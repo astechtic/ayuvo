@@ -1,10 +1,12 @@
 package com.ayuvo.health
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.IntentCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +19,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.ayuvo.health.models.QuickActionRequest
+import com.ayuvo.health.records.RecordsRequest
+import com.ayuvo.health.records.ingest.ImportItem
+import com.ayuvo.health.records.ingest.ImportSpec
+import com.ayuvo.health.records.model.ImportMethod
+import com.ayuvo.health.records.model.RecordSource
 import com.ayuvo.health.services.QuickActionShortcutManager
 import com.ayuvo.health.services.ReviewPrompter
 import com.ayuvo.health.ui.navigation.AppNavHost
@@ -38,6 +45,7 @@ private data class StartupPrefs(
 
 class MainActivity : ComponentActivity() {
     private var pendingQuickAction by mutableStateOf<QuickActionRequest?>(null)
+    private var pendingRecordsRequest by mutableStateOf<RecordsRequest?>(null)
     private var startupPrefs by mutableStateOf<StartupPrefs?>(null)
     private var contentReady by mutableStateOf(false)
 
@@ -47,10 +55,54 @@ class MainActivity : ComponentActivity() {
         intent?.action = null
     }
 
+    /**
+     * Share sheet (SEND / SEND_MULTIPLE) and "Open in" (VIEW): the streams are copied right away
+     * on the app scope while the URI grant is still valid, then the Records tab is requested.
+     */
+    private fun handleIncomingRecordsIntent(intent: Intent?) {
+        val action = intent?.action ?: return
+        val isView = action == Intent.ACTION_VIEW
+        val items: List<ImportItem> = when (action) {
+            Intent.ACTION_SEND -> {
+                val stream = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+                    ?: intent.clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+                when {
+                    stream != null -> listOf(ImportItem.FromUri(stream))
+                    !intent.getStringExtra(Intent.EXTRA_TEXT).isNullOrBlank() ->
+                        listOf(ImportItem.FromText(intent.getStringExtra(Intent.EXTRA_TEXT)!!))
+                    else -> emptyList()
+                }
+            }
+            Intent.ACTION_SEND_MULTIPLE -> {
+                val streams = IntentCompat.getParcelableArrayListExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+                    .orEmpty()
+                    .ifEmpty {
+                        val clip = intent.clipData
+                        if (clip == null) emptyList() else (0 until clip.itemCount).mapNotNull { clip.getItemAt(it).uri }
+                    }
+                streams.map { ImportItem.FromUri(it) }
+            }
+            Intent.ACTION_VIEW -> listOfNotNull(intent.data?.let { ImportItem.FromUri(it) })
+            else -> emptyList()
+        }
+        if (items.isEmpty()) return
+        val textOnly = items.all { it is ImportItem.FromText }
+        val spec = ImportSpec(
+            source = if (isView) RecordSource.OPEN_IN else RecordSource.SHARE_IN,
+            method = if (isView) ImportMethod.OPEN_IN else ImportMethod.SHARE_SHEET,
+            userTitle = if (textOnly) intent.getStringExtra(Intent.EXTRA_SUBJECT) else null,
+            sourceApp = referrer?.host
+        )
+        (application as AyuvoApp).container.recordsImports.import(items, spec)
+        pendingRecordsRequest = RecordsRequest()
+        intent.action = null
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         handleQuickActionIntent(intent)
+        handleIncomingRecordsIntent(intent)
     }
     override fun onStart() {
         super.onStart()
@@ -110,6 +162,8 @@ class MainActivity : ComponentActivity() {
         }
 
         handleQuickActionIntent(intent)
+        // A recreated activity (rotation, process restore) still carries the original share intent.
+        if (savedInstanceState == null) handleIncomingRecordsIntent(intent)
 
         lifecycleScope.launch {
             combine(
@@ -161,6 +215,10 @@ class MainActivity : ComponentActivity() {
                         quickActionRequest = pendingQuickAction,
                         onQuickActionHandled = { requestID ->
                             if (pendingQuickAction?.id == requestID) pendingQuickAction = null
+                        },
+                        recordsRequest = pendingRecordsRequest,
+                        onRecordsRequestHandled = { requestID ->
+                            if (pendingRecordsRequest?.id == requestID) pendingRecordsRequest = null
                         }
                     )
                 }

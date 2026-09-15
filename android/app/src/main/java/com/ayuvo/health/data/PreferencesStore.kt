@@ -603,6 +603,10 @@ class PreferencesStore(
     val appearanceMode: Flow<String> = ds.data.map { it[Keys.APPEARANCE_MODE] ?: "system" }
     suspend fun setAppearanceMode(v: String) { ds.edit { it[Keys.APPEARANCE_MODE] = v } }
 
+    /** Health Records home layout: `timeline` (default) | `list` | `grid`. Device-only (not in cloud backup). */
+    val healthRecordsViewMode: Flow<String> = ds.data.map { it[Keys.HEALTH_RECORDS_VIEW_MODE] ?: "timeline" }
+    suspend fun setHealthRecordsViewMode(v: String) { ds.edit { it[Keys.HEALTH_RECORDS_VIEW_MODE] = v } }
+
     /** Mirrors iOS @AppStorage("appThemeColor"). */
     val appThemeColor: Flow<String> = ds.data.map { it[Keys.APP_THEME_COLOR] ?: AppThemeColor.DEFAULT_KEY }
     suspend fun setAppThemeColor(v: String) { ds.edit { it[Keys.APP_THEME_COLOR] = v } }
@@ -1450,6 +1454,7 @@ class PreferencesStore(
         val PREFER_GRAMS_BY_DEFAULT = booleanPreferencesKey("foodMeasurementPreferGramsByDefault")
         val SAVE_MEAL_PHOTOS_TO_GALLERY = booleanPreferencesKey("saveMealPhotosToGallery")
         val APPEARANCE_MODE = stringPreferencesKey("appearanceMode")
+        val HEALTH_RECORDS_VIEW_MODE = stringPreferencesKey("healthRecordsViewMode")
         val APP_THEME_COLOR = stringPreferencesKey("appThemeColor")
         val WEEK_STARTS_MONDAY = booleanPreferencesKey("weekStartsOnMonday")
         val QUICK_ACTION_1 = stringPreferencesKey("quickAction.slot1")

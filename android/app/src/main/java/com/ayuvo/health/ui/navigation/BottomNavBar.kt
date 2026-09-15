@@ -27,11 +27,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonitorHeart
-import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SportsGymnastics
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -66,7 +65,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayuvo.health.ui.theme.AppColors
-import com.ayuvo.health.models.WorkoutTabMode
 import kotlinx.coroutines.launch
 
 data class BottomTab(val route: String, val icon: ImageVector, @get:StringRes val labelRes: Int)
@@ -74,8 +72,8 @@ data class BottomTab(val route: String, val icon: ImageVector, @get:StringRes va
 val BottomTabs = listOf(
     BottomTab(AppRoutes.HOME, Icons.Filled.Home, R.string.nav_home),
     BottomTab(AppRoutes.HEALTH, Icons.Filled.MonitorHeart, R.string.nav_health),
+    BottomTab(AppRoutes.RECORDS, Icons.Filled.Description, R.string.nav_records),
     BottomTab(AppRoutes.COACH, Icons.Filled.Forum, R.string.nav_coach),
-    BottomTab(AppRoutes.WORKOUTS, Icons.Filled.FitnessCenter, R.string.nav_workouts),
     BottomTab(AppRoutes.SETTINGS, Icons.Filled.Settings, R.string.nav_settings)
 )
 
@@ -103,21 +101,10 @@ val BottomNavDockedControlPadding = 82.dp
 fun AppBottomNavBar(
     currentRoute: String?,
     showAboutBadge: Boolean = false,
-    workoutMode: WorkoutTabMode = WorkoutTabMode.Default,
     onTap: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val tabs = remember(workoutMode) {
-        BottomTabs.map { tab ->
-            if (tab.route != AppRoutes.WORKOUTS) tab else tab.copy(
-                icon = if (workoutMode == WorkoutTabMode.LOG) {
-                    Icons.Filled.SportsGymnastics
-                } else {
-                    Icons.Filled.FitnessCenter
-                }
-            )
-        }
-    }
+    val tabs = BottomTabs
     val isDark = MaterialTheme.colorScheme.background.let {
         (it.red + it.green + it.blue) / 3f < 0.5f
     }

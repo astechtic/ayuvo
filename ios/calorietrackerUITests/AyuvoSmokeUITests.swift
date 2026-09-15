@@ -1,7 +1,7 @@
 import XCTest
 
 /// Rebrand smoke walk: onboarding AI step (API key or on-device), the five tabs, the Health tab's
-/// Progress | Health Data selector, Coach, the three Settings app-info categories, the
+/// Progress | Health Data | Workouts selector, Records, Coach, the three Settings app-info categories, the
 /// Licenses screen and the health export description.
 ///
 /// Set `TEST_RUNNER_AYUVO_SMOKE_SHOTS_DIR=<absolute dir>` on the xcodebuild command line to
@@ -126,17 +126,18 @@ final class AyuvoSmokeUITests: XCTestCase {
         settleHealthAccessSheet(app, timeout: 8)
 
         // Tab bar
-        for tab in ["Home", "Health", "Coach", "Workouts", "Settings"] {
+        for tab in ["Home", "Health", "Records", "Coach", "Settings"] {
             XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 10), "Missing tab \(tab)")
         }
         XCTAssertFalse(app.tabBars.buttons["Progress"].exists, "Progress tab should be renamed Health")
+        XCTAssertFalse(app.tabBars.buttons["Workouts"].exists, "Workouts moved into the Health tab")
 
         // Home: Health Data card leads the dashboard
         XCTAssertTrue(app.staticTexts["Health Data"].firstMatch.waitForExistence(timeout: 10))
         _ = app.staticTexts["Steps"].firstMatch.waitForExistence(timeout: 120)
         shot(app, "02-home-dashboard")
 
-        // Health tab: Progress | Health Data
+        // Health tab: Progress | Health Data | Workouts
         app.tabBars.buttons["Health"].tap()
         XCTAssertTrue(app.buttons["Progress"].firstMatch.waitForExistence(timeout: 8), "Health tab should show the Progress segment")
         XCTAssertTrue(app.buttons["Health Data"].firstMatch.exists, "Health tab should show the Health Data segment")
@@ -167,10 +168,22 @@ final class AyuvoSmokeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Ask Ayuvo"].waitForExistence(timeout: 8))
         shot(app, "06-coach-empty-state")
 
-        // Workouts
-        app.tabBars.buttons["Workouts"].tap()
-        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 8))
+        // Workouts: third Health pane (no navigation bar above the selector)
+        app.tabBars.buttons["Health"].tap()
+        let workoutsSegment = app.buttons["Workouts"].firstMatch
+        XCTAssertTrue(workoutsSegment.waitForExistence(timeout: 8), "Health tab should show the Workouts segment")
+        tapLabel(workoutsSegment)
+        XCTAssertTrue(
+            app.buttons["Exercise library"].firstMatch.waitForExistence(timeout: 8)
+                || app.textFields["workouts.search"].waitForExistence(timeout: 2),
+            "Workouts segment should host the workout log or library"
+        )
         shot(app, "07-workouts")
+
+        // Records
+        app.tabBars.buttons["Records"].tap()
+        XCTAssertTrue(app.navigationBars["Records"].waitForExistence(timeout: 8))
+        shot(app, "07b-records")
 
         // Settings: three app-info categories
         app.tabBars.buttons["Settings"].tap()

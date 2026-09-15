@@ -50,8 +50,10 @@ import com.ayuvo.health.ui.settings.CalculationMethodsScreen
 import com.ayuvo.health.ui.settings.OptionalNutrientGoalsScreen
 import com.ayuvo.health.ui.settings.SettingsScreen
 import com.ayuvo.health.ui.settings.SettingsViewModel
-import com.ayuvo.health.ui.workouts.WorkoutsScreen
 import com.ayuvo.health.models.WorkoutTabMode
+import com.ayuvo.health.records.RecordsRequest
+import com.ayuvo.health.ui.records.RecordDetailScreen
+import com.ayuvo.health.ui.records.RecordsScreen
 import com.ayuvo.health.models.QuickActionRequest
 import com.ayuvo.health.ui.settings.AddMenuSettingsScreen
 import com.ayuvo.health.ui.about.LicensesScreen
@@ -74,7 +76,9 @@ fun AppNavHost(
     container: AppContainer,
     startOnboarding: Boolean,
     quickActionRequest: QuickActionRequest? = null,
-    onQuickActionHandled: (Long) -> Unit = {}
+    onQuickActionHandled: (Long) -> Unit = {},
+    recordsRequest: RecordsRequest? = null,
+    onRecordsRequestHandled: (Long) -> Unit = {}
 ) {
     val nav = rememberNavController()
     // Warm the app-scoped Settings state while Home is visible. By the time the user changes
@@ -90,7 +94,6 @@ fun AppNavHost(
     // covers the tab bar.
     val context = LocalContext.current
     val analyzing by container.analyzingFood.collectAsState()
-    val persistedWorkoutMode by container.workoutRepository.mode.collectAsState(initial = WorkoutTabMode.Default)
     val workoutUiPrefs = remember(context) {
         context.getSharedPreferences(WORKOUT_UI_PREFS, android.content.Context.MODE_PRIVATE)
     }
@@ -98,8 +101,7 @@ fun AppNavHost(
         mutableStateOf(workoutUiPrefs.getBoolean(WORKOUT_MODE_V2_DEFAULT_KEY, false))
     }
     // Match iOS's versioned AppStorage key: reset the former library-first
-    // default once, then keep every user switch persistent after that.
-    val workoutMode = if (workoutModeV2Initialized) persistedWorkoutMode else WorkoutTabMode.LOG
+    // default once (see the LaunchedEffect below), then keep every user switch persistent.
     // Nested settings/* screens keep the tab bar visible and highlight Settings,
     // so re-tapping the Settings icon can return to the hub (iOS parity).
     val selectedTabRoute = AppRoutes.selectedBottomTab(currentRoute)
@@ -109,7 +111,8 @@ fun AppNavHost(
     var settingsPopToRootTick by remember { mutableIntStateOf(0) }
     val currentVersion = remember(context) { AndroidUpdateChecker.currentVersion(context) }
     var updateAvailable by remember { mutableStateOf(false) }
-    // One-shot request to land on a Health tab segment (Home "See All" / Settings "All Health Data").
+    // One-shot request to land on a Health tab segment (Home "See All" / Settings "All Health Data" /
+    // Home "Workouts").
     var healthTabRequest by remember { mutableStateOf<HealthTabDestination?>(null) }
 
     // Settings is intentionally warmed before onboarding finishes. Reload the values that
@@ -214,6 +217,16 @@ fun AppNavHost(
             }
             return
         }
+        // Re-tapping Records from a pushed record screen pops back to the Records home.
+        if (target == AppRoutes.RECORDS && AppRoutes.isRecordsChildRoute(route)) {
+            if (!nav.popBackStack(AppRoutes.RECORDS, inclusive = false)) {
+                nav.navigate(AppRoutes.RECORDS) {
+                    popUpTo(AppRoutes.HOME) { saveState = true }
+                    launchSingleTop = true
+                }
+            }
+            return
+        }
         if (target == selectedTab) return
         // Tapping HOME (the start destination) needs popBackStack
         // — `navigate(HOME) { popUpTo(HOME); launchSingleTop = true }`
@@ -232,6 +245,17 @@ fun AppNavHost(
         }
     }
 
+    // Share / "Open in" landed records: switch to the Records tab once the app is past onboarding.
+    // The import itself already started in MainActivity; the Records screen shows its notice.
+    LaunchedEffect(recordsRequest?.id, currentRoute) {
+        val request = recordsRequest ?: return@LaunchedEffect
+        if (currentRoute == null || currentRoute == AppRoutes.ONBOARDING) return@LaunchedEffect
+        if (AppRoutes.selectedBottomTab(currentRoute) != AppRoutes.RECORDS || AppRoutes.isRecordsChildRoute(currentRoute)) {
+            navigateToTab(AppRoutes.RECORDS)
+        }
+        onRecordsRequestHandled(request.id)
+    }
+
     CompositionLocalProvider(LocalLaunchFillEpoch provides launchFillEpoch) {
     Scaffold(
         bottomBar = {
@@ -239,7 +263,6 @@ fun AppNavHost(
                 AppBottomNavBar(
                     currentRoute = selectedTabRoute,
                     showAboutBadge = updateAvailable,
-                    workoutMode = workoutMode,
                     onTap = ::navigateToTab
                 )
             }
@@ -269,7 +292,11 @@ fun AppNavHost(
                                 healthTabRequest = HealthTabDestination.HEALTH_DATA
                                 navigateToTab(AppRoutes.HEALTH)
                             },
-                            onOpenHealthType = { key -> nav.navigate(AppRoutes.healthType(key)) }
+                            onOpenHealthType = { key -> nav.navigate(AppRoutes.healthType(key)) },
+                            onOpenWorkouts = {
+                                healthTabRequest = HealthTabDestination.WORKOUTS
+                                navigateToTab(AppRoutes.HEALTH)
+                            }
                         )
                     }
                 }
@@ -291,6 +318,32 @@ fun AppNavHost(
                             requestedDestination = healthTabRequest,
                             onRequestConsumed = { healthTabRequest = null },
                             onOpenType = { key -> nav.navigate(AppRoutes.healthType(key)) }
+                        )
+                    }
+                }
+                composable(AppRoutes.RECORDS) {
+                    TabInset {
+                        RecordsScreen(
+                            container = container,
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.RECORD_DETAIL,
+                    arguments = listOf(navArgument(AppRoutes.RECORD_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val recordId = entry.arguments?.getString(AppRoutes.RECORD_ID_ARG) ?: return@composable
+                    TabInset {
+                        RecordDetailScreen(
+                            container = container,
+                            recordId = recordId,
+                            onBack = { nav.popBackStack() },
+                            onOpenRecord = { id ->
+                                nav.navigate(AppRoutes.recordDetail(id)) {
+                                    popUpTo(AppRoutes.RECORDS) { inclusive = false }
+                                }
+                            }
                         )
                     }
                 }
@@ -336,7 +389,6 @@ fun AppNavHost(
                         foodAnalysis = container.foodAnalysis
                     )
                 }
-                composable(AppRoutes.WORKOUTS) { TabInset { WorkoutsScreen(container = container) } }
             }
         }
     }

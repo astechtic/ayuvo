@@ -42,6 +42,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.IosShare
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.automirrored.outlined.DirectionsRun
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
@@ -257,6 +258,7 @@ internal enum class SettingsCategory(
     APP_PREFERENCES(R.string.settings_section_app, Icons.Outlined.Palette),
     WORKOUT(R.string.settings_section_workout, Icons.Outlined.FitnessCenter),
     HEALTH_DATA(R.string.settings_section_health, Icons.Outlined.Favorite),
+    HEALTH_RECORDS(R.string.settings_section_health_records, Icons.Outlined.Description),
     DATA_MANAGEMENT(R.string.settings_section_data_management, Icons.Outlined.Download),
     APP_UPDATES(
         R.string.about_category_app_updates,
@@ -1403,6 +1405,10 @@ fun SettingsScreen(
             }
             }
 
+            if (selectedCategory == SettingsCategory.HEALTH_RECORDS) {
+                HealthRecordsPrivacySection()
+            }
+
             if (selectedCategory == SettingsCategory.DATA_MANAGEMENT) {
             SectionCard {
                 ToggleRow(
@@ -2045,6 +2051,35 @@ fun SettingsScreen(
                 dismissText = stringResource(R.string.action_cancel),
                 onDismiss = { showHealthPermissionHelp = false }
             )
+        }
+    }
+}
+
+/** Settings › Health Records: the Phase 1 "How Ayuvo handles your health records" explainer. */
+@Composable
+private fun HealthRecordsPrivacySection() {
+    SectionCard(title = stringResource(R.string.records_privacy_title)) {
+        Column(
+            Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            listOf(
+                R.string.records_privacy_point_device,
+                R.string.records_privacy_point_backup,
+                R.string.records_privacy_point_ai,
+                R.string.records_privacy_point_sharing,
+                R.string.records_privacy_point_delete
+            ).forEach { res ->
+                Row(verticalAlignment = Alignment.Top) {
+                    Text("•", color = AppColors.Calorie, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.width(10.dp))
+                    Text(
+                        stringResource(res),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                    )
+                }
+            }
         }
     }
 }

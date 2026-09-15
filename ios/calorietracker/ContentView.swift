@@ -114,16 +114,14 @@ private enum AppUpdateChecker {
 struct ContentView: View {
     @Environment(NotificationManager.self) private var notificationManager
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(RecordsStore.self) private var recordsStore
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
-    @AppStorage(WorkoutTabMode.storageKey) private var workoutTabModeRaw = WorkoutTabMode.defaultMode.rawValue
     @State private var appUpdateState: AppUpdateState = .idle
     @State private var selectedTab: AppTab = .home
+    /// Health tab pane; lifted here so Home's Workouts shortcut can open the Workouts pane.
+    @State private var healthOverviewMode: ProgressOverviewMode = .progress
     @State private var quickActionRequest: QuickActionRequest?
     @State private var foodLogMethodRequest: FoodLogMethodRequest?
-
-    private var workoutsTabIcon: String {
-        WorkoutTabMode.mode(for: workoutTabModeRaw).tabIcon
-    }
 
     var body: some View {
         standardTabView
@@ -131,6 +129,10 @@ struct ContentView: View {
             .task {
                 consumePendingLaunchRoutes()
                 await refreshAppUpdateState()
+            }
+            .onChange(of: recordsStore.tabRequest) { _, _ in
+                // Share extension / "Open in Ayuvo" imports land on the Records tab.
+                selectedTab = .records
             }
             .onReceive(NotificationCenter.default.publisher(for: .quickActionRequested)) { _ in
                 consumePendingLaunchRoutes()
@@ -155,7 +157,8 @@ struct ContentView: View {
                 foodLogMethodRequest: foodLogMethodRequest,
                 onFoodLogMethodHandled: { requestID in
                     if foodLogMethodRequest?.id == requestID { foodLogMethodRequest = nil }
-                }
+                },
+                onOpenWorkouts: openWorkouts
             )
                 .tag(AppTab.home)
                 .tabItem {
@@ -163,11 +166,18 @@ struct ContentView: View {
                     Text("Home")
                 }
 
-            HealthTabView()
+            HealthTabView(progressOverviewMode: $healthOverviewMode)
                 .tag(AppTab.health)
                 .tabItem {
                     Image(systemName: "heart.text.square.fill")
                     Text("Health")
+                }
+
+            RecordsHomeView()
+                .tag(AppTab.records)
+                .tabItem {
+                    Image(systemName: "list.clipboard.fill")
+                    Text("Records")
                 }
 
             ChatView()
@@ -175,13 +185,6 @@ struct ContentView: View {
                 .tabItem {
                     Image(systemName: "bubble.left.and.bubble.right.fill")
                     Text("Coach")
-                }
-
-            WorkoutsView()
-                .tag(AppTab.workouts)
-                .tabItem {
-                    Image(systemName: workoutsTabIcon)
-                    Text("Workouts")
                 }
 
             ProfileView(
@@ -202,9 +205,15 @@ struct ContentView: View {
     private enum AppTab: String, Hashable {
         case home
         case health
+        case records
         case coach
-        case workouts
         case settings
+    }
+
+    /// Workouts lives in the Health tab's third pane.
+    private func openWorkouts() {
+        healthOverviewMode = .workouts
+        selectedTab = .health
     }
 
     private func consumePendingLaunchRoutes() {
@@ -549,6 +558,7 @@ struct HomeView: View {
     let onQuickActionHandled: (UUID) -> Void
     var foodLogMethodRequest: FoodLogMethodRequest?
     var onFoodLogMethodHandled: (UUID) -> Void = { _ in }
+    var onOpenWorkouts: () -> Void = {}
     @Environment(FoodStore.self) private var foodStore
     @Environment(WaterStore.self) private var waterStore
     @Environment(FastingStore.self) private var fastingStore
@@ -1039,6 +1049,11 @@ private var dailyStepsTaskKey: String {
                             .listRowSeparator(.hidden)
                         }
                     }
+
+                    HomeWorkoutsShortcutRow(onOpen: onOpenWorkouts)
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
 
                 // Nutrition summary. Keeping the dome, macros, water and detail affordance in
@@ -3442,7 +3457,7 @@ struct HealthTabView: View {
     @State private var showWorkoutHistory = false
     @State private var showImportedHealthWorkoutHistory = false
     @State private var progressMetric: ProgressMetric = .weight
-    @State private var progressOverviewMode: ProgressOverviewMode = .progress
+    @Binding var progressOverviewMode: ProgressOverviewMode
     @State private var foodRangeStats: ProgressFoodRangeStats?
     @State private var isLoadingFoodRangeStats = false
 
@@ -3640,8 +3655,12 @@ struct HealthTabView: View {
                     }
                     .background(AppColors.appBackground)
                     .transition(.opacity)
-                } else {
+                } else if progressOverviewMode == .healthData {
                     HealthHubView(showsNavigationChrome: false)
+                        .transition(.opacity)
+                } else {
+                    // Workouts pane: no nested stack, so its pushes land on this stack.
+                    WorkoutsView(embedded: true)
                         .transition(.opacity)
                 }
                 }
@@ -3835,6 +3854,7 @@ enum ProfileSettingsCategory: String, CaseIterable, Identifiable, Hashable {
     case appPreferences
     case workout
     case healthData
+    case healthRecords
     case dataManagement
     case appUpdates
     case helpSupport
@@ -3850,6 +3870,7 @@ enum ProfileSettingsCategory: String, CaseIterable, Identifiable, Hashable {
         .appPreferences,
         .workout,
         .healthData,
+        .healthRecords,
         .dataManagement
     ]
 
@@ -3872,6 +3893,7 @@ enum ProfileSettingsCategory: String, CaseIterable, Identifiable, Hashable {
         case .appPreferences: "App Settings"
         case .workout: "Workout"
         case .healthData: "Health & Data"
+        case .healthRecords: "Health Records"
         case .dataManagement: "Data Management"
         case .appUpdates: "App & Updates"
         case .helpSupport: "Help & Support"
@@ -3890,6 +3912,7 @@ enum ProfileSettingsCategory: String, CaseIterable, Identifiable, Hashable {
         case .appPreferences: "slider.horizontal.3"
         case .workout: "dumbbell"
         case .healthData: "heart"
+        case .healthRecords: "doc.text"
         case .dataManagement: "externaldrive"
         case .appUpdates: "arrow.triangle.2.circlepath.circle.fill"
         case .helpSupport: "questionmark.bubble.fill"
@@ -3939,6 +3962,7 @@ struct ProfileView: View {
     @Environment(NotificationManager.self) private var notificationManager
     @Environment(HealthKitManager.self) private var healthKitManager
     @Environment(HealthDataStore.self) private var healthDataStore
+    @Environment(RecordsStore.self) private var recordsStore
     private var profile: UserProfile {
         get { profileStore.profile }
         nonmutating set { profileStore.profile = newValue }
@@ -5619,6 +5643,10 @@ struct ProfileView: View {
                 .listRowBackground(AppColors.appCard)
                 }
 
+                if settingsCategory == .healthRecords {
+                HealthRecordsSettingsSection()
+                }
+
                 if settingsCategory == .dataManagement {
                 CloudBackupSettingsSection()
 
@@ -5965,6 +5993,8 @@ struct ProfileView: View {
                         // Health mirror: cancel sync → close the SQLite connections → remove the
                         // files (+ -wal/-shm) before the preference domain goes.
                         await healthDataStore.deleteAllData()
+                        // Health Records: database (+ sidecars), originals, caches and the share inbox.
+                        await recordsStore.deleteAllData()
                         let domain = Bundle.main.bundleIdentifier ?? ""
                         UserDefaults.standard.removePersistentDomain(forName: domain)
                         AIProviderSettings.deleteAllData()
@@ -5976,7 +6006,7 @@ struct ProfileView: View {
                     }
                 }
             } message: {
-                Text("This will permanently delete all your data including food logs, weight entries, workout history, and profile. This action cannot be undone.")
+                Text("This will permanently delete all your data including food logs, weight entries, workout history, health records, and profile. This action cannot be undone.")
             }
     }
     private var requestTimeoutInput: some View {

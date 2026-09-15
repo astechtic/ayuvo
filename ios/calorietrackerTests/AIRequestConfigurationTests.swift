@@ -6,9 +6,10 @@ import UIKit
 @Suite(.serialized)
 struct AIRequestConfigurationTests {
     @Test func settingsHubKeepsEveryFocusedCategory() {
-        #expect(ProfileSettingsCategory.allCases.count == 13)
-        #expect(Set(ProfileSettingsCategory.allCases.map(\.rawValue)).count == 13)
-        #expect(ProfileSettingsCategory.preferenceCases.count == 10)
+        #expect(ProfileSettingsCategory.allCases.count == 14)
+        #expect(Set(ProfileSettingsCategory.allCases.map(\.rawValue)).count == 14)
+        #expect(ProfileSettingsCategory.preferenceCases.count == 11)
+        #expect(ProfileSettingsCategory.preferenceCases.contains(.healthRecords))
         #expect(ProfileSettingsCategory.appInfoCases.count == 3)
         #expect(ProfileSettingsCategory.allCases.compactMap(\.aboutCategory).count == 3)
     }

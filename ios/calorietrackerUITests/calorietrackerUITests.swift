@@ -53,8 +53,12 @@ final class calorietrackerUITests: XCTestCase {
         ]
         app.launch()
 
-        let workouts = app.tabBars.buttons["Workouts"]
-        XCTAssertTrue(workouts.waitForExistence(timeout: 8))
+        // Workouts is the Health tab's third pane.
+        let health = app.tabBars.buttons["Health"]
+        XCTAssertTrue(health.waitForExistence(timeout: 8))
+        health.tap()
+        let workouts = app.buttons["Workouts"].firstMatch
+        XCTAssertTrue(workouts.waitForExistence(timeout: 5))
         workouts.tap()
 
         let search = app.textFields["workouts.search"]

@@ -100,15 +100,20 @@ struct WorkoutLogView: View {
     private var library: ExerciseLibraryService { workoutStore.exerciseLibrary }
     private let session: WorkoutLogSessionState
     private let embedsInNavigationStack: Bool
+    /// False when hosted as the Health tab's Workouts pane: the host keeps its navigation bar
+    /// hidden, so the library switch moves inline above the week strip.
+    private let showsNavigationBar: Bool
     private let onShowLibrary: (() -> Void)?
 
     init(
         session: WorkoutLogSessionState = WorkoutLogSessionState(),
         embedsInNavigationStack: Bool = true,
+        showsNavigationBar: Bool = true,
         onShowLibrary: (() -> Void)? = nil
     ) {
         self.session = session
         self.embedsInNavigationStack = embedsInNavigationStack
+        self.showsNavigationBar = showsNavigationBar
         self.onShowLibrary = onShowLibrary
     }
 
@@ -205,6 +210,35 @@ struct WorkoutLogView: View {
     private var workoutContent: some View {
         ScrollViewReader { proxy in
                 List {
+                    if !showsNavigationBar, let onShowLibrary {
+                        Section {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    guard focusedSetField == nil else {
+                                        dismissSetKeyboard()
+                                        return
+                                    }
+                                    onShowLibrary()
+                                } label: {
+                                    Label("Exercise library", systemImage: "dumbbell.fill")
+                                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                        .foregroundStyle(Color.workoutAccent)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .contentShape(Capsule())
+                                }
+                                .buttonStyle(.plain)
+                                .workoutPressable()
+                                .workoutLiquidBarSurface(cornerRadius: 18)
+                                .accessibilityHint("Switches back to the workout library")
+                            }
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 0, trailing: 16))
+                        }
+                    }
+
                     Section {
                         WorkoutLogWeekStrip(
                             selectedDate: selectedDateBinding,
@@ -407,9 +441,9 @@ struct WorkoutLogView: View {
             // Keep the chrome quiet: the date strip and burn calculator lead.
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar(.visible, for: .navigationBar)
+            .toolbar(showsNavigationBar ? .visible : .hidden, for: .navigationBar)
             .toolbar {
-                if let onShowLibrary {
+                if showsNavigationBar, let onShowLibrary {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
                             guard focusedSetField == nil else {

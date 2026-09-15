@@ -218,7 +218,8 @@ fun HomeScreen(
     quickActionRequest: QuickActionRequest? = null,
     onQuickActionHandled: (Long) -> Unit = {},
     onOpenHealth: () -> Unit = {},
-    onOpenHealthType: (String) -> Unit = {}
+    onOpenHealthType: (String) -> Unit = {},
+    onOpenWorkouts: () -> Unit = {}
 ) {
     val vm: HomeViewModel = viewModel(factory = HomeViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -539,6 +540,14 @@ DisposableEffect(lifecycleOwner, vm) {
                             onClick = { editingFast = pinnedFast }
                         )
                     }
+                }
+            }
+
+            // Workouts left the tab bar for Records; this shortcut opens the Health tab's Workouts segment.
+            if (!selectionMode) {
+                item(key = "workouts-shortcut") {
+                    Spacer(Modifier.height(8.dp))
+                    WorkoutsShortcutCard(onClick = onOpenWorkouts)
                 }
             }
 

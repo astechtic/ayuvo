@@ -181,7 +181,8 @@ fun ProgressScreen(
     onOpenType: (String) -> Unit = {}
 ) {
     var destination by rememberSaveable { mutableStateOf(HealthTabDestination.PROGRESS) }
-    // Home's "See All" / Settings' "All Health Data" land on the Health Data segment; the request
+    // Home's "See All" / Settings' "All Health Data" land on the Health Data segment and Home's
+    // Workouts card on the Workouts segment; the request
     // is consumed once so a state restore never re-applies it.
     LaunchedEffect(requestedDestination) {
         if (requestedDestination != null) {
@@ -190,17 +191,25 @@ fun ProgressScreen(
         }
     }
     val destinationState = rememberSaveableStateHolder()
+    // An exercise detail takes the whole tab, as it did when Workouts was its own tab.
+    var workoutSubScreenVisible by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize()) {
-        HealthTabSelector(
-            selected = destination,
-            onSelect = { destination = it },
-            modifier = Modifier.padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 4.dp)
-        )
+        if (!(destination == HealthTabDestination.WORKOUTS && workoutSubScreenVisible)) {
+            HealthTabSelector(
+                selected = destination,
+                onSelect = { destination = it },
+                modifier = Modifier.padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 4.dp)
+            )
+        }
         Box(Modifier.weight(1f)) {
             destinationState.SaveableStateProvider(destination.name) {
                 when (destination) {
                     HealthTabDestination.PROGRESS -> MyProgressContent(container)
                     HealthTabDestination.HEALTH_DATA -> HealthHubScreen(container = container, onOpenType = onOpenType)
+                    HealthTabDestination.WORKOUTS -> com.ayuvo.health.ui.workouts.WorkoutsScreen(
+                        container = container,
+                        onSubScreenVisibleChange = { workoutSubScreenVisible = it }
+                    )
                 }
             }
         }

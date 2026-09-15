@@ -9,4 +9,10 @@
     <exclude domain="database" path="ayuvo_health.db-wal" />
     <exclude domain="database" path="ayuvo_health.db-shm" />
     <exclude domain="database" path="ayuvo_health.db-journal" />
+    <!-- Health Records (docs/health-records.md): documents and their index stay on device. -->
+    <exclude domain="database" path="ayuvo_records.db" />
+    <exclude domain="database" path="ayuvo_records.db-wal" />
+    <exclude domain="database" path="ayuvo_records.db-shm" />
+    <exclude domain="database" path="ayuvo_records.db-journal" />
+    <exclude domain="file" path="ayuvo-records/" />
 </full-backup-content>

@@ -190,6 +190,9 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.mlkit.barcode.scanning)
+    // Health Records: GMS document scanner (Phase 1) and bundled Latin text recognition (used from Phase 2).
+    implementation(libs.play.services.mlkit.document.scanner)
+    implementation(libs.mlkit.text.recognition)
     implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)

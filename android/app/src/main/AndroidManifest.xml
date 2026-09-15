@@ -114,7 +114,33 @@
             android:label="${launcherAppName}"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Ayuvo.Splash" />
+            android:theme="@style/Theme.Ayuvo.Splash">
+            <!-- Health Records receiving (docs/health-records.md §3.13): shared or opened
+                 documents are copied into ayuvo-records/ immediately. Launcher entry points
+                 stay on the activity-aliases below. -->
+            <intent-filter android:label="@string/records_share_target">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter android:label="@string/records_share_target">
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter android:label="@string/records_share_target">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
 
         <!-- Health Connect opens this privacy-policy entry point on Android 13 and below.
              Without it, the standalone Health Connect app cannot reliably discover Ayuvo

@@ -1356,6 +1356,7 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             // The Health Data mirror goes first, with the sync engine paused so no page can
             // land in a database that is being removed.
             container.deleteHealthDatabase()
+            runCatching { container.deleteRecordsData() }
             container.prefs.clearAll()
             container.keyStore.clearAll()
             container.imageStore.clearAll()

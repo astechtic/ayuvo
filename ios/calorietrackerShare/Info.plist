@@ -12,8 +12,12 @@
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
+				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
+				<integer>20</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-				<integer>1</integer>
+				<integer>20</integer>
+				<key>NSExtensionActivationSupportsText</key>
+				<true/>
 			</dict>
 		</dict>
 		<key>NSExtensionPrincipalClass</key>

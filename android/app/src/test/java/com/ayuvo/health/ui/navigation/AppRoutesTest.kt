@@ -8,9 +8,9 @@ import org.junit.Test
 
 class AppRoutesTest {
     @Test
-    fun bottomTabsAreHomeHealthCoachWorkoutsSettings() {
+    fun bottomTabsAreHomeHealthRecordsCoachSettings() {
         assertEquals(
-            listOf(AppRoutes.HOME, AppRoutes.HEALTH, AppRoutes.COACH, AppRoutes.WORKOUTS, AppRoutes.SETTINGS),
+            listOf(AppRoutes.HOME, AppRoutes.HEALTH, AppRoutes.RECORDS, AppRoutes.COACH, AppRoutes.SETTINGS),
             AppRoutes.bottomTabs
         )
     }
@@ -37,5 +37,23 @@ class AppRoutesTest {
         assertFalse(AppRoutes.isHealthDetailRoute(AppRoutes.HOME))
         // "healthy-food" style routes must not be mistaken for the Health tab.
         assertNull(AppRoutes.selectedBottomTab("healthy"))
+    }
+
+    @Test
+    fun workoutRoutesBelongToTheHealthTab() {
+        assertEquals(AppRoutes.HEALTH, AppRoutes.selectedBottomTab("workouts"))
+        assertEquals(AppRoutes.HEALTH, AppRoutes.selectedBottomTab("workouts/session/abc"))
+        assertNull(AppRoutes.selectedBottomTab("workoutsx"))
+    }
+
+    @Test
+    fun recordRoutesKeepRecordsSelected() {
+        assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORDS))
+        assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORD_DETAIL))
+        assertEquals("records/detail/abc-123", AppRoutes.recordDetail("abc-123"))
+        assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.recordDetail("abc-123")))
+        assertTrue(AppRoutes.isRecordsChildRoute(AppRoutes.recordDetail("x")))
+        assertFalse(AppRoutes.isRecordsChildRoute(AppRoutes.RECORDS))
+        assertNull(AppRoutes.selectedBottomTab("recordsx"))
     }
 }

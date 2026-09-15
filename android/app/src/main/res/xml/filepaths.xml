@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <cache-path name="capture_cache" path="capture/" />
+    <!-- Health Records "Export original": a cache copy, removed before the next export. -->
+    <cache-path name="records_share" path="records-share/" />
 </paths>

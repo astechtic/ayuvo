@@ -32,6 +32,9 @@ object CloudBackupPolicy {
         "healthHubRateLimitedUntil",
         // Coach transcripts can quote health data; store policy (5.1.3(ii)) keeps them off the cloud.
         "coachChatHistory",
+        // Health Records preferences stay on this device (docs/health-records.md §6).
+        "healthRecordsViewMode",
+        "healthRecordsAiMode",
     )
 
     private val photoName = Regex("^[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp)$", RegexOption.IGNORE_CASE)

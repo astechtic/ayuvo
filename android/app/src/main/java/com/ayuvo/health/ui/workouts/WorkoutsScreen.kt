@@ -1,5 +1,9 @@
 package com.ayuvo.health.ui.workouts
 
+import androidx.compose.runtime.DisposableEffect
+
+import androidx.compose.runtime.rememberUpdatedState
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -92,7 +96,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-fun WorkoutsScreen(container: AppContainer, modifier: Modifier = Modifier) {
+fun WorkoutsScreen(
+    container: AppContainer,
+    modifier: Modifier = Modifier,
+    /** True while a full-screen sub-screen (exercise detail) replaces the workouts content. */
+    onSubScreenVisibleChange: (Boolean) -> Unit = {}
+) {
+    val latestSubScreenCallback by rememberUpdatedState(onSubScreenVisibleChange)
+    DisposableEffect(Unit) { onDispose { latestSubScreenCallback(false) } }
     val context = LocalContext.current
     var catalog by remember { mutableStateOf(ExerciseRepository.peek()) }
     LaunchedEffect(Unit) {
@@ -137,6 +148,8 @@ fun WorkoutsScreen(container: AppContainer, modifier: Modifier = Modifier) {
 
     val openItem = vm.openExerciseSnapshot
         ?: vm.openExerciseId?.let { id -> repo.exercises.firstOrNull { it.id == id } }
+    val showingSubScreen = openItem != null
+    LaunchedEffect(showingSubScreen) { latestSubScreenCallback(showingSubScreen) }
     UserExerciseEditorSheet(
         visible = showCreateUserExercise || editingUserExerciseId != null,
         existingItemId = editingUserExerciseId,

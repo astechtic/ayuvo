@@ -23,6 +23,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ShowChart
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,13 +45,17 @@ import androidx.compose.ui.unit.sp
 import com.ayuvo.health.R
 import com.ayuvo.health.ui.theme.AppColors
 
-/** The two segments of the Health tab: the classic Progress charts and the Health Data hub. */
+/**
+ * The segments of the Health tab: the classic Progress charts, the Health Data hub and
+ * Workouts (moved out of the tab bar when Records took its place).
+ */
 enum class HealthTabDestination(
     @StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
     PROGRESS(R.string.health_tab_progress, Icons.AutoMirrored.Filled.ShowChart),
-    HEALTH_DATA(R.string.health_tab_data, Icons.Filled.MonitorHeart)
+    HEALTH_DATA(R.string.health_tab_data, Icons.Filled.MonitorHeart),
+    WORKOUTS(R.string.nav_workouts, Icons.Filled.FitnessCenter)
 }
 
 /**
@@ -117,9 +122,9 @@ internal fun HealthTabSelector(
                                 onClick = { onSelect(destination) },
                                 role = Role.Tab
                             )
-                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                            .padding(horizontal = 8.dp, vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
+                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally)
                     ) {
                         Icon(
                             imageVector = destination.icon,
@@ -129,7 +134,7 @@ internal fun HealthTabSelector(
                         )
                         Text(
                             text = stringResource(destination.labelRes),
-                            fontSize = 15.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,

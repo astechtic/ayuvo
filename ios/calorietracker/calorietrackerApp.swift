@@ -26,6 +26,7 @@ struct calorietrackerApp: App {
     @State private var importedHealthWorkoutStore = ImportedHealthWorkoutStore()
     @State private var cloudBackupService = CloudBackupService()
     @State private var healthDataStore = HealthDataStore()
+    @State private var recordsStore = RecordsStore()
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("appearanceMode") private var appearanceMode = "system"
     @AppStorage("notificationsEnabled") private var notificationsEnabled = false
@@ -74,6 +75,7 @@ struct calorietrackerApp: App {
                         .environment(importedHealthWorkoutStore)
                         .environment(cloudBackupService)
                         .environment(healthDataStore)
+                        .environment(recordsStore)
                 } else {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
                         .environment(notificationManager)
@@ -98,6 +100,16 @@ struct calorietrackerApp: App {
                 AppThemeColor.applyAppIconIfNeeded(for: AppThemeColor.color(for: newValue))
             }
             .onOpenURL { url in
+                // "Open in Ayuvo" (Files, Mail…): PDFs and images import as Health Records.
+                if url.isFileURL {
+                    Task { await recordsStore.importOpenIn(url: url) }
+                    return
+                }
+                // Share extension "Save to Health Records" hand-off.
+                if url.scheme == "ayuvo", url.host == "records-inbox" {
+                    Task { await recordsStore.drainInbox() }
+                    return
+                }
                 guard url.scheme == "ayuvo", url.host == "log-food",
                       let raw = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                         .queryItems?.first(where: { $0.name == "method" })?.value,
@@ -132,6 +144,11 @@ struct calorietrackerApp: App {
                 await cloudBackupService.runSmokeTestIfRequested()
                 await importHealthFixtureIfRequested()
             }
+            .task {
+                // Items shared while Ayuvo was not running.
+                await recordsStore.drainInbox()
+                await importRecordsFixtureIfRequested()
+            }
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
@@ -147,6 +164,7 @@ struct calorietrackerApp: App {
                         foodStore: foodStore, weightStore: weightStore, bodyFatStore: bodyFatStore, profile: profile
                     )
                 }
+                Task { await recordsStore.drainInbox() }
                 if hasCompletedOnboarding {
                     wireUpHealthKit()
                     // Re-wire on every scene-active so the widget refresh callback
@@ -374,6 +392,24 @@ struct calorietrackerApp: App {
         } catch {
             // Fixture problems only matter to the test run; the app carries on normally.
         }
+        #endif
+    }
+
+    /// Debug / UI-test hook: `-ayuvoRecordsFixture <absolute path>[,<path>…]` imports those files
+    /// through the regular Health Records importer (source `import`) so the Records tab can be
+    /// exercised on a simulator without the Files picker. Compiled out of release builds.
+    private func importRecordsFixtureIfRequested() async {
+        #if DEBUG
+        let arguments = CommandLine.arguments
+        guard let index = arguments.firstIndex(of: "-ayuvoRecordsFixture"), arguments.indices.contains(index + 1) else { return }
+        let urls = arguments[index + 1]
+            .split(separator: ",")
+            .map { URL(fileURLWithPath: String($0)) }
+            .filter { FileManager.default.fileExists(atPath: $0.path) }
+        guard !urls.isEmpty, await recordsStore.recordsCountForFixture() == 0 else { return }
+        await recordsStore.importItems(urls.map {
+            RecordImportItem(payload: .file($0), source: .import, importMethod: .filePicker, originalFilename: $0.lastPathComponent)
+        }, announce: false)
         #endif
     }
 

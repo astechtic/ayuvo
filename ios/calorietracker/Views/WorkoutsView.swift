@@ -5,36 +5,55 @@ struct WorkoutsView: View {
     @AppStorage(WorkoutTabMode.storageKey) private var selectedModeRaw = WorkoutTabMode.defaultMode.rawValue
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @State private var workoutLogSession = WorkoutLogSessionState()
+    /// When true the view is a pane of the Health tab: it creates no `NavigationStack` of its
+    /// own, so its `navigationDestination`s register on the Health stack, and it never shows a
+    /// navigation bar above the Health segment selector.
+    private let embedded: Bool
+
+    init(embedded: Bool = false) {
+        self.embedded = embedded
+    }
 
     private var selectedMode: WorkoutTabMode {
         WorkoutTabMode.mode(for: selectedModeRaw)
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if selectedMode == .log {
-                    WorkoutLogView(
-                        session: workoutLogSession,
-                        embedsInNavigationStack: false,
-                        onShowLibrary: { showMode(.library) }
-                    )
-                    .transition(.opacity)
-                } else {
-                    ExerciseLibraryBrowserView(
-                        onShowWorkoutLog: { showMode(.log) }
-                    )
-                    .background(WorkoutsScreenBackground())
-                    .navigationTitle("Workouts")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar(.hidden, for: .navigationBar)
-                    .transition(.opacity)
+        Group {
+            if embedded {
+                modeContent
+            } else {
+                NavigationStack {
+                    modeContent
                 }
             }
         }
         // Refresh static workout theme tokens without replacing this stack or
         // discarding its route and session-only timer state.
         .animation(.easeInOut(duration: 0.2), value: appThemeColorRaw)
+    }
+
+    private var modeContent: some View {
+        Group {
+            if selectedMode == .log {
+                WorkoutLogView(
+                    session: workoutLogSession,
+                    embedsInNavigationStack: false,
+                    showsNavigationBar: !embedded,
+                    onShowLibrary: { showMode(.library) }
+                )
+                .transition(.opacity)
+            } else {
+                ExerciseLibraryBrowserView(
+                    onShowWorkoutLog: { showMode(.log) }
+                )
+                .background(WorkoutsScreenBackground())
+                .navigationTitle("Workouts")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar(.hidden, for: .navigationBar)
+                .transition(.opacity)
+            }
+        }
     }
 
     private func showMode(_ mode: WorkoutTabMode) {

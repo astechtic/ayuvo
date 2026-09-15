@@ -31,6 +31,13 @@ import com.ayuvo.health.data.health.HealthDataStore
 import com.ayuvo.health.data.health.HealthDatabase
 import com.ayuvo.health.data.health.LocalHealthSources
 import com.ayuvo.health.data.health.SqliteHealthDataStore
+import com.ayuvo.health.records.data.RecordFileStore
+import com.ayuvo.health.records.data.RecordsDatabase
+import com.ayuvo.health.records.data.RecordsStore
+import com.ayuvo.health.records.data.SqliteRecordsStore
+import com.ayuvo.health.records.ingest.RecordImporter
+import com.ayuvo.health.records.ingest.RecordsImportCoordinator
+import kotlinx.coroutines.withContext
 import com.ayuvo.health.services.ai.ChatService
 import com.ayuvo.health.services.ai.FoodAnalysisService
 import com.ayuvo.health.services.health.HealthConnectManager
@@ -224,6 +231,23 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         )
     }
     val healthRepository: HealthDataRepository by lazy { HealthDataRepository(healthStore) }
+
+    // -- Health Records (docs/health-records.md) ------------------------------
+    // Lazily opened like the health mirror: nothing touches ayuvo_records.db until the Records
+    // tab, an import or a share intent needs it.
+    val recordFiles: RecordFileStore by lazy { RecordFileStore(app) }
+    private val recordsDatabaseLazy = lazy { RecordsDatabase(app) }
+    val recordsDatabase: RecordsDatabase by recordsDatabaseLazy
+    val recordsStore: RecordsStore by lazy { SqliteRecordsStore(recordsDatabase, recordFiles) }
+    val recordImporter: RecordImporter by lazy { RecordImporter(app, recordsStore, recordFiles) }
+    val recordsImports = RecordsImportCoordinator(scope, { recordImporter }, { recordsStore })
+
+    /** Delete All Data: the records database (+ journal files), originals, thumbnails and caches. */
+    suspend fun deleteRecordsData() = withContext(Dispatchers.IO) {
+        if (recordsDatabaseLazy.isInitialized()) recordsStore.close()
+        RecordsDatabase.deleteDatabaseFiles(appContext)
+        recordFiles.deleteAll()
+    }
 
     private val workoutHealthSync = object : WorkoutHealthSync {
         override suspend fun upsertBurn(session: WorkoutSession): Boolean {

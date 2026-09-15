@@ -2,7 +2,8 @@
    Data extraction rules (API 31+). The Health Data mirror (ayuvo_health.db and its
    journal files) is excluded from both cloud backup and device-to-device transfer:
    it holds heart rate, sleep, blood pressure and other platform health records
-   that must stay on this device. Everything else keeps the default behaviour.
+   that must stay on this device. Health Records (ayuvo_records.db and the ayuvo-records/
+   files root) are excluded the same way. Everything else keeps the default behaviour.
 -->
 <data-extraction-rules>
     <cloud-backup>
@@ -10,11 +11,21 @@
         <exclude domain="database" path="ayuvo_health.db-wal" />
         <exclude domain="database" path="ayuvo_health.db-shm" />
         <exclude domain="database" path="ayuvo_health.db-journal" />
+        <exclude domain="database" path="ayuvo_records.db" />
+        <exclude domain="database" path="ayuvo_records.db-wal" />
+        <exclude domain="database" path="ayuvo_records.db-shm" />
+        <exclude domain="database" path="ayuvo_records.db-journal" />
+        <exclude domain="file" path="ayuvo-records/" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="database" path="ayuvo_health.db" />
         <exclude domain="database" path="ayuvo_health.db-wal" />
         <exclude domain="database" path="ayuvo_health.db-shm" />
         <exclude domain="database" path="ayuvo_health.db-journal" />
+        <exclude domain="database" path="ayuvo_records.db" />
+        <exclude domain="database" path="ayuvo_records.db-wal" />
+        <exclude domain="database" path="ayuvo_records.db-shm" />
+        <exclude domain="database" path="ayuvo_records.db-journal" />
+        <exclude domain="file" path="ayuvo-records/" />
     </device-transfer>
 </data-extraction-rules>
