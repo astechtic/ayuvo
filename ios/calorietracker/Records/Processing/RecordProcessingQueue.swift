@@ -124,6 +124,7 @@ actor RecordProcessingQueue {
         if !didStart {
             didStart = true
             _ = try? await database.backfillProcessingJobsIfNeeded(nowMs: dependencies.now())
+            _ = try? await database.backfillKnowledgeJobsIfNeeded(nowMs: dependencies.now())
             if dependencies.schedulesWakeups {
                 RecordsConnectivity.shared.start()
                 RecordsConnectivity.shared.onReconnect { [weak self] in
@@ -312,6 +313,10 @@ actor RecordProcessingQueue {
             await evaluateReview(record.id)
             return .advance
         case .nearDuplicate: return await runNearDuplicate(record)
+        case .observations:
+            try? await database.syncKnowledge(recordID: record.id, nowMs: dependencies.now())
+            return .advance
+        case .relations: return await runRelations(record)
         case .index:
             try? await database.reindex(recordID: record.id)
             return .advance
@@ -464,6 +469,19 @@ actor RecordProcessingQueue {
         if status != record.reviewStatus {
             try? await database.setReviewStatus(id: id, status, nowMs: dependencies.now())
         }
+    }
+
+    /// §22: suggestions against records within ±180 days (split children are linked at acceptance).
+    private func runRelations(_ record: HealthRecord) async -> Outcome {
+        guard let (profile, candidates, links) = try? await database.relationInputs(recordID: record.id) else { return .advance }
+        let today = dependencies.today()
+        let suggestions = await Task.detached(priority: .utility) {
+            RecordRelationSuggester.suggest(for: profile, candidates: candidates, existingLinks: links, today: today)
+        }.value
+        if !suggestions.isEmpty {
+            _ = try? await database.insertSuggestions(recordID: record.id, suggestions, nowMs: dependencies.now())
+        }
+        return .advance
     }
 
     private func runNearDuplicate(_ record: HealthRecord) async -> Outcome {

@@ -251,7 +251,15 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val recordFiles: RecordFileStore by lazy { RecordFileStore(app) }
     private val recordsDatabaseLazy = lazy { RecordsDatabase(app) }
     val recordsDatabase: RecordsDatabase by recordsDatabaseLazy
-    val recordsStore: RecordsStore by lazy { SqliteRecordsStore(recordsDatabase, recordFiles) }
+    val recordsStore: RecordsStore by lazy { SqliteRecordsStore(recordsDatabase, recordFiles, catalog = { analyteCatalog }) }
+
+    // Phase 3 "Knowledge base": the bundled analyte catalogue (§20), parsed once after units.json.
+    val analyteCatalog: com.ayuvo.health.records.analytes.AnalyteCatalog by lazy {
+        recordRules // installs UnitsCatalog.active first
+        com.ayuvo.health.records.analytes.AnalyteCatalog.parseOrEmpty(
+            runCatching { app.assets.open(com.ayuvo.health.records.analytes.AnalyteCatalog.ASSET_PATH).bufferedReader().use { it.readText() } }.getOrNull()
+        ).also { com.ayuvo.health.records.analytes.AnalyteCatalog.active = it }
+    }
     val recordImporter: RecordImporter by lazy { RecordImporter(app, recordsStore, recordFiles) }
 
     // Phase 2 "Intelligence": background pipeline (docs/health-records.md §9).

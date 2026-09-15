@@ -18,5 +18,6 @@ class RecordsAssetsContractTest {
     }
 
     @Test fun recordTypes() = compare("record_types.json", required = true)
-    @Test fun units() = compare("units.json", required = false)
+    @Test fun units() = compare("units.json", required = true)
+    @Test fun analytes() = compare("analytes.json", required = true)
 }

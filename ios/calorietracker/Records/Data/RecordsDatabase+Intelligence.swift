@@ -273,13 +273,33 @@ extension RecordsDatabase {
             clauses.append("records.id IN (\(Array(repeating: "?", count: ids.count).joined(separator: ", ")))")
             values.append(contentsOf: ids.sorted().map { .text($0) })
         }
+        for entityID in [query.doctorEntityID, query.facilityEntityID].compactMap({ $0 }) {
+            clauses.append("records.id IN (SELECT record_id FROM record_entities WHERE entity_id=?)")
+            values.append(.text(entityID))
+        }
+        let conditions = query.filteringAnalyteConditions
+        if !conditions.isEmpty {
+            let ids = try recordIDs(matching: conditions)
+            guard !ids.isEmpty else { return false }
+            clauses.append("records.id IN (\(Array(repeating: "?", count: ids.count).joined(separator: ", ")))")
+            values.append(contentsOf: ids.sorted().map { .text($0) })
+        }
         return true
     }
 
-    /// Records whose field of `key` contains every folded query word as a word prefix, in order.
+    /// Records whose doctor / facility entity (or, for records without entities yet, field of `key`)
+    /// contains every folded query word as a word prefix, in order.
     func recordIDs(key: RecordFieldKey, prefixMatching name: String) throws -> Set<String> {
         let wanted = RecordsFold.normalizedValue(name).split(separator: " ").map(String.init)
         var ids = Set<String>()
+        let kind: RecordEntityKind = key == .facility ? .facility : .doctor
+        try connection.query(
+            "SELECT re.record_id, e.normalized_name FROM record_entities re JOIN entities e ON e.id=re.entity_id WHERE e.kind=?",
+            [.text(kind.rawValue)]
+        ) { s in
+            guard let id = s.text(0), let normalized = s.text(1) else { return }
+            if Self.wordsPrefixMatch(words: normalized.split(separator: " ").map(String.init), wanted: wanted) { ids.insert(id) }
+        }
         try connection.query(
             "SELECT record_id, value_text FROM record_fields WHERE field_key=? AND state<>'rejected'",
             [.text(key.rawValue)]
@@ -573,6 +593,8 @@ extension RecordsDatabase {
             classification.append(.obj(["record_type": .str(type.rawValue), "confidence": .number(confidence), "method": .str((extraction.typeMethod ?? .rules).rawValue)]))
         }
         try updateDerivedColumnsInTransaction(recordID: recordID, nowMs: nowMs, classification: classification)
+        // §19 promotion in the same transaction as the write rule.
+        try syncKnowledgeInTransaction(recordID: recordID, nowMs: nowMs)
         try reindexInTransaction(recordID: recordID)
     }
 
@@ -644,6 +666,7 @@ extension RecordsDatabase {
                 try confirmDocumentDateIfPrimary(recordID: field.recordID, key: field.key, value: value, nowMs: nowMs)
             }
             try updateDerivedColumnsInTransaction(recordID: field.recordID, nowMs: nowMs)
+            try syncKnowledgeInTransaction(recordID: field.recordID, nowMs: nowMs)
             try reindexInTransaction(recordID: field.recordID)
         }
     }
@@ -672,6 +695,7 @@ extension RecordsDatabase {
                 try confirmDocumentDateIfPrimary(recordID: recordID, key: key, value: trimmed, nowMs: nowMs)
             }
             try updateDerivedColumnsInTransaction(recordID: recordID, nowMs: nowMs)
+            try syncKnowledgeInTransaction(recordID: recordID, nowMs: nowMs)
             try reindexInTransaction(recordID: recordID)
         }
     }
@@ -682,6 +706,7 @@ extension RecordsDatabase {
             try connection.run("UPDATE record_fields SET state='confirmed', updated_ms=? WHERE record_id=? AND state='suggested'", [.int(nowMs), .text(recordID)])
             try connection.run("UPDATE records SET review_status='reviewed', updated_ms=? WHERE id=?", [.int(nowMs), .text(recordID)])
             try updateDerivedColumnsInTransaction(recordID: recordID, nowMs: nowMs)
+            try syncKnowledgeInTransaction(recordID: recordID, nowMs: nowMs)
             try reindexInTransaction(recordID: recordID)
         }
     }
@@ -744,6 +769,7 @@ extension RecordsDatabase {
         try connection.inTransaction {
             try connection.run("UPDATE records SET notes=?, updated_ms=? WHERE id=?", [.optionalText(mergedNotes), .int(nowMs), .text(existingID)])
             try setTagsInTransaction(recordID: existingID, names: mergedTags)
+            try moveLinksInTransaction(from: newID, to: existingID, nowMs: nowMs)
             try reindexInTransaction(recordID: existingID)
         }
     }
@@ -767,6 +793,7 @@ extension RecordsDatabase {
             try connection.run("DELETE FROM record_fields WHERE record_id=? AND state='suggested'", [.text(existingID)])
             try connection.run("DELETE FROM split_proposals WHERE record_id=?", [.text(existingID)])
             try connection.run("DELETE FROM processing_jobs WHERE record_id=?", [.text(existingID)])
+            try syncKnowledgeInTransaction(recordID: existingID, nowMs: nowMs)
             try reindexInTransaction(recordID: existingID)
         }
     }
@@ -795,6 +822,7 @@ extension RecordsDatabase {
         let pages = try pages(recordID: parentID)
         let fields = try fields(recordID: parentID)
         let parentTags = try tags(recordID: parentID)
+        let parentObservations = try observations(recordID: parentID, includeRejected: false)
         var childIDs: [String] = []
         try connection.inTransaction {
             for (index, segment) in segments.enumerated() {
@@ -819,14 +847,19 @@ extension RecordsDatabase {
                     return copy
                 }
                 try replacePagesInTransaction(recordID: childID, pages: childPages)
+                var fieldIDMap: [String: String] = [:]
                 for field in fields where field.sourcePage.map(range.contains) == true && field.state != .rejected {
+                    let newFieldID = UUID().uuidString.lowercased()
+                    fieldIDMap[field.id] = newFieldID
                     try connection.run(
                         "INSERT INTO record_fields (id, record_id, field_key, value_text, value_json, method, confidence, state, source_page, source_bbox, evidence, created_ms, updated_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        [.text(UUID().uuidString.lowercased()), .text(childID), .text(field.key.rawValue), .text(field.valueText), .optionalText(field.valueJSON),
+                        [.text(newFieldID), .text(childID), .text(field.key.rawValue), .text(field.valueText), .optionalText(field.valueJSON),
                          .text(field.method.rawValue), .real(field.confidence), .text(field.state.rawValue), .int(Int64((field.sourcePage ?? 0) - segment.pageStart)),
                          .optionalText(field.sourceBBox), .optionalText(field.evidence), .int(nowMs), .int(nowMs)]
                     )
                 }
+                try copyObservationsInTransaction(from: parentObservations, toChild: childID, pageStart: segment.pageStart, range: range, fieldIDMap: fieldIDMap, nowMs: nowMs)
+                try syncKnowledgeInTransaction(recordID: childID, nowMs: nowMs)
                 if !parentTags.isEmpty { try setTagsInTransaction(recordID: childID, names: parentTags) }
                 try connection.run(
                     "INSERT INTO processing_jobs (record_id, stage, attempts, next_attempt_ms, awaiting_consent, updated_ms) VALUES (?, 'classify', 0, 0, 0, ?)",
@@ -838,6 +871,7 @@ extension RecordsDatabase {
             try connection.run("UPDATE split_proposals SET status='accepted', segments_json=?, updated_ms=? WHERE record_id=?",
                                [.text(RecordSplitProposal.encodeSegments(segments)), .int(nowMs), .text(parentID)])
             try connection.run("UPDATE records SET archived=1, review_status='reviewed', updated_ms=? WHERE id=?", [.int(nowMs), .text(parentID)])
+            try linkSplitInTransaction(parentID: parentID, childIDs: childIDs, nowMs: nowMs)
         }
         return childIDs
     }

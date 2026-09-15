@@ -198,9 +198,9 @@ data class RecordAdvancedFilters(
     /** Inclusive `sort_date` bounds, `yyyy-MM-dd`. */
     val dateFrom: String? = null,
     val dateTo: String? = null,
-    /** Folded prefix of a `doctor_name` field. */
+    /** Name prefix matched against doctor entities (§19; normalized like the entity name). */
     val doctor: String? = null,
-    /** Folded prefix of a `facility` field. */
+    /** Name prefix matched against facility entities (§19). */
     val facility: String? = null,
     val categories: Set<RecordCategory> = emptySet(),
     val types: Set<RecordType> = emptySet(),
@@ -212,12 +212,21 @@ data class RecordAdvancedFilters(
     val favorites: Boolean = false,
     val received: Boolean = false,
     val needsReview: Boolean = false,
-    val archived: Boolean = false
+    val archived: Boolean = false,
+    /** Phase 3: doctor entities picked in the Filters sheet (any of them). */
+    val doctorEntityIds: Set<String> = emptySet(),
+    /** Phase 3: facility entities picked in the Filters sheet (any of them). */
+    val facilityEntityIds: Set<String> = emptySet(),
+    /** Phase 3: records with a matching observation for every condition (§23). */
+    val analyteConditions: List<AnalyteCondition> = emptyList(),
+    /** Phase 3: "Test" filter — records with an observation of any of these analytes. */
+    val analyteIds: Set<String> = emptySet()
 ) {
     /** Count shown on the Filters chip (sheet-owned fields only). */
     val activeCount: Int get() = listOf(
-        dateFrom != null || dateTo != null, doctor != null, facility != null, categories.isNotEmpty(),
-        types.isNotEmpty(), flags.isNotEmpty(), tagIds.isNotEmpty(), aiProcessed, userConfirmed
+        dateFrom != null || dateTo != null, doctor != null || doctorEntityIds.isNotEmpty(),
+        facility != null || facilityEntityIds.isNotEmpty(), categories.isNotEmpty(),
+        types.isNotEmpty(), flags.isNotEmpty(), tagIds.isNotEmpty(), aiProcessed, userConfirmed, analyteIds.isNotEmpty()
     ).count { it }
 
     val isEmpty: Boolean get() = this == RecordAdvancedFilters()
@@ -237,7 +246,11 @@ data class RecordAdvancedFilters(
         favorites = favorites || other.favorites,
         received = received || other.received,
         needsReview = needsReview || other.needsReview,
-        archived = archived || other.archived
+        archived = archived || other.archived,
+        doctorEntityIds = doctorEntityIds + other.doctorEntityIds,
+        facilityEntityIds = facilityEntityIds + other.facilityEntityIds,
+        analyteConditions = (analyteConditions + other.analyteConditions).distinct(),
+        analyteIds = analyteIds + other.analyteIds
     )
 }
 

@@ -4,6 +4,25 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.ayuvo.health.records.ingest.RecordTitles
+import com.ayuvo.health.records.analytes.AnalyteCatalog
+import com.ayuvo.health.records.knowledge.EntityRules
+import com.ayuvo.health.records.knowledge.ObservationRules
+import com.ayuvo.health.records.knowledge.RelationSuggester
+import com.ayuvo.health.records.model.AnalyteCondition
+import com.ayuvo.health.records.model.AnalyteMethod
+import com.ayuvo.health.records.model.EntityKind
+import com.ayuvo.health.records.model.HealthEntity
+import com.ayuvo.health.records.model.LinkKind
+import com.ayuvo.health.records.model.LinkOrigin
+import com.ayuvo.health.records.model.LinkStatus
+import com.ayuvo.health.records.model.NewUserObservation
+import com.ayuvo.health.records.model.Observation
+import com.ayuvo.health.records.model.ObservationEdit
+import com.ayuvo.health.records.model.RecordLink
+import com.ayuvo.health.records.model.RelatedRecord
+import com.ayuvo.health.records.model.ResultFlag
+import com.ayuvo.health.records.model.ValueHit
+import com.ayuvo.health.records.processing.UnitsCatalog
 import com.ayuvo.health.records.model.AiModeUsed
 import com.ayuvo.health.records.model.DateMethod
 import com.ayuvo.health.records.model.DatePrecision
@@ -59,7 +78,9 @@ import java.util.UUID
  */
 class SqliteRecordsStore(
     private val helper: RecordsDatabase,
-    private val files: RecordFileStore
+    private val files: RecordFileStore,
+    /** Analyte catalogue for §20 mapping (the bundled asset in the app, injectable in tests). */
+    private val catalog: () -> AnalyteCatalog = { AnalyteCatalog.active }
 ) : RecordsStore {
 
     private val _revision = MutableStateFlow(0L)
@@ -194,6 +215,8 @@ class SqliteRecordsStore(
                         createdMsOf(database, id)?.let { values.put("sort_date", RecordSortDate.localDay(it)) }
                     }
                     database.update("records", values, "id = ?", arrayOf(id))
+                    // Observed dates follow the record date (§19).
+                    if (patch.documentDate != null || patch.clearDocumentDate) knowledgeIn(database, id)
                     if (patch.title != null || patch.notes != null || patch.recordType != null) reindexIn(database, id)
                 }
             }
@@ -320,6 +343,7 @@ class SqliteRecordsStore(
             }
             database.delete("records", "id = ?", arrayOf(id))
         }
+        deleteOrphanEntities(database)
         val dirs = ids.toMutableSet()
         for (path in paths) {
             val owner = path.substringBefore('/')
@@ -379,7 +403,7 @@ class SqliteRecordsStore(
     override suspend fun fields(recordId: String): List<RecordField> = withContext(Dispatchers.IO) { fieldsIn(db, recordId) }
 
     private fun fieldsIn(database: SQLiteDatabase, recordId: String): List<RecordField> = database.rawQuery(
-        "SELECT $FIELD_COLUMNS FROM record_fields WHERE record_id = ? ORDER BY field_key, source_page, created_ms, id",
+        "SELECT $FIELD_COLUMNS FROM record_fields WHERE record_id = ? ORDER BY field_key, source_page, created_ms, rowid",
         arrayOf(recordId)
     ).use { c -> buildList { while (c.moveToNext()) add(readField(c)) } }
 
@@ -445,6 +469,7 @@ class SqliteRecordsStore(
                     }
                 }
                 deriveColumnsIn(database, id, typeLabel)
+                knowledgeIn(database, id)
                 reindexIn(database, id)
             }
         }
@@ -507,6 +532,7 @@ class SqliteRecordsStore(
                 }
                 database.update("record_fields", values, "id = ?", arrayOf(fieldId))
                 deriveColumnsIn(database, recordId, typeLabel)
+                knowledgeIn(database, recordId)
                 reindexIn(database, recordId)
             }
         }
@@ -530,6 +556,7 @@ class SqliteRecordsStore(
                     put("updated_ms", now)
                 })
                 deriveColumnsIn(database, recordId, typeLabel)
+                knowledgeIn(database, recordId)
                 reindexIn(database, recordId)
             }
         }
@@ -749,6 +776,7 @@ class SqliteRecordsStore(
                 deleteIn(database, listOf(newId))
                 database.delete("record_pages", "record_id = ?", arrayOf(existingId))
                 database.delete("record_highlights", "record_id = ?", arrayOf(existingId))
+                database.delete("observations", "record_id = ? AND state = 'suggested' AND field_id IS NOT NULL", arrayOf(existingId))
                 database.delete("record_fields", "record_id = ? AND state = 'suggested'", arrayOf(existingId))
                 database.delete("split_proposals", "record_id = ?", arrayOf(existingId))
                 database.execSQL(
@@ -772,6 +800,7 @@ class SqliteRecordsStore(
                     put("updated_ms", System.currentTimeMillis())
                 }
                 database.update("records", values, "id = ?", arrayOf(existingId))
+                knowledgeIn(database, existingId)
                 reindexIn(database, existingId)
             }
             if (oldOriginal != null && oldOriginal.name != "original.$ext") oldOriginal.delete()
@@ -797,6 +826,7 @@ class SqliteRecordsStore(
                     "UPDATE duplicate_candidates SET resolution = 'merged' WHERE record_id = ? AND existing_id = ?",
                     arrayOf(newId, existingId)
                 )
+                moveLinksIn(database, fromId = newId, toId = existingId)
                 touch(database, existingId)
                 reindexIn(database, existingId)
                 deleteIn(database, listOf(newId))
@@ -856,6 +886,7 @@ class SqliteRecordsStore(
                 val pages = pagesIn(database, parentId)
                 val fields = fieldsIn(database, parentId)
                 val highlights = highlightsIn(database, parentId)
+                val parentObservations = observationsIn(database, parentId)
                 val tagIds = database.rawQuery("SELECT tag_id FROM record_tags WHERE record_id = ?", arrayOf(parentId))
                     .use { c -> buildList { while (c.moveToNext()) add(c.getString(0)) } }
                 val now = System.currentTimeMillis()
@@ -897,6 +928,12 @@ class SqliteRecordsStore(
                         fieldIdMap[field.id] = newId
                         database.insertOrThrow("record_fields", null, field.copy(id = newId, recordId = childId).toRowValues())
                     }
+                    parentObservations.filter { it.sourcePage != null && it.sourcePage in segment.pageStart..segment.pageEnd }.forEach { o ->
+                        database.insertOrThrow(
+                            "observations", null,
+                            o.copy(id = UUID.randomUUID().toString(), recordId = childId, fieldId = o.fieldId?.let { fieldIdMap[it] }).toValues()
+                        )
+                    }
                     highlights.filter { it.sourcePage != null && it.sourcePage in segment.pageStart..segment.pageEnd }.forEach { h ->
                         database.insertOrThrow("record_highlights", null, ContentValues().apply {
                             put("id", UUID.randomUUID().toString())
@@ -920,7 +957,14 @@ class SqliteRecordsStore(
                         }, SQLiteDatabase.CONFLICT_IGNORE)
                     }
                     database.insertOrThrow("processing_jobs", null, ProcessingJob(recordId = childId, stage = ProcessingStage.CLASSIFY, updatedMs = now).toValues())
+                    rebuildEntitiesIn(database, childId)
                     reindexIn(database, childId)
+                }
+                // §22/§25: accepted split_from links (origin user) parent↔child and sibling↔sibling.
+                val splitPairs = childIds.map { parentId to it } +
+                    childIds.indices.flatMap { i -> (i + 1 until childIds.size).map { j -> childIds[i] to childIds[j] } }
+                for ((x, y) in splitPairs) {
+                    upsertLinkIn(database, x, y, LinkKind.SPLIT_FROM, LinkOrigin.USER, LinkStatus.ACCEPTED, 1.0, emptyList(), now, replace = true)
                 }
                 database.execSQL("UPDATE records SET archived = 1, review_status = 'reviewed', updated_ms = ? WHERE id = ?", arrayOf<Any>(now, parentId))
                 database.execSQL("UPDATE split_proposals SET status = 'accepted', updated_ms = ? WHERE record_id = ?", arrayOf<Any>(now, parentId))
@@ -969,6 +1013,531 @@ class SqliteRecordsStore(
         runCatching { helper.close() }
     }
 
+    // -- Phase 3: knowledge base (§19–§24) ----------------------------------------
+
+    override suspend fun observations(recordId: String): List<Observation> = withContext(Dispatchers.IO) { observationsIn(db, recordId) }
+
+    private fun observationsIn(database: SQLiteDatabase, recordId: String): List<Observation> = database.rawQuery(
+        "SELECT $OBSERVATION_COLUMNS FROM observations WHERE record_id = ? ORDER BY source_page IS NULL, source_page, created_ms, rowid",
+        arrayOf(recordId)
+    ).use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
+
+    private fun observationIn(database: SQLiteDatabase, id: String): Observation? = database.rawQuery(
+        "SELECT $OBSERVATION_COLUMNS FROM observations WHERE id = ?",
+        arrayOf(id)
+    ).use { c -> if (c.moveToFirst()) readObservation(c) else null }
+
+    override suspend fun analyteObservations(analyteId: String, includeExcluded: Boolean): List<Observation> = withContext(Dispatchers.IO) {
+        // Served by idx_observations_trend (analyte_id, observed_date).
+        db.rawQuery(
+            "SELECT $OBSERVATION_COLUMNS FROM observations INDEXED BY idx_observations_trend WHERE analyte_id = ? AND state != 'rejected' " +
+                (if (includeExcluded) "" else "AND excluded_from_trends = 0 ") +
+                "AND observed_date IS NOT NULL ORDER BY observed_date, created_ms",
+            arrayOf(analyteId)
+        ).use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
+    }
+
+    override suspend fun trendsForRecord(recordId: String): Map<String, List<Observation>> = withContext(Dispatchers.IO) {
+        val database = db
+        val ids = database.rawQuery(
+            "SELECT DISTINCT analyte_id FROM observations WHERE record_id = ? AND analyte_id IS NOT NULL AND state != 'rejected'",
+            arrayOf(recordId)
+        ).use { c -> buildList { while (c.moveToNext()) add(c.getString(0)) } }
+        ids.associateWith { analyteId ->
+            database.rawQuery(
+                "SELECT $OBSERVATION_COLUMNS FROM observations INDEXED BY idx_observations_trend WHERE analyte_id = ? AND state != 'rejected' " +
+                    "AND excluded_from_trends = 0 AND observed_date IS NOT NULL ORDER BY observed_date, created_ms",
+                arrayOf(analyteId)
+            ).use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
+        }
+    }
+
+    override suspend fun refreshKnowledge(recordId: String) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                knowledgeIn(database, recordId)
+                reindexIn(database, recordId)
+            }
+        }
+    }
+
+    /** §19 promotion + entity rebuild, inside the caller's transaction. */
+    private fun knowledgeIn(database: SQLiteDatabase, recordId: String) {
+        promoteIn(database, recordId)
+        rebuildEntitiesIn(database, recordId)
+    }
+
+    private fun promoteIn(database: SQLiteDatabase, recordId: String) {
+        val row = database.rawQuery("SELECT document_date, sort_date FROM records WHERE id = ?", arrayOf(recordId)).use { c ->
+            if (c.moveToFirst()) c.getStringOrNull(0) to c.getStringOrNull(1) else null
+        } ?: return
+        val now = System.currentTimeMillis()
+        val existing = observationsIn(database, recordId)
+        val promotion = ObservationRules.promote(
+            fieldsIn(database, recordId), existing, ObservationRules.RecordContext(recordId, row.first, row.second),
+            userAliasesIn(database), now, catalog()
+        ) { UUID.randomUUID().toString() }
+        for ((insert, obs) in promotion.writes()) {
+            if (insert) database.insertOrThrow("observations", null, obs.toValues())
+            else database.update("observations", obs.toValues(), "id = ?", arrayOf(obs.id))
+        }
+    }
+
+    private fun userAliasesIn(database: SQLiteDatabase): Map<String, String> =
+        database.rawQuery("SELECT normalized_name, analyte_id FROM analyte_user_aliases", null).use { c ->
+            buildMap { while (c.moveToNext()) put(c.getString(0), c.getString(1)) }
+        }
+
+    override suspend fun userAliases(): Map<String, String> = withContext(Dispatchers.IO) { userAliasesIn(db) }
+
+    override suspend fun editObservation(observationId: String, edit: ObservationEdit) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                val current = observationIn(database, observationId) ?: return@write
+                val now = System.currentTimeMillis()
+                val result = ObservationRules.edit(current, edit, now, catalog())
+                if (result.error != null) return@write
+                database.update("observations", result.observation.toValues(), "id = ?", arrayOf(observationId))
+                val remapped = edit.setAnalyte && edit.analyteId != null && edit.analyteId != current.analyteId
+                if (remapped && edit.rememberAlias) {
+                    val key = AnalyteCatalog.normalizeTestName(current.rawName)
+                    if (key.isNotEmpty()) {
+                        database.insertWithOnConflict("analyte_user_aliases", null, ContentValues().apply {
+                            put("normalized_name", key)
+                            put("analyte_id", edit.analyteId)
+                            put("created_ms", now)
+                        }, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                }
+                touch(database, current.recordId)
+                reindexIn(database, current.recordId)
+            }
+        }
+    }
+
+    override suspend fun removeObservation(observationId: String) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                val current = observationIn(database, observationId) ?: return@write
+                database.execSQL(
+                    "UPDATE observations SET state = 'rejected', updated_ms = ? WHERE id = ?",
+                    arrayOf<Any>(System.currentTimeMillis(), observationId)
+                )
+                reindexIn(database, current.recordId)
+            }
+        }
+    }
+
+    override suspend fun addObservation(input: NewUserObservation): Observation? {
+        if (input.valueText.isBlank()) return null
+        return withContext(Dispatchers.IO) {
+            write { database ->
+                val record = database.rawQuery("SELECT document_date, sort_date FROM records WHERE id = ?", arrayOf(input.recordId)).use { c ->
+                    if (c.moveToFirst()) c.getStringOrNull(0) to c.getStringOrNull(1) else null
+                } ?: return@write null
+                val now = System.currentTimeMillis()
+                // Default date = the record's observed date (§24); an explicit date is user-owned.
+                val observed = ObservationRules.observedDate(ObservationRules.RecordContext(input.recordId, record.first, record.second), fieldsIn(database, input.recordId))
+                val obs = ObservationRules.newUserObservation(input, UUID.randomUUID().toString(), catalog(), observed, now)
+                database.insertOrThrow("observations", null, obs.toValues())
+                touch(database, input.recordId)
+                reindexIn(database, input.recordId)
+                obs
+            }
+        }
+    }
+
+    override suspend fun applyUserAlias(rawName: String, analyteId: String): Int = withContext(Dispatchers.IO) {
+        write { database ->
+            val targets = database.rawQuery(
+                "SELECT $OBSERVATION_COLUMNS FROM observations WHERE analyte_id IS NULL AND state != 'rejected'",
+                null
+            ).use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
+            val result = ObservationRules.applyUserAlias(targets, rawName, analyteId, System.currentTimeMillis(), catalog())
+            if (result.error != null) return@write 0
+            val updated = result.observations.filter { it.id in result.updatedIds }
+            for (o in updated) database.update("observations", o.toValues(), "id = ?", arrayOf(o.id))
+            updated.map { it.recordId }.distinct().forEach { reindexIn(database, it) }
+            updated.size
+        }
+    }
+
+    override suspend fun unmappedWithName(rawName: String): Int = withContext(Dispatchers.IO) {
+        val key = AnalyteCatalog.normalizeTestName(rawName)
+        db.rawQuery("SELECT raw_name FROM observations WHERE analyte_id IS NULL AND state != 'rejected'", null).use { c ->
+            var n = 0
+            while (c.moveToNext()) if (key in AnalyteCatalog.testNameKeys(c.getString(0))) n++
+            n
+        }
+    }
+
+    // Entities
+
+    private fun rebuildEntitiesIn(database: SQLiteDatabase, recordId: String) {
+        database.delete("record_entities", "record_id = ?", arrayOf(recordId))
+        val now = System.currentTimeMillis()
+        val rebuild = EntityRules.rebuild(fieldsIn(database, recordId))
+        val ids = HashMap<Pair<EntityKind, String>, String>()
+        for (ref in rebuild.entities) {
+            val existing = database.rawQuery(
+                "SELECT id, specialty FROM entities WHERE kind = ? AND normalized_name = ?",
+                arrayOf(ref.kind.raw, ref.normalizedName)
+            ).use { c -> if (c.moveToFirst()) c.getString(0) to c.getStringOrNull(1) else null }
+            // Upsert by (kind, normalized_name): an existing display name is kept, a NULL specialty filled.
+            val entityId = existing?.first ?: UUID.randomUUID().toString().also { id ->
+                database.insertOrThrow("entities", null, ContentValues().apply {
+                    put("id", id)
+                    put("kind", ref.kind.raw)
+                    put("display_name", ref.displayName)
+                    put("normalized_name", ref.normalizedName)
+                    ref.specialty?.let { put("specialty", it) }
+                    put("created_ms", now)
+                    put("updated_ms", now)
+                })
+            }
+            if (existing != null && existing.second == null && ref.specialty != null) {
+                database.execSQL("UPDATE entities SET specialty = ?, updated_ms = ? WHERE id = ?", arrayOf<Any>(ref.specialty, now, entityId))
+            }
+            ids[ref.kind to ref.normalizedName] = entityId
+        }
+        for (link in rebuild.recordEntities) {
+            val entityId = ids[link.kind to link.normalizedName] ?: continue
+            database.insertWithOnConflict("record_entities", null, ContentValues().apply {
+                put("record_id", recordId)
+                put("entity_id", entityId)
+                put("role", link.role)
+            }, SQLiteDatabase.CONFLICT_IGNORE)
+        }
+        deleteOrphanEntities(database)
+    }
+
+    private fun deleteOrphanEntities(database: SQLiteDatabase) {
+        database.execSQL("DELETE FROM entities WHERE id NOT IN (SELECT entity_id FROM record_entities)")
+    }
+
+    override suspend fun entities(kind: EntityKind): List<HealthEntity> = withContext(Dispatchers.IO) {
+        db.rawQuery(
+            "SELECT e.id, e.kind, e.display_name, e.normalized_name, e.specialty, COUNT(DISTINCT re.record_id) AS n " +
+                "FROM entities e JOIN record_entities re ON re.entity_id = e.id JOIN records r ON r.id = re.record_id " +
+                "WHERE e.kind = ? AND r.archived = 0 GROUP BY e.id ORDER BY n DESC, e.display_name COLLATE NOCASE",
+            arrayOf(kind.raw)
+        ).use { c -> buildList { while (c.moveToNext()) add(readEntity(c, c.getInt(5))) } }
+    }
+
+    override suspend fun recordEntities(recordId: String): List<Pair<HealthEntity, String>> = withContext(Dispatchers.IO) {
+        db.rawQuery(
+            "SELECT e.id, e.kind, e.display_name, e.normalized_name, e.specialty, re.role FROM record_entities re " +
+                "JOIN entities e ON e.id = re.entity_id WHERE re.record_id = ? ORDER BY re.role",
+            arrayOf(recordId)
+        ).use { c -> buildList { while (c.moveToNext()) add(readEntity(c, 0) to c.getString(5)) } }
+    }
+
+    private fun readEntity(c: Cursor, count: Int) = HealthEntity(
+        id = c.getString(0),
+        kind = EntityKind.fromRaw(c.getString(1)),
+        displayName = c.getString(2),
+        normalizedName = c.getString(3),
+        specialty = c.getStringOrNull(4),
+        recordCount = count
+    )
+
+    // Links
+
+    private fun linkIn(database: SQLiteDatabase, x: String, y: String): RecordLink? {
+        val (a, b) = RecordLink.pair(x, y)
+        return database.rawQuery("SELECT $LINK_COLUMNS FROM record_links WHERE a_id = ? AND b_id = ?", arrayOf(a, b))
+            .use { c -> if (c.moveToFirst()) readLink(c) else null }
+    }
+
+    private fun upsertLinkIn(
+        database: SQLiteDatabase,
+        x: String,
+        y: String,
+        kind: LinkKind,
+        origin: LinkOrigin,
+        status: LinkStatus,
+        score: Double,
+        reasons: List<String>,
+        now: Long,
+        replace: Boolean
+    ) {
+        if (x == y) return
+        val (a, b) = RecordLink.pair(x, y)
+        val existing = linkIn(database, a, b)
+        if (existing != null && !replace) return
+        database.insertWithOnConflict("record_links", null, ContentValues().apply {
+            put("a_id", a)
+            put("b_id", b)
+            put("kind", kind.raw)
+            put("origin", origin.raw)
+            put("status", status.raw)
+            put("score", score)
+            put("reasons_json", RecordJsonList.encode(reasons))
+            put("created_ms", existing?.createdMs ?: now)
+            put("updated_ms", now)
+        }, SQLiteDatabase.CONFLICT_REPLACE)
+    }
+
+    override suspend fun related(recordId: String): List<RelatedRecord> = withContext(Dispatchers.IO) {
+        val database = db
+        val links = database.rawQuery(
+            "SELECT $LINK_COLUMNS FROM record_links WHERE (a_id = ? OR b_id = ?) AND status != 'rejected'",
+            arrayOf(recordId, recordId)
+        ).use { c -> buildList { while (c.moveToNext()) add(readLink(c)) } }
+        val others = links.map { it.other(recordId) }.distinct().chunked(500).flatMap { chunk ->
+            database.rawQuery("SELECT $COLUMNS FROM records WHERE id IN (${chunk.joinToString(",") { "?" }})", chunk.toTypedArray()).use { it.readAll() }
+        }.associateBy { it.id }
+        links.mapNotNull { link -> others[link.other(recordId)]?.let { RelatedRecord(link, it) } }
+            .sortedWith(
+                compareBy<RelatedRecord> { if (it.link.isLinked) 0 else 1 }
+                    .thenByDescending { if (it.link.isLinked) it.record.sortDate else "" }
+                    .thenByDescending { it.link.score }
+                    .thenByDescending { it.record.sortDate }
+            )
+    }
+
+    override suspend fun link(a: String, b: String, kind: LinkKind) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                val exists = database.rawQuery("SELECT COUNT(*) FROM records WHERE id IN (?, ?)", arrayOf(a, b)).use { c -> c.moveToFirst() && c.getInt(0) == 2 }
+                if (!exists) return@write
+                upsertLinkIn(database, a, b, kind, LinkOrigin.USER, LinkStatus.ACCEPTED, 1.0, emptyList(), System.currentTimeMillis(), replace = true)
+            }
+        }
+    }
+
+    override suspend fun unlink(a: String, b: String) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                val existing = linkIn(database, a, b) ?: return@write
+                val (x, y) = RecordLink.pair(a, b)
+                if (existing.origin == LinkOrigin.USER) {
+                    database.delete("record_links", "a_id = ? AND b_id = ?", arrayOf(x, y))
+                } else {
+                    database.execSQL("UPDATE record_links SET status = 'rejected', updated_ms = ? WHERE a_id = ? AND b_id = ?", arrayOf<Any>(System.currentTimeMillis(), x, y))
+                }
+            }
+        }
+    }
+
+    override suspend fun acceptLink(a: String, b: String) = setLinkStatus(a, b, LinkStatus.ACCEPTED)
+    override suspend fun rejectLink(a: String, b: String) = setLinkStatus(a, b, LinkStatus.REJECTED)
+
+    private suspend fun setLinkStatus(a: String, b: String, status: LinkStatus) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                val (x, y) = RecordLink.pair(a, b)
+                database.execSQL(
+                    "UPDATE record_links SET status = ?, updated_ms = ? WHERE a_id = ? AND b_id = ? AND origin = 'suggested'",
+                    arrayOf<Any>(status.raw, System.currentTimeMillis(), x, y)
+                )
+            }
+        }
+    }
+
+    private fun moveLinksIn(database: SQLiteDatabase, fromId: String, toId: String) {
+        val links = database.rawQuery("SELECT $LINK_COLUMNS FROM record_links WHERE a_id = ? OR b_id = ?", arrayOf(fromId, fromId))
+            .use { c -> buildList { while (c.moveToNext()) add(readLink(c)) } }
+        val now = System.currentTimeMillis()
+        // §25: links move to the kept record; self-links dropped; on a collision the stronger row wins
+        // (user or accepted > suggested > rejected).
+        fun rank(l: RecordLink) = when {
+            l.origin == LinkOrigin.USER || l.status == LinkStatus.ACCEPTED -> 2
+            l.status == LinkStatus.SUGGESTED -> 1
+            else -> 0
+        }
+        for (link in links) {
+            val other = link.other(fromId)
+            if (other == toId) continue
+            val existing = linkIn(database, toId, other)
+            if (existing != null && rank(existing) >= rank(link)) continue
+            upsertLinkIn(database, toId, other, link.kind, link.origin, link.status, link.score, link.reasons, now, replace = true)
+        }
+    }
+
+    override suspend fun suggestRelations(recordId: String, today: LocalDate): Int = withContext(Dispatchers.IO) {
+        write { database ->
+            val target = factsIn(database, listOf(recordId)).firstOrNull() ?: return@write 0
+            val date = runCatching { LocalDate.parse(target.sortDate) }.getOrNull() ?: return@write 0
+            val from = date.minusDays(RelationSuggester.WINDOW_DAYS).toString()
+            val to = date.plusDays(RelationSuggester.WINDOW_DAYS).toString()
+            // Candidates by idx_records_timeline range on sort_date.
+            val candidateIds = database.rawQuery(
+                "SELECT id FROM records WHERE sort_date >= ? AND sort_date <= ? AND id != ? ORDER BY sort_date DESC LIMIT 2000",
+                arrayOf(from, to, recordId)
+            ).use { c -> buildList { while (c.moveToNext()) add(c.getString(0)) } }
+            val existing = database.rawQuery("SELECT a_id, b_id, status FROM record_links WHERE a_id = ? OR b_id = ?", arrayOf(recordId, recordId))
+                .use { c -> buildList { while (c.moveToNext()) add(RelationSuggester.ExistingLink(c.getString(0), c.getString(1), c.getString(2))) } }
+            val suggestions = RelationSuggester.suggest(target, factsIn(database, candidateIds), existing)
+            val now = System.currentTimeMillis()
+            for (s in suggestions) {
+                upsertLinkIn(database, s.aId, s.bId, LinkKind.fromRaw(s.kind), LinkOrigin.SUGGESTED, LinkStatus.SUGGESTED, s.score, s.reasons, now, replace = false)
+            }
+            suggestions.size
+        }
+    }
+
+    /** §22 facts for [ids] in a few grouped queries. */
+    private fun factsIn(database: SQLiteDatabase, ids: List<String>): List<RelationSuggester.RecordFacts> {
+        if (ids.isEmpty()) return emptyList()
+        val out = mutableListOf<RelationSuggester.RecordFacts>()
+        for (chunk in ids.chunked(400)) {
+            val marks = chunk.joinToString(",") { "?" }
+            val args = chunk.toTypedArray()
+            val records = database.rawQuery(
+                "SELECT id, record_type, sort_date, archived, EXISTS (SELECT 1 FROM records c WHERE c.parent_id = records.id) FROM records WHERE id IN ($marks)",
+                args
+            ).use { c -> buildList { while (c.moveToNext()) add(arrayOf<Any?>(c.getString(0), c.getString(1), c.getString(2), c.getInt(3) != 0, c.getInt(4) != 0)) } }
+            val fields = database.rawQuery(
+                "SELECT $FIELD_COLUMNS FROM record_fields WHERE record_id IN ($marks) AND field_key IN ('report_name', 'follow_up_date', 'test_result') ORDER BY field_key, source_page, created_ms, id",
+                args
+            ).use { c -> buildList { while (c.moveToNext()) add(readField(c)) } }.groupBy { it.recordId }
+            val analytes = database.rawQuery(
+                "SELECT record_id, analyte_id FROM observations WHERE record_id IN ($marks) AND analyte_id IS NOT NULL AND state != 'rejected' ORDER BY created_ms",
+                args
+            ).use { c -> buildList { while (c.moveToNext()) add(c.getString(0) to c.getString(1)) } }.groupBy({ it.first }, { it.second })
+            val entities = database.rawQuery(
+                "SELECT re.record_id, e.kind, e.normalized_name FROM record_entities re JOIN entities e ON e.id = re.entity_id WHERE re.record_id IN ($marks)",
+                args
+            ).use { c -> buildList { while (c.moveToNext()) add(Triple(c.getString(0), c.getString(1), c.getString(2))) } }.groupBy { it.first }
+            val cat = catalog()
+            for (r in records) {
+                val id = r[0] as String
+                val f = fields[id].orEmpty()
+                val ents = entities[id].orEmpty()
+                out += RelationSuggester.RecordFacts(
+                    id = id,
+                    recordType = r[1] as String,
+                    sortDate = r[2] as String,
+                    archived = r[3] as Boolean,
+                    splitParent = r[4] as Boolean,
+                    panels = ObservationRules.recordPanels(f, cat),
+                    reportName = ExtractionWriter.best(f, FieldKey.REPORT_NAME)?.valueText,
+                    analytes = analytes[id].orEmpty().distinct(),
+                    doctors = ents.filter { it.second == "doctor" }.map { it.third }.distinct(),
+                    facilities = ents.filter { it.second == "facility" }.map { it.third }.distinct(),
+                    followUpDates = f.filter { it.key == FieldKey.FOLLOW_UP_DATE && it.state != FieldState.REJECTED }.map { it.valueText }
+                )
+            }
+        }
+        return out
+    }
+
+    override suspend fun acceptedLinksAmong(ids: Collection<String>): List<RecordLink> = withContext(Dispatchers.IO) {
+        if (ids.size < 2) return@withContext emptyList()
+        val set = ids.toSet()
+        ids.distinct().chunked(400).flatMap { chunk ->
+            val marks = chunk.joinToString(",") { "?" }
+            db.rawQuery(
+                "SELECT $LINK_COLUMNS FROM record_links WHERE status = 'accepted' AND (a_id IN ($marks) OR b_id IN ($marks))",
+                (chunk + chunk).toTypedArray()
+            ).use { c -> buildList { while (c.moveToNext()) add(readLink(c)) } }
+        }.filter { it.aId in set && it.bId in set }.distinctBy { it.aId to it.bId }
+    }
+
+    override suspend fun valueHits(conditions: List<AnalyteCondition>, analyteIds: List<String>, limit: Int): List<ValueHit> = withContext(Dispatchers.IO) {
+        val database = db
+        val rows = LinkedHashMap<String, Observation>()
+        val perQuery = limit.coerceAtLeast(1)
+        val queries = conditions.map { RecordsQuerySql.observationCondition(it, "o") } +
+            analyteIds.filter { id -> conditions.none { it.analyteId == id } }
+                .map { RecordsQuerySql.observationCondition(AnalyteCondition(it), "o") }
+        for (q in queries) {
+            database.rawQuery(
+                "SELECT ${OBSERVATION_COLUMNS.split(", ").joinToString(", ") { "o.$it" }} FROM observations o JOIN records r ON r.id = o.record_id " +
+                    "WHERE r.archived = 0 AND ${q.sql} ORDER BY o.observed_date DESC, o.created_ms DESC LIMIT ?",
+                (q.args + perQuery.toString()).toTypedArray()
+            ).use { c -> while (c.moveToNext()) readObservation(c).let { rows.putIfAbsent(it.id, it) } }
+        }
+        val records = rows.values.map { it.recordId }.distinct().chunked(500).flatMap { chunk ->
+            database.rawQuery("SELECT $COLUMNS FROM records WHERE id IN (${chunk.joinToString(",") { "?" }})", chunk.toTypedArray()).use { it.readAll() }
+        }.associateBy { it.id }
+        val cat = catalog()
+        rows.values
+            .sortedWith(compareByDescending<Observation> { it.observedDate ?: "" }.thenByDescending { it.createdMs })
+            .mapNotNull { o -> records[o.recordId]?.let { ValueHit(o, cat.displayName(o.analyteId) ?: o.rawName, it) } }
+            .take(limit)
+    }
+
+    override suspend fun recordIdsNeedingKnowledge(): List<String> = withContext(Dispatchers.IO) {
+        db.rawQuery(
+            "SELECT id FROM records r WHERE EXISTS (SELECT 1 FROM record_fields f WHERE f.record_id = r.id AND f.field_key IN ('test_result', 'doctor_name', 'facility')) " +
+                "AND NOT EXISTS (SELECT 1 FROM observations o WHERE o.record_id = r.id) " +
+                "AND NOT EXISTS (SELECT 1 FROM record_entities e WHERE e.record_id = r.id) ORDER BY sort_date DESC",
+            null
+        ).use { c -> buildList { while (c.moveToNext()) add(c.getString(0)) } }
+    }
+
+    private fun Observation.toValues() = ContentValues().apply {
+        put("id", id)
+        put("record_id", recordId)
+        if (fieldId != null) put("field_id", fieldId) else putNull("field_id")
+        if (analyteId != null) put("analyte_id", analyteId) else putNull("analyte_id")
+        if (analyteMethod != null) put("analyte_method", analyteMethod.raw) else putNull("analyte_method")
+        put("raw_name", rawName)
+        if (valueNum != null) put("value_num", valueNum) else putNull("value_num")
+        put("value_text", valueText)
+        if (unit != null) put("unit", unit) else putNull("unit")
+        if (canonicalValue != null) put("canonical_value", canonicalValue) else putNull("canonical_value")
+        if (canonicalUnit != null) put("canonical_unit", canonicalUnit) else putNull("canonical_unit")
+        if (refLow != null) put("ref_low", refLow) else putNull("ref_low")
+        if (refHigh != null) put("ref_high", refHigh) else putNull("ref_high")
+        if (refText != null) put("ref_text", refText) else putNull("ref_text")
+        put("flag", flag.raw)
+        if (observedDate != null) put("observed_date", observedDate) else putNull("observed_date")
+        if (observedDateMethod != null) put("observed_date_method", observedDateMethod) else putNull("observed_date_method")
+        put("method", method.raw)
+        put("confidence", confidence)
+        put("state", state.raw)
+        if (sourcePage != null) put("source_page", sourcePage) else putNull("source_page")
+        if (sourceBbox != null) put("source_bbox", sourceBbox) else putNull("source_bbox")
+        if (evidence != null) put("evidence", evidence) else putNull("evidence")
+        put("excluded_from_trends", if (excludedFromTrends) 1 else 0)
+        put("created_ms", createdMs)
+        put("updated_ms", updatedMs)
+    }
+
+    private fun readObservation(c: Cursor) = Observation(
+        id = c.getString(0),
+        recordId = c.getString(1),
+        fieldId = c.getStringOrNull(2),
+        analyteId = c.getStringOrNull(3),
+        analyteMethod = AnalyteMethod.fromRaw(c.getStringOrNull(4)),
+        rawName = c.getString(5),
+        valueNum = if (c.isNull(6)) null else c.getDouble(6),
+        valueText = c.getString(7),
+        unit = c.getStringOrNull(8),
+        canonicalValue = if (c.isNull(9)) null else c.getDouble(9),
+        canonicalUnit = c.getStringOrNull(10),
+        refLow = if (c.isNull(11)) null else c.getDouble(11),
+        refHigh = if (c.isNull(12)) null else c.getDouble(12),
+        refText = c.getStringOrNull(13),
+        flag = ResultFlag.fromRaw(c.getStringOrNull(14)),
+        observedDate = c.getStringOrNull(15),
+        observedDateMethod = c.getStringOrNull(16),
+        method = ExtractionMethod.fromRaw(c.getString(17)),
+        confidence = c.getDouble(18),
+        state = FieldState.fromRaw(c.getString(19)),
+        sourcePage = c.getIntOrNull(20),
+        sourceBbox = c.getStringOrNull(21),
+        evidence = c.getStringOrNull(22),
+        excludedFromTrends = c.getInt(23) != 0,
+        createdMs = c.getLong(24),
+        updatedMs = c.getLong(25)
+    )
+
+    private fun readLink(c: Cursor) = RecordLink(
+        aId = c.getString(0),
+        bId = c.getString(1),
+        kind = LinkKind.fromRaw(c.getString(2)),
+        origin = LinkOrigin.fromRaw(c.getString(3)),
+        status = LinkStatus.fromRaw(c.getString(4)),
+        score = c.getDouble(5),
+        reasons = RecordJsonList.decode(c.getStringOrNull(6)),
+        createdMs = c.getLong(7),
+        updatedMs = c.getLong(8)
+    )
+
     // -- FTS ------------------------------------------------------------------
 
     /** Rebuilds the single FTS row for [recordId] from the §17 columns. */
@@ -989,7 +1558,11 @@ class SqliteRecordsStore(
             tagNames = tagNames,
             pageTexts = pageTexts,
             fields = fieldsIn(database, recordId),
-            highlights = highlightsIn(database, recordId)
+            highlights = highlightsIn(database, recordId),
+            analyteNames = observationsIn(database, recordId)
+                .filter { it.state != FieldState.REJECTED }
+                .mapNotNull { catalog().displayName(it.analyteId) }
+                .distinct()
         )
         database.delete("records_fts", "docid = ?", arrayOf(record.seq.toString()))
         database.execSQL(
@@ -1210,5 +1783,9 @@ class SqliteRecordsStore(
 
         const val FIELD_COLUMNS = "id, record_id, field_key, value_text, value_json, method, confidence, state, source_page, source_bbox, evidence, created_ms, updated_ms"
         const val HIGHLIGHT_COLUMNS = "id, record_id, section, text, method, provider, field_id, source_page, confidence, dismissed, position, created_ms"
+        const val OBSERVATION_COLUMNS = "id, record_id, field_id, analyte_id, analyte_method, raw_name, value_num, value_text, unit, " +
+            "canonical_value, canonical_unit, ref_low, ref_high, ref_text, flag, observed_date, observed_date_method, method, " +
+            "confidence, state, source_page, source_bbox, evidence, excluded_from_trends, created_ms, updated_ms"
+        const val LINK_COLUMNS = "a_id, b_id, kind, origin, status, score, reasons_json, created_ms, updated_ms"
     }
 }

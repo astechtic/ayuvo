@@ -6,7 +6,7 @@ import Foundation
 /// statement-for-statement and column-for-column. A fresh install runs v1 then each migration.
 nonisolated enum RecordsSchema {
     /// Latest `PRAGMA user_version` / `records_meta.schema_version`.
-    static let schemaVersion = 2
+    static let schemaVersion = 3
     static let baseVersion = 1
 
     nonisolated struct Migration: Sendable {
@@ -19,12 +19,15 @@ nonisolated enum RecordsSchema {
     static let tableNames: [String] = [
         "records", "record_pages", "tags", "record_tags", "records_fts", "records_meta",
         "record_fields", "record_highlights", "processing_jobs", "duplicate_candidates", "split_proposals",
+        "observations", "analyte_user_aliases", "entities", "record_entities", "record_links",
     ]
 
     static let indexNames: [String] = [
         "idx_records_timeline", "idx_records_checksum", "idx_records_parent", "idx_records_type", "idx_record_tags_tag",
         "idx_records_status", "idx_records_review", "idx_record_fields_record", "idx_record_fields_key_value",
         "idx_record_highlights_record", "idx_processing_jobs_next",
+        "idx_observations_trend", "idx_observations_record", "idx_observations_field", "idx_entities_kind_name",
+        "idx_record_entities_entity", "idx_record_links_b",
     ]
 
     static let migrations: [Migration] = [
@@ -101,6 +104,79 @@ nonisolated enum RecordsSchema {
               created_ms INTEGER NOT NULL,
               updated_ms INTEGER NOT NULL)
             """,
+        ]),
+        Migration(version: 3, fileName: "003_knowledge.sql", statements: [
+            """
+            CREATE TABLE observations (
+              id TEXT PRIMARY KEY NOT NULL,
+              record_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+              field_id TEXT REFERENCES record_fields(id) ON DELETE SET NULL,
+              analyte_id TEXT,
+              analyte_method TEXT,
+              raw_name TEXT NOT NULL,
+              value_num REAL,
+              value_text TEXT NOT NULL,
+              unit TEXT,
+              canonical_value REAL,
+              canonical_unit TEXT,
+              ref_low REAL,
+              ref_high REAL,
+              ref_text TEXT,
+              flag TEXT NOT NULL DEFAULT 'unknown',
+              observed_date TEXT,
+              observed_date_method TEXT,
+              method TEXT NOT NULL,
+              confidence REAL NOT NULL DEFAULT 0,
+              state TEXT NOT NULL DEFAULT 'suggested',
+              source_page INTEGER,
+              source_bbox TEXT,
+              evidence TEXT,
+              excluded_from_trends INTEGER NOT NULL DEFAULT 0,
+              created_ms INTEGER NOT NULL,
+              updated_ms INTEGER NOT NULL)
+            """,
+            "CREATE INDEX idx_observations_trend ON observations(analyte_id, observed_date)",
+            "CREATE INDEX idx_observations_record ON observations(record_id)",
+            "CREATE INDEX idx_observations_field ON observations(field_id)",
+            """
+            CREATE TABLE analyte_user_aliases (
+              normalized_name TEXT PRIMARY KEY NOT NULL,
+              analyte_id TEXT NOT NULL,
+              created_ms INTEGER NOT NULL)
+            """,
+            """
+            CREATE TABLE entities (
+              id TEXT PRIMARY KEY NOT NULL,
+              kind TEXT NOT NULL,
+              display_name TEXT NOT NULL,
+              normalized_name TEXT NOT NULL,
+              specialty TEXT,
+              created_ms INTEGER NOT NULL,
+              updated_ms INTEGER NOT NULL)
+            """,
+            "CREATE UNIQUE INDEX idx_entities_kind_name ON entities(kind, normalized_name)",
+            """
+            CREATE TABLE record_entities (
+              record_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+              entity_id TEXT NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
+              role TEXT NOT NULL,
+              PRIMARY KEY (record_id, entity_id, role))
+            """,
+            "CREATE INDEX idx_record_entities_entity ON record_entities(entity_id, role)",
+            """
+            CREATE TABLE record_links (
+              a_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+              b_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+              kind TEXT NOT NULL,
+              origin TEXT NOT NULL,
+              status TEXT NOT NULL,
+              score REAL NOT NULL DEFAULT 0,
+              reasons_json TEXT,
+              created_ms INTEGER NOT NULL,
+              updated_ms INTEGER NOT NULL,
+              PRIMARY KEY (a_id, b_id))
+            """,
+            "CREATE INDEX idx_record_links_b ON record_links(b_id)",
         ]),
     ]
 

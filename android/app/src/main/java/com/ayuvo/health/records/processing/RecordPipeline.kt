@@ -211,12 +211,21 @@ class RecordPipeline(
                     )
                     ProcessingStage.REVIEW
                 }
+                ProcessingStage.OBSERVATIONS -> {
+                    // §19 promotion + mapping (also done inside applyExtraction; re-run for aliases and dates).
+                    s.refreshKnowledge(recordId)
+                    ProcessingStage.RELATIONS
+                }
                 ProcessingStage.REVIEW -> {
                     evaluateReview(recordId)
                     ProcessingStage.NEAR_DUPLICATE
                 }
                 ProcessingStage.NEAR_DUPLICATE -> {
                     runCatching { nearDuplicates(record) }.onFailure { if (it is CancellationException) throw it }
+                    ProcessingStage.OBSERVATIONS
+                }
+                ProcessingStage.RELATIONS -> {
+                    runCatching { s.suggestRelations(recordId, today()) }.onFailure { if (it is CancellationException) throw it }
                     ProcessingStage.INDEX
                 }
                 ProcessingStage.INDEX -> {
@@ -398,6 +407,19 @@ class RecordPipeline(
         }
     } finally {
         recycle()
+    }
+
+    /**
+     * One-time Phase 3 backfill for a record processed before v3: promotion, entities, relation
+     * suggestions and the FTS row, without re-running text or rules.
+     */
+    suspend fun backfillKnowledge(recordId: String) = lock.withLock {
+        withContext(Dispatchers.IO) {
+            val s = store()
+            if (s.record(recordId) == null) return@withContext
+            s.refreshKnowledge(recordId)
+            runCatching { s.suggestRelations(recordId, today()) }
+        }
     }
 
     /** Recomputes `review_status` (§15); an explicit `reviewed` survives unless something new is pending. */

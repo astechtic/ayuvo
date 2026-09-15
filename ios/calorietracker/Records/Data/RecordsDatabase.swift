@@ -20,11 +20,14 @@ actor RecordsDatabase {
     private(set) var isClosed = false
     /// Zone for the `sort_date` fallback day; tests pin it.
     nonisolated let timeZone: TimeZone
+    /// Analyte catalog used for mapping, conversion and FTS names (tests inject a small one).
+    nonisolated let catalog: AnalyteCatalog
 
-    private init(connection: HealthDBConnection, url: URL?, timeZone: TimeZone) {
+    private init(connection: HealthDBConnection, url: URL?, timeZone: TimeZone, catalog: AnalyteCatalog) {
         self.connection = connection
         self.url = url
         self.timeZone = timeZone
+        self.catalog = catalog
     }
 
     // MARK: - Opening
@@ -34,11 +37,12 @@ actor RecordsDatabase {
         url: URL,
         fileManager: FileManager = .default,
         timeZone: TimeZone = .current,
-        targetVersion: Int = RecordsSchema.schemaVersion
+        targetVersion: Int = RecordsSchema.schemaVersion,
+        catalog: AnalyteCatalog = .shared
     ) async throws -> RecordsDatabase {
         try RecordsLocation.prepareDirectory(url.deletingLastPathComponent(), fileManager: fileManager)
         let connection = try HealthDBConnection(path: url.path, readOnly: false, fileProtection: true)
-        let database = RecordsDatabase(connection: connection, url: url, timeZone: timeZone)
+        let database = RecordsDatabase(connection: connection, url: url, timeZone: timeZone, catalog: catalog)
         try await database.configure(targetVersion: targetVersion)
         return database
     }
@@ -54,9 +58,9 @@ actor RecordsDatabase {
         }
     }
 
-    nonisolated static func inMemory(timeZone: TimeZone = .current, targetVersion: Int = RecordsSchema.schemaVersion) async throws -> RecordsDatabase {
+    nonisolated static func inMemory(timeZone: TimeZone = .current, targetVersion: Int = RecordsSchema.schemaVersion, catalog: AnalyteCatalog = .shared) async throws -> RecordsDatabase {
         let connection = try HealthDBConnection(path: ":memory:", readOnly: false, fileProtection: false)
-        let database = RecordsDatabase(connection: connection, url: nil, timeZone: timeZone)
+        let database = RecordsDatabase(connection: connection, url: nil, timeZone: timeZone, catalog: catalog)
         try await database.configure(targetVersion: targetVersion)
         return database
     }
@@ -279,6 +283,7 @@ actor RecordsDatabase {
             detail.parent = try self.record(id: parentID)
         }
         detail.children = try children(parentID: id)
+        try loadKnowledge(into: &detail)
         return detail
     }
 
@@ -468,6 +473,7 @@ actor RecordsDatabase {
                 removed.append(id)
             }
             try connection.exec("DELETE FROM tags WHERE id NOT IN (SELECT tag_id FROM record_tags)")
+            try deleteOrphanEntitiesInTransaction()
         }
         return removed
     }
@@ -606,6 +612,12 @@ actor RecordsDatabase {
                 break
             }
         }
+        try connection.query(
+            "SELECT DISTINCT analyte_id FROM observations WHERE record_id=? AND analyte_id IS NOT NULL AND state<>'rejected' ORDER BY analyte_id",
+            [.text(recordID)]
+        ) { s in
+            if let id = s.text(0), let analyte = catalog.analyte(id: id) { clinical.append(analyte.displayName) }
+        }
         var highlightTexts: [String] = []
         try connection.query("SELECT text FROM record_highlights WHERE record_id=? AND dismissed=0 ORDER BY section, position", [.text(recordID)]) {
             if let text = $0.text(0) { highlightTexts.append(text) }
@@ -631,6 +643,11 @@ actor RecordsDatabase {
         try connection.inTransaction {
             try connection.exec("""
             DELETE FROM records_fts;
+            DELETE FROM record_links;
+            DELETE FROM record_entities;
+            DELETE FROM entities;
+            DELETE FROM analyte_user_aliases;
+            DELETE FROM observations;
             DELETE FROM processing_jobs;
             DELETE FROM duplicate_candidates;
             DELETE FROM split_proposals;

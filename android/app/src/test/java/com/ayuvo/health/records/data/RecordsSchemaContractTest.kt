@@ -56,6 +56,33 @@ class RecordsSchemaContractTest {
         assertEquals((RecordsSchema.BASE_VERSION + 1..RecordsSchema.VERSION).toList(), RecordsSchema.MIGRATIONS.keys.toList())
     }
 
+    /**
+     * docs §8 statement splitting, applied literally: migrations are embedded as exactly these
+     * strings (indentation kept), so the comparison is exact rather than whitespace-collapsed.
+     */
+    @Test
+    fun migrationsAreEmbeddedVerbatimPerSplittingRule() {
+        for ((version, name) in RecordsSchema.MIGRATION_FILES) {
+            val file = listOf("../../shared/records/migrations/$name", "../shared/records/migrations/$name", "shared/records/migrations/$name")
+                .map(::File).firstOrNull { it.exists() }
+            assertTrue("shared/records/migrations/$name not found", file != null)
+            assertEquals("$name (exact §8 split)", splitStatements(file!!.readText()), RecordsSchema.MIGRATIONS.getValue(version))
+        }
+    }
+
+    @Test
+    fun knowledgeMigrationDeclaresPhase3Schema() {
+        val sql = RecordsSchema.migrationSql(3)
+        for (table in listOf("observations", "analyte_user_aliases", "entities", "record_entities", "record_links")) {
+            assertTrue("missing $table", sql.contains("CREATE TABLE $table ("))
+            assertTrue(table in RecordsSchema.MIGRATION_TABLES)
+        }
+        for (index in listOf("idx_observations_trend", "idx_observations_record", "idx_observations_field", "idx_entities_kind_name", "idx_record_entities_entity", "idx_record_links_b")) {
+            assertTrue("missing $index", sql.contains(" $index ON "))
+        }
+        assertEquals(3, RecordsSchema.VERSION)
+    }
+
     @Test
     fun embeddedDdlDeclaresEveryTableAndIndex() {
         val ddl = RecordsSchema.SQL
@@ -79,5 +106,27 @@ class RecordsSchemaContractTest {
         val added = RecordsSchema.MIGRATION_002.filter { it.startsWith("ALTER TABLE records ADD COLUMN ") }
             .map { it.removePrefix("ALTER TABLE records ADD COLUMN ").substringBefore(' ') }
         assertTrue(all.drop(declared.size).all { it in added })
+    }
+
+    companion object {
+        /** `statements(path)` of scripts/records_contract_check.py (docs §8). */
+        fun splitStatements(source: String): List<String> {
+            val text = source.replace("\r\n", "\n").replace('\r', '\n')
+            val out = mutableListOf<String>()
+            val cur = mutableListOf<String>()
+            for (raw in text.split('\n')) {
+                val k = raw.indexOf("--")
+                val line = (if (k < 0) raw else raw.substring(0, k)).trimEnd()
+                if (line.isEmpty()) continue
+                cur += line
+                if (line.endsWith(";")) {
+                    val stmt = cur.joinToString("\n").dropLast(1).trimEnd()
+                    if (stmt.isNotBlank()) out += stmt
+                    cur.clear()
+                }
+            }
+            check(cur.isEmpty()) { "text after the last ';'" }
+            return out
+        }
     }
 }

@@ -152,7 +152,8 @@ struct RecordDetailIntelligenceSections: View {
 
     @ViewBuilder
     private var extractedInformation: some View {
-        let fields = detail.visibleFields.filter { $0.key != .medication && $0.key != .recommendation }
+        // Test results live in "Health data points" once promoted to observations (§19).
+        let fields = detail.visibleFields.filter { $0.key != .medication && $0.key != .recommendation && !($0.key == .testResult && !detail.observations.isEmpty) }
         if !fields.isEmpty {
             RecordsCard {
                 RecordsSectionTitle(title: "Extracted information", systemImage: "text.viewfinder")

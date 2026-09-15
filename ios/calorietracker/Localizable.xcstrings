@@ -47,6 +47,12 @@
         }
       }
     },
+    "%@ %@ · %@" : {
+
+    },
+    "%@ trend" : {
+
+    },
     "%@ · found by AI" : {
 
     },
@@ -54,6 +60,15 @@
 
     },
     "%@ · from file details" : {
+
+    },
+    "%@%@ %@ since %@" : {
+
+    },
+    "%@%@%@ since %@" : {
+
+    },
+    "%lld records linked" : {
 
     },
     "." : {
@@ -96,6 +111,63 @@
           }
         }
       }
+    },
+    "Abnormal" : {
+
+    },
+    "Accept suggestion" : {
+
+    },
+    "Add another report with %@ to see a trend" : {
+
+    },
+    "Add value" : {
+
+    },
+    "Also map %lld other values with this name" : {
+
+    },
+    "Also map 1 other value with this name" : {
+
+    },
+    "Both records stay saved. Only the link is removed." : {
+
+    },
+    "Choose" : {
+
+    },
+    "Choose test" : {
+
+    },
+    "Choose the test so this value appears in trends." : {
+
+    },
+    "Choose unit" : {
+
+    },
+    "Confirmed" : {
+
+    },
+    "Critical high" : {
+
+    },
+    "Critical low" : {
+
+    },
+    "Dismiss suggestion" : {
+
+    },
+    "Earlier" : {
+
+    },
+    "Edit or change test" : {
+
+    },
+    "Episode" : {
+
+    },
+    "Follow-up" : {
+
     },
     "Food photos and meals are analysed on this iPhone. No API key or account needed." : {
       "extractionState" : "manual",
@@ -152,6 +224,39 @@
         }
       }
     },
+    "Health data points" : {
+
+    },
+    "Keep the printed name only" : {
+
+    },
+    "Later" : {
+
+    },
+    "Latest report range" : {
+
+    },
+    "Latest · %@" : {
+
+    },
+    "Link" : {
+
+    },
+    "Link %lld" : {
+
+    },
+    "Link follow-ups, prescriptions and earlier reports to keep an episode together." : {
+
+    },
+    "Link options" : {
+
+    },
+    "Link record" : {
+
+    },
+    "Linked" : {
+
+    },
     "Needs an iPhone with 8 GB of RAM. You can finish setup while it downloads." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -163,6 +268,24 @@
         }
       }
     },
+    "No date" : {
+
+    },
+    "No records found" : {
+
+    },
+    "No unit" : {
+
+    },
+    "No values found on this record yet. You can add one yourself." : {
+
+    },
+    "No values yet" : {
+
+    },
+    "Normal" : {
+
+    },
     "Not available on this iPhone" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -173,6 +296,15 @@
           }
         }
       }
+    },
+    "Not in trends" : {
+
+    },
+    "Not mapped" : {
+
+    },
+    "Not shown in trend" : {
+
     },
     "Offline" : {
       "extractionState" : "manual",
@@ -210,6 +342,21 @@
         }
       }
     },
+    "Outside range" : {
+
+    },
+    "Prescribed after the visit" : {
+
+    },
+    "Prescription for" : {
+
+    },
+    "Previous report" : {
+
+    },
+    "Printed as “%@”" : {
+
+    },
     "Private" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -232,6 +379,51 @@
         }
       }
     },
+    "Range %@" : {
+
+    },
+    "Range %@–%@" : {
+
+    },
+    "Range from %@" : {
+
+    },
+    "Range up to %@" : {
+
+    },
+    "Records linked" : {
+
+    },
+    "Reference range (optional)" : {
+
+    },
+    "Reference range, e.g. 13.0 - 17.0" : {
+
+    },
+    "Related" : {
+
+    },
+    "Related records" : {
+
+    },
+    "Relation" : {
+
+    },
+    "Remember for “%@”" : {
+
+    },
+    "Remove from trend" : {
+
+    },
+    "Remove this value?" : {
+
+    },
+    "Remove value" : {
+
+    },
+    "Removing hides this value from the record and its trends. The original document isn't changed." : {
+
+    },
     "Runs on this iPhone · no key" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -242,6 +434,36 @@
           }
         }
       }
+    },
+    "Same doctor" : {
+
+    },
+    "Same document" : {
+
+    },
+    "Same episode" : {
+
+    },
+    "Same hospital or lab" : {
+
+    },
+    "Same report" : {
+
+    },
+    "Same tests" : {
+
+    },
+    "Search tests" : {
+
+    },
+    "Shared tests" : {
+
+    },
+    "Show in trend" : {
+
+    },
+    "Show in trends" : {
+
     },
     "Start the download to continue." : {
       "extractionState" : "manual",
@@ -254,6 +476,27 @@
         }
       }
     },
+    "Suggested" : {
+
+    },
+    "Tap a point to open its report" : {
+
+    },
+    "Test" : {
+
+    },
+    "Test name" : {
+
+    },
+    "Turn off for a value that shouldn't be compared with others, like a repeat test or a different method." : {
+
+    },
+    "Unlink" : {
+
+    },
+    "Unlink these records?" : {
+
+    },
     "Use your own AI provider key, or run a private model right on this iPhone." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -264,6 +507,21 @@
           }
         }
       }
+    },
+    "Value added" : {
+
+    },
+    "Values" : {
+
+    },
+    "Values in units that can't be converted are shown as separate series." : {
+
+    },
+    "View full trend" : {
+
+    },
+    "View on page %lld" : {
+
     },
     "Works without an internet connection once downloaded." : {
       "extractionState" : "manual",
@@ -3633,6 +3891,9 @@
 
     },
     "Add to favorites" : {
+
+    },
+    "· %@ %@" : {
 
     },
     "•" : {

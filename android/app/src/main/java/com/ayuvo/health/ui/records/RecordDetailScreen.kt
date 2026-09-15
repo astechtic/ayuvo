@@ -87,11 +87,13 @@ fun RecordDetailScreen(
     recordId: String,
     onBack: () -> Unit,
     onOpenRecord: (String) -> Unit = {},
-    onOpenSplit: (String) -> Unit = {}
+    onOpenSplit: (String) -> Unit = {},
+    onOpenTrend: (String) -> Unit = {},
+    focusObservationId: String? = null
 ) {
     val vm: RecordDetailViewModel = viewModel(
-        key = "record-$recordId",
-        factory = RecordDetailViewModel.Factory(container, recordId)
+        key = "record-$recordId-${focusObservationId.orEmpty()}",
+        factory = RecordDetailViewModel.Factory(container, recordId, focusObservationId)
     )
     val ui by vm.ui.collectAsState()
     val context = LocalContext.current
@@ -100,6 +102,9 @@ fun RecordDetailScreen(
     var edit by rememberSaveable { mutableStateOf<DetailEdit?>(null) }
     var showReview by rememberSaveable { mutableStateOf(false) }
     var showDuplicates by rememberSaveable { mutableStateOf(false) }
+    var editingObservationId by rememberSaveable { mutableStateOf<String?>(null) }
+    var addingObservation by rememberSaveable { mutableStateOf(false) }
+    var linkingRecord by rememberSaveable { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val exportFailed = stringResource(R.string.records_export_failed)
     val noApp = stringResource(R.string.records_no_app)
@@ -240,7 +245,17 @@ fun RecordDetailScreen(
                         onOpenRecord = onOpenRecord
                     )
                     HighlightsCard(intelligence.highlights, onFocusPage = vm::focusPage, onDismiss = vm::dismissHighlight)
-                    ExtractedInfoCard(intelligence.fields, onFocus = vm::focusField, onEdit = { showReview = true })
+                    ExtractedInfoCard(intelligence.fields.filter { it.key != com.ayuvo.health.records.model.FieldKey.TEST_RESULT || ui.observations.isEmpty() }, onFocus = vm::focusField, onEdit = { showReview = true })
+                    if (ui.observations.isNotEmpty() || record.recordType == RecordType.LAB_REPORT || record.recordType == RecordType.DIAGNOSTIC_REPORT) {
+                        HealthDataPointsCard(
+                            observations = ui.observations,
+                            trends = ui.trends,
+                            catalog = ui.catalog,
+                            onRow = { editingObservationId = it.id },
+                            onViewTrend = onOpenTrend,
+                            onAdd = { addingObservation = true }
+                        )
+                    }
                     val usable = intelligence.fields.filter { it.state != com.ayuvo.health.records.model.FieldState.REJECTED }
                     ListCard(
                         R.string.records_medications_title,
@@ -339,6 +354,16 @@ fun RecordDetailScreen(
                     }
                 }
 
+                RelatedRecordsCard(
+                    related = ui.related,
+                    files = container.recordFiles,
+                    onOpen = { onOpenRecord(it.id) },
+                    onAccept = vm::acceptLink,
+                    onReject = vm::rejectLink,
+                    onUnlink = vm::unlink,
+                    onLinkRecord = { linkingRecord = true }
+                )
+
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     GlassTextButton(
                         text = stringResource(R.string.records_action_export),
@@ -379,6 +404,63 @@ fun RecordDetailScreen(
             },
             onDismiss = { showReview = false }
         )
+    }
+
+    val editingObservation = editingObservationId?.let { id -> ui.observations.firstOrNull { it.id == id } }
+    if (record != null && editingObservation != null) {
+        ObservationEditSheet(
+            observation = editingObservation,
+            catalog = ui.catalog,
+            onSave = { edit ->
+                vm.editObservation(editingObservation, edit)
+                editingObservationId = null
+            },
+            onRemove = {
+                vm.removeObservation(editingObservation)
+                editingObservationId = null
+            },
+            onViewSource = if (editingObservation.sourcePage != null) {
+                {
+                    editingObservationId = null
+                    vm.focusObservation(editingObservation)
+                }
+            } else null,
+            onDismiss = { editingObservationId = null }
+        )
+    }
+    if (record != null && addingObservation) {
+        AddObservationSheet(
+            catalog = ui.catalog,
+            defaultDate = record.documentDate ?: record.sortDate,
+            onSave = { analyteId, name, value, unit, date, ref ->
+                vm.addObservation(analyteId, name, value, unit, date, ref)
+                addingObservation = false
+            },
+            onDismiss = { addingObservation = false }
+        )
+    }
+    if (record != null && linkingRecord) {
+        LinkRecordSheet(
+            candidates = ui.linkCandidates,
+            files = container.recordFiles,
+            onSearch = vm::searchLinkCandidates,
+            onLink = { id, kind ->
+                vm.linkTo(id, kind)
+                linkingRecord = false
+            },
+            onDismiss = { linkingRecord = false }
+        )
+    }
+    ui.aliasPrompt?.let { (rawName, _, count) ->
+        GlassDialog(onDismissRequest = vm::dismissAliasPrompt) {
+            Text(stringResource(R.string.records_obs_apply_others, count, rawName), fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
+            GlassDialogActions(
+                primaryText = stringResource(R.string.records_obs_apply_others_action),
+                onPrimary = vm::applyAliasToOthers,
+                dismissText = stringResource(R.string.action_cancel),
+                onDismiss = vm::dismissAliasPrompt
+            )
+        }
     }
 
     if (record != null && showDuplicates) {

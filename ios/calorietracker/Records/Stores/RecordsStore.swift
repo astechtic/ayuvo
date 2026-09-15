@@ -41,6 +41,8 @@ nonisolated struct RecordsSearchState: Equatable, Sendable {
     var aiParsed: ParsedRecordQuery?
     var isRewriting = false
     var offerAIRewrite = false
+    /// Phase 3 "Values" group (§23).
+    var valueHits: [RecordValueHit] = []
 
     var isActive: Bool { !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     var visibleChips: [ParsedRecordQuery.Chip] {
@@ -101,6 +103,8 @@ final class RecordsStore {
     var reviewRequest: String?
     /// Duplicate sheet requested from Needs Review / detail.
     var duplicateSheetRequest: RecordDuplicatePrompt?
+    /// Phase 3: accepted links (not split) of loaded timeline records, for episode badges.
+    var episodeLinks: [String: Set<String>] = [:]
     @ObservationIgnored var refreshTask: Task<Void, Never>?
     @ObservationIgnored var searchTask: Task<Void, Never>?
     @ObservationIgnored var autoReviewIDs = Set<String>()
@@ -185,6 +189,7 @@ final class RecordsStore {
             let (rows, recentList, total) = try await (page, recentRows, count)
             guard generation == loadGeneration else { return }
             records = rows
+            episodeLinks = (try? await repository.database.episodeNeighbours(recordIDs: rows.map(\.id))) ?? [:]
             recent = recentList
             totalCount = total
             hasMore = rows.count >= RecordsRepository.pageSize
@@ -213,7 +218,11 @@ final class RecordsStore {
                   generation == loadGeneration
             else { return }
             let known = Set(records.map(\.id))
-            records.append(contentsOf: rows.filter { !known.contains($0.id) })
+            let added = rows.filter { !known.contains($0.id) }
+            records.append(contentsOf: added)
+            if let more = try? await repository.database.episodeNeighbours(recordIDs: added.map(\.id)) {
+                episodeLinks.merge(more) { a, b in a.union(b) }
+            }
             hasMore = rows.count >= RecordsRepository.pageSize
         }
     }
@@ -449,6 +458,7 @@ final class RecordsStore {
         processingProgress = nil
         needsReviewRecords = []
         importantHighlights = []
+        episodeLinks = [:]
         searchState = RecordsSearchState()
         autoReviewIDs = []
         if let repository {

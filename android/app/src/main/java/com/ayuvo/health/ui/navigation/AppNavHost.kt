@@ -55,6 +55,7 @@ import com.ayuvo.health.records.RecordsRequest
 import com.ayuvo.health.ui.records.RecordDetailScreen
 import com.ayuvo.health.ui.records.RecordsScreen
 import com.ayuvo.health.ui.records.SplitReviewScreen
+import com.ayuvo.health.ui.records.TrendScreen
 import com.ayuvo.health.models.QuickActionRequest
 import com.ayuvo.health.ui.settings.AddMenuSettingsScreen
 import com.ayuvo.health.ui.about.LicensesScreen
@@ -326,26 +327,43 @@ fun AppNavHost(
                     TabInset {
                         RecordsScreen(
                             container = container,
-                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
+                            onOpenValue = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) }
                         )
                     }
                 }
                 composable(
-                    AppRoutes.RECORD_DETAIL,
-                    arguments = listOf(navArgument(AppRoutes.RECORD_ID_ARG) { type = NavType.StringType })
+                    AppRoutes.RECORD_DETAIL_FOCUS,
+                    arguments = listOf(
+                        navArgument(AppRoutes.RECORD_ID_ARG) { type = NavType.StringType },
+                        navArgument(AppRoutes.RECORD_FOCUS_ARG) { type = NavType.StringType; nullable = true; defaultValue = null }
+                    )
                 ) { entry ->
                     val recordId = entry.arguments?.getString(AppRoutes.RECORD_ID_ARG) ?: return@composable
+                    val focusObservation = entry.arguments?.getString(AppRoutes.RECORD_FOCUS_ARG)
                     TabInset {
                         RecordDetailScreen(
                             container = container,
                             recordId = recordId,
                             onBack = { nav.popBackStack() },
-                            onOpenRecord = { id ->
-                                nav.navigate(AppRoutes.recordDetail(id)) {
-                                    popUpTo(AppRoutes.RECORDS) { inclusive = false }
-                                }
-                            },
-                            onOpenSplit = { id -> nav.navigate(AppRoutes.recordSplit(id)) }
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
+                            onOpenSplit = { id -> nav.navigate(AppRoutes.recordSplit(id)) },
+                            onOpenTrend = { analyteId -> nav.navigate(AppRoutes.recordTrend(analyteId)) },
+                            focusObservationId = focusObservation
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.RECORD_TREND,
+                    arguments = listOf(navArgument(AppRoutes.ANALYTE_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val analyteId = entry.arguments?.getString(AppRoutes.ANALYTE_ID_ARG) ?: return@composable
+                    TabInset {
+                        TrendScreen(
+                            container = container,
+                            analyteId = analyteId,
+                            onBack = { nav.popBackStack() },
+                            onOpenPoint = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) }
                         )
                     }
                 }

@@ -8,7 +8,19 @@ struct RecordsVectorTests {
     static let vectorFiles = [
         "fold", "classifier", "dates", "fields", "lab_rows", "boundaries", "highlights", "review",
         "apply_extraction", "ai_validation", "ai_chunks", "hashing", "query_parser",
+        "analyte_mapping", "unit_conversion", "observations", "trends", "entities", "relations",
     ]
+
+    /// Every vector file in shared/records/test-vectors must have a runner here.
+    @Test func everySharedVectorFileHasARunner() throws {
+        let names = try FileManager.default.contentsOfDirectory(atPath: Self.vectorsDirectory.path)
+            .filter { $0.hasSuffix(".json") }
+            .map { String($0.dropLast(5)) }
+        #expect(!names.isEmpty)
+        for name in names.sorted() {
+            #expect(Self.vectorFiles.contains(name), "no Swift runner for test-vectors/\(name).json")
+        }
+    }
 
     static var vectorsDirectory: URL {
         HealthTestFixtures.repoRootURL.appendingPathComponent("shared/records/test-vectors")
@@ -58,7 +70,7 @@ struct RecordsVectorTests {
     @Test func bundledSharedFilesAreByteIdentical() throws {
         let shared = HealthTestFixtures.repoRootURL.appendingPathComponent("shared/records")
         let ios = HealthTestFixtures.repoRootURL.appendingPathComponent("ios/calorietracker/Records/Resources")
-        for file in ["record_types.json", "units.json"] {
+        for file in ["record_types.json", "units.json", "analytes.json"] {
             let a = try Data(contentsOf: shared.appendingPathComponent(file))
             let b = try Data(contentsOf: ios.appendingPathComponent(file))
             #expect(a == b, "\(file) differs from shared/records")
@@ -97,7 +109,7 @@ struct RecordsVectorTests {
     /// Migration statement splitting (§8) matches the reference rule on both shared SQL files.
     @Test func statementSplittingFollowsContract() throws {
         let root = HealthTestFixtures.repoRootURL.appendingPathComponent("shared/records")
-        for file in ["schema.sql", "migrations/002_intelligence.sql"] {
+        for file in ["schema.sql", "migrations/002_intelligence.sql", "migrations/003_knowledge.sql"] {
             let sql = try String(contentsOf: root.appendingPathComponent(file), encoding: .utf8)
             #expect(RecordsSchema.parseStatementsStrict(sql) != nil, "\(file) has text after the last ;")
         }

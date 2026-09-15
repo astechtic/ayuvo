@@ -4,6 +4,10 @@ import UIKit
 /// Navigation values pushed on the Records tab's stack.
 enum RecordsRoute: Hashable {
     case detail(String)
+    /// Record detail opened at an observation's source page (trend points, Values hits).
+    case detailSource(recordID: String, observationID: String)
+    /// Full trend for an analyte (§21).
+    case trend(String)
 }
 
 extension View {
@@ -13,6 +17,10 @@ extension View {
             switch route {
             case .detail(let id):
                 RecordDetailView(recordID: id)
+            case .detailSource(let id, let observationID):
+                RecordDetailView(recordID: id, initialObservationID: observationID)
+            case .trend(let analyteID):
+                RecordTrendView(analyteID: analyteID)
             }
         }
     }
@@ -198,6 +206,8 @@ struct RecordRow: View {
     var isSelecting = false
     var isSelected = false
     var compact = false
+    /// Phase 3: the record has accepted links (timeline "Episode" badge).
+    var episode = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -221,6 +231,7 @@ struct RecordRow: View {
                     }
                 }
                 HStack(spacing: 6) {
+                    if episode { RecordEpisodeBadge() }
                     if !compact { RecordTypePill(type: record.recordType) }
                     Text(RecordFormatting.subtitle(record))
                         .font(.system(.caption, design: .rounded))
@@ -312,5 +323,20 @@ struct RecordsPrivacyExplainer: View {
                 .font(.system(.subheadline, design: .rounded))
                 .fixedSize(horizontal: false, vertical: true)
         }
+    }
+}
+
+/// Small "Episode" capsule for records with accepted links (plan §3.10 timeline).
+struct RecordEpisodeBadge: View {
+    var body: some View {
+        Label("Episode", systemImage: "link")
+            .labelStyle(.titleAndIcon)
+            .font(.system(.caption2, design: .rounded, weight: .semibold))
+            .foregroundStyle(.teal)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(Color.teal.opacity(0.12), in: Capsule())
+            .lineLimit(1)
+            .accessibilityIdentifier("records.row.episode")
     }
 }

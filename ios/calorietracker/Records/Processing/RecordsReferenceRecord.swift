@@ -606,22 +606,65 @@ extension RR {
     static let qPeriods: [String: String] = ["day": "day", "days": "day", "week": "week", "weeks": "week", "month": "month", "months": "month", "year": "year", "years": "year"]
 
     struct QTok {
-        var isDate: Bool
+        /// `w`, `date` or `op`.
+        var kind: String
         var word: String
         var date: YMD?
         var text: String
+        var start: Int
+        var end: Int
+        var isDate: Bool { kind == "date" }
+        var isWord: Bool { kind == "w" }
+    }
+
+    static func qText(_ text: String) -> String { fold(text).components(separatedBy: "\n").joined(separator: " ") }
+
+    /// Reference `_q_plain_tokens`: alphanumeric runs (a digit run + `.` + digits is one token), comparison ops.
+    static func qPlainTokens(_ f: String, _ start: Int, _ end: Int, _ toks: inout [QTok]) {
+        let u = Array(f.utf16)
+        func alnum(_ i: Int) -> Bool {
+            guard let scalar = Unicode.Scalar(u[i]) else { return false }
+            return isAlnum(scalar)
+        }
+        func digit(_ i: Int) -> Bool { u[i] >= 48 && u[i] <= 57 }
+        var i = start
+        while i < end {
+            if alnum(i) {
+                var j = i
+                while j < end, alnum(j) { j += 1 }
+                if (i..<j).allSatisfy(digit), j + 1 < end, u[j] == 46, digit(j + 1) {
+                    var k = j + 1
+                    while k < end, digit(k) { k += 1 }
+                    if k == end || !alnum(k) { j = k }
+                }
+                let w = f.rSub(i, j)
+                toks.append(QTok(kind: "w", word: w, date: nil, text: w, start: i, end: j))
+                i = j
+            } else if u[i] == 60 || u[i] == 62 || u[i] == 0x2264 || u[i] == 0x2265 {
+                if (u[i] == 60 || u[i] == 62), i + 1 < end, u[i + 1] == 61 {
+                    toks.append(QTok(kind: "op", word: f.rSub(i, i + 2), date: nil, text: f.rSub(i, i + 2), start: i, end: i + 2))
+                    i += 2
+                } else {
+                    let op = u[i] == 0x2264 ? "<=" : (u[i] == 0x2265 ? ">=" : f.rSub(i, i + 1))
+                    toks.append(QTok(kind: "op", word: op, date: nil, text: f.rSub(i, i + 1), start: i, end: i + 1))
+                    i += 1
+                }
+            } else {
+                i += 1
+            }
+        }
     }
 
     static func qTokens(_ text: String, _ today: YMD, _ dateOrder: String) -> [QTok] {
-        let f = fold(text).components(separatedBy: "\n").joined(separator: " ")
+        let f = qText(text)
         var toks: [QTok] = []
         var pos = 0
         for c in dateCandidates(f, today, dateOrder) where c.precision == "day" {
-            for w in words(f.rSub(pos, c.start)) { toks.append(QTok(isDate: false, word: w, date: nil, text: w)) }
-            toks.append(QTok(isDate: true, word: "", date: c.dates[0], text: f.rSub(c.start, c.end)))
+            qPlainTokens(f, pos, c.start, &toks)
+            toks.append(QTok(kind: "date", word: "", date: c.dates[0], text: f.rSub(c.start, c.end), start: c.start, end: c.end))
             pos = c.end
         }
-        for w in words(f.rSub(pos)) { toks.append(QTok(isDate: false, word: w, date: nil, text: w)) }
+        qPlainTokens(f, pos, f.rLen, &toks)
         return toks
     }
 
@@ -649,8 +692,8 @@ extension RR {
         let v = t.word
         if v == "today" { return (today, today, 1) }
         if v == "yesterday" { let d = today.days(-1); return (d, d, 1) }
-        let nxt = i + 1 < toks.count && !toks[i + 1].isDate ? toks[i + 1].word : nil
-        let nxt2 = i + 2 < toks.count && !toks[i + 2].isDate ? toks[i + 2].word : nil
+        let nxt = i + 1 < toks.count && toks[i + 1].isWord ? toks[i + 1].word : nil
+        let nxt2 = i + 2 < toks.count && toks[i + 2].isWord ? toks[i + 2].word : nil
         if ["this", "current"].contains(v), let nxt, ["week", "month", "year"].contains(nxt) {
             let r = periodRange(nxt, today)
             return (r.0, r.1, 2)
@@ -697,7 +740,7 @@ extension RR {
     static func matchPhrase<V>(_ toks: [QTok], _ i: Int, _ table: [([String], V)]) -> ([String], V)? {
         for (phrase, value) in table {
             let n = phrase.count
-            if i + n <= toks.count, (0..<n).allSatisfy({ !toks[i + $0].isDate && toks[i + $0].word == phrase[$0] }) {
+            if i + n <= toks.count, (0..<n).allSatisfy({ toks[i + $0].isWord && toks[i + $0].word == phrase[$0] }) {
                 return (phrase, value)
             }
         }
@@ -712,14 +755,134 @@ extension RR {
         return s
     }()
 
-    static func parseQuery(_ text: String, today: String, dateOrder: String) -> RJ {
+    // MARK: §23 Query analyte conditions
+
+    static let qCondFlags: [([String], String)] = qFlags + [(["normal"], "normal")]
+    static let qConnectors: Set<String> = ["was", "is", "were", "are"]
+    static let qCmpWords: [([String], String)] = [(["greater", "than"], ">"), (["more", "than"], ">"), (["less", "than"], "<"), (["at", "least"], ">="),
+                                                  (["at", "most"], "<="), (["above"], ">"), (["over"], ">"), (["below"], "<"), (["under"], "<")]
+    static let reQNumber = Rx("[0-9]+(?:\\.[0-9]+)?")
+
+    struct QAliasTable {
+        var table: [[String]: [String]]
+        var longest: Int
+    }
+
+    static func qAliasTable(_ cat: AnalyteCatalog) -> QAliasTable {
+        var reserved = qStop.union(kMethodWords)
+        for (p, _) in qTypes { reserved.formUnion(p) }
+        for (p, _) in qFlags { reserved.formUnion(p) }
+        for (p, _) in qStates { reserved.formUnion(p) }
+        var table: [[String]: [String]] = [:]
+        for e in cat.entries {
+            guard let id = e["id"].string else { continue }
+            for a in (e["aliases"].array ?? []).compactMap(\.string) {
+                for ws in [words(fold(a)), analyteWords(a)] {
+                    if ws.joined(separator: " ").rLen <= 1 || ws.allSatisfy(reserved.contains) { continue }
+                    if !(table[ws] ?? []).contains(id) { table[ws, default: []].append(id) }
+                }
+            }
+        }
+        return QAliasTable(table: table, longest: table.keys.map(\.count).max() ?? 0)
+    }
+
+    static let sharedQAliasTable = qAliasTable(.shared)
+
+    static func qMatchAlias(_ toks: [QTok], _ i: Int, _ t: QAliasTable) -> (Int, [String])? {
+        var n = min(t.longest, toks.count - i)
+        while n > 0 {
+            if (0..<n).allSatisfy({ toks[i + $0].isWord }), let ids = t.table[(0..<n).map { toks[i + $0].word }], !ids.isEmpty {
+                return (n, ids)
+            }
+            n -= 1
+        }
+        return nil
+    }
+
+    static func qResolve(_ ids: [String], _ unit: String?, _ cat: AnalyteCatalog) -> String? {
+        var c = ids
+        let keeps: [(String) -> Bool] = [
+            { unit != nil && analyteUnits(cat.entry($0)).contains(unit!) },
+            { cat.entry($0)["category"].string != "urine" },
+            { cat.entry($0)["kind"].string == "numeric" },
+        ]
+        for keep in keeps where c.count > 1 {
+            let k = c.filter(keep)
+            if !k.isEmpty { c = k }
+        }
+        return c.count == 1 ? c[0] : nil
+    }
+
+    struct QCond {
+        var flag: String?
+        var op: String?
+        var value: Double?
+        var unit: String?
+        var end: Int
+        var endPos: Int
+    }
+
+    static func qCondition(_ toks: [QTok], _ j: Int, _ f: String) -> QCond? {
+        var k = j
+        if k < toks.count, toks[k].isWord, qConnectors.contains(toks[k].word) { k += 1 }
+        if let fl = matchPhrase(toks, k, qCondFlags) {
+            let end = k + fl.0.count
+            return QCond(flag: fl.1, end: end, endPos: toks[end - 1].end)
+        }
+        var op: String?
+        var k2 = 0
+        if k < toks.count, toks[k].kind == "op" {
+            op = toks[k].word
+            k2 = k + 1
+        } else if let cm = matchPhrase(toks, k, qCmpWords) {
+            op = cm.1
+            k2 = k + cm.0.count
+        }
+        guard let op, k2 < toks.count, toks[k2].isWord, reQNumber.fullmatch(toks[k2].word) != nil else { return nil }
+        var end = k2 + 1
+        var endPos = toks[k2].end
+        var pos = endPos
+        let u = Array(f.utf16)
+        while pos < u.count, u[pos] == 32 { pos += 1 }
+        var unit: String?
+        if pos < u.count, let um = matchUnit(f, pos) {
+            unit = um.0
+            endPos = um.1
+            while end < toks.count, toks[end].start < um.1 { end += 1 }
+        }
+        return QCond(op: op, value: Double(toks[k2].word), unit: unit, end: end, endPos: endPos)
+    }
+
+    static func qConditionOut(_ aid: String, _ cond: QCond, _ cat: AnalyteCatalog) -> RJ {
+        if let flag = cond.flag {
+            return .obj(["analyte_id": .str(aid), "flag": .str(flag), "op": .null, "value": .null, "unit": .null, "canonical_value": .null, "canonical_unit": .null])
+        }
+        var cv: RJ
+        var cu: RJ
+        if cond.unit == nil {
+            cv = .number(round4(cond.value ?? 0))
+            cu = cat.entry(aid)["canonical_unit"]
+        } else {
+            let conv = convertUnit(aid, cond.value, cond.unit, cat)
+            cv = conv["canonical_value"]
+            cu = conv["canonical_unit"]
+        }
+        return .obj(["analyte_id": .str(aid), "flag": .null, "op": .string(cond.op), "value": .number(cond.value), "unit": .string(cond.unit),
+                     "canonical_value": cv, "canonical_unit": cu])
+    }
+
+    static func parseQuery(_ text: String, today: String, dateOrder: String, catalog cat: AnalyteCatalog = .shared) -> RJ {
         let todayD = YMD.iso(today) ?? YMD(y: 2026, m: 1, d: 1)
         let toks = qTokens(text, todayD, dateOrder)
+        let f = qText(text)
+        let aliasTable = cat === AnalyteCatalog.shared ? sharedQAliasTable : qAliasTable(cat)
         var terms: [String] = []
         var favorites = false, needsReview = false, archived = false
         var source: String?
         var doctor: String?, facility: String?
         var chips: [RJ] = []
+        var conditions: [RJ] = []
+        var analytes: [String] = []
         var types = Set<String>(), flags = Set<String>()
         var ranges: [(YMD?, YMD?)] = []
         var i = 0
@@ -729,7 +892,7 @@ extension RR {
         while i < toks.count {
             let t = toks[i]
             let v = t.word
-            if !t.isDate, v == "from" || v == "between", let a = qDatespec(toks, i + 1, todayD, true) {
+            if t.isWord, v == "from" || v == "between", let a = qDatespec(toks, i + 1, todayD, true) {
                 let j = i + 1 + a.2
                 if j < toks.count, !toks[j].isDate, ["to", "and", "till", "until"].contains(toks[j].word), let b = qDatespec(toks, j + 1, todayD, true) {
                     ranges.append((a.0, b.1))
@@ -742,7 +905,7 @@ extension RR {
                 i = j
                 continue
             }
-            if !t.isDate, ["since", "after", "before", "in", "during"].contains(v), let a = qDatespec(toks, i + 1, todayD, true) {
+            if t.isWord, ["since", "after", "before", "in", "during"].contains(v), let a = qDatespec(toks, i + 1, todayD, true) {
                 switch v {
                 case "since": ranges.append((a.0, nil))
                 case "after": ranges.append((a.1.days(1), nil))
@@ -759,7 +922,7 @@ extension RR {
                 i += a.2
                 continue
             }
-            if t.isDate {
+            if !t.isWord {
                 i += 1
                 continue
             }
@@ -781,6 +944,31 @@ extension RR {
                 i += phrase.count
                 continue
             }
+            if let (n, ids) = qMatchAlias(toks, i, aliasTable) {
+                let cond = qCondition(toks, i + n, f)
+                let aid = qResolve(ids, cond?.unit, cat)
+                if let aid, let cond {
+                    conditions.append(qConditionOut(aid, cond, cat))
+                    chips.append(.obj(["kind": .str("analyte"), "text": .str(f.rSub(toks[i].start, cond.endPos))]))
+                    i = cond.end
+                    continue
+                }
+                if let aid {
+                    if !analytes.contains(aid) { analytes.append(aid) }
+                    for tk in toks[i..<(i + n)] where !qStop.contains(tk.word) && !terms.contains(tk.word) { terms.append(tk.word) }
+                    i += n
+                    continue
+                }
+            }
+            if let cf = matchPhrase(toks, i, qCondFlags) {
+                if let al = qMatchAlias(toks, i + cf.0.count, aliasTable), let aid = qResolve(al.1, nil, cat) {
+                    let end = i + cf.0.count + al.0
+                    conditions.append(qConditionOut(aid, QCond(flag: cf.1, end: end, endPos: toks[end - 1].end), cat))
+                    chips.append(.obj(["kind": .str("analyte"), "text": .str(f.rSub(toks[i].start, toks[end - 1].end))]))
+                    i = end
+                    continue
+                }
+            }
             if let (phrase, val) = matchPhrase(toks, i, qFlags) {
                 flags.insert(val)
                 chip("flag", i, i + phrase.count)
@@ -790,7 +978,7 @@ extension RR {
             if ["doctor", "dr", "at", "hospital"].contains(v) {
                 var j = i + 1
                 var name: [String] = []
-                while j < toks.count, !toks[j].isDate, name.count < 3, !qReserved.contains(toks[j].word), qDatespec(toks, j, todayD, false) == nil {
+                while j < toks.count, toks[j].isWord, name.count < 3, !qReserved.contains(toks[j].word), qDatespec(toks, j, todayD, false) == nil {
                     name.append(toks[j].word)
                     j += 1
                 }
@@ -806,7 +994,7 @@ extension RR {
                     continue
                 }
             }
-            if !qStop.contains(v), !terms.contains(v) { terms.append(v) }
+            for w in words(v) where !qStop.contains(w) && !terms.contains(w) { terms.append(w) }
             i += 1
         }
         var dateFrom: RJ = .null, dateTo: RJ = .null
@@ -821,7 +1009,8 @@ extension RR {
             "record_types": .arr(recordTypes.filter(types.contains).map(RJ.str)),
             "flags": .arr(qOrderFlags.filter(flags.contains).map(RJ.str)),
             "doctor": .string(doctor), "facility": .string(facility), "favorites": .bool(favorites), "needs_review": .bool(needsReview),
-            "archived": .bool(archived), "source": .string(source), "chips": .arr(chips),
+            "archived": .bool(archived), "source": .string(source), "analyte_conditions": .arr(conditions),
+            "analytes": .arr(analytes.map(RJ.str)), "chips": .arr(chips),
             "match": terms.isEmpty ? .null : .str(terms.map { $0 + "*" }.joined(separator: " ")),
         ])
     }
@@ -879,6 +1068,57 @@ extension RR {
             }
         case "parse_query":
             return parseQuery(inp["text"].string ?? "", today: inp["today"].string ?? "", dateOrder: inp["date_order"].string ?? "dmy")
+        case "map_analyte":
+            func aliases(_ v: RJ) -> [String: String]? { v.object.map { $0.compactMapValues(\.string) } }
+            switch inp["op"].string ?? "map" {
+            case "map":
+                return mapAnalyteRef(inp["name"].string, panels: inp["panels"].array?.compactMap(\.string), userAliases: aliases(inp["user_aliases"]),
+                                     unit: inp["unit"].string, qualitative: inp["qualitative"].bool)
+            case "keys":
+                return .obj(["keys": .arr(testNameKeys(inp["name"].string).map(RJ.str)), "normalized_name": .str(normalizeTestNameRef(inp["name"].string))])
+            case "detect_panels":
+                return .obj(["panels": .arr(detectPanelsRef(texts: (inp["texts"].array ?? []).compactMap(\.string), testNames: (inp["test_names"].array ?? []).compactMap(\.string)).map(RJ.str))])
+            default:
+                return .null
+            }
+        case "convert_unit":
+            return convertUnit(inp["analyte_id"].string, inp["value"].double, inp["unit"].string)
+        case "observations":
+            let ua = inp["user_aliases"].object.map { $0.compactMapValues(\.string) }
+            switch inp["op"].string ?? "" {
+            case "promote":
+                return promoteObservations(fields: inp["fields"].array ?? [], existing: inp["existing_observations"].array ?? [], record: inp["record"],
+                                           userAliases: ua, nowMs: inp["now_ms"].isNull ? .int(0) : inp["now_ms"])
+            case "observed_date":
+                return observedDateRef(record: inp["record"], fields: inp["fields"].array ?? [])
+            case "edit":
+                return editObservationRef(inp["observation"], inp["patch"])
+            case "user_alias":
+                return applyUserAliasRef(inp["observations"].array ?? [], rawName: inp["raw_name"].string, analyteID: inp["analyte_id"].string,
+                                         nowMs: inp["now_ms"].isNull ? .int(0) : inp["now_ms"])
+            default:
+                return .null
+            }
+        case "trends":
+            let trend = trendSeriesRef(inp["observations"].array ?? [], analyteID: inp["analyte_id"].string ?? "")
+            switch inp["op"].string ?? "" {
+            case "series": return trend
+            case "mini": return miniTrendRef(trend, observationID: inp["observation_id"].string ?? "")
+            default: return .null
+            }
+        case "entities":
+            switch inp["op"].string ?? "rebuild" {
+            case "rebuild":
+                return rebuildEntities(inp["fields"].array ?? [])
+            case "normalize":
+                let name = inp["name"].string
+                return .obj(["doctor_display": .str(doctorDisplayName(name)), "doctor": .str(normalizeDoctorName(name)),
+                             "facility_display": .str(facilityDisplayName(name)), "facility": .str(normalizeFacilityName(name))])
+            default:
+                return .null
+            }
+        case "suggest_relations":
+            return suggestRelations(record: inp["record"], candidates: inp["candidates"].array ?? [], today: inp["today"].string ?? "", existingLinks: inp["existing_links"].array ?? [])
         default:
             return .null
         }

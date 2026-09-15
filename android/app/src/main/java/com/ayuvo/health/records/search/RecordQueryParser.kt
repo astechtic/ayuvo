@@ -1,6 +1,9 @@
 package com.ayuvo.health.records.search
 
+import com.ayuvo.health.records.analytes.AnalyteCatalog
+import com.ayuvo.health.records.model.AnalyteCondition
 import com.ayuvo.health.records.model.RecordAdvancedFilters
+import com.ayuvo.health.records.processing.UnitsCatalog
 import com.ayuvo.health.records.model.RecordType
 import com.ayuvo.health.records.processing.DateDetector
 import com.ayuvo.health.records.processing.DateOrder
@@ -30,7 +33,11 @@ data class ParsedRecordQuery(
     val archived: Boolean = false,
     val chips: List<ParsedChip> = emptyList(),
     /** FTS4 MATCH expression (`term*` joined by spaces) or null. */
-    val match: String? = null
+    val match: String? = null,
+    /** Phase 3 (§23): `<analyte> was low`, `<analyte> above 7 <unit>`. */
+    val analyteConditions: List<AnalyteCondition> = emptyList(),
+    /** Phase 3 (§23): bare analyte aliases (FTS terms and a Values group). */
+    val analytes: List<String> = emptyList()
 ) {
     val source: String? get() = if (received) "received" else null
 
@@ -44,14 +51,15 @@ data class ParsedRecordQuery(
         favorites = favorites,
         received = received,
         needsReview = needsReview,
-        archived = archived
+        archived = archived,
+        analyteConditions = analyteConditions
     )
 }
 
 /** Pure universal-search parser, ported line by line from `scripts/records_reference.py` `parse_query`. */
 object RecordQueryParser {
 
-    private data class Tok(val kind: String, val word: String?, val date: LocalDate?, val text: String) {
+    private data class Tok(val kind: String, val word: String?, val date: LocalDate?, val text: String, val start: Int = 0, val end: Int = 0) {
         val v: String? get() = word
     }
 
@@ -109,18 +117,115 @@ object RecordQueryParser {
     private val YEAR4 = Regex("[0-9]{4}")
     private val NUM3 = Regex("[0-9]{1,3}")
 
+    private fun qText(text: String): String = RecordText.fold(text).split('\n').joinToString(" ")
+
+    private fun isDigit(ch: Char) = ch in '0'..'9'
+
+    /** Reference `_q_plain_tokens`: alnum runs ('w', a `1.2` decimal is one token) and comparison 'op' tokens. */
+    private fun plainTokens(f: String, start: Int, end: Int, toks: MutableList<Tok>) {
+        var i = start
+        while (i < end) {
+            val cp = f.codePointAt(i)
+            if (RecordText.isAlnumCp(cp)) {
+                var j = i
+                while (j < end && RecordText.isAlnumCp(f.codePointAt(j))) j += Character.charCount(f.codePointAt(j))
+                if (f.substring(i, j).all(::isDigit) && j + 1 < end && f[j] == '.' && isDigit(f[j + 1])) {
+                    var k = j + 1
+                    while (k < end && isDigit(f[k])) k++
+                    if (k == end || !RecordText.isAlnumCp(f.codePointAt(k))) j = k
+                }
+                val w = f.substring(i, j)
+                toks += Tok("w", w, null, w, i, j)
+                i = j
+            } else {
+                val ch = f[i]
+                if (ch == '<' || ch == '>' || ch == '≤' || ch == '≥') {
+                    if ((ch == '<' || ch == '>') && i + 1 < end && f[i + 1] == '=') {
+                        toks += Tok("op", "$ch=", null, f.substring(i, i + 2), i, i + 2)
+                        i += 2
+                    } else {
+                        val op = when (ch) { '≤' -> "<="; '≥' -> ">="; else -> ch.toString() }
+                        toks += Tok("op", op, null, ch.toString(), i, i + 1)
+                        i += 1
+                    }
+                } else {
+                    i += Character.charCount(cp)
+                }
+            }
+        }
+    }
+
     private fun tokens(text: String, today: LocalDate, order: DateOrder): List<Tok> {
-        val f = RecordText.fold(text).split('\n').joinToString(" ")
+        val f = qText(text)
         val toks = mutableListOf<Tok>()
         var pos = 0
         for (c in DateDetector.candidates(f, today, order)) {
             if (c.precision != "day") continue
-            RecordText.words(f.substring(pos, c.start)).forEach { toks += Tok("w", it, null, it) }
-            toks += Tok("date", null, c.dates[0], f.substring(c.start, c.end))
+            plainTokens(f, pos, c.start, toks)
+            toks += Tok("date", null, c.dates[0], f.substring(c.start, c.end), c.start, c.end)
             pos = c.end
         }
-        RecordText.words(f.substring(pos)).forEach { toks += Tok("w", it, null, it) }
+        plainTokens(f, pos, f.length, toks)
         return toks
+    }
+
+    private val Q_COND_FLAGS: List<Pair<List<String>, String>> by lazy { Q_FLAGS + (listOf("normal") to "normal") }
+    private val Q_CONNECTORS = setOf("was", "is", "were", "are")
+    private val Q_CMP_WORDS: List<Pair<List<String>, String>> = listOf(
+        listOf("greater", "than") to ">", listOf("more", "than") to ">", listOf("less", "than") to "<",
+        listOf("at", "least") to ">=", listOf("at", "most") to "<=", listOf("above") to ">", listOf("over") to ">",
+        listOf("below") to "<", listOf("under") to "<"
+    )
+    private val RE_Q_NUMBER = Regex("[0-9]+(?:\\.[0-9]+)?")
+
+    private fun matchAlias(toks: List<Tok>, i: Int, catalog: AnalyteCatalog): Pair<Int, List<String>>? {
+        val (table, longest) = catalog.queryAliases(RESERVED)
+        for (n in minOf(longest, toks.size - i) downTo 1) {
+            if ((0 until n).all { toks[i + it].kind == "w" }) {
+                val ids = table[(0 until n).map { toks[i + it].word!! }]
+                if (!ids.isNullOrEmpty()) return n to ids
+            }
+        }
+        return null
+    }
+
+    private data class Cond(val flag: String?, val op: String?, val value: Double?, val unit: String?, val end: Int, val endPos: Int)
+
+    private fun condition(toks: List<Tok>, j: Int, f: String, units: UnitsCatalog): Cond? {
+        var k = j
+        if (k < toks.size && toks[k].kind == "w" && toks[k].word in Q_CONNECTORS) k++
+        matchPhrase(toks, k, Q_COND_FLAGS)?.let { (phrase, flag) ->
+            val end = k + phrase.size
+            return Cond(flag, null, null, null, end, toks[end - 1].end)
+        }
+        var op: String? = null
+        var k2 = 0
+        if (k < toks.size && toks[k].kind == "op") {
+            op = toks[k].word
+            k2 = k + 1
+        } else {
+            matchPhrase(toks, k, Q_CMP_WORDS)?.let { (phrase, o) -> op = o; k2 = k + phrase.size }
+        }
+        if (op == null || k2 >= toks.size || toks[k2].kind != "w" || !RE_Q_NUMBER.matches(toks[k2].word!!)) return null
+        var end = k2 + 1
+        var endPos = toks[k2].end
+        var pos = endPos
+        while (pos < f.length && f[pos] == ' ') pos++
+        var unit: String? = null
+        val um = if (pos < f.length) units.matchAt(f, pos) else null
+        if (um != null) {
+            unit = um.canonical
+            endPos = pos + um.folded.length
+            while (end < toks.size && toks[end].start < endPos) end++
+        }
+        return Cond(null, op, toks[k2].word!!.toDouble(), unit, end, endPos)
+    }
+
+    private fun conditionOut(aid: String, c: Cond, catalog: AnalyteCatalog): AnalyteCondition {
+        if (c.flag != null) return AnalyteCondition(aid, flag = c.flag)
+        val (cv, cu) = if (c.unit == null) AnalyteCatalog.round4(c.value!!) to catalog.analyte(aid)?.canonicalUnit
+        else catalog.convert(aid, c.value, c.unit).let { it.value to it.canonicalUnit }
+        return AnalyteCondition(aid, op = c.op, value = c.value, unit = c.unit, canonicalValue = cv, canonicalUnit = cu)
     }
 
     private fun periodRange(unit: String, start: LocalDate): Pair<LocalDate, LocalDate> = when (unit) {
@@ -186,8 +291,17 @@ object RecordQueryParser {
         return null
     }
 
-    fun parse(text: String, today: LocalDate, dateOrder: DateOrder = DateOrder.DMY): ParsedRecordQuery {
+    fun parse(
+        text: String,
+        today: LocalDate,
+        dateOrder: DateOrder = DateOrder.DMY,
+        catalog: AnalyteCatalog = AnalyteCatalog.active,
+        units: UnitsCatalog = UnitsCatalog.active
+    ): ParsedRecordQuery {
+        val f = qText(text)
         val toks = tokens(text, today, dateOrder)
+        val conditions = mutableListOf<AnalyteCondition>()
+        val analytes = mutableListOf<String>()
         val terms = mutableListOf<String>()
         val types = HashSet<String>()
         val flags = HashSet<String>()
@@ -266,6 +380,40 @@ object RecordQueryParser {
                 i += phrase.size
                 continue@loop
             }
+            // 2b. Analyte alias (§23): with a condition → analyte_conditions; bare → analytes + terms.
+            val al = matchAlias(toks, i, catalog)
+            if (al != null) {
+                val (n, ids) = al
+                val cond = condition(toks, i + n, f, units)
+                val aid = catalog.queryResolve(ids, cond?.unit)
+                if (aid != null && cond != null) {
+                    conditions += conditionOut(aid, cond, catalog)
+                    val t = f.substring(toks[i].start, cond.endPos)
+                    chips += ParsedChip("analyte", t, t)
+                    i = cond.end
+                    continue@loop
+                }
+                if (aid != null) {
+                    if (aid !in analytes) analytes += aid
+                    for (t in toks.subList(i, i + n)) if (t.word !in Q_STOP && t.word!! !in terms) terms += t.word
+                    i += n
+                    continue@loop
+                }
+            }
+            // 2c. Flag + analyte alias ("high cholesterol") → analyte condition.
+            val cf = matchPhrase(toks, i, Q_COND_FLAGS)
+            if (cf != null) {
+                val al2 = matchAlias(toks, i + cf.first.size, catalog)
+                val aid = al2?.let { catalog.queryResolve(it.second, null) }
+                if (aid != null) {
+                    val end = i + cf.first.size + al2.first
+                    conditions += AnalyteCondition(aid, flag = cf.second)
+                    val t = f.substring(toks[i].start, toks[end - 1].end)
+                    chips += ParsedChip("analyte", t, t)
+                    i = end
+                    continue@loop
+                }
+            }
             matchPhrase(toks, i, Q_FLAGS)?.let { (phrase, value) ->
                 flags += value
                 chip("flag", i, i + phrase.size)
@@ -285,7 +433,8 @@ object RecordQueryParser {
                     continue@loop
                 }
             }
-            if (v !in Q_STOP && v !in terms) terms += v!!
+            // 4. Stop words, else terms (a '1.2' token becomes the terms '1' and '2', as in Phase 2).
+            for (w in RecordText.words(v!!)) if (w !in Q_STOP && w !in terms) terms += w
             i++
         }
         var dateFrom: String? = null
@@ -309,7 +458,9 @@ object RecordQueryParser {
             needsReview = needsReview,
             archived = archived,
             chips = chips,
-            match = if (terms.isEmpty()) null else terms.joinToString(" ") { "$it*" }
+            match = if (terms.isEmpty()) null else terms.joinToString(" ") { "$it*" },
+            analyteConditions = conditions,
+            analytes = analytes
         )
     }
 }

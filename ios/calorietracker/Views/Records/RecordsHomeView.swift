@@ -245,6 +245,8 @@ struct RecordsHomeView: View {
         query.dateTo = filters.dateTo
         query.doctor = filters.doctor
         query.facility = filters.facility
+        query.doctorEntityID = filters.doctorEntityID
+        query.facilityEntityID = filters.facilityEntityID
         query.flags = filters.flags
         query.tags = filters.tags
         query.aiProcessedOnly = filters.aiProcessedOnly
@@ -354,6 +356,9 @@ struct RecordsHomeView: View {
                 }
                 .accessibilityIdentifier("records.search.smarter")
             }
+            if !state.valueHits.isEmpty {
+                valuesGroup(state.valueHits)
+            }
             if state.aiParsed != nil {
                 Text("AI turned your search into filters. Only the search text was sent.")
                     .font(.system(.caption, design: .rounded))
@@ -365,6 +370,54 @@ struct RecordsHomeView: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    /// §23 "Values": observation chips "Hb 7.6 g/dL ↓ · CBC Sep 12" opening the record at the source.
+    private func valuesGroup(_ hits: [RecordValueHit]) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Values")
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                .foregroundStyle(.secondary)
+            ForEach(hits.prefix(8)) { hit in
+                let o = hit.observation
+                NavigationLink(value: RecordsRoute.detailSource(recordID: hit.record.id, observationID: o.id)) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "drop.fill")
+                            .font(.caption)
+                            .foregroundStyle(o.flag.isAbnormal ? o.flag.tint : AppColors.calorie)
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack(spacing: 4) {
+                                Text(o.displayName())
+                                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                    .lineLimit(1)
+                                Text(o.valueWithUnit)
+                                    .font(.system(.subheadline, design: .rounded, weight: .bold))
+                                    .monospacedDigit()
+                                    .foregroundStyle(o.flag.isAbnormal ? o.flag.tint : .primary)
+                                    .lineLimit(1)
+                                if let symbol = o.flag.symbol {
+                                    Text(symbol).font(.system(.subheadline, design: .rounded, weight: .bold)).foregroundStyle(o.flag.tint)
+                                }
+                            }
+                            Text("\(hit.record.title) · \(o.observedDate.flatMap { RecordDates.date(fromDay: $0)?.formatted(date: .abbreviated, time: .omitted) } ?? RecordFormatting.dateText(hit.record))")
+                                .font(.system(.caption, design: .rounded))
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
+                        Spacer(minLength: 0)
+                        Image(systemName: "chevron.right").font(.caption2).foregroundStyle(.tertiary)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(AppColors.appCard, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("records.search.value.\(o.id)")
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("records.search.values")
     }
 
     private func searchResults(_ hits: [RecordSearchHit]) -> some View {
@@ -468,11 +521,24 @@ struct RecordsHomeView: View {
     private var timeline: some View {
         ForEach(groupedByMonth) { group in
             Section {
-                ForEach(group.records) { record in
+                ForEach(Array(group.records.enumerated()), id: \.element.id) { index, record in
+                    let neighbours = store.episodeLinks[record.id]
+                    let next = index + 1 < group.records.count ? group.records[index + 1] : nil
                     recordLink(record) {
-                        RecordRow(record: record, isSelecting: isSelecting, isSelected: selection.contains(record.id))
+                        RecordRow(record: record, isSelecting: isSelecting, isSelected: selection.contains(record.id), episode: neighbours != nil)
                     }
                     .padding(.horizontal)
+                    .overlay(alignment: .bottomLeading) {
+                        // Thin connector between consecutive linked rows (plan §3.10).
+                        if let next, neighbours?.contains(next.id) == true, !isSelecting {
+                            Capsule()
+                                .fill(Color.teal.opacity(0.55))
+                                .frame(width: 3, height: 18)
+                                .offset(x: 38.5, y: 9)
+                                .accessibilityHidden(true)
+                        }
+                    }
+                    .zIndex(neighbours == nil ? 0 : 1)
                     Divider().padding(.leading, 76)
                 }
             } header: {

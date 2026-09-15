@@ -1,0 +1,1343 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-rx",
+            "b_id": "rec-visit",
+            "kind": "prescription_for",
+            "origin": "suggested",
+            "reasons": [
+              "same_doctor",
+              "same_facility",
+              "prescription_after_visit"
+            ],
+            "score": 1.0,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-followup",
+            "b_id": "rec-visit",
+            "kind": "follow_up",
+            "origin": "suggested",
+            "reasons": [
+              "same_doctor",
+              "same_facility",
+              "follow_up_date"
+            ],
+            "score": 1.0,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "metropolis healthcare"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-lab",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "Complete Blood Count",
+            "sort_date": "2026-08-03",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-rx",
+            "panels": [],
+            "record_type": "prescription",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-followup",
+            "panels": [],
+            "record_type": "consultation_note",
+            "report_name": null,
+            "sort_date": "2026-08-15",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "ravi rao"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-other-doc",
+            "panels": [],
+            "record_type": "prescription",
+            "report_name": null,
+            "sort_date": "2026-04-20",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": true,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "metropolis healthcare"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-split-parent",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": null,
+            "sort_date": "2026-08-02",
+            "split_parent": true
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "neha gupta"
+          ],
+          "facilities": [
+            "city care hospital"
+          ],
+          "follow_up_dates": [
+            "2026-08-15"
+          ],
+          "id": "rec-visit",
+          "panels": [],
+          "record_type": "consultation_note",
+          "report_name": null,
+          "sort_date": "2026-08-01",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "chain_visit",
+      "notes": "rx same day same doctor -> prescription_for 1.0; follow-up visit on the follow_up_date -> follow_up 1.0; lab only shares the doctor (0.4) -> none; far same-facility record -> none; archived split parent excluded"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-lab",
+            "b_id": "rec-lab-may",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count",
+              "mcv"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [
+              "metropolis healthcare"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-lab-may",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-05-10",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [
+              "2026-08-15"
+            ],
+            "id": "rec-visit",
+            "panels": [],
+            "record_type": "consultation_note",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": true,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "metropolis healthcare"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-split-parent",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": null,
+            "sort_date": "2026-08-02",
+            "split_parent": true
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [
+            "hemoglobin",
+            "platelet_count",
+            "wbc_count"
+          ],
+          "archived": false,
+          "doctors": [
+            "neha gupta"
+          ],
+          "facilities": [
+            "metropolis healthcare"
+          ],
+          "follow_up_dates": [],
+          "id": "rec-lab",
+          "panels": [
+            "cbc"
+          ],
+          "record_type": "lab_report",
+          "report_name": "Complete Blood Count",
+          "sort_date": "2026-08-03",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "chain_lab",
+      "notes": "previous CBC: same panel 0.5 + 3 shared analytes 0.2"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-followup",
+            "b_id": "rec-visit",
+            "kind": "follow_up",
+            "origin": "suggested",
+            "reasons": [
+              "same_doctor",
+              "same_facility",
+              "follow_up_date"
+            ],
+            "score": 1.0,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-followup",
+            "b_id": "rec-rx",
+            "kind": "same_episode",
+            "origin": "suggested",
+            "reasons": [
+              "same_doctor",
+              "same_facility"
+            ],
+            "score": 0.6,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [
+              "2026-08-15"
+            ],
+            "id": "rec-visit",
+            "panels": [],
+            "record_type": "consultation_note",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-rx",
+            "panels": [],
+            "record_type": "prescription",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "metropolis healthcare"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-lab",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "Complete Blood Count",
+            "sort_date": "2026-08-03",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "neha gupta"
+          ],
+          "facilities": [
+            "city care hospital"
+          ],
+          "follow_up_dates": [],
+          "id": "rec-followup",
+          "panels": [],
+          "record_type": "consultation_note",
+          "report_name": null,
+          "sort_date": "2026-08-15",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "chain_followup",
+      "notes": "the prescription predates this visit: only same doctor + facility (0.6) -> same_episode"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-followup",
+            "b_id": "rec-visit",
+            "kind": "follow_up",
+            "origin": "suggested",
+            "reasons": [
+              "same_doctor",
+              "same_facility",
+              "follow_up_date"
+            ],
+            "score": 1.0,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-rx",
+            "panels": [],
+            "record_type": "prescription",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-followup",
+            "panels": [],
+            "record_type": "consultation_note",
+            "report_name": null,
+            "sort_date": "2026-08-15",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [
+          {
+            "a_id": "rec-rx",
+            "b_id": "rec-visit",
+            "kind": "prescription_for",
+            "origin": "suggested",
+            "status": "rejected"
+          }
+        ],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "neha gupta"
+          ],
+          "facilities": [
+            "city care hospital"
+          ],
+          "follow_up_dates": [
+            "2026-08-15"
+          ],
+          "id": "rec-visit",
+          "panels": [],
+          "record_type": "consultation_note",
+          "report_name": null,
+          "sort_date": "2026-08-01",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "rejected_not_recreated"
+    },
+    {
+      "expected": {
+        "links": []
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [
+              "2026-08-15"
+            ],
+            "id": "rec-visit",
+            "panels": [],
+            "record_type": "consultation_note",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [
+          {
+            "a_id": "rec-followup",
+            "b_id": "rec-visit",
+            "kind": "related",
+            "origin": "user",
+            "status": "accepted"
+          }
+        ],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "neha gupta"
+          ],
+          "facilities": [
+            "city care hospital"
+          ],
+          "follow_up_dates": [],
+          "id": "rec-followup",
+          "panels": [],
+          "record_type": "consultation_note",
+          "report_name": null,
+          "sort_date": "2026-08-15",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "accepted_user_link_skipped"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-cbc-0",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-1",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-2",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-3",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-4",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-0",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-07-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-1",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-06-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-2",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-05-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-3",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-04-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-4",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-03-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-5",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-02-10",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-6",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-02-03",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "mcv"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-near-partial",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "Hemogram",
+            "sort_date": "2026-07-25",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [
+            "hemoglobin",
+            "platelet_count",
+            "wbc_count"
+          ],
+          "archived": false,
+          "doctors": [],
+          "facilities": [],
+          "follow_up_dates": [],
+          "id": "rec-cbc-new",
+          "panels": [
+            "cbc"
+          ],
+          "record_type": "lab_report",
+          "report_name": "CBC",
+          "sort_date": "2026-08-01",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "max_five",
+      "notes": "8 candidates: 7 previous CBCs score 0.7 (the oldest is 179 days back), a closer partial hemogram scores 0.5 (below the bar); the 5 closest 0.7 ones are kept"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-cbc-0",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-1",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-2",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "same_report_name",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-0",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-07-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-1",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-06-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-2",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-05-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-3",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-04-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-4",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-03-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-5",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-02-10",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-cbc-6",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "CBC",
+            "sort_date": "2026-02-03",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [
+          {
+            "a_id": "rec-cbc-new",
+            "b_id": "rec-zzz-1",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-aaa-2",
+            "b_id": "rec-cbc-new",
+            "kind": "related",
+            "origin": "suggested",
+            "status": "suggested"
+          },
+          {
+            "a_id": "rec-cbc-new",
+            "b_id": "rec-zzz-3",
+            "kind": "related",
+            "origin": "suggested",
+            "status": "rejected"
+          }
+        ],
+        "record": {
+          "analytes": [
+            "hemoglobin",
+            "platelet_count",
+            "wbc_count"
+          ],
+          "archived": false,
+          "doctors": [],
+          "facilities": [],
+          "follow_up_dates": [],
+          "id": "rec-cbc-new",
+          "panels": [
+            "cbc"
+          ],
+          "record_type": "lab_report",
+          "report_name": "CBC",
+          "sort_date": "2026-08-01",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "max_five_counts_pending",
+      "notes": "2 pending suggestions leave 3 slots; rejected rows do not count"
+    },
+    {
+      "expected": {
+        "links": []
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [
+              "2026-08-15"
+            ],
+            "id": "rec-visit",
+            "panels": [],
+            "record_type": "consultation_note",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "city care hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-rx",
+            "panels": [],
+            "record_type": "prescription",
+            "report_name": null,
+            "sort_date": "2026-08-01",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "ravi rao"
+          ],
+          "facilities": [
+            "city care hospital"
+          ],
+          "follow_up_dates": [],
+          "id": "rec-other-doc",
+          "panels": [],
+          "record_type": "prescription",
+          "report_name": null,
+          "sort_date": "2026-04-20",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "same_facility_far_apart",
+      "notes": "103 days apart, facility only counts within 30 days"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-180",
+            "b_id": "rec-cbc-new",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_panel",
+              "shared_analytes"
+            ],
+            "score": 0.7,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-180",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": null,
+            "sort_date": "2026-02-02",
+            "split_parent": false
+          },
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-181",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": null,
+            "sort_date": "2026-02-01",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [
+            "hemoglobin",
+            "platelet_count",
+            "wbc_count"
+          ],
+          "archived": false,
+          "doctors": [],
+          "facilities": [],
+          "follow_up_dates": [],
+          "id": "rec-cbc-new",
+          "panels": [
+            "cbc"
+          ],
+          "record_type": "lab_report",
+          "report_name": "CBC",
+          "sort_date": "2026-08-01",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "window_boundary",
+      "notes": "180 days is inside the window, 181 is not"
+    },
+    {
+      "expected": {
+        "links": []
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [
+              "hemoglobin",
+              "platelet_count",
+              "wbc_count"
+            ],
+            "archived": false,
+            "doctors": [
+              "neha gupta"
+            ],
+            "facilities": [
+              "metropolis healthcare"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-lab",
+            "panels": [
+              "cbc"
+            ],
+            "record_type": "lab_report",
+            "report_name": "Complete Blood Count",
+            "sort_date": "2026-08-03",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [
+            "hemoglobin",
+            "platelet_count",
+            "wbc_count"
+          ],
+          "archived": true,
+          "doctors": [
+            "neha gupta"
+          ],
+          "facilities": [
+            "metropolis healthcare"
+          ],
+          "follow_up_dates": [],
+          "id": "rec-split-parent",
+          "panels": [
+            "cbc"
+          ],
+          "record_type": "lab_report",
+          "report_name": null,
+          "sort_date": "2026-08-02",
+          "split_parent": true
+        },
+        "today": "2026-09-15"
+      },
+      "name": "archived_split_parent_record"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-usg-1",
+            "b_id": "rec-usg-2",
+            "kind": "previous_report",
+            "origin": "suggested",
+            "reasons": [
+              "same_report_name",
+              "same_doctor"
+            ],
+            "score": 0.9,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "kiran shah"
+            ],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-usg-1",
+            "panels": [],
+            "record_type": "imaging_report",
+            "report_name": "USG Abdomen",
+            "sort_date": "2026-06-01",
+            "split_parent": false
+          },
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [],
+            "facilities": [],
+            "follow_up_dates": [],
+            "id": "rec-usg-3",
+            "panels": [],
+            "record_type": "imaging_report",
+            "report_name": "USG Abdomen",
+            "sort_date": "2026-03-01",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "kiran shah"
+          ],
+          "facilities": [],
+          "follow_up_dates": [],
+          "id": "rec-usg-2",
+          "panels": [],
+          "record_type": "imaging_report",
+          "report_name": "USG ABDOMEN",
+          "sort_date": "2026-06-20",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "imaging_same_name",
+      "notes": "same report name + same doctor within 30 days -> previous_report 0.9; same name alone (0.5) is below the bar"
+    },
+    {
+      "expected": {
+        "links": [
+          {
+            "a_id": "rec-discharge",
+            "b_id": "rec-discharge-rx",
+            "kind": "prescription_for",
+            "origin": "suggested",
+            "reasons": [
+              "same_doctor",
+              "prescription_after_visit"
+            ],
+            "score": 1.0,
+            "status": "suggested"
+          }
+        ]
+      },
+      "input": {
+        "candidates": [
+          {
+            "analytes": [],
+            "archived": false,
+            "doctors": [
+              "vivek nair"
+            ],
+            "facilities": [
+              "st marys hospital"
+            ],
+            "follow_up_dates": [],
+            "id": "rec-discharge",
+            "panels": [],
+            "record_type": "discharge_summary",
+            "report_name": null,
+            "sort_date": "2026-07-01",
+            "split_parent": false
+          }
+        ],
+        "existing_links": [],
+        "record": {
+          "analytes": [],
+          "archived": false,
+          "doctors": [
+            "vivek nair"
+          ],
+          "facilities": [],
+          "follow_up_dates": [],
+          "id": "rec-discharge-rx",
+          "panels": [],
+          "record_type": "prescription",
+          "report_name": null,
+          "sort_date": "2026-07-04",
+          "split_parent": false
+        },
+        "today": "2026-09-15"
+      },
+      "name": "discharge_prescription"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "suggest_relations",
+  "version": 1
+}

@@ -198,6 +198,10 @@ nonisolated enum RecordProcessingStage: String, CaseIterable, Codable, Sendable 
     case highlights
     case review
     case nearDuplicate = "near_duplicate"
+    /// Phase 3: promotion + analyte mapping (§19).
+    case observations
+    /// Phase 3: relation suggestions (§22).
+    case relations
     case index
     case done
 

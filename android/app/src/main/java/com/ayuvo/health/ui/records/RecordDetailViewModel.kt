@@ -8,7 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ayuvo.health.AppContainer
+import com.ayuvo.health.records.analytes.AnalyteCatalog
+import com.ayuvo.health.records.knowledge.TrendSeries
 import com.ayuvo.health.records.model.HealthRecord
+import com.ayuvo.health.records.model.LinkKind
+import com.ayuvo.health.records.model.NewUserObservation
+import com.ayuvo.health.records.model.Observation
+import com.ayuvo.health.records.model.ObservationEdit
+import com.ayuvo.health.records.model.RecordLink
+import com.ayuvo.health.records.model.RecordQuery
+import com.ayuvo.health.records.model.RecordsSearchTerms
+import com.ayuvo.health.records.model.RelatedRecord
 import com.ayuvo.health.records.model.RecordCategory
 import com.ayuvo.health.records.model.RecordPage
 import com.ayuvo.health.records.model.RecordPatch
@@ -52,13 +62,26 @@ data class RecordDetailUiState(
     val focus: SourceFocus? = null,
     /** Pending duplicate pairs resolved into records for the sheet. */
     val duplicateMatches: List<Pair<DuplicateCandidate, DuplicateMatch>> = emptyList(),
-    val reviewItems: List<ReviewItem> = emptyList()
+    val reviewItems: List<ReviewItem> = emptyList(),
+    // Phase 3
+    val observations: List<Observation> = emptyList(),
+    /** Trend of every analyte this record has (mini trends shown for ≥ 2 points). */
+    val trends: Map<String, TrendSeries.Trend> = emptyMap(),
+    val related: List<RelatedRecord> = emptyList(),
+    val catalog: AnalyteCatalog = AnalyteCatalog.EMPTY,
+    /** "Also match N other values named X?" after a remap: (raw name, analyte id, count). */
+    val aliasPrompt: Triple<String, String, Int>? = null,
+    /** Link record sheet candidates for the current search text. */
+    val linkCandidates: List<HealthRecord> = emptyList()
 )
 
 class RecordDetailViewModel(
     private val container: AppContainer,
-    private val recordId: String
+    private val recordId: String,
+    /** Trend point tap: open with this observation's source in view (§24). */
+    private val focusObservationId: String? = null
 ) : ViewModel() {
+    private var pendingFocus: String? = focusObservationId
     private val store get() = container.recordsStore
 
     private val _ui = MutableStateFlow(RecordDetailUiState())
@@ -92,11 +115,20 @@ class RecordDetailViewModel(
                 candidate to DuplicateMatch(newer, older)
             }
             val review = intelligence?.let { ReviewSelection.items(it.fields) }.orEmpty()
+            val catalog = withContext(Dispatchers.IO) { container.analyteCatalog }
+            val observations = store.observations(recordId)
+            val trends = store.trendsForRecord(recordId).mapValues { (id, rows) -> TrendSeries.build(id, rows, catalog) }
+            val related = store.related(recordId)
             _ui.update {
                 it.copy(
                     loading = false, record = record, pages = pages, tags = tags, allTags = allTags, missing = false,
-                    intelligence = intelligence, waitingForAi = waiting, duplicateMatches = matches, reviewItems = review
+                    intelligence = intelligence, waitingForAi = waiting, duplicateMatches = matches, reviewItems = review,
+                    observations = observations, trends = trends, related = related, catalog = catalog
                 )
+            }
+            pendingFocus?.let { id ->
+                pendingFocus = null
+                observations.firstOrNull { it.id == id }?.let { focusObservation(it) }
             }
         }.onFailure { _ui.update { it.copy(loading = false) } }
     }
@@ -164,9 +196,74 @@ class RecordDetailViewModel(
         val page = field.sourcePage ?: return
         viewModelScope.launch {
             val bbox = SourceBoxes.parse(field.sourceBbox) ?: runCatching {
-                SourceBoxes.locate(store.pages(recordId).firstOrNull { it.pageIndex == page }?.blocksJson, field.evidence ?: field.valueText)
+                val blocks = store.pages(recordId).firstOrNull { it.pageIndex == page }?.blocksJson
+                SourceBoxes.locateEvidence(blocks, field.evidence ?: field.valueText)?.let {
+                    if (field.key == com.ayuvo.health.records.model.FieldKey.TEST_RESULT) SourceBoxes.rowOf(blocks, it) else it
+                }
             }.getOrNull()
             _ui.update { it.copy(focus = SourceFocus(page, bbox)) }
+        }
+    }
+
+    fun focusObservation(observation: Observation) {
+        val page = observation.sourcePage ?: return
+        viewModelScope.launch {
+            val bbox = SourceBoxes.parse(observation.sourceBbox) ?: runCatching {
+                val blocks = store.pages(recordId).firstOrNull { it.pageIndex == page }?.blocksJson
+                // §25: the folded evidence against blocks_json lines (first containing line, else highest word
+                // overlap); OCR cells of the same table row are then outlined together.
+                SourceBoxes.locateEvidence(blocks, observation.evidence ?: observation.rawName)?.let { SourceBoxes.rowOf(blocks, it) }
+            }.getOrNull()
+            _ui.update { it.copy(focus = SourceFocus(page, bbox)) }
+        }
+    }
+
+    // -- Health data points (§24) -----------------------------------------------
+
+    fun editObservation(observation: Observation, edit: ObservationEdit) = launch {
+        store.editObservation(observation.id, edit)
+        val remapped = edit.setAnalyte && edit.analyteId != null && edit.analyteId != observation.analyteId
+        if (remapped) {
+            val others = store.unmappedWithName(observation.rawName)
+            if (others > 0) {
+                _ui.update { it.copy(aliasPrompt = Triple(observation.rawName, edit.analyteId!!, others)) }
+            }
+        }
+    }
+
+    fun applyAliasToOthers() = launch {
+        val prompt = _ui.value.aliasPrompt ?: return@launch
+        _ui.update { it.copy(aliasPrompt = null) }
+        store.applyUserAlias(prompt.first, prompt.second)
+    }
+
+    fun dismissAliasPrompt() = _ui.update { it.copy(aliasPrompt = null) }
+
+    fun removeObservation(observation: Observation) = launch { store.removeObservation(observation.id) }
+
+    fun setExcluded(observation: Observation, excluded: Boolean) = launch {
+        store.editObservation(observation.id, ObservationEdit(excludedFromTrends = excluded, rememberAlias = false))
+    }
+
+    fun addObservation(analyteId: String?, name: String, value: String, unit: String?, date: String?, refText: String?) = launch {
+        store.addObservation(NewUserObservation(recordId, analyteId, name, value, unit, date, refText))
+    }
+
+    // -- Related records (§19, §22) ---------------------------------------------
+
+    fun acceptLink(link: RecordLink) = launch { store.acceptLink(link.aId, link.bId) }
+    fun rejectLink(link: RecordLink) = launch { store.rejectLink(link.aId, link.bId) }
+    fun unlink(link: RecordLink) = launch { store.unlink(link.aId, link.bId) }
+    fun linkTo(otherId: String, kind: LinkKind) = launch { store.link(recordId, otherId, kind) }
+
+    fun searchLinkCandidates(text: String) {
+        viewModelScope.launch {
+            runCatching {
+                val linked = _ui.value.related.filter { it.link.isLinked }.map { it.record.id }.toSet() + recordId
+                val terms = RecordsSearchTerms.split(text)
+                val found = if (terms.isEmpty()) store.recent(40) else store.search(RecordQuery(terms = terms), limit = 40).map { it.record }
+                found.filter { it.id !in linked }
+            }.onSuccess { list -> _ui.update { it.copy(linkCandidates = list) } }
         }
     }
 
@@ -255,8 +352,8 @@ class RecordDetailViewModel(
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
-    class Factory(private val container: AppContainer, private val recordId: String) : ViewModelProvider.Factory {
+    class Factory(private val container: AppContainer, private val recordId: String, private val focusObservationId: String? = null) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = RecordDetailViewModel(container, recordId) as T
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = RecordDetailViewModel(container, recordId, focusObservationId) as T
     }
 }

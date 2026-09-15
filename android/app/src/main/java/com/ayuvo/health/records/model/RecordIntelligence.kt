@@ -96,11 +96,11 @@ enum class HighlightSection(val raw: String) {
     }
 }
 
-/** `processing_jobs.stage`, in pipeline order (§8, §9). */
+/** `processing_jobs.stage`, in pipeline order (§8, §9; Phase 3 adds `observations` and `relations`). */
 enum class ProcessingStage(val raw: String) {
     TEXT("text"), CLASSIFY("classify"), BOUNDARIES("boundaries"), RULES("rules"), AI("ai"),
     VALIDATE("validate"), HIGHLIGHTS("highlights"), REVIEW("review"), NEAR_DUPLICATE("near_duplicate"),
-    INDEX("index"), DONE("done");
+    OBSERVATIONS("observations"), RELATIONS("relations"), INDEX("index"), DONE("done");
 
     fun next(): ProcessingStage = entries.getOrElse(ordinal + 1) { DONE }
 

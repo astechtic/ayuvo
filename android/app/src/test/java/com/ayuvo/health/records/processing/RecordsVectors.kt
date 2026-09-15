@@ -3,7 +3,12 @@ package com.ayuvo.health.records.processing
 import com.ayuvo.health.records.model.ExtractedField
 import com.ayuvo.health.records.model.ExtractionMethod
 import com.ayuvo.health.records.model.FieldState
+import com.ayuvo.health.records.analytes.AnalyteCatalog
+import com.ayuvo.health.records.model.AnalyteMethod
+import com.ayuvo.health.records.model.Observation
+import com.ayuvo.health.records.model.ObservationEdit
 import com.ayuvo.health.records.model.RecordField
+import com.ayuvo.health.records.model.ResultFlag
 import com.ayuvo.health.records.search.RecordQueryParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -30,6 +35,7 @@ object RecordsVectors {
     private val fields by lazy { FieldExtractor(config, units) }
     private val labRows by lazy { LabRowParser(units) }
     private val boundaries by lazy { BoundaryDetector(classifier, units) }
+    private val catalog by lazy { units; AnalyteCatalog.parse(RecordsTestFiles.shared("analytes.json")!!.readText(), units) }
 
     data class Outcome(val file: String, val passed: Int, val total: Int, val failures: List<String>)
 
@@ -156,15 +162,158 @@ object RecordsVectors {
             else -> error("unknown hashing op")
         }
         "parse_query" -> {
-            val q = RecordQueryParser.parse(input.str("text")!!, today(input), order(input))
+            val q = RecordQueryParser.parse(input.str("text")!!, today(input), order(input), catalog, units)
             obj(
                 "terms" to q.terms, "date_from" to q.dateFrom, "date_to" to q.dateTo, "record_types" to q.recordTypes.map { it.raw },
                 "flags" to q.flags.toList(), "doctor" to q.doctor, "facility" to q.facility, "favorites" to q.favorites,
                 "needs_review" to q.needsReview, "archived" to q.archived, "source" to q.source,
+                "analyte_conditions" to q.analyteConditions.map {
+                    obj("analyte_id" to it.analyteId, "flag" to it.flag, "op" to it.op, "value" to it.value, "unit" to it.unit,
+                        "canonical_value" to it.canonicalValue, "canonical_unit" to it.canonicalUnit)
+                },
+                "analytes" to q.analytes,
                 "chips" to q.chips.map { obj("kind" to it.kind, "text" to it.label) }, "match" to q.match
             )
         }
+        "map_analyte" -> when (input.str("op") ?: "map") {
+            "map" -> {
+                val m = catalog.map(
+                    input.str("name")!!, (input["panels"] as? JsonArray)?.map { (it as JsonPrimitive).content },
+                    (input["user_aliases"] as? JsonObject)?.mapValues { (it.value as JsonPrimitive).content },
+                    input.str("unit"), input.bool("qualitative")
+                )
+                obj("analyte_id" to m.analyteId, "method" to m.method?.raw, "key" to m.key, "normalized_name" to m.normalizedName, "candidates" to m.candidates)
+            }
+            "keys" -> obj("keys" to AnalyteCatalog.testNameKeys(input.str("name")), "normalized_name" to AnalyteCatalog.normalizeTestName(input.str("name")))
+            "detect_panels" -> obj("panels" to catalog.detectPanels(strings(input["texts"]), strings(input["test_names"])))
+            else -> error("map_analyte op")
+        }
+        "convert_unit" -> catalog.convert(input.str("analyte_id"), input.num("value"), input.str("unit")).let {
+            obj("unit" to it.unit, "canonical_value" to it.value, "canonical_unit" to it.canonicalUnit, "status" to it.status)
+        }
+        "observations" -> observations(input)
+        "trends" -> {
+            val tr = com.ayuvo.health.records.knowledge.TrendSeries.build(input.str("analyte_id")!!, (input["observations"] as JsonArray).map { toObservation(it.jsonObj()) }, catalog)
+            when (input.str("op")) {
+                "series" -> obj(
+                    "analyte_id" to tr.analyteId, "display_name" to tr.displayName,
+                    "series" to tr.series.map { se ->
+                        obj(
+                            "unit" to se.unit, "convertible" to se.convertible,
+                            "points" to se.points.map { p ->
+                                obj("date" to p.date, "value" to p.value, "value_text" to p.valueText, "unit" to p.unit, "flag" to p.flag,
+                                    "ref_low" to p.refLow, "ref_high" to p.refHigh, "record_ids" to p.recordIds, "observation_ids" to p.observationIds)
+                            },
+                            "band" to se.band?.let { obj("low" to it.low, "high" to it.high) }
+                        )
+                    },
+                    "skipped_ids" to tr.skippedIds
+                )
+                "mini" -> com.ayuvo.health.records.knowledge.TrendSeries.mini(tr, input.str("observation_id")!!, catalog).let { m ->
+                    obj(
+                        "show" to m.show, "values" to m.values, "text" to m.text, "unit" to m.unit,
+                        "change" to m.delta?.let { obj("delta" to it, "unit" to m.unit, "since_date" to m.sinceDate) },
+                        "change_text" to m.changeText
+                    )
+                }
+                else -> error("trends op")
+            }
+        }
+        "entities" -> when (input.str("op") ?: "rebuild") {
+            "rebuild" -> com.ayuvo.health.records.knowledge.EntityRules.rebuild((input["fields"] as JsonArray).mapIndexed { i, e -> toField(e.jsonObj(), i) }).let { r ->
+                obj(
+                    "entities" to r.entities.map { obj("kind" to it.kind.raw, "display_name" to it.displayName, "normalized_name" to it.normalizedName, "specialty" to it.specialty) },
+                    "record_entities" to r.recordEntities.map { obj("kind" to it.kind.raw, "normalized_name" to it.normalizedName, "role" to it.role) }
+                )
+            }
+            "normalize" -> input.str("name").let { n ->
+                val er = com.ayuvo.health.records.knowledge.EntityRules
+                obj("doctor_display" to er.doctorDisplayName(n), "doctor" to er.normalizeDoctorName(n), "facility_display" to er.facilityDisplayName(n), "facility" to er.normalizeFacilityName(n))
+            }
+            else -> error("entities op")
+        }
+        "suggest_relations" -> {
+            fun facts(o: JsonObject) = com.ayuvo.health.records.knowledge.RelationSuggester.RecordFacts(
+                id = o.str("id")!!, recordType = o.str("record_type")!!, sortDate = o.str("sort_date")!!,
+                archived = o.bool("archived") == true, splitParent = o.bool("split_parent") == true,
+                panels = strings(o["panels"]), reportName = o.str("report_name"), analytes = strings(o["analytes"]),
+                doctors = strings(o["doctors"]), facilities = strings(o["facilities"]), followUpDates = strings(o["follow_up_dates"])
+            )
+            val links = (input["existing_links"] as? JsonArray).orEmpty().map { e ->
+                val o = e.jsonObj()
+                com.ayuvo.health.records.knowledge.RelationSuggester.ExistingLink(o.str("a_id")!!, o.str("b_id")!!, o.str("status")!!)
+            }
+            val out = com.ayuvo.health.records.knowledge.RelationSuggester.suggest(facts(input["record"]!!.jsonObj()), (input["candidates"] as JsonArray).map { facts(it.jsonObj()) }, links)
+            obj("links" to out.map { obj("a_id" to it.aId, "b_id" to it.bId, "kind" to it.kind, "origin" to it.origin, "status" to it.status, "score" to it.score, "reasons" to it.reasons) })
+        }
         else -> error("unknown function $function")
+    }
+
+    private fun strings(e: JsonElement?): List<String> = (e as? JsonArray).orEmpty().map { (it as JsonPrimitive).content }
+
+    private fun toObservation(o: JsonObject) = Observation(
+        id = o.str("id")!!, recordId = o.str("record_id")!!, fieldId = o.str("field_id"), analyteId = o.str("analyte_id"),
+        analyteMethod = AnalyteMethod.fromRaw(o.str("analyte_method")), rawName = o.str("raw_name")!!, valueNum = o.num("value_num"),
+        valueText = o.str("value_text") ?: "", unit = o.str("unit"), canonicalValue = o.num("canonical_value"), canonicalUnit = o.str("canonical_unit"),
+        refLow = o.num("ref_low"), refHigh = o.num("ref_high"), refText = o.str("ref_text"), flag = ResultFlag.fromRaw(o.str("flag")),
+        observedDate = o.str("observed_date"), observedDateMethod = o.str("observed_date_method"),
+        method = ExtractionMethod.entries.first { it.raw == o.str("method") }, confidence = o.num("confidence") ?: 0.0,
+        state = FieldState.fromRaw(o.str("state")), sourcePage = o.num("source_page")?.toInt(), sourceBbox = o.str("source_bbox"),
+        evidence = o.str("evidence"), excludedFromTrends = (o.num("excluded_from_trends") ?: 0.0) != 0.0 || o.bool("excluded_from_trends") == true,
+        createdMs = o.num("created_ms")?.toLong() ?: 0, updatedMs = o.num("updated_ms")?.toLong() ?: 0
+    )
+
+    private fun observationJson(o: Observation) = obj(
+        "id" to o.id, "record_id" to o.recordId, "field_id" to o.fieldId, "analyte_id" to o.analyteId, "analyte_method" to o.analyteMethod?.raw,
+        "raw_name" to o.rawName, "value_num" to o.valueNum, "value_text" to o.valueText, "unit" to o.unit, "canonical_value" to o.canonicalValue,
+        "canonical_unit" to o.canonicalUnit, "ref_low" to o.refLow, "ref_high" to o.refHigh, "ref_text" to o.refText, "flag" to o.flag.raw,
+        "observed_date" to o.observedDate, "observed_date_method" to o.observedDateMethod, "method" to o.method.raw, "confidence" to o.confidence,
+        "state" to o.state.raw, "source_page" to o.sourcePage, "source_bbox" to o.sourceBbox, "evidence" to o.evidence,
+        "excluded_from_trends" to (if (o.excludedFromTrends) 1 else 0), "created_ms" to o.createdMs, "updated_ms" to o.updatedMs
+    )
+
+    private fun observations(input: JsonObject): JsonElement {
+        val rules = com.ayuvo.health.records.knowledge.ObservationRules
+        fun record() = input["record"]!!.jsonObj().let { com.ayuvo.health.records.knowledge.ObservationRules.RecordContext(it.str("id") ?: "", it.str("document_date"), it.str("sort_date")) }
+        fun fields() = (input["fields"] as JsonArray).mapIndexed { i, e -> toField(e.jsonObj(), i) }
+        return when (input.str("op")) {
+            "promote" -> {
+                val r = rules.promote(
+                    fields(), (input["existing_observations"] as? JsonArray).orEmpty().map { toObservation(it.jsonObj()) }, record(),
+                    (input["user_aliases"] as? JsonObject)?.mapValues { (it.value as JsonPrimitive).content }, input.num("now_ms")?.toLong() ?: 0, catalog
+                )
+                obj(
+                    "observations" to r.observations.map(::observationJson),
+                    "actions" to r.actions.map { obj("action" to it.action, "id" to it.id, "field_id" to it.fieldId) },
+                    "panels" to r.panels
+                )
+            }
+            "observed_date" -> rules.observedDate(record(), fields()).let { obj("date" to it.date, "method" to it.method) }
+            "edit" -> {
+                val p = input["patch"]!!.jsonObj()
+                val edit = ObservationEdit(
+                    setValue = "value" in p, value = p.str("value"),
+                    setUnit = "unit" in p, unit = p.str("unit"),
+                    setRefText = "ref_text" in p, refText = p.str("ref_text"),
+                    setAnalyte = "analyte_id" in p, analyteId = p.str("analyte_id"),
+                    setObservedDate = "observed_date" in p, observedDate = p.str("observed_date"),
+                    excludedFromTrends = p.bool("excluded_from_trends"),
+                    remove = p.bool("remove") == true
+                )
+                val r = rules.edit(toObservation(input["observation"]!!.jsonObj()), edit, p.num("now_ms")?.toLong() ?: 0, catalog)
+                obj("observation" to observationJson(r.observation), "error" to r.error)
+            }
+            "user_alias" -> {
+                val r = rules.applyUserAlias((input["observations"] as JsonArray).map { toObservation(it.jsonObj()) }, input.str("raw_name")!!, input.str("analyte_id")!!, input.num("now_ms")?.toLong() ?: 0, catalog)
+                obj(
+                    "alias" to r.normalizedName?.let { obj("normalized_name" to it, "analyte_id" to r.analyteId) },
+                    "observations" to r.observations.map(::observationJson),
+                    "updated_ids" to r.updatedIds,
+                    "error" to r.error
+                )
+            }
+            else -> error("observations op")
+        }
     }
 
     private fun toField(o: JsonObject, index: Int): RecordField = RecordField(
@@ -177,6 +326,7 @@ object RecordsVectors {
         confidence = o.num("confidence") ?: 0.0,
         state = FieldState.fromRaw(o.str("state")),
         sourcePage = o.num("source_page")?.toInt(),
+        sourceBbox = o.str("source_bbox"),
         evidence = o.str("evidence")
     )
 

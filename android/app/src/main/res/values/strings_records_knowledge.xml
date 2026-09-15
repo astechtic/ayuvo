@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Health Records Phase 3 "Health knowledge base" (docs/health-records.md §19–§24). English first. -->
+<resources>
+    <!-- Health data points -->
+    <string name="records_data_points_title">Health data points</string>
+    <string name="records_data_points_empty">No test values yet. Add one if the report has results that weren\'t found.</string>
+    <string name="records_data_points_add">Add value</string>
+    <string name="records_data_points_unmapped">Not matched to a test</string>
+    <string name="records_data_points_confirmed">Confirmed</string>
+    <string name="records_data_points_edited">Edited</string>
+    <string name="records_data_points_excluded">Hidden from trends</string>
+    <string name="records_data_points_ref">Ref %1$s</string>
+    <string name="records_view_full_trend">View full trend</string>
+    <string name="records_flag_low">Low</string>
+    <string name="records_flag_high">High</string>
+    <string name="records_flag_critical_low">Critical low</string>
+    <string name="records_flag_critical_high">Critical high</string>
+    <string name="records_flag_abnormal">Abnormal</string>
+    <string name="records_flag_normal">Normal</string>
+
+    <!-- Observation edit sheet -->
+    <string name="records_obs_edit_title">Edit value</string>
+    <string name="records_obs_field_test">Test</string>
+    <string name="records_obs_field_value">Value</string>
+    <string name="records_obs_field_unit">Unit</string>
+    <string name="records_obs_field_date">Date</string>
+    <string name="records_obs_field_ref">Reference range</string>
+    <string name="records_obs_field_ref_hint">e.g. 13.0 - 17.0</string>
+    <string name="records_obs_choose_test">Choose test</string>
+    <string name="records_obs_as_printed">As printed: %1$s</string>
+    <string name="records_obs_exclude">Show in trends</string>
+    <string name="records_obs_remove">Remove value</string>
+    <string name="records_obs_view_source">View in original</string>
+    <string name="records_obs_unmap">Not a listed test</string>
+    <string name="records_obs_apply_others">Also match %1$d other values named “%2$s”?</string>
+    <string name="records_obs_apply_others_action">Match all</string>
+    <string name="records_obs_add_title">Add value</string>
+    <string name="records_obs_search_tests">Search tests</string>
+    <string name="records_obs_no_tests">No matching tests</string>
+    <string name="records_obs_edit_note">Your edits are kept; the original report stays unchanged.</string>
+
+    <!-- Trend screen -->
+    <string name="records_trend_title">%1$s trend</string>
+    <string name="records_trend_empty">Add another report with %1$s to see a trend</string>
+    <string name="records_trend_points">Values</string>
+    <string name="records_trend_band">Reference range (latest report): %1$s</string>
+    <string name="records_trend_separate_units">Values in %1$s can\'t be converted and are shown as their own series.</string>
+    <string name="records_trend_point_open">Open report</string>
+    <string name="records_trend_exclude">Hide from trend</string>
+    <string name="records_trend_include">Show in trend</string>
+    <string name="records_trend_latest">Latest</string>
+    <string name="records_trend_change">Change</string>
+    <string name="records_trend_count">Reports</string>
+    <string name="records_trend_note">Values come from your reports. Ask your doctor to interpret changes.</string>
+    <string name="records_trend_sources">%1$d reports</string>
+
+    <!-- Related records -->
+    <string name="records_related_title">Related records</string>
+    <string name="records_related_linked">Linked</string>
+    <string name="records_related_suggested">Suggested</string>
+    <string name="records_related_empty">No related records yet.</string>
+    <string name="records_related_link">Link record</string>
+    <string name="records_related_unlink">Unlink</string>
+    <string name="records_related_accept">Link</string>
+    <string name="records_related_reject">Not related</string>
+    <string name="records_link_sheet_title">Link record</string>
+    <string name="records_link_search">Search records</string>
+    <string name="records_link_kind">Relation</string>
+    <string name="records_link_action">Link</string>
+    <string name="records_link_kind_follow_up">Follow-up</string>
+    <string name="records_link_kind_prescription_for">Prescription for</string>
+    <string name="records_link_kind_same_episode">Same episode</string>
+    <string name="records_link_kind_previous_report">Previous report</string>
+    <string name="records_link_kind_related">Related</string>
+    <string name="records_link_kind_split_from">From the same document</string>
+    <string name="records_episode_badge">Episode</string>
+
+    <!-- Search / filters -->
+    <string name="records_search_group_values">Values</string>
+    <string name="records_filter_test">Test</string>
+    <string name="records_filter_any">Any</string>
+    <string name="records_filter_choose">Choose</string>
+</resources>

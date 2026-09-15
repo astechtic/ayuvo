@@ -12,6 +12,10 @@ Checks:
   2. Output shapes per function (keys and enum values).
   3. record_types.json and units.json: shapes, regexes compile, portable-subset lint, units unique
      after folding. The reference module's own compiled patterns are linted too.
+     analytes.json (§20): ids unique snake_case, known panels/categories/kinds, every unit a units.json
+     canonical spelling with a positive factor, canonical unit listed with factor 1 / offset 0, decimals on
+     numeric analytes, aliases normalized-unique per analyte, shared aliases exactly
+     ANALYTE_SHARED_ALIASES and each group separable (unit sets, kind, own panel or the urine rule).
   4. ai_extraction.schema.json parses; vector inputs marked "schema_valid" validate against it;
      ai_extraction.md carries both prompt variants and the placeholders.
   5. schema.sql and migrations/*.sql split into statements with statements(path) (rule in
@@ -38,7 +42,9 @@ EXPECTED_FILES = {
     "fields.json": "extract_fields", "lab_rows.json": "parse_lab_rows", "boundaries.json": "detect_boundaries",
     "highlights.json": "build_highlights", "review.json": "review_status", "apply_extraction.json": "apply_extraction",
     "ai_validation.json": "validate_ai", "ai_chunks.json": "ai_chunks", "hashing.json": "hashing",
-    "query_parser.json": "parse_query",
+    "query_parser.json": "parse_query", "analyte_mapping.json": "map_analyte", "unit_conversion.json": "convert_unit",
+    "observations.json": "observations", "trends.json": "trends", "entities.json": "entities",
+    "relations.json": "suggest_relations",
 }
 
 
@@ -190,11 +196,102 @@ def check_data_files(problems):
             if fv in owner and owner[fv] != u["canonical"]:
                 problems.append("units.json: %r folds to %r, claimed by %s and %s" % (v, fv, owner[fv], u["canonical"]))
             owner[fv] = u["canonical"]
+    check_analytes(problems, set(u["canonical"] for u in un["units"]))
     for name in sorted(dir(R)):
         obj = getattr(R, name)
         if isinstance(obj, re.Pattern):
             for issue in lint_pattern(obj.pattern, owned=True):
                 problems.append("records_reference.%s: %s" % (name, issue))
+
+
+_ANALYTE_KEYS = {"id", "display_name", "category", "panels", "kind", "canonical_unit", "decimals", "units", "aliases",
+                 "loinc", "metric_registry_id"}
+
+
+def _separable(a, b):
+    """Two analytes sharing an alias can be told apart (§20 _disambiguate)."""
+    ua, ub = R._analyte_units(a), R._analyte_units(b)
+    if ua and ub and not (ua & ub):
+        return True
+    if a["kind"] != b["kind"]:
+        return True
+    if (a["category"] == "urine") != (b["category"] == "urine"):
+        return True
+    return bool(set(a["panels"]) - set(b["panels"])) and bool(set(b["panels"]) - set(a["panels"]))
+
+
+def check_analytes(problems, unit_canonicals):
+    path = os.path.join(SHARED, "analytes.json")
+    try:
+        doc = json.load(open(path, encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        problems.append("analytes.json: %s" % e)
+        return
+    if set(doc) != {"format", "version", "analytes"} or doc.get("format") != "ayuvo-analytes" or doc.get("version") != 1:
+        problems.append("analytes.json: bad envelope")
+        return
+    ids = set()
+    index = {}
+    for e in doc["analytes"]:
+        where = "analytes.json: %s" % e.get("id")
+        if set(e) - _ANALYTE_KEYS or not {"id", "display_name", "category", "panels", "kind", "canonical_unit",
+                                            "units", "aliases"} <= set(e):
+            problems.append("%s: bad keys %s" % (where, sorted(e)))
+            continue
+        if not re.fullmatch("[a-z][a-z0-9_]*", e["id"]) or e["id"] in ids:
+            problems.append("%s: id not unique snake_case" % where)
+        ids.add(e["id"])
+        if not e["display_name"].strip():
+            problems.append("%s: empty display_name" % where)
+        if e["category"] not in R.ANALYTE_CATEGORIES:
+            problems.append("%s: unknown category" % where)
+        if e["kind"] not in ("numeric", "qualitative"):
+            problems.append("%s: bad kind" % where)
+        if any(p not in R.PANEL_IDS for p in e["panels"]) or len(set(e["panels"])) != len(e["panels"]):
+            problems.append("%s: bad panels" % where)
+        if e["kind"] == "numeric" and not (isinstance(e.get("decimals"), int) and 0 <= e["decimals"] <= 4):
+            problems.append("%s: numeric analyte needs decimals 0..4" % where)
+        seen_units = set()
+        for u in e["units"]:
+            if set(u) != {"unit", "factor", "offset"} or u["unit"] not in unit_canonicals:
+                problems.append("%s: unit %r is not a units.json canonical spelling" % (where, u.get("unit")))
+                continue
+            if isinstance(u["factor"], bool) or not isinstance(u["factor"], (int, float)) or not u["factor"] > 0:
+                problems.append("%s: factor of %s must be > 0" % (where, u["unit"]))
+            if isinstance(u["offset"], bool) or not isinstance(u["offset"], (int, float)):
+                problems.append("%s: offset of %s must be a number" % (where, u["unit"]))
+            if u["unit"] in seen_units:
+                problems.append("%s: unit %s listed twice" % (where, u["unit"]))
+            seen_units.add(u["unit"])
+        cu = e["canonical_unit"]
+        if cu is None:
+            if e["units"]:
+                problems.append("%s: units listed without a canonical unit" % where)
+        elif not any(u.get("unit") == cu and u.get("factor") == 1 and u.get("offset") == 0 for u in e["units"]):
+            problems.append("%s: canonical unit %s must be listed with factor 1, offset 0" % (where, cu))
+        if e.get("metric_registry_id") == "blood_glucose" and cu != "mmol/L":
+            problems.append("%s: blood_glucose analytes use mmol/L" % where)
+        keys = [" ".join(R.analyte_words(a)) for a in e["aliases"]]
+        if not keys or any(not k for k in keys) or len(set(keys)) != len(keys):
+            problems.append("%s: aliases empty or not unique after normalization" % where)
+        for k in keys:
+            lst = index.setdefault(k, [])
+            if e["id"] not in lst:
+                lst.append(e["id"])
+    shared = dict((k, v) for k, v in index.items() if len(v) > 1)
+    if shared != R.ANALYTE_SHARED_ALIASES:
+        diff = sorted(k for k in set(shared) | set(R.ANALYTE_SHARED_ALIASES)
+                      if shared.get(k) != R.ANALYTE_SHARED_ALIASES.get(k))
+        problems.append("analytes.json: shared aliases differ from ANALYTE_SHARED_ALIASES: %s" % diff)
+    by_id = dict((e["id"], e) for e in doc["analytes"])
+    for k, group in sorted(shared.items()):
+        for i in range(len(group)):
+            for j in range(i + 1, len(group)):
+                if group[i] in by_id and group[j] in by_id and not _separable(by_id[group[i]], by_id[group[j]]):
+                    problems.append("analytes.json: shared alias %r cannot disambiguate %s / %s" % (k, group[i], group[j]))
+    for panel, phrases in R._PANEL_KEYWORDS:
+        if panel not in R.PANEL_IDS or any(" ".join(R.analyte_words(p)) != p for p in phrases):
+            problems.append("_PANEL_KEYWORDS: %s phrases must be in analyte_words form" % panel)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -337,6 +434,49 @@ def check_shape(function, exp, where, problems):
         for f in exp["flags"]:
             if f not in ("abnormal", "low", "high", "critical"):
                 problems.append("%s: bad flag" % where)
+        cat = R.analyte_catalog()["by_id"]
+        for c in exp["analyte_conditions"]:
+            if c["analyte_id"] not in cat or (c["flag"] is None) == (c["op"] is None):
+                problems.append("%s: bad analyte condition" % where)
+            if c["flag"] is not None and c["flag"] not in ("abnormal", "low", "high", "critical", "normal"):
+                problems.append("%s: bad condition flag" % where)
+            if c["op"] is not None and c["op"] not in (">", ">=", "<", "<="):
+                problems.append("%s: bad condition op" % where)
+        if any(a not in cat for a in exp["analytes"]):
+            problems.append("%s: unknown analyte" % where)
+    elif function == "map_analyte" and "analyte_id" in exp:
+        if exp["analyte_id"] is not None and exp["analyte_id"] not in R.analyte_catalog()["by_id"]:
+            problems.append("%s: unknown analyte" % where)
+        if (exp["analyte_id"] is None) != (exp["method"] is None) or (exp["candidates"] and exp["analyte_id"]):
+            problems.append("%s: inconsistent mapping" % where)
+    elif function == "convert_unit":
+        if exp["status"] not in ("converted", "unmapped", "no_value", "unit_missing", "unit_unknown") or \
+                ((exp["canonical_value"] is not None) != (exp["status"] == "converted")):
+            problems.append("%s: bad conversion status" % where)
+    elif function == "observations" and "observations" in exp:
+        for o in exp["observations"]:
+            if set(o) != set(R.OBSERVATION_KEYS):
+                problems.append("%s: observation keys %s" % (where, sorted(set(o) ^ set(R.OBSERVATION_KEYS))))
+            elif (o["state"] not in ("suggested", "confirmed", "rejected", "user") or o["flag"] not in R.FLAGS
+                  or o["analyte_method"] not in R.ANALYTE_METHODS + [None]):
+                problems.append("%s: bad observation enums" % where)
+    elif function == "observations" and exp.get("observation") is not None:
+        o = exp["observation"]
+        if set(o) != set(R.OBSERVATION_KEYS) or o["flag"] not in R.FLAGS:
+            problems.append("%s: bad edited observation" % where)
+    elif function == "entities" and "entities" in exp:
+        for e in exp["entities"]:
+            if e["kind"] not in ("doctor", "facility"):
+                problems.append("%s: bad entity kind" % where)
+        for l in exp["record_entities"]:
+            if (l["kind"], l["role"]) not in (("doctor", "doctor"), ("doctor", "referrer"), ("facility", "facility")):
+                problems.append("%s: bad entity role" % where)
+    elif function == "suggest_relations":
+        if len(exp["links"]) > R.MAX_SUGGESTIONS:
+            problems.append("%s: more than %d suggestions" % (where, R.MAX_SUGGESTIONS))
+        for l in exp["links"]:
+            if not l["a_id"] < l["b_id"] or l["kind"] not in R.LINK_KINDS or l["score"] < 0.6:
+                problems.append("%s: bad link" % where)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -447,6 +587,16 @@ class ReferenceSelfTest(unittest.TestCase):
         self.assertIn("variable-length lookbehind", lint_pattern("(?<!a+)b", False))
         self.assertIn("possessive quantifier", lint_pattern("a++", False))
         self.assertEqual(lint_pattern("(?<![a-z])ab(?:c|d)?[0-9]{1,2}", True), [])
+
+    def test_analyte_words_and_keys(self):
+        self.assertEqual(R.analyte_words("S.G.O.T. (AST)"), ["sgot", "ast"])
+        self.assertEqual(R.analyte_words("Vitamin D"), ["vitamin", "d"])
+        self.assertEqual(R.test_name_keys("Sr. Creatinine (Jaffe)"), ["sr creatinine jaffe", "sr creatinine", "creatinine"])
+
+    def test_round4_and_format(self):
+        self.assertEqual(R.round4(95 * 0.0555), 5.2725)
+        self.assertEqual(R.format_value(6.105, 1), "6.1")
+        self.assertEqual(R.format_value(-0.04, 1), "0.0")
 
     def test_apply_extraction_never_overwrites_confirmed(self):
         rows = [{"id": "r", "field_key": "facility", "value_text": "Metro Labs", "value_json": None, "method": "user",

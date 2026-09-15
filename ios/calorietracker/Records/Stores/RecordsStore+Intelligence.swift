@@ -222,10 +222,10 @@ extension RecordsStore {
 
     // MARK: - Filters sheet
 
-    func filterSuggestions() async -> (doctors: [String], facilities: [String], tags: [String]) {
+    func filterSuggestions() async -> (doctors: [RecordEntity], facilities: [RecordEntity], tags: [String]) {
         guard let repository = await openIfNeeded() else { return ([], [], []) }
-        let doctors = (try? await repository.database.distinctFieldValues(.doctorName)) ?? []
-        let facilities = (try? await repository.database.distinctFieldValues(.facility)) ?? []
+        let doctors = (try? await repository.database.entities(kind: .doctor)) ?? []
+        let facilities = (try? await repository.database.entities(kind: .facility)) ?? []
         let tags = (try? await repository.allTagNames()) ?? []
         return (doctors, facilities, tags)
     }
@@ -253,6 +253,18 @@ extension RecordsStore {
         state.offerAIRewrite = false
         searchState = state
         setQuery(query)
+        let conditions = active.analyteConditions.filter { !state.removedChips.contains(ParsedRecordQuery.Chip.analyte($0, label: "").id) }
+        if conditions.isEmpty {
+            searchState.valueHits = []
+        } else {
+            let archived = query.archivedOnly
+            Task { [weak self] in
+                guard let self, let repository = await self.openIfNeeded() else { return }
+                let values = (try? await repository.database.valueHits(conditions: conditions, archived: archived)) ?? []
+                guard self.searchState.text == text else { return }
+                self.searchState.valueHits = values
+            }
+        }
         guard !active.terms.isEmpty else {
             searchState.hits = nil
             return

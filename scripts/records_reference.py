@@ -2360,21 +2360,58 @@ _Q_PERIODS = {"day": "day", "days": "day", "week": "week", "weeks": "week", "mon
               "year": "year", "years": "year"}
 
 
+def _q_text(text):
+    return " ".join(fold(text or "").split("\n"))
+
+
+def _is_ascii_digit(ch):
+    return "0" <= ch <= "9"
+
+
+def _q_plain_tokens(f, start, end, toks):
+    """Tokens of f[start:end]: maximal alphanumeric runs ('w'); a run of ASCII digits followed by '.' and
+    ASCII digits and then a non-alphanumeric (or the end) is ONE 'w' token ('1.2', Phase 3); '>=', '<=',
+    '>', '<', '≥', '≤' are 'op' tokens (value '>=', '<=', '>', '<'). Tokens are (kind, value, text, start, end)."""
+    i = start
+    while i < end:
+        ch = f[i]
+        if _is_alnum_cp(ch):
+            j = i
+            while j < end and _is_alnum_cp(f[j]):
+                j += 1
+            if all(_is_ascii_digit(x) for x in f[i:j]) and j + 1 < end and f[j] == "." and _is_ascii_digit(f[j + 1]):
+                k = j + 1
+                while k < end and _is_ascii_digit(f[k]):
+                    k += 1
+                if k == end or not _is_alnum_cp(f[k]):
+                    j = k
+            toks.append(("w", f[i:j], f[i:j], i, j))
+            i = j
+        elif ch in "<>≤≥":
+            if ch in "<>" and i + 1 < end and f[i + 1] == "=":
+                toks.append(("op", ch + "=", f[i:i + 2], i, i + 2))
+                i += 2
+            else:
+                op = {"≤": "<=", "≥": ">="}.get(ch, ch)
+                toks.append(("op", op, ch, i, i + 1))
+                i += 1
+        else:
+            i += 1
+
+
 def _q_tokens(text, today, date_order):
-    """Folded query -> tokens [(kind, value, text)]: kind 'date' for full dates found by §11 (value =
-    date), else 'w' alphanumeric words."""
-    f = " ".join(fold(text or "").split("\n"))
+    """Folded query -> tokens [(kind, value, text, start, end)]: kind 'date' for full dates found by §11
+    (value = date), 'op' comparison symbols, else 'w' words (see _q_plain_tokens). Offsets index _q_text."""
+    f = _q_text(text)
     toks = []
     pos = 0
     for c in _date_candidates(f, today, date_order):
         if c["precision"] != "day":
             continue
-        for w in words(f[pos:c["start"]]):
-            toks.append(("w", w, w))
-        toks.append(("date", c["dates"][0], f[c["start"]:c["end"]]))
+        _q_plain_tokens(f, pos, c["start"], toks)
+        toks.append(("date", c["dates"][0], f[c["start"]:c["end"]], c["start"], c["end"]))
         pos = c["end"]
-    for w in words(f[pos:]):
-        toks.append(("w", w, w))
+    _q_plain_tokens(f, pos, len(f), toks)
     return toks
 
 
@@ -2396,7 +2433,7 @@ def _q_datespec(toks, i, today, allow_bare_abbrev):
     yesterday; this|last|past|previous week|month|year; last|past N days|weeks|months|years."""
     if i >= len(toks):
         return None
-    kind, v, _ = toks[i]
+    kind, v = toks[i][0], toks[i][1]
     if kind == "date":
         return v, v, 1
     if v == "today":
@@ -2452,13 +2489,111 @@ def _match_phrase(toks, i, table):
     return None
 
 
+_Q_COND_FLAGS = _Q_FLAGS + [(("normal",), "normal")]
+_Q_CONNECTORS = frozenset(["was", "is", "were", "are"])
+_Q_CMP_WORDS = [(("greater", "than"), ">"), (("more", "than"), ">"), (("less", "than"), "<"), (("at", "least"), ">="),
+                (("at", "most"), "<="), (("above",), ">"), (("over",), ">"), (("below",), "<"), (("under",), "<")]
+_RE_Q_NUMBER = re.compile("[0-9]+(?:\\.[0-9]+)?")
+
+
+def _q_alias_table():
+    """§23 query aliases: every catalog alias as §8.1 words and as analyte_words (both spellings index the
+    same analyte). Skipped: keys of <= 1 character and aliases made only of reserved query words (types,
+    flags, states, stop words) or method words. Returns ({words tuple: [ids]}, longest length)."""
+    if "q_alias" not in _CACHE:
+        reserved = (set(w for p, _ in _Q_TYPES for w in p) | set(w for p, _ in _Q_FLAGS for w in p)
+                    | set(w for p, _ in _Q_STATES for w in p) | _Q_STOP | _METHOD_WORDS)
+        table = {}
+        for e in analyte_catalog()["list"]:
+            for a in e["aliases"]:
+                for ws in (tuple(words(fold(a))), tuple(analyte_words(a))):
+                    if len(" ".join(ws)) <= 1 or all(w in reserved for w in ws):
+                        continue
+                    ids = table.setdefault(ws, [])
+                    if e["id"] not in ids:
+                        ids.append(e["id"])
+        _CACHE["q_alias"] = (table, max(len(k) for k in table))
+    return _CACHE["q_alias"]
+
+
+def _q_match_alias(toks, i):
+    table, longest = _q_alias_table()
+    for n in range(min(longest, len(toks) - i), 0, -1):
+        if all(toks[i + k][0] == "w" for k in range(n)):
+            ids = table.get(tuple(toks[i + k][1] for k in range(n)))
+            if ids:
+                return n, ids
+    return None
+
+
+def _q_resolve(ids, unit):
+    """Query alias -> one analyte or None: keep analytes listing the unit (when given and any does), then
+    non-urine analytes, then numeric analytes; each filter applies only if it keeps at least one."""
+    cat = analyte_catalog()["by_id"]
+    c = list(ids)
+    for keep in ((lambda i: unit is not None and unit in _analyte_units(cat[i])),
+                 (lambda i: cat[i]["category"] != "urine"), (lambda i: cat[i]["kind"] == "numeric")):
+        if len(c) > 1:
+            k = [i for i in c if keep(i)]
+            if k:
+                c = k
+    return c[0] if len(c) == 1 else None
+
+
+def _q_condition(toks, j, f):
+    """After an analyte alias ending at token j: optional was/is/were/are, then a flag phrase (low, high,
+    elevated, raised, abnormal, out of range, critical, normal) or a comparison (op token or comparison
+    words) + number [+ unit matched by match_unit on the folded query]. -> dict or None."""
+    k = j
+    if k < len(toks) and toks[k][0] == "w" and toks[k][1] in _Q_CONNECTORS:
+        k += 1
+    fl = _match_phrase(toks, k, _Q_COND_FLAGS)
+    if fl:
+        end = k + len(fl[0])
+        return {"flag": fl[1], "op": None, "value": None, "unit": None, "end": end, "end_pos": toks[end - 1][4]}
+    op, k2 = None, None
+    if k < len(toks) and toks[k][0] == "op":
+        op, k2 = toks[k][1], k + 1
+    else:
+        cm = _match_phrase(toks, k, _Q_CMP_WORDS)
+        if cm:
+            op, k2 = cm[1], k + len(cm[0])
+    if op is None or k2 >= len(toks) or toks[k2][0] != "w" or not _RE_Q_NUMBER.fullmatch(toks[k2][1]):
+        return None
+    end, end_pos = k2 + 1, toks[k2][4]
+    pos = end_pos
+    while pos < len(f) and f[pos] == " ":
+        pos += 1
+    unit = None
+    um = match_unit(f, pos) if pos < len(f) else None
+    if um:
+        unit, end_pos = um[0], um[1]
+        while end < len(toks) and toks[end][3] < um[1]:
+            end += 1
+    return {"flag": None, "op": op, "value": float(toks[k2][1]), "unit": unit, "end": end, "end_pos": end_pos}
+
+
+def _q_condition_out(aid, cond):
+    if cond["flag"] is not None:
+        return {"analyte_id": aid, "flag": cond["flag"], "op": None, "value": None, "unit": None,
+                "canonical_value": None, "canonical_unit": None}
+    if cond["unit"] is None:
+        cv, cu = _json_num(round4(cond["value"])), analyte_catalog()["by_id"][aid]["canonical_unit"]
+    else:
+        conv = convert_unit(aid, cond["value"], cond["unit"])
+        cv, cu = conv["canonical_value"], conv["canonical_unit"]
+    return {"analyte_id": aid, "flag": None, "op": cond["op"], "value": _json_num(cond["value"]),
+            "unit": cond["unit"], "canonical_value": cv, "canonical_unit": cu}
+
+
 def parse_query(text, today, date_order):
-    """§17 RecordQueryParser. Returns the RecordQuery dict (dates ISO strings)."""
+    """§17 RecordQueryParser + §23 analyte conditions. Returns the RecordQuery dict (dates ISO strings)."""
     today_d = _dt.date.fromisoformat(today)
     toks = _q_tokens(text, today_d, date_order)
+    f = _q_text(text)
     q = {"terms": [], "date_from": None, "date_to": None, "record_types": [], "flags": [], "doctor": None,
          "facility": None, "favorites": False, "needs_review": False, "archived": False, "source": None,
-         "chips": [], "match": None}
+         "analyte_conditions": [], "analytes": [], "chips": [], "match": None}
     types, flags = set(), set()
     ranges = []
     i = 0
@@ -2469,7 +2604,7 @@ def parse_query(text, today, date_order):
     reserved_names = set(w for p, _ in _Q_TYPES for w in p) | set(w for p, _ in _Q_FLAGS for w in p) | \
         set(w for p, _ in _Q_STATES for w in p) | _Q_STOP
     while i < len(toks):
-        kind, v, _ = toks[i]
+        kind, v = toks[i][0], toks[i][1]
         # 1. Date phrases with a preposition.
         if kind == "w" and v in ("from", "between") :
             a = _q_datespec(toks, i + 1, today_d, True)
@@ -2533,6 +2668,36 @@ def parse_query(text, today, date_order):
                 q["terms"].append(phrase[0])
             i += len(phrase)
             continue
+        # 2b. Analyte alias (§23): with a condition -> analyte_conditions; bare -> analytes + terms.
+        al = _q_match_alias(toks, i)
+        if al:
+            n, ids = al
+            cond = _q_condition(toks, i + n, f)
+            aid = _q_resolve(ids, cond["unit"] if cond else None)
+            if aid is not None and cond is not None:
+                q["analyte_conditions"].append(_q_condition_out(aid, cond))
+                q["chips"].append({"kind": "analyte", "text": f[toks[i][3]:cond["end_pos"]]})
+                i = cond["end"]
+                continue
+            if aid is not None:
+                if aid not in q["analytes"]:
+                    q["analytes"].append(aid)
+                for t in toks[i:i + n]:
+                    if t[1] not in _Q_STOP and t[1] not in q["terms"]:
+                        q["terms"].append(t[1])
+                i += n
+                continue
+        # 2c. Flag + analyte alias ("high cholesterol") -> analyte condition.
+        cf = _match_phrase(toks, i, _Q_COND_FLAGS)
+        if cf:
+            al = _q_match_alias(toks, i + len(cf[0]))
+            aid = _q_resolve(al[1], None) if al else None
+            if aid is not None:
+                end = i + len(cf[0]) + al[0]
+                q["analyte_conditions"].append(_q_condition_out(aid, {"flag": cf[1]}))
+                q["chips"].append({"kind": "analyte", "text": f[toks[i][3]:toks[end - 1][4]]})
+                i = end
+                continue
         fl = _match_phrase(toks, i, _Q_FLAGS)
         if fl:
             phrase, val = fl
@@ -2557,9 +2722,10 @@ def parse_query(text, today, date_order):
                     chip("facility", i, j)
                 i = j
                 continue
-        # 4. Stop words, else a term.
-        if v not in _Q_STOP and v not in q["terms"]:
-            q["terms"].append(v)
+        # 4. Stop words, else a term (a '1.2' token becomes the terms '1' and '2', as in Phase 2).
+        for w in words(v):
+            if w not in _Q_STOP and w not in q["terms"]:
+                q["terms"].append(w)
         i += 1
     if ranges:
         lo = [r[0] for r in ranges if r[0] is not None]
@@ -2570,6 +2736,870 @@ def parse_query(text, today, date_order):
     q["flags"] = [f for f in _Q_ORDER_FLAGS if f in flags]
     q["match"] = " ".join(t + "*" for t in q["terms"]) if q["terms"] else None
     return q
+
+
+# =============================================================================================
+# Phase 3: health knowledge base (docs §19-§24)
+# =============================================================================================
+
+# ---------------------------------------------------------------------------------------------
+# §20 Analyte catalog and test-name mapping
+# ---------------------------------------------------------------------------------------------
+
+PANEL_IDS = ["cbc", "iron_studies", "vitamins", "diabetes", "lipid", "lft", "kft", "electrolytes", "thyroid",
+             "cardiac", "coagulation", "hormones", "urine_routine", "urine_albumin", "serology", "pancreas"]
+ANALYTE_CATEGORIES = ["hematology", "iron", "vitamins", "diabetes", "lipids", "liver", "kidney", "electrolytes",
+                      "thyroid", "cardiac", "inflammation", "coagulation", "hormones", "tumor_markers", "urine",
+                      "serology", "pancreas", "other"]
+URINE_PANELS = frozenset(["urine_routine", "urine_albumin"])
+ANALYTE_METHODS = ["catalog", "user_alias", "user"]
+
+# Method words (§20): removed from a test name, as whole words, when building the "m" keys. Specimens,
+# derivations, assay methods and filler. Never: total, free, direct, indirect, fasting, random, absolute,
+# count, ratio (they distinguish analytes).
+_METHOD_WORDS = frozenset([
+    "serum", "plasma", "blood", "whole", "venous", "capillary", "edta", "fluoride", "heparin",
+    "calculated", "calc", "derived", "measured", "method", "automated", "auto", "analyzer", "analyser",
+    "hplc", "ifcc", "ngsp", "dcct", "clia", "eclia", "cmia", "cia", "elisa", "elfa", "ria", "ise",
+    "turbidimetric", "turbidimetry", "immunoturbidimetric", "immunoturbidimetry", "nephelometric", "nephelometry",
+    "photometric", "photometry", "colorimetric", "colorimetry", "spectrophotometric", "spectrophotometry",
+    "enzymatic", "kinetic", "jaffe", "jaffes", "westergren", "wintrobe", "ckd", "epi", "mdrd",
+    "level", "levels", "conc", "concentration"])
+# Serum abbreviations, removed only as the FIRST word ("S. Creatinine", "Sr. Uric Acid").
+_METHOD_LEADING = frozenset(["s", "sr", "se", "ser"])
+
+# Panel headings (§20 detect_panels): phrases in analyte_words form, matched as whole-word runs.
+_PANEL_KEYWORDS = [
+    ("cbc", ["complete blood count", "cbc", "hemogram", "haemogram", "full blood count", "fbc", "blood count"]),
+    ("iron_studies", ["iron studies", "iron profile", "iron panel", "anemia profile", "anaemia profile"]),
+    ("vitamins", ["vitamin profile", "vitamin panel", "vitamin b12", "vitamin d"]),
+    ("diabetes", ["diabetes profile", "diabetic profile", "diabetes panel", "glucose tolerance", "blood sugar",
+                  "hba1c", "glycated", "glycosylated"]),
+    ("lipid", ["lipid", "lipids", "lipid profile", "lipid panel"]),
+    ("lft", ["liver function", "lft", "hepatic function", "liver panel", "liver profile"]),
+    ("kft", ["kidney function", "renal function", "kft", "rft", "renal profile", "kidney profile", "renal panel"]),
+    ("electrolytes", ["electrolyte", "electrolytes"]),
+    ("thyroid", ["thyroid", "tft"]),
+    ("cardiac", ["cardiac", "troponin"]),
+    ("coagulation", ["coagulation", "prothrombin", "pt inr"]),
+    ("hormones", ["hormone", "hormones", "hormonal", "fertility", "pcos"]),
+    ("urine_routine", ["urine", "urinalysis", "cue"]),
+    ("urine_albumin", ["microalbumin", "albumin creatinine ratio", "acr", "urine albumin"]),
+    ("serology", ["serology", "dengue", "widal", "hiv", "hbsag", "viral markers"]),
+    ("pancreas", ["amylase", "lipase", "pancreatic"]),
+]
+_PANEL_MIN_ANALYTES = 3
+
+# Aliases shared by several analytes after normalization (§20). The contract check recomputes this map
+# from analytes.json and fails when it differs, and requires every group to be separable by unit, kind,
+# panel or the urine rule.
+ANALYTE_SHARED_ALIASES = {
+    "albumin": ["albumin", "urine_protein"],
+    "basophil": ["basophils_pct", "basophils_abs"],
+    "basophils": ["basophils_pct", "basophils_abs"],
+    "baso": ["basophils_pct", "basophils_abs"],
+    "bilirubin": ["bilirubin_total", "urine_bilirubin"],
+    "creatinine": ["creatinine", "urine_creatinine"],
+    "eos": ["eosinophils_pct", "eosinophils_abs"],
+    "eosinophil": ["eosinophils_pct", "eosinophils_abs"],
+    "eosinophils": ["eosinophils_pct", "eosinophils_abs"],
+    "glucose": ["glucose", "urine_glucose"],
+    "leucocytes": ["wbc_count", "urine_leukocyte_esterase"],
+    "leukocytes": ["wbc_count", "urine_leukocyte_esterase"],
+    "lymph": ["lymphocytes_pct", "lymphocytes_abs"],
+    "lymphocyte": ["lymphocytes_pct", "lymphocytes_abs"],
+    "lymphocytes": ["lymphocytes_pct", "lymphocytes_abs"],
+    "mono": ["monocytes_pct", "monocytes_abs"],
+    "monocyte": ["monocytes_pct", "monocytes_abs"],
+    "monocytes": ["monocytes_pct", "monocytes_abs"],
+    "neut": ["neutrophils_pct", "neutrophils_abs"],
+    "neutrophil": ["neutrophils_pct", "neutrophils_abs"],
+    "neutrophils": ["neutrophils_pct", "neutrophils_abs"],
+    "protein": ["total_protein", "urine_protein"],
+    "rbc": ["rbc_count", "urine_rbc"],
+    "rdw": ["rdw_cv", "rdw_sd"],
+    "red blood cells": ["rbc_count", "urine_rbc"],
+    "red cell distribution width": ["rdw_cv", "rdw_sd"],
+    "sugar": ["glucose", "urine_glucose"],
+    "tc": ["wbc_count", "cholesterol_total"],
+    "wbc": ["wbc_count", "urine_pus_cells"],
+}
+
+
+def analyte_catalog():
+    """shared/records/analytes.json -> {list, by_id, index} where index maps each alias key
+    (' '.join(analyte_words(alias))) to the analyte ids listing it, in file order."""
+    if "analytes" not in _CACHE:
+        with open(os.path.join(SHARED, "analytes.json"), encoding="utf-8") as fh:
+            data = json.load(fh)
+        by_id, index = {}, {}
+        for e in data["analytes"]:
+            by_id[e["id"]] = e
+            for a in e["aliases"]:
+                ids = index.setdefault(" ".join(analyte_words(a)), [])
+                if e["id"] not in ids:
+                    ids.append(e["id"])
+        _CACHE["analytes"] = {"list": data["analytes"], "by_id": by_id, "index": index}
+    return _CACHE["analytes"]
+
+
+def analyte_words(s):
+    """§20 words of a test name: §8.1 words of fold(s), then every run of >= 2 consecutive one-letter
+    ASCII words is joined into one word ('S.G.O.T.' -> 'sgot', 'A/G Ratio' -> 'ag ratio'; a single
+    one-letter word stays: 'Vitamin D' -> 'vitamin d')."""
+    out, run = [], []
+    for w in words(fold(s or "")):
+        if len(w) == 1 and "a" <= w <= "z":
+            run.append(w)
+            continue
+        if len(run) >= 2:
+            out.append("".join(run))
+        else:
+            out.extend(run)
+        run = []
+        out.append(w)
+    if len(run) >= 2:
+        out.append("".join(run))
+    else:
+        out.extend(run)
+    return out
+
+
+def _strip_method_words(ws):
+    """Remove method words (and a leading serum abbreviation); at least the original words remain."""
+    out = [w for i, w in enumerate(ws) if not (w in _METHOD_WORDS or (i == 0 and w in _METHOD_LEADING))]
+    return out if out else list(ws)
+
+
+def _strip_brackets(f):
+    """Delete (...) and [...] segments (nesting of the same bracket counted; an unclosed bracket runs to the
+    end). Each deleted segment becomes one space."""
+    out, close, opener, depth = [], None, None, 0
+    for ch in f:
+        if close is None:
+            if ch == "(" or ch == "[":
+                opener, close, depth = ch, (")" if ch == "(" else "]"), 1
+                out.append(" ")
+            else:
+                out.append(ch)
+        elif ch == opener:
+            depth += 1
+        elif ch == close:
+            depth -= 1
+            if depth == 0:
+                close = None
+    return "".join(out)
+
+
+def test_name_keys(name):
+    """Lookup keys of a printed test name, most specific first (duplicates removed):
+    k1 = all words; k2 = words after deleting bracketed text; k1m = k1 without method words; k2m = k2 without
+    method words. (Brackets go before method words: 'Sr. Creatinine (Jaffe)' keeps 'sr creatinine'.)"""
+    f = fold(name or "")
+    k1 = analyte_words(f)
+    k2 = analyte_words(_strip_brackets(f))
+    keys = []
+    for ws in (k1, k2, _strip_method_words(k1), _strip_method_words(k2)):
+        k = " ".join(ws)
+        if k and k not in keys:
+            keys.append(k)
+    return keys
+
+
+def normalize_test_name(name):
+    """§20 normalized test name (the analyte_user_aliases key): k1m of test_name_keys."""
+    return " ".join(_strip_method_words(analyte_words(name)))
+
+
+def canonical_unit_spelling(unit):
+    """A unit string -> the units.json canonical spelling when the WHOLE folded string is a variant, else
+    the printed-fold text with whitespace collapsed; blank/None -> None."""
+    if unit is None:
+        return None
+    p = _WS.sub(" ", pfold(unit)).strip(" ")
+    if not p:
+        return None
+    m = match_unit(fold(p), 0)
+    if m and m[1] == len(p):
+        return m[0]
+    return p
+
+
+def _analyte_units(e):
+    """Units accepted for an analyte. Dimensionless numeric analytes (canonical_unit null) accept 'ratio'."""
+    us = set(u["unit"] for u in e["units"])
+    if e["canonical_unit"] is None and e["kind"] == "numeric":
+        us.add("ratio")
+    return us
+
+
+def _disambiguate(ids, unit, qualitative, panels):
+    """Shared alias -> one analyte id or None. Steps, each applied only while >= 2 candidates remain; a step
+    that leaves exactly one candidate decides, one that leaves none is skipped:
+    1. unit (canonical spelling, or '%' printed in the name) listed for the analyte;
+    2. kind: qualitative when the value has no number, numeric otherwise;
+    3. panels: the analyte lists a detected panel;
+    4. urine rule: without a detected urine panel, urine-category analytes drop out."""
+    cat = analyte_catalog()["by_id"]
+    c = list(ids)
+    steps = []
+    if unit is not None:
+        steps.append(lambda i: unit in _analyte_units(cat[i]))
+    if qualitative is not None:
+        steps.append(lambda i: cat[i]["kind"] == ("qualitative" if qualitative else "numeric"))
+    steps.append(lambda i: bool(set(cat[i]["panels"]) & panels))
+    if not (panels & URINE_PANELS):
+        steps.append(lambda i: cat[i]["category"] != "urine")
+    for keep in steps:
+        k = [i for i in c if keep(i)]
+        if len(k) == 1:
+            return k[0]
+        if len(k) >= 2:
+            c = k
+    return None
+
+
+def map_analyte(name, panels=None, user_aliases=None, unit=None, qualitative=None):
+    """§20 mapping. Order: user alias on any key (k1, k2, k1m, k2m) -> catalog alias on the first key that has
+    one (unique alias -> that analyte; shared alias -> _disambiguate; unresolved -> unmapped with candidates).
+    Never fuzzy. Returns {analyte_id, method, key, normalized_name, candidates}."""
+    cat = analyte_catalog()
+    keys = test_name_keys(name)
+    res = {"analyte_id": None, "method": None, "key": None, "normalized_name": normalize_test_name(name),
+           "candidates": []}
+    ua = user_aliases or {}
+    for k in keys:
+        aid = ua.get(k)
+        if aid is not None and aid in cat["by_id"]:
+            res.update({"analyte_id": aid, "method": "user_alias", "key": k})
+            return res
+    u = canonical_unit_spelling(unit)
+    if u is None and "%" in (name or ""):
+        u = "%"
+    pset = set(panels or [])
+    for k in keys:
+        ids = cat["index"].get(k)
+        if not ids:
+            continue
+        res["key"] = k
+        aid = ids[0] if len(ids) == 1 else _disambiguate(ids, u, qualitative, pset)
+        if aid is None:
+            res["candidates"] = list(ids)
+        else:
+            res.update({"analyte_id": aid, "method": "catalog"})
+        return res
+    return res
+
+
+def detect_panels(texts, test_names):
+    """§20 panels of a record: a heading phrase in any of `texts` (report names), or >= 3 distinct analytes
+    mapped (catalog, no context) from `test_names` that list the panel. Output in PANEL_IDS order."""
+    found = set()
+    for t in texts or []:
+        s = " " + " ".join(analyte_words(t)) + " "
+        for panel, phrases in _PANEL_KEYWORDS:
+            if any((" " + ph + " ") in s for ph in phrases):
+                found.add(panel)
+    by_id = analyte_catalog()["by_id"]
+    counts, seen = {}, set()
+    for n in test_names or []:
+        m = map_analyte(n)
+        if m["method"] == "catalog" and m["analyte_id"] not in seen:
+            seen.add(m["analyte_id"])
+            for p in by_id[m["analyte_id"]]["panels"]:
+                counts[p] = counts.get(p, 0) + 1
+    for p, c in counts.items():
+        if c >= _PANEL_MIN_ANALYTES:
+            found.add(p)
+    return [p for p in PANEL_IDS if p in found]
+
+
+def round4(x):
+    """Half-up to 4 decimals: floor(x * 10000 + 0.5 + 1e-9) / 10000 (canonical values)."""
+    return math.floor(x * 10000 + 0.5 + 1e-9) / 10000.0
+
+
+def convert_unit(analyte_id, value, unit):
+    """§20 conversion -> {unit, canonical_value, canonical_unit, status}. canonical = round4(value x factor +
+    offset). status: converted | unmapped | no_value | unit_missing | unit_unknown. Dimensionless numeric
+    analytes convert a value with no unit or unit 'ratio'. A missing unit is never assumed."""
+    u = canonical_unit_spelling(unit)
+    out = {"unit": u, "canonical_value": None, "canonical_unit": None, "status": None}
+    e = analyte_catalog()["by_id"].get(analyte_id) if analyte_id else None
+    if e is None:
+        out["status"] = "unmapped"
+        return out
+    if value is None:
+        out["status"] = "no_value"
+        return out
+    factor = offset = None
+    if e["canonical_unit"] is None and e["kind"] == "numeric":
+        if u is None or u == "ratio":
+            factor, offset = 1, 0
+    elif u is None:
+        out["status"] = "unit_missing"
+        return out
+    else:
+        for x in e["units"]:
+            if x["unit"] == u:
+                factor, offset = x["factor"], x["offset"]
+                break
+    if factor is None:
+        out["status"] = "unit_unknown"
+        return out
+    out.update({"canonical_value": _json_num(round4(value * factor + offset)), "canonical_unit": e["canonical_unit"],
+                "status": "converted"})
+    return out
+
+
+# ---------------------------------------------------------------------------------------------
+# §19 Observations: observed date, promotion, edits, user aliases
+# ---------------------------------------------------------------------------------------------
+
+OBSERVATION_KEYS = ["id", "record_id", "field_id", "analyte_id", "analyte_method", "raw_name", "value_num",
+                    "value_text", "unit", "canonical_value", "canonical_unit", "ref_low", "ref_high", "ref_text",
+                    "flag", "observed_date", "observed_date_method", "method", "confidence", "state", "source_page",
+                    "source_bbox", "evidence", "excluded_from_trends", "created_ms", "updated_ms"]
+# Columns a still-suggested observation copies from its field on every promotion.
+_OBS_SYNC_KEYS = ["analyte_id", "analyte_method", "raw_name", "value_num", "value_text", "unit", "canonical_value",
+                  "canonical_unit", "ref_low", "ref_high", "ref_text", "flag", "method", "confidence", "state",
+                  "source_page", "source_bbox", "evidence"]
+
+
+def observed_date(record, fields):
+    """§19: best non-rejected collection_date row -> best report_date row (§8.1 best row) ->
+    record.document_date -> record.sort_date. Returns {date, method}; method names the source."""
+    for key in ("collection_date", "report_date"):
+        r = _best_row(fields, key)
+        if r is not None:
+            return {"date": r["value_text"], "method": key}
+    for key in ("document_date", "sort_date"):
+        if record.get(key):
+            return {"date": record[key], "method": key}
+    return {"date": None, "method": None}
+
+
+def _observation_from_field(fd, record, panels, user_aliases, od):
+    vj = fd.get("value_json") or {}
+    raw = vj.get("name") if vj.get("name") else fd["value_text"]
+    vn = vj.get("value_num")
+    m = map_analyte(raw, panels, user_aliases, vj.get("unit"), vn is None)
+    conv = convert_unit(m["analyte_id"], vn, vj.get("unit"))
+    return {"id": None, "record_id": record["id"], "field_id": fd["id"], "analyte_id": m["analyte_id"],
+            "analyte_method": m["method"], "raw_name": raw, "value_num": vn,
+            "value_text": vj.get("value") if vj.get("value") is not None else "", "unit": conv["unit"],
+            "canonical_value": conv["canonical_value"], "canonical_unit": conv["canonical_unit"],
+            "ref_low": vj.get("ref_low"), "ref_high": vj.get("ref_high"), "ref_text": vj.get("ref_text"),
+            "flag": vj.get("flag") or "unknown", "observed_date": od["date"], "observed_date_method": od["method"],
+            "method": fd.get("method"), "confidence": fd.get("confidence"),
+            "state": "confirmed" if fd["state"] in ("confirmed", "user") else "suggested",
+            "source_page": fd.get("source_page"), "source_bbox": fd.get("source_bbox"), "evidence": fd.get("evidence"),
+            "excluded_from_trends": 0, "created_ms": None, "updated_ms": None}
+
+
+def record_panels(fields):
+    """detect_panels over a record's non-rejected report_name values and test_result names."""
+    live = [r for r in fields if r.get("state") != "rejected"]
+    texts = [r["value_text"] for r in live if r["field_key"] == "report_name"]
+    names = [((r.get("value_json") or {}).get("name") or r["value_text"]) for r in live if r["field_key"] == "test_result"]
+    return detect_panels(texts, names)
+
+
+def promote_observations(fields, existing_observations, record, user_aliases=None, now_ms=0):
+    """§19 promotion (runs in the transaction that changes a record's fields: extraction or review).
+    For each test_result field in row order:
+      * no observation with that field_id: insert one unless the field is rejected (ids obs-1, obs-2, ...;
+        state confirmed when the field is confirmed/user, else suggested);
+      * field rejected: a suggested/confirmed observation becomes rejected; user/rejected ones are kept;
+      * observation still suggested: every _OBS_SYNC_KEYS column is recomputed from the field;
+      * any non-rejected observation whose observed_date_method is not 'user' follows observed_date().
+    Returns {observations, actions, panels}; existing rows keep their order, inserts are appended."""
+    panels = record_panels(fields)
+    od = observed_date(record, fields)
+    obs = [dict(o) for o in existing_observations]
+    by_field = {}
+    for o in obs:
+        if o.get("field_id") is not None and o["field_id"] not in by_field:
+            by_field[o["field_id"]] = o
+    actions = []
+    inserted = 0
+    for fd in fields:
+        if fd["field_key"] != "test_result":
+            continue
+        o = by_field.get(fd["id"])
+        if o is None:
+            if fd["state"] == "rejected":
+                continue
+            inserted += 1
+            new = _observation_from_field(fd, record, panels, user_aliases, od)
+            new.update({"id": "obs-%d" % inserted, "created_ms": now_ms, "updated_ms": now_ms})
+            obs.append(new)
+            by_field[fd["id"]] = new
+            actions.append({"action": "insert", "id": new["id"], "field_id": fd["id"]})
+            continue
+        if fd["state"] == "rejected":
+            if o["state"] in ("suggested", "confirmed"):
+                o["state"] = "rejected"
+                o["updated_ms"] = now_ms
+                actions.append({"action": "reject", "id": o["id"], "field_id": fd["id"]})
+            else:
+                actions.append({"action": "keep", "id": o["id"], "field_id": fd["id"]})
+            continue
+        changed = False
+        if o["state"] == "suggested":
+            target = _observation_from_field(fd, record, panels, user_aliases, od)
+            for k in _OBS_SYNC_KEYS:
+                if o.get(k) != target[k]:
+                    o[k] = target[k]
+                    changed = True
+        if o["state"] != "rejected" and o.get("observed_date_method") != "user":
+            if o.get("observed_date") != od["date"] or o.get("observed_date_method") != od["method"]:
+                o["observed_date"], o["observed_date_method"] = od["date"], od["method"]
+                changed = True
+        if changed:
+            o["updated_ms"] = now_ms
+        actions.append({"action": "update" if changed else "keep", "id": o["id"], "field_id": fd["id"]})
+    return {"observations": obs, "actions": actions, "panels": panels}
+
+
+def _parse_ref_text(ref_text):
+    """§13 reference forms on a whole reference text (brackets stripped) -> (low, high) floats or None."""
+    if ref_text is None:
+        return None, None
+    rf = fold(ref_text).strip(" ()[]")
+    for rx, kind in ((_RE_REF_RANGE, "range"), (_RE_REF_HIGH, "high"), (_RE_REF_LOW, "low")):
+        fm = rx.fullmatch(rf)
+        if fm:
+            tmp = {"ref_low": None, "ref_high": None}
+            _set_ref(tmp, fm, kind)
+            return tmp["ref_low"], tmp["ref_high"]
+    return None, None
+
+
+_RE_EDIT_RANGE = re.compile("([0-9]{1,3})[ ]?-[ ]?([0-9]{1,3})")
+_RE_ISO_DATE = re.compile("([0-9]{4})-([0-9]{2})-([0-9]{2})")
+
+
+def _value_parts(value_text):
+    """Edited value -> (value_num, comparator, range_value, qualitative) with §13 value forms."""
+    vf = fold(value_text or "").strip(" ")
+    rm = _RE_EDIT_RANGE.fullmatch(vf)
+    if rm:
+        return None, None, True, False
+    vm = _RE_VALUE_NUM.fullmatch(vf)
+    if vm:
+        return _num_value(vm.group(2)), vm.group(1), False, False
+    return None, None, False, True
+
+
+def recompute_flag(value_text, ref_text, ref_low, ref_high):
+    """§24 flag of an edited observation: §13 flag resolution without a printed marker."""
+    vn, comp, rng, qual = _value_parts(value_text)
+    value = fold(value_text or "").strip(" ")
+    if rng:
+        value = value.replace(" ", "")
+    res = {"flag_raw": None, "ref_low": ref_low, "ref_high": ref_high, "value_num": vn, "comparator": comp,
+           "range_value": rng, "qualitative": qual, "value": value, "ref_text": ref_text}
+    return _resolve_flag(res)
+
+
+def _convert_between(analyte_id, value, from_unit, to_unit):
+    """A value in from_unit -> to_unit through the analyte's factors (both units listed), round4; else None."""
+    e = analyte_catalog()["by_id"].get(analyte_id) if analyte_id else None
+    if value is None or e is None or from_unit is None or to_unit is None:
+        return None
+    f = dict((u["unit"], u) for u in e["units"])
+    if from_unit not in f or to_unit not in f:
+        return None
+    canonical = value * f[from_unit]["factor"] + f[from_unit]["offset"]
+    return _json_num(round4((canonical - f[to_unit]["offset"]) / f[to_unit]["factor"]))
+
+
+def edit_observation(obs, patch):
+    """§24 user edit. patch keys (each optional): value, unit, ref_text, analyte_id (null = unmapped),
+    observed_date (yyyy-MM-dd or null), excluded_from_trends (bool), remove (true), now_ms.
+    Every edit sets state 'user' (remove sets 'rejected') and updated_ms; evidence/source_* are kept.
+    canonical_value/canonical_unit are always recomputed. A unit change without a ref_text in the patch converts
+    ref_low/ref_high from the old unit to the new one through the analyte's factors (ref_text stays as printed);
+    when either unit is not convertible the bounds become null and flag 'unknown'. flag is recomputed when value,
+    ref_text or the unit changed.
+    Returns {observation, error}; on error the observation is returned unchanged."""
+    cat = analyte_catalog()["by_id"]
+    o = dict(obs)
+    if patch.get("analyte_id") is not None and patch["analyte_id"] not in cat:
+        return {"observation": dict(obs), "error": "unknown_analyte"}
+    if patch.get("observed_date") is not None:
+        m = _RE_ISO_DATE.fullmatch(patch["observed_date"]) if isinstance(patch["observed_date"], str) else None
+        if not m or _valid(int(m.group(1)), int(m.group(2)), int(m.group(3))) is None:
+            return {"observation": dict(obs), "error": "bad_date"}
+    if "value" in patch and not _WS.sub(" ", patch["value"] or "").strip(" "):
+        return {"observation": dict(obs), "error": "empty_value"}
+    now = patch.get("now_ms")
+    if patch.get("remove"):
+        o["state"] = "rejected"
+        o["updated_ms"] = now
+        return {"observation": o, "error": None}
+    if "value" in patch:
+        o["value_text"] = _WS.sub(" ", patch["value"]).strip(" ")
+        vn = _value_parts(o["value_text"])[0]
+        o["value_num"] = _json_num(vn)
+    unit_changed = False
+    if "unit" in patch:
+        new_unit = canonical_unit_spelling(patch["unit"])
+        unit_changed = new_unit != o.get("unit")
+        old_unit = o.get("unit")
+        o["unit"] = new_unit
+    if "ref_text" in patch:
+        rt = _WS.sub(" ", patch["ref_text"] or "").strip(" ") or None
+        lo, hi = _parse_ref_text(rt)
+        o["ref_text"], o["ref_low"], o["ref_high"] = rt, _json_num(lo), _json_num(hi)
+    if "analyte_id" in patch:
+        o["analyte_id"] = patch["analyte_id"]
+        o["analyte_method"] = "user" if patch["analyte_id"] is not None else None
+    if "observed_date" in patch:
+        o["observed_date"] = patch["observed_date"]
+        o["observed_date_method"] = "user"
+    if "excluded_from_trends" in patch:
+        o["excluded_from_trends"] = 1 if patch["excluded_from_trends"] else 0
+    ranges_ok = True
+    if unit_changed and "ref_text" not in patch and (o.get("ref_low") is not None or o.get("ref_high") is not None):
+        # The printed range is in the original unit: convert the bounds, or drop them (ref_text stays as printed).
+        lo = _convert_between(o.get("analyte_id"), o.get("ref_low"), old_unit, o["unit"])
+        hi = _convert_between(o.get("analyte_id"), o.get("ref_high"), old_unit, o["unit"])
+        if (o.get("ref_low") is not None and lo is None) or (o.get("ref_high") is not None and hi is None):
+            o["ref_low"], o["ref_high"] = None, None
+            ranges_ok = False
+        else:
+            o["ref_low"], o["ref_high"] = lo, hi
+    if not ranges_ok:
+        o["flag"] = "unknown"
+    elif "value" in patch or "ref_text" in patch or unit_changed:
+        o["flag"] = recompute_flag(o["value_text"], o.get("ref_text"), o.get("ref_low"), o.get("ref_high"))
+    conv = convert_unit(o.get("analyte_id"), o.get("value_num"), o.get("unit"))
+    o["canonical_value"], o["canonical_unit"] = conv["canonical_value"], conv["canonical_unit"]
+    o["state"] = "user"
+    o["updated_ms"] = now
+    return {"observation": o, "error": None}
+
+
+def apply_user_alias(observations, raw_name, analyte_id, now_ms=0):
+    """§19 "This is <analyte>": alias key = normalize_test_name(raw_name). On confirmation every non-rejected
+    UNMAPPED observation for which that key is one of test_name_keys(raw_name) gets analyte_id,
+    analyte_method 'user_alias' and a recomputed canonical value (state unchanged).
+    Returns {alias, observations, updated_ids, error}."""
+    key = normalize_test_name(raw_name)
+    if analyte_id not in analyte_catalog()["by_id"]:
+        return {"alias": None, "observations": [dict(o) for o in observations], "updated_ids": [],
+                "error": "unknown_analyte"}
+    out, updated = [], []
+    for o in observations:
+        o = dict(o)
+        if o["state"] != "rejected" and o.get("analyte_id") is None and key in test_name_keys(o["raw_name"]):
+            conv = convert_unit(analyte_id, o.get("value_num"), o.get("unit"))
+            o.update({"analyte_id": analyte_id, "analyte_method": "user_alias",
+                      "canonical_value": conv["canonical_value"], "canonical_unit": conv["canonical_unit"],
+                      "updated_ms": now_ms})
+            updated.append(o["id"])
+        out.append(o)
+    return {"alias": {"normalized_name": key, "analyte_id": analyte_id}, "observations": out, "updated_ids": updated,
+            "error": None}
+
+
+# ---------------------------------------------------------------------------------------------
+# §21 Trends
+# ---------------------------------------------------------------------------------------------
+
+def trend_series(observations, analyte_id):
+    """§21. Points = observations of the analyte with state != rejected, excluded_from_trends = 0 and an
+    observed_date, ordered by (observed_date, created_ms, id). A point with canonical_value joins the
+    canonical series; else one with value_num joins the series of its unit (null = no unit); else it is
+    skipped. Within a series, observations with the same date and value collapse into one point (first one
+    gives flag/range/unit; record_ids and observation_ids list every member). Canonical series first, then
+    unit series, each by first appearance. Canonical points convert ref_low/ref_high with the observation's
+    unit. band = the range of the most recent point that has a bound, else null."""
+    e = analyte_catalog()["by_id"].get(analyte_id)
+    rows = [o for o in observations if o.get("analyte_id") == analyte_id and o.get("state") != "rejected"
+            and not o.get("excluded_from_trends") and o.get("observed_date")]
+    rows.sort(key=lambda o: (o["observed_date"], o.get("created_ms") or 0, o["id"]))
+    series, skipped = [], []
+    for o in rows:
+        if o.get("canonical_value") is not None:
+            key, value = ("c", o.get("canonical_unit")), o["canonical_value"]
+        elif o.get("value_num") is not None:
+            key, value = ("u", o.get("unit")), o["value_num"]
+        else:
+            skipped.append(o["id"])
+            continue
+        s = next((x for x in series if x["_key"] == key), None)
+        if s is None:
+            s = {"_key": key, "unit": key[1], "convertible": key[0] == "c", "points": [], "band": None}
+            series.append(s)
+        lo, hi = o.get("ref_low"), o.get("ref_high")
+        if key[0] == "c":
+            lo = convert_unit(analyte_id, lo, o.get("unit"))["canonical_value"] if lo is not None else None
+            hi = convert_unit(analyte_id, hi, o.get("unit"))["canonical_value"] if hi is not None else None
+        p = next((x for x in s["points"] if x["date"] == o["observed_date"] and x["value"] == value), None)
+        if p is None:
+            s["points"].append({"date": o["observed_date"], "value": value, "value_text": o.get("value_text"),
+                                "unit": o.get("unit"), "flag": o.get("flag"), "ref_low": lo, "ref_high": hi,
+                                "record_ids": [o["record_id"]], "observation_ids": [o["id"]]})
+        else:
+            if o["record_id"] not in p["record_ids"]:
+                p["record_ids"].append(o["record_id"])
+            p["observation_ids"].append(o["id"])
+    for s in series:
+        for p in reversed(s["points"]):
+            if p["ref_low"] is not None or p["ref_high"] is not None:
+                s["band"] = {"low": p["ref_low"], "high": p["ref_high"]}
+                break
+    ordered = [s for s in series if s["convertible"]] + [s for s in series if not s["convertible"]]
+    for s in ordered:
+        del s["_key"]
+    return {"analyte_id": analyte_id, "display_name": e["display_name"] if e else None, "series": ordered,
+            "skipped_ids": skipped}
+
+
+def _round_dec(x, d):
+    """Half-up on the magnitude to d decimals (sign kept)."""
+    r = math.floor(abs(x) * (10.0 ** d) + 0.5 + 1e-9) / (10.0 ** d)
+    return -r if x < 0 and r != 0 else r
+
+
+def format_value(x, d):
+    """Fixed d decimals of _round_dec(x, d), '-' for negatives."""
+    r = _round_dec(x, d)
+    return ("-" if r < 0 else "") + ("%." + str(d) + "f") % abs(r)
+
+
+def mini_trend(trend, observation_id):
+    """§21 detail mini trend for one observation. Uses the series point that contains the observation and the
+    points before it (a report shows its trend as of that report). Shown when that is >= 2 points.
+    text = the last <= 5 values (older first) joined by ' → ' with the analyte's decimals (default 2);
+    change_text = '<+|−><|delta|>[ <unit>] since <previous point date>' (U+2212 minus; no sign when the
+    rounded delta is 0)."""
+    none = {"show": False, "values": [], "text": None, "unit": None, "change": None, "change_text": None}
+    e = analyte_catalog()["by_id"].get(trend["analyte_id"])
+    d = e.get("decimals", 2) if e else 2
+    for s in trend["series"]:
+        for idx, p in enumerate(s["points"]):
+            if observation_id not in p["observation_ids"]:
+                continue
+            pts = s["points"][:idx + 1]
+            if len(pts) < 2:
+                return none
+            vals = [format_value(x["value"], d) for x in pts[-5:]]
+            prev = pts[-2]
+            delta = _round_dec(p["value"] - prev["value"], d)
+            sign = "+" if delta > 0 else ("−" if delta < 0 else "")
+            text = sign + ("%." + str(d) + "f") % abs(delta)
+            if s["unit"]:
+                text += " " + s["unit"]
+            return {"show": True, "values": vals, "text": " → ".join(vals), "unit": s["unit"],
+                    "change": {"delta": _json_num(delta), "unit": s["unit"], "since_date": prev["date"]},
+                    "change_text": text + " since " + prev["date"]}
+    return none
+
+
+# ---------------------------------------------------------------------------------------------
+# §19 Entities (doctors, facilities)
+# ---------------------------------------------------------------------------------------------
+
+_DOCTOR_TITLES = frozenset(["dr", "doctor", "prof", "professor"])
+_ENTITY_QUALIFICATIONS = _QUALIFICATIONS | frozenset(["mrcgp", "fcps", "facp", "frcpath", "dpm", "dortho", "dlo",
+                                                      "dvd", "dnbe", "fnb", "fracs", "mams"])
+_FACILITY_WORD = {"hospitals": "hospital", "clinics": "clinic", "laboratories": "lab", "laboratory": "lab",
+                  "labs": "lab", "diagnostics": "diagnostic", "centre": "center", "centres": "center",
+                  "centers": "center", "pathlabs": "pathlab", "speciality": "specialty", "specialities": "specialty",
+                  "specialties": "specialty", "pvt": None, "private": None, "ltd": None, "limited": None,
+                  "llp": None, "inc": None, "and": None}
+_FACILITY_JOIN = [("health", "care", "healthcare"), ("path", "lab", "pathlab"), ("multi", "specialty", "multispecialty"),
+                  ("super", "specialty", "superspecialty"), ("poly", "clinic", "polyclinic")]
+
+
+def _letters_of(tok):
+    return "".join(ch for ch in fold(tok) if "a" <= ch <= "z")
+
+
+def doctor_display_name(value):
+    """Doctor name for display: printed fold, whitespace collapsed, cut before the first ',' or '(', a glued
+    'Dr.Name' split, leading titles (dr, doctor, prof, professor) and trailing qualification tokens
+    (letters of the token in the qualification list, 'M.B.B.S.' included) removed; one token always stays."""
+    p = _WS.sub(" ", pfold(value or "")).strip(" ")
+    cut = [i for i in (p.find(","), p.find("(")) if i >= 0]
+    if cut:
+        p = p[:min(cut)]
+    toks = [t for t in p.strip(" .-").split(" ") if t]
+    if toks:
+        t0 = fold(toks[0])
+        for pre in ("dr.", "prof."):
+            if t0.startswith(pre) and len(t0) > len(pre):
+                toks = [toks[0][:len(pre)], toks[0][len(pre):]] + toks[1:]
+                break
+    while len(toks) > 1 and _letters_of(toks[0]) in _DOCTOR_TITLES:
+        toks = toks[1:]
+    while len(toks) > 1 and _letters_of(toks[-1]) in _ENTITY_QUALIFICATIONS:
+        toks = toks[:-1]
+    return " ".join(toks).strip(" .-'")
+
+
+def normalize_doctor_name(value):
+    """entities.normalized_name for doctors: analyte_words of the display name ('A.K. Sharma' == 'AK Sharma')."""
+    return " ".join(analyte_words(doctor_display_name(value)))
+
+
+def facility_display_name(value):
+    return _WS.sub(" ", pfold(value or "")).strip(" ,.-|")
+
+
+def normalize_facility_name(value):
+    """entities.normalized_name for facilities: analyte_words; per-word suffix normalization (_FACILITY_WORD;
+    None = dropped); adjacent pairs joined (_FACILITY_JOIN, left to right); a leading 'the' dropped; if nothing
+    is left the plain words are kept."""
+    ws = analyte_words(facility_display_name(value))
+    out = []
+    for w in ws:
+        m = _FACILITY_WORD.get(w, w)
+        if m is not None:
+            out.append(m)
+    joined = []
+    for w in out:
+        if joined:
+            pair = next((j for a, b, j in _FACILITY_JOIN if joined[-1] == a and w == b), None)
+            if pair is not None:
+                joined[-1] = pair
+                continue
+        joined.append(w)
+    if joined and joined[0] == "the" and len(joined) > 1:
+        joined = joined[1:]
+    return " ".join(joined) if joined else " ".join(ws)
+
+
+def _best_of(rows):
+    """§8.1 best row among already filtered rows."""
+    rank = {"user": 0, "confirmed": 1, "suggested": 2}
+    c = [(i, r) for i, r in enumerate(rows) if r["state"] != "rejected"
+         and (r["state"] in ("user", "confirmed") or r["confidence"] >= 0.6)]
+    c.sort(key=lambda t: (rank[t[1]["state"]], -t[1]["confidence"], t[0]))
+    return c[0][1] if c else None
+
+
+def rebuild_entities(fields):
+    """§19 entities of one record from its field rows: best primary doctor_name (role doctor, specialty =
+    best doctor_specialty), best referrer doctor_name (role referrer), best facility (role facility).
+    Returns {entities:[{kind, display_name, normalized_name, specialty}], record_entities:[{kind,
+    normalized_name, role}]}. The store upserts entities by (kind, normalized_name), keeping an existing
+    display_name and filling a NULL specialty."""
+    def role(r):
+        vj = r.get("value_json")
+        return vj.get("role") if isinstance(vj, dict) else None
+    docs = [r for r in fields if r["field_key"] == "doctor_name"]
+    prim = _best_of([r for r in docs if role(r) != "referrer"])
+    ref = _best_of([r for r in docs if role(r) == "referrer"])
+    spec = _best_row(fields, "doctor_specialty")
+    fac = _best_row(fields, "facility")
+    entities, links = [], []
+
+    def add(kind, display, norm, specialty, rl):
+        if not norm:
+            return
+        ent = next((x for x in entities if x["kind"] == kind and x["normalized_name"] == norm), None)
+        if ent is None:
+            ent = {"kind": kind, "display_name": display, "normalized_name": norm, "specialty": None}
+            entities.append(ent)
+        if specialty and not ent["specialty"]:
+            ent["specialty"] = specialty
+        link = {"kind": kind, "normalized_name": norm, "role": rl}
+        if link not in links:
+            links.append(link)
+
+    if prim is not None:
+        add("doctor", doctor_display_name(prim["value_text"]), normalize_doctor_name(prim["value_text"]),
+            spec["value_text"] if spec is not None else None, "doctor")
+    if ref is not None:
+        add("doctor", doctor_display_name(ref["value_text"]), normalize_doctor_name(ref["value_text"]), None, "referrer")
+    if fac is not None:
+        add("facility", facility_display_name(fac["value_text"]), normalize_facility_name(fac["value_text"]), None,
+            "facility")
+    return {"entities": entities, "record_entities": links}
+
+
+# ---------------------------------------------------------------------------------------------
+# §22 Related-record suggestions
+# ---------------------------------------------------------------------------------------------
+
+LINK_KINDS = ["follow_up", "prescription_for", "same_episode", "previous_report", "related", "split_from"]
+_LINK_PRIORITY = ["follow_up", "prescription_for", "previous_report", "same_episode"]
+_LAB_LIKE = frozenset(["lab_report", "imaging_report", "diagnostic_report"])
+MAX_SUGGESTIONS = 5
+RELATION_WINDOW_DAYS = 180
+
+
+def _days_between(a, b):
+    return (_dt.date.fromisoformat(b) - _dt.date.fromisoformat(a)).days
+
+
+def suggest_relations(record, candidates, today, existing_links=None):
+    """§22. record/candidates: {id, record_type, sort_date, archived, split_parent, panels, report_name,
+    analytes, doctors (normalized doctor+referrer entity names), facilities, follow_up_dates}.
+    existing_links: record_links rows {a_id, b_id, kind, origin, status}. `today` is part of the port signature
+    and is not used by the v1 rules. Returns {links:[{a_id, b_id, kind, origin, status, score, reasons}]}."""
+    links = existing_links or []
+    if record.get("archived") and record.get("split_parent"):
+        return {"links": []}
+    pairs = set((l["a_id"], l["b_id"]) for l in links)
+    pending = sum(1 for l in links if l["status"] == "suggested" and record["id"] in (l["a_id"], l["b_id"]))
+    slots = max(0, MAX_SUGGESTIONS - pending)
+    found = []
+    for c in candidates:
+        if c["id"] == record["id"] or (c.get("archived") and c.get("split_parent")):
+            continue
+        gap = _days_between(record["sort_date"], c["sort_date"])
+        if abs(gap) > RELATION_WINDOW_DAYS:
+            continue
+        a, b = sorted([record["id"], c["id"]])
+        if (a, b) in pairs:
+            continue
+        kinds, reasons = {}, []
+        if record["record_type"] in _LAB_LIKE and c["record_type"] in _LAB_LIKE:
+            same_panel = bool(set(record.get("panels") or []) & set(c.get("panels") or []))
+            rn = norm_text(record.get("report_name") or "")
+            same_name = bool(rn) and rn == norm_text(c.get("report_name") or "")
+            if same_panel or same_name:
+                s = 0.5
+                reasons += (["same_panel"] if same_panel else []) + (["same_report_name"] if same_name else [])
+                if len(set(record.get("analytes") or []) & set(c.get("analytes") or [])) >= 3:
+                    s += 0.2
+                    reasons.append("shared_analytes")
+                kinds["previous_report"] = s
+        near = abs(gap) <= 30
+        if near and set(record.get("doctors") or []) & set(c.get("doctors") or []):
+            kinds["same_episode"] = kinds.get("same_episode", 0) + 0.4
+            reasons.append("same_doctor")
+        if near and set(record.get("facilities") or []) & set(c.get("facilities") or []):
+            kinds["same_episode"] = kinds.get("same_episode", 0) + 0.2
+            reasons.append("same_facility")
+        for p, v in ((record, c), (c, record)):
+            if (p["record_type"] == "prescription" and v["record_type"] in ("consultation_note", "discharge_summary")
+                    and set(p.get("doctors") or []) & set(v.get("doctors") or [])
+                    and 0 <= _days_between(v["sort_date"], p["sort_date"]) <= 14):
+                kinds["prescription_for"] = 0.6
+                reasons.append("prescription_after_visit")
+                break
+        for x, y in ((record, c), (c, record)):
+            if any(abs(_days_between(f, y["sort_date"])) <= 7 for f in (x.get("follow_up_dates") or [])):
+                kinds["follow_up"] = 0.6
+                reasons.append("follow_up_date")
+                break
+        if not kinds:
+            continue
+        total = round2(min(1.0, sum(kinds[k] for k in _LINK_PRIORITY if k in kinds)))
+        if total < 0.6:
+            continue
+        kind = sorted(kinds, key=lambda k: (-round2(kinds[k]), _LINK_PRIORITY.index(k)))[0]
+        found.append((-total, abs(gap), c["id"], {"a_id": a, "b_id": b, "kind": kind, "origin": "suggested",
+                                                  "status": "suggested", "score": total, "reasons": reasons}))
+    found.sort(key=lambda t: (t[0], t[1], t[2]))
+    return {"links": [t[3] for t in found[:slots]]}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -2624,4 +3654,46 @@ def run_case(function, inp):
         raise ValueError(op)
     if function == "parse_query":
         return parse_query(inp["text"], inp["today"], inp["date_order"])
+    if function == "map_analyte":
+        op = inp.get("op", "map")
+        if op == "map":
+            return map_analyte(inp["name"], inp.get("panels"), inp.get("user_aliases"), inp.get("unit"),
+                               inp.get("qualitative"))
+        if op == "keys":
+            return {"keys": test_name_keys(inp["name"]), "normalized_name": normalize_test_name(inp["name"])}
+        if op == "detect_panels":
+            return {"panels": detect_panels(inp.get("texts"), inp.get("test_names"))}
+        raise ValueError(op)
+    if function == "convert_unit":
+        return convert_unit(inp["analyte_id"], inp["value"], inp.get("unit"))
+    if function == "observations":
+        op = inp["op"]
+        if op == "promote":
+            return promote_observations(inp["fields"], inp.get("existing_observations") or [], inp["record"],
+                                        inp.get("user_aliases"), inp.get("now_ms", 0))
+        if op == "observed_date":
+            return observed_date(inp["record"], inp["fields"])
+        if op == "edit":
+            return edit_observation(inp["observation"], inp["patch"])
+        if op == "user_alias":
+            return apply_user_alias(inp["observations"], inp["raw_name"], inp["analyte_id"], inp.get("now_ms", 0))
+        raise ValueError(op)
+    if function == "trends":
+        tr = trend_series(inp["observations"], inp["analyte_id"])
+        if inp["op"] == "series":
+            return tr
+        if inp["op"] == "mini":
+            return mini_trend(tr, inp["observation_id"])
+        raise ValueError(inp["op"])
+    if function == "entities":
+        op = inp.get("op", "rebuild")
+        if op == "rebuild":
+            return rebuild_entities(inp["fields"])
+        if op == "normalize":
+            return {"doctor_display": doctor_display_name(inp["name"]), "doctor": normalize_doctor_name(inp["name"]),
+                    "facility_display": facility_display_name(inp["name"]),
+                    "facility": normalize_facility_name(inp["name"])}
+        raise ValueError(op)
+    if function == "suggest_relations":
+        return suggest_relations(inp["record"], inp["candidates"], inp["today"], inp.get("existing_links"))
     raise ValueError("unknown function " + function)

@@ -337,12 +337,16 @@ internal fun FiltersChip(count: Int, onClick: () -> Unit) {
 internal fun RecordsFilterSheet(
     initial: RecordAdvancedFilters,
     tags: List<RecordTag>,
+    doctors: List<com.ayuvo.health.records.model.HealthEntity> = emptyList(),
+    facilities: List<com.ayuvo.health.records.model.HealthEntity> = emptyList(),
+    catalog: com.ayuvo.health.records.analytes.AnalyteCatalog = com.ayuvo.health.records.analytes.AnalyteCatalog.EMPTY,
     onApply: (RecordAdvancedFilters) -> Unit,
     onDismiss: () -> Unit
 ) {
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val context = LocalContext.current
     var filters by remember { mutableStateOf(initial) }
+    var pickingTest by remember { mutableStateOf(false) }
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -378,18 +382,24 @@ internal fun RecordsFilterSheet(
                 )
             }
 
+            // Phase 3: Doctor / Hospital pick from entities found in the user's records (§19).
             FilterLabel(stringResource(R.string.records_filter_doctor))
-            GlassTextField(
-                value = filters.doctor.orEmpty(),
-                onValueChange = { filters = filters.copy(doctor = it.trim().lowercase().ifEmpty { null }) },
-                placeholder = stringResource(R.string.records_filter_doctor_hint)
-            )
+            EntityChips(doctors, filters.doctorEntityIds, stringResource(R.string.records_filter_doctor_hint)) {
+                filters = filters.copy(doctorEntityIds = filters.doctorEntityIds.toggle(it), doctor = null)
+            }
             FilterLabel(stringResource(R.string.records_filter_hospital))
-            GlassTextField(
-                value = filters.facility.orEmpty(),
-                onValueChange = { filters = filters.copy(facility = it.trim().lowercase().ifEmpty { null }) },
-                placeholder = stringResource(R.string.records_filter_hospital_hint)
-            )
+            EntityChips(facilities, filters.facilityEntityIds, stringResource(R.string.records_filter_hospital_hint)) {
+                filters = filters.copy(facilityEntityIds = filters.facilityEntityIds.toggle(it), facility = null)
+            }
+            if (catalog.analytes.isNotEmpty()) {
+                FilterLabel(stringResource(R.string.records_filter_test))
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    filters.analyteIds.forEach { id ->
+                        RecordChip(text = catalog.displayName(id) ?: id, selected = true, onClick = { filters = filters.copy(analyteIds = filters.analyteIds - id) })
+                    }
+                    RecordChip(text = stringResource(R.string.records_filter_choose), selected = false, onClick = { pickingTest = true })
+                }
+            }
 
             FilterLabel(stringResource(R.string.records_field_category))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -433,9 +443,89 @@ internal fun RecordsFilterSheet(
             )
         }
     }
+    if (pickingTest) {
+        AnalytePickerSheet(
+            catalog = catalog,
+            selected = null,
+            allowUnmapped = false,
+            onPick = { id ->
+                if (id != null) filters = filters.copy(analyteIds = filters.analyteIds + id)
+                pickingTest = false
+            },
+            onDismiss = { pickingTest = false }
+        )
+    }
 }
 
 private fun <T> Set<T>.toggle(value: T): Set<T> = if (value in this) this - value else this + value
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun EntityChips(entities: List<com.ayuvo.health.records.model.HealthEntity>, selected: Set<String>, emptyHint: String, onToggle: (String) -> Unit) {
+    if (entities.isEmpty()) {
+        Text(emptyHint, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
+        return
+    }
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        entities.take(24).forEach { e ->
+            RecordChip(text = "${e.displayName} · ${e.recordCount}", selected = e.id in selected, onClick = { onToggle(e.id) })
+        }
+    }
+}
+
+/** "Episode" badge on timeline rows that belong to an accepted link chain (§3.10). */
+@Composable
+internal fun EpisodeChip() {
+    Text(
+        stringResource(R.string.records_episode_badge),
+        fontSize = 10.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = AppColors.Calorie,
+        maxLines = 1,
+        modifier = Modifier.clip(RoundedCornerShape(50)).background(AppColors.Calorie.copy(alpha = 0.12f)).padding(horizontal = 7.dp, vertical = 2.dp)
+    )
+}
+
+/** §23 Values group: "Hemoglobin 7.6 g/dL ↓ · CBC · 12 Sep". */
+@Composable
+internal fun ValueHitsGroup(values: List<com.ayuvo.health.records.model.ValueHit>, catalog: com.ayuvo.health.records.analytes.AnalyteCatalog, onOpen: (com.ayuvo.health.records.model.ValueHit) -> Unit) {
+    GlassSurface(Modifier.fillMaxWidth(), cornerRadius = 18.dp, padding = 0.dp) {
+        Column {
+            values.forEach { hit ->
+                val o = hit.observation
+                Row(
+                    Modifier.fillMaxWidth().clickable { onOpen(hit) }.padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(hit.displayName, fontWeight = FontWeight.SemiBold, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                observationValue(o) + when {
+                                    o.flag == com.ayuvo.health.records.model.ResultFlag.LOW || o.flag == com.ayuvo.health.records.model.ResultFlag.CRITICAL_LOW -> " ↓"
+                                    o.flag == com.ayuvo.health.records.model.ResultFlag.HIGH || o.flag == com.ayuvo.health.records.model.ResultFlag.CRITICAL_HIGH -> " ↑"
+                                    else -> ""
+                                },
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                                color = if (o.flag.isAbnormal) o.flag.color(MaterialTheme.colorScheme.onSurface) else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Text(
+                            listOfNotNull(hit.record.title, o.observedDate?.let { runCatching { RecordFormat.date(LocalDate.parse(it)) }.getOrNull() }).joinToString(" · "),
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    FlagChip(o.flag)
+                }
+            }
+        }
+    }
+}
 
 @Composable
 private fun FilterLabel(text: String) {

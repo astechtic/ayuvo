@@ -31,14 +31,16 @@ object SearchIndexer {
         tagNames: List<String>,
         pageTexts: List<String>,
         fields: List<RecordField>,
-        highlights: List<RecordHighlight>
+        highlights: List<RecordHighlight>,
+        /** Phase 3: display names of mapped analytes (§19 FTS `clinical`). */
+        analyteNames: List<String> = emptyList()
     ): Row {
         val usable = fields.filter { it.state != FieldState.REJECTED }
         fun values(keys: List<String>) = keys.flatMap { key -> usable.filter { it.key == key }.map { it.valueText } }.distinct()
         return Row(
             title = RecordText.fold(title),
             people = RecordText.fold(values(peopleKeys).joinToString("\n")),
-            clinical = RecordText.fold((listOf(typeLabel(recordType)) + values(clinicalKeys)).filter { it.isNotBlank() }.joinToString("\n")),
+            clinical = RecordText.fold((listOf(typeLabel(recordType)) + values(clinicalKeys) + analyteNames).filter { it.isNotBlank() }.distinct().joinToString("\n")),
             body = RecordText.fold(pageTexts.joinToString("\n")),
             notesTags = RecordText.fold(listOfNotNull(notes).plus(tagNames).joinToString(" ")),
             highlights = RecordText.fold(highlights.filter { !it.dismissed }.joinToString("\n") { it.text })

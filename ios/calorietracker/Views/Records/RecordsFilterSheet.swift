@@ -11,15 +11,15 @@ struct RecordsFilterSheet: View {
     @State private var useTo = false
     @State private var from = Date()
     @State private var to = Date()
-    @State private var doctors: [String] = []
-    @State private var facilities: [String] = []
+    @State private var doctors: [RecordEntity] = []
+    @State private var facilities: [RecordEntity] = []
     @State private var tags: [String] = []
 
     static func activeCount(_ query: RecordQuery) -> Int {
         var count = 0
         if query.dateFrom != nil || query.dateTo != nil { count += 1 }
-        if !(query.doctor ?? "").isEmpty { count += 1 }
-        if !(query.facility ?? "").isEmpty { count += 1 }
+        if !(query.doctor ?? "").isEmpty || query.doctorEntityID != nil { count += 1 }
+        if !(query.facility ?? "").isEmpty || query.facilityEntityID != nil { count += 1 }
         if !query.categories.isEmpty { count += 1 }
         if !query.recordTypes.isEmpty { count += 1 }
         if query.flags.contains(.abnormal) { count += 1 }
@@ -39,14 +39,20 @@ struct RecordsFilterSheet: View {
                     if useTo { DatePicker("To", selection: $to, displayedComponents: .date).labelsHidden() }
                 }
                 Section("Doctor & hospital") {
-                    Picker("Doctor", selection: Binding(get: { draft.doctor ?? "" }, set: { draft.doctor = $0.isEmpty ? nil : $0 })) {
+                    Picker("Doctor", selection: Binding(get: { draft.doctorEntityID ?? "" }, set: { draft.doctorEntityID = $0.isEmpty ? nil : $0; draft.doctor = nil })) {
                         Text("Any").tag("")
-                        ForEach(doctors, id: \.self) { Text($0).tag($0) }
+                        ForEach(doctors) { entity in
+                            Text(entityLabel(entity)).tag(entity.id)
+                        }
                     }
-                    Picker("Hospital or lab", selection: Binding(get: { draft.facility ?? "" }, set: { draft.facility = $0.isEmpty ? nil : $0 })) {
+                    .accessibilityIdentifier("records.filters.doctor")
+                    Picker("Hospital or lab", selection: Binding(get: { draft.facilityEntityID ?? "" }, set: { draft.facilityEntityID = $0.isEmpty ? nil : $0; draft.facility = nil })) {
                         Text("Any").tag("")
-                        ForEach(facilities, id: \.self) { Text($0).tag($0) }
+                        ForEach(facilities) { entity in
+                            Text(entityLabel(entity)).tag(entity.id)
+                        }
                     }
+                    .accessibilityIdentifier("records.filters.facility")
                 }
                 Section("Category") {
                     ForEach(RecordCategory.allCases) { category in
@@ -115,6 +121,10 @@ struct RecordsFilterSheet: View {
             facilities = suggestions.facilities
             tags = suggestions.tags
         }
+    }
+
+    private func entityLabel(_ entity: RecordEntity) -> String {
+        entity.recordCount > 0 ? "\(entity.displayName) (\(entity.recordCount))" : entity.displayName
     }
 
     private func toggleRow(_ title: String, isOn: Bool, toggle: @escaping () -> Void) -> some View {

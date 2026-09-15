@@ -96,6 +96,13 @@ nonisolated struct RecordDetail: Hashable, Sendable {
     /// Parent of a split child, or children of an accepted split parent.
     var parent: HealthRecord?
     var children: [HealthRecord] = []
+    // Phase 3
+    /// Non-rejected observations in field order, user-added ones last.
+    var observations: [RecordObservation] = []
+    /// Mini trends keyed by observation id (analytes with ≥ 2 trend points).
+    var miniTrends: [String: RecordMiniTrend] = [:]
+    /// Links other than rejected suggestions: accepted first, then suggestions by score.
+    var related: [RecordRelated] = []
 
     var visibleFields: [RecordField] { fields.filter { $0.state != .rejected } }
     var awaitingConsent: Bool { job?.awaitingConsent == true }
@@ -153,6 +160,13 @@ nonisolated struct RecordQuery: Hashable, Sendable {
     var tags: Set<String> = []
     var aiProcessedOnly = false
     var userConfirmedOnly = false
+    // Phase 3: entity pickers and analyte conditions (§23).
+    var doctorEntityID: String?
+    var facilityEntityID: String?
+    /// Records with a matching observation for every non-bare condition.
+    var analyteConditions: [RecordAnalyteCondition] = []
+
+    var filteringAnalyteConditions: [RecordAnalyteCondition] { analyteConditions.filter { !$0.isBare } }
 
     static let all = RecordQuery()
 
@@ -161,6 +175,7 @@ nonisolated struct RecordQuery: Hashable, Sendable {
     var hasAdvancedFilter: Bool {
         needsReviewOnly || dateFrom != nil || dateTo != nil || !(doctor ?? "").isEmpty || !(facility ?? "").isEmpty
             || !flags.isEmpty || !tags.isEmpty || aiProcessedOnly || userConfirmedOnly
+            || doctorEntityID != nil || facilityEntityID != nil || !filteringAnalyteConditions.isEmpty
     }
 
     var hasChipFilter: Bool {

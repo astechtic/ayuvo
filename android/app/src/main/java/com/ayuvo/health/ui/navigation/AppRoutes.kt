@@ -21,6 +21,11 @@ object AppRoutes {
     const val RECORD_ID_ARG = "recordId"
     const val RECORD_DETAIL = "records/detail/{$RECORD_ID_ARG}"
     const val RECORD_SPLIT = "records/split/{$RECORD_ID_ARG}"
+    const val RECORD_FOCUS_ARG = "obs"
+    /** Record detail, optionally opened at an observation's source (trend point tap, §24). */
+    const val RECORD_DETAIL_FOCUS = "records/detail/{$RECORD_ID_ARG}?$RECORD_FOCUS_ARG={$RECORD_FOCUS_ARG}"
+    const val ANALYTE_ID_ARG = "analyteId"
+    const val RECORD_TREND = "records/trend/{$ANALYTE_ID_ARG}"
 
     /** Workouts is no longer a tab; any legacy `workouts…` destination belongs to the Health tab. */
     private const val LEGACY_WORKOUTS = "workouts"
@@ -28,6 +33,8 @@ object AppRoutes {
     fun healthType(typeKey: String): String = "health/type/$typeKey"
     fun recordDetail(recordId: String): String = "records/detail/$recordId"
     fun recordSplit(recordId: String): String = "records/split/$recordId"
+    fun recordTrend(analyteId: String): String = "records/trend/$analyteId"
+    fun recordDetailAt(recordId: String, observationId: String): String = "records/detail/$recordId?$RECORD_FOCUS_ARG=$observationId"
 
     val bottomTabs = listOf(HOME, HEALTH, RECORDS, COACH, SETTINGS)
 

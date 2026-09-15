@@ -2,6 +2,8 @@
   "cases": [
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [],
         "date_from": null,
@@ -27,6 +29,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -55,6 +59,10 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [
+          "hemoglobin"
+        ],
         "archived": false,
         "chips": [],
         "date_from": null,
@@ -80,6 +88,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -116,6 +126,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -152,6 +164,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -186,6 +200,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -220,6 +236,18 @@
     },
     {
       "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hemoglobin",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "low",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -227,8 +255,8 @@
             "text": "reports"
           },
           {
-            "kind": "flag",
-            "text": "low"
+            "kind": "analyte",
+            "text": "hemoglobin was low"
           }
         ],
         "date_from": null,
@@ -236,10 +264,8 @@
         "doctor": null,
         "facility": null,
         "favorites": false,
-        "flags": [
-          "low"
-        ],
-        "match": "hemoglobin*",
+        "flags": [],
+        "match": null,
         "needs_review": false,
         "record_types": [
           "lab_report",
@@ -247,9 +273,7 @@
           "diagnostic_report"
         ],
         "source": null,
-        "terms": [
-          "hemoglobin"
-        ]
+        "terms": []
       },
       "input": {
         "date_order": "dmy",
@@ -260,6 +284,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -294,6 +320,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -322,6 +350,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -350,6 +380,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -378,6 +410,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -406,6 +440,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -434,6 +470,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -462,6 +500,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -490,6 +530,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -521,6 +563,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -559,6 +603,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -593,6 +639,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -627,6 +675,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -663,6 +713,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -691,6 +743,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": true,
         "chips": [
           {
@@ -725,6 +779,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -753,6 +809,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -785,6 +843,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -818,6 +878,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -852,6 +914,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -882,6 +946,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -920,6 +986,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -956,6 +1024,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -984,6 +1054,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1020,11 +1092,23 @@
     },
     {
       "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "cholesterol_total",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "high",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
-            "kind": "flag",
-            "text": "high"
+            "kind": "analyte",
+            "text": "high cholesterol"
           }
         ],
         "date_from": null,
@@ -1032,16 +1116,12 @@
         "doctor": null,
         "facility": null,
         "favorites": false,
-        "flags": [
-          "high"
-        ],
-        "match": "cholesterol*",
+        "flags": [],
+        "match": null,
         "needs_review": false,
         "record_types": [],
         "source": null,
-        "terms": [
-          "cholesterol"
-        ]
+        "terms": []
       },
       "input": {
         "date_order": "dmy",
@@ -1052,11 +1132,23 @@
     },
     {
       "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "tsh",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "high",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
-            "kind": "flag",
-            "text": "elevated"
+            "kind": "analyte",
+            "text": "elevated tsh"
           },
           {
             "kind": "date",
@@ -1068,16 +1160,12 @@
         "doctor": null,
         "facility": null,
         "favorites": false,
-        "flags": [
-          "high"
-        ],
-        "match": "tsh*",
+        "flags": [],
+        "match": null,
         "needs_review": false,
         "record_types": [],
         "source": null,
-        "terms": [
-          "tsh"
-        ]
+        "terms": []
       },
       "input": {
         "date_order": "dmy",
@@ -1088,6 +1176,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1120,6 +1210,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1154,6 +1246,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1188,11 +1282,23 @@
     },
     {
       "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "glucose",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "abnormal",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
-            "kind": "flag",
-            "text": "out of range"
+            "kind": "analyte",
+            "text": "sugar out of range"
           }
         ],
         "date_from": null,
@@ -1200,16 +1306,12 @@
         "doctor": null,
         "facility": null,
         "favorites": false,
-        "flags": [
-          "abnormal"
-        ],
-        "match": "sugar*",
+        "flags": [],
+        "match": null,
         "needs_review": false,
         "record_types": [],
         "source": null,
-        "terms": [
-          "sugar"
-        ]
+        "terms": []
       },
       "input": {
         "date_order": "dmy",
@@ -1220,6 +1322,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1254,6 +1358,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1288,6 +1394,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1316,6 +1424,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [],
         "date_from": null,
@@ -1341,6 +1451,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1375,6 +1487,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1405,6 +1519,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1441,6 +1557,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [],
         "date_from": null,
@@ -1464,6 +1582,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1498,6 +1618,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1530,6 +1652,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1560,6 +1684,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1597,6 +1723,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1625,6 +1753,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1653,23 +1783,36 @@
     },
     {
       "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hba1c",
+            "canonical_unit": "%",
+            "canonical_value": 7,
+            "flag": null,
+            "op": ">",
+            "unit": null,
+            "value": 7
+          }
+        ],
+        "analytes": [],
         "archived": false,
-        "chips": [],
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "hba1c above 7"
+          }
+        ],
         "date_from": null,
         "date_to": null,
         "doctor": null,
         "facility": null,
         "favorites": false,
         "flags": [],
-        "match": "hba1c* above* 7*",
+        "match": null,
         "needs_review": false,
         "record_types": [],
         "source": null,
-        "terms": [
-          "hba1c",
-          "above",
-          "7"
-        ]
+        "terms": []
       },
       "input": {
         "date_order": "dmy",
@@ -1680,6 +1823,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1708,6 +1853,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [],
         "date_from": null,
@@ -1731,6 +1878,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1769,6 +1918,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1797,6 +1948,8 @@
     },
     {
       "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
         "archived": false,
         "chips": [
           {
@@ -1830,6 +1983,1200 @@
         "today": "2026-09-15"
       },
       "name": "q_us_numeric_date_mdy"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "creatinine",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 1.2,
+            "flag": null,
+            "op": ">",
+            "unit": "mg/dL",
+            "value": 1.2
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "creatinine > 1.2 mg/dl"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "creatinine > 1.2 mg/dL",
+        "today": "2026-09-15"
+      },
+      "name": "q_creatinine_1_2_mg_dl",
+      "notes": "op token + number + unit; shared alias resolves to serum creatinine"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "glucose",
+            "canonical_unit": "mmol/L",
+            "canonical_value": 5.5,
+            "flag": null,
+            "op": "<",
+            "unit": "mmol/L",
+            "value": 5.5
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "glucose below 5.5 mmol/l"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "glucose below 5.5 mmol/l",
+        "today": "2026-09-15"
+      },
+      "name": "q_glucose_below_5_5_mmol_l"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "vitamin_d_25oh",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "low",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "vitamin d low"
+          },
+          {
+            "kind": "date",
+            "text": "last year"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2025-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "vitamin d low last year",
+        "today": "2026-09-15"
+      },
+      "name": "q_vitamin_d_low_last_year"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "tsh",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "normal",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "tsh normal"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "tsh normal",
+        "today": "2026-09-15"
+      },
+      "name": "q_tsh_normal"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hemoglobin",
+            "canonical_unit": "g/dL",
+            "canonical_value": 10,
+            "flag": null,
+            "op": "<",
+            "unit": null,
+            "value": 10
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "hb < 10"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hb < 10",
+        "today": "2026-09-15"
+      },
+      "name": "q_hb_10"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hemoglobin",
+            "canonical_unit": "g/dL",
+            "canonical_value": 10,
+            "flag": null,
+            "op": "<",
+            "unit": "g/dL",
+            "value": 10
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "hemoglobin below 10 g/dl"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hemoglobin below 10 g/dl",
+        "today": "2026-09-15"
+      },
+      "name": "q_hemoglobin_below_10_g_dl"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "platelet_count",
+            "canonical_unit": "10^3/µL",
+            "canonical_value": 150,
+            "flag": null,
+            "op": "<",
+            "unit": "lakhs/cumm",
+            "value": 1.5
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "platelets under 1.5 lakhs/cumm"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "platelets under 1.5 lakhs/cumm",
+        "today": "2026-09-15"
+      },
+      "name": "q_platelets_under_1_5_lakhs_cumm",
+      "notes": "query unit converted: canonical 150"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "glucose_fasting",
+            "canonical_unit": "mmol/L",
+            "canonical_value": 6.993,
+            "flag": null,
+            "op": ">",
+            "unit": "mg/dL",
+            "value": 126
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "fasting blood sugar above 126 mg/dl"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "fasting blood sugar above 126 mg/dl",
+        "today": "2026-09-15"
+      },
+      "name": "q_fasting_blood_sugar_above_126_mg_dl",
+      "notes": "canonical mmol/L"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "ldl_cholesterol",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 160,
+            "flag": null,
+            "op": ">",
+            "unit": null,
+            "value": 160
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "ldl more than 160"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "ldl more than 160",
+        "today": "2026-09-15"
+      },
+      "name": "q_ldl_more_than_160"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hdl_cholesterol",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 40,
+            "flag": null,
+            "op": "<",
+            "unit": null,
+            "value": 40
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "hdl less than 40"
+          },
+          {
+            "kind": "date",
+            "text": "in 2025"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2025-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hdl less than 40 in 2025",
+        "today": "2026-09-15"
+      },
+      "name": "q_hdl_less_than_40_in_2025"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hba1c",
+            "canonical_unit": "%",
+            "canonical_value": 6.5,
+            "flag": null,
+            "op": ">=",
+            "unit": "%",
+            "value": 6.5
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "hba1c >= 6.5%"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hba1c >= 6.5%",
+        "today": "2026-09-15"
+      },
+      "name": "q_hba1c_6_5",
+      "notes": "'%' attached to the number"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "tsh",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "high",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "tsh is high"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "tsh is high",
+        "today": "2026-09-15"
+      },
+      "name": "q_tsh_is_high"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "vitamin_b12",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "low",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "low vitamin b12"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "low vitamin b12",
+        "today": "2026-09-15"
+      },
+      "name": "q_low_vitamin_b12",
+      "notes": "flag before the analyte"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "alt",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "high",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "sgpt raised"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "sgpt raised",
+        "today": "2026-09-15"
+      },
+      "name": "q_sgpt_raised"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "neutrophils* above* 70*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "neutrophils",
+          "above",
+          "70"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "neutrophils above 70",
+        "today": "2026-09-15"
+      },
+      "name": "q_neutrophils_above_70",
+      "notes": "ambiguous alias (% vs absolute): plain terms"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [
+          "urine_protein"
+        ],
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "urine* protein*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "urine",
+          "protein"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "urine protein",
+        "today": "2026-09-15"
+      },
+      "name": "q_urine_protein",
+      "notes": "bare alias -> analytes + terms"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [
+          "creatinine"
+        ],
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "creatinine*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "creatinine"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "creatinine",
+        "today": "2026-09-15"
+      },
+      "name": "q_creatinine",
+      "notes": "bare shared alias -> serum creatinine"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [
+          "ldl_cholesterol"
+        ],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "ldl* cholesterol*",
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": [
+          "ldl",
+          "cholesterol"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "ldl cholesterol reports",
+        "today": "2026-09-15"
+      },
+      "name": "q_ldl_cholesterol_reports"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "uric_acid",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 7,
+            "flag": null,
+            "op": ">=",
+            "unit": null,
+            "value": 7
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "uric acid at least 7"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "uric acid at least 7",
+        "today": "2026-09-15"
+      },
+      "name": "q_uric_acid_at_least_7"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "egfr",
+            "canonical_unit": "mL/min/1.73m²",
+            "canonical_value": 60,
+            "flag": null,
+            "op": "<=",
+            "unit": null,
+            "value": 60
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "egfr at most 60"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "egfr at most 60",
+        "today": "2026-09-15"
+      },
+      "name": "q_egfr_at_most_60"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "cholesterol_total",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 201.084,
+            "flag": null,
+            "op": ">",
+            "unit": "mmol/L",
+            "value": 5.2
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "cholesterol above 5.2 mmol/l"
+          },
+          {
+            "kind": "date",
+            "text": "last 6 months"
+          }
+        ],
+        "date_from": "2026-03-15",
+        "date_to": "2026-09-15",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "cholesterol above 5.2 mmol/l last 6 months",
+        "today": "2026-09-15"
+      },
+      "name": "q_cholesterol_above_5_2_mmol_l_last_6_months"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "potassium",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "critical",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "potassium critical"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "potassium critical",
+        "today": "2026-09-15"
+      },
+      "name": "q_potassium_critical"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "t3_total",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "high",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "t3 high"
+          },
+          {
+            "kind": "doctor",
+            "text": "dr mehta"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": "mehta",
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "t3 high dr mehta",
+        "today": "2026-09-15"
+      },
+      "name": "q_t3_high_dr_mehta"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "glucose",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": null,
+            "op": ">",
+            "unit": "%",
+            "value": 7
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "glucose above 7 %"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "glucose above 7 %",
+        "today": "2026-09-15"
+      },
+      "name": "q_glucose_above_7",
+      "notes": "unit not listed for glucose: canonical_value null"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hba1c",
+            "canonical_unit": "%",
+            "canonical_value": 2.7924,
+            "flag": null,
+            "op": ">",
+            "unit": "mmol/mol",
+            "value": 7
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "hba1c above 7 mmol/mol"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hba1c above 7 mmol/mol",
+        "today": "2026-09-15"
+      },
+      "name": "q_hba1c_above_7_mmol_mol",
+      "notes": "IFCC converted to NGSP %"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [
+          "hemoglobin"
+        ],
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "hemoglobin*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "hemoglobin"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hemoglobin was",
+        "today": "2026-09-15"
+      },
+      "name": "q_hemoglobin_was",
+      "notes": "connector without a flag: bare"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "x ray"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "1* 2*",
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": [
+          "1",
+          "2"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "x-ray 1.2",
+        "today": "2026-09-15"
+      },
+      "name": "q_x_ray_1_2",
+      "notes": "a decimal that is not part of a condition becomes the terms 1 and 2"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "flag",
+            "text": "abnormal"
+          },
+          {
+            "kind": "type",
+            "text": "blood reports"
+          },
+          {
+            "kind": "date",
+            "text": "2026"
+          }
+        ],
+        "date_from": "2026-01-01",
+        "date_to": "2026-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "abnormal"
+        ],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "abnormal blood reports 2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_abnormal_blood_reports_2026",
+      "notes": "'blood' is a method word, never a query alias"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "iron",
+            "canonical_unit": "µg/dL",
+            "canonical_value": 60,
+            "flag": null,
+            "op": ">=",
+            "unit": "µg/dL",
+            "value": 60
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "analyte",
+            "text": "serum iron ≥ 60 μg/dl"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "serum iron ≥ 60 µg/dl",
+        "today": "2026-09-15"
+      },
+      "name": "q_serum_iron_60_g_dl"
+    },
+    {
+      "expected": {
+        "analyte_conditions": [
+          {
+            "analyte_id": "hemoglobin",
+            "canonical_unit": null,
+            "canonical_value": null,
+            "flag": "low",
+            "op": null,
+            "unit": null,
+            "value": null
+          }
+        ],
+        "analytes": [],
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          },
+          {
+            "kind": "analyte",
+            "text": "hb low"
+          },
+          {
+            "kind": "date",
+            "text": "from 01/07/2026 to 30/09/2026"
+          }
+        ],
+        "date_from": "2026-07-01",
+        "date_to": "2026-09-30",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "reports with hb low from 01/07/2026 to 30/09/2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_reports_with_hb_low_from_01_07_2026_to_30_09_2026"
     }
   ],
   "format": "ayuvo-records-vectors",

@@ -1,0 +1,515 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "doctor": "neha gupta",
+        "doctor_display": "Neha Gupta",
+        "facility": "dr neha gupta md medicine",
+        "facility_display": "Dr. Neha Gupta, MD (Medicine)"
+      },
+      "input": {
+        "name": "Dr. Neha Gupta, MD (Medicine)",
+        "op": "normalize"
+      },
+      "name": "normalize_dr_neha_gupta_md_medicine"
+    },
+    {
+      "expected": {
+        "doctor": "ak sharma",
+        "doctor_display": "A.K. SHARMA",
+        "facility": "dr ak sharma mbbs md",
+        "facility_display": "DR.A.K. SHARMA MBBS MD"
+      },
+      "input": {
+        "name": "DR.A.K. SHARMA MBBS MD",
+        "op": "normalize"
+      },
+      "name": "normalize_dr_a_k_sharma_mbbs_md",
+      "notes": "glued Dr., initials joined"
+    },
+    {
+      "expected": {
+        "doctor": "r iyer",
+        "doctor_display": "R. Iyer",
+        "facility": "prof dr r iyer",
+        "facility_display": "Prof. Dr. R. Iyer"
+      },
+      "input": {
+        "name": "Prof. Dr. R. Iyer",
+        "op": "normalize"
+      },
+      "name": "normalize_prof_dr_r_iyer"
+    },
+    {
+      "expected": {
+        "doctor": "suresh rao",
+        "doctor_display": "Suresh Rao",
+        "facility": "dr suresh rao mbbsdnb",
+        "facility_display": "Dr Suresh Rao M.B.B.S., D.N.B"
+      },
+      "input": {
+        "name": "Dr Suresh Rao M.B.B.S., D.N.B.",
+        "op": "normalize"
+      },
+      "name": "normalize_dr_suresh_rao_m_b_b_s_d_n_b"
+    },
+    {
+      "expected": {
+        "doctor": "ak sharma",
+        "doctor_display": "A K Sharma",
+        "facility": "ak sharma",
+        "facility_display": "A K Sharma"
+      },
+      "input": {
+        "name": "A K Sharma",
+        "op": "normalize"
+      },
+      "name": "normalize_a_k_sharma"
+    },
+    {
+      "expected": {
+        "doctor": "doctor",
+        "doctor_display": "Doctor",
+        "facility": "doctor",
+        "facility_display": "Doctor"
+      },
+      "input": {
+        "name": "Doctor",
+        "op": "normalize"
+      },
+      "name": "normalize_doctor",
+      "notes": "a single token is kept"
+    },
+    {
+      "expected": {
+        "doctor": "city care hospitals pvt ltd",
+        "doctor_display": "City Care Hospitals Pvt. Ltd",
+        "facility": "city care hospital",
+        "facility_display": "City Care Hospitals Pvt. Ltd"
+      },
+      "input": {
+        "name": "City Care Hospitals Pvt. Ltd.",
+        "op": "normalize"
+      },
+      "name": "normalize_city_care_hospitals_pvt_ltd"
+    },
+    {
+      "expected": {
+        "doctor": "the apollo clinic",
+        "doctor_display": "The Apollo Clinic",
+        "facility": "apollo clinic",
+        "facility_display": "The Apollo Clinic"
+      },
+      "input": {
+        "name": "The Apollo Clinic",
+        "op": "normalize"
+      },
+      "name": "normalize_the_apollo_clinic"
+    },
+    {
+      "expected": {
+        "doctor": "lal pathlabs",
+        "doctor_display": "Lal PathLabs",
+        "facility": "dr lal pathlab",
+        "facility_display": "Dr. Lal PathLabs"
+      },
+      "input": {
+        "name": "Dr. Lal PathLabs",
+        "op": "normalize"
+      },
+      "name": "normalize_dr_lal_pathlabs"
+    },
+    {
+      "expected": {
+        "doctor": "lal path labs",
+        "doctor_display": "Lal Path Labs",
+        "facility": "dr lal pathlab",
+        "facility_display": "Dr Lal Path Labs"
+      },
+      "input": {
+        "name": "Dr Lal Path Labs",
+        "op": "normalize"
+      },
+      "name": "normalize_dr_lal_path_labs"
+    },
+    {
+      "expected": {
+        "doctor": "metropolis healthcare limited",
+        "doctor_display": "Metropolis Healthcare Limited",
+        "facility": "metropolis healthcare",
+        "facility_display": "Metropolis Healthcare Limited"
+      },
+      "input": {
+        "name": "Metropolis Healthcare Limited",
+        "op": "normalize"
+      },
+      "name": "normalize_metropolis_healthcare_limited"
+    },
+    {
+      "expected": {
+        "doctor": "metropolis health care",
+        "doctor_display": "Metropolis Health Care",
+        "facility": "metropolis healthcare",
+        "facility_display": "Metropolis Health Care"
+      },
+      "input": {
+        "name": "Metropolis Health Care",
+        "op": "normalize"
+      },
+      "name": "normalize_metropolis_health_care"
+    },
+    {
+      "expected": {
+        "doctor": "srl diagnostics research centre",
+        "doctor_display": "SRL Diagnostics & Research Centre",
+        "facility": "srl diagnostic research center",
+        "facility_display": "SRL Diagnostics & Research Centre"
+      },
+      "input": {
+        "name": "SRL Diagnostics & Research Centre",
+        "op": "normalize"
+      },
+      "name": "normalize_srl_diagnostics_research_centre"
+    },
+    {
+      "expected": {
+        "doctor": "thyrocare laboratories",
+        "doctor_display": "Thyrocare Laboratories",
+        "facility": "thyrocare lab",
+        "facility_display": "Thyrocare Laboratories"
+      },
+      "input": {
+        "name": "Thyrocare Laboratories",
+        "op": "normalize"
+      },
+      "name": "normalize_thyrocare_laboratories"
+    },
+    {
+      "expected": {
+        "doctor": "sunrise multi speciality hospital",
+        "doctor_display": "Sunrise Multi Speciality Hospital",
+        "facility": "sunrise multispecialty hospital",
+        "facility_display": "Sunrise Multi Speciality Hospital"
+      },
+      "input": {
+        "name": "Sunrise Multi Speciality Hospital",
+        "op": "normalize"
+      },
+      "name": "normalize_sunrise_multi_speciality_hospital"
+    },
+    {
+      "expected": {
+        "entities": [
+          {
+            "display_name": "Neha Gupta",
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "specialty": "MD (Medicine)"
+          },
+          {
+            "display_name": "City Care Hospital",
+            "kind": "facility",
+            "normalized_name": "city care hospital",
+            "specialty": null
+          }
+        ],
+        "record_entities": [
+          {
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "role": "doctor"
+          },
+          {
+            "kind": "facility",
+            "normalized_name": "city care hospital",
+            "role": "facility"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.85,
+            "evidence": "Neha Gupta",
+            "field_key": "doctor_name",
+            "id": "d1",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "MD (Medicine)",
+            "field_key": "doctor_specialty",
+            "id": "s1",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "MD (Medicine)"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "City Care Hospital",
+            "field_key": "facility",
+            "id": "fa",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "City Care Hospital"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Dolo 650",
+            "field_key": "medication",
+            "id": "m1",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Dolo 650"
+          }
+        ],
+        "op": "rebuild"
+      },
+      "name": "rebuild_prescription"
+    },
+    {
+      "expected": {
+        "entities": [
+          {
+            "display_name": "Anil Mehta",
+            "kind": "doctor",
+            "normalized_name": "anil mehta",
+            "specialty": null
+          },
+          {
+            "display_name": "R. Iyer",
+            "kind": "doctor",
+            "normalized_name": "r iyer",
+            "specialty": null
+          },
+          {
+            "display_name": "Metropolis Healthcare Ltd",
+            "kind": "facility",
+            "normalized_name": "metropolis healthcare",
+            "specialty": null
+          }
+        ],
+        "record_entities": [
+          {
+            "kind": "doctor",
+            "normalized_name": "anil mehta",
+            "role": "doctor"
+          },
+          {
+            "kind": "doctor",
+            "normalized_name": "r iyer",
+            "role": "referrer"
+          },
+          {
+            "kind": "facility",
+            "normalized_name": "metropolis healthcare",
+            "role": "facility"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.85,
+            "evidence": "Dr. R. Iyer",
+            "field_key": "doctor_name",
+            "id": "d1",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "role": "referrer"
+            },
+            "value_text": "Dr. R. Iyer"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Anil Mehta",
+            "field_key": "doctor_name",
+            "id": "d2",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Anil Mehta"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Metropolis Healthcare Ltd",
+            "field_key": "facility",
+            "id": "fa",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Metropolis Healthcare Ltd"
+          }
+        ],
+        "op": "rebuild"
+      },
+      "name": "rebuild_lab_with_referrer"
+    },
+    {
+      "expected": {
+        "entities": [
+          {
+            "display_name": "Neha Gupta",
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "specialty": null
+          }
+        ],
+        "record_entities": [
+          {
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "role": "doctor"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.9,
+            "evidence": "N Gupta",
+            "field_key": "doctor_name",
+            "id": "d1",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "N Gupta"
+          },
+          {
+            "confidence": 0.3,
+            "evidence": "Dr Neha Gupta",
+            "field_key": "doctor_name",
+            "id": "d2",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "user",
+            "value_json": null,
+            "value_text": "Dr Neha Gupta"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Wrong Clinic",
+            "field_key": "facility",
+            "id": "fa",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "rejected",
+            "value_json": null,
+            "value_text": "Wrong Clinic"
+          },
+          {
+            "confidence": 0.5,
+            "evidence": "Low Conf Labs",
+            "field_key": "facility",
+            "id": "fb",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Low Conf Labs"
+          }
+        ],
+        "op": "rebuild"
+      },
+      "name": "rebuild_best_rows",
+      "notes": "user row beats a higher-confidence suggestion; rejected and < 0.6 facilities are ignored"
+    },
+    {
+      "expected": {
+        "entities": [
+          {
+            "display_name": "NEHA GUPTA",
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "specialty": null
+          }
+        ],
+        "record_entities": [
+          {
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "role": "doctor"
+          },
+          {
+            "kind": "doctor",
+            "normalized_name": "neha gupta",
+            "role": "referrer"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.85,
+            "evidence": "Neha Gupta",
+            "field_key": "doctor_name",
+            "id": "d1",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "role": "referrer"
+            },
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Dr. NEHA GUPTA MD",
+            "field_key": "doctor_name",
+            "id": "d2",
+            "method": "pdf_text",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Dr. NEHA GUPTA MD"
+          }
+        ],
+        "op": "rebuild"
+      },
+      "name": "rebuild_same_person_two_roles",
+      "notes": "one entity, roles doctor and referrer"
+    },
+    {
+      "expected": {
+        "entities": [],
+        "record_entities": []
+      },
+      "input": {
+        "fields": [],
+        "op": "rebuild"
+      },
+      "name": "rebuild_empty"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "entities",
+  "version": 1
+}

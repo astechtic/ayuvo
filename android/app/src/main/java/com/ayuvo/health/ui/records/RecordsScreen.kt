@@ -60,6 +60,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalResources
@@ -96,7 +97,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecordsScreen(
     container: AppContainer,
-    onOpenRecord: (String) -> Unit
+    onOpenRecord: (String) -> Unit,
+    /** A Values hit opens its record at the observation's source (§23, §24). */
+    onOpenValue: (recordId: String, observationId: String) -> Unit = { recordId, _ -> onOpenRecord(recordId) }
 ) {
     val vm: RecordsViewModel = viewModel(factory = RecordsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -204,10 +207,11 @@ fun RecordsScreen(
                     ) {
                         RecordsEmptyState(onAction = launchers.launch)
                     }
-                    ui.searchHits != null -> SearchResults(
+                    ui.searchHits != null || ui.valueHits != null -> SearchResults(
                         ui = ui,
                         container = container,
                         onOpen = { record -> if (ui.selecting) vm.toggleSelection(record.id) else onOpenRecord(record.id) },
+                        onOpenValue = { hit -> onOpenValue(hit.record.id, hit.observation.id) },
                         onSearchWithAi = vm::searchWithAi
                     )
                     ui.items.isEmpty() -> Column {
@@ -236,6 +240,9 @@ fun RecordsScreen(
         RecordsFilterSheet(
             initial = ui.advanced,
             tags = ui.allTags,
+            doctors = ui.doctors,
+            facilities = ui.facilities,
+            catalog = ui.catalog,
             onApply = {
                 vm.setAdvanced(it)
                 showFilters = false
@@ -458,13 +465,21 @@ private fun RecordsBody(
                             MonthHeader(RecordFormat.monthHeader(records.first().sortDate))
                         }
                         items(records, key = { it.id }) { record ->
+                            val index = ui.items.indexOf(record)
+                            val prev = ui.items.getOrNull(index - 1)
+                            val next = ui.items.getOrNull(index + 1)
+                            val linkedUp = prev != null && ui.isEpisodePair(prev.id, record.id) && prev.sortDate.take(7) == record.sortDate.take(7)
+                            val linkedDown = next != null && ui.isEpisodePair(record.id, next.id) && next.sortDate.take(7) == record.sortDate.take(7)
                             RecordRow(
                                 record = record,
                                 files = files,
                                 selecting = ui.selecting,
                                 selected = record.id in ui.selection,
                                 onClick = { onOpen(record) },
-                                onLongClick = { onLongPress(record) }
+                                onLongClick = { onLongPress(record) },
+                                episode = ui.episodeLinks.any { it.first == record.id || it.second == record.id },
+                                connectUp = linkedUp,
+                                connectDown = linkedDown
                             )
                         }
                     }
@@ -540,9 +555,12 @@ private fun SearchResults(
     ui: RecordsUiState,
     container: AppContainer,
     onOpen: (HealthRecord) -> Unit,
+    onOpenValue: (com.ayuvo.health.records.model.ValueHit) -> Unit,
     onSearchWithAi: () -> Unit
 ) {
-    val hits = ui.searchHits.orEmpty()
+    // Analyte-only queries ("hemoglobin was low") have no FTS terms: their records are the filtered page.
+    val hits = ui.searchHits ?: ui.items.map { com.ayuvo.health.records.data.RecordSearchHit(it, 0.0, null) }
+    val values = ui.valueHits.orEmpty()
     LazyColumn(
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = BottomNavScrollPadding),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -561,12 +579,18 @@ private fun SearchResults(
         if (ui.canSearchWithAi) {
             item(key = "ai-search") { AiSearchRow(ui.aiSearchRunning, onSearchWithAi) }
         }
-        if (hits.isEmpty()) {
+        if (hits.isEmpty() && values.isEmpty()) {
             item(key = "none") { NoMatches(search = ui.search) }
         } else {
-            item(key = "group-records") { SectionTitle(stringResource(R.string.records_search_group_records)) }
-            items(hits, key = { "hit-${it.record.id}" }) { hit ->
-                SearchHitRow(hit = hit, files = container.recordFiles, onClick = { onOpen(hit.record) })
+            if (hits.isNotEmpty()) {
+                item(key = "group-records") { SectionTitle(stringResource(R.string.records_search_group_records)) }
+                items(hits, key = { "hit-${it.record.id}" }) { hit ->
+                    SearchHitRow(hit = hit, files = container.recordFiles, onClick = { onOpen(hit.record) })
+                }
+            }
+            if (values.isNotEmpty()) {
+                item(key = "group-values") { SectionTitle(stringResource(R.string.records_search_group_values)) }
+                item(key = "values") { ValueHitsGroup(values, ui.catalog, onOpenValue) }
             }
         }
     }
@@ -624,11 +648,24 @@ private fun RecordRow(
     selecting: Boolean,
     selected: Boolean,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
+    episode: Boolean = false,
+    connectUp: Boolean = false,
+    connectDown: Boolean = false
 ) {
+    val connector = AppColors.Calorie.copy(alpha = 0.45f)
     GlassSurface(
         modifier = Modifier
             .fillMaxWidth()
+            .then(
+                if (connectUp || connectDown) Modifier.drawBehind {
+                    // Thin connector between adjacent rows of one accepted link chain (§3.10).
+                    val x = 10.dp.toPx() + 24.dp.toPx()
+                    val gap = 8.dp.toPx()
+                    if (connectUp) drawLine(connector, androidx.compose.ui.geometry.Offset(x, -gap), androidx.compose.ui.geometry.Offset(x, 0f), strokeWidth = 2.dp.toPx())
+                    if (connectDown) drawLine(connector, androidx.compose.ui.geometry.Offset(x, size.height), androidx.compose.ui.geometry.Offset(x, size.height + gap), strokeWidth = 2.dp.toPx())
+                } else Modifier
+            )
             .clip(RoundedCornerShape(18.dp))
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
         cornerRadius = 18.dp,
@@ -652,6 +689,10 @@ private fun RecordRow(
                 )
             }
             RecordStatusPill(record)
+            if (episode) {
+                Spacer(Modifier.width(6.dp))
+                EpisodeChip()
+            }
             if (record.favorite) {
                 Spacer(Modifier.width(6.dp))
                 Icon(Icons.Filled.Star, stringResource(R.string.records_filter_favorites), tint = AppColors.Calorie, modifier = Modifier.size(18.dp))

@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ayuvo.health.AppContainer
+import com.ayuvo.health.records.analytes.AnalyteCatalog
 import com.ayuvo.health.records.data.RecordsStore
+import com.ayuvo.health.records.model.HealthEntity
+import com.ayuvo.health.records.model.ValueHit
 import com.ayuvo.health.records.ingest.ImportItem
 import com.ayuvo.health.records.ingest.ImportSpec
 import com.ayuvo.health.records.model.HealthRecord
@@ -74,9 +77,36 @@ data class RecordsUiState(
     /** "Search smarter with AI" row: shown when the mode allows it and the query looks natural-language. */
     val canSearchWithAi: Boolean = false,
     val aiSearchRunning: Boolean = false,
-    val allTags: List<RecordTag> = emptyList()
+    val allTags: List<RecordTag> = emptyList(),
+    // Phase 3
+    /** §23 Values group while the query names analytes; null otherwise. */
+    val valueHits: List<ValueHit>? = null,
+    /** Accepted links among [items] (timeline episode connectors). */
+    val episodeLinks: Set<Pair<String, String>> = emptySet(),
+    val doctors: List<HealthEntity> = emptyList(),
+    val facilities: List<HealthEntity> = emptyList(),
+    val catalog: AnalyteCatalog = AnalyteCatalog.EMPTY
 ) {
     val isBrowsingAll: Boolean get() = filter == RecordFilter.ALL && search.isBlank() && advanced.isEmpty
+
+    /** Chain id per record: connected components of the accepted links (visit → lab → prescription). */
+    private val episodeRoots: Map<String, String> by lazy {
+        val parent = HashMap<String, String>()
+        fun find(x: String): String {
+            var r = x
+            while (parent[r] != null && parent[r] != r) r = parent.getValue(r)
+            return r
+        }
+        for ((a, b) in episodeLinks) {
+            parent.putIfAbsent(a, a); parent.putIfAbsent(b, b)
+            val ra = find(a); val rb = find(b)
+            if (ra != rb) parent[ra] = rb
+        }
+        parent.keys.associateWith { find(it) }
+    }
+
+    /** Two records of the same accepted link chain (timeline connector). */
+    fun isEpisodePair(x: String, y: String): Boolean = episodeRoots[x] != null && episodeRoots[x] == episodeRoots[y]
     val selecting: Boolean get() = selection.isNotEmpty()
 }
 
@@ -130,10 +160,12 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     /** Filter chip + Filters sheet + the parsed structure of the search text (§17). */
-    private fun effective(q: RecordQuery): Pair<RecordQuery, List<ParsedChip>> {
-        if (q.search.isBlank()) return q.copy(terms = null) to emptyList()
-        val parsed = RecordQueryParser.parse(q.search, today, RecordRules.deviceDateOrder())
-        return q.copy(advanced = q.advanced.and(parsed.toFilters()), terms = parsed.terms) to parsed.chips
+    private fun effective(q: RecordQuery, catalog: AnalyteCatalog = _ui.value.catalog): Pair<RecordQuery, List<ParsedChip>> = parsedQuery(q, catalog).let { (eq, parsed) -> eq to parsed?.chips.orEmpty() }
+
+    private fun parsedQuery(q: RecordQuery, catalog: AnalyteCatalog): Pair<RecordQuery, com.ayuvo.health.records.search.ParsedRecordQuery?> {
+        if (q.search.isBlank()) return q.copy(terms = null) to null
+        val parsed = RecordQueryParser.parse(q.search, today, RecordRules.deviceDateOrder(), catalog)
+        return q.copy(advanced = q.advanced.and(parsed.toFilters()), terms = parsed.terms) to parsed
     }
 
     private suspend fun reload(q: RecordQuery) {
@@ -141,9 +173,13 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
             val keepWindow = loadedQuery == q
             val limit = if (keepWindow) maxOf(RecordsStore.PAGE_SIZE, _ui.value.items.size) else RecordsStore.PAGE_SIZE
             runCatching {
-                val (effectiveQuery, chips) = effective(q)
+                val catalog = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { container.analyteCatalog }
+                val (effectiveQuery, parsed) = parsedQuery(q, catalog)
+                val chips = parsed?.chips.orEmpty()
                 val browsing = q.filter == RecordFilter.ALL && q.search.isBlank() && q.advanced.isEmpty
+                // A bare analyte is also an FTS term; its Values group is shown even when no page text matches.
                 val hits = if (effectiveQuery.terms?.isNotEmpty() == true) store.search(effectiveQuery, today = today) else null
+                val values = parsed?.takeIf { it.analyteConditions.isNotEmpty() || it.analytes.isNotEmpty() }?.let { store.valueHits(it.analyteConditions, it.analytes) }
                 val page = if (hits == null) store.page(effectiveQuery, after = null, limit = limit) else RecordPageResult(hits.map { it.record }, null)
                 val recent = if (browsing) store.recent(RECENT_COUNT) else emptyList()
                 val total = store.count()
@@ -151,7 +187,10 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
                 val review = if (browsing) store.needsReview(SECTION_COUNT) else emptyList()
                 val highlights = if (browsing) store.importantHighlights(SECTION_COUNT) else emptyList()
                 val tags = store.allTags()
-                Loaded(page, recent, total, hits, chips, summary, review, highlights, tags, effectiveQuery.terms.orEmpty())
+                val episodes = if (hits == null) store.acceptedLinksAmong(page.items.map { it.id }).map { it.aId to it.bId }.toSet() else emptySet()
+                val doctors = store.entities(com.ayuvo.health.records.model.EntityKind.DOCTOR)
+                val facilities = store.entities(com.ayuvo.health.records.model.EntityKind.FACILITY)
+                Loaded(page, recent, total, hits, chips, summary, review, highlights, tags, effectiveQuery.terms.orEmpty(), values, episodes, doctors, facilities, catalog)
             }.onSuccess { loaded ->
                 val page = loaded.page
                 cursor = page.next
@@ -173,6 +212,11 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
                         needsReview = loaded.review,
                         highlights = loaded.highlights,
                         allTags = loaded.tags,
+                        valueHits = loaded.values,
+                        episodeLinks = loaded.episodes,
+                        doctors = loaded.doctors,
+                        facilities = loaded.facilities,
+                        catalog = loaded.catalog,
                         // §17: ≥ 2 unrecognised terms and zero FTS hits, and the mode allows AI.
                         canSearchWithAi = loaded.hits?.isEmpty() == true && loaded.terms.size >= MIN_AI_SEARCH_TERMS &&
                             mode != null && mode != RecordsAiMode.OFF
@@ -194,7 +238,12 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
         val review: List<HealthRecord>,
         val highlights: List<HighlightWithRecord>,
         val tags: List<RecordTag>,
-        val terms: List<String>
+        val terms: List<String>,
+        val values: List<ValueHit>?,
+        val episodes: Set<Pair<String, String>>,
+        val doctors: List<HealthEntity>,
+        val facilities: List<HealthEntity>,
+        val catalog: AnalyteCatalog
     )
 
     fun loadMore() {
@@ -204,13 +253,18 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
             pageLock.withLock {
                 val q = loadedQuery ?: return@withLock
                 if (cursor != after) return@withLock
-                runCatching { store.page(effective(q).first, after, RecordsStore.PAGE_SIZE) }.onSuccess { page ->
+                runCatching {
+                    val page = store.page(effective(q).first, after, RecordsStore.PAGE_SIZE)
+                    val all = _ui.value.items + page.items
+                    page to store.acceptedLinksAmong(all.map { it.id }).map { it.aId to it.bId }.toSet()
+                }.onSuccess { (page, episodes) ->
                     cursor = page.next
                     _ui.update { state ->
                         val existing = state.items.mapTo(HashSet()) { it.id }
                         state.copy(
                             items = state.items + page.items.filter { it.id !in existing },
-                            canLoadMore = page.next != null
+                            canLoadMore = page.next != null,
+                            episodeLinks = episodes
                         )
                     }
                 }

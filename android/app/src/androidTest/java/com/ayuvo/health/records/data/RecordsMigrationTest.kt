@@ -109,6 +109,98 @@ class RecordsMigrationTest {
         }
     }
 
+    /** A v2 database with processed data upgrades to v3 in place (docs §19) and backfills knowledge. */
+    @Test
+    fun upgradeFromV2KeepsDataAndAddsKnowledgeSchema() = runBlocking {
+        val path = context.getDatabasePath(DB).apply { parentFile?.mkdirs() }
+        val id = UUID.randomUUID().toString()
+        SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
+            db.beginTransaction()
+            try {
+                RecordsSchema.STATEMENTS.forEach(db::execSQL)
+                RecordsSchema.MIGRATION_002.forEach(db::execSQL)
+                db.execSQL("INSERT INTO records_meta(key, value) VALUES ('schema_version', '2')")
+                db.insertOrThrow("records", null, ContentValues().apply {
+                    put("id", id)
+                    put("title", "Complete Blood Count")
+                    put("record_type", "lab_report")
+                    put("category", "lab_reports")
+                    put("source", "import")
+                    put("import_method", "file_picker")
+                    put("created_ms", 1_000L)
+                    put("updated_ms", 1_000L)
+                    put("sort_date", "2026-09-12")
+                    put("document_date", "2026-09-12")
+                    put("mime_type", "application/pdf")
+                    put("file_type", "pdf")
+                    put("processing_status", "ready")
+                    put("ai_mode_used", "none")
+                    put("type_method", "rules")
+                })
+                db.insertOrThrow("record_fields", null, ContentValues().apply {
+                    put("id", "f1")
+                    put("record_id", id)
+                    put("field_key", "test_result")
+                    put("value_text", "Hemoglobin")
+                    put("value_json", """{"name":"Hemoglobin","value":"7.6","value_num":7.6,"unit":"g/dL","ref_text":"13.0 - 17.0","ref_low":13,"ref_high":17,"flag":"low"}""")
+                    put("method", "rules")
+                    put("confidence", 0.9)
+                    put("state", "suggested")
+                    put("source_page", 0)
+                    put("evidence", "Hemoglobin  7.6  g/dL  13.0 - 17.0")
+                    put("created_ms", 1_000L)
+                    put("updated_ms", 1_000L)
+                })
+                db.insertOrThrow("record_fields", null, ContentValues().apply {
+                    put("id", "f2")
+                    put("record_id", id)
+                    put("field_key", "doctor_name")
+                    put("value_text", "Anjali Mehta")
+                    put("method", "rules")
+                    put("confidence", 0.85)
+                    put("state", "suggested")
+                    put("created_ms", 1_000L)
+                    put("updated_ms", 1_000L)
+                })
+                db.execSQL("INSERT INTO processing_jobs(record_id, stage, updated_ms) VALUES (?, 'done', 1000)", arrayOf(id))
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
+            }
+            db.version = 2
+        }
+        val helper = RecordsDatabase(context, DB)
+        val store = SqliteRecordsStore(helper, RecordFileStore(File(tempRoot, "f"), File(tempRoot, "r"), File(tempRoot, "s")))
+        try {
+            val db = helper.writableDatabase
+            assertEquals(3, db.version)
+            val tables = mutableSetOf<String>()
+            db.rawQuery("SELECT name FROM sqlite_master WHERE type IN ('table', 'index')", null).use { c -> while (c.moveToNext()) tables += c.getString(0) }
+            assertTrue(tables.containsAll(listOf("observations", "analyte_user_aliases", "entities", "record_entities", "record_links")))
+            assertTrue(tables.containsAll(listOf("idx_observations_trend", "idx_entities_kind_name", "idx_record_links_b")))
+            // v2 rows survive untouched.
+            assertEquals("Complete Blood Count", store.record(id)!!.title)
+            assertEquals(2, store.fields(id).size)
+            assertEquals("done", store.job(id)!!.stage.raw)
+            // The one-time backfill finds the record and promotes its values and entities.
+            assertEquals(listOf(id), store.recordIdsNeedingKnowledge())
+            store.refreshKnowledge(id)
+            val obs = store.observations(id).single()
+            assertEquals("f1", obs.fieldId)
+            assertEquals("7.6", obs.valueText)
+            assertEquals("2026-09-12", obs.observedDate)
+            assertEquals(com.ayuvo.health.records.model.ResultFlag.LOW, obs.flag)
+            assertEquals(listOf("anjali mehta"), store.recordEntities(id).map { it.first.normalizedName })
+            assertTrue(store.recordIdsNeedingKnowledge().isEmpty())
+            db.rawQuery("SELECT value FROM records_meta WHERE key = 'schema_version'", null).use { c ->
+                assertTrue(c.moveToFirst())
+                assertEquals("3", c.getString(0))
+            }
+        } finally {
+            store.close()
+        }
+    }
+
     @Test
     fun freshInstallEqualsV1PlusMigrations() {
         val helper = RecordsDatabase(context, DB)

@@ -11,7 +11,7 @@ object RecordsSchema {
     const val BASE_VERSION = 1
 
     /** Latest `user_version`: [BASE_VERSION] plus every entry of [MIGRATIONS]. */
-    const val VERSION = 2
+    const val VERSION = 3
 
     val STATEMENTS: List<String> = listOf(
         """CREATE TABLE records (
@@ -138,11 +138,76 @@ object RecordsSchema {
   updated_ms INTEGER NOT NULL)"""
     )
 
+    /** `migrations/003_knowledge.sql` (user_version 3), verbatim (§8 splitting). */
+    val MIGRATION_003: List<String> = listOf(
+        """CREATE TABLE observations (
+  id TEXT PRIMARY KEY NOT NULL,
+  record_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+  field_id TEXT REFERENCES record_fields(id) ON DELETE SET NULL,
+  analyte_id TEXT,
+  analyte_method TEXT,
+  raw_name TEXT NOT NULL,
+  value_num REAL,
+  value_text TEXT NOT NULL,
+  unit TEXT,
+  canonical_value REAL,
+  canonical_unit TEXT,
+  ref_low REAL,
+  ref_high REAL,
+  ref_text TEXT,
+  flag TEXT NOT NULL DEFAULT 'unknown',
+  observed_date TEXT,
+  observed_date_method TEXT,
+  method TEXT NOT NULL,
+  confidence REAL NOT NULL DEFAULT 0,
+  state TEXT NOT NULL DEFAULT 'suggested',
+  source_page INTEGER,
+  source_bbox TEXT,
+  evidence TEXT,
+  excluded_from_trends INTEGER NOT NULL DEFAULT 0,
+  created_ms INTEGER NOT NULL,
+  updated_ms INTEGER NOT NULL)""",
+        "CREATE INDEX idx_observations_trend ON observations(analyte_id, observed_date)",
+        "CREATE INDEX idx_observations_record ON observations(record_id)",
+        "CREATE INDEX idx_observations_field ON observations(field_id)",
+        """CREATE TABLE analyte_user_aliases (
+  normalized_name TEXT PRIMARY KEY NOT NULL,
+  analyte_id TEXT NOT NULL,
+  created_ms INTEGER NOT NULL)""",
+        """CREATE TABLE entities (
+  id TEXT PRIMARY KEY NOT NULL,
+  kind TEXT NOT NULL,
+  display_name TEXT NOT NULL,
+  normalized_name TEXT NOT NULL,
+  specialty TEXT,
+  created_ms INTEGER NOT NULL,
+  updated_ms INTEGER NOT NULL)""",
+        "CREATE UNIQUE INDEX idx_entities_kind_name ON entities(kind, normalized_name)",
+        """CREATE TABLE record_entities (
+  record_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+  entity_id TEXT NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
+  role TEXT NOT NULL,
+  PRIMARY KEY (record_id, entity_id, role))""",
+        "CREATE INDEX idx_record_entities_entity ON record_entities(entity_id, role)",
+        """CREATE TABLE record_links (
+  a_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+  b_id TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+  kind TEXT NOT NULL,
+  origin TEXT NOT NULL,
+  status TEXT NOT NULL,
+  score REAL NOT NULL DEFAULT 0,
+  reasons_json TEXT,
+  created_ms INTEGER NOT NULL,
+  updated_ms INTEGER NOT NULL,
+  PRIMARY KEY (a_id, b_id))""",
+        "CREATE INDEX idx_record_links_b ON record_links(b_id)"
+    )
+
     /** Migration statements keyed by the `user_version` they produce, applied in order. */
-    val MIGRATIONS: Map<Int, List<String>> = linkedMapOf(2 to MIGRATION_002)
+    val MIGRATIONS: Map<Int, List<String>> = linkedMapOf(2 to MIGRATION_002, 3 to MIGRATION_003)
 
     /** Shared file name of each migration (contract test). */
-    val MIGRATION_FILES: Map<Int, String> = linkedMapOf(2 to "002_intelligence.sql")
+    val MIGRATION_FILES: Map<Int, String> = linkedMapOf(2 to "002_intelligence.sql", 3 to "003_knowledge.sql")
 
     val SQL: String get() = STATEMENTS.joinToString(";\n", postfix = ";\n")
 
@@ -151,9 +216,10 @@ object RecordsSchema {
 
     val TABLES: List<String> = listOf("records", "record_pages", "tags", "record_tags", "records_fts", "records_meta")
 
-    /** Tables added by migrations (v2). */
+    /** Tables added by migrations (v2, v3). */
     val MIGRATION_TABLES: List<String> = listOf(
-        "record_fields", "record_highlights", "processing_jobs", "duplicate_candidates", "split_proposals"
+        "record_fields", "record_highlights", "processing_jobs", "duplicate_candidates", "split_proposals",
+        "observations", "analyte_user_aliases", "entities", "record_entities", "record_links"
     )
 
     val INDEXES: List<String> = listOf(

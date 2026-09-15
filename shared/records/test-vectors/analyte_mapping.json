@@ -1,0 +1,1476 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "hb",
+        "method": "catalog",
+        "normalized_name": "hb"
+      },
+      "input": {
+        "name": "Hb",
+        "op": "map"
+      },
+      "name": "map_hb"
+    },
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "hgb",
+        "method": "catalog",
+        "normalized_name": "hgb"
+      },
+      "input": {
+        "name": "HGB",
+        "op": "map"
+      },
+      "name": "map_hgb"
+    },
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "haemoglobin",
+        "method": "catalog",
+        "normalized_name": "haemoglobin"
+      },
+      "input": {
+        "name": "Haemoglobin",
+        "op": "map"
+      },
+      "name": "map_haemoglobin"
+    },
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "hemoglobin",
+        "method": "catalog",
+        "normalized_name": "hemoglobin hb"
+      },
+      "input": {
+        "name": "Hemoglobin (Hb)",
+        "op": "map"
+      },
+      "name": "map_hemoglobin_hb",
+      "notes": "k1 'hemoglobin hb' has no alias; k2 drops the bracket"
+    },
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "haemoglobin",
+        "method": "catalog",
+        "normalized_name": "haemoglobin"
+      },
+      "input": {
+        "name": "Haemoglobin (Photometric)",
+        "op": "map"
+      },
+      "name": "map_haemoglobin_photometric",
+      "notes": "'photometric' is a method word (k1m)"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose_fasting",
+        "candidates": [],
+        "key": "glucose fasting",
+        "method": "catalog",
+        "normalized_name": "glucose fasting fbs"
+      },
+      "input": {
+        "name": "Glucose, Fasting (FBS)",
+        "op": "map"
+      },
+      "name": "map_glucose_fasting_fbs",
+      "notes": "k2 = 'glucose fasting'"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose_fasting",
+        "candidates": [],
+        "key": "fbs",
+        "method": "catalog",
+        "normalized_name": "fbs"
+      },
+      "input": {
+        "name": "FBS",
+        "op": "map"
+      },
+      "name": "map_fbs"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose_fasting",
+        "candidates": [],
+        "key": "blood sugar fasting",
+        "method": "catalog",
+        "normalized_name": "sugar fasting"
+      },
+      "input": {
+        "name": "Blood Sugar (Fasting)",
+        "op": "map"
+      },
+      "name": "map_blood_sugar_fasting",
+      "notes": "k1 exact alias 'blood sugar fasting' (method word 'blood' is only tried after k1)"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose_pp",
+        "candidates": [],
+        "key": "post prandial blood sugar",
+        "method": "catalog",
+        "normalized_name": "post prandial sugar ppbs"
+      },
+      "input": {
+        "name": "Post Prandial Blood Sugar (PPBS)",
+        "op": "map"
+      },
+      "name": "map_post_prandial_blood_sugar_ppbs"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose_pp",
+        "candidates": [],
+        "key": "ppbs",
+        "method": "catalog",
+        "normalized_name": "ppbs"
+      },
+      "input": {
+        "name": "P.P.B.S.",
+        "op": "map"
+      },
+      "name": "map_p_p_b_s",
+      "notes": "one-letter runs join: p p b s -> ppbs"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose_random",
+        "candidates": [],
+        "key": "random blood sugar",
+        "method": "catalog",
+        "normalized_name": "random sugar"
+      },
+      "input": {
+        "name": "Random Blood Sugar",
+        "op": "map"
+      },
+      "name": "map_random_blood_sugar"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose",
+        "candidates": [],
+        "key": "glucose",
+        "method": "catalog",
+        "normalized_name": "glucose"
+      },
+      "input": {
+        "name": "Glucose",
+        "op": "map",
+        "unit": "mg/dL"
+      },
+      "name": "map_glucose_unit_mg_dl"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_glucose",
+        "candidates": [],
+        "key": "glucose",
+        "method": "catalog",
+        "normalized_name": "glucose"
+      },
+      "input": {
+        "name": "Glucose",
+        "op": "map",
+        "qualitative": true
+      },
+      "name": "map_glucose_qualitative_true",
+      "notes": "qualitative value (Nil) -> urine glucose by kind"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_glucose",
+        "candidates": [],
+        "key": "glucose",
+        "method": "catalog",
+        "normalized_name": "glucose"
+      },
+      "input": {
+        "name": "Glucose",
+        "op": "map",
+        "panels": [
+          "urine_routine"
+        ]
+      },
+      "name": "map_glucose_panels_urine_routine",
+      "notes": "urine panel detected -> urine glucose"
+    },
+    {
+      "expected": {
+        "analyte_id": "glucose",
+        "candidates": [],
+        "key": "glucose",
+        "method": "catalog",
+        "normalized_name": "glucose"
+      },
+      "input": {
+        "name": "Glucose",
+        "op": "map"
+      },
+      "name": "map_glucose",
+      "notes": "no context: the urine rule leaves blood glucose"
+    },
+    {
+      "expected": {
+        "analyte_id": "creatinine",
+        "candidates": [],
+        "key": "s creatinine",
+        "method": "catalog",
+        "normalized_name": "creatinine"
+      },
+      "input": {
+        "name": "S. Creatinine",
+        "op": "map"
+      },
+      "name": "map_s_creatinine",
+      "notes": "exact alias"
+    },
+    {
+      "expected": {
+        "analyte_id": "creatinine",
+        "candidates": [],
+        "key": "sr creatinine",
+        "method": "catalog",
+        "normalized_name": "creatinine"
+      },
+      "input": {
+        "name": "Sr. Creatinine (Jaffe)",
+        "op": "map"
+      },
+      "name": "map_sr_creatinine_jaffe",
+      "notes": "k1m drops leading 'sr' and 'jaffe'"
+    },
+    {
+      "expected": {
+        "analyte_id": "creatinine",
+        "candidates": [],
+        "key": "creatinine",
+        "method": "catalog",
+        "normalized_name": "creatinine"
+      },
+      "input": {
+        "name": "Creatinine",
+        "op": "map"
+      },
+      "name": "map_creatinine",
+      "notes": "no panel: urine rule -> serum creatinine"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_creatinine",
+        "candidates": [],
+        "key": "creatinine",
+        "method": "catalog",
+        "normalized_name": "creatinine"
+      },
+      "input": {
+        "name": "Creatinine",
+        "op": "map",
+        "panels": [
+          "urine_albumin"
+        ]
+      },
+      "name": "map_creatinine_panels_urine_albumin",
+      "notes": "urine albumin panel -> urine creatinine"
+    },
+    {
+      "expected": {
+        "analyte_id": null,
+        "candidates": [
+          "creatinine",
+          "urine_creatinine"
+        ],
+        "key": "creatinine",
+        "method": null,
+        "normalized_name": "creatinine"
+      },
+      "input": {
+        "name": "Creatinine",
+        "op": "map",
+        "panels": [
+          "kft",
+          "urine_albumin"
+        ],
+        "unit": "mg/dL"
+      },
+      "name": "map_creatinine_panels_kft_urine_albumin_unit_mg_dl",
+      "notes": "both panels and a shared unit: unresolved, candidates listed"
+    },
+    {
+      "expected": {
+        "analyte_id": "vitamin_b12",
+        "candidates": [],
+        "key": "vit b12",
+        "method": "catalog",
+        "normalized_name": "vit b12"
+      },
+      "input": {
+        "name": "Vit B12",
+        "op": "map"
+      },
+      "name": "map_vit_b12"
+    },
+    {
+      "expected": {
+        "analyte_id": "vitamin_b12",
+        "candidates": [],
+        "key": "vitamin b12",
+        "method": "catalog",
+        "normalized_name": "vitamin b12 cyanocobalamin"
+      },
+      "input": {
+        "name": "Vitamin B12 (Cyanocobalamin)",
+        "op": "map"
+      },
+      "name": "map_vitamin_b12_cyanocobalamin"
+    },
+    {
+      "expected": {
+        "analyte_id": "vitamin_d_25oh",
+        "candidates": [],
+        "key": "25 oh vitamin d total",
+        "method": "catalog",
+        "normalized_name": "25 oh vitamin d total"
+      },
+      "input": {
+        "name": "25 OH Vitamin D Total",
+        "op": "map"
+      },
+      "name": "map_25_oh_vitamin_d_total"
+    },
+    {
+      "expected": {
+        "analyte_id": "vitamin_d_25oh",
+        "candidates": [],
+        "key": "vitamin d 25 oh",
+        "method": "catalog",
+        "normalized_name": "vitamin d 25 oh"
+      },
+      "input": {
+        "name": "Vitamin D (25-OH), Serum",
+        "op": "map"
+      },
+      "name": "map_vitamin_d_25_oh_serum",
+      "notes": "k1m = 'vitamin d 25 oh'"
+    },
+    {
+      "expected": {
+        "analyte_id": "ldl_cholesterol",
+        "candidates": [],
+        "key": "ldl cholesterol direct",
+        "method": "catalog",
+        "normalized_name": "ldl cholesterol direct"
+      },
+      "input": {
+        "name": "LDL Cholesterol - Direct",
+        "op": "map"
+      },
+      "name": "map_ldl_cholesterol_direct"
+    },
+    {
+      "expected": {
+        "analyte_id": "ldl_cholesterol",
+        "candidates": [],
+        "key": "ldl cholesterol",
+        "method": "catalog",
+        "normalized_name": "ldl cholesterol"
+      },
+      "input": {
+        "name": "LDL Cholesterol (Calculated)",
+        "op": "map"
+      },
+      "name": "map_ldl_cholesterol_calculated",
+      "notes": "direct and calculated LDL share one analyte"
+    },
+    {
+      "expected": {
+        "analyte_id": "hdl_cholesterol",
+        "candidates": [],
+        "key": "hdl c",
+        "method": "catalog",
+        "normalized_name": "hdl c"
+      },
+      "input": {
+        "name": "HDL-C",
+        "op": "map"
+      },
+      "name": "map_hdl_c"
+    },
+    {
+      "expected": {
+        "analyte_id": "triglycerides",
+        "candidates": [],
+        "key": "triglycerides",
+        "method": "catalog",
+        "normalized_name": "triglycerides"
+      },
+      "input": {
+        "name": "Triglycerides, Serum",
+        "op": "map"
+      },
+      "name": "map_triglycerides_serum"
+    },
+    {
+      "expected": {
+        "analyte_id": "cholesterol_total",
+        "candidates": [],
+        "key": "total cholesterol",
+        "method": "catalog",
+        "normalized_name": "total cholesterol"
+      },
+      "input": {
+        "name": "Total Cholesterol",
+        "op": "map"
+      },
+      "name": "map_total_cholesterol"
+    },
+    {
+      "expected": {
+        "analyte_id": "cholesterol_total",
+        "candidates": [],
+        "key": "tc",
+        "method": "catalog",
+        "normalized_name": "tc"
+      },
+      "input": {
+        "name": "TC",
+        "op": "map",
+        "unit": "mg/dL"
+      },
+      "name": "map_tc_unit_mg_dl",
+      "notes": "shared with total count: unit decides"
+    },
+    {
+      "expected": {
+        "analyte_id": "wbc_count",
+        "candidates": [],
+        "key": "tc",
+        "method": "catalog",
+        "normalized_name": "tc"
+      },
+      "input": {
+        "name": "TC",
+        "op": "map",
+        "panels": [
+          "cbc"
+        ]
+      },
+      "name": "map_tc_panels_cbc",
+      "notes": "shared with total cholesterol: CBC panel decides"
+    },
+    {
+      "expected": {
+        "analyte_id": null,
+        "candidates": [
+          "wbc_count",
+          "cholesterol_total"
+        ],
+        "key": "tc",
+        "method": null,
+        "normalized_name": "tc"
+      },
+      "input": {
+        "name": "TC",
+        "op": "map"
+      },
+      "name": "map_tc",
+      "notes": "no context: unresolved"
+    },
+    {
+      "expected": {
+        "analyte_id": "platelet_count",
+        "candidates": [],
+        "key": "platelet count",
+        "method": "catalog",
+        "normalized_name": "platelet count"
+      },
+      "input": {
+        "name": "Platelet Count",
+        "op": "map"
+      },
+      "name": "map_platelet_count"
+    },
+    {
+      "expected": {
+        "analyte_id": "platelet_count",
+        "candidates": [],
+        "key": "plt",
+        "method": "catalog",
+        "normalized_name": "plt"
+      },
+      "input": {
+        "name": "PLT",
+        "op": "map"
+      },
+      "name": "map_plt"
+    },
+    {
+      "expected": {
+        "analyte_id": "wbc_count",
+        "candidates": [],
+        "key": "tlc",
+        "method": "catalog",
+        "normalized_name": "tlc"
+      },
+      "input": {
+        "name": "TLC",
+        "op": "map"
+      },
+      "name": "map_tlc"
+    },
+    {
+      "expected": {
+        "analyte_id": "wbc_count",
+        "candidates": [],
+        "key": "total leucocyte count",
+        "method": "catalog",
+        "normalized_name": "total leucocyte count tlc"
+      },
+      "input": {
+        "name": "Total Leucocyte Count (TLC)",
+        "op": "map"
+      },
+      "name": "map_total_leucocyte_count_tlc"
+    },
+    {
+      "expected": {
+        "analyte_id": "neutrophils_pct",
+        "candidates": [],
+        "key": "neutrophils",
+        "method": "catalog",
+        "normalized_name": "neutrophils"
+      },
+      "input": {
+        "name": "Neutrophils %",
+        "op": "map"
+      },
+      "name": "map_neutrophils",
+      "notes": "'%' printed in the name is a unit hint"
+    },
+    {
+      "expected": {
+        "analyte_id": "neutrophils_pct",
+        "candidates": [],
+        "key": "neutrophils",
+        "method": "catalog",
+        "normalized_name": "neutrophils"
+      },
+      "input": {
+        "name": "Neutrophils",
+        "op": "map",
+        "unit": "%"
+      },
+      "name": "map_neutrophils_unit"
+    },
+    {
+      "expected": {
+        "analyte_id": "neutrophils_abs",
+        "candidates": [],
+        "key": "neutrophils",
+        "method": "catalog",
+        "normalized_name": "neutrophils"
+      },
+      "input": {
+        "name": "Neutrophils",
+        "op": "map",
+        "unit": "/cumm"
+      },
+      "name": "map_neutrophils_unit_cumm"
+    },
+    {
+      "expected": {
+        "analyte_id": null,
+        "candidates": [
+          "neutrophils_pct",
+          "neutrophils_abs"
+        ],
+        "key": "neutrophils",
+        "method": null,
+        "normalized_name": "neutrophils"
+      },
+      "input": {
+        "name": "Neutrophils",
+        "op": "map",
+        "panels": [
+          "cbc"
+        ]
+      },
+      "name": "map_neutrophils_panels_cbc",
+      "notes": "no unit: both differentials are numeric CBC analytes -> unresolved"
+    },
+    {
+      "expected": {
+        "analyte_id": "neutrophils_abs",
+        "candidates": [],
+        "key": "absolute neutrophil count",
+        "method": "catalog",
+        "normalized_name": "absolute neutrophil count"
+      },
+      "input": {
+        "name": "Absolute Neutrophil Count",
+        "op": "map"
+      },
+      "name": "map_absolute_neutrophil_count"
+    },
+    {
+      "expected": {
+        "analyte_id": "neutrophils_abs",
+        "candidates": [],
+        "key": "neutrophils abs",
+        "method": "catalog",
+        "normalized_name": "neutrophils abs"
+      },
+      "input": {
+        "name": "Neutrophils (Abs)",
+        "op": "map"
+      },
+      "name": "map_neutrophils_abs",
+      "notes": "k1 'neutrophils abs'"
+    },
+    {
+      "expected": {
+        "analyte_id": "lymphocytes_pct",
+        "candidates": [],
+        "key": "lymphocytes",
+        "method": "catalog",
+        "normalized_name": "lymphocytes"
+      },
+      "input": {
+        "name": "Lymphocytes (%)",
+        "op": "map"
+      },
+      "name": "map_lymphocytes"
+    },
+    {
+      "expected": {
+        "analyte_id": "bilirubin_total",
+        "candidates": [],
+        "key": "bilirubin",
+        "method": "catalog",
+        "normalized_name": "bilirubin"
+      },
+      "input": {
+        "name": "Bilirubin",
+        "op": "map"
+      },
+      "name": "map_bilirubin",
+      "notes": "no context: urine rule -> total bilirubin"
+    },
+    {
+      "expected": {
+        "analyte_id": "bilirubin_total",
+        "candidates": [],
+        "key": "bilirubin",
+        "method": "catalog",
+        "normalized_name": "bilirubin"
+      },
+      "input": {
+        "name": "Bilirubin",
+        "op": "map",
+        "panels": [
+          "lft"
+        ]
+      },
+      "name": "map_bilirubin_panels_lft"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_bilirubin",
+        "candidates": [],
+        "key": "bilirubin",
+        "method": "catalog",
+        "normalized_name": "bilirubin"
+      },
+      "input": {
+        "name": "Bilirubin",
+        "op": "map",
+        "panels": [
+          "urine_routine"
+        ]
+      },
+      "name": "map_bilirubin_panels_urine_routine"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_bilirubin",
+        "candidates": [],
+        "key": "bilirubin",
+        "method": "catalog",
+        "normalized_name": "bilirubin"
+      },
+      "input": {
+        "name": "Bilirubin",
+        "op": "map",
+        "panels": [
+          "lft",
+          "urine_routine"
+        ],
+        "qualitative": true
+      },
+      "name": "map_bilirubin_panels_lft_urine_routine_qualitative_true",
+      "notes": "both panels: qualitative value decides"
+    },
+    {
+      "expected": {
+        "analyte_id": "bilirubin_total",
+        "candidates": [],
+        "key": "bilirubin",
+        "method": "catalog",
+        "normalized_name": "bilirubin"
+      },
+      "input": {
+        "name": "Bilirubin",
+        "op": "map",
+        "panels": [
+          "lft",
+          "urine_routine"
+        ],
+        "qualitative": false,
+        "unit": "mg/dl"
+      },
+      "name": "map_bilirubin_panels_lft_urine_routine_qualitative_false_unit_mg_dl",
+      "notes": "both panels, numeric value, unit decides"
+    },
+    {
+      "expected": {
+        "analyte_id": "bilirubin_direct",
+        "candidates": [],
+        "key": "bilirubin direct",
+        "method": "catalog",
+        "normalized_name": "bilirubin direct"
+      },
+      "input": {
+        "name": "Bilirubin (Direct)",
+        "op": "map"
+      },
+      "name": "map_bilirubin_direct"
+    },
+    {
+      "expected": {
+        "analyte_id": "bilirubin_total",
+        "candidates": [],
+        "key": "bilirubin total",
+        "method": "catalog",
+        "normalized_name": "bilirubin total diazo"
+      },
+      "input": {
+        "name": "Bilirubin Total (Diazo)",
+        "op": "map"
+      },
+      "name": "map_bilirubin_total_diazo",
+      "notes": "'diazo' is not a method word: k2 drops the bracket"
+    },
+    {
+      "expected": {
+        "analyte_id": "ast",
+        "candidates": [],
+        "key": "sgot",
+        "method": "catalog",
+        "normalized_name": "sgot"
+      },
+      "input": {
+        "name": "S.G.O.T.",
+        "op": "map"
+      },
+      "name": "map_s_g_o_t"
+    },
+    {
+      "expected": {
+        "analyte_id": "alt",
+        "candidates": [],
+        "key": "sgpt alt",
+        "method": "catalog",
+        "normalized_name": "sgpt alt"
+      },
+      "input": {
+        "name": "SGPT (ALT)",
+        "op": "map"
+      },
+      "name": "map_sgpt_alt"
+    },
+    {
+      "expected": {
+        "analyte_id": "ag_ratio",
+        "candidates": [],
+        "key": "ag ratio",
+        "method": "catalog",
+        "normalized_name": "ag ratio"
+      },
+      "input": {
+        "name": "A/G Ratio",
+        "op": "map"
+      },
+      "name": "map_a_g_ratio"
+    },
+    {
+      "expected": {
+        "analyte_id": "hba1c",
+        "candidates": [],
+        "key": "hba1c",
+        "method": "catalog",
+        "normalized_name": "hba1c"
+      },
+      "input": {
+        "name": "HbA1c (HPLC)",
+        "op": "map"
+      },
+      "name": "map_hba1c_hplc"
+    },
+    {
+      "expected": {
+        "analyte_id": "hba1c",
+        "candidates": [],
+        "key": "glycosylated haemoglobin",
+        "method": "catalog",
+        "normalized_name": "glycosylated haemoglobin hba1c"
+      },
+      "input": {
+        "name": "Glycosylated Haemoglobin (HbA1c)",
+        "op": "map"
+      },
+      "name": "map_glycosylated_haemoglobin_hba1c"
+    },
+    {
+      "expected": {
+        "analyte_id": "tsh",
+        "candidates": [],
+        "key": "tsh ultrasensitive",
+        "method": "catalog",
+        "normalized_name": "tsh ultrasensitive"
+      },
+      "input": {
+        "name": "TSH (Ultrasensitive)",
+        "op": "map"
+      },
+      "name": "map_tsh_ultrasensitive"
+    },
+    {
+      "expected": {
+        "analyte_id": "free_t4",
+        "candidates": [],
+        "key": "free t4",
+        "method": "catalog",
+        "normalized_name": "free t4"
+      },
+      "input": {
+        "name": "Free T4",
+        "op": "map"
+      },
+      "name": "map_free_t4"
+    },
+    {
+      "expected": {
+        "analyte_id": "t3_total",
+        "candidates": [],
+        "key": "t3 total",
+        "method": "catalog",
+        "normalized_name": "t3 total"
+      },
+      "input": {
+        "name": "T3, Total",
+        "op": "map"
+      },
+      "name": "map_t3_total"
+    },
+    {
+      "expected": {
+        "analyte_id": "egfr",
+        "candidates": [],
+        "key": "egfr",
+        "method": "catalog",
+        "normalized_name": "egfr"
+      },
+      "input": {
+        "name": "eGFR (CKD-EPI)",
+        "op": "map"
+      },
+      "name": "map_egfr_ckd_epi"
+    },
+    {
+      "expected": {
+        "analyte_id": "esr",
+        "candidates": [],
+        "key": "esr",
+        "method": "catalog",
+        "normalized_name": "esr"
+      },
+      "input": {
+        "name": "ESR (Westergren)",
+        "op": "map"
+      },
+      "name": "map_esr_westergren"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_pus_cells",
+        "candidates": [],
+        "key": "pus cells",
+        "method": "catalog",
+        "normalized_name": "pus cells"
+      },
+      "input": {
+        "name": "Pus Cells",
+        "op": "map"
+      },
+      "name": "map_pus_cells"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_pus_cells",
+        "candidates": [],
+        "key": "wbc",
+        "method": "catalog",
+        "normalized_name": "wbc"
+      },
+      "input": {
+        "name": "WBC",
+        "op": "map",
+        "unit": "/hpf"
+      },
+      "name": "map_wbc_unit_hpf"
+    },
+    {
+      "expected": {
+        "analyte_id": "wbc_count",
+        "candidates": [],
+        "key": "wbc",
+        "method": "catalog",
+        "normalized_name": "wbc"
+      },
+      "input": {
+        "name": "WBC",
+        "op": "map",
+        "unit": "10^3/µL"
+      },
+      "name": "map_wbc_unit_10_3_l"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_rbc",
+        "candidates": [],
+        "key": "rbc",
+        "method": "catalog",
+        "normalized_name": "rbc"
+      },
+      "input": {
+        "name": "RBC",
+        "op": "map",
+        "qualitative": true
+      },
+      "name": "map_rbc_qualitative_true"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_protein",
+        "candidates": [],
+        "key": "protein",
+        "method": "catalog",
+        "normalized_name": "protein"
+      },
+      "input": {
+        "name": "Protein",
+        "op": "map",
+        "qualitative": true
+      },
+      "name": "map_protein_qualitative_true"
+    },
+    {
+      "expected": {
+        "analyte_id": "albumin",
+        "candidates": [],
+        "key": "albumin",
+        "method": "catalog",
+        "normalized_name": "albumin"
+      },
+      "input": {
+        "name": "Albumin",
+        "op": "map",
+        "unit": "g/dL"
+      },
+      "name": "map_albumin_unit_g_dl"
+    },
+    {
+      "expected": {
+        "analyte_id": "rdw_sd",
+        "candidates": [],
+        "key": "rdw",
+        "method": "catalog",
+        "normalized_name": "rdw"
+      },
+      "input": {
+        "name": "RDW",
+        "op": "map",
+        "unit": "fL"
+      },
+      "name": "map_rdw_unit_fl"
+    },
+    {
+      "expected": {
+        "analyte_id": "rdw_cv",
+        "candidates": [],
+        "key": "rdw",
+        "method": "catalog",
+        "normalized_name": "rdw"
+      },
+      "input": {
+        "name": "RDW",
+        "op": "map",
+        "unit": "%"
+      },
+      "name": "map_rdw_unit"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_specific_gravity",
+        "candidates": [],
+        "key": "specific gravity",
+        "method": "catalog",
+        "normalized_name": "specific gravity"
+      },
+      "input": {
+        "name": "Specific Gravity",
+        "op": "map"
+      },
+      "name": "map_specific_gravity"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_ph",
+        "candidates": [],
+        "key": "ph",
+        "method": "catalog",
+        "normalized_name": "ph"
+      },
+      "input": {
+        "name": "pH",
+        "op": "map"
+      },
+      "name": "map_ph"
+    },
+    {
+      "expected": {
+        "analyte_id": "hbsag",
+        "candidates": [],
+        "key": "hbsag",
+        "method": "catalog",
+        "normalized_name": "hbsag"
+      },
+      "input": {
+        "name": "HBsAg",
+        "op": "map"
+      },
+      "name": "map_hbsag"
+    },
+    {
+      "expected": {
+        "analyte_id": "dengue_ns1",
+        "candidates": [],
+        "key": "dengue ns1 antigen",
+        "method": "catalog",
+        "normalized_name": "dengue ns1 antigen"
+      },
+      "input": {
+        "name": "Dengue NS1 Antigen",
+        "op": "map"
+      },
+      "name": "map_dengue_ns1_antigen"
+    },
+    {
+      "expected": {
+        "analyte_id": "beta_hcg",
+        "candidates": [],
+        "key": "β hcg",
+        "method": "catalog",
+        "normalized_name": "β hcg"
+      },
+      "input": {
+        "name": "β-hCG",
+        "op": "map"
+      },
+      "name": "map_hcg"
+    },
+    {
+      "expected": {
+        "analyte_id": "sodium",
+        "candidates": [],
+        "key": "na",
+        "method": "catalog",
+        "normalized_name": "na"
+      },
+      "input": {
+        "name": "Na+",
+        "op": "map"
+      },
+      "name": "map_na"
+    },
+    {
+      "expected": {
+        "analyte_id": "potassium",
+        "candidates": [],
+        "key": "k",
+        "method": "catalog",
+        "normalized_name": "k"
+      },
+      "input": {
+        "name": "K+",
+        "op": "map"
+      },
+      "name": "map_k"
+    },
+    {
+      "expected": {
+        "analyte_id": "lipoprotein_a",
+        "candidates": [],
+        "key": "lp a",
+        "method": "catalog",
+        "normalized_name": "lp a"
+      },
+      "input": {
+        "name": "Lp(a)",
+        "op": "map"
+      },
+      "name": "map_lp_a"
+    },
+    {
+      "expected": {
+        "analyte_id": "urine_blood",
+        "candidates": [],
+        "key": "occult blood",
+        "method": "catalog",
+        "normalized_name": "occult"
+      },
+      "input": {
+        "name": "Occult Blood",
+        "op": "map"
+      },
+      "name": "map_occult_blood"
+    },
+    {
+      "expected": {
+        "analyte_id": "hematocrit",
+        "candidates": [],
+        "key": "hb",
+        "method": "user_alias",
+        "normalized_name": "hb"
+      },
+      "input": {
+        "name": "Hb",
+        "op": "map",
+        "user_aliases": {
+          "hb": "hematocrit"
+        }
+      },
+      "name": "map_hb_user_alias_hb_hematocrit",
+      "notes": "a user alias beats the catalog"
+    },
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "hgb x",
+        "method": "user_alias",
+        "normalized_name": "hgb x"
+      },
+      "input": {
+        "name": "HGB-X",
+        "op": "map",
+        "user_aliases": {
+          "hgb x": "hemoglobin"
+        }
+      },
+      "name": "map_hgb_x_user_alias_hgb_x_hemoglobin",
+      "notes": "unmapped name mapped by the user"
+    },
+    {
+      "expected": {
+        "analyte_id": "hemoglobin",
+        "candidates": [],
+        "key": "hb",
+        "method": "catalog",
+        "normalized_name": "hb"
+      },
+      "input": {
+        "name": "Hb",
+        "op": "map",
+        "user_aliases": {
+          "hb": "no_such_analyte"
+        }
+      },
+      "name": "map_hb_user_alias_hb_no_such_analyte",
+      "notes": "a user alias to an unknown analyte is ignored"
+    },
+    {
+      "expected": {
+        "analyte_id": null,
+        "candidates": [],
+        "key": null,
+        "method": null,
+        "normalized_name": "sodium tube"
+      },
+      "input": {
+        "name": "Sodium Fluoride Tube",
+        "op": "map"
+      },
+      "name": "map_sodium_fluoride_tube",
+      "notes": "never fuzzy: contains an alias word but no key matches"
+    },
+    {
+      "expected": {
+        "analyte_id": null,
+        "candidates": [],
+        "key": null,
+        "method": null,
+        "normalized_name": "galactomannan"
+      },
+      "input": {
+        "name": "Serum Galactomannan",
+        "op": "map"
+      },
+      "name": "map_serum_galactomannan",
+      "notes": "unmapped"
+    },
+    {
+      "expected": {
+        "analyte_id": null,
+        "candidates": [],
+        "key": null,
+        "method": null,
+        "normalized_name": ""
+      },
+      "input": {
+        "name": "",
+        "op": "map"
+      },
+      "name": "map_",
+      "notes": "empty name"
+    },
+    {
+      "expected": {
+        "keys": [
+          "glucose fasting fbs plasma",
+          "glucose fasting plasma",
+          "glucose fasting fbs",
+          "glucose fasting"
+        ],
+        "normalized_name": "glucose fasting fbs"
+      },
+      "input": {
+        "name": "Glucose, Fasting (FBS), Plasma",
+        "op": "keys"
+      },
+      "name": "keys_glucose_fasting_fbs_plasma"
+    },
+    {
+      "expected": {
+        "keys": [
+          "s creatinine jaffe",
+          "s creatinine",
+          "creatinine"
+        ],
+        "normalized_name": "creatinine"
+      },
+      "input": {
+        "name": "S. Creatinine (Jaffe)",
+        "op": "keys"
+      },
+      "name": "keys_s_creatinine_jaffe"
+    },
+    {
+      "expected": {
+        "keys": [
+          "iron serum ferrozine total",
+          "iron total",
+          "iron ferrozine total"
+        ],
+        "normalized_name": "iron ferrozine total"
+      },
+      "input": {
+        "name": "Iron [Serum (Ferrozine)] Total",
+        "op": "keys"
+      },
+      "name": "keys_nested_brackets"
+    },
+    {
+      "expected": {
+        "panels": [
+          "cbc"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [],
+        "texts": [
+          "COMPLETE BLOOD COUNT (CBC)"
+        ]
+      },
+      "name": "panels_cbc_heading"
+    },
+    {
+      "expected": {
+        "panels": [
+          "cbc"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [
+          "Haemoglobin",
+          "Total Leucocyte Count",
+          "Platelet Count"
+        ],
+        "texts": []
+      },
+      "name": "panels_cbc_by_analytes",
+      "notes": ">= 3 CBC analytes"
+    },
+    {
+      "expected": {
+        "panels": []
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [
+          "Hb",
+          "Neutrophils",
+          "Lymphocytes"
+        ],
+        "texts": []
+      },
+      "name": "panels_shared_aliases_do_not_count",
+      "notes": "unresolved names count for nothing"
+    },
+    {
+      "expected": {
+        "panels": [
+          "lipid",
+          "lft"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [],
+        "texts": [
+          "Lipid Profile",
+          "Liver Function Test"
+        ]
+      },
+      "name": "panels_lipid_and_lft"
+    },
+    {
+      "expected": {
+        "panels": [
+          "urine_routine"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [],
+        "texts": [
+          "Urine Routine Examination"
+        ]
+      },
+      "name": "panels_urine_routine"
+    },
+    {
+      "expected": {
+        "panels": [
+          "kft"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [
+          "Urea",
+          "Creatinine",
+          "Uric Acid",
+          "Sodium",
+          "Potassium"
+        ],
+        "texts": []
+      },
+      "name": "panels_kft_by_analytes",
+      "notes": "kft 5, electrolytes 2 (below the minimum)"
+    },
+    {
+      "expected": {
+        "panels": [
+          "kft",
+          "electrolytes"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [],
+        "texts": [
+          "Kidney Function Test with Electrolytes"
+        ]
+      },
+      "name": "panels_kft_with_electrolytes"
+    },
+    {
+      "expected": {
+        "panels": [
+          "diabetes"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [],
+        "texts": [
+          "HbA1c"
+        ]
+      },
+      "name": "panels_hba1c_heading"
+    },
+    {
+      "expected": {
+        "panels": [
+          "thyroid"
+        ]
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [
+          "T3",
+          "T4",
+          "TSH"
+        ],
+        "texts": [
+          "Thyroid Profile - I"
+        ]
+      },
+      "name": "panels_thyroid_profile"
+    },
+    {
+      "expected": {
+        "panels": []
+      },
+      "input": {
+        "op": "detect_panels",
+        "test_names": [
+          "Hb"
+        ],
+        "texts": [
+          "Consultation"
+        ]
+      },
+      "name": "panels_nothing"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "map_analyte",
+  "version": 1
+}

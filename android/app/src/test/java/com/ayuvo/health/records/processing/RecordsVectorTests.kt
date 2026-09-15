@@ -57,12 +57,44 @@ class QueryParserVectorsTest {
     @Test fun allCases() = RecordsVectors.assertAll("query_parser.json")
 }
 
-/** Every vector file in shared/records/test-vectors has a test class above. */
+class AnalyteMappingVectorsTest {
+    @Test fun allCases() = RecordsVectors.assertAll("analyte_mapping.json")
+}
+
+class UnitConversionVectorsTest {
+    @Test fun allCases() = RecordsVectors.assertAll("unit_conversion.json")
+}
+
+class ObservationsVectorsTest {
+    @Test fun allCases() = RecordsVectors.assertAll("observations.json")
+}
+
+class TrendsVectorsTest {
+    @Test fun allCases() = RecordsVectors.assertAll("trends.json")
+}
+
+class EntitiesVectorsTest {
+    @Test fun allCases() = RecordsVectors.assertAll("entities.json")
+}
+
+class RelationsVectorsTest {
+    @Test fun allCases() = RecordsVectors.assertAll("relations.json")
+}
+
+/** Files that have a runner above; a new shared vector file without one fails [VectorFilesCoveredTest]. */
+val VECTOR_FILES_WITH_RUNNERS = listOf(
+    "fold.json", "classifier.json", "dates.json", "fields.json", "lab_rows.json", "boundaries.json", "highlights.json",
+    "review.json", "apply_extraction.json", "ai_validation.json", "ai_chunks.json", "hashing.json", "query_parser.json",
+    "analyte_mapping.json", "unit_conversion.json", "observations.json", "trends.json", "entities.json", "relations.json"
+)
+
+/** Every vector file in shared/records/test-vectors has a test class above (and every runner a file). */
 class VectorFilesCoveredTest {
     @Test
     fun everyVectorFileIsRun() {
-        val dir = RecordsTestFiles.shared("test-vectors") ?: return
-        val files = dir.listFiles { f: File -> f.name.endsWith(".json") }.orEmpty().map { it.name }.sorted()
-        assertEquals(listOf("fold.json", "classifier.json", "dates.json", "fields.json", "lab_rows.json", "boundaries.json", "highlights.json", "review.json", "apply_extraction.json", "ai_validation.json", "ai_chunks.json", "hashing.json", "query_parser.json").sorted(), files)
+        val dir = RecordsTestFiles.shared("test-vectors")
+        org.junit.Assert.assertNotNull("shared/records/test-vectors not found", dir)
+        val files = dir!!.listFiles { f: File -> f.name.endsWith(".json") }.orEmpty().map { it.name }.sorted()
+        assertEquals(VECTOR_FILES_WITH_RUNNERS.sorted(), files)
     }
 }

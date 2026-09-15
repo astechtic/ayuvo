@@ -62,8 +62,18 @@ class RecordSearchRankingTest {
         val where = RecordsQuerySql.where(q)
         listOf(
             "review_status = 'needs_review'", "sort_date >= ?", "sort_date <= ?", "record_type IN (?)",
-            "field_key = 'doctor_name'", "field_key = 'test_result'", "tag_id = ?", "ai_mode_used != 'none'", "records_fts MATCH ?"
+            "e.kind = 'doctor'", "field_key = 'test_result'", "tag_id = ?", "ai_mode_used != 'none'", "records_fts MATCH ?"
         ).forEach { assertTrue(it, where.sql.contains(it)) }
+        // Phase 3: Doctor is entity-backed, prefix-matched on the normalized name.
+        assertTrue(where.args.containsAll(listOf("mehta", "mehta%")))
+        val analyte = RecordsQuerySql.where(RecordQuery(advanced = RecordAdvancedFilters(
+            analyteConditions = listOf(com.ayuvo.health.records.model.AnalyteCondition("hemoglobin", flag = "low"), com.ayuvo.health.records.model.AnalyteCondition("hba1c", op = ">", value = 7.0)),
+            doctorEntityIds = setOf("e1")
+        )))
+        assertTrue(analyte.sql.contains("flag IN (?, ?)"))
+        assertTrue(analyte.sql.contains("canonical_value > ?"))
+        assertTrue(analyte.sql.contains("entity_id IN (?)"))
+        assertEquals(listOf("hemoglobin", "low", "critical_low", "hba1c", "7.0", "e1").sorted(), analyte.args.sorted())
         assertEquals("hemoglobin*", where.args.first())
         assertTrue(where.args.contains("%\"flag\":\"critical_low\"%"))
         val search = RecordsQuerySql.searchCandidates(q, "hemoglobin*", "seq, id", 50)

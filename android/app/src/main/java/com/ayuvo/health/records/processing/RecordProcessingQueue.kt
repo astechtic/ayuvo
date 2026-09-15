@@ -90,11 +90,31 @@ class RecordProcessingQueue(
             }
             s.setMeta(META_BACKFILL, System.currentTimeMillis().toString())
         }
+        if (s.meta(META_KNOWLEDGE_BACKFILL) == null) {
+            // Phase 3: records processed under v2 get observations, entities and suggestions once.
+            if (s.recordIdsNeedingKnowledge().isNotEmpty()) {
+                val request = OneTimeWorkRequestBuilder<RecordProcessingWorker>()
+                    .setInputData(Data.Builder().putBoolean(KEY_KNOWLEDGE, true).build())
+                    .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
+                    .addTag(TAG_WORK)
+                    .build()
+                workManager.enqueueUniqueWork(WORK_KNOWLEDGE_BACKFILL, ExistingWorkPolicy.KEEP, request)
+            } else {
+                s.setMeta(META_KNOWLEDGE_BACKFILL, System.currentTimeMillis().toString())
+            }
+        }
         val now = System.currentTimeMillis()
         val jobs = s.unfinishedJobs().filter { !it.awaitingConsent }
         val (later, due) = jobs.partition { it.stage == ProcessingStage.AI && it.nextAttemptMs > now }
         schedule(due.map(ProcessingJob::recordId))
         later.forEach { scheduleAi(listOf(it.recordId), it.nextAttemptMs - now, needsNetwork = true) }
+    }
+
+    /** Phase 3 backfill worker body: one record at a time, then marks the backfill done. */
+    internal suspend fun runKnowledgeBackfill() {
+        val s = store()
+        for (id in s.recordIdsNeedingKnowledge()) pipeline().backfillKnowledge(id)
+        s.setMeta(META_KNOWLEDGE_BACKFILL, System.currentTimeMillis().toString())
     }
 
     /** Runs one batch inside the worker; returns ids whose AI stage must be re-run later. */
@@ -118,6 +138,9 @@ class RecordProcessingQueue(
         const val KEY_AI_RETRY = "ai_retry"
         const val KEY_DRAIN = "drain"
         const val META_BACKFILL = "p2_backfill_done_ms"
+        const val META_KNOWLEDGE_BACKFILL = "p3_backfill_done_ms"
+        const val WORK_KNOWLEDGE_BACKFILL = "records_backfill_knowledge"
+        const val KEY_KNOWLEDGE = "knowledge_backfill"
         /** WorkManager Data is capped at 10 KB; 36-char UUIDs fit comfortably in 150s. */
         const val MAX_IDS_PER_REQUEST = 150
     }
@@ -130,7 +153,8 @@ class RecordProcessingWorker(appContext: Context, params: WorkerParameters) : Co
         val ids = inputData.getStringArray(RecordProcessingQueue.KEY_IDS)?.toList().orEmpty()
         val drain = inputData.getBoolean(RecordProcessingQueue.KEY_DRAIN, false)
         return try {
-            app.container.recordsQueue.runBatch(ids, drain)
+            if (inputData.getBoolean(RecordProcessingQueue.KEY_KNOWLEDGE, false)) app.container.recordsQueue.runKnowledgeBackfill()
+            else app.container.recordsQueue.runBatch(ids, drain)
             Result.success()
         } catch (e: kotlinx.coroutines.CancellationException) {
             throw e

@@ -1,5 +1,8 @@
 package com.ayuvo.health.records.data
 
+import com.ayuvo.health.records.knowledge.EntityRules
+import com.ayuvo.health.records.model.AnalyteCondition
+import com.ayuvo.health.records.model.EntityKind
 import com.ayuvo.health.records.model.RecordCursor
 import com.ayuvo.health.records.model.RecordFilter
 import com.ayuvo.health.records.model.RecordQuery
@@ -64,15 +67,33 @@ object RecordsQuerySql {
             clauses += "category IN (${advanced.categories.joinToString(", ") { "?" }})"
             args += advanced.categories.map { it.raw }.sorted()
         }
-        advanced.doctor?.let { prefix ->
-            clauses += fieldPrefixClause("doctor_name")
+        // Phase 3: Doctor / Hospital are backed by entities (§19), not raw field text.
+        advanced.doctor?.let { EntityRules.normalize(EntityKind.DOCTOR, it) }?.takeIf { it.isNotEmpty() }?.let { prefix ->
+            clauses += entityPrefixClause(EntityKind.DOCTOR)
             args += prefix
-            args += "$prefix%"
+            args += escapeLike(prefix) + "%"
         }
-        advanced.facility?.let { prefix ->
-            clauses += fieldPrefixClause("facility")
+        advanced.facility?.let { EntityRules.normalize(EntityKind.FACILITY, it) }?.takeIf { it.isNotEmpty() }?.let { prefix ->
+            clauses += entityPrefixClause(EntityKind.FACILITY)
             args += prefix
-            args += "$prefix%"
+            args += escapeLike(prefix) + "%"
+        }
+        if (advanced.doctorEntityIds.isNotEmpty()) {
+            clauses += "id IN (SELECT record_id FROM record_entities WHERE entity_id IN (${advanced.doctorEntityIds.joinToString(", ") { "?" }}))"
+            args += advanced.doctorEntityIds.sorted()
+        }
+        if (advanced.facilityEntityIds.isNotEmpty()) {
+            clauses += "id IN (SELECT record_id FROM record_entities WHERE entity_id IN (${advanced.facilityEntityIds.joinToString(", ") { "?" }}))"
+            args += advanced.facilityEntityIds.sorted()
+        }
+        if (advanced.analyteIds.isNotEmpty()) {
+            clauses += "id IN (SELECT record_id FROM observations WHERE state != 'rejected' AND analyte_id IN (${advanced.analyteIds.joinToString(", ") { "?" }}))"
+            args += advanced.analyteIds.sorted()
+        }
+        for (condition in advanced.analyteConditions) {
+            val built = observationCondition(condition, alias = null)
+            clauses += "id IN (SELECT record_id FROM observations WHERE ${built.sql})"
+            args += built.args
         }
         if (advanced.flags.isNotEmpty()) {
             val wanted = advanced.flags.flatMap { flag ->
@@ -104,9 +125,47 @@ object RecordsQuerySql {
         return Built(clauses.joinToString(" AND "), args)
     }
 
-    private fun fieldPrefixClause(key: String): String =
-        "id IN (SELECT record_id FROM record_fields WHERE field_key = '$key' AND state != 'rejected' " +
-            "AND (lower(value_text) = ? OR lower(value_text) LIKE ?))"
+    private fun entityPrefixClause(kind: EntityKind): String =
+        "id IN (SELECT re.record_id FROM record_entities re JOIN entities e ON e.id = re.entity_id " +
+            "WHERE e.kind = '${kind.raw}' AND (e.normalized_name = ? OR e.normalized_name LIKE ? ESCAPE '\\'))"
+
+    private fun escapeLike(s: String): String = s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+    /** Flags an analyte flag condition matches (§17 flag families plus `normal`). */
+    fun flagValues(flag: String): List<String> = when (flag) {
+        "abnormal" -> abnormalFlags
+        "critical" -> listOf("critical_low", "critical_high")
+        "low" -> listOf("low", "critical_low")
+        "high" -> listOf("high", "critical_high")
+        else -> listOf(flag)
+    }
+
+    /**
+     * WHERE fragment over `observations` (optionally aliased) for one §23 condition: the analyte,
+     * not rejected, and its flag family or a comparison on `canonical_value`.
+     */
+    fun observationCondition(condition: AnalyteCondition, alias: String?): Built {
+        val p = alias?.let { "$it." } ?: ""
+        val parts = mutableListOf("${p}analyte_id = ?", "${p}state != 'rejected'")
+        val args = mutableListOf(condition.analyteId)
+        if (condition.flag != null) {
+            val values = flagValues(condition.flag)
+            parts += "${p}flag IN (${values.joinToString(", ") { "?" }})"
+            args += values
+        }
+        val op = condition.op
+        if (op != null) {
+            // §23: no unit → the typed number is canonical; a unit that doesn't convert matches nothing.
+            val value = if (condition.unit == null) condition.canonicalValue ?: condition.value else condition.canonicalValue
+            if (value != null && op in setOf(">", ">=", "<", "<=")) {
+                parts += "${p}canonical_value $op ?"
+                args += value.toString()
+            } else {
+                parts += "0"
+            }
+        }
+        return Built(parts.joinToString(" AND "), args)
+    }
 
     fun matchExpression(query: RecordQuery): String? =
         // Parsed terms (possibly empty: "abnormal" is only a filter) replace the raw search text.

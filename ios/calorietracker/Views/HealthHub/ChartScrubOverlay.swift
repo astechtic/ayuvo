@@ -12,18 +12,22 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
     let date: (Point) -> Date
     @Binding var selected: Point?
     private let label: (Point) -> Label
+    /// Optional tap on the plot: the nearest point by date (Health Records trend → source).
+    private let onTap: ((Point) -> Void)?
 
     init(
         proxy: ChartProxy,
         points: [Point],
         date: @escaping (Point) -> Date,
         selected: Binding<Point?>,
+        onTap: ((Point) -> Void)? = nil,
         @ViewBuilder label: @escaping (Point) -> Label
     ) {
         self.proxy = proxy
         self.points = points
         self.date = date
         self._selected = selected
+        self.onTap = onTap
         self.label = label
     }
 
@@ -34,6 +38,13 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
             ZStack(alignment: .topLeading) {
                 Color.clear
                     .contentShape(Rectangle())
+                    .gesture(
+                        SpatialTapGesture().onEnded { value in
+                            guard let onTap, let plotFrame, let point = nearest(at: value.location.x - plotFrame.minX) else { return }
+                            onTap(point)
+                        },
+                        including: onTap == nil ? .subviews : .all
+                    )
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 6)
                             .onChanged { value in
@@ -63,12 +74,15 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
         }
     }
 
-    private func inspect(at plotX: CGFloat) {
-        guard let target: Date = proxy.value(atX: plotX), !points.isEmpty else { return }
-        let nearest = points.min {
+    private func nearest(at plotX: CGFloat) -> Point? {
+        guard let target: Date = proxy.value(atX: plotX), !points.isEmpty else { return nil }
+        return points.min {
             abs(date($0).timeIntervalSince(target)) < abs(date($1).timeIntervalSince(target))
         }
-        guard let nearest, nearest != selected else { return }
+    }
+
+    private func inspect(at plotX: CGFloat) {
+        guard let nearest = nearest(at: plotX), nearest != selected else { return }
         selected = nearest
         UISelectionFeedbackGenerator().selectionChanged()
     }

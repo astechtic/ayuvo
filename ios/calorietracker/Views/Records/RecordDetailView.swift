@@ -6,6 +6,8 @@ import UIKit
 /// Record detail: header, original viewer, notes, tags and actions (Phase 1).
 struct RecordDetailView: View {
     let recordID: String
+    /// Opens the source viewer at this observation once loaded (trend point / Values hit).
+    var initialObservationID: String? = nil
     @Environment(RecordsStore.self) private var store
     @Environment(\.dismiss) private var dismiss
     @State private var detail: RecordDetail?
@@ -19,6 +21,7 @@ struct RecordDetailView: View {
     @State private var sourceTarget: RecordSourceTarget?
     @State private var showSplit = false
     @State private var duplicatePrompt: RecordDuplicatePrompt?
+    @State private var didOpenInitialSource = false
 
     var body: some View {
         Group {
@@ -40,6 +43,36 @@ struct RecordDetailView: View {
     private func load() async {
         detail = await store.detail(id: recordID)
         didLoad = true
+        if !didOpenInitialSource, let observationID = initialObservationID, let detail {
+            didOpenInitialSource = true
+            var observation = detail.observations.first { $0.id == observationID }
+            if observation == nil { observation = await store.observation(id: observationID) }
+            if let observation, let page = observation.sourcePage {
+                let pages = detail.pages
+                let box = await Task.detached(priority: .userInitiated) {
+                    observation.bbox ?? RecordSourceLocator.box(evidence: observation.evidence, page: page, pages: pages)
+                }.value
+                sourceTarget = RecordSourceTarget(page: page, box: box, label: observation.evidence ?? observation.rawName)
+            }
+        }
+    }
+
+    /// Adds the evidence outline from the page's line boxes when the row has no stored box.
+    private func openSource(_ target: RecordSourceTarget, detail: RecordDetail) {
+        guard target.box == nil else {
+            sourceTarget = target
+            return
+        }
+        let pages = detail.pages
+        Task {
+            let box = await Task.detached(priority: .userInitiated) {
+                RecordSourceLocator.box(evidence: target.label, page: target.page, pages: pages)
+                    ?? RecordSourceLocator.box(evidence: target.label.components(separatedBy: ":").first, page: target.page, pages: pages)
+            }.value
+            var located = target
+            located.box = box
+            sourceTarget = located
+        }
     }
 
     @ViewBuilder
@@ -66,17 +99,19 @@ struct RecordDetailView: View {
                 RecordDetailIntelligenceSections(
                     detail: detail,
                     onReview: { showReview = true },
-                    onSource: { sourceTarget = $0 },
+                    onSource: { openSource($0, detail: detail) },
                     onSplit: { showSplit = true },
                     onDuplicate: { candidate in
                         Task { duplicatePrompt = await store.duplicatePrompt(for: candidate) }
                     }
                 )
+                RecordObservationsSection(detail: detail, onSource: { openSource($0, detail: detail) })
                 notesSection(record)
                 tagsSection(detail)
                 if !detail.children.isEmpty { childrenSection(detail.children) }
                 infoSection(record)
                 actions(record)
+                RecordRelatedSection(detail: detail)
             }
             .padding()
         }
@@ -121,7 +156,7 @@ struct RecordDetailView: View {
             RecordReviewSheet(recordID: record.id, onOpenSource: { field in
                 showReview = false
                 if let page = field.sourcePage {
-                    sourceTarget = RecordSourceTarget(page: page, box: field.bbox, label: field.evidence ?? field.displayValue)
+                    openSource(RecordSourceTarget(page: page, box: field.bbox, label: field.evidence ?? field.displayValue), detail: detail)
                 }
             })
         }

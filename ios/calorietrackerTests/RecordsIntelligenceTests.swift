@@ -156,17 +156,19 @@ struct RecordsMigrationTests {
         let fromFiles = try await RecordsDatabase.inMemory(targetVersion: 0)
         let schema = try String(contentsOf: F.sharedSchemaURL, encoding: .utf8)
         let migration = try String(contentsOf: I.sharedMigrationURL, encoding: .utf8)
+        let knowledge = try String(contentsOf: RecordsKnowledgeFixtures.sharedMigrationURL, encoding: .utf8)
         try await fromFiles.withConnection { connection in
             try connection.exec(schema)
             try connection.exec(migration)
+            try connection.exec(knowledge)
         }
         #expect(try await embedded.tableNames() == fromFiles.tableNames())
         #expect(try await embedded.indexNames() == fromFiles.indexNames())
         for table in RecordsSchema.tableNames {
             #expect(try await embedded.tableInfo(table) == fromFiles.tableInfo(table), "table \(table) differs")
         }
-        #expect(try await embedded.userVersion() == 2)
-        #expect(try await embedded.metaValue("schema_version") == "2")
+        #expect(try await embedded.userVersion() == RecordsSchema.schemaVersion)
+        #expect(try await embedded.metaValue("schema_version") == "\(RecordsSchema.schemaVersion)")
         #expect(try await embedded.tableNames() == RecordsSchema.tableNames.sorted())
         #expect(try await embedded.indexNames() == RecordsSchema.indexNames.sorted())
     }
@@ -189,8 +191,8 @@ struct RecordsMigrationTests {
         await v1.close()
 
         let upgraded = try await RecordsDatabase.open(url: url)
-        #expect(try await upgraded.userVersion() == 2)
-        #expect(try await upgraded.metaValue("schema_version") == "2")
+        #expect(try await upgraded.userVersion() == RecordsSchema.schemaVersion)
+        #expect(try await upgraded.metaValue("schema_version") == "\(RecordsSchema.schemaVersion)")
         let stored = try #require(try await upgraded.record(id: "old"))
         #expect(stored.title == "CBC Jul")
         #expect(stored.notes == "fasting")
@@ -683,8 +685,10 @@ struct RecordsIntelligenceUnitTests {
         #expect(parsed.recordTypes == [.prescription])
         #expect(parsed.dateFrom == "2026-08-01" && parsed.dateTo == "2026-08-31")
         parsed = RecordQueryParser.parse("hemoglobin low 2025", today: today)
-        #expect(parsed.terms == ["hemoglobin"])
-        #expect(parsed.flags == [.low])
+        // Phase 3 (§23): "<analyte> low" is an analyte condition, not a term + global flag.
+        #expect(parsed.terms.isEmpty)
+        #expect(parsed.flags.isEmpty)
+        #expect(parsed.analyteConditions.first?.analyteID == "hemoglobin" && parsed.analyteConditions.first?.flag == "low")
         #expect(parsed.dateFrom == "2025-01-01" && parsed.dateTo == "2025-12-31")
         parsed = RecordQueryParser.parse("x-ray at apollo hospital", today: today)
         #expect(parsed.recordTypes == [.imagingReport])

@@ -1,0 +1,673 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "canonical_unit": "g/dL",
+        "canonical_value": 13.2,
+        "status": "converted",
+        "unit": "g/dL"
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": "g/dL",
+        "value": 13.2
+      },
+      "name": "conv_hemoglobin_13_2_g_dl"
+    },
+    {
+      "expected": {
+        "canonical_unit": "g/dL",
+        "canonical_value": 13.2,
+        "status": "converted",
+        "unit": "g/L"
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": "g/L",
+        "value": 132
+      },
+      "name": "conv_hemoglobin_132_g_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "g/dL",
+        "canonical_value": 13,
+        "status": "converted",
+        "unit": "g/dL"
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": "gm/dl",
+        "value": 13
+      },
+      "name": "conv_hemoglobin_13_gm_dl",
+      "notes": "variant spelling"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "unit_unknown",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": "mmol/L",
+        "value": 13
+      },
+      "name": "conv_hemoglobin_13_mmol_l",
+      "notes": "unit not listed for the analyte"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "unit_missing",
+        "unit": null
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": null,
+        "value": 13
+      },
+      "name": "conv_hemoglobin_13_none",
+      "notes": "a missing unit is never assumed"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "no_value",
+        "unit": "g/dL"
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": "g/dL",
+        "value": null
+      },
+      "name": "conv_hemoglobin_none_g_dl"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "unit_unknown",
+        "unit": "gm per dl"
+      },
+      "input": {
+        "analyte_id": "hemoglobin",
+        "unit": "gm per dl",
+        "value": 13
+      },
+      "name": "conv_hemoglobin_13_gm_per_dl",
+      "notes": "free text unit kept"
+    },
+    {
+      "expected": {
+        "canonical_unit": "10^3/µL",
+        "canonical_value": 150,
+        "status": "converted",
+        "unit": "lakhs/cumm"
+      },
+      "input": {
+        "analyte_id": "platelet_count",
+        "unit": "lakhs/cumm",
+        "value": 1.5
+      },
+      "name": "conv_platelet_count_1_5_lakhs_cumm"
+    },
+    {
+      "expected": {
+        "canonical_unit": "10^3/µL",
+        "canonical_value": 250,
+        "status": "converted",
+        "unit": "lakhs/cumm"
+      },
+      "input": {
+        "analyte_id": "platelet_count",
+        "unit": "Lakh/cumm",
+        "value": 2.5
+      },
+      "name": "conv_platelet_count_2_5_lakh_cumm"
+    },
+    {
+      "expected": {
+        "canonical_unit": "10^3/µL",
+        "canonical_value": 150,
+        "status": "converted",
+        "unit": "/cumm"
+      },
+      "input": {
+        "analyte_id": "platelet_count",
+        "unit": "/cumm",
+        "value": 150000
+      },
+      "name": "conv_platelet_count_150000_cumm"
+    },
+    {
+      "expected": {
+        "canonical_unit": "10^3/µL",
+        "canonical_value": 250,
+        "status": "converted",
+        "unit": "10^3/µL"
+      },
+      "input": {
+        "analyte_id": "platelet_count",
+        "unit": "10³/µL",
+        "value": 250
+      },
+      "name": "conv_platelet_count_250_10_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "10^3/µL",
+        "canonical_value": 7.8,
+        "status": "converted",
+        "unit": "cells/cumm"
+      },
+      "input": {
+        "analyte_id": "wbc_count",
+        "unit": "cells/cumm",
+        "value": 7800
+      },
+      "name": "conv_wbc_count_7800_cells_cumm"
+    },
+    {
+      "expected": {
+        "canonical_unit": "10^3/µL",
+        "canonical_value": 7.8,
+        "status": "converted",
+        "unit": "x10^9/L"
+      },
+      "input": {
+        "analyte_id": "wbc_count",
+        "unit": "x10^9/L",
+        "value": 7.8
+      },
+      "name": "conv_wbc_count_7_8_x10_9_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mmol/L",
+        "canonical_value": 5.2725,
+        "status": "converted",
+        "unit": "mg/dL"
+      },
+      "input": {
+        "analyte_id": "glucose_fasting",
+        "unit": "mg/dL",
+        "value": 95
+      },
+      "name": "conv_glucose_fasting_95_mg_dl",
+      "notes": "canonical mmol/L (metric registry blood_glucose)"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mmol/L",
+        "canonical_value": 5.3,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "glucose_fasting",
+        "unit": "mmol/L",
+        "value": 5.3
+      },
+      "name": "conv_glucose_fasting_5_3_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mmol/L",
+        "canonical_value": 6.105,
+        "status": "converted",
+        "unit": "mg/dL"
+      },
+      "input": {
+        "analyte_id": "glucose",
+        "unit": "mg%",
+        "value": 110
+      },
+      "name": "conv_glucose_110_mg"
+    },
+    {
+      "expected": {
+        "canonical_unit": "%",
+        "canonical_value": 7.0004,
+        "status": "converted",
+        "unit": "mmol/mol"
+      },
+      "input": {
+        "analyte_id": "hba1c",
+        "unit": "mmol/mol",
+        "value": 53
+      },
+      "name": "conv_hba1c_53_mmol_mol",
+      "notes": "NGSP % = 0.09148 x IFCC + 2.152"
+    },
+    {
+      "expected": {
+        "canonical_unit": "%",
+        "canonical_value": 7.2,
+        "status": "converted",
+        "unit": "%"
+      },
+      "input": {
+        "analyte_id": "hba1c",
+        "unit": "%",
+        "value": 7.2
+      },
+      "name": "conv_hba1c_7_2_"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 1,
+        "status": "converted",
+        "unit": "µmol/L"
+      },
+      "input": {
+        "analyte_id": "creatinine",
+        "unit": "µmol/L",
+        "value": 88.42
+      },
+      "name": "conv_creatinine_88_42_mol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 1.0971,
+        "status": "converted",
+        "unit": "µmol/L"
+      },
+      "input": {
+        "analyte_id": "creatinine",
+        "unit": "umol/L",
+        "value": 97
+      },
+      "name": "conv_creatinine_97_umol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 201.084,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "cholesterol_total",
+        "unit": "mmol/L",
+        "value": 5.2
+      },
+      "name": "conv_cholesterol_total_5_2_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 150.569,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "triglycerides",
+        "unit": "mmol/L",
+        "value": 1.7
+      },
+      "name": "conv_triglycerides_1_7_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 1,
+        "status": "converted",
+        "unit": "µmol/L"
+      },
+      "input": {
+        "analyte_id": "bilirubin_total",
+        "unit": "µmol/L",
+        "value": 17.1
+      },
+      "name": "conv_bilirubin_total_17_1_mol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 10.02,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "calcium_total",
+        "unit": "mmol/L",
+        "value": 2.5
+      },
+      "name": "conv_calcium_total_2_5_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 30.03,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "urea",
+        "unit": "mmol/L",
+        "value": 5
+      },
+      "name": "conv_urea_5_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 14.005,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "bun",
+        "unit": "mmol/L",
+        "value": 5
+      },
+      "name": "conv_bun_5_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "ng/mL",
+        "canonical_value": 30.045,
+        "status": "converted",
+        "unit": "nmol/L"
+      },
+      "input": {
+        "analyte_id": "vitamin_d_25oh",
+        "unit": "nmol/L",
+        "value": 75
+      },
+      "name": "conv_vitamin_d_25oh_75_nmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "pg/mL",
+        "canonical_value": 406.5,
+        "status": "converted",
+        "unit": "pmol/L"
+      },
+      "input": {
+        "analyte_id": "vitamin_b12",
+        "unit": "pmol/L",
+        "value": 300
+      },
+      "name": "conv_vitamin_b12_300_pmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "µIU/mL",
+        "canonical_value": 2.5,
+        "status": "converted",
+        "unit": "mIU/L"
+      },
+      "input": {
+        "analyte_id": "tsh",
+        "unit": "mIU/L",
+        "value": 2.5
+      },
+      "name": "conv_tsh_2_5_miu_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": 1.1,
+        "status": "converted",
+        "unit": null
+      },
+      "input": {
+        "analyte_id": "inr",
+        "unit": null,
+        "value": 1.1
+      },
+      "name": "conv_inr_1_1_none",
+      "notes": "dimensionless"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": 1.1,
+        "status": "converted",
+        "unit": "ratio"
+      },
+      "input": {
+        "analyte_id": "inr",
+        "unit": "ratio",
+        "value": 1.1
+      },
+      "name": "conv_inr_1_1_ratio"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "unit_unknown",
+        "unit": "g/dL"
+      },
+      "input": {
+        "analyte_id": "ag_ratio",
+        "unit": "g/dL",
+        "value": 1.5
+      },
+      "name": "conv_ag_ratio_1_5_g_dl"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "unmapped",
+        "unit": "g/dL"
+      },
+      "input": {
+        "analyte_id": null,
+        "unit": "g/dL",
+        "value": 13
+      },
+      "name": "conv_None_13_g_dl",
+      "notes": "unmapped"
+    },
+    {
+      "expected": {
+        "canonical_unit": "ng/mL",
+        "canonical_value": 0.014,
+        "status": "converted",
+        "unit": "ng/L"
+      },
+      "input": {
+        "analyte_id": "troponin_i",
+        "unit": "ng/L",
+        "value": 14
+      },
+      "name": "conv_troponin_i_14_ng_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "µg/mL",
+        "canonical_value": 0.5,
+        "status": "converted",
+        "unit": "ng/mL"
+      },
+      "input": {
+        "analyte_id": "d_dimer",
+        "unit": "ng/mL",
+        "value": 500
+      },
+      "name": "conv_d_dimer_500_ng_ml"
+    },
+    {
+      "expected": {
+        "canonical_unit": "/hpf",
+        "canonical_value": 3,
+        "status": "converted",
+        "unit": "/hpf"
+      },
+      "input": {
+        "analyte_id": "urine_pus_cells",
+        "unit": "/hpf",
+        "value": 3
+      },
+      "name": "conv_urine_pus_cells_3_hpf"
+    },
+    {
+      "expected": {
+        "canonical_unit": null,
+        "canonical_value": null,
+        "status": "unit_missing",
+        "unit": null
+      },
+      "input": {
+        "analyte_id": "urine_glucose",
+        "unit": null,
+        "value": 0
+      },
+      "name": "conv_urine_glucose_0_none"
+    },
+    {
+      "expected": {
+        "canonical_unit": "ng/dL",
+        "canonical_value": 432.6,
+        "status": "converted",
+        "unit": "nmol/L"
+      },
+      "input": {
+        "analyte_id": "testosterone_total",
+        "unit": "nmol/L",
+        "value": 15
+      },
+      "name": "conv_testosterone_total_15_nmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 30,
+        "status": "converted",
+        "unit": "mg/L"
+      },
+      "input": {
+        "analyte_id": "lipoprotein_a",
+        "unit": "mg/L",
+        "value": 300
+      },
+      "name": "conv_lipoprotein_a_300_mg_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "ng/mL",
+        "canonical_value": 50,
+        "status": "converted",
+        "unit": "µg/L"
+      },
+      "input": {
+        "analyte_id": "ferritin",
+        "unit": "mcg/L",
+        "value": 50
+      },
+      "name": "conv_ferritin_50_mcg_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mL/min/1.73m²",
+        "canonical_value": 90,
+        "status": "converted",
+        "unit": "mL/min/1.73m²"
+      },
+      "input": {
+        "analyte_id": "egfr",
+        "unit": "mL/min/1.73 m²",
+        "value": 90
+      },
+      "name": "conv_egfr_90_ml_min_1_73_m"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 2.0655,
+        "status": "converted",
+        "unit": "mEq/L"
+      },
+      "input": {
+        "analyte_id": "magnesium",
+        "unit": "mEq/L",
+        "value": 1.7
+      },
+      "name": "conv_magnesium_1_7_meq_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mm/hr",
+        "canonical_value": 20,
+        "status": "converted",
+        "unit": "mm/hr"
+      },
+      "input": {
+        "analyte_id": "esr",
+        "unit": "mm/1st hr",
+        "value": 20
+      },
+      "name": "conv_esr_20_mm_1st_hr"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/L",
+        "canonical_value": 20,
+        "status": "converted",
+        "unit": "mg/dL"
+      },
+      "input": {
+        "analyte_id": "urine_microalbumin",
+        "unit": "mg/dL",
+        "value": 2
+      },
+      "name": "conv_urine_microalbumin_2_mg_dl"
+    },
+    {
+      "expected": {
+        "canonical_unit": "mg/dL",
+        "canonical_value": 126.126,
+        "status": "converted",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "analyte_id": "eag",
+        "unit": "mmol/L",
+        "value": 7
+      },
+      "name": "conv_eag_7_mmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "µIU/mL",
+        "canonical_value": 8.64,
+        "status": "converted",
+        "unit": "pmol/L"
+      },
+      "input": {
+        "analyte_id": "insulin",
+        "unit": "pmol/L",
+        "value": 60
+      },
+      "name": "conv_insulin_60_pmol_l"
+    },
+    {
+      "expected": {
+        "canonical_unit": "ng/dL",
+        "canonical_value": 1.1655,
+        "status": "converted",
+        "unit": "pmol/L"
+      },
+      "input": {
+        "analyte_id": "free_t4",
+        "unit": "pmol/L",
+        "value": 15
+      },
+      "name": "conv_free_t4_15_pmol_l"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "convert_unit",
+  "version": 1
+}

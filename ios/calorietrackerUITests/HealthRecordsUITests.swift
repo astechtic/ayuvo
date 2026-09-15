@@ -390,6 +390,255 @@ final class HealthRecordsUITests: XCTestCase {
     }
 }
 
+extension HealthRecordsUITests {
+    /// Text-layer CBC with a hemoglobin value on a given collection date.
+    private func makeCBCPDF(named name: String, date: String, hemoglobin: String, extraRow: (String, String, String, String)? = nil) throws -> URL {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("records-ui-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let url = directory.appendingPathComponent(name)
+        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 612, height: 792))
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            let bold: [NSAttributedString.Key: Any] = [.font: UIFont.boldSystemFont(ofSize: 20)]
+            let body: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 12)]
+            func draw(_ text: String, _ x: CGFloat, _ y: CGFloat, _ attributes: [NSAttributedString.Key: Any]) {
+                (text as NSString).draw(at: CGPoint(x: x, y: y), withAttributes: attributes)
+            }
+            draw("City Diagnostics Laboratory", 60, 40, bold)
+            draw("Complete Blood Count", 60, 72, bold)
+            draw("Patient Name: Asha Rao", 60, 110, body)
+            draw("Age: 34 Y", 300, 110, body)
+            draw("Sex: Female", 420, 110, body)
+            draw("Ref. by: Dr. Suresh Menon", 60, 130, body)
+            draw("Collected: \(date)", 60, 150, body)
+            draw("Reported: \(date)", 300, 150, body)
+            draw("Test", 60, 190, bold)
+            draw("Result", 250, 190, bold)
+            draw("Units", 340, 190, bold)
+            draw("Reference Range", 440, 190, bold)
+            let rows = [("Hemoglobin", hemoglobin, "g/dL", "13.0 - 17.0"), ("Total WBC Count", "6200", "cells/cumm", "4000 - 11000"),
+                        ("Platelet Count", "250", "10^3/µL", "150 - 410")] + (extraRow.map { [$0] } ?? [])
+            for (index, row) in rows.enumerated() {
+                let y = 220 + CGFloat(index) * 24
+                draw(row.0, 60, y, body)
+                draw(row.1, 250, y, body)
+                draw(row.2, 340, y, body)
+                draw(row.3, 440, y, body)
+            }
+        }
+        try data.write(to: url)
+        return url
+    }
+
+    private func scrollTo(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 10) {
+        for _ in 0..<maxSwipes where !(element.exists && element.isHittable) {
+            app.swiftUpSmall()
+        }
+    }
+
+    /// Phase 3 walk: three CBC reports (Jul/Aug/Sep) → detail mini trend "7.2 → 8.4 → 9.7" → full trend →
+    /// point → source page, search "hemoglobin was low" shows Values, link / unlink a record.
+    @MainActor
+    func testKnowledgeTrendSourceValuesSearchAndLinks() throws {
+        let files = try [("cbc_jul.pdf", "18/07/2026", "7.2"), ("cbc_aug.pdf", "10/08/2026", "8.4"), ("cbc_sep.pdf", "12/09/2026", "9.7")]
+            .map { try makeCBCPDF(named: $0.0, date: $0.1, hemoglobin: $0.2).path }
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES", "-healthRecordsViewMode", "timeline",
+                                "-healthRecordsAiMode", "off", "-ayuvoRecordsFixture", files.joined(separator: ","), "-ayuvoRecordsReset"]
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["Records"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Records"].tap()
+
+        let strip = app.descendants(matching: .any)["records.processingStrip"]
+        let september = app.staticTexts["September 2026"].firstMatch
+        XCTAssertTrue(september.waitForExistence(timeout: 60), "records land in the timeline")
+        _ = strip.waitForExistence(timeout: 5)
+        XCTAssertTrue(strip.waitForNonExistence(timeout: 180), "processing finishes")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.5))
+        shot(app, "records-p3-ios-ui-01-timeline")
+
+        // Sep record (first in the timeline) → Health data points with the mini trend.
+        let title = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Complete Blood Count'")).firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 20))
+        title.tap()
+        XCTAssertTrue(app.staticTexts["records.detail.title"].waitForExistence(timeout: 10))
+        let mini = app.descendants(matching: .any)["records.miniTrend.hemoglobin"].firstMatch
+        scrollTo(mini, in: app)
+        XCTAssertTrue(mini.waitForExistence(timeout: 10), "mini trend for hemoglobin")
+        XCTAssertTrue(mini.label.contains("7.2 → 8.4 → 9.7"), "mini trend label: \(mini.label)")
+        shot(app, "records-p3-ios-ui-02-detail-data-points")
+
+        // Full trend.
+        mini.tap()
+        let chart = app.descendants(matching: .any)["records.trend.chart"].firstMatch
+        XCTAssertTrue(chart.waitForExistence(timeout: 10), "trend chart")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        shot(app, "records-p3-ios-ui-03-trend")
+
+        // Point → record at the source page.
+        let augPoint = app.buttons["records.trend.point.2026-08-10"].firstMatch
+        scrollTo(augPoint, in: app)
+        XCTAssertTrue(augPoint.waitForExistence(timeout: 5), "Aug point in the table")
+        augPoint.tap()
+        let source = app.descendants(matching: .any)["records.sourceViewer"].firstMatch
+        XCTAssertTrue(source.waitForExistence(timeout: 10), "source viewer opens at the observation's page")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.5))
+        shot(app, "records-p3-ios-ui-04-source")
+        app.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(source.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["records.detail.title"].waitForExistence(timeout: 5), "Aug record detail")
+
+        // Link / unlink from the Aug record.
+        let link = app.buttons["records.related.link"].firstMatch
+        scrollTo(link, in: app, maxSwipes: 16)
+        XCTAssertTrue(link.waitForExistence(timeout: 5))
+        shot(app, "records-p3-ios-ui-05-related")
+        link.tap()
+        let candidate = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'records.linkSheet.candidate.'")).firstMatch
+        XCTAssertTrue(candidate.waitForExistence(timeout: 10))
+        candidate.tap()
+        shot(app, "records-p3-ios-ui-06-link-sheet")
+        app.buttons["records.linkSheet.save"].tap()
+        let linked = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'records.related.linked.'")).firstMatch
+        XCTAssertTrue(linked.waitForExistence(timeout: 10), "linked record appears")
+        scrollTo(linked, in: app)
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        shot(app, "records-p3-ios-ui-07-linked")
+        let menu = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'records.related.menu.'")).firstMatch
+        XCTAssertTrue(menu.waitForExistence(timeout: 5))
+        menu.tap()
+        app.buttons["Unlink"].firstMatch.tap()
+        let confirm = app.buttons["Unlink"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(linked.waitForNonExistence(timeout: 10), "unlink removes the link")
+
+        // Back to the Records root and search by value.
+        for _ in 0..<3 where !app.navigationBars["Records"].exists {
+            app.navigationBars.buttons.firstMatch.tap()
+            RunLoop.current.run(until: Date().addingTimeInterval(0.6))
+        }
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 8))
+        search.tap()
+        search.typeText("hemoglobin was low")
+        let values = app.descendants(matching: .any)["records.search.values"].firstMatch
+        XCTAssertTrue(values.waitForExistence(timeout: 10), "Values group shows observation hits")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        shot(app, "records-p3-ios-ui-08-search-values")
+    }
+}
+
+extension HealthRecordsUITests {
+    /// Manual walk (screenshots): edit a value, map an unmapped test, add a value, accept / reject
+    /// suggestions and the entity-backed doctor filter.
+    @MainActor
+    func testKnowledgeManualWalkEditMapAddAndSuggestions() throws {
+        let files = try [("cbc_jul.pdf", "18/07/2026", "7.2", nil), ("cbc_aug.pdf", "10/08/2026", "8.4", nil),
+                         ("cbc_sep.pdf", "12/09/2026", "9.7", ("Retic Xq Index", "1.2", "%", "0.5 - 2.5"))]
+            .map { try makeCBCPDF(named: $0.0, date: $0.1, hemoglobin: $0.2, extraRow: $0.3).path }
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES", "-healthRecordsViewMode", "timeline",
+                                "-healthRecordsAiMode", "off", "-ayuvoRecordsFixture", files.joined(separator: ","), "-ayuvoRecordsReset"]
+        app.launch()
+        app.tabBars.buttons["Records"].tap()
+        let strip = app.descendants(matching: .any)["records.processingStrip"]
+        XCTAssertTrue(app.staticTexts["September 2026"].firstMatch.waitForExistence(timeout: 60))
+        _ = strip.waitForExistence(timeout: 5)
+        XCTAssertTrue(strip.waitForNonExistence(timeout: 180))
+        RunLoop.current.run(until: Date().addingTimeInterval(1.5))
+        app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Complete Blood Count'")).firstMatch.tap()
+
+        // Edit the hemoglobin value.
+        let hb = app.buttons["records.observation.Hemoglobin"].firstMatch
+        scrollTo(hb, in: app)
+        XCTAssertTrue(hb.waitForExistence(timeout: 10))
+        hb.tap()
+        let value = app.textFields["records.observationEdit.value"]
+        XCTAssertTrue(value.waitForExistence(timeout: 5))
+        shot(app, "records-p3-ios-manual-01-edit-sheet")
+        value.tap()
+        value.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4) + "9.9")
+        let unit = app.textFields["records.observationEdit.unit"]
+        unit.tap()
+        unit.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 6) + "gm/dl")
+        shot(app, "records-p3-ios-manual-02-edit-value-unit")
+        app.buttons["records.observationEdit.save"].tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS '9.9 g/dL'")).firstMatch.waitForExistence(timeout: 8)
+            || app.buttons.matching(NSPredicate(format: "label CONTAINS '9.9 g/dL'")).firstMatch.waitForExistence(timeout: 2), "edited value shows with the canonical unit spelling")
+        shot(app, "records-p3-ios-manual-03-after-edit")
+
+        // Map the unmapped test.
+        let retic = app.buttons["records.observation.Retic Xq Index"].firstMatch
+        scrollTo(retic, in: app)
+        XCTAssertTrue(retic.waitForExistence(timeout: 5))
+        shot(app, "records-p3-ios-manual-04-unmapped-row")
+        retic.tap()
+        app.buttons["records.observationEdit.analyte"].firstMatch.tap()
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 5))
+        search.tap()
+        search.typeText("reticulocyte")
+        let pick = app.buttons["records.analytePicker.reticulocyte_pct"].firstMatch
+        XCTAssertTrue(pick.waitForExistence(timeout: 5))
+        shot(app, "records-p3-ios-manual-05-analyte-picker")
+        pick.tap()
+        XCTAssertTrue(app.switches["records.observationEdit.remember"].waitForExistence(timeout: 5))
+        shot(app, "records-p3-ios-manual-06-mapped-remember")
+        app.buttons["records.observationEdit.save"].tap()
+        XCTAssertTrue(app.buttons["records.observation.Retic Xq Index"].firstMatch.waitForExistence(timeout: 8))
+        shot(app, "records-p3-ios-manual-07-after-map")
+
+        // Add a manual value.
+        let add = app.buttons["records.observation.add"].firstMatch
+        scrollTo(add, in: app)
+        add.tap()
+        let name = app.textFields["records.observationAdd.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Home glucose check")
+        let addValue = app.textFields["records.observationAdd.value"]
+        addValue.tap()
+        addValue.typeText("104")
+        let addUnit = app.textFields["records.observationAdd.unit"]
+        addUnit.tap()
+        addUnit.typeText("mg/dL")
+        shot(app, "records-p3-ios-manual-08-add-value")
+        app.buttons["records.observationAdd.save"].tap()
+        XCTAssertTrue(app.buttons["records.observation.Home glucose check"].firstMatch.waitForExistence(timeout: 8), "manual value row")
+        scrollTo(app.buttons["records.observation.Home glucose check"].firstMatch, in: app)
+        shot(app, "records-p3-ios-manual-09-after-add")
+
+        // Suggestions: accept one, dismiss the other.
+        let accept = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'records.related.accept.'")).firstMatch
+        scrollTo(accept, in: app, maxSwipes: 16)
+        XCTAssertTrue(accept.waitForExistence(timeout: 5), "suggested related records")
+        shot(app, "records-p3-ios-manual-10-suggestions")
+        accept.tap()
+        let reject = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'records.related.reject.'")).firstMatch
+        XCTAssertTrue(reject.waitForExistence(timeout: 8))
+        reject.tap()
+        XCTAssertTrue(reject.waitForNonExistence(timeout: 8))
+        let linked = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'records.related.linked.'")).firstMatch
+        XCTAssertTrue(linked.waitForExistence(timeout: 8))
+        scrollTo(linked, in: app)
+        shot(app, "records-p3-ios-manual-11-accepted")
+
+        // Timeline episode badge and doctor filter.
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["records.row.episode"].firstMatch.waitForExistence(timeout: 8), "episode badge")
+        app.swipeUp()
+        RunLoop.current.run(until: Date().addingTimeInterval(1))
+        shot(app, "records-p3-ios-manual-12-timeline-episode")
+        app.buttons["records.filters"].tap()
+        let doctor = app.buttons["records.filters.doctor"].firstMatch
+        XCTAssertTrue(doctor.waitForExistence(timeout: 5))
+        doctor.tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(1))
+        shot(app, "records-p3-ios-manual-13-doctor-filter")
+    }
+}
+
 private extension XCUIApplication {
     /// A short upward drag (about a third of the screen) so rows stop above the tab bar.
     func swiftUpSmall() {

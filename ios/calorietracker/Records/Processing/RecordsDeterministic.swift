@@ -222,6 +222,8 @@ nonisolated struct ParsedRecordQuery: Equatable, Sendable {
         case received
         case needsReview
         case archived
+        /// Phase 3 analyte condition (§23); `label` is the folded query text.
+        case analyte(RecordAnalyteCondition, label: String)
 
         var id: String {
             switch self {
@@ -234,6 +236,7 @@ nonisolated struct ParsedRecordQuery: Equatable, Sendable {
             case .received: "received"
             case .needsReview: "needs_review"
             case .archived: "archived"
+            case .analyte(let c, _): "analyte:\(c.analyteID):\(c.flag ?? ""):\(c.op ?? ""):\(c.value.map { RecordsFold.compactNumber($0) } ?? "")"
             }
         }
 
@@ -248,6 +251,8 @@ nonisolated struct ParsedRecordQuery: Equatable, Sendable {
             case .received: String(localized: "Received")
             case .needsReview: String(localized: "Needs review")
             case .archived: String(localized: "Archived")
+            case .analyte(let c, let label):
+                RecordAnalyteChipText.label(c, fallback: label)
             }
         }
     }
@@ -263,6 +268,7 @@ nonisolated struct ParsedRecordQuery: Equatable, Sendable {
     var received = false
     var needsReview = false
     var archived = false
+    var analyteConditions: [RecordAnalyteCondition] = []
     var chips: [Chip] = []
 
     func applied(to base: RecordQuery, removing removed: Set<String> = []) -> RecordQuery {
@@ -282,6 +288,7 @@ nonisolated struct ParsedRecordQuery: Equatable, Sendable {
             case .received: query.receivedOnly = true
             case .needsReview: query.needsReviewOnly = true
             case .archived: query.archivedOnly = true
+            case .analyte(let condition, _): query.analyteConditions.append(condition)
             }
         }
         return query
@@ -291,8 +298,8 @@ nonisolated struct ParsedRecordQuery: Equatable, Sendable {
 nonisolated enum RecordQueryParser {
     static var stopWords: Set<String> { RR.qStop }
 
-    static func parse(_ text: String, today: String, order: RecordDateOrder = .device) -> ParsedRecordQuery {
-        let q = RR.parseQuery(text, today: today, dateOrder: order.rawValue)
+    static func parse(_ text: String, today: String, order: RecordDateOrder = .device, catalog: AnalyteCatalog = .shared) -> ParsedRecordQuery {
+        let q = RR.parseQuery(text, today: today, dateOrder: order.rawValue, catalog: catalog)
         var parsed = ParsedRecordQuery()
         parsed.terms = (q["terms"].array ?? []).compactMap(\.string)
         parsed.dateFrom = q["date_from"].string
@@ -320,6 +327,32 @@ nonisolated enum RecordQueryParser {
         if parsed.needsReview { parsed.chips.append(.needsReview) }
         if parsed.archived { parsed.chips.append(.archived) }
         if parsed.received { parsed.chips.append(.received) }
+        // §23: conditions (with chips) and bare aliases (Values group only; they stay FTS terms).
+        let conditions = (q["analyte_conditions"].array ?? []).compactMap { c -> RecordAnalyteCondition? in
+            guard let id = c["analyte_id"].string else { return nil }
+            return RecordAnalyteCondition(analyteID: id, flag: c["flag"].string, op: c["op"].string, value: c["value"].double, unit: c["unit"].string,
+                                          canonicalValue: c["canonical_value"].double, canonicalUnit: c["canonical_unit"].string)
+        }
+        for (condition, text) in zip(conditions, texts("analyte")) {
+            parsed.chips.append(.analyte(condition, label: text))
+        }
+        let bare = (q["analytes"].array ?? []).compactMap(\.string).map { RecordAnalyteCondition(analyteID: $0) }
+        parsed.analyteConditions = conditions + bare
         return parsed
+    }
+}
+
+/// Chip text for an analyte condition: "Hemoglobin · Low", "HbA1c > 7 %".
+nonisolated enum RecordAnalyteChipText {
+    static func label(_ c: RecordAnalyteCondition, catalog: AnalyteCatalog = .shared, fallback: String) -> String {
+        let name = catalog.analyte(id: c.analyteID)?.displayName ?? fallback
+        if let flag = c.flag {
+            let flagText = RecordQueryFlag(rawValue: flag)?.title ?? (flag == "normal" ? String(localized: "Normal") : flag)
+            return "\(name) · \(flagText)"
+        }
+        if let op = c.op, let value = c.value {
+            return "\(name) \(op) \(RecordsFold.compactNumber(value))" + (c.unit.map { " \($0)" } ?? "")
+        }
+        return name
     }
 }

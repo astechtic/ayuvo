@@ -1,6 +1,16 @@
 package com.ayuvo.health.records.data
 
 import com.ayuvo.health.records.model.AiModeUsed
+import com.ayuvo.health.records.model.AnalyteCondition
+import com.ayuvo.health.records.model.EntityKind
+import com.ayuvo.health.records.model.HealthEntity
+import com.ayuvo.health.records.model.LinkKind
+import com.ayuvo.health.records.model.NewUserObservation
+import com.ayuvo.health.records.model.Observation
+import com.ayuvo.health.records.model.ObservationEdit
+import com.ayuvo.health.records.model.RecordLink
+import com.ayuvo.health.records.model.RelatedRecord
+import com.ayuvo.health.records.model.ValueHit
 import com.ayuvo.health.records.model.DuplicateCandidate
 import com.ayuvo.health.records.model.DuplicateResolution
 import com.ayuvo.health.records.model.ExtractedField
@@ -163,10 +173,74 @@ interface RecordsStore {
     /** Rebuilds the FTS row (§17 columns). */
     suspend fun reindex(recordId: String)
 
+    // -- Phase 3: knowledge base (§19–§24) --------------------------------------
+
+    /** Observations of one record (every state), in source order. */
+    suspend fun observations(recordId: String): List<Observation>
+
+    /**
+     * §21 trend rows of [analyteId] (`idx_observations_trend`): non-rejected with a date, ordered by
+     * `observed_date, created_ms`; [includeExcluded] also returns rows excluded from trends (table).
+     */
+    suspend fun analyteObservations(analyteId: String, includeExcluded: Boolean = false): List<Observation>
+
+    /** Trend rows of every analyte that [recordId] has, keyed by analyte id (detail mini trends). */
+    suspend fun trendsForRecord(recordId: String): Map<String, List<Observation>>
+
+    /** Re-runs §19 promotion + mapping, entity rebuild and the FTS row for one record. */
+    suspend fun refreshKnowledge(recordId: String)
+
+    /** §24 user edit; remembers a remapped test name in `analyte_user_aliases` when asked. */
+    suspend fun editObservation(observationId: String, edit: ObservationEdit)
+
+    /** Remove = `state rejected` (§24). */
+    suspend fun removeObservation(observationId: String)
+
+    suspend fun addObservation(input: NewUserObservation): Observation?
+
+    /** `normalized name → analyte id` of `analyte_user_aliases`. */
+    suspend fun userAliases(): Map<String, String>
+
+    /** §19 "This is <analyte>" on confirmation: maps every unmapped observation with a matching name key. */
+    suspend fun applyUserAlias(rawName: String, analyteId: String): Int
+
+    /** Unmapped, non-rejected observations sharing [rawName]'s normalized name (the "apply to others" prompt). */
+    suspend fun unmappedWithName(rawName: String): Int
+
+    /** Doctor / facility entities referenced by non-archived records, most used first. */
+    suspend fun entities(kind: EntityKind): List<HealthEntity>
+
+    suspend fun recordEntities(recordId: String): List<Pair<HealthEntity, String>>
+
+    /** Non-rejected links of [recordId] with the other record (Linked first, then Suggested by score). */
+    suspend fun related(recordId: String): List<RelatedRecord>
+
+    /** User link (§19): replaces a suggestion on the pair, `origin user`, `status accepted`. */
+    suspend fun link(a: String, b: String, kind: LinkKind)
+
+    /** Unlink: deletes a user row, or rejects a suggestion (kept so it never reappears). */
+    suspend fun unlink(a: String, b: String)
+
+    suspend fun acceptLink(a: String, b: String)
+    suspend fun rejectLink(a: String, b: String)
+
+    /** §22 suggestions for [recordId]; returns how many were created. */
+    suspend fun suggestRelations(recordId: String, today: java.time.LocalDate = java.time.LocalDate.now()): Int
+
+    /** Accepted links whose both ends are in [ids] (timeline episode connectors). */
+    suspend fun acceptedLinksAmong(ids: Collection<String>): List<RecordLink>
+
+    /** §23 Values group: observation hits for analyte conditions and bare analytes. */
+    suspend fun valueHits(conditions: List<AnalyteCondition>, analyteIds: List<String>, limit: Int = VALUE_HITS_LIMIT): List<ValueHit>
+
+    /** Record ids with any promoted knowledge missing (v2 backfill). */
+    suspend fun recordIdsNeedingKnowledge(): List<String>
+
     fun close()
 
     companion object {
         const val PAGE_SIZE = 60
         const val SEARCH_LIMIT = 200
+        const val VALUE_HITS_LIMIT = 30
     }
 }

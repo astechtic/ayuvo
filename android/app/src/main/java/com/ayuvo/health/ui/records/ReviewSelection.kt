@@ -55,6 +55,40 @@ object SourceBoxes {
         return values.takeIf { it.size == 4 }
     }
 
+    /** §25 lab-row outline: first line containing the folded evidence, else the line with the most shared words. */
+    fun locateEvidence(blocksJson: String?, evidence: String?): List<Float>? {
+        val needle = com.ayuvo.health.records.processing.RecordText.collapsed(evidence)
+        if (needle.isEmpty()) return null
+        val blocks = RecordJson.parseArray(blocksJson) ?: return null
+        val needleWords = com.ayuvo.health.records.processing.RecordText.words(needle).toSet()
+        var best: List<Float>? = null
+        var bestOverlap = 0
+        for (element in blocks) {
+            val obj = element as? JsonObject ?: continue
+            val line = com.ayuvo.health.records.processing.RecordText.collapsed((obj["t"] as? JsonPrimitive)?.content)
+            val box = (obj["b"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.floatOrNull }?.takeIf { it.size == 4 } ?: continue
+            if (line.isEmpty()) continue
+            if (line.contains(needle)) return box
+            val overlap = com.ayuvo.health.records.processing.RecordText.words(line).toSet().intersect(needleWords).size
+            if (overlap > bestOverlap) { bestOverlap = overlap; best = box }
+        }
+        return best
+    }
+
+    /** Union of every line box vertically overlapping [box]'s centre (a table row's cells). */
+    fun rowOf(blocksJson: String?, box: List<Float>): List<Float> {
+        val blocks = RecordJson.parseArray(blocksJson) ?: return box
+        val cy = box[1] + box[3] / 2
+        var l = box[0]; var t = box[1]; var r = box[0] + box[2]; var b = box[1] + box[3]
+        for (element in blocks) {
+            val bb = ((element as? JsonObject)?.get("b") as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.floatOrNull }?.takeIf { it.size == 4 } ?: continue
+            if (cy >= bb[1] && cy <= bb[1] + bb[3]) {
+                l = minOf(l, bb[0]); t = minOf(t, bb[1]); r = maxOf(r, bb[0] + bb[2]); b = maxOf(b, bb[1] + bb[3])
+            }
+        }
+        return listOf(l, t, r - l, b - t)
+    }
+
     /** The first line box whose folded text contains the folded [evidence] (or the reverse). */
     fun locate(blocksJson: String?, evidence: String?): List<Float>? {
         val needle = com.ayuvo.health.records.processing.RecordText.collapsed(evidence)
