@@ -1,0 +1,398 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ayuvo Debug"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "calorietracker"
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يستخدم Ayuvo الكاميرا لمسح الطعام والرموز الشريطية."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo qida və ştrix-kodları skan etmək üçün kameradan istifadə edir."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo verwendet die Kamera, um Lebensmittel und Barcodes zu scannen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo uses the camera to scan food and barcodes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo usa la cámara para escanear alimentos y códigos de barras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo utilise l’appareil photo pour scanner les aliments et les codes-barres."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo भोजन और बारकोड स्कैन करने के लिए कैमरे का उपयोग करता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo usa la fotocamera per scansionare alimenti e codici a barre."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvoは、食品やバーコードのスキャンにカメラを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo는 음식과 바코드를 스캔하기 위해 카메라를 사용합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo gebruikt de camera om voedsel en barcodes te scannen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo używa aparatu do skanowania żywności i kodów kreskowych."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Ayuvo usa a câmera para escanear alimentos e códigos de barras."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo folosește camera pentru a scana alimente și coduri de bare."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo использует камеру для сканирования продуктов и штрихкодов."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo використовує камеру для сканування продуктів и штрихкодов."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo 使用相机扫描食物和条形码。"
+          }
+        }
+      }
+    },
+    "NSHealthShareUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo reads your activity, body measurements, heart, sleep, vitals, respiratory, mobility, hearing, cycle tracking, mindfulness, symptoms and nutrition data to show them in the Health Data hub and keep your history in sync on this iPhone. Only if you allow it, Coach can use this data to answer your questions through your AI provider."
+          }
+        }
+      }
+    },
+    "NSHealthUpdateUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يكتب Ayuvo بيانات التغذية وقياسات الجسم وسعرات التمارين المحسوبة أو يحدّثها أو يزيلها عندما تغيّر سجلاتك."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo qeydlərinizi dəyişdirdikdə qidalanma, bədən ölçüləri və hesablanmış məşq kalorilərinizi yazır, yeniləyir və ya silir."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo schreibt, aktualisiert oder entfernt deine Ernährungsdaten, Körpermaße und berechneten Trainingskalorien, wenn du deine Einträge änderst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo writes, updates or removes your nutrition, body measurements and calculated workout calories when you change your logs."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo escribe, actualiza o elimina tus datos de nutrición, medidas corporales y calorías de entrenamiento calculadas cuando cambias tus registros."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo écrit, met à jour ou supprime vos données de nutrition, vos mensurations et vos calories d’entraînement calculées lorsque vous modifiez vos journaux."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब आप अपने लॉग बदलते हैं, तो Ayuvo आपके पोषण, शरीर माप और गणना की गई वर्कआउट कैलोरी को लिखता, अपडेट करता या हटाता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo scrive, aggiorna o rimuove i tuoi dati di nutrizione, le misure corporee e le calorie di allenamento calcolate quando modifichi i tuoi diari."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvoは、ログを変更すると栄養、身体測定、算出したワークアウトのカロリーを書き込み、更新、または削除します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo는 기록을 변경하면 영양, 신체 측정 및 계산된 운동 칼로리를 기록, 업데이트 또는 제거합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo schrijft, werkt bij of verwijdert je voeding, lichaamsmaten en berekende trainingscalorieën wanneer je je logboek wijzigt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo zapisuje, aktualizuje lub usuwa dane o odżywianiu, pomiary ciała i obliczone kalorie treningu, gdy zmieniasz swoje wpisy."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Ayuvo grava, atualiza ou remove sua nutrição, medidas corporais e calorias de treino calculadas quando você altera seus registros."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo scrie, actualizează sau elimină datele tale de nutriție, măsurătorile corporale și caloriile de antrenament calculate atunci când îți modifici jurnalele."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo записывает, обновляет или удаляет данные о питании, измерения тела и рассчитанные калории тренировок, когда вы меняете свои записи."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo записує, оновлює або видаляє дані про харчування, вимірювання тіла та розраховані калорії тренувань, коли ви змінюєте свої записи."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你更改日志时，Ayuvo 会写入、更新或删除你的营养、身体测量和计算得出的锻炼卡路里。"
+          }
+        }
+      }
+    },
+    "NSLocalNetworkUsageDescription" : {
+      "comment" : "Privacy - Local Network Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Connect to an Ollama server running on your local network."
+          }
+        }
+      }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "Privacy - Microphone Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ayuvo needs microphone access so you can log food by voice."
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryAddUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحفظ Ayuvo صور الوجبات في مكتبة الصور عند النقر على حفظ."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo \"Yadda saxla\" düyməsinə toxunanda yemək şəkillərini foto kitabxananıza yadda saxlayır."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo speichert Mahlzeitfotos in deiner Fotomediathek, wenn du auf Speichern tippst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo saves meal photos to your photo library when you tap Save."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo guarda fotos de comidas en tu biblioteca de fotos cuando tocas Guardar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo enregistre les photos de repas dans votre photothèque lorsque vous touchez Enregistrer."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब आप सहेजें पर टैप करते हैं, तो Ayuvo भोजन की तस्वीरें आपकी फोटो लाइब्रेरी में सहेजता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo salva le foto dei pasti nella libreria foto quando tocchi Salva."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvoは「保存」をタップすると、食事の写真をフォトライブラリに保存します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo는 저장을 탭하면 식사 사진을 사진 보관함에 저장합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo slaat maaltijdfoto's op in je fotobibliotheek wanneer je op Opslaan tikt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo zapisuje zdjęcia posiłków w bibliotece zdjęć po dotknięciu Zapisz."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Ayuvo salva fotos de refeições na sua biblioteca de fotos quando você toca em Salvar."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo salvează fotografiile meselor în biblioteca foto când atingi Salvează."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo сохраняет фото блюд в медиатеку, когда вы нажимаете «Сохранить»."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuvo зберігає фото страв в медiatеку, когда ви нажимаете «Зберегти»."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你点按“保存”时，Ayuvo 会将餐食照片保存到照片图库。"
+          }
+        }
+      }
+    },
+    "NSSpeechRecognitionUsageDescription" : {
+      "comment" : "Privacy - Speech Recognition Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ayuvo uses speech recognition to convert your voice into text for food logging."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

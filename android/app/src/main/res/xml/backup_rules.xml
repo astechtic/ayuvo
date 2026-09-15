@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Auto Backup rules for devices older than API 31 (newer devices use
+   data_extraction_rules.xml). The Health Data mirror (ayuvo_health.db and its
+   journal files) must never leave the device through Android backup: it holds
+   heart rate, sleep, blood pressure and other platform health records.
+-->
+<full-backup-content>
+    <exclude domain="database" path="ayuvo_health.db" />
+    <exclude domain="database" path="ayuvo_health.db-wal" />
+    <exclude domain="database" path="ayuvo_health.db-shm" />
+    <exclude domain="database" path="ayuvo_health.db-journal" />
+</full-backup-content>

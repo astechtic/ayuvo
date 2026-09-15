@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Ayuvo" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Ayuvo.Splash.Base" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/app_splash_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.Ayuvo</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash" parent="Theme.Ayuvo.Splash.Rose" />
+
+    <style name="Theme.Ayuvo.Splash.Rose" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Red" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_red</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Orange" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_orange</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Green" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_green</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Mint" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_mint</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Teal" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_teal</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Blue" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_blue</item>
+    </style>
+
+    <style name="Theme.Ayuvo.Splash.Purple" parent="Theme.Ayuvo.Splash.Base">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_purple</item>
+    </style>
+</resources>

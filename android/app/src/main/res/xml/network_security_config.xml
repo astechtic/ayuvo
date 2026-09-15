@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Every built-in provider endpoint is a hard-coded HTTPS URL. Cleartext exists only for a
+         user-supplied local Ollama / OpenAI-compatible server, which usually lives on a private
+         LAN address (192.168.x.x, 10.x.x.x). This XML cannot express IP ranges, so the rule is
+         enforced in code instead: SecureHttpClient.PrivateCleartextOnly rejects every http://
+         request whose host is not loopback, link-local, RFC 1918 or a .local name before any
+         byte leaves the device. All app clients go through SecureHttpClient. -->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

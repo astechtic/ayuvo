@@ -1,0 +1,759 @@
+<resources>
+    <string name="app_name">Ayuvo</string>
+
+    <!-- Widgets -->
+    <string name="widget_calorie_label">Ayuvo 卡路里</string>
+    <string name="widget_calorie_description">一目了然查看今日的卡路里和宏量营养素。</string>
+    <string name="widget_protein_label">Ayuvo 蛋白质</string>
+    <string name="widget_protein_description">一目了然查看今日的蛋白质进度。</string>
+    <string name="widget_today">今日</string>
+    <string name="widget_protein">蛋白质</string>
+    <string name="widget_calories">卡路里</string>
+    <string name="widget_carbs">碳水</string>
+    <string name="widget_fat">脂肪</string>
+    <string name="widget_kcal_left_format">还剩 %1$d kcal</string>
+    <string name="widget_g_left_format">还剩 %1$dg</string>
+    <string name="widget_kcal">kcal</string>
+    <string name="widget_protein_g">蛋白质 g</string>
+    <string name="widget_value_unit_format">%1$d%2$s / %3$d%4$s</string>
+    <string name="widget_center_small_format">/ %1$d</string>
+    <string name="widget_center_small_g_format">/ %1$dg</string>
+    <string name="widget_center_large_g_format">%1$dg</string>
+
+    <!-- Common buttons / actions -->
+    <string name="action_save">保存</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_done">完成</string>
+    <string name="action_ok">好</string>
+    <string name="action_clear">清除</string>
+    <string name="action_delete">删除</string>
+    <string name="action_continue">继续</string>
+    <string name="action_get_started">开始使用</string>
+    <string name="action_log">记录</string>
+    <string name="action_analyze">分析</string>
+    <string name="action_discard">放弃</string>
+    <string name="action_reset">重置</string>
+    <string name="action_keep_going">继续努力</string>
+    <string name="action_send">发送</string>
+    <string name="action_pin">固定</string>
+
+    <!-- Generic units / labels -->
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_g">g</string>
+    <string name="unit_mg">mg</string>
+    <string name="unit_percent">%</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_lbs">lbs</string>
+    <string name="unit_ft">ft</string>
+    <string name="unit_in">in</string>
+    <string name="unit_ft_in">ft / in</string>
+    <string name="kcal_value_format">%1$,d kcal</string>
+    <string name="grams_value_format">%1$dg</string>
+    <string name="grams_value_decimal_format">%1$.1fg</string>
+    <string name="kg_value_format">%1$.1f kg</string>
+    <string name="lbs_value_format">%1$.1f lbs</string>
+    <string name="kg_per_week_format">%1$.2f kg/周</string>
+    <string name="lbs_per_week_format">%1$.2f lbs/周</string>
+    <string name="height_cm_format">%1$d cm</string>
+    <string name="feet_inches_format">%1$d\' %2$d\"</string>
+    <string name="value_unit_format">%1$d %2$s</string>
+    <string name="ft_label_format">%1$d ft</string>
+    <string name="in_label_format">%1$d in</string>
+    <string name="bullet">·</string>
+
+    <!-- Macros / Goal labels -->
+    <string name="macro_protein">蛋白质</string>
+    <string name="macro_carbs">碳水</string>
+    <string name="macro_fat">脂肪</string>
+    <string name="macro_calories">卡路里</string>
+
+    <!-- Gender -->
+    <string name="gender_male">男性</string>
+    <string name="gender_female">女性</string>
+    <string name="gender_other">其他</string>
+
+    <!-- Activity Level -->
+    <string name="activity_sedentary">久坐</string>
+    <string name="activity_light">轻度</string>
+    <string name="activity_moderate">中等</string>
+    <string name="activity_active">活跃</string>
+    <string name="activity_very_active">非常活跃</string>
+    <string name="activity_extra_active">超级活跃</string>
+    <string name="activity_sedentary_subtitle">工作和居家时大多坐着；很少或没有计划性锻炼。\n大致参考：每天少于 5,000 步。</string>
+    <string name="activity_light_subtitle">大多坐着；每周 1–3 天轻度锻炼或休闲活动。\n大致参考：每天 5,000–7,499 步。</string>
+    <string name="activity_moderate_subtitle">每周 3–5 天规律进行健身、有氧、攀岩、骑行或运动。\n大致参考：每天 7,500–9,999 步。</string>
+    <string name="activity_active_subtitle">大多数天训练，或工作中需要大量站立、走动或搬抬。\n大致参考：每天 10,000–12,499 步。</string>
+    <string name="activity_very_active_subtitle">每周 6–7 天高强度或耐力训练，或从事高强度体力工作。\n大致参考：每天 12,500–14,999 步。</string>
+    <string name="activity_extra_active_subtitle">竞技或高训练量运动员、每天两练，或重体力工作并频繁训练。\n大致参考：每天 15,000 步以上。</string>
+
+    <!-- Weight Goal -->
+    <string name="goal_lose">减重 / Cutting</string>
+    <string name="goal_maintain">维持 / Recomp</string>
+    <string name="goal_gain">增重 / Bulking</string>
+
+    <!-- Meal Type -->
+    <string name="meal_breakfast">早餐</string>
+    <string name="meal_lunch">午餐</string>
+    <string name="meal_dinner">晚餐</string>
+    <string name="meal_snack">小食</string>
+    <string name="meal_other">其他</string>
+
+    <!-- AutoBalance Macro -->
+    <string name="autobalance_protein">蛋白质</string>
+    <string name="autobalance_carbs">碳水</string>
+    <string name="autobalance_fat">脂肪</string>
+
+    <!-- AI Provider names -->
+    <string name="ai_provider_gemini">Google Gemini</string>
+    <string name="ai_provider_openai">OpenAI</string>
+    <string name="ai_provider_anthropic">Anthropic Claude</string>
+    <string name="ai_provider_xai">xAI Grok</string>
+    <string name="ai_provider_openrouter">OpenRouter</string>
+    <string name="ai_provider_together">Together AI</string>
+    <string name="ai_provider_groq">Groq</string>
+    <string name="ai_provider_huggingface">Hugging Face</string>
+    <string name="ai_provider_fireworks">Fireworks AI</string>
+    <string name="ai_provider_deepinfra">DeepInfra</string>
+    <string name="ai_provider_mistral">Mistral</string>
+    <string name="ai_provider_ollama">Ollama（本地）</string>
+    <string name="ai_provider_custom">自定义（兼容 OpenAI）</string>
+
+    <!-- AI Provider API key placeholders -->
+    <string name="ai_key_placeholder_gemini">AIza…</string>
+    <string name="ai_key_placeholder_openai">sk-…</string>
+    <string name="ai_key_placeholder_anthropic">sk-ant-…</string>
+    <string name="ai_key_placeholder_xai">xai-…</string>
+    <string name="ai_key_placeholder_openrouter">sk-or-…</string>
+    <string name="ai_key_placeholder_together">…</string>
+    <string name="ai_key_placeholder_groq">gsk_…</string>
+    <string name="ai_key_placeholder_huggingface">hf_…</string>
+    <string name="ai_key_placeholder_fireworks">fw_…</string>
+    <string name="ai_key_placeholder_deepinfra">…</string>
+    <string name="ai_key_placeholder_mistral">…</string>
+    <string name="ai_key_placeholder_ollama">无需密钥</string>
+    <string name="ai_key_placeholder_custom">API 密钥（如端点不需要可填任意内容）</string>
+
+    <!-- Speech Provider -->
+    <string name="speech_provider_native">原生（设备端）</string>
+    <string name="speech_provider_openai">OpenAI GPT-Transcribe</string>
+    <string name="speech_provider_groq">Groq（Whisper）</string>
+    <string name="speech_provider_deepgram">Deepgram</string>
+    <string name="speech_provider_assemblyai">AssemblyAI</string>
+
+    <string name="speech_key_placeholder_native">无需密钥</string>
+    <string name="speech_key_placeholder_openai">sk-…</string>
+    <string name="speech_key_placeholder_groq">gsk_…</string>
+    <string name="speech_key_placeholder_deepgram">Token your-deepgram-key</string>
+    <string name="speech_key_placeholder_assemblyai">你的 AssemblyAI 密钥</string>
+
+    <string name="speech_description_native">Android 设备端语音识别。免费，多数手机可离线使用，支持实时部分结果。推荐默认。</string>
+    <string name="speech_description_openai">OpenAI GPT-Transcribe API。准确度高，支持 99 种以上语言，按分钟计费。</string>
+    <string name="speech_description_groq">Groq 托管的 Whisper Large v3。推理速度极快，提供免费套餐。</string>
+    <string name="speech_description_deepgram">Deepgram Nova。支持实时与批量模式，快速且准确。</string>
+    <string name="speech_description_assemblyai">AssemblyAI Universal 模型。准确度高，提供免费套餐。</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">主页</string>
+    <string name="nav_coach">教练</string>
+    <string name="nav_settings">设置</string>
+    <string name="nav_about">关于</string>
+
+    <!-- Day-of-week narrow letters (for week strip) -->
+    <string name="dow_narrow_monday">一</string>
+    <string name="dow_narrow_tuesday">二</string>
+    <string name="dow_narrow_wednesday">三</string>
+    <string name="dow_narrow_thursday">四</string>
+    <string name="dow_narrow_friday">五</string>
+    <string name="dow_narrow_saturday">六</string>
+    <string name="dow_narrow_sunday">日</string>
+
+    <!-- Months (full) -->
+    <string name="month_january">一月</string>
+    <string name="month_february">二月</string>
+    <string name="month_march">三月</string>
+    <string name="month_april">四月</string>
+    <string name="month_may">五月</string>
+    <string name="month_june">六月</string>
+    <string name="month_july">七月</string>
+    <string name="month_august">八月</string>
+    <string name="month_september">九月</string>
+    <string name="month_october">十月</string>
+    <string name="month_november">十一月</string>
+    <string name="month_december">十二月</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_back">返回</string>
+    <string name="onboarding_logo_description">Ayuvo 标志</string>
+
+    <string name="onboarding_gender_title">你的性别是？</string>
+    <string name="onboarding_gender_subtitle">这有助于我们计算你的代谢</string>
+
+    <string name="onboarding_birthday_title">你的生日是？</string>
+    <string name="onboarding_birthday_subtitle">用于计算你的每日所需</string>
+
+    <string name="onboarding_height_weight_title">身高和体重</string>
+    <string name="onboarding_height_weight_subtitle">我们会为你保密</string>
+    <string name="onboarding_imperial">英制</string>
+    <string name="onboarding_metric">公制</string>
+    <string name="onboarding_height">身高</string>
+    <string name="onboarding_weight">体重</string>
+    <string name="onboarding_feet">英尺</string>
+    <string name="onboarding_inches">英寸</string>
+
+    <string name="onboarding_activity_title">你的活跃程度如何？</string>
+    <string name="onboarding_activity_subtitle">请根据包含工作和锻炼在内的平均一周来选择。</string>
+
+    <string name="onboarding_goal_title">你的目标是什么？</string>
+    <string name="onboarding_goal_subtitle">你可以随时更改</string>
+
+    <string name="onboarding_desired_weight_title">你的\n目标体重是？</string>
+
+    <string name="onboarding_body_fat_title">你知道自己的\n体脂率吗？</string>
+    <string name="onboarding_body_fat_subtitle">有助于更准确地计算你的代谢</string>
+    <string name="onboarding_yes">是</string>
+    <string name="onboarding_no">否</string>
+    <string name="onboarding_body_fat_ranges">常见范围：男性 10–25%，女性 18–35%</string>
+    <string name="onboarding_body_fat_no_worries">没关系！我们会根据你的身高、体重和\n年龄使用标准公式计算。</string>
+
+    <string name="onboarding_pace_title_maintain">你的节奏</string>
+    <string name="onboarding_pace_subtitle_maintain">我们会为你设定一个平衡的计划</string>
+    <string name="onboarding_pace_title_change">你希望多快\n达成目标？</string>
+    <string name="onboarding_pace_subtitle_lose">每周减重速度</string>
+    <string name="onboarding_pace_subtitle_gain">每周增重速度</string>
+    <string name="onboarding_pace_balanced_set">已设置平衡节奏</string>
+    <string name="onboarding_pace_balanced_subtitle">我们会让你的卡路里保持稳定，\n以维持当前体重。</string>
+    <string name="onboarding_pace_per_week">每周</string>
+    <string name="onboarding_pace_slow">缓慢</string>
+    <string name="onboarding_pace_recommended">推荐</string>
+    <string name="onboarding_pace_fast">快速</string>
+    <string name="onboarding_pace_reach_prefix">你将达成目标，所需时间为 </string>
+    <plurals name="onboarding_pace_days_format">
+        <item quantity="other">%1$d 天</item>
+    </plurals>
+    <string name="onboarding_pace_caption_slow">温和且可持续。适合养成长期习惯。</string>
+    <string name="onboarding_pace_caption_fast">激进但可行。需要较强的自律。</string>
+    <string name="onboarding_pace_caption_recommended">最平衡的节奏，既有动力又可持续。</string>
+
+    <string name="onboarding_notifications_title">提醒你\n记录餐食</string>
+    <string name="onboarding_notifications_subtitle">在用餐时间获得温和提醒，\n让你不会忘记记录。</string>
+    <string name="onboarding_notifications_enabled">已启用提醒</string>
+    <string name="onboarding_notifications_allow">允许通知</string>
+    <string name="onboarding_notifications_change_anytime">你可以随时在设置中更改。</string>
+
+    <string name="onboarding_health_title">连接到\nHealth Connect</string>
+    <string name="onboarding_health_subtitle">自动同步营养、步数和身体\n测量数据。</string>
+    <string name="onboarding_health_feature_nutrition">营养数据</string>
+    <string name="onboarding_health_feature_weight">体重同步</string>
+    <string name="onboarding_health_feature_steps">每日步数</string>
+    <string name="onboarding_health_feature_body">身体测量</string>
+    <string name="onboarding_health_unavailable">Health Connect 不可用</string>
+    <string name="onboarding_health_connected">已连接</string>
+    <string name="onboarding_health_connect">连接</string>
+
+    <string name="onboarding_ai_choice_title">设置你的 AI</string>
+    <string name="onboarding_ai_byok_subtitle">添加你自己的 AI 提供商密钥 — 支持 Gemini、OpenAI、Groq 等。</string>
+    <string name="onboarding_ai_byok_card_title">自带密钥</string>
+    <string name="onboarding_ai_byok_card_subtitle">永久免费 — 使用你的密钥无限制。Gemini、OpenAI、Groq 等。</string>
+    <string name="onboarding_ai_byok_badge">推荐</string>
+    <string name="onboarding_provider_title">设置你的 AI</string>
+    <string name="onboarding_provider_subtitle">添加你自己的 AI 提供商密钥 — 应用保持免费。</string>
+    <string name="onboarding_provider_recommended_title">推荐：Google Gemini</string>
+    <string name="onboarding_provider_recommended_subtitle">提供免费套餐，快速且准确</string>
+    <string name="onboarding_provider_step_1">在 aistudio.google.com/apikey 获取免费密钥</string>
+    <string name="onboarding_provider_step_2">选择提供商并在下方粘贴密钥</string>
+    <string name="onboarding_provider_step_3">粘贴你的密钥——完成</string>
+    <string name="onboarding_provider_footer">支持 13 个提供商。你的密钥仅保留在\n本设备上，并经过加密。</string>
+
+    <string name="onboarding_building_calories">卡路里</string>
+    <string name="onboarding_building_carbs">碳水</string>
+    <string name="onboarding_building_protein">蛋白质</string>
+    <string name="onboarding_building_fats">脂肪</string>
+    <string name="onboarding_building_health_score">健康评分</string>
+    <string name="onboarding_building_percent_format">%1$d%%</string>
+    <string name="onboarding_building_setting_up">我们正在为你\n设置一切</string>
+    <string name="onboarding_building_finalizing">正在完成结果…</string>
+    <string name="onboarding_building_recommendation">每日推荐量</string>
+    <string name="onboarding_building_bullet">•</string>
+
+    <string name="onboarding_plan_title">你的计划</string>
+    <string name="onboarding_plan_subtitle">点按任意数值进行编辑</string>
+    <string name="onboarding_plan_daily_calories">每日卡路里</string>
+    <string name="onboarding_plan_doctor_title">请咨询医生</string>
+    <string name="onboarding_plan_doctor_message">最低建议为每天 1,200 卡路里。</string>
+
+    <string name="onboarding_plan_field_calories">每日卡路里</string>
+    <string name="onboarding_plan_field_protein">蛋白质</string>
+    <string name="onboarding_plan_field_carbs">碳水</string>
+    <string name="onboarding_plan_field_fat">脂肪</string>
+
+
+    <!-- Home -->
+    <plurals name="home_daily_steps">
+        <item quantity="one">%1$s 步</item>
+        <item quantity="other">%1$s 步</item>
+    </plurals>
+
+    <string name="home_add_food">添加食物</string>
+    <string name="home_menu_camera">相机</string>
+    <string name="home_menu_camera_note">相机 + 备注</string>
+    <string name="home_menu_nutrition_label">营养成分表</string>
+    <string name="home_menu_from_photos">从照片</string>
+    <string name="home_menu_text_input">文本输入</string>
+    <string name="home_menu_voice">语音</string>
+    <string name="home_menu_manual_entry">手动输入</string>
+    <string name="home_menu_saved_meals">已保存的餐食</string>
+    <string name="home_kcal_of_format">/ %1$s kcal</string>
+    <string name="home_kcal_left_format">还剩 %1$s</string>
+    <string name="home_view_more">查看更多</string>
+    <string name="home_todays_food">今日饮食</string>
+    <string name="home_no_foods_logged">尚未记录食物</string>
+    <string name="home_swipe_delete">删除</string>
+    <string name="home_swipe_favorite">收藏</string>
+    <string name="home_swipe_unfavorite">取消收藏</string>
+    <string name="home_favorited">已收藏</string>
+    <string name="home_macro_chip_format">%1$s %2$dg</string>
+    <string name="home_analyzing_food">正在分析你的食物…</string>
+    <string name="home_looking_up_nutrition">正在查询营养信息…</string>
+    <string name="home_fiber_format">纤维：%1$.1fg</string>
+    <string name="home_sugar_format">糖：%1$.1fg</string>
+    <string name="home_sat_fat_format">饱和脂肪：%1$.1fg</string>
+    <string name="home_sodium_format">钠：%1$.1fmg</string>
+    <string name="home_potassium_format">钾：%1$.1fmg</string>
+    <string name="home_cholesterol_format">胆固醇：%1$.1fmg</string>
+    <string name="home_serving_format">份量：约 %1$dg</string>
+    <string name="home_protein_value">蛋白质：%1$dg</string>
+    <string name="home_carbs_value">碳水：%1$dg</string>
+    <string name="home_fat_value">脂肪：%1$dg</string>
+
+    <string name="text_input_placeholder_1">2 个鸡蛋、黄油吐司和一杯咖啡</string>
+    <string name="text_input_placeholder_2">Chipotle 鸡肉米饭卷饼碗</string>
+    <string name="text_input_placeholder_3">达美乐意大利香肠披萨，2 片</string>
+    <string name="text_input_placeholder_4">希腊酸奶配格兰诺拉麦片和蓝莓</string>
+
+    <string name="manual_title">手动输入</string>
+    <string name="manual_name">名称</string>
+    <string name="manual_name_placeholder">如：自制沙拉</string>
+    <string name="manual_calories">卡路里</string>
+    <string name="manual_protein">蛋白质 (g)</string>
+    <string name="manual_carbs">碳水 (g)</string>
+    <string name="manual_fat">脂肪 (g)</string>
+    <string name="manual_zero_placeholder">0</string>
+    <string name="manual_meal_type">餐食类型</string>
+
+    <string name="error_title">出错了</string>
+
+    <!-- Food sheets shared primitives -->
+    <string name="sheet_food_details">食物详情</string>
+    <string name="sheet_serving">份量</string>
+    <string name="sheet_nutrition">营养</string>
+    <string name="sheet_meal">餐食</string>
+    <string name="sheet_more_nutrition">更多营养</string>
+    <string name="sheet_name">名称</string>
+    <string name="sheet_quantity">数量</string>
+    <string name="sheet_meal_type">餐食类型</string>
+    <string name="sheet_review_food">核对食物</string>
+    <string name="sheet_edit_food">编辑食物</string>
+
+    <string name="sheet_micro_sugar">糖</string>
+    <string name="sheet_micro_added_sugar">添加糖</string>
+    <string name="sheet_micro_fiber">纤维</string>
+    <string name="sheet_micro_saturated_fat">饱和脂肪</string>
+    <string name="sheet_micro_mono_fat">单不饱和脂肪</string>
+    <string name="sheet_micro_poly_fat">多不饱和脂肪</string>
+    <string name="sheet_micro_cholesterol">胆固醇</string>
+    <string name="sheet_micro_sodium">钠</string>
+    <string name="sheet_micro_potassium">钾</string>
+
+    <!-- Context note sheet -->
+    <string name="context_note_title">添加备注</string>
+    <string name="context_note_section">添加备注（可选）</string>
+    <string name="context_note_placeholder">如：不放油、加双倍奶酪、大份</string>
+
+    <!-- Voice input sheet -->
+    <string name="voice_listening">聆听中…</string>
+    <string name="voice_tap_to_start">点按麦克风开始</string>
+    <string name="voice_transcribing_format">正在通过 %1$s 转写…</string>
+    <string name="voice_mic_permission_denied">麦克风权限被拒绝。</string>
+    <string name="voice_mic_start_failed">无法启动麦克风。请检查权限。</string>
+    <string name="voice_transcription_failed">转写失败</string>
+    <string name="voice_stop">停止</string>
+    <string name="voice_record">录音</string>
+
+    <!-- Saved Meals sheet -->
+    <string name="saved_meals_title">已保存的餐食</string>
+    <string name="saved_meals_tab_recents">最近</string>
+    <string name="saved_meals_tab_frequent">常用</string>
+    <string name="saved_meals_tab_favorites">收藏</string>
+    <string name="saved_meals_no_logs">尚未记录食物</string>
+    <string name="saved_meals_no_favorites">尚未收藏\n向左滑动任意食物即可添加</string>
+    <string name="saved_meals_count_format">已记录 %1$d 次</string>
+    <string name="saved_meals_log_action">记录</string>
+    <string name="saved_meals_remove_favorite">移除收藏</string>
+    <string name="saved_meals_move_up">上移</string>
+    <string name="saved_meals_move_down">下移</string>
+
+    <!-- Nutrition detail sheet -->
+    <string name="nutrition_details_title">营养详情</string>
+    <string name="nutrition_section_macros">宏量营养素</string>
+    <string name="nutrition_section_detailed">详细营养</string>
+    <string name="nutrition_label_calories">卡路里</string>
+    <string name="nutrition_label_protein">蛋白质</string>
+    <string name="nutrition_label_carbs">碳水</string>
+    <string name="nutrition_label_fat">脂肪</string>
+    <string name="nutrition_label_sugar">糖</string>
+    <string name="nutrition_label_added_sugar">添加糖</string>
+    <string name="nutrition_label_fiber">纤维</string>
+    <string name="nutrition_label_saturated_fat">饱和脂肪</string>
+    <string name="nutrition_label_mono_fat">单不饱和脂肪</string>
+    <string name="nutrition_label_poly_fat">多不饱和脂肪</string>
+    <string name="nutrition_label_cholesterol">胆固醇</string>
+    <string name="nutrition_label_sodium">钠</string>
+    <string name="nutrition_label_potassium">钾</string>
+    <string name="nutrition_em_dash">—</string>
+
+    <!-- Coach -->
+    <string name="coach_title">教练</string>
+    <string name="coach_reset_chat_a11y">重置聊天</string>
+    <string name="coach_send_a11y">发送</string>
+    <string name="coach_input_voice_a11y">语音输入</string>
+    <string name="coach_input_placeholder">问教练…</string>
+    <string name="coach_empty_title">问问你的教练</string>
+    <string name="coach_reset_dialog_title">重置聊天</string>
+    <string name="coach_reset_dialog_message">清除所有消息并重新开始？此操作无法撤销。</string>
+    <string name="coach_reset_confirm">重置</string>
+    <string name="coach_no_profile_error">尚无个人资料。请先完成引导设置。</string>
+    <string name="coach_chat_failed">聊天失败</string>
+
+    <string name="coach_chip_predict_30_days">30 天后我的预期体重是多少？</string>
+    <string name="coach_chip_lose_faster">如何安全地更快减重？</string>
+    <string name="coach_chip_eating_too_much">我吃得太多了吗？</string>
+    <string name="coach_chip_what_dinner">晚餐吃什么？</string>
+    <string name="coach_chip_gain_healthy">如何健康增重？</string>
+    <string name="coach_chip_eating_enough">我吃够了吗？</string>
+    <string name="coach_chip_high_protein">可以加哪些高蛋白食物？</string>
+    <string name="coach_chip_holding_weight">我的体重稳定吗？</string>
+    <string name="coach_chip_average_intake">我的平均摄入量是多少？</string>
+    <string name="coach_chip_macro_suggestions">宏量营养建议？</string>
+    <string name="coach_chip_trend">我的趋势如何？</string>
+    <string name="coach_chip_doing_this_week">我这周表现如何？</string>
+    <string name="coach_chip_log_advice">根据我的记录有什么建议？</string>
+
+    <!-- Progress -->
+    <string name="progress_range_week">1周</string>
+    <string name="progress_range_month">1月</string>
+    <string name="progress_range_3m">3月</string>
+    <string name="progress_range_6m">6月</string>
+    <string name="progress_range_year">1年</string>
+    <string name="progress_range_all">全部</string>
+
+    <string name="progress_weight_section">体重</string>
+    <string name="progress_log_weight">记录体重</string>
+    <string name="progress_stat_current">当前</string>
+    <string name="progress_stat_goal">目标</string>
+    <string name="progress_log_first_weight">记录你的第一个体重以查看趋势</string>
+
+    <string name="progress_weight_history">体重历史</string>
+    <string name="progress_body_fat_history">体脂历史</string>
+    <plurals name="progress_history_count_format">
+        <item quantity="one">%1$d 条记录 · 点按以查看或删除</item>
+        <item quantity="other">%1$d 条记录 · 点按以查看或删除</item>
+    </plurals>
+
+    <string name="progress_calories_section">卡路里</string>
+    <string name="progress_avg_format">平均：%1$,d kcal</string>
+    <string name="progress_no_food">尚未记录食物</string>
+
+    <string name="progress_macro_averages">宏量平均值</string>
+    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
+
+    <string name="progress_log_weight_title">记录体重</string>
+
+    <string name="progress_goal_reached_title">恭喜！🎉</string>
+    <string name="progress_goal_reached_message">你已达到目标体重！前往“设置”切换目标，然后点按“重新计算目标”以更新你的目标。</string>
+
+    <!-- Settings -->
+    <string name="settings_section_personal">个人信息</string>
+    <string name="settings_section_goals">目标与营养</string>
+    <string name="settings_section_daily_targets">每日目标</string>
+    <string name="settings_section_app">App 设置</string>
+    <string name="settings_section_tracking_reminders">追踪与提醒</string>
+    <string name="settings_category_ai_providers">AI 提供商与回退选项</string>
+    <string name="settings_section_workout">训练</string>
+    <string name="settings_section_ai">AI 提供商</string>
+    <string name="settings_section_speech">语音转文字</string>
+    <string name="settings_section_health">健康与数据</string>
+    <string name="settings_section_data_management">数据管理</string>
+
+    <string name="settings_gender">性别</string>
+    <string name="settings_birthday">生日</string>
+    <string name="settings_height">身高</string>
+    <string name="settings_weight">体重</string>
+    <string name="settings_body_fat">体脂率</string>
+    <string name="settings_not_set">未设置</string>
+    <string name="settings_birthday_age_format">%1$s（年龄 %2$d）</string>
+
+    <string name="settings_weight_goal">体重目标</string>
+    <string name="settings_activity_level">活动水平</string>
+    <string name="settings_weekly_change">每周变化</string>
+    <string name="settings_weekly_default">0.50 kg/周</string>
+    <string name="settings_goal_weight">目标体重</string>
+    <string name="settings_calories">卡路里</string>
+    <string name="settings_recalculate_goals">重新计算目标</string>
+    <string name="settings_macro_pinned_format">%1$dg</string>
+    <string name="settings_macro_auto_format">%1$dg · 自动</string>
+    <string name="settings_macro_pinned_a11y">已固定</string>
+    <string name="settings_macro_auto_a11y">自动</string>
+
+    <string name="settings_appearance">外观</string>
+    <string name="settings_appearance_system">跟随系统</string>
+    <string name="settings_appearance_light">浅色</string>
+    <string name="settings_appearance_dark">深色</string>
+    <string name="settings_metric_units">公制单位</string>
+    <string name="settings_height_unit">身高单位</string>
+    <string name="settings_weight_unit">体重单位</string>
+    <string name="settings_week_starts">每周起始日</string>
+    <string name="settings_week_monday">星期一</string>
+    <string name="settings_week_sunday">星期日</string>
+    <string name="settings_notifications">通知</string>
+    <string name="settings_battery_opt">电池优化</string>
+    <string name="settings_battery_opt_value">将 Ayuvo 加入白名单</string>
+
+    <string name="settings_ai_provider">提供商</string>
+    <string name="settings_ai_model">模型</string>
+    <string name="settings_ai_model_unset">（在下方设置一个）</string>
+    <string name="settings_api_key">API 密钥</string>
+    <string name="settings_base_url">基础 URL</string>
+    <string name="settings_server_url">服务器 URL</string>
+    <string name="settings_tap_to_edit">点按以编辑</string>
+    <string name="settings_custom_url_placeholder">https://your-endpoint.com/v1</string>
+    <string name="settings_custom_url_title">自定义基础 URL</string>
+    <string name="settings_clear_key">清除密钥</string>
+
+    <string name="settings_health_connect">Health Connect</string>
+    <string name="settings_clear_food_log">清除饮食记录</string>
+    <string name="settings_delete_all_data">删除所有数据</string>
+
+    <!-- Settings dialogs -->
+    <string name="settings_clear_food_title">清除饮食记录？</string>
+    <string name="settings_clear_food_message">将清除所有食物记录和照片。个人资料、体重和设置会保留。</string>
+    <string name="settings_delete_all_title">删除所有本地数据？</string>
+    <string name="settings_delete_all_message">将清除个人资料、饮食记录、体重历史、聊天和 API 密钥，然后返回引导设置。Health Connect 数据保持不变。</string>
+    <string name="settings_max_pinned_title">最多固定 2 个</string>
+    <string name="settings_max_pinned_message">一次最多只能固定 2 个宏量营养素。请先打开另一个并点按“重置为自动平衡”以取消固定。</string>
+    <string name="settings_recalc_title">重新计算目标？</string>
+    <string name="settings_recalc_message">将根据你的身高/体重/活动量/目标，使用公式默认值重置卡路里和宏量营养素。所有已固定的宏量营养素都会被清除。</string>
+    <string name="settings_recalc_confirm">重新计算</string>
+    <string name="settings_invalid_goal_title">目标体重与你的目标不匹配</string>
+    <string name="settings_invalid_goal_lose">减重目标的目标体重需低于当前体重。</string>
+    <string name="settings_invalid_goal_gain">增重目标的目标体重需高于当前体重。</string>
+    <string name="settings_permission_title">需要权限</string>
+
+    <string name="settings_notifications_denied">通知权限被拒绝。请在“系统设置 → 应用 → Ayuvo → 通知”中启用以接收提醒。</string>
+
+    <!-- Notification copy -->
+    <string name="notif_weight_log_title">称重时间到了</string>
+    <string name="notif_weight_log_text">记录今天的体重，让进度图保持准确。</string>
+    <string name="settings_health_unavailable">此设备不支持 Health Connect。请从 Play Store 安装后再次点按开关。</string>
+
+    <!-- Settings sheets / pickers -->
+    <string name="sheet_ai_provider">AI 提供商</string>
+    <string name="sheet_model">模型</string>
+    <string name="sheet_model_footer">或在下方输入任意自定义模型 ID。</string>
+    <string name="sheet_any_model_id">任意模型 ID</string>
+    <string name="sheet_api_key_format">API 密钥 — %1$s</string>
+    <string name="sheet_speech_api_key_format">语音 API 密钥 — %1$s</string>
+    <string name="sheet_speech_engine">语音引擎</string>
+    <string name="sheet_gender">性别</string>
+    <string name="sheet_activity_level">活动水平</string>
+    <string name="sheet_goal">目标</string>
+    <string name="sheet_target_weight">目标体重</string>
+    <string name="sheet_weight">体重</string>
+    <string name="sheet_birthday">生日</string>
+    <string name="sheet_appearance">外观</string>
+    <string name="sheet_week_starts">每周起始日</string>
+    <string name="sheet_height">身高</string>
+    <string name="sheet_body_fat_percent">体脂率 %</string>
+    <string name="sheet_weekly_change">每周变化</string>
+    <string name="sheet_weekly_change_format">%1$.1f %2$s/周 %3$s</string>
+    <string name="sheet_weekly_change_loss">减重</string>
+    <string name="sheet_weekly_change_gain">增重</string>
+    <string name="sheet_pace_slow">缓慢</string>
+    <string name="sheet_pace_recommended">推荐</string>
+    <string name="sheet_pace_fast">快速</string>
+    <string name="sheet_selected_a11y">已选择</string>
+    <string name="sheet_reset_to_auto">重置为自动平衡</string>
+
+    <string name="sheet_macros">宏量营养素</string>
+    <string name="sheet_macros_subtitle">最多可将 2 个宏量营养素固定为精确克数。未固定的会根据剩余卡路里自动平衡。</string>
+    <string name="sheet_macro_pinned">已固定</string>
+    <string name="sheet_macro_auto">自动</string>
+    <string name="sheet_macro_label_format">%1$s（%2$s）</string>
+
+    <!-- About -->
+    <string name="about_rate">评价应用</string>
+    <string name="about_share">分享应用</string>
+    <string name="about_privacy">隐私政策</string>
+    <string name="about_terms">服务条款</string>
+    <string name="about_category_app_updates">应用与更新</string>
+    <string name="about_category_legal">法律信息</string>
+    <string name="about_share_chooser">分享 Ayuvo</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_streak">连续记录提醒</string>
+    <string name="notif_channel_streak_desc">每日提醒记录餐食并保持连续记录。</string>
+    <string name="notif_channel_daily">每日摘要</string>
+    <string name="notif_channel_daily_desc">一天结束时的卡路里和宏量营养素摘要。</string>
+    <string name="notif_channel_weight_goal">体重目标</string>
+    <string name="notif_channel_weight_goal_desc">达成目标体重时的庆祝。</string>
+    <string name="notif_streak_title">别忘了记录你的餐食</string>
+    <string name="notif_streak_text">保持连续记录——记录今天吃的内容。</string>
+    <string name="notif_summary_title">今日摘要已就绪</string>
+    <string name="notif_summary_text">点按查看今日宏量营养素的完成情况。</string>
+
+    <string name="onboarding_goal_optional">目标(可选)</string>
+    <string name="onboarding_goal_set_later">稍后可以在设置中设置。</string>
+    <string name="settings_goal_body_fat">目标体脂</string>
+    <string name="settings_use_body_fat_bmr">使用体脂计算BMR</string>
+    <string name="settings_use_body_fat_bmr_subtitle">开启 = Katch-McArdle(使用瘦体重以获得更准确的BMR)。关闭 = Mifflin-St Jeor(仅使用身高/体重/年龄)。如果体脂测量值已过时,请关闭。</string>
+    <string name="sheet_goal_body_fat">体脂目标</string>
+    <string name="sheet_goal_body_fat_currently">当前%1$d%%</string>
+    <string name="action_remove_goal">移除目标</string>
+    <string name="progress_metric_weight">体重</string>
+    <string name="progress_metric_body_fat">体脂</string>
+    <string name="progress_metric_workouts">锻炼</string>
+    <string name="progress_workout_history">锻炼历史</string>
+    <plurals name="progress_workout_history_count_format">
+        <item quantity="one">%1$d 条已计算消耗 · 点按查看或删除</item>
+        <item quantity="other">%1$d 条已计算消耗 · 点按查看或删除</item>
+    </plurals>
+    <string name="progress_workout_delete_title">删除锻炼消耗？</string>
+    <string name="progress_workout_delete_message">这会从 Ayuvo 和 Health Connect 中移除已计算的消耗。你的锻炼日记计划仍会保留。</string>
+    <string name="progress_workout_section">锻炼活动</string>
+    <string name="progress_workout_stat_workouts">锻炼</string>
+    <string name="progress_workout_stat_total">总消耗</string>
+    <string name="progress_workout_stat_average">平均消耗</string>
+    <string name="progress_workout_stat_latest">最新</string>
+    <string name="progress_workout_stat_days">天数</string>
+    <string name="progress_workout_no_range">此时间范围内没有已计算的锻炼消耗</string>
+    <string name="progress_workout_chart_description">%1$s 至 %2$s 的锻炼消耗图表。总计 %3$d 千卡；最新 %4$d 千卡。</string>
+    <string name="progress_log_body_fat">记录体脂</string>
+    <string name="progress_log_first_body_fat">记录你的第一个体脂百分比以查看趋势</string>
+    <string name="progress_log_body_fat_title">记录体脂</string>
+    <string name="notif_body_fat_log_title">体脂签到</string>
+    <string name="notif_body_fat_log_text">记录今天的体脂百分比以追踪你的体成分趋势。</string>
+    <string name="saved_meals_search_placeholder">搜索已保存的食物</string>
+    <string name="saved_meals_no_match">没有匹配的食物</string>
+    <string name="settings_section_custom_instructions">自定义 AI 指令</string>
+    <string name="settings_custom_instructions_placeholder">例如：我住在德国，按欧洲份量计算，优先选择 ALDI/REWE 品牌。我正在进行健美减脂期。</string>
+    <string name="settings_custom_instructions_footer">随每次 AI 请求一同发送的可选上下文——地区、饮食、运动目标，任何你本来需要每次都重复的信息。留空即可停用。</string>
+    <string name="settings_save">保存</string>
+    <string name="settings_saved">已保存</string>
+    <string name="settings_section_fallback">备用提供商</string>
+    <string name="settings_enable_fallback">启用备用</string>
+    <string name="settings_fallback_footer">如果主提供商失败（过载、速率限制、网络错误），应用会自动使用此备用提供商重试。允许与主提供商相同——只需选择不同的模型即可。</string>
+    <string name="widget_all_metrics_label">Ayuvo 今天</string>
+    <string name="widget_all_metrics_description">在一个小部件中查看今天的卡路里、蛋白质、碳水和脂肪。</string>
+    <string name="settings_needs_health_connect">需要 Health Connect</string>
+    <string name="settings_energy_goals_info">开启后，Ayuvo 会在计算目标时使用 Health Connect 的近期实测能量窗口作为维持热量基准，而不是公式估算：有足够天数时使用实测总能量，否则使用实测活动能量平均值 + 公式 BMR。读取消耗数据不使用 AI。需要 Health Connect。与“重新计算”按钮及 Adaptive Goals 配合使用。</string>
+    <string name="settings_adaptive_goals_info">大约每周一次，当你打开应用时，Ayuvo 会根据你的资料、最近记录的饮食和体重趋势，自动重新运行完整的目标计算（与“重新计算”按钮相同）。如果已开启 Energy Burn，则会以实测消耗作为维持热量的基准。若 AI 不可用则静默跳过。关闭后会恢复到该功能首次更改前的目标。这不是医疗建议。</string>
+    <string name="ad_label">广告</string>
+    <string name="onboarding_plan_adaptive_note">你的计划会根据记录每周自动调整 — 想保持不变，可在设置中关闭 Adaptive Goals。</string>
+    <string name="settings_fasting_tracking">禁食跟踪</string>
+    <string name="settings_fasting_goal">默认禁食目标</string>
+    <string name="settings_fasting_goal_value">%1$d 小时</string>
+    <string name="settings_notif_fasting_goal">已达到禁食目标</string>
+    <string name="fasting">禁食</string>
+    <string name="fasting_start">开始禁食</string>
+    <string name="fasting_end">结束禁食</string>
+    <string name="fasting_cancel">取消禁食</string>
+    <string name="fasting_in_progress">禁食进行中</string>
+    <string name="fasting_completed_format">%1$s禁食</string>
+    <string name="fasting_goal_format">%1$s目标</string>
+    <string name="fasting_started_format">%1$s开始</string>
+    <string name="fasting_choose_goal">选择禁食目标</string>
+    <string name="fasting_hours">小时</string>
+    <string name="fasting_edit">编辑禁食</string>
+    <string name="fasting_active">进行中的禁食</string>
+    <string name="fasting_started">开始</string>
+    <string name="fasting_ended">结束</string>
+    <string name="fasting_delete">删除禁食</string>
+    <string name="fasting_overlap_title">禁食与另一段记录重叠</string>
+    <string name="fasting_overlap_message">请调整开始或结束时间，避免禁食记录重叠。</string>
+    <string name="food_logging_paused">食物记录已暂停</string>
+    <string name="food_blocked_by_active_fast">请先结束或取消当前禁食，再记录食物。</string>
+    <string name="home_todays_diary">今日日记</string>
+    <string name="home_diary">日记</string>
+    <string name="home_no_diary_entries">暂无日记记录</string>
+    <string name="home_menu_photo_scan">拍照与扫描</string>
+    <string name="home_menu_describe_meal">描述餐食</string>
+    <string name="home_menu_reuse_meal">重复使用餐食</string>
+    <string name="notif_channel_fasting">禁食</string>
+    <string name="notif_channel_fasting_desc">当前禁食达到目标时通知你。</string>
+    <string name="notif_fasting_goal_title">已达到禁食目标</string>
+    <string name="notif_fasting_goal_text">你已达到%1$s的禁食目标。准备好后即可结束禁食。</string>
+    <string name="home_menu_barcode">条形码</string>
+    <string name="settings_calc_methods">计算方法</string>
+    <string name="settings_calc_calorie_target">目标卡路里值</string>
+    <string name="settings_calc_maintenance">维持热量和目标调整</string>
+    <string name="settings_calc_macro_split">宏量营养素比例</string>
+    <string name="settings_calc_micro_values">微量营养素值</string>
+    <string name="settings_calc_intro">你的每日热量和宏量营养素目标由 AI 设定。当你点按“重新计算目标”时（若开启了自适应目标，则大约每周自动一次），Ayuvo 会将你的资料、下方的参考公式、保护隐私的每日营养汇总、带日期的准确体重、体脂和围度测量值、汇总的训练次数、时长、组数和重复次数，以及可选的 Health Connect 能量数据发送给你的 AI 服务商。此计算不会发送食物名称、备注、照片、配料或运动名称。它以这些经同行评审的公式为基础，再根据你的真实数据进行调整，以估算你真正的维持热量和目标。</string>
+    <string name="settings_calc_sec_bmr">基础代谢率 (BMR)</string>
+    <string name="settings_calc_sec_tdee">每日能量消耗 (TDEE)</string>
+    <string name="settings_calc_mifflin_name">Mifflin-St Jeor 方程</string>
+    <string name="settings_calc_mifflin_used">静息代谢的默认公式。当体脂数据不可用时使用。</string>
+    <string name="settings_calc_mifflin_formula">男性：10×体重(kg) + 6.25×身高(cm) − 5×年龄 + 5\n女性：10×体重(kg) + 6.25×身高(cm) − 5×年龄 − 161</string>
+    <string name="settings_calc_katch_name">Katch-McArdle 方程</string>
+    <string name="settings_calc_katch_used">只要输入了体脂率就会使用。它根据去脂体重而不是总体重计算 BMR。</string>
+    <string name="settings_calc_katch_formula">BMR = 370 + 21.6 × LBM(kg)\nLBM = 体重 × (1 − 体脂率)</string>
+    <string name="settings_calc_tdee_name">活动系数法</string>
+    <string name="settings_calc_tdee_used">TDEE = BMR × 活动系数。该系数对应你选择的活动水平。这是公式计算的维持热量基准。开启 Energy Burn 后，计算会改用 Health Connect 的近期实测能量窗口：有足够天数时使用实测总能量，否则使用实测活动能量平均值 + 公式 BMR。</string>
+    <string name="settings_calc_tdee_formula">久坐：1.2 · 轻度：1.375 · 中度：1.465 · 活跃：1.55 · 非常活跃：1.725 · 极度活跃：1.9</string>
+    <string name="settings_calc_target_name">维持热量和目标调整</string>
+    <string name="settings_calc_target_used">维持热量从你的 TDEE 开始；若开启 Energy Burn，则使用 Health Connect 的近期实测能量窗口，而不是公式估算：有足够天数时使用实测总能量，否则使用实测活动能量平均值 + 公式 BMR。AI 会结合你记录的摄入量和体重趋势校准维持热量，然后应用目标：每周体重变化率会转换为减重时的每日热量缺口或增重时的每日热量盈余。</string>
+    <string name="settings_calc_target_formula">1 lb 体脂 ≈ 3,500 kcal · 1 kg ≈ 7,700 kcal\n为设定每日卡路里目标，每周变化率 ÷ 7 后，减重时从维持热量中减去，增重时则加上。</string>
+    <string name="settings_calc_split_name">蛋白质、碳水化合物和脂肪目标</string>
+    <string name="settings_calc_split_used">AI 以这些参考值为指导，使蛋白质、碳水化合物和脂肪符合你的热量目标。蛋白质采用按活动水平制定的总体重比率；脂肪根据体重设定；其余热量由碳水化合物补足。你可以在“设置”中锁定或自行编辑任何数值。</string>
+    <string name="settings_calc_split_formula">蛋白质：根据活动水平，每 kg 约 0.8–2.2 g，减重时略微提高\n脂肪：每 kg 体重约 0.6 g\n碳水化合物：剩余热量 ÷ 4 kcal/g</string>
+    <string name="settings_calc_micro_name">每餐估算值</string>
+    <string name="settings_calc_micro_used">每餐返回的卡路里、宏量营养素、纤维、糖、饱和脂肪、胆固醇、咖啡因、钠、钾及其他详细营养值，都是你所选的 AI 服务商根据食物图片、语音转写或文字描述生成的估算值。</string>
+    <string name="settings_calc_mifflin_citation">Mifflin MD, St Jeor ST, et al. (1990). “健康人静息能量消耗的新预测方程。” Am J Clin Nutr 51(2):241–247.</string>
+    <string name="settings_calc_katch_citation">McArdle WD, Katch FI, Katch VL.《运动生理学：营养、能量与人体表现》，第 7 版。Lippincott Williams &amp; Wilkins, 2010.</string>
+    <string name="settings_calc_tdee_citation">来自 FAO/WHO/UNU 人体能量需求联合专家咨询 (2001) 的标准 PAL（身体活动水平）系数。ACSM 和 USDA 膳食指南也广泛采用这些系数。</string>
+    <string name="settings_calc_target_citation">Hall KD, et al. (2011). “能量失衡对体重影响的量化。” Lancet 378(9793):826–837. 经典的每磅 3,500 kcal 规则源自 Wishnofsky M (1958), Am J Clin Nutr 6:542–546.</string>
+    <string name="settings_calc_split_citation">Morton RW, et al. (2018). “蛋白质补充对抗阻训练引起的肌肉量和力量增长之影响的系统综述、荟萃分析和荟萃回归。” Br J Sports Med 52(6):376–384.</string>
+    <string name="settings_calc_micro_citation">估算值依赖底层 AI 模型的训练数据（USDA FoodData Central、制造商营养标签和科学文献）。准确度会因食物、份量是否清晰可见以及服务商模型而异。对于经常记录的食物，请务必与标签核对。</string>
+    <string name="about_litert_notices">LiteRT-LM 第三方声明</string>
+    <string name="about_litert_notices_load_error">无法加载 LiteRT-LM 第三方声明。</string>
+    <string name="settings_model_source">模型来源</string>
+    <string name="settings_model_license_format">%1$s 许可证</string>
+    <string name="settings_model_requires_8gb">需要配备 8 GB 内存的设备</string>
+    <string name="settings_model_low_ram_unsupported">不支持低内存设备</string>
+    <string name="settings_model_processor_unsupported">不支持此设备的处理器</string>
+    <string name="action_download">下载</string>
+    <string name="ai_provider_local_gemma">Gemma 4 E2B（设备端）</string>
+    <string name="ai_key_placeholder_local">无需 API 密钥</string>
+    <string name="speech_provider_local_whisper">Whisper Base（设备端）</string>
+    <string name="speech_key_placeholder_local">无需 API 密钥</string>
+    <string name="speech_description_local_whisper">已下载的多语言 Whisper Base。音频保留在此设备上，无需 API 密钥。</string>
+    <string name="settings_on_device_models">设备端模型</string>
+    <string name="settings_on_device_models_info">模型会下载到应用的私有存储空间，并在不向服务器发送照片、提示或音频的情况下运行。下载大小和模型许可条款适用。</string>
+    <string name="settings_local_model_not_downloaded_format">%1$s · 未下载</string>
+    <string name="settings_local_model_downloading_format">正在下载 · %1$d%%</string>
+    <string name="settings_local_model_installed">已安装 · 可离线使用</string>
+    <string name="settings_view_model_license">查看模型许可证</string>
+    <string name="settings_info_speech_fallback">当所选录音 STT 提供商失败时重试转写。它只生成转写文本；该文本仍会遵循正常的文本 AI 路径。Android 原生语音识别已有自己的恢复机制。</string>
+    <string name="settings_speech_fallback_footer">所选录音提供商失败时使用。Android 原生语音识别已有自己的恢复机制。</string>
+    <string name="about_whisper_notices">Whisper Base 第三方声明</string>
+    <string name="about_whisper_notices_load_error">无法加载 Whisper Base 第三方声明。</string>
+    <string name="cd_remove_image">移除图片</string>
+    <string name="cd_save_photo">保存照片</string>
+    <string name="gallery_folder_name">Ayuvo</string>
+    <string name="photo_saved_to_gallery">照片已保存</string>
+    <string name="photo_save_failed">无法保存照片</string>
+    <string name="photo_save_permission_denied">照片访问被拒绝</string>
+    <string name="settings_save_photos_to_gallery">保存到照片</string>
+    <string name="settings_save_photos_to_gallery_subtitle">记录时也将餐食照片保存到相册</string>
+    <string name="settings_other_nutrients_note">与卡路里、蛋白质、碳水化合物和脂肪目标分开。</string>
+</resources>

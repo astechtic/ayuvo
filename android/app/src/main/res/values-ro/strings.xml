@@ -1,0 +1,764 @@
+<resources>
+    <string name="app_name">Ayuvo</string>
+
+    <!-- Widgets -->
+    <string name="widget_calorie_label">Calorii Ayuvo</string>
+    <string name="widget_calorie_description">Vezi caloriile și macros de azi dintr-o privire.</string>
+    <string name="widget_protein_label">Proteine Ayuvo</string>
+    <string name="widget_protein_description">Vezi progresul proteinelor de azi dintr-o privire.</string>
+    <string name="widget_today">Astăzi</string>
+    <string name="widget_protein">Proteine</string>
+    <string name="widget_calories">Calorii</string>
+    <string name="widget_carbs">Carbohidrați</string>
+    <string name="widget_fat">Grăsimi</string>
+    <string name="widget_kcal_left_format">%1$d kcal rămase</string>
+    <string name="widget_g_left_format">%1$dg rămase</string>
+    <string name="widget_kcal">kcal</string>
+    <string name="widget_protein_g">proteine g</string>
+    <string name="widget_value_unit_format">%1$d%2$s / %3$d%4$s</string>
+    <string name="widget_center_small_format">/ %1$d</string>
+    <string name="widget_center_small_g_format">/ %1$dg</string>
+    <string name="widget_center_large_g_format">%1$dg</string>
+
+    <!-- Common buttons / actions -->
+    <string name="action_save">Salvează</string>
+    <string name="action_cancel">Anulează</string>
+    <string name="action_done">Gata</string>
+    <string name="action_ok">OK</string>
+    <string name="action_clear">Șterge</string>
+    <string name="action_delete">Șterge</string>
+    <string name="action_continue">Continuă</string>
+    <string name="action_get_started">Începe</string>
+    <string name="action_log">Înregistrează</string>
+    <string name="action_analyze">Analizează</string>
+    <string name="action_discard">Renunță</string>
+    <string name="action_reset">Resetează</string>
+    <string name="action_keep_going">Continuă</string>
+    <string name="action_send">Trimite</string>
+    <string name="action_pin">Fixează</string>
+
+    <!-- Generic units / labels -->
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_g">g</string>
+    <string name="unit_mg">mg</string>
+    <string name="unit_percent">%</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_lbs">lbs</string>
+    <string name="unit_ft">ft</string>
+    <string name="unit_in">in</string>
+    <string name="unit_ft_in">ft / in</string>
+    <string name="kcal_value_format">%1$,d kcal</string>
+    <string name="grams_value_format">%1$dg</string>
+    <string name="grams_value_decimal_format">%1$.1fg</string>
+    <string name="kg_value_format">%1$.1f kg</string>
+    <string name="lbs_value_format">%1$.1f lbs</string>
+    <string name="kg_per_week_format">%1$.2f kg/săpt.</string>
+    <string name="lbs_per_week_format">%1$.2f lbs/săpt.</string>
+    <string name="height_cm_format">%1$d cm</string>
+    <string name="feet_inches_format">%1$d\' %2$d\"</string>
+    <string name="value_unit_format">%1$d %2$s</string>
+    <string name="ft_label_format">%1$d ft</string>
+    <string name="in_label_format">%1$d in</string>
+    <string name="bullet">·</string>
+
+    <!-- Macros / Goal labels -->
+    <string name="macro_protein">Proteine</string>
+    <string name="macro_carbs">Carbohidrați</string>
+    <string name="macro_fat">Grăsimi</string>
+    <string name="macro_calories">Calorii</string>
+
+    <!-- Gender -->
+    <string name="gender_male">Bărbat</string>
+    <string name="gender_female">Femeie</string>
+    <string name="gender_other">Altul</string>
+
+    <!-- Activity Level -->
+    <string name="activity_sedentary">Sedentar</string>
+    <string name="activity_light">Ușor</string>
+    <string name="activity_moderate">Moderat</string>
+    <string name="activity_active">Activ</string>
+    <string name="activity_very_active">Foarte activ</string>
+    <string name="activity_extra_active">Extra activ</string>
+    <string name="activity_sedentary_subtitle">Mai mult așezat la serviciu și acasă; puțin sau deloc exercițiu planificat.\nReper aproximativ: sub 5.000 de pași/zi.</string>
+    <string name="activity_light_subtitle">Mai mult așezat; exercițiu ușor sau activitate recreativă 1–3 zile/săptămână.\nReper aproximativ: 5.000–7.499 de pași/zi.</string>
+    <string name="activity_moderate_subtitle">Sală, cardio, escaladă, ciclism sau sport regulat 3–5 zile/săptămână.\nReper aproximativ: 7.500–9.999 de pași/zi.</string>
+    <string name="activity_active_subtitle">Antrenament în majoritatea zilelor, sau serviciu cu mult stat în picioare, mișcare ori ridicare.\nReper aproximativ: 10.000–12.499 de pași/zi.</string>
+    <string name="activity_very_active_subtitle">Antrenament intens 6–7 zile/săptămână, rezistență sau muncă fizică solicitantă.\nReper aproximativ: 12.500–14.999 de pași/zi.</string>
+    <string name="activity_extra_active_subtitle">Sportiv de performanță sau volum mare, două antrenamente zilnic, ori muncă grea plus antrenament frecvent.\nReper aproximativ: peste 15.000 de pași/zi.</string>
+
+    <!-- Weight Goal -->
+    <string name="goal_lose">Slăbește / Cutting</string>
+    <string name="goal_maintain">Menține / Recomp</string>
+    <string name="goal_gain">Câștigă în greutate / Bulking</string>
+
+    <!-- Meal Type -->
+    <string name="meal_breakfast">Mic dejun</string>
+    <string name="meal_lunch">Prânz</string>
+    <string name="meal_dinner">Cină</string>
+    <string name="meal_snack">Gustare</string>
+    <string name="meal_other">Altul</string>
+
+    <!-- AutoBalance Macro -->
+    <string name="autobalance_protein">Proteine</string>
+    <string name="autobalance_carbs">Carbohidrați</string>
+    <string name="autobalance_fat">Grăsimi</string>
+
+    <!-- AI Provider names -->
+    <string name="ai_provider_gemini">Google Gemini</string>
+    <string name="ai_provider_openai">OpenAI</string>
+    <string name="ai_provider_anthropic">Anthropic Claude</string>
+    <string name="ai_provider_xai">xAI Grok</string>
+    <string name="ai_provider_openrouter">OpenRouter</string>
+    <string name="ai_provider_together">Together AI</string>
+    <string name="ai_provider_groq">Groq</string>
+    <string name="ai_provider_huggingface">Hugging Face</string>
+    <string name="ai_provider_fireworks">Fireworks AI</string>
+    <string name="ai_provider_deepinfra">DeepInfra</string>
+    <string name="ai_provider_mistral">Mistral</string>
+    <string name="ai_provider_ollama">Ollama (Local)</string>
+    <string name="ai_provider_custom">Personalizat (compatibil OpenAI)</string>
+
+    <!-- AI Provider API key placeholders -->
+    <string name="ai_key_placeholder_gemini">AIza…</string>
+    <string name="ai_key_placeholder_openai">sk-…</string>
+    <string name="ai_key_placeholder_anthropic">sk-ant-…</string>
+    <string name="ai_key_placeholder_xai">xai-…</string>
+    <string name="ai_key_placeholder_openrouter">sk-or-…</string>
+    <string name="ai_key_placeholder_together">…</string>
+    <string name="ai_key_placeholder_groq">gsk_…</string>
+    <string name="ai_key_placeholder_huggingface">hf_…</string>
+    <string name="ai_key_placeholder_fireworks">fw_…</string>
+    <string name="ai_key_placeholder_deepinfra">…</string>
+    <string name="ai_key_placeholder_mistral">…</string>
+    <string name="ai_key_placeholder_ollama">Nu e nevoie de cheie</string>
+    <string name="ai_key_placeholder_custom">Cheie API (sau orice dacă endpoint-ul nu cere)</string>
+
+    <!-- Speech Provider -->
+    <string name="speech_provider_native">Nativ (pe dispozitiv)</string>
+    <string name="speech_provider_openai">OpenAI GPT-Transcribe</string>
+    <string name="speech_provider_groq">Groq (Whisper)</string>
+    <string name="speech_provider_deepgram">Deepgram</string>
+    <string name="speech_provider_assemblyai">AssemblyAI</string>
+
+    <string name="speech_key_placeholder_native">Nu e necesar</string>
+    <string name="speech_key_placeholder_openai">sk-…</string>
+    <string name="speech_key_placeholder_groq">gsk_…</string>
+    <string name="speech_key_placeholder_deepgram">Token cheia-ta-deepgram</string>
+    <string name="speech_key_placeholder_assemblyai">Cheia ta AssemblyAI</string>
+
+    <string name="speech_description_native">Recunoașterea vocală pe dispozitiv de la Android. Gratuită, funcționează offline pe majoritatea telefoanelor, cu rezultate parțiale în timp real. Implicit recomandat.</string>
+    <string name="speech_description_openai">API OpenAI GPT-Transcribe. Precizie ridicată, peste 99 de limbi, plată pe minut.</string>
+    <string name="speech_description_groq">Whisper Large v3 găzduit de Groq. Inferență foarte rapidă, are nivel gratuit.</string>
+    <string name="speech_description_deepgram">Deepgram Nova. Moduri în timp real și pe loturi, rapid și precis.</string>
+    <string name="speech_description_assemblyai">Modelul Universal AssemblyAI. Precizie solidă, nivel gratuit disponibil.</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Acasă</string>
+    <string name="nav_coach">Antrenor</string>
+    <string name="nav_settings">Setări</string>
+    <string name="nav_about">Despre</string>
+
+    <!-- Day-of-week narrow letters (for week strip) -->
+    <string name="dow_narrow_monday">L</string>
+    <string name="dow_narrow_tuesday">M</string>
+    <string name="dow_narrow_wednesday">M</string>
+    <string name="dow_narrow_thursday">J</string>
+    <string name="dow_narrow_friday">V</string>
+    <string name="dow_narrow_saturday">S</string>
+    <string name="dow_narrow_sunday">D</string>
+
+    <!-- Months (full) -->
+    <string name="month_january">Ianuarie</string>
+    <string name="month_february">Februarie</string>
+    <string name="month_march">Martie</string>
+    <string name="month_april">Aprilie</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Iunie</string>
+    <string name="month_july">Iulie</string>
+    <string name="month_august">August</string>
+    <string name="month_september">Septembrie</string>
+    <string name="month_october">Octombrie</string>
+    <string name="month_november">Noiembrie</string>
+    <string name="month_december">Decembrie</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_back">Înapoi</string>
+    <string name="onboarding_logo_description">Logo Ayuvo</string>
+
+    <string name="onboarding_gender_title">Care e sexul tău?</string>
+    <string name="onboarding_gender_subtitle">Ne ajută să calculăm metabolismul tău</string>
+
+    <string name="onboarding_birthday_title">Când e ziua ta?</string>
+    <string name="onboarding_birthday_subtitle">Folosit pentru a calcula necesarul zilnic</string>
+
+    <string name="onboarding_height_weight_title">Înălțime &amp; greutate</string>
+    <string name="onboarding_height_weight_subtitle">Vom păstra acest lucru privat</string>
+    <string name="onboarding_imperial">Imperial</string>
+    <string name="onboarding_metric">Metric</string>
+    <string name="onboarding_height">Înălțime</string>
+    <string name="onboarding_weight">Greutate</string>
+    <string name="onboarding_feet">Picioare</string>
+    <string name="onboarding_inches">Țoli</string>
+
+    <string name="onboarding_activity_title">Cât de activ ești?</string>
+    <string name="onboarding_activity_subtitle">Alege după săptămâna medie, incluzând munca și exercițiul.</string>
+
+    <string name="onboarding_goal_title">Care e obiectivul tău?</string>
+    <string name="onboarding_goal_subtitle">Poți schimba asta oricând</string>
+
+    <string name="onboarding_desired_weight_title">Care e\ngreutatea ta dorită?</string>
+
+    <string name="onboarding_body_fat_title">Îți cunoști\nprocentul de grăsime corporală?</string>
+    <string name="onboarding_body_fat_subtitle">Ne ajută să calculăm metabolismul mai precis</string>
+    <string name="onboarding_yes">Da</string>
+    <string name="onboarding_no">Nu</string>
+    <string name="onboarding_body_fat_ranges">Intervale obișnuite: Bărbați 10–25%, Femei 18–35%</string>
+    <string name="onboarding_body_fat_no_worries">Nicio grijă! Vom folosi o formulă standard\npe baza înălțimii, greutății și vârstei tale.</string>
+
+    <string name="onboarding_pace_title_maintain">Ritmul tău</string>
+    <string name="onboarding_pace_subtitle_maintain">Vom seta un plan echilibrat</string>
+    <string name="onboarding_pace_title_change">Cât de repede vrei\nsă îți atingi obiectivul?</string>
+    <string name="onboarding_pace_subtitle_lose">Viteza de slăbire pe săptămână</string>
+    <string name="onboarding_pace_subtitle_gain">Viteza de îngrășare pe săptămână</string>
+    <string name="onboarding_pace_balanced_set">Ritm echilibrat setat</string>
+    <string name="onboarding_pace_balanced_subtitle">Vom menține caloriile constante\npentru a-ți păstra greutatea actuală.</string>
+    <string name="onboarding_pace_per_week">pe săptămână</string>
+    <string name="onboarding_pace_slow">Lent</string>
+    <string name="onboarding_pace_recommended">Recomandat</string>
+    <string name="onboarding_pace_fast">Rapid</string>
+    <string name="onboarding_pace_reach_prefix">Îți vei atinge obiectivul în </string>
+    <plurals name="onboarding_pace_days_format">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d de zile</item>
+    </plurals>
+    <string name="onboarding_pace_caption_slow">Blând și sustenabil. Excelent pentru obiceiuri pe termen lung.</string>
+    <string name="onboarding_pace_caption_fast">Agresiv, dar realizabil. Necesită disciplină puternică.</string>
+    <string name="onboarding_pace_caption_recommended">Cel mai echilibrat ritm, motivant și sustenabil.</string>
+
+    <string name="onboarding_notifications_title">Fii notificat să\nînregistrezi mesele</string>
+    <string name="onboarding_notifications_subtitle">Primește mementouri blânde la orele meselor\nca să nu uiți să urmărești.</string>
+    <string name="onboarding_notifications_enabled">Mementouri activate</string>
+    <string name="onboarding_notifications_allow">Permite notificările</string>
+    <string name="onboarding_notifications_change_anytime">Poți schimba asta oricând în Setări.</string>
+
+    <string name="onboarding_health_title">Conectează-te la\nHealth Connect</string>
+    <string name="onboarding_health_subtitle">Păstrează sincronizate automat nutriția, pașii\nși măsurătorile corporale.</string>
+    <string name="onboarding_health_feature_nutrition">Date nutriționale</string>
+    <string name="onboarding_health_feature_weight">Sincronizare greutate</string>
+    <string name="onboarding_health_feature_steps">Pași zilnici</string>
+    <string name="onboarding_health_feature_body">Măsurători corporale</string>
+    <string name="onboarding_health_unavailable">Health Connect indisponibil</string>
+    <string name="onboarding_health_connected">Conectat</string>
+    <string name="onboarding_health_connect">Conectează</string>
+
+    <string name="onboarding_ai_choice_title">Configurează-ți AI-ul</string>
+    <string name="onboarding_ai_byok_subtitle">Adaugă propria cheie de furnizor AI — Gemini, OpenAI, Groq și altele sunt suportate.</string>
+    <string name="onboarding_ai_byok_card_title">Adu propria cheie</string>
+    <string name="onboarding_ai_byok_card_subtitle">Gratuit pentru totdeauna — nelimitat pe cheia ta. Gemini, OpenAI, Groq și altele.</string>
+    <string name="onboarding_ai_byok_badge">Recomandat</string>
+    <string name="onboarding_provider_title">Configurează-ți AI-ul</string>
+    <string name="onboarding_provider_subtitle">Adaugă propria cheie de furnizor AI — aplicația rămâne gratuită.</string>
+    <string name="onboarding_provider_recommended_title">Recomandat: Google Gemini</string>
+    <string name="onboarding_provider_recommended_subtitle">Versiune gratuită disponibilă, rapidă &amp; precisă</string>
+    <string name="onboarding_provider_step_1">Obține o cheie gratuită la aistudio.google.com/apikey</string>
+    <string name="onboarding_provider_step_2">Alege un furnizor și lipește cheia mai jos</string>
+    <string name="onboarding_provider_step_3">Lipește cheia — gata</string>
+    <string name="onboarding_provider_footer">13 furnizori suportați. Cheia ta rămâne pe\nacest dispozitiv, criptată.</string>
+
+    <string name="onboarding_building_calories">Calorii</string>
+    <string name="onboarding_building_carbs">Carbohidrați</string>
+    <string name="onboarding_building_protein">Proteine</string>
+    <string name="onboarding_building_fats">Grăsimi</string>
+    <string name="onboarding_building_health_score">Scor de sănătate</string>
+    <string name="onboarding_building_percent_format">%1$d%%</string>
+    <string name="onboarding_building_setting_up">Pregătim totul\npentru tine</string>
+    <string name="onboarding_building_finalizing">Se finalizează rezultatele…</string>
+    <string name="onboarding_building_recommendation">Recomandare zilnică pentru</string>
+    <string name="onboarding_building_bullet">•</string>
+
+    <string name="onboarding_plan_title">Planul tău</string>
+    <string name="onboarding_plan_subtitle">Atinge orice valoare pentru a o edita</string>
+    <string name="onboarding_plan_daily_calories">calorii zilnice</string>
+    <string name="onboarding_plan_doctor_title">Consultă un medic</string>
+    <string name="onboarding_plan_doctor_message">Recomandarea minimă este de 1.200 de calorii pe zi.</string>
+
+    <string name="onboarding_plan_field_calories">Calorii zilnice</string>
+    <string name="onboarding_plan_field_protein">Proteine</string>
+    <string name="onboarding_plan_field_carbs">Carbohidrați</string>
+    <string name="onboarding_plan_field_fat">Grăsimi</string>
+
+
+    <!-- Home -->
+    <plurals name="home_daily_steps">
+        <item quantity="one">%1$s pas</item>
+        <item quantity="few">%1$s pași</item>
+        <item quantity="other">%1$s de pași</item>
+    </plurals>
+
+    <string name="home_add_food">Adaugă aliment</string>
+    <string name="home_menu_camera">Cameră</string>
+    <string name="home_menu_camera_note">Cameră + notă</string>
+    <string name="home_menu_nutrition_label">Etichetă nutrițională</string>
+    <string name="home_menu_from_photos">Din Fotografii</string>
+    <string name="home_menu_text_input">Introducere text</string>
+    <string name="home_menu_voice">Voce</string>
+    <string name="home_menu_manual_entry">Intrare manuală</string>
+    <string name="home_menu_saved_meals">Mese salvate</string>
+    <string name="home_kcal_of_format">din %1$s kcal</string>
+    <string name="home_kcal_left_format">%1$s rămase</string>
+    <string name="home_view_more">Vezi mai multe</string>
+    <string name="home_todays_food">Mâncarea de azi</string>
+    <string name="home_no_foods_logged">Niciun aliment înregistrat</string>
+    <string name="home_swipe_delete">Șterge</string>
+    <string name="home_swipe_favorite">Favorit</string>
+    <string name="home_swipe_unfavorite">Elimină din favorite</string>
+    <string name="home_favorited">Adăugat la favorite</string>
+    <string name="home_macro_chip_format">%1$s %2$dg</string>
+    <string name="home_analyzing_food">Se analizează mâncarea ta…</string>
+    <string name="home_looking_up_nutrition">Se caută informațiile nutriționale…</string>
+    <string name="home_fiber_format">Fibre: %1$.1fg</string>
+    <string name="home_sugar_format">Zahăr: %1$.1fg</string>
+    <string name="home_sat_fat_format">Grăsimi sat.: %1$.1fg</string>
+    <string name="home_sodium_format">Sodiu: %1$.1fmg</string>
+    <string name="home_potassium_format">Potasiu: %1$.1fmg</string>
+    <string name="home_cholesterol_format">Colesterol: %1$.1fmg</string>
+    <string name="home_serving_format">Porție: ~%1$dg</string>
+    <string name="home_protein_value">Proteine: %1$dg</string>
+    <string name="home_carbs_value">Carbohidrați: %1$dg</string>
+    <string name="home_fat_value">Grăsimi: %1$dg</string>
+
+    <string name="text_input_placeholder_1">2 ouă, pâine prăjită cu unt și o cafea</string>
+    <string name="text_input_placeholder_2">Bowl de burrito Chipotle cu pui și orez</string>
+    <string name="text_input_placeholder_3">Pizza Domino\'s cu pepperoni, 2 felii</string>
+    <string name="text_input_placeholder_4">Iaurt grecesc cu granola și afine</string>
+
+    <string name="manual_title">Intrare manuală</string>
+    <string name="manual_name">Nume</string>
+    <string name="manual_name_placeholder">ex. Salată de casă</string>
+    <string name="manual_calories">Calorii</string>
+    <string name="manual_protein">Proteine (g)</string>
+    <string name="manual_carbs">Carbohidrați (g)</string>
+    <string name="manual_fat">Grăsimi (g)</string>
+    <string name="manual_zero_placeholder">0</string>
+    <string name="manual_meal_type">Tipul mesei</string>
+
+    <string name="error_title">Ceva nu a mers bine</string>
+
+    <!-- Food sheets shared primitives -->
+    <string name="sheet_food_details">Detalii aliment</string>
+    <string name="sheet_serving">Porție</string>
+    <string name="sheet_nutrition">Nutriție</string>
+    <string name="sheet_meal">Masă</string>
+    <string name="sheet_more_nutrition">Mai multe informații nutriționale</string>
+    <string name="sheet_name">Nume</string>
+    <string name="sheet_quantity">Cantitate</string>
+    <string name="sheet_meal_type">Tipul mesei</string>
+    <string name="sheet_review_food">Verifică alimentul</string>
+    <string name="sheet_edit_food">Editează alimentul</string>
+
+    <string name="sheet_micro_sugar">Zahăr</string>
+    <string name="sheet_micro_added_sugar">Zahăr adăugat</string>
+    <string name="sheet_micro_fiber">Fibre</string>
+    <string name="sheet_micro_saturated_fat">Grăsimi saturate</string>
+    <string name="sheet_micro_mono_fat">Grăsimi mono</string>
+    <string name="sheet_micro_poly_fat">Grăsimi poli</string>
+    <string name="sheet_micro_cholesterol">Colesterol</string>
+    <string name="sheet_micro_sodium">Sodiu</string>
+    <string name="sheet_micro_potassium">Potasiu</string>
+
+    <!-- Context note sheet -->
+    <string name="context_note_title">Adaugă notă</string>
+    <string name="context_note_section">Adaugă o notă (opțional)</string>
+    <string name="context_note_placeholder">ex. fără ulei, brânză în plus, porție mare</string>
+
+    <!-- Voice input sheet -->
+    <string name="voice_listening">Ascult…</string>
+    <string name="voice_tap_to_start">Atinge microfonul pentru a începe</string>
+    <string name="voice_transcribing_format">Se transcrie prin %1$s…</string>
+    <string name="voice_mic_permission_denied">Permisiunea pentru microfon a fost refuzată.</string>
+    <string name="voice_mic_start_failed">Nu s-a putut porni microfonul. Verifică permisiunile.</string>
+    <string name="voice_transcription_failed">Transcrierea a eșuat</string>
+    <string name="voice_stop">Oprește</string>
+    <string name="voice_record">Înregistrează</string>
+
+    <!-- Saved Meals sheet -->
+    <string name="saved_meals_title">Mese salvate</string>
+    <string name="saved_meals_tab_recents">Recente</string>
+    <string name="saved_meals_tab_frequent">Frecvente</string>
+    <string name="saved_meals_tab_favorites">Favorite</string>
+    <string name="saved_meals_no_logs">Niciun aliment înregistrat încă</string>
+    <string name="saved_meals_no_favorites">Niciun favorit încă\nGlisează stânga pe orice aliment pentru a-l adăuga</string>
+    <string name="saved_meals_count_format">%1$d× înregistrat</string>
+    <string name="saved_meals_log_action">Înregistrează</string>
+    <string name="saved_meals_remove_favorite">Elimină din favorite</string>
+    <string name="saved_meals_move_up">Mută în sus</string>
+    <string name="saved_meals_move_down">Mută în jos</string>
+
+    <!-- Nutrition detail sheet -->
+    <string name="nutrition_details_title">Detalii nutriționale</string>
+    <string name="nutrition_section_macros">Macronutrienți</string>
+    <string name="nutrition_section_detailed">Nutriție detaliată</string>
+    <string name="nutrition_label_calories">Calorii</string>
+    <string name="nutrition_label_protein">Proteine</string>
+    <string name="nutrition_label_carbs">Carbohidrați</string>
+    <string name="nutrition_label_fat">Grăsimi</string>
+    <string name="nutrition_label_sugar">Zahăr</string>
+    <string name="nutrition_label_added_sugar">Zahăr adăugat</string>
+    <string name="nutrition_label_fiber">Fibre</string>
+    <string name="nutrition_label_saturated_fat">Grăsimi saturate</string>
+    <string name="nutrition_label_mono_fat">Grăsimi mononesat.</string>
+    <string name="nutrition_label_poly_fat">Grăsimi polinesat.</string>
+    <string name="nutrition_label_cholesterol">Colesterol</string>
+    <string name="nutrition_label_sodium">Sodiu</string>
+    <string name="nutrition_label_potassium">Potasiu</string>
+    <string name="nutrition_em_dash">—</string>
+
+    <!-- Coach -->
+    <string name="coach_title">Antrenor</string>
+    <string name="coach_reset_chat_a11y">Resetează chatul</string>
+    <string name="coach_send_a11y">Trimite</string>
+    <string name="coach_input_voice_a11y">Introducere vocală</string>
+    <string name="coach_input_placeholder">Întreabă Antrenorul…</string>
+    <string name="coach_empty_title">Întreabă-ți Antrenorul</string>
+    <string name="coach_reset_dialog_title">Resetează chatul</string>
+    <string name="coach_reset_dialog_message">Ștergi toate mesajele și o iei de la capăt? Această acțiune nu poate fi anulată.</string>
+    <string name="coach_reset_confirm">Resetează</string>
+    <string name="coach_no_profile_error">Niciun profil încă. Termină mai întâi onboarding-ul.</string>
+    <string name="coach_chat_failed">Chatul a eșuat</string>
+
+    <string name="coach_chip_predict_30_days">Ce greutate voi avea peste 30 de zile?</string>
+    <string name="coach_chip_lose_faster">Cum slăbesc mai repede în siguranță?</string>
+    <string name="coach_chip_eating_too_much">Mănânc prea mult?</string>
+    <string name="coach_chip_what_dinner">Ce să mănânc la cină?</string>
+    <string name="coach_chip_gain_healthy">Cum mă îngraș sănătos?</string>
+    <string name="coach_chip_eating_enough">Mănânc suficient?</string>
+    <string name="coach_chip_high_protein">Alimente bogate în proteine de adăugat?</string>
+    <string name="coach_chip_holding_weight">Îmi mențin greutatea?</string>
+    <string name="coach_chip_average_intake">Care e aportul meu mediu?</string>
+    <string name="coach_chip_macro_suggestions">Sugestii pentru macros?</string>
+    <string name="coach_chip_trend">Cum e tendința mea?</string>
+    <string name="coach_chip_doing_this_week">Cum mă descurc săptămâna asta?</string>
+    <string name="coach_chip_log_advice">Vreun sfat pe baza jurnalului meu?</string>
+
+    <!-- Progress -->
+    <string name="progress_range_week">1S</string>
+    <string name="progress_range_month">1L</string>
+    <string name="progress_range_3m">3L</string>
+    <string name="progress_range_6m">6L</string>
+    <string name="progress_range_year">1A</string>
+    <string name="progress_range_all">Tot</string>
+
+    <string name="progress_weight_section">Greutate</string>
+    <string name="progress_log_weight">Înregistrează greutatea</string>
+    <string name="progress_stat_current">Actual</string>
+    <string name="progress_stat_goal">Obiectiv</string>
+    <string name="progress_log_first_weight">Înregistrează prima greutate pentru a vedea tendințele</string>
+
+    <string name="progress_weight_history">Istoric greutate</string>
+    <string name="progress_body_fat_history">Istoric grăsime corporală</string>
+    <plurals name="progress_history_count_format">
+        <item quantity="one">%1$d intrare · atinge pentru a vedea sau șterge</item>
+        <item quantity="few">%1$d intrări · atinge pentru a vedea sau șterge</item>
+        <item quantity="other">%1$d de intrări · atinge pentru a vedea sau șterge</item>
+    </plurals>
+
+    <string name="progress_calories_section">Calorii</string>
+    <string name="progress_avg_format">Med.: %1$,d kcal</string>
+    <string name="progress_no_food">Niciun aliment înregistrat încă</string>
+
+    <string name="progress_macro_averages">Medii macronutrienți</string>
+    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
+
+    <string name="progress_log_weight_title">Înregistrează greutatea</string>
+
+    <string name="progress_goal_reached_title">Felicitări! 🎉</string>
+    <string name="progress_goal_reached_message">Ți-ai atins greutatea obiectiv! Mergi la Setări pentru a-ți schimba obiectivul și atinge Recalculează obiectivele pentru a actualiza țintele.</string>
+
+    <!-- Settings -->
+    <string name="settings_section_personal">Informații personale</string>
+    <string name="settings_section_goals">Obiective și nutriție</string>
+    <string name="settings_section_daily_targets">Obiective zilnice</string>
+    <string name="settings_section_app">Setări aplicație</string>
+    <string name="settings_section_tracking_reminders">Monitorizare și mementouri</string>
+    <string name="settings_category_ai_providers">Furnizori AI și opțiuni de rezervă</string>
+    <string name="settings_section_workout">Antrenament</string>
+    <string name="settings_section_ai">Furnizor AI</string>
+    <string name="settings_section_speech">Voce în text</string>
+    <string name="settings_section_health">Sănătate și date</string>
+    <string name="settings_section_data_management">Gestionarea datelor</string>
+
+    <string name="settings_gender">Sex</string>
+    <string name="settings_birthday">Data nașterii</string>
+    <string name="settings_height">Înălțime</string>
+    <string name="settings_weight">Greutate</string>
+    <string name="settings_body_fat">Grăsime corporală</string>
+    <string name="settings_not_set">Nesetat</string>
+    <string name="settings_birthday_age_format">%1$s (vârsta %2$d)</string>
+
+    <string name="settings_weight_goal">Obiectiv de greutate</string>
+    <string name="settings_activity_level">Nivel de activitate</string>
+    <string name="settings_weekly_change">Schimbare săptămânală</string>
+    <string name="settings_weekly_default">0,50 kg/săpt.</string>
+    <string name="settings_goal_weight">Greutate obiectiv</string>
+    <string name="settings_calories">Calorii</string>
+    <string name="settings_recalculate_goals">Recalculează obiectivele</string>
+    <string name="settings_macro_pinned_format">%1$dg</string>
+    <string name="settings_macro_auto_format">%1$dg · auto</string>
+    <string name="settings_macro_pinned_a11y">Fixat</string>
+    <string name="settings_macro_auto_a11y">Auto</string>
+
+    <string name="settings_appearance">Aspect</string>
+    <string name="settings_appearance_system">Sistem</string>
+    <string name="settings_appearance_light">Luminos</string>
+    <string name="settings_appearance_dark">Întunecat</string>
+    <string name="settings_metric_units">Unități metrice</string>
+    <string name="settings_height_unit">Unitate de înălțime</string>
+    <string name="settings_weight_unit">Unitate de greutate</string>
+    <string name="settings_week_starts">Săptămâna începe în</string>
+    <string name="settings_week_monday">Luni</string>
+    <string name="settings_week_sunday">Duminică</string>
+    <string name="settings_notifications">Notificări</string>
+    <string name="settings_battery_opt">Optimizare baterie</string>
+    <string name="settings_battery_opt_value">Adaugă Ayuvo în lista albă</string>
+
+    <string name="settings_ai_provider">Furnizor</string>
+    <string name="settings_ai_model">Model</string>
+    <string name="settings_ai_model_unset">(setează unul mai jos)</string>
+    <string name="settings_api_key">Cheie API</string>
+    <string name="settings_base_url">URL de bază</string>
+    <string name="settings_server_url">URL server</string>
+    <string name="settings_tap_to_edit">Atinge pentru a edita</string>
+    <string name="settings_custom_url_placeholder">https://endpointul-tau.com/v1</string>
+    <string name="settings_custom_url_title">URL de bază personalizat</string>
+    <string name="settings_clear_key">Șterge cheia</string>
+
+    <string name="settings_health_connect">Health Connect</string>
+    <string name="settings_clear_food_log">Șterge jurnalul alimentar</string>
+    <string name="settings_delete_all_data">Șterge toate datele</string>
+
+    <!-- Settings dialogs -->
+    <string name="settings_clear_food_title">Ștergi jurnalul alimentar?</string>
+    <string name="settings_clear_food_message">Șterge toate intrările alimentare și fotografiile. Profilul, greutățile și setările rămân.</string>
+    <string name="settings_delete_all_title">Ștergi toate datele locale?</string>
+    <string name="settings_delete_all_message">Șterge profilul, jurnalul alimentar, istoricul greutății, chatul și cheile API, apoi te duce înapoi la onboarding. Datele Health Connect rămân intacte.</string>
+    <string name="settings_max_pinned_title">Max 2 fixați</string>
+    <string name="settings_max_pinned_message">Se pot fixa cel mult 2 macronutrienți simultan. Elimină mai întâi fixarea altuia deschizându-l și atingând Resetează la echilibrare automată.</string>
+    <string name="settings_recalc_title">Recalculezi obiectivele?</string>
+    <string name="settings_recalc_message">Resetează caloriile și macronutrienții la valorile implicite din formula de înălțime/greutate/activitate/obiectiv. Toți macronutrienții fixați sunt eliminați.</string>
+    <string name="settings_recalc_confirm">Recalculează</string>
+    <string name="settings_invalid_goal_title">Greutatea obiectiv nu se potrivește cu obiectivul tău</string>
+    <string name="settings_invalid_goal_lose">Un obiectiv de slăbire necesită o țintă sub greutatea actuală.</string>
+    <string name="settings_invalid_goal_gain">Un obiectiv de îngrășare necesită o țintă peste greutatea actuală.</string>
+    <string name="settings_permission_title">Este necesară permisiunea</string>
+
+    <string name="settings_notifications_denied">Permisiunea pentru notificări a fost refuzată. Activează-o în Setări sistem → Aplicații → Ayuvo → Notificări pentru a primi mementouri.</string>
+
+    <!-- Notification copy -->
+    <string name="notif_weight_log_title">Este ora cântăririi</string>
+    <string name="notif_weight_log_text">Înregistrează greutatea de azi pentru a menține graficul tău de progres precis.</string>
+    <string name="settings_health_unavailable">Health Connect nu este disponibil pe acest dispozitiv. Instalează-l din Play Store, apoi atinge din nou comutatorul.</string>
+
+    <!-- Settings sheets / pickers -->
+    <string name="sheet_ai_provider">Furnizor AI</string>
+    <string name="sheet_model">Model</string>
+    <string name="sheet_model_footer">Sau scrie orice ID de model personalizat mai jos.</string>
+    <string name="sheet_any_model_id">Orice ID de model</string>
+    <string name="sheet_api_key_format">Cheie API — %1$s</string>
+    <string name="sheet_speech_api_key_format">Cheie API voce — %1$s</string>
+    <string name="sheet_speech_engine">Motor vocal</string>
+    <string name="sheet_gender">Sex</string>
+    <string name="sheet_activity_level">Nivel de activitate</string>
+    <string name="sheet_goal">Obiectiv</string>
+    <string name="sheet_target_weight">Greutate țintă</string>
+    <string name="sheet_weight">Greutate</string>
+    <string name="sheet_birthday">Data nașterii</string>
+    <string name="sheet_appearance">Aspect</string>
+    <string name="sheet_week_starts">Săptămâna începe în</string>
+    <string name="sheet_height">Înălțime</string>
+    <string name="sheet_body_fat_percent">Grăsime corporală %</string>
+    <string name="sheet_weekly_change">Schimbare săptămânală</string>
+    <string name="sheet_weekly_change_format">%1$.1f %2$s/săpt. %3$s</string>
+    <string name="sheet_weekly_change_loss">slăbire</string>
+    <string name="sheet_weekly_change_gain">îngrășare</string>
+    <string name="sheet_pace_slow">Lent</string>
+    <string name="sheet_pace_recommended">Recomandat</string>
+    <string name="sheet_pace_fast">Rapid</string>
+    <string name="sheet_selected_a11y">Selectat</string>
+    <string name="sheet_reset_to_auto">Resetează la echilibrare automată</string>
+
+    <string name="sheet_macros">Macronutrienți</string>
+    <string name="sheet_macros_subtitle">Fixează până la 2 macronutrienți la grame exacte. Cei nefixați se echilibrează automat din caloriile rămase.</string>
+    <string name="sheet_macro_pinned">fixat</string>
+    <string name="sheet_macro_auto">auto</string>
+    <string name="sheet_macro_label_format">%1$s (%2$s)</string>
+
+    <!-- About -->
+    <string name="about_rate">Evaluează aplicația</string>
+    <string name="about_share">Distribuie aplicația</string>
+    <string name="about_privacy">Politica de confidențialitate</string>
+    <string name="about_terms">Termenii serviciului</string>
+    <string name="about_category_app_updates">Aplicație și actualizări</string>
+    <string name="about_category_legal">Informații juridice</string>
+    <string name="about_share_chooser">Distribuie Ayuvo</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_streak">Memento serie</string>
+    <string name="notif_channel_streak_desc">Memento zilnic pentru a înregistra o masă și a-ți menține seria.</string>
+    <string name="notif_channel_daily">Rezumat zilnic</string>
+    <string name="notif_channel_daily_desc">Rezumat de final de zi al caloriilor + macronutrienților tăi.</string>
+    <string name="notif_channel_weight_goal">Obiectiv de greutate</string>
+    <string name="notif_channel_weight_goal_desc">Sărbătoare când îți atingi greutatea obiectiv.</string>
+    <string name="notif_streak_title">Nu uita să îți înregistrezi mesele</string>
+    <string name="notif_streak_text">Menține-ți seria — înregistrează ceva din ziua de azi.</string>
+    <string name="notif_summary_title">Rezumatul de azi e gata</string>
+    <string name="notif_summary_text">Atinge pentru a vedea cum s-au aliniat macronutrienții de azi.</string>
+
+    <string name="onboarding_goal_optional">Țintă (opțional)</string>
+    <string name="onboarding_goal_set_later">Poți seta asta mai târziu în Setări.</string>
+    <string name="settings_goal_body_fat">Țintă grăsime corporală</string>
+    <string name="settings_use_body_fat_bmr">Folosește grăsimea corporală pentru BMR</string>
+    <string name="settings_use_body_fat_bmr_subtitle">Pornit = Katch-McArdle (folosește masa slabă pentru un BMR mai precis). Oprit = Mifflin-St Jeor (doar înălțime/greutate/vârstă). Oprește dacă măsurarea grăsimii corporale este învechită.</string>
+    <string name="sheet_goal_body_fat">Țintă grăsime corporală</string>
+    <string name="sheet_goal_body_fat_currently">Curent %1$d%%</string>
+    <string name="action_remove_goal">Elimină ținta</string>
+    <string name="progress_metric_weight">Greutate</string>
+    <string name="progress_metric_body_fat">Grăsime corporală</string>
+    <string name="progress_metric_workouts">Antrenamente</string>
+    <string name="progress_workout_history">Istoric antrenamente</string>
+    <plurals name="progress_workout_history_count_format">
+        <item quantity="one">%1$d consum calculat · atinge pentru a vedea sau șterge</item>
+        <item quantity="few">%1$d consumuri calculate · atinge pentru a vedea sau șterge</item>
+        <item quantity="other">%1$d de consumuri calculate · atinge pentru a vedea sau șterge</item>
+    </plurals>
+    <string name="progress_workout_delete_title">Ștergi consumul antrenamentului?</string>
+    <string name="progress_workout_delete_message">Se elimină consumul calculat din Ayuvo și Health Connect. Planul din jurnalul de antrenament rămâne salvat.</string>
+    <string name="progress_workout_section">Activitate de antrenament</string>
+    <string name="progress_workout_stat_workouts">Antrenamente</string>
+    <string name="progress_workout_stat_total">Consum total</string>
+    <string name="progress_workout_stat_average">Consum mediu</string>
+    <string name="progress_workout_stat_latest">Recent</string>
+    <string name="progress_workout_stat_days">Zile</string>
+    <string name="progress_workout_no_range">Nu există consumuri calculate pentru antrenamente în această perioadă</string>
+    <string name="progress_workout_chart_description">Graficul consumului din antrenamente de la %1$s la %2$s. Total: %3$d kilocalorii; recent: %4$d kilocalorii.</string>
+    <string name="progress_log_body_fat">Înregistrează grăsimea corporală</string>
+    <string name="progress_log_first_body_fat">Înregistrează primul tău % de grăsime corporală pentru a vedea tendințele</string>
+    <string name="progress_log_body_fat_title">Înregistrează grăsimea corporală</string>
+    <string name="notif_body_fat_log_title">Verificare grăsime corporală</string>
+    <string name="notif_body_fat_log_text">Înregistrează grăsimea corporală de azi pentru a urmări tendința compoziției.</string>
+    <string name="saved_meals_search_placeholder">Caută în mâncărurile salvate</string>
+    <string name="saved_meals_no_match">Nicio mâncare potrivită</string>
+    <string name="settings_section_custom_instructions">Instrucțiuni AI personalizate</string>
+    <string name="settings_custom_instructions_placeholder">Ex.: locuiesc în Germania, presupune porții europene, prefer mărcile ALDI/REWE. Sunt într-o etapă de definire la culturism.</string>
+    <string name="settings_custom_instructions_footer">Context opțional trimis cu fiecare cerere AI — regiune, dietă, obiective sportive, orice ai repeta altfel de fiecare dată. Lasă gol pentru a dezactiva.</string>
+    <string name="settings_save">Salvează</string>
+    <string name="settings_saved">Salvat</string>
+    <string name="settings_section_fallback">Furnizor de rezervă</string>
+    <string name="settings_enable_fallback">Activează rezerva</string>
+    <string name="settings_fallback_footer">Dacă furnizorul principal eșuează (suprasolicitare, limită de rată, eroare de rețea), aplicația reîncearcă automat cu această rezervă. Este permis același furnizor ca cel principal — doar alege un model diferit.</string>
+    <string name="widget_all_metrics_label">Ayuvo Astăzi</string>
+    <string name="widget_all_metrics_description">Vezi caloriile, proteinele, carbohidrații și grăsimile de azi într-un singur widget.</string>
+    <string name="settings_needs_health_connect">Necesită Health Connect</string>
+    <string name="settings_energy_goals_info">Când este activat, Ayuvo folosește intervalul recent de energie măsurată din Health Connect ca bază de menținere la calcularea obiectivelor, în locul estimării prin formulă: energia totală măsurată când sunt disponibile suficiente zile; altfel, media energiei active măsurate + BMR calculat prin formulă. Nu se folosește IA pentru citirea consumului. Necesită Health Connect. Funcționează cu butonul Recalculează și cu Adaptive Goals.</string>
+    <string name="settings_adaptive_goals_info">Aproximativ o dată pe săptămână, la deschiderea aplicației, Ayuvo reia automat calculul complet al obiectivelor — același folosit de butonul Recalculează — pe baza profilului tău, a alimentelor înregistrate recent și a tendinței greutății. Dacă Energy Burn este activat, consumul tău măsurat este folosit ca ancoră de întreținere. Dacă IA nu este disponibilă, rularea este omisă silențios. Dezactivarea restaurează obiectivele de dinainte de prima modificare făcută de această funcție. Acesta nu este un sfat medical.</string>
+    <string name="ad_label">Reclamă</string>
+    <string name="onboarding_plan_adaptive_note">Planul tău se ajustează automat săptămânal pe măsură ce înregistrezi — dezactivează Adaptive Goals din Setări pentru a-l păstra fix.</string>
+    <string name="settings_fasting_tracking">Urmărirea postului</string>
+    <string name="settings_fasting_goal">Obiectiv implicit de post</string>
+    <string name="settings_fasting_goal_value">%1$d ore</string>
+    <string name="settings_notif_fasting_goal">Obiectiv de post atins</string>
+    <string name="fasting">Post</string>
+    <string name="fasting_start">Începe postul</string>
+    <string name="fasting_end">Încheie postul</string>
+    <string name="fasting_cancel">Anulează postul</string>
+    <string name="fasting_in_progress">Post în desfășurare</string>
+    <string name="fasting_completed_format">Post de %1$s</string>
+    <string name="fasting_goal_format">Obiectiv de %1$s</string>
+    <string name="fasting_started_format">Început %1$s</string>
+    <string name="fasting_choose_goal">Alege un obiectiv de post</string>
+    <string name="fasting_hours">ore</string>
+    <string name="fasting_edit">Editează postul</string>
+    <string name="fasting_active">Post activ</string>
+    <string name="fasting_started">Început</string>
+    <string name="fasting_ended">Încheiat</string>
+    <string name="fasting_delete">Șterge postul</string>
+    <string name="fasting_overlap_title">Postul se suprapune cu o altă sesiune</string>
+    <string name="fasting_overlap_message">Ajustează ora de început sau de sfârșit pentru ca sesiunile de post să nu se suprapună.</string>
+    <string name="food_logging_paused">Jurnalul alimentar este întrerupt</string>
+    <string name="food_blocked_by_active_fast">Încheie sau anulează postul activ înainte de a înregistra alimente.</string>
+    <string name="home_todays_diary">Jurnalul de azi</string>
+    <string name="home_diary">Jurnal</string>
+    <string name="home_no_diary_entries">Nicio înregistrare în jurnal</string>
+    <string name="home_menu_photo_scan">Fotografie și scanare</string>
+    <string name="home_menu_describe_meal">Descrie masa</string>
+    <string name="home_menu_reuse_meal">Reutilizează masa</string>
+    <string name="notif_channel_fasting">Post</string>
+    <string name="notif_channel_fasting_desc">Te anunță când un post activ își atinge obiectivul.</string>
+    <string name="notif_fasting_goal_title">Obiectiv de post atins</string>
+    <string name="notif_fasting_goal_text">Ai atins obiectivul de post de %1$s. Încheie postul când ești pregătit.</string>
+    <string name="home_menu_barcode">Cod de bare</string>
+    <string name="settings_calc_methods">Metode de calcul</string>
+    <string name="settings_calc_calorie_target">Țintă calorică pentru obiectiv</string>
+    <string name="settings_calc_maintenance">Menținere și ajustarea obiectivului</string>
+    <string name="settings_calc_macro_split">Împărțirea macronutrienților</string>
+    <string name="settings_calc_micro_values">Valorile micronutrienților</string>
+    <string name="settings_calc_intro">Obiectivele tale zilnice de calorii și macronutrienți sunt stabilite de AI. Când atingi „Recalculează obiectivele” — sau automat cam o dată pe săptămână dacă Obiectivele adaptive sunt activate — Ayuvo trimite furnizorului tău de AI profilul, ecuațiile de referință de mai jos, totalurile nutriționale zilnice agregate care protejează confidențialitatea, măsurători exacte și datate ale greutății, grăsimii corporale și circumferințelor măsurate cu banda, date agregate despre antrenamente — număr, durată, seturi și repetări — și date energetice opționale din Health Connect. Numele alimentelor, notele, fotografiile, ingredientele și numele exercițiilor nu sunt trimise pentru acest calcul. AI pornește de la aceste formule validate științific, apoi le ajustează la datele tale reale pentru a estima menținerea și obiectivele tale reale.</string>
+    <string name="settings_calc_sec_bmr">Metabolismul bazal (BMR)</string>
+    <string name="settings_calc_sec_tdee">Consumul energetic zilnic (TDEE)</string>
+    <string name="settings_calc_mifflin_name">Ecuația Mifflin-St Jeor</string>
+    <string name="settings_calc_mifflin_used">Formula implicită pentru metabolismul în repaus. Se folosește când grăsimea corporală nu este disponibilă.</string>
+    <string name="settings_calc_mifflin_formula">Bărbați: 10×greutate(kg) + 6,25×înălțime(cm) − 5×vârstă + 5\nFemei: 10×greutate(kg) + 6,25×înălțime(cm) − 5×vârstă − 161</string>
+    <string name="settings_calc_katch_name">Ecuația Katch-McArdle</string>
+    <string name="settings_calc_katch_used">Se folosește ori de câte ori ai introdus procentul de grăsime corporală. Calculează BMR din masa corporală slabă, nu din greutatea totală.</string>
+    <string name="settings_calc_katch_formula">BMR = 370 + 21,6 × MCS(kg)\nMCS = greutate × (1 − procentul de grăsime corporală)</string>
+    <string name="settings_calc_tdee_name">Metoda multiplicatorului de activitate</string>
+    <string name="settings_calc_tdee_used">TDEE = BMR × multiplicatorul de activitate. Multiplicatorul corespunde nivelului de activitate selectat. Aceasta este baza de menținere calculată prin formulă. Când Energy Burn este activat, calculul folosește în schimb intervalul recent de energie măsurată din Health Connect: energia totală măsurată când sunt disponibile suficiente zile; altfel, media energiei active măsurate + BMR calculat prin formulă.</string>
+    <string name="settings_calc_tdee_formula">Sedentar: 1,2 · Ușor: 1,375 · Moderat: 1,465 · Activ: 1,55 · Foarte activ: 1,725 · Extrem de activ: 1,9</string>
+    <string name="settings_calc_target_name">Menținere și ajustarea obiectivului</string>
+    <string name="settings_calc_target_used">Menținerea pornește de la TDEE sau, când Energy Burn este activat, de la intervalul recent de energie măsurată din Health Connect în locul estimării formulei: energia totală măsurată când sunt disponibile suficiente zile; altfel, media energiei active măsurate + BMR calculat prin formulă. AI ajustează menținerea pe baza aportului înregistrat și a tendinței greutății, apoi aplică obiectivul: o rată săptămânală de schimbare a greutății devine un deficit caloric zilnic pentru slăbire sau un surplus pentru creștere.</string>
+    <string name="settings_calc_target_formula">1 lb de grăsime corporală ≈ 3.500 kcal · 1 kg ≈ 7.700 kcal\nRata săptămânală ÷ 7 se scade din menținere pentru slăbire sau se adaugă pentru creștere, stabilind obiectivul caloric zilnic.</string>
+    <string name="settings_calc_split_name">Obiective pentru proteine, carbohidrați și grăsimi</string>
+    <string name="settings_calc_split_used">AI potrivește proteinele, carbohidrații și grăsimile cu obiectivul caloric, folosind aceste referințe drept ghid. Proteinele folosesc rate în funcție de activitate, aplicate greutății corporale totale; grăsimile se stabilesc din greutate; carbohidrații completează restul. Poți bloca sau edita orice valoare în Configurări.</string>
+    <string name="settings_calc_split_formula">Proteine: aprox. 0,8–2,2 g per kg în funcție de nivelul de activitate, puțin mai mult la slăbire\nGrăsimi: aprox. 0,6 g per kg de greutate corporală\nCarbohidrați: caloriile rămase ÷ 4 kcal/g</string>
+    <string name="settings_calc_micro_name">Estimări pentru fiecare masă</string>
+    <string name="settings_calc_micro_used">Caloriile, macronutrienții, fibrele, zahărul, grăsimile saturate, colesterolul, cofeina, sodiul, potasiul și alte valori nutriționale detaliate pentru fiecare masă sunt estimări generate de AI din fotografia alimentului, transcrierea vocală sau descrierea text, folosind furnizorul de AI selectat.</string>
+    <string name="settings_calc_mifflin_citation">Mifflin MD, St Jeor ST, et al. (1990). „O nouă ecuație predictivă pentru consumul energetic în repaus la persoanele sănătoase.” Am J Clin Nutr 51(2):241–247.</string>
+    <string name="settings_calc_katch_citation">McArdle WD, Katch FI, Katch VL. Fiziologia exercițiului: nutriție, energie și performanță umană, ed. a 7-a. Lippincott Williams &amp; Wilkins, 2010.</string>
+    <string name="settings_calc_tdee_citation">Coeficienți PAL (nivel de activitate fizică) standard din consultarea comună a experților FAO/WHO/UNU privind necesarul energetic uman (2001). Sunt folosiți pe scară largă și de ACSM și în Ghidurile alimentare USDA.</string>
+    <string name="settings_calc_target_citation">Hall KD, et al. (2011). „Cuantificarea efectului dezechilibrului energetic asupra greutății corporale.” Lancet 378(9793):826–837. Regula clasică de 3.500 kcal per livră provine de la Wishnofsky M (1958), Am J Clin Nutr 6:542–546.</string>
+    <string name="settings_calc_split_citation">Morton RW, et al. (2018). „O analiză sistematică, meta-analiză și meta-regresie a efectului suplimentării cu proteine asupra creșterii masei musculare și forței induse de antrenamentul de rezistență.” Br J Sports Med 52(6):376–384.</string>
+    <string name="settings_calc_micro_citation">Estimările se bazează pe datele de antrenare ale modelului AI subiacent (USDA FoodData Central, etichetele producătorilor și literatura științifică). Precizia variază în funcție de aliment, vizibilitatea dimensiunii porției și modelul furnizorului. Verifică întotdeauna etichetele alimentelor pe care le înregistrezi frecvent.</string>
+    <string name="about_litert_notices">Notificări privind terții pentru LiteRT-LM</string>
+    <string name="about_litert_notices_load_error">Notificările privind terții pentru LiteRT-LM nu au putut fi încărcate.</string>
+    <string name="settings_model_source">Sursa modelului</string>
+    <string name="settings_model_license_format">Licență %1$s</string>
+    <string name="settings_model_requires_8gb">Necesită un dispozitiv cu 8 GB de RAM</string>
+    <string name="settings_model_low_ram_unsupported">Nu este acceptat pe dispozitivele cu memorie RAM redusă</string>
+    <string name="settings_model_processor_unsupported">Procesorul acestui dispozitiv nu este acceptat</string>
+    <string name="action_download">Descarcă</string>
+    <string name="ai_provider_local_gemma">Gemma 4 E2B (pe dispozitiv)</string>
+    <string name="ai_key_placeholder_local">Nu este necesară nicio cheie API</string>
+    <string name="speech_provider_local_whisper">Whisper Base (pe dispozitiv)</string>
+    <string name="speech_key_placeholder_local">Nu este necesară nicio cheie API</string>
+    <string name="speech_description_local_whisper">Whisper Base multilingv descărcat. Conținutul audio rămâne pe acest dispozitiv și nu este necesară nicio cheie API.</string>
+    <string name="settings_on_device_models">Modele pe dispozitiv</string>
+    <string name="settings_on_device_models_info">Modelele sunt descărcate în spațiul de stocare privat al aplicației și rulează fără a trimite fotografii, solicitări sau conținut audio către un server. Se aplică dimensiunea descărcării și termenii licenței modelului.</string>
+    <string name="settings_local_model_not_downloaded_format">%1$s · Nedescărcat</string>
+    <string name="settings_local_model_downloading_format">Se descarcă · %1$d%%</string>
+    <string name="settings_local_model_installed">Instalat · Gata offline</string>
+    <string name="settings_view_model_license">Vizualizați licența modelului</string>
+    <string name="settings_info_speech_fallback">Reîncearcă transcrierea atunci când furnizorul STT selectat pentru înregistrări audio eșuează. Acesta produce doar o transcriere; transcrierea urmează în continuare traseul normal al IA pentru text. Recunoașterea vocală nativă Android are deja propriul mecanism de recuperare.</string>
+    <string name="settings_speech_fallback_footer">Se utilizează dacă furnizorul selectat pentru înregistrări audio eșuează. Recunoașterea vocală nativă Android are deja propriul mecanism de recuperare.</string>
+    <string name="about_whisper_notices">Notificări terțe Whisper Base</string>
+    <string name="about_whisper_notices_load_error">Notificările terțe Whisper Base nu au putut fi încărcate.</string>
+    <string name="cd_remove_image">Elimină imaginea</string>
+    <string name="cd_save_photo">Salvează fotografia</string>
+    <string name="gallery_folder_name">Ayuvo</string>
+    <string name="photo_saved_to_gallery">Fotografie salvată</string>
+    <string name="photo_save_failed">Fotografia nu a putut fi salvată</string>
+    <string name="photo_save_permission_denied">Acces la fotografii refuzat</string>
+    <string name="settings_save_photos_to_gallery">Salvează în Fotografii</string>
+    <string name="settings_save_photos_to_gallery_subtitle">Salvează și fotografiile meselor în galerie la înregistrare</string>
+    <string name="settings_other_nutrients_note">Separat de obiectivele de calorii, proteine, carbohidrați și grăsimi.</string>
+</resources>

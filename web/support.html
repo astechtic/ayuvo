@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support — Ayuvo</title>
+<meta name="description" content="Get help with Ayuvo on iPhone and Android: contact support, troubleshooting for AI providers, Health Connect and Apple Health, exports, backups and deleting your data.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://ayuvo-health.web.app/support">
+<meta name="theme-color" content="#FF375F">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ayuvo">
+<meta property="og:url" content="https://ayuvo-health.web.app/support">
+<meta property="og:title" content="Support — Ayuvo">
+<meta property="og:description" content="Contact support and find answers about AI providers, Health data, backups and deleting your data.">
+<meta property="og:image" content="https://ayuvo-health.web.app/assets/opengraph.jpg?v=1">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/brand/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://ayuvo-health.web.app/support#webpage",
+  "url": "https://ayuvo-health.web.app/support",
+  "name": "Support — Ayuvo",
+  "inLanguage": "en",
+  "isPartOf": { "@id": "https://ayuvo-health.web.app/#website" }
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sr-only" aria-hidden="true" focusable="false">
+  <symbol id="i-mail" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></symbol>
+</svg>
+<nav class="nav scrolled" id="nav">
+  <div class="container">
+    <a href="/" class="nav-brand"><img src="assets/brand/ayuvo-mark.svg" alt="" width="30" height="30"><span>Ayuvo</span></a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+    <label for="nav-toggle" class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></label>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/#features">Features</a>
+      <a href="/#faq">FAQ</a>
+      <a href="support" class="active">Support</a>
+      <a href="privacy">Privacy</a>
+      <a href="terms">Terms</a>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="container">
+    <div class="page-content">
+      <h1>Support</h1>
+      <span class="page-date">Ayuvo for iPhone and Android</span>
+
+      <div class="summary">
+        <p><strong>Email us.</strong> Every question, bug or idea goes to a person. Replies usually arrive within a few days.</p>
+        <p><a class="mail-btn" href="mailto:yaaratech@gmail.com?subject=Ayuvo%20support"><svg class="icon"><use href="#i-mail"/></svg> yaaratech@gmail.com</a></p>
+      </div>
+
+      <h2 id="before-you-write">Before you write</h2>
+      <p>The fastest way is <strong>Settings → Help &amp; Support → Contact Support</strong> inside the app: it opens an email with the app version, build, OS version, device and language already filled in. If you write from elsewhere, please include:</p>
+      <ul>
+        <li>Platform and app version (Settings → App &amp; Updates)</li>
+        <li>Which AI or speech provider you use, and the model, if the issue is about analysis or the coach</li>
+        <li>What you did, what you expected, and what happened instead — a screenshot helps</li>
+      </ul>
+
+      <h2 id="faq">Frequently asked</h2>
+      <div class="card-grid">
+        <div class="card"><h3>Is Ayuvo free?</h3><p>Yes. No subscriptions, credits or in-app purchases. AI features use an API key you create with a provider; any usage is billed by that provider, never by Ayuvo.</p></div>
+        <div class="card"><h3>Which AI can I use?</h3><p>Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones Gemma 4 E2B runs on-device; iPhones can use Apple Intelligence as a fallback.</p></div>
+        <div class="card"><h3>Where is my data?</h3><p>In the app's storage on your phone. There is no Ayuvo account or server. Data leaves the device only when you act — see the <a href="privacy">Privacy Policy</a>.</p></div>
+        <div class="card"><h3>Does the coach see my health data?</h3><p>Only while "Let Coach use my health data" is on. It is shown at every connect step and in Settings → Health &amp; Data.</p></div>
+        <div class="card"><h3>How do backups work?</h3><p>Off by default. iPhone uses your private iCloud database, Android your Google Drive app folder. Backups never include the health hub database or coach chat.</p></div>
+        <div class="card"><h3>Which languages?</h3><p>18: English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian. The app follows your phone's language.</p></div>
+      </div>
+
+      <h2 id="troubleshooting">Troubleshooting</h2>
+      <h3>"401", "403" or "invalid key" from the AI provider</h3>
+      <p>The key is missing, mistyped or belongs to another product. Open Settings → AI Providers, paste the key again and make sure the provider and model match the key. Most providers show usage and limits in their own console.</p>
+      <h3>"429" or "quota exceeded"</h3>
+      <p>Your provider's free tier or rate limit is exhausted. Ayuvo retries transient overloads automatically; a persistent 429 means the provider account needs credit or a slower pace. A fallback provider can be configured in Settings.</p>
+      <h3>Health Connect is missing or out of date (Android)</h3>
+      <p>Health Connect is part of Android 14+ and a Play Store app on Android 9–13. The Health tab's Connect button opens the right screen; if it says "not installed", install or update Health Connect from Google Play, then grant the categories you want Ayuvo to read.</p>
+      <h3>Apple Health shows nothing (iPhone)</h3>
+      <p>Open the Health app → Sharing → Apps &amp; Services → Ayuvo and turn on the categories you want to share. Reads that were denied show as "Nothing shared yet" in Ayuvo. On iOS 27 a "past 30 days" grant limits history; grant full history from the same screen.</p>
+      <h3>Ollama on your local network</h3>
+      <p>Enter the base URL of your Ollama server (for example <code>http://192.168.1.20:11434/v1</code>) under Settings → AI Providers → Ollama. Plain HTTP is allowed only for local-network addresses; everything else must use HTTPS. iPhone will ask for Local Network permission once.</p>
+      <h3>On-device models and storage</h3>
+      <p>Gemma 4 E2B is about 2.6 GB and Whisper Base about 150 MB. Both download only when you tap Download and can be removed from the same screen to free space.</p>
+
+      <h2 id="your-data">Your data</h2>
+      <ul>
+        <li><strong>Export:</strong> Settings → Data Management exports the food diary (JSON, CSV or Markdown) and the Health hub (an <code>ayuvo-health-data</code> zip).</li>
+        <li><strong>Delete everything:</strong> Settings → Delete All Data wipes the app's local storage on this device. It does not delete Apple Health / Health Connect samples, nor backups you keep in iCloud or Google Drive (delete those from the same Settings screen).</li>
+        <li><strong>Revoke Health access:</strong> iPhone: Settings → Health → Data Access &amp; Devices → Ayuvo. Android: Health Connect → App permissions → Ayuvo.</li>
+        <li><strong>Turn off cloud backup:</strong> Settings → Data Management → Cloud Backup, then "Delete cloud backup" if you want the stored archive gone too.</li>
+      </ul>
+
+      <h2 id="legal">Legal</h2>
+      <p><a href="privacy">Privacy Policy</a> · <a href="terms">Terms of Service</a></p>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="footer-brand-mark"><img src="assets/brand/ayuvo-mark.svg" alt="" width="30" height="30"><span>Ayuvo</span></a>
+        <p>A private, all-in-one health companion for iPhone and Android.</p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><ul><li><a href="/#features">Features</a></li><li><a href="/#how">How it works</a></li><li><a href="/#faq">FAQ</a></li><li><a href="support">Support</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="privacy">Privacy Policy</a></li><li><a href="terms">Terms of Service</a></li><li><a href="sitemap.xml">Sitemap</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Yaara Tech</span><span>No cookies, no trackers</span></div>
+  </div>
+</footer>
+<script src="site.js?v=1"></script>
+</body>
+</html>

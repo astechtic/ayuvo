@@ -1,0 +1,120 @@
+THIRD-PARTY NOTICES
+
+Ayuvo bundles or uses the following third-party data, media and assets. Their
+licences and attributions are reproduced here as required by their authors.
+
+--------------------------------------------------------------------------------
+1. Exercise library data — exercises-dataset
+--------------------------------------------------------------------------------
+Exercise names, categories, body parts, equipment, targets, muscle groups and
+instructions come from https://github.com/hasaneyldrm/exercises-dataset and are
+bundled in the app.
+
+MIT License
+
+Copyright (c) 2026 Hasan Emir Yıldırım
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation and data files (the "Software"),
+to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+2. Exercise images and animations — Gym visual
+--------------------------------------------------------------------------------
+Exercise thumbnails and animated demonstrations are © Gym visual —
+https://gymvisual.com/ — and are streamed at runtime from the dataset's
+repository; they are not bundled in the app. Their use is governed by Gym
+visual's Terms & Conditions of Use
+(https://gymvisual.com/content/3-terms-and-conditions-of-use), not by the MIT
+License above. Every exercise detail screen carries the attribution
+"© Gym visual — https://gymvisual.com/".
+
+--------------------------------------------------------------------------------
+3. Barcode product data — Open Food Facts
+--------------------------------------------------------------------------------
+Barcode lookups query the Open Food Facts database
+(https://world.openfoodfacts.org) live, one product per scanned barcode; the
+database is not bundled. Open Food Facts data is made available under the Open
+Database License (ODbL) v1.0 — https://opendatacommons.org/licenses/odbl/1-0/ —
+by a community of contributors.
+
+--------------------------------------------------------------------------------
+4. Muscle glyphs — react-muscle-highlighter
+--------------------------------------------------------------------------------
+The muscle-filter icons in the Workouts tab are cropped/rasterised derivatives
+of the SVG muscle paths from
+https://github.com/soroojshehryar/react-muscle-highlighter 1.2.0.
+
+MIT License
+
+Copyright (c) 2024 My Muscle Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+--------------------------------------------------------------------------------
+5. Provider logo assets — Lobe Icons and Simple Icons
+--------------------------------------------------------------------------------
+The monochrome AI-provider logos are sourced from the projects below. All
+provider names and logos remain trademarks of their respective owners.
+
+Lobe Icons 1.94.0 — https://github.com/lobehub/lobe-icons
+
+MIT License
+
+Copyright (c) 2023 LobeHub
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Simple Icons 16.21.0 — https://github.com/simple-icons/simple-icons
+
+The Android, Google Gemini and Deepgram silhouettes are distributed by Simple
+Icons under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+--------------------------------------------------------------------------------
+6. On-device models
+--------------------------------------------------------------------------------
+LiteRT-LM and Whisper Base ship their own notice files, available from
+Settings → Legal.

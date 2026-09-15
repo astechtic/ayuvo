@@ -1,0 +1,14 @@
+---
+description: Ayuvo brand, privacy wording and removed-feature guardrails for every edit in this repo
+alwaysApply: true
+---
+
+# Ayuvo brand rules
+
+- The product is **Ayuvo** (mark: `brand/ayuvo-mark.svg`; default accent "Rose" #FF375F). Package/bundle id family `com.ayuvo.health`; site `https://ayuvo-health.web.app` (`/privacy`, `/terms`, `/support`).
+- Never reintroduce the previous brand or its owner: no "Fud AI", "fudai", "fud-ai", developer names, social handles, Ko-fi, Product Hunt, Discord, Udyam or ACE references. The only permitted appearance is the retained MIT copyright line in `LICENSE` and the in-app Licenses screens.
+- Removed features stay removed: pricing/subscriptions/credits/tips, hosted AI relay, Weekly Challenge, meal-share links and deep links, GitHub issue forms, OpenSSF badges, star history, Cloudflare Worker.
+- Placeholders that must be filled before release (never invent values): `LEGAL_ENTITY_NAME`, `LEGAL_ADDRESS`, `SUPPORT_EMAIL`, `GOVERNING_LAW`, `EFFECTIVE_DATE`, `APP_STORE_URL`, `PLAY_STORE_URL`, `AYUVO_APPSTORE_ID`, `AYUVO_TEAM_ID`, `FIREBASE_PROJECT_ID`.
+- Privacy wording: never claim data "never leaves the device"; say "kept on this device, never stored in iCloud/Drive backup, shared with your AI provider only through Coach". Health data is never in cloud backups.
+- Allowed outbound traffic from the apps: the user's BYOK AI/STT providers, Open Food Facts (barcode number), raw.githubusercontent.com (exercise media, © Gym visual attribution required), Hugging Face (model downloads), the user's own iCloud/Google Drive backup, Apple/Google store update checks and review prompts. Nothing else.
+- Icons and marketing rasters are generated (`scripts/brand/render_icons.py`); never hand-edit rendered PNGs.

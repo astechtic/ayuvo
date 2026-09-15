@@ -1,0 +1,220 @@
+<resources>
+    <!-- Health Data hub (local mirror of Health Connect). English-only by convention; keys are health_*. -->
+
+    <!-- Home strip -->
+    <string name="health_home_section">Health</string>
+    <string name="health_home_see_all">See All</string>
+    <string name="health_home_all_data">All Health Data</string>
+    <string name="health_home_connect_title">Connect Health Connect</string>
+    <string name="health_home_connect_subtitle">Steps, heart, sleep and more on this device</string>
+    <string name="health_home_grant_access">Grant access</string>
+    <string name="health_home_nothing_yet">Nothing shared yet</string>
+    <string name="health_home_importing">Importing history…</string>
+    <string name="health_home_today">Today</string>
+    <string name="health_home_last_night">Last night</string>
+
+    <!-- Hub -->
+    <string name="health_hub_title">Health Data</string>
+    <string name="health_back_hub">Health Data</string>
+    <string name="health_hub_subtitle_last_synced">Last synced %1$s · %2$s</string>
+    <string name="health_hub_subtitle_never">Not synced yet</string>
+    <string name="health_hub_subtitle_syncing">Syncing…</string>
+    <string name="health_hub_subtitle_importing">Importing history… %1$d–%2$d · %3$d%%</string>
+    <string name="health_hub_subtitle_busy">Health Connect is busy — will retry later</string>
+    <string name="health_hub_subtitle_limited">History before %1$s isn\'t available</string>
+    <string name="health_hub_grant_history">Grant history access</string>
+    <string name="health_hub_subtitle_permissions_reset">Permissions were reset or restored from another device</string>
+    <string name="health_hub_regrant">Grant access again</string>
+    <string name="health_hub_more">More</string>
+    <string name="health_hub_connect_title">Connect to Health Connect</string>
+    <string name="health_hub_connect_body">Mirror every data type your phone and watch share — steps, heart rate, sleep, blood pressure and more — into a private database kept on this device. It is never stored in Drive backup and is shared with your AI provider only through Coach, when you allow it.</string>
+    <string name="health_hub_connect_action">Connect</string>
+    <string name="health_hub_coach_consent_title">Let Coach use my health data</string>
+    <string name="health_hub_coach_consent_subtitle">Sent to your AI provider only when you ask Coach. Change this any time in Settings › Health &amp; Data.</string>
+    <string name="health_hub_unavailable_title">Health Connect isn\'t available</string>
+    <string name="health_hub_open_play_store">Get Health Connect</string>
+    <string name="health_hub_no_data_title">Nothing shared yet</string>
+    <string name="health_hub_no_data_body">Data appears here after your watch or phone syncs to Health Connect.</string>
+    <string name="health_hub_allow_category">Allow %1$s access</string>
+    <string name="health_hub_requires_android_14">Requires Android 14 or newer</string>
+    <string name="health_hub_show_all_types">Show all data types</string>
+    <string name="health_hub_hide_empty_types">Hide empty data types</string>
+    <string name="health_hub_storage_used">Storage used: %1$s</string>
+    <string name="health_hub_menu_export">Export Health Data</string>
+    <string name="health_hub_menu_import">Import Health Data</string>
+    <string name="health_hub_menu_edit_tiles">Edit Home tiles</string>
+    <string name="health_hub_menu_manage_access">Manage Health Connect access</string>
+    <string name="health_hub_read_only_footer">Kept on this device, never stored in Drive backup, shared with your AI provider only through Coach.</string>
+    <string name="health_hub_edit_tiles_title">Home tiles</string>
+    <string name="health_hub_edit_tiles_body">Choose up to %1$d data types for the Health strip on Home.</string>
+    <string name="health_hub_rows_hidden">%1$d more data types without data</string>
+    <string name="health_relative_just_now">Just now</string>
+    <plurals name="health_relative_minutes">
+        <item quantity="one">%d min ago</item>
+        <item quantity="other">%d min ago</item>
+    </plurals>
+    <plurals name="health_relative_hours">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+    <plurals name="health_relative_days">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+    <plurals name="health_types_count">
+        <item quantity="one">%d data type</item>
+        <item quantity="other">%d data types</item>
+    </plurals>
+    <plurals name="health_records_count">
+        <item quantity="one">%d record</item>
+        <item quantity="other">%d records</item>
+    </plurals>
+
+    <!-- Detail -->
+    <string name="health_detail_total">TOTAL</string>
+    <string name="health_detail_average">AVERAGE</string>
+    <string name="health_detail_range">RANGE</string>
+    <string name="health_detail_latest">LATEST</string>
+    <string name="health_detail_records">RECORDS</string>
+    <string name="health_range_day">D</string>
+    <string name="health_range_week">W</string>
+    <string name="health_range_month">M</string>
+    <string name="health_range_six_months">6M</string>
+    <string name="health_range_year">Y</string>
+    <string name="health_detail_previous">Previous period</string>
+    <string name="health_detail_next">Next period</string>
+    <string name="health_detail_show_all_data">Show All Data</string>
+    <string name="health_detail_sources">Data Sources &amp; Access</string>
+    <string name="health_detail_sources_body">Apps that write this data type to Health Connect. Manage what each app may share in Health Connect.</string>
+    <string name="health_detail_options">Options</string>
+    <string name="health_detail_unit">Unit</string>
+    <string name="health_detail_show_on_home">Show on Home</string>
+    <string name="health_detail_export_csv">Export CSV</string>
+    <string name="health_detail_no_data_range">No data in this range</string>
+    <string name="health_detail_chart_summary">%1$s chart, %2$d points, %3$s</string>
+    <string name="health_record_source">Source</string>
+    <string name="health_record_device">Device</string>
+    <string name="health_record_method">Recording method</string>
+    <string name="health_record_id">Record ID</string>
+    <string name="health_record_time">Time</string>
+    <string name="health_record_value">Value</string>
+    <string name="health_record_origin_import">Imported from an Ayuvo health export</string>
+    <string name="health_method_manual">Manual entry</string>
+    <string name="health_method_auto">Automatically recorded</string>
+    <string name="health_method_active">Actively recorded</string>
+    <string name="health_method_unknown">Unknown</string>
+    <string name="health_source_own">Ayuvo</string>
+    <string name="health_load_more">Load more</string>
+    <string name="health_sleep_bedtime">Bedtime</string>
+    <string name="health_sleep_wake">Wake</string>
+    <string name="health_unit_kg">kg</string>
+    <string name="health_unit_lb">lb</string>
+    <string name="health_unit_cm">cm</string>
+    <string name="health_unit_in">in</string>
+    <string name="health_unit_mmol_l">mmol/L</string>
+    <string name="health_unit_mg_dl">mg/dL</string>
+
+    <!-- Settings › Health & Data -->
+    <string name="health_settings_all_data">All Health Data</string>
+    <string name="health_settings_all_data_value">Steps, heart, sleep &amp; more</string>
+    <string name="health_settings_cta_title">All Health Data — connect steps, heart &amp; sleep</string>
+    <string name="health_settings_cta_subtitle">Mirror every type your watch shares, kept on this device</string>
+    <string name="health_settings_cta_dismiss">Dismiss</string>
+    <string name="health_settings_coach_toggle">Let Coach use health data</string>
+    <string name="health_settings_coach_subtitle">Shared with your AI provider only through Coach</string>
+    <string name="health_settings_clear">Clear synced health data</string>
+    <string name="health_settings_clear_title">Clear synced health data?</string>
+    <string name="health_settings_clear_message">Removes the local mirror of your Health Connect data from this device. Your data in Health Connect is untouched and syncs again while the hub is on.</string>
+    <string name="health_settings_connected_read_only">Connected · read only</string>
+    <string name="health_settings_export">Export Health Data</string>
+    <string name="health_settings_import">Import Health Data</string>
+
+    <!-- Export / import (ayuvo-health-data v1) -->
+    <string name="health_export_body">Creates a zip of every mirrored record in the platform-neutral Ayuvo health format. It moves your data between phones and to iPhone; it is not stored in Drive backup.</string>
+    <string name="health_export_share">Share</string>
+    <string name="health_export_save">Save to file</string>
+    <string name="health_export_done">Exported %1$d records.</string>
+    <string name="health_import_reading">Reading export…</string>
+    <string name="health_import_platform">Exported from</string>
+    <string name="health_import_records">Records</string>
+    <string name="health_import_types">Data types</string>
+    <string name="health_import_unknown_types">Unknown data types</string>
+    <string name="health_import_unit_mismatch">Records with a different unit (skipped)</string>
+    <string name="health_import_checksum_warning">Checksums do not match — the file may have been altered.</string>
+    <string name="health_import_modes_body">Merge keeps everything on this phone and adds or updates records by id (newer wins, deletions are never undone). Replace all removes the current mirror first.</string>
+    <string name="health_import_merge">Merge</string>
+    <string name="health_import_replace">Replace all</string>
+    <string name="health_import_replace_title">Replace all synced health data?</string>
+    <string name="health_import_replace_message">The current mirror on this phone is removed before the export is imported. Health Connect itself is untouched and syncs again afterwards.</string>
+    <string name="health_import_result">Imported %1$d records (%2$d skipped).</string>
+
+    <!-- Onboarding -->
+    <string name="health_onboarding_feature_vitals">Heart, sleep &amp; vitals</string>
+
+    <!-- Coach -->
+    <string name="coach_chip_sleep_week" translatable="false">How did I sleep this week?</string>
+
+    <!-- Categories (Apple Health order) -->
+    <string name="health_category_activity">Activity</string>
+    <string name="health_category_body">Body Measurements</string>
+    <string name="health_category_cycle_tracking">Cycle Tracking</string>
+    <string name="health_category_hearing">Hearing</string>
+    <string name="health_category_heart">Heart</string>
+    <string name="health_category_mental_wellbeing">Mental Wellbeing</string>
+    <string name="health_category_mobility">Mobility</string>
+    <string name="health_category_nutrition">Nutrition</string>
+    <string name="health_category_respiratory">Respiratory</string>
+    <string name="health_category_sleep">Sleep</string>
+    <string name="health_category_symptoms">Symptoms</string>
+    <string name="health_category_vitals">Vitals</string>
+    <string name="health_category_other">Other Data</string>
+
+    <!-- Data types readable on Android (iOS-only and raw ids fall back to a humanised slug) -->
+    <string name="health_type_steps">Steps</string>
+    <string name="health_type_distance">Walking + Running Distance</string>
+    <string name="health_type_wheelchair_pushes">Wheelchair Pushes</string>
+    <string name="health_type_floors_climbed">Floors Climbed</string>
+    <string name="health_type_elevation_gained">Elevation Gained</string>
+    <string name="health_type_active_energy">Active Energy</string>
+    <string name="health_type_total_energy">Total Energy</string>
+    <string name="health_type_workout">Workouts</string>
+    <string name="health_type_planned_workout">Planned Workouts</string>
+    <string name="health_type_speed">Speed</string>
+    <string name="health_type_power">Power</string>
+    <string name="health_type_cycling_cadence">Cycling Cadence</string>
+    <string name="health_type_step_cadence">Step Cadence</string>
+    <string name="health_type_weight">Weight</string>
+    <string name="health_type_height">Height</string>
+    <string name="health_type_body_fat">Body Fat Percentage</string>
+    <string name="health_type_lean_body_mass">Lean Body Mass</string>
+    <string name="health_type_bone_mass">Bone Mass</string>
+    <string name="health_type_body_water_mass">Body Water Mass</string>
+    <string name="health_type_basal_metabolic_rate">Basal Metabolic Rate</string>
+    <string name="health_type_heart_rate">Heart Rate</string>
+    <string name="health_type_resting_heart_rate">Resting Heart Rate</string>
+    <string name="health_type_hrv_rmssd">Heart Rate Variability</string>
+    <string name="health_type_blood_pressure">Blood Pressure</string>
+    <string name="health_type_vo2_max">VO₂ Max</string>
+    <string name="health_type_sleep">Sleep</string>
+    <string name="health_type_blood_glucose">Blood Glucose</string>
+    <string name="health_type_body_temperature">Body Temperature</string>
+    <string name="health_type_skin_temperature">Skin Temperature</string>
+    <string name="health_type_respiratory_rate">Respiratory Rate</string>
+    <string name="health_type_blood_oxygen">Blood Oxygen</string>
+    <string name="health_type_hydration">Water</string>
+    <string name="health_type_nutrition">Nutrition</string>
+    <string name="health_type_menstrual_flow">Menstruation</string>
+    <string name="health_type_menstruation_period">Menstrual Period</string>
+    <string name="health_type_intermenstrual_bleeding">Spotting</string>
+    <string name="health_type_ovulation_test">Ovulation Test Result</string>
+    <string name="health_type_cervical_mucus">Cervical Mucus Quality</string>
+    <string name="health_type_sexual_activity">Sexual Activity</string>
+    <string name="health_type_basal_body_temperature">Basal Body Temperature</string>
+    <string name="health_type_mindfulness_session">Mindful Minutes</string>
+    <string name="health_type_hrv_sdnn">Heart Rate Variability (SDNN)</string>
+    <string name="health_type_resting_energy">Resting Energy</string>
+    <string name="health_type_exercise_minutes">Exercise Minutes</string>
+    <string name="health_type_stand_minutes">Stand Minutes</string>
+    <string name="health_type_bmi">Body Mass Index</string>
+    <string name="health_type_walking_heart_rate_average">Walking Heart Rate Average</string>
+</resources>

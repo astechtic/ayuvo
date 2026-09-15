@@ -1,0 +1,1757 @@
+{
+  "android/app/src/main/res/drawable-nodpi/ic_logo.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_blue.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_green.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_mint.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_orange.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_purple.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_red.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/drawable-nodpi/ic_logo_teal.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_baby_pink.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_baby_pink_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_baby_pink_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_blue.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_blue_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_blue_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_coral.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_coral_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_coral_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_graphite.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_graphite_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_graphite_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_green.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_green_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_green_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_indigo.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_indigo_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_indigo_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_lavender.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_lavender_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_lavender_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_lime.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_lime_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_lime_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_mint.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_mint_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_mint_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_mocha_brown.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_mocha_brown_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_mocha_brown_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_orange.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_orange_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_orange_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_purple.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_purple_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_purple_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_red.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_red_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_red_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_rose_gold.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_rose_gold_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_rose_gold_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_sky_cyan.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_sky_cyan_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_sky_cyan_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_teal.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_teal_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_teal_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_yellow.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_yellow_foreground.png": [
+    162,
+    162,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher_yellow_round.png": [
+    72,
+    72,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_baby_pink.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_baby_pink_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_baby_pink_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_blue.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_blue_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_blue_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_coral.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_coral_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_coral_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_graphite.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_graphite_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_graphite_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_green.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_green_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_green_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_indigo.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_indigo_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_indigo_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_lavender.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_lavender_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_lavender_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_lime.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_lime_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_lime_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_mint.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_mint_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_mint_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_mocha_brown.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_mocha_brown_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_mocha_brown_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_orange.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_orange_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_orange_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_purple.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_purple_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_purple_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_red.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_red_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_red_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_rose_gold.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_rose_gold_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_rose_gold_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_sky_cyan.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_sky_cyan_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_sky_cyan_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_teal.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_teal_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_teal_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_yellow.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_yellow_foreground.png": [
+    108,
+    108,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher_yellow_round.png": [
+    48,
+    48,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_baby_pink.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_baby_pink_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_baby_pink_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_blue.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_blue_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_blue_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_coral.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_coral_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_coral_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_graphite.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_graphite_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_graphite_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_green.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_green_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_green_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_indigo.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_indigo_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_indigo_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_lavender.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_lavender_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_lavender_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_lime.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_lime_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_lime_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_mint.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_mint_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_mint_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_mocha_brown.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_mocha_brown_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_mocha_brown_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_orange.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_orange_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_orange_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_purple.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_purple_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_purple_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_red.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_red_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_red_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_rose_gold.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_rose_gold_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_rose_gold_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_sky_cyan.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_sky_cyan_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_sky_cyan_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_teal.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_teal_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_teal_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_yellow.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_yellow_foreground.png": [
+    216,
+    216,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher_yellow_round.png": [
+    96,
+    96,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_baby_pink.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_baby_pink_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_baby_pink_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_blue.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_blue_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_blue_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_coral.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_coral_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_coral_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_graphite.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_graphite_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_graphite_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_green.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_green_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_green_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_indigo.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_indigo_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_indigo_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_lavender.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_lavender_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_lavender_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_lime.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_lime_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_lime_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_mint.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_mint_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_mint_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_mocha_brown.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_mocha_brown_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_mocha_brown_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_orange.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_orange_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_orange_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_purple.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_purple_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_purple_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_red.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_red_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_red_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_rose_gold.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_rose_gold_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_rose_gold_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_sky_cyan.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_sky_cyan_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_sky_cyan_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_teal.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_teal_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_teal_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_yellow.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_yellow_foreground.png": [
+    324,
+    324,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_yellow_round.png": [
+    144,
+    144,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_baby_pink.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_baby_pink_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_baby_pink_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_blue.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_blue_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_blue_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_coral.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_coral_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_coral_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_graphite.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_graphite_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_graphite_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_green.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_green_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_green_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_indigo.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_indigo_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_indigo_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_lavender.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_lavender_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_lavender_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_lime.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_lime_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_lime_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_mint.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_mint_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_mint_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_mocha_brown.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_mocha_brown_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_mocha_brown_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_orange.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_orange_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_orange_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_purple.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_purple_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_purple_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_red.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_red_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_red_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_rose_gold.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_rose_gold_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_rose_gold_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_sky_cyan.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_sky_cyan_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_sky_cyan_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_teal.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_teal_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_teal_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_yellow.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_yellow_foreground.png": [
+    432,
+    432,
+    "RGBA"
+  ],
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_yellow_round.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "ios/FudAIWatchApp/Assets.xcassets/AppIcon.appiconset/appicon.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIcon.appiconset/appicon-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIcon.appiconset/appicon-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIcon.appiconset/appicon.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconBabyPink.appiconset/appicon-baby-pink-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconBabyPink.appiconset/appicon-baby-pink-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconBabyPink.appiconset/appicon-baby-pink.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconBlue.appiconset/appicon-blue-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconBlue.appiconset/appicon-blue-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconBlue.appiconset/appicon-blue.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconCoral.appiconset/appicon-coral-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconCoral.appiconset/appicon-coral-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconCoral.appiconset/appicon-coral.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconGraphite.appiconset/appicon-graphite-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconGraphite.appiconset/appicon-graphite-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconGraphite.appiconset/appicon-graphite.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconGreen.appiconset/appicon-green-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconGreen.appiconset/appicon-green-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconGreen.appiconset/appicon-green.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconIndigo.appiconset/appicon-indigo-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconIndigo.appiconset/appicon-indigo-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconIndigo.appiconset/appicon-indigo.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconLavender.appiconset/appicon-lavender-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconLavender.appiconset/appicon-lavender-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconLavender.appiconset/appicon-lavender.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconLime.appiconset/appicon-lime-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconLime.appiconset/appicon-lime-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconLime.appiconset/appicon-lime.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconMint.appiconset/appicon-mint-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconMint.appiconset/appicon-mint-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconMint.appiconset/appicon-mint.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconMochaBrown.appiconset/appicon-mocha-brown-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconMochaBrown.appiconset/appicon-mocha-brown-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconMochaBrown.appiconset/appicon-mocha-brown.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconOrange.appiconset/appicon-orange-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconOrange.appiconset/appicon-orange-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconOrange.appiconset/appicon-orange.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconPurple.appiconset/appicon-purple-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconPurple.appiconset/appicon-purple-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconPurple.appiconset/appicon-purple.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconRed.appiconset/appicon-red-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconRed.appiconset/appicon-red-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconRed.appiconset/appicon-red.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconRoseGold.appiconset/appicon-rose-gold-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconRoseGold.appiconset/appicon-rose-gold-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconRoseGold.appiconset/appicon-rose-gold.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconSkyCyan.appiconset/appicon-sky-cyan-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconSkyCyan.appiconset/appicon-sky-cyan-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconSkyCyan.appiconset/appicon-sky-cyan.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconTeal.appiconset/appicon-teal-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconTeal.appiconset/appicon-teal-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconTeal.appiconset/appicon-teal.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconYellow.appiconset/appicon-yellow-dark.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconYellow.appiconset/appicon-yellow-tinted.png": [
+    1024,
+    1024,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/AppIconYellow.appiconset/appicon-yellow.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "ios/calorietracker/Assets.xcassets/onboardingLogo.imageset/logo@2x.png": [
+    600,
+    600,
+    "RGBA"
+  ],
+  "ios/calorietracker/Assets.xcassets/onboardingLogo.imageset/logo@3x.png": [
+    900,
+    900,
+    "RGBA"
+  ],
+  "marketing/appstore/icon-1024.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "marketing/appstore/watch-icon-1024.png": [
+    1024,
+    1024,
+    "RGB"
+  ],
+  "marketing/logo/ayuvo-logo-2048-transparent.png": [
+    2048,
+    2048,
+    "RGBA"
+  ],
+  "marketing/logo/ayuvo-logo-2048.png": [
+    2048,
+    2048,
+    "RGB"
+  ],
+  "marketing/logo/ayuvo-mono-ink.png": [
+    2048,
+    2048,
+    "RGB"
+  ],
+  "marketing/logo/ayuvo-mono-white.png": [
+    2048,
+    2048,
+    "RGBA"
+  ],
+  "marketing/play/developer-header-4096x2304.jpg": [
+    4096,
+    2304,
+    "RGB"
+  ],
+  "marketing/play/feature-graphic-1024x500.png": [
+    1024,
+    500,
+    "RGB"
+  ],
+  "marketing/play/icon-512.png": [
+    512,
+    512,
+    "RGB"
+  ],
+  "marketing/proofs/mark-sizes.png": [
+    1728,
+    652,
+    "RGB"
+  ],
+  "marketing/web/opengraph-1200x630.jpg": [
+    1200,
+    630,
+    "RGB"
+  ],
+  "web/assets/brand/apple-touch-icon.png": [
+    180,
+    180,
+    "RGB"
+  ],
+  "web/assets/brand/favicon-32.png": [
+    32,
+    32,
+    "RGBA"
+  ],
+  "web/assets/brand/logo-192.png": [
+    192,
+    192,
+    "RGBA"
+  ],
+  "web/assets/brand/logo-512.png": [
+    512,
+    512,
+    "RGBA"
+  ],
+  "web/assets/opengraph.jpg": [
+    1200,
+    630,
+    "RGB"
+  ]
+}

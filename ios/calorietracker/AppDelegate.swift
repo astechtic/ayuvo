@@ -1,0 +1,64 @@
+import FirebaseCore
+import UIKit
+import UserNotifications
+
+/// Minimal app delegate, attached via `@UIApplicationDelegateAdaptor`: configures Firebase core
+/// (no Analytics or other data-collecting products) and handles local notifications: present the "Update Available" banner while the app is foreground (the update
+/// check runs at launch) and open the App Store when it's tapped.
+final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        FirebaseApp.configure()
+        UNUserNotificationCenter.current().delegate = self
+        QuickActionSettings.registerApplicationShortcuts()
+        WatchSnapshotSync.shared.activate()
+        return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let configuration = UISceneConfiguration(
+            name: "Default Configuration",
+            sessionRole: connectingSceneSession.role
+        )
+        configuration.delegateClass = SceneDelegate.self
+        return configuration
+    }
+
+    // Retained for iOS versions/configurations that still deliver shortcuts to the app delegate.
+    func application(
+        _ application: UIApplication,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        completionHandler(QuickActionCoordinator.handle(shortcutItem))
+    }
+
+    /// Show the update banner even when the app is in the foreground; leave the scheduled reminders
+    /// to their default (no foreground interruption) so this changes nothing for them.
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        if notification.request.identifier == NotificationManager.appUpdateNotificationID {
+            return [.banner, .sound, .list]
+        }
+        return []
+    }
+
+    /// Open the App Store listing when the update notification is tapped.
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        let userInfo = response.notification.request.content.userInfo
+        if let urlString = userInfo["updateURL"] as? String, let url = URL(string: urlString) {
+            await UIApplication.shared.open(url)
+        }
+    }
+}

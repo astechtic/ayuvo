@@ -1,0 +1,15 @@
+package com.ayuvo.health.models
+
+import com.ayuvo.health.services.ai.FoodAnalysis
+import kotlinx.serialization.Serializable
+import java.time.Instant
+
+@Serializable
+data class PendingFoodAnalysisDraft(
+    val analysis: FoodAnalysis,
+    val imageFilename: String? = null,
+    val additionalImageFilenames: List<String> = emptyList(),
+    val source: FoodSource? = null,
+    @Serializable(with = InstantSerializer::class)
+    val createdAt: Instant = Instant.now()
+)

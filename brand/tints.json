@@ -1,0 +1,26 @@
+{
+  "$comment": "Accent tints shared by the iOS AppThemeColor (Views/Theme.swift) and the Android AppThemeColor (ui/theme/Color.kt). `key` is the persisted theme key, `android_suffix` is the launcher-icon resource suffix (empty = default icon), `ios_appiconset` is the asset-catalog set name. Gradients run 135deg from `start` (top-left) to `end` (bottom-right).",
+  "default": "rose",
+  "background": "#0F1412",
+  "tints": [
+    {"key": "rose",       "display": "Rose",        "android_suffix": "",            "ios_appiconset": "AppIcon",           "start": "#FF375F", "end": "#FF6B8A"},
+    {"key": "red",        "display": "Red",         "android_suffix": "red",         "ios_appiconset": "AppIconRed",        "start": "#FF3B30", "end": "#FF6961"},
+    {"key": "orange",     "display": "Orange",      "android_suffix": "orange",      "ios_appiconset": "AppIconOrange",     "start": "#FF9500", "end": "#FFB340"},
+    {"key": "green",      "display": "Green",       "android_suffix": "green",       "ios_appiconset": "AppIconGreen",      "start": "#34C759", "end": "#62D46F"},
+    {"key": "mint",       "display": "Mint",        "android_suffix": "mint",        "ios_appiconset": "AppIconMint",       "start": "#00C7BE", "end": "#66D4CF"},
+    {"key": "teal",       "display": "Teal",        "android_suffix": "teal",        "ios_appiconset": "AppIconTeal",       "start": "#30B0C7", "end": "#64D2FF"},
+    {"key": "blue",       "display": "Blue",        "android_suffix": "blue",        "ios_appiconset": "AppIconBlue",       "start": "#0A84FF", "end": "#5EAEFF"},
+    {"key": "purple",     "display": "Purple",      "android_suffix": "purple",      "ios_appiconset": "AppIconPurple",     "start": "#AF52DE", "end": "#BF5AF2"},
+    {"key": "yellow",     "display": "Yellow",      "android_suffix": "yellow",      "ios_appiconset": "AppIconYellow",     "start": "#FFCC00", "end": "#FFD60A"},
+    {"key": "coral",      "display": "Coral",       "android_suffix": "coral",       "ios_appiconset": "AppIconCoral",      "start": "#FF7F50", "end": "#FFA382"},
+    {"key": "roseGold",   "display": "Rose Gold",   "android_suffix": "rose_gold",   "ios_appiconset": "AppIconRoseGold",   "start": "#C9807C", "end": "#E8B4B0"},
+    {"key": "mochaBrown", "display": "Mocha Brown", "android_suffix": "mocha_brown", "ios_appiconset": "AppIconMochaBrown", "start": "#A2845E", "end": "#C9A57E"},
+    {"key": "indigo",     "display": "Indigo",      "android_suffix": "indigo",      "ios_appiconset": "AppIconIndigo",     "start": "#5856D6", "end": "#7D7AFF"},
+    {"key": "lavender",   "display": "Lavender",    "android_suffix": "lavender",    "ios_appiconset": "AppIconLavender",   "start": "#B57EDC", "end": "#D0A9F5"},
+    {"key": "skyCyan",    "display": "Sky Cyan",    "android_suffix": "sky_cyan",    "ios_appiconset": "AppIconSkyCyan",    "start": "#32ADE6", "end": "#70CFFF"},
+    {"key": "graphite",   "display": "Graphite",    "android_suffix": "graphite",    "ios_appiconset": "AppIconGraphite",   "start": "#8E8E93", "end": "#B8B8BE"},
+    {"key": "babyPink",   "display": "Baby Pink",   "android_suffix": "baby_pink",   "ios_appiconset": "AppIconBabyPink",   "start": "#FF8FAB", "end": "#FFB3C6"},
+    {"key": "lime",       "display": "Lime",        "android_suffix": "lime",        "ios_appiconset": "AppIconLime",       "start": "#A0D911", "end": "#C3E956"}
+  ],
+  "android_logo_tints": ["rose", "red", "orange", "green", "mint", "teal", "blue", "purple"]
+}

@@ -1,0 +1,42 @@
+# Xcode
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+build/
+
+# Android Studio / Gradle
+.gradle/
+local.properties
+*.iml
+.idea/
+*.jks
+.cxx/
+
+# Local configuration
+ios/Local.xcconfig
+android/oauth.properties
+.DS_Store
+
+# Claude Code runtime
+.claude/
+ios/build-sim/
+
+# Xcode per-user state (scheme order, workspace UI) — meaningless off this machine
+ios/**/xcuserdata/
+
+# Stray compiler output at the repo root (e.g. `swiftc test.swift` -> ./test).
+# A Mach-O binary was once committed this way; keep it out.
+/test
+
+# Old signed binaries / hosting emulator state
+android/release/
+web/.firebase/
+web/firebase-debug.log
+web/ui-debug.log
+marketing/raw/**/*.tmp
+
+
+# Generated workout data / QA artifacts
+shared/workout-vectors/
+artifacts/workout-visual-qa/
