@@ -28,6 +28,9 @@ struct CoachTools {
     /// advertised only when Health sync is on AND the user confirmed Coach access.
     var health: CoachHealthContext? = nil
     var healthAccessEnabled = false
+    /// Health Records (docs/health-records.md §26): tools advertised only with Coach access on and at
+    /// least one non-archived record.
+    var records: CoachRecordsContext? = nil
 
     static let nutritionToolNames: [String] = [
         "get_data_summary",
@@ -54,6 +57,9 @@ struct CoachTools {
         "get_sleep_history",
     ]
 
+    /// Names, descriptions and schemas come from `shared/records/coach_tools.json` (exact).
+    static let recordsToolNames: [String] = RecordsCoachContract.toolNames
+
     /// The provider schemas are built from this instance value, preventing any
     /// workout tool from being disclosed when the user has the diary disabled, and
     /// any health tool from being disclosed without Health sync + Coach consent.
@@ -61,6 +67,7 @@ struct CoachTools {
         Self.nutritionToolNames
             + (workoutAccessEnabled ? Self.workoutToolNames : [])
             + (healthAccessEnabled && health != nil ? Self.healthToolNames : [])
+            + (records?.toolsAvailable == true ? Self.recordsToolNames : [])
     }
 
     /// Timer-era builds could store several completed sessions for one diary
@@ -85,7 +92,9 @@ struct CoachTools {
 
     /// Per-provider tool descriptions kept in one place so all three formats
     /// see the same human-readable text.
-    static let toolDescriptions: [String: String] = [
+    static let toolDescriptions: [String: String] = baseToolDescriptions.merging(RecordsCoachContract.shared.descriptions) { base, _ in base }
+
+    private static let baseToolDescriptions: [String: String] = [
         "get_data_summary": "Get a quick summary of the user's available data: total counts and earliest/latest dates for weights, body-fat readings, and food entries. Call this first when the user asks anything about their history range or data spanning more than 14 days.",
         "get_weight_history": "Fetch weight entries between two dates (inclusive). Returns date + weight (kg + lbs). Use this when the user asks about specific past dates or weight trends older than the last 10 entries.",
         "get_body_fat_history": "Fetch body-fat readings between two dates (inclusive). Returns date + percent. Use when the user asks about body composition trends older than the last 10 readings.",
@@ -111,6 +120,9 @@ struct CoachTools {
     /// ChatService, so no-argument workout tools never accidentally inherit a
     /// required date range.
     static func parameterSchema(for toolName: String) -> [String: Any] {
+        if recordsToolNames.contains(toolName), let schema = RecordsCoachContract.shared.parameterSchema(for: toolName) {
+            return schema
+        }
         if ["get_data_summary", "get_workout_preferences", "get_health_data_types"].contains(toolName) {
             return ["type": "object", "properties": [:]]
         }
@@ -212,6 +224,9 @@ struct CoachTools {
     /// Async entry used by the provider loops. Only the health tools need it (they read the
     /// SQLite mirror); every other name delegates to the untouched synchronous `execute`.
     func executeAsync(name: String, arguments: [String: Any]) async -> String {
+        if Self.recordsToolNames.contains(name) {
+            return await RecordsCoachToolExecutor.execute(name: name, arguments: arguments, context: records?.toolsAvailable == true ? records : nil)
+        }
         guard Self.healthToolNames.contains(name) else {
             return execute(name: name, arguments: arguments)
         }

@@ -45,7 +45,20 @@ EXPECTED_FILES = {
     "query_parser.json": "parse_query", "analyte_mapping.json": "map_analyte", "unit_conversion.json": "convert_unit",
     "observations.json": "observations", "trends.json": "trends", "entities.json": "entities",
     "relations.json": "suggest_relations",
+    "coach_tools_payloads.json": "coach_tools", "coach_context.json": "pack_coach_records",
+    "coach_prompt.json": "coach_prompt",
 }
+# Phase 4 vector files may carry top-level "fixtures": {"snapshots": {name: snapshot}}; a case input whose
+# "snapshot" is a string names one of them (ports resolve it the same way before running the case).
+FIXTURE_FILES = frozenset(["coach_tools_payloads.json", "coach_context.json", "coach_prompt.json"])
+
+
+def resolve_input(doc, inp):
+    snap = inp.get("snapshot")
+    if isinstance(snap, str):
+        inp = dict(inp)
+        inp["snapshot"] = doc["fixtures"]["snapshots"][snap]
+    return inp
 
 
 def dumps(obj):
@@ -350,6 +363,82 @@ def schema_errors(v, s, path="$"):
     return errs
 
 
+_COACH_TOOL_PROPS = {"records_search": ["query", "from", "to", "record_type", "limit"],
+                     "records_get": ["record_id", "include_text"],
+                     "records_observation_series": ["analyte", "from", "to"]}
+_COACH_PLACEHOLDERS = {
+    ("prompt", "available_line"): {"n", "latest_date"}, ("prompt", "selected_header"): set(),
+    ("prompt", "selected_line"): {"record_id", "title", "date", "type_label"}, ("prompt", "not_available_line"): set(),
+    ("prompt", "guardrails"): set(), ("errors", "unknown_record"): {"id"}, ("errors", "not_selected"): {"id"},
+    ("errors", "unknown_analyte"): {"analyte"}, ("errors", "bad_date"): {"value"}, ("errors", "date_order"): set(),
+    ("errors", "unavailable"): set(),
+}
+
+
+def compact_schema(schema):
+    """Canonical tool input_schema string (§26): the schema object serialized with keys in file order, no
+    whitespace (separators ',' and ':'), non-ASCII unescaped, JSON string escapes as json.dumps writes them."""
+    return json.dumps(schema, separators=(",", ":"), ensure_ascii=False)
+
+
+def check_coach_tools(problems):
+    """shared/records/coach_tools.json (§26): envelope, unique tool names, schema subset, required ⊆
+    properties, the file embeds every input_schema in its compact form, placeholders per string."""
+    path = os.path.join(SHARED, "coach_tools.json")
+    try:
+        raw = open(path, encoding="utf-8").read()
+        doc = json.loads(raw)
+    except (OSError, ValueError) as e:
+        problems.append("coach_tools.json: %s" % e)
+        return []
+    if set(doc) != {"format", "version", "notes", "tools", "prompt", "errors"} or \
+            doc.get("format") != "ayuvo-records-coach-tools" or doc.get("version") != 1:
+        problems.append("coach_tools.json: bad envelope")
+        return []
+    names = [t.get("name") for t in doc["tools"]]
+    if len(set(names)) != len(names) or sorted(names) != sorted(_COACH_TOOL_PROPS):
+        problems.append("coach_tools.json: tool names must be unique and exactly %s" % sorted(_COACH_TOOL_PROPS))
+    out = []
+    for t in doc["tools"]:
+        where = "coach_tools.json: %s" % t.get("name")
+        if set(t) != {"name", "description", "input_schema"} or not isinstance(t.get("description"), str) \
+                or not t["description"].strip():
+            problems.append("%s: bad tool keys or empty description" % where)
+            continue
+        s = t["input_schema"]
+        if not isinstance(s, dict) or set(s) - {"type", "properties", "required"} or s.get("type") != "object" \
+                or not isinstance(s.get("properties"), dict) or not s["properties"]:
+            problems.append("%s: input_schema must be an object schema with properties" % where)
+            continue
+        for pname, p in s["properties"].items():
+            if not isinstance(p, dict) or set(p) - {"type", "description", "enum", "minimum", "maximum"} \
+                    or p.get("type") not in ("string", "integer", "number", "boolean") \
+                    or not isinstance(p.get("description"), str) or not p["description"].strip():
+                problems.append("%s: bad property %s" % (where, pname))
+        req = s.get("required", [])
+        if not isinstance(req, list) or len(set(req)) != len(req) or any(r not in s["properties"] for r in req):
+            problems.append("%s: required must be unique property names" % where)
+        if t["name"] in _COACH_TOOL_PROPS and list(s["properties"]) != _COACH_TOOL_PROPS[t["name"]]:
+            problems.append("%s: properties differ from the reference arguments %s" % (where, _COACH_TOOL_PROPS[t["name"]]))
+        compact = compact_schema(s)
+        if ('"input_schema": ' + compact) not in raw:
+            problems.append("%s: input_schema is not written in its compact canonical form" % where)
+        out.append((t["name"], compact))
+    for (section, key), wanted in sorted(_COACH_PLACEHOLDERS.items()):
+        value = doc.get(section, {}).get(key)
+        if not isinstance(value, str):
+            problems.append("coach_tools.json: missing %s.%s" % (section, key))
+            continue
+        found = set(re.findall("\\{([a-z_]+)\\}", value))
+        if found != wanted or value.count("{") != len(re.findall("\\{[a-z_]+\\}", value)):
+            problems.append("coach_tools.json: %s.%s placeholders %s, expected %s" % (section, key, sorted(found), sorted(wanted)))
+    for section in ("prompt", "errors"):
+        extra = set(doc[section]) - set(k for s, k in _COACH_PLACEHOLDERS if s == section)
+        if extra:
+            problems.append("coach_tools.json: unexpected %s keys %s" % (section, sorted(extra)))
+    return out
+
+
 def check_ai_files(problems):
     schema_path = os.path.join(SHARED, "ai_extraction.schema.json")
     md_path = os.path.join(SHARED, "ai_extraction.md")
@@ -399,8 +488,86 @@ def _shape_items(items, where, problems):
             problems.append("%s: bad flag" % where)
 
 
-def check_shape(function, exp, where, problems):
-    if function == "classify":
+_SEARCH_KEYS = {"query", "count", "records", "values"}
+_SEARCH_RECORD_KEYS = {"record_id", "title", "date", "record_type", "facility", "doctor", "review_status", "highlights"}
+_SEARCH_VALUE_KEYS = {"record_id", "analyte", "name", "value", "unit", "flag", "date"}
+_GET_KEYS = {"record_id", "title", "date", "record_type", "category", "facility", "doctor", "referrer", "patient_sex",
+             "patient_age", "review_status", "ai_mode_used", "page_count", "fields", "test_results", "highlights", "text"}
+_GET_TEST_KEYS = {"name", "analyte", "value", "unit", "ref_text", "ref_low", "ref_high", "flag", "state", "source_page"}
+_SERIES_KEYS = {"analyte", "display_name", "unit", "count", "points"}
+_SERIES_POINT_KEYS = {"date", "value", "unit", "canonical_value", "flag", "ref_low", "ref_high", "record_id",
+                      "record_title", "state"}
+
+
+def _is_filled_error(message):
+    for tpl in R.coach_tools_doc()["errors"].values():
+        pieces = re.split("(\\{[a-z_]+\\})", tpl)
+        pat = "".join(".*" if p.startswith("{") and p.endswith("}") else re.escape(p) for p in pieces)
+        if re.fullmatch(pat, message, re.S):
+            return True
+    return False
+
+
+def _check_coach_tools_shape(exp, where, problems, inp):
+    if "error" in exp:
+        if set(exp) != {"error"} or not _is_filled_error(exp["error"]):
+            problems.append("%s: bad error payload" % where)
+        return
+    snap = inp["snapshot"]
+    selected = set(inp.get("selected_ids") or [])
+    names = [R.norm_text(f["value_text"]) for f in snap.get("fields") or [] if f["field_key"] == "patient_name"]
+    blob = " " + R.norm_text(json.dumps(exp, ensure_ascii=False)) + " "
+    if any(n and (" " + n + " ") in blob for n in names):
+        problems.append("%s: patient name leaked into a tool payload" % where)
+    ids = []
+    if inp["tool"] == "records_search":
+        if set(exp) != _SEARCH_KEYS or exp["count"] != len(exp["records"]) or len(exp["records"]) > 20 \
+                or len(exp["values"]) > 20:
+            problems.append("%s: bad records_search payload" % where)
+            return
+        for r in exp["records"]:
+            if set(r) != _SEARCH_RECORD_KEYS or len(r["highlights"]) > 3:
+                problems.append("%s: bad search record" % where)
+        for v in exp["values"]:
+            if set(v) != _SEARCH_VALUE_KEYS or v["flag"] not in R.FLAGS:
+                problems.append("%s: bad search value" % where)
+        ids = [r["record_id"] for r in exp["records"]] + [v["record_id"] for v in exp["values"]]
+    elif inp["tool"] == "records_get":
+        if set(exp) != _GET_KEYS or (exp["text"] is not None and len(exp["text"]) > 2000):
+            problems.append("%s: bad records_get payload" % where)
+            return
+        if any(f["key"] in ("test_result", "patient_name", "location") for f in exp["fields"]):
+            problems.append("%s: excluded field key in records_get" % where)
+        if any(set(t) != _GET_TEST_KEYS or t["flag"] not in R.FLAGS for t in exp["test_results"]):
+            problems.append("%s: bad test_results entry" % where)
+        ids = [exp["record_id"]]
+    else:
+        if set(exp) != _SERIES_KEYS or exp["count"] != len(exp["points"]) or len(exp["points"]) > 100 \
+                or not exp["points"]:
+            problems.append("%s: bad series payload" % where)
+            return
+        if any(set(p) != _SERIES_POINT_KEYS for p in exp["points"]) or \
+                [p["date"] for p in exp["points"]] != sorted(p["date"] for p in exp["points"]):
+            problems.append("%s: bad series points" % where)
+        ids = [p["record_id"] for p in exp["points"]]
+    if selected and any(i not in selected for i in ids):
+        problems.append("%s: payload escapes the selected records" % where)
+
+
+def check_shape(function, exp, where, problems, inp=None):
+    if function == "coach_tools":
+        _check_coach_tools_shape(exp, where, problems, inp)
+    elif function == "pack_coach_records":
+        if set(exp) != {"text", "record_ids", "dropped_results"} or len(exp["record_ids"]) > R.COACH_CONTEXT_MAX_RECORDS \
+                or (exp["text"] is None) != (not exp["record_ids"]):
+            problems.append("%s: bad packed context" % where)
+        elif exp["text"] is not None and len(exp["text"]) > R.COACH_CONTEXT_MAX_CHARS and len(exp["record_ids"]) > 1:
+            problems.append("%s: packed context over the limit" % where)
+    elif function == "coach_prompt" and inp["op"] == "prompt_lines":
+        if set(exp) != {"advertise_tools", "available_line", "guardrails", "selected_lines", "not_available_line"} or \
+                any("{" in line for line in ([exp["available_line"] or ""] + exp["selected_lines"][:1])):
+            problems.append("%s: bad prompt lines" % where)
+    elif function == "classify":
         if exp["record_type"] not in R.RECORD_TYPES or exp["category"] != R.DEFAULT_CATEGORY[exp["record_type"]]:
             problems.append("%s: bad type/category" % where)
     elif function in ("extract_dates", "extract_fields", "parse_lab_rows"):
@@ -519,9 +686,15 @@ def check_vectors(write, schema, problems):
         except ValueError as e:
             problems.append("%s: invalid JSON: %s" % (name, e))
             continue
-        if (doc.get("format") != "ayuvo-records-vectors" or doc.get("version") != 1
+        allowed = {"format", "version", "function", "cases"} | ({"fixtures"} if name in FIXTURE_FILES else set())
+        if (doc.get("format") != "ayuvo-records-vectors" or doc.get("version") != 1 or set(doc) - allowed
                 or doc.get("function") != EXPECTED_FILES.get(name) or not isinstance(doc.get("cases"), list)):
             problems.append("%s: bad envelope" % name)
+            continue
+        snaps = (doc.get("fixtures") or {}).get("snapshots") or {}
+        if any(isinstance(c.get("input", {}).get("snapshot"), str) and c["input"]["snapshot"] not in snaps
+               for c in doc["cases"] if isinstance(c.get("input"), dict)):
+            problems.append("%s: a case names an unknown snapshot fixture" % name)
             continue
         seen = set()
         changed = False
@@ -532,7 +705,7 @@ def check_vectors(write, schema, problems):
             if c["name"] in seen:
                 problems.append("%s: duplicate case %s" % (name, c["name"]))
             seen.add(c["name"])
-            got = json.loads(json.dumps(R.run_case(doc["function"], c["input"]), ensure_ascii=False))
+            got = json.loads(json.dumps(R.run_case(doc["function"], resolve_input(doc, c["input"])), ensure_ascii=False))
             where = "%s/%s" % (name, c["name"])
             if write:
                 if c.get("expected") != got:
@@ -540,7 +713,7 @@ def check_vectors(write, schema, problems):
                     changed = True
             elif c.get("expected") != got:
                 problems.append("%s: expected differs from the reference at %s" % (where, _first_diff(c.get("expected"), got)))
-            check_shape(doc["function"], got, where, problems)
+            check_shape(doc["function"], got, where, problems, resolve_input(doc, c["input"]))
             if schema is not None and c["input"].get("schema_valid"):
                 ai = R.lenient_json(c["input"]["ai_json"])
                 for err in schema_errors(ai, schema):
@@ -598,6 +771,13 @@ class ReferenceSelfTest(unittest.TestCase):
         self.assertEqual(R.format_value(6.105, 1), "6.1")
         self.assertEqual(R.format_value(-0.04, 1), "0.0")
 
+    def test_coach_helpers(self):
+        self.assertEqual(R.fill_placeholders("{a} {b} {c}", {"a": "{b}", "b": 2}), "{b} 2 {c}")
+        self.assertEqual(R.fts_tokens("hb: 9.1 g/dl — low μl"), ["hb", "9", "1", "g", "dl", "—", "low", "μl"])
+        self.assertEqual(compact_schema({"type": "object", "properties": {"q": {"type": "string", "description": "a \"b\""}}}),
+                         '{"type":"object","properties":{"q":{"type":"string","description":"a \\"b\\""}}}')
+        self.assertEqual(R.collapse_ws(" a \r\n\tb  "), "a b")
+
     def test_apply_extraction_never_overwrites_confirmed(self):
         rows = [{"id": "r", "field_key": "facility", "value_text": "Metro Labs", "value_json": None, "method": "user",
                  "confidence": 0.1, "state": "confirmed", "source_page": 0, "source_bbox": None, "evidence": None}]
@@ -612,6 +792,7 @@ def main(argv):
     check_data_files(problems)
     schema = check_ai_files(problems)
     sql_counts = check_sql(problems)
+    coach_schemas = check_coach_tools(problems)
     counts = check_vectors(write, schema, problems)
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(ReferenceSelfTest)
     result = unittest.TextTestRunner(stream=open(os.devnull, "w"), verbosity=0).run(suite)
@@ -621,6 +802,11 @@ def main(argv):
         print("sql  %-45s %d statements" % (rel, sql_counts[rel]))
     for name in sorted(counts):
         print("vec  %-45s %d cases" % (name, counts[name]))
+    for name, compact in coach_schemas:
+        print("tool %-45s schema %d chars" % (name, len(compact)))
+    if "--print-schemas" in argv:
+        for name, compact in coach_schemas:
+            print("%s %s" % (name, compact))
     print("self-tests: %d run" % result.testsRun)
     if problems:
         print("\n%d problem(s):" % len(problems))

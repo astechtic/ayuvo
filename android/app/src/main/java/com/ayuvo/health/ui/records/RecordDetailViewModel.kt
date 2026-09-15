@@ -72,7 +72,10 @@ data class RecordDetailUiState(
     /** "Also match N other values named X?" after a remap: (raw name, analyte id, count). */
     val aliasPrompt: Triple<String, String, Int>? = null,
     /** Link record sheet candidates for the current search text. */
-    val linkCandidates: List<HealthRecord> = emptyList()
+    val linkCandidates: List<HealthRecord> = emptyList(),
+    // Phase 4
+    /** §27 "Compare with previous report" partner, or null. */
+    val previousReport: HealthRecord? = null
 )
 
 class RecordDetailViewModel(
@@ -119,11 +122,13 @@ class RecordDetailViewModel(
             val observations = store.observations(recordId)
             val trends = store.trendsForRecord(recordId).mapValues { (id, rows) -> TrendSeries.build(id, rows, catalog) }
             val related = store.related(recordId)
+            val previous = runCatching { com.ayuvo.health.records.coach.RecordsCoachSelection.previousReport(store, { container.analyteCatalog }, recordId) }.getOrNull()
             _ui.update {
                 it.copy(
                     loading = false, record = record, pages = pages, tags = tags, allTags = allTags, missing = false,
                     intelligence = intelligence, waitingForAi = waiting, duplicateMatches = matches, reviewItems = review,
-                    observations = observations, trends = trends, related = related, catalog = catalog
+                    observations = observations, trends = trends, related = related, catalog = catalog,
+                    previousReport = previous
                 )
             }
             pendingFocus?.let { id ->

@@ -140,10 +140,16 @@ import kotlinx.coroutines.withContext
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun CoachScreen(container: AppContainer) {
+fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
     val vm: CoachViewModel = viewModel(factory = CoachViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
     var input by remember { mutableStateOf("") }
+    // §27 entry points prefill an editable prompt.
+    LaunchedEffect(ui.prefill?.id) {
+        val prefill = ui.prefill ?: return@LaunchedEffect
+        input = prefill.text
+        vm.consumePrefill(prefill.id)
+    }
     var attachedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
     var showCameraCapture by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
@@ -282,12 +288,14 @@ fun CoachScreen(container: AppContainer) {
                         .only(WindowInsetsSides.Bottom)
                 )
         ) {
-            val resolvedChips = ui.suggestions.map { stringResource(it) }
+            val recordChipTexts = ui.recordChips.map { it to stringResource(it.labelRes) }
+            val resolvedChips = recordChipTexts.map { it.second } + ui.suggestions.map { stringResource(it) }
             val onPromptTap: (String) -> Unit = { chip ->
                 hideKeyboard()
                 input = ""
                 attachedImageBytes = null
-                vm.send(chip)
+                val recordsChip = recordChipTexts.firstOrNull { it.second == chip }?.first
+                if (recordsChip != null) vm.sendRecordsChip(recordsChip, chip) else vm.send(chip)
             }
 
             // Top region — empty state OR message list
@@ -313,6 +321,7 @@ fun CoachScreen(container: AppContainer) {
                         sending = ui.sending,
                         error = resolvedError,
                         listState = listState,
+                        onOpenRecord = onOpenRecord,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -325,6 +334,11 @@ fun CoachScreen(container: AppContainer) {
                     onTap = onPromptTap
                 )
             }
+
+            com.ayuvo.health.ui.records.CoachRecordsChipBar(
+                records = ui.selectedRecords,
+                onChange = { hideKeyboard(); vm.openPicker() }
+            )
 
             // input bar — capsule with gradient send button
             InputBar(
@@ -352,6 +366,33 @@ fun CoachScreen(container: AppContainer) {
                 }
             },
             onDismiss = { showCameraCapture = false }
+        )
+    }
+
+    ui.consent?.let { consent ->
+        com.ayuvo.health.ui.records.CoachRecordsConsentSheet(
+            providerName = consent.providerName,
+            onAllow = vm::allowRecordsAccess,
+            onNotNow = vm::declineRecordsAccess
+        )
+    }
+    ui.modePrompt?.let { prompt ->
+        com.ayuvo.health.ui.records.CoachRecordsModeDialog(
+            providerName = prompt.providerName,
+            onDeviceAvailable = prompt.onDeviceAvailable,
+            onSend = { vm.answerModePrompt(CoachRecordsModeChoice.SEND) },
+            onCancel = { vm.answerModePrompt(CoachRecordsModeChoice.CANCEL) },
+            onUseOnDevice = { vm.answerModePrompt(CoachRecordsModeChoice.ON_DEVICE) }
+        )
+    }
+    if (ui.pickerOpen) {
+        com.ayuvo.health.ui.records.CoachRecordsPickerSheet(
+            selected = ui.selectedRecords,
+            candidates = ui.pickerCandidates,
+            files = container.recordFiles,
+            onSearch = vm::searchPicker,
+            onDone = { ids -> vm.closePicker(ids) },
+            onDismiss = { vm.closePicker(null) }
         )
     }
 
@@ -506,6 +547,7 @@ private fun MessageList(
     sending: Boolean,
     error: String?,
     listState: androidx.compose.foundation.lazy.LazyListState,
+    onOpenRecord: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -514,7 +556,7 @@ private fun MessageList(
         contentPadding = PaddingValues(top = 14.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        items(messages, key = { it.id }) { MessageBubble(it) }
+        items(messages, key = { it.id }) { MessageBubble(it, onOpenRecord) }
 
         if (sending) {
             item("typing") {
@@ -610,8 +652,9 @@ private fun TypingIndicator() {
 }
 
 @Composable
-private fun MessageBubble(msg: ChatMessage) {
+private fun MessageBubble(msg: ChatMessage, onOpenRecord: (String) -> Unit = {}) {
     val isUser = msg.role == ChatMessage.Role.USER
+    Column(Modifier.fillMaxWidth()) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         verticalAlignment = Alignment.Top,
@@ -626,6 +669,14 @@ private fun MessageBubble(msg: ChatMessage) {
             Spacer(Modifier.width(48.dp))
             Bubble(content = msg.content, isUser = true, attachmentImageBase64 = msg.attachmentImageBase64)
         }
+    }
+    if (!isUser && msg.recordRefs.isNotEmpty()) {
+        com.ayuvo.health.ui.records.CoachUsedRecords(
+            refs = msg.recordRefs,
+            onOpen = onOpenRecord,
+            modifier = Modifier.padding(start = 52.dp, end = 48.dp, top = 6.dp)
+        )
+    }
     }
 }
 

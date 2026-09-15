@@ -1,5 +1,20 @@
 import Foundation
 
+/// HTTP seam for the Coach tool loops so tests can drive a provider conversation with canned responses.
+nonisolated protocol ChatHTTPTransport: Sendable {
+    func data(for request: URLRequest) async throws -> (Data, URLResponse)
+}
+
+nonisolated struct URLSessionChatTransport: ChatHTTPTransport {
+    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+        try await URLSession.shared.data(for: request)
+    }
+}
+
+nonisolated enum ChatHTTP {
+    @TaskLocal static var transport: any ChatHTTPTransport = URLSessionChatTransport()
+}
+
 /// Routes a multi-turn chat (system context + user/assistant message history + new user message)
 /// to the currently-selected LLM provider, with **tool calling** so the model can fetch any
 /// historical slice of the user's data on demand instead of receiving a fixed-size dump in
@@ -11,6 +26,8 @@ struct ChatService {
         case networkError(Error)
         case apiError(String)
         case invalidResponse
+        /// §30: the user chose "Use on-device Coach" while a records tool call waited for approval.
+        case recordsSwitchToOnDevice
 
         var errorDescription: String? {
             switch self {
@@ -22,6 +39,8 @@ struct ChatService {
                 return "API error: \(msg)"
             case .invalidResponse:
                 return "Could not understand the AI response. Please try again."
+            case .recordsSwitchToOnDevice:
+                return "Switching this conversation to the on-device Coach."
             }
         }
     }
@@ -50,7 +69,9 @@ struct ChatService {
         workoutPlans: [StrengthWorkoutDayPlan] = [],
         workoutPreferences: StrengthWorkoutPreferences? = nil,
         workoutAccessEnabled: Bool = false,
-        health: CoachHealthContext? = nil
+        health: CoachHealthContext? = nil,
+        records: CoachRecordsContext? = nil,
+        providerOverride: AIProvider? = nil
     ) async throws -> String {
         let systemPrompt = buildSystemPrompt(
             profile: profile,
@@ -64,7 +85,9 @@ struct ChatService {
             workoutSessions: workoutSessions,
             workoutPlans: workoutPlans,
             workoutAccessEnabled: workoutAccessEnabled,
-            health: health
+            health: health,
+            records: records,
+            newUserMessage: newUserMessage
         )
         let tools = CoachTools(
             weights: weights,
@@ -77,13 +100,17 @@ struct ChatService {
             workoutPlanWeightUnit: weightMetric ? .kg : .lbs,
             workoutAccessEnabled: workoutAccessEnabled,
             health: health,
-            healthAccessEnabled: health?.context.enabled ?? false
+            healthAccessEnabled: health?.context.enabled ?? false,
+            records: records
         )
 
-        // Tool-less modes cannot call the health tools; give them a short 7-day digest instead.
-        let onDeviceSystemPrompt = systemPrompt + onDeviceHealthBlock(health)
+        // Tool-less modes cannot call the health tools; give them a short 7-day digest instead,
+        // plus the selected Health Records packed by §29.
+        let onDeviceSystemPrompt = systemPrompt + onDeviceHealthBlock(health) + onDeviceRecordsBlock(records)
 
-        let config = AIProviderSettings.currentConfig(requiresVision: imageData != nil)
+        let config = providerOverride.map {
+            AIProviderSettings.RequestConfig(provider: $0, model: $0 == .gemma4Local ? Gemma4LocalModelManager.modelID : "", baseURL: $0.baseURL, apiKey: nil)
+        } ?? AIProviderSettings.currentConfig(requiresVision: imageData != nil)
         func request(
             provider: AIProvider,
             model: String,
@@ -96,6 +123,7 @@ struct ChatService {
 
             switch provider.apiFormat {
             case .onDevice:
+                await records?.session.add(records?.onDeviceBlock.isEmpty == false ? (records?.packedRefs ?? []) : [])
                 return try await callOnDevice(
                     systemPrompt: onDeviceSystemPrompt,
                     history: history,
@@ -103,6 +131,7 @@ struct ChatService {
                     imageData: imageData
                 )
             case .liteRTLocal:
+                await records?.session.add(records?.onDeviceBlock.isEmpty == false ? (records?.packedRefs ?? []) : [])
                 let localHistory = history.suffix(8).map { message in
                     Gemma4LocalModelManager.ChatTurn(
                         role: message.role == .user ? .user : .assistant,
@@ -140,6 +169,8 @@ struct ChatService {
             )
         } catch {
             if error is CancellationError { throw error }
+            if case ChatError.recordsSwitchToOnDevice = error { throw error }
+            if providerOverride != nil { throw error }
             let fallback = imageData == nil
                 ? AIProviderSettings.currentTextFallbackConfig(
                     excludingPrimary: config.provider,
@@ -215,6 +246,30 @@ struct ChatService {
         return lines.joined(separator: "\n")
     }
 
+    /// §29 selected-records block for tool-less providers ("" without access or selection), followed by
+    /// `prompt.guardrails` (§32; outside the 1,800-character block limit).
+    static func onDeviceRecordsBlock(_ records: CoachRecordsContext?) -> String {
+        guard let records, records.enabled, !records.selected.isEmpty, !records.onDeviceBlock.isEmpty else { return "" }
+        var block = "\n\n" + records.onDeviceBlock
+        if let guardrails = records.prompt["guardrails"].string ?? RecordsCoachContract.shared.prompt["guardrails"] {
+            block += "\n\n" + guardrails
+        }
+        return block
+    }
+
+    /// Records lines of `## Data available`, the guardrails block and the selected records (§26).
+    static func recordsPromptLines(_ records: CoachRecordsContext?, newUserMessage: String) -> [String] {
+        guard let records else { return [] }
+        var lines = RecordsCoach.dataAvailableLines(prompt: records.prompt, message: newUserMessage).map { "- " + $0 }
+        if records.toolsAvailable {
+            if let guardrails = records.prompt["guardrails"].string {
+                lines.append(contentsOf: guardrails.components(separatedBy: "\n"))
+            }
+            lines.append(contentsOf: (records.prompt["selected_lines"].array ?? []).compactMap(\.string))
+        }
+        return lines
+    }
+
     private static func relativeSyncText(_ date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.locale = Locale(identifier: "en_US")
@@ -241,7 +296,9 @@ struct ChatService {
         workoutSessions: [StrengthWorkoutSession] = [],
         workoutPlans: [StrengthWorkoutDayPlan] = [],
         workoutAccessEnabled: Bool = false,
-        health: CoachHealthContext? = nil
+        health: CoachHealthContext? = nil,
+        records: CoachRecordsContext? = nil,
+        newUserMessage: String = ""
     ) -> String {
         let forecast = WeightAnalysisService.compute(weights: weights, foods: foods, profile: profile)
         let currentDateFormatter = DateFormatter()
@@ -358,6 +415,7 @@ struct ChatService {
         } else {
             lines.append("- No health data is available (Apple Health sync or Coach health access is off).")
         }
+        lines.append(contentsOf: recordsPromptLines(records, newUserMessage: newUserMessage))
         if let latest = measurements.max(by: { $0.date < $1.date }),
            let summary = latest.promptSummary(gender: profile.gender, heightCm: profile.heightCm) {
             lines.append("")
@@ -391,7 +449,7 @@ struct ChatService {
         }
     }
 
-    private static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, imageData: Data?, provider: AIProvider, tools: CoachTools) async throws -> String {
+    static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, imageData: Data?, provider: AIProvider, tools: CoachTools) async throws -> String {
         guard let url = URL(string: "\(baseURL)/chat/completions") else {
             throw ChatError.apiError("Invalid API URL.")
         }
@@ -475,6 +533,7 @@ struct ChatService {
                         "content": result,
                     ])
                 }
+                if await tools.records?.session.switchToOnDevice == true { throw ChatError.recordsSwitchToOnDevice }
                 continue
             }
 
@@ -568,6 +627,7 @@ struct ChatService {
                     ])
                 }
                 messages.append(["role": "user", "content": toolResults])
+                if await tools.records?.session.switchToOnDevice == true { throw ChatError.recordsSwitchToOnDevice }
                 continue
             }
 
@@ -682,6 +742,7 @@ struct ChatService {
                     }
                 }
                 contents.append(["role": "user", "parts": responseParts])
+                if await tools.records?.session.switchToOnDevice == true { throw ChatError.recordsSwitchToOnDevice }
                 continue
             }
 
@@ -731,7 +792,7 @@ struct ChatService {
         for attempt in 0...retryDelaysNs.count {
             let (data, response): (Data, URLResponse)
             do {
-                (data, response) = try await URLSession.shared.data(for: request)
+                (data, response) = try await ChatHTTP.transport.data(for: request)
             } catch {
                 throw ChatError.networkError(error)
             }

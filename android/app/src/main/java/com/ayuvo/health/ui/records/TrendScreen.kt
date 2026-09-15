@@ -148,7 +148,9 @@ fun TrendScreen(
     container: AppContainer,
     analyteId: String,
     onBack: () -> Unit,
-    onOpenPoint: (recordId: String, observationId: String) -> Unit
+    onOpenPoint: (recordId: String, observationId: String) -> Unit,
+    /** §27 "Explain this trend": every record of the series (max 10, newest) + the prefilled prompt. */
+    onAskCoach: (recordIds: List<String>, prompt: String) -> Unit = { _, _ -> }
 ) {
     val vm: TrendViewModel = viewModel(key = "trend-$analyteId", factory = TrendViewModel.Factory(container, analyteId))
     val ui by vm.ui.collectAsState()
@@ -173,7 +175,16 @@ fun TrendScreen(
     Column(Modifier.fillMaxSize()) {
         Row(Modifier.fillMaxWidth().padding(start = 4.dp, end = 12.dp, top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.records_title), tint = AppColors.Calorie) }
-            Text(stringResource(R.string.records_trend_title, name), fontSize = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(stringResource(R.string.records_trend_title, name), fontSize = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+        }
+        val trendRecordIds = trend?.series.orEmpty().flatMap { s -> s.points.map { it.date to it.recordIds } }
+        if (!ui.loading && trendRecordIds.isNotEmpty()) {
+            val prompt = stringResource(R.string.records_coach_prompt_trend, name)
+            com.ayuvo.health.ui.components.GlassTextButton(
+                text = stringResource(R.string.records_coach_explain_trend),
+                onClick = { onAskCoach(com.ayuvo.health.records.coach.RecordsCoach.trendSelection(trendRecordIds), prompt) },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
+            )
         }
         if (ui.loading) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = AppColors.Calorie) }

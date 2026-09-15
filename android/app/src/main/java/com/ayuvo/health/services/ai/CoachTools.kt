@@ -39,13 +39,26 @@ class CoachTools(
     private val workoutPreferences: WorkoutPreferences = WorkoutPreferences(),
     private val workoutPlanWeightUnit: WorkoutWeightUnit = WorkoutWeightUnit.LBS,
     private val clock: Clock = Clock.systemDefaultZone(),
-    private val healthSnapshot: HealthCoachSnapshot? = null
+    private val healthSnapshot: HealthCoachSnapshot? = null,
+    /** Health Records tools (docs/health-records.md §26) — non-null only when access is on and records exist. */
+    val records: com.ayuvo.health.records.coach.RecordsCoachTools? = null
 ) {
     private val healthData: CoachHealthData? = healthSnapshot?.let { CoachHealthData(it, clock) }
 
-    /** Tools offered to the model for this message: the fixed set plus health tools when consented. */
+    /** Tools offered to the model for this message: the fixed set plus health / records tools when consented. */
     val advertisedToolNames: List<String>
-        get() = if (healthData != null) TOOL_NAMES + HEALTH_TOOL_NAMES else TOOL_NAMES
+        get() = (if (healthData != null) TOOL_NAMES + HEALTH_TOOL_NAMES else TOOL_NAMES) + records?.names.orEmpty()
+
+    /** Description advertised for [name]; records tools use the shared contract strings exactly. */
+    fun descriptionFor(name: String): String =
+        records?.contract?.tool(name)?.description ?: TOOL_DESCRIPTIONS[name] ?: ""
+
+    /** Compact input schema exactly as written in `coach_tools.json` for records tools, else null. */
+    fun rawSchemaFor(name: String): String? = records?.contract?.tool(name)?.schemaJson
+
+    /** Runs a records tool when [name] is one; null otherwise (the caller falls back to [execute]). */
+    suspend fun executeRecords(name: String, args: Map<String, Any?>): String? =
+        records?.takeIf { it.handles(name) }?.execute(name, args)
 
     /** Android provider loops already deal in [JSONObject], so keep this adapter at the edge. */
     fun execute(name: String, args: JSONObject): String = execute(

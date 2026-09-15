@@ -130,7 +130,25 @@
     "Also map 1 other value with this name" : {
 
     },
+    "Analyze my latest blood reports" : {
+
+    },
+    "Analyzing %lld records" : {
+
+    },
+    "Analyzing:" : {
+
+    },
+    "Ask about this report" : {
+
+    },
+    "Ask Coach" : {
+
+    },
     "Both records stay saved. Only the link is removed." : {
+
+    },
+    "Change records" : {
 
     },
     "Choose" : {
@@ -143,6 +161,27 @@
 
     },
     "Choose unit" : {
+
+    },
+    "Choose up to %lld records for this conversation." : {
+
+    },
+    "Coach access" : {
+
+    },
+    "Coach reads the records on this device; nothing is sent online." : {
+
+    },
+    "Coach sends the details of the records it reads — test results, dates, doctors and diagnoses — to %@ to answer you. Records stay stored on this device." : {
+
+    },
+    "Coach uses %@. Send the selected records' details online?" : {
+
+    },
+    "Compare this report with the previous one. What changed?" : {
+
+    },
+    "Compare with previous report" : {
 
     },
     "Confirmed" : {
@@ -164,6 +203,18 @@
 
     },
     "Episode" : {
+
+    },
+    "Explain how my %@ has changed over time." : {
+
+    },
+    "Explain this report: what stands out and what should I ask my doctor?" : {
+
+    },
+    "Explain this trend" : {
+
+    },
+    "Find abnormal values" : {
 
     },
     "Follow-up" : {
@@ -237,6 +288,12 @@
 
     },
     "Latest · %@" : {
+
+    },
+    "Let Coach read your health records?" : {
+
+    },
+    "Let Coach use my health records" : {
 
     },
     "Link" : {
@@ -354,6 +411,9 @@
     "Previous report" : {
 
     },
+    "Previous: %@ · %@" : {
+
+    },
     "Printed as “%@”" : {
 
     },
@@ -391,6 +451,9 @@
     "Range up to %@" : {
 
     },
+    "Recent records" : {
+
+    },
     "Records linked" : {
 
     },
@@ -422,6 +485,9 @@
 
     },
     "Removing hides this value from the record and its trends. The original document isn't changed." : {
+
+    },
+    "Results" : {
 
     },
     "Runs on this iPhone · no key" : {
@@ -456,6 +522,9 @@
     "Search tests" : {
 
     },
+    "Send" : {
+
+    },
     "Shared tests" : {
 
     },
@@ -475,6 +544,9 @@
           }
         }
       }
+    },
+    "Stop analyzing records" : {
+
     },
     "Suggested" : {
 
@@ -497,6 +569,9 @@
     "Unlink these records?" : {
 
     },
+    "Use on-device Coach" : {
+
+    },
     "Use your own AI provider key, or run a private model right on this iPhone." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -507,6 +582,9 @@
           }
         }
       }
+    },
+    "Used records" : {
+
     },
     "Value added" : {
 

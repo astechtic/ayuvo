@@ -31,6 +31,23 @@ struct HealthRecordsSettingsSection: View {
         .onAppear { store.refreshAIEnvironment() }
 
         Section {
+            Toggle(isOn: Binding(get: { store.coachAccessEnabled }, set: { store.setCoachAccess($0) })) {
+                Label {
+                    Text("Let Coach use my health records")
+                } icon: {
+                    Image(systemName: "bubble.left.and.text.bubble.right")
+                        .foregroundStyle(AppColors.calorie)
+                }
+            }
+            .accessibilityIdentifier("records.settings.coachAccess")
+        } header: {
+            Text("Coach access")
+        } footer: {
+            Text(coachFooter)
+        }
+        .listRowBackground(AppColors.appCard)
+
+        Section {
             RecordsPrivacyExplainer()
                 .padding(.vertical, 6)
         } header: {
@@ -71,6 +88,14 @@ struct HealthRecordsSettingsSection: View {
             if !store.hasLoadedOnce { await store.reload() }
             storageBytes = await store.storageBytes()
         }
+    }
+
+    private var coachFooter: String {
+        let provider = CoachRecordsFormatting.coachProvider(override: nil)
+        if provider.onDevice {
+            return String(localized: "Coach reads the records on this device; nothing is sent online.")
+        }
+        return String(localized: "Coach sends the details of the records it reads — test results, dates, doctors and diagnoses — to \(provider.name) to answer you. Records stay stored on this device.")
     }
 
     private var aiFooter: String {

@@ -115,6 +115,7 @@ struct ContentView: View {
     @Environment(NotificationManager.self) private var notificationManager
     @Environment(\.scenePhase) private var scenePhase
     @Environment(RecordsStore.self) private var recordsStore
+    @Environment(ChatStore.self) private var chatStore
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @State private var appUpdateState: AppUpdateState = .idle
     @State private var selectedTab: AppTab = .home
@@ -131,8 +132,12 @@ struct ContentView: View {
                 await refreshAppUpdateState()
             }
             .onChange(of: recordsStore.tabRequest) { _, _ in
-                // Share extension / "Open in Ayuvo" imports land on the Records tab.
+                // Share extension / "Open in Ayuvo" imports and Coach "Used records" chips land on Records.
                 selectedTab = .records
+            }
+            .onChange(of: chatStore.handoffRequest) { _, _ in
+                // Records entry points (Ask about this report, Explain this trend, Ask Coach) open Coach.
+                selectedTab = .coach
             }
             .onReceive(NotificationCenter.default.publisher(for: .quickActionRequested)) { _ in
                 consumePendingLaunchRoutes()

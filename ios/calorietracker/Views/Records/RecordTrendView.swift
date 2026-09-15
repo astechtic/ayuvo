@@ -7,6 +7,7 @@ import SwiftUI
 struct RecordTrendView: View {
     let analyteID: String
     @Environment(RecordsStore.self) private var store
+    @Environment(ChatStore.self) private var chatStore
     @State private var trend: RecordAnalyteTrend?
     @State private var didLoad = false
     @State private var seriesID: String?
@@ -39,6 +40,21 @@ struct RecordTrendView: View {
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if trend?.items.isEmpty == false {
+                    Button {
+                        Task {
+                            let refs = await store.trendRecordRefs(analyteID: analyteID)
+                            chatStore.requestHandoff(records: refs, prompt: CoachRecordsPrompts.explainTrend(title))
+                        }
+                    } label: {
+                        Label("Explain this trend", systemImage: "bubble.left.and.text.bubble.right")
+                    }
+                    .accessibilityIdentifier("records.trend.explain")
+                }
+            }
+        }
         .task(id: store.revision) {
             let loaded = await store.trend(analyteID: analyteID)
             trend = loaded
@@ -98,6 +114,20 @@ struct RecordTrendView: View {
             }
             .accessibilityIdentifier("records.trend.empty")
         }
+        Button {
+            Task {
+                let refs = await store.trendRecordRefs(analyteID: analyteID)
+                chatStore.requestHandoff(records: refs, prompt: CoachRecordsPrompts.explainTrend(title))
+            }
+        } label: {
+            Label("Explain this trend", systemImage: "bubble.left.and.text.bubble.right.fill")
+                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .tint(AppColors.calorie)
+        .controlSize(.large)
+        .accessibilityIdentifier("records.trend.explainButton")
         pointsTable(trend)
     }
 

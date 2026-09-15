@@ -619,6 +619,22 @@ class PreferencesStore(
         ds.edit { if (it[Keys.HEALTH_RECORDS_AI_MODE] == null) it[Keys.HEALTH_RECORDS_AI_MODE] = v }
     }
 
+    /**
+     * Coach may read Health Records (docs/health-records.md §26). Default off; set only by an
+     * affirmative act (the consent sheet or the Settings toggle). Device-only (excluded from cloud backup).
+     */
+    val healthRecordsCoachAccessEnabled: Flow<Boolean> = ds.data.map { it[Keys.HEALTH_RECORDS_COACH_ACCESS_ENABLED] ?: false }
+
+    val healthRecordsCoachConsentedAt: Flow<String?> = ds.data.map { it[Keys.HEALTH_RECORDS_COACH_CONSENTED_AT] }
+
+    /** Enabling stores the consent time (ISO-8601); disabling keeps the last consent time for reference. */
+    suspend fun setHealthRecordsCoachAccess(enabled: Boolean, consentedAtIso: String? = null) {
+        ds.edit {
+            it[Keys.HEALTH_RECORDS_COACH_ACCESS_ENABLED] = enabled
+            if (enabled && consentedAtIso != null) it[Keys.HEALTH_RECORDS_COACH_CONSENTED_AT] = consentedAtIso
+        }
+    }
+
     /** Mirrors iOS @AppStorage("appThemeColor"). */
     val appThemeColor: Flow<String> = ds.data.map { it[Keys.APP_THEME_COLOR] ?: AppThemeColor.DEFAULT_KEY }
     suspend fun setAppThemeColor(v: String) { ds.edit { it[Keys.APP_THEME_COLOR] = v } }
@@ -1468,6 +1484,8 @@ class PreferencesStore(
         val APPEARANCE_MODE = stringPreferencesKey("appearanceMode")
         val HEALTH_RECORDS_VIEW_MODE = stringPreferencesKey("healthRecordsViewMode")
         val HEALTH_RECORDS_AI_MODE = stringPreferencesKey("healthRecordsAiMode")
+        val HEALTH_RECORDS_COACH_ACCESS_ENABLED = booleanPreferencesKey("healthRecordsCoachAccessEnabled")
+        val HEALTH_RECORDS_COACH_CONSENTED_AT = stringPreferencesKey("healthRecordsCoachConsentedAt")
         val APP_THEME_COLOR = stringPreferencesKey("appThemeColor")
         val WEEK_STARTS_MONDAY = booleanPreferencesKey("weekStartsOnMonday")
         val QUICK_ACTION_1 = stringPreferencesKey("quickAction.slot1")

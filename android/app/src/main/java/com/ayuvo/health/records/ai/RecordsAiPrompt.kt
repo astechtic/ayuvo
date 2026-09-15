@@ -9,7 +9,7 @@ package com.ayuvo.health.records.ai
  */
 object RecordsAiPrompt {
     /** The prompt is the shared `ai_extraction.md` v1 text (RecordsAiPromptContractTest compares the fenced blocks). */
-    const val IS_PLACEHOLDER = false
+    const val IS_DRAFT_PROMPT = false
 
     val SYSTEM_FULL: String = """You extract facts from one person's own medical document for their private health records app.
 Return ONLY one JSON object, no markdown, no prose, exactly this shape:

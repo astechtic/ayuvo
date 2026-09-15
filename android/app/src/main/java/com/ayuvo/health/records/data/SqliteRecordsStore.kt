@@ -1037,6 +1037,62 @@ class SqliteRecordsStore(
         ).use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
     }
 
+    // -- Phase 4: Coach (docs §26–§29) ----------------------------------------------------------
+
+    override suspend fun allRecords(): List<HealthRecord> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT $COLUMNS FROM records ORDER BY seq", null).use { it.readAll() }
+    }
+
+    private fun <T> byRecord(ids: Collection<String>, sql: (String) -> String, read: (Cursor) -> T, recordIdOf: (T) -> String): Map<String, List<T>> {
+        if (ids.isEmpty()) return emptyMap()
+        val out = LinkedHashMap<String, MutableList<T>>()
+        ids.distinct().chunked(500).forEach { chunk ->
+            db.rawQuery(sql(chunk.joinToString(",") { "?" }), chunk.toTypedArray()).use { c ->
+                while (c.moveToNext()) read(c).let { out.getOrPut(recordIdOf(it)) { mutableListOf() }.add(it) }
+            }
+        }
+        return out
+    }
+
+    override suspend fun fieldsFor(recordIds: Collection<String>): Map<String, List<RecordField>> = withContext(Dispatchers.IO) {
+        byRecord(recordIds, { marks -> "SELECT $FIELD_COLUMNS FROM record_fields WHERE record_id IN ($marks) ORDER BY record_id, field_key, source_page, created_ms, rowid" }, ::readField) { it.recordId }
+    }
+
+    override suspend fun observationsFor(recordIds: Collection<String>): Map<String, List<Observation>> = withContext(Dispatchers.IO) {
+        byRecord(recordIds, { marks -> "SELECT $OBSERVATION_COLUMNS FROM observations WHERE record_id IN ($marks) ORDER BY record_id, source_page IS NULL, source_page, created_ms, rowid" }, ::readObservation) { it.recordId }
+    }
+
+    override suspend fun highlightsFor(recordIds: Collection<String>): Map<String, List<RecordHighlight>> = withContext(Dispatchers.IO) {
+        byRecord(recordIds, { marks -> "SELECT $HIGHLIGHT_COLUMNS FROM record_highlights WHERE record_id IN ($marks) ORDER BY record_id, section, position, created_ms" }, ::readHighlight) { it.recordId }
+    }
+
+    override suspend fun links(recordId: String): List<RecordLink> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT $LINK_COLUMNS FROM record_links WHERE a_id = ? OR b_id = ?", arrayOf(recordId, recordId))
+            .use { c -> buildList { while (c.moveToNext()) add(readLink(c)) } }
+    }
+
+    override suspend fun observationsOfAnalytes(analyteIds: Collection<String>): List<Observation> = withContext(Dispatchers.IO) {
+        if (analyteIds.isEmpty()) return@withContext emptyList()
+        analyteIds.distinct().chunked(500).flatMap { chunk ->
+            db.rawQuery(
+                "SELECT $OBSERVATION_COLUMNS FROM observations WHERE analyte_id IN (${chunk.joinToString(",") { "?" }}) ORDER BY observed_date, created_ms, id",
+                chunk.toTypedArray()
+            ).use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
+        }
+    }
+
+    override suspend fun unmappedObservations(): List<Observation> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT $OBSERVATION_COLUMNS FROM observations WHERE analyte_id IS NULL ORDER BY observed_date, created_ms, id", null)
+            .use { c -> buildList { while (c.moveToNext()) add(readObservation(c)) } }
+    }
+
+    override suspend fun ftsMatchinfo(terms: List<String>): Map<Long, IntArray> = withContext(Dispatchers.IO) {
+        val match = RecordsSearchText.matchTerms(terms) ?: return@withContext emptyMap()
+        db.rawQuery("SELECT docid, matchinfo(records_fts, 'pcnalx') FROM records_fts WHERE records_fts MATCH ?", arrayOf(match)).use { c ->
+            buildMap { while (c.moveToNext()) put(c.getLong(0), RecordSearchRanking.decodeMatchinfo(c.getBlob(1))) }
+        }
+    }
+
     override suspend fun trendsForRecord(recordId: String): Map<String, List<Observation>> = withContext(Dispatchers.IO) {
         val database = db
         val ids = database.rawQuery(
@@ -1560,9 +1616,11 @@ class SqliteRecordsStore(
             fields = fieldsIn(database, recordId),
             highlights = highlightsIn(database, recordId),
             analyteNames = observationsIn(database, recordId)
-                .filter { it.state != FieldState.REJECTED }
-                .mapNotNull { catalog().displayName(it.analyteId) }
+                .filter { it.state != FieldState.REJECTED && catalog().analyte(it.analyteId) != null }
+                .mapNotNull { it.analyteId }
                 .distinct()
+                .sorted()
+                .mapNotNull { catalog().displayName(it) }
         )
         database.delete("records_fts", "docid = ?", arrayOf(record.seq.toString()))
         database.execSQL(

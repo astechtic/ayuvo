@@ -386,11 +386,11 @@ extension RecordsDatabase {
                 let base = xOffset + 3 * (column + phrase * columns)
                 let hitsHere = Double(info[base])
                 let docsWithHits = Double(info[base + 2])
-                guard hitsHere > 0, averages[column] > 0 else { continue }
-                var idf = log((rows - docsWithHits + 0.5) / (docsWithHits + 0.5))
-                if idf <= 0 { idf = 1e-6 }
+                guard hitsHere > 0 else { continue }
+                // §28 `bm25_pcnalx`: idf floored at 1e-6, zero column averages count as 1.
+                let idf = max(log((rows - docsWithHits + 0.5) / (docsWithHits + 0.5)), 1e-6)
                 let weight = column < weights.count ? weights[column] : 1
-                let denominator = hitsHere + k1 * (1 - b + b * (lengths[column] / averages[column]))
+                let denominator = hitsHere + k1 * (1 - b + b * (lengths[column] / max(averages[column], 1)))
                 score += weight * idf * (hitsHere * (k1 + 1)) / denominator
             }
         }

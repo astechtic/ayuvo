@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
@@ -99,7 +100,9 @@ fun RecordsScreen(
     container: AppContainer,
     onOpenRecord: (String) -> Unit,
     /** A Values hit opens its record at the observation's source (§23, §24). */
-    onOpenValue: (recordId: String, observationId: String) -> Unit = { recordId, _ -> onOpenRecord(recordId) }
+    onOpenValue: (recordId: String, observationId: String) -> Unit = { recordId, _ -> onOpenRecord(recordId) },
+    /** §27 multi-select "Ask Coach": the chosen records, no prompt. */
+    onAskCoach: (List<String>) -> Unit = {}
 ) {
     val vm: RecordsViewModel = viewModel(factory = RecordsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -152,7 +155,12 @@ fun RecordsScreen(
                     onClose = vm::clearSelection,
                     onFavorite = vm::favoriteSelection,
                     onArchive = vm::archiveSelection,
-                    onDelete = { confirmDelete = true }
+                    onDelete = { confirmDelete = true },
+                    onAskCoach = {
+                        val chosen = ui.items.filter { it.id in ui.selection }.map { it.id }
+                        vm.clearSelection()
+                        onAskCoach(com.ayuvo.health.records.coach.RecordsCoach.normalizeSelection(chosen))
+                    }
                 )
             } else {
                 RecordsHeader(onAdd = { showAddSheet = true })
@@ -339,7 +347,8 @@ private fun SelectionBar(
     onClose: () -> Unit,
     onFavorite: () -> Unit,
     onArchive: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onAskCoach: () -> Unit = {}
 ) {
     Row(
         Modifier
@@ -355,6 +364,9 @@ private fun SelectionBar(
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.weight(1f)
         )
+        IconButton(onClick = onAskCoach) {
+            Icon(Icons.Filled.Forum, stringResource(R.string.records_coach_ask_coach), tint = AppColors.Calorie)
+        }
         IconButton(onClick = onFavorite) {
             Icon(Icons.Outlined.StarOutline, stringResource(R.string.records_action_favorite), tint = AppColors.Calorie)
         }

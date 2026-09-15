@@ -35,6 +35,8 @@ object CloudBackupPolicy {
         // Health Records preferences stay on this device (docs/health-records.md §6).
         "healthRecordsViewMode",
         "healthRecordsAiMode",
+        "healthRecordsCoachAccessEnabled",
+        "healthRecordsCoachConsentedAt",
     )
 
     private val photoName = Regex("^[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp)$", RegexOption.IGNORE_CASE)

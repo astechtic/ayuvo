@@ -89,7 +89,9 @@ fun RecordDetailScreen(
     onOpenRecord: (String) -> Unit = {},
     onOpenSplit: (String) -> Unit = {},
     onOpenTrend: (String) -> Unit = {},
-    focusObservationId: String? = null
+    focusObservationId: String? = null,
+    /** §27 "Ask about this report" / "Compare with previous report": records + prefilled prompt. */
+    onAskCoach: (recordIds: List<String>, prompt: String) -> Unit = { _, _ -> }
 ) {
     val vm: RecordDetailViewModel = viewModel(
         key = "record-$recordId-${focusObservationId.orEmpty()}",
@@ -223,6 +225,22 @@ fun RecordDetailScreen(
                 LaunchedEffect(ui.focus?.token) { if (ui.focus != null) scrollState.animateScrollTo(0) }
                 val intelligence = ui.intelligence
                 DetailStatusLine(record, intelligence)
+                val askPrompt = stringResource(R.string.records_coach_prompt_report)
+                val comparePrompt = stringResource(R.string.records_coach_prompt_compare)
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    GlassTextButton(
+                        text = stringResource(R.string.records_coach_ask_report),
+                        onClick = { onAskCoach(listOf(record.id), askPrompt) },
+                        modifier = Modifier.weight(1f)
+                    )
+                    ui.previousReport?.let { previous ->
+                        GlassTextButton(
+                            text = stringResource(R.string.records_coach_compare_previous),
+                            onClick = { onAskCoach(listOf(record.id, previous.id), comparePrompt) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
                 val options = ui.aiOptions
                 if (intelligence?.job?.awaitingConsent == true && options != null) {
                     AiConsentBanner(

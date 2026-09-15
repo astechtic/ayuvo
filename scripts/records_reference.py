@@ -3602,6 +3602,816 @@ def suggest_relations(record, candidates, today, existing_links=None):
     return {"links": [t[3] for t in found[:slots]]}
 
 
+# =============================================================================================
+# Phase 4: Coach over Health Records (docs §26-§30)
+# =============================================================================================
+#
+# Every function below works on a plain "store snapshot" dict (lists are store rows, list order is row
+# order):
+#   records:      [{id, seq, title, record_type, category, sort_date, created_ms, review_status,
+#                   ai_mode_used, page_count, archived, favorite, source, notes, tags? (tag names)}]
+#   fields:       record_fields rows [{id, record_id, field_key, value_text, value_json (object|null),
+#                   state, confidence, method, source_page}]
+#   observations: observations rows (OBSERVATION_KEYS)
+#   highlights:   [{id, record_id, section, text, position, dismissed}]
+#   pages:        [{record_id, page_index, text}]
+#   links:        record_links rows [{a_id, b_id, kind, origin, status}]
+#   user_aliases: {normalized_name: analyte_id}
+#   catalog:      optional and ignored (the reference always uses shared/records/analytes.json)
+# Missing lists mean empty. Payloads are compared structurally (parsed JSON); the prompt lines and the
+# packed on-device block are exact strings.
+
+_COACH_TOOLS_DOC = {}
+_FTS_COLUMNS = ["title", "people", "clinical", "body", "notes_tags", "highlights"]
+_FTS_WEIGHTS = [5.0, 3.0, 3.0, 1.0, 2.0, 2.0]
+_FTS_PEOPLE_KEYS = ["doctor_name", "doctor_specialty", "facility", "department", "patient_name"]
+_FTS_CLINICAL_KEYS = ["report_name", "test_result", "diagnosis", "symptom", "medication", "procedure"]
+_SEARCH_LIMIT_DEFAULT = 10
+_SEARCH_LIMIT_CAP = 20
+_SEARCH_VALUES_CAP = 20
+_SEARCH_HIGHLIGHTS_CAP = 3
+_GET_TEXT_CHARS = 2000
+_SERIES_CAP = 100
+COACH_CONTEXT_MAX_RECORDS = 3
+COACH_CONTEXT_MAX_CHARS = 1800
+_FLAGGED = ("critical_low", "critical_high", "low", "high", "abnormal")
+_FLAG_WORD = {"low": "low", "high": "high", "critical_low": "critical low", "critical_high": "critical high",
+              "abnormal": "abnormal"}
+_STORED_FLAGS = {"abnormal": ["low", "high", "critical_low", "critical_high", "abnormal"],
+                 "low": ["low", "critical_low"], "high": ["high", "critical_high"],
+                 "critical": ["critical_low", "critical_high"], "normal": ["normal"]}
+# Fields never sent to a model: identity (patient_name) and address (location). Page-text lines that carry
+# identity, contact or ID data are removed from records_get text (see _pii_line).
+_GET_EXCLUDED_KEYS = frozenset(["test_result", "patient_name", "location"])
+_RE_PII_LABEL = re.compile("(?<![a-z0-9])(?:patient|name|uhid|mrn|mr no|ip no|op no|reg no|regn no|registration|"
+                           "phone|mobile|mob|tel|telephone|contact|email|e-mail|address|addr|aadhaar|aadhar|abha|"
+                           "pan no|passport|policy no|member id|id no|lab no|sample id|barcode|dob|d\\.o\\.b|"
+                           "date of birth|birth)(?![a-z0-9])")
+_RE_PII_DIGITS = re.compile("[0-9](?:[ -]?[0-9]){9}")
+_RE_PLACEHOLDER = re.compile("\\{([a-z_]+)\\}")
+_RE_ISO_DAY = re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+
+def coach_tools_doc():
+    """shared/records/coach_tools.json (tools, prompt strings, error strings)."""
+    if "coach" not in _COACH_TOOLS_DOC:
+        with open(os.path.join(SHARED, "coach_tools.json"), encoding="utf-8") as fh:
+            _COACH_TOOLS_DOC["coach"] = json.load(fh)
+    return _COACH_TOOLS_DOC["coach"]
+
+
+def fill_placeholders(template, values):
+    """Single left-to-right pass: every '{name}' whose name is in values is replaced by str(value); other
+    braces stay. Replaced text is never rescanned (a title containing '{date}' stays literal)."""
+    return _RE_PLACEHOLDER.sub(lambda m: str(values[m.group(1)]) if m.group(1) in values else m.group(0), template)
+
+
+def coach_error(key, **values):
+    return {"error": fill_placeholders(coach_tools_doc()["errors"][key], values)}
+
+
+def collapse_ws(s):
+    """Runs of space, tab, CR and LF -> one space; trimmed. None -> None."""
+    if s is None:
+        return None
+    return re.sub("[ \t\r\n]+", " ", s).strip(" ")
+
+
+def _snap(snapshot, key):
+    return snapshot.get(key) or []
+
+
+def _record_map(snapshot):
+    return dict((r["id"], r) for r in _snap(snapshot, "records"))
+
+
+def _timeline_key(r):
+    return (r.get("sort_date") or "", r.get("created_ms") or 0, r.get("seq") or 0)
+
+
+def _rows_of(snapshot, record_id):
+    return [f for f in _snap(snapshot, "fields") if f["record_id"] == record_id]
+
+
+def _role(row):
+    vj = row.get("value_json")
+    return vj.get("role") if isinstance(vj, dict) else None
+
+
+def _best_value(rows, key, role=None):
+    """§8.1 best non-rejected row of key; for doctor_name, role 'referrer' picks referrer rows and None the
+    primary (non-referrer) rows. -> value_text or None."""
+    cand = [r for r in rows if r["field_key"] == key]
+    if key == "doctor_name":
+        cand = [r for r in cand if (_role(r) == "referrer") == (role == "referrer")]
+    best = _best_of(cand)
+    return best["value_text"] if best is not None else None
+
+
+def _medication_text(row):
+    """§15 medication line: '<name>[ <strength>][ · <frequency>][ · <duration>]'."""
+    vj = row.get("value_json") or {}
+    text = vj.get("name") or row["value_text"]
+    if vj.get("strength"):
+        text += " " + vj["strength"]
+    for k in ("frequency", "duration"):
+        if vj.get(k):
+            text += " · " + vj[k]
+    return text
+
+
+def _parse_day(value):
+    """Tool date argument -> (date string or None, error dict or None). Absent, null and "" mean no bound."""
+    if value is None or value == "":
+        return None, None
+    if not isinstance(value, str):
+        return None, coach_error("bad_date", value=json.dumps(value, separators=(",", ":"), ensure_ascii=False))
+    m = _RE_ISO_DATE.fullmatch(value)
+    if not m or _valid(int(m.group(1)), int(m.group(2)), int(m.group(3))) is None:
+        return None, coach_error("bad_date", value=value)
+    return value, None
+
+
+def _date_args(args):
+    lo, err = _parse_day(args.get("from"))
+    if err:
+        return None, None, err
+    hi, err = _parse_day(args.get("to"))
+    if err:
+        return None, None, err
+    if lo is not None and hi is not None and lo > hi:
+        return None, None, coach_error("date_order")
+    return lo, hi, None
+
+
+def _record_observations(snapshot, record_id):
+    """Non-rejected observations of a record, ordered by the row position of their field (field_id), then
+    user-added rows (no field or an unknown field) by (created_ms, id)."""
+    rows = _rows_of(snapshot, record_id)
+    pos = dict((f["id"], i) for i, f in enumerate(rows))
+    obs = [o for o in _snap(snapshot, "observations") if o["record_id"] == record_id]
+    has_any = bool(obs)
+    live = [o for o in obs if o.get("state") != "rejected"]
+    live.sort(key=lambda o: ((0, pos[o["field_id"]], 0, "") if o.get("field_id") in pos
+                             else (1, 0, o.get("created_ms") or 0, o["id"])))
+    return has_any, live
+
+
+def record_test_results(snapshot, record_id):
+    """§28 test_results of a record: from its observations when the record has any observation row (rejected
+    ones omitted), else from its non-rejected test_result fields. Report order."""
+    has_obs, obs = _record_observations(snapshot, record_id)
+    out = []
+    if has_obs:
+        for o in obs:
+            out.append({"name": o.get("raw_name"), "analyte": o.get("analyte_id"), "value": o.get("value_text"),
+                        "unit": o.get("unit"), "ref_text": o.get("ref_text"), "ref_low": o.get("ref_low"),
+                        "ref_high": o.get("ref_high"), "flag": o.get("flag") or "unknown", "state": o.get("state"),
+                        "source_page": o.get("source_page")})
+        return out
+    for f in _rows_of(snapshot, record_id):
+        if f["field_key"] != "test_result" or f["state"] == "rejected":
+            continue
+        vj = f.get("value_json") or {}
+        out.append({"name": vj.get("name") or f["value_text"], "analyte": None,
+                    "value": vj.get("value") if vj.get("value") is not None else "",
+                    "unit": canonical_unit_spelling(vj.get("unit")), "ref_text": vj.get("ref_text"),
+                    "ref_low": vj.get("ref_low"), "ref_high": vj.get("ref_high"), "flag": vj.get("flag") or "unknown",
+                    "state": f["state"], "source_page": f.get("source_page")})
+    return out
+
+
+# ---------------------------------------------------------------------------------------------
+# §28 records_search: FTS row, BM25 over matchinfo('pcnalx'), filters, restriction
+# ---------------------------------------------------------------------------------------------
+
+def fts_row(snapshot, record):
+    """The records_fts row of a record (§17 columns, Phase 3 analyte names), each column folded:
+    title; people = non-rejected doctor_name, doctor_specialty, facility, department, patient_name values (in
+    that key order, row order inside a key); clinical = the type (record_type with '_' -> ' ', nothing for
+    other), report_name, test_result, diagnosis, symptom, medication, procedure values, then the display names
+    of the distinct analyte ids of the record's non-rejected observations (sorted by id), distinct values
+    only; body = page texts by page_index; notes_tags = notes and the record's tag names (record.tags) joined
+    with ' '; highlights = non-dismissed highlight texts by
+    (section, position). Values are joined with '\\n'."""
+    rows = [f for f in _rows_of(snapshot, record["id"]) if f["state"] != "rejected"]
+
+    def values(keys):
+        return [f["value_text"] for k in keys for f in rows if f["field_key"] == k]
+    clinical = ([record["record_type"].replace("_", " ")] if record.get("record_type") not in (None, "other") else [])
+    clinical += values(_FTS_CLINICAL_KEYS)
+    cat = analyte_catalog()["by_id"]
+    ids = sorted(set(o["analyte_id"] for o in _snap(snapshot, "observations")
+                     if o["record_id"] == record["id"] and o.get("state") != "rejected" and o.get("analyte_id") in cat))
+    clinical += [cat[i]["display_name"] for i in ids]
+    distinct = []
+    for v in clinical:
+        if v and v not in distinct:
+            distinct.append(v)
+    pages = sorted([p for p in _snap(snapshot, "pages") if p["record_id"] == record["id"]], key=lambda p: p["page_index"])
+    hls = sorted([h for h in _snap(snapshot, "highlights") if h["record_id"] == record["id"] and not h.get("dismissed")],
+                 key=lambda h: (h["section"], h.get("position") or 0))
+    return {"title": fold(record.get("title") or ""), "people": fold("\n".join(values(_FTS_PEOPLE_KEYS))),
+            "clinical": fold("\n".join(distinct)), "body": fold("\n".join(p.get("text") or "" for p in pages)),
+            "notes_tags": fold(" ".join([record.get("notes") or ""] + list(record.get("tags") or []))),"highlights": fold("\n".join(h["text"] for h in hls))}
+
+
+def fts_tokens(s):
+    """FTS4 'simple' tokenizer: a token is a maximal run of ASCII letters/digits and code points >= U+0080
+    (the indexed text is already folded, so no case mapping is needed)."""
+    out, cur = [], []
+    for ch in s:
+        if ("a" <= ch <= "z") or ("0" <= ch <= "9") or ("A" <= ch <= "Z") or ord(ch) >= 0x80:
+            cur.append(ch)
+        elif cur:
+            out.append("".join(cur))
+            cur = []
+    if cur:
+        out.append("".join(cur))
+    return out
+
+
+def bm25_pcnalx(terms, doc_tokens, all_tokens, weights=None, k1=1.2, b=0.75):
+    """§17 BM25 from FTS4 matchinfo 'pcnalx' for a MATCH of 'term*' phrases. doc_tokens: token lists per column
+    of this row; all_tokens: [token lists per column] for EVERY row of the FTS table. n = rows; a[c] =
+    (total tokens of column c + n/2) / n in integer arithmetic (FTS4's rounding); l[c] = tokens of this row;
+    tf = tokens of this row starting with the term; df = rows with >= 1 such token in c.
+    score = sum weight[c] * idf * tf (k1 + 1) / (tf + k1 (1 - b + b l / max(a, 1))) over terms and columns with
+    tf > 0, idf = max(ln((n - df + 0.5) / (df + 0.5)), 1e-6)."""
+    weights = weights or _FTS_WEIGHTS
+    n = len(all_tokens)
+    score = 0.0
+    for t in terms:
+        for c in range(len(doc_tokens)):
+            tf = sum(1 for x in doc_tokens[c] if x.startswith(t))
+            if tf <= 0:
+                continue
+            df = sum(1 for row in all_tokens if any(x.startswith(t) for x in row[c]))
+            avg = (sum(len(row[c]) for row in all_tokens) + n // 2) // n
+            idf = max(math.log((n - df + 0.5) / (df + 0.5)), 1e-6)
+            norm = tf + k1 * (1 - b + b * len(doc_tokens[c]) / max(avg, 1))
+            score += weights[c] * idf * (tf * (k1 + 1)) / norm
+    return score
+
+
+def recency_boost(sort_date, today):
+    """0.15 x max(0, 1 - days/730), days = max(0, today - sort_date)."""
+    days = max(0, (_dt.date.fromisoformat(today) - _dt.date.fromisoformat(sort_date)).days)
+    return 0.15 * max(0.0, 1 - days / 730.0)
+
+
+def _words_prefix_match(words_list, wanted):
+    """Every wanted word is a prefix of a later word, in order."""
+    i = 0
+    for w in words_list:
+        if i < len(wanted) and w.startswith(wanted[i]):
+            i += 1
+    return i == len(wanted)
+
+
+def _observation_matches(o, cond):
+    if o.get("analyte_id") != cond["analyte_id"] or o.get("state") == "rejected":
+        return False
+    if cond["flag"] is not None:
+        return o.get("flag") in _STORED_FLAGS[cond["flag"]]
+    cv = cond["canonical_value"]
+    if cv is None or o.get("canonical_value") is None or o.get("canonical_unit") != cond["canonical_unit"]:
+        return False
+    v = o["canonical_value"]
+    return {">": v > cv, ">=": v >= cv, "<": v < cv, "<=": v <= cv}[cond["op"]]
+
+
+def _search_limit(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return _SEARCH_LIMIT_DEFAULT
+    if isinstance(value, float):
+        if value != math.floor(value):
+            return _SEARCH_LIMIT_DEFAULT
+        value = int(value)
+    return max(1, min(_SEARCH_LIMIT_CAP, value))
+
+
+def records_search_payload(snapshot, args, selected_ids, today, date_order):
+    """§28 records_search. Steps:
+    1. Arguments: query (non-string -> ""); from/to (bad -> errors.bad_date, from > to -> errors.date_order);
+       record_type (not a §3 value -> ignored); limit (default 10, whole numbers clamped to 1..20, anything
+       else -> 10).
+    2. parse_query(query, today, date_order); date range = intersection with from/to on sort_date (an empty
+       intersection matches nothing); record_type narrows the parsed types (parsed types without it -> nothing).
+    3. Scope: selected_ids non-empty -> only those records (archived or not); otherwise records whose archived
+       flag equals the query's `archived`.
+    4. Filters (AND): types, dates, favorites, needs_review, source received (share_in/open_in), flags
+       (test_result fields, §17), doctor/facility (a non-rejected doctor_name/facility field whose §8.1
+       normalized words prefix-match the name's words in order), every analyte condition (§23, observations).
+    5. Terms: none -> timeline order (sort_date, created_ms, seq descending). Otherwise every term must
+       prefix-match a token of the record's FTS row (any column); score = bm25_pcnalx over ALL snapshot records
+       + recency_boost; order score desc, then timeline desc.
+    6. records = first `limit`; values (only when the query has analytes or analyte conditions) = non-rejected
+       observations of in-scope records for those analytes (a conditioned analyte also needs a matching
+       condition; a bare one matches any value), observed_date inside the date range when a bound exists, newest
+       first by (observed_date, created_ms, id) descending, max 20. count = len(records)."""
+    args = args or {}
+    query = args.get("query") if isinstance(args.get("query"), str) else ""
+    lo, hi, err = _date_args(args)
+    if err:
+        return err
+    limit = _search_limit(args.get("limit"))
+    q = parse_query(query, today, date_order)
+    date_from = max([d for d in (q["date_from"], lo) if d is not None], default=None)
+    date_to = min([d for d in (q["date_to"], hi) if d is not None], default=None)
+    types = list(q["record_types"])
+    rt = args.get("record_type")
+    if isinstance(rt, str) and rt in RECORD_TYPES:
+        types = [rt] if (not types or rt in types) else ["-"]
+    selected = set(selected_ids or [])
+    records = _snap(snapshot, "records")
+    fields = _snap(snapshot, "fields")
+    observations = _snap(snapshot, "observations")
+
+    def in_scope(r):
+        if selected:
+            return r["id"] in selected
+        return bool(r.get("archived")) == bool(q["archived"])
+    scope = [r for r in records if in_scope(r)]
+
+    def passes(r):
+        if types and r.get("record_type") not in types:
+            return False
+        if date_from is not None and r["sort_date"] < date_from:
+            return False
+        if date_to is not None and r["sort_date"] > date_to:
+            return False
+        if q["favorites"] and not r.get("favorite"):
+            return False
+        if q["needs_review"] and r.get("review_status") != "needs_review":
+            return False
+        if q["source"] == "received" and r.get("source") not in ("share_in", "open_in"):
+            return False
+        rows = [f for f in fields if f["record_id"] == r["id"] and f["state"] != "rejected"]
+        if q["flags"]:
+            wanted = set(x for fl in q["flags"] for x in _STORED_FLAGS[fl])
+            if not any(f["field_key"] == "test_result" and (f.get("value_json") or {}).get("flag") in wanted for f in rows):
+                return False
+        for key, name in (("doctor_name", q["doctor"]), ("facility", q["facility"])):
+            if name is None or not norm_text(name):
+                continue
+            wanted = norm_text(name).split(" ")
+            if not any(f["field_key"] == key and _words_prefix_match(
+                    normalize_value(key, f["value_text"], f.get("value_json")).split(" "), wanted) for f in rows):
+                return False
+        robs = [o for o in observations if o["record_id"] == r["id"]]
+        for cond in q["analyte_conditions"]:
+            if not any(_observation_matches(o, cond) for o in robs):
+                return False
+        return True
+    hits = [r for r in scope if passes(r)]
+    if q["terms"]:
+        all_rows = [fts_row(snapshot, r) for r in records]
+        all_tokens = [[fts_tokens(row[c]) for c in _FTS_COLUMNS] for row in all_rows]
+        index = dict((r["id"], i) for i, r in enumerate(records))
+        scored = []
+        for r in hits:
+            toks = all_tokens[index[r["id"]]]
+            if not all(any(x.startswith(t) for col in toks for x in col) for t in q["terms"]):
+                continue
+            score = bm25_pcnalx(q["terms"], toks, all_tokens) + recency_boost(r["sort_date"], today)
+            scored.append((score, r))
+        scored.sort(key=lambda t: _timeline_key(t[1]), reverse=True)
+        scored.sort(key=lambda t: t[0], reverse=True)
+        ordered = [r for _, r in scored]
+    else:
+        ordered = sorted(hits, key=_timeline_key, reverse=True)
+    out_records = []
+    for r in ordered[:limit]:
+        rows = _rows_of(snapshot, r["id"])
+        hl = sorted([h for h in _snap(snapshot, "highlights") if h["record_id"] == r["id"]
+                     and h["section"] == "important" and not h.get("dismissed")], key=lambda h: h.get("position") or 0)
+        out_records.append({"record_id": r["id"], "title": r["title"], "date": r["sort_date"],
+                            "record_type": r["record_type"], "facility": _best_value(rows, "facility"),
+                            "doctor": _best_value(rows, "doctor_name"), "review_status": r.get("review_status") or "none",
+                            "highlights": [h["text"] for h in hl[:_SEARCH_HIGHLIGHTS_CAP]]})
+    values = []
+    if q["analytes"] or q["analyte_conditions"]:
+        scope_ids = set(r["id"] for r in scope)
+        bare = set(q["analytes"])
+        conds = q["analyte_conditions"]
+        cand = []
+        for o in observations:
+            if o["record_id"] not in scope_ids or o.get("state") == "rejected":
+                continue
+            aid = o.get("analyte_id")
+            if aid not in bare and not any(_observation_matches(o, c) for c in conds):
+                continue
+            od = o.get("observed_date")
+            if (date_from is not None or date_to is not None) and od is None:
+                continue
+            if (date_from is not None and od < date_from) or (date_to is not None and od > date_to):
+                continue
+            cand.append(o)
+        cand.sort(key=lambda o: (o.get("observed_date") or "", o.get("created_ms") or 0, o["id"]), reverse=True)
+        for o in cand[:_SEARCH_VALUES_CAP]:
+            values.append({"record_id": o["record_id"], "analyte": o.get("analyte_id"), "name": o.get("raw_name"),
+                           "value": o.get("value_text"), "unit": o.get("unit"), "flag": o.get("flag") or "unknown",
+                           "date": o.get("observed_date")})
+    return {"query": query, "count": len(out_records), "records": out_records, "values": values}
+
+
+# ---------------------------------------------------------------------------------------------
+# §28 records_get
+# ---------------------------------------------------------------------------------------------
+
+def _pii_line(folded_line, patient_names):
+    """A page-text line removed from records_get text: it has an identity/contact/ID label (_RE_PII_LABEL),
+    a run of >= 10 digits (optionally separated by single spaces or '-'), or contains a non-rejected
+    patient_name value (§9.3 contains on §8.1 normalized words)."""
+    if _RE_PII_LABEL.search(folded_line) or _RE_PII_DIGITS.search(folded_line):
+        return True
+    padded = " " + norm_text(folded_line) + " "
+    return any(n and (" " + n + " ") in padded for n in patient_names)
+
+
+def record_text_excerpt(snapshot, record_id):
+    """§28 text: page texts by page_index (CRLF/CR -> LF), identity lines removed (_pii_line on fold(line)),
+    empty pages skipped, joined with '\\n\\n', first 2,000 code points; no text -> None."""
+    names = [norm_text(f["value_text"]) for f in _rows_of(snapshot, record_id)
+             if f["field_key"] == "patient_name" and f["state"] != "rejected"]
+    parts = []
+    pages = sorted([p for p in _snap(snapshot, "pages") if p["record_id"] == record_id], key=lambda p: p["page_index"])
+    for p in pages:
+        text = (p.get("text") or "").replace("\r\n", "\n").replace("\r", "\n")
+        kept = [ln for ln in text.split("\n") if not _pii_line(fold(ln), names)]
+        page = "\n".join(kept).strip("\n")
+        if page.strip(" \t\n"):
+            parts.append(page)
+    text = "\n\n".join(parts)
+    return text[:_GET_TEXT_CHARS] if text else None
+
+
+def records_get_payload(snapshot, args, selected_ids):
+    """§28 records_get. record_id not a string -> treated as "". Restricted (selected_ids non-empty) and the id
+    is not selected -> errors.not_selected (checked first, so other ids are never confirmed to exist); unknown
+    id -> errors.unknown_record. fields = non-rejected rows in row order except test_result, patient_name and
+    location: {key, value, state, source_page} with value = value_text (medication: the §15 medication line).
+    test_results = record_test_results. highlights = non-dismissed {section, text} by (section, position).
+    text only when include_text is exactly true (record_text_excerpt)."""
+    args = args or {}
+    rid = args.get("record_id") if isinstance(args.get("record_id"), str) else ""
+    selected = list(selected_ids or [])
+    if selected and rid not in selected:
+        return coach_error("not_selected", id=rid)
+    rec = _record_map(snapshot).get(rid)
+    if rec is None:
+        return coach_error("unknown_record", id=rid)
+    rows = _rows_of(snapshot, rid)
+    fields = []
+    for f in rows:
+        if f["state"] == "rejected" or f["field_key"] in _GET_EXCLUDED_KEYS:
+            continue
+        value = _medication_text(f) if f["field_key"] == "medication" else f["value_text"]
+        fields.append({"key": f["field_key"], "value": value, "state": f["state"], "source_page": f.get("source_page")})
+    hls = sorted([h for h in _snap(snapshot, "highlights") if h["record_id"] == rid and not h.get("dismissed")],
+                 key=lambda h: (h["section"], h.get("position") or 0))
+    return {"record_id": rid, "title": rec["title"], "date": rec["sort_date"], "record_type": rec["record_type"],
+            "category": rec.get("category") or DEFAULT_CATEGORY.get(rec["record_type"], "other"),
+            "facility": _best_value(rows, "facility"), "doctor": _best_value(rows, "doctor_name"),
+            "referrer": _best_value(rows, "doctor_name", "referrer"), "patient_sex": _best_value(rows, "patient_sex"),
+            "patient_age": _best_value(rows, "patient_age"), "review_status": rec.get("review_status") or "none",
+            "ai_mode_used": rec.get("ai_mode_used") or "none", "page_count": rec.get("page_count") or 0,
+            "fields": fields, "test_results": record_test_results(snapshot, rid),
+            "highlights": [{"section": h["section"], "text": h["text"]} for h in hls],
+            "text": record_text_excerpt(snapshot, rid) if args.get("include_text") is True else None}
+
+
+# ---------------------------------------------------------------------------------------------
+# §28 records_observation_series
+# ---------------------------------------------------------------------------------------------
+
+def resolve_series_analyte(snapshot, name):
+    """analyte argument -> catalog id or None: an exact catalog id first, else §20 map_analyte(name) with the
+    snapshot's user aliases (no panels, unit or kind context)."""
+    cat = analyte_catalog()["by_id"]
+    if name in cat:
+        return name
+    return map_analyte(name, None, snapshot.get("user_aliases") or {}, None, None)["analyte_id"]
+
+
+def records_series_payload(snapshot, args, selected_ids):
+    """§28 records_observation_series.
+    Rows = observations with state != rejected, excluded_from_trends = 0, an observed_date inside from/to,
+    whose record exists and is selected (restricted) or not archived (unrestricted). Resolved analyte -> rows with that analyte_id; when
+    that yields nothing (or the name does not resolve), rows with analyte_id null whose
+    normalize_test_name(raw_name) equals normalize_test_name(argument) (payload analyte null). Nothing ->
+    errors.unknown_analyte (blank argument too). Rows ordered by (observed_date, created_ms, id); rows with the
+    same observed_date and the same value (canonical_value when set, else unit + value_text) keep only the
+    first; the last 100 remain, oldest first. unit = the catalog canonical unit (null when unresolved);
+    display_name = catalog display name, else the first row's raw_name."""
+    args = args or {}
+    name = args.get("analyte") if isinstance(args.get("analyte"), str) else ""
+    lo, hi, err = _date_args(args)
+    if err:
+        return err
+    if not name.strip():
+        return coach_error("unknown_analyte", analyte=name)
+    recs = _record_map(snapshot)
+    selected = set(selected_ids or [])
+
+    def usable(o):
+        od = o.get("observed_date")
+        return (o.get("state") != "rejected" and not o.get("excluded_from_trends") and od is not None
+                and o["record_id"] in recs
+                and (o["record_id"] in selected if selected else not recs[o["record_id"]].get("archived"))
+                and (lo is None or od >= lo) and (hi is None or od <= hi))
+    rows = [o for o in _snap(snapshot, "observations") if usable(o)]
+    aid = resolve_series_analyte(snapshot, name)
+    picked = [o for o in rows if aid is not None and o.get("analyte_id") == aid]
+    if not picked:
+        key = normalize_test_name(name)
+        picked = [o for o in rows if o.get("analyte_id") is None and normalize_test_name(o.get("raw_name") or "") == key]
+        aid = None
+    if not picked:
+        return coach_error("unknown_analyte", analyte=name)
+    picked.sort(key=lambda o: (o["observed_date"], o.get("created_ms") or 0, o["id"]))
+    seen, points = set(), []
+    for o in picked:
+        vkey = ("c", o["canonical_value"]) if o.get("canonical_value") is not None else ("u", o.get("unit"), o.get("value_text"))
+        dkey = (o["observed_date"],) + vkey
+        if dkey in seen:
+            continue
+        seen.add(dkey)
+        points.append({"date": o["observed_date"], "value": o.get("value_text"), "unit": o.get("unit"),
+                       "canonical_value": o.get("canonical_value"), "flag": o.get("flag") or "unknown",
+                       "ref_low": o.get("ref_low"), "ref_high": o.get("ref_high"), "record_id": o["record_id"],
+                       "record_title": recs[o["record_id"]]["title"], "state": o.get("state")})
+    points = points[-_SERIES_CAP:]
+    e = analyte_catalog()["by_id"].get(aid) if aid else None
+    return {"analyte": aid, "display_name": e["display_name"] if e else picked[0].get("raw_name"),
+            "unit": e["canonical_unit"] if e else None, "count": len(points), "points": points}
+
+
+# ---------------------------------------------------------------------------------------------
+# §26 prompt lines, gating and record refs
+# ---------------------------------------------------------------------------------------------
+
+def _type_label(type_labels, record_type):
+    return (type_labels or {}).get(record_type) or TYPE_LABEL.get(record_type, "Record")
+
+
+def _selected_records(snapshot, selected_ids):
+    """Selected ids that exist, newest first (sort_date, created_ms, seq descending)."""
+    recs = _record_map(snapshot)
+    picked = []
+    for i in selected_ids or []:
+        if i in recs and recs[i] not in picked:
+            picked.append(recs[i])
+    return sorted(picked, key=_timeline_key, reverse=True)
+
+
+def coach_prompt_lines(snapshot, access_enabled, selected_ids, type_labels):
+    """§26 system-prompt pieces -> {advertise_tools, available_line, guardrails, selected_lines,
+    not_available_line}.
+    * access disabled: tools not advertised; not_available_line = prompt.not_available_line (the caller adds it
+      only when mentions_records(user message)); everything else null/empty.
+    * enabled, no non-archived record: nothing (no tools, no lines, not_available_line null).
+    * enabled: available_line with n = non-archived record count and latest_date = their max sort_date;
+      guardrails; selected_lines = prompt.selected_header + one prompt.selected_line per existing selected
+      record (newest first; title whitespace-collapsed; date = sort_date; type_label from type_labels, falling
+      back to the English TYPE_LABEL), empty without a selection."""
+    p = coach_tools_doc()["prompt"]
+    out = {"advertise_tools": False, "available_line": None, "guardrails": None, "selected_lines": [],
+           "not_available_line": None}
+    if not access_enabled:
+        out["not_available_line"] = p["not_available_line"]
+        return out
+    live = [r for r in _snap(snapshot, "records") if not r.get("archived")]
+    if not live:
+        return out
+    out["advertise_tools"] = True
+    out["available_line"] = fill_placeholders(p["available_line"], {"n": len(live),
+                                                                    "latest_date": max(r["sort_date"] for r in live)})
+    out["guardrails"] = p["guardrails"]
+    sel = _selected_records(snapshot, selected_ids)
+    if sel:
+        out["selected_lines"] = [p["selected_header"]] + [
+            fill_placeholders(p["selected_line"], {"record_id": r["id"], "title": collapse_ws(r["title"]),
+                                                   "date": r["sort_date"],
+                                                   "type_label": _type_label(type_labels, r["record_type"])})
+            for r in sel]
+    return out
+
+
+_MENTION_EXTRA = [(("record",), None), (("records",), None)]
+
+
+def mentions_records(message):
+    """§26 gating: the §8.1 words of fold(message) contain a §17 type phrase (_Q_TYPES, e.g. 'report',
+    'blood test', 'x ray', 'prescription') or the word 'record'/'records'."""
+    ws = words(fold(message or ""))
+    toks = [("w", w) for w in ws]
+    table = _Q_TYPES + _MENTION_EXTRA
+    return any(_match_phrase(toks, i, table) for i in range(len(toks)))
+
+
+def record_refs(tool_calls, packed=None):
+    """§26 record_refs of one assistant turn -> [{record_id, title, date}], distinct by record_id, first
+    occurrence wins. Order: `packed` (the records of the on-device block, as {record_id, title, date}) first,
+    then tool calls in call order: a successful records_get -> its record (date = the payload date);
+    a successful records_observation_series -> each point's record (title = record_title, date = the point
+    date) in point order. records_search results and error payloads add nothing."""
+    out, seen = [], set()
+
+    def add(rid, title, date):
+        if rid is not None and rid not in seen:
+            seen.add(rid)
+            out.append({"record_id": rid, "title": title, "date": date})
+    for r in packed or []:
+        add(r["record_id"], r["title"], r["date"])
+    for call in tool_calls or []:
+        res = call.get("result")
+        if not isinstance(res, dict) or "error" in res:
+            continue
+        if call.get("name") == "records_get":
+            add(res.get("record_id"), res.get("title"), res.get("date"))
+        elif call.get("name") == "records_observation_series":
+            for pt in res.get("points") or []:
+                add(pt.get("record_id"), pt.get("record_title"), pt.get("date"))
+    return out
+
+
+# ---------------------------------------------------------------------------------------------
+# §27 selection helpers
+# ---------------------------------------------------------------------------------------------
+
+def compare_candidate(snapshot, record_id):
+    """§27 "Compare with previous report" -> {previous_id, rule}. Candidates are other non-archived records
+    older than the record by (sort_date, created_ms, seq). rule 'link': a previous_report record_links row with
+    the record whose status is not rejected -> the newest such older record. Else rule 'shared_analytes': both
+    records lab-like (lab_report, imaging_report, diagnostic_report) and sharing >= 3 distinct analyte ids of
+    non-rejected observations -> the newest such older record. Else {previous_id: null, rule: null}."""
+    recs = _record_map(snapshot)
+    rec = recs.get(record_id)
+    none = {"previous_id": None, "rule": None}
+    if rec is None:
+        return none
+
+    def older(c):
+        return c["id"] != record_id and not c.get("archived") and _timeline_key(c) < _timeline_key(rec)
+    linked = []
+    for l in _snap(snapshot, "links"):
+        if l.get("kind") != "previous_report" or l.get("status") == "rejected" or record_id not in (l["a_id"], l["b_id"]):
+            continue
+        other = recs.get(l["b_id"] if l["a_id"] == record_id else l["a_id"])
+        if other is not None and older(other):
+            linked.append(other)
+    if linked:
+        return {"previous_id": max(linked, key=_timeline_key)["id"], "rule": "link"}
+    if rec.get("record_type") not in _LAB_LIKE:
+        return none
+
+    def analytes(rid):
+        return set(o["analyte_id"] for o in _snap(snapshot, "observations")
+                   if o["record_id"] == rid and o.get("state") != "rejected" and o.get("analyte_id"))
+    mine = analytes(record_id)
+    shared = [c for c in _snap(snapshot, "records") if older(c) and c.get("record_type") in _LAB_LIKE
+              and len(mine & analytes(c["id"])) >= 3]
+    if shared:
+        return {"previous_id": max(shared, key=_timeline_key)["id"], "rule": "shared_analytes"}
+    return none
+
+
+def latest_lab_selection(snapshot):
+    """§27 Coach suggestion chips -> {show_chips, latest, compare}: show_chips = a non-archived lab_report
+    exists; latest = up to 3 newest non-archived lab_report ids (timeline order); compare = [newest lab report,
+    its compare_candidate] when one exists, else null."""
+    labs = sorted([r for r in _snap(snapshot, "records") if r.get("record_type") == "lab_report" and not r.get("archived")],
+                  key=_timeline_key, reverse=True)
+    if not labs:
+        return {"show_chips": False, "latest": [], "compare": None}
+    prev = compare_candidate(snapshot, labs[0]["id"])["previous_id"]
+    return {"show_chips": True, "latest": [r["id"] for r in labs[:3]],
+            "compare": [labs[0]["id"], prev] if prev is not None else None}
+
+
+# ---------------------------------------------------------------------------------------------
+# §29 on-device context block
+# ---------------------------------------------------------------------------------------------
+
+def _strip_ref_brackets(ref_text):
+    t = collapse_ws(ref_text)
+    if t and len(t) >= 2 and ((t[0] == "(" and t[-1] == ")") or (t[0] == "[" and t[-1] == "]")):
+        t = t[1:-1].strip(" ")
+    return t or None
+
+
+def _result_item(tr):
+    parts = [collapse_ws(x) for x in (tr["name"], tr["value"], tr["unit"]) if x is not None and collapse_ws(x)]
+    inner = []
+    if tr["flag"] in _FLAG_WORD:
+        inner.append(_FLAG_WORD[tr["flag"]])
+    ref = _strip_ref_brackets(tr["ref_text"]) if tr["ref_text"] is not None else None
+    if ref:
+        inner.append("ref " + ref)
+    text = " ".join(parts)
+    if inner:
+        text += " (" + ", ".join(inner) + ")"
+    return text
+
+
+def _flag_group(flag):
+    if flag in ("critical_low", "critical_high"):
+        return 0
+    if flag in ("low", "high"):
+        return 1
+    if flag == "abnormal":
+        return 2
+    return 3
+
+
+def pack_coach_records(snapshot, selected_ids, type_labels):
+    """§29 on-device block -> {text, record_ids, dropped_results}. text null when no selected record exists.
+    Records: existing selected ids, newest first, max 3. Per record:
+      '### <title> — <date> (<type label>)'
+      'Facility: <f> · Doctor: <d>' (parts omitted individually; line omitted when both missing)
+      'Results: <item>; <item>' items = record_test_results ordered critical, low/high, abnormal, rest (report
+        order inside a group); item = '<name> <value> <unit>' (missing parts skipped) + ' (<flag word>, ref
+        <ref_text>)' where the flag word is present for flagged results and 'ref …' when ref_text exists (one
+        enclosing ()/[] removed); no parenthesis when neither.
+      'Medications: <name> <strength> <frequency>; …', 'Diagnoses: …', 'Recommendations: …' (non-rejected rows,
+        row order). Every value whitespace-collapsed; lines with no data omitted.
+    Lines joined with '\\n' under '## Health records (selected by the user)'. While the block is longer than
+    1,800 code points, drop ONE item at a time in this order: an unflagged result, then a flagged result (both
+    from the last record backwards, from the end of its list), then a recommendation, a diagnosis, a
+    medication (same order), then the oldest remaining record (never the newest). A record that lost results
+    ends its Results line with ' (+N more results not shown)' ('Results: (+N more results not shown)' when all
+    were dropped)."""
+    sel = _selected_records(snapshot, selected_ids)[:COACH_CONTEXT_MAX_RECORDS]
+    if not sel:
+        return {"text": None, "record_ids": [], "dropped_results": 0}
+    blocks = []
+    for r in sel:
+        rows = [f for f in _rows_of(snapshot, r["id"]) if f["state"] != "rejected"]
+        results = [(i, tr) for i, tr in enumerate(record_test_results(snapshot, r["id"]))]
+        results.sort(key=lambda t: (_flag_group(t[1]["flag"]), t[0]))
+        meds = []
+        for f in rows:
+            if f["field_key"] == "medication":
+                vj = f.get("value_json") or {}
+                parts = [vj.get("name") or f["value_text"], vj.get("strength"), vj.get("frequency")]
+                meds.append(" ".join(collapse_ws(x) for x in parts if x and collapse_ws(x)))
+        blocks.append({
+            "record": r,
+            "facility": collapse_ws(_best_value(rows, "facility")), "doctor": collapse_ws(_best_value(rows, "doctor_name")),
+            "results": [{"text": _result_item(tr), "flagged": tr["flag"] in _FLAGGED} for _, tr in results],
+            "dropped": 0,
+            "medications": [m for m in meds if m],
+            "diagnoses": [collapse_ws(f["value_text"]) for f in rows if f["field_key"] == "diagnosis" and collapse_ws(f["value_text"])],
+            "recommendations": [collapse_ws(f["value_text"]) for f in rows
+                                if f["field_key"] == "recommendation" and collapse_ws(f["value_text"])]})
+
+    def render():
+        lines = ["## Health records (selected by the user)"]
+        for b in blocks:
+            r = b["record"]
+            lines.append("### %s — %s (%s)" % (collapse_ws(r["title"]), r["sort_date"], _type_label(type_labels, r["record_type"])))
+            fd = [x for x in (("Facility: " + b["facility"]) if b["facility"] else None,
+                              ("Doctor: " + b["doctor"]) if b["doctor"] else None) if x]
+            if fd:
+                lines.append(" · ".join(fd))
+            if b["results"] or b["dropped"]:
+                line = "Results:"
+                if b["results"]:
+                    line += " " + "; ".join(x["text"] for x in b["results"])
+                if b["dropped"]:
+                    line += " (+%d more results not shown)" % b["dropped"]
+                lines.append(line)
+            for label, key in (("Medications", "medications"), ("Diagnoses", "diagnoses"), ("Recommendations", "recommendations")):
+                if b[key]:
+                    lines.append(label + ": " + "; ".join(b[key]))
+        return "\n".join(lines)
+
+    def drop_one():
+        for flagged in (False, True):
+            for b in reversed(blocks):
+                for i in range(len(b["results"]) - 1, -1, -1):
+                    if b["results"][i]["flagged"] == flagged:
+                        del b["results"][i]
+                        b["dropped"] += 1
+                        return True
+        for key in ("recommendations", "diagnoses", "medications"):
+            for b in reversed(blocks):
+                if b[key]:
+                    b[key].pop()
+                    return True
+        if len(blocks) > 1:
+            blocks.pop()
+            return True
+        return False
+    text = render()
+    while len(text) > COACH_CONTEXT_MAX_CHARS and drop_one():
+        text = render()
+    return {"text": text, "record_ids": [b["record"]["id"] for b in blocks],
+            "dropped_results": sum(b["dropped"] for b in blocks)}
+
+
 # ---------------------------------------------------------------------------------------------
 # Vector dispatch (used by scripts/records_contract_check.py)
 # ---------------------------------------------------------------------------------------------
@@ -3696,4 +4506,29 @@ def run_case(function, inp):
         raise ValueError(op)
     if function == "suggest_relations":
         return suggest_relations(inp["record"], inp["candidates"], inp["today"], inp.get("existing_links"))
+    if function == "coach_tools":
+        snap, tool = inp["snapshot"], inp["tool"]
+        if tool == "records_search":
+            return records_search_payload(snap, inp["args"], inp.get("selected_ids"), inp["today"], inp["date_order"])
+        if tool == "records_get":
+            return records_get_payload(snap, inp["args"], inp.get("selected_ids"))
+        if tool == "records_observation_series":
+            return records_series_payload(snap, inp["args"], inp.get("selected_ids"))
+        raise ValueError(tool)
+    if function == "pack_coach_records":
+        return pack_coach_records(inp["snapshot"], inp.get("selected_ids"), inp.get("type_labels"))
+    if function == "coach_prompt":
+        op = inp["op"]
+        if op == "prompt_lines":
+            return coach_prompt_lines(inp["snapshot"], inp["access_enabled"], inp.get("selected_ids"),
+                                      inp.get("type_labels"))
+        if op == "mentions_records":
+            return {"mentions": mentions_records(inp["message"])}
+        if op == "record_refs":
+            return {"record_refs": record_refs(inp["tool_calls"], inp.get("packed"))}
+        if op == "compare_candidate":
+            return compare_candidate(inp["snapshot"], inp["record_id"])
+        if op == "latest_lab_selection":
+            return latest_lab_selection(inp["snapshot"])
+        raise ValueError(op)
     raise ValueError("unknown function " + function)

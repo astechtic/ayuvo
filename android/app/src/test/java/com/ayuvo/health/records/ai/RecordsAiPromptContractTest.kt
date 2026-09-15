@@ -21,7 +21,7 @@ class RecordsAiPromptContractTest {
         assertEquals(blocks[0], RecordsAiPrompt.SYSTEM_FULL)
         assertEquals(blocks[1], RecordsAiPrompt.USER_TEMPLATE)
         assertEquals(blocks[2], RecordsAiPrompt.SYSTEM_COMPACT)
-        assertTrue(!RecordsAiPrompt.IS_PLACEHOLDER)
+        assertTrue(!RecordsAiPrompt.IS_DRAFT_PROMPT)
     }
 
     @Test

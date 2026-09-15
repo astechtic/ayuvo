@@ -6,6 +6,7 @@ import UniformTypeIdentifiers
 /// multi-select and the Add Record flows.
 struct RecordsHomeView: View {
     @Environment(RecordsStore.self) private var store
+    @Environment(ChatStore.self) private var chatStore
     @State private var path = NavigationPath()
     @State private var searchText = ""
     @State private var chip: RecordsFilterChip = .all
@@ -55,6 +56,11 @@ struct RecordsHomeView: View {
         }
         .task {
             store.refreshAIEnvironment()
+            // A Coach "Used records" chip may have asked for a record before this tab existed.
+            if let id = store.navigationRequest {
+                store.navigationRequest = nil
+                path.append(RecordsRoute.detail(id))
+            }
             if !store.hasLoadedOnce { await store.reload() }
         }
         .onChange(of: searchText) { _, newValue in
@@ -757,6 +763,18 @@ struct RecordsHomeView: View {
             } label: {
                 Label(chip == .archived ? "Unarchive" : "Archive", systemImage: "archivebox")
             }
+            Spacer()
+            Button {
+                let ids = Array(selection)
+                Task {
+                    let refs = await store.recordRefs(ids: ids)
+                    chatStore.requestHandoff(records: refs, prompt: "")
+                    endSelection()
+                }
+            } label: {
+                Label("Ask Coach", systemImage: "bubble.left.and.text.bubble.right")
+            }
+            .accessibilityIdentifier("records.selection.askCoach")
             Spacer()
             Button(role: .destructive) {
                 showBulkDeleteConfirmation = true

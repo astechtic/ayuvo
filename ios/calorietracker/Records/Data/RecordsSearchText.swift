@@ -16,11 +16,12 @@ nonisolated enum RecordsSearchText {
         RR.words(fold(query))
     }
 
-    /// Folded text for an FTS column: the same term split as queries, so non-ASCII punctuation
-    /// (which `simple` would keep inside a token, e.g. `—`) separates words on both sides.
+    /// Folded text for an FTS column, exactly the reference `fts_row` column (§28): the FTS4 `simple`
+    /// tokenizer then keeps non-ASCII punctuation such as `—` inside tokens on both platforms, which keeps
+    /// BM25 column lengths identical to the reference.
     static func indexText(_ text: String?) -> String {
         guard let text, !text.isEmpty else { return "" }
-        return terms(text).joined(separator: " ")
+        return fold(text)
     }
 
     /// `MATCH` expression, or nil when the query has no searchable term.

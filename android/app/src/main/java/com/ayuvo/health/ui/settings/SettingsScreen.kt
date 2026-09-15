@@ -1406,6 +1406,8 @@ fun SettingsScreen(
             }
 
             if (selectedCategory == SettingsCategory.HEALTH_RECORDS) {
+                HealthRecordsCoachSection(container = container)
+                Spacer(Modifier.height(18.dp))
                 HealthRecordsAiSection(
                     container = container,
                     onOpenAiProviders = { selectedCategory = SettingsCategory.AI_PROVIDERS }
@@ -2087,6 +2089,48 @@ private fun HealthRecordsAiSection(container: AppContainer, onOpenAiProviders: (
                 onAddProvider = onOpenAiProviders
             )
         }
+    }
+}
+
+/**
+ * Settings › Health Records › Coach (docs/health-records.md §26): "Let Coach use my health records".
+ * Turning it on shows the consent sheet (an affirmative act stores the consent time); off removes the
+ * records tools immediately.
+ */
+@Composable
+private fun HealthRecordsCoachSection(container: AppContainer) {
+    val scope = rememberCoroutineScope()
+    val enabled by container.prefs.healthRecordsCoachAccessEnabled.collectAsState(initial = false)
+    var consentProvider by remember { mutableStateOf<String?>(null) }
+    var showConsent by remember { mutableStateOf(false) }
+    SectionCard(title = stringResource(R.string.records_coach_settings_title)) {
+        ToggleRow(
+            stringResource(R.string.records_coach_settings_toggle),
+            enabled,
+            icon = Icons.Outlined.SmartToy,
+            subtitle = stringResource(R.string.records_coach_settings_subtitle),
+            onChange = { on ->
+                if (on) {
+                    scope.launch {
+                        val provider = container.chatService.coachProvider(hasImage = false)
+                        consentProvider = if (provider == com.ayuvo.health.models.AIProvider.LOCAL_GEMMA) null else container.appContext.getString(provider.displayNameRes)
+                        showConsent = true
+                    }
+                } else {
+                    scope.launch { container.prefs.setHealthRecordsCoachAccess(false) }
+                }
+            }
+        )
+    }
+    if (showConsent) {
+        com.ayuvo.health.ui.records.CoachRecordsConsentSheet(
+            providerName = consentProvider,
+            onAllow = {
+                showConsent = false
+                scope.launch { container.prefs.setHealthRecordsCoachAccess(true, java.time.Instant.now().toString()) }
+            },
+            onNotNow = { showConsent = false }
+        )
     }
 }
 

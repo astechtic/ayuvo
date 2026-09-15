@@ -17,6 +17,9 @@ import com.ayuvo.health.models.WorkoutPreferences
 import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.models.WorkoutWeightUnit
 import com.ayuvo.health.models.WeightEntry
+import com.ayuvo.health.records.coach.CoachRecordRef
+import com.ayuvo.health.records.coach.RecordsCoachSwitchToOnDevice
+import com.ayuvo.health.records.coach.RecordsCoachTools
 import com.ayuvo.health.services.WeightAnalysisService
 import com.ayuvo.health.services.WeightForecast
 import com.ayuvo.health.services.ondevice.LocalGemmaRuntime
@@ -51,6 +54,32 @@ class ChatService(
     private val localGemma: LocalGemmaRuntime? = null
 ) {
 
+    /** A Coach reply plus the health records it relied on (docs/health-records.md §26). */
+    data class CoachReply(val text: String, val recordRefs: List<CoachRecordRef> = emptyList())
+
+    /**
+     * Health Records context for one message (§26–§30), built by the Coach screen: the tools (cloud
+     * providers), the `## Data available` lines + guardrails, and the §29 packed block for on-device Coach.
+     */
+    class RecordsTurn(
+        val tools: RecordsCoachTools? = null,
+        /** `prompt.available_line` (enabled with records), or null. */
+        val availableLine: String? = null,
+        /** `prompt.selected_header` + one `- ` line per selected record, or empty. */
+        val selectedLines: List<String> = emptyList(),
+        val guardrails: String? = null,
+        /** `prompt.not_available_line` when access is off and the message names records. */
+        val notAvailableLine: String? = null,
+        val onDeviceBlock: String? = null,
+        val onDeviceRefs: List<CoachRecordRef> = emptyList()
+    ) {
+        val hasCloudLines: Boolean get() = availableLine != null || notAvailableLine != null || selectedLines.isNotEmpty() || guardrails != null
+    }
+
+    /** The provider Coach would use for a message (separate text provider honoured). */
+    suspend fun coachProvider(hasImage: Boolean): AIProvider =
+        if (!hasImage && prefs.separateTextProviderEnabled.first()) prefs.selectedTextAIProvider.first() else prefs.selectedAIProvider.first()
+
     suspend fun sendMessage(
         history: List<ChatMessage>,
         newUserMessage: String,
@@ -70,7 +99,33 @@ class ChatService(
         /** Health Data hub snapshot — non-null only when the hub is on AND Coach consent is on. */
         healthSnapshot: HealthCoachSnapshot? = null,
         healthHubEnabled: Boolean = false
-    ): String {
+    ): String = send(
+        history, newUserMessage, profile, weights, bodyFats, measurements, foods, fastingSessions, heightMetric, weightMetric,
+        imageBytes, workoutSessions, workoutPlans, workoutPreferences, workoutPlanWeightUnit, healthSnapshot, healthHubEnabled
+    ).text
+
+    suspend fun send(
+        history: List<ChatMessage>,
+        newUserMessage: String,
+        profile: UserProfile,
+        weights: List<WeightEntry>,
+        bodyFats: List<BodyFatEntry>,
+        measurements: List<BodyMeasurement> = emptyList(),
+        foods: List<FoodEntry>,
+        fastingSessions: List<FastingSession> = emptyList(),
+        heightMetric: Boolean,
+        weightMetric: Boolean,
+        imageBytes: ByteArray? = null,
+        workoutSessions: List<WorkoutSession> = emptyList(),
+        workoutPlans: List<WorkoutDayPlan> = emptyList(),
+        workoutPreferences: WorkoutPreferences = WorkoutPreferences(),
+        workoutPlanWeightUnit: WorkoutWeightUnit = WorkoutWeightUnit.LBS,
+        healthSnapshot: HealthCoachSnapshot? = null,
+        healthHubEnabled: Boolean = false,
+        records: RecordsTurn? = null,
+        /** §30 "Use on-device Coach": this conversation runs on the on-device model. */
+        providerOverride: AIProvider? = null
+    ): CoachReply {
         val baseSystemPrompt = buildSystemPrompt(
             profile = profile,
             weights = weights,
@@ -83,15 +138,30 @@ class ChatService(
             workoutSessions = workoutSessions,
             workoutPlans = workoutPlans,
             healthSnapshot = healthSnapshot,
-            healthHubEnabled = healthHubEnabled
+            healthHubEnabled = healthHubEnabled,
+            recordsLines = records?.let(::recordsDataLines).orEmpty()
         )
         val userContext = prefs.userContext.first()
         val systemPrompt = if (userContext.isNotBlank())
             "$baseSystemPrompt\n\n## User-provided context\n$userContext"
         else baseSystemPrompt
-        // On-device / no-tool providers cannot call the health tools: give them a ≤12-line digest.
+        // On-device / no-tool providers cannot call tools: give them a ≤12-line health digest and the
+        // §29 block of the selected records (never the records tool lines).
+        val localBase = if (records == null || !records.hasCloudLines) systemPrompt else {
+            val base = buildSystemPrompt(
+                profile = profile, weights = weights, bodyFats = bodyFats, measurements = measurements, foods = foods,
+                fastingSessions = fastingSessions, heightMetric = heightMetric, weightMetric = weightMetric,
+                workoutSessions = workoutSessions, workoutPlans = workoutPlans, healthSnapshot = healthSnapshot,
+                healthHubEnabled = healthHubEnabled
+            )
+            if (userContext.isNotBlank()) "$base\n\n## User-provided context\n$userContext" else base
+        }
         val healthDigest = healthSnapshot?.let { CoachHealthData(it).promptSummary().joinToString("\n") }
-        val localSystemPrompt = if (healthDigest.isNullOrBlank()) systemPrompt else "$systemPrompt\n\n$healthDigest"
+        val withDigest = if (healthDigest.isNullOrBlank()) localBase else "$localBase\n\n$healthDigest"
+        // §29/§32: the packed block, then the records guardrails (outside the 1,800-character limit).
+        val localSystemPrompt = records?.onDeviceBlock?.takeIf { it.isNotBlank() }?.let { block ->
+            withDigest + "\n\n" + onDeviceRecordsTail(block, records.guardrails)
+        } ?: withDigest
         val tools = CoachTools(
             weights = weights,
             bodyFats = bodyFats,
@@ -101,45 +171,75 @@ class ChatService(
             workoutPlans = workoutPlans,
             workoutPreferences = workoutPreferences,
             workoutPlanWeightUnit = workoutPlanWeightUnit,
-            healthSnapshot = healthSnapshot
+            healthSnapshot = healthSnapshot,
+            records = records?.tools
         )
 
         val useSeparateTextProvider = imageBytes == null && prefs.separateTextProviderEnabled.first()
-        val provider = if (useSeparateTextProvider) {
+        val provider = providerOverride ?: if (useSeparateTextProvider) {
             prefs.selectedTextAIProvider.first()
         } else {
             prefs.selectedAIProvider.first()
         }
-        val model = if (useSeparateTextProvider) {
-            provider.supportedTextModelOrDefault(prefs.selectedTextAIModel.first())
-        } else {
-            provider.supportedModelOrDefault(prefs.selectedAIModel.first())
+        val model = when {
+            providerOverride != null -> provider.defaultModel
+            useSeparateTextProvider -> provider.supportedTextModelOrDefault(prefs.selectedTextAIModel.first())
+            else -> provider.supportedModelOrDefault(prefs.selectedAIModel.first())
         }
         val baseUrl = prefs.customBaseUrl(provider).first()?.takeIf { it.isNotEmpty() } ?: provider.baseUrl
         val apiKey = keyStore.apiKey(provider)
         val maxTokens = prefs.maxResponseTokens.first()
         val requestTimeoutSeconds = prefs.aiRequestTimeoutSeconds.first()
 
+        fun reply(text: String, used: AIProvider) = CoachReply(
+            text,
+            if (used == AIProvider.LOCAL_GEMMA) records?.onDeviceRefs.orEmpty() else records?.tools?.readRefs.orEmpty()
+        )
         return try {
-            runProvider(
-                provider, model, baseUrl, apiKey, systemPrompt, history, newUserMessage,
-                tools, imageBytes, maxTokens, requestTimeoutSeconds, localSystemPrompt
+            reply(
+                runProvider(
+                    provider, model, baseUrl, apiKey, systemPrompt, history, newUserMessage,
+                    tools, imageBytes, maxTokens, requestTimeoutSeconds, localSystemPrompt
+                ),
+                provider
             )
         } catch (primaryError: Throwable) {
             if (primaryError is kotlinx.coroutines.CancellationException) throw primaryError
+            if (primaryError is RecordsCoachSwitchToOnDevice) throw primaryError
             val fallback = currentFallbackConfig(
                 hasImage = imageBytes != null,
                 primary = provider,
                 primaryModel = model,
                 primaryBaseUrl = baseUrl
             ) ?: throw primaryError
-            runProvider(
-                fallback.provider, fallback.model, fallback.baseUrl, fallback.apiKey,
-                systemPrompt, history, newUserMessage, tools, imageBytes, maxTokens,
-                requestTimeoutSeconds, localSystemPrompt
+            reply(
+                runProvider(
+                    fallback.provider, fallback.model, fallback.baseUrl, fallback.apiKey,
+                    systemPrompt, history, newUserMessage, tools, imageBytes, maxTokens,
+                    requestTimeoutSeconds, localSystemPrompt
+                ),
+                fallback.provider
             )
         }
     }
+
+    /** Records tools run through their suspend executor; every other tool through [CoachTools.execute]. */
+    private suspend fun executeTool(tools: CoachTools, name: String, args: JSONObject): String =
+        tools.executeRecords(name, jsonToMap(args)) ?: tools.execute(name, args)
+
+    private fun jsonToMap(o: JSONObject): Map<String, Any?> {
+        val out = LinkedHashMap<String, Any?>()
+        val keys = o.keys()
+        while (keys.hasNext()) {
+            val k = keys.next()
+            out[k] = o.opt(k).takeUnless { it == JSONObject.NULL }
+        }
+        return out
+    }
+
+    /** Records schemas are the contract's compact text (key order kept); others come from the map. */
+    private fun schemaObject(tools: CoachTools, name: String): JSONObject =
+        tools.rawSchemaFor(name)?.let { JSONObject(it) } ?: JSONObject(CoachTools.parameterSchemaFor(name))
 
     private suspend fun runProvider(
         provider: AIProvider,
@@ -230,7 +330,8 @@ class ChatService(
         workoutSessions: List<WorkoutSession> = emptyList(),
         workoutPlans: List<WorkoutDayPlan> = emptyList(),
         healthSnapshot: HealthCoachSnapshot? = null,
-        healthHubEnabled: Boolean = false
+        healthHubEnabled: Boolean = false,
+        recordsLines: List<String> = emptyList()
     ): String {
         val forecast: WeightForecast = WeightAnalysisService.compute(weights, foods, profile)
         val zone = ZoneId.systemDefault()
@@ -330,6 +431,8 @@ class ChatService(
             healthHubEnabled -> lines.add("- Health data from Health Connect is not available to Coach (the user turned Coach access off in Settings › Health & Data).")
             else -> lines.add("- No health platform data is available; nutrition, weight, fasting, and workout tools still work.")
         }
+        // Health Records (§26, §32): continues the `## Data available` list.
+        lines.addAll(recordsLines)
         measurements.maxByOrNull { it.date }?.promptSummary(profile.gender, profile.heightCm)?.let { summary ->
             lines.add("")
             lines.add("## Body measurements (latest)")
@@ -365,8 +468,8 @@ class ChatService(
                 put("type", "function")
                 put("function", JSONObject().apply {
                     put("name", name)
-                    put("description", CoachTools.TOOL_DESCRIPTIONS[name] ?: "")
-                    put("parameters", JSONObject(CoachTools.parameterSchemaFor(name)))
+                    put("description", tools.descriptionFor(name))
+                    put("parameters", schemaObject(tools, name))
                 })
             })
         }
@@ -440,7 +543,7 @@ class ChatService(
                     val id = call.optString("id").takeIf { it.isNotEmpty() } ?: continue
                     val argsString = function.optString("arguments", "{}")
                     val args = runCatching { JSONObject(argsString) }.getOrNull() ?: JSONObject()
-                    val result = tools.execute(name, args)
+                    val result = executeTool(tools, name, args)
                     messages.put(JSONObject().apply {
                         put("role", "tool")
                         put("tool_call_id", id)
@@ -476,8 +579,8 @@ class ChatService(
         for (name in tools.advertisedToolNames) {
             toolsArr.put(JSONObject().apply {
                 put("name", name)
-                put("description", CoachTools.TOOL_DESCRIPTIONS[name] ?: "")
-                put("input_schema", JSONObject(CoachTools.parameterSchemaFor(name)))
+                put("description", tools.descriptionFor(name))
+                put("input_schema", schemaObject(tools, name))
             })
         }
         // History as plain text role:content; tool_use / tool_result blocks
@@ -525,7 +628,7 @@ class ChatService(
                     val id = use.optString("id").takeIf { it.isNotEmpty() } ?: continue
                     val name = use.optString("name").takeIf { it.isNotEmpty() } ?: continue
                     val input = use.optJSONObject("input") ?: JSONObject()
-                    val result = tools.execute(name, input)
+                    val result = executeTool(tools, name, input)
                     toolResults.put(JSONObject().apply {
                         put("type", "tool_result")
                         put("tool_use_id", id)
@@ -567,8 +670,8 @@ class ChatService(
         for (name in tools.advertisedToolNames) {
             declarations.put(JSONObject().apply {
                 put("name", name)
-                put("description", CoachTools.TOOL_DESCRIPTIONS[name] ?: "")
-                put("parameters", JSONObject(CoachTools.parameterSchemaFor(name)))
+                put("description", tools.descriptionFor(name))
+                put("parameters", schemaObject(tools, name))
             })
         }
         val toolsObj = JSONObject().put("functionDeclarations", declarations)
@@ -622,7 +725,7 @@ class ChatService(
                 for (call in functionCalls) {
                     val name = call.optString("name").takeIf { it.isNotEmpty() } ?: continue
                     val args = call.optJSONObject("args") ?: JSONObject()
-                    val resultStr = tools.execute(name, args)
+                    val resultStr = executeTool(tools, name, args)
                     val resultObj = runCatching { JSONObject(resultStr) }.getOrNull() ?: JSONObject()
                     responseParts.put(JSONObject().apply {
                         put("functionResponse", JSONObject().apply {
@@ -717,6 +820,22 @@ class ChatService(
     private val dateFmt: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d").withZone(ZoneId.systemDefault())
 
     companion object {
+        /**
+         * §32 layout of the records part of `## Data available` (appended after its last list item):
+         * `- <available_line>`, a blank line, the guardrails; with a selection a blank line, then
+         * `selected_header` and its `- ` lines. Access off: `- <not_available_line>` only.
+         */
+        internal fun recordsDataLines(turn: RecordsTurn): List<String> = buildList {
+            turn.notAvailableLine?.let { add("- $it") }
+            turn.availableLine?.let { add("- $it") }
+            turn.guardrails?.let { add(""); add(it) }
+            if (turn.selectedLines.isNotEmpty()) { add(""); addAll(turn.selectedLines) }
+        }
+
+        /** §29/§32 on-device prompt tail: packed block, one blank line, guardrails. */
+        internal fun onDeviceRecordsTail(block: String, guardrails: String?): String =
+            listOfNotNull(block, guardrails).joinToString("\n\n")
+
         private val JSON_MEDIA = "application/json; charset=utf-8".toMediaType()
         private const val MAX_TOOL_ROUNDS = 6
     }

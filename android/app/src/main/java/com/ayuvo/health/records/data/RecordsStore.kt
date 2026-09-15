@@ -184,6 +184,22 @@ interface RecordsStore {
      */
     suspend fun analyteObservations(analyteId: String, includeExcluded: Boolean = false): List<Observation>
 
+    // -- Phase 4: Coach (§26–§29) ---------------------------------------------------------------
+
+    /** Every record, archived included (Coach snapshot rows). */
+    suspend fun allRecords(): List<HealthRecord>
+    suspend fun fieldsFor(recordIds: Collection<String>): Map<String, List<RecordField>>
+    suspend fun observationsFor(recordIds: Collection<String>): Map<String, List<Observation>>
+    suspend fun highlightsFor(recordIds: Collection<String>): Map<String, List<RecordHighlight>>
+    /** Every `record_links` row of [recordId], any status. */
+    suspend fun links(recordId: String): List<RecordLink>
+    /** Observations (any state) of these analytes. */
+    suspend fun observationsOfAnalytes(analyteIds: Collection<String>): List<Observation>
+    /** Observations (any state) without an analyte. */
+    suspend fun unmappedObservations(): List<Observation>
+    /** `docid → matchinfo('pcnalx')` of every FTS row matching all `term*` prefixes. */
+    suspend fun ftsMatchinfo(terms: List<String>): Map<Long, IntArray>
+
     /** Trend rows of every analyte that [recordId] has, keyed by analyte id (detail mini trends). */
     suspend fun trendsForRecord(recordId: String): Map<String, List<Observation>>
 

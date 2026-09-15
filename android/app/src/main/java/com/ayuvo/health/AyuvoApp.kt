@@ -287,6 +287,19 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         )
     }
     val recordsQueryRewriter: AiQueryRewriter by lazy { AiQueryRewriter({ recordsAiResolver }, { recordsAi }) }
+
+    // Phase 4 "AI Coach" (docs/health-records.md §26–§30).
+    val recordsCoachContract: com.ayuvo.health.records.coach.RecordsCoachContract by lazy {
+        com.ayuvo.health.records.coach.RecordsCoachContract.parse(
+            app.assets.open(com.ayuvo.health.records.coach.RecordsCoachContract.ASSET_PATH).bufferedReader().use { it.readText() }
+        ).also { com.ayuvo.health.records.coach.RecordsCoachContract.active = it }
+    }
+
+    /** One-shot "open Coach with these records and this prompt" request from the Records screens (§27). */
+    val coachRecordsRequests = kotlinx.coroutines.flow.MutableStateFlow<com.ayuvo.health.records.coach.CoachRecordsRequest?>(null)
+
+    /** Whether a records database exists (Coach never creates one just to look for records). */
+    fun recordsDatabaseExists(): Boolean = recordsDatabaseLazy.isInitialized() || appContext.getDatabasePath(RecordsDatabase.NAME).exists()
     val recordsQueue: RecordProcessingQueue by lazy { RecordProcessingQueue(app, { recordsStore }, { recordsPipeline }) }
     val recordsImports = RecordsImportCoordinator(scope, { recordImporter }, { recordsStore }, { recordsQueue })
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Coach × Health Records (docs/health-records.md §26–§30). English first. -->
+<resources>
+    <string name="records_coach_consent_title">Let Coach read your health records?</string>
+    <string name="records_coach_consent_body">Coach sends the details of the records it reads — test results, dates, doctors and diagnoses — to %1$s to answer you. Records stay stored on this device.</string>
+    <string name="records_coach_consent_body_on_device">Coach reads the records on this device; nothing is sent online.</string>
+    <string name="records_coach_consent_allow">Allow</string>
+    <string name="records_coach_consent_not_now">Not now</string>
+
+    <string name="records_coach_settings_title">Coach</string>
+    <string name="records_coach_settings_toggle">Let Coach use my health records</string>
+    <string name="records_coach_settings_subtitle">Coach can search and read your records to answer questions. Turning this off removes access immediately.</string>
+
+    <string name="records_coach_analyzing">Analyzing:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Analyzing %d record</item>
+        <item quantity="other">Analyzing %d records</item>
+    </plurals>
+    <string name="records_coach_change_records">Change records</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+    <string name="records_coach_used_records">Used records</string>
+
+    <string name="records_coach_picker_title">Records for this conversation</string>
+    <string name="records_coach_picker_search">Search records</string>
+    <string name="records_coach_picker_limit">Choose up to %d records.</string>
+    <string name="records_coach_picker_done">Done</string>
+    <string name="records_coach_picker_empty">No records found.</string>
+    <string name="records_coach_picker_selected">Selected</string>
+    <string name="records_coach_picker_recent">Recent records</string>
+    <string name="records_coach_picker_results">Results</string>
+
+    <string name="records_coach_mode_title">Send records online?</string>
+    <string name="records_coach_mode_body">Coach uses %1$s. Send the selected records\' details online?</string>
+    <string name="records_coach_mode_send">Send</string>
+    <string name="records_coach_mode_on_device">Use on-device Coach</string>
+
+    <string name="records_coach_ask_report">Ask about this report</string>
+    <string name="records_coach_compare_previous">Compare with previous report</string>
+    <string name="records_coach_explain_trend">Explain this trend</string>
+    <string name="records_coach_ask_coach">Ask Coach</string>
+
+    <string name="records_coach_prompt_report">Explain this report: what stands out and what should I ask my doctor?</string>
+    <string name="records_coach_prompt_compare">Compare this report with the previous one. What changed?</string>
+    <string name="records_coach_prompt_trend">Explain how my %1$s has changed over time.</string>
+
+    <string name="records_coach_chip_latest">Analyze my latest blood reports</string>
+    <string name="records_coach_chip_abnormal">Find abnormal values</string>
+    <string name="records_coach_chip_compare">Compare with previous report</string>
+</resources>

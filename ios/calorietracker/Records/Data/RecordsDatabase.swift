@@ -75,6 +75,9 @@ actor RecordsDatabase {
             throw HealthDBError(kind: .corrupt, code: SQLITE_CORRUPT, message: check ?? "quick_check failed")
         }
         try migrate(to: targetVersion)
+        if targetVersion >= RecordsSchema.schemaVersion {
+            try reindexAllIfNeeded()
+        }
     }
 
     /// v1 (`schema.sql`) then every migration in order, each step in its own transaction that
@@ -594,29 +597,30 @@ actor RecordsDatabase {
         try connection.query("SELECT text FROM record_pages WHERE record_id=? ORDER BY page_index", [.text(recordID)]) {
             if let text = $0.text(0), !text.isEmpty { bodyParts.append(text) }
         }
-        var people: [String] = []
-        var clinical: [String] = type == .other ? [] : [type.title, type.rawValue.replacingOccurrences(of: "_", with: " ")]
+        // Reference `fts_row` (§28): people and clinical values in key order (row order inside a key); clinical =
+        // the raw type words, the clinical values, then the analyte display names; distinct clinical values.
+        var byKey: [String: [String]] = [:]
         try connection.query(
-            "SELECT field_key, value_text, value_json FROM record_fields WHERE record_id=? AND state<>'rejected' ORDER BY field_key, created_ms",
+            "SELECT field_key, value_text FROM record_fields WHERE record_id=? AND state<>'rejected' ORDER BY rowid",
             [.text(recordID)]
         ) { s in
-            guard let key = RecordFieldKey(rawValue: s.text(0) ?? ""), let value = s.text(1) else { return }
-            switch key {
-            case .doctorName, .doctorSpecialty, .facility, .department, .patientName:
-                people.append(value)
-            case .reportName, .testResult, .diagnosis, .symptom, .procedure:
-                clinical.append(value)
-            case .medication:
-                clinical.append(value)
-            default:
-                break
-            }
+            guard let key = s.text(0), let value = s.text(1) else { return }
+            byKey[key, default: []].append(value)
         }
+        let people = RR.coachPeopleKeys.flatMap { byKey[$0] ?? [] }
+        var clinicalValues: [String] = type == .other ? [] : [type.rawValue.replacingOccurrences(of: "_", with: " ")]
+        clinicalValues += RR.coachClinicalKeys.flatMap { byKey[$0] ?? [] }
+        var analyteIDs: [String] = []
         try connection.query(
-            "SELECT DISTINCT analyte_id FROM observations WHERE record_id=? AND analyte_id IS NOT NULL AND state<>'rejected' ORDER BY analyte_id",
+            "SELECT DISTINCT analyte_id FROM observations WHERE record_id=? AND analyte_id IS NOT NULL AND state<>'rejected'",
             [.text(recordID)]
         ) { s in
-            if let id = s.text(0), let analyte = catalog.analyte(id: id) { clinical.append(analyte.displayName) }
+            if let id = s.text(0), catalog.hasEntry(id) { analyteIDs.append(id) }
+        }
+        clinicalValues += analyteIDs.sorted(by: RR.scalarLess).compactMap { catalog.analyte(id: $0)?.displayName }
+        var clinical: [String] = []
+        for value in clinicalValues where !value.isEmpty && !clinical.contains(value) {
+            clinical.append(value)
         }
         var highlightTexts: [String] = []
         try connection.query("SELECT text FROM record_highlights WHERE record_id=? AND dismissed=0 ORDER BY section, position", [.text(recordID)]) {

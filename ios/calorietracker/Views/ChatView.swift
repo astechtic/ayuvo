@@ -15,6 +15,7 @@ struct ChatView: View {
     @Environment(FastingStore.self) private var fastingStore
     @Environment(StrengthWorkoutStore.self) private var strengthWorkoutStore
     @Environment(HealthDataStore.self) private var healthDataStore
+    @Environment(RecordsStore.self) private var recordsStore
     @AppStorage("heightUnit") private var heightUnitRaw = "ftin"
     @AppStorage("weightUnit") private var weightUnitRaw = "lbs"
 
@@ -31,6 +32,13 @@ struct ChatView: View {
     @State private var voicePressStart: Date?
     @State private var voicePulse = false
     @FocusState private var isInputFocused: Bool
+    // Health Records (§26–§30)
+    @State private var showRecordsConsent = false
+    @State private var pendingHandoff: CoachRecordsHandoff?
+    @State private var showRecordsPicker = false
+    @State private var recordsSuggestions = CoachRecordsSuggestions()
+    @State private var approvalBox = CoachRecordsApprovalBox()
+    @State private var showPreSendApproval = false
     @ScaledMetric(relativeTo: .title2) private var coachHeroSize = 92.0
     @ScaledMetric(relativeTo: .title2) private var coachHeroIconSize = 38.0
     @ScaledMetric(relativeTo: .body) private var composerControlSize = 40.0
@@ -55,6 +63,15 @@ struct ChatView: View {
 
                 if !messages.isEmpty {
                     promptChips
+                }
+
+                if !chatStore.selectedRecords.isEmpty {
+                    CoachRecordsChipBar(
+                        records: chatStore.selectedRecords,
+                        onChange: { showRecordsPicker = true },
+                        onClear: { chatStore.setSelectedRecords([]) }
+                    )
+                    .padding(.top, 4)
                 }
 
                 inputArea
@@ -88,6 +105,41 @@ struct ChatView: View {
                     .ignoresSafeArea()
             }
             .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
+            .sheet(isPresented: $showRecordsConsent) {
+                let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride)
+                CoachRecordsConsentSheet(providerName: provider.name, onDevice: provider.onDevice, onAllow: {
+                    recordsStore.setCoachAccess(true)
+                    showRecordsConsent = false
+                    applyHandoff(pendingHandoff, allowed: true)
+                }, onNotNow: {
+                    showRecordsConsent = false
+                    applyHandoff(pendingHandoff, allowed: false)
+                })
+            }
+            .sheet(isPresented: $showRecordsPicker) {
+                CoachRecordsPickerSheet(initial: chatStore.selectedRecords) { refs in
+                    chatStore.setSelectedRecords(refs)
+                }
+            }
+            .confirmationDialog(
+                String(localized: "Coach uses \(approvalBox.providerName). Send the selected records' details online?"),
+                isPresented: Binding(get: { approvalBox.isPresented }, set: { if !$0 { approvalBox.dismissed() } }),
+                titleVisibility: .visible
+            ) {
+                Button("Send") { approvalBox.answer(.send) }
+                    .accessibilityIdentifier("coach.recordsOnline.send")
+                if approvalBox.offersOnDevice {
+                    Button("Use on-device Coach") { approvalBox.answer(.useOnDevice) }
+                }
+                Button("Cancel", role: .cancel) { approvalBox.answer(.cancel) }
+            }
+            .task { await consumeHandoffIfNeeded() }
+            .onChange(of: chatStore.handoffRequest) { _, _ in
+                Task { await consumeHandoffIfNeeded() }
+            }
+            .task(id: recordsSuggestionsKey) {
+                recordsSuggestions = await recordsStore.coachSuggestions()
+            }
             .onChange(of: capturedImage) { _, newValue in
                 guard let image = newValue else { return }
                 capturedImage = nil
@@ -161,6 +213,25 @@ struct ChatView: View {
 
                 emptyPromptGrid
                     .padding(.top, 26)
+                if !recordsPromptChips.isEmpty {
+                    VStack(spacing: 8) {
+                        ForEach(recordsPromptChips, id: \.0) { chip in
+                            Button {
+                                sendRecordsChip(chip)
+                            } label: {
+                                Label(chip.0, systemImage: "list.clipboard")
+                                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(isSending)
+                            .accessibilityIdentifier("coach.recordsChip.\(chip.0)")
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                }
                 Spacer(minLength: 24)
             }
             .padding(.horizontal, 8)
@@ -174,7 +245,9 @@ struct ChatView: View {
             ScrollView {
                 VStack(spacing: 14) {
                     ForEach(messages) { msg in
-                        MessageBubble(message: msg)
+                        MessageBubble(message: msg, onOpenRecord: { ref in
+                            recordsStore.openRecordFromCoach(ref.recordID)
+                        })
                             .id(msg.id)
                     }
                     if isSending {
@@ -325,6 +398,29 @@ struct ChatView: View {
         .padding(.horizontal, 16)
     }
 
+    /// §27 records chips, shown when Coach access is on and at least one lab record exists.
+    private var recordsPromptChips: [(String, [ChatRecordRef])] {
+        guard recordsStore.coachAccessEnabled, !recordsSuggestions.isEmpty else { return [] }
+        var chips: [(String, [ChatRecordRef])] = [
+            (CoachRecordsPrompts.analyzeLatest, recordsSuggestions.latestLabs),
+            (CoachRecordsPrompts.findAbnormal, []),
+        ]
+        if recordsSuggestions.comparePair.count == 2 {
+            chips.append((CoachRecordsPrompts.compareChip, recordsSuggestions.comparePair))
+        }
+        return chips
+    }
+
+    private var recordsSuggestionsKey: String {
+        "\(recordsStore.coachAccessEnabled)-\(recordsStore.revision)"
+    }
+
+    private func sendRecordsChip(_ chip: (String, [ChatRecordRef])) {
+        if !chip.1.isEmpty { chatStore.setSelectedRecords(chip.1) }
+        draft = chip.0
+        send()
+    }
+
     /// Shown only while Coach can actually reach the Health Data hub.
     private var healthPromptChips: [String] {
         guard healthDataStore.isEnabled, healthDataStore.coachHealthDataEnabled else { return [] }
@@ -343,6 +439,22 @@ struct ChatView: View {
                     .background(AppColors.calorie.opacity(0.08), in: Circle())
                     .accessibilityHidden(true)
 
+                ForEach(recordsPromptChips, id: \.0) { chip in
+                    Button {
+                        sendRecordsChip(chip)
+                    } label: {
+                        Label(chip.0, systemImage: "list.clipboard")
+                            .font(.system(.footnote, design: .rounded, weight: .medium))
+                            .padding(.horizontal, 14)
+                            .frame(minHeight: 44)
+                            .foregroundStyle(AppColors.calorie)
+                            .background(Capsule().fill(.ultraThinMaterial))
+                            .overlay(Capsule().fill(AppColors.calorie.opacity(0.10)))
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(isSending)
+                    .accessibilityIdentifier("coach.recordsChip.\(chip.0)")
+                }
                 ForEach(suggestedPrompts + healthPromptChips, id: \.self) { chip in
                     Button {
                         draft = chip
@@ -652,10 +764,46 @@ struct ChatView: View {
 
     // MARK: - Send
 
+    // MARK: - Health Records hand-off & approval
+
+    private func consumeHandoffIfNeeded() async {
+        guard chatStore.pendingHandoff != nil, let handoff = chatStore.consumeHandoff() else { return }
+        if recordsStore.coachAccessEnabled || handoff.records.isEmpty {
+            applyHandoff(handoff, allowed: true)
+        } else {
+            pendingHandoff = handoff
+            showRecordsConsent = true
+        }
+    }
+
+    private func applyHandoff(_ handoff: CoachRecordsHandoff?, allowed: Bool) {
+        pendingHandoff = nil
+        guard let handoff else { return }
+        if allowed, !handoff.records.isEmpty { chatStore.setSelectedRecords(handoff.records) }
+        if !handoff.prompt.isEmpty { draft = handoff.prompt }
+        isInputFocused = !handoff.prompt.isEmpty
+    }
+
+    /// §30: an online provider while the records AI mode is local / off needs a per-conversation OK.
+    private func recordsNeedOnlineApproval() -> Bool {
+        guard recordsStore.coachAccessEnabled, chatStore.recordsOnlineDecision != .send else { return false }
+        guard recordsStore.aiMode == .local || recordsStore.aiMode == .off else { return false }
+        return !CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride).onDevice
+    }
+
     private func send() {
         let typedText = draft.trimmingCharacters(in: .whitespacesAndNewlines)
         let image = attachedImage
         guard (!typedText.isEmpty || image != nil), !isSending else { return }
+        if !chatStore.selectedRecords.isEmpty, chatStore.recordsOnlineDecision == nil, recordsNeedOnlineApproval() {
+            Task {
+                let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride)
+                let decision = await approvalBox.ask(providerName: provider.name, offersOnDevice: CoachRecordsFormatting.onDeviceProvider() != nil)
+                applyOnlineDecision(decision)
+                send()
+            }
+            return
+        }
 
         let text = typedText.isEmpty ? "Analyze this image." : typedText
         let imageDataForAI = image.flatMap {
@@ -681,8 +829,46 @@ struct ChatView: View {
             do {
                 // Health Data hub: nil unless Health sync and the Coach consent are both on.
                 let health = await healthDataStore.coachContext()
+                let reply = try await sendWithRecords(history: Array(historyForCall), text: text, imageDataForAI: imageDataForAI, health: health)
+                chatStore.append(ChatMessage(role: .assistant, content: reply.text, recordRefs: reply.refs.isEmpty ? nil : reply.refs))
+            } catch {
+                errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            }
+        }
+    }
+
+    private func applyOnlineDecision(_ decision: CoachRecordsOnlineDecision) {
+        switch decision {
+        case .send:
+            chatStore.recordsOnlineDecision = .send
+        case .cancel:
+            // Cancel removes the records tools and the selection for this conversation.
+            chatStore.recordsOnlineDecision = .cancel
+            chatStore.setSelectedRecords([])
+        case .useOnDevice:
+            chatStore.providerOverride = CoachRecordsFormatting.onDeviceProvider()
+            chatStore.recordsOnlineDecision = nil
+        }
+    }
+
+    /// Builds the records context, sends, and retries on the on-device Coach when the user picks it
+    /// during a records tool call.
+    private func sendWithRecords(history: [ChatMessage], text: String, imageDataForAI: Data?, health: CoachHealthContext?) async throws -> (text: String, refs: [ChatRecordRef]) {
+        for attempt in 0..<2 {
+            let needsApproval = recordsNeedOnlineApproval()
+            let box = approvalBox
+            let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride)
+            let offersOnDevice = CoachRecordsFormatting.onDeviceProvider() != nil
+            let session = CoachRecordsSession(
+                needsOnlineApproval: needsApproval,
+                decision: needsApproval ? chatStore.recordsOnlineDecision : nil,
+                requestApproval: { await box.ask(providerName: provider.name, offersOnDevice: offersOnDevice) }
+            )
+            var records: CoachRecordsContext? = await recordsStore.coachContext(selected: chatStore.selectedRecords, session: session)
+            if chatStore.recordsOnlineDecision == .cancel { records = nil }
+            do {
                 let reply = try await ChatService.sendMessage(
-                    history: Array(historyForCall),
+                    history: history,
                     newUserMessage: text,
                     imageData: imageDataForAI,
                     profile: userProfile,
@@ -697,13 +883,21 @@ struct ChatView: View {
                     workoutPlans: Array(strengthWorkoutStore.dayPlans.values),
                     workoutPreferences: strengthWorkoutStore.preferences,
                     workoutAccessEnabled: true,
-                    health: health
+                    health: health,
+                    records: records,
+                    providerOverride: chatStore.providerOverride
                 )
-                chatStore.append(ChatMessage(role: .assistant, content: reply))
+                if needsApproval, let decision = await session.decision { applyOnlineDecision(decision) }
+                return (reply, await session.refs)
+            } catch ChatService.ChatError.recordsSwitchToOnDevice where attempt == 0 {
+                applyOnlineDecision(.useOnDevice)
+                continue
             } catch {
-                errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+                if needsApproval, let decision = await session.decision, decision != .useOnDevice { applyOnlineDecision(decision) }
+                throw error
             }
         }
+        throw ChatService.ChatError.invalidResponse
     }
 
     private func openCamera() {
@@ -870,6 +1064,7 @@ private enum MarkdownMessageBlockCache {
 
 private struct MessageBubble: View {
     let message: ChatMessage
+    var onOpenRecord: (ChatRecordRef) -> Void = { _ in }
 
     private var isUser: Bool { message.role == .user }
     private var bubbleShape: UnevenRoundedRectangle {
@@ -892,7 +1087,13 @@ private struct MessageBubble: View {
                 Spacer(minLength: 48)
             }
 
-            bubble
+            VStack(alignment: .leading, spacing: 6) {
+                bubble
+                if !isUser, let refs = message.recordRefs, !refs.isEmpty {
+                    CoachUsedRecordsRow(refs: refs, onOpen: onOpenRecord)
+                        .padding(.leading, 4)
+                }
+            }
 
             if isUser {
                 // no trailing icon

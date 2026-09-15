@@ -9,8 +9,11 @@ struct RecordDetailView: View {
     /// Opens the source viewer at this observation once loaded (trend point / Values hit).
     var initialObservationID: String? = nil
     @Environment(RecordsStore.self) private var store
+    @Environment(ChatStore.self) private var chatStore
     @Environment(\.dismiss) private var dismiss
     @State private var detail: RecordDetail?
+    /// §27 previous report for "Compare with previous report".
+    @State private var compareRecord: HealthRecord?
     @State private var didLoad = false
     @State private var showEdit = false
     @State private var showDeleteConfirmation = false
@@ -40,9 +43,46 @@ struct RecordDetailView: View {
         .task(id: store.revision) { await load() }
     }
 
+    /// "Ask about this report" / "Compare with previous report" (§27).
+    private func coachSection(_ record: HealthRecord) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Ask Coach")
+            Button {
+                chatStore.requestHandoff(records: [ChatRecordRef(record)], prompt: CoachRecordsPrompts.explainReport)
+            } label: {
+                Label("Ask about this report", systemImage: "bubble.left.and.text.bubble.right.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AppColors.calorie)
+            .accessibilityIdentifier("records.detail.askCoach")
+            if let previous = compareRecord {
+                Button {
+                    chatStore.requestHandoff(records: [ChatRecordRef(record), ChatRecordRef(previous)], prompt: CoachRecordsPrompts.compareWithPrevious)
+                } label: {
+                    Label("Compare with previous report", systemImage: "arrow.left.arrow.right")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(AppColors.calorie)
+                .accessibilityIdentifier("records.detail.compareCoach")
+                Text("Previous: \(previous.title) · \(RecordFormatting.dateText(previous))")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+        }
+        .controlSize(.large)
+        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(AppColors.appCard, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
     private func load() async {
         detail = await store.detail(id: recordID)
         didLoad = true
+        compareRecord = detail == nil ? nil : await store.compareCandidate(for: recordID)
         if !didOpenInitialSource, let observationID = initialObservationID, let detail {
             didOpenInitialSource = true
             var observation = detail.observations.first { $0.id == observationID }
@@ -106,6 +146,7 @@ struct RecordDetailView: View {
                     }
                 )
                 RecordObservationsSection(detail: detail, onSource: { openSource($0, detail: detail) })
+                coachSection(record)
                 notesSection(record)
                 tagsSection(detail)
                 if !detail.children.isEmpty { childrenSection(detail.children) }

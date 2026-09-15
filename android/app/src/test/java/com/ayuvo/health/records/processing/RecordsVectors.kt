@@ -44,6 +44,7 @@ object RecordsVectors {
         val root = json.parseToJsonElement(f.readText()).jsonObj()
         val function = root.str("function") ?: error("$file has no function")
         val cases = (root["cases"] as? JsonArray) ?: error("$file has no cases")
+        val snapshots = ((root["fixtures"] as? JsonObject)?.get("snapshots") as? JsonObject).orEmpty()
         val failures = mutableListOf<String>()
         var passed = 0
         for (c in cases) {
@@ -51,7 +52,12 @@ object RecordsVectors {
             val name = case.str("name") ?: "?"
             val expected = case["expected"]!!
             val actual = try {
-                runCase(function, case["input"]!!.jsonObj())
+                val raw = case["input"]!!.jsonObj()
+                // A string `snapshot` names a top-level fixture (docs §9.2).
+                val input = (raw["snapshot"] as? JsonPrimitive)?.takeIf { it.isString }?.let { name ->
+                    JsonObject(raw + ("snapshot" to (snapshots[name.content] ?: error("unknown snapshot ${name.content}"))))
+                } ?: raw
+                runCase(function, input)
             } catch (e: Throwable) {
                 failures += "$name: threw ${e.javaClass.simpleName}: ${e.message}"
                 continue
@@ -246,8 +252,57 @@ object RecordsVectors {
             val out = com.ayuvo.health.records.knowledge.RelationSuggester.suggest(facts(input["record"]!!.jsonObj()), (input["candidates"] as JsonArray).map { facts(it.jsonObj()) }, links)
             obj("links" to out.map { obj("a_id" to it.aId, "b_id" to it.bId, "kind" to it.kind, "origin" to it.origin, "status" to it.status, "score" to it.score, "reasons" to it.reasons) })
         }
+        "coach_tools" -> kotlinx.coroutines.runBlocking {
+            val data = coachData(input)
+            val args = (input["args"] as? JsonObject) ?: JsonObject(emptyMap())
+            val selected = strings(input["selected_ids"])
+            when (input.str("tool")) {
+                "records_search" -> com.ayuvo.health.records.coach.RecordsCoach.search(data, coachContract, args, selected, today(input), order(input))
+                "records_get" -> com.ayuvo.health.records.coach.RecordsCoach.get(data, coachContract, args, selected)
+                "records_observation_series" -> com.ayuvo.health.records.coach.RecordsCoach.series(data, coachContract, args, selected)
+                else -> error("coach tool")
+            }
+        }
+        "pack_coach_records" -> kotlinx.coroutines.runBlocking {
+            val p = com.ayuvo.health.records.coach.RecordsCoach.pack(coachData(input), strings(input["selected_ids"]), typeLabels(input))
+            obj("text" to p.text, "record_ids" to p.recordIds, "dropped_results" to p.droppedResults)
+        }
+        "coach_prompt" -> kotlinx.coroutines.runBlocking {
+            val rc = com.ayuvo.health.records.coach.RecordsCoach
+            when (input.str("op")) {
+                "prompt_lines" -> rc.promptLines(coachData(input), coachContract, input.bool("access_enabled") == true, strings(input["selected_ids"]), typeLabels(input)).let {
+                    obj("advertise_tools" to it.advertiseTools, "available_line" to it.availableLine, "guardrails" to it.guardrails,
+                        "selected_lines" to it.selectedLines, "not_available_line" to it.notAvailableLine)
+                }
+                "mentions_records" -> obj("mentions" to rc.mentionsRecords(input.str("message")))
+                "record_refs" -> {
+                    val calls = (input["tool_calls"] as? JsonArray).orEmpty().mapNotNull { c ->
+                        val o = c as? JsonObject ?: return@mapNotNull null
+                        (o["result"] as? JsonObject)?.let { com.ayuvo.health.records.coach.RecordsCoach.ToolCall(o.str("name") ?: "", it) }
+                    }
+                    val packed = (input["packed"] as? JsonArray).orEmpty().map { e ->
+                        val o = e.jsonObj()
+                        com.ayuvo.health.records.coach.CoachRecordRef(o.str("record_id")!!, o.str("title") ?: "", o.str("date") ?: "")
+                    }
+                    obj("record_refs" to rc.recordRefs(calls, packed).map { obj("record_id" to it.recordId, "title" to it.title, "date" to it.date) })
+                }
+                "compare_candidate" -> rc.compareCandidate(coachData(input), input.str("record_id")!!).let { obj("previous_id" to it.previousId, "rule" to it.rule) }
+                "latest_lab_selection" -> rc.latestLabSelection(coachData(input)).let { obj("show_chips" to it.showChips, "latest" to it.latest, "compare" to it.compare) }
+                else -> error("coach_prompt op")
+            }
+        }
         else -> error("unknown function $function")
     }
+
+    val coachContract by lazy {
+        com.ayuvo.health.records.coach.RecordsCoachContract.parse(RecordsTestFiles.shared("coach_tools.json")!!.readText())
+    }
+
+    private fun coachData(input: JsonObject) =
+        com.ayuvo.health.records.coach.SnapshotCoachData.parse((input["snapshot"] as? JsonObject) ?: JsonObject(emptyMap()), catalog)
+
+    private fun typeLabels(input: JsonObject): Map<String, String>? =
+        (input["type_labels"] as? JsonObject)?.mapValues { (it.value as JsonPrimitive).content }
 
     private fun strings(e: JsonElement?): List<String> = (e as? JsonArray).orEmpty().map { (it as JsonPrimitive).content }
 

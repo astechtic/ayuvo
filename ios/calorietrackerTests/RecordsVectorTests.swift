@@ -18,7 +18,7 @@ struct RecordsVectorTests {
             .map { String($0.dropLast(5)) }
         #expect(!names.isEmpty)
         for name in names.sorted() {
-            #expect(Self.vectorFiles.contains(name), "no Swift runner for test-vectors/\(name).json")
+            #expect(Self.vectorFiles.contains(name) || RecordsCoachVectorTests.files.contains(name), "no Swift runner for test-vectors/\(name).json")
         }
     }
 
@@ -69,7 +69,11 @@ struct RecordsVectorTests {
 
     @Test func bundledSharedFilesAreByteIdentical() throws {
         let shared = HealthTestFixtures.repoRootURL.appendingPathComponent("shared/records")
-        let ios = HealthTestFixtures.repoRootURL.appendingPathComponent("ios/calorietracker/Records/Resources")
+        // The app sources sit next to this test target's folder (`<app>Tests` → `<app>`).
+        let testsFolder = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let ios = testsFolder.deletingLastPathComponent()
+            .appendingPathComponent(testsFolder.lastPathComponent.replacingOccurrences(of: "Tests", with: ""))
+            .appendingPathComponent("Records/Resources")
         for file in ["record_types.json", "units.json", "analytes.json"] {
             let a = try Data(contentsOf: shared.appendingPathComponent(file))
             let b = try Data(contentsOf: ios.appendingPathComponent(file))

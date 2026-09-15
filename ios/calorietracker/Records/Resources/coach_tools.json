@@ -1,0 +1,37 @@
+{
+  "format": "ayuvo-records-coach-tools",
+  "version": 1,
+  "notes": "Coach tools over Health Records (docs/health-records.md §26–§30). Both platforms advertise these names, descriptions and input schemas EXACTLY (schema strings are serialized compactly, keys in the order written here). Parity tests byte-compare their embedded copies with this file.",
+  "tools": [
+    {
+      "name": "records_search",
+      "description": "Search the user's health records (lab reports, prescriptions, doctor visits, imaging, discharge summaries, bills) stored in Ayuvo. Returns matching records with title, date, type, facility and doctor, plus matching test values. Use it to find which records exist before calling records_get. Supports plain words, test names (\"hemoglobin\"), conditions (\"hemoglobin was low\", \"hba1c above 7\") and date words (\"last year\").",
+      "input_schema": {"type":"object","properties":{"query":{"type":"string","description":"What to look for, e.g. \"cbc\", \"thyroid reports\", \"hemoglobin was low\". Use an empty string to list recent records."},"from":{"type":"string","description":"Optional inclusive start date, ISO yyyy-MM-dd."},"to":{"type":"string","description":"Optional inclusive end date, ISO yyyy-MM-dd."},"record_type":{"type":"string","description":"Optional record type: lab_report, prescription, consultation_note, discharge_summary, imaging_report, diagnostic_report, medication_list, vaccination_record, bill, insurance, personal_note, other."},"limit":{"type":"integer","description":"Maximum number of records to return, most relevant first (cap 20)."}},"required":["query"]}
+    },
+    {
+      "name": "records_get",
+      "description": "Details of one health record by record_id: extracted fields (doctor, facility, dates, diagnoses, medications, recommendations), test results with units, reference ranges and flags, highlights, and optionally a short text excerpt. Values marked \"state\":\"suggested\" were extracted automatically and are not yet confirmed by the user.",
+      "input_schema": {"type":"object","properties":{"record_id":{"type":"string","description":"A record_id returned by records_search or listed in the selected records."},"include_text":{"type":"boolean","description":"Also return up to 2000 characters of the record's text. Default false."}},"required":["record_id"]}
+    },
+    {
+      "name": "records_observation_series",
+      "description": "All values of one lab test across the user's health records, oldest first, with date, value, unit, reference range, flag and the source record. Use for trends and comparisons such as \"how has my hemoglobin changed?\". analyte may be a test name as printed on reports (e.g. \"Hb\", \"HbA1c\") or a catalog id.",
+      "input_schema": {"type":"object","properties":{"analyte":{"type":"string","description":"Test name or catalog id, e.g. \"hemoglobin\", \"HbA1c\", \"tsh\"."},"from":{"type":"string","description":"Optional inclusive start date, ISO yyyy-MM-dd."},"to":{"type":"string","description":"Optional inclusive end date, ISO yyyy-MM-dd."}},"required":["analyte"]}
+    }
+  ],
+  "prompt": {
+    "available_line": "{n} health records are stored in Ayuvo (latest {latest_date}). Use records_search, records_get and records_observation_series to read them.",
+    "selected_header": "The user selected these health records for this conversation. Only these records are available to the tools:",
+    "selected_line": "- {record_id}: {title} — {date} ({type_label})",
+    "not_available_line": "No health records are available: the user has not allowed Coach to use Health Records.",
+    "guardrails": "Health records guardrails:\n- Use only values returned by the records tools; never invent or estimate test values, dates or diagnoses.\n- Name the record (title and date) for every value you mention.\n- Values with \"state\":\"suggested\" were extracted automatically; say so when they matter and suggest checking the original report.\n- Do not diagnose. Describe what the reports say and how values changed, point out values the report flags as outside its reference range, and suggest discussing them with a doctor.\n- If values conflict between records or units differ, say so instead of choosing one silently."
+  },
+  "errors": {
+    "unknown_record": "unknown record_id '{id}'; call records_search",
+    "not_selected": "record '{id}' is not in the records the user selected for this conversation",
+    "unknown_analyte": "no values found for '{analyte}'",
+    "bad_date": "invalid date '{value}' (expected yyyy-MM-dd)",
+    "date_order": "from must be on or before to",
+    "unavailable": "health records are not available"
+  }
+}

@@ -11,18 +11,28 @@ struct ChatMessage: Identifiable, Codable, Equatable {
     let content: String
     let timestamp: Date
     let attachmentImageData: Data?
+    /// Health Records the reply relied on (docs/health-records.md §26 `record_refs`), shown as
+    /// "Used records" chips. Absent in older histories.
+    let recordRefs: [ChatRecordRef]?
+
+    enum CodingKeys: String, CodingKey {
+        case id, role, content, timestamp, attachmentImageData
+        case recordRefs = "record_refs"
+    }
 
     init(
         id: UUID = UUID(),
         role: Role,
         content: String,
         timestamp: Date = .now,
-        attachmentImageData: Data? = nil
+        attachmentImageData: Data? = nil,
+        recordRefs: [ChatRecordRef]? = nil
     ) {
         self.id = id
         self.role = role
         self.content = content
         self.timestamp = timestamp
         self.attachmentImageData = attachmentImageData
+        self.recordRefs = recordRefs
     }
 }

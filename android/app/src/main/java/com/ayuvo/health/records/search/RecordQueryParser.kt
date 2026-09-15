@@ -119,6 +119,15 @@ object RecordQueryParser {
 
     private fun qText(text: String): String = RecordText.fold(text).split('\n').joinToString(" ")
 
+    /** True when [text] contains one of the §17 type phrases (or one of [extraWords]) as whole words (Coach §26). */
+    fun mentionsRecordType(text: String, extraWords: Set<String> = emptySet()): Boolean {
+        val words = RecordText.words(qText(text))
+        return words.indices.any { i ->
+            words[i] in extraWords ||
+                Q_TYPES.any { (phrase, _) -> i + phrase.size <= words.size && phrase.indices.all { words[i + it] == phrase[it] } }
+        }
+    }
+
     private fun isDigit(ch: Char) = ch in '0'..'9'
 
     /** Reference `_q_plain_tokens`: alnum runs ('w', a `1.2` decimal is one token) and comparison 'op' tokens. */

@@ -60,10 +60,10 @@ object RecordSearchRanking {
         } ?: 0
     }
 
-    /** `0.15 × max(0, 1 − days_since(sort_date)/730)`. */
+    /** `0.15 × max(0, 1 − days/730)` with days = max(0, today − sort_date) (a future date counts as today, §28). */
     fun recencyBoost(sortDate: String, today: LocalDate): Double {
         val date = runCatching { LocalDate.parse(sortDate) }.getOrNull() ?: return 0.0
-        val days = ChronoUnit.DAYS.between(date, today).toDouble()
+        val days = max(0L, ChronoUnit.DAYS.between(date, today)).toDouble()
         return 0.15 * max(0.0, 1 - days / 730.0)
     }
 

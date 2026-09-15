@@ -116,6 +116,9 @@ final class RecordsStore {
     private(set) var tabRequest = 0
     /// Record to push on the Records stack (consumed by `RecordsHomeView`).
     var navigationRequest: String?
+    // Phase 4 (Coach) — `healthRecordsCoachAccessEnabled` / `healthRecordsCoachConsentedAt` (§26).
+    private(set) var coachAccessEnabled = false
+    private(set) var coachConsentedAt: String?
 
     init(
         defaults: UserDefaults = .standard,
@@ -131,6 +134,28 @@ final class RecordsStore {
         self.inboxRoot = inboxRoot
         self.viewMode = defaults.string(forKey: RecordsViewMode.storageKey).flatMap(RecordsViewMode.init(rawValue:)) ?? .defaultMode
         self.aiMode = RecordsAIMode.stored(in: defaults)
+        self.coachAccessEnabled = defaults.bool(forKey: Self.coachAccessKey)
+        self.coachConsentedAt = defaults.string(forKey: Self.coachConsentedAtKey)
+    }
+
+    static let coachAccessKey = "healthRecordsCoachAccessEnabled"
+    static let coachConsentedAtKey = "healthRecordsCoachConsentedAt"
+
+    /// The consent sheet's "Allow" or the Settings toggle — never flipped silently.
+    func setCoachAccess(_ enabled: Bool) {
+        coachAccessEnabled = enabled
+        defaults.set(enabled, forKey: Self.coachAccessKey)
+        if enabled {
+            let stamp = ISO8601DateFormatter().string(from: Date())
+            coachConsentedAt = stamp
+            defaults.set(stamp, forKey: Self.coachConsentedAtKey)
+        }
+    }
+
+    /// Opens a record from Coach's "Used records" chips: Records tab + push the detail.
+    func openRecordFromCoach(_ id: String) {
+        navigationRequest = id
+        tabRequest += 1
     }
 
     // MARK: - Opening
@@ -486,7 +511,11 @@ final class RecordsStore {
         viewMode = .defaultMode
         defaults.removeObject(forKey: RecordsViewMode.storageKey)
         defaults.removeObject(forKey: RecordsAIMode.storageKey)
+        defaults.removeObject(forKey: Self.coachAccessKey)
+        defaults.removeObject(forKey: Self.coachConsentedAtKey)
         aiMode = nil
+        coachAccessEnabled = false
+        coachConsentedAt = nil
         revision += 1
     }
 }

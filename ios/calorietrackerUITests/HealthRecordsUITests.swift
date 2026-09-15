@@ -639,6 +639,80 @@ extension HealthRecordsUITests {
     }
 }
 
+extension HealthRecordsUITests {
+    /// Phase 4 walk: three CBCs → detail "Ask about this report" → Coach tab with the consent sheet → Allow →
+    /// "Analyzing" chip bar with the record and the prefilled prompt → "Change records" picker adds a record.
+    @MainActor
+    func testAskCoachAboutReportConsentChipBarAndPicker() throws {
+        let files = try [("cbc_jul.pdf", "18/07/2026", "7.2"), ("cbc_aug.pdf", "10/08/2026", "8.4"), ("cbc_sep.pdf", "12/09/2026", "9.7")]
+            .map { try makeCBCPDF(named: $0.0, date: $0.1, hemoglobin: $0.2).path }
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES", "-healthRecordsViewMode", "timeline",
+                                "-healthRecordsAiMode", "off", "-healthRecordsCoachAccessEnabled", "NO",
+                                "-ayuvoRecordsFixture", files.joined(separator: ","), "-ayuvoRecordsReset"]
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["Records"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Records"].tap()
+        let strip = app.descendants(matching: .any)["records.processingStrip"]
+        XCTAssertTrue(app.staticTexts["September 2026"].firstMatch.waitForExistence(timeout: 60), "records land in the timeline")
+        _ = strip.waitForExistence(timeout: 5)
+        XCTAssertTrue(strip.waitForNonExistence(timeout: 180), "processing finishes")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+
+        let title = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Complete Blood Count'")).firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 20))
+        title.tap()
+        XCTAssertTrue(app.staticTexts["records.detail.title"].waitForExistence(timeout: 10))
+        let ask = app.buttons["records.detail.askCoach"].firstMatch
+        scrollTo(ask, in: app, maxSwipes: 14)
+        XCTAssertTrue(ask.waitForExistence(timeout: 5), "Ask about this report")
+        let compare = app.buttons["records.detail.compareCoach"].firstMatch
+        XCTAssertTrue(compare.waitForExistence(timeout: 5), "Compare with previous report is offered for the Sep CBC")
+        shot(app, "records-p4-ios-01-detail-ask-coach")
+        ask.tap()
+
+        // Coach tab + consent sheet.
+        let allow = app.buttons["coach.recordsConsent.allow"].firstMatch
+        XCTAssertTrue(allow.waitForExistence(timeout: 10), "consent sheet on first use")
+        XCTAssertTrue(app.staticTexts["Let Coach read your health records?"].firstMatch.exists)
+        RunLoop.current.run(until: Date().addingTimeInterval(0.8))
+        shot(app, "records-p4-ios-02-consent-sheet")
+        allow.tap()
+
+        let bar = app.descendants(matching: .any)["coach.records.bar"].firstMatch
+        XCTAssertTrue(bar.waitForExistence(timeout: 10), "chip bar above the input")
+        let chip = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'coach.records.chip.'")).firstMatch
+        XCTAssertTrue(chip.waitForExistence(timeout: 5))
+        XCTAssertTrue(chip.label.contains("Complete Blood Count"), "chip names the record: \(chip.label)")
+        let prompt = app.descendants(matching: .any).matching(NSPredicate(format: "value CONTAINS 'Explain this report'")).firstMatch
+        XCTAssertTrue(prompt.waitForExistence(timeout: 5), "prefilled, editable prompt")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.8))
+        shot(app, "records-p4-ios-03-coach-chip-bar")
+
+        // Change records: pick one more.
+        if app.keyboards.firstMatch.exists {
+            app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25)).tap()
+        }
+        let change = app.buttons["coach.records.change"].firstMatch
+        XCTAssertTrue(change.waitForExistence(timeout: 5))
+        change.tap()
+        let candidates = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'coach.recordsPicker.candidate.'"))
+        XCTAssertTrue(candidates.firstMatch.waitForExistence(timeout: 10), "picker lists recent records")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.6))
+        shot(app, "records-p4-ios-04-change-records-picker")
+        let selectedID = chip.identifier.replacingOccurrences(of: "coach.records.chip.", with: "")
+        let other = candidates.allElementsBoundByIndex.first { $0.identifier != "coach.recordsPicker.candidate.\(selectedID)" }
+        XCTAssertNotNil(other, "another record to add")
+        other?.tap()
+        app.buttons["coach.recordsPicker.done"].tap()
+        let chips = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'coach.records.chip.'"))
+        let deadline = Date().addingTimeInterval(8)
+        while chips.count < 2 && Date() < deadline { RunLoop.current.run(until: Date().addingTimeInterval(0.3)) }
+        XCTAssertEqual(chips.count, 2, "two records selected")
+        shot(app, "records-p4-ios-05-two-records-selected")
+    }
+}
+
 private extension XCUIApplication {
     /// A short upward drag (about a third of the screen) so rows stop above the tab bar.
     func swiftUpSmall() {

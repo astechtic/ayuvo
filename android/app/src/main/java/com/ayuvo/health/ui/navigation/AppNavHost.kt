@@ -247,6 +247,12 @@ fun AppNavHost(
         }
     }
 
+    /** §27 entry points: select records, prefill the prompt and open the Coach tab. */
+    fun askCoach(recordIds: List<String>, prompt: String) {
+        container.coachRecordsRequests.value = com.ayuvo.health.records.coach.CoachRecordsRequest(recordIds, prompt)
+        navigateToTab(AppRoutes.COACH)
+    }
+
     // Share / "Open in" landed records: switch to the Records tab once the app is past onboarding.
     // The import itself already started in MainActivity; the Records screen shows its notice.
     LaunchedEffect(recordsRequest?.id, currentRoute) {
@@ -328,7 +334,8 @@ fun AppNavHost(
                         RecordsScreen(
                             container = container,
                             onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
-                            onOpenValue = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) }
+                            onOpenValue = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) },
+                            onAskCoach = { ids -> askCoach(ids, "") }
                         )
                     }
                 }
@@ -349,7 +356,8 @@ fun AppNavHost(
                             onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
                             onOpenSplit = { id -> nav.navigate(AppRoutes.recordSplit(id)) },
                             onOpenTrend = { analyteId -> nav.navigate(AppRoutes.recordTrend(analyteId)) },
-                            focusObservationId = focusObservation
+                            focusObservationId = focusObservation,
+                            onAskCoach = ::askCoach
                         )
                     }
                 }
@@ -363,7 +371,8 @@ fun AppNavHost(
                             container = container,
                             analyteId = analyteId,
                             onBack = { nav.popBackStack() },
-                            onOpenPoint = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) }
+                            onOpenPoint = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) },
+                            onAskCoach = ::askCoach
                         )
                     }
                 }
@@ -381,7 +390,9 @@ fun AppNavHost(
                         )
                     }
                 }
-                composable(AppRoutes.COACH) { TabInset { CoachScreen(container = container) } }
+                composable(AppRoutes.COACH) {
+                    TabInset { CoachScreen(container = container, onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }) }
+                }
                 composable(AppRoutes.SETTINGS) {
                     TabInset {
                         SettingsScreen(

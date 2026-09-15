@@ -35,15 +35,17 @@ object SearchIndexer {
         /** Phase 3: display names of mapped analytes (§19 FTS `clinical`). */
         analyteNames: List<String> = emptyList()
     ): Row {
+        // Reference `fts_row` (docs §28): people keep every value; clinical drops empty and repeated values;
+        // highlights by (section, position).
         val usable = fields.filter { it.state != FieldState.REJECTED }
-        fun values(keys: List<String>) = keys.flatMap { key -> usable.filter { it.key == key }.map { it.valueText } }.distinct()
+        fun values(keys: List<String>) = keys.flatMap { key -> usable.filter { it.key == key }.map { it.valueText } }
         return Row(
             title = RecordText.fold(title),
             people = RecordText.fold(values(peopleKeys).joinToString("\n")),
-            clinical = RecordText.fold((listOf(typeLabel(recordType)) + values(clinicalKeys) + analyteNames).filter { it.isNotBlank() }.distinct().joinToString("\n")),
+            clinical = RecordText.fold((listOf(typeLabel(recordType)) + values(clinicalKeys) + analyteNames).filter { it.isNotEmpty() }.distinct().joinToString("\n")),
             body = RecordText.fold(pageTexts.joinToString("\n")),
-            notesTags = RecordText.fold(listOfNotNull(notes).plus(tagNames).joinToString(" ")),
-            highlights = RecordText.fold(highlights.filter { !it.dismissed }.joinToString("\n") { it.text })
+            notesTags = RecordText.fold((listOf(notes ?: "") + tagNames).joinToString(" ")),
+            highlights = RecordText.fold(highlights.filter { !it.dismissed }.sortedWith(compareBy({ it.section.raw }, { it.position })).joinToString("\n") { it.text })
         )
     }
 }
