@@ -24,11 +24,9 @@ class RecordsDatabase(
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+        // Fresh install = schema.sql (v1) then every migration in order; there is no combined DDL.
         RecordsSchema.STATEMENTS.forEach(db::execSQL)
-        db.execSQL(
-            "INSERT OR REPLACE INTO records_meta(key, value) VALUES ('schema_version', ?)",
-            arrayOf(VERSION.toString())
-        )
+        migrate(db, RecordsSchema.BASE_VERSION, VERSION)
     }
 
     override fun onOpen(db: SQLiteDatabase) {
@@ -38,8 +36,9 @@ class RecordsDatabase(
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // v1 is the first schema. Later versions run shared/records/migrations/NNN_*.sql in order,
-        // each inside one transaction, then write records_meta.schema_version.
+        // SQLiteOpenHelper already runs onCreate/onUpgrade inside one transaction together with the
+        // user_version bump, so a failed statement rolls the whole upgrade back.
+        migrate(db, oldVersion, newVersion)
     }
 
     fun files(): List<File> = databaseFiles(context)
@@ -47,6 +46,21 @@ class RecordsDatabase(
     companion object {
         const val NAME = "ayuvo_records.db"
         const val VERSION = RecordsSchema.VERSION
+
+        /**
+         * Runs `shared/records/migrations/NNN_*.sql` for every version in (from, to], then records
+         * `records_meta.schema_version`. Callers own the transaction.
+         */
+        fun migrate(db: SQLiteDatabase, from: Int, to: Int) {
+            for ((version, statements) in RecordsSchema.MIGRATIONS) {
+                if (version <= from || version > to) continue
+                statements.forEach(db::execSQL)
+            }
+            db.execSQL(
+                "INSERT OR REPLACE INTO records_meta(key, value) VALUES ('schema_version', ?)",
+                arrayOf(to.toString())
+            )
+        }
 
         fun databaseFiles(context: Context): List<File> {
             val base = context.getDatabasePath(NAME)

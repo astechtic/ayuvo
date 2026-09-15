@@ -51,6 +51,8 @@ class AppRoutesTest {
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORDS))
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORD_DETAIL))
         assertEquals("records/detail/abc-123", AppRoutes.recordDetail("abc-123"))
+        assertEquals("records/split/abc-123", AppRoutes.recordSplit("abc-123"))
+        assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORD_SPLIT))
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.recordDetail("abc-123")))
         assertTrue(AppRoutes.isRecordsChildRoute(AppRoutes.recordDetail("x")))
         assertFalse(AppRoutes.isRecordsChildRoute(AppRoutes.RECORDS))

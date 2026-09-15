@@ -1,0 +1,485 @@
+#!/usr/bin/env python3
+"""Ayuvo Health Records contract check (Python 3 stdlib only).
+
+    python3 scripts/records_contract_check.py           # verify; exit 1 on any problem
+    python3 scripts/records_contract_check.py --write   # rewrite every vector's "expected" from the reference
+
+Checks:
+  1. shared/records/test-vectors/*.json: envelope shape, unique case names, stable formatting
+     (sorted keys, 2-space indent, UTF-8 without escapes, trailing newline), and every case's
+     "expected" equals scripts/records_reference.py run on its "input" (inputs are the source of truth;
+     --write only replaces "expected").
+  2. Output shapes per function (keys and enum values).
+  3. record_types.json and units.json: shapes, regexes compile, portable-subset lint, units unique
+     after folding. The reference module's own compiled patterns are linted too.
+  4. ai_extraction.schema.json parses; vector inputs marked "schema_valid" validate against it;
+     ai_extraction.md carries both prompt variants and the placeholders.
+  5. schema.sql and migrations/*.sql split into statements with statements(path) (rule in
+     docs/health-records.md §8).
+  6. A small unittest suite for the helpers.
+"""
+
+import glob
+import json
+import os
+import re
+import sys
+import unittest
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+SHARED = os.path.join(ROOT, "shared", "records")
+VECTORS = os.path.join(SHARED, "test-vectors")
+sys.path.insert(0, HERE)
+import records_reference as R  # noqa: E402
+
+EXPECTED_FILES = {
+    "fold.json": "fold", "classifier.json": "classify", "dates.json": "extract_dates",
+    "fields.json": "extract_fields", "lab_rows.json": "parse_lab_rows", "boundaries.json": "detect_boundaries",
+    "highlights.json": "build_highlights", "review.json": "review_status", "apply_extraction.json": "apply_extraction",
+    "ai_validation.json": "validate_ai", "ai_chunks.json": "ai_chunks", "hashing.json": "hashing",
+    "query_parser.json": "parse_query",
+}
+
+
+def dumps(obj):
+    return json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+
+
+# ---------------------------------------------------------------------------------------------
+# SQL statements (docs §8)
+# ---------------------------------------------------------------------------------------------
+
+def statements(path):
+    """Split a shared .sql file into statements, exactly as both platforms embed them:
+    1. decode UTF-8, CRLF/CR -> LF;
+    2. on every line delete from the first '--' to the end of the line (the shared files never put '--'
+       inside a string literal; check_sql enforces it);
+    3. right-trim every line and drop lines that are then empty;
+    4. a line ending with ';' closes the statement: its lines are joined with '\\n' and the final ';'
+       is removed (leading indentation inside the statement is kept);
+    5. non-empty text after the last ';' is an error."""
+    with open(path, encoding="utf-8") as fh:
+        text = fh.read().replace("\r\n", "\n").replace("\r", "\n")
+    out, cur = [], []
+    for raw in text.split("\n"):
+        k = raw.find("--")
+        line = (raw if k < 0 else raw[:k]).rstrip()
+        if not line:
+            continue
+        cur.append(line)
+        if line.endswith(";"):
+            stmt = "\n".join(cur)[:-1].rstrip()
+            if stmt.strip():
+                out.append(stmt)
+            cur = []
+    if cur:
+        raise ValueError("%s: text after the last ';': %r" % (path, "\n".join(cur)[:80]))
+    return out
+
+
+def check_sql(problems):
+    files = [os.path.join(SHARED, "schema.sql")] + sorted(glob.glob(os.path.join(SHARED, "migrations", "*.sql")))
+    counts = {}
+    for path in files:
+        rel = os.path.relpath(path, ROOT)
+        with open(path, encoding="utf-8") as fh:
+            for n, raw in enumerate(fh.read().split("\n"), 1):
+                k = raw.find("--")
+                if k >= 0 and raw[:k].count("'") % 2 == 1:
+                    problems.append("%s:%d: '--' inside a string literal" % (rel, n))
+        try:
+            st = statements(path)
+        except ValueError as e:
+            problems.append(str(e))
+            continue
+        if not st:
+            problems.append("%s: no statements" % rel)
+        for s in st:
+            if not re.match("(CREATE|ALTER|DROP|INSERT|UPDATE|DELETE|PRAGMA) ", s.lstrip()):
+                problems.append("%s: unexpected statement start %r" % (rel, s[:40]))
+            if s.count("(") != s.count(")"):
+                problems.append("%s: unbalanced parentheses in %r" % (rel, s[:40]))
+        counts[rel] = len(st)
+    return counts
+
+
+# ---------------------------------------------------------------------------------------------
+# Regex portability lint
+# ---------------------------------------------------------------------------------------------
+
+_LINT = [
+    ("(?P<", "named group"), ("(?<=", None), ("(?>", "atomic group"), ("\\p{", "unicode property"),
+    ("\\P{", "unicode property"), ("\\A", "\\A anchor"), ("\\Z", "\\Z anchor"), ("\\z", "\\z anchor"),
+    ("\\h", "\\h class"), ("\\R", "\\R"), ("\\X", "\\X"), ("\\K", "\\K"), ("\\Q", "\\Q quoting"),
+    ("(?#", "inline comment"),
+]
+
+
+def lint_pattern(p, owned):
+    """Constructs outside the portable subset. owned=True additionally forbids \\d \\w \\s \\b and lazy
+    quantifiers (the reference's own patterns use explicit ASCII classes)."""
+    issues = []
+    for tok, what in _LINT:
+        if tok in p and what:
+            issues.append(what)
+    if re.search("\\(\\?[aiLmsux-]+[):]", p):
+        issues.append("inline flags")
+    if re.search("\\(\\?<[A-Za-z]", p):
+        issues.append("named group")
+    if re.search("[*+?}][+]", p.replace("\\+", "").replace("\\*", "").replace("\\?", "").replace("\\}", "")):
+        issues.append("possessive quantifier")
+    for m in re.finditer("\\(\\?<[=!]", p):
+        depth, i, body = 1, m.end(), []
+        while i < len(p) and depth:
+            if p[i] == "\\":
+                body.append(p[i:i + 2])
+                i += 2
+                continue
+            if p[i] == "(":
+                depth += 1
+            elif p[i] == ")":
+                depth -= 1
+                if depth == 0:
+                    break
+            body.append(p[i])
+            i += 1
+        b = "".join(body)
+        if re.search("(?<!\\\\)[*+?|]|\\{[0-9]*,", b):
+            issues.append("variable-length lookbehind")
+    if owned:
+        if re.search("\\\\[dwsbDWSB]", p):
+            issues.append("\\d/\\w/\\s/\\b in a reference-owned pattern")
+        if re.search("[*+?}]\\?", p.replace("\\*", "").replace("\\+", "").replace("\\?", "")):
+            issues.append("lazy quantifier")
+    return issues
+
+
+def check_data_files(problems):
+    rt = json.load(open(os.path.join(SHARED, "record_types.json"), encoding="utf-8"))
+    if rt.get("format") != "ayuvo-record-types" or not isinstance(rt.get("types"), list):
+        problems.append("record_types.json: bad envelope")
+    ids = [t["id"] for t in rt["types"]]
+    for t in rt["types"]:
+        if t["id"] not in R.RECORD_TYPES or R.DEFAULT_CATEGORY[t["id"]] != t["category"]:
+            problems.append("record_types.json: %s category/type mismatch with §3" % t["id"])
+        for r in t["rules"]:
+            if r["scope"] not in ("head", "body") or not isinstance(r["weight"], int):
+                problems.append("record_types.json: bad rule in %s" % t["id"])
+            try:
+                re.compile(r["pattern"])
+            except re.error as e:
+                problems.append("record_types.json: %s pattern does not compile: %s" % (t["id"], e))
+            for issue in lint_pattern(r["pattern"], owned=False):
+                problems.append("record_types.json: %s %r: %s" % (t["id"], r["pattern"], issue))
+    if len(set(ids)) != len(ids):
+        problems.append("record_types.json: duplicate type ids")
+
+    un = json.load(open(os.path.join(SHARED, "units.json"), encoding="utf-8"))
+    if un.get("format") != "ayuvo-record-units" or un.get("version") != 1:
+        problems.append("units.json: bad envelope")
+    owner = {}
+    for u in un["units"]:
+        if not u.get("canonical") or not u.get("variants"):
+            problems.append("units.json: empty unit entry")
+        for v in u["variants"] + [u["canonical"]]:
+            fv = R.fold(v)
+            if fv != fv.strip() or "  " in fv or "\n" in fv:
+                problems.append("units.json: variant %r folds with bad spacing" % v)
+            re.compile(re.escape(fv))
+            if fv in owner and owner[fv] != u["canonical"]:
+                problems.append("units.json: %r folds to %r, claimed by %s and %s" % (v, fv, owner[fv], u["canonical"]))
+            owner[fv] = u["canonical"]
+    for name in sorted(dir(R)):
+        obj = getattr(R, name)
+        if isinstance(obj, re.Pattern):
+            for issue in lint_pattern(obj.pattern, owned=True):
+                problems.append("records_reference.%s: %s" % (name, issue))
+
+
+# ---------------------------------------------------------------------------------------------
+# Minimal JSON Schema subset validator (type, enum, const, required, properties,
+# additionalProperties: false, items, minimum, maximum, maxLength, minLength, pattern, anyOf)
+# ---------------------------------------------------------------------------------------------
+
+def _type_ok(v, t):
+    return {"object": isinstance(v, dict), "array": isinstance(v, list), "string": isinstance(v, str),
+            "integer": isinstance(v, int) and not isinstance(v, bool),
+            "number": isinstance(v, (int, float)) and not isinstance(v, bool), "boolean": isinstance(v, bool),
+            "null": v is None}[t]
+
+
+def schema_errors(v, s, path="$"):
+    errs = []
+    if "anyOf" in s:
+        if not any(not schema_errors(v, sub, path) for sub in s["anyOf"]):
+            errs.append("%s: matches no anyOf branch" % path)
+        return errs
+    if "type" in s:
+        types = s["type"] if isinstance(s["type"], list) else [s["type"]]
+        if not any(_type_ok(v, t) for t in types):
+            return ["%s: expected %s" % (path, "/".join(types))]
+    if "enum" in s and v not in s["enum"]:
+        errs.append("%s: %r not in enum" % (path, v))
+    if "const" in s and v != s["const"]:
+        errs.append("%s: expected const" % path)
+    if isinstance(v, dict):
+        for k in s.get("required", []):
+            if k not in v:
+                errs.append("%s: missing %s" % (path, k))
+        props = s.get("properties", {})
+        for k, sub in props.items():
+            if k in v:
+                errs += schema_errors(v[k], sub, path + "." + k)
+        if s.get("additionalProperties") is False:
+            for k in v:
+                if k not in props:
+                    errs.append("%s: unexpected property %s" % (path, k))
+    if isinstance(v, list) and "items" in s:
+        for i, x in enumerate(v):
+            errs += schema_errors(x, s["items"], "%s[%d]" % (path, i))
+    if isinstance(v, (int, float)) and not isinstance(v, bool):
+        if "minimum" in s and v < s["minimum"]:
+            errs.append("%s: below minimum" % path)
+        if "maximum" in s and v > s["maximum"]:
+            errs.append("%s: above maximum" % path)
+    if isinstance(v, str):
+        if "maxLength" in s and len(v) > s["maxLength"]:
+            errs.append("%s: longer than %d" % (path, s["maxLength"]))
+        if "minLength" in s and len(v) < s["minLength"]:
+            errs.append("%s: shorter than %d" % (path, s["minLength"]))
+        if "pattern" in s and not re.search(s["pattern"], v):
+            errs.append("%s: does not match pattern" % path)
+    return errs
+
+
+def check_ai_files(problems):
+    schema_path = os.path.join(SHARED, "ai_extraction.schema.json")
+    md_path = os.path.join(SHARED, "ai_extraction.md")
+    try:
+        schema = json.load(open(schema_path, encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        problems.append("ai_extraction.schema.json: %s" % e)
+        return None
+    try:
+        md = open(md_path, encoding="utf-8").read()
+    except OSError as e:
+        problems.append("ai_extraction.md: %s" % e)
+        md = ""
+    for needle in ("{record_type_hint}", "{pages}", "=== Page N ===", "## System prompt (full)",
+                   "## User template", "## System prompt (compact, on-device)"):
+        if needle not in md:
+            problems.append("ai_extraction.md: missing %r" % needle)
+    enum_types = schema["properties"]["record_type"]["enum"]
+    if enum_types != R.RECORD_TYPES:
+        problems.append("ai_extraction.schema.json: record_type enum differs from §3")
+    date_keys = schema["properties"]["dates"]["items"]["properties"]["key"]["enum"]
+    if sorted(date_keys) != sorted(R.DATE_KEYS):
+        problems.append("ai_extraction.schema.json: date keys differ from the reference")
+    field_keys = schema["properties"]["fields"]["items"]["properties"]["key"]["enum"]
+    if sorted(field_keys) != sorted(R._AI_FIELD_KEYS):
+        problems.append("ai_extraction.schema.json: field keys differ from the reference")
+    return schema
+
+
+# ---------------------------------------------------------------------------------------------
+# Output shapes
+# ---------------------------------------------------------------------------------------------
+
+_ITEM_KEYS = {"key", "value_text", "value_json", "confidence", "source_page", "evidence"}
+
+
+def _shape_items(items, where, problems):
+    for it in items:
+        if set(it) != _ITEM_KEYS:
+            problems.append("%s: item keys %s" % (where, sorted(it)))
+            continue
+        if it["key"] not in R.FIELD_KEYS:
+            problems.append("%s: unknown field key %s" % (where, it["key"]))
+        if not (0 <= it["confidence"] <= 1):
+            problems.append("%s: confidence out of range" % where)
+        if it["key"] == "test_result" and it["value_json"]["flag"] not in R.FLAGS:
+            problems.append("%s: bad flag" % where)
+
+
+def check_shape(function, exp, where, problems):
+    if function == "classify":
+        if exp["record_type"] not in R.RECORD_TYPES or exp["category"] != R.DEFAULT_CATEGORY[exp["record_type"]]:
+            problems.append("%s: bad type/category" % where)
+    elif function in ("extract_dates", "extract_fields", "parse_lab_rows"):
+        _shape_items(exp["items"], where, problems)
+    elif function == "detect_boundaries":
+        segs = exp["segments"]
+        if segs and (segs[0]["page_start"] != 0 or any(segs[i]["page_start"] != segs[i - 1]["page_end"] + 1
+                                                         for i in range(1, len(segs)))):
+            problems.append("%s: segments are not contiguous" % where)
+        if exp["propose"] != (len(segs) >= 2):
+            problems.append("%s: propose flag" % where)
+    elif function == "build_highlights":
+        for h in exp["highlights"]:
+            if h["section"] not in ("important", "medications", "recommendations", "summary"):
+                problems.append("%s: bad section" % where)
+    elif function == "review_status":
+        if exp["status"] not in ("none", "needs_review", "reviewed"):
+            problems.append("%s: bad status" % where)
+    elif function == "apply_extraction":
+        for r in exp["rows"]:
+            if r["state"] not in ("suggested", "confirmed", "rejected", "user"):
+                problems.append("%s: bad state" % where)
+    elif function == "validate_ai":
+        for it in exp["items"]:
+            if it["method"] not in ("ai_local", "ai_cloud") or not (0 <= it["confidence"] <= 0.9):
+                problems.append("%s: bad AI item" % where)
+    elif function == "parse_query":
+        for t in exp["record_types"]:
+            if t not in R.RECORD_TYPES:
+                problems.append("%s: bad record type" % where)
+        for f in exp["flags"]:
+            if f not in ("abnormal", "low", "high", "critical"):
+                problems.append("%s: bad flag" % where)
+
+
+# ---------------------------------------------------------------------------------------------
+# Vectors
+# ---------------------------------------------------------------------------------------------
+
+def _first_diff(a, b, path="$"):
+    if type(a) != type(b) and not (isinstance(a, (int, float)) and isinstance(b, (int, float))):
+        return path
+    if isinstance(a, dict):
+        for k in sorted(set(a) | set(b)):
+            if k not in a or k not in b:
+                return path + "." + k
+            d = _first_diff(a[k], b[k], path + "." + k)
+            if d:
+                return d
+        return None
+    if isinstance(a, list):
+        if len(a) != len(b):
+            return path + " (length %d vs %d)" % (len(a), len(b))
+        for i in range(len(a)):
+            d = _first_diff(a[i], b[i], "%s[%d]" % (path, i))
+            if d:
+                return d
+        return None
+    return None if a == b else path
+
+
+def check_vectors(write, schema, problems):
+    counts = {}
+    present = sorted(os.path.basename(p) for p in glob.glob(os.path.join(VECTORS, "*.json")))
+    for name in sorted(EXPECTED_FILES):
+        if name not in present:
+            problems.append("test-vectors/%s missing" % name)
+    for name in present:
+        path = os.path.join(VECTORS, name)
+        raw = open(path, encoding="utf-8").read()
+        try:
+            doc = json.loads(raw)
+        except ValueError as e:
+            problems.append("%s: invalid JSON: %s" % (name, e))
+            continue
+        if (doc.get("format") != "ayuvo-records-vectors" or doc.get("version") != 1
+                or doc.get("function") != EXPECTED_FILES.get(name) or not isinstance(doc.get("cases"), list)):
+            problems.append("%s: bad envelope" % name)
+            continue
+        seen = set()
+        changed = False
+        for c in doc["cases"]:
+            if set(c) - {"name", "input", "expected", "notes"} or not isinstance(c.get("input"), dict):
+                problems.append("%s: bad case keys %s" % (name, sorted(c)))
+                continue
+            if c["name"] in seen:
+                problems.append("%s: duplicate case %s" % (name, c["name"]))
+            seen.add(c["name"])
+            got = json.loads(json.dumps(R.run_case(doc["function"], c["input"]), ensure_ascii=False))
+            where = "%s/%s" % (name, c["name"])
+            if write:
+                if c.get("expected") != got:
+                    c["expected"] = got
+                    changed = True
+            elif c.get("expected") != got:
+                problems.append("%s: expected differs from the reference at %s" % (where, _first_diff(c.get("expected"), got)))
+            check_shape(doc["function"], got, where, problems)
+            if schema is not None and c["input"].get("schema_valid"):
+                ai = R.lenient_json(c["input"]["ai_json"])
+                for err in schema_errors(ai, schema):
+                    problems.append("%s: AI input violates ai_extraction.schema.json: %s" % (where, err))
+        counts[name] = len(doc["cases"])
+        if write and (changed or raw != dumps(doc)):
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write(dumps(doc))
+        elif not write and raw != dumps(doc):
+            problems.append("%s: not in canonical format (run --write)" % name)
+    return counts
+
+
+# ---------------------------------------------------------------------------------------------
+# Self-tests
+# ---------------------------------------------------------------------------------------------
+
+class ReferenceSelfTest(unittest.TestCase):
+    def test_fold_is_idempotent_and_length_preserving(self):
+        for s in ["Hémoglobine  µg/dL\r\n\tİ ²", "ÅNGSTRÖM ﬁ", "Σ plain"]:
+            self.assertEqual(R.fold(R.fold(s)), R.fold(s))
+            self.assertEqual(len(R.fold(s)), len(R.pfold(s)))
+
+    def test_round2_half_up(self):
+        self.assertEqual(R.round2(0.625), 0.63)
+        self.assertEqual(R.round2(0.8125), 0.81)
+        self.assertEqual(R.round2(0.955), 0.96)
+
+    def test_statements_rule(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".sql", delete=False, encoding="utf-8") as fh:
+            fh.write("-- header\r\nCREATE TABLE a (\n  x TEXT, -- note; not an end\n  y INTEGER);\n\nCREATE INDEX i ON a(x);  \n")
+        try:
+            self.assertEqual(statements(fh.name), ["CREATE TABLE a (\n  x TEXT,\n  y INTEGER)", "CREATE INDEX i ON a(x)"])
+        finally:
+            os.unlink(fh.name)
+
+    def test_fnv_known_values(self):
+        self.assertEqual(R.fnv1a64(b""), 0xcbf29ce484222325)
+        self.assertEqual(R.fnv1a64(b"a"), 0xaf63dc4c8601ec8c)
+
+    def test_lint_flags_non_portable(self):
+        self.assertIn("named group", lint_pattern("(?P<x>a)", False))
+        self.assertIn("variable-length lookbehind", lint_pattern("(?<!a+)b", False))
+        self.assertIn("possessive quantifier", lint_pattern("a++", False))
+        self.assertEqual(lint_pattern("(?<![a-z])ab(?:c|d)?[0-9]{1,2}", True), [])
+
+    def test_apply_extraction_never_overwrites_confirmed(self):
+        rows = [{"id": "r", "field_key": "facility", "value_text": "Metro Labs", "value_json": None, "method": "user",
+                 "confidence": 0.1, "state": "confirmed", "source_page": 0, "source_bbox": None, "evidence": None}]
+        out = R.apply_extraction(rows, [{"key": "facility", "value_text": "METRO LABS", "value_json": None,
+                                         "method": "ai_cloud", "confidence": 0.9}])
+        self.assertEqual(out["rows"], rows)
+
+
+def main(argv):
+    write = "--write" in argv
+    problems = []
+    check_data_files(problems)
+    schema = check_ai_files(problems)
+    sql_counts = check_sql(problems)
+    counts = check_vectors(write, schema, problems)
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(ReferenceSelfTest)
+    result = unittest.TextTestRunner(stream=open(os.devnull, "w"), verbosity=0).run(suite)
+    for f, tb in result.failures + result.errors:
+        problems.append("self-test %s failed:\n%s" % (f.id(), tb))
+    for rel in sorted(sql_counts):
+        print("sql  %-45s %d statements" % (rel, sql_counts[rel]))
+    for name in sorted(counts):
+        print("vec  %-45s %d cases" % (name, counts[name]))
+    print("self-tests: %d run" % result.testsRun)
+    if problems:
+        print("\n%d problem(s):" % len(problems))
+        for p in problems:
+            print("  - " + p)
+        return 1
+    print("records contract OK" + (" (vectors rewritten)" if write else ""))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

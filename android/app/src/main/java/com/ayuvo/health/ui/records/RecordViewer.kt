@@ -4,7 +4,13 @@ import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -137,7 +143,11 @@ internal fun RecordViewer(
     height: Dp,
     renderCache: RecordRenderCache?,
     onOpenElsewhere: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** Split children show only this range (absolute page indexes of the shared parent file). */
+    pageRange: IntRange? = null,
+    /** Tap-to-source: jump to a page and outline a normalized box on it. */
+    focus: SourceFocus? = null
 ) {
     val shape = RoundedCornerShape(20.dp)
     Box(
@@ -149,8 +159,8 @@ internal fun RecordViewer(
     ) {
         when {
             file == null && record.fileType != RecordFileType.TEXT -> ViewerProblemCard(ViewerProblem.MISSING, onOpenElsewhere)
-            record.fileType == RecordFileType.PDF -> PdfPager(file!!, record.id, renderCache, onOpenElsewhere)
-            record.fileType == RecordFileType.IMAGE -> ImageViewer(file!!, onOpenElsewhere)
+            record.fileType == RecordFileType.PDF -> PdfPager(file!!, record.parentId ?: record.id, renderCache, onOpenElsewhere, pageRange, focus)
+            record.fileType == RecordFileType.IMAGE -> ImageViewer(file!!, onOpenElsewhere, focus?.takeIf { it.page == 0 }?.bbox)
             record.fileType == RecordFileType.TEXT -> TextViewer(pages)
             else -> ViewerProblemCard(ViewerProblem.UNSUPPORTED, onOpenElsewhere)
         }
@@ -158,7 +168,14 @@ internal fun RecordViewer(
 }
 
 @Composable
-private fun PdfPager(file: File, recordId: String, cache: RecordRenderCache?, onOpenElsewhere: () -> Unit) {
+private fun PdfPager(
+    file: File,
+    recordId: String,
+    cache: RecordRenderCache?,
+    onOpenElsewhere: () -> Unit,
+    pageRange: IntRange?,
+    focus: SourceFocus?
+) {
     val source by produceState<Result<PdfPageSource>?>(initialValue = null, file) {
         value = PdfPageSource.open(file, recordId, cache)
     }
@@ -177,11 +194,19 @@ private fun PdfPager(file: File, recordId: String, cache: RecordRenderCache?, on
         }
         opened.pageCount == 0 -> ViewerProblemCard(ViewerProblem.UNREADABLE, onOpenElsewhere)
         else -> {
-            val pagerState = rememberPagerState(pageCount = { opened.pageCount })
+            val first = pageRange?.first?.coerceIn(0, opened.pageCount - 1) ?: 0
+            val last = pageRange?.last?.coerceIn(first, opened.pageCount - 1) ?: (opened.pageCount - 1)
+            val visibleCount = last - first + 1
+            val pagerState = rememberPagerState(pageCount = { visibleCount })
             var fullScreen by remember { mutableStateOf<Bitmap?>(null) }
+            LaunchedEffect(focus?.token) {
+                val target = focus?.page ?: return@LaunchedEffect
+                if (target in first..last) pagerState.animateScrollToPage(target - first)
+            }
             BoxWithConstraints(Modifier.fillMaxSize()) {
                 val widthPx = with(LocalDensity.current) { maxWidth.roundToPx() }
-                HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
+                HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { position ->
+                    val index = first + position
                     val bitmap by produceState<Bitmap?>(initialValue = null, opened, index, widthPx) {
                         value = opened.render(index, widthPx)
                     }
@@ -192,17 +217,18 @@ private fun PdfPager(file: File, recordId: String, cache: RecordRenderCache?, on
                         } else {
                             Image(
                                 bitmap = bmp.asImageBitmap(),
-                                contentDescription = stringResource(R.string.records_viewer_page, index + 1, opened.pageCount),
+                                contentDescription = stringResource(R.string.records_viewer_page, position + 1, visibleCount),
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable { fullScreen = bmp }
                             )
+                            focus?.bbox?.takeIf { focus.page == index }?.let { box -> SourceOutline(bmp.width, bmp.height, box) }
                         }
                     }
                 }
                 Text(
-                    stringResource(R.string.records_viewer_page, pagerState.currentPage + 1, opened.pageCount),
+                    stringResource(R.string.records_viewer_page, pagerState.currentPage + 1, visibleCount),
                     fontSize = 12.sp,
                     color = Color.White,
                     modifier = Modifier
@@ -221,8 +247,39 @@ private fun PdfPager(file: File, recordId: String, cache: RecordRenderCache?, on
 /** Outlives the composition so a renderer closes after its in-flight page render. */
 private val viewerCloseScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+/** Outlines a normalized [box] (x, y, w, h) over a bitmap drawn with ContentScale.Fit. */
 @Composable
-private fun ImageViewer(file: File, onOpenElsewhere: () -> Unit) {
+private fun SourceOutline(bitmapWidth: Int, bitmapHeight: Int, box: List<Float>) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val density = LocalDensity.current
+        val cw = with(density) { maxWidth.toPx() }
+        val ch = with(density) { maxHeight.toPx() }
+        Canvas(Modifier.fillMaxSize()) {
+            val scale = minOf(cw / bitmapWidth.coerceAtLeast(1), ch / bitmapHeight.coerceAtLeast(1))
+            val dw = bitmapWidth * scale
+            val dh = bitmapHeight * scale
+            val left = (cw - dw) / 2 + box[0] * dw
+            val top = (ch - dh) / 2 + box[1] * dh
+            val pad = 3.dp.toPx()
+            drawRoundRect(
+                color = AppColors.Calorie,
+                topLeft = Offset(left - pad, top - pad),
+                size = Size(box[2] * dw + 2 * pad, box[3] * dh + 2 * pad),
+                cornerRadius = CornerRadius(4.dp.toPx()),
+                style = Stroke(width = 2.dp.toPx())
+            )
+            drawRoundRect(
+                color = AppColors.Calorie.copy(alpha = 0.12f),
+                topLeft = Offset(left - pad, top - pad),
+                size = Size(box[2] * dw + 2 * pad, box[3] * dh + 2 * pad),
+                cornerRadius = CornerRadius(4.dp.toPx())
+            )
+        }
+    }
+}
+
+@Composable
+private fun ImageViewer(file: File, onOpenElsewhere: () -> Unit, bbox: List<Float>?) {
     val decoded by produceState<Result<Bitmap?>?>(initialValue = null, file) {
         value = withContext(Dispatchers.IO) { runCatching { FoodImageDecoder.decode(file, VIEWER_MAX_DIMENSION) } }
     }
@@ -238,6 +295,7 @@ private fun ImageViewer(file: File, onOpenElsewhere: () -> Unit) {
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize().clickable { fullScreen = true }
             )
+            bbox?.let { SourceOutline(bitmap.width, bitmap.height, it) }
             if (fullScreen) FullScreenImageViewer(bitmaps = listOf(bitmap), onDismiss = { fullScreen = false })
         }
     }

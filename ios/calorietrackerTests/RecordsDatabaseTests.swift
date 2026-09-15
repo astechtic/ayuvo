@@ -84,15 +84,15 @@ struct RecordsSchemaTests {
 
     @Test func schemaCreatedFromSharedFileMatchesEmbeddedColumnForColumn() async throws {
         let fileSQL = try String(contentsOf: F.sharedSchemaURL, encoding: .utf8)
-        let embedded = try await RecordsDatabase.inMemory()
-        let fromFile = try await RecordsDatabase.inMemory()
+        // v1 only; migration 002 has its own parity tests (RecordsMigrationTests).
+        let embedded = try await RecordsDatabase.inMemory(targetVersion: 1)
+        let fromFile = try await RecordsDatabase.inMemory(targetVersion: 0)
         try await fromFile.withConnection { connection in
-            try connection.exec("DROP TABLE IF EXISTS records_fts; DROP TABLE IF EXISTS record_tags; DROP TABLE IF EXISTS tags; DROP TABLE IF EXISTS record_pages; DROP TABLE IF EXISTS records_meta; DROP TABLE IF EXISTS records;")
             try connection.exec(fileSQL)
         }
         #expect(try await embedded.tableNames() == fromFile.tableNames())
         #expect(try await embedded.indexNames() == fromFile.indexNames())
-        for table in RecordsSchema.tableNames {
+        for table in ["records", "record_pages", "tags", "record_tags", "records_fts", "records_meta"] {
             let a = try await embedded.tableInfo(table)
             let b = try await fromFile.tableInfo(table)
             #expect(a == b, "table \(table) differs from shared/records/schema.sql")
@@ -121,7 +121,7 @@ struct RecordsSchemaTests {
         await db.close()
         let reopened = try await RecordsDatabase.open(url: url)
         #expect(try await reopened.recordCount() == 1)
-        #expect(try await reopened.userVersion() == 1)
+        #expect(try await reopened.userVersion() == RecordsSchema.schemaVersion)
         await reopened.close()
     }
 

@@ -878,7 +878,38 @@ struct GeminiService {
         return data
     }
 
-    private static func dispatch(provider: AIProvider, model: String, baseURL: String, apiKey: String?, prompt: String, imageDataList: [Data]) async throws -> String {
+    /// Health Records AI call (docs/health-records.md §9.3): text-only requests use the text
+    /// provider (`currentConfig(requiresVision: false)`), page images the vision provider.
+    /// `maxOutputTokens` overrides the global cap for this call only. Returns the text and the
+    /// provider that answered. No fallback provider: records never go to a second provider.
+    static func callRecordsAI(prompt: String, imageDataList: [Data], maxOutputTokens: Int?) async throws -> (text: String, provider: AIProvider) {
+        let config = AIProviderSettings.currentConfig(requiresVision: !imageDataList.isEmpty)
+        if config.provider.requiresAPIKey, config.apiKey == nil {
+            throw AnalysisError.noAPIKey
+        }
+        let text = try await dispatch(
+            provider: config.provider,
+            model: config.model,
+            baseURL: config.baseURL,
+            apiKey: config.apiKey,
+            prompt: prompt,
+            imageDataList: imageDataList,
+            maxOutputTokens: maxOutputTokens
+        )
+        return (text, config.provider)
+    }
+
+    /// Output-token cap for one request: the per-call override, else the global setting.
+    static func effectiveMaxOutputTokens(_ override: Int?) -> Int {
+        override.map { max(1, $0) } ?? AIProviderSettings.maxResponseTokens
+    }
+
+    /// Gemini `generationConfig`, sent only when a per-call override is given (default requests are unchanged).
+    static func geminiGenerationConfig(maxOutputTokens: Int?) -> [String: Any]? {
+        maxOutputTokens.map { ["maxOutputTokens": max(1, $0)] }
+    }
+
+    private static func dispatch(provider: AIProvider, model: String, baseURL: String, apiKey: String?, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
         switch provider.apiFormat {
         case .onDevice:
             guard imageDataList.isEmpty else {
@@ -898,22 +929,22 @@ struct GeminiService {
                 prompt: prompt,
                 images: imageDataList,
                 systemPrompt: AIProviderSettings.currentUserContext,
-                maxOutputTokens: AIProviderSettings.maxResponseTokens
+                maxOutputTokens: effectiveMaxOutputTokens(maxOutputTokens)
             )
         case .gemini:
             guard let key = apiKey else { throw AnalysisError.noAPIKey }
-            return try await callGemini(baseURL: baseURL, model: model, apiKey: key, prompt: prompt, imageDataList: imageDataList)
+            return try await callGemini(baseURL: baseURL, model: model, apiKey: key, prompt: prompt, imageDataList: imageDataList, maxOutputTokens: maxOutputTokens)
         case .openaiCompatible:
-            return try await callOpenAICompatible(baseURL: baseURL, model: model, apiKey: apiKey, provider: provider, prompt: prompt, imageDataList: imageDataList)
+            return try await callOpenAICompatible(baseURL: baseURL, model: model, apiKey: apiKey, provider: provider, prompt: prompt, imageDataList: imageDataList, maxOutputTokens: maxOutputTokens)
         case .anthropic:
             guard let key = apiKey else { throw AnalysisError.noAPIKey }
-            return try await callAnthropic(baseURL: baseURL, model: model, apiKey: key, prompt: prompt, imageDataList: imageDataList)
+            return try await callAnthropic(baseURL: baseURL, model: model, apiKey: key, prompt: prompt, imageDataList: imageDataList, maxOutputTokens: maxOutputTokens)
         }
     }
 
     // MARK: - Gemini Format
 
-    private static func callGemini(baseURL: String, model: String, apiKey: String?, prompt: String, imageDataList: [Data]) async throws -> String {
+    private static func callGemini(baseURL: String, model: String, apiKey: String?, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
         // Send the API key in the X-goog-api-key header, not the URL query string,
         // so it doesn't end up in server logs / proxies (CodeQL: cleartext transmission).
         var parts: [[String: Any]] = []
@@ -932,6 +963,9 @@ struct GeminiService {
         ]
         if let userContext = AIProviderSettings.currentUserContext {
             body["systemInstruction"] = ["parts": [["text": userContext]]]
+        }
+        if let generationConfig = geminiGenerationConfig(maxOutputTokens: maxOutputTokens) {
+            body["generationConfig"] = generationConfig
         }
 
         guard let apiKey else { throw AnalysisError.noAPIKey }
@@ -1002,15 +1036,15 @@ struct GeminiService {
         return OpenAITextResponse(text: text, finishReason: finishReason, hasReasoning: hasReasoning)
     }
 
-    private static func compactOpenAIRetryPrompt(_ prompt: String) -> String {
+    private static func compactOpenAIRetryPrompt(_ prompt: String, maxOutputTokens: Int? = nil) -> String {
         """
         \(prompt)
 
-        IMPORTANT: The previous response did not contain a complete answer. Return only the requested compact JSON object, with no reasoning, explanation, or markdown. Keep the complete response under \(AIProviderSettings.maxResponseTokens) tokens.
+        IMPORTANT: The previous response did not contain a complete answer. Return only the requested compact JSON object, with no reasoning, explanation, or markdown. Keep the complete response under \(effectiveMaxOutputTokens(maxOutputTokens)) tokens.
         """
     }
 
-    private static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, provider: AIProvider, prompt: String, imageDataList: [Data]) async throws -> String {
+    private static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, provider: AIProvider, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
         guard let url = URL(string: "\(baseURL)/chat/completions") else {
             throw AnalysisError.requestFailed(.invalidURL)
         }
@@ -1042,7 +1076,7 @@ struct GeminiService {
                 "model": model,
                 "messages": messages,
             ]
-            body[provider.openAICompatibleTokenLimitKey(for: model)] = AIProviderSettings.maxResponseTokens
+            body[provider.openAICompatibleTokenLimitKey(for: model)] = effectiveMaxOutputTokens(maxOutputTokens)
             if provider == .openrouter {
                 body["reasoning"] = AIProviderSettings.openRouterReasoningEffort.requestOptions(compactRetry: compactRetry, exclude: true)
             }
@@ -1052,7 +1086,7 @@ struct GeminiService {
 
         var response = try await request(prompt, compactRetry: false)
         if response.needsCompactRetry {
-            response = try await request(compactOpenAIRetryPrompt(prompt), compactRetry: true)
+            response = try await request(compactOpenAIRetryPrompt(prompt, maxOutputTokens: maxOutputTokens), compactRetry: true)
             if response.wasTruncated {
                 throw AnalysisError.requestFailed(.truncated)
             }
@@ -1087,15 +1121,15 @@ struct GeminiService {
         )
     }
 
-    private static func compactAnthropicRetryPrompt(_ prompt: String) -> String {
+    private static func compactAnthropicRetryPrompt(_ prompt: String, maxOutputTokens: Int? = nil) -> String {
         """
         \(prompt)
 
-        IMPORTANT: The previous response was truncated. Return only the requested compact JSON object, with no reasoning, explanation, or markdown. Keep the complete response under \(AIProviderSettings.maxResponseTokens) tokens.
+        IMPORTANT: The previous response was truncated. Return only the requested compact JSON object, with no reasoning, explanation, or markdown. Keep the complete response under \(effectiveMaxOutputTokens(maxOutputTokens)) tokens.
         """
     }
 
-    private static func callAnthropic(baseURL: String, model: String, apiKey: String, prompt: String, imageDataList: [Data]) async throws -> String {
+    private static func callAnthropic(baseURL: String, model: String, apiKey: String, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
         guard let url = URL(string: "\(baseURL)/messages") else {
             throw AnalysisError.requestFailed(.invalidURL)
         }
@@ -1121,7 +1155,7 @@ struct GeminiService {
 
             var body: [String: Any] = [
                 "model": model,
-                "max_tokens": AIProviderSettings.maxResponseTokens,
+                "max_tokens": effectiveMaxOutputTokens(maxOutputTokens),
                 "messages": [["role": "user", "content": content]],
             ]
             if let userContext = AIProviderSettings.currentUserContext {
@@ -1133,7 +1167,7 @@ struct GeminiService {
 
         var response = try await request(prompt)
         if response.wasTruncated {
-            response = try await request(compactAnthropicRetryPrompt(prompt))
+            response = try await request(compactAnthropicRetryPrompt(prompt, maxOutputTokens: maxOutputTokens))
             if response.wasTruncated {
                 throw AnalysisError.requestFailed(.truncated)
             }

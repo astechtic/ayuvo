@@ -1,0 +1,1113 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "actions": [
+          {
+            "action": "insert",
+            "id": "new-1"
+          },
+          {
+            "action": "insert",
+            "id": "new-2"
+          },
+          {
+            "action": "insert",
+            "id": "new-3"
+          },
+          {
+            "action": "insert",
+            "id": "new-4"
+          },
+          {
+            "action": "insert",
+            "id": "new-5"
+          },
+          {
+            "action": "insert",
+            "id": "new-6"
+          },
+          {
+            "action": "insert",
+            "id": "new-7"
+          },
+          {
+            "action": "insert",
+            "id": "new-8"
+          },
+          {
+            "action": "insert",
+            "id": "new-9"
+          },
+          {
+            "action": "insert",
+            "id": "new-10"
+          },
+          {
+            "action": "insert",
+            "id": "new-11"
+          }
+        ],
+        "conflicts": [],
+        "record": {
+          "category": "lab_reports",
+          "document_date": "2026-09-12",
+          "document_date_method": "rules",
+          "document_date_precision": "day",
+          "record_type": "lab_report",
+          "sort_date": "2026-09-12",
+          "title": "Complete Blood Count (CBC)",
+          "title_is_derived": true,
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "field_key": "collection_date",
+            "id": "new-1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "field_key": "report_date",
+            "id": "new-2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "field_key": "document_time",
+            "id": "new-3",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "14:40"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "SUNRISE DIAGNOSTICS & PATH LAB",
+            "field_key": "facility",
+            "id": "new-4",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics & Path Lab"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Patient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M",
+            "field_key": "patient_name",
+            "id": "new-5",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "RAHUL VERMA"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Patient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M",
+            "field_key": "patient_age",
+            "id": "new-6",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "34 years"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Patient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M",
+            "field_key": "patient_sex",
+            "id": "new-7",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "male"
+          },
+          {
+            "confidence": 0.85,
+            "evidence": "UHID : SD-204518 Ref. By : Dr. A. K. Mehta",
+            "field_key": "doctor_name",
+            "id": "new-8",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "role": "referrer"
+            },
+            "value_text": "A. K. Mehta"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "COMPLETE BLOOD COUNT (CBC)",
+            "field_key": "report_name",
+            "id": "new-9",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Complete Blood Count (CBC)"
+          },
+          {
+            "confidence": 0.85,
+            "evidence": "Dr. Neha Gupta, MD (Pathology)",
+            "field_key": "doctor_name",
+            "id": "new-10",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Dr. Neha Gupta, MD (Pathology)",
+            "field_key": "doctor_specialty",
+            "id": "new-11",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "MD"
+          }
+        ]
+      },
+      "input": {
+        "classification": [
+          {
+            "confidence": 0.89,
+            "method": "rules",
+            "record_type": "lab_report"
+          }
+        ],
+        "existing_rows": [],
+        "new_items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "key": "collection_date",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "key": "report_date",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "key": "document_time",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "14:40"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "SUNRISE DIAGNOSTICS & PATH LAB",
+            "key": "facility",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics & Path Lab"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Patient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M",
+            "key": "patient_name",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "RAHUL VERMA"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Patient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M",
+            "key": "patient_age",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "34 years"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Patient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M",
+            "key": "patient_sex",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "male"
+          },
+          {
+            "confidence": 0.85,
+            "evidence": "UHID : SD-204518 Ref. By : Dr. A. K. Mehta",
+            "key": "doctor_name",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": {
+              "role": "referrer"
+            },
+            "value_text": "A. K. Mehta"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "COMPLETE BLOOD COUNT (CBC)",
+            "key": "report_name",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Complete Blood Count (CBC)"
+          },
+          {
+            "confidence": 0.85,
+            "evidence": "Dr. Neha Gupta, MD (Pathology)",
+            "key": "doctor_name",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Dr. Neha Gupta, MD (Pathology)",
+            "key": "doctor_specialty",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "MD"
+          }
+        ],
+        "record": {
+          "category": "other",
+          "document_date": "2026-09-01",
+          "document_date_method": "file_metadata",
+          "document_date_precision": "day",
+          "record_type": "other",
+          "sort_date": "2026-09-01",
+          "title": "scan 0012",
+          "title_is_derived": true,
+          "type_confidence": null,
+          "type_method": null
+        }
+      },
+      "name": "insert_into_empty_and_derive_record"
+    },
+    {
+      "expected": {
+        "actions": [
+          {
+            "action": "skip_confirmed",
+            "id": "r1"
+          },
+          {
+            "action": "skip_user",
+            "id": "r2"
+          },
+          {
+            "action": "skip_rejected",
+            "id": "r3"
+          }
+        ],
+        "conflicts": [],
+        "record": null,
+        "rows": [
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "facility",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "confirmed",
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics"
+          },
+          {
+            "confidence": 1.0,
+            "evidence": null,
+            "field_key": "doctor_name",
+            "id": "r2",
+            "method": "user",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "user",
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": null,
+            "field_key": "diagnosis",
+            "id": "r3",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "rejected",
+            "value_json": null,
+            "value_text": "Anaemia"
+          }
+        ]
+      },
+      "input": {
+        "existing_rows": [
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "facility",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "confirmed",
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics"
+          },
+          {
+            "confidence": 1.0,
+            "evidence": null,
+            "field_key": "doctor_name",
+            "id": "r2",
+            "method": "user",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "user",
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": null,
+            "field_key": "diagnosis",
+            "id": "r3",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "rejected",
+            "value_json": null,
+            "value_text": "Anaemia"
+          }
+        ],
+        "new_items": [
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "key": "facility",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "SUNRISE  DIAGNOSTICS."
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "key": "doctor_name",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Dr Neha-Gupta"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "key": "diagnosis",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "anaemia"
+          }
+        ]
+      },
+      "name": "never_touch_confirmed_user_rejected",
+      "notes": "Normalized values equal -> skip, whatever the confidence."
+    },
+    {
+      "expected": {
+        "actions": [
+          {
+            "action": "update",
+            "id": "r1"
+          },
+          {
+            "action": "keep",
+            "id": "r2"
+          }
+        ],
+        "conflicts": [],
+        "record": null,
+        "rows": [
+          {
+            "confidence": 0.8,
+            "evidence": "COMPLETE BLOOD COUNT",
+            "field_key": "report_name",
+            "id": "r1",
+            "method": "ai_local",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "COMPLETE BLOOD COUNT"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "facility",
+            "id": "r2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Metro Labs"
+          }
+        ]
+      },
+      "input": {
+        "existing_rows": [
+          {
+            "confidence": 0.7,
+            "evidence": null,
+            "field_key": "report_name",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Complete Blood Count"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "facility",
+            "id": "r2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Metro Labs"
+          }
+        ],
+        "new_items": [
+          {
+            "confidence": 0.8,
+            "evidence": "COMPLETE BLOOD COUNT",
+            "key": "report_name",
+            "method": "ai_local",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "COMPLETE BLOOD COUNT"
+          },
+          {
+            "confidence": 0.6,
+            "evidence": null,
+            "key": "facility",
+            "method": "ai_local",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Metro labs"
+          }
+        ]
+      },
+      "name": "update_suggested_only_when_more_confident"
+    },
+    {
+      "expected": {
+        "actions": [
+          {
+            "action": "insert",
+            "id": "new-1"
+          },
+          {
+            "action": "insert",
+            "id": "new-2"
+          },
+          {
+            "action": "insert",
+            "id": "new-3"
+          }
+        ],
+        "conflicts": [
+          "report_date"
+        ],
+        "record": null,
+        "rows": [
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "report_date",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "report_date",
+            "id": "new-1",
+            "method": "ai_cloud",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": null,
+            "field_key": "diagnosis",
+            "id": "new-2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Fatty liver"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": null,
+            "field_key": "diagnosis",
+            "id": "new-3",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Cholelithiasis"
+          }
+        ]
+      },
+      "input": {
+        "existing_rows": [
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "report_date",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          }
+        ],
+        "new_items": [
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "key": "report_date",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": null,
+            "key": "diagnosis",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Fatty liver"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": null,
+            "key": "diagnosis",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Cholelithiasis"
+          }
+        ]
+      },
+      "name": "different_value_is_conflict_not_overwrite"
+    },
+    {
+      "expected": {
+        "actions": [
+          {
+            "action": "update",
+            "id": "r1"
+          },
+          {
+            "action": "insert",
+            "id": "new-1"
+          },
+          {
+            "action": "keep",
+            "id": "new-1"
+          }
+        ],
+        "conflicts": [],
+        "record": null,
+        "rows": [
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "test_result",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "unknown",
+              "name": "HAEMOGLOBIN",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "11.2",
+              "value_num": null
+            },
+            "value_text": "HAEMOGLOBIN"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "test_result",
+            "id": "new-1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "unknown",
+              "name": "Haemoglobin",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "11.4",
+              "value_num": null
+            },
+            "value_text": "Haemoglobin"
+          }
+        ]
+      },
+      "input": {
+        "existing_rows": [
+          {
+            "confidence": 0.6,
+            "evidence": null,
+            "field_key": "test_result",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "unknown",
+              "name": "Haemoglobin",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "11.2",
+              "value_num": 11.2
+            },
+            "value_text": "Haemoglobin"
+          }
+        ],
+        "new_items": [
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "key": "test_result",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "HAEMOGLOBIN",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "11.2",
+              "value_num": null
+            },
+            "value_text": "HAEMOGLOBIN"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "key": "test_result",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Haemoglobin",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "11.4",
+              "value_num": null
+            },
+            "value_text": "Haemoglobin"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "key": "test_result",
+            "method": "rules",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Haemoglobin",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "11.4",
+              "value_num": null
+            },
+            "value_text": "Haemoglobin"
+          }
+        ]
+      },
+      "name": "test_result_identity_is_name_and_value",
+      "notes": "Same name+value updates the suggested row; a different value inserts a second test_result (multi-valued, no conflict); duplicates inside one batch are merged."
+    },
+    {
+      "expected": {
+        "actions": [],
+        "conflicts": [],
+        "record": {
+          "category": "lab_reports",
+          "document_date": "2026-09-09",
+          "document_date_method": "user",
+          "document_date_precision": "day",
+          "record_type": "lab_report",
+          "sort_date": "2026-09-09",
+          "title": "My cholesterol test",
+          "title_is_derived": false,
+          "type_confidence": null,
+          "type_method": "user"
+        },
+        "rows": [
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "report_name",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Lipid Panel"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "collection_date",
+            "id": "r2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          }
+        ]
+      },
+      "input": {
+        "classification": [
+          {
+            "confidence": 0.9,
+            "method": "rules",
+            "record_type": "bill"
+          }
+        ],
+        "existing_rows": [
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "report_name",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Lipid Panel"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "collection_date",
+            "id": "r2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          }
+        ],
+        "new_items": [],
+        "record": {
+          "category": "lab_reports",
+          "document_date": "2026-09-09",
+          "document_date_method": "user",
+          "document_date_precision": "day",
+          "record_type": "lab_report",
+          "sort_date": "2026-09-09",
+          "title": "My cholesterol test",
+          "title_is_derived": false,
+          "type_confidence": null,
+          "type_method": "user"
+        }
+      },
+      "name": "record_columns_user_methods_untouched"
+    },
+    {
+      "expected": {
+        "actions": [],
+        "conflicts": [],
+        "record": {
+          "category": "prescriptions",
+          "document_date": "2026-09-13",
+          "document_date_method": "rules",
+          "document_date_precision": "day",
+          "record_type": "prescription",
+          "sort_date": "2026-09-13",
+          "title": "Prescription — Kulkarni Clinic",
+          "title_is_derived": true,
+          "type_confidence": 0.8,
+          "type_method": "ai_cloud"
+        },
+        "rows": [
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "facility",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Kulkarni Clinic"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "visit_date",
+            "id": "r2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "prescription_date",
+            "id": "r3",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          },
+          {
+            "confidence": 0.5,
+            "evidence": null,
+            "field_key": "report_date",
+            "id": "r4",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-14"
+          },
+          {
+            "confidence": 0.4,
+            "evidence": null,
+            "field_key": "report_name",
+            "id": "r5",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rx"
+          }
+        ]
+      },
+      "input": {
+        "classification": [
+          {
+            "confidence": 0,
+            "method": "rules",
+            "record_type": "other"
+          },
+          {
+            "confidence": 0.8,
+            "method": "ai_cloud",
+            "record_type": "prescription"
+          }
+        ],
+        "existing_rows": [
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "facility",
+            "id": "r1",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Kulkarni Clinic"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": null,
+            "field_key": "visit_date",
+            "id": "r2",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": null,
+            "field_key": "prescription_date",
+            "id": "r3",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          },
+          {
+            "confidence": 0.5,
+            "evidence": null,
+            "field_key": "report_date",
+            "id": "r4",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-14"
+          },
+          {
+            "confidence": 0.4,
+            "evidence": null,
+            "field_key": "report_name",
+            "id": "r5",
+            "method": "rules",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rx"
+          }
+        ],
+        "new_items": [],
+        "record": {
+          "category": "other",
+          "document_date": null,
+          "document_date_method": "import_time",
+          "document_date_precision": "day",
+          "record_type": "other",
+          "sort_date": "2026-09-14",
+          "title": "scan 0012",
+          "title_is_derived": true,
+          "type_confidence": null,
+          "type_method": null
+        }
+      },
+      "name": "title_from_facility_and_date_order",
+      "notes": "Rows below 0.6 (and not user/confirmed) are not used for record columns."
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "apply_extraction",
+  "version": 1
+}

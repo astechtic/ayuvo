@@ -20,13 +20,14 @@ extension View {
 
 /// Phase 1 filter chips (plan §1 screen map).
 enum RecordsFilterChip: String, CaseIterable, Identifiable {
-    case all, reports, prescriptions, lab, imaging, doctorNotes, discharge, bills, images, pdfs, notes, received, favorites, archived
+    case all, needsReview, reports, prescriptions, lab, imaging, doctorNotes, discharge, bills, images, pdfs, notes, received, favorites, archived
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .all: String(localized: "All")
+        case .needsReview: String(localized: "Needs Review")
         case .reports: String(localized: "Reports")
         case .prescriptions: String(localized: "Prescriptions")
         case .lab: String(localized: "Lab")
@@ -47,6 +48,7 @@ enum RecordsFilterChip: String, CaseIterable, Identifiable {
         var query = RecordQuery(text: text)
         switch self {
         case .all: break
+        case .needsReview: query.needsReviewOnly = true
         case .reports: query.recordTypes = [.labReport, .imagingReport, .diagnosticReport]
         case .prescriptions: query.recordTypes = [.prescription, .medicationList]
         case .lab: query.categories = [.labReports]
@@ -184,6 +186,9 @@ enum RecordFormatting {
         case .other: parts.append(String(localized: "File"))
         }
         if record.isReceived { parts.append(String(localized: "Received")) }
+        if record.isSplitChild, let start = record.pageStart, let end = record.pageEnd {
+            parts.append(start == end ? String(localized: "Page \(start + 1)") : String(localized: "Pages \(start + 1)–\(end + 1)"))
+        }
         return parts.joined(separator: " · ")
     }
 }
@@ -224,10 +229,7 @@ struct RecordRow: View {
                 }
             }
             Spacer(minLength: 0)
-            if record.processingStatus == .saved {
-                ProgressView()
-                    .controlSize(.mini)
-            }
+            RecordStatusIndicator(record: record)
         }
         .padding(.vertical, compact ? 6 : 8)
         .contentShape(Rectangle())

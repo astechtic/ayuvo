@@ -1,0 +1,809 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Collected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM",
+            "key": "document_time",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "14:40"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "cbc_indian"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Collected: 09/10/2026 07:45 AM Received: 09/10/2026 09:02 AM Reported: 09/11/2026 04:10 PM",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Collected: 09/10/2026 07:45 AM Received: 09/10/2026 09:02 AM Reported: 09/11/2026 04:10 PM",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-11"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Collected: 09/10/2026 07:45 AM Received: 09/10/2026 09:02 AM Reported: 09/11/2026 04:10 PM",
+            "key": "document_time",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "16:10"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "mdy",
+        "pages": [
+          "Riverside Medical Laboratory\n4100 Oak Street, Suite 200, Springfield, IL 62704\nPatient: DOE, JANE M          DOB: 03/14/1978          Sex: F\nPhysician: Dr. Robert Chen          Account #: 88213\nCollected: 09/10/2026 07:45 AM     Received: 09/10/2026 09:02 AM     Reported: 09/11/2026 04:10 PM\nLIPID PANEL\nTest                    Result    Flag   Units    Reference Range\nCholesterol, Total      212       H      mg/dL    <200\nTriglycerides           168       H      mg/dL    <150\nHDL Cholesterol         44               mg/dL    >40\nLDL Cholesterol, Calc   134       H      mg/dL    <100\nNon-HDL Cholesterol     168              mg/dL    <130\nChol/HDL Ratio          4.8                       <5.0\nFasting: Yes\nPage 1 of 1"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "lipid_us_mdy"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Sample Collected On: 05-Sep-2026 09:10 Report Date: 06-Sep-2026",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-05"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Sample Collected On: 05-Sep-2026 09:10 Report Date: 06-Sep-2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-06"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "CITY CARE PATHOLOGY LABORATORY\nName: Mrs. Sunita Rao    Age: 52 Years    Gender: Female\nSample Collected On: 05-Sep-2026 09:10    Report Date: 06-Sep-2026\nReferred By: Dr. P. Iyer\nTHYROID PROFILE (T3, T4, TSH)\nSpecimen: Serum\nInvestigation              Observed Value    Units      Biological Reference Interval\nTotal T3                   1.12              ng/mL      0.80 - 2.00\nTotal T4                   7.9               µg/dL      5.1 - 14.1\nTSH (Ultrasensitive)       6.84    H         µIU/mL     0.27 - 4.20\nInterpretation: Elevated TSH with normal T3/T4 suggests subclinical hypothyroidism. Correlate clinically.\nDr. Kavita Menon, MD Pathology"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "thyroid_text_months"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "Date: 13/09/2026",
+            "key": "prescription_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Review after 5 days",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-18"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+        ],
+        "record_type": "prescription",
+        "today": "2026-09-15"
+      },
+      "name": "prescription_relative_follow_up"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "Dt: 2/9/26",
+            "key": "prescription_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-02"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Dr. R. K. Sharrna  M.B.B.S\nSharma Clinic\nDt: 2/9/26\nMr Vikas  35y/m\nc/o cough & cold 4 days\nRx\nTab Montek-LC  0-0-1  x5d\nTab. Dol0 650  1-1-1  x 3days  SOS\nSyp Grilinctus  2tsp  tds\nCap Amoxyci11in 500mg  1-0-1  x 5 days\nT ab. Levocet 5mg  0-0-1\nSteam inhalation"
+        ],
+        "record_type": "prescription",
+        "today": "2026-09-15"
+      },
+      "name": "prescription_two_digit_year"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Visit Date: 08/09/2026",
+            "key": "visit_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-08"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Follow up on 22/09/2026 with reports",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-22"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "GREENLEAF MULTISPECIALITY HOSPITAL\nDepartment of Cardiology\nOPD Consultation Note\nPatient Name: Meera Joshi    Age/Sex: 61 Y / F    UHID: GL-778120\nVisit Date: 08/09/2026\nConsultant: Dr. Anil Deshmukh, DM (Cardiology)\nChief Complaints:\nBreathlessness on exertion since 2 weeks\nOccasional chest tightness\nHistory: Known case of hypertension for 10 years.\nOn Examination: BP 148/92 mmHg, Pulse 88/min, SpO2 97%\nProvisional Diagnosis: Hypertensive heart disease; Rule out coronary artery disease\nPlan:\nECG and 2D Echo\nLipid profile and HbA1c\nTab. Telmisartan 40 mg OD\nFollow up on 22/09/2026 with reports"
+        ],
+        "record_type": "consultation_note",
+        "today": "2026-09-15"
+      },
+      "name": "consultation_follow_up"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Date of Admission: 02/09/2026 Date of Discharge: 07/09/2026",
+            "key": "admission_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-02"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Date of Admission: 02/09/2026 Date of Discharge: 07/09/2026",
+            "key": "discharge_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-07"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Review in medicine OPD after 1 week with CBC and chest X-ray",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-14"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "ST. MARY'S HOSPITAL\nDISCHARGE SUMMARY\nPatient Name: Mohd. Irfan Khan    Age: 58 Years    Sex: Male\nIP No: 2026/IP/04512    Ward: Medical ICU    Bed No: 12\nDate of Admission: 02/09/2026    Date of Discharge: 07/09/2026\nTreating Doctor: Dr. Farah Siddiqui, MD (Internal Medicine)\nFinal Diagnosis:\n1. Community acquired pneumonia (right lower lobe)\n2. Type 2 diabetes mellitus - uncontrolled\nPresenting Complaints: Fever with chills, productive cough, breathlessness\nCourse in Hospital:\nPatient was admitted with high grade fever and hypoxia. Treated with Inj. Ceftriaxone 1 g IV BD and Inj. Azithromycin 500 mg IV OD. Blood sugars controlled with insulin. Improved clinically.\nCondition at Discharge: Stable\nDischarge Medications:\n1. Tab. Cefuroxime 500 mg 1-0-1 x 5 days after food\n2. Tab. Metformin 500 mg 1-0-1 after food\n3. Tab. Paracetamol 650 mg SOS for fever\nAdvice on Discharge:\nMonitor blood sugar twice daily\nReview in medicine OPD after 1 week with CBC and chest X-ray"
+        ],
+        "record_type": "discharge_summary",
+        "today": "2026-09-15"
+      },
+      "name": "discharge_relative_follow_up"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.6,
+            "evidence": "Patient Name: Kavya Reddy Age/Sex: 38Y/F Date: 11/09/2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-11"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "PRIME IMAGING & DIAGNOSTIC CENTRE\nULTRASONOGRAPHY - WHOLE ABDOMEN\nPatient Name: Kavya Reddy     Age/Sex: 38Y/F     Date: 11/09/2026\nRef. By: Dr. S. Rao\nClinical Indication: Pain abdomen, right upper quadrant\nFINDINGS:\nLiver: Normal in size (14.2 cm) with diffusely increased echogenicity. No focal lesion.\nGall Bladder: Distended. Multiple calculi, largest measuring 8 mm. Wall thickness normal.\nCBD: Normal calibre (4 mm).\nPancreas: Normal.\nSpleen: Normal in size (10.1 cm).\nKidneys: Right 10.2 x 4.5 cm, Left 10.5 x 4.8 cm. No calculus or hydronephrosis.\nIMPRESSION:\n- Grade I fatty liver.\n- Cholelithiasis without cholecystitis.\nSuggested: Surgical consultation.\nDr. Vivek Menon, MD (Radiodiagnosis)\nConsultant Radiologist"
+        ],
+        "record_type": "imaging_report",
+        "today": "2026-09-15"
+      },
+      "name": "usg_bare_date"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Date of Test: 10/09/2026 Time: 11:20",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Date of Test: 10/09/2026 Time: 11:20",
+            "key": "document_time",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "11:20"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "HEARTLINE CARDIAC CLINIC\nELECTROCARDIOGRAM (ECG) REPORT\nName: Suresh Pillai   Age: 66 yrs   Sex: M\nDate of Test: 10/09/2026   Time: 11:20\nHeart Rate: 54 bpm\nRhythm: Sinus bradycardia\nPR Interval: 168 ms\nQRS Duration: 92 ms\nQTc: 412 ms\nAxis: Normal\nInterpretation: Sinus bradycardia. No acute ST-T changes.\nImpression: Sinus bradycardia\nDr. Latha Krishnan, DM (Cardiology)"
+        ],
+        "record_type": "diagnostic_report",
+        "today": "2026-09-15"
+      },
+      "name": "ecg_typed_label_and_time"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Invoice No: WP/26-27/01873 Invoice Date: 13/09/2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "WELLNESS PHARMACY & DIAGNOSTICS\nGSTIN: 27AABCW1234K1Z5\nTAX INVOICE\nInvoice No: WP/26-27/01873    Invoice Date: 13/09/2026\nPatient: Priya Deshpande    Doctor: Dr. Sanjay Kulkarni\nSr  Item                          Batch     Exp      Qty   Rate     Amount\n1   Azithromycin 500mg Tab (3)    AZ2231    08/27    1     118.50   118.50\n2   Paracetamol 650mg Tab (15)    PC7781    11/27    1     32.00    32.00\n3   CBC Test                      -         -        1     350.00   350.00\nSub Total                                                           500.50\nCGST 6%                                                             9.12\nSGST 6%                                                             9.12\nGrand Total                                                         ₹ 518.74\nPaid by UPI"
+        ],
+        "record_type": "bill",
+        "today": "2026-09-15"
+      },
+      "name": "invoice_date"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Date of Admission: 18/08/2026 Date of Discharge: 21/08/2026",
+            "key": "admission_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-08-18"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Date of Admission: 18/08/2026 Date of Discharge: 21/08/2026",
+            "key": "discharge_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-08-21"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "SECURECARE HEALTH INSURANCE CO. LTD.\nCLAIM FORM - PART A (To be filled by the insured)\nPolicy No: SC/HL/2025/0098812\nClaim No: CL-26-004411\nName of Policy Holder: Rakesh Gupta\nMember ID: SCH-4471-02\nName of Patient: Anita Gupta    Relationship: Spouse    Age: 47\nHospital: City Care Hospital, Nagpur\nDate of Admission: 18/08/2026    Date of Discharge: 21/08/2026\nDiagnosis: Acute gastroenteritis with dehydration\nClaim Amount: Rs. 48,650\nSum Insured: Rs. 5,00,000"
+        ],
+        "record_type": "insurance",
+        "today": "2026-09-15"
+      },
+      "name": "insurance_admission_discharge"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.6,
+            "evidence": "BCG Birth 16/01/2025 B2211",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2025-01-16"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Next due: MMR Dose 2 on 20/04/2027",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2027-04-20"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "LITTLE STEPS CHILD CARE CLINIC\nIMMUNIZATION CERTIFICATE\nChild Name: Aarav Singh    DOB: 15/01/2025    Sex: Male\nVaccine                 Dose        Date Given     Batch No\nBCG                     Birth       16/01/2025     B2211\nHepatitis B             Dose 1      16/01/2025     HB0931\nDTaP-IPV-Hib-HepB       Dose 1      26/02/2025     PX5510\nDTaP-IPV-Hib-HepB       Dose 2      26/03/2025     PX5602\nMMR                     Dose 1      20/10/2025     MM1180\nNext due: MMR Dose 2 on 20/04/2027\nDr. Pooja Bansal, MD (Pediatrics)"
+        ],
+        "record_type": "vaccination_record",
+        "today": "2026-09-15"
+      },
+      "name": "immunization_dob_excluded_next_due"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Report Date: 05/06/2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-06-05"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Collected: 13/06/2026 09:00",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-06-13"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Report Date: 05/06/2026\nCollected: 13/06/2026 09:00\nPrinted on: 15/09/2026"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "ambiguous_dmy"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Report Date: 05/06/2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-05-06"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Collected: 13/06/2026 09:00",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-06-13"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "mdy",
+        "pages": [
+          "Report Date: 05/06/2026\nCollected: 13/06/2026 09:00\nPrinted on: 15/09/2026"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "ambiguous_mdy",
+      "notes": "05/06 follows the device order; 13/06 is day-first whatever the order; printed dates are ignored."
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Reported: 06/13/2026 4:10 PM",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-06-13"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Reported: 06/13/2026 4:10 PM",
+            "key": "document_time",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "16:10"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Reported: 06/13/2026 4:10 PM"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "month_first_forced_by_value"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Date of Report: Sept 5, 2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-05"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Sample collected on 4th September 2026 at 7:30 am",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-04"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Visit Date: 2026-09-01",
+            "key": "visit_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-01"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Discharge date: 12.08.2026",
+            "key": "discharge_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-08-12"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Date of Report: Sept 5, 2026\nSample collected on 4th September 2026 at 7:30 am\nVisit Date: 2026-09-01\nDischarge date: 12.08.2026"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "text_forms"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Report Date: Aug 2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "month"
+            },
+            "value_text": "2026-08-01"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "HEALTH CHECK SUMMARY\nReport Date: Aug 2026"
+        ],
+        "record_type": "other",
+        "today": "2026-09-15"
+      },
+      "name": "month_precision"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Report Date: 14/09/2026",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-14"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Name: Asha Rao  DOB: 01/02/1990  Age: 36 Y\nDate of Birth: 1 Feb 1990\nD.O.B. 01-02-1990\nReport Date: 14/09/2026"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "dob_variants_excluded"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Next visit: 20/09/2027",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2027-09-20"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Report Date: 31/02/2026\nCollected: 20/09/2026\nFollow up: 20/09/2029\nNext visit: 20/09/2027"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "invalid_and_future_dropped",
+      "notes": "Feb 31 invalid; collected date after today+1 dropped; follow-up allowed up to today+2 years."
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "12/09/2026 08:15 12/09/2026 14:10",
+            "key": "collection_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "12/09/2026 08:15 12/09/2026 14:10",
+            "key": "report_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "12/09/2026 08:15 12/09/2026 14:10",
+            "key": "document_time",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "14:10"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Sample Collected On     Reported On\n12/09/2026 08:15        12/09/2026 14:10"
+        ],
+        "record_type": "lab_report",
+        "today": "2026-09-15"
+      },
+      "name": "previous_line_label_columns"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "02/09/2026",
+            "key": "admission_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-02"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "DISCHARGE SUMMARY\nDate of Admission:\n02/09/2026"
+        ],
+        "record_type": "discharge_summary",
+        "today": "2026-09-15"
+      },
+      "name": "previous_line_single_label"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.6,
+            "evidence": "10/09/2026",
+            "key": "visit_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-10"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "CITY CLINIC\n10/09/2026\nSomething 11/09/2026"
+        ],
+        "record_type": "consultation_note",
+        "today": "2026-09-15"
+      },
+      "name": "unlabeled_head_first_only"
+    },
+    {
+      "expected": {
+        "items": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Advice: rest\nReview after 2 weeks"
+        ],
+        "record_type": "prescription",
+        "today": "2026-09-15"
+      },
+      "name": "relative_follow_up_unresolvable",
+      "notes": "No other date to resolve against -> dropped."
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "Date: 01/09/2026",
+            "key": "prescription_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-01"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Follow up after 2 weeks",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-15"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Revisit in 3 months",
+            "key": "follow_up_date",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-12-01"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "Date: 01/09/2026\nFollow up after 2 weeks\nRevisit in 3 months"
+        ],
+        "record_type": "prescription",
+        "today": "2026-09-15"
+      },
+      "name": "relative_follow_up_weeks_months"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "extract_dates",
+  "version": 1
+}

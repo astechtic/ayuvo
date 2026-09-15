@@ -29,11 +29,17 @@ actor RecordsDatabase {
 
     // MARK: - Opening
 
-    nonisolated static func open(url: URL, fileManager: FileManager = .default, timeZone: TimeZone = .current) async throws -> RecordsDatabase {
+    /// `targetVersion` exists for migration tests (open a v1 database); the app always migrates to the latest.
+    nonisolated static func open(
+        url: URL,
+        fileManager: FileManager = .default,
+        timeZone: TimeZone = .current,
+        targetVersion: Int = RecordsSchema.schemaVersion
+    ) async throws -> RecordsDatabase {
         try RecordsLocation.prepareDirectory(url.deletingLastPathComponent(), fileManager: fileManager)
         let connection = try HealthDBConnection(path: url.path, readOnly: false, fileProtection: true)
         let database = RecordsDatabase(connection: connection, url: url, timeZone: timeZone)
-        try await database.configure()
+        try await database.configure(targetVersion: targetVersion)
         return database
     }
 
@@ -48,14 +54,14 @@ actor RecordsDatabase {
         }
     }
 
-    nonisolated static func inMemory(timeZone: TimeZone = .current) async throws -> RecordsDatabase {
+    nonisolated static func inMemory(timeZone: TimeZone = .current, targetVersion: Int = RecordsSchema.schemaVersion) async throws -> RecordsDatabase {
         let connection = try HealthDBConnection(path: ":memory:", readOnly: false, fileProtection: false)
         let database = RecordsDatabase(connection: connection, url: nil, timeZone: timeZone)
-        try await database.configure()
+        try await database.configure(targetVersion: targetVersion)
         return database
     }
 
-    private func configure() throws {
+    private func configure(targetVersion: Int) throws {
         try connection.exec("PRAGMA journal_mode=WAL")
         try connection.exec("PRAGMA synchronous=NORMAL")
         try connection.exec("PRAGMA busy_timeout=5000")
@@ -64,24 +70,39 @@ actor RecordsDatabase {
         guard check == "ok" else {
             throw HealthDBError(kind: .corrupt, code: SQLITE_CORRUPT, message: check ?? "quick_check failed")
         }
-        try migrate()
+        try migrate(to: targetVersion)
     }
 
-    private func migrate() throws {
-        let version = try userVersion()
-        guard version < RecordsSchema.schemaVersion else { return }
-        try connection.inTransaction {
-            if version < 1 {
+    /// v1 (`schema.sql`) then every migration in order, each step in its own transaction that
+    /// also stamps `user_version` + `records_meta.schema_version` (contract §8).
+    private func migrate(to targetVersion: Int) throws {
+        var version = try userVersion()
+        if version < RecordsSchema.baseVersion, targetVersion >= RecordsSchema.baseVersion {
+            try connection.inTransaction {
                 for statement in RecordsSchema.statements {
                     try connection.exec(statement)
                 }
+                try stampVersion(RecordsSchema.baseVersion)
             }
-            try connection.run(
-                "INSERT OR REPLACE INTO records_meta (key, value) VALUES ('schema_version', ?)",
-                [.text("\(RecordsSchema.schemaVersion)")]
-            )
-            try connection.exec("PRAGMA user_version=\(RecordsSchema.schemaVersion)")
+            version = RecordsSchema.baseVersion
         }
+        for migration in RecordsSchema.migrations where migration.version > version && migration.version <= targetVersion {
+            try connection.inTransaction {
+                for statement in migration.statements {
+                    try connection.exec(statement)
+                }
+                try stampVersion(migration.version)
+            }
+            version = migration.version
+        }
+    }
+
+    private func stampVersion(_ version: Int) throws {
+        try connection.run(
+            "INSERT OR REPLACE INTO records_meta (key, value) VALUES ('schema_version', ?)",
+            [.text("\(version)")]
+        )
+        try connection.exec("PRAGMA user_version=\(version)")
     }
 
     // MARK: - Introspection
@@ -155,12 +176,12 @@ actor RecordsDatabase {
 
     // MARK: - Records
 
-    nonisolated static let columns = "seq, id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes"
+    nonisolated static let columns = "seq, id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes, phash, text_signature, ai_mode_used, ai_provider, type_confidence, type_method"
 
     /// Contract §5 order, served by `idx_records_timeline`.
     nonisolated static let timelineOrderSQL = "sort_date DESC, created_ms DESC, seq DESC"
 
-    private nonisolated static func decodeRecord(_ s: HealthDBStatement) -> HealthRecord {
+    nonisolated static func decodeRecord<S: HealthDBStatementReading>(_ s: S) -> HealthRecord {
         HealthRecord(
             seq: s.int64(0) ?? 0,
             id: s.text(1) ?? "",
@@ -192,7 +213,13 @@ actor RecordsDatabase {
             reviewStatus: RecordReviewStatus(rawValue: s.text(27) ?? "") ?? .none,
             favorite: (s.int(28) ?? 0) != 0,
             archived: (s.int(29) ?? 0) != 0,
-            notes: s.text(30)
+            notes: s.text(30),
+            phash: s.text(31),
+            textSignature: s.text(32),
+            aiModeUsed: RecordAIModeUsed(rawValue: s.text(33) ?? "") ?? .none,
+            aiProvider: s.text(34),
+            typeConfidence: s.double(35),
+            typeMethod: s.text(36).flatMap(RecordFieldMethod.init(rawValue:))
         )
     }
 
@@ -204,8 +231,8 @@ actor RecordsDatabase {
         try connection.inTransaction {
             try connection.run(
                 """
-                INSERT INTO records (id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO records (id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes, phash, text_signature, ai_mode_used, ai_provider, type_confidence, type_method)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [
                     .text(record.id), .optionalText(record.parentID), .optionalInt(record.pageStart), .optionalInt(record.pageEnd),
@@ -218,7 +245,9 @@ actor RecordsDatabase {
                     .optionalText(record.thumbnailPath), .optionalText(record.checksumSHA256),
                     .text(record.processingStatus.rawValue), .optionalText(record.processingError),
                     .text(record.reviewStatus.rawValue), .int(record.favorite ? 1 : 0), .int(record.archived ? 1 : 0),
-                    .optionalText(record.notes),
+                    .optionalText(record.notes), .optionalText(record.phash), .optionalText(record.textSignature),
+                    .text(record.aiModeUsed.rawValue), .optionalText(record.aiProvider), .optionalReal(record.typeConfidence),
+                    .optionalText(record.typeMethod?.rawValue),
                 ]
             )
             try replacePagesInTransaction(recordID: record.id, pages: pages)
@@ -240,7 +269,17 @@ actor RecordsDatabase {
 
     func detail(id: String) throws -> RecordDetail? {
         guard let record = try record(id: id) else { return nil }
-        return RecordDetail(record: record, tags: try tags(recordID: id), pages: try pages(recordID: id))
+        var detail = RecordDetail(record: record, tags: try tags(recordID: id), pages: try pages(recordID: id))
+        detail.fields = try fields(recordID: id)
+        detail.highlights = try highlights(recordID: id)
+        detail.job = try job(recordID: id)
+        detail.duplicates = try duplicateCandidates(recordID: id, pendingOnly: true)
+        detail.splitProposal = try splitProposal(recordID: id)
+        if let parentID = record.parentID {
+            detail.parent = try self.record(id: parentID)
+        }
+        detail.children = try children(parentID: id)
+        return detail
     }
 
     func recordCount(includeArchived: Bool = true) throws -> Int {
@@ -268,6 +307,7 @@ actor RecordsDatabase {
             clauses.append("seq IN (SELECT docid FROM records_fts WHERE records_fts MATCH ?)")
             values.append(.text(match))
         }
+        guard (try? appendAdvancedFilters(query, clauses: &clauses, values: &values)) == true else { return nil }
         if let cursor {
             clauses.append("(sort_date < ? OR (sort_date = ? AND created_ms < ?) OR (sort_date = ? AND created_ms = ? AND seq < ?))")
             values.append(contentsOf: [
@@ -323,12 +363,14 @@ actor RecordsDatabase {
             values.append(.text(title))
         }
         if let type = patch.recordType {
-            sets.append("record_type=?")
+            sets.append("record_type=?, type_method=?")
             values.append(.text(type.rawValue))
+            values.append(.text(RecordFieldMethod.user.rawValue))
         }
         if let category = patch.category {
-            sets.append("category=?")
+            sets.append("category=?, type_method=?")
             values.append(.text(category.rawValue))
+            values.append(.text(RecordFieldMethod.user.rawValue))
         }
         if let date = patch.documentDate {
             // sort_date follows document_date; clearing it resets to the local import day.
@@ -357,7 +399,7 @@ actor RecordsDatabase {
         values.append(.text(id))
         try connection.inTransaction {
             try connection.run("UPDATE records SET \(sets.joined(separator: ", ")) WHERE id=?", values)
-            if patch.title != nil || patch.notes != nil {
+            if patch.title != nil || patch.notes != nil || patch.recordType != nil {
                 try reindexInTransaction(recordID: id)
             }
         }
@@ -452,7 +494,7 @@ actor RecordsDatabase {
         return rows
     }
 
-    private func replacePagesInTransaction(recordID: String, pages: [RecordPage]) throws {
+    func replacePagesInTransaction(recordID: String, pages: [RecordPage]) throws {
         try connection.run("DELETE FROM record_pages WHERE record_id=?", [.text(recordID)])
         guard !pages.isEmpty else { return }
         let statement = try connection.prepare(
@@ -507,7 +549,7 @@ actor RecordsDatabase {
         return result
     }
 
-    private func setTagsInTransaction(recordID: String, names: [String]) throws {
+    func setTagsInTransaction(recordID: String, names: [String]) throws {
         try connection.run("DELETE FROM record_tags WHERE record_id=?", [.text(recordID)])
         for name in Self.normalizedTagNames(names) {
             var tagID = try connection.scalarText("SELECT id FROM tags WHERE name=? COLLATE NOCASE", [.text(name)])
@@ -522,21 +564,23 @@ actor RecordsDatabase {
 
     // MARK: - FTS
 
-    /// Rebuilds the record's one FTS row (Phase 1 columns: title, body, notes_tags).
+    /// Rebuilds the record's one FTS row (§17 columns, all folded, rejected fields excluded).
     func reindex(recordID: String) throws {
         try connection.inTransaction {
             try reindexInTransaction(recordID: recordID)
         }
     }
 
-    private func reindexInTransaction(recordID: String) throws {
+    func reindexInTransaction(recordID: String) throws {
         var seq: Int64?
         var title: String?
         var notes: String?
-        try connection.query("SELECT seq, title, notes FROM records WHERE id=?", [.text(recordID)]) { s in
+        var type: RecordType = .other
+        try connection.query("SELECT seq, title, notes, record_type FROM records WHERE id=?", [.text(recordID)]) { s in
             seq = s.int64(0)
             title = s.text(1)
             notes = s.text(2)
+            type = RecordType(rawValue: s.text(3) ?? "") ?? .other
         }
         guard let seq else { return }
         let tagText = try tags(recordID: recordID).joined(separator: " ")
@@ -544,14 +588,39 @@ actor RecordsDatabase {
         try connection.query("SELECT text FROM record_pages WHERE record_id=? ORDER BY page_index", [.text(recordID)]) {
             if let text = $0.text(0), !text.isEmpty { bodyParts.append(text) }
         }
+        var people: [String] = []
+        var clinical: [String] = type == .other ? [] : [type.title, type.rawValue.replacingOccurrences(of: "_", with: " ")]
+        try connection.query(
+            "SELECT field_key, value_text, value_json FROM record_fields WHERE record_id=? AND state<>'rejected' ORDER BY field_key, created_ms",
+            [.text(recordID)]
+        ) { s in
+            guard let key = RecordFieldKey(rawValue: s.text(0) ?? ""), let value = s.text(1) else { return }
+            switch key {
+            case .doctorName, .doctorSpecialty, .facility, .department, .patientName:
+                people.append(value)
+            case .reportName, .testResult, .diagnosis, .symptom, .procedure:
+                clinical.append(value)
+            case .medication:
+                clinical.append(value)
+            default:
+                break
+            }
+        }
+        var highlightTexts: [String] = []
+        try connection.query("SELECT text FROM record_highlights WHERE record_id=? AND dismissed=0 ORDER BY section, position", [.text(recordID)]) {
+            if let text = $0.text(0) { highlightTexts.append(text) }
+        }
         try connection.run("DELETE FROM records_fts WHERE docid=?", [.int(seq)])
         try connection.run(
-            "INSERT INTO records_fts (docid, title, people, clinical, body, notes_tags, highlights) VALUES (?, ?, '', '', ?, ?, '')",
+            "INSERT INTO records_fts (docid, title, people, clinical, body, notes_tags, highlights) VALUES (?, ?, ?, ?, ?, ?, ?)",
             [
                 .int(seq),
                 .text(RecordsSearchText.indexText(title)),
+                .text(RecordsSearchText.indexText(people.joined(separator: "\n"))),
+                .text(RecordsSearchText.indexText(clinical.joined(separator: "\n"))),
                 .text(RecordsSearchText.indexText(bodyParts.joined(separator: "\n"))),
                 .text(RecordsSearchText.indexText([notes ?? "", tagText].joined(separator: " "))),
+                .text(RecordsSearchText.indexText(highlightTexts.joined(separator: "\n"))),
             ]
         )
     }
@@ -562,6 +631,11 @@ actor RecordsDatabase {
         try connection.inTransaction {
             try connection.exec("""
             DELETE FROM records_fts;
+            DELETE FROM processing_jobs;
+            DELETE FROM duplicate_candidates;
+            DELETE FROM split_proposals;
+            DELETE FROM record_highlights;
+            DELETE FROM record_fields;
             DELETE FROM record_tags;
             DELETE FROM tags;
             DELETE FROM record_pages;

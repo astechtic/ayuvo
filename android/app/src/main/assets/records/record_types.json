@@ -1,0 +1,103 @@
+{
+  "format": "ayuvo-record-types",
+  "version": 1,
+  "notes": "Deterministic document classifier (docs/health-records.md §10). Patterns are matched case-insensitively against FOLDED text (lowercase, diacritics removed, whitespace runs collapsed to one space). Portable regex subset only: literals, \\b \\d \\s \\w, [...], (?:...), ?, *, +, {n,m}, |, and one-character fixed-width lookarounds such as (?<![-/]) and (?![-/]). scope 'head' = first 25 non-empty lines of the first page of the analysed range; 'body' = all text of the range. Each rule contributes its weight at most once. Scoring: see §10.",
+  "threshold": 4,
+  "margin": 2,
+  "types": [
+    {
+      "id": "lab_report",
+      "category": "lab_reports",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:laboratory|pathology|diagnostics?|path lab|labs?)\\b", "weight": 2},
+        {"scope": "body", "pattern": "\\b(?:reference (?:range|interval)|ref\\.? range|biological ref(?:erence)?|normal range)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:specimen|sample (?:type|collected)|collected on|collection date|sample date)\\b", "weight": 2},
+        {"scope": "body", "pattern": "\\b(?:complete blood count|cbc|cbc with diff(?:erential)?|haemogram|hemogram|lipid profile|lipid panel|liver function|lft|kidney function|kft|renal function|(?:basic|comprehensive) metabolic panel|bmp|cmp|thyroid profile|hba1c|a1c|glycated|iron studies|coagulation (?:profile|panel|studies)|pt ?/ ?inr|pt-inr|electrolytes|urine routine|urinalysis|vitamin d|vitamin b12)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:haemoglobin|hemoglobin|platelet|wbc|rbc|creatinine|cholesterol|triglycerides|tsh|bilirubin)\\b", "weight": 2},
+        {"scope": "body", "pattern": "\\b(?:g/dl|mg/dl|mmol/l|iu/l|u/l|miu/l|pg/ml|ng/ml|cells/cumm|10\\^3/ul)\\b", "weight": 2}
+      ]
+    },
+    {
+      "id": "prescription",
+      "category": "prescriptions",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:prescription|rx)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:tab|tablet|cap|capsule|syp|syrup|inj|injection|oint|ointment|drops)\\b\\.?\\s", "weight": 2},
+        {"scope": "body", "pattern": "(?<![-/])\\b(?:od|bd|bid|tds|tid|qid|hs|sos|prn|once daily|twice daily|thrice daily|after food|before food|at bedtime)\\b(?![-/])", "weight": 3},
+        {"scope": "body", "pattern": "\\b\\d+\\s?(?:mg|mcg|ml|iu)\\b", "weight": 1},
+        {"scope": "body", "pattern": "\\b(?:x|for)\\s?\\d+\\s?(?:days?|weeks?|months?)\\b", "weight": 2},
+        {"scope": "head", "pattern": "\\b(?:mbbs|dnb|mrcp|frcs|bds|reg\\.? no|registration no)\\b", "weight": 1}
+      ]
+    },
+    {
+      "id": "consultation_note",
+      "category": "doctor_visits",
+      "rules": [
+        {"scope": "head", "pattern": "^(?:opd |out ?patient )?consultation\\b|\\b(?:consultation (?:note|record|sheet|slip)|opd|out ?patient|clinic visit|visit note|progress note)\\b", "weight": 4},
+        {"scope": "body", "pattern": "\\b(?:chief complaints?|c/o|history of present illness|hpi|presenting complaints?)\\b", "weight": 4},
+        {"scope": "body", "pattern": "\\b(?:examination|o/e|on examination|vitals|bp|pulse)\\b", "weight": 1},
+        {"scope": "body", "pattern": "\\b(?:provisional diagnosis|diagnosis|impression|plan|advice|follow[ -]?up)\\b", "weight": 2}
+      ]
+    },
+    {
+      "id": "discharge_summary",
+      "category": "hospitalization",
+      "rules": [
+        {"scope": "head", "pattern": "\\bdischarge (?:summary|card|note)\\b", "weight": 6},
+        {"scope": "body", "pattern": "\\b(?:date of admission|doa|admitted on|date of discharge|dod|discharged on)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:course in (?:the )?hospital|hospital course|condition at discharge|discharge medications?)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:ip no|ipd|in ?patient|ward|bed no)\\b", "weight": 1}
+      ]
+    },
+    {
+      "id": "imaging_report",
+      "category": "imaging",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:radiology|imaging|usg|ultrasound|ultrasonography|sonography|mri|ct scan|cect|ncct|x-?ray|radiograph|mammogra\\w*|doppler|echocardiograph\\w*|pet ?ct)\\b", "weight": 4},
+        {"scope": "body", "pattern": "\\b(?:impression|findings|technique|no (?:obvious|significant) abnormality|clinical (?:history|indication))\\b", "weight": 2},
+        {"scope": "body", "pattern": "\\b(?:radiologist|sonologist)\\b", "weight": 2}
+      ]
+    },
+    {
+      "id": "diagnostic_report",
+      "category": "lab_reports",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:ecg|electrocardiogram|eeg|pft|pulmonary function|spirometry|tmt|treadmill|holter|audiometry|endoscopy|colonoscopy|biopsy|histopathology|cytology)\\b", "weight": 4},
+        {"scope": "body", "pattern": "\\b(?:interpretation|conclusion|impression)\\b", "weight": 1}
+      ]
+    },
+    {
+      "id": "medication_list",
+      "category": "medication",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:medication list|current medications|list of medicines|medicine chart|drug chart)\\b", "weight": 6}
+      ]
+    },
+    {
+      "id": "vaccination_record",
+      "category": "vaccination",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:vaccination|immuni[sz]ation|vaccine certificate|covid-?19 vaccine)\\b", "weight": 5},
+        {"scope": "body", "pattern": "\\b(?:dose [12]|booster|batch (?:no|number)|lot (?:no|number)|covishield|covaxin|bcg|mmr|hepatitis b|tdap|dtap|hpv|influenza)\\b", "weight": 2}
+      ]
+    },
+    {
+      "id": "bill",
+      "category": "insurance_bills",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:invoice|bill|receipt|cash memo|tax invoice)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:amount|total|net payable|grand total|paid|balance|gst|gstin|cgst|sgst|discount|mrp|qty)\\b", "weight": 3},
+        {"scope": "body", "pattern": "(?:₹|rs\\.?|inr|\\$|usd|eur|€)\\s?\\d", "weight": 2}
+      ]
+    },
+    {
+      "id": "insurance",
+      "category": "insurance_bills",
+      "rules": [
+        {"scope": "head", "pattern": "\\b(?:insurance|policy (?:no|number)|claim (?:no|number|form)|tpa|pre-?authori[sz]ation|cashless)\\b", "weight": 4},
+        {"scope": "body", "pattern": "\\b(?:sum insured|insured|policy holder|member id|claim amount)\\b", "weight": 3},
+        {"scope": "body", "pattern": "\\b(?:tpa|policy period|claim (?:no|number|form)|cashless|reimbursement|pre-?authori[sz]ation)\\b", "weight": 2}
+      ]
+    }
+  ]
+}

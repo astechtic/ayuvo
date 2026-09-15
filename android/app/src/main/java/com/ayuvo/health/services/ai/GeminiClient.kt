@@ -26,7 +26,8 @@ object GeminiClient {
         model: String,
         apiKey: String,
         prompt: String,
-        imageBytesList: List<ByteArray>
+        imageBytesList: List<ByteArray>,
+        maxOutputTokens: Int? = null
     ): String {
         val url = "$baseUrl/models/$model:generateContent"
 
@@ -48,6 +49,10 @@ object GeminiClient {
 
                 val body = JSONObject().apply {
                     put("contents", JSONArray().put(JSONObject().put("parts", parts)))
+                    // Only a per-call override adds generationConfig; the default body is unchanged.
+                    if (maxOutputTokens != null) {
+                        put("generationConfig", JSONObject().put("maxOutputTokens", maxOutputTokens))
+                    }
                 }
 
                 client.newCall(

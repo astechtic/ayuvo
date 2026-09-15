@@ -147,9 +147,17 @@ data class HealthRecord(
     val reviewStatus: ReviewStatus = ReviewStatus.NONE,
     val favorite: Boolean = false,
     val archived: Boolean = false,
-    val notes: String? = null
+    val notes: String? = null,
+    /** `records.ai_mode_used` (v2). */
+    val aiModeUsed: AiModeUsed = AiModeUsed.NONE
 ) {
     val isReceived: Boolean get() = source == RecordSource.SHARE_IN || source == RecordSource.OPEN_IN
+
+    /** A split child that shows only [pageStart]..[pageEnd] of its parent's file. */
+    val isSplitChild: Boolean get() = parentId != null && pageStart != null && pageEnd != null
+
+    val isProcessing: Boolean get() = processingStatus == ProcessingStatus.QUEUED ||
+        processingStatus == ProcessingStatus.EXTRACTING_TEXT || processingStatus == ProcessingStatus.ANALYZING
 
 }
 
@@ -179,16 +187,77 @@ data class RecordPage(
 
 data class RecordTag(val id: String, val name: String)
 
-/** The quick filter chips on the Records home (Phase 1 set). */
+/** The quick filter chips on the Records home. */
 enum class RecordFilter {
     ALL, REPORTS, PRESCRIPTIONS, LAB, IMAGING, DOCTOR_NOTES, DISCHARGE, BILLS,
-    IMAGES, PDFS, NOTES, RECEIVED, FAVORITES, ARCHIVED
+    IMAGES, PDFS, NOTES, RECEIVED, FAVORITES, NEEDS_REVIEW, ARCHIVED
+}
+
+/** The Filters sheet (plan §2) plus the structured part of a parsed search (§17). */
+data class RecordAdvancedFilters(
+    /** Inclusive `sort_date` bounds, `yyyy-MM-dd`. */
+    val dateFrom: String? = null,
+    val dateTo: String? = null,
+    /** Folded prefix of a `doctor_name` field. */
+    val doctor: String? = null,
+    /** Folded prefix of a `facility` field. */
+    val facility: String? = null,
+    val categories: Set<RecordCategory> = emptySet(),
+    val types: Set<RecordType> = emptySet(),
+    /** `abnormal`, `low`, `high`, `critical` (§17 flags filter). */
+    val flags: Set<String> = emptySet(),
+    val tagIds: Set<String> = emptySet(),
+    val aiProcessed: Boolean = false,
+    val userConfirmed: Boolean = false,
+    val favorites: Boolean = false,
+    val received: Boolean = false,
+    val needsReview: Boolean = false,
+    val archived: Boolean = false
+) {
+    /** Count shown on the Filters chip (sheet-owned fields only). */
+    val activeCount: Int get() = listOf(
+        dateFrom != null || dateTo != null, doctor != null, facility != null, categories.isNotEmpty(),
+        types.isNotEmpty(), flags.isNotEmpty(), tagIds.isNotEmpty(), aiProcessed, userConfirmed
+    ).count { it }
+
+    val isEmpty: Boolean get() = this == RecordAdvancedFilters()
+
+    /** Union of two filter sets: bounds intersect, sets merge, booleans OR. */
+    fun and(other: RecordAdvancedFilters): RecordAdvancedFilters = RecordAdvancedFilters(
+        dateFrom = listOfNotNull(dateFrom, other.dateFrom).maxOrNull(),
+        dateTo = listOfNotNull(dateTo, other.dateTo).minOrNull(),
+        doctor = doctor ?: other.doctor,
+        facility = facility ?: other.facility,
+        categories = categories + other.categories,
+        types = types + other.types,
+        flags = flags + other.flags,
+        tagIds = tagIds + other.tagIds,
+        aiProcessed = aiProcessed || other.aiProcessed,
+        userConfirmed = userConfirmed || other.userConfirmed,
+        favorites = favorites || other.favorites,
+        received = received || other.received,
+        needsReview = needsReview || other.needsReview,
+        archived = archived || other.archived
+    )
 }
 
 data class RecordQuery(
     val filter: RecordFilter = RecordFilter.ALL,
-    val search: String = ""
-)
+    /** Raw search text (Phase 1 behaviour when [terms] is null). */
+    val search: String = "",
+    val advanced: RecordAdvancedFilters = RecordAdvancedFilters(),
+    /** Parsed free-text terms (§17); when set they replace [search] for the FTS MATCH. */
+    val terms: List<String>? = null
+) {
+    val hasTextMatch: Boolean get() = (terms ?: RecordsSearchTerms.split(search)).isNotEmpty()
+}
+
+/** Folded search terms of raw text (Phase 1 search). */
+object RecordsSearchTerms {
+    fun split(input: String): List<String> =
+        com.ayuvo.health.records.processing.RecordText.fold(input)
+            .split(Regex("[^\\p{L}\\p{N}]+")).filter { it.isNotEmpty() }.distinct()
+}
 
 /** Keyset position in the timeline ordering (docs/health-records.md §5). */
 data class RecordCursor(val sortDate: String, val createdMs: Long, val seq: Long)

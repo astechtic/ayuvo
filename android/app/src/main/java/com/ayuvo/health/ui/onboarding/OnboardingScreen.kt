@@ -256,7 +256,9 @@ fun OnboardingScreen(container: AppContainer, onComplete: () -> Unit) {
                     onBackToChoice = vm::back,
                     onProviderChange = vm::setAiProvider,
                     onModelChange = vm::setAiModel,
-                    onKeyChange = vm::setApiKey
+                    onKeyChange = vm::setApiKey,
+                    recordsAiMode = ui.recordsAiMode,
+                    onRecordsAiModeChange = vm::setRecordsAiMode
                 )
                 OnboardingStep.BUILDING_PLAN -> BuildingPlanStep(vm = vm, onComplete = vm::next)
                 OnboardingStep.PLAN_READY -> PlanReadyStep(state = ui, vm = vm)
@@ -1259,7 +1261,9 @@ private fun ProviderStep(
     onBackToChoice: () -> Unit,
     onProviderChange: (AIProvider) -> Unit,
     onModelChange: (String) -> Unit,
-    onKeyChange: (String) -> Unit
+    onKeyChange: (String) -> Unit,
+    recordsAiMode: com.ayuvo.health.records.model.RecordsAiMode,
+    onRecordsAiModeChange: (com.ayuvo.health.records.model.RecordsAiMode) -> Unit
 ) {
     var selectorSheet by remember { mutableStateOf<ProviderSelectorSheet?>(null) }
     Column(
@@ -1292,6 +1296,11 @@ private fun ProviderStep(
                 onKeyChange = onKeyChange
             )
         }
+        if (phase != OnboardingAiPhase.CHOICE) {
+            Spacer(Modifier.height(20.dp))
+            RecordsAiModeQuestion(selected = recordsAiMode, onSelect = onRecordsAiModeChange)
+            Spacer(Modifier.height(12.dp))
+        }
     }
 
     when (selectorSheet) {
@@ -1317,6 +1326,33 @@ private fun ProviderStep(
             } else null
         )
         null -> Unit
+    }
+}
+
+/** §16 question group: shown after the provider/local choice, inside the same AI step. */
+@Composable
+private fun RecordsAiModeQuestion(
+    selected: com.ayuvo.health.records.model.RecordsAiMode,
+    onSelect: (com.ayuvo.health.records.model.RecordsAiMode) -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                stringResource(R.string.records_ai_question),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            com.ayuvo.health.ui.records.RecordsAiModeOptionList(selected = selected, onSelect = onSelect, options = null)
+            Text(
+                stringResource(R.string.records_ai_onboarding_note),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
+        }
     }
 }
 

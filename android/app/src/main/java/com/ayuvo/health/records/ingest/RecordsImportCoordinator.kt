@@ -3,7 +3,11 @@ package com.ayuvo.health.records.ingest
 import android.net.Uri
 import android.util.Log
 import com.ayuvo.health.records.data.RecordsStore
+import com.ayuvo.health.records.model.DuplicateCandidate
+import com.ayuvo.health.records.model.DuplicateReason
+import com.ayuvo.health.records.model.DuplicateResolution
 import com.ayuvo.health.records.model.HealthRecord
+import com.ayuvo.health.records.processing.RecordProcessingQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +43,8 @@ sealed interface ImportItem {
 class RecordsImportCoordinator(
     private val scope: CoroutineScope,
     private val importer: () -> RecordImporter,
-    private val store: () -> RecordsStore
+    private val store: () -> RecordsStore,
+    private val queue: () -> RecordProcessingQueue
 ) {
     private val _notice = MutableStateFlow<RecordsImportNotice?>(null)
     val notice: StateFlow<RecordsImportNotice?> = _notice.asStateFlow()
@@ -89,8 +94,17 @@ class RecordsImportCoordinator(
             } finally {
                 _inFlight.update { (it - items.size).coerceAtLeast(0) }
             }
+            // Exact duplicates are remembered so Needs Review and the duplicate sheet can offer them later.
+            for (match in duplicates) {
+                runCatching {
+                    store().addDuplicateCandidate(DuplicateCandidate(match.newRecord.id, match.existing.id, DuplicateReason.CHECKSUM, 1.0))
+                }
+            }
             // Background stage: never blocks the notice, never removes a record.
             for (record in saved) runCatching { importer().process(record) }
+            // Phase 2 pipeline (text → … → index) runs in WorkManager, one record at a time.
+            runCatching { queue().enqueue(saved.map { it.id }) }
+                .onFailure { Log.w(TAG, "Processing enqueue failed: ${it.javaClass.simpleName}") }
         }
     }
 
@@ -100,7 +114,43 @@ class RecordsImportCoordinator(
 
     /** Duplicate sheet "Cancel": the new import is deleted. */
     fun discard(record: HealthRecord) {
-        scope.launch { runCatching { store().delete(listOf(record.id)) } }
+        scope.launch {
+            runCatching {
+                queue().cancel(listOf(record.id))
+                store().delete(listOf(record.id))
+            }
+        }
+    }
+
+    /** Duplicate sheet "Keep both": resolution only. */
+    fun keepBoth(newId: String, existingId: String) {
+        scope.launch { runCatching { store().resolveDuplicate(newId, existingId, DuplicateResolution.KEEP_BOTH) } }
+    }
+
+    /**
+     * Duplicate sheet "Replace" (plan §3.11): the existing record gets the new file and is
+     * reprocessed; notes, tags and confirmed values stay; the new row goes.
+     */
+    fun replace(newId: String, existingId: String, onDone: () -> Unit = {}) {
+        scope.launch {
+            runCatching {
+                queue().cancel(listOf(newId))
+                store().replaceWithNew(existingId, newId)
+                queue().enqueue(listOf(existingId))
+            }.onFailure { Log.w(TAG, "Replace failed: ${it.javaClass.simpleName}") }
+            onDone()
+        }
+    }
+
+    /** Duplicate sheet "Merge": notes and tags move into the existing record; the new one is deleted. */
+    fun merge(newId: String, existingId: String, onDone: () -> Unit = {}) {
+        scope.launch {
+            runCatching {
+                queue().cancel(listOf(newId))
+                store().mergeInto(existingId, newId)
+            }.onFailure { Log.w(TAG, "Merge failed: ${it.javaClass.simpleName}") }
+            onDone()
+        }
     }
 
     private companion object {

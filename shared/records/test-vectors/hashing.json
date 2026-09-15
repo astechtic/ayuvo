@@ -1,0 +1,849 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "hex": "0000000000000000"
+      },
+      "input": {
+        "gray": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "op": "dhash"
+      },
+      "name": "dhash_all_equal"
+    },
+    {
+      "expected": {
+        "hex": "ffffffffffffffff"
+      },
+      "input": {
+        "gray": [
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        ],
+        "op": "dhash"
+      },
+      "name": "dhash_descending_rows_all_ones"
+    },
+    {
+      "expected": {
+        "hex": "0000000000000000"
+      },
+      "input": {
+        "gray": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        ],
+        "op": "dhash"
+      },
+      "name": "dhash_ascending_rows_all_zeros"
+    },
+    {
+      "expected": {
+        "hex": "55aa55aa55aa55aa"
+      },
+      "input": {
+        "gray": [
+          [
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0
+          ],
+          [
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255
+          ],
+          [
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0
+          ],
+          [
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255
+          ],
+          [
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0
+          ],
+          [
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255
+          ],
+          [
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0
+          ],
+          [
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255,
+            0,
+            255
+          ]
+        ],
+        "op": "dhash"
+      },
+      "name": "dhash_checkerboard"
+    },
+    {
+      "expected": {
+        "hex": "ff00000000000000"
+      },
+      "input": {
+        "gray": [
+          [
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "op": "dhash"
+      },
+      "name": "dhash_first_row_only"
+    },
+    {
+      "expected": {
+        "hex": "0000000000000001"
+      },
+      "input": {
+        "gray": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            10,
+            0
+          ]
+        ],
+        "op": "dhash"
+      },
+      "name": "dhash_last_bit_only"
+    },
+    {
+      "expected": {
+        "distance": 0
+      },
+      "input": {
+        "a": "ff00ff00ff00ff00",
+        "b": "ff00ff00ff00ff00",
+        "op": "hamming"
+      },
+      "name": "hamming_identical"
+    },
+    {
+      "expected": {
+        "distance": 7
+      },
+      "input": {
+        "a": "ff00ff00ff00ff00",
+        "b": "ff00ff00ff00ff7f",
+        "op": "hamming"
+      },
+      "name": "hamming_seven"
+    },
+    {
+      "expected": {
+        "hex": "cbf29ce484222325"
+      },
+      "input": {
+        "op": "fnv1a64",
+        "text": ""
+      },
+      "name": "fnv1a64_empty"
+    },
+    {
+      "expected": {
+        "hex": "af63dc4c8601ec8c"
+      },
+      "input": {
+        "op": "fnv1a64",
+        "text": "a"
+      },
+      "name": "fnv1a64_a"
+    },
+    {
+      "expected": {
+        "hex": "85944171f73967e8"
+      },
+      "input": {
+        "op": "fnv1a64",
+        "text": "foobar"
+      },
+      "name": "fnv1a64_foobar"
+    },
+    {
+      "expected": {
+        "hex": "b6278261e39cf8f5"
+      },
+      "input": {
+        "op": "fnv1a64",
+        "text": "hb 13"
+      },
+      "name": "fnv1a64_hb_13"
+    },
+    {
+      "expected": {
+        "shingles": []
+      },
+      "input": {
+        "op": "shingles",
+        "text": " -- , "
+      },
+      "name": "shingles_empty_and_punctuation"
+    },
+    {
+      "expected": {
+        "shingles": [
+          "hb 13 2 g dl"
+        ]
+      },
+      "input": {
+        "op": "shingles",
+        "text": "Hb 13.2 g/dL"
+      },
+      "name": "shingles_exactly_five_words"
+    },
+    {
+      "expected": {
+        "shingles": [
+          "haemoglobin low"
+        ]
+      },
+      "input": {
+        "op": "shingles",
+        "text": "Haemoglobin LOW"
+      },
+      "name": "shingles_fewer_than_five_words"
+    },
+    {
+      "expected": {
+        "shingles": [
+          "blood count report for rahul",
+          "complete blood count report for"
+        ]
+      },
+      "input": {
+        "op": "shingles",
+        "text": "Complete Blood Count report for Rahul"
+      },
+      "name": "shingles_six_words"
+    },
+    {
+      "expected": {
+        "shingles": [
+          "a b c d e",
+          "b c d e a",
+          "c d e a b",
+          "d e a b c",
+          "e a b c d"
+        ]
+      },
+      "input": {
+        "op": "shingles",
+        "text": "a b c d e a b c d e"
+      },
+      "name": "shingles_repeated_deduplicated"
+    },
+    {
+      "expected": {
+        "signature": ""
+      },
+      "input": {
+        "op": "minhash",
+        "text": ""
+      },
+      "name": "minhash_empty"
+    },
+    {
+      "expected": {
+        "signature": "cd459eb557ef9200,0cdd1a70f864ff77,b3291b82dfc8f1de,8cece574f9160f4d,9f98836f4e0b6074,fef49fd5660e431b,d33da9ab88952e02,411bd403130aa9c1,877efecda57dfdb8,d8642945d53641ef,50942135a98dfd76,94a0932b698f0125,266871296c83528c,c6f6caca4665b7d3,7d778c87bfe460da,3028e8d50a1c8e99,d995e16297f2ed30,73ff940c6d5a7667,990937187a56bd0e,794f9ae1a69ef87d,a9cc8eabb5a17d24,e3213b6aff29a04b,8c7bcef1995b56b2,cb62cdee06e7c7b1,6d5f1a63400bc8e8,eaf4f8e06f30e89f,94f6b0450b816aa6,cd1715d287940695,8dc19f3304e0f7bc,2ef2700688a0f883,38ee4eb4d1dd834a,2224e55efaf48cc9,c76e5088d0c796a0,189ccb384f817b97,bba4c5963af45c7e,35d2173ea36178ed,4d01a09a38afbf14,534d5a9044b424bb,aa898b7cc5a49422,6a4a310e369de061,2ecdb99254213558,e25d51efbeb8fa8f,51e1e412df3ebb96,420a305654343945,2a570e4f6f29dfac,ce7b7908bde0ff73,86b8dc5250fdfefa,aa9334c2cf6acb39,88e30fa5f5fc24d0,5bd7c62e07d6c187,4855e55bd85f1b2e,f593d65bc724729d,0e1749d29f163ec4,8de0dcc104ad20eb,356180bb43a799d2,80ca5e97a0f22651,166b3bb9441cdb88,51bd95041ea7aebf,e93af32c11305846,7c644415e59d3e35,90c2e2103c0423dc,dc652ebd8b721923,416a78c82d09c76a,b0c460671c117769"
+      },
+      "input": {
+        "op": "minhash",
+        "text": "Haemoglobin"
+      },
+      "name": "minhash_one_word"
+    },
+    {
+      "expected": {
+        "signature": "54ae86c262823b31,0edbebbdf6ded8d9,0e4736556001ef28,07b9858a594d03db,015337c85a5ca7f5,44dfae8bdb0760c9,0981b27dc2a963d9,26dec05e06b254b4,1c7fddc9c3fca3f9,0bc27a233d1753ab,482fc0f32d951a03,2025350836102d53,1213142cdba17c87,32b6d10270bad223,11a91ef6bcf191bc,1493449bf24e9cff,119cb06d38f1ac96,056338ff7fb19c29,4de0b2b8b1a69eda,0e12837c582b063d,10ddc4af53ab2f3d,5d460cfd7141dfb8,0d708de52aa0b92f,2645eaddf0a7cf12,025e61ca66763118,60c93c952420d0c1,1da08749d4195613,57d5bef29463bb03,004ee644566c51e4,14ed0b0d1f343cc6,196db7b6a6261c37,19a565a620cd800c,24d0debf40ef54d1,6d672636c134a4b9,160ca1e6d7debb3b,1c396cfa64ae776d,32e820cfde35da8c,024e805ec97d2be9,11e098175ee57622,02d51d781b9f6907,19e218d6a49c3ceb,5276792a90d23e4b,14d898f7669052a3,6a7262b24396afb3,3594f57a4593c9f2,14bd58ceb9978883,14c1c1deaab9f1a7,0065473aea292cc1,1387112695120b28,0ff8780ce4481925,3d036373ad06dbfe,06e153d07f4eab5d,1a6b85244eab689d,0e3ada10fc87c918,1b1fecd951141e0f,2a7a5dd4d36fc617,01979d7facb3cf7b,1053db077d00f07f,21be0d3a4de6df15,1249478db4e31958,044d46c3215b1a02,059a473626f6de53,1a4851b53366042c,3385b0e3e552d2c0"
+      },
+      "input": {
+        "op": "minhash",
+        "text": "Complete Blood Count report for Rahul Verma on 12 September 2026"
+      },
+      "name": "minhash_short_report"
+    },
+    {
+      "expected": {
+        "similarity": 1.0
+      },
+      "input": {
+        "a": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+        "b": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG ROAD, SECTOR 14, GURUGRAM, HARYANA 122001  PH: 0124-4567890\nPATIENT NAME : MR. RAHUL VERMA     AGE/SEX : 34 YRS/M\nUHID : SD-204518             REF. BY : DR. A. K. MEHTA\nCOLLECTED ON : 12/09/2026 08:15 AM    REPORTED ON : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTEST NAME           RESULT   UNIT      BIOLOGICAL REFERENCE INTERVAL\nHAEMOGLOBIN          11.2  L  G/DL      13.0 - 17.0\nTOTAL LEUCOCYTE COUNT     11,800 H  CELLS/CUMM   4,000 - 11,000\nRBC COUNT           4.12    MILLION/CUMM  4.5 - 5.5\nPACKED CELL VOLUME (PCV)   35.1  L  %       40 - 50\nMCV              85.2    FL       83 - 101\nMCH              27.2    PG       27 - 32\nPLATELET COUNT        1.45  L  LAKHS/CUMM   1.5 - 4.1\nNEUTROPHILS          72     %       40 - 80\nLYMPHOCYTES          20     %       20 - 40\nESR              28   H  MM/1ST HR   0 - 15\nMETHOD: AUTOMATED CELL COUNTER\nDR. NEHA GUPTA, MD (PATHOLOGY)\nCONSULTANT PATHOLOGIST\nPAGE 1 OF 1",
+        "op": "similarity"
+      },
+      "name": "similarity_identical_after_fold"
+    },
+    {
+      "expected": {
+        "similarity": 0.0
+      },
+      "input": {
+        "a": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+        "b": "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days",
+        "op": "similarity"
+      },
+      "name": "similarity_different_documents"
+    },
+    {
+      "expected": {
+        "similarity": 0.9375
+      },
+      "input": {
+        "a": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+        "b": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.9   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+        "op": "similarity"
+      },
+      "name": "similarity_one_line_changed"
+    },
+    {
+      "expected": {
+        "candidate": true,
+        "reason": "phash",
+        "score": 1.0
+      },
+      "input": {
+        "op": "near_duplicate",
+        "phash_a": "f0e1d2c3b4a59687",
+        "phash_b": "f0e1d2c3b4a59685",
+        "text_a": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+        "text_b": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1"
+      },
+      "name": "near_duplicate_phash_and_text"
+    },
+    {
+      "expected": {
+        "candidate": true,
+        "reason": "phash",
+        "score": 0.98
+      },
+      "input": {
+        "op": "near_duplicate",
+        "phash_a": "f0e1d2c3b4a59687",
+        "phash_b": "f0e1d2c3b4a5968f",
+        "text_a": "",
+        "text_b": ""
+      },
+      "name": "near_duplicate_phash_both_texts_empty"
+    },
+    {
+      "expected": {
+        "candidate": true,
+        "reason": "content",
+        "score": 1.0
+      },
+      "input": {
+        "op": "near_duplicate",
+        "phash_a": "0000000000000000",
+        "phash_b": "ffffffffffffffff",
+        "text_a": "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days",
+        "text_b": "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+      },
+      "name": "near_duplicate_phash_far_text_same"
+    },
+    {
+      "expected": {
+        "candidate": false,
+        "reason": null,
+        "score": 0.06
+      },
+      "input": {
+        "op": "near_duplicate",
+        "phash_a": "0000000000000000",
+        "phash_b": "0000000000000001",
+        "text_a": "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+        "text_b": "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 03:05 PM\nLIVER FUNCTION TEST (LFT)\nTest Name              Result        Unit     Biological Reference Interval\nBilirubin Total        1.8     H     mg/dL    0.3 - 1.2\nBilirubin Direct       0.5     H     mg/dL    0.0 - 0.3\nBilirubin Indirect     1.3           mg/dL    0.2 - 0.9\nSGOT (AST)             86      H     U/L      5 - 40\nSGPT (ALT)             112     H     U/L      5 - 41\nAlkaline Phosphatase   98            U/L      40 - 129\nTotal Protein          7.1           g/dL     6.4 - 8.3\nAlbumin                4.2           g/dL     3.5 - 5.2\nA/G Ratio              1.45                   1.1 - 2.2"
+      },
+      "name": "near_duplicate_not_candidate"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "hashing",
+  "version": 1
+}

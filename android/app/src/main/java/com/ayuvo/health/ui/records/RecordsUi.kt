@@ -93,6 +93,7 @@ internal fun RecordFilter.labelRes(): Int = when (this) {
     RecordFilter.NOTES -> R.string.records_filter_notes
     RecordFilter.RECEIVED -> R.string.records_filter_received
     RecordFilter.FAVORITES -> R.string.records_filter_favorites
+    RecordFilter.NEEDS_REVIEW -> R.string.records_filter_needs_review
     RecordFilter.ARCHIVED -> R.string.records_filter_archived
 }
 

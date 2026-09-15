@@ -1,0 +1,754 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "highlights": [
+          {
+            "confidence": 0.9,
+            "field_index": 9,
+            "position": 0,
+            "section": "important",
+            "source_page": 0,
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 0,
+            "position": 1,
+            "section": "important",
+            "source_page": 0,
+            "text": "Haemoglobin: 11.2 g/dL — below the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 3,
+            "position": 2,
+            "section": "important",
+            "source_page": 0,
+            "text": "Packed Cell Volume (PCV): 35.1 % — below the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 2,
+            "position": 3,
+            "section": "important",
+            "source_page": 0,
+            "text": "RBC Count: 4.12 million/cumm — below the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 1,
+            "position": 4,
+            "section": "important",
+            "source_page": 0,
+            "text": "Total Leucocyte Count: 11,800 cells/cumm — above the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 6,
+            "position": 5,
+            "section": "important",
+            "source_page": 0,
+            "text": "Platelet Count: 1.45 lakhs/cumm — below the report reference range"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.9,
+            "evidence": "Haemoglobin 11.2 L g/dL 13.0 - 17.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Haemoglobin",
+              "ref_high": 17,
+              "ref_low": 13,
+              "ref_text": "13.0 - 17.0",
+              "unit": "g/dL",
+              "value": "11.2",
+              "value_num": 11.2
+            },
+            "value_text": "Haemoglobin"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Total Leucocyte Count 11,800 H cells/cumm 4,000 - 11,000",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Total Leucocyte Count",
+              "ref_high": 11000,
+              "ref_low": 4000,
+              "ref_text": "4,000 - 11,000",
+              "unit": "cells/cumm",
+              "value": "11,800",
+              "value_num": 11800
+            },
+            "value_text": "Total Leucocyte Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "RBC Count 4.12 million/cumm 4.5 - 5.5",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "RBC Count",
+              "ref_high": 5.5,
+              "ref_low": 4.5,
+              "ref_text": "4.5 - 5.5",
+              "unit": "million/cumm",
+              "value": "4.12",
+              "value_num": 4.12
+            },
+            "value_text": "RBC Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Packed Cell Volume (PCV) 35.1 L % 40 - 50",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Packed Cell Volume (PCV)",
+              "ref_high": 50,
+              "ref_low": 40,
+              "ref_text": "40 - 50",
+              "unit": "%",
+              "value": "35.1",
+              "value_num": 35.1
+            },
+            "value_text": "Packed Cell Volume (PCV)"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "MCV 85.2 fL 83 - 101",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "MCV",
+              "ref_high": 101,
+              "ref_low": 83,
+              "ref_text": "83 - 101",
+              "unit": "fL",
+              "value": "85.2",
+              "value_num": 85.2
+            },
+            "value_text": "MCV"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "MCH 27.2 pg 27 - 32",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "MCH",
+              "ref_high": 32,
+              "ref_low": 27,
+              "ref_text": "27 - 32",
+              "unit": "pg",
+              "value": "27.2",
+              "value_num": 27.2
+            },
+            "value_text": "MCH"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Platelet Count 1.45 L lakhs/cumm 1.5 - 4.1",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Platelet Count",
+              "ref_high": 4.1,
+              "ref_low": 1.5,
+              "ref_text": "1.5 - 4.1",
+              "unit": "lakhs/cumm",
+              "value": "1.45",
+              "value_num": 1.45
+            },
+            "value_text": "Platelet Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Neutrophils 72 % 40 - 80",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Neutrophils",
+              "ref_high": 80,
+              "ref_low": 40,
+              "ref_text": "40 - 80",
+              "unit": "%",
+              "value": "72",
+              "value_num": 72
+            },
+            "value_text": "Neutrophils"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Lymphocytes 20 % 20 - 40",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Lymphocytes",
+              "ref_high": 40,
+              "ref_low": 20,
+              "ref_text": "20 - 40",
+              "unit": "%",
+              "value": "20",
+              "value_num": 20
+            },
+            "value_text": "Lymphocytes"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "ESR 28 H mm/1st hr 0 - 15",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "ESR",
+              "ref_high": 15,
+              "ref_low": 0,
+              "ref_text": "0 - 15",
+              "unit": "mm/hr",
+              "value": "28",
+              "value_num": 28
+            },
+            "value_text": "ESR"
+          }
+        ]
+      },
+      "name": "cbc_flags_ordered"
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "confidence": 0.9,
+            "field_index": 2,
+            "position": 0,
+            "section": "important",
+            "source_page": 0,
+            "text": "Glucose Random: 42 mg/dL — marked critical on the report"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 0,
+            "position": 1,
+            "section": "important",
+            "source_page": 0,
+            "text": "Potassium: 6.8 mmol/L — marked critical on the report"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 3,
+            "position": 2,
+            "section": "important",
+            "source_page": 0,
+            "text": "Troponin I: 0.9 ng/mL — above the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 5,
+            "position": 3,
+            "section": "important",
+            "source_page": 0,
+            "text": "TSH: 9.8 µIU/mL — above the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 1,
+            "position": 4,
+            "section": "important",
+            "source_page": 0,
+            "text": "Sodium: 128 mmol/L — below the report reference range"
+          },
+          {
+            "confidence": 0.9,
+            "field_index": 4,
+            "position": 5,
+            "section": "important",
+            "source_page": 0,
+            "text": "Haemoglobin: 15.1 g/dL — above the report reference range"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.9,
+            "evidence": "Potassium: 6.8HH mmol/L 3.5 - 5.1",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "critical_high",
+              "name": "Potassium",
+              "ref_high": 5.1,
+              "ref_low": 3.5,
+              "ref_text": "3.5 - 5.1",
+              "unit": "mmol/L",
+              "value": "6.8",
+              "value_num": 6.8
+            },
+            "value_text": "Potassium"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Sodium: 128L mmol/L 135 - 145",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Sodium",
+              "ref_high": 145,
+              "ref_low": 135,
+              "ref_text": "135 - 145",
+              "unit": "mmol/L",
+              "value": "128",
+              "value_num": 128
+            },
+            "value_text": "Sodium"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Glucose Random 42 critical mg/dL 70 - 140",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "critical_low",
+              "name": "Glucose Random",
+              "ref_high": 140,
+              "ref_low": 70,
+              "ref_text": "70 - 140",
+              "unit": "mg/dL",
+              "value": "42",
+              "value_num": 42
+            },
+            "value_text": "Glucose Random"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Troponin I 0.9* ng/mL <0.04",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Troponin I",
+              "ref_high": 0.04,
+              "ref_low": null,
+              "ref_text": "<0.04",
+              "unit": "ng/mL",
+              "value": "0.9",
+              "value_num": 0.9
+            },
+            "value_text": "Troponin I"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Haemoglobin 15.1 H g/dL 12.0 - 15.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Haemoglobin",
+              "ref_high": 15,
+              "ref_low": 12,
+              "ref_text": "12.0 - 15.0",
+              "unit": "g/dL",
+              "value": "15.1",
+              "value_num": 15.1
+            },
+            "value_text": "Haemoglobin"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "TSH 9.8 μIU/mL 0.27 - 4.20",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "TSH",
+              "ref_high": 4.2,
+              "ref_low": 0.27,
+              "ref_text": "0.27 - 4.20",
+              "unit": "µIU/mL",
+              "value": "9.8",
+              "value_num": 9.8
+            },
+            "value_text": "TSH"
+          }
+        ]
+      },
+      "name": "critical_first_then_distance"
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "confidence": 0.8,
+            "field_index": 10,
+            "position": 0,
+            "section": "medications",
+            "source_page": 0,
+            "text": "Azithromycin 500 mg · 1-0-0 · x 3 days"
+          },
+          {
+            "confidence": 0.8,
+            "field_index": 11,
+            "position": 1,
+            "section": "medications",
+            "source_page": 0,
+            "text": "Paracetamol 650 mg · 1-0-1 · x 5 days"
+          },
+          {
+            "confidence": 0.8,
+            "field_index": 12,
+            "position": 2,
+            "section": "medications",
+            "source_page": 0,
+            "text": "Ascoril LS · TDS · x 5 days"
+          },
+          {
+            "confidence": 0.8,
+            "field_index": 13,
+            "position": 3,
+            "section": "medications",
+            "source_page": 0,
+            "text": "Pantoprazole 40 mg · 1-0-0 · x 5 days"
+          },
+          {
+            "confidence": 0.7,
+            "field_index": 14,
+            "position": 0,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Warm saline gargles. Plenty of fluids"
+          },
+          {
+            "confidence": 0.7,
+            "field_index": 15,
+            "position": 1,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Review after 5 days"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.85,
+            "evidence": "Dr. Sanjay Kulkarni",
+            "key": "doctor_name",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Sanjay Kulkarni"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "MBBS, MD (General Medicine)",
+            "key": "doctor_specialty",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "MBBS, MD (General Medicine)"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Kulkarni Clinic, Shivaji Nagar, Pune",
+            "key": "facility",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Kulkarni Clinic"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Name: Priya Deshpande Age: 29 Y Sex: F",
+            "key": "patient_name",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Priya Deshpande"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Name: Priya Deshpande Age: 29 Y Sex: F",
+            "key": "patient_age",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "29 years"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Name: Priya Deshpande Age: 29 Y Sex: F",
+            "key": "patient_sex",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "female"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "C/O: Fever, sore throat, body ache x 3 days",
+            "key": "symptom",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Fever"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "C/O: Fever, sore throat, body ache x 3 days",
+            "key": "symptom",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "sore throat"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "C/O: Fever, sore throat, body ache x 3 days",
+            "key": "symptom",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "body ache x 3 days"
+          },
+          {
+            "confidence": 0.75,
+            "evidence": "Dx: Acute pharyngitis",
+            "key": "diagnosis",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Acute pharyngitis"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "1. Tab. Azithromycin 500 mg 1-0-0 x 3 days after food",
+            "key": "medication",
+            "source_page": 0,
+            "value_json": {
+              "dose": null,
+              "duration": "x 3 days",
+              "form": "tablet",
+              "frequency": "1-0-0",
+              "instructions": "after food",
+              "name": "Azithromycin",
+              "strength": "500 mg"
+            },
+            "value_text": "Azithromycin"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "2. Tab. Paracetamol 650 mg 1-0-1 x 5 days",
+            "key": "medication",
+            "source_page": 0,
+            "value_json": {
+              "dose": null,
+              "duration": "x 5 days",
+              "form": "tablet",
+              "frequency": "1-0-1",
+              "instructions": null,
+              "name": "Paracetamol",
+              "strength": "650 mg"
+            },
+            "value_text": "Paracetamol"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "3. Syp. Ascoril LS 10 ml TDS x 5 days",
+            "key": "medication",
+            "source_page": 0,
+            "value_json": {
+              "dose": "10 ml",
+              "duration": "x 5 days",
+              "form": "syrup",
+              "frequency": "TDS",
+              "instructions": null,
+              "name": "Ascoril LS",
+              "strength": null
+            },
+            "value_text": "Ascoril LS"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "4. Cap. Pantoprazole 40 mg 1-0-0 before food x 5 days",
+            "key": "medication",
+            "source_page": 0,
+            "value_json": {
+              "dose": null,
+              "duration": "x 5 days",
+              "form": "capsule",
+              "frequency": "1-0-0",
+              "instructions": "before food",
+              "name": "Pantoprazole",
+              "strength": "40 mg"
+            },
+            "value_text": "Pantoprazole"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Advice: Warm saline gargles. Plenty of fluids.",
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Warm saline gargles. Plenty of fluids"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Review after 5 days",
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Review after 5 days"
+          }
+        ]
+      },
+      "name": "prescription_meds_and_advice"
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "confidence": 0.7,
+            "field_index": 0,
+            "position": 0,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Item 0"
+          },
+          {
+            "confidence": 0.7,
+            "field_index": 1,
+            "position": 1,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Item 1"
+          },
+          {
+            "confidence": 0.7,
+            "field_index": 2,
+            "position": 2,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Item 2"
+          },
+          {
+            "confidence": 0.7,
+            "field_index": 3,
+            "position": 3,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Item 3"
+          },
+          {
+            "confidence": 0.7,
+            "field_index": 4,
+            "position": 4,
+            "section": "recommendations",
+            "source_page": 0,
+            "text": "Item 4"
+          },
+          {
+            "confidence": null,
+            "field_index": null,
+            "position": 0,
+            "section": "summary",
+            "source_page": 0,
+            "text": "Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglob…"
+          }
+        ]
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 0"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 1"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 2"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 3"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 4"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 5"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 6"
+          },
+          {
+            "confidence": 0.7,
+            "key": "recommendation",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Item 1"
+          },
+          {
+            "confidence": 0.9,
+            "key": "test_result",
+            "source_page": 1,
+            "state": "rejected",
+            "value_json": {
+              "flag": "low",
+              "name": "Hb",
+              "ref_high": 15,
+              "ref_low": 12,
+              "ref_text": "12-15",
+              "unit": "g/dL",
+              "value": "9.1",
+              "value_num": 9.1
+            },
+            "value_text": "Hb"
+          }
+        ],
+        "summary": {
+          "source_pages": [
+            0
+          ],
+          "text": "Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. Haemoglobin is below the report range. "
+        }
+      },
+      "name": "caps_dedup_rejected_and_summary"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "build_highlights",
+  "version": 1
+}

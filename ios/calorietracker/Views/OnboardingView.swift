@@ -58,6 +58,8 @@ struct OnboardingView: View {
     @State private var showByokKey = false
     @State private var aiSetupMode: AISetupMode = OnboardingView.initialAISetupMode()
     @State private var gemmaManager = Gemma4LocalModelManager.shared
+    /// Health Records AI mode picked in the AI step; nil follows the provider choice (§16).
+    @State private var recordsAIChoice: RecordsAIMode?
     /// AI-computed targets from the Building Plan step; seeds the Plan Ready screen.
     @State private var aiGoal: GeminiService.GoalCalculation?
     private enum EditableField: String, Identifiable {
@@ -880,6 +882,9 @@ struct OnboardingView: View {
                     .padding(.horizontal, 24)
                     .transition(.opacity)
 
+                    recordsAIModeCard
+                        .padding(.horizontal, 24)
+
                     aiPrivacyNoticeCard
                         .padding(.horizontal, 24)
                     aiTermsCard
@@ -919,6 +924,36 @@ struct OnboardingView: View {
                     .padding(.horizontal, 24)
             }
         }
+    }
+
+    /// §16: Local preselected after an on-device choice, else Ask. Saved when onboarding completes.
+    private var effectiveRecordsAIMode: RecordsAIMode {
+        recordsAIChoice ?? (aiSetupMode == .onDevice ? .local : .ask)
+    }
+
+    private var recordsAIModeCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: "list.clipboard.fill")
+                    .foregroundStyle(AppColors.calorie)
+                Text("How would you like Ayuvo AI to process your health records?")
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            ForEach(RecordsAIMode.allCases) { mode in
+                RecordsAIModeOptionRow(mode: mode, isSelected: effectiveRecordsAIMode == mode) {
+                    recordsAIChoice = mode
+                }
+                .accessibilityIdentifier("onboarding.recordsAiMode.\(mode.rawValue)")
+            }
+            Text("You can change this later in Settings › Health Records.")
+                .font(.system(.caption, design: .rounded))
+                .foregroundStyle(.secondary)
+        }
+        .padding(16)
+        .background(AppColors.appCard, in: RoundedRectangle(cornerRadius: 16))
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("onboarding.recordsAiMode.card")
     }
 
     private var aiProviderSubtitle: String {
@@ -1544,6 +1579,10 @@ struct OnboardingView: View {
                 editedProfile.autoBalanceMacro = .carbs
                 editedProfile.save()
                 SpeechSettings.setInitialProvider(matching: byokProvider)
+                // Health Records AI mode (§16): set once here, never asked again.
+                if UserDefaults.standard.string(forKey: RecordsAIMode.storageKey) == nil {
+                    UserDefaults.standard.set(effectiveRecordsAIMode.rawValue, forKey: RecordsAIMode.storageKey)
+                }
                 // Seed only new users; keep the legacy fallback and saved choices intact.
                 if !hasCompletedOnboarding,
                    UserDefaults.standard.object(forKey: FoodLogSortOrder.storageKey) == nil {

@@ -54,6 +54,7 @@ import com.ayuvo.health.models.WorkoutTabMode
 import com.ayuvo.health.records.RecordsRequest
 import com.ayuvo.health.ui.records.RecordDetailScreen
 import com.ayuvo.health.ui.records.RecordsScreen
+import com.ayuvo.health.ui.records.SplitReviewScreen
 import com.ayuvo.health.models.QuickActionRequest
 import com.ayuvo.health.ui.settings.AddMenuSettingsScreen
 import com.ayuvo.health.ui.about.LicensesScreen
@@ -343,7 +344,22 @@ fun AppNavHost(
                                 nav.navigate(AppRoutes.recordDetail(id)) {
                                     popUpTo(AppRoutes.RECORDS) { inclusive = false }
                                 }
-                            }
+                            },
+                            onOpenSplit = { id -> nav.navigate(AppRoutes.recordSplit(id)) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.RECORD_SPLIT,
+                    arguments = listOf(navArgument(AppRoutes.RECORD_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val recordId = entry.arguments?.getString(AppRoutes.RECORD_ID_ARG) ?: return@composable
+                    TabInset {
+                        SplitReviewScreen(
+                            container = container,
+                            recordId = recordId,
+                            onBack = { nav.popBackStack() },
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }
                         )
                     }
                 }

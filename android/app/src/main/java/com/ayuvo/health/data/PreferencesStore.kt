@@ -607,6 +607,18 @@ class PreferencesStore(
     val healthRecordsViewMode: Flow<String> = ds.data.map { it[Keys.HEALTH_RECORDS_VIEW_MODE] ?: "timeline" }
     suspend fun setHealthRecordsViewMode(v: String) { ds.edit { it[Keys.HEALTH_RECORDS_VIEW_MODE] = v } }
 
+    /**
+     * Health Records AI processing mode (docs/health-records.md §16): `local` | `cloud` | `ask` | `off`,
+     * null while the user has not chosen. Device-only (excluded from cloud backup).
+     */
+    val healthRecordsAiMode: Flow<String?> = ds.data.map { it[Keys.HEALTH_RECORDS_AI_MODE] }
+    suspend fun setHealthRecordsAiMode(v: String) { ds.edit { it[Keys.HEALTH_RECORDS_AI_MODE] = v } }
+
+    /** Writes [v] only while the mode is still unset (onboarding never overrides an earlier choice). */
+    suspend fun setHealthRecordsAiModeIfUnset(v: String) {
+        ds.edit { if (it[Keys.HEALTH_RECORDS_AI_MODE] == null) it[Keys.HEALTH_RECORDS_AI_MODE] = v }
+    }
+
     /** Mirrors iOS @AppStorage("appThemeColor"). */
     val appThemeColor: Flow<String> = ds.data.map { it[Keys.APP_THEME_COLOR] ?: AppThemeColor.DEFAULT_KEY }
     suspend fun setAppThemeColor(v: String) { ds.edit { it[Keys.APP_THEME_COLOR] = v } }
@@ -1455,6 +1467,7 @@ class PreferencesStore(
         val SAVE_MEAL_PHOTOS_TO_GALLERY = booleanPreferencesKey("saveMealPhotosToGallery")
         val APPEARANCE_MODE = stringPreferencesKey("appearanceMode")
         val HEALTH_RECORDS_VIEW_MODE = stringPreferencesKey("healthRecordsViewMode")
+        val HEALTH_RECORDS_AI_MODE = stringPreferencesKey("healthRecordsAiMode")
         val APP_THEME_COLOR = stringPreferencesKey("appThemeColor")
         val WEEK_STARTS_MONDAY = booleanPreferencesKey("weekStartsOnMonday")
         val QUICK_ACTION_1 = stringPreferencesKey("quickAction.slot1")

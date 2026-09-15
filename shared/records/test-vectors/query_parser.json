@@ -1,0 +1,1838 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "cbc*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "cbc"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "CBC",
+        "today": "2026-09-15"
+      },
+      "name": "q_cbc"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "doctor",
+            "text": "dr sharma"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": "sharma",
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "Dr. Sharma",
+        "today": "2026-09-15"
+      },
+      "name": "q_dr_sharma"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "hemoglobin*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "hemoglobin"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hemoglobin",
+        "today": "2026-09-15"
+      },
+      "name": "q_hemoglobin"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          },
+          {
+            "kind": "date",
+            "text": "from september 2026"
+          }
+        ],
+        "date_from": "2026-09-01",
+        "date_to": "2026-09-30",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "reports from September 2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_reports_from_september_2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "flag",
+            "text": "abnormal"
+          },
+          {
+            "kind": "type",
+            "text": "blood reports"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "abnormal"
+        ],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "abnormal blood reports",
+        "today": "2026-09-15"
+      },
+      "name": "q_abnormal_blood_reports"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "diabetes*",
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": [
+          "diabetes"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "diabetes reports",
+        "today": "2026-09-15"
+      },
+      "name": "q_diabetes_reports"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "prescriptions"
+          },
+          {
+            "kind": "date",
+            "text": "from last year"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2025-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "prescription"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "prescriptions from last year",
+        "today": "2026-09-15"
+      },
+      "name": "q_prescriptions_from_last_year"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          },
+          {
+            "kind": "flag",
+            "text": "low"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "low"
+        ],
+        "match": "hemoglobin*",
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": [
+          "hemoglobin"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "reports where hemoglobin was low",
+        "today": "2026-09-15"
+      },
+      "name": "q_reports_where_hemoglobin_was_low"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "scans"
+          },
+          {
+            "kind": "date",
+            "text": "since 2025"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "scans since 2025",
+        "today": "2026-09-15"
+      },
+      "name": "q_scans_since_2025"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "last 3 months"
+          }
+        ],
+        "date_from": "2026-06-15",
+        "date_to": "2026-09-15",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "last 3 months",
+        "today": "2026-09-15"
+      },
+      "name": "q_last_3_months"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "this month"
+          }
+        ],
+        "date_from": "2026-09-01",
+        "date_to": "2026-09-30",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "this month",
+        "today": "2026-09-15"
+      },
+      "name": "q_this_month"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "last week"
+          }
+        ],
+        "date_from": "2026-09-07",
+        "date_to": "2026-09-13",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "last week",
+        "today": "2026-09-15"
+      },
+      "name": "q_last_week"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "this week"
+          }
+        ],
+        "date_from": "2026-09-14",
+        "date_to": "2026-09-20",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "this week",
+        "today": "2026-09-15"
+      },
+      "name": "q_this_week"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "today"
+          }
+        ],
+        "date_from": "2026-09-15",
+        "date_to": "2026-09-15",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "today",
+        "today": "2026-09-15"
+      },
+      "name": "q_today"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "yesterday"
+          }
+        ],
+        "date_from": "2026-09-14",
+        "date_to": "2026-09-14",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "yesterday",
+        "today": "2026-09-15"
+      },
+      "name": "q_yesterday"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "last 7 days"
+          }
+        ],
+        "date_from": "2026-09-08",
+        "date_to": "2026-09-15",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "last 7 days",
+        "today": "2026-09-15"
+      },
+      "name": "q_last_7_days"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "2025"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2025-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "lipid* profile*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "lipid",
+          "profile"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "lipid profile 2025",
+        "today": "2026-09-15"
+      },
+      "name": "q_lipid_profile_2025"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "report"
+          },
+          {
+            "kind": "date",
+            "text": "june"
+          }
+        ],
+        "date_from": "2026-06-01",
+        "date_to": "2026-06-30",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "thyroid*",
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": [
+          "thyroid"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "thyroid report june",
+        "today": "2026-09-15"
+      },
+      "name": "q_thyroid_report_june"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "bills"
+          },
+          {
+            "kind": "facility",
+            "text": "at apollo"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": "apollo",
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "bill"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "bills at apollo",
+        "today": "2026-09-15"
+      },
+      "name": "q_bills_at_apollo"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "doctor",
+            "text": "doctor mehta"
+          },
+          {
+            "kind": "type",
+            "text": "prescriptions"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": "mehta",
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "prescription"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "doctor mehta prescriptions",
+        "today": "2026-09-15"
+      },
+      "name": "q_doctor_mehta_prescriptions"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "favorites",
+            "text": "favourite"
+          },
+          {
+            "kind": "type",
+            "text": "reports"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": true,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "favourite reports",
+        "today": "2026-09-15"
+      },
+      "name": "q_favourite_reports"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "needs_review",
+            "text": "needs review"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": true,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "needs review",
+        "today": "2026-09-15"
+      },
+      "name": "q_needs_review"
+    },
+    {
+      "expected": {
+        "archived": true,
+        "chips": [
+          {
+            "kind": "archived",
+            "text": "archived"
+          },
+          {
+            "kind": "type",
+            "text": "bills"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "bill"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "archived bills",
+        "today": "2026-09-15"
+      },
+      "name": "q_archived_bills"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "source",
+            "text": "shared with me"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": "received",
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "shared with me",
+        "today": "2026-09-15"
+      },
+      "name": "q_shared_with_me"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "x ray"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "chest*",
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": [
+          "chest"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "x-ray chest",
+        "today": "2026-09-15"
+      },
+      "name": "q_x-ray_chest"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "mri"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "mri* brain*",
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": [
+          "mri",
+          "brain"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "MRI brain",
+        "today": "2026-09-15"
+      },
+      "name": "q_mri_brain"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "discharge summary"
+          },
+          {
+            "kind": "date",
+            "text": "2024"
+          }
+        ],
+        "date_from": "2024-01-01",
+        "date_to": "2024-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "discharge_summary"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "discharge summary 2024",
+        "today": "2026-09-15"
+      },
+      "name": "q_discharge_summary_2024"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "vaccination"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "vaccination_record"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "vaccination records",
+        "today": "2026-09-15"
+      },
+      "name": "q_vaccination_records"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "insurance"
+          },
+          {
+            "kind": "type",
+            "text": "claims"
+          },
+          {
+            "kind": "date",
+            "text": "before march 2026"
+          }
+        ],
+        "date_from": null,
+        "date_to": "2026-02-28",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "insurance"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "insurance claims before march 2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_insurance_claims_before_march_2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          },
+          {
+            "kind": "date",
+            "text": "after 15/08/2026"
+          }
+        ],
+        "date_from": "2026-08-16",
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "reports after 15/08/2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_reports_after_15-08-2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "from 01/08/2026 to 31/08/2026"
+          }
+        ],
+        "date_from": "2026-08-01",
+        "date_to": "2026-08-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "from 01/08/2026 to 31/08/2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_from_01-08-2026_to_31-08-2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "ultrasound"
+          },
+          {
+            "kind": "date",
+            "text": "between jan 2026 and mar 2026"
+          }
+        ],
+        "date_from": "2026-01-01",
+        "date_to": "2026-03-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "ultrasound*",
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": [
+          "ultrasound"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "ultrasound between jan 2026 and mar 2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_ultrasound_between_jan_2026_and_mar_2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "flag",
+            "text": "high"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "high"
+        ],
+        "match": "cholesterol*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "cholesterol"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "high cholesterol",
+        "today": "2026-09-15"
+      },
+      "name": "q_high_cholesterol"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "flag",
+            "text": "elevated"
+          },
+          {
+            "kind": "date",
+            "text": "last year"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2025-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "high"
+        ],
+        "match": "tsh*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "tsh"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "elevated tsh last year",
+        "today": "2026-09-15"
+      },
+      "name": "q_elevated_tsh_last_year"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "flag",
+            "text": "critical"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "critical"
+        ],
+        "match": "results*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "results"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "critical results",
+        "today": "2026-09-15"
+      },
+      "name": "q_critical_results"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "blood test"
+          },
+          {
+            "kind": "date",
+            "text": "in may"
+          }
+        ],
+        "date_from": "2026-05-01",
+        "date_to": "2026-05-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "blood test in may",
+        "today": "2026-09-15"
+      },
+      "name": "q_blood_test_in_may"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "may 2026"
+          },
+          {
+            "kind": "type",
+            "text": "invoices"
+          }
+        ],
+        "date_from": "2026-05-01",
+        "date_to": "2026-05-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "bill"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "may 2026 invoices",
+        "today": "2026-09-15"
+      },
+      "name": "q_may_2026_invoices"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "flag",
+            "text": "out of range"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [
+          "abnormal"
+        ],
+        "match": "sugar*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "sugar"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "sugar out of range",
+        "today": "2026-09-15"
+      },
+      "name": "q_sugar_out_of_range"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "lab reports"
+          },
+          {
+            "kind": "doctor",
+            "text": "dr iyer"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": "iyer",
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "lab reports Dr Iyer",
+        "today": "2026-09-15"
+      },
+      "name": "q_lab_reports_dr_iyer"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "consultation"
+          },
+          {
+            "kind": "facility",
+            "text": "at greenleaf"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": "greenleaf",
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "consultation_note"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "consultation at greenleaf hospital",
+        "today": "2026-09-15"
+      },
+      "name": "q_consultation_at_greenleaf_hospital"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "facility",
+            "text": "hospital fortis"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": "fortis",
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hospital fortis",
+        "today": "2026-09-15"
+      },
+      "name": "q_hospital_fortis"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "hemoglobine*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "hemoglobine"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "Hémoglobine",
+        "today": "2026-09-15"
+      },
+      "name": "q_hémoglobine"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "past 2 years"
+          },
+          {
+            "kind": "type",
+            "text": "scans"
+          }
+        ],
+        "date_from": "2024-09-15",
+        "date_to": "2026-09-15",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "past 2 years scans",
+        "today": "2026-09-15"
+      },
+      "name": "q_past_2_years_scans"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "notes"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "personal_note"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "notes",
+        "today": "2026-09-15"
+      },
+      "name": "q_notes"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          },
+          {
+            "kind": "date",
+            "text": "from 2025 to 2026"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2026-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "reports from 2025 to 2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_reports_from_2025_to_2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "",
+        "today": "2026-09-15"
+      },
+      "name": "q_empty"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "rx"
+          },
+          {
+            "kind": "date",
+            "text": "last month"
+          }
+        ],
+        "date_from": "2026-08-01",
+        "date_to": "2026-08-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "prescription"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "rx last month",
+        "today": "2026-09-15"
+      },
+      "name": "q_rx_last_month"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "medicines"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "bp*",
+        "needs_review": false,
+        "record_types": [
+          "prescription"
+        ],
+        "source": null,
+        "terms": [
+          "bp"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "medicines for bp",
+        "today": "2026-09-15"
+      },
+      "name": "q_medicines_for_bp"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "15 sep 2026"
+          }
+        ],
+        "date_from": "2026-09-15",
+        "date_to": "2026-09-15",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "cbc*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "cbc"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "15 Sep 2026 cbc",
+        "today": "2026-09-15"
+      },
+      "name": "q_15_sep_2026_cbc"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "usg"
+          },
+          {
+            "kind": "date",
+            "text": "12/09/2026"
+          }
+        ],
+        "date_from": "2026-09-12",
+        "date_to": "2026-09-12",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "usg* abdomen*",
+        "needs_review": false,
+        "record_types": [
+          "imaging_report"
+        ],
+        "source": null,
+        "terms": [
+          "usg",
+          "abdomen"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "usg abdomen 12/09/2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_usg_abdomen_12-09-2026"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "in september"
+          }
+        ],
+        "date_from": "2026-09-01",
+        "date_to": "2026-09-30",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "in september",
+        "today": "2026-09-15"
+      },
+      "name": "q_in_september"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "october"
+          }
+        ],
+        "date_from": "2025-10-01",
+        "date_to": "2025-10-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "october",
+        "today": "2026-09-15"
+      },
+      "name": "q_october"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": "hba1c* above* 7*",
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": [
+          "hba1c",
+          "above",
+          "7"
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "hba1c above 7",
+        "today": "2026-09-15"
+      },
+      "name": "q_hba1c_above_7"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "favorites",
+            "text": "starred"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": true,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "starred",
+        "today": "2026-09-15"
+      },
+      "name": "q_starred"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "Dr.",
+        "today": "2026-09-15"
+      },
+      "name": "q_dr"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "source",
+            "text": "received"
+          },
+          {
+            "kind": "type",
+            "text": "prescriptions"
+          },
+          {
+            "kind": "needs_review",
+            "text": "to review"
+          }
+        ],
+        "date_from": null,
+        "date_to": null,
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": true,
+        "record_types": [
+          "prescription"
+        ],
+        "source": "received",
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "received prescriptions to review",
+        "today": "2026-09-15"
+      },
+      "name": "q_received_prescriptions_to_review"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "date",
+            "text": "last year"
+          }
+        ],
+        "date_from": "2025-01-01",
+        "date_to": "2025-12-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "dmy",
+        "text": "last year",
+        "today": "2026-09-15"
+      },
+      "name": "q_last_year"
+    },
+    {
+      "expected": {
+        "archived": false,
+        "chips": [
+          {
+            "kind": "type",
+            "text": "reports"
+          },
+          {
+            "kind": "date",
+            "text": "before 09/01/2026"
+          }
+        ],
+        "date_from": null,
+        "date_to": "2026-08-31",
+        "doctor": null,
+        "facility": null,
+        "favorites": false,
+        "flags": [],
+        "match": null,
+        "needs_review": false,
+        "record_types": [
+          "lab_report",
+          "imaging_report",
+          "diagnostic_report"
+        ],
+        "source": null,
+        "terms": []
+      },
+      "input": {
+        "date_order": "mdy",
+        "text": "reports before 09/01/2026",
+        "today": "2026-09-15"
+      },
+      "name": "q_us_numeric_date_mdy"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "parse_query",
+  "version": 1
+}

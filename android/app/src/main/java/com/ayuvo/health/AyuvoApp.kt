@@ -37,6 +37,18 @@ import com.ayuvo.health.records.data.RecordsStore
 import com.ayuvo.health.records.data.SqliteRecordsStore
 import com.ayuvo.health.records.ingest.RecordImporter
 import com.ayuvo.health.records.ingest.RecordsImportCoordinator
+import com.ayuvo.health.records.ai.RecordsAiExtractor
+import com.ayuvo.health.records.ai.RecordsAiModeResolver
+import com.ayuvo.health.records.model.RecordsAiMode
+import com.ayuvo.health.records.processing.MlKitOcrEngine
+import com.ayuvo.health.records.processing.NetworkState
+import com.ayuvo.health.records.processing.OcrEngine
+import com.ayuvo.health.records.processing.RecordPipeline
+import com.ayuvo.health.records.processing.RecordProcessingQueue
+import com.ayuvo.health.records.processing.RecordRules
+import com.ayuvo.health.records.processing.TextStage
+import com.ayuvo.health.records.search.AiQueryRewriter
+import com.ayuvo.health.ui.records.labelRes
 import kotlinx.coroutines.withContext
 import com.ayuvo.health.services.ai.ChatService
 import com.ayuvo.health.services.ai.FoodAnalysisService
@@ -95,6 +107,7 @@ class AyuvoApp : Application() {
         super.onCreate()
         container = AppContainer(this, appScope)
         container.notifications.createChannels()
+        container.resumeRecordsProcessing()
         WidgetRefreshScheduler.onAppStarted(this)
         container.widgetSnapshotWriter.observe().launchIn(appScope)
         // Warm exercise catalog off the main thread before the first Workouts tab open.
@@ -240,10 +253,53 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val recordsDatabase: RecordsDatabase by recordsDatabaseLazy
     val recordsStore: RecordsStore by lazy { SqliteRecordsStore(recordsDatabase, recordFiles) }
     val recordImporter: RecordImporter by lazy { RecordImporter(app, recordsStore, recordFiles) }
-    val recordsImports = RecordsImportCoordinator(scope, { recordImporter }, { recordsStore })
+
+    // Phase 2 "Intelligence": background pipeline (docs/health-records.md §9).
+    val recordsAiResolver: RecordsAiModeResolver by lazy { RecordsAiModeResolver(prefs, keyStore, localModels) }
+    val recordsAi: RecordsAiExtractor by lazy { RecordsAiExtractor(foodAnalysis, localBusy = { localGemma.isBusy }) }
+    val recordRules: RecordRules by lazy {
+        RecordRules(
+            recordTypesJson = app.assets.open(RecordRules.RECORD_TYPES_ASSET).bufferedReader().use { it.readText() },
+            unitsJson = runCatching { app.assets.open(RecordRules.UNITS_ASSET).bufferedReader().use { it.readText() } }.getOrNull()
+        )
+    }
+    private val recordsOcr: OcrEngine by lazy { MlKitOcrEngine() }
+    val recordsPipeline: RecordPipeline by lazy {
+        RecordPipeline(
+            store = { recordsStore },
+            files = recordFiles,
+            textStage = { TextStage(recordsStore, recordFiles, recordsOcr) },
+            rules = { recordRules },
+            aiResolver = { recordsAiResolver },
+            aiExtractor = { recordsAi },
+            aiPreference = { RecordsAiMode.fromRaw(prefs.healthRecordsAiMode.first()) },
+            isOnline = { NetworkState.isOnline(appContext) },
+            typeLabel = { type -> appContext.getString(type.labelRes()) },
+            providerLabel = { provider -> appContext.getString(provider.displayNameRes) }
+        )
+    }
+    val recordsQueryRewriter: AiQueryRewriter by lazy { AiQueryRewriter({ recordsAiResolver }, { recordsAi }) }
+    val recordsQueue: RecordProcessingQueue by lazy { RecordProcessingQueue(app, { recordsStore }, { recordsPipeline }) }
+    val recordsImports = RecordsImportCoordinator(scope, { recordImporter }, { recordsStore }, { recordsQueue })
+
+    /** Resumes unfinished processing (and the one-time Phase 2 backfill) when a records DB exists. */
+    fun resumeRecordsProcessing() {
+        if (!appContext.getDatabasePath(RecordsDatabase.NAME).exists()) return
+        scope.launch {
+            runCatching { recordsQueue.resumeOnStart() }
+                .onFailure { Log.w("AyuvoRecords", "Resume failed: ${it.javaClass.simpleName}") }
+        }
+    }
+
+    /** Deletes records after stopping their processing. */
+    suspend fun deleteRecords(ids: Collection<String>) {
+        recordsQueue.cancel(ids)
+        recordsStore.delete(ids)
+    }
 
     /** Delete All Data: the records database (+ journal files), originals, thumbnails and caches. */
     suspend fun deleteRecordsData() = withContext(Dispatchers.IO) {
+        runCatching { androidx.work.WorkManager.getInstance(appContext).cancelAllWorkByTag(RecordProcessingQueue.TAG_WORK) }
         if (recordsDatabaseLazy.isInitialized()) recordsStore.close()
         RecordsDatabase.deleteDatabaseFiles(appContext)
         recordFiles.deleteAll()

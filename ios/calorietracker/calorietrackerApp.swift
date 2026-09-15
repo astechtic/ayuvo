@@ -148,6 +148,8 @@ struct calorietrackerApp: App {
                 // Items shared while Ayuvo was not running.
                 await recordsStore.drainInbox()
                 await importRecordsFixtureIfRequested()
+                // Health Records processing: resume unfinished jobs (and the one-time Phase 1 backfill).
+                if hasCompletedOnboarding { await recordsStore.resumeProcessing() }
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -164,7 +166,10 @@ struct calorietrackerApp: App {
                         foodStore: foodStore, weightStore: weightStore, bodyFatStore: bodyFatStore, profile: profile
                     )
                 }
-                Task { await recordsStore.drainInbox() }
+                Task {
+                    await recordsStore.drainInbox()
+                    if hasCompletedOnboarding { await recordsStore.resumeProcessing() }
+                }
                 if hasCompletedOnboarding {
                     wireUpHealthKit()
                     // Re-wire on every scene-active so the widget refresh callback
@@ -406,6 +411,8 @@ struct calorietrackerApp: App {
             .split(separator: ",")
             .map { URL(fileURLWithPath: String($0)) }
             .filter { FileManager.default.fileExists(atPath: $0.path) }
+        // `-ayuvoRecordsReset` starts the fixture from an empty Health Records store.
+        if arguments.contains("-ayuvoRecordsReset") { await recordsStore.deleteAllData() }
         guard !urls.isEmpty, await recordsStore.recordsCountForFixture() == 0 else { return }
         await recordsStore.importItems(urls.map {
             RecordImportItem(payload: .file($0), source: .import, importMethod: .filePicker, originalFilename: $0.lastPathComponent)

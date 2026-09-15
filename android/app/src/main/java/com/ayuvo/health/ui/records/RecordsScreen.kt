@@ -106,6 +106,7 @@ fun RecordsScreen(
     val snackbar = remember { SnackbarHostState() }
     val noticeScope = rememberCoroutineScope()
     var showAddSheet by remember { mutableStateOf(false) }
+    var showFilters by remember { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
     val duplicates = remember { mutableStateListOf<DuplicateMatch>() }
     val launchers = rememberAddRecordLaunchers(onImport = vm::import)
@@ -155,6 +156,7 @@ fun RecordsScreen(
             }
             if (ui.totalCount > 0 || !ui.isBrowsingAll) {
                 RecordsSearchField(value = ui.search, onValueChange = vm::setSearch)
+                ParsedChipsRow(chips = ui.chips, onRemove = vm::removeChip)
                 IosStyleSegmentedControl(
                     options = RecordsViewMode.entries,
                     selected = ui.viewMode,
@@ -166,6 +168,9 @@ fun RecordsScreen(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    item(key = "filters") {
+                        FiltersChip(count = ui.advanced.activeCount, onClick = { showFilters = true })
+                    }
                     items(RecordFilter.entries, key = { it.name }) { filter ->
                         RecordChip(
                             text = stringResource(filter.labelRes()),
@@ -189,6 +194,7 @@ fun RecordsScreen(
                     )
                 }
             }
+            ProcessingStrip(summary = ui.processing, progress = ui.progress)
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 when {
                     ui.loadFailed && ui.items.isEmpty() -> LoadFailedBanner(onRetry = vm::retry)
@@ -198,13 +204,24 @@ fun RecordsScreen(
                     ) {
                         RecordsEmptyState(onAction = launchers.launch)
                     }
-                    ui.items.isEmpty() -> NoMatches(search = ui.search)
+                    ui.searchHits != null -> SearchResults(
+                        ui = ui,
+                        container = container,
+                        onOpen = { record -> if (ui.selecting) vm.toggleSelection(record.id) else onOpenRecord(record.id) },
+                        onSearchWithAi = vm::searchWithAi
+                    )
+                    ui.items.isEmpty() -> Column {
+                        if (ui.canSearchWithAi) Box(Modifier.padding(16.dp)) { AiSearchRow(ui.aiSearchRunning, vm::searchWithAi) }
+                        NoMatches(search = ui.search)
+                    }
                     else -> RecordsBody(
                         ui = ui,
                         container = container,
                         onOpen = { record -> if (ui.selecting) vm.toggleSelection(record.id) else onOpenRecord(record.id) },
                         onLongPress = { record -> vm.toggleSelection(record.id) },
-                        onLoadMore = vm::loadMore
+                        onLoadMore = vm::loadMore,
+                        onChooseAiMode = vm::chooseAiMode,
+                        onApplyAiToAll = vm::applyAiToAllWaiting
                     )
                 }
             }
@@ -215,11 +232,26 @@ fun RecordsScreen(
         AddRecordSheet(onDismiss = { showAddSheet = false }, onAction = launchers.launch)
     }
 
+    if (showFilters) {
+        RecordsFilterSheet(
+            initial = ui.advanced,
+            tags = ui.allTags,
+            onApply = {
+                vm.setAdvanced(it)
+                showFilters = false
+            },
+            onDismiss = { showFilters = false }
+        )
+    }
+
     duplicates.firstOrNull()?.let { match ->
         DuplicateRecordSheet(
             match = match,
             files = container.recordFiles,
-            onKeepBoth = { duplicates.remove(match) },
+            onKeepBoth = {
+                duplicates.remove(match)
+                vm.keepBoth(match.newRecord.id, match.existing.id)
+            },
             onOpenExisting = {
                 duplicates.remove(match)
                 onOpenRecord(match.existing.id)
@@ -227,6 +259,14 @@ fun RecordsScreen(
             onCancelImport = {
                 duplicates.remove(match)
                 vm.discardImported(match.newRecord)
+            },
+            onReplace = {
+                duplicates.remove(match)
+                vm.replaceExisting(match.newRecord.id, match.existing.id)
+            },
+            onMerge = {
+                duplicates.remove(match)
+                vm.mergeIntoExisting(match.newRecord.id, match.existing.id)
             }
         )
     }
@@ -344,7 +384,9 @@ private fun RecordsBody(
     container: AppContainer,
     onOpen: (HealthRecord) -> Unit,
     onLongPress: (HealthRecord) -> Unit,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    onChooseAiMode: (com.ayuvo.health.records.model.RecordsAiMode) -> Unit,
+    onApplyAiToAll: (String) -> Unit
 ) {
     val files = container.recordFiles
     val showRecent = ui.isBrowsingAll && ui.recent.isNotEmpty() && ui.viewMode != RecordsViewMode.GRID
@@ -365,6 +407,13 @@ private fun RecordsBody(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
+                if (ui.isBrowsingAll) {
+                    item(key = "sections", span = { GridItemSpan(maxLineSpan) }) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            HomeSectionsContent(ui, container, onOpen, onChooseAiMode, onApplyAiToAll)
+                        }
+                    }
+                }
                 if (ui.isBrowsingAll && ui.recent.isNotEmpty()) {
                     item(key = "recent", span = { GridItemSpan(maxLineSpan) }) {
                         RecentStrip(ui, container, onOpen)
@@ -398,6 +447,7 @@ private fun RecordsBody(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
+                homeSections(ui, container, onOpen, onChooseAiMode, onApplyAiToAll)
                 if (showRecent) {
                     item(key = "recent") { RecentStrip(ui, container, onOpen) }
                 }
@@ -437,6 +487,86 @@ private fun RecordsBody(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+/** One-time AI chooser, consent banner, Needs review and Important highlights (browsing only). */
+private fun androidx.compose.foundation.lazy.LazyListScope.homeSections(
+    ui: RecordsUiState,
+    container: AppContainer,
+    onOpen: (HealthRecord) -> Unit,
+    onChooseAiMode: (com.ayuvo.health.records.model.RecordsAiMode) -> Unit,
+    onApplyAiToAll: (String) -> Unit
+) {
+    if (!ui.isBrowsingAll || ui.selecting) return
+    item(key = "home-sections") {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            HomeSectionsContent(ui, container, onOpen, onChooseAiMode, onApplyAiToAll)
+        }
+    }
+}
+
+@Composable
+private fun HomeSectionsContent(
+    ui: RecordsUiState,
+    container: AppContainer,
+    onOpen: (HealthRecord) -> Unit,
+    onChooseAiMode: (com.ayuvo.health.records.model.RecordsAiMode) -> Unit,
+    onApplyAiToAll: (String) -> Unit
+) {
+    val options = ui.aiOptions
+    if (ui.aiModeLoaded && ui.aiMode == null && options != null) {
+        RecordsAiChooserCard(onChoose = onChooseAiMode, options = options)
+    }
+    if (ui.processing.awaitingConsent > 1 && options != null) {
+        AiConsentBanner(
+            options = options,
+            waitingCount = ui.processing.awaitingConsent,
+            onLocal = { onApplyAiToAll("local") },
+            onCloud = { onApplyAiToAll("cloud") },
+            onNotNow = { onApplyAiToAll("off") },
+            onApplyAll = onApplyAiToAll
+        )
+    }
+    NeedsReviewSection(records = ui.needsReview, files = container.recordFiles, onOpen = onOpen)
+    HighlightsSection(items = ui.highlights, onOpen = { onOpen(it.record) })
+}
+
+/** Universal search results (§17), grouped under "Records" with matched snippets. */
+@Composable
+private fun SearchResults(
+    ui: RecordsUiState,
+    container: AppContainer,
+    onOpen: (HealthRecord) -> Unit,
+    onSearchWithAi: () -> Unit
+) {
+    val hits = ui.searchHits.orEmpty()
+    LazyColumn(
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = BottomNavScrollPadding),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (ui.processing.processing > 0) {
+            item(key = "processing-note") {
+                Text(
+                    stringResource(R.string.records_search_processing_note),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+        }
+        if (ui.canSearchWithAi) {
+            item(key = "ai-search") { AiSearchRow(ui.aiSearchRunning, onSearchWithAi) }
+        }
+        if (hits.isEmpty()) {
+            item(key = "none") { NoMatches(search = ui.search) }
+        } else {
+            item(key = "group-records") { SectionTitle(stringResource(R.string.records_search_group_records)) }
+            items(hits, key = { "hit-${it.record.id}" }) { hit ->
+                SearchHitRow(hit = hit, files = container.recordFiles, onClick = { onOpen(hit.record) })
             }
         }
     }
@@ -521,7 +651,9 @@ private fun RecordRow(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
+            RecordStatusPill(record)
             if (record.favorite) {
+                Spacer(Modifier.width(6.dp))
                 Icon(Icons.Filled.Star, stringResource(R.string.records_filter_favorites), tint = AppColors.Calorie, modifier = Modifier.size(18.dp))
             }
         }
@@ -564,6 +696,7 @@ private fun RecordGridCell(
             }
         }
         Text(record.title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        RecordStatusPill(record)
         Text(
             RecordFormat.displayDate(record),
             fontSize = 11.sp,

@@ -7,11 +7,45 @@ nonisolated struct RecordsBanner: Identifiable, Equatable, Sendable {
     var systemImage: String = "checkmark.circle.fill"
 }
 
-/// "This looks like an existing record" (contract §4.5). Phase 1: Keep both · Cancel · Open existing.
+/// "This looks like an existing record" (contract §4.5, plan §3.11): Keep both · Replace · Merge · Cancel.
 nonisolated struct RecordDuplicatePrompt: Identifiable, Equatable, Sendable {
-    var id: String { newRecord.id }
+    var id: String { newRecord.id + "|" + existing.id }
     var newRecord: HealthRecord
     var existing: HealthRecord
+    var reason: RecordDuplicateReason = .checksum
+    var score: Double = 1
+}
+
+/// Page progress of the record being processed.
+nonisolated struct RecordsProcessingProgress: Equatable, Sendable {
+    var recordID: String
+    var page: Int
+    var total: Int
+}
+
+nonisolated struct RecordHighlightItem: Identifiable, Hashable, Sendable {
+    var highlight: RecordHighlight
+    var record: HealthRecord
+    var id: String { highlight.id }
+}
+
+/// Universal search state (§17).
+nonisolated struct RecordsSearchState: Equatable, Sendable {
+    var text = ""
+    var parsed = ParsedRecordQuery()
+    var removedChips: Set<String> = []
+    /// nil while not searching or when the query has no free-text terms (timeline filters apply).
+    var hits: [RecordSearchHit]?
+    var isSearching = false
+    /// Chips added by AI query rewriting.
+    var aiParsed: ParsedRecordQuery?
+    var isRewriting = false
+    var offerAIRewrite = false
+
+    var isActive: Bool { !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+    var visibleChips: [ParsedRecordQuery.Chip] {
+        ((aiParsed ?? parsed).chips).filter { !removedChips.contains($0.id) }
+    }
 }
 
 /// Main-actor façade for the Records tab: lazily opens the database, keeps the loaded
@@ -20,7 +54,7 @@ nonisolated struct RecordDuplicatePrompt: Identifiable, Equatable, Sendable {
 @Observable
 @MainActor
 final class RecordsStore {
-    private let defaults: UserDefaults
+    let defaults: UserDefaults
     private let databaseURL: URL
     private let files: RecordFileStore
     private let inboxRoot: () -> URL?
@@ -52,6 +86,26 @@ final class RecordsStore {
 
     var banner: RecordsBanner?
     var duplicatePrompts: [RecordDuplicatePrompt] = []
+
+    // Phase 2 (Intelligence) — written by RecordsStore+Intelligence.swift.
+    var processingQueue: RecordProcessingQueue?
+    var processingSummary = RecordsProcessingSummary()
+    var processingProgress: RecordsProcessingProgress?
+    var needsReviewRecords: [HealthRecord] = []
+    var importantHighlights: [RecordHighlightItem] = []
+    var nearDuplicateCount = 0
+    var aiMode: RecordsAIMode?
+    var aiEnvironment = RecordsAIEnvironment.none
+    var searchState = RecordsSearchState()
+    /// Record whose review sheet should open (a just-imported record that finished needing review).
+    var reviewRequest: String?
+    /// Duplicate sheet requested from Needs Review / detail.
+    var duplicateSheetRequest: RecordDuplicatePrompt?
+    @ObservationIgnored var refreshTask: Task<Void, Never>?
+    @ObservationIgnored var searchTask: Task<Void, Never>?
+    @ObservationIgnored var autoReviewIDs = Set<String>()
+    @ObservationIgnored var pendingRefreshIDs = Set<String>()
+    @ObservationIgnored let queueDependencies: RecordProcessingQueue.Dependencies?
     var importErrorMessage: String?
     /// Incremented when something outside the tab (share extension, "Open in") wants the
     /// Records tab selected. `ContentView` observes it.
@@ -63,13 +117,16 @@ final class RecordsStore {
         defaults: UserDefaults = .standard,
         databaseURL: URL = RecordsLocation.databaseURL(),
         files: RecordFileStore = RecordFileStore(),
-        inboxRoot: @escaping () -> URL? = { RecordsLocation.inboxDirectory() }
+        inboxRoot: @escaping () -> URL? = { RecordsLocation.inboxDirectory() },
+        queueDependencies: RecordProcessingQueue.Dependencies? = nil
     ) {
+        self.queueDependencies = queueDependencies
         self.defaults = defaults
         self.databaseURL = databaseURL
         self.files = files
         self.inboxRoot = inboxRoot
         self.viewMode = defaults.string(forKey: RecordsViewMode.storageKey).flatMap(RecordsViewMode.init(rawValue:)) ?? .defaultMode
+        self.aiMode = RecordsAIMode.stored(in: defaults)
     }
 
     // MARK: - Opening
@@ -86,8 +143,10 @@ final class RecordsStore {
         let task = Task { [weak self] in
             do {
                 let (database, _) = try await RecordsDatabase.openQuarantiningCorruption(url: url)
-                self?.repository = RecordsRepository(database: database, files: files)
+                let repository = RecordsRepository(database: database, files: files)
+                self?.repository = repository
                 self?.openError = nil
+                await self?.startProcessing(repository: repository)
             } catch {
                 self?.openError = String(describing: error)
             }
@@ -130,6 +189,7 @@ final class RecordsStore {
             totalCount = total
             hasMore = rows.count >= RecordsRepository.pageSize
             loadError = nil
+            await reloadSections(repository: repository)
         } catch {
             guard generation == loadGeneration else { return }
             loadError = String(localized: "Couldn't load records.")
@@ -161,6 +221,10 @@ final class RecordsStore {
     private func didChange() async {
         revision += 1
         await reload()
+    }
+
+    func bumpRevision() {
+        revision += 1
     }
 
     func detail(id: String) async -> RecordDetail? {
@@ -207,8 +271,10 @@ final class RecordsStore {
         await didChange()
     }
 
-    func delete(ids: [String]) async {
+    func delete(ids requested: [String]) async {
         guard let repository = await openIfNeeded() else { return }
+        let ids = (try? await repository.expandedForDelete(requested)) ?? requested
+        await processingQueue?.cancel(ids: ids)
         try? await Task.detached(priority: .userInitiated) {
             try await repository.delete(ids: ids)
         }.value
@@ -262,6 +328,8 @@ final class RecordsStore {
                 : String(localized: "\(results.count) records saved to Health Records"))
         }
         let records = results.map(\.record)
+        // The review sheet opens by itself only for imports the user just made (not silent imports).
+        if announce { autoReviewIDs.formUnion(records.map(\.id)) }
         let generation = dataGeneration
         let previous = processingTask
         processingTask = Task { [weak self] in
@@ -272,6 +340,7 @@ final class RecordsStore {
                     await repository.processBasics(record)
                 }.value
                 guard self?.dataGeneration == generation else { return }
+                await self?.processingQueue?.enqueue(ids: [record.id])
                 await self?.didChange()
             }
         }
@@ -290,6 +359,12 @@ final class RecordsStore {
 
     func resolveDuplicateKeepBoth(_ prompt: RecordDuplicatePrompt) {
         duplicatePrompts.removeAll { $0.id == prompt.id }
+        guard prompt.reason != .checksum else { return }
+        Task {
+            guard let repository = await openIfNeeded() else { return }
+            try? await repository.keepBothDuplicate(recordID: prompt.newRecord.id, existingID: prompt.existing.id)
+            await refreshProcessingState(recordIDs: [prompt.newRecord.id, prompt.existing.id])
+        }
     }
 
     /// Cancel: the new import is deleted.
@@ -366,6 +441,16 @@ final class RecordsStore {
         if let openTask { await openTask.value }
         await processingTask?.value
         processingTask = nil
+        if let queue = processingQueue {
+            await queue.shutdown()
+        }
+        processingQueue = nil
+        processingSummary = RecordsProcessingSummary()
+        processingProgress = nil
+        needsReviewRecords = []
+        importantHighlights = []
+        searchState = RecordsSearchState()
+        autoReviewIDs = []
         if let repository {
             await repository.database.close()
         }
@@ -390,6 +475,8 @@ final class RecordsStore {
         query = RecordQuery()
         viewMode = .defaultMode
         defaults.removeObject(forKey: RecordsViewMode.storageKey)
+        defaults.removeObject(forKey: RecordsAIMode.storageKey)
+        aiMode = nil
         revision += 1
     }
 }

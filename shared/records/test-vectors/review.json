@@ -1,0 +1,561 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "report_date",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.8,
+            "field_key": "facility",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics & Path Lab"
+          },
+          {
+            "confidence": 0.8,
+            "field_key": "report_name",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Complete Blood Count (CBC)"
+          }
+        ]
+      },
+      "name": "clean_lab_report"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "type_uncertain",
+          "no_date"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": null,
+          "processing_error": null,
+          "record_type": "other",
+          "review_status": "none",
+          "type_confidence": 0,
+          "type_method": "rules"
+        },
+        "rows": []
+      },
+      "name": "type_other_and_no_date"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.4,
+          "type_method": "user"
+        },
+        "rows": []
+      },
+      "name": "user_type_low_confidence_ok"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "conflict:report_date",
+          "low_confidence:report_date"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "report_date",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.6,
+            "field_key": "report_date",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "2026-09-13"
+          }
+        ]
+      },
+      "name": "conflict_single_valued"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "report_date",
+            "state": "confirmed",
+            "value_json": null,
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.6,
+            "field_key": "report_date",
+            "state": "rejected",
+            "value_json": null,
+            "value_text": "2026-09-13"
+          }
+        ]
+      },
+      "name": "conflict_resolved_by_user"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.85,
+            "field_key": "doctor_name",
+            "state": "suggested",
+            "value_json": {
+              "role": "referrer"
+            },
+            "value_text": "A. K. Mehta"
+          },
+          {
+            "confidence": 0.85,
+            "field_key": "doctor_name",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          }
+        ]
+      },
+      "name": "referrer_is_separate_slot"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.75,
+            "field_key": "diagnosis",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Fatty liver"
+          },
+          {
+            "confidence": 0.75,
+            "field_key": "diagnosis",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Cholelithiasis"
+          }
+        ]
+      },
+      "name": "multi_valued_no_conflict"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "low_confidence:report_date"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.6,
+            "field_key": "report_date",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "2026-09-11"
+          },
+          {
+            "confidence": 0.7,
+            "field_key": "doctor_name",
+            "state": "confirmed",
+            "value_json": null,
+            "value_text": "S. Rao"
+          }
+        ]
+      },
+      "name": "low_confidence_key_field"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "split_pending",
+          "duplicate_pending"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "pending_duplicate": true,
+        "pending_split": true,
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": []
+      },
+      "name": "pending_split_and_duplicate"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "text_failed"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": "ocr_failed",
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": []
+      },
+      "name": "ocr_failed"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "ai_image_item"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "none",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.5,
+            "field_key": "diagnosis",
+            "from_image": true,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Fracture radius"
+          }
+        ]
+      },
+      "name": "ai_from_image_item"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "reviewed"
+      },
+      "input": {
+        "record": {
+          "document_date": null,
+          "processing_error": null,
+          "record_type": "other",
+          "review_status": "reviewed",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "facility",
+            "state": "confirmed",
+            "value_json": null,
+            "value_text": "City Clinic"
+          }
+        ]
+      },
+      "name": "reviewed_stays_reviewed"
+    },
+    {
+      "expected": {
+        "reasons": [
+          "conflict:facility"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-12",
+          "processing_error": null,
+          "record_type": "lab_report",
+          "review_status": "reviewed",
+          "type_confidence": 0.89,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "facility",
+            "state": "confirmed",
+            "value_json": null,
+            "value_text": "City Clinic"
+          },
+          {
+            "confidence": 0.8,
+            "field_key": "facility",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "City Care Clinic"
+          }
+        ]
+      },
+      "name": "reviewed_reopened_by_new_conflict"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-07",
+          "ocr_confidence": null,
+          "processing_error": null,
+          "record_type": "discharge_summary",
+          "review_status": "none",
+          "type_confidence": 0.75,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "discharge_date",
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-07"
+          },
+          {
+            "confidence": 0.8,
+            "field_key": "facility",
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "St. Mary's Hospital"
+          }
+        ]
+      },
+      "name": "clean_discharge_summary_type_passes",
+      "notes": "Classifier output for the synthetic discharge summary (lead 3 over margin 2 -> 0.75): no review."
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-11",
+          "ocr_confidence": null,
+          "processing_error": null,
+          "record_type": "imaging_report",
+          "review_status": "none",
+          "type_confidence": 0.95,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.9,
+            "field_key": "report_date",
+            "state": "confirmed",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-11"
+          }
+        ]
+      },
+      "name": "clean_usg_type_passes",
+      "notes": "Classifier output for the synthetic USG report: no review."
+    },
+    {
+      "expected": {
+        "reasons": [
+          "type_uncertain"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-10",
+          "ocr_confidence": null,
+          "processing_error": null,
+          "record_type": "consultation_note",
+          "review_status": "none",
+          "type_confidence": 0.65,
+          "type_method": "rules"
+        },
+        "rows": []
+      },
+      "name": "type_lead_at_margin_needs_review",
+      "notes": "Consultation vs prescription lead exactly at the margin -> 0.65 -> type_uncertain."
+    },
+    {
+      "expected": {
+        "reasons": [
+          "ocr_low_confidence"
+        ],
+        "status": "needs_review"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-02",
+          "ocr_confidence": 0.52,
+          "processing_error": null,
+          "record_type": "prescription",
+          "review_status": "none",
+          "type_confidence": 0.95,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.8,
+            "field_key": "prescription_date",
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-02"
+          }
+        ]
+      },
+      "name": "ocr_low_confidence_noisy_scan",
+      "notes": "Handwritten OCR: type is clear but mean OCR line confidence < 0.6 -> review."
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "none"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-13",
+          "ocr_confidence": 0.91,
+          "processing_error": null,
+          "record_type": "prescription",
+          "review_status": "none",
+          "type_confidence": 0.95,
+          "type_method": "rules"
+        },
+        "rows": [
+          {
+            "confidence": 0.8,
+            "field_key": "prescription_date",
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          }
+        ]
+      },
+      "name": "ocr_confidence_ok"
+    },
+    {
+      "expected": {
+        "reasons": [],
+        "status": "reviewed"
+      },
+      "input": {
+        "record": {
+          "document_date": "2026-09-02",
+          "ocr_confidence": 0.52,
+          "processing_error": null,
+          "record_type": "prescription",
+          "review_status": "reviewed",
+          "type_confidence": 0.95,
+          "type_method": "rules"
+        },
+        "rows": []
+      },
+      "name": "reviewed_ignores_low_ocr",
+      "notes": "Record-level reasons are not re-raised after the user reviewed."
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "review_status",
+  "version": 1
+}

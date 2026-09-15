@@ -50,6 +50,11 @@ class RecordRenderCache(private val dir: File, private val maxBytes: Long = DEFA
         }
     }
 
+    /** Drops every cached page of [recordId] (its original changed). */
+    fun evict(recordId: String) {
+        runCatching { File(dir, recordId).deleteRecursively() }
+    }
+
     fun trim() {
         val files = dir.walkTopDown().filter { it.isFile }.toList()
         val entries = files.map { CacheEntry(it.path, it.length(), it.lastModified()) }

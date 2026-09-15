@@ -37,6 +37,25 @@ nonisolated struct HealthRecord: Identifiable, Hashable, Sendable {
     var favorite: Bool = false
     var archived: Bool = false
     var notes: String?
+    // Schema v2 (migrations/002_intelligence.sql)
+    /// 64-bit dHash of the first page, 16 hex digits.
+    var phash: String?
+    /// 64 MinHash values (hex, comma-separated).
+    var textSignature: String?
+    var aiModeUsed: RecordAIModeUsed = .none
+    var aiProvider: String?
+    var typeConfidence: Double?
+    var typeMethod: RecordFieldMethod?
+
+    /// Split child (shares the parent's file; the viewer shows `page_start…page_end`).
+    var isSplitChild: Bool { parentID != nil && pageStart != nil }
+
+    var isProcessing: Bool {
+        switch processingStatus {
+        case .queued, .extractingText, .analyzing: true
+        default: false
+        }
+    }
 
     /// The stored timeline day (`sort_date`), falling back to the same rule for unsaved rows.
     var effectiveDate: String {
@@ -69,6 +88,17 @@ nonisolated struct RecordDetail: Hashable, Sendable {
     var record: HealthRecord
     var tags: [String]
     var pages: [RecordPage]
+    var fields: [RecordField] = []
+    var highlights: [RecordHighlight] = []
+    var job: RecordProcessingJob?
+    var duplicates: [RecordDuplicateCandidate] = []
+    var splitProposal: RecordSplitProposal?
+    /// Parent of a split child, or children of an accepted split parent.
+    var parent: HealthRecord?
+    var children: [HealthRecord] = []
+
+    var visibleFields: [RecordField] { fields.filter { $0.state != .rejected } }
+    var awaitingConsent: Bool { job?.awaitingConsent == true }
 }
 
 /// Editable fields of the detail screen. `nil` leaves a column untouched.
@@ -111,16 +141,59 @@ nonisolated struct RecordQuery: Hashable, Sendable {
     /// Archived records are hidden unless this is on (then only archived rows show).
     var archivedOnly = false
     var receivedOnly = false
+    // Phase 2 filters (Filters sheet + parsed universal-search chips).
+    var needsReviewOnly = false
+    /// Inclusive `sort_date` bounds, `yyyy-MM-dd`.
+    var dateFrom: String?
+    var dateTo: String?
+    /// Folded prefix match against `doctor_name` / `facility` fields.
+    var doctor: String?
+    var facility: String?
+    var flags: Set<RecordQueryFlag> = []
+    var tags: Set<String> = []
+    var aiProcessedOnly = false
+    var userConfirmedOnly = false
 
     static let all = RecordQuery()
 
     var trimmedText: String { text.trimmingCharacters(in: .whitespacesAndNewlines) }
 
+    var hasAdvancedFilter: Bool {
+        needsReviewOnly || dateFrom != nil || dateTo != nil || !(doctor ?? "").isEmpty || !(facility ?? "").isEmpty
+            || !flags.isEmpty || !tags.isEmpty || aiProcessedOnly || userConfirmedOnly
+    }
+
     var hasChipFilter: Bool {
-        !recordTypes.isEmpty || !categories.isEmpty || !fileTypes.isEmpty || favoritesOnly || archivedOnly || receivedOnly
+        !recordTypes.isEmpty || !categories.isEmpty || !fileTypes.isEmpty || favoritesOnly || archivedOnly || receivedOnly || hasAdvancedFilter
     }
 
     var isUnfiltered: Bool { !hasChipFilter && trimmedText.isEmpty }
+}
+
+/// `flags` filter of a query (§17): abnormal matches any non-normal flag.
+nonisolated enum RecordQueryFlag: String, CaseIterable, Codable, Sendable {
+    case abnormal
+    case low
+    case high
+    case critical
+
+    var storedFlags: [RecordResultFlag] {
+        switch self {
+        case .abnormal: [.low, .high, .criticalLow, .criticalHigh, .abnormal]
+        case .low: [.low, .criticalLow]
+        case .high: [.high, .criticalHigh]
+        case .critical: [.criticalLow, .criticalHigh]
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .abnormal: String(localized: "Abnormal")
+        case .low: String(localized: "Low")
+        case .high: String(localized: "High")
+        case .critical: String(localized: "Critical")
+        }
+    }
 }
 
 /// Keyset cursor `(sort_date, created_ms, seq)` for contract §5 ordering.

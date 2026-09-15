@@ -1,0 +1,61 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "chunks": [
+          {
+            "pages": [
+              1,
+              3
+            ],
+            "text": "=== Page 1 ===\nSUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001 Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA Age/Sex : 34 Yrs/M\nUHID : SD-204518 Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name Result Unit Biological Reference Interval\nHaemoglobin 11.2 L g/dL 13.0 - 17.0\nTotal Leucocyte Count 11,800 H cells/cumm 4,000 - 11,000\nRBC Count 4.12 million/cumm 4.5 - 5.5\nPacked Cell Volume (PCV) 35.1 L % 40 - 50\nMCV 85.2 fL 83 - 101\nMCH 27.2 pg 27 - 32\nPlatelet Count 1.45 L lakhs/cumm 1.5 - 4.1\nNeutrophils 72 % 40 - 80\nLymphocytes 20 % 20 - 40\nESR 28 H mm/1st hr 0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1\n\n=== Page 3 ===\nDr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234 Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande Age: 29 Y Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg 1-0-0 x 3 days after food\n2. Tab. Paracetamol 650 mg 1-0-1 x 5 days\n3. Syp. Ascoril LS 10 ml TDS x 5 days\n4. Cap. Pantoprazole 40 mg 1-0-0 before food x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+          }
+        ]
+      },
+      "input": {
+        "mode": "cloud",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+          "",
+          "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+        ]
+      },
+      "name": "cloud_single_chunk"
+    },
+    {
+      "expected": {
+        "chunks": [
+          {
+            "pages": [
+              1
+            ],
+            "text": "=== Page 1 ===\nHEARTLINE CARDIAC CLINIC\nELECTROCARDIOGRAM (ECG) REPORT\nName: Suresh Pillai Age: 66 yrs Sex: M\nDate of Test: 10/09/2026 Time: 11:20\nHeart Rate: 54 bpm\nRhythm: Sinus bradycardia\nPR Interval: 168 ms\nQRS Duration: 92 ms\nQTc: 412 ms\nAxis: Normal\nInterpretation: Sinus bradycardia. No acute ST-T changes.\nImpression: Sinus bradycardia\nDr. Latha Krishnan, DM (Cardiology)"
+          },
+          {
+            "pages": [
+              2
+            ],
+            "text": "=== Page 2 ===\nLine 000 of a long discharge summary with narrative text about the hospital course.\nLine 001 of a long discharge summary with narrative text about the hospital course.\nLine 002 of a long discharge summary with narrative text about the hospital course.\nLine 003 of a long discharge summary with narrative text about the hospital course.\nLine 004 of a long discharge summary with narrative text about the hospital course.\nLine 005 of a long discharge summary with narrative text about the hospital course.\nLine 006 of a long discharge summary with narrative text about the hospital course.\nLine 007 of a long discharge summary with narrative text about the hospital course.\nLine 008 of a long discharge summary with narrative text about the hospital course.\nLine 009 of a long discharge summary with narrative text about the hospital course.\nLine 010 of a long discharge summary with narrative text about the hospital course.\nLine 011 of a long discharge summary with narrative text about the hospital course.\nLine 012 of a long discharge summary with narrative text about the hospital course.\nLine 013 of a long discharge summary with narrative text about the hospital course.\nLine 014 of a long discharge summary with narrative text about the hospital course.\nLine 015 of a long discharge summary with narrative text about the hospital course.\nLine 016 of a long discharge summary with narrative text about the hospital course.\nLine 017 of a long discharge summary with narrative text about the hospital course.\nLine 018 of a long discharge summary with narrative text about the hospital course.\nLine 019 of a long discharge summary with narrative text about the hospital course.\nLine 020 of a long discharge summary with narrative text about the hospital course.\nLine 021 of a long discharge summary with narrative text about the hospital course.\nLine 022 of a long discharge summary with narrative text about the hospital course.\nLine 023 of a long discharge summary with narrative text about the hospital course.\nLine 024 of a long discharge summary with narrative text about the hospital course.\nLine 025 of a long discharge summary with narrative text about the hospital course.\nLine 026 of a long discharge summary with narrative text about the hospital course.\nLine 027 of a long discharge summary with narrative text about the hospital course.\nLine 028 of a long discharge summary with narrative text about the hospital course."
+          },
+          {
+            "pages": [
+              2
+            ],
+            "text": "=== Page 2 ===\nLine 029 of a long discharge summary with narrative text about the hospital course.\nLine 030 of a long discharge summary with narrative text about the hospital course.\nLine 031 of a long discharge summary with narrative text about the hospital course.\nLine 032 of a long discharge summary with narrative text about the hospital course.\nLine 033 of a long discharge summary with narrative text about the hospital course.\nLine 034 of a long discharge summary with narrative text about the hospital course.\nLine 035 of a long discharge summary with narrative text about the hospital course.\nLine 036 of a long discharge summary with narrative text about the hospital course.\nLine 037 of a long discharge summary with narrative text about the hospital course.\nLine 038 of a long discharge summary with narrative text about the hospital course.\nLine 039 of a long discharge summary with narrative text about the hospital course."
+          }
+        ]
+      },
+      "input": {
+        "mode": "local",
+        "pages": [
+          "HEARTLINE CARDIAC CLINIC\nELECTROCARDIOGRAM (ECG) REPORT\nName: Suresh Pillai   Age: 66 yrs   Sex: M\nDate of Test: 10/09/2026   Time: 11:20\nHeart Rate: 54 bpm\nRhythm: Sinus bradycardia\nPR Interval: 168 ms\nQRS Duration: 92 ms\nQTc: 412 ms\nAxis: Normal\nInterpretation: Sinus bradycardia. No acute ST-T changes.\nImpression: Sinus bradycardia\nDr. Latha Krishnan, DM (Cardiology)",
+          "Line 000 of a long discharge summary with narrative text about the hospital course.\nLine 001 of a long discharge summary with narrative text about the hospital course.\nLine 002 of a long discharge summary with narrative text about the hospital course.\nLine 003 of a long discharge summary with narrative text about the hospital course.\nLine 004 of a long discharge summary with narrative text about the hospital course.\nLine 005 of a long discharge summary with narrative text about the hospital course.\nLine 006 of a long discharge summary with narrative text about the hospital course.\nLine 007 of a long discharge summary with narrative text about the hospital course.\nLine 008 of a long discharge summary with narrative text about the hospital course.\nLine 009 of a long discharge summary with narrative text about the hospital course.\nLine 010 of a long discharge summary with narrative text about the hospital course.\nLine 011 of a long discharge summary with narrative text about the hospital course.\nLine 012 of a long discharge summary with narrative text about the hospital course.\nLine 013 of a long discharge summary with narrative text about the hospital course.\nLine 014 of a long discharge summary with narrative text about the hospital course.\nLine 015 of a long discharge summary with narrative text about the hospital course.\nLine 016 of a long discharge summary with narrative text about the hospital course.\nLine 017 of a long discharge summary with narrative text about the hospital course.\nLine 018 of a long discharge summary with narrative text about the hospital course.\nLine 019 of a long discharge summary with narrative text about the hospital course.\nLine 020 of a long discharge summary with narrative text about the hospital course.\nLine 021 of a long discharge summary with narrative text about the hospital course.\nLine 022 of a long discharge summary with narrative text about the hospital course.\nLine 023 of a long discharge summary with narrative text about the hospital course.\nLine 024 of a long discharge summary with narrative text about the hospital course.\nLine 025 of a long discharge summary with narrative text about the hospital course.\nLine 026 of a long discharge summary with narrative text about the hospital course.\nLine 027 of a long discharge summary with narrative text about the hospital course.\nLine 028 of a long discharge summary with narrative text about the hospital course.\nLine 029 of a long discharge summary with narrative text about the hospital course.\nLine 030 of a long discharge summary with narrative text about the hospital course.\nLine 031 of a long discharge summary with narrative text about the hospital course.\nLine 032 of a long discharge summary with narrative text about the hospital course.\nLine 033 of a long discharge summary with narrative text about the hospital course.\nLine 034 of a long discharge summary with narrative text about the hospital course.\nLine 035 of a long discharge summary with narrative text about the hospital course.\nLine 036 of a long discharge summary with narrative text about the hospital course.\nLine 037 of a long discharge summary with narrative text about the hospital course.\nLine 038 of a long discharge summary with narrative text about the hospital course.\nLine 039 of a long discharge summary with narrative text about the hospital course."
+        ]
+      },
+      "name": "local_splits_long_page"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "ai_chunks",
+  "version": 1
+}

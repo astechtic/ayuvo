@@ -1,0 +1,293 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "page_scores": [
+          {
+            "page": 1,
+            "score": -3,
+            "signals": [
+              "continuation"
+            ]
+          },
+          {
+            "page": 2,
+            "score": -3,
+            "signals": [
+              "continuation"
+            ]
+          },
+          {
+            "page": 3,
+            "score": 7,
+            "signals": [
+              "page_one_of",
+              "previous_last_page",
+              "report_name_change"
+            ]
+          },
+          {
+            "page": 4,
+            "score": -3,
+            "signals": [
+              "continuation"
+            ]
+          },
+          {
+            "page": 5,
+            "score": 9,
+            "signals": [
+              "previous_last_page",
+              "type_change",
+              "head_change",
+              "patient_or_date_change"
+            ]
+          },
+          {
+            "page": 6,
+            "score": 7,
+            "signals": [
+              "type_change",
+              "head_change",
+              "patient_or_date_change"
+            ]
+          },
+          {
+            "page": 7,
+            "score": 2,
+            "signals": [
+              "type_change",
+              "head_change",
+              "continuation"
+            ]
+          },
+          {
+            "page": 8,
+            "score": 7,
+            "signals": [
+              "type_change",
+              "head_change",
+              "patient_or_date_change"
+            ]
+          },
+          {
+            "page": 9,
+            "score": 2,
+            "signals": [
+              "head_change"
+            ]
+          },
+          {
+            "page": 10,
+            "score": 0,
+            "signals": [
+              "head_change",
+              "previous_blank",
+              "continuation"
+            ]
+          },
+          {
+            "page": 11,
+            "score": 7,
+            "signals": [
+              "type_change",
+              "head_change",
+              "patient_or_date_change"
+            ]
+          }
+        ],
+        "propose": true,
+        "segments": [
+          {
+            "confidence": 0.85,
+            "page_end": 2,
+            "page_start": 0,
+            "record_type": "lab_report",
+            "title": "Complete Blood Count (CBC)"
+          },
+          {
+            "confidence": 0.85,
+            "page_end": 4,
+            "page_start": 3,
+            "record_type": "lab_report",
+            "title": "Liver Function Test (LFT)"
+          },
+          {
+            "confidence": 0.95,
+            "page_end": 5,
+            "page_start": 5,
+            "record_type": "prescription",
+            "title": "Prescription — Kulkarni Clinic"
+          },
+          {
+            "confidence": 0.85,
+            "page_end": 7,
+            "page_start": 6,
+            "record_type": "consultation_note",
+            "title": "Doctor Note — Greenleaf Multispeciality Hospital"
+          },
+          {
+            "confidence": 0.85,
+            "page_end": 10,
+            "page_start": 8,
+            "record_type": "bill",
+            "title": "Bill — Wellness Pharmacy & Diagnostics"
+          },
+          {
+            "confidence": 0.85,
+            "page_end": 11,
+            "page_start": 11,
+            "record_type": "imaging_report",
+            "title": "Ultrasonography - Whole Abdomen"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPage 1 of 3",
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nDIFFERENTIAL LEUCOCYTE COUNT\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nEosinophils                   6           %              1 - 6\nPage 2 of 3",
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nPeripheral smear: Normocytic normochromic RBCs. Platelets mildly reduced.\nDr. Neha Gupta, MD (Pathology)\nPage 3 of 3",
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 03:05 PM\nLIVER FUNCTION TEST (LFT)\nTest Name              Result        Unit     Biological Reference Interval\nBilirubin Total        1.8     H     mg/dL    0.3 - 1.2\nSGOT (AST)             86      H     U/L      5 - 40\nSGPT (ALT)             112     H     U/L      5 - 41\nPage 1 of 2",
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 03:05 PM\nAlkaline Phosphatase   98            U/L      40 - 129\nTotal Protein          7.1           g/dL     6.4 - 8.3\nAlbumin                4.2           g/dL     3.5 - 5.2\nDr. Neha Gupta, MD (Pathology)\nPage 2 of 2",
+          "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days",
+          "GREENLEAF MULTISPECIALITY HOSPITAL\nDepartment of Cardiology\nOPD Consultation Note\nPatient Name: Meera Joshi    Age/Sex: 61 Y / F    UHID: GL-778120\nVisit Date: 08/09/2026\nConsultant: Dr. Anil Deshmukh, DM (Cardiology)\nChief Complaints:\nBreathlessness on exertion since 2 weeks\nHistory: Known case of hypertension for 10 years.\nOn Examination: BP 148/92 mmHg, Pulse 88/min",
+          "Contd. - Meera Joshi (GL-778120)\nProvisional Diagnosis: Hypertensive heart disease\nPlan:\nECG and 2D Echo\nTab. Telmisartan 40 mg OD\nFollow up on 22/09/2026 with reports\nDr. Anil Deshmukh",
+          "WELLNESS PHARMACY & DIAGNOSTICS\nGSTIN: 27AABCW1234K1Z5\nTAX INVOICE\nInvoice No: WP/26-27/01873    Invoice Date: 13/09/2026\nSr  Item                          Batch     Exp      Qty   Rate     Amount\n1   Azithromycin 500mg Tab (3)    AZ2231    08/27    1     118.50   118.50\n2   Paracetamol 650mg Tab (15)    PC7781    11/27    1     32.00    32.00\nContinued on next page",
+          "\n\n",
+          "Continued from previous page\nInvoice No: WP/26-27/01873\n3   Pantoprazole 40mg Cap (5)     PN1120    02/28    1     64.00    64.00\nSub Total                                                           214.50\nCGST 6%     SGST 6%                                                 25.74\nGrand Total                                                         ₹ 240.24",
+          "PRIME IMAGING & DIAGNOSTIC CENTRE\nULTRASONOGRAPHY - WHOLE ABDOMEN\nPatient Name: Kavya Reddy     Age/Sex: 38Y/F     Date: 11/09/2026\nRef. By: Dr. S. Rao\nClinical Indication: Pain abdomen, right upper quadrant\nFINDINGS:\nLiver: Normal in size (14.2 cm) with diffusely increased echogenicity. No focal lesion.\nGall Bladder: Distended. Multiple calculi, largest measuring 8 mm. Wall thickness normal.\nCBD: Normal calibre (4 mm).\nPancreas: Normal.\nSpleen: Normal in size (10.1 cm).\nKidneys: Right 10.2 x 4.5 cm, Left 10.5 x 4.8 cm. No calculus or hydronephrosis.\nIMPRESSION:\n- Grade I fatty liver.\n- Cholelithiasis without cholecystitis.\nSuggested: Surgical consultation.\nDr. Vivek Menon, MD (Radiodiagnosis)\nConsultant Radiologist"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "combined_12_pages",
+      "notes": "CBC 0-2, LFT 3-4, prescription 5, consultation 6-7, invoice 8 + blank 9 + continued 10, USG 11."
+    },
+    {
+      "expected": {
+        "page_scores": [],
+        "propose": false,
+        "segments": [
+          {
+            "confidence": 0.5,
+            "page_end": 1,
+            "page_start": 0,
+            "record_type": "lab_report",
+            "title": "Complete Blood Count (CBC)"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1",
+          "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "two_pages_never_split"
+    },
+    {
+      "expected": {
+        "page_scores": [
+          {
+            "page": 1,
+            "score": -3,
+            "signals": [
+              "continuation"
+            ]
+          },
+          {
+            "page": 2,
+            "score": -3,
+            "signals": [
+              "continuation"
+            ]
+          }
+        ],
+        "propose": false,
+        "segments": [
+          {
+            "confidence": 0.5,
+            "page_end": 2,
+            "page_start": 0,
+            "record_type": "lab_report",
+            "title": "Complete Blood Count (CBC)"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPage 1 of 3",
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nDIFFERENTIAL LEUCOCYTE COUNT\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nEosinophils                   6           %              1 - 6\nPage 2 of 3",
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nPeripheral smear: Normocytic normochromic RBCs. Platelets mildly reduced.\nDr. Neha Gupta, MD (Pathology)\nPage 3 of 3"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "three_page_single_report"
+    },
+    {
+      "expected": {
+        "page_scores": [
+          {
+            "page": 1,
+            "score": 9,
+            "signals": [
+              "type_change",
+              "head_change",
+              "patient_or_date_change",
+              "report_name_change"
+            ]
+          },
+          {
+            "page": 2,
+            "score": 7,
+            "signals": [
+              "type_change",
+              "head_change",
+              "patient_or_date_change"
+            ]
+          }
+        ],
+        "propose": true,
+        "segments": [
+          {
+            "confidence": 0.95,
+            "page_end": 0,
+            "page_start": 0,
+            "record_type": "lab_report",
+            "title": "Thyroid Profile (T3, T4, TSH)"
+          },
+          {
+            "confidence": 0.95,
+            "page_end": 1,
+            "page_start": 1,
+            "record_type": "imaging_report",
+            "title": "Ultrasonography - Whole Abdomen"
+          },
+          {
+            "confidence": 0.85,
+            "page_end": 2,
+            "page_start": 2,
+            "record_type": "bill",
+            "title": "Bill — Wellness Pharmacy & Diagnostics"
+          }
+        ]
+      },
+      "input": {
+        "date_order": "dmy",
+        "pages": [
+          "CITY CARE PATHOLOGY LABORATORY\nName: Mrs. Sunita Rao    Age: 52 Years    Gender: Female\nSample Collected On: 05-Sep-2026 09:10    Report Date: 06-Sep-2026\nReferred By: Dr. P. Iyer\nTHYROID PROFILE (T3, T4, TSH)\nSpecimen: Serum\nInvestigation              Observed Value    Units      Biological Reference Interval\nTotal T3                   1.12              ng/mL      0.80 - 2.00\nTotal T4                   7.9               µg/dL      5.1 - 14.1\nTSH (Ultrasensitive)       6.84    H         µIU/mL     0.27 - 4.20\nInterpretation: Elevated TSH with normal T3/T4 suggests subclinical hypothyroidism. Correlate clinically.\nDr. Kavita Menon, MD Pathology",
+          "PRIME IMAGING & DIAGNOSTIC CENTRE\nULTRASONOGRAPHY - WHOLE ABDOMEN\nPatient Name: Kavya Reddy     Age/Sex: 38Y/F     Date: 11/09/2026\nRef. By: Dr. S. Rao\nClinical Indication: Pain abdomen, right upper quadrant\nFINDINGS:\nLiver: Normal in size (14.2 cm) with diffusely increased echogenicity. No focal lesion.\nGall Bladder: Distended. Multiple calculi, largest measuring 8 mm. Wall thickness normal.\nCBD: Normal calibre (4 mm).\nPancreas: Normal.\nSpleen: Normal in size (10.1 cm).\nKidneys: Right 10.2 x 4.5 cm, Left 10.5 x 4.8 cm. No calculus or hydronephrosis.\nIMPRESSION:\n- Grade I fatty liver.\n- Cholelithiasis without cholecystitis.\nSuggested: Surgical consultation.\nDr. Vivek Menon, MD (Radiodiagnosis)\nConsultant Radiologist",
+          "WELLNESS PHARMACY & DIAGNOSTICS\nGSTIN: 27AABCW1234K1Z5\nTAX INVOICE\nInvoice No: WP/26-27/01873    Invoice Date: 13/09/2026\nPatient: Priya Deshpande    Doctor: Dr. Sanjay Kulkarni\nSr  Item                          Batch     Exp      Qty   Rate     Amount\n1   Azithromycin 500mg Tab (3)    AZ2231    08/27    1     118.50   118.50\n2   Paracetamol 650mg Tab (15)    PC7781    11/27    1     32.00    32.00\n3   CBC Test                      -         -        1     350.00   350.00\nSub Total                                                           500.50\nCGST 6%                                                             9.12\nSGST 6%                                                             9.12\nGrand Total                                                         ₹ 518.74\nPaid by UPI"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "unnumbered_different_documents"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "detect_boundaries",
+  "version": 1
+}

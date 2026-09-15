@@ -100,6 +100,19 @@ class CloudBackupArchiveTest {
     }
 
     @Test
+    fun healthRecordsPreferencesNeverEnterTheArchive() {
+        val values = mapOf(
+            "healthRecordsViewMode" to CloudBackupValue.string("grid"),
+            "healthRecordsAiMode" to CloudBackupValue.string("cloud"),
+            "healthHubEnabled" to CloudBackupValue.bool(true),
+        )
+        val unpack = CloudBackupArchive.unpack(
+            CloudBackupArchive.pack(values = values, photos = emptyMap(), exportedAt = "2026-09-15T12:00:00Z", appVersion = "7.0")
+        )
+        assertEquals(setOf("healthHubEnabled"), unpack.document.payload.values.keys)
+    }
+
+    @Test
     fun rejectsPathTraversalPhotoNames() {
         assertEquals("secret.jpg", CloudBackupPolicy.safePhotoName("../secret.jpg"))
         assertEquals("meal.jpg", CloudBackupPolicy.safePhotoName("photos/meal.jpg"))

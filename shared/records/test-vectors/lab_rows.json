@@ -1,0 +1,1131 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Haemoglobin 11.2 L g/dL 13.0 - 17.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Haemoglobin",
+              "ref_high": 17,
+              "ref_low": 13,
+              "ref_text": "13.0 - 17.0",
+              "unit": "g/dL",
+              "value": "11.2",
+              "value_num": 11.2
+            },
+            "value_text": "Haemoglobin"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Total Leucocyte Count 11,800 H cells/cumm 4,000 - 11,000",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Total Leucocyte Count",
+              "ref_high": 11000,
+              "ref_low": 4000,
+              "ref_text": "4,000 - 11,000",
+              "unit": "cells/cumm",
+              "value": "11,800",
+              "value_num": 11800
+            },
+            "value_text": "Total Leucocyte Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "RBC Count 4.12 million/cumm 4.5 - 5.5",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "RBC Count",
+              "ref_high": 5.5,
+              "ref_low": 4.5,
+              "ref_text": "4.5 - 5.5",
+              "unit": "million/cumm",
+              "value": "4.12",
+              "value_num": 4.12
+            },
+            "value_text": "RBC Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Packed Cell Volume (PCV) 35.1 L % 40 - 50",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Packed Cell Volume (PCV)",
+              "ref_high": 50,
+              "ref_low": 40,
+              "ref_text": "40 - 50",
+              "unit": "%",
+              "value": "35.1",
+              "value_num": 35.1
+            },
+            "value_text": "Packed Cell Volume (PCV)"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "MCV 85.2 fL 83 - 101",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "MCV",
+              "ref_high": 101,
+              "ref_low": 83,
+              "ref_text": "83 - 101",
+              "unit": "fL",
+              "value": "85.2",
+              "value_num": 85.2
+            },
+            "value_text": "MCV"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "MCH 27.2 pg 27 - 32",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "MCH",
+              "ref_high": 32,
+              "ref_low": 27,
+              "ref_text": "27 - 32",
+              "unit": "pg",
+              "value": "27.2",
+              "value_num": 27.2
+            },
+            "value_text": "MCH"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Platelet Count 1.45 L lakhs/cumm 1.5 - 4.1",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Platelet Count",
+              "ref_high": 4.1,
+              "ref_low": 1.5,
+              "ref_text": "1.5 - 4.1",
+              "unit": "lakhs/cumm",
+              "value": "1.45",
+              "value_num": 1.45
+            },
+            "value_text": "Platelet Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Neutrophils 72 % 40 - 80",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Neutrophils",
+              "ref_high": 80,
+              "ref_low": 40,
+              "ref_text": "40 - 80",
+              "unit": "%",
+              "value": "72",
+              "value_num": 72
+            },
+            "value_text": "Neutrophils"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Lymphocytes 20 % 20 - 40",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Lymphocytes",
+              "ref_high": 40,
+              "ref_low": 20,
+              "ref_text": "20 - 40",
+              "unit": "%",
+              "value": "20",
+              "value_num": 20
+            },
+            "value_text": "Lymphocytes"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "ESR 28 H mm/1st hr 0 - 15",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "ESR",
+              "ref_high": 15,
+              "ref_low": 0,
+              "ref_text": "0 - 15",
+              "unit": "mm/hr",
+              "value": "28",
+              "value_num": 28
+            },
+            "value_text": "ESR"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "cbc_indian"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Cholesterol, Total 212 H mg/dL <200",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Cholesterol, Total",
+              "ref_high": 200,
+              "ref_low": null,
+              "ref_text": "<200",
+              "unit": "mg/dL",
+              "value": "212",
+              "value_num": 212
+            },
+            "value_text": "Cholesterol, Total"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Triglycerides 168 H mg/dL <150",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Triglycerides",
+              "ref_high": 150,
+              "ref_low": null,
+              "ref_text": "<150",
+              "unit": "mg/dL",
+              "value": "168",
+              "value_num": 168
+            },
+            "value_text": "Triglycerides"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "HDL Cholesterol 44 mg/dL >40",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "HDL Cholesterol",
+              "ref_high": null,
+              "ref_low": 40,
+              "ref_text": ">40",
+              "unit": "mg/dL",
+              "value": "44",
+              "value_num": 44
+            },
+            "value_text": "HDL Cholesterol"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "LDL Cholesterol, Calc 134 H mg/dL <100",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "LDL Cholesterol, Calc",
+              "ref_high": 100,
+              "ref_low": null,
+              "ref_text": "<100",
+              "unit": "mg/dL",
+              "value": "134",
+              "value_num": 134
+            },
+            "value_text": "LDL Cholesterol, Calc"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Non-HDL Cholesterol 168 mg/dL <130",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Non-HDL Cholesterol",
+              "ref_high": 130,
+              "ref_low": null,
+              "ref_text": "<130",
+              "unit": "mg/dL",
+              "value": "168",
+              "value_num": 168
+            },
+            "value_text": "Non-HDL Cholesterol"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Chol/HDL Ratio 4.8 <5.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Chol/HDL Ratio",
+              "ref_high": 5,
+              "ref_low": null,
+              "ref_text": "<5.0",
+              "unit": null,
+              "value": "4.8",
+              "value_num": 4.8
+            },
+            "value_text": "Chol/HDL Ratio"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "Riverside Medical Laboratory\n4100 Oak Street, Suite 200, Springfield, IL 62704\nPatient: DOE, JANE M          DOB: 03/14/1978          Sex: F\nPhysician: Dr. Robert Chen          Account #: 88213\nCollected: 09/10/2026 07:45 AM     Received: 09/10/2026 09:02 AM     Reported: 09/11/2026 04:10 PM\nLIPID PANEL\nTest                    Result    Flag   Units    Reference Range\nCholesterol, Total      212       H      mg/dL    <200\nTriglycerides           168       H      mg/dL    <150\nHDL Cholesterol         44               mg/dL    >40\nLDL Cholesterol, Calc   134       H      mg/dL    <100\nNon-HDL Cholesterol     168              mg/dL    <130\nChol/HDL Ratio          4.8                       <5.0\nFasting: Yes\nPage 1 of 1"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "lipid_panel_us"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Total T3 1.12 ng/mL 0.80 - 2.00",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Total T3",
+              "ref_high": 2,
+              "ref_low": 0.8,
+              "ref_text": "0.80 - 2.00",
+              "unit": "ng/mL",
+              "value": "1.12",
+              "value_num": 1.12
+            },
+            "value_text": "Total T3"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Total T4 7.9 μg/dL 5.1 - 14.1",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Total T4",
+              "ref_high": 14.1,
+              "ref_low": 5.1,
+              "ref_text": "5.1 - 14.1",
+              "unit": "µg/dL",
+              "value": "7.9",
+              "value_num": 7.9
+            },
+            "value_text": "Total T4"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "TSH (Ultrasensitive) 6.84 H μIU/mL 0.27 - 4.20",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "TSH (Ultrasensitive)",
+              "ref_high": 4.2,
+              "ref_low": 0.27,
+              "ref_text": "0.27 - 4.20",
+              "unit": "µIU/mL",
+              "value": "6.84",
+              "value_num": 6.84
+            },
+            "value_text": "TSH (Ultrasensitive)"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "CITY CARE PATHOLOGY LABORATORY\nName: Mrs. Sunita Rao    Age: 52 Years    Gender: Female\nSample Collected On: 05-Sep-2026 09:10    Report Date: 06-Sep-2026\nReferred By: Dr. P. Iyer\nTHYROID PROFILE (T3, T4, TSH)\nSpecimen: Serum\nInvestigation              Observed Value    Units      Biological Reference Interval\nTotal T3                   1.12              ng/mL      0.80 - 2.00\nTotal T4                   7.9               µg/dL      5.1 - 14.1\nTSH (Ultrasensitive)       6.84    H         µIU/mL     0.27 - 4.20\nInterpretation: Elevated TSH with normal T3/T4 suggests subclinical hypothyroidism. Correlate clinically.\nDr. Kavita Menon, MD Pathology"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "thyroid_profile"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "HbA1c 7.8 % 4.0 - 5.6",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "HbA1c",
+              "ref_high": 5.6,
+              "ref_low": 4,
+              "ref_text": "4.0 - 5.6",
+              "unit": "%",
+              "value": "7.8",
+              "value_num": 7.8
+            },
+            "value_text": "HbA1c"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Estimated Average Glucose 177 mg/dL",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Estimated Average Glucose",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": "mg/dL",
+              "value": "177",
+              "value_num": 177
+            },
+            "value_text": "Estimated Average Glucose"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Glucose, Fasting (Plasma) 132 mg/dL 70 - 100",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Glucose, Fasting (Plasma)",
+              "ref_high": 100,
+              "ref_low": 70,
+              "ref_text": "70 - 100",
+              "unit": "mg/dL",
+              "value": "132",
+              "value_num": 132
+            },
+            "value_text": "Glucose, Fasting (Plasma)"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Glucose, Post Prandial (2 hrs) 198 mg/dL < 140",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Glucose, Post Prandial (2 hrs)",
+              "ref_high": 140,
+              "ref_low": null,
+              "ref_text": "< 140",
+              "unit": "mg/dL",
+              "value": "198",
+              "value_num": 198
+            },
+            "value_text": "Glucose, Post Prandial (2 hrs)"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "METRO LABS\nPatient Name: Arjun Nair    Age/Sex: 45/M\nCollection Date: 14/09/2026    Report Date: 14/09/2026\nTest    Result    Unit    Reference Range\nGLYCATED HAEMOGLOBIN (HbA1c)\nHbA1c    7.8    %    4.0 - 5.6\nEstimated Average Glucose    177    mg/dL\nInterpretation:\nNon-diabetic    < 5.7\nPrediabetes    5.7 - 6.4\nDiabetes    >= 6.5\nBLOOD GLUCOSE FASTING\nGlucose, Fasting (Plasma)    132    mg/dL    70 - 100\nGlucose, Post Prandial (2 hrs)    198    mg/dL    < 140"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "hba1c_glucose"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Bilirubin Total 1.8 H mg/dL 0.3 - 1.2",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Bilirubin Total",
+              "ref_high": 1.2,
+              "ref_low": 0.3,
+              "ref_text": "0.3 - 1.2",
+              "unit": "mg/dL",
+              "value": "1.8",
+              "value_num": 1.8
+            },
+            "value_text": "Bilirubin Total"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Bilirubin Direct 0.5 H mg/dL 0.0 - 0.3",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Bilirubin Direct",
+              "ref_high": 0.3,
+              "ref_low": 0,
+              "ref_text": "0.0 - 0.3",
+              "unit": "mg/dL",
+              "value": "0.5",
+              "value_num": 0.5
+            },
+            "value_text": "Bilirubin Direct"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Bilirubin Indirect 1.3 mg/dL 0.2 - 0.9",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Bilirubin Indirect",
+              "ref_high": 0.9,
+              "ref_low": 0.2,
+              "ref_text": "0.2 - 0.9",
+              "unit": "mg/dL",
+              "value": "1.3",
+              "value_num": 1.3
+            },
+            "value_text": "Bilirubin Indirect"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "SGOT (AST) 86 H U/L 5 - 40",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "SGOT (AST)",
+              "ref_high": 40,
+              "ref_low": 5,
+              "ref_text": "5 - 40",
+              "unit": "U/L",
+              "value": "86",
+              "value_num": 86
+            },
+            "value_text": "SGOT (AST)"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "SGPT (ALT) 112 H U/L 5 - 41",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "SGPT (ALT)",
+              "ref_high": 41,
+              "ref_low": 5,
+              "ref_text": "5 - 41",
+              "unit": "U/L",
+              "value": "112",
+              "value_num": 112
+            },
+            "value_text": "SGPT (ALT)"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Alkaline Phosphatase 98 U/L 40 - 129",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Alkaline Phosphatase",
+              "ref_high": 129,
+              "ref_low": 40,
+              "ref_text": "40 - 129",
+              "unit": "U/L",
+              "value": "98",
+              "value_num": 98
+            },
+            "value_text": "Alkaline Phosphatase"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Total Protein 7.1 g/dL 6.4 - 8.3",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Total Protein",
+              "ref_high": 8.3,
+              "ref_low": 6.4,
+              "ref_text": "6.4 - 8.3",
+              "unit": "g/dL",
+              "value": "7.1",
+              "value_num": 7.1
+            },
+            "value_text": "Total Protein"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Albumin 4.2 g/dL 3.5 - 5.2",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Albumin",
+              "ref_high": 5.2,
+              "ref_low": 3.5,
+              "ref_text": "3.5 - 5.2",
+              "unit": "g/dL",
+              "value": "4.2",
+              "value_num": 4.2
+            },
+            "value_text": "Albumin"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "A/G Ratio 1.45 1.1 - 2.2",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "A/G Ratio",
+              "ref_high": 2.2,
+              "ref_low": 1.1,
+              "ref_text": "1.1 - 2.2",
+              "unit": null,
+              "value": "1.45",
+              "value_num": 1.45
+            },
+            "value_text": "A/G Ratio"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 03:05 PM\nLIVER FUNCTION TEST (LFT)\nTest Name              Result        Unit     Biological Reference Interval\nBilirubin Total        1.8     H     mg/dL    0.3 - 1.2\nBilirubin Direct       0.5     H     mg/dL    0.0 - 0.3\nBilirubin Indirect     1.3           mg/dL    0.2 - 0.9\nSGOT (AST)             86      H     U/L      5 - 40\nSGPT (ALT)             112     H     U/L      5 - 41\nAlkaline Phosphatase   98            U/L      40 - 129\nTotal Protein          7.1           g/dL     6.4 - 8.3\nAlbumin                4.2           g/dL     3.5 - 5.2\nA/G Ratio              1.45                   1.1 - 2.2"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "lft"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "Specific Gravity 1.020 1.005 - 1.030",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Specific Gravity",
+              "ref_high": 1.03,
+              "ref_low": 1.005,
+              "ref_text": "1.005 - 1.030",
+              "unit": null,
+              "value": "1.020",
+              "value_num": 1.02
+            },
+            "value_text": "Specific Gravity"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "pH 6.0 5.0 - 8.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "pH",
+              "ref_high": 8,
+              "ref_low": 5,
+              "ref_text": "5.0 - 8.0",
+              "unit": null,
+              "value": "6.0",
+              "value_num": 6
+            },
+            "value_text": "pH"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Protein Trace Nil",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "abnormal",
+              "name": "Protein",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Nil",
+              "unit": null,
+              "value": "Trace",
+              "value_num": null
+            },
+            "value_text": "Protein"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Glucose Nil Nil",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Glucose",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Nil",
+              "unit": null,
+              "value": "Nil",
+              "value_num": null
+            },
+            "value_text": "Glucose"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Ketones Negative Negative",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Ketones",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Negative",
+              "unit": null,
+              "value": "Negative",
+              "value_num": null
+            },
+            "value_text": "Ketones"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Blood Positive Negative",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "abnormal",
+              "name": "Blood",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Negative",
+              "unit": null,
+              "value": "Positive",
+              "value_num": null
+            },
+            "value_text": "Blood"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Pus Cells 4-6 /hpf 0 - 5",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Pus Cells",
+              "ref_high": 5,
+              "ref_low": 0,
+              "ref_text": "0 - 5",
+              "unit": "/hpf",
+              "value": "4-6",
+              "value_num": null
+            },
+            "value_text": "Pus Cells"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "RBCs Nil /hpf 0 - 2",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "RBCs",
+              "ref_high": 2,
+              "ref_low": 0,
+              "ref_text": "0 - 2",
+              "unit": "/hpf",
+              "value": "Nil",
+              "value_num": null
+            },
+            "value_text": "RBCs"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Epithelial Cells 2-3 /hpf 0 - 5",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Epithelial Cells",
+              "ref_high": 5,
+              "ref_low": 0,
+              "ref_text": "0 - 5",
+              "unit": "/hpf",
+              "value": "2-3",
+              "value_num": null
+            },
+            "value_text": "Epithelial Cells"
+          },
+          {
+            "confidence": 0.7,
+            "evidence": "Casts Absent",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Casts",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "Absent",
+              "value_num": null
+            },
+            "value_text": "Casts"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Ms. ANANYA IYER          Age/Sex : 27 Yrs/F\nCollected On : 11/09/2026 07:50 AM       Reported On : 11/09/2026 12:30 PM\nURINE ROUTINE EXAMINATION\nSpecimen: Urine (random)\nTest              Result      Unit      Biological Reference Interval\nPHYSICAL EXAMINATION\nColour            Pale Yellow           Pale Yellow\nAppearance        Clear                 Clear\nSpecific Gravity  1.020                 1.005 - 1.030\nCHEMICAL EXAMINATION\npH                6.0                   5.0 - 8.0\nProtein           Trace                 Nil\nGlucose           Nil                   Nil\nKetones           Negative              Negative\nBlood             Positive              Negative\nMICROSCOPIC EXAMINATION\nPus Cells         4-6         /hpf      0 - 5\nRBCs              Nil         /hpf      0 - 2\nEpithelial Cells  2-3         /hpf      0 - 5\nCasts             Absent"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "urine_routine_qualitative"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.7,
+            "evidence": "Axis: Normal",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Axis",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "Normal",
+              "value_num": null
+            },
+            "value_text": "Axis"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "HEARTLINE CARDIAC CLINIC\nELECTROCARDIOGRAM (ECG) REPORT\nName: Suresh Pillai   Age: 66 yrs   Sex: M\nDate of Test: 10/09/2026   Time: 11:20\nHeart Rate: 54 bpm\nRhythm: Sinus bradycardia\nPR Interval: 168 ms\nQRS Duration: 92 ms\nQTc: 412 ms\nAxis: Normal\nInterpretation: Sinus bradycardia. No acute ST-T changes.\nImpression: Sinus bradycardia\nDr. Latha Krishnan, DM (Cardiology)"
+        ],
+        "record_type": "diagnostic_report"
+      },
+      "name": "ecg_units_not_in_list_rejected"
+    },
+    {
+      "expected": {
+        "items": []
+      },
+      "input": {
+        "pages": [
+          "WELLNESS PHARMACY & DIAGNOSTICS\nGSTIN: 27AABCW1234K1Z5\nTAX INVOICE\nInvoice No: WP/26-27/01873    Invoice Date: 13/09/2026\nPatient: Priya Deshpande    Doctor: Dr. Sanjay Kulkarni\nSr  Item                          Batch     Exp      Qty   Rate     Amount\n1   Azithromycin 500mg Tab (3)    AZ2231    08/27    1     118.50   118.50\n2   Paracetamol 650mg Tab (15)    PC7781    11/27    1     32.00    32.00\n3   CBC Test                      -         -        1     350.00   350.00\nSub Total                                                           500.50\nCGST 6%                                                             9.12\nSGST 6%                                                             9.12\nGrand Total                                                         ₹ 518.74\nPaid by UPI"
+        ],
+        "record_type": "bill"
+      },
+      "name": "invoice_not_applied"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Hemoglobin 13.5 g/dL 13.0-17.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Hemoglobin",
+              "ref_high": 17,
+              "ref_low": 13,
+              "ref_text": "13.0-17.0",
+              "unit": "g/dL",
+              "value": "13.5",
+              "value_num": 13.5
+            },
+            "value_text": "Hemoglobin"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "WBC 12.4 H x10^3/uL 4.0-11.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "WBC",
+              "ref_high": 11,
+              "ref_low": 4,
+              "ref_text": "4.0-11.0",
+              "unit": "10^3/µL",
+              "value": "12.4",
+              "value_num": 12.4
+            },
+            "value_text": "WBC"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Platelets 140 L 10^3/μL 150-400",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Platelets",
+              "ref_high": 400,
+              "ref_low": 150,
+              "ref_text": "150-400",
+              "unit": "10^3/µL",
+              "value": "140",
+              "value_num": 140
+            },
+            "value_text": "Platelets"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Ferritin 8 ng/mL (15-150)",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Ferritin",
+              "ref_high": 150,
+              "ref_low": 15,
+              "ref_text": "(15-150)",
+              "unit": "ng/mL",
+              "value": "8",
+              "value_num": 8
+            },
+            "value_text": "Ferritin"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Vitamin B12 180 pg/mL 211 - 911 L",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Vitamin B12",
+              "ref_high": 911,
+              "ref_low": 211,
+              "ref_text": "211 - 911",
+              "unit": "pg/mL",
+              "value": "180",
+              "value_num": 180
+            },
+            "value_text": "Vitamin B12"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Creatinine 1.4 mg/dL 0.7 to 1.3",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Creatinine",
+              "ref_high": 1.3,
+              "ref_low": 0.7,
+              "ref_text": "0.7 to 1.3",
+              "unit": "mg/dL",
+              "value": "1.4",
+              "value_num": 1.4
+            },
+            "value_text": "Creatinine"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "eGFR (CKD-EPI 2021) 58 mL/min/1.73m2 >60",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "eGFR (CKD-EPI 2021)",
+              "ref_high": null,
+              "ref_low": 60,
+              "ref_text": ">60",
+              "unit": "mL/min/1.73m²",
+              "value": "58",
+              "value_num": 58
+            },
+            "value_text": "eGFR (CKD-EPI 2021)"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "Hemoglobin 13.5 g/dL 13.0-17.0\nWBC 12.4 H x10^3/uL 4.0-11.0\nPlatelets 140 L 10^3/µL 150-400\nFerritin 8 ng/mL (15-150)\nVitamin B12 180 pg/mL 211 - 911 L\nCreatinine 1.4 mg/dL 0.7 to 1.3\neGFR (CKD-EPI 2021) 58 mL/min/1.73m² >60"
+        ],
+        "record_type": "other"
+      },
+      "name": "single_space_pdf_text_layer",
+      "notes": "Applies because >= 3 lines carry number+unit even though the type is other."
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Potassium: 6.8HH mmol/L 3.5 - 5.1",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "critical_high",
+              "name": "Potassium",
+              "ref_high": 5.1,
+              "ref_low": 3.5,
+              "ref_text": "3.5 - 5.1",
+              "unit": "mmol/L",
+              "value": "6.8",
+              "value_num": 6.8
+            },
+            "value_text": "Potassium"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Sodium: 128L mmol/L 135 - 145",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Sodium",
+              "ref_high": 145,
+              "ref_low": 135,
+              "ref_text": "135 - 145",
+              "unit": "mmol/L",
+              "value": "128",
+              "value_num": 128
+            },
+            "value_text": "Sodium"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Glucose Random 42 critical mg/dL 70 - 140",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "critical_low",
+              "name": "Glucose Random",
+              "ref_high": 140,
+              "ref_low": 70,
+              "ref_text": "70 - 140",
+              "unit": "mg/dL",
+              "value": "42",
+              "value_num": 42
+            },
+            "value_text": "Glucose Random"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Troponin I 0.9* ng/mL <0.04",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Troponin I",
+              "ref_high": 0.04,
+              "ref_low": null,
+              "ref_text": "<0.04",
+              "unit": "ng/mL",
+              "value": "0.9",
+              "value_num": 0.9
+            },
+            "value_text": "Troponin I"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Haemoglobin 15.1 ↑ g/dL 12.0 - 15.0",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "Haemoglobin",
+              "ref_high": 15,
+              "ref_low": 12,
+              "ref_text": "12.0 - 15.0",
+              "unit": "g/dL",
+              "value": "15.1",
+              "value_num": 15.1
+            },
+            "value_text": "Haemoglobin"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "Potassium: 6.8HH mmol/L 3.5 - 5.1\nSodium: 128L mmol/L 135 - 145\nGlucose Random 42 critical mg/dL 70 - 140\nTroponin I 0.9* ng/mL <0.04\nHaemoglobin 15.1 ↑ g/dL 12.0 - 15.0"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "attached_flags_and_critical"
+    },
+    {
+      "expected": {
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Platelet Count 1,50,000 /cumm 1,50,000 - 4,10,000 Impedance",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Platelet Count",
+              "ref_high": 410000,
+              "ref_low": 150000,
+              "ref_text": "1,50,000 - 4,10,000",
+              "unit": "/cumm",
+              "value": "1,50,000",
+              "value_num": 150000
+            },
+            "value_text": "Platelet Count"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Haemoglobin 12.9 gm/dl 12 - 15 Photometry",
+            "key": "test_result",
+            "source_page": 0,
+            "value_json": {
+              "flag": "normal",
+              "name": "Haemoglobin",
+              "ref_high": 15,
+              "ref_low": 12,
+              "ref_text": "12 - 15",
+              "unit": "g/dL",
+              "value": "12.9",
+              "value_num": 12.9
+            },
+            "value_text": "Haemoglobin"
+          }
+        ]
+      },
+      "input": {
+        "pages": [
+          "Platelet Count  1,50,000  /cumm  1,50,000 - 4,10,000  Impedance\nHaemoglobin  12.9  gm/dl  12 - 15  Photometry"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "lakh_grouping_and_method_column"
+    },
+    {
+      "expected": {
+        "items": []
+      },
+      "input": {
+        "pages": [
+          "Age 34 Years Sex Male\nPlot 12, Sector 5, Noida 201301\nPage 1 of 2\nSample No 45521\nPh: 0124-4567890\nDesirable < 200\nBorderline High 200-239"
+        ],
+        "record_type": "lab_report"
+      },
+      "name": "demographics_and_addresses_rejected"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "parse_lab_rows",
+  "version": 1
+}

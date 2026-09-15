@@ -1,0 +1,635 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "dropped": [],
+        "error": null,
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "Collected On : 12/09/2026 08:15 AM",
+            "from_image": false,
+            "key": "collection_date",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Reported On : 12/09/2026",
+            "from_image": false,
+            "key": "report_date",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "SUNRISE DIAGNOSTICS & PATH LAB",
+            "from_image": false,
+            "key": "facility",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics & Path Lab"
+          },
+          {
+            "confidence": 0.85,
+            "evidence": "Dr. Neha Gupta, MD (Pathology)",
+            "from_image": false,
+            "key": "doctor_name",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Neha Gupta"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Haemoglobin 11.2 L g/dL 13.0 - 17.0",
+            "from_image": false,
+            "key": "test_result",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Haemoglobin",
+              "ref_high": 17,
+              "ref_low": 13,
+              "ref_text": "13.0 - 17.0",
+              "unit": "g/dL",
+              "value": "11.2",
+              "value_num": 11.2
+            },
+            "value_text": "Haemoglobin"
+          },
+          {
+            "confidence": 0.9,
+            "evidence": "Platelet Count 1.45 L lakhs/cumm 1.5 - 4.1",
+            "from_image": false,
+            "key": "test_result",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "flag": "low",
+              "name": "Platelet Count",
+              "ref_high": 4.1,
+              "ref_low": 1.5,
+              "ref_text": "1.5 - 4.1",
+              "unit": "lakhs/cumm",
+              "value": "1.45",
+              "value_num": 1.45
+            },
+            "value_text": "Platelet Count"
+          }
+        ],
+        "record_type": {
+          "confidence": 0.9,
+          "method": "ai_cloud",
+          "record_type": "lab_report"
+        },
+        "report_name": {
+          "confidence": 0.7,
+          "evidence": null,
+          "from_image": false,
+          "key": "report_name",
+          "method": "ai_cloud",
+          "source_page": 0,
+          "value_json": null,
+          "value_text": "Complete Blood Count (CBC)"
+        },
+        "summary": {
+          "source_pages": [
+            0
+          ],
+          "text": "Haemoglobin 11.2 g/dL and platelet count are below the report ranges; ESR is above it."
+        }
+      },
+      "input": {
+        "ai_json": "{\"record_type\": \"lab_report\", \"record_type_confidence\": 0.97, \"report_name\": \"Complete Blood Count (CBC)\", \"dates\": [{\"key\": \"collection_date\", \"value\": \"2026-09-12\", \"evidence\": \"Collected On : 12/09/2026 08:15 AM\", \"source_page\": 1, \"confidence\": 0.9}, {\"key\": \"report_date\", \"value\": \"2026-09-12\", \"evidence\": \"Reported On : 12/09/2026\", \"source_page\": 1, \"confidence\": 0.9}], \"fields\": [{\"key\": \"facility\", \"value\": \"Sunrise Diagnostics & Path Lab\", \"evidence\": \"SUNRISE DIAGNOSTICS & PATH LAB\", \"source_page\": 1, \"confidence\": 0.8}, {\"key\": \"doctor_name\", \"value\": \"Neha Gupta\", \"evidence\": \"Dr. Neha Gupta, MD (Pathology)\", \"source_page\": 1, \"confidence\": 0.85}], \"test_results\": [{\"name\": \"Haemoglobin\", \"value\": \"11.2\", \"unit\": \"g/dL\", \"ref_text\": \"13.0 - 17.0\", \"flag\": \"high\", \"evidence\": \"Haemoglobin                   11.2   L    g/dL           13.0 - 17.0\", \"source_page\": 1, \"confidence\": 0.95}, {\"name\": \"Platelet Count\", \"value\": \"1.45\", \"unit\": \"lakhs/cumm\", \"ref_text\": \"1.5 - 4.1\", \"flag\": \"low\", \"evidence\": \"Platelet Count 1.45 L lakhs/cumm 1.5 - 4.1\", \"source_page\": 1, \"confidence\": 0.9}], \"medications\": [], \"summary\": {\"text\": \"Haemoglobin 11.2 g/dL and platelet count are below the report ranges; ESR is above it.\", \"source_pages\": [1]}}",
+        "date_order": "dmy",
+        "mode": "cloud",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1"
+        ],
+        "schema_valid": true,
+        "today": "2026-09-15"
+      },
+      "name": "valid_cloud_response",
+      "notes": "Evidence whitespace differs from the page (collapsed); the model flag \"high\" for Haemoglobin is replaced by the printed L marker."
+    },
+    {
+      "expected": {
+        "dropped": [],
+        "error": null,
+        "items": [
+          {
+            "confidence": 0.85,
+            "evidence": "2. Tab. Paracetamol 650 mg 1-0-1 x 5 days",
+            "from_image": false,
+            "key": "medication",
+            "method": "ai_local",
+            "source_page": 0,
+            "value_json": {
+              "dose": null,
+              "duration": "x 5 days",
+              "form": "tablet",
+              "frequency": "1-0-1",
+              "instructions": null,
+              "name": "Paracetamol",
+              "strength": "650 mg"
+            },
+            "value_text": "Paracetamol"
+          }
+        ],
+        "record_type": {
+          "confidence": 0.8,
+          "method": "ai_local",
+          "record_type": "prescription"
+        },
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": "Here is the JSON:\n```json\n{\"record_type\": \"prescription\", \"record_type_confidence\": 0.8, \"report_name\": null, \"dates\": [], \"fields\": [], \"test_results\": [], \"medications\": [{\"name\": \"Paracetamol\", \"strength\": \"650 mg\", \"form\": \"tablet\", \"dose\": null, \"frequency\": \"1-0-1\", \"duration\": \"x 5 days\", \"instructions\": \"after food\", \"evidence\": \"2. Tab. Paracetamol 650 mg 1-0-1 x 5 days\", \"source_page\": 1, \"confidence\": 0.85}], \"summary\": null}\n```",
+        "date_order": "dmy",
+        "mode": "local",
+        "pages": [
+          "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "code_fence_and_prose_wrapper",
+      "notes": "instructions \"after food\" is not in the evidence line -> nulled; the item survives."
+    },
+    {
+      "expected": {
+        "dropped": [
+          {
+            "index": 0,
+            "kind": "dates",
+            "reason": "date_not_in_evidence"
+          },
+          {
+            "index": 1,
+            "kind": "dates",
+            "reason": "unknown_key"
+          },
+          {
+            "index": 2,
+            "kind": "dates",
+            "reason": "missing_source_page"
+          },
+          {
+            "index": 0,
+            "kind": "fields",
+            "reason": "value_not_in_evidence"
+          },
+          {
+            "index": 1,
+            "kind": "fields",
+            "reason": "value_not_in_evidence"
+          },
+          {
+            "index": 2,
+            "kind": "fields",
+            "reason": "bad_source_page"
+          },
+          {
+            "index": 3,
+            "kind": "fields",
+            "reason": "number_not_in_evidence"
+          },
+          {
+            "index": 0,
+            "kind": "test_results",
+            "reason": "number_not_in_evidence"
+          },
+          {
+            "index": 1,
+            "kind": "test_results",
+            "reason": "evidence_not_found"
+          },
+          {
+            "index": 0,
+            "kind": "medications",
+            "reason": "value_not_in_evidence"
+          },
+          {
+            "index": 0,
+            "kind": "summary",
+            "reason": "number_not_in_pages"
+          }
+        ],
+        "error": null,
+        "items": [
+          {
+            "confidence": 0.9,
+            "evidence": "ESR 28 H mm/1st hr 0 - 15",
+            "from_image": false,
+            "key": "test_result",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "flag": "high",
+              "name": "ESR",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": "mm/hr",
+              "value": "28",
+              "value_num": 28
+            },
+            "value_text": "ESR"
+          }
+        ],
+        "record_type": {
+          "confidence": 0.9,
+          "method": "ai_cloud",
+          "record_type": "lab_report"
+        },
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": {
+          "dates": [
+            {
+              "confidence": 0.9,
+              "evidence": "Reported On : 12/09/2026",
+              "key": "report_date",
+              "source_page": 1,
+              "value": "2026-09-13"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Reported On",
+              "key": "date_of_birth",
+              "source_page": 1,
+              "value": "1990-01-01"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Collected On : 12/09/2026",
+              "key": "collection_date",
+              "value": "2026-09-12"
+            }
+          ],
+          "fields": [
+            {
+              "confidence": 0.9,
+              "evidence": "Dr. Neha Gupta, MD (Pathology)",
+              "key": "doctor_name",
+              "source_page": 1,
+              "value": "Rajesh Khanna"
+            },
+            {
+              "confidence": 0.7,
+              "evidence": "Haemoglobin 11.2 L g/dL",
+              "key": "diagnosis",
+              "source_page": 1,
+              "value": "Iron deficiency anaemia"
+            },
+            {
+              "confidence": 0.7,
+              "evidence": "SUNRISE DIAGNOSTICS",
+              "key": "facility",
+              "source_page": 3,
+              "value": "Sunrise Diagnostics"
+            },
+            {
+              "confidence": 0.7,
+              "evidence": "Age/Sex : 34 Yrs/M",
+              "key": "patient_age",
+              "source_page": 1,
+              "value": "43 years"
+            }
+          ],
+          "medications": [
+            {
+              "confidence": 0.5,
+              "evidence": "Haemoglobin 11.2",
+              "name": "Ferrous sulphate",
+              "source_page": 1,
+              "strength": "200 mg"
+            }
+          ],
+          "record_type": "lab_report",
+          "record_type_confidence": 1.4,
+          "report_name": "Iron Studies",
+          "summary": {
+            "source_pages": [
+              1
+            ],
+            "text": "Haemoglobin is 10.2 g/dL, suggesting iron deficiency."
+          },
+          "test_results": [
+            {
+              "confidence": 0.9,
+              "evidence": "Haemoglobin 11.2 L g/dL 13.0 - 17.0",
+              "flag": "low",
+              "name": "Haemoglobin",
+              "ref_text": "13.0 - 17.0",
+              "source_page": 1,
+              "unit": "g/dL",
+              "value": "10.2"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Serum Ferritin 8 ng/mL 30-400",
+              "flag": "low",
+              "name": "Serum Ferritin",
+              "ref_text": "30-400",
+              "source_page": 1,
+              "unit": "ng/mL",
+              "value": "8"
+            },
+            {
+              "confidence": 2,
+              "evidence": "ESR 28 H mm/1st hr 0 - 15",
+              "flag": "high",
+              "name": "ESR",
+              "ref_text": "0 - 20",
+              "source_page": 1,
+              "unit": "mm/hr",
+              "value": "28"
+            }
+          ]
+        },
+        "date_order": "dmy",
+        "mode": "cloud",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "fabrications_dropped",
+      "notes": "Every invented value, date, key, page and summary number is dropped; ESR ref_text 0 - 20 is not printed -> nulled and the flag comes from the printed H."
+    },
+    {
+      "expected": {
+        "dropped": [],
+        "error": null,
+        "items": [
+          {
+            "confidence": 0.8,
+            "evidence": "Report Date: 05/06/2026",
+            "from_image": false,
+            "key": "report_date",
+            "method": "ai_local",
+            "source_page": 0,
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-05-06"
+          }
+        ],
+        "record_type": null,
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": {
+          "dates": [
+            {
+              "confidence": 0.8,
+              "evidence": "Report Date: 05/06/2026",
+              "key": "report_date",
+              "source_page": 1,
+              "value": "2026-05-06"
+            }
+          ]
+        },
+        "date_order": "dmy",
+        "mode": "local",
+        "pages": [
+          "Report Date: 05/06/2026"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "ambiguous_date_either_order_accepted"
+    },
+    {
+      "expected": {
+        "dropped": [],
+        "error": null,
+        "items": [
+          {
+            "confidence": 0.5,
+            "evidence": "Hairline fracture distal radius",
+            "from_image": true,
+            "key": "diagnosis",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": null,
+            "value_text": "Hairline fracture distal radius"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Impression: Normal study",
+            "from_image": true,
+            "key": "diagnosis",
+            "method": "ai_cloud",
+            "source_page": 1,
+            "value_json": null,
+            "value_text": "Normal study"
+          }
+        ],
+        "record_type": {
+          "confidence": 0.7,
+          "method": "ai_cloud",
+          "record_type": "imaging_report"
+        },
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": {
+          "fields": [
+            {
+              "confidence": 0.8,
+              "evidence": "Hairline fracture distal radius",
+              "key": "diagnosis",
+              "source_page": 1,
+              "value": "Hairline fracture distal radius"
+            },
+            {
+              "confidence": 0.8,
+              "evidence": "Impression: Normal study",
+              "key": "diagnosis",
+              "source_page": 2,
+              "value": "Normal study"
+            }
+          ],
+          "record_type": "imaging_report",
+          "record_type_confidence": 0.7
+        },
+        "date_order": "dmy",
+        "image_pages": [
+          1,
+          2
+        ],
+        "mode": "cloud",
+        "pages": [
+          "",
+          "Impression: Normal study"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "image_page_without_text_capped",
+      "notes": "Page 1 was sent as an image with no OCR text: kept, confidence capped at 0.5, from_image. Page 2 has OCR text and is validated normally (still from_image)."
+    },
+    {
+      "expected": {
+        "dropped": [],
+        "error": "parse_error",
+        "items": [],
+        "record_type": null,
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": "Sorry, I cannot help with that.",
+        "date_order": "dmy",
+        "mode": "cloud",
+        "pages": [
+          "x"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "parse_error"
+    },
+    {
+      "expected": {
+        "dropped": [],
+        "error": "parse_error",
+        "items": [],
+        "record_type": null,
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": "{\"record_type\": \"lab_report\", \"dates\": [{\"key\": \"report_date\"",
+        "date_order": "dmy",
+        "mode": "local",
+        "pages": [
+          "x"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "truncated_json"
+    },
+    {
+      "expected": {
+        "dropped": [],
+        "error": null,
+        "items": [
+          {
+            "confidence": 0.6,
+            "evidence": "HEALTH CHECK: Sep 2026",
+            "from_image": false,
+            "key": "report_date",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "precision": "month"
+            },
+            "value_text": "2026-09-01"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Protein Trace Nil",
+            "from_image": false,
+            "key": "test_result",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "flag": "abnormal",
+              "name": "Protein",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Nil",
+              "unit": null,
+              "value": "Trace",
+              "value_num": null
+            },
+            "value_text": "Protein"
+          },
+          {
+            "confidence": 0.8,
+            "evidence": "Blood Positive Negative",
+            "from_image": false,
+            "key": "test_result",
+            "method": "ai_cloud",
+            "source_page": 0,
+            "value_json": {
+              "flag": "unknown",
+              "name": "Blood",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "Negative",
+              "value_num": null
+            },
+            "value_text": "Blood"
+          }
+        ],
+        "record_type": null,
+        "report_name": null,
+        "summary": null
+      },
+      "input": {
+        "ai_json": {
+          "dates": [
+            {
+              "confidence": 0.6,
+              "evidence": "HEALTH CHECK: Sep 2026",
+              "key": "report_date",
+              "source_page": 1,
+              "value": "2026-09"
+            }
+          ],
+          "test_results": [
+            {
+              "confidence": 0.8,
+              "evidence": "Protein Trace Nil",
+              "flag": "abnormal",
+              "name": "Protein",
+              "ref_text": "Nil",
+              "source_page": 1,
+              "unit": null,
+              "value": "Trace"
+            },
+            {
+              "confidence": 0.8,
+              "evidence": "Blood Positive Negative",
+              "flag": "normal",
+              "name": "Blood",
+              "ref_text": null,
+              "source_page": 1,
+              "unit": null,
+              "value": "Negative"
+            }
+          ]
+        },
+        "date_order": "dmy",
+        "mode": "cloud",
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Ms. ANANYA IYER          Age/Sex : 27 Yrs/F\nCollected On : 11/09/2026 07:50 AM       Reported On : 11/09/2026 12:30 PM\nURINE ROUTINE EXAMINATION\nSpecimen: Urine (random)\nTest              Result      Unit      Biological Reference Interval\nPHYSICAL EXAMINATION\nColour            Pale Yellow           Pale Yellow\nAppearance        Clear                 Clear\nSpecific Gravity  1.020                 1.005 - 1.030\nCHEMICAL EXAMINATION\npH                6.0                   5.0 - 8.0\nProtein           Trace                 Nil\nGlucose           Nil                   Nil\nKetones           Negative              Negative\nBlood             Positive              Negative\nMICROSCOPIC EXAMINATION\nPus Cells         4-6         /hpf      0 - 5\nRBCs              Nil         /hpf      0 - 2\nEpithelial Cells  2-3         /hpf      0 - 5\nCasts             Absent\nHEALTH CHECK: Sep 2026"
+        ],
+        "today": "2026-09-15"
+      },
+      "name": "qualitative_result_and_month_date",
+      "notes": "Qualitative flags are recomputed only for numbers; \"Negative\" for Blood is in the evidence text but is not the printed result -- the validator cannot know; it is kept (documented limitation)."
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "validate_ai",
+  "version": 1
+}

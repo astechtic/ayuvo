@@ -10,6 +10,10 @@ struct RecordsHomeView: View {
     @State private var searchText = ""
     @State private var chip: RecordsFilterChip = .all
     @State private var searchTask: Task<Void, Never>?
+    @State private var filters = RecordQuery()
+    @State private var showFilters = false
+    @State private var reviewRecordID: String?
+    @State private var consentWaiting: [String] = []
 
     @State private var showAddSheet = false
     @State private var pendingAction: AddRecordAction?
@@ -50,6 +54,7 @@ struct RecordsHomeView: View {
                 .animation(.snappy, value: store.banner)
         }
         .task {
+            store.refreshAIEnvironment()
             if !store.hasLoadedOnce { await store.reload() }
         }
         .onChange(of: searchText) { _, newValue in
@@ -57,11 +62,31 @@ struct RecordsHomeView: View {
             searchTask = Task {
                 try? await Task.sleep(nanoseconds: 150_000_000)
                 guard !Task.isCancelled else { return }
-                store.setQuery(chip.query(text: newValue))
+                store.runSearch(text: newValue, base: baseQuery)
             }
         }
-        .onChange(of: chip) { _, newValue in
-            store.setQuery(newValue.query(text: searchText))
+        .onChange(of: chip) { _, _ in
+            store.runSearch(text: searchText, base: baseQuery)
+        }
+        .onChange(of: filters) { _, _ in
+            store.runSearch(text: searchText, base: baseQuery)
+        }
+        .onChange(of: store.reviewRequest) { _, id in
+            guard let id else { return }
+            store.reviewRequest = nil
+            if reviewRecordID == nil, !showAddSheet, store.duplicatePrompts.isEmpty { reviewRecordID = id }
+        }
+        .task(id: store.processingSummary.awaitingConsent) {
+            consentWaiting = store.processingSummary.awaitingConsent > 0 ? await store.awaitingConsentIDs() : []
+        }
+        .sheet(isPresented: $showFilters) {
+            RecordsFilterSheet(filters: $filters)
+        }
+        .sheet(item: Binding(get: { reviewRecordID.map(RecordIDBox.init) }, set: { reviewRecordID = $0?.id })) { box in
+            RecordReviewSheet(recordID: box.id)
+        }
+        .sheet(item: Binding(get: { store.duplicateSheetRequest }, set: { store.duplicateSheetRequest = $0 })) { prompt in
+            RecordDuplicateSheet(prompt: prompt)
         }
         .onChange(of: store.navigationRequest) { _, id in
             guard let id else { return }
@@ -174,8 +199,12 @@ struct RecordsHomeView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 8)
 
+                    intelligenceSections
+
                     if store.isLoadingFirstPage && store.records.isEmpty {
                         skeletonRows
+                    } else if let hits = store.searchState.hits, store.searchState.isActive {
+                        if hits.isEmpty { emptyState } else { searchResults(hits) }
                     } else if store.records.isEmpty {
                         emptyState
                     } else {
@@ -201,6 +230,160 @@ struct RecordsHomeView: View {
 
     private var showsRecent: Bool {
         store.query.isUnfiltered && store.recent.count > 1 && !isSelecting
+    }
+
+    /// Chip query plus the Filters sheet.
+    private var baseQuery: RecordQuery {
+        var query = chip.query(text: "")
+        if !filters.recordTypes.isEmpty {
+            query.recordTypes = query.recordTypes.isEmpty ? filters.recordTypes : query.recordTypes.intersection(filters.recordTypes)
+        }
+        if !filters.categories.isEmpty {
+            query.categories = query.categories.isEmpty ? filters.categories : query.categories.intersection(filters.categories)
+        }
+        query.dateFrom = filters.dateFrom
+        query.dateTo = filters.dateTo
+        query.doctor = filters.doctor
+        query.facility = filters.facility
+        query.flags = filters.flags
+        query.tags = filters.tags
+        query.aiProcessedOnly = filters.aiProcessedOnly
+        query.userConfirmedOnly = filters.userConfirmedOnly
+        return query
+    }
+
+    private var showsSections: Bool {
+        !store.searchState.isActive && chip == .all && RecordsFilterSheet.activeCount(filters) == 0 && !isSelecting
+    }
+
+    @ViewBuilder
+    private var intelligenceSections: some View {
+        if store.searchState.isActive {
+            searchHeader
+                .padding(.horizontal)
+                .padding(.bottom, 8)
+        } else if showsSections {
+            VStack(alignment: .leading, spacing: 12) {
+                if store.hasLoadedOnce, store.aiMode == nil, store.totalCount > 0 || store.recent.isEmpty == false {
+                    RecordsAIChooserCard()
+                }
+                RecordsProcessingStrip()
+                if store.processingSummary.awaitingConsent > 0, !consentWaiting.isEmpty {
+                    RecordAIConsentBanner(recordIDs: [consentWaiting[0]], waitingCount: consentWaiting.count)
+                }
+                if !store.needsReviewRecords.isEmpty { needsReviewSection }
+                if store.nearDuplicateCount > 0 {
+                    Button {
+                        Task { await store.openFirstNearDuplicate() }
+                    } label: {
+                        Label(store.nearDuplicateCount == 1 ? String(localized: "1 possible duplicate to check") : String(localized: "\(store.nearDuplicateCount) possible duplicates to check"), systemImage: "doc.on.doc")
+                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    }
+                    .accessibilityIdentifier("records.nearDuplicates")
+                }
+                if !store.importantHighlights.isEmpty { highlightsSection }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+        }
+    }
+
+    private var needsReviewSection: some View {
+        RecordsCard {
+            RecordsSectionTitle(title: "Needs review", systemImage: "exclamationmark.circle.fill", trailing: "\(store.processingSummary.needsReview)")
+            ForEach(store.needsReviewRecords.prefix(3)) { record in
+                Button {
+                    reviewRecordID = record.id
+                } label: {
+                    RecordRow(record: record, compact: true)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("records.needsReview.\(record.id)")
+            }
+            if store.processingSummary.needsReview > 3 {
+                Button("Show all") { withAnimation(.snappy) { chip = .needsReview } }
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("records.needsReviewSection")
+    }
+
+    private var highlightsSection: some View {
+        RecordsCard {
+            RecordsSectionTitle(title: "Important highlights", systemImage: "waveform.path.ecg")
+            ForEach(store.importantHighlights) { item in
+                NavigationLink(value: RecordsRoute.detail(item.record.id)) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        RecordHighlightRow(text: item.highlight.text)
+                        Text("\(item.record.title) · \(RecordFormatting.dateText(item.record))")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .padding(.leading, 20)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("records.highlightsSection")
+    }
+
+    @ViewBuilder
+    private var searchHeader: some View {
+        let state = store.searchState
+        VStack(alignment: .leading, spacing: 8) {
+            if !state.visibleChips.isEmpty {
+                RecordsSearchChipsRow(chips: state.visibleChips) { chip in
+                    store.removeSearchChip(chip, base: baseQuery)
+                }
+            }
+            if state.isRewriting {
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text("Searching smarter with AI…").font(.system(.footnote, design: .rounded))
+                }
+            } else if state.offerAIRewrite {
+                Button {
+                    Task { await store.rewriteSearchWithAI(base: baseQuery) }
+                } label: {
+                    Label("Search smarter with AI", systemImage: "sparkles")
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                }
+                .accessibilityIdentifier("records.search.smarter")
+            }
+            if state.aiParsed != nil {
+                Text("AI turned your search into filters. Only the search text was sent.")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(.secondary)
+            }
+            if store.processingSummary.activeRecords > 0 {
+                Label("Some records are still processing and may not appear yet", systemImage: "hourglass")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func searchResults(_ hits: [RecordSearchHit]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Records")
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                .foregroundStyle(.secondary)
+                .padding(.horizontal)
+                .padding(.vertical, 6)
+            ForEach(hits) { hit in
+                recordLink(hit.record) {
+                    RecordSearchResultRow(hit: hit)
+                }
+                .padding(.horizontal)
+                Divider().padding(.leading, 76)
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("records.searchResults")
     }
 
     private var header: some View {
@@ -420,7 +603,7 @@ struct RecordsHomeView: View {
             .padding(.horizontal, 32)
         } else {
             ContentUnavailableView {
-                Label(store.query.trimmedText.isEmpty ? "No records here" : "No results for \"\(store.query.trimmedText)\"", systemImage: "magnifyingglass")
+                Label(store.searchState.isActive ? "No results for \"\(store.searchState.text.trimmingCharacters(in: .whitespaces))\"" : "No records here", systemImage: "magnifyingglass")
             } description: {
                 Text("Check the spelling or remove filters.")
             }
@@ -451,6 +634,27 @@ struct RecordsHomeView: View {
                     if isSelecting { endSelection() } else { isSelecting = true }
                 }
             }
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                showFilters = true
+            } label: {
+                let count = RecordsFilterSheet.activeCount(filters)
+                Image(systemName: count > 0 ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                    .font(.system(size: 20))
+                    .overlay(alignment: .topTrailing) {
+                        if count > 0 {
+                            Text("\(count)")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundStyle(.white)
+                                .padding(3)
+                                .background(AppColors.calorie, in: Circle())
+                                .offset(x: 6, y: -6)
+                        }
+                    }
+            }
+            .accessibilityLabel("Filters")
+            .accessibilityIdentifier("records.filters")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -567,6 +771,10 @@ private struct RecordMonthGroup: Identifiable {
     let key: String
     var records: [HealthRecord]
     var id: String { key }
+}
+
+private struct RecordIDBox: Identifiable {
+    let id: String
 }
 
 private struct TextEntryModeBox: Identifiable {

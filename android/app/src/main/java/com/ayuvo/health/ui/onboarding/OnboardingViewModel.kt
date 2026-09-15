@@ -72,8 +72,18 @@ data class OnboardingState(
     val customCalories: Int? = null,
     val customProtein: Int? = null,
     val customCarbs: Int? = null,
-    val customFat: Int? = null
+    val customFat: Int? = null,
+    /** Health Records AI mode picked on the AI step; null = the preselection below (§16). */
+    val recordsAiModeChoice: com.ayuvo.health.records.model.RecordsAiMode? = null
 ) {
+    /** Preselected Local for the on-device path, Ask otherwise (docs/health-records.md §16). */
+    val recordsAiMode: com.ayuvo.health.records.model.RecordsAiMode
+        get() = recordsAiModeChoice ?: if (aiPhase == OnboardingAiPhase.LOCAL) {
+            com.ayuvo.health.records.model.RecordsAiMode.LOCAL
+        } else {
+            com.ayuvo.health.records.model.RecordsAiMode.ASK
+        }
+
     /** PLAN_READY is the final step (the old Rate-app review step was removed). */
     val isLastStep: Boolean get() = step == OnboardingStep.PLAN_READY
 
@@ -221,6 +231,10 @@ class OnboardingViewModel(private val container: AppContainer) : ViewModel() {
         _ui.value = _ui.value.copy(aiPhase = OnboardingAiPhase.LOCAL)
     }
 
+    fun setRecordsAiMode(mode: com.ayuvo.health.records.model.RecordsAiMode) {
+        _ui.value = _ui.value.copy(recordsAiModeChoice = mode)
+    }
+
     fun downloadLocalModel() {
         container.localModels.download(LocalModelId.GEMMA_4_E2B)
     }
@@ -358,6 +372,8 @@ class OnboardingViewModel(private val container: AppContainer) : ViewModel() {
             // untouched — these prefs are only written here and by the Settings toggles.
             // Onboarding just calculated goals, so stamp the weekly adaptive check as done;
             // the first auto-run lands next week.
+            // Never overrides a mode chosen earlier (e.g. a re-run onboarding after restore).
+            container.prefs.setHealthRecordsAiModeIfUnset(state.recordsAiMode.raw)
             container.prefs.setAdaptiveGoalsEnabled(!planEdited)
             container.prefs.setHealthEnergyGoalsEnabled(true)
             container.prefs.setAdaptiveGoalsLastCheckDay(LocalDate.now().toString())

@@ -14,6 +14,16 @@ import com.ayuvo.health.records.model.RecordPage
 import com.ayuvo.health.records.model.RecordPatch
 import com.ayuvo.health.records.model.RecordTag
 import com.ayuvo.health.records.model.RecordType
+import com.ayuvo.health.records.ai.RecordsAiOptions
+import com.ayuvo.health.records.data.RecordIntelligence
+import com.ayuvo.health.records.ingest.DuplicateMatch
+import com.ayuvo.health.records.model.DuplicateCandidate
+import com.ayuvo.health.records.model.DuplicateResolution
+import com.ayuvo.health.records.model.FieldState
+import com.ayuvo.health.records.model.ProcessingStage
+import com.ayuvo.health.records.model.RecordField
+import com.ayuvo.health.records.model.ReviewStatus
+import com.ayuvo.health.records.model.SplitStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,13 +35,24 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDate
 
+/** Where the viewer should jump: a page (absolute index) and an optional normalized box. */
+data class SourceFocus(val page: Int, val bbox: List<Float>?, val token: Long = System.nanoTime())
+
 data class RecordDetailUiState(
     val loading: Boolean = true,
     val record: HealthRecord? = null,
     val pages: List<RecordPage> = emptyList(),
     val tags: List<RecordTag> = emptyList(),
     val allTags: List<RecordTag> = emptyList(),
-    val missing: Boolean = false
+    val missing: Boolean = false,
+    // Phase 2
+    val intelligence: RecordIntelligence? = null,
+    val aiOptions: RecordsAiOptions? = null,
+    val waitingForAi: Int = 0,
+    val focus: SourceFocus? = null,
+    /** Pending duplicate pairs resolved into records for the sheet. */
+    val duplicateMatches: List<Pair<DuplicateCandidate, DuplicateMatch>> = emptyList(),
+    val reviewItems: List<ReviewItem> = emptyList()
 )
 
 class RecordDetailViewModel(
@@ -47,6 +68,9 @@ class RecordDetailViewModel(
         viewModelScope.launch {
             store.revision.collectLatest { reload() }
         }
+        viewModelScope.launch {
+            container.prefs.healthRecordsAiMode.collect { refreshAiOptions() }
+        }
     }
 
     private suspend fun reload() {
@@ -56,11 +80,117 @@ class RecordDetailViewModel(
                 _ui.update { it.copy(loading = false, record = null, missing = true) }
                 return
             }
+            // Page text is only needed on screen for text records; boxes load on a source jump.
             val pages = if (record.fileType == com.ayuvo.health.records.model.RecordFileType.TEXT) store.pages(recordId) else emptyList()
             val tags = store.tags(recordId)
             val allTags = store.allTags()
-            _ui.update { it.copy(loading = false, record = record, pages = pages, tags = tags, allTags = allTags, missing = false) }
+            val intelligence = store.intelligence(recordId)
+            val waiting = store.awaitingConsent().size
+            val matches = intelligence?.duplicates.orEmpty().mapNotNull { candidate ->
+                val newer = store.record(candidate.recordId) ?: return@mapNotNull null
+                val older = store.record(candidate.existingId) ?: return@mapNotNull null
+                candidate to DuplicateMatch(newer, older)
+            }
+            val review = intelligence?.let { ReviewSelection.items(it.fields) }.orEmpty()
+            _ui.update {
+                it.copy(
+                    loading = false, record = record, pages = pages, tags = tags, allTags = allTags, missing = false,
+                    intelligence = intelligence, waitingForAi = waiting, duplicateMatches = matches, reviewItems = review
+                )
+            }
         }.onFailure { _ui.update { it.copy(loading = false) } }
+    }
+
+    private fun refreshAiOptions() {
+        viewModelScope.launch {
+            runCatching { container.recordsAiResolver.options() }.onSuccess { o -> _ui.update { it.copy(aiOptions = o) } }
+        }
+    }
+
+    private val typeLabel: (RecordType) -> String? = { type -> container.appContext.getString(type.labelRes()) }
+
+    // -- Review ---------------------------------------------------------------
+
+    fun confirmField(fieldId: String) = launch { store.setFieldState(fieldId, FieldState.CONFIRMED, typeLabel = typeLabel); reviewChanged() }
+    fun rejectField(fieldId: String) = launch { store.setFieldState(fieldId, FieldState.REJECTED, typeLabel = typeLabel); reviewChanged() }
+    fun editField(fieldId: String, value: String) = launch { store.setFieldState(fieldId, FieldState.USER, editedValue = value, typeLabel = typeLabel); reviewChanged() }
+    fun addField(key: String, value: String) = launch { store.addUserField(recordId, key, value, typeLabel); reviewChanged() }
+
+    /** "Confirm all": every item shown in the sheet is confirmed and the record is marked reviewed. */
+    fun confirmAll() = launch {
+        val items = _ui.value.reviewItems
+        for (item in items) {
+            val field = item.field
+            if (field.state == FieldState.SUGGESTED && !item.conflict) store.setFieldState(field.id, FieldState.CONFIRMED, typeLabel = typeLabel)
+        }
+        store.setReviewStatus(listOf(recordId), ReviewStatus.REVIEWED)
+    }
+
+    private suspend fun reviewChanged() {
+        container.recordsPipeline.evaluateReview(recordId)
+        if (ReviewSelection.items(store.fields(recordId)).isEmpty() && _ui.value.record?.reviewStatus == ReviewStatus.NEEDS_REVIEW) {
+            val pending = store.intelligence(recordId)
+            if (pending != null && pending.duplicates.isEmpty() && pending.split?.status != SplitStatus.PENDING) {
+                store.setReviewStatus(listOf(recordId), ReviewStatus.REVIEWED)
+            }
+        }
+    }
+
+    fun dismissHighlight(id: String) = launch { store.dismissHighlight(id) }
+
+    // -- AI consent (§16) -------------------------------------------------------
+
+    /** [mode] is `local`, `cloud` or `off` ("Not now"); applies to this record only. */
+    fun decideAi(mode: String) = launch {
+        val job = store.job(recordId) ?: com.ayuvo.health.records.model.ProcessingJob(recordId = recordId, stage = ProcessingStage.AI)
+        store.saveJob(job.copy(stage = ProcessingStage.AI, requestedMode = mode, awaitingConsent = false, attempts = 0, nextAttemptMs = 0, updatedMs = System.currentTimeMillis()))
+        if (mode != "off") store.setStatus(recordId, com.ayuvo.health.records.model.ProcessingStatus.QUEUED, keepError = true)
+        container.recordsQueue.schedule(listOf(recordId))
+    }
+
+    fun decideAiForAll(mode: String) = launch {
+        val ids = store.awaitingConsent()
+        for (id in ids) {
+            store.job(id)?.let { store.saveJob(it.copy(requestedMode = mode, awaitingConsent = false, attempts = 0, nextAttemptMs = 0)) }
+        }
+        container.recordsQueue.schedule(ids)
+    }
+
+    fun reprocess() = launch { container.recordsQueue.enqueue(listOf(recordId)) }
+
+    // -- Source jump ------------------------------------------------------------
+
+    fun focusField(field: RecordField) {
+        val page = field.sourcePage ?: return
+        viewModelScope.launch {
+            val bbox = SourceBoxes.parse(field.sourceBbox) ?: runCatching {
+                SourceBoxes.locate(store.pages(recordId).firstOrNull { it.pageIndex == page }?.blocksJson, field.evidence ?: field.valueText)
+            }.getOrNull()
+            _ui.update { it.copy(focus = SourceFocus(page, bbox)) }
+        }
+    }
+
+    fun focusPage(page: Int?) {
+        if (page == null) return
+        _ui.update { it.copy(focus = SourceFocus(page, null)) }
+    }
+
+    // -- Duplicates & splits ----------------------------------------------------
+
+    fun keepBoth(candidate: DuplicateCandidate) = launch { store.resolveDuplicate(candidate.recordId, candidate.existingId, DuplicateResolution.KEEP_BOTH); reviewChanged() }
+    fun replaceExisting(candidate: DuplicateCandidate, onDone: () -> Unit) =
+        container.recordsImports.replace(candidate.recordId, candidate.existingId, onDone)
+    fun mergeIntoExisting(candidate: DuplicateCandidate, onDone: () -> Unit) =
+        container.recordsImports.merge(candidate.recordId, candidate.existingId, onDone)
+    fun cancelNew(candidate: DuplicateCandidate, onDone: () -> Unit) {
+        viewModelScope.launch {
+            runCatching { container.deleteRecords(listOf(candidate.recordId)) }
+            onDone()
+        }
+    }
+
+    private fun launch(block: suspend () -> Unit) {
+        viewModelScope.launch { runCatching { block() } }
     }
 
     private fun patch(patch: RecordPatch) {
@@ -92,7 +222,7 @@ class RecordDetailViewModel(
 
     fun delete(onDone: () -> Unit) {
         viewModelScope.launch {
-            runCatching { store.delete(listOf(recordId)) }
+            runCatching { container.deleteRecords(listOf(recordId)) }
             onDone()
         }
     }

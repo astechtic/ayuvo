@@ -15,6 +15,10 @@ struct RecordDetailView: View {
     @State private var showFullScreenViewer = false
     @State private var exportItem: RecordExportItem?
     @State private var newTag = ""
+    @State private var showReview = false
+    @State private var sourceTarget: RecordSourceTarget?
+    @State private var showSplit = false
+    @State private var duplicatePrompt: RecordDuplicatePrompt?
 
     var body: some View {
         Group {
@@ -59,8 +63,18 @@ struct RecordDetailView: View {
                             .accessibilityLabel("Full screen")
                         }
                     }
+                RecordDetailIntelligenceSections(
+                    detail: detail,
+                    onReview: { showReview = true },
+                    onSource: { sourceTarget = $0 },
+                    onSplit: { showSplit = true },
+                    onDuplicate: { candidate in
+                        Task { duplicatePrompt = await store.duplicatePrompt(for: candidate) }
+                    }
+                )
                 notesSection(record)
                 tagsSection(detail)
+                if !detail.children.isEmpty { childrenSection(detail.children) }
                 infoSection(record)
                 actions(record)
             }
@@ -79,6 +93,14 @@ struct RecordDetailView: View {
 
                 Menu {
                     Button { showEdit = true } label: { Label("Edit", systemImage: "pencil") }
+                    if !detail.fields.isEmpty || record.reviewStatus == .needsReview {
+                        Button { showReview = true } label: { Label("Review details", systemImage: "checklist") }
+                    }
+                    if record.parentID == nil, record.fileType != .other {
+                        Button {
+                            Task { await store.reprocess(id: record.id) }
+                        } label: { Label("Find details again", systemImage: "arrow.clockwise") }
+                    }
                     Button { export(record) } label: { Label("Export original", systemImage: "square.and.arrow.up") }
                     Button {
                         Task { await store.setArchived(ids: [record.id], !record.archived) }
@@ -94,6 +116,23 @@ struct RecordDetailView: View {
         }
         .sheet(isPresented: $showEdit) {
             RecordEditSheet(detail: detail)
+        }
+        .sheet(isPresented: $showReview) {
+            RecordReviewSheet(recordID: record.id, onOpenSource: { field in
+                showReview = false
+                if let page = field.sourcePage {
+                    sourceTarget = RecordSourceTarget(page: page, box: field.bbox, label: field.evidence ?? field.displayValue)
+                }
+            })
+        }
+        .fullScreenCover(item: $sourceTarget) { target in
+            RecordSourceViewer(record: record, url: store.originalURL(for: record), target: target)
+        }
+        .fullScreenCover(isPresented: $showSplit) {
+            RecordSplitReviewView(recordID: record.id)
+        }
+        .sheet(item: $duplicatePrompt) { prompt in
+            RecordDuplicateSheet(prompt: prompt)
         }
         .sheet(item: $exportItem, onDismiss: { exportItem?.cleanUp() }) { item in
             ActivityShareSheet(activityItems: [item.url])
@@ -143,9 +182,32 @@ struct RecordDetailView: View {
             Label(dateLine(record), systemImage: "calendar")
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(.secondary)
-            Text("Not processed by AI")
+            if let parent = detail?.parent, record.isSplitChild {
+                NavigationLink(value: RecordsRoute.detail(parent.id)) {
+                    Label("Part of \(parent.title)", systemImage: "rectangle.split.3x1")
+                        .font(.system(.caption, design: .rounded, weight: .semibold))
+                }
+                .accessibilityIdentifier("records.detail.parentLink")
+            }
+            if let children = detail?.children, !children.isEmpty {
+                Label("Combined document · \(children.count) records", systemImage: "square.stack.3d.up.fill")
+                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                    .foregroundStyle(AppColors.calorie)
+                    .accessibilityIdentifier("records.detail.combinedBadge")
+            }
+            if let processing = RecordStatusText.processing(record) {
+                HStack(spacing: 6) {
+                    if record.isProcessing { ProgressView().controlSize(.mini) }
+                    Text(processing)
+                }
+                .font(.system(.caption, design: .rounded))
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("records.detail.processing")
+            }
+            Text(RecordStatusText.aiLabel(record))
                 .font(.system(.caption, design: .rounded))
                 .foregroundStyle(.tertiary)
+                .accessibilityIdentifier("records.detail.aiStatus")
         }
     }
 
@@ -156,6 +218,10 @@ struct RecordDetailView: View {
             return String(localized: "Added \(date)")
         case .fileMetadata:
             return String(localized: "\(date) · from file details")
+        case .rules, .pdfText, .ocr:
+            return String(localized: "\(date) · found on the document")
+        case .aiLocal, .aiCloud:
+            return String(localized: "\(date) · found by AI")
         default:
             return date
         }
@@ -223,6 +289,21 @@ struct RecordDetailView: View {
         guard !tag.isEmpty else { return }
         newTag = ""
         Task { await store.setTags(id: detail.record.id, names: detail.tags + [tag]) }
+    }
+
+    private func childrenSection(_ children: [HealthRecord]) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            sectionTitle("Records in this document")
+            ForEach(children) { child in
+                NavigationLink(value: RecordsRoute.detail(child.id)) {
+                    RecordRow(record: child, compact: true)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(AppColors.appCard, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private func infoSection(_ record: HealthRecord) -> some View {
@@ -368,7 +449,7 @@ struct RecordOriginalViewer: View {
                     } else if record.processingError == "unreadable_pdf" {
                         unavailable(title: String(localized: "Can't preview"), message: String(localized: "This PDF couldn't be read. The original file is still saved."), icon: "exclamationmark.triangle.fill")
                     } else {
-                        PDFKitView(url: url)
+                        PDFKitView(url: url, pageRange: record.pageStart.flatMap { start in record.pageEnd.map { start...$0 } })
                     }
                 case .image:
                     ZoomableImageView(url: url)
@@ -422,6 +503,18 @@ struct RecordOriginalViewer: View {
 
 struct PDFKitView: UIViewRepresentable {
     let url: URL
+    /// Split child: only these pages (0-based, inclusive) are shown.
+    var pageRange: ClosedRange<Int>? = nil
+    /// Page to open at, relative to `pageRange` when set.
+    var initialPage: Int? = nil
+    /// `[x, y, w, h]` normalized top-left box outlined on `initialPage`.
+    var highlightBox: [Double]? = nil
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    final class Coordinator {
+        var loadedKey: String?
+    }
 
     func makeUIView(context: Context) -> PDFView {
         let view = PDFView()
@@ -429,13 +522,54 @@ struct PDFKitView: UIViewRepresentable {
         view.displayMode = .singlePageContinuous
         view.displayDirection = .vertical
         view.backgroundColor = .secondarySystemBackground
-        view.document = PDFDocument(url: url)
+        load(into: view, coordinator: context.coordinator)
         return view
     }
 
     func updateUIView(_ view: PDFView, context: Context) {
-        if view.document?.documentURL != url {
-            view.document = PDFDocument(url: url)
+        load(into: view, coordinator: context.coordinator)
+    }
+
+    private func load(into view: PDFView, coordinator: Coordinator) {
+        let key = "\(url.path)|\(pageRange.map { "\($0)" } ?? "")|\(initialPage ?? -1)|\(highlightBox?.description ?? "")"
+        guard coordinator.loadedKey != key else { return }
+        coordinator.loadedKey = key
+        guard let source = PDFDocument(url: url) else { return }
+        var document = source
+        if let pageRange {
+            let restricted = PDFDocument()
+            var target = 0
+            for index in pageRange where index < source.pageCount {
+                if let page = source.page(at: index)?.copy() as? PDFPage {
+                    restricted.insert(page, at: target)
+                    target += 1
+                }
+            }
+            if restricted.pageCount > 0 { document = restricted }
+        }
+        view.document = document
+        guard let initialPage, let page = document.page(at: min(max(0, initialPage), max(0, document.pageCount - 1))) else { return }
+        if let box = highlightBox, box.count == 4 {
+            let bounds = page.bounds(for: .cropBox)
+            let rect = CGRect(
+                x: bounds.minX + box[0] * bounds.width,
+                y: bounds.maxY - (box[1] + box[3]) * bounds.height,
+                width: box[2] * bounds.width,
+                height: box[3] * bounds.height
+            ).insetBy(dx: -4, dy: -4)
+            let annotation = PDFAnnotation(bounds: rect, forType: .square, withProperties: nil)
+            annotation.color = .systemOrange
+            let border = PDFBorder()
+            border.lineWidth = 3
+            annotation.border = border
+            page.addAnnotation(annotation)
+            DispatchQueue.main.async {
+                view.go(to: rect, on: page)
+            }
+        } else {
+            DispatchQueue.main.async {
+                view.go(to: page)
+            }
         }
     }
 }

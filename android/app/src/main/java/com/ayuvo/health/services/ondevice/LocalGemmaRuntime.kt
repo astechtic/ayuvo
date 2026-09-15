@@ -29,6 +29,9 @@ class LocalGemmaRuntime(
 
     fun isReady(): Boolean = models.isExecutable(LocalModelId.GEMMA_4_E2B)
 
+    /** True while another generation (e.g. Coach) holds the runtime; callers may wait and retry. */
+    val isBusy: Boolean get() = mutex.isLocked
+
     suspend fun generate(
         prompt: String,
         images: List<ByteArray> = emptyList(),

@@ -245,63 +245,121 @@ struct RecordTextEntrySheet: View {
     }
 }
 
-/// "This looks like an existing record" (Phase 1: Keep both · Cancel import · Open existing).
+/// "This looks like an existing record" (plan §3.11): Keep both · Replace · Merge · Cancel import,
+/// plus Open existing. Used for exact (checksum) and near duplicates (look / content).
 struct RecordDuplicateSheet: View {
     let prompt: RecordDuplicatePrompt
     @Environment(RecordsStore.self) private var store
     @Environment(\.dismiss) private var dismiss
+    @State private var pending: PendingAction?
+
+    enum PendingAction: String, Identifiable {
+        case replace, merge, cancel
+        var id: String { rawValue }
+    }
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 18) {
-                HStack(spacing: 16) {
-                    column(record: prompt.existing, caption: String(localized: "Existing"))
-                    column(record: prompt.newRecord, caption: String(localized: "New"))
-                }
-                Label("Identical file", systemImage: "equal.circle.fill")
-                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                    .foregroundStyle(AppColors.calorie)
-                Text("This file is byte-for-byte the same as a record you already saved.")
-                    .font(.system(.footnote, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                VStack(spacing: 10) {
-                    Button {
-                        store.resolveDuplicateKeepBoth(prompt)
-                        dismiss()
-                    } label: {
-                        Text("Keep both").frame(maxWidth: .infinity)
+            ScrollView {
+                VStack(spacing: 18) {
+                    HStack(spacing: 16) {
+                        column(record: prompt.existing, caption: String(localized: "Existing"))
+                        column(record: prompt.newRecord, caption: String(localized: "New"))
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(AppColors.calorie)
-
-                    Button {
-                        Task { await store.resolveDuplicateOpenExisting(prompt) }
-                        dismiss()
-                    } label: {
-                        Text("Open existing").frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-
-                    Button(role: .destructive) {
-                        Task { await store.resolveDuplicateCancel(prompt) }
-                        dismiss()
-                    } label: {
-                        Text("Cancel import").frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    Text("Open existing and Cancel import don't keep the new copy.")
-                        .font(.system(.caption, design: .rounded))
+                    Label(prompt.reason.title, systemImage: prompt.reason == .checksum ? "equal.circle.fill" : "square.on.square")
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .foregroundStyle(AppColors.calorie)
+                        .accessibilityIdentifier("records.duplicate.reason")
+                    Text(explanation)
+                        .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                    VStack(spacing: 10) {
+                        Button {
+                            store.resolveDuplicateKeepBoth(prompt)
+                            dismiss()
+                        } label: {
+                            Text("Keep both").frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(AppColors.calorie)
+                        .accessibilityIdentifier("records.duplicate.keepBoth")
+
+                        HStack(spacing: 10) {
+                            Button { pending = .replace } label: { Text("Replace").frame(maxWidth: .infinity) }
+                                .buttonStyle(.bordered)
+                                .accessibilityIdentifier("records.duplicate.replace")
+                            Button { pending = .merge } label: { Text("Merge").frame(maxWidth: .infinity) }
+                                .buttonStyle(.bordered)
+                                .accessibilityIdentifier("records.duplicate.merge")
+                        }
+
+                        Button {
+                            Task { await store.resolveDuplicateOpenExisting(prompt) }
+                            dismiss()
+                        } label: {
+                            Text("Open existing").frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button(role: .destructive) {
+                            pending = .cancel
+                        } label: {
+                            Text("Cancel import").frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        Text("Replace swaps the existing record's file for the new one and keeps its notes and tags. Merge moves the new record's notes and tags into the existing one. Open existing, Merge and Cancel import don't keep the new copy.")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .controlSize(.large)
                 }
-                .controlSize(.large)
+                .padding()
             }
-            .padding()
             .navigationTitle("This looks like an existing record")
             .navigationBarTitleDisplayMode(.inline)
         }
         .presentationDetents([.large])
         .interactiveDismissDisabled()
+        .confirmationDialog(confirmTitle, isPresented: Binding(get: { pending != nil }, set: { if !$0 { pending = nil } }), titleVisibility: .visible) {
+            switch pending {
+            case .replace:
+                Button("Replace") {
+                    Task { await store.resolveDuplicateReplace(prompt) }
+                    dismiss()
+                }
+            case .merge:
+                Button("Merge") {
+                    Task { await store.resolveDuplicateMerge(prompt) }
+                    dismiss()
+                }
+            case .cancel:
+                Button("Cancel import", role: .destructive) {
+                    Task { await store.resolveDuplicateCancel(prompt) }
+                    dismiss()
+                }
+            case .none:
+                EmptyView()
+            }
+        }
+    }
+
+    private var explanation: String {
+        switch prompt.reason {
+        case .checksum: String(localized: "This file is byte-for-byte the same as a record you already saved.")
+        case .phash: String(localized: "The first page looks the same as a record you already saved.")
+        case .content: String(localized: "The text is almost the same as a record you already saved.")
+        }
+    }
+
+    private var confirmTitle: String {
+        switch pending {
+        case .replace: String(localized: "Replace the existing record's file with the new one?")
+        case .merge: String(localized: "Merge the new record into the existing one?")
+        case .cancel: String(localized: "Delete the new copy?")
+        case .none: ""
+        }
     }
 
     private func column(record: HealthRecord, caption: String) -> some View {

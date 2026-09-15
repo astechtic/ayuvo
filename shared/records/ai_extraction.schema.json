@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ayuvo-records-ai-extraction-v1",
+  "title": "Ayuvo health record AI extraction response (docs/health-records.md §9.3)",
+  "description": "The single JSON object the model returns. The app never trusts it: ExtractionValidator (scripts/records_reference.py validate_ai) re-checks evidence, numbers, dates and flags. source_page is the 1-based N of '=== Page N ===' in the prompt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_type", "record_type_confidence", "report_name", "dates", "fields", "test_results", "medications", "summary"],
+  "properties": {
+    "record_type": {
+      "type": "string",
+      "enum": ["lab_report", "prescription", "consultation_note", "discharge_summary", "imaging_report", "diagnostic_report", "medication_list", "vaccination_record", "bill", "insurance", "personal_note", "other"]
+    },
+    "record_type_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "report_name": {"type": ["string", "null"], "maxLength": 120},
+    "dates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "value", "evidence", "source_page", "confidence"],
+        "properties": {
+          "key": {"type": "string", "enum": ["report_date", "collection_date", "visit_date", "prescription_date", "admission_date", "discharge_date", "follow_up_date"]},
+          "value": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}(-[0-9]{2})?$"},
+          "evidence": {"type": "string", "minLength": 1, "maxLength": 200},
+          "source_page": {"type": "integer", "minimum": 1},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "value", "evidence", "source_page", "confidence"],
+        "properties": {
+          "key": {"type": "string", "enum": ["doctor_name", "doctor_specialty", "facility", "department", "patient_name", "patient_age", "patient_sex", "diagnosis", "symptom", "procedure", "recommendation", "document_time"]},
+          "value": {"type": "string", "minLength": 1, "maxLength": 200},
+          "evidence": {"type": "string", "minLength": 1, "maxLength": 200},
+          "source_page": {"type": "integer", "minimum": 1},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "test_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "value", "unit", "ref_text", "flag", "evidence", "source_page", "confidence"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "maxLength": 80},
+          "value": {"type": "string", "minLength": 1, "maxLength": 40},
+          "unit": {"type": ["string", "null"], "maxLength": 30},
+          "ref_text": {"type": ["string", "null"], "maxLength": 80},
+          "flag": {"type": ["string", "null"], "enum": ["low", "high", "critical_low", "critical_high", "abnormal", "normal", null]},
+          "evidence": {"type": "string", "minLength": 1, "maxLength": 200},
+          "source_page": {"type": "integer", "minimum": 1},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "medications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "strength", "form", "dose", "frequency", "duration", "instructions", "evidence", "source_page", "confidence"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "maxLength": 80},
+          "strength": {"type": ["string", "null"], "maxLength": 40},
+          "form": {"type": ["string", "null"], "maxLength": 30},
+          "dose": {"type": ["string", "null"], "maxLength": 40},
+          "frequency": {"type": ["string", "null"], "maxLength": 40},
+          "duration": {"type": ["string", "null"], "maxLength": 40},
+          "instructions": {"type": ["string", "null"], "maxLength": 80},
+          "evidence": {"type": "string", "minLength": 1, "maxLength": 200},
+          "source_page": {"type": "integer", "minimum": 1},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "summary": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "source_pages"],
+          "properties": {
+            "text": {"type": "string", "minLength": 1, "maxLength": 400},
+            "source_pages": {"type": "array", "items": {"type": "integer", "minimum": 1}}
+          }
+        }
+      ]
+    }
+  }
+}

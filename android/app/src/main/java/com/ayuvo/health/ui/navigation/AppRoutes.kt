@@ -20,12 +20,14 @@ object AppRoutes {
     const val HEALTH_TYPE = "health/type/{$HEALTH_TYPE_ARG}"
     const val RECORD_ID_ARG = "recordId"
     const val RECORD_DETAIL = "records/detail/{$RECORD_ID_ARG}"
+    const val RECORD_SPLIT = "records/split/{$RECORD_ID_ARG}"
 
     /** Workouts is no longer a tab; any legacy `workouts…` destination belongs to the Health tab. */
     private const val LEGACY_WORKOUTS = "workouts"
 
     fun healthType(typeKey: String): String = "health/type/$typeKey"
     fun recordDetail(recordId: String): String = "records/detail/$recordId"
+    fun recordSplit(recordId: String): String = "records/split/$recordId"
 
     val bottomTabs = listOf(HOME, HEALTH, RECORDS, COACH, SETTINGS)
 

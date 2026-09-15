@@ -1406,6 +1406,11 @@ fun SettingsScreen(
             }
 
             if (selectedCategory == SettingsCategory.HEALTH_RECORDS) {
+                HealthRecordsAiSection(
+                    container = container,
+                    onOpenAiProviders = { selectedCategory = SettingsCategory.AI_PROVIDERS }
+                )
+                Spacer(Modifier.height(18.dp))
                 HealthRecordsPrivacySection()
             }
 
@@ -2050,6 +2055,36 @@ fun SettingsScreen(
                 },
                 dismissText = stringResource(R.string.action_cancel),
                 onDismiss = { showHealthPermissionHelp = false }
+            )
+        }
+    }
+}
+
+/**
+ * Settings › Health Records › AI processing (docs/health-records.md §16): the four modes with
+ * availability notes; on-device setup and provider keys live in the AI Providers category.
+ */
+@Composable
+private fun HealthRecordsAiSection(container: AppContainer, onOpenAiProviders: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    val rawMode by container.prefs.healthRecordsAiMode.collectAsState(initial = null)
+    val localStates by container.localModels.states.collectAsState()
+    val resolver = container.recordsAiResolver
+    var options by remember { mutableStateOf<com.ayuvo.health.records.ai.RecordsAiOptions?>(null) }
+    LaunchedEffect(localStates, rawMode) { options = runCatching { resolver.options() }.getOrNull() }
+    SectionCard(title = stringResource(R.string.records_ai_settings_title)) {
+        Column(Modifier.padding(horizontal = 16.dp, vertical = 14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                stringResource(R.string.records_ai_question),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f)
+            )
+            com.ayuvo.health.ui.records.RecordsAiModeOptionList(
+                selected = com.ayuvo.health.records.model.RecordsAiMode.fromRaw(rawMode),
+                onSelect = { mode -> scope.launch { container.prefs.setHealthRecordsAiMode(mode.raw) } },
+                options = options,
+                onSetUpLocal = onOpenAiProviders,
+                onAddProvider = onOpenAiProviders
             )
         }
     }

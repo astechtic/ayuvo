@@ -35,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,7 +86,8 @@ fun RecordDetailScreen(
     container: AppContainer,
     recordId: String,
     onBack: () -> Unit,
-    onOpenRecord: (String) -> Unit = {}
+    onOpenRecord: (String) -> Unit = {},
+    onOpenSplit: (String) -> Unit = {}
 ) {
     val vm: RecordDetailViewModel = viewModel(
         key = "record-$recordId",
@@ -96,6 +98,9 @@ fun RecordDetailScreen(
     val scope = rememberCoroutineScope()
     var menuOpen by remember { mutableStateOf(false) }
     var edit by rememberSaveable { mutableStateOf<DetailEdit?>(null) }
+    var showReview by rememberSaveable { mutableStateOf(false) }
+    var showDuplicates by rememberSaveable { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
     val exportFailed = stringResource(R.string.records_export_failed)
     val noApp = stringResource(R.string.records_no_app)
 
@@ -155,6 +160,25 @@ fun RecordDetailScreen(
                             onClick = { menuOpen = false; export(view = false) }
                         )
                         DropdownMenuItem(
+                            text = { Text(stringResource(R.string.records_action_reprocess)) },
+                            onClick = { menuOpen = false; vm.reprocess() }
+                        )
+                        val options = ui.aiOptions
+                        if (record.aiModeUsed == com.ayuvo.health.records.model.AiModeUsed.NONE && options != null) {
+                            if (options.localAvailable) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.records_action_find_more_ai) + " · " + stringResource(R.string.records_method_ai_local)) },
+                                    onClick = { menuOpen = false; vm.decideAi("local") }
+                                )
+                            }
+                            if (options.cloudConfigured) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.records_action_find_more_ai) + " · " + stringResource(R.string.records_method_ai_cloud)) },
+                                    onClick = { menuOpen = false; vm.decideAi("cloud") }
+                                )
+                            }
+                        }
+                        DropdownMenuItem(
                             text = { Text(stringResource(if (record.archived) R.string.records_action_unarchive else R.string.records_action_archive)) },
                             onClick = { menuOpen = false; vm.toggleArchived() }
                         )
@@ -177,7 +201,7 @@ fun RecordDetailScreen(
             else -> Column(
                 Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
@@ -187,8 +211,52 @@ fun RecordDetailScreen(
                     pages = ui.pages,
                     height = if (record.fileType == RecordFileType.TEXT) 260.dp else 440.dp,
                     renderCache = container.recordFiles.renderPages,
-                    onOpenElsewhere = { export(view = true) }
+                    onOpenElsewhere = { export(view = true) },
+                    pageRange = if (record.isSplitChild) record.pageStart!!..record.pageEnd!! else null,
+                    focus = ui.focus
                 )
+                LaunchedEffect(ui.focus?.token) { if (ui.focus != null) scrollState.animateScrollTo(0) }
+                val intelligence = ui.intelligence
+                DetailStatusLine(record, intelligence)
+                val options = ui.aiOptions
+                if (intelligence?.job?.awaitingConsent == true && options != null) {
+                    AiConsentBanner(
+                        options = options,
+                        waitingCount = ui.waitingForAi,
+                        onLocal = { vm.decideAi("local") },
+                        onCloud = { vm.decideAi("cloud") },
+                        onNotNow = { vm.decideAi("off") },
+                        onApplyAll = if (ui.waitingForAi > 1) { mode -> vm.decideAiForAll(mode) } else null
+                    )
+                }
+                if (intelligence != null) {
+                    DetailBanners(
+                        record = record,
+                        intelligence = intelligence,
+                        reviewCount = if (record.reviewStatus == com.ayuvo.health.records.model.ReviewStatus.REVIEWED) 0 else ui.reviewItems.size,
+                        onReview = { showReview = true },
+                        onDuplicates = { showDuplicates = true },
+                        onSplit = { onOpenSplit(record.id) },
+                        onOpenRecord = onOpenRecord
+                    )
+                    HighlightsCard(intelligence.highlights, onFocusPage = vm::focusPage, onDismiss = vm::dismissHighlight)
+                    ExtractedInfoCard(intelligence.fields, onFocus = vm::focusField, onEdit = { showReview = true })
+                    val usable = intelligence.fields.filter { it.state != com.ayuvo.health.records.model.FieldState.REJECTED }
+                    ListCard(
+                        R.string.records_medications_title,
+                        intelligence.highlights.filter { it.section == com.ayuvo.health.records.model.HighlightSection.MEDICATIONS && !it.dismissed }
+                            .map { it.text to it.sourcePage }
+                            .ifEmpty { usable.filter { it.key == com.ayuvo.health.records.model.FieldKey.MEDICATION }.map { fieldDisplayValue(it) to it.sourcePage } },
+                        onFocusPage = vm::focusPage
+                    )
+                    ListCard(
+                        R.string.records_recommendations_title,
+                        intelligence.highlights.filter { it.section == com.ayuvo.health.records.model.HighlightSection.RECOMMENDATIONS && !it.dismissed }
+                            .map { it.text to it.sourcePage }
+                            .ifEmpty { usable.filter { it.key == com.ayuvo.health.records.model.FieldKey.RECOMMENDATION }.map { it.valueText to it.sourcePage } },
+                        onFocusPage = vm::focusPage
+                    )
+                }
                 if (record.processingStatus == ProcessingStatus.FAILED_PARTIAL && record.processingError == ThumbnailMaker.ERROR_PROTECTED_PDF) {
                     Text(
                         stringResource(R.string.records_protected_note),
@@ -291,6 +359,58 @@ fun RecordDetailScreen(
                 }
                 Spacer(Modifier.heightIn(min = BottomNavScrollPadding))
             }
+        }
+    }
+
+    if (record != null && showReview) {
+        ReviewDetailsSheet(
+            items = ui.reviewItems,
+            onConfirm = { vm.confirmField(it.id) },
+            onEdit = { field, value -> vm.editField(field.id, value) },
+            onIgnore = { vm.rejectField(it.id) },
+            onConfirmAll = {
+                vm.confirmAll()
+                showReview = false
+            },
+            onAdd = { key, value -> vm.addField(key, value) },
+            onFocus = {
+                showReview = false
+                vm.focusField(it)
+            },
+            onDismiss = { showReview = false }
+        )
+    }
+
+    if (record != null && showDuplicates) {
+        val pair = ui.duplicateMatches.firstOrNull()
+        if (pair == null) {
+            showDuplicates = false
+        } else {
+            val (candidate, match) = pair
+            DuplicateRecordSheet(
+                match = match,
+                files = container.recordFiles,
+                reason = candidate.reason,
+                onKeepBoth = { vm.keepBoth(candidate); showDuplicates = false },
+                onOpenExisting = {
+                    showDuplicates = false
+                    onOpenRecord(if (candidate.existingId == recordId) candidate.recordId else candidate.existingId)
+                },
+                onCancelImport = {
+                    showDuplicates = false
+                    vm.cancelNew(candidate) { if (candidate.recordId == recordId) onBack() }
+                },
+                onReplace = {
+                    showDuplicates = false
+                    vm.replaceExisting(candidate) {}
+                    if (candidate.recordId == recordId) onBack()
+                },
+                onMerge = {
+                    showDuplicates = false
+                    vm.mergeIntoExisting(candidate) {}
+                    if (candidate.recordId == recordId) onBack()
+                }
+            )
         }
     }
 

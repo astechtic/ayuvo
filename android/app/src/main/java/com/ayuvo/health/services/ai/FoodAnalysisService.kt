@@ -538,6 +538,73 @@ class FoodAnalysisService(
         }
     }
 
+    /**
+     * Health Records AI call (docs/health-records.md §9.3, §16). [target] LOCAL always runs the
+     * on-device Gemma runtime; CLOUD uses the configured BYOK route — the separate text provider for
+     * text-only calls when enabled, the vision provider otherwise — with the same fallback rules as
+     * [callAi]. A LOCAL_GEMMA primary counts as local, so CLOUD never silently runs on-device.
+     * The user's food context is deliberately NOT prepended: record prompts carry medical text only.
+     * [maxOutputTokens] overrides the global response-token setting for this call only.
+     */
+    suspend fun callRecordsAi(
+        prompt: String,
+        images: List<ByteArray>,
+        maxOutputTokens: Int,
+        target: com.ayuvo.health.records.ai.RecordsAiTarget
+    ): com.ayuvo.health.records.ai.RecordsAiReply {
+        val requestTimeoutSeconds = prefs.aiRequestTimeoutSeconds.first()
+        if (target == com.ayuvo.health.records.ai.RecordsAiTarget.LOCAL) {
+            val runtime = localGemma ?: throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
+            if (!runtime.isReady()) throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
+            val uploads = withContext(Dispatchers.IO) { images.map(FoodImagePreprocessor::prepareForUpload) }
+            val text = dispatch(AIProvider.LOCAL_GEMMA, AIProvider.LOCAL_GEMMA.defaultModel, "", null, prompt, uploads, maxOutputTokens, requestTimeoutSeconds, geminiMaxOutputTokens = maxOutputTokens)
+            return com.ayuvo.health.records.ai.RecordsAiReply(text, AIProvider.LOCAL_GEMMA)
+        }
+        val route = recordsCloudRoute(textOnly = images.isEmpty())
+            ?: throw AiError.NoApiKey
+        val uploads = withContext(Dispatchers.IO) { images.map(FoodImagePreprocessor::prepareForUpload) }
+        return try {
+            val text = dispatch(route.provider, route.model, route.baseUrl, route.apiKey, prompt, uploads, maxOutputTokens, requestTimeoutSeconds, geminiMaxOutputTokens = maxOutputTokens)
+            com.ayuvo.health.records.ai.RecordsAiReply(text, route.provider)
+        } catch (primaryError: Throwable) {
+            if (primaryError is kotlinx.coroutines.CancellationException) throw primaryError
+            val fallback = (if (images.isEmpty()) {
+                currentTextFallbackConfig(route.provider, route.model, route.baseUrl)
+            } else {
+                currentImageFallbackConfig(route.provider, route.model, route.baseUrl)
+            })?.takeIf { it.provider != AIProvider.LOCAL_GEMMA } ?: throw primaryError
+            try {
+                val text = dispatch(fallback.provider, fallback.model, fallback.baseUrl, fallback.apiKey, prompt, uploads, maxOutputTokens, requestTimeoutSeconds, geminiMaxOutputTokens = maxOutputTokens)
+                com.ayuvo.health.records.ai.RecordsAiReply(text, fallback.provider)
+            } catch (fallbackError: Throwable) {
+                if (fallbackError is kotlinx.coroutines.CancellationException) throw fallbackError
+                throw AiError.BothProvidersFailed(route.provider, fallback.provider, fallbackError)
+            }
+        }
+    }
+
+    /**
+     * The BYOK route a records cloud call would use, or null when none is usable (no key, or the
+     * primary is on-device Gemma, which counts as local per §16).
+     */
+    suspend fun recordsCloudProvider(textOnly: Boolean): AIProvider? = recordsCloudRoute(textOnly)?.provider
+
+    private suspend fun recordsCloudRoute(textOnly: Boolean): FallbackConfig? {
+        val useSeparateTextProvider = textOnly && prefs.separateTextProviderEnabled.first()
+        val provider = if (useSeparateTextProvider) prefs.selectedTextAIProvider.first() else prefs.selectedAIProvider.first()
+        if (provider == AIProvider.LOCAL_GEMMA) return null
+        val model = if (useSeparateTextProvider) {
+            provider.supportedTextModelOrDefault(prefs.selectedTextAIModel.first())
+        } else {
+            provider.supportedModelOrDefault(prefs.selectedAIModel.first())
+        }
+        val baseUrl = prefs.customBaseUrl(provider).first()?.takeIf { it.isNotEmpty() } ?: provider.baseUrl
+        val key = keyStore.apiKey(provider)
+        if (provider.requiresApiKey && key.isNullOrEmpty()) return null
+        if (baseUrl.isEmpty()) return null
+        return FallbackConfig(provider, model, baseUrl, key)
+    }
+
     private suspend fun addingFallbackServingUnits(
         analysis: FoodAnalysis,
         imageBytes: ByteArray?,
@@ -618,7 +685,8 @@ class FoodAnalysisService(
         prompt: String,
         imageBytesList: List<ByteArray>,
         maxTokens: Int,
-        requestTimeoutSeconds: Int
+        requestTimeoutSeconds: Int,
+        geminiMaxOutputTokens: Int? = null
     ): String {
         if (provider == AIProvider.LOCAL_GEMMA) {
             return localGemma?.generate(
@@ -632,7 +700,7 @@ class FoodAnalysisService(
         val requestClient = clientForProvider(okHttp, provider, requestTimeoutSeconds)
         return when (provider.apiFormat) {
             AIProvider.ApiFormat.GEMINI ->
-                GeminiClient.analyze(requestClient, baseUrl, model, apiKey!!, prompt, imageBytesList)
+                GeminiClient.analyze(requestClient, baseUrl, model, apiKey!!, prompt, imageBytesList, geminiMaxOutputTokens)
             AIProvider.ApiFormat.ANTHROPIC ->
                 AnthropicClient.analyze(requestClient, baseUrl, model, apiKey!!, prompt, imageBytesList, maxTokens)
             AIProvider.ApiFormat.OPENAI_COMPATIBLE ->

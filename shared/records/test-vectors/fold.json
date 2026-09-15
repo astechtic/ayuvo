@@ -1,0 +1,186 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "fold": "haemoglobin hb 13.2",
+        "normalized": "haemoglobin hb 13 2",
+        "pfold": "Haemoglobin HB 13.2",
+        "words": [
+          "haemoglobin",
+          "hb",
+          "13",
+          "2"
+        ]
+      },
+      "input": {
+        "text": "  Haemoglobin   HB  \t 13.2 "
+      },
+      "name": "ascii_lowercase_and_trim"
+    },
+    {
+      "expected": {
+        "fold": "hemoglobine — dr. jose perez, clinica sao joao",
+        "normalized": "hemoglobine dr jose perez clinica sao joao",
+        "pfold": "Hemoglobine — Dr. Jose Perez, Clinica Sao Joao",
+        "words": [
+          "hemoglobine",
+          "dr",
+          "jose",
+          "perez",
+          "clinica",
+          "sao",
+          "joao"
+        ]
+      },
+      "input": {
+        "text": "Hémoglobine — Dr. José Pérez, Clínica São João"
+      },
+      "name": "diacritics_removed"
+    },
+    {
+      "expected": {
+        "fold": "platelets 250 ×103/μl; egfr 92 ml/min/1.73m2",
+        "normalized": "platelets 250 103 μl egfr 92 ml min 1 73m2",
+        "pfold": "Platelets 250 ×103/μL; eGFR 92 mL/min/1.73m2",
+        "words": [
+          "platelets",
+          "250",
+          "103",
+          "μl",
+          "egfr",
+          "92",
+          "ml",
+          "min",
+          "1",
+          "73m2"
+        ]
+      },
+      "input": {
+        "text": "Platelets 250 ×10³/µL; eGFR 92 mL/min/1.73m²"
+      },
+      "name": "micro_sign_and_superscripts"
+    },
+    {
+      "expected": {
+        "fold": "line one\n\nline three\nline four",
+        "normalized": "line one line three line four",
+        "pfold": "Line one\n\nLine three\nLine four",
+        "words": [
+          "line",
+          "one",
+          "line",
+          "three",
+          "line",
+          "four"
+        ]
+      },
+      "input": {
+        "text": "Line one\r\n\r\n  Line   three\rLine four"
+      },
+      "name": "crlf_and_blank_lines_kept"
+    },
+    {
+      "expected": {
+        "fold": "total cholesterol 212 mg/dl",
+        "normalized": "total cholesterol 212 mg dl",
+        "pfold": "Total Cholesterol 212 mg/dL",
+        "words": [
+          "total",
+          "cholesterol",
+          "212",
+          "mg",
+          "dl"
+        ]
+      },
+      "input": {
+        "text": "Total Cholesterol 212​ mg/dL﻿"
+      },
+      "name": "nbsp_em_space_zero_width"
+    },
+    {
+      "expected": {
+        "fold": "final diagnosis hba1c 7.8%",
+        "normalized": "final diagnosis hba1c 7 8",
+        "pfold": "final diagnosis HbA1c 7.8%",
+        "words": [
+          "final",
+          "diagnosis",
+          "hba1c",
+          "7",
+          "8"
+        ]
+      },
+      "input": {
+        "text": "ﬁnal diagnosis ＨｂＡ１ｃ ７．８％"
+      },
+      "name": "ligature_fullwidth_digits"
+    },
+    {
+      "expected": {
+        "fold": "istanbul σοφιασ",
+        "normalized": "istanbul σοφιασ",
+        "pfold": "ISTANBUL ΣΟΦΙΑΣ",
+        "words": [
+          "istanbul",
+          "σοφιασ"
+        ]
+      },
+      "input": {
+        "text": "İSTANBUL ΣΟΦΙΑΣ"
+      },
+      "name": "dotted_capital_i_and_sigma"
+    },
+    {
+      "expected": {
+        "fold": "tab 1⁄2-0-1⁄2 paracetamol",
+        "normalized": "tab 1 2 0 1 2 paracetamol",
+        "pfold": "Tab 1⁄2-0-1⁄2 paracetamol",
+        "words": [
+          "tab",
+          "1",
+          "2",
+          "0",
+          "1",
+          "2",
+          "paracetamol"
+        ]
+      },
+      "input": {
+        "text": "Tab ½-0-½ para­cetamol"
+      },
+      "name": "fraction_and_soft_hyphen"
+    },
+    {
+      "expected": {
+        "fold": "grand total ₹ 518.74 ↑ ↓ •",
+        "normalized": "grand total 518 74",
+        "pfold": "Grand Total ₹ 518.74 ↑ ↓ •",
+        "words": [
+          "grand",
+          "total",
+          "518",
+          "74"
+        ]
+      },
+      "input": {
+        "text": "Grand Total ₹ 518.74 ↑ ↓ •"
+      },
+      "name": "rupee_and_arrows_untouched"
+    },
+    {
+      "expected": {
+        "fold": "",
+        "normalized": "",
+        "pfold": "",
+        "words": []
+      },
+      "input": {
+        "text": ""
+      },
+      "name": "empty"
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "fold",
+  "version": 1
+}

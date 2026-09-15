@@ -1,0 +1,485 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.95,
+        "record_type": "lab_report",
+        "scores": {
+          "bill": 3,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 14,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\n12, MG Road, Sector 14, Gurugram, Haryana 122001    Ph: 0124-4567890\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nUHID : SD-204518                         Ref. By : Dr. A. K. Mehta\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 02:40 PM\nCOMPLETE BLOOD COUNT (CBC)\nTest Name                     Result      Unit           Biological Reference Interval\nHaemoglobin                   11.2   L    g/dL           13.0 - 17.0\nTotal Leucocyte Count         11,800 H    cells/cumm     4,000 - 11,000\nRBC Count                     4.12        million/cumm   4.5 - 5.5\nPacked Cell Volume (PCV)      35.1   L    %              40 - 50\nMCV                           85.2        fL             83 - 101\nMCH                           27.2        pg             27 - 32\nPlatelet Count                1.45   L    lakhs/cumm     1.5 - 4.1\nNeutrophils                   72          %              40 - 80\nLymphocytes                   20          %              20 - 40\nESR                           28     H    mm/1st hr      0 - 15\nMethod: Automated cell counter\nDr. Neha Gupta, MD (Pathology)\nConsultant Pathologist\nPage 1 of 1"
+        ]
+      },
+      "name": "cbc_indian"
+    },
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.95,
+        "record_type": "lab_report",
+        "scores": {
+          "bill": 3,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 12,
+          "medication_list": 0,
+          "prescription": 1,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "Riverside Medical Laboratory\n4100 Oak Street, Suite 200, Springfield, IL 62704\nPatient: DOE, JANE M          DOB: 03/14/1978          Sex: F\nPhysician: Dr. Robert Chen          Account #: 88213\nCollected: 09/10/2026 07:45 AM     Received: 09/10/2026 09:02 AM     Reported: 09/11/2026 04:10 PM\nLIPID PANEL\nTest                    Result    Flag   Units    Reference Range\nCholesterol, Total      212       H      mg/dL    <200\nTriglycerides           168       H      mg/dL    <150\nHDL Cholesterol         44               mg/dL    >40\nLDL Cholesterol, Calc   134       H      mg/dL    <100\nNon-HDL Cholesterol     168              mg/dL    <130\nChol/HDL Ratio          4.8                       <5.0\nFasting: Yes\nPage 1 of 1"
+        ]
+      },
+      "name": "lipid_panel_us"
+    },
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.95,
+        "record_type": "lab_report",
+        "scores": {
+          "bill": 3,
+          "consultation_note": 0,
+          "diagnostic_report": 1,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 14,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "CITY CARE PATHOLOGY LABORATORY\nName: Mrs. Sunita Rao    Age: 52 Years    Gender: Female\nSample Collected On: 05-Sep-2026 09:10    Report Date: 06-Sep-2026\nReferred By: Dr. P. Iyer\nTHYROID PROFILE (T3, T4, TSH)\nSpecimen: Serum\nInvestigation              Observed Value    Units      Biological Reference Interval\nTotal T3                   1.12              ng/mL      0.80 - 2.00\nTotal T4                   7.9               µg/dL      5.1 - 14.1\nTSH (Ultrasensitive)       6.84    H         µIU/mL     0.27 - 4.20\nInterpretation: Elevated TSH with normal T3/T4 suggests subclinical hypothyroidism. Correlate clinically.\nDr. Kavita Menon, MD Pathology"
+        ]
+      },
+      "name": "thyroid_profile"
+    },
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.95,
+        "record_type": "lab_report",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 0,
+          "diagnostic_report": 1,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 14,
+          "medication_list": 0,
+          "prescription": 1,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "METRO LABS\nPatient Name: Arjun Nair    Age/Sex: 45/M\nCollection Date: 14/09/2026    Report Date: 14/09/2026\nTest    Result    Unit    Reference Range\nGLYCATED HAEMOGLOBIN (HbA1c)\nHbA1c    7.8    %    4.0 - 5.6\nEstimated Average Glucose    177    mg/dL\nInterpretation:\nNon-diabetic    < 5.7\nPrediabetes    5.7 - 6.4\nDiabetes    >= 6.5\nBLOOD GLUCOSE FASTING\nGlucose, Fasting (Plasma)    132    mg/dL    70 - 100\nGlucose, Post Prandial (2 hrs)    198    mg/dL    < 140"
+        ]
+      },
+      "name": "hba1c_glucose"
+    },
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.95,
+        "record_type": "lab_report",
+        "scores": {
+          "bill": 3,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 14,
+          "medication_list": 0,
+          "prescription": 1,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Mr. RAHUL VERMA          Age/Sex : 34 Yrs/M\nCollected On : 12/09/2026 08:15 AM       Reported On : 12/09/2026 03:05 PM\nLIVER FUNCTION TEST (LFT)\nTest Name              Result        Unit     Biological Reference Interval\nBilirubin Total        1.8     H     mg/dL    0.3 - 1.2\nBilirubin Direct       0.5     H     mg/dL    0.0 - 0.3\nBilirubin Indirect     1.3           mg/dL    0.2 - 0.9\nSGOT (AST)             86      H     U/L      5 - 40\nSGPT (ALT)             112     H     U/L      5 - 41\nAlkaline Phosphatase   98            U/L      40 - 129\nTotal Protein          7.1           g/dL     6.4 - 8.3\nAlbumin                4.2           g/dL     3.5 - 5.2\nA/G Ratio              1.45                   1.1 - 2.2"
+        ]
+      },
+      "name": "lft"
+    },
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.95,
+        "record_type": "lab_report",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 1,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 10,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "SUNRISE DIAGNOSTICS & PATH LAB\nPatient Name : Ms. ANANYA IYER          Age/Sex : 27 Yrs/F\nCollected On : 11/09/2026 07:50 AM       Reported On : 11/09/2026 12:30 PM\nURINE ROUTINE EXAMINATION\nSpecimen: Urine (random)\nTest              Result      Unit      Biological Reference Interval\nPHYSICAL EXAMINATION\nColour            Pale Yellow           Pale Yellow\nAppearance        Clear                 Clear\nSpecific Gravity  1.020                 1.005 - 1.030\nCHEMICAL EXAMINATION\npH                6.0                   5.0 - 8.0\nProtein           Trace                 Nil\nGlucose           Nil                   Nil\nKetones           Negative              Negative\nBlood             Positive              Negative\nMICROSCOPIC EXAMINATION\nPus Cells         4-6         /hpf      0 - 5\nRBCs              Nil         /hpf      0 - 2\nEpithelial Cells  2-3         /hpf      0 - 5\nCasts             Absent"
+        ]
+      },
+      "name": "urine_routine"
+    },
+    {
+      "expected": {
+        "category": "prescriptions",
+        "confidence": 0.95,
+        "record_type": "prescription",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 6,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 12,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "Dr. Sanjay Kulkarni\nMBBS, MD (General Medicine)\nReg. No. MMC 2011/04/1234\nKulkarni Clinic, Shivaji Nagar, Pune\nPh: 020-25501234   Timings: 10 am - 1 pm, 6 pm - 9 pm\nDate: 13/09/2026\nName: Priya Deshpande    Age: 29 Y    Sex: F\nC/O: Fever, sore throat, body ache x 3 days\nDx: Acute pharyngitis\nRx\n1. Tab. Azithromycin 500 mg    1-0-0    x 3 days    after food\n2. Tab. Paracetamol 650 mg    1-0-1    x 5 days\n3. Syp. Ascoril LS 10 ml    TDS    x 5 days\n4. Cap. Pantoprazole 40 mg    1-0-0    before food    x 5 days\nAdvice: Warm saline gargles. Plenty of fluids.\nReview after 5 days"
+        ]
+      },
+      "name": "prescription_101"
+    },
+    {
+      "expected": {
+        "category": "prescriptions",
+        "confidence": 0.95,
+        "record_type": "prescription",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 4,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 11,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "Dr. R. K. Sharrna  M.B.B.S\nSharma Clinic\nDt: 2/9/26\nMr Vikas  35y/m\nc/o cough & cold 4 days\nRx\nTab Montek-LC  0-0-1  x5d\nTab. Dol0 650  1-1-1  x 3days  SOS\nSyp Grilinctus  2tsp  tds\nCap Amoxyci11in 500mg  1-0-1  x 5 days\nT ab. Levocet 5mg  0-0-1\nSteam inhalation"
+        ]
+      },
+      "name": "prescription_ocr_noise"
+    },
+    {
+      "expected": {
+        "category": "doctor_visits",
+        "confidence": 0.95,
+        "record_type": "consultation_note",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 11,
+          "diagnostic_report": 4,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 3,
+          "medication_list": 0,
+          "prescription": 6,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "GREENLEAF MULTISPECIALITY HOSPITAL\nDepartment of Cardiology\nOPD Consultation Note\nPatient Name: Meera Joshi    Age/Sex: 61 Y / F    UHID: GL-778120\nVisit Date: 08/09/2026\nConsultant: Dr. Anil Deshmukh, DM (Cardiology)\nChief Complaints:\nBreathlessness on exertion since 2 weeks\nOccasional chest tightness\nHistory: Known case of hypertension for 10 years.\nOn Examination: BP 148/92 mmHg, Pulse 88/min, SpO2 97%\nProvisional Diagnosis: Hypertensive heart disease; Rule out coronary artery disease\nPlan:\nECG and 2D Echo\nLipid profile and HbA1c\nTab. Telmisartan 40 mg OD\nFollow up on 22/09/2026 with reports"
+        ]
+      },
+      "name": "consultation_note"
+    },
+    {
+      "expected": {
+        "category": "hospitalization",
+        "confidence": 0.75,
+        "record_type": "discharge_summary",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 10,
+          "diagnostic_report": 0,
+          "discharge_summary": 13,
+          "imaging_report": 4,
+          "insurance": 0,
+          "lab_report": 3,
+          "medication_list": 0,
+          "prescription": 8,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "ST. MARY'S HOSPITAL\nDISCHARGE SUMMARY\nPatient Name: Mohd. Irfan Khan    Age: 58 Years    Sex: Male\nIP No: 2026/IP/04512    Ward: Medical ICU    Bed No: 12\nDate of Admission: 02/09/2026    Date of Discharge: 07/09/2026\nTreating Doctor: Dr. Farah Siddiqui, MD (Internal Medicine)\nFinal Diagnosis:\n1. Community acquired pneumonia (right lower lobe)\n2. Type 2 diabetes mellitus - uncontrolled\nPresenting Complaints: Fever with chills, productive cough, breathlessness\nCourse in Hospital:\nPatient was admitted with high grade fever and hypoxia. Treated with Inj. Ceftriaxone 1 g IV BD and Inj. Azithromycin 500 mg IV OD. Blood sugars controlled with insulin. Improved clinically.\nCondition at Discharge: Stable\nDischarge Medications:\n1. Tab. Cefuroxime 500 mg 1-0-1 x 5 days after food\n2. Tab. Metformin 500 mg 1-0-1 after food\n3. Tab. Paracetamol 650 mg SOS for fever\nAdvice on Discharge:\nMonitor blood sugar twice daily\nReview in medicine OPD after 1 week with CBC and chest X-ray"
+        ]
+      },
+      "name": "discharge_summary"
+    },
+    {
+      "expected": {
+        "category": "imaging",
+        "confidence": 0.95,
+        "record_type": "imaging_report",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 2,
+          "diagnostic_report": 1,
+          "discharge_summary": 0,
+          "imaging_report": 8,
+          "insurance": 0,
+          "lab_report": 2,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "PRIME IMAGING & DIAGNOSTIC CENTRE\nULTRASONOGRAPHY - WHOLE ABDOMEN\nPatient Name: Kavya Reddy     Age/Sex: 38Y/F     Date: 11/09/2026\nRef. By: Dr. S. Rao\nClinical Indication: Pain abdomen, right upper quadrant\nFINDINGS:\nLiver: Normal in size (14.2 cm) with diffusely increased echogenicity. No focal lesion.\nGall Bladder: Distended. Multiple calculi, largest measuring 8 mm. Wall thickness normal.\nCBD: Normal calibre (4 mm).\nPancreas: Normal.\nSpleen: Normal in size (10.1 cm).\nKidneys: Right 10.2 x 4.5 cm, Left 10.5 x 4.8 cm. No calculus or hydronephrosis.\nIMPRESSION:\n- Grade I fatty liver.\n- Cholelithiasis without cholecystitis.\nSuggested: Surgical consultation.\nDr. Vivek Menon, MD (Radiodiagnosis)\nConsultant Radiologist"
+        ]
+      },
+      "name": "usg_abdomen"
+    },
+    {
+      "expected": {
+        "category": "lab_reports",
+        "confidence": 0.71,
+        "record_type": "diagnostic_report",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 2,
+          "diagnostic_report": 5,
+          "discharge_summary": 0,
+          "imaging_report": 2,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "HEARTLINE CARDIAC CLINIC\nELECTROCARDIOGRAM (ECG) REPORT\nName: Suresh Pillai   Age: 66 yrs   Sex: M\nDate of Test: 10/09/2026   Time: 11:20\nHeart Rate: 54 bpm\nRhythm: Sinus bradycardia\nPR Interval: 168 ms\nQRS Duration: 92 ms\nQTc: 412 ms\nAxis: Normal\nInterpretation: Sinus bradycardia. No acute ST-T changes.\nImpression: Sinus bradycardia\nDr. Latha Krishnan, DM (Cardiology)"
+        ]
+      },
+      "name": "ecg"
+    },
+    {
+      "expected": {
+        "category": "insurance_bills",
+        "confidence": 0.75,
+        "record_type": "bill",
+        "scores": {
+          "bill": 8,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 5,
+          "medication_list": 0,
+          "prescription": 3,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "WELLNESS PHARMACY & DIAGNOSTICS\nGSTIN: 27AABCW1234K1Z5\nTAX INVOICE\nInvoice No: WP/26-27/01873    Invoice Date: 13/09/2026\nPatient: Priya Deshpande    Doctor: Dr. Sanjay Kulkarni\nSr  Item                          Batch     Exp      Qty   Rate     Amount\n1   Azithromycin 500mg Tab (3)    AZ2231    08/27    1     118.50   118.50\n2   Paracetamol 650mg Tab (15)    PC7781    11/27    1     32.00    32.00\n3   CBC Test                      -         -        1     350.00   350.00\nSub Total                                                           500.50\nCGST 6%                                                             9.12\nSGST 6%                                                             9.12\nGrand Total                                                         ₹ 518.74\nPaid by UPI"
+        ]
+      },
+      "name": "invoice_gst"
+    },
+    {
+      "expected": {
+        "category": "insurance_bills",
+        "confidence": 0.85,
+        "record_type": "insurance",
+        "scores": {
+          "bill": 5,
+          "consultation_note": 2,
+          "diagnostic_report": 0,
+          "discharge_summary": 3,
+          "imaging_report": 0,
+          "insurance": 9,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "SECURECARE HEALTH INSURANCE CO. LTD.\nCLAIM FORM - PART A (To be filled by the insured)\nPolicy No: SC/HL/2025/0098812\nClaim No: CL-26-004411\nName of Policy Holder: Rakesh Gupta\nMember ID: SCH-4471-02\nName of Patient: Anita Gupta    Relationship: Spouse    Age: 47\nHospital: City Care Hospital, Nagpur\nDate of Admission: 18/08/2026    Date of Discharge: 21/08/2026\nDiagnosis: Acute gastroenteritis with dehydration\nClaim Amount: Rs. 48,650\nSum Insured: Rs. 5,00,000"
+        ]
+      },
+      "name": "insurance_claim"
+    },
+    {
+      "expected": {
+        "category": "vaccination",
+        "confidence": 0.94,
+        "record_type": "vaccination_record",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 7
+        }
+      },
+      "input": {
+        "pages": [
+          "LITTLE STEPS CHILD CARE CLINIC\nIMMUNIZATION CERTIFICATE\nChild Name: Aarav Singh    DOB: 15/01/2025    Sex: Male\nVaccine                 Dose        Date Given     Batch No\nBCG                     Birth       16/01/2025     B2211\nHepatitis B             Dose 1      16/01/2025     HB0931\nDTaP-IPV-Hib-HepB       Dose 1      26/02/2025     PX5510\nDTaP-IPV-Hib-HepB       Dose 2      26/03/2025     PX5602\nMMR                     Dose 1      20/10/2025     MM1180\nNext due: MMR Dose 2 on 20/04/2027\nDr. Pooja Bansal, MD (Pediatrics)"
+        ]
+      },
+      "name": "immunization_certificate"
+    },
+    {
+      "expected": {
+        "category": "other",
+        "confidence": 0,
+        "record_type": "other",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 1,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "Felt dizzy after morning walk. Checked BP at home: 150/95 at 9 am, 138/88 in the evening.\nRemember to ask about reducing salt and whether to repeat the lipid test.\nStarted walking 30 minutes daily since 1 Sept."
+        ]
+      },
+      "name": "personal_note"
+    },
+    {
+      "expected": {
+        "category": "other",
+        "confidence": 0,
+        "record_type": "other",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 0,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          ""
+        ]
+      },
+      "name": "empty_document"
+    },
+    {
+      "expected": {
+        "category": "insurance_bills",
+        "confidence": 0.63,
+        "record_type": "bill",
+        "scores": {
+          "bill": 6,
+          "consultation_note": 0,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 4,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "Invoice continued\nAmount 450",
+          "PRESCRIPTION\nTab. Dolo 650 1-0-1 x 3 days"
+        ]
+      },
+      "name": "head_rule_only_on_first_page",
+      "notes": "Head = first page only: page 2 \"PRESCRIPTION\" does not score the head rule. Bill leads by exactly the margin -> 0.63, reviewed."
+    },
+    {
+      "expected": {
+        "category": "doctor_visits",
+        "confidence": 0.65,
+        "record_type": "consultation_note",
+        "scores": {
+          "bill": 0,
+          "consultation_note": 10,
+          "diagnostic_report": 0,
+          "discharge_summary": 0,
+          "imaging_report": 0,
+          "insurance": 0,
+          "lab_report": 0,
+          "medication_list": 0,
+          "prescription": 8,
+          "vaccination_record": 0
+        }
+      },
+      "input": {
+        "pages": [
+          "OPD Consultation\nChief complaints: cough\nDiagnosis: URTI\nTab. Azithromycin 500 mg OD x 3 days"
+        ]
+      },
+      "name": "consult_with_meds_is_consultation",
+      "notes": "Consultation note that also lists medications: consultation 10 beats prescription 8. The lead is exactly the margin, so confidence is 0.65 (< 0.7) and the record still goes to review."
+    }
+  ],
+  "format": "ayuvo-records-vectors",
+  "function": "classify",
+  "version": 1
+}

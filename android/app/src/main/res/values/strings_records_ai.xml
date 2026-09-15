@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Health Records AI processing (docs/health-records.md §16). English first. -->
+<resources>
+    <string name="records_ai_question">How would you like Ayuvo AI to process your health records?</string>
+    <string name="records_ai_mode_local">Local AI</string>
+    <string name="records_ai_mode_local_detail">Uses the on-device model. Record text stays on this phone for AI processing.</string>
+    <string name="records_ai_mode_cloud">Cloud AI</string>
+    <string name="records_ai_mode_cloud_detail">Sends page text (images only for pages without text) to your AI provider.</string>
+    <string name="records_ai_mode_ask">Ask me when needed</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo asks before using AI on a record.</string>
+    <string name="records_ai_mode_off">Skip AI for now</string>
+    <string name="records_ai_mode_off_detail">Details are found without AI. You can change this in Settings.</string>
+    <string name="records_ai_onboarding_note">You can change this anytime in Settings › Health Records.</string>
+    <string name="records_ai_chooser_title">Choose how AI helps with your records</string>
+    <string name="records_ai_settings_title">AI processing</string>
+    <string name="records_ai_local_unavailable">On-device AI isn’t set up — details found without AI.</string>
+    <string name="records_ai_set_up_local">Set up on-device AI</string>
+    <string name="records_ai_no_cloud_provider">Add an AI provider to use online AI.</string>
+    <string name="records_ai_add_provider">Add an AI provider</string>
+    <string name="records_ai_cloud_provider_note">Online AI uses %1$s.</string>
+    <string name="records_ai_consent_title">Use AI to find more details?</string>
+    <string name="records_ai_consent_body">AI can find details the rules missed. Results are suggestions you can check against the original.</string>
+    <string name="records_ai_consent_local">On this device</string>
+    <string name="records_ai_consent_cloud">Online AI · %1$s</string>
+    <string name="records_ai_consent_not_now">Not now</string>
+    <string name="records_ai_consent_apply_all">Apply to all waiting records</string>
+    <string name="records_ai_consent_none_available">No AI is available yet. Set up on-device AI or add an AI provider in Settings.</string>
+    <string name="records_ai_status_local">Processed on this device</string>
+    <string name="records_ai_status_cloud">Processed using online AI · %1$s</string>
+    <string name="records_ai_status_none">Not processed by AI</string>
+</resources>
