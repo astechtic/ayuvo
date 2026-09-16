@@ -1524,7 +1524,7 @@
     <string name="records_backup_drive_last">Last Drive backup %1$s</string>
     <string name="records_backup_drive_never">Not backed up to Drive yet</string>
     <string name="records_backup_drive_restore">Restore from Drive</string>
-    <string name="records_backup_drive_signin">Turn on Google Drive Backup in Data &amp; privacy first.</string>
+    <string name="records_backup_drive_signin">Turn on Google Drive Backup in Data Management first.</string>
     <string name="records_backup_exported">Archive ready \u00b7 %1$s</string>
     <string name="records_backup_imported">Imported %1$d records, skipped %2$d</string>
     <string name="records_backup_missing_files">%1$d records have no original file in the archive.</string>

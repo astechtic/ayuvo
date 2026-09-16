@@ -12,11 +12,11 @@
 		F00D10000000000000000001 /* FudAIWatchApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = F00D10000000000000000007 /* FudAIWatchApp.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F00D10000000000000000002 /* FudAIWatchWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F00D10000000000000000008 /* FudAIWatchWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F00D57000000000000000011 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = F00D57000000000000000013 /* WhisperKit */; };
-		F1BE00000000000000000011 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F1BE00000000000000000013 /* FirebaseCore */; };
 		F00D58000000000000000011 /* LiteRTLM in Frameworks */ = {isa = PBXBuildFile; productRef = F00D58000000000000000013 /* LiteRTLM */; };
 		F00D59000000000000000011 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = F00D59000000000000000012 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt */; };
 		F00D5A000000000000000011 /* THIRD_PARTY_NOTICES_WhisperBase.txt in Resources */ = {isa = PBXBuildFile; fileRef = F00D5A000000000000000012 /* THIRD_PARTY_NOTICES_WhisperBase.txt */; };
 		F00D61000000000000000011 /* exercises.json in Resources */ = {isa = PBXBuildFile; fileRef = F00D61000000000000000012 /* exercises.json */; };
+		F1BE00000000000000000011 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F1BE00000000000000000013 /* FirebaseCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -705,6 +705,7 @@
 				INFOPLIST_KEY_AppGroupIdentifier = "$(APP_GROUP_IDENTIFIER)";
 				INFOPLIST_KEY_CFBundleDisplayName = "Ayuvo Debug";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Ayuvo uses the camera to scan food and barcodes.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ayuvo reads your activity, body measurements, heart, sleep, vitals, respiratory, mobility, hearing, cycle tracking, mindfulness, symptoms and nutrition data to show them in the Health Data hub and keep your history in sync on this iPhone. Only if you allow it, Coach can use this data to answer your questions through your AI provider.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ayuvo writes, updates or removes your nutrition, body measurements and calculated workout calories when you change your logs.";
@@ -760,6 +761,7 @@
 				INFOPLIST_KEY_AppGroupIdentifier = "$(APP_GROUP_IDENTIFIER)";
 				INFOPLIST_KEY_CFBundleDisplayName = "Ayuvo Debug";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Ayuvo uses the camera to scan food and barcodes.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ayuvo reads your activity, body measurements, heart, sleep, vitals, respiratory, mobility, hearing, cycle tracking, mindfulness, symptoms and nutrition data to show them in the Health Data hub and keep your history in sync on this iPhone. Only if you allow it, Coach can use this data to answer your questions through your AI provider.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ayuvo writes, updates or removes your nutrition, body measurements and calculated workout calories when you change your logs.";
