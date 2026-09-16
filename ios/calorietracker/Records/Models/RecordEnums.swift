@@ -188,4 +188,12 @@ nonisolated enum RecordsViewMode: String, CaseIterable, Codable, Sendable, Ident
         case .grid: String(localized: "Grid")
         }
     }
+
+    var systemImage: String {
+        switch self {
+        case .timeline: "calendar.day.timeline.leading"
+        case .list: "list.bullet"
+        case .grid: "square.grid.2x2"
+        }
+    }
 }

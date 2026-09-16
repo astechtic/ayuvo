@@ -5656,6 +5656,38 @@ struct ProfileView: View {
                 CloudBackupSettingsSection()
 
                 Section {
+                    // Health Records backup/restore — accessible from Data Management too
+                    NavigationLink {
+                        RecordsStorageScreen()
+                    } label: {
+                        Label {
+                            Text("Health Records Storage")
+                        } icon: {
+                            Image(systemName: "externaldrive")
+                                .foregroundStyle(AppColors.calorie)
+                        }
+                    }
+                    .accessibilityIdentifier("dataManagement.records.storage")
+
+                    NavigationLink {
+                        RecordsBackupScreen()
+                    } label: {
+                        Label {
+                            Text("Health Records Backup & Restore")
+                        } icon: {
+                            Image(systemName: "archivebox")
+                                .foregroundStyle(AppColors.calorie)
+                        }
+                    }
+                    .accessibilityIdentifier("dataManagement.records.backup")
+                } header: {
+                    Text("Health Records")
+                } footer: {
+                    Text("Create and restore ayuvo-records archives. Health Records are never in iCloud or iPhone backups.")
+                }
+                .listRowBackground(AppColors.appCard)
+
+                Section {
                     // Export Food Diary
                     Button {
                         showExportDiary = true

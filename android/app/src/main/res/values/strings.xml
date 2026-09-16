@@ -1535,4 +1535,8 @@
     <string name="records_settings_storage_subtitle">Sizes and cleanup</string>
     <string name="records_settings_backup">Backup &amp; restore</string>
     <string name="records_settings_backup_subtitle">Archive, restore, Drive</string>
+    <string name="records_backup_drive_backup_now">Back up now to Drive</string>
+    <string name="records_backup_drive_reauth">Drive sign-in expired — turn the toggle off and on again to sign in.</string>
+    <string name="settings_data_mgmt_records_storage">Health Records Storage</string>
+    <string name="settings_data_mgmt_records_backup">Health Records Backup &amp; Restore</string>
 </resources>

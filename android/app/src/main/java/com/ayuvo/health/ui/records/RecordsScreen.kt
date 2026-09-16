@@ -40,6 +40,11 @@ import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.ViewTimeline
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -79,7 +84,6 @@ import com.ayuvo.health.records.ingest.DuplicateMatch
 import com.ayuvo.health.records.model.HealthRecord
 import com.ayuvo.health.records.model.RecordFilter
 import com.ayuvo.health.records.model.RecordType
-import com.ayuvo.health.ui.charts.IosStyleSegmentedControl
 import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.components.GlassSurface
@@ -174,15 +178,13 @@ fun RecordsScreen(
                 RecordsHeader(onAdd = { showAddSheet = true })
             }
             if (ui.totalCount > 0 || !ui.isBrowsingAll) {
-                RecordsSearchField(value = ui.search, onValueChange = vm::setSearch)
-                ParsedChipsRow(chips = ui.chips, onRemove = vm::removeChip)
-                IosStyleSegmentedControl(
-                    options = RecordsViewMode.entries,
-                    selected = ui.viewMode,
-                    label = { stringResource(it.labelRes()) },
-                    onSelect = vm::setViewMode,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                RecordsSearchFieldWithViewMode(
+                    value = ui.search,
+                    onValueChange = vm::setSearch,
+                    viewMode = ui.viewMode,
+                    onSelectViewMode = vm::setViewMode
                 )
+                ParsedChipsRow(chips = ui.chips, onRemove = vm::removeChip)
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -387,6 +389,66 @@ private fun SelectionBar(
         }
         IconButton(onClick = onDelete) {
             Icon(Icons.Filled.Delete, stringResource(R.string.action_delete), tint = Color(0xFFFF453A))
+        }
+    }
+}
+
+@Composable
+private fun RecordsSearchFieldWithViewMode(
+    value: String,
+    onValueChange: (String) -> Unit,
+    viewMode: RecordsViewMode,
+    onSelectViewMode: (RecordsViewMode) -> Unit
+) {
+    var menuOpen by remember { mutableStateOf(false) }
+    Row(
+        Modifier.padding(start = 16.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(Modifier.weight(1f)) {
+            GlassTextField(
+                value = value,
+                onValueChange = onValueChange,
+                placeholder = stringResource(R.string.records_search_placeholder),
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Search)
+            )
+            if (value.isNotEmpty()) {
+                IconButton(onClick = { onValueChange("") }, modifier = Modifier.align(Alignment.CenterEnd)) {
+                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.action_clear))
+                }
+            }
+        }
+        Box {
+            IconButton(onClick = { menuOpen = true }) {
+                Icon(
+                    imageVector = when (viewMode) {
+                        RecordsViewMode.TIMELINE -> Icons.Filled.ViewTimeline
+                        RecordsViewMode.LIST -> Icons.Filled.ViewList
+                        RecordsViewMode.GRID -> Icons.Filled.GridView
+                    },
+                    contentDescription = "View settings",
+                    tint = AppColors.Calorie
+                )
+            }
+            DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                RecordsViewMode.entries.forEach { mode ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(mode.labelRes())) },
+                        onClick = { onSelectViewMode(mode); menuOpen = false },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = when (mode) {
+                                    RecordsViewMode.TIMELINE -> Icons.Filled.ViewTimeline
+                                    RecordsViewMode.LIST -> Icons.Filled.ViewList
+                                    RecordsViewMode.GRID -> Icons.Filled.GridView
+                                },
+                                contentDescription = null,
+                                tint = if (mode == viewMode) AppColors.Calorie else androidx.compose.ui.graphics.Color.Unspecified
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
 }

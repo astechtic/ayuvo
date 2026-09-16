@@ -388,28 +388,32 @@ fun RecordDetailScreen(
                     onLinkRecord = { linkingRecord = true }
                 )
 
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    GlassTextButton(
-                        text = stringResource(R.string.records_action_share),
-                        onClick = { onShare(listOf(recordId)) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    GlassTextButton(
-                        text = stringResource(R.string.records_action_export),
-                        onClick = { export(view = false) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    GlassTextButton(
-                        text = stringResource(if (record.archived) R.string.records_action_unarchive else R.string.records_action_archive),
-                        onClick = { vm.toggleArchived() },
-                        modifier = Modifier.weight(1f)
-                    )
-                    GlassTextButton(
-                        text = stringResource(R.string.action_delete),
-                        onClick = { edit = DetailEdit.DELETE },
-                        color = Color(0xFFFF453A),
-                        modifier = Modifier.weight(1f)
-                    )
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        GlassTextButton(
+                            text = stringResource(R.string.records_action_share),
+                            onClick = { onShare(listOf(recordId)) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        GlassTextButton(
+                            text = stringResource(R.string.records_action_export),
+                            onClick = { export(view = false) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        GlassTextButton(
+                            text = stringResource(if (record.archived) R.string.records_action_unarchive else R.string.records_action_archive),
+                            onClick = { vm.toggleArchived() },
+                            modifier = Modifier.weight(1f)
+                        )
+                        GlassTextButton(
+                            text = stringResource(R.string.action_delete),
+                            onClick = { edit = DetailEdit.DELETE },
+                            color = Color(0xFFFF453A),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
                 Spacer(Modifier.heightIn(min = BottomNavScrollPadding))
             }

@@ -40,6 +40,9 @@ class DriveCloudBackupClient(
         data class Resolution(val intentSender: IntentSender) : AuthOutcome()
     }
 
+    /** Thrown when Drive returns HTTP 401 — the stored access token has expired. */
+    class DriveTokenExpiredException : Exception("Google Drive sign-in expired. Please sign in again.")
+
     /** Always shows every Google account on the device (not Continue for the last one). */
     fun accountPickerIntent(): Intent {
         val options = AccountPicker.AccountChooserOptions.Builder()
@@ -121,6 +124,7 @@ class DriveCloudBackupClient(
             .get()
             .build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive list failed (${response.code})")
             val body = response.body?.string() ?: return@use null
             val files = JSONObject(body).optJSONArray("files") ?: return@use null
@@ -175,6 +179,7 @@ class DriveCloudBackupClient(
                         val confirmed = range?.substringAfter('-', "")?.toLongOrNull()?.plus(1) ?: end
                         null to confirmed
                     }
+                    response.code == 401 -> throw DriveTokenExpiredException()
                     response.code in 500..599 && attempts < RESUMABLE_MAX_RETRIES -> {
                         attempts++
                         null to offset
@@ -209,6 +214,7 @@ class DriveCloudBackupClient(
             .header("X-Upload-Content-Length", total.toString())
         val request = if (existingFileId == null) builder.post(body).build() else builder.patch(body).build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive resumable session failed (${response.code})")
             return response.header("Location") ?: error("Drive returned no resumable session URL")
         }
@@ -247,6 +253,7 @@ class DriveCloudBackupClient(
             .get()
             .build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive list failed (${response.code})")
             val body = response.body?.string() ?: return@use null
             val fileList = JSONObject(body).optJSONArray("files") ?: return@use null
@@ -262,6 +269,7 @@ class DriveCloudBackupClient(
             .get()
             .build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive download failed (${response.code})")
             val source = response.body?.byteStream() ?: error("Empty backup file")
             target.parentFile?.mkdirs()
@@ -276,6 +284,7 @@ class DriveCloudBackupClient(
             .get()
             .build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive download failed (${response.code})")
             response.body?.bytes() ?: error("Empty backup file")
         }
@@ -330,6 +339,7 @@ class DriveCloudBackupClient(
             .post(body)
             .build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive upload failed (${response.code})")
             val json = JSONObject(response.body?.string() ?: error("Empty Drive create response"))
             return json.getString("id")
@@ -343,6 +353,7 @@ class DriveCloudBackupClient(
             .patch(zip.toRequestBody("application/zip".toMediaType()))
             .build()
         http.newCall(request).execute().use { response ->
+            if (response.code == 401) throw DriveTokenExpiredException()
             if (!response.isSuccessful) error("Drive update failed (${response.code})")
         }
     }

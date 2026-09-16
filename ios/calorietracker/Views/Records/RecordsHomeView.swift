@@ -452,14 +452,6 @@ struct RecordsHomeView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Picker("View", selection: Binding(get: { store.viewMode }, set: { store.viewMode = $0 })) {
-                ForEach(RecordsViewMode.allCases) { mode in
-                    Text(mode.title).tag(mode)
-                }
-            }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("records.viewMode")
-
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(RecordsFilterChip.allCases) { item in
@@ -713,6 +705,23 @@ struct RecordsHomeView: View {
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
+            Menu {
+                ForEach(RecordsViewMode.allCases) { mode in
+                    Button {
+                        store.viewMode = mode
+                    } label: {
+                        Label(mode.title, systemImage: mode.systemImage)
+                    }
+                    .accessibilityIdentifier("records.viewMode.\(mode.title.lowercased())")
+                }
+            } label: {
+                Image(systemName: store.viewMode.systemImage)
+                    .font(.system(size: 18))
+            }
+            .accessibilityLabel("View settings")
+            .accessibilityIdentifier("records.viewMode")
+        }
+        ToolbarItem(placement: .topBarTrailing) {
             Button {
                 showFilters = true
             } label: {
@@ -746,7 +755,7 @@ struct RecordsHomeView: View {
     }
 
     private var selectionBar: some View {
-        HStack {
+        HStack(spacing: 4) {
             Button {
                 let ids = Array(selection)
                 let allFavorite = store.records.filter { selection.contains($0.id) }.allSatisfy(\.favorite)
@@ -757,6 +766,8 @@ struct RecordsHomeView: View {
             } label: {
                 Label("Favorite", systemImage: "star")
             }
+            .help("Favorite")
+            .accessibilityLabel("Favorite")
             Spacer()
             Button {
                 let ids = Array(selection)
@@ -768,6 +779,8 @@ struct RecordsHomeView: View {
             } label: {
                 Label(chip == .archived ? "Unarchive" : "Archive", systemImage: "archivebox")
             }
+            .help(chip == .archived ? "Unarchive" : "Archive")
+            .accessibilityLabel(chip == .archived ? "Unarchive" : "Archive")
             Spacer()
             Button {
                 let ids = Array(selection)
@@ -779,6 +792,8 @@ struct RecordsHomeView: View {
             } label: {
                 Label("Ask Coach", systemImage: "bubble.left.and.text.bubble.right")
             }
+            .help("Ask Coach")
+            .accessibilityLabel("Ask Coach")
             .accessibilityIdentifier("records.selection.askCoach")
             Spacer()
             Button {
@@ -786,6 +801,8 @@ struct RecordsHomeView: View {
             } label: {
                 Label("Share", systemImage: "square.and.arrow.up")
             }
+            .help("Share")
+            .accessibilityLabel("Share")
             .accessibilityIdentifier("records.selection.share")
             Spacer()
             Button(role: .destructive) {
@@ -793,11 +810,13 @@ struct RecordsHomeView: View {
             } label: {
                 Label("Delete", systemImage: "trash")
             }
+            .help("Delete")
+            .accessibilityLabel("Delete")
         }
-        .labelStyle(.titleAndIcon)
-        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+        .labelStyle(.iconOnly)
+        .font(.system(size: 22, weight: .regular))
         .disabled(selection.isEmpty)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 24)
         .padding(.vertical, 12)
         .background(.bar)
     }

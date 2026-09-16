@@ -361,6 +361,13 @@ final class RecordsStore {
                 ? String(localized: "Saved to Health Records")
                 : String(localized: "\(results.count) records saved to Health Records"))
         }
+        // Sync newly added/imported records to Apple Health Clinical Records (guarded — no-op without entitlement)
+        if RecordsHealthKitSync.isAvailable {
+            let files = repository.files
+            for result in results {
+                await RecordsStore.healthKitSync.syncOne(record: result.record, fileStore: files)
+            }
+        }
         let records = results.map(\.record)
         // The review sheet opens by itself only for imports the user just made (not silent imports).
         if announce { autoReviewIDs.formUnion(records.map(\.id)) }

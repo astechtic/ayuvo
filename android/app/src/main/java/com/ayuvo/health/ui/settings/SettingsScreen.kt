@@ -1434,6 +1434,19 @@ fun SettingsScreen(
 
             if (selectedCategory == SettingsCategory.DATA_MANAGEMENT) {
             SectionCard {
+                // Link to Health Records storage and backup from Data Management
+                SettingRow(
+                    stringResource(R.string.settings_data_mgmt_records_storage),
+                    stringResource(R.string.records_settings_storage_subtitle),
+                    icon = Icons.Outlined.Storage
+                ) { nav.navigate(AppRoutes.HEALTH_RECORDS_STORAGE) }
+                HorizontalDivider()
+                SettingRow(
+                    stringResource(R.string.settings_data_mgmt_records_backup),
+                    stringResource(R.string.records_settings_backup_subtitle),
+                    icon = Icons.Outlined.CloudUpload
+                ) { nav.navigate(AppRoutes.HEALTH_RECORDS_BACKUP) }
+                HorizontalDivider()
                 ToggleRow(
                     label = stringResource(R.string.cloud_backup_title),
                     checked = cloudBackup.enabled,

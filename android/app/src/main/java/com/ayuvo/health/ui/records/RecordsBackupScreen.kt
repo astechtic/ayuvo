@@ -73,6 +73,7 @@ data class RecordsBackupUiState(
     val archiveBytes: Long = 0,
     val imported: ArchiveImportResult? = null,
     val driveSignedIn: Boolean = false,
+    val driveTokenExpired: Boolean = false,
     val error: String? = null
 )
 
@@ -137,11 +138,14 @@ class RecordsBackupViewModel(private val container: AppContainer) : ViewModel() 
 
     fun driveBackupNow() {
         if (_ui.value.busy) return
-        _ui.update { it.copy(busy = true, error = null) }
+        _ui.update { it.copy(busy = true, error = null, driveTokenExpired = false) }
         viewModelScope.launch {
             container.recordsDriveBackup.backupNow { sent, total ->
                 _ui.update { it.copy(progress = "${sent * 100 / total.coerceAtLeast(1)}%") }
-            }.onFailure { e -> _ui.update { it.copy(error = e.message ?: e.javaClass.simpleName) } }
+            }.onFailure { e ->
+                val expired = e is com.ayuvo.health.backup.DriveCloudBackupClient.DriveTokenExpiredException
+                _ui.update { it.copy(error = e.message ?: e.javaClass.simpleName, driveTokenExpired = expired) }
+            }
             _ui.update { it.copy(busy = false, progress = null) }
             refresh()
         }
@@ -317,10 +321,25 @@ fun RecordsBackupScreen(container: AppContainer, onBack: () -> Unit) {
                     if (ui.status.driveEnabled) {
                         Spacer(Modifier.height(6.dp))
                         GlassTextButton(
+                            text = stringResource(R.string.records_backup_drive_backup_now),
+                            onClick = { vm.driveBackupNow() },
+                            enabled = !ui.busy && ui.driveSignedIn,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        GlassTextButton(
                             text = stringResource(R.string.records_backup_drive_restore),
                             onClick = { driveRestoreMode = true },
                             enabled = !ui.busy && ui.driveSignedIn,
                             modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    if (ui.driveTokenExpired) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            stringResource(R.string.records_backup_drive_reauth),
+                            fontSize = 12.sp,
+                            color = AppColors.Calorie
                         )
                     }
                 }
