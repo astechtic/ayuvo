@@ -1,0 +1,3025 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "basic_two_meds",
+      "notes": "Ten entries over two days; 08:00 ties ordered amoxicillin, metformin; next_fire = 08:00."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 0,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "reminders_disabled_schedule",
+      "notes": "Metformin's row has reminders off."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "paused",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "paused_med_excluded",
+      "notes": "Only active medicines get reminders."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789008000000,
+            "kind": "snooze",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": 1789008000000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "snooze_replaces_scheduled",
+      "notes": "The 08:00 Metformin occurrence has a log, so no scheduled entry; a snooze entry fires at 08:10."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007520000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789007520000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789180200000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789180200000
+          },
+          {
+            "fire_at_ms": 1789180200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789180200000
+          }
+        ],
+        "next_fire_ms": 1789007520000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007520000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "due_two_minutes_ago_fires_now",
+      "notes": "Inside LATE_FIRE_MS: fire_at = now."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789180200000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789180200000
+          },
+          {
+            "fire_at_ms": 1789180200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789180200000
+          }
+        ],
+        "next_fire_ms": 1789029000000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789008000000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "due_ten_minutes_ago_not_fired",
+      "notes": "Outside LATE_FIRE_MS: the 08:00 doses are not planned again."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789011000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789011000000
+          },
+          {
+            "fire_at_ms": 1789014600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789014600000
+          },
+          {
+            "fire_at_ms": 1789018200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789018200000
+          },
+          {
+            "fire_at_ms": 1789065000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789065000000
+          },
+          {
+            "fire_at_ms": 1789068600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789068600000
+          },
+          {
+            "fire_at_ms": 1789072200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789072200000
+          },
+          {
+            "fire_at_ms": 1789075800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789075800000
+          },
+          {
+            "fire_at_ms": 1789079400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789079400000
+          },
+          {
+            "fire_at_ms": 1789083000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789083000000
+          },
+          {
+            "fire_at_ms": 1789086600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789086600000
+          },
+          {
+            "fire_at_ms": 1789090200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789090200000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789097400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789097400000
+          },
+          {
+            "fire_at_ms": 1789101000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789101000000
+          },
+          {
+            "fire_at_ms": 1789104600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789104600000
+          },
+          {
+            "fire_at_ms": 1789151400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789151400000
+          },
+          {
+            "fire_at_ms": 1789155000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789155000000
+          },
+          {
+            "fire_at_ms": 1789158600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789158600000
+          },
+          {
+            "fire_at_ms": 1789162200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789162200000
+          },
+          {
+            "fire_at_ms": 1789165800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789165800000
+          },
+          {
+            "fire_at_ms": 1789169400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789169400000
+          },
+          {
+            "fire_at_ms": 1789173000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789173000000
+          },
+          {
+            "fire_at_ms": 1789176600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789176600000
+          },
+          {
+            "fire_at_ms": 1789180200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789180200000
+          },
+          {
+            "fire_at_ms": 1789183800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789183800000
+          },
+          {
+            "fire_at_ms": 1789187400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789187400000
+          },
+          {
+            "fire_at_ms": 1789191000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789191000000
+          },
+          {
+            "fire_at_ms": 1789237800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789237800000
+          },
+          {
+            "fire_at_ms": 1789241400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789241400000
+          },
+          {
+            "fire_at_ms": 1789245000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789245000000
+          },
+          {
+            "fire_at_ms": 1789248600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789248600000
+          },
+          {
+            "fire_at_ms": 1789252200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789252200000
+          },
+          {
+            "fire_at_ms": 1789255800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789255800000
+          },
+          {
+            "fire_at_ms": 1789259400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789259400000
+          },
+          {
+            "fire_at_ms": 1789263000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789263000000
+          },
+          {
+            "fire_at_ms": 1789266600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789266600000
+          },
+          {
+            "fire_at_ms": 1789270200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789270200000
+          },
+          {
+            "fire_at_ms": 1789273800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789273800000
+          },
+          {
+            "fire_at_ms": 1789277400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789277400000
+          },
+          {
+            "fire_at_ms": 1789324200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789324200000
+          },
+          {
+            "fire_at_ms": 1789327800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789327800000
+          },
+          {
+            "fire_at_ms": 1789331400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789331400000
+          },
+          {
+            "fire_at_ms": 1789335000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789335000000
+          },
+          {
+            "fire_at_ms": 1789338600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789338600000
+          },
+          {
+            "fire_at_ms": 1789342200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789342200000
+          },
+          {
+            "fire_at_ms": 1789345800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789345800000
+          },
+          {
+            "fire_at_ms": 1789349400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789349400000
+          },
+          {
+            "fire_at_ms": 1789353000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789353000000
+          },
+          {
+            "fire_at_ms": 1789356600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789356600000
+          },
+          {
+            "fire_at_ms": 1789360200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789360200000
+          },
+          {
+            "fire_at_ms": 1789363800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789363800000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": true
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 604800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "00:00",
+              "01:00",
+              "02:00",
+              "03:00",
+              "04:00",
+              "05:00",
+              "06:00",
+              "07:00",
+              "08:00",
+              "09:00",
+              "10:00",
+              "11:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "budget_trim_at_52",
+      "notes": "84 candidates -> first 52, truncated true."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789011000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789011000000
+          },
+          {
+            "fire_at_ms": 1789014600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789014600000
+          },
+          {
+            "fire_at_ms": 1789018200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789018200000
+          },
+          {
+            "fire_at_ms": 1789065000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789065000000
+          },
+          {
+            "fire_at_ms": 1789068600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789068600000
+          },
+          {
+            "fire_at_ms": 1789072200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789072200000
+          },
+          {
+            "fire_at_ms": 1789075800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789075800000
+          },
+          {
+            "fire_at_ms": 1789079400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789079400000
+          },
+          {
+            "fire_at_ms": 1789083000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789083000000
+          },
+          {
+            "fire_at_ms": 1789086600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789086600000
+          },
+          {
+            "fire_at_ms": 1789090200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789090200000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789097400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789097400000
+          },
+          {
+            "fire_at_ms": 1789101000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789101000000
+          },
+          {
+            "fire_at_ms": 1789104600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789104600000
+          },
+          {
+            "fire_at_ms": 1789151400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789151400000
+          },
+          {
+            "fire_at_ms": 1789155000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789155000000
+          },
+          {
+            "fire_at_ms": 1789158600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789158600000
+          },
+          {
+            "fire_at_ms": 1789162200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789162200000
+          },
+          {
+            "fire_at_ms": 1789165800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789165800000
+          },
+          {
+            "fire_at_ms": 1789169400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789169400000
+          },
+          {
+            "fire_at_ms": 1789173000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789173000000
+          },
+          {
+            "fire_at_ms": 1789176600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789176600000
+          },
+          {
+            "fire_at_ms": 1789180200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789180200000
+          },
+          {
+            "fire_at_ms": 1789183800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789183800000
+          },
+          {
+            "fire_at_ms": 1789187400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789187400000
+          },
+          {
+            "fire_at_ms": 1789191000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789191000000
+          },
+          {
+            "fire_at_ms": 1789237800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789237800000
+          },
+          {
+            "fire_at_ms": 1789241400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789241400000
+          },
+          {
+            "fire_at_ms": 1789245000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789245000000
+          },
+          {
+            "fire_at_ms": 1789248600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789248600000
+          },
+          {
+            "fire_at_ms": 1789252200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789252200000
+          },
+          {
+            "fire_at_ms": 1789255800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789255800000
+          },
+          {
+            "fire_at_ms": 1789259400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789259400000
+          },
+          {
+            "fire_at_ms": 1789263000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789263000000
+          },
+          {
+            "fire_at_ms": 1789266600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789266600000
+          },
+          {
+            "fire_at_ms": 1789270200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789270200000
+          },
+          {
+            "fire_at_ms": 1789273800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789273800000
+          },
+          {
+            "fire_at_ms": 1789277400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789277400000
+          },
+          {
+            "fire_at_ms": 1789324200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789324200000
+          },
+          {
+            "fire_at_ms": 1789327800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789327800000
+          },
+          {
+            "fire_at_ms": 1789331400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789331400000
+          },
+          {
+            "fire_at_ms": 1789335000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789335000000
+          },
+          {
+            "fire_at_ms": 1789338600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789338600000
+          },
+          {
+            "fire_at_ms": 1789342200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789342200000
+          },
+          {
+            "fire_at_ms": 1789345800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789345800000
+          },
+          {
+            "fire_at_ms": 1789349400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789349400000
+          },
+          {
+            "fire_at_ms": 1789353000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789353000000
+          },
+          {
+            "fire_at_ms": 1789356600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789356600000
+          },
+          {
+            "fire_at_ms": 1789360200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789360200000
+          },
+          {
+            "fire_at_ms": 1789363800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789363800000
+          },
+          {
+            "fire_at_ms": 1789410600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789410600000
+          },
+          {
+            "fire_at_ms": 1789414200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789414200000
+          },
+          {
+            "fire_at_ms": 1789417800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789417800000
+          },
+          {
+            "fire_at_ms": 1789421400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789421400000
+          },
+          {
+            "fire_at_ms": 1789425000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789425000000
+          },
+          {
+            "fire_at_ms": 1789428600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789428600000
+          },
+          {
+            "fire_at_ms": 1789432200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789432200000
+          },
+          {
+            "fire_at_ms": 1789435800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789435800000
+          },
+          {
+            "fire_at_ms": 1789439400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789439400000
+          },
+          {
+            "fire_at_ms": 1789443000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789443000000
+          },
+          {
+            "fire_at_ms": 1789446600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789446600000
+          },
+          {
+            "fire_at_ms": 1789450200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789450200000
+          },
+          {
+            "fire_at_ms": 1789497000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789497000000
+          },
+          {
+            "fire_at_ms": 1789500600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789500600000
+          },
+          {
+            "fire_at_ms": 1789504200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789504200000
+          },
+          {
+            "fire_at_ms": 1789507800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789507800000
+          },
+          {
+            "fire_at_ms": 1789511400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789511400000
+          },
+          {
+            "fire_at_ms": 1789515000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789515000000
+          },
+          {
+            "fire_at_ms": 1789518600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789518600000
+          },
+          {
+            "fire_at_ms": 1789522200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789522200000
+          },
+          {
+            "fire_at_ms": 1789525800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789525800000
+          },
+          {
+            "fire_at_ms": 1789529400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789529400000
+          },
+          {
+            "fire_at_ms": 1789533000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789533000000
+          },
+          {
+            "fire_at_ms": 1789536600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789536600000
+          },
+          {
+            "fire_at_ms": 1789583400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789583400000
+          },
+          {
+            "fire_at_ms": 1789587000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789587000000
+          },
+          {
+            "fire_at_ms": 1789590600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789590600000
+          },
+          {
+            "fire_at_ms": 1789594200000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789594200000
+          },
+          {
+            "fire_at_ms": 1789597800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789597800000
+          },
+          {
+            "fire_at_ms": 1789601400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789601400000
+          },
+          {
+            "fire_at_ms": 1789605000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789605000000
+          },
+          {
+            "fire_at_ms": 1789608600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789608600000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": null,
+        "horizon_ms": 604800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "00:00",
+              "01:00",
+              "02:00",
+              "03:00",
+              "04:00",
+              "05:00",
+              "06:00",
+              "07:00",
+              "08:00",
+              "09:00",
+              "10:00",
+              "11:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "budget_null_unlimited",
+      "notes": "Android passes no budget."
+    },
+    {
+      "expected": {
+        "entries": [],
+        "next_fire_ms": null,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [],
+        "now_ms": 1789007280000,
+        "schedules": [],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "empty",
+      "notes": "next_fire_ms null."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 86520000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "horizon_exclusive",
+      "notes": "The 08:00 dose of the next day equals now + horizon and is excluded."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789008000000,
+            "kind": "snooze",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": 1789008000000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 0,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "snooze_fires_even_when_reminders_off",
+      "notes": "A user-requested snooze always fires."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": 1789003680000,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "closed_schedule_excluded",
+      "notes": "Only open rows are planned."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789029000000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007280000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-2",
+            "note": null,
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "skipped",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007340000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "taken_and_skipped_excluded",
+      "notes": "Logged occurrences never produce entries (taken early / skipped ahead)."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [
+          {
+            "created_ms": 1788921000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788921000000,
+            "snoozed_until_ms": 1788921600000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1788921000000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "old_snooze_ignored",
+      "notes": "A snooze older than LATE_FIRE_MS is left to missed materialization."
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789007400000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "fire_at_ms": 1789029000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789050600000,
+            "kind": "scheduled",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          },
+          {
+            "fire_at_ms": 1789093800000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789093800000
+          },
+          {
+            "fire_at_ms": 1789115400000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789115400000
+          },
+          {
+            "fire_at_ms": 1789137000000,
+            "kind": "scheduled",
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789137000000
+          }
+        ],
+        "next_fire_ms": 1789007400000,
+        "truncated": false
+      },
+      "input": {
+        "budget": 52,
+        "horizon_ms": 172800000,
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-10",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007280000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "end_date_limits_horizon",
+      "notes": "Metformin ends today: only its 08:00 and 20:00."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "plan_reminders",
+  "version": 1
+}

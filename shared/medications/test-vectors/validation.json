@@ -1,0 +1,637 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "errors": []
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "valid_daily",
+      "notes": "No errors."
+    },
+    {
+      "expected": {
+        "errors": []
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": null,
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 1,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": []
+        }
+      },
+      "name": "valid_prn",
+      "notes": "PRN without a schedule."
+    },
+    {
+      "expected": {
+        "errors": []
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [
+            1,
+            3,
+            5
+          ],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "weekly",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "valid_weekly",
+      "notes": "Weekly with days."
+    },
+    {
+      "expected": {
+        "errors": []
+      },
+      "input": {
+        "draft": {
+          "anchor_time": "06:00",
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "interval",
+          "instructions": null,
+          "interval_hours": 8,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": []
+        }
+      },
+      "name": "valid_interval",
+      "notes": "Interval."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "prn_has_schedule",
+            "field": "frequency_kind"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 1,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "prn_with_schedule",
+      "notes": "prn_has_schedule."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "days_required",
+            "field": "days"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "weekly",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "weekly_without_days",
+      "notes": "days_required."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "days_not_allowed",
+            "field": "days"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [
+            1
+          ],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "daily_with_days",
+      "notes": "days_not_allowed."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "times_invalid",
+            "field": "times"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "20:00",
+            "08:00"
+          ]
+        }
+      },
+      "name": "unsorted_times",
+      "notes": "times_invalid."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "times_invalid",
+            "field": "times"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "08:00"
+          ]
+        }
+      },
+      "name": "duplicate_times",
+      "notes": "times_invalid."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "times_invalid",
+            "field": "times"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "00:00",
+            "01:00",
+            "02:00",
+            "03:00",
+            "04:00",
+            "05:00",
+            "06:00",
+            "07:00",
+            "08:00",
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00"
+          ]
+        }
+      },
+      "name": "too_many_times",
+      "notes": "times_invalid (max 12)."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "interval_invalid",
+            "field": "interval_hours"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": "06:00",
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "interval",
+          "instructions": null,
+          "interval_hours": 5,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": []
+        }
+      },
+      "name": "interval_5",
+      "notes": "interval_invalid."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "anchor_required",
+            "field": "anchor_time"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "interval",
+          "instructions": null,
+          "interval_hours": 8,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": []
+        }
+      },
+      "name": "interval_without_anchor",
+      "notes": "anchor_required."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "end_date_before_start",
+            "field": "end_date"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": "2026-08-31",
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "end_before_start",
+      "notes": "end_date_before_start."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "start_date_invalid",
+            "field": "start_date"
+          },
+          {
+            "code": "end_date_invalid",
+            "field": "end_date"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": "2026-02-30",
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-13-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "bad_dates",
+      "notes": "start_date_invalid + end_date_invalid."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "name_required",
+            "field": "name"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "   ",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "empty_name",
+      "notes": "name_required."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "name_required",
+            "field": "name"
+          },
+          {
+            "code": "strength_too_long",
+            "field": "strength"
+          },
+          {
+            "code": "form_invalid",
+            "field": "form"
+          },
+          {
+            "code": "dose_quantity_invalid",
+            "field": "dose_quantity"
+          },
+          {
+            "code": "dose_unit_invalid",
+            "field": "dose_unit"
+          },
+          {
+            "code": "food_relation_invalid",
+            "field": "food_relation"
+          },
+          {
+            "code": "start_date_invalid",
+            "field": "start_date"
+          },
+          {
+            "code": "frequency_required",
+            "field": "frequency_kind"
+          },
+          {
+            "code": "instructions_too_long",
+            "field": "instructions"
+          },
+          {
+            "code": "note_too_long",
+            "field": "note"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "days": [],
+          "dose_quantity": 0,
+          "dose_unit": "spoon",
+          "end_date": null,
+          "food_relation": "never",
+          "form": "pill",
+          "frequency_kind": null,
+          "instructions": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+          "is_prn": 0,
+          "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "note": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+          "start_date": null,
+          "strength": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+          "times": []
+        }
+      },
+      "name": "everything_wrong",
+      "notes": "Every code, in field order."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "dose_quantity_invalid",
+            "field": "dose_quantity"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": null,
+          "dose_unit": "ml",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "syrup",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "syrup_null_dose",
+      "notes": "dose_quantity_invalid (the hint's dose_required must be resolved)."
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "frequency_required",
+            "field": "frequency_kind"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": null,
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "start_date": "2026-09-01",
+          "strength": "500 mg",
+          "times": []
+        }
+      },
+      "name": "frequency_missing",
+      "notes": "frequency_required."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "validate_draft",
+  "version": 1
+}

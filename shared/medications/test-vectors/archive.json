@@ -1,0 +1,1860 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "app": {
+          "platform": "android",
+          "version": "1.0"
+        },
+        "dose_logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007460000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "id": "log-2",
+            "medication_id": "med-2",
+            "note": null,
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "skipped",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "exported_ms": 1789097400000,
+        "format": "ayuvo-medications",
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788582600000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "version": 1
+      },
+      "input": {
+        "app_version": "1.0",
+        "exported_ms": 1789097400000,
+        "op": "export",
+        "platform": "android",
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": "med-1/photo.jpg",
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "export_round_trip",
+      "notes": "Arrays ordered by id, photo_path null, only table columns."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-1",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "med-2",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "sch-1",
+            "op": "insert",
+            "row": {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            "table": "medication_schedules"
+          },
+          {
+            "id": "sch-2",
+            "op": "insert",
+            "row": {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            "table": "medication_schedules"
+          },
+          {
+            "id": "log-1",
+            "op": "insert",
+            "row": {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            "table": "dose_logs"
+          },
+          {
+            "id": "log-2",
+            "op": "insert",
+            "row": {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            },
+            "table": "dose_logs"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "merge_into_empty",
+      "notes": "Every row inserted, medications first."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-1",
+            "op": "skip",
+            "reason": "older",
+            "table": "medications"
+          },
+          {
+            "id": "med-2",
+            "op": "update",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "sch-1",
+            "op": "insert",
+            "row": {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            "table": "medication_schedules"
+          },
+          {
+            "id": "sch-2",
+            "op": "insert",
+            "row": {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            "table": "medication_schedules"
+          },
+          {
+            "id": "log-1",
+            "op": "insert",
+            "row": {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            "table": "dose_logs"
+          },
+          {
+            "id": "log-2",
+            "op": "insert",
+            "row": {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            },
+            "table": "dose_logs"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin XR",
+              "photo_path": "med-1/photo.jpg",
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788669000000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin old",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1
+            }
+          ],
+          "schedules": []
+        }
+      },
+      "name": "merge_newer_wins_older_skipped",
+      "notes": "med-1 local is newer -> skip:older (keeps its photo); med-2 archive is newer -> update; schedules/logs inserted."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "sch-1",
+            "op": "skip",
+            "reason": "orphan",
+            "table": "medication_schedules"
+          },
+          {
+            "id": "log-1",
+            "op": "skip",
+            "reason": "orphan",
+            "table": "dose_logs"
+          },
+          {
+            "id": "log-2",
+            "op": "skip",
+            "reason": "orphan",
+            "table": "dose_logs"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "orphan_schedule_and_log",
+      "notes": "No medications in the archive -> schedules and logs are orphans."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-2",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "sch-1",
+            "op": "skip",
+            "reason": "older",
+            "table": "medication_schedules"
+          },
+          {
+            "id": "log-1",
+            "op": "skip",
+            "reason": "occurrence_conflict",
+            "table": "dose_logs"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-local",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ]
+        }
+      },
+      "name": "occurrence_conflict",
+      "notes": "log-1 targets (sch-1, 08:00) which log-local already occupies -> skip:occurrence_conflict."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-1",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            "table": "medications"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [],
+          "exported_ms": 1789097400000,
+          "extra": "ignored",
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "color": "blue",
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            }
+          ],
+          "schedules": [],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "unknown_keys_ignored",
+      "notes": "Unknown keys dropped on insert."
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false,
+        "ops": []
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 2
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "version_2_rejected",
+      "notes": "unsupported_version."
+    },
+    {
+      "expected": {
+        "error": "bad_format",
+        "ok": false,
+        "ops": []
+      },
+      "input": {
+        "archive": {
+          "format": "ayuvo-records",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "bad_format_rejected",
+      "notes": "bad_format."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-1",
+            "op": "skip",
+            "reason": "invalid",
+            "table": "medications"
+          },
+          {
+            "id": "med-2",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "sch-2",
+            "op": "skip",
+            "reason": "invalid",
+            "table": "medication_schedules"
+          },
+          {
+            "id": "log-2",
+            "op": "skip",
+            "reason": "invalid",
+            "table": "dose_logs"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "due",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "lozenge",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "25:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "invalid_rows_skipped",
+      "notes": "Bad enum/time/status rows are skipped; the valid medication is inserted."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-1",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1789183800000
+            },
+            "table": "medications"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1789270200000
+            }
+          ],
+          "schedules": [],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "future_updated_ms_clamped",
+      "notes": "updated_ms beyond now is clamped to now_ms."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-1",
+            "op": "skip",
+            "reason": "older",
+            "table": "medications"
+          },
+          {
+            "id": "med-2",
+            "op": "skip",
+            "reason": "older",
+            "table": "medications"
+          },
+          {
+            "id": "sch-1",
+            "op": "skip",
+            "reason": "older",
+            "table": "medication_schedules"
+          },
+          {
+            "id": "sch-2",
+            "op": "skip",
+            "reason": "older",
+            "table": "medication_schedules"
+          },
+          {
+            "id": "log-1",
+            "op": "skip",
+            "reason": "older",
+            "table": "dose_logs"
+          },
+          {
+            "id": "log-2",
+            "op": "skip",
+            "reason": "older",
+            "table": "dose_logs"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ],
+          "time_zone": "Asia/Kolkata",
+          "version": 1
+        },
+        "now_ms": 1789183800000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789007460000,
+              "updated_ms": 1789007400000
+            },
+            {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "log-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789007400000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-1",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-2",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "250 mg",
+              "updated_ms": 1788229800000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-1",
+              "interval_hours": null,
+              "medication_id": "med-1",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            },
+            {
+              "active_from_ms": 1788201000000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788229800000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "sch-2",
+              "interval_hours": null,
+              "medication_id": "med-2",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "14:00",
+                "20:00"
+              ],
+              "updated_ms": 1788229800000
+            }
+          ]
+        }
+      },
+      "name": "idempotent_second_merge",
+      "notes": "Everything skip:older (equal timestamps are not newer)."
+    },
+    {
+      "expected": {
+        "app": {
+          "platform": "ios",
+          "version": "1.0"
+        },
+        "dose_logs": [],
+        "exported_ms": 1789097400000,
+        "format": "ayuvo-medications",
+        "medications": [],
+        "schedules": [],
+        "time_zone": "Asia/Kolkata",
+        "version": 1
+      },
+      "input": {
+        "app_version": "1.0",
+        "exported_ms": 1789097400000,
+        "op": "export",
+        "platform": "ios",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        },
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "export_empty",
+      "notes": "Empty arrays."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "archive",
+  "version": 1
+}

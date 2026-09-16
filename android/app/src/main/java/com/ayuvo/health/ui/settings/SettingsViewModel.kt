@@ -35,6 +35,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import com.ayuvo.health.medications.reminders.MedicationAlarms
+import com.ayuvo.health.medications.reminders.MedicationNotifications
 
 data class SettingsUiState(
     val selectedAI: AIProvider = AIProvider.GEMINI,
@@ -66,6 +68,10 @@ data class SettingsUiState(
     val bodyFatReminderEnabled: Boolean = true,
     val goalReachedNotificationsEnabled: Boolean = true,
     val appUpdateNotificationsEnabled: Boolean = true,
+    /** Medication reminders (docs/medications.md §10); exact alarms = `canScheduleExactAlarms()` on Android 12+. */
+    val medicationRemindersEnabled: Boolean = true,
+    val medicationSnoozeMinutes: Int = 10,
+    val medicationExactAlarms: Boolean = true,
     val waterTrackingEnabled: Boolean = false,
     val waterDailyGoalMl: Int = 2_000,
     val waterUnit: WaterUnit = WaterUnit.Default,
@@ -233,6 +239,9 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             val bodyFatReminder = container.prefs.bodyFatReminderEnabled.first()
             val goalReachedNotifications = container.prefs.goalReachedNotificationsEnabled.first()
             val appUpdateNotifications = container.prefs.appUpdateNotificationsEnabled.first()
+            val medicationReminders = container.prefs.medicationRemindersEnabled.first()
+            val medicationSnooze = container.prefs.medicationSnoozeMinutes.first()
+            val medicationExact = MedicationAlarms.exactAllowed(container.appContext)
             val waterTracking = container.prefs.waterTrackingEnabled.first()
             val waterGoal = container.prefs.waterDailyGoalMl.first()
             val waterUnit = container.prefs.waterUnit.first()
@@ -310,6 +319,9 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
                 bodyFatReminderEnabled = bodyFatReminder,
                 goalReachedNotificationsEnabled = goalReachedNotifications,
                 appUpdateNotificationsEnabled = appUpdateNotifications,
+                medicationRemindersEnabled = medicationReminders,
+                medicationSnoozeMinutes = medicationSnooze,
+                medicationExactAlarms = medicationExact,
                 waterTrackingEnabled = waterTracking,
                 waterDailyGoalMl = waterGoal,
                 waterUnit = waterUnit,
@@ -959,6 +971,30 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
         }
     }
 
+    fun setMedicationRemindersEnabled(v: Boolean) {
+        viewModelScope.launch {
+            container.prefs.setMedicationRemindersEnabled(v)
+            _ui.value = _ui.value.copy(medicationRemindersEnabled = v)
+            syncNotificationSchedules()
+        }
+    }
+
+    fun setMedicationSnoozeMinutes(v: Int) {
+        viewModelScope.launch {
+            container.prefs.setMedicationSnoozeMinutes(v)
+            _ui.value = _ui.value.copy(medicationSnoozeMinutes = container.prefs.medicationSnoozeMinutes.first())
+        }
+    }
+
+    /** Re-reads `canScheduleExactAlarms()` (the user may have flipped it in system settings). */
+    fun refreshExactAlarmState() {
+        val exact = MedicationAlarms.exactAllowed(container.appContext)
+        if (exact != _ui.value.medicationExactAlarms) {
+            _ui.value = _ui.value.copy(medicationExactAlarms = exact)
+            if (container.medicationsDatabaseExists()) container.medicationReminders.replanAsync()
+        }
+    }
+
     fun setWaterTrackingEnabled(v: Boolean) {
         viewModelScope.launch {
             container.prefs.setWaterTrackingEnabled(v)
@@ -1041,7 +1077,17 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             container.notifications.cancelBodyFatReminder()
             container.notifications.cancelWaterReminder()
             container.notifications.cancelFastingGoal()
+            MedicationAlarms.cancel(container.appContext)
+            MedicationNotifications.cancelAll(container.appContext)
             return
+        }
+
+        // Medication reminders plan themselves from the database (docs/medications.md §10); the
+        // coordinator applies the per-type toggle and cancels when it is off.
+        if (container.medicationsDatabaseExists()) {
+            container.medicationReminders.replanAsync()
+        } else if (!container.prefs.medicationRemindersEnabled.first()) {
+            MedicationAlarms.cancel(container.appContext)
         }
 
         if (container.prefs.streakReminderEnabled.first()) {
@@ -1357,6 +1403,7 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             // land in a database that is being removed.
             container.deleteHealthDatabase()
             runCatching { container.deleteRecordsData() }
+            runCatching { container.deleteMedicationsData() }
             container.prefs.clearAll()
             container.keyStore.clearAll()
             container.imageStore.clearAll()

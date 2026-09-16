@@ -1,0 +1,1424 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "insert",
+        "row": {
+          "created_ms": 1789007700000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007700000,
+          "updated_ms": 1789007700000
+        }
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007700000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "take_from_due",
+      "notes": "Insert new-1 taken at now."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "update",
+        "row": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "taken",
+          "taken_at_ms": 1789008120000,
+          "updated_ms": 1789008120000
+        }
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789008120000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "take_from_snoozed",
+      "notes": "Update keeps id and snooze history."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "update",
+        "row": {
+          "created_ms": 1789014600000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789025400000,
+          "updated_ms": 1789025400000
+        }
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": {
+          "created_ms": 1789014600000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "missed",
+          "taken_at_ms": null,
+          "updated_ms": 1789014600000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789025400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "late_take_on_missed",
+      "notes": "An explicit late take updates the missed row."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "insert",
+        "row": {
+          "created_ms": 1789018200000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789008600000,
+          "updated_ms": 1789018200000
+        }
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789018200000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10,
+        "taken_at_ms": 1789008600000
+      },
+      "name": "take_at_time",
+      "notes": "taken_at_ms provided by the user."
+    },
+    {
+      "expected": {
+        "error": "taken_at_in_future",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10,
+        "taken_at_ms": 1789007460000
+      },
+      "name": "take_in_future_error",
+      "notes": "taken_at_in_future."
+    },
+    {
+      "expected": {
+        "error": "already_taken",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007400000,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789011000000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "already_taken_error",
+      "notes": "already_taken."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "insert",
+        "row": {
+          "created_ms": 1789003800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "skipped",
+          "taken_at_ms": null,
+          "updated_ms": 1789003800000
+        }
+      },
+      "input": {
+        "action": "skipped",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789003800000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "skip_from_scheduled",
+      "notes": "Skipping ahead is allowed."
+    },
+    {
+      "expected": {
+        "error": "already_taken",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "skipped",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007400000,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789011000000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "skip_already_taken_error",
+      "notes": "already_taken (undo first)."
+    },
+    {
+      "expected": {
+        "error": "already_resolved",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "skipped",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "skipped",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789011000000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "skip_already_skipped_error",
+      "notes": "already_resolved."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "update",
+        "row": {
+          "created_ms": 1789014600000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "skipped",
+          "taken_at_ms": null,
+          "updated_ms": 1789018200000
+        }
+      },
+      "input": {
+        "action": "skipped",
+        "existing_log": {
+          "created_ms": 1789014600000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "missed",
+          "taken_at_ms": null,
+          "updated_ms": 1789014600000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789018200000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "skip_missed",
+      "notes": "A missed dose may be marked skipped."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "insert",
+        "row": {
+          "created_ms": 1789007520000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008120000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007520000
+        }
+      },
+      "input": {
+        "action": "snoozed",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007520000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "snooze_from_due",
+      "notes": "snoozed_until = now + 10 min."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "update",
+        "row": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789009860000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789008060000
+        }
+      },
+      "input": {
+        "action": "snoozed",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789008060000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 30
+      },
+      "name": "snooze_again",
+      "notes": "Due again after the first snooze; update to now + 30."
+    },
+    {
+      "expected": {
+        "error": "not_due_yet",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "snoozed",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007340000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "snooze_not_due_yet_error",
+      "notes": "not_due_yet."
+    },
+    {
+      "expected": {
+        "error": "dose_missed",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "snoozed",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789014600000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "snooze_after_missed_error",
+      "notes": "dose_missed."
+    },
+    {
+      "expected": {
+        "error": "bad_snooze",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "snoozed",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 15
+      },
+      "name": "snooze_bad_minutes_error",
+      "notes": "bad_snooze."
+    },
+    {
+      "expected": {
+        "error": "already_resolved",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "snoozed",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007400000,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007460000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "snooze_taken_error",
+      "notes": "already_resolved."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "delete",
+        "row": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007400000,
+          "updated_ms": 1789007400000
+        }
+      },
+      "input": {
+        "action": "undo",
+        "existing_log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007400000,
+          "updated_ms": 1789007400000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007460000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "undo_taken",
+      "notes": "op delete."
+    },
+    {
+      "expected": {
+        "error": "cannot_undo_missed",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "undo",
+        "existing_log": {
+          "created_ms": 1789014600000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "missed",
+          "taken_at_ms": null,
+          "updated_ms": 1789014600000
+        },
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789018200000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "undo_missed_error",
+      "notes": "cannot_undo_missed."
+    },
+    {
+      "expected": {
+        "error": "nothing_to_undo",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "undo",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "undo_nothing_error",
+      "notes": "nothing_to_undo."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "op": "insert",
+        "row": {
+          "created_ms": 1789007460000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-1",
+          "note": "with breakfast",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007460000,
+          "updated_ms": 1789007460000
+        }
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "note": "with breakfast",
+        "now_ms": 1789007460000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "note_attached",
+      "notes": "note stored on the row."
+    },
+    {
+      "expected": {
+        "error": "note_too_long",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "taken",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "note": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "now_ms": 1789007460000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "note_too_long_error",
+      "notes": "note_too_long."
+    },
+    {
+      "expected": {
+        "error": "bad_action",
+        "ok": false,
+        "op": null,
+        "row": null
+      },
+      "input": {
+        "action": "eat",
+        "existing_log": null,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789007400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        },
+        "op": "apply_dose_action",
+        "snooze_minutes": 10
+      },
+      "name": "bad_action_error",
+      "notes": "bad_action."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "row": {
+          "created_ms": 1789029000000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-4",
+          "note": null,
+          "schedule_id": null,
+          "scheduled_at_ms": 1789029000000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789029000000,
+          "updated_ms": 1789029000000
+        }
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-4",
+          "instructions": null,
+          "is_prn": 1,
+          "name": "Paracetamol",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "650 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789029000000,
+        "op": "log_prn_dose"
+      },
+      "name": "prn_log_default_quantity",
+      "notes": "schedule_id null, scheduled_at = taken_at = now, dose from the medicine."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "row": {
+          "created_ms": 1789029000000,
+          "dose_quantity": 2,
+          "dose_unit": "tablet",
+          "id": "new-1",
+          "medication_id": "med-4",
+          "note": "headache",
+          "schedule_id": null,
+          "scheduled_at_ms": 1789027200000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789027200000,
+          "updated_ms": 1789029000000
+        }
+      },
+      "input": {
+        "dose_quantity": 2,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-4",
+          "instructions": null,
+          "is_prn": 1,
+          "name": "Paracetamol",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "note": "headache",
+        "now_ms": 1789029000000,
+        "op": "log_prn_dose",
+        "taken_at_ms": 1789027200000
+      },
+      "name": "prn_log_custom_quantity_time_note",
+      "notes": "Custom quantity and time."
+    },
+    {
+      "expected": {
+        "error": "not_prn",
+        "ok": false,
+        "row": null
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789029000000,
+        "op": "log_prn_dose"
+      },
+      "name": "prn_on_non_prn_error",
+      "notes": "not_prn."
+    },
+    {
+      "expected": {
+        "error": "not_active",
+        "ok": false,
+        "row": null
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-4",
+          "instructions": null,
+          "is_prn": 1,
+          "name": "Paracetamol",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "paused",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789029000000,
+        "op": "log_prn_dose"
+      },
+      "name": "prn_not_active_error",
+      "notes": "not_active."
+    },
+    {
+      "expected": {
+        "error": "taken_at_in_future",
+        "ok": false,
+        "row": null
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-4",
+          "instructions": null,
+          "is_prn": 1,
+          "name": "Paracetamol",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789029000000,
+        "op": "log_prn_dose",
+        "taken_at_ms": 1789029060000
+      },
+      "name": "prn_future_error",
+      "notes": "taken_at_in_future."
+    },
+    {
+      "expected": {
+        "error": "dose_quantity_invalid",
+        "ok": false,
+        "row": null
+      },
+      "input": {
+        "dose_quantity": 0,
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-4",
+          "instructions": null,
+          "is_prn": 1,
+          "name": "Paracetamol",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "now_ms": 1789029000000,
+        "op": "log_prn_dose"
+      },
+      "name": "prn_bad_quantity_error",
+      "notes": "dose_quantity_invalid."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "dose_actions",
+  "version": 1
+}

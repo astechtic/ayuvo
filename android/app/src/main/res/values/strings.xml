@@ -836,7 +836,7 @@
     <string name="settings_clear_food_title">Clear food log?</string>
     <string name="settings_clear_food_message">Wipes all food entries and photos. Profile, weights, and settings stay.</string>
     <string name="settings_delete_all_title">Delete all local data?</string>
-    <string name="settings_delete_all_message">Wipes profile, food log, weight history, chat, and API keys, then takes you back to onboarding. Health Connect data stays intact.</string>
+    <string name="settings_delete_all_message">Wipes profile, food log, weight history, medications, chat, and API keys, then takes you back to onboarding. Health Connect data stays intact.</string>
     <string name="settings_max_pinned_title">Max 2 Macros Locked</string>
     <string name="settings_max_pinned_message">At most 2 macros can be locked at a time, so one stays free to balance. Unlock another macro first (tap its lock icon).</string>
     <string name="settings_macro_locked">Locked</string>
@@ -1150,6 +1150,16 @@
     <string name="settings_notif_body_fat_reminder">Body fat reminder</string>
     <string name="settings_notif_goal_alerts">Goal reached alerts</string>
     <string name="settings_notif_app_updates">App updates</string>
+    <string name="settings_notif_medication_reminders">Medication reminders</string>
+    <string name="settings_medications_snooze">Default snooze</string>
+    <plurals name="settings_medications_snooze_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <string name="settings_medications_exact_timing">Precise reminder timing</string>
+    <string name="settings_medications_exact_timing_on">On</string>
+    <string name="settings_medications_exact_timing_off">Off</string>
+    <string name="settings_medications_exact_rationale">Allow “Alarms &amp; reminders” for Ayuvo so medication reminders arrive at the exact minute. Without it they can be a few minutes late while the phone is idle.</string>
     <string name="settings_notif_none_selected">No notification type is selected. You can leave notifications allowed and keep every app reminder off.</string>
     <string name="settings_calc_calorie_target">Calorie target for goal</string>
     <string name="settings_calc_maintenance">Maintenance &amp; goal adjustment</string>
@@ -1202,6 +1212,65 @@
     <string name="notif_channel_fasting_desc">Alerts when an active fast reaches its goal.</string>
     <string name="notif_fasting_goal_title">Fasting Goal Reached</string>
     <string name="notif_fasting_goal_text">You reached your %1$s fasting goal. End the fast when you’re ready.</string>
+    <!-- Medication reminders (docs/medications.md §16) -->
+    <string name="notif_channel_medication">Medication Reminders</string>
+    <string name="notif_channel_medication_desc">Reminders when a dose of a medicine you added is due.</string>
+    <string name="notif_medication_body">Take %1$s · %2$s · %3$s</string>
+    <string name="notif_medication_body_short">Take %1$s · %2$s</string>
+    <string name="notif_medication_action_taken">Taken</string>
+    <string name="notif_medication_action_skip">Skip</string>
+    <string name="notif_medication_action_snooze">Snooze %1$d min</string>
+    <string name="notif_medication_food_before">before food</string>
+    <string name="notif_medication_food_with">with food</string>
+    <string name="notif_medication_food_after">after food</string>
+    <plurals name="notif_medication_unit_tablet">
+        <item quantity="one">%1$s tablet</item>
+        <item quantity="other">%1$s tablets</item>
+    </plurals>
+    <plurals name="notif_medication_unit_capsule">
+        <item quantity="one">%1$s capsule</item>
+        <item quantity="other">%1$s capsules</item>
+    </plurals>
+    <plurals name="notif_medication_unit_ml">
+        <item quantity="one">%1$s ml</item>
+        <item quantity="other">%1$s ml</item>
+    </plurals>
+    <plurals name="notif_medication_unit_mg">
+        <item quantity="one">%1$s mg</item>
+        <item quantity="other">%1$s mg</item>
+    </plurals>
+    <plurals name="notif_medication_unit_g">
+        <item quantity="one">%1$s g</item>
+        <item quantity="other">%1$s g</item>
+    </plurals>
+    <plurals name="notif_medication_unit_mcg">
+        <item quantity="one">%1$s mcg</item>
+        <item quantity="other">%1$s mcg</item>
+    </plurals>
+    <plurals name="notif_medication_unit_drop">
+        <item quantity="one">%1$s drop</item>
+        <item quantity="other">%1$s drops</item>
+    </plurals>
+    <plurals name="notif_medication_unit_puff">
+        <item quantity="one">%1$s puff</item>
+        <item quantity="other">%1$s puffs</item>
+    </plurals>
+    <plurals name="notif_medication_unit_unit">
+        <item quantity="one">%1$s unit</item>
+        <item quantity="other">%1$s units</item>
+    </plurals>
+    <plurals name="notif_medication_unit_sachet">
+        <item quantity="one">%1$s sachet</item>
+        <item quantity="other">%1$s sachets</item>
+    </plurals>
+    <plurals name="notif_medication_unit_application">
+        <item quantity="one">%1$s application</item>
+        <item quantity="other">%1$s applications</item>
+    </plurals>
+    <plurals name="notif_medication_unit_other">
+        <item quantity="one">%1$s dose</item>
+        <item quantity="other">%1$s doses</item>
+    </plurals>
     <string name="water">Water</string>
     <string name="water_log_title">Log Water</string>
     <string name="water_how_much">How much water?</string>

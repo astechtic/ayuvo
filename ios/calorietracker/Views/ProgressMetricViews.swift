@@ -42,11 +42,15 @@ enum ProgressMetric: String, CaseIterable, Identifiable, Equatable {
     }
 }
 
-/// Two-segment capsule for the Health tab. Segments share the track equally and the
-/// gradient pill slides between them via matched geometry.
+/// Segmented capsule for the Health tab. Segments share the track equally and the gradient pill
+/// slides between them via matched geometry. With five or more panes the unselected segments show
+/// their icon only (the selected one keeps icon + title); every button still carries the title as
+/// its accessibility label, so `app.buttons["Health Data"]` keeps working in UI tests.
 struct ProgressOverviewModeSelector: View {
     @Binding var selection: ProgressOverviewMode
     @Namespace private var pillNamespace
+
+    private var compact: Bool { ProgressOverviewMode.allCases.count >= 5 }
 
     var body: some View {
         HStack(spacing: 4) {
@@ -69,12 +73,13 @@ struct ProgressOverviewModeSelector: View {
             guard selection != mode else { return }
             withAnimation(.snappy) { selection = mode }
         } label: {
-            Label(mode.title, systemImage: mode.icon)
+            Label(compact ? mode.compactTitle : mode.title, systemImage: mode.icon)
+                .labelStyle(SelectorLabelStyle(showsTitle: !compact || isSelected, compact: compact))
                 .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 .foregroundStyle(isSelected ? Color.white : Color.secondary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .padding(.horizontal, 10)
+                .minimumScaleFactor(compact ? 0.6 : 0.8)
+                .padding(.horizontal, compact ? 4 : 10)
                 .frame(maxWidth: .infinity, minHeight: 44)
                 .background {
                     if isSelected {
@@ -92,7 +97,29 @@ struct ProgressOverviewModeSelector: View {
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(mode.title)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+}
+
+/// Icon-only or icon + title, switchable per segment without changing the view identity
+/// (so the matched-geometry pill animation is unaffected).
+private struct SelectorLabelStyle: LabelStyle {
+    let showsTitle: Bool
+    var compact = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: compact ? 3 : 5) {
+            configuration.icon
+            if showsTitle {
+                if compact {
+                    configuration.title
+                        .font(.system(.footnote, design: .rounded, weight: .semibold))
+                } else {
+                    configuration.title
+                }
+            }
+        }
     }
 }
 

@@ -1,0 +1,1282 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": 5,
+        "food_relation": "after",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "after food",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": "650 mg",
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": "x 5 days",
+          "form": "tablet",
+          "frequency": "1-0-1",
+          "instructions": "after food",
+          "name": "Dolo 650",
+          "strength": "650 mg"
+        }
+      },
+      "name": "triplet_1_0_1",
+      "notes": "Morning + night slots, 5 days, after food, confidence 0.9."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "14:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "1-1-1",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "triplet_1_1_1",
+      "notes": "All three slots."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "at bedtime",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "22:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "0-0-1",
+          "instructions": "at bedtime",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "triplet_0_0_1",
+      "notes": "Single night slot: the table gives 20:00, and the bedtime instruction moves a single daily slot to 22:00."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 0.5,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "1/2-0-1/2",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "triplet_half_0_half",
+      "notes": "dose_quantity 0.5."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.6,
+        "days": [],
+        "dose_quantity": 2,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "uneven_doses",
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "2-0-1",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "triplet_uneven",
+      "notes": "First non-zero quantity, uneven_doses note, confidence 0.6."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "13:00",
+          "18:00",
+          "22:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "1-1-1-1",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "triplet_four",
+      "notes": "Four-slot table."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": "500 mg",
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "bd",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": "500 mg"
+        }
+      },
+      "name": "bd",
+      "notes": "Twice daily."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "capsule",
+        "duration_days": 14,
+        "food_relation": "after",
+        "form": "capsule",
+        "frequency_kind": "daily",
+        "instructions": "after food",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "14:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": "for 2 weeks",
+          "form": "capsule",
+          "frequency": "tds",
+          "instructions": "after food",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "tds_after_food",
+      "notes": "capsule default unit, 14 days."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "13:00",
+          "18:00",
+          "22:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "qid",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "qid",
+      "notes": "Four times daily."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "22:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "hs",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "hs",
+      "notes": "22:00 only."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": null,
+        "instructions": "if needed",
+        "interval_hours": null,
+        "is_prn": true,
+        "name": "Dolo 650",
+        "notes": [
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": []
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "sos",
+          "instructions": "if needed",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "sos",
+      "notes": "PRN: no schedule."
+    },
+    {
+      "expected": {
+        "anchor_time": "08:00",
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "interval",
+        "instructions": null,
+        "interval_hours": 8,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": []
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "every 8 hours",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "every_8_hours",
+      "notes": "interval 8 anchored 08:00."
+    },
+    {
+      "expected": {
+        "anchor_time": "08:00",
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "interval",
+        "instructions": null,
+        "interval_hours": 6,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": []
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "q6h",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "q6h",
+      "notes": "interval 6."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.6,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "interval_rounded",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "14:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "every 5 hours",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "every_5_hours_rounded",
+      "notes": "5 does not divide 24: 3x daily, interval_rounded, 0.6."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": 5,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": "x 5 days",
+          "form": "tablet",
+          "frequency": "od",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "x_5_days",
+      "notes": "duration_days 5."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": 14,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": "for 2 weeks",
+          "form": "tablet",
+          "frequency": "od",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "for_2_weeks",
+      "notes": "14 days."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": 30,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": "1 month",
+          "form": "tablet",
+          "frequency": "od",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "one_month",
+      "notes": "30 days."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 5,
+        "dose_unit": "ml",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "syrup",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": "5 ml",
+          "duration": null,
+          "form": "syrup",
+          "frequency": "bd",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "syrup_5_ml",
+      "notes": "5 ml twice daily."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": null,
+        "dose_unit": "ml",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "syrup",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_required"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "syrup",
+          "frequency": "bd",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "syrup_without_dose",
+      "notes": "dose_quantity null + dose_required."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 2,
+        "dose_unit": "puff",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "inhaler",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": "2 puffs",
+          "duration": null,
+          "form": "inhaler",
+          "frequency": "bd",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "two_puffs",
+      "notes": "puff unit."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 5,
+        "dose_unit": "ml",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "syrup",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "14:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": "1 tsp",
+          "duration": null,
+          "form": "syrup",
+          "frequency": "tds",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "one_tsp",
+      "notes": "tsp = 5 ml."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.3,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "frequency_defaulted",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": null,
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "empty_frequency",
+      "notes": "Nothing parsed: daily 08:00, confidence 0.3."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "application",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "cream",
+        "frequency_kind": "daily",
+        "instructions": "apply locally",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "form_mapped",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "ointment",
+          "frequency": "twice daily",
+          "instructions": "apply locally",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "ointment_maps_to_cream",
+      "notes": "form_mapped, application unit."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.6,
+        "days": [
+          1
+        ],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "weekly",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "weekday_defaulted",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "once weekly",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "once_weekly",
+      "notes": "weekly, Monday defaulted, 0.6."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "at bedtime",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "22:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "od",
+          "instructions": "at bedtime",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "bedtime_instruction_moves_single_slot",
+      "notes": "od + bedtime -> 22:00."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "before",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "before meals",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "bd",
+          "instructions": "before meals",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "before_meals",
+      "notes": "food before."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "with",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "with milk",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "od",
+          "instructions": "with milk",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "with_milk",
+      "notes": "food with."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "before",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "on empty stomach",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "od",
+          "instructions": "on empty stomach",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "empty_stomach",
+      "notes": "food before."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": 1,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "stat",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "stat",
+      "notes": "One dose today: duration 1 day."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "unit",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "other",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "form_mapped",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "14:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "lozenge",
+          "frequency": "tds",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "unknown_form_text",
+      "notes": "Unknown form word -> other (form_mapped), unit 'unit'."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "unit",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "other",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "form_defaulted",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": null,
+          "frequency": "bd",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "no_form",
+      "notes": "form_defaulted -> other."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "anytime",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": null,
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "14:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "tablet",
+          "frequency": "three times a day",
+          "instructions": null,
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "thrice_a_day_words",
+      "notes": "Word form of tds."
+    },
+    {
+      "expected": {
+        "anchor_time": null,
+        "confidence": 0.9,
+        "days": [],
+        "dose_quantity": 1,
+        "dose_unit": "tablet",
+        "duration_days": null,
+        "food_relation": "after",
+        "form": "tablet",
+        "frequency_kind": "daily",
+        "instructions": "After Food",
+        "interval_hours": null,
+        "is_prn": false,
+        "name": "Dolo 650",
+        "notes": [
+          "form_mapped",
+          "time_defaulted",
+          "dose_defaulted"
+        ],
+        "strength": null,
+        "times": [
+          "08:00",
+          "20:00"
+        ]
+      },
+      "input": {
+        "value_json": {
+          "dose": null,
+          "duration": null,
+          "form": "Tab.",
+          "frequency": "BD",
+          "instructions": "After Food",
+          "name": "Dolo 650",
+          "strength": null
+        }
+      },
+      "name": "printed_case_and_dots",
+      "notes": "Case-insensitive, trailing dot on the form word."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "frequency_hint",
+  "version": 1
+}

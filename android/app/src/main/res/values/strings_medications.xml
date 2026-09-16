@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Medication Management & Reminders (docs/medications.md). English source strings; translations follow incrementally. -->
+<resources>
+    <!-- Health tab segment + Home card -->
+    <string name="health_tab_meds">Meds</string>
+    <string name="home_medications_title">Medications</string>
+    <string name="home_medications_taken">Taken %1$d of %2$d</string>
+    <string name="home_medications_next">Next: %1$s at %2$s</string>
+    <string name="home_medications_done">All doses done for today</string>
+    <string name="home_medications_none_today">No doses scheduled today</string>
+    <string name="records_add_to_medications">Add to Medications</string>
+
+    <!-- Meds home -->
+    <string name="medications_title">Medications</string>
+    <string name="medications_section_today">Today</string>
+    <string name="medications_section_prn">As needed</string>
+    <string name="medications_section_all">All medicines</string>
+    <string name="medications_today_empty">No doses scheduled today.</string>
+    <string name="medications_search_placeholder">Search medicines</string>
+    <string name="medications_list_empty">No medicines match.</string>
+    <string name="medications_filter_all">All</string>
+    <string name="medications_filter_active">Active</string>
+    <string name="medications_filter_paused">Paused</string>
+    <string name="medications_filter_completed">Completed</string>
+    <string name="medications_filter_stopped">Stopped</string>
+    <string name="medications_empty_title">Keep track of your medicines</string>
+    <string name="medications_empty_body">Add a medicine with its dose and times, and Ayuvo reminds you when a dose is due. Everything is stored on this device.</string>
+    <string name="medications_empty_add">Add medication</string>
+    <string name="medications_menu_from_prescription">Add from prescription</string>
+    <string name="medications_menu_history">History</string>
+    <string name="medications_menu_export">Export medications…</string>
+    <string name="medications_menu_import">Import…</string>
+    <string name="medications_summary_taken">%1$d / %2$d</string>
+    <string name="medications_summary_upcoming">Upcoming</string>
+    <string name="medications_unknown_medicine">Medicine</string>
+    <string name="medications_dose_line">%1$s · %2$s</string>
+    <string name="medications_late">late</string>
+    <string name="medications_today">Today</string>
+    <string name="medications_yesterday">Yesterday</string>
+    <string name="medications_now">Now</string>
+
+    <!-- Dose statuses (single words, always shown with an icon) -->
+    <string name="medications_status_scheduled">Scheduled</string>
+    <string name="medications_status_due">Due</string>
+    <string name="medications_status_taken">Taken</string>
+    <string name="medications_status_skipped">Skipped</string>
+    <string name="medications_status_missed">Missed</string>
+    <string name="medications_status_snoozed">Snoozed</string>
+
+    <!-- Actions -->
+    <string name="medications_action_take">Take</string>
+    <string name="medications_action_take_late">Take (late)</string>
+    <string name="medications_action_taken_now">Taken now</string>
+    <string name="medications_action_take_late_now">Take (late) now</string>
+    <string name="medications_action_taken_at">Taken at…</string>
+    <string name="medications_action_skip">Skip</string>
+    <string name="medications_action_snooze">Snooze</string>
+    <string name="medications_action_undo">Undo</string>
+    <string name="medications_action_log_dose">Log dose</string>
+    <string name="medications_action_change_time">Change time</string>
+    <string name="medications_action_edit">Edit</string>
+    <string name="medications_action_pause">Pause</string>
+    <string name="medications_action_resume">Resume</string>
+    <string name="medications_action_stop">Stop</string>
+    <string name="medications_action_see_all">See all history</string>
+    <string name="medications_action_add_time">Add time</string>
+    <string name="medications_action_add_photo">Add photo</string>
+    <string name="medications_action_choose_record">Choose</string>
+    <string name="medications_snooze_for">Snooze for</string>
+    <string name="medications_snooze_minutes">%1$d min</string>
+    <string name="medications_snooze_hour">1 hour</string>
+    <string name="medications_snoozed_until">Snoozed until %1$s</string>
+    <string name="medications_note_placeholder">Note (optional)</string>
+    <string name="medications_prn_time_label">Time: %1$s</string>
+    <string name="medications_prn_today_count">%1$d today</string>
+    <string name="medications_prn_last_taken">Last dose %1$s</string>
+
+    <!-- Snackbar / errors -->
+    <string name="medications_msg_taken">Dose marked as taken</string>
+    <string name="medications_msg_skipped">Dose skipped</string>
+    <string name="medications_msg_snoozed">Reminder snoozed</string>
+    <string name="medications_msg_undone">Dose entry removed</string>
+    <string name="medications_msg_prn_logged">Dose logged</string>
+    <string name="medications_msg_exported">Medications exported</string>
+    <string name="medications_msg_export_failed">Couldn\'t export medications</string>
+    <string name="medications_msg_import_failed">This file isn\'t an Ayuvo medications export</string>
+    <plurals name="medications_msg_imported">
+        <item quantity="one">Imported %1$d medication</item>
+        <item quantity="other">Imported %1$d medications</item>
+    </plurals>
+    <string name="medications_error_generic">Something went wrong. Please try again.</string>
+    <string name="medications_error_already_taken">This dose is already marked as taken.</string>
+    <string name="medications_error_not_due_yet">You can snooze a dose once it is due.</string>
+    <string name="medications_error_dose_missed">This dose has passed its window and can\'t be snoozed.</string>
+    <string name="medications_error_future_time">The time can\'t be in the future.</string>
+    <string name="medications_error_cannot_undo_missed">A missed dose can\'t be undone.</string>
+    <string name="medications_error_invalid_transition">That change isn\'t possible for this medicine right now.</string>
+    <string name="medications_error_schedule">Check the schedule details.</string>
+    <string name="medications_error_name">Enter a name (up to 80 characters).</string>
+    <string name="medications_error_strength">Strength is too long (40 characters max).</string>
+    <string name="medications_error_dose">Enter a dose greater than 0.</string>
+    <string name="medications_error_date">Enter a valid date.</string>
+    <string name="medications_error_end_before_start">The end date must be on or after the start date.</string>
+    <string name="medications_error_times_required">Add at least one time.</string>
+    <string name="medications_error_times_invalid">Times must be unique (up to 12).</string>
+    <string name="medications_error_days">Choose at least one day.</string>
+    <string name="medications_error_interval">Choose an interval and a starting time.</string>
+    <string name="medications_error_instructions">Instructions are too long (200 characters max).</string>
+    <string name="medications_error_frequency">Choose how often to take it.</string>
+
+    <!-- Reminder prerequisites -->
+    <string name="medications_notice_notifications">Notifications are off, so dose reminders can\'t be shown.</string>
+    <string name="medications_notice_turn_on">Turn on</string>
+    <string name="medications_notice_exact">Reminders may arrive a few minutes late. Allow precise timing for on-time doses.</string>
+    <string name="medications_notice_allow">Allow</string>
+
+    <!-- Editor -->
+    <string name="medications_add_title">Add medication</string>
+    <string name="medications_edit_title">Edit medication</string>
+    <string name="medications_edit_schedule_note">Past doses stay in history; new times start from now.</string>
+    <string name="medications_section_medicine">Medicine</string>
+    <string name="medications_section_dose">Dose</string>
+    <string name="medications_section_schedule">Schedule</string>
+    <string name="medications_section_duration">Duration</string>
+    <string name="medications_section_more">More</string>
+    <string name="medications_field_name">Name</string>
+    <string name="medications_field_name_hint">e.g. Metformin</string>
+    <string name="medications_field_strength">Strength</string>
+    <string name="medications_field_strength_hint">e.g. 500 mg</string>
+    <string name="medications_field_form">Form</string>
+    <string name="medications_field_generic">Generic name</string>
+    <string name="medications_field_brand">Brand</string>
+    <string name="medications_field_dose_quantity">Quantity</string>
+    <string name="medications_field_dose_unit">Unit</string>
+    <string name="medications_field_food">With food</string>
+    <string name="medications_field_prn">As needed</string>
+    <string name="medications_field_prn_hint">No schedule or reminders; log each dose when you take it.</string>
+    <string name="medications_field_frequency">How often</string>
+    <string name="medications_field_times">Times</string>
+    <string name="medications_field_days">Days</string>
+    <string name="medications_field_interval">Every</string>
+    <string name="medications_interval_value">%1$d hours</string>
+    <string name="medications_field_anchor">Starting at</string>
+    <string name="medications_field_reminders">Reminders</string>
+    <string name="medications_field_start">Start date</string>
+    <string name="medications_field_end">End date</string>
+    <string name="medications_field_no_end">No end date</string>
+    <string name="medications_field_instructions">Instructions</string>
+    <string name="medications_field_instructions_hint">e.g. after breakfast</string>
+    <string name="medications_field_photo">Photo</string>
+    <string name="medications_field_record">Prescription record</string>
+    <string name="medications_record_none">Not linked</string>
+    <string name="medications_record_missing">Record no longer available</string>
+    <string name="medications_photo_camera">Take photo</string>
+    <string name="medications_photo_gallery">Choose photo</string>
+    <string name="medications_preset_once">Once daily</string>
+    <string name="medications_preset_twice">Twice daily</string>
+    <string name="medications_preset_thrice">3× daily</string>
+    <string name="medications_preset_four">4× daily</string>
+    <string name="medications_preset_specific">Specific times</string>
+    <string name="medications_preset_interval">Every X hours</string>
+    <string name="medications_preset_weekly">Specific days</string>
+
+    <!-- Enum labels -->
+    <string name="medications_form_tablet">Tablet</string>
+    <string name="medications_form_capsule">Capsule</string>
+    <string name="medications_form_syrup">Syrup</string>
+    <string name="medications_form_injection">Injection</string>
+    <string name="medications_form_cream">Cream</string>
+    <string name="medications_form_drops">Drops</string>
+    <string name="medications_form_inhaler">Inhaler</string>
+    <string name="medications_form_other">Other</string>
+    <string name="medications_food_before">Before food</string>
+    <string name="medications_food_with">With food</string>
+    <string name="medications_food_after">After food</string>
+    <string name="medications_food_anytime">Anytime</string>
+    <string name="medications_unit_tablet">tablet</string>
+    <string name="medications_unit_capsule">capsule</string>
+    <string name="medications_unit_ml">ml</string>
+    <string name="medications_unit_mg">mg</string>
+    <string name="medications_unit_g">g</string>
+    <string name="medications_unit_mcg">mcg</string>
+    <string name="medications_unit_drop">drop</string>
+    <string name="medications_unit_puff">puff</string>
+    <string name="medications_unit_unit">unit</string>
+    <string name="medications_unit_sachet">sachet</string>
+    <string name="medications_unit_application">application</string>
+    <string name="medications_unit_other">dose</string>
+    <string name="medications_dose_measured">%1$s %2$s</string>
+    <plurals name="medications_dose_tablet"><item quantity="one">%1$s tablet</item><item quantity="other">%1$s tablets</item></plurals>
+    <plurals name="medications_dose_capsule"><item quantity="one">%1$s capsule</item><item quantity="other">%1$s capsules</item></plurals>
+    <plurals name="medications_dose_drop"><item quantity="one">%1$s drop</item><item quantity="other">%1$s drops</item></plurals>
+    <plurals name="medications_dose_puff"><item quantity="one">%1$s puff</item><item quantity="other">%1$s puffs</item></plurals>
+    <plurals name="medications_dose_unit"><item quantity="one">%1$s unit</item><item quantity="other">%1$s units</item></plurals>
+    <plurals name="medications_dose_sachet"><item quantity="one">%1$s sachet</item><item quantity="other">%1$s sachets</item></plurals>
+    <plurals name="medications_dose_application"><item quantity="one">%1$s application</item><item quantity="other">%1$s applications</item></plurals>
+    <string name="medications_frequency_prn">As needed</string>
+    <string name="medications_frequency_none">No schedule</string>
+    <string name="medications_frequency_daily">Every day · %1$s</string>
+    <string name="medications_frequency_weekly">%1$s · %2$s</string>
+    <string name="medications_frequency_interval">Every %1$d hours from %2$s</string>
+    <string name="medications_relative_just_now">just now</string>
+    <plurals name="medications_relative_minutes"><item quantity="one">%1$d min ago</item><item quantity="other">%1$d min ago</item></plurals>
+    <plurals name="medications_relative_hours"><item quantity="one">%1$d h ago</item><item quantity="other">%1$d h ago</item></plurals>
+    <plurals name="medications_relative_days"><item quantity="one">%1$d day ago</item><item quantity="other">%1$d days ago</item></plurals>
+
+    <!-- Detail -->
+    <string name="medications_detail_missing">This medicine was deleted.</string>
+    <string name="medications_detail_schedule">Dose &amp; schedule</string>
+    <string name="medications_detail_adherence">Adherence · last 7 days</string>
+    <string name="medications_adherence_line">%1$d / %2$d doses taken · %3$d%%</string>
+    <string name="medications_adherence_none">No scheduled doses yet.</string>
+    <string name="medications_detail_history">Recent history</string>
+    <string name="medications_history_empty">No doses logged yet.</string>
+    <string name="medications_detail_record">Prescription record</string>
+    <string name="medications_completes_on">Completes automatically after %1$s</string>
+    <string name="medications_stop_title">Stop %1$s?</string>
+    <string name="medications_stop_body">Reminders end and the medicine moves to Stopped. Its history is kept.</string>
+    <string name="medications_delete_title">Delete %1$s?</string>
+    <string name="medications_delete_body">The medicine and all its dose history are removed from this device.</string>
+    <string name="medications_history_title">Dose history</string>
+
+    <!-- Prescription import -->
+    <string name="medications_import_title">Add from prescription</string>
+    <string name="medications_import_check_note">Check each medicine against the prescription before saving.</string>
+    <string name="medications_import_processing">Ayuvo is still reading this record.</string>
+    <string name="medications_import_none">No medicines were detected in this record.</string>
+    <string name="medications_import_add_manually">Add manually</string>
+    <string name="medications_import_dose_missing">Dose needed</string>
+    <string name="medications_import_defaults_note">Some details were filled in with defaults — please check.</string>
+    <string name="medications_import_until">until %1$s</string>
+    <plurals name="medications_import_confirm">
+        <item quantity="one">Add %1$d medication</item>
+        <item quantity="other">Add %1$d medications</item>
+    </plurals>
+    <string name="medications_record_picker_title">Choose a prescription</string>
+    <string name="medications_record_picker_subtitle">Prescriptions and medication lists from your Health Records.</string>
+    <string name="medications_record_picker_search">Search records</string>
+    <string name="medications_record_picker_empty">No prescriptions yet. Add one in the Records tab first.</string>
+
+    <!-- Safety copy (docs/medications.md §17) -->
+    <string name="medications_disclaimer">Ayuvo helps you track the medicines you choose to add and reminds you when a dose is due. It does not give medical advice. If you miss a dose or are unsure about anything, ask your doctor or pharmacist.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_medication_add">Add medication</string>
+    <string name="cd_medication_menu">More options</string>
+    <string name="cd_medication_more_actions">More dose actions</string>
+    <string name="cd_medication_back">Back</string>
+    <string name="cd_medication_photo">Medicine photo</string>
+    <string name="cd_medication_remove_time">Remove %1$s</string>
+</resources>

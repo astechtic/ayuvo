@@ -108,6 +108,17 @@ import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.Medication
+import androidx.compose.material.icons.outlined.Snooze
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.res.pluralStringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.ayuvo.health.medications.logic.MedicationConstants
+import com.ayuvo.health.medications.reminders.MedicationAlarms
+import com.ayuvo.health.ui.components.OptionPickerSheet
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.AlertDialog
@@ -600,6 +611,29 @@ fun SettingsScreen(
         }
     }
 
+    // Medication reminders: the system "Alarms & reminders" toggle (Android 12+), with the app
+    // details page as a fallback. The exact-alarm state is re-read when the screen resumes.
+    fun openExactAlarmSettings() {
+        val intents = listOfNotNull(
+            MedicationAlarms.requestExactIntent(activityContext),
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                .setData(Uri.parse("package:${activityContext.packageName}"))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+        for (intent in intents) {
+            if (runCatching { activityContext.startActivity(intent) }.isSuccess) return
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) vm.refreshExactAlarmState()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
     BackHandler(enabled = selectedCategory != null) {
         selectedCategory = null
     }
@@ -1018,7 +1052,8 @@ fun SettingsScreen(
                         NotificationTypeRows(
                             ui = ui,
                             vm = vm,
-                            onDailySummaryChange = ::onDailySummaryToggle
+                            onDailySummaryChange = ::onDailySummaryToggle,
+                            onRequestExactAlarm = ::openExactAlarmSettings
                         )
                         HorizontalDivider()
                         SettingRow(
@@ -2286,8 +2321,10 @@ private fun SettingsDetailHeader(backLabel: String, title: String, onBack: () ->
 private fun NotificationTypeRows(
     ui: SettingsUiState,
     vm: SettingsViewModel,
-    onDailySummaryChange: (Boolean) -> Unit
+    onDailySummaryChange: (Boolean) -> Unit,
+    onRequestExactAlarm: () -> Unit = {}
 ) {
+    var showSnoozeSheet by remember { mutableStateOf(false) }
     Text(
         stringResource(R.string.settings_notification_types),
         style = MaterialTheme.typography.labelMedium,
@@ -2339,6 +2376,54 @@ private fun NotificationTypeRows(
             onChange = vm::setFastingGoalNotificationEnabled
         )
     }
+    // Medication reminders (docs/medications.md §10): per-type toggle, default snooze and the
+    // Android 12+ exact-alarm grant (reminders fall back to inexact alarms without it).
+    HorizontalDivider()
+    ToggleRow(
+        stringResource(R.string.settings_notif_medication_reminders),
+        ui.medicationRemindersEnabled,
+        icon = Icons.Outlined.Medication,
+        onChange = vm::setMedicationRemindersEnabled
+    )
+    if (ui.medicationRemindersEnabled) {
+        HorizontalDivider()
+        SettingRow(
+            stringResource(R.string.settings_medications_snooze),
+            pluralStringResource(R.plurals.settings_medications_snooze_minutes, ui.medicationSnoozeMinutes, ui.medicationSnoozeMinutes),
+            icon = Icons.Outlined.Snooze
+        ) { showSnoozeSheet = true }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            HorizontalDivider()
+            SettingRow(
+                stringResource(R.string.settings_medications_exact_timing),
+                stringResource(
+                    if (ui.medicationExactAlarms) R.string.settings_medications_exact_timing_on
+                    else R.string.settings_medications_exact_timing_off
+                ),
+                icon = Icons.Outlined.Alarm,
+                onClick = onRequestExactAlarm
+            )
+            if (!ui.medicationExactAlarms) {
+                Text(
+                    stringResource(R.string.settings_medications_exact_rationale),
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                )
+            }
+        }
+    }
+    if (showSnoozeSheet) {
+        OptionPickerSheet(
+            title = stringResource(R.string.settings_medications_snooze),
+            items = MedicationConstants.SNOOZE_MINUTES,
+            label = { pluralStringResource(R.plurals.settings_medications_snooze_minutes, it, it) },
+            selected = { it == ui.medicationSnoozeMinutes },
+            onSelect = { vm.setMedicationSnoozeMinutes(it); showSnoozeSheet = false },
+            onDismiss = { showSnoozeSheet = false }
+        )
+    }
     HorizontalDivider()
     ToggleRow(
         stringResource(R.string.settings_notif_goal_alerts),
@@ -2359,6 +2444,7 @@ private fun NotificationTypeRows(
         !ui.bodyFatReminderEnabled &&
         (!ui.waterTrackingEnabled || !ui.waterReminderEnabled) &&
         (!ui.fastingTrackingEnabled || !ui.fastingGoalNotificationEnabled) &&
+        !ui.medicationRemindersEnabled &&
         !ui.goalReachedNotificationsEnabled &&
         !ui.appUpdateNotificationsEnabled
     if (noneSelected) {

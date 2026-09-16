@@ -1,0 +1,327 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "scheduled"
+      },
+      "input": {
+        "log": null,
+        "now_ms": 1789007399999,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "before_time_scheduled",
+      "notes": "Strictly before the time."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "due"
+      },
+      "input": {
+        "log": null,
+        "now_ms": 1789007400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "at_time_due",
+      "notes": "now == scheduled_at is due."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "due"
+      },
+      "input": {
+        "log": null,
+        "now_ms": 1789014599999,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "before_deadline_due",
+      "notes": "One ms before the grace deadline."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "missed"
+      },
+      "input": {
+        "log": null,
+        "now_ms": 1789014600000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "at_deadline_missed",
+      "notes": "now == deadline is missed."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789015200000,
+        "is_late": false,
+        "status": "snoozed"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789007700000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "snoozed_pending",
+      "notes": "Before snoozed_until the status is snoozed."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789015200000,
+        "is_late": false,
+        "status": "due"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789008000000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "snoozed_elapsed_due",
+      "notes": "At snoozed_until the dose is due again; the deadline moves to snoozed_until + grace."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789015200000,
+        "is_late": false,
+        "status": "missed"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "snoozed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789015200000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "snoozed_elapsed_missed",
+      "notes": "Grace after the snooze expired."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "taken"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789007520000,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789011000000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "taken_on_time",
+      "notes": "is_late false."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": true,
+        "status": "taken"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1789014600001,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789018200000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "taken_late",
+      "notes": "Taken after the grace deadline is flagged late (display only)."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "missed"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "missed",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789003800000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "stored_missed_wins_after_rollback",
+      "notes": "A clock rollback cannot un-miss a stored missed row."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789014600000,
+        "is_late": false,
+        "status": "skipped"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": null,
+          "status": "skipped",
+          "taken_at_ms": null,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789043400000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "stored_skipped",
+      "notes": "Stored skipped wins."
+    },
+    {
+      "expected": {
+        "deadline_ms": 1789015200000,
+        "is_late": false,
+        "status": "taken"
+      },
+      "input": {
+        "log": {
+          "created_ms": 1789007400000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": null,
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000,
+          "snoozed_until_ms": 1789008000000,
+          "status": "taken",
+          "taken_at_ms": 1789008300000,
+          "updated_ms": 1789007400000
+        },
+        "now_ms": 1789011000000,
+        "occurrence": {
+          "medication_id": "med-1",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1789007400000
+        }
+      },
+      "name": "stored_taken_after_snooze_deadline",
+      "notes": "deadline_ms uses the snoozed_until history."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "resolve_dose_status",
+  "version": 1
+}

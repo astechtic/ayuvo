@@ -46,6 +46,24 @@ struct CloudBackupArchiveTests {
         }
     }
 
+    @Test func medicationPreferencesAndPendingRouteNeverEnterTheCloudBackup() throws {
+        let values: [String: CloudBackupValue] = [
+            "medicationRemindersEnabled": .bool(true),
+            "medicationSnoozeMinutes": .int(30),
+            "medication.pending": .string("abc"),
+            "useMetric": .bool(true),
+        ]
+        let zip = try CloudBackupArchive.pack(values: values, photos: [:], exportedAt: "2026-09-16T10:00:00Z", appVersion: "1.0")
+        let (document, _) = try CloudBackupArchive.unpack(zip)
+        let keys = Set(document.payload.values.keys)
+        #expect(!keys.contains("medicationRemindersEnabled"))
+        #expect(!keys.contains("medicationSnoozeMinutes"))
+        #expect(!keys.contains("medication.pending"))
+        #expect(keys.contains("useMetric"))
+        #expect(!CloudBackupPolicy.include(MedicationSettings.remindersEnabledKey))
+        #expect(!CloudBackupPolicy.include(MedicationSettings.pendingRouteKey))
+    }
+
     @Test func coachChatHistoryAndHealthHubThrottlesAreExcludedWhilePreferencesAreKept() throws {
         let values: [String: CloudBackupValue] = [
             "coachChatHistory": .string("[{\"role\":\"user\",\"content\":\"my resting HR is 52\"}]"),

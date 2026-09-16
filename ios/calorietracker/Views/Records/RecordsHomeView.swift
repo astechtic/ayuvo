@@ -44,6 +44,8 @@ struct RecordsHomeView: View {
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search records"))
                 .toolbar { toolbarContent }
                 .recordsRouteDestinations()
+                // "Add to Medications" from a record detail pushes the import screen on this stack.
+                .medicationRouteDestinations()
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     if isSelecting { selectionBar }
                 }

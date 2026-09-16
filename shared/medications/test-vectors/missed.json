@@ -1,0 +1,613 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "ops": [
+          {
+            "op": "insert",
+            "row": {
+              "created_ms": 1789057800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "new-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789057800000
+            }
+          },
+          {
+            "op": "insert",
+            "row": {
+              "created_ms": 1789057800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "id": "new-2",
+              "medication_id": "med-2",
+              "note": null,
+              "schedule_id": "sch-2",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789057800000
+            }
+          },
+          {
+            "op": "insert",
+            "row": {
+              "created_ms": 1789057800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "new-3",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789050600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789057800000
+            }
+          }
+        ]
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789057800000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ]
+      },
+      "name": "insert_untouched_past",
+      "notes": "Three past-grace occurrences with no logs -> three inserts new-1..new-3 in occurrence order."
+    },
+    {
+      "expected": {
+        "ops": [
+          {
+            "op": "update",
+            "row": {
+              "created_ms": 1789007400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "log-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": 1789009200000,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789016400000
+            }
+          }
+        ]
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": 1789009200000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789016400000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          }
+        ]
+      },
+      "name": "snoozed_becomes_missed",
+      "notes": "Update keeps snoozed_until_ms and the original id."
+    },
+    {
+      "expected": {
+        "ops": []
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007400000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789029000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789029000000,
+            "snoozed_until_ms": null,
+            "status": "skipped",
+            "taken_at_ms": null,
+            "updated_ms": 1789029000000
+          },
+          {
+            "created_ms": 1789050600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-3",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "snoozed_until_ms": null,
+            "status": "missed",
+            "taken_at_ms": null,
+            "updated_ms": 1789050600000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789137000000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ]
+      },
+      "name": "terminal_rows_untouched",
+      "notes": "No ops."
+    },
+    {
+      "expected": {
+        "ops": [
+          {
+            "op": "insert",
+            "row": {
+              "created_ms": 1789014600000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "id": "new-1",
+              "medication_id": "med-1",
+              "note": null,
+              "schedule_id": "sch-1",
+              "scheduled_at_ms": 1789007400000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789014600000
+            }
+          }
+        ]
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789014600000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400001
+          }
+        ]
+      },
+      "name": "boundary_now_minus_grace",
+      "notes": "scheduled_at == now - grace is missed (insert); one ms later is still due (no op)."
+    },
+    {
+      "expected": {
+        "ops": []
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789050600000,
+        "occurrences": [
+          {
+            "medication_id": "med-9",
+            "schedule_id": "sch-9",
+            "scheduled_at_ms": 1789007400000
+          }
+        ]
+      },
+      "name": "unknown_medication_skipped",
+      "notes": "No dose snapshot available -> skipped."
+    },
+    {
+      "expected": {
+        "ops": []
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": 1789018200000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789021800000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          }
+        ]
+      },
+      "name": "snoozed_still_pending",
+      "notes": "Snoozed far ahead: still inside snoozed_until + grace -> nothing."
+    },
+    {
+      "expected": {
+        "ops": []
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789007400000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ]
+      },
+      "name": "future_occurrence_ignored",
+      "notes": "Scheduled doses are never materialized."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "materialize_missed",
+  "version": 1
+}

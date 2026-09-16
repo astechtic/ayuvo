@@ -116,6 +116,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(RecordsStore.self) private var recordsStore
     @Environment(ChatStore.self) private var chatStore
+    @Environment(MedicationStore.self) private var medicationStore
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @State private var appUpdateState: AppUpdateState = .idle
     @State private var selectedTab: AppTab = .home
@@ -139,7 +140,15 @@ struct ContentView: View {
                 // Records entry points (Ask about this report, Explain this trend, Ask Coach) open Coach.
                 selectedTab = .coach
             }
+            .onChange(of: medicationStore.tabRequest) { _, _ in
+                // Notification taps, "Open Medications" after a prescription import.
+                selectedTab = .health
+                healthOverviewMode = .medications
+            }
             .onReceive(NotificationCenter.default.publisher(for: .quickActionRequested)) { _ in
+                consumePendingLaunchRoutes()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .medicationRouteRequested)) { _ in
                 consumePendingLaunchRoutes()
             }
             .onReceive(NotificationCenter.default.publisher(for: .foodLogMethodRequested)) { _ in
@@ -166,6 +175,10 @@ struct ContentView: View {
                 onOpenWorkouts: openWorkouts,
                 onOpenRecords: {
                     selectedTab = .records
+                },
+                onOpenMedications: {
+                    selectedTab = .health
+                    healthOverviewMode = .medications
                 }
             )
                 .tag(AppTab.home)
@@ -235,6 +248,13 @@ struct ContentView: View {
     }
 
     private func consumePendingLaunchRoutes() {
+        // A medication reminder tap (or ayuvo://medications) lands on the Meds pane, optionally at a detail.
+        if let pending = MedicationCoordinator.consumePending() {
+            selectedTab = .health
+            healthOverviewMode = .medications
+            if let id = pending { medicationStore.navigationRequest = .detail(id) }
+            return
+        }
         if let action = QuickActionCoordinator.consumePending() {
             selectedTab = .health
             healthOverviewMode = .food
@@ -578,7 +598,9 @@ struct HomeView: View {
     var onOpenHealthData: () -> Void = {}
     var onOpenWorkouts: () -> Void = {}
     var onOpenRecords: () -> Void = {}
+    var onOpenMedications: () -> Void = {}
 
+    @Environment(MedicationStore.self) private var medicationStore
     @Environment(FoodStore.self) private var foodStore
     @Environment(WaterStore.self) private var waterStore
     @Environment(FastingStore.self) private var fastingStore
@@ -615,6 +637,9 @@ struct HomeView: View {
                         waterStore: waterStore,
                         onOpenFood: onOpenFood
                     )
+
+                    // Medications today (hidden while there are no active/paused medicines)
+                    HomeMedicationsCard(store: medicationStore, onOpen: onOpenMedications)
 
                     // Clinical Highlights / Records Card
                     HomeClinicalHighlightsCard(
@@ -4053,6 +4078,8 @@ struct HealthTabView: View {
     @State private var showWorkoutHistory = false
     @State private var showImportedHealthWorkoutHistory = false
     @State private var progressMetric: ProgressMetric = .weight
+    /// The Health stack's path: the Meds pane pushes its detail / history / import screens here.
+    @State private var healthPath = NavigationPath()
     @Binding var progressOverviewMode: ProgressOverviewMode
     var quickActionRequest: QuickActionRequest? = nil
     var onQuickActionHandled: (UUID) -> Void = { _ in }
@@ -4113,7 +4140,7 @@ struct HealthTabView: View {
 
     var body: some View {
         let _ = profileStore.profile
-        return NavigationStack {
+        return NavigationStack(path: $healthPath) {
             VStack(spacing: 0) {
                 // Fixed header: identical in both modes (the navigation bar stays hidden),
                 // so switching panes never moves the selector.
@@ -4267,6 +4294,9 @@ struct HealthTabView: View {
                 } else if progressOverviewMode == .healthData {
                     HealthHubView(showsNavigationChrome: false)
                         .transition(.opacity)
+                } else if progressOverviewMode == .medications {
+                    MedicationsHomeView(path: $healthPath)
+                        .transition(.opacity)
                 } else {
                     // Workouts pane: no nested stack, so its pushes land on this stack.
                     WorkoutsView(embedded: true)
@@ -4277,6 +4307,8 @@ struct HealthTabView: View {
             }
             .background(AppColors.appBackground)
             .healthRouteDestinations()
+            .medicationRouteDestinations()
+            .recordsRouteDestinations()
             .toolbar(.hidden, for: .navigationBar)
             .task(id: foodRangeStatsTaskKey) {
                 isLoadingFoodRangeStats = true
@@ -4572,6 +4604,7 @@ struct ProfileView: View {
     @Environment(HealthKitManager.self) private var healthKitManager
     @Environment(HealthDataStore.self) private var healthDataStore
     @Environment(RecordsStore.self) private var recordsStore
+    @Environment(MedicationStore.self) private var medicationStore
     private var profile: UserProfile {
         get { profileStore.profile }
         nonmutating set { profileStore.profile = newValue }
@@ -6636,6 +6669,8 @@ struct ProfileView: View {
                         await healthDataStore.deleteAllData()
                         // Health Records: database (+ sidecars), originals, caches and the share inbox.
                         await recordsStore.deleteAllData()
+                        // Medications: database, photos and pending dose reminders.
+                        await medicationStore.deleteAllData()
                         let domain = Bundle.main.bundleIdentifier ?? ""
                         UserDefaults.standard.removePersistentDomain(forName: domain)
                         AIProviderSettings.deleteAllData()
@@ -6647,7 +6682,7 @@ struct ProfileView: View {
                     }
                 }
             } message: {
-                Text("This will permanently delete all your data including food logs, weight entries, workout history, health records, and profile. This action cannot be undone.")
+                Text("This will permanently delete all your data including food logs, weight entries, workout history, health records, medications, and profile. This action cannot be undone.")
             }
     }
     private var requestTimeoutInput: some View {
@@ -7876,4 +7911,5 @@ private struct LabReportAllergenConfirmationSheet: View {
         .environment(CloudBackupService())
         .environment(HealthDataStore())
         .environment(RecordsStore())
+        .environment(MedicationStore())
 }

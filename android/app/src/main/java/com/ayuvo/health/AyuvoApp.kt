@@ -31,6 +31,14 @@ import com.ayuvo.health.data.health.HealthDataStore
 import com.ayuvo.health.data.health.HealthDatabase
 import com.ayuvo.health.data.health.LocalHealthSources
 import com.ayuvo.health.data.health.SqliteHealthDataStore
+import com.ayuvo.health.medications.data.MedicationPhotoStore
+import com.ayuvo.health.medications.data.MedicationsDatabase
+import com.ayuvo.health.medications.data.MedicationsStore
+import com.ayuvo.health.medications.data.SqliteMedicationsStore
+import com.ayuvo.health.medications.reminders.MedicationAlarms
+import com.ayuvo.health.medications.reminders.MedicationMaintenanceWorker
+import com.ayuvo.health.medications.reminders.MedicationNotifications
+import com.ayuvo.health.medications.reminders.MedicationReminderCoordinator
 import com.ayuvo.health.records.data.RecordFileStore
 import com.ayuvo.health.records.data.RecordsDatabase
 import com.ayuvo.health.records.data.RecordsStore
@@ -107,6 +115,7 @@ class AyuvoApp : Application() {
         super.onCreate()
         container = AppContainer(this, appScope)
         container.notifications.createChannels()
+        MedicationNotifications.createChannel(this)
         container.resumeRecordsProcessing()
         WidgetRefreshScheduler.onAppStarted(this)
         container.widgetSnapshotWriter.observe().launchIn(appScope)
@@ -137,6 +146,12 @@ class AyuvoApp : Application() {
         // updates — without this, a user who enabled Notifications once would
         // silently stop receiving the reminder after the next reboot.
         appScope.launch {
+            // Medication reminders (docs/medications.md §10): re-plan on every cold start and keep
+            // planning on every store write. Never creates the database just to look for doses.
+            if (container.medicationsDatabaseExists()) {
+                container.medicationReminders.start()
+                MedicationMaintenanceWorker.onAppStarted(this@AyuvoApp)
+            }
             if (container.prefs.fastingTrackingEnabled.first()) {
                 container.notifications.ensureFastingChannel()
             }
@@ -329,6 +344,46 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             drive = com.ayuvo.health.backup.DriveCloudBackupClient(BuildConfig.CLOUD_BACKUP_WEB_CLIENT_ID),
             accessToken = { keyStore.cloudBackupAccessToken() }
         )
+    }
+
+    // -- Medications (docs/medications.md) ------------------------------------
+    // Lazily opened like records: nothing touches ayuvo_medications.db until the Meds segment, a
+    // notification action or the reminder planner needs it.
+    val medicationPhotos: MedicationPhotoStore by lazy { MedicationPhotoStore(app) }
+    private val medicationsDatabaseLazy = lazy { MedicationsDatabase(app) }
+    val medicationsDatabase: MedicationsDatabase by medicationsDatabaseLazy
+    val medicationsStore: MedicationsStore by lazy { SqliteMedicationsStore(medicationsDatabase, medicationPhotos) }
+
+    /** Whether a medications database exists (planners never create one just to look for doses). */
+    fun medicationsDatabaseExists(): Boolean = medicationsDatabaseLazy.isInitialized() || MedicationsDatabase.exists(appContext)
+
+    /** Single next-wake alarm planner for medication reminders (docs/medications.md §10). */
+    val medicationReminders: MedicationReminderCoordinator by lazy {
+        MedicationReminderCoordinator(
+            context = appContext,
+            store = { medicationsStore },
+            scope = scope,
+            databaseExists = ::medicationsDatabaseExists,
+            gate = {
+                com.ayuvo.health.medications.reminders.ReminderGate.shouldSchedule(
+                    notificationsEnabled = prefs.notificationsEnabled.first(),
+                    medicationRemindersEnabled = prefs.medicationRemindersEnabled.first(),
+                    canPost = notifications.canPostNotifications()
+                )
+            },
+            snoozeMinutes = { prefs.medicationSnoozeMinutes.first() }
+        )
+    }
+
+    /** Delete All Data: the medications database (+ journal files), every photo and every reminder. */
+    suspend fun deleteMedicationsData() = withContext(Dispatchers.IO) {
+        MedicationAlarms.cancel(appContext)
+        MedicationNotifications.cancelAll(appContext)
+        runCatching { MedicationMaintenanceWorker.cancel(appContext) }
+        medicationReminders.reset()
+        if (medicationsDatabaseLazy.isInitialized()) runCatching { medicationsDatabase.close() }
+        MedicationsDatabase.deleteDatabaseFiles(appContext)
+        medicationPhotos.deleteAll()
     }
 
     /**

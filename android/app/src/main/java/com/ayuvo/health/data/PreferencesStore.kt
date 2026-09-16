@@ -240,6 +240,18 @@ class PreferencesStore(
     val appUpdateNotificationsEnabled: Flow<Boolean> = ds.data.map { it[Keys.APP_UPDATE_NOTIFICATIONS_ENABLED] ?: true }
     suspend fun setAppUpdateNotificationsEnabled(v: Boolean) { ds.edit { it[Keys.APP_UPDATE_NOTIFICATIONS_ENABLED] = v } }
 
+    // -- Medication reminders (docs/medications.md §2; device-local, never in cloud backup) --
+    val medicationRemindersEnabled: Flow<Boolean> = ds.data.map { it[Keys.MEDICATION_REMINDERS_ENABLED] ?: true }
+    suspend fun setMedicationRemindersEnabled(v: Boolean) { ds.edit { it[Keys.MEDICATION_REMINDERS_ENABLED] = v } }
+
+    /** 10 | 30 | 60 minutes; anything else stored by an older build reads as the default. */
+    val medicationSnoozeMinutes: Flow<Int> = ds.data.map { coerceSnoozeMinutes(it[Keys.MEDICATION_SNOOZE_MINUTES]) }
+    suspend fun setMedicationSnoozeMinutes(v: Int) { ds.edit { it[Keys.MEDICATION_SNOOZE_MINUTES] = coerceSnoozeMinutes(v) } }
+
+    private fun coerceSnoozeMinutes(v: Int?): Int =
+        if (v != null && v in com.ayuvo.health.medications.logic.MedicationConstants.SNOOZE_MINUTES) v
+        else com.ayuvo.health.medications.logic.MedicationConstants.DEFAULT_SNOOZE_MINUTES
+
     // -- Water tracking --------------------------------------------------
     val waterTrackingEnabled: Flow<Boolean> = ds.data.map { it[Keys.WATER_TRACKING_ENABLED] ?: false }
     suspend fun setWaterTrackingEnabled(v: Boolean) { ds.edit { it[Keys.WATER_TRACKING_ENABLED] = v } }
@@ -1436,6 +1448,8 @@ class PreferencesStore(
         val BODY_FAT_REMINDER_ENABLED = booleanPreferencesKey("bodyFatReminderEnabled")
         val GOAL_REACHED_NOTIFICATIONS_ENABLED = booleanPreferencesKey("goalReachedNotificationsEnabled")
         val APP_UPDATE_NOTIFICATIONS_ENABLED = booleanPreferencesKey("appUpdateNotificationsEnabled")
+        val MEDICATION_REMINDERS_ENABLED = booleanPreferencesKey("medicationRemindersEnabled")
+        val MEDICATION_SNOOZE_MINUTES = intPreferencesKey("medicationSnoozeMinutes")
         val WATER_TRACKING_ENABLED = booleanPreferencesKey("waterTrackingEnabled")
         val WATER_DAILY_GOAL_ML = intPreferencesKey("waterDailyGoalMl")
         val WATER_UNIT = stringPreferencesKey("waterUnit")

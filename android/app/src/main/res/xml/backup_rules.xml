@@ -15,4 +15,10 @@
     <exclude domain="database" path="ayuvo_records.db-shm" />
     <exclude domain="database" path="ayuvo_records.db-journal" />
     <exclude domain="file" path="ayuvo-records/" />
+    <!-- Medications (docs/medications.md): medicine names, schedules, dose logs and photos stay on device. -->
+    <exclude domain="database" path="ayuvo_medications.db" />
+    <exclude domain="database" path="ayuvo_medications.db-wal" />
+    <exclude domain="database" path="ayuvo_medications.db-shm" />
+    <exclude domain="database" path="ayuvo_medications.db-journal" />
+    <exclude domain="file" path="ayuvo-medications/" />
 </full-backup-content>

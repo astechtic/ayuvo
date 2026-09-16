@@ -516,10 +516,12 @@ class ReminderReceiver : BroadcastReceiver() {
     }
 }
 
-private fun NotificationManagerCompat.notifySafely(
+/** Shared by every notification poster in the app (medication reminders pass a [tag]). */
+internal fun NotificationManagerCompat.notifySafely(
     context: Context,
     id: Int,
-    notif: android.app.Notification
+    notif: android.app.Notification,
+    tag: String? = null
 ) {
     val canNotify = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
         ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
@@ -527,7 +529,7 @@ private fun NotificationManagerCompat.notifySafely(
     if (!canNotify) return
 
     try {
-        notify(id, notif)
+        if (tag != null) notify(tag, id, notif) else notify(id, notif)
     } catch (_: SecurityException) {
         // Permission can still be revoked between the explicit check and notify().
     }

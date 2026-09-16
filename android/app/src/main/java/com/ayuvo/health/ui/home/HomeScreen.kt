@@ -19,6 +19,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ayuvo.health.services.FoodImageDecoder
 import com.ayuvo.health.ui.navigation.LocalLaunchFillEpoch
+import androidx.compose.material.icons.filled.Medication
+import com.ayuvo.health.medications.model.DoseStatus
+import com.ayuvo.health.medications.model.MedicationStatus
+import com.ayuvo.health.medications.model.TodayTimeline
+import com.ayuvo.health.ui.medications.MedicationFormat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -225,20 +230,36 @@ fun HomeScreen(
     onOpenHealthType: (String) -> Unit = {},
     onOpenRecords: () -> Unit = {},
     onOpenRecord: (String) -> Unit = {},
-    onOpenWorkouts: () -> Unit = {}
+    onOpenWorkouts: () -> Unit = {},
+    onOpenMedications: () -> Unit = {}
 ) {
     val vm: HomeViewModel = viewModel(factory = HomeViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
+    var resumeTick by remember { mutableIntStateOf(0) }
     DisposableEffect(lifecycleOwner, vm) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 vm.refreshDailySteps()
                 vm.bumpBurnRefresh()
+                resumeTick++
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    // Medications today (docs/medications.md §8): only read when a medications database exists —
+    // opening the store would create one for users who never added a medicine.
+    val medicationsExist = remember { container.medicationsDatabaseExists() }
+    var medicationsToday by remember { mutableStateOf<TodayTimeline?>(null) }
+    if (medicationsExist) {
+        val medicationsRevision by container.medicationsStore.revision.collectAsState()
+        LaunchedEffect(medicationsRevision, resumeTick) {
+            medicationsToday = runCatching {
+                container.medicationsStore.today(System.currentTimeMillis(), ZoneId.systemDefault().id)
+            }.getOrNull()
+        }
     }
 
     val weekStartsOnMonday by container.prefs.weekStartsOnMonday.collectAsState(initial = true)
@@ -332,6 +353,14 @@ fun HomeScreen(
                     onOpenFood = onOpenFood,
                     onAddWater = { vm.addWater(250) }
                 )
+            }
+
+            // 3b. Medications today (hidden until there is an active or paused medicine)
+            val medsTimeline = medicationsToday
+            if (medsTimeline != null && medsTimeline.medications.values.any { it.status == MedicationStatus.ACTIVE || it.status == MedicationStatus.PAUSED }) {
+                item(key = "medications-today") {
+                    MedicationsTodayCard(timeline = medsTimeline, onOpen = onOpenMedications)
+                }
             }
 
             // 4. Important Highlights (Lab & Clinical Alerts) Card
@@ -500,6 +529,59 @@ private fun HydrationWidgetCard(waterTodayMl: Int, waterGoalMl: Int, onOpenFood:
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Water", tint = AppColors.Calorie)
             }
+        }
+    }
+}
+
+/**
+ * "Medications today" (docs/medications.md §8): taken / total plus the next due dose, linking to the
+ * Meds segment. Only composed while an active or paused medicine exists.
+ */
+@Composable
+private fun MedicationsTodayCard(timeline: TodayTimeline, onOpen: () -> Unit) {
+    val context = LocalContext.current
+    val summary = timeline.summary
+    val next = timeline.groups.asSequence().flatMap { it.items.asSequence() }
+        .firstOrNull { it.status == DoseStatus.DUE || it.status == DoseStatus.SNOOZED || it.status == DoseStatus.SCHEDULED }
+    val nextMedication = next?.let { timeline.medications[it.medicationId] }
+    val subtitle = when {
+        next != null && nextMedication != null ->
+            stringResource(R.string.home_medications_next, MedicationFormat.nameWithStrength(nextMedication), MedicationFormat.time(context, next.scheduledAtMs))
+        summary.total == 0 -> stringResource(R.string.home_medications_none_today)
+        else -> stringResource(R.string.home_medications_done)
+    }
+    GlassSurface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onOpen() },
+        cornerRadius = 20.dp,
+        padding = 16.dp
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                IconBubble(icon = Icons.Filled.Medication, size = 40.dp, iconSize = 22.dp)
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = if (summary.total > 0) stringResource(R.string.home_medications_taken, summary.taken, summary.total)
+                        else stringResource(R.string.home_medications_title),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = subtitle,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        maxLines = 2
+                    )
+                }
+            }
+            ViewMoreButton()
         }
     }
 }

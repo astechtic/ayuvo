@@ -1,0 +1,246 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "medication_ids": [
+          "med-1"
+        ]
+      },
+      "input": {
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-09",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "today": "2026-09-10"
+      },
+      "name": "end_yesterday_completes",
+      "notes": "end_date < today."
+    },
+    {
+      "expected": {
+        "medication_ids": []
+      },
+      "input": {
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-10",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "today": "2026-09-10"
+      },
+      "name": "end_today_not_yet",
+      "notes": "Its last doses still run today."
+    },
+    {
+      "expected": {
+        "medication_ids": []
+      },
+      "input": {
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "today": "2026-09-10"
+      },
+      "name": "no_end_date",
+      "notes": "Open-ended medicines never auto-complete."
+    },
+    {
+      "expected": {
+        "medication_ids": []
+      },
+      "input": {
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-01",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "stopped",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "today": "2026-09-10"
+      },
+      "name": "stopped_ignored",
+      "notes": "Only active/paused."
+    },
+    {
+      "expected": {
+        "medication_ids": [
+          "med-1"
+        ]
+      },
+      "input": {
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-01",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "paused",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "today": "2026-09-10"
+      },
+      "name": "paused_completes",
+      "notes": "A paused course that ended completes too."
+    },
+    {
+      "expected": {
+        "medication_ids": [
+          "b",
+          "a"
+        ]
+      },
+      "input": {
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-01",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "b",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-02",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "a",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "c",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "today": "2026-09-10"
+      },
+      "name": "mixed_in_input_order",
+      "notes": "Ids in input order."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "auto_complete",
+  "version": 1
+}

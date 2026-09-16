@@ -1,0 +1,1091 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": "log-2",
+                "medication_id": "med-2",
+                "schedule_id": "sch-2",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "skipped"
+              },
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": "log-1",
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "taken"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": "log-3",
+                "medication_id": "med-2",
+                "schedule_id": "sch-2",
+                "scheduled_at_ms": 1789029000000,
+                "snoozed_until_ms": 1789029600000,
+                "status": "snoozed"
+              }
+            ],
+            "slot": "14:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-2",
+                "schedule_id": "sch-2",
+                "scheduled_at_ms": 1789050600000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              },
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789050600000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "20:00"
+          }
+        ],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 0,
+          "skipped": 1,
+          "snoozed": 1,
+          "taken": 1,
+          "total": 5,
+          "upcoming": 2
+        }
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007580000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "id": "log-2",
+            "medication_id": "med-2",
+            "note": null,
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "skipped",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789029000000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "id": "log-3",
+            "medication_id": "med-2",
+            "note": null,
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789029000000,
+            "snoozed_until_ms": 1789029600000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1789029000000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-2",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Amoxicillin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "250 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789029300000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-2",
+            "interval_hours": null,
+            "medication_id": "med-2",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "14:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "two_meds_mixed_statuses",
+      "notes": "08:00 group ordered Amoxicillin then Metformin (folded names); 14:00 snoozed; 20:00 two scheduled. total 5."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": "log-1",
+                "medication_id": "med-3",
+                "schedule_id": "sch-3",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "taken"
+              },
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "missed"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789050600000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "20:00"
+          }
+        ],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 1,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 1,
+          "total": 3,
+          "upcoming": 1
+        }
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-3",
+            "note": null,
+            "schedule_id": "sch-3",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007400000,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-3",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Atorvastatin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "paused",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789018200000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": 1789014600000,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-3",
+            "interval_hours": null,
+            "medication_id": "med-3",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "paused_med_log_still_shown",
+      "notes": "A paused medicine gets no occurrences, but its log from this morning is still an item (kind scheduled)."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "missed"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "prn",
+                "log_id": "log-1",
+                "medication_id": "med-4",
+                "schedule_id": null,
+                "scheduled_at_ms": 1789011720000,
+                "snoozed_until_ms": null,
+                "status": "taken"
+              }
+            ],
+            "slot": "09:12"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "prn",
+                "log_id": "log-2",
+                "medication_id": "med-4",
+                "schedule_id": null,
+                "scheduled_at_ms": 1789035000000,
+                "snoozed_until_ms": null,
+                "status": "taken"
+              }
+            ],
+            "slot": "15:40"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789050600000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "20:00"
+          }
+        ],
+        "prn": [
+          {
+            "last_taken_ms": 1789035000000,
+            "medication_id": "med-4",
+            "today_count": 2
+          }
+        ],
+        "summary": {
+          "due": 0,
+          "missed": 1,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 0,
+          "total": 2,
+          "upcoming": 1
+        }
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789011720000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-4",
+            "note": null,
+            "schedule_id": null,
+            "scheduled_at_ms": 1789011720000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789011720000,
+            "updated_ms": 1789011720000
+          },
+          {
+            "created_ms": 1789035000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-4",
+            "note": null,
+            "schedule_id": null,
+            "scheduled_at_ms": 1789035000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789035000000,
+            "updated_ms": 1789035000000
+          },
+          {
+            "created_ms": 1788971400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-3",
+            "medication_id": "med-4",
+            "note": null,
+            "schedule_id": null,
+            "scheduled_at_ms": 1788971400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788971400000,
+            "updated_ms": 1788971400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-4",
+            "instructions": null,
+            "is_prn": 1,
+            "name": "Paracetamol",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "650 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789036200000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "prn_section_and_items",
+      "notes": "PRN doses appear as kind 'prn' items in their own slots; prn section counts today (2) and last_taken is 15:40; yesterday's log is not an item."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": "log-1",
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "taken"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1b",
+                "scheduled_at_ms": 1789054200000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "21:00"
+          }
+        ],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 0,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 1,
+          "total": 2,
+          "upcoming": 1
+        }
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007400000,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789025400000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": 1789021800000,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          },
+          {
+            "active_from_ms": 1789021800000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1b",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "09:00",
+              "21:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "edited_midday_old_version_once",
+      "notes": "v1 contributes 08:00 (taken, shown once), not 20:00; v2 contributes 21:00 only (09:00 is before its active_from)."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789050600000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "20:00"
+          }
+        ],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 0,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 0,
+          "total": 2,
+          "upcoming": 2
+        }
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1788982200000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "day_boundary_kolkata",
+      "notes": "01:00 IST on 10 Sep: date is 2026-09-10, both doses upcoming."
+    },
+    {
+      "expected": {
+        "date": "2026-09-09",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1788940800000,
+                "snoozed_until_ms": null,
+                "status": "missed"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1788984000000,
+                "snoozed_until_ms": null,
+                "status": "scheduled"
+              }
+            ],
+            "slot": "20:00"
+          }
+        ],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 1,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 0,
+          "total": 2,
+          "upcoming": 1
+        }
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1788982200000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "20:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "day_boundary_utc_same_instant",
+      "notes": "The same instant in UTC is 19:30 on 9 Sep: the date is 2026-09-09 and the 20:00 UTC dose is scheduled (slots are wall-clock in the given zone)."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789007400000,
+                "snoozed_until_ms": null,
+                "status": "missed"
+              }
+            ],
+            "slot": "08:00"
+          },
+          {
+            "items": [
+              {
+                "dose_quantity": 1,
+                "dose_unit": "tablet",
+                "is_late": false,
+                "kind": "scheduled",
+                "log_id": null,
+                "medication_id": "med-1",
+                "schedule_id": "sch-1",
+                "scheduled_at_ms": 1789014600000,
+                "snoozed_until_ms": null,
+                "status": "due"
+              }
+            ],
+            "slot": "10:00"
+          }
+        ],
+        "prn": [],
+        "summary": {
+          "due": 1,
+          "missed": 1,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 0,
+          "total": 2,
+          "upcoming": 0
+        }
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-1",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789016400000,
+        "schedules": [
+          {
+            "active_from_ms": 1788201000000,
+            "active_until_ms": null,
+            "anchor_time": null,
+            "created_ms": 1788229800000,
+            "days": [],
+            "frequency_kind": "daily",
+            "id": "sch-1",
+            "interval_hours": null,
+            "medication_id": "med-1",
+            "reminder_enabled": 1,
+            "times": [
+              "08:00",
+              "10:00"
+            ],
+            "updated_ms": 1788229800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "missed_and_due",
+      "notes": "08:00 is past grace (missed, derived), 10:00 is due."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 0,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 0,
+          "total": 0,
+          "upcoming": 0
+        }
+      },
+      "input": {
+        "logs": [],
+        "medications": [],
+        "now_ms": 1789029000000,
+        "schedules": [],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "empty_day",
+      "notes": "Everything empty."
+    },
+    {
+      "expected": {
+        "date": "2026-09-10",
+        "groups": [],
+        "prn": [],
+        "summary": {
+          "due": 0,
+          "missed": 0,
+          "skipped": 0,
+          "snoozed": 0,
+          "taken": 0,
+          "total": 0,
+          "upcoming": 0
+        }
+      },
+      "input": {
+        "logs": [],
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-4",
+            "instructions": null,
+            "is_prn": 1,
+            "name": "Paracetamol",
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "stopped",
+            "strength": "500 mg",
+            "updated_ms": 1788229800000
+          }
+        ],
+        "now_ms": 1789029000000,
+        "schedules": [],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "stopped_med_prn_not_listed",
+      "notes": "Only active PRN medicines are listed."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "today_timeline",
+  "version": 1
+}

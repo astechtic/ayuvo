@@ -1135,6 +1135,11 @@ struct NotificationSettingsView: View {
     @AppStorage(WaterSettings.reminderMinuteKey) private var waterReminderMinute = 0
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
     @AppStorage(FastingSettings.notificationEnabledKey) private var fastingGoalNotificationEnabled = true
+    @AppStorage(MedicationSettings.remindersEnabledKey) private var medicationRemindersEnabled = MedicationSettings.defaultRemindersEnabled
+    @AppStorage(MedicationSettings.snoozeMinutesKey) private var medicationSnoozeMinutes = MedicationSettings.defaultSnoozeMinutes
+    #if DEBUG
+    @State private var pendingMedicationReminders: Int?
+    #endif
 
     var body: some View {
         List {
@@ -1159,6 +1164,9 @@ struct NotificationSettingsView: View {
                                 applyMealReminders()
                                 applyWaterReminder()
                                 applyFastingGoalNotification()
+                                // `cancelAllNotifications()` below also drops the medication
+                                // requests, so turning the master switch back on re-plans them.
+                                await MedicationReminderRuntime.shared.replan()
                             }
                         }
                     } else {
@@ -1257,6 +1265,71 @@ struct NotificationSettingsView: View {
                     .listRowBackground(AppColors.appCard)
                 }
 
+                // Medications (docs/medications.md §10, §16)
+                Section {
+                    Toggle(isOn: $medicationRemindersEnabled) {
+                        Label {
+                            Text("Dose Reminders")
+                        } icon: {
+                            Image(systemName: "pills.fill")
+                                .foregroundStyle(AppColors.calorie)
+                        }
+                    }
+                    .tint(AppColors.calorie)
+                    .onChange(of: medicationRemindersEnabled) { _, enabled in
+                        Task {
+                            if enabled {
+                                await MedicationReminderRuntime.shared.replan()
+                            } else {
+                                await MedicationReminderRuntime.shared.cancelAll()
+                            }
+                            #if DEBUG
+                            pendingMedicationReminders = await MedicationReminderRuntime.shared.scheduler.pendingCount()
+                            #endif
+                        }
+                    }
+
+                    if medicationRemindersEnabled {
+                        Picker(selection: $medicationSnoozeMinutes) {
+                            ForEach(MedicationSettings.snoozeOptions, id: \.self) { minutes in
+                                Text(snoozeOptionTitle(minutes)).tag(minutes)
+                            }
+                        } label: {
+                            Label {
+                                Text("Snooze For")
+                            } icon: {
+                                Image(systemName: "clock.arrow.circlepath")
+                                    .foregroundStyle(AppColors.calorie)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .tint(AppColors.calorie)
+                        .accessibilityIdentifier("medications.settings.snooze")
+                    }
+
+                    #if DEBUG
+                    HStack {
+                        Label {
+                            Text("Pending reminders")
+                        } icon: {
+                            Image(systemName: "ladybug")
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Text(pendingMedicationReminders.map(String.init) ?? "…")
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                    .accessibilityIdentifier("medications.settings.pending")
+                    #endif
+                } header: {
+                    Text("Medications")
+                } footer: {
+                    Text("Reminders are scheduled a week ahead. Open Ayuvo now and then, or act on a reminder, to keep them coming. The Snooze button on a reminder uses the time chosen here.")
+                        .font(.system(.caption, design: .rounded))
+                }
+                .listRowBackground(AppColors.appCard)
+
                 // Smart Notifications
                 Section {
                     NotificationTimeRow(
@@ -1324,7 +1397,17 @@ struct NotificationSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await notificationManager.refreshAuthorizationStatus()
+            #if DEBUG
+            pendingMedicationReminders = await MedicationReminderRuntime.shared.scheduler.pendingCount()
+            #endif
         }
+    }
+
+    private func snoozeOptionTitle(_ minutes: Int) -> String {
+        if minutes >= 60 {
+            return String(localized: "1 hour")
+        }
+        return String(localized: "\(minutes) min")
     }
 
     private func applyMealReminders() {

@@ -68,6 +68,7 @@ import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.GlassTextButton
+import androidx.compose.ui.platform.testTag
 import com.ayuvo.health.ui.components.GlassTextField
 import com.ayuvo.health.ui.components.OptionPickerSheet
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
@@ -93,7 +94,9 @@ fun RecordDetailScreen(
     /** §27 "Ask about this report" / "Compare with previous report": records + prefilled prompt. */
     onAskCoach: (recordIds: List<String>, prompt: String) -> Unit = { _, _ -> },
     /** §34 "Share": opens "What will be shared" for this record. */
-    onShare: (List<String>) -> Unit = {}
+    onShare: (List<String>) -> Unit = {},
+    /** Medications (docs/medications.md §13): review this record's medicines and add them. */
+    onAddToMedications: (String) -> Unit = {}
 ) {
     val vm: RecordDetailViewModel = viewModel(
         key = "record-$recordId-${focusObservationId.orEmpty()}",
@@ -281,12 +284,22 @@ fun RecordDetailScreen(
                         )
                     }
                     val usable = intelligence.fields.filter { it.state != com.ayuvo.health.records.model.FieldState.REJECTED }
+                    val hasMedicationFields = usable.any { it.key == com.ayuvo.health.records.model.FieldKey.MEDICATION }
                     ListCard(
                         R.string.records_medications_title,
                         intelligence.highlights.filter { it.section == com.ayuvo.health.records.model.HighlightSection.MEDICATIONS && !it.dismissed }
                             .map { it.text to it.sourcePage }
                             .ifEmpty { usable.filter { it.key == com.ayuvo.health.records.model.FieldKey.MEDICATION }.map { fieldDisplayValue(it) to it.sourcePage } },
-                        onFocusPage = vm::focusPage
+                        onFocusPage = vm::focusPage,
+                        action = if (hasMedicationFields) {
+                            {
+                                GlassTextButton(
+                                    text = stringResource(R.string.records_add_to_medications),
+                                    onClick = { onAddToMedications(record.id) },
+                                    modifier = Modifier.fillMaxWidth().testTag("records.detail.medications.add")
+                                )
+                            }
+                        } else null
                     )
                     ListCard(
                         R.string.records_recommendations_title,

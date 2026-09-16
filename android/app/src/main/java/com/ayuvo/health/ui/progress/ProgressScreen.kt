@@ -181,7 +181,12 @@ fun ProgressScreen(
     onRequestConsumed: () -> Unit = {},
     onOpenType: (String) -> Unit = {},
     quickActionRequest: QuickActionRequest? = null,
-    onQuickActionHandled: (Long) -> Unit = {}
+    onQuickActionHandled: (Long) -> Unit = {},
+    // Meds segment (docs/medications.md): pushed screens over the Health tab.
+    onOpenMedication: (String) -> Unit = {},
+    onAddMedication: () -> Unit = {},
+    onOpenMedicationHistory: () -> Unit = {},
+    onImportMedicationsFromRecord: (String) -> Unit = {}
 ) {
     var destination by rememberSaveable { mutableStateOf(HealthTabDestination.PROGRESS) }
     // Home's "See All" / Settings' "All Health Data" land on the Health Data segment and Home's
@@ -217,6 +222,13 @@ fun ProgressScreen(
                     HealthTabDestination.WORKOUTS -> com.ayuvo.health.ui.workouts.WorkoutsScreen(
                         container = container,
                         onSubScreenVisibleChange = { workoutSubScreenVisible = it }
+                    )
+                    HealthTabDestination.MEDICATIONS -> com.ayuvo.health.ui.medications.MedicationsScreen(
+                        container = container,
+                        onOpenMedication = onOpenMedication,
+                        onAddMedication = onAddMedication,
+                        onOpenHistory = onOpenMedicationHistory,
+                        onImportFromRecord = onImportMedicationsFromRecord
                     )
                 }
             }

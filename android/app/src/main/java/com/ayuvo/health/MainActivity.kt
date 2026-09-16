@@ -18,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import com.ayuvo.health.medications.model.MedicationIntents
+import com.ayuvo.health.medications.model.MedicationRequest
 import com.ayuvo.health.models.QuickActionRequest
 import com.ayuvo.health.records.RecordsRequest
 import com.ayuvo.health.records.ingest.ImportItem
@@ -46,12 +48,20 @@ private data class StartupPrefs(
 class MainActivity : ComponentActivity() {
     private var pendingQuickAction by mutableStateOf<QuickActionRequest?>(null)
     private var pendingRecordsRequest by mutableStateOf<RecordsRequest?>(null)
+    private var pendingMedicationRequest by mutableStateOf<MedicationRequest?>(null)
     private var startupPrefs by mutableStateOf<StartupPrefs?>(null)
     private var contentReady by mutableStateOf(false)
 
     private fun handleQuickActionIntent(intent: Intent?) {
         val action = QuickActionShortcutManager.actionFrom(intent) ?: return
         pendingQuickAction = QuickActionRequest(action)
+        intent?.action = null
+    }
+
+    /** A medication reminder tap: open the Meds segment (and the medicine when the intent names one). */
+    private fun handleMedicationIntent(intent: Intent?) {
+        val request = MedicationIntents.requestFrom(intent) ?: return
+        pendingMedicationRequest = request
         intent?.action = null
     }
 
@@ -102,6 +112,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         handleQuickActionIntent(intent)
+        handleMedicationIntent(intent)
         handleIncomingRecordsIntent(intent)
     }
     override fun onStart() {
@@ -165,6 +176,7 @@ class MainActivity : ComponentActivity() {
         }
 
         handleQuickActionIntent(intent)
+        handleMedicationIntent(intent)
         // A recreated activity (rotation, process restore) still carries the original share intent.
         if (savedInstanceState == null) handleIncomingRecordsIntent(intent)
 
@@ -222,6 +234,10 @@ class MainActivity : ComponentActivity() {
                         recordsRequest = pendingRecordsRequest,
                         onRecordsRequestHandled = { requestID ->
                             if (pendingRecordsRequest?.id == requestID) pendingRecordsRequest = null
+                        },
+                        medicationRequest = pendingMedicationRequest,
+                        onMedicationRequestHandled = { requestID ->
+                            if (pendingMedicationRequest?.id == requestID) pendingMedicationRequest = null
                         }
                     )
                 }

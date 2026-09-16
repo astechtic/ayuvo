@@ -28,7 +28,15 @@ struct RecordDetailIntelligenceSections: View {
             banners
             highlightsCard
             extractedInformation
-            listSection(title: "Medications", systemImage: "pills.fill", keys: [.medication], identifier: "records.detail.medications")
+            listSection(title: "Medications", systemImage: "pills.fill", keys: [.medication], identifier: "records.detail.medications") {
+                // Medication Management: turn the extracted medicines into tracked medications (docs/medications.md §13).
+                NavigationLink(value: MedicationRoute.importFromRecord(record.id)) {
+                    Label("Add to Medications", systemImage: "plus.circle")
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .foregroundStyle(AppColors.calorie)
+                }
+                .accessibilityIdentifier("records.detail.medications.add")
+            }
             listSection(title: "Recommendations", systemImage: "checklist", keys: [.recommendation], identifier: "records.detail.recommendations")
         }
         .task(id: detail.awaitingConsent) {
@@ -209,7 +217,13 @@ struct RecordDetailIntelligenceSections: View {
     }
 
     @ViewBuilder
-    private func listSection(title: LocalizedStringKey, systemImage: String, keys: Set<RecordFieldKey>, identifier: String) -> some View {
+    private func listSection<Action: View>(
+        title: LocalizedStringKey,
+        systemImage: String,
+        keys: Set<RecordFieldKey>,
+        identifier: String,
+        @ViewBuilder action: () -> Action = { EmptyView() }
+    ) -> some View {
         let fields = detail.visibleFields.filter { keys.contains($0.key) }
         if !fields.isEmpty {
             RecordsCard {
@@ -229,6 +243,7 @@ struct RecordDetailIntelligenceSections: View {
                     }
                     .buttonStyle(.plain)
                 }
+                action()
             }
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier(identifier)

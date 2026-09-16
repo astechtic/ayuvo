@@ -27,6 +27,7 @@ struct calorietrackerApp: App {
     @State private var cloudBackupService = CloudBackupService()
     @State private var healthDataStore = HealthDataStore()
     @State private var recordsStore = RecordsStore()
+    @State private var medicationStore = MedicationStore()
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("appearanceMode") private var appearanceMode = "system"
     @AppStorage("notificationsEnabled") private var notificationsEnabled = false
@@ -76,6 +77,7 @@ struct calorietrackerApp: App {
                         .environment(cloudBackupService)
                         .environment(healthDataStore)
                         .environment(recordsStore)
+                        .environment(medicationStore)
                 } else {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
                         .environment(notificationManager)
@@ -89,6 +91,7 @@ struct calorietrackerApp: App {
                         .environment(waterStore)
                         .environment(fastingStore)
                         .environment(healthDataStore)
+                        .environment(medicationStore)
                 }
             }
             .tint(AppThemeColor.color(for: appThemeColorRaw).color)
@@ -110,12 +113,23 @@ struct calorietrackerApp: App {
                     Task { await recordsStore.drainInbox() }
                     return
                 }
+                // ayuvo://medications[?id=<medication id>] opens the Meds pane (optionally at a detail).
+                if url.scheme == "ayuvo", url.host == "medications" {
+                    let id = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                        .queryItems?.first(where: { $0.name == "id" })?.value
+                    MedicationCoordinator.request(medicationID: id?.isEmpty == false ? id : nil)
+                    return
+                }
                 guard url.scheme == "ayuvo", url.host == "log-food",
                       let raw = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                         .queryItems?.first(where: { $0.name == "method" })?.value,
                       let method = FoodLogMethod(rawValue: raw)
                 else { return }
                 FoodLogMethodCoordinator.request(method)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .medicationDoseDidChange)) { _ in
+                // A dose was taken / skipped / snoozed from a notification action in the background.
+                medicationStore.handleExternalChange()
             }
             .onReceive(NotificationCenter.default.publisher(for: .userProfileDidChange)) { _ in
                 refreshWidgetSnapshot()
@@ -134,6 +148,8 @@ struct calorietrackerApp: App {
                 // The health mirror is never part of the cloud backup; only re-check
                 // authorization and drop device-local throttles so "Grant access" shows.
                 healthDataStore.reloadAfterRestore()
+                // Medications are never in the cloud backup either; only their preferences may change.
+                medicationStore.reloadAfterRestore()
                 refreshWidgetSnapshot()
             }
             .task {
@@ -151,6 +167,12 @@ struct calorietrackerApp: App {
                 await importRecordsArchiveIfRequested()
                 // Health Records processing: resume unfinished jobs (and the one-time Phase 1 backfill).
                 if hasCompletedOnboarding { await recordsStore.resumeProcessing() }
+            }
+            .task {
+                // Medications: open lazily (the database file is only created on the first save),
+                // then the DEBUG fixture hook for UI tests.
+                await medicationStore.openIfNeeded()
+                await importMedicationsFixtureIfRequested()
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -171,6 +193,11 @@ struct calorietrackerApp: App {
                 Task {
                     await recordsStore.drainInbox()
                     if hasCompletedOnboarding { await recordsStore.resumeProcessing() }
+                }
+                Task {
+                    // Medications: mark doses missed / courses completed, then refresh the Today timeline.
+                    await medicationStore.materializeMissedAndCompletions()
+                    await medicationStore.reload()
                 }
                 if hasCompletedOnboarding {
                     wireUpHealthKit()
@@ -419,6 +446,21 @@ struct calorietrackerApp: App {
         await recordsStore.importItems(urls.map {
             RecordImportItem(payload: .file($0), source: .import, importMethod: .filePicker, originalFilename: $0.lastPathComponent)
         }, announce: false)
+        #endif
+    }
+
+    /// Debug / UI-test hook: `-ayuvoMedicationsFixture <absolute path>` merges an `ayuvo-medications`
+    /// archive through the regular importer so the Meds pane can be exercised on a simulator without
+    /// the Files picker. `-ayuvoMedicationsReset` wipes the medications store first. Compiled out of
+    /// release builds.
+    private func importMedicationsFixtureIfRequested() async {
+        #if DEBUG
+        let arguments = CommandLine.arguments
+        if arguments.contains("-ayuvoMedicationsReset") { await medicationStore.deleteAllData() }
+        guard let index = arguments.firstIndex(of: MedicationSettings.fixtureArgument), arguments.indices.contains(index + 1) else { return }
+        let url = URL(fileURLWithPath: arguments[index + 1])
+        guard let data = try? Data(contentsOf: url) else { return }
+        _ = try? await medicationStore.importArchive(data)
         #endif
     }
 

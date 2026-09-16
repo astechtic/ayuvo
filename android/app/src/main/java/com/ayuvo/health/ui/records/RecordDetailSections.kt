@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -400,9 +401,17 @@ private fun FieldRow(field: RecordField, onFocus: (RecordField) -> Unit, onEdit:
     }
 }
 
-/** Medications / Recommendations cards built from their highlight sections (fallback: fields). */
+/**
+ * Medications / Recommendations cards built from their highlight sections (fallback: fields).
+ * [action] renders under the list (the Medications card's "Add to Medications").
+ */
 @Composable
-internal fun ListCard(@StringRes title: Int, items: List<Pair<String, Int?>>, onFocusPage: (Int?) -> Unit) {
+internal fun ListCard(
+    @StringRes title: Int,
+    items: List<Pair<String, Int?>>,
+    onFocusPage: (Int?) -> Unit,
+    action: (@Composable () -> Unit)? = null
+) {
     if (items.isEmpty()) return
     GlassSurface(Modifier.fillMaxWidth(), cornerRadius = 20.dp, padding = 16.dp) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -413,6 +422,10 @@ internal fun ListCard(@StringRes title: Int, items: List<Pair<String, Int?>>, on
                     Spacer(Modifier.width(8.dp))
                     Text(text, fontSize = 14.sp, modifier = Modifier.weight(1f))
                 }
+            }
+            if (action != null) {
+                Spacer(Modifier.height(4.dp))
+                action()
             }
         }
     }

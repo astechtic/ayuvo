@@ -29,6 +29,10 @@ enum CloudBackupPolicy {
         // Health Records preferences never enter iCloud (docs/health-records.md §6); the records
         // themselves live in the backup-excluded `Application Support/Ayuvo/Records/`.
         if key.hasPrefix("healthRecords") { return false }
+        // Medication preferences and the pending notification route stay on the device; the
+        // medications database lives in the backup-excluded `Application Support/Ayuvo/Medications/`
+        // and has its own portable `ayuvo-medications` export (docs/medications.md §2, §14).
+        if key.hasPrefix("medication") { return false }
         if key.hasPrefix("Apple") || key.hasPrefix("NS") || key.hasPrefix("com.apple") { return false }
         if key.hasPrefix("AK") { return false }
         return true

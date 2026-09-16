@@ -3,8 +3,11 @@ import UIKit
 import UserNotifications
 
 /// Minimal app delegate, attached via `@UIApplicationDelegateAdaptor`: configures Firebase core
-/// (no Analytics or other data-collecting products) and handles local notifications: present the "Update Available" banner while the app is foreground (the update
-/// check runs at launch) and open the App Store when it's tapped.
+/// (no Analytics or other data-collecting products) and handles local notifications: present the
+/// "Update Available" banner while the app is foreground (the update check runs at launch) and open
+/// the App Store when it's tapped; medication reminders (docs/medications.md §16) show in the
+/// foreground too, and their Taken / Skip / Snooze actions are applied in the background by
+/// `MedicationActionHandler` before any SwiftUI view exists.
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(
         _ application: UIApplication,
@@ -12,6 +15,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     ) -> Bool {
         FirebaseApp.configure()
         UNUserNotificationCenter.current().delegate = self
+        // Both must happen before launch completes: the category so the actions render on the first
+        // reminder, the background task so iOS accepts later `BGAppRefreshTaskRequest`s.
+        MedicationNotificationScheduler.registerCategory()
+        MedicationBackgroundRefresh.register()
+        MedicationReminderRuntime.shared.start()
         QuickActionSettings.registerApplicationShortcuts()
         WatchSnapshotSync.shared.activate()
         return true
@@ -39,23 +47,27 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         completionHandler(QuickActionCoordinator.handle(shortcutItem))
     }
 
-    /// Show the update banner even when the app is in the foreground; leave the scheduled reminders
-    /// to their default (no foreground interruption) so this changes nothing for them.
+    /// Show the update banner and due-dose reminders even when the app is in the foreground; leave
+    /// the other scheduled reminders to their default (no foreground interruption).
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        if notification.request.identifier == NotificationManager.appUpdateNotificationID {
+        let identifier = notification.request.identifier
+        if identifier == NotificationManager.appUpdateNotificationID
+            || MedicationReminderPlanner.isMedicationIdentifier(identifier) {
             return [.banner, .sound, .list]
         }
         return []
     }
 
-    /// Open the App Store listing when the update notification is tapped.
+    /// Medication actions first (Taken / Skip / Snooze are applied here, a plain tap routes to the
+    /// Meds segment); otherwise open the App Store listing when the update notification is tapped.
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
+        if await MedicationActionHandler.handle(response) { return }
         let userInfo = response.notification.request.content.userInfo
         if let urlString = userInfo["updateURL"] as? String, let url = URL(string: urlString) {
             await UIApplication.shared.open(url)

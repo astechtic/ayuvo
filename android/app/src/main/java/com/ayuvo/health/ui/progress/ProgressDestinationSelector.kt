@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +50,7 @@ import androidx.compose.material.icons.filled.Restaurant
 
 /**
  * The segments of the Health tab: Food management flow, the classic Progress charts,
- * the Health Data hub and Workouts.
+ * the Health Data hub, Workouts and Medications.
  */
 enum class HealthTabDestination(
     @StringRes val labelRes: Int,
@@ -58,13 +59,18 @@ enum class HealthTabDestination(
     FOOD(R.string.health_tab_food, Icons.Filled.Restaurant),
     PROGRESS(R.string.health_tab_progress, Icons.AutoMirrored.Filled.ShowChart),
     HEALTH_DATA(R.string.health_tab_data, Icons.Filled.MonitorHeart),
-    WORKOUTS(R.string.nav_workouts, Icons.Filled.FitnessCenter)
+    WORKOUTS(R.string.nav_workouts, Icons.Filled.FitnessCenter),
+    MEDICATIONS(R.string.health_tab_meds, Icons.Filled.Medication)
 }
+
+/** With this many segments the track is too narrow for five labels: unselected segments go icon-only. */
+private const val COMPACT_FROM = 5
 
 /**
  * Matches iOS `ProgressOverviewModeSelector`: capsule track with gradient
- * selected chip + icon label. Segments share the track equally and the gradient
- * pill slides between them.
+ * selected chip + icon label and a pill that slides between segments. Up to four segments
+ * share the track equally; from five on, the selected segment takes two shares and shows
+ * its label while the others show only their icon (with the label as content description).
  */
 @Composable
 internal fun HealthTabSelector(
@@ -76,6 +82,8 @@ internal fun HealthTabSelector(
     val track = if (isDark) AppColors.AppCardDark else AppColors.AppCardLight
     val destinations = HealthTabDestination.entries
     val selectedIndex = destinations.indexOf(selected).coerceAtLeast(0)
+    val compact = destinations.size >= COMPACT_FROM
+    val selectedShare = if (compact) 2f else 1f
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
@@ -84,11 +92,17 @@ internal fun HealthTabSelector(
             .border(0.75.dp, AppColors.Calorie.copy(alpha = 0.12f), RoundedCornerShape(50))
             .padding(4.dp)
     ) {
-        val segmentWidth = maxWidth / destinations.size
+        // The Row distributes its width by weight: (size - 1) unit shares plus the selected share.
+        val unit = maxWidth / (destinations.size - 1 + selectedShare)
         val indicatorOffset by animateDpAsState(
-            targetValue = segmentWidth * selectedIndex,
+            targetValue = unit * selectedIndex,
             animationSpec = spring(dampingRatio = 0.85f, stiffness = Spring.StiffnessMediumLow),
             label = "health_tab_indicator"
+        )
+        val indicatorWidth by animateDpAsState(
+            targetValue = unit * selectedShare,
+            animationSpec = spring(dampingRatio = 0.85f, stiffness = Spring.StiffnessMediumLow),
+            label = "health_tab_indicator_width"
         )
         Box {
             // Sized to the segment row below; the pill slides underneath the labels.
@@ -96,7 +110,7 @@ internal fun HealthTabSelector(
                 Box(
                     Modifier
                         .offset(x = indicatorOffset)
-                        .width(segmentWidth)
+                        .width(indicatorWidth)
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(50))
                         .background(AppColors.CalorieGradient)
@@ -110,6 +124,8 @@ internal fun HealthTabSelector(
             ) {
                 destinations.forEach { destination ->
                     val isSelected = selected == destination
+                    val label = stringResource(destination.labelRes)
+                    val showLabel = !compact || isSelected
                     val contentColor by animateColorAsState(
                         targetValue = if (isSelected) Color.White
                         else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
@@ -117,7 +133,7 @@ internal fun HealthTabSelector(
                     )
                     Row(
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(if (isSelected) selectedShare else 1f)
                             .heightIn(min = 44.dp)
                             .clip(RoundedCornerShape(50))
                             .selectable(
@@ -125,25 +141,28 @@ internal fun HealthTabSelector(
                                 onClick = { onSelect(destination) },
                                 role = Role.Tab
                             )
-                            .padding(horizontal = 8.dp, vertical = 10.dp),
+                            .padding(horizontal = if (compact) 4.dp else 8.dp, vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally)
                     ) {
                         Icon(
                             imageVector = destination.icon,
-                            contentDescription = null,
+                            // Icon-only segments still announce their name.
+                            contentDescription = if (showLabel) null else label,
                             modifier = Modifier.size(16.dp),
                             tint = contentColor
                         )
-                        Text(
-                            text = stringResource(destination.labelRes),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = contentColor,
-                            modifier = Modifier.weight(1f, fill = false)
-                        )
+                        if (showLabel) {
+                            Text(
+                                text = label,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = contentColor,
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+                        }
                     }
                 }
             }

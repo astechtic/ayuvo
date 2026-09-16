@@ -47,6 +47,24 @@ class AppRoutesTest {
     }
 
     @Test
+    fun medicationRoutesBelongToTheHealthTab() {
+        assertEquals(AppRoutes.HEALTH, AppRoutes.selectedBottomTab(AppRoutes.medicationAdd()))
+        assertEquals(AppRoutes.HEALTH, AppRoutes.selectedBottomTab(AppRoutes.medicationAdd("rec-1")))
+        assertEquals(AppRoutes.HEALTH, AppRoutes.selectedBottomTab(AppRoutes.medicationDetail("x")))
+        assertEquals(AppRoutes.HEALTH, AppRoutes.selectedBottomTab(AppRoutes.MEDICATION_HISTORY))
+        assertEquals("medications/detail/x", AppRoutes.medicationDetail("x"))
+        assertEquals("medications/edit/x", AppRoutes.medicationEdit("x"))
+        assertEquals("medications/history", AppRoutes.medicationHistory())
+        assertEquals("medications/history?medicationId=x", AppRoutes.medicationHistory("x"))
+        assertEquals("medications/import/rec-1", AppRoutes.medicationImport("rec-1"))
+        assertEquals("medications/add?recordId=rec-1", AppRoutes.medicationAdd("rec-1"))
+        assertTrue(AppRoutes.isMedicationsChildRoute(AppRoutes.medicationDetail("x")))
+        assertFalse(AppRoutes.isMedicationsChildRoute(AppRoutes.HEALTH))
+        assertFalse(AppRoutes.isHealthDetailRoute(AppRoutes.medicationDetail("x")))
+        assertNull(AppRoutes.selectedBottomTab("medicationsx"))
+    }
+
+    @Test
     fun recordRoutesKeepRecordsSelected() {
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORDS))
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORD_DETAIL))

@@ -1,0 +1,1217 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "slot": "08:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789029000000,
+            "slot": "14:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "slot": "20:00"
+          },
+          {
+            "local_date": "2026-09-11",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000,
+            "slot": "08:00"
+          },
+          {
+            "local_date": "2026-09-11",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789115400000,
+            "slot": "14:00"
+          },
+          {
+            "local_date": "2026-09-11",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000,
+            "slot": "20:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "14:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789151400000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "daily_3x_two_days",
+      "notes": "Three slots over two local days = 6 occurrences ascending."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-28",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1790566200000,
+            "slot": "09:00"
+          },
+          {
+            "local_date": "2026-09-30",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1790739000000,
+            "slot": "09:00"
+          },
+          {
+            "local_date": "2026-10-02",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1790911800000,
+            "slot": "09:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [
+            1,
+            3,
+            5
+          ],
+          "frequency_kind": "weekly",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "09:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1791138600000,
+        "window_start_ms": 1790533800000
+      },
+      "name": "weekly_mwf_month_boundary",
+      "notes": "2026-09-28 is a Monday; Mon/Wed/Fri across the month boundary = 28 Sep, 30 Sep, 2 Oct."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789000200000,
+            "slot": "06:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789029000000,
+            "slot": "14:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789057800000,
+            "slot": "22:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": "22:00",
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "interval",
+          "id": "sch-1",
+          "interval_hours": 8,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "interval_q8h_anchor_22",
+      "notes": "Slots derive from the anchor: 06:00, 14:00, 22:00 (crosses midnight correctly)."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789011000000,
+            "slot": "09:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789054200000,
+            "slot": "21:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": "09:00",
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "interval",
+          "id": "sch-1",
+          "interval_hours": 12,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "interval_q12h_anchor_09",
+      "notes": "09:00 and 21:00."
+    },
+    {
+      "expected": {
+        "occurrences": []
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": "08:00",
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "interval",
+          "id": "sch-1",
+          "interval_hours": 5,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "interval_not_dividing_24",
+      "notes": "interval_hours must be one of 1,2,3,4,6,8,12,24; anything else yields nothing (validation rejects it)."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-11",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789093800000,
+            "slot": "08:00"
+          },
+          {
+            "local_date": "2026-09-11",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789137000000,
+            "slot": "20:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-11",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789151400000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "start_date_after_window_start",
+      "notes": "Only the 11 Sep doses; the start date is inclusive."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "slot": "08:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "slot": "20:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": "2026-09-10",
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "end_date_today_kept",
+      "notes": "The end date's own doses still run."
+    },
+    {
+      "expected": {
+        "occurrences": []
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": "2026-09-09",
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "end_date_yesterday_dropped",
+      "notes": "Nothing after the end date."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "slot": "08:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": 1789021800000,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "active_until_midday_cuts_evening",
+      "notes": "A closed schedule version only produces doses before active_until_ms."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "slot": "20:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1789021800000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "active_from_midday_drops_morning",
+      "notes": "A new version produces doses from active_from_ms on (inclusive)."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-03-08",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1772955000000,
+            "slot": "02:30"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-03-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 0,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "02:30"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "America/New_York",
+        "window_end_ms": 1773028800000,
+        "window_start_ms": 1772946000000
+      },
+      "name": "dst_spring_forward_gap",
+      "notes": "02:30 does not exist on 2026-03-08 in New York; the dose lands at 03:30 EDT (07:30Z), slot stays '02:30'."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-03-08",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1772955000000,
+            "slot": "02:30"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-03-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 0,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "02:30",
+            "03:30"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "America/New_York",
+        "window_end_ms": 1773028800000,
+        "window_start_ms": 1772946000000
+      },
+      "name": "dst_spring_forward_collapse",
+      "notes": "Both slots map to the same instant; only the earlier slot's occurrence is kept."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-11-01",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1793511000000,
+            "slot": "01:30"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-10-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 0,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "01:30"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "America/New_York",
+        "window_end_ms": 1793595600000,
+        "window_start_ms": 1793505600000
+      },
+      "name": "dst_fall_back_once",
+      "notes": "01:30 happens twice on 2026-11-01; the earlier (EDT) instant is used, once."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-03-29",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1774767600000,
+            "slot": "08:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-03-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 0,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Europe/London",
+        "window_end_ms": 1774825200000,
+        "window_start_ms": 1774742400000
+      },
+      "name": "london_spring_forward_normal_slot",
+      "notes": "A slot outside the gap keeps its wall-clock time across the transition (08:00 BST = 07:00Z)."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "slot": "08:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "kolkata_half_hour_zone",
+      "notes": "08:00 IST = 02:30Z."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "slot": "08:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789050600000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "window_end_exclusive",
+      "notes": "The 20:00 dose equals window_end_ms and is excluded; the local date loop still covers that day."
+    },
+    {
+      "expected": {
+        "occurrences": []
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "empty_times",
+      "notes": "No slots, no occurrences."
+    },
+    {
+      "expected": {
+        "occurrences": []
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 1,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "prn_yields_nothing",
+      "notes": "PRN medicines never have occurrences even if a schedule row exists."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "slot": "08:00"
+          },
+          {
+            "local_date": "2026-09-10",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "slot": "20:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "paused",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 1788201000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [],
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "08:00",
+            "20:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "Asia/Kolkata",
+        "window_end_ms": 1789065000000,
+        "window_start_ms": 1788978600000
+      },
+      "name": "status_not_checked",
+      "notes": "expand_occurrences ignores status; callers filter (the open row would be closed on pause anyway)."
+    },
+    {
+      "expected": {
+        "occurrences": [
+          {
+            "local_date": "2026-09-13",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789279200000,
+            "slot": "06:00"
+          },
+          {
+            "local_date": "2026-09-13",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789322400000,
+            "slot": "18:00"
+          },
+          {
+            "local_date": "2026-09-20",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789884000000,
+            "slot": "06:00"
+          },
+          {
+            "local_date": "2026-09-20",
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789927200000,
+            "slot": "18:00"
+          }
+        ]
+      },
+      "input": {
+        "medication": {
+          "brand_name": null,
+          "created_ms": 1788229800000,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": null,
+          "id": "med-1",
+          "instructions": null,
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": null,
+          "related_record_id": null,
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 1788229800000
+        },
+        "schedule": {
+          "active_from_ms": 0,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "created_ms": 1788229800000,
+          "days": [
+            7
+          ],
+          "frequency_kind": "weekly",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times": [
+            "06:00",
+            "18:00"
+          ],
+          "updated_ms": 1788229800000
+        },
+        "time_zone": "UTC",
+        "window_end_ms": 1789948800000,
+        "window_start_ms": 1788739200000
+      },
+      "name": "utc_multi_day_weekly_sunday",
+      "notes": "ISO weekday 7 = Sunday: 13 Sep and 20 Sep, two slots each."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "expand_occurrences",
+  "version": 1
+}

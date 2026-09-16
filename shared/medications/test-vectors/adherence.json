@@ -1,0 +1,837 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "expected": 21,
+        "has_data": true,
+        "percent": 86,
+        "taken": 18
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1788489000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788489000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788489060000,
+            "updated_ms": 1788489000000
+          },
+          {
+            "created_ms": 1788510600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788510600000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788510660000,
+            "updated_ms": 1788510600000
+          },
+          {
+            "created_ms": 1788532200000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-3",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788532200000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788532260000,
+            "updated_ms": 1788532200000
+          },
+          {
+            "created_ms": 1788575400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-4",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788575400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788575460000,
+            "updated_ms": 1788575400000
+          },
+          {
+            "created_ms": 1788597000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-5",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788597000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788597060000,
+            "updated_ms": 1788597000000
+          },
+          {
+            "created_ms": 1788618600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-6",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788618600000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788618660000,
+            "updated_ms": 1788618600000
+          },
+          {
+            "created_ms": 1788661800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-7",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788661800000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788661860000,
+            "updated_ms": 1788661800000
+          },
+          {
+            "created_ms": 1788683400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-8",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788683400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788683460000,
+            "updated_ms": 1788683400000
+          },
+          {
+            "created_ms": 1788705000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-9",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788705000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788705060000,
+            "updated_ms": 1788705000000
+          },
+          {
+            "created_ms": 1788748200000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-10",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788748200000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788748260000,
+            "updated_ms": 1788748200000
+          },
+          {
+            "created_ms": 1788769800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-11",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788769800000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788769860000,
+            "updated_ms": 1788769800000
+          },
+          {
+            "created_ms": 1788791400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-12",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788791400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788791460000,
+            "updated_ms": 1788791400000
+          },
+          {
+            "created_ms": 1788834600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-13",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788834600000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788834660000,
+            "updated_ms": 1788834600000
+          },
+          {
+            "created_ms": 1788856200000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-14",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788856200000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788856260000,
+            "updated_ms": 1788856200000
+          },
+          {
+            "created_ms": 1788877800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-15",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788877800000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788877860000,
+            "updated_ms": 1788877800000
+          },
+          {
+            "created_ms": 1788921000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-16",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788921000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788921060000,
+            "updated_ms": 1788921000000
+          },
+          {
+            "created_ms": 1788942600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-17",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788942600000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788942660000,
+            "updated_ms": 1788942600000
+          },
+          {
+            "created_ms": 1788964200000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-18",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788964200000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1788964260000,
+            "updated_ms": 1788964200000
+          }
+        ],
+        "now_ms": 1789144200000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788489000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788510600000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788532200000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788575400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788597000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788618600000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788661800000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788683400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788705000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788748200000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788769800000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788791400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788834600000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788856200000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788877800000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788921000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788942600000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788964200000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ]
+      },
+      "name": "eighteen_of_twenty_one",
+      "notes": "18 / 21 -> 86 %."
+    },
+    {
+      "expected": {
+        "expected": 3,
+        "has_data": true,
+        "percent": 33,
+        "taken": 1
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1788489000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788489000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1,
+            "updated_ms": 1788489000000
+          },
+          {
+            "created_ms": 1789029000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "prn-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": null,
+            "scheduled_at_ms": 1789029000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789029000000,
+            "updated_ms": 1789029000000
+          }
+        ],
+        "now_ms": 1789144200000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788489000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788510600000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1788532200000
+          }
+        ]
+      },
+      "name": "prn_logs_excluded",
+      "notes": "The PRN row (schedule_id null) is ignored: 1 / 3."
+    },
+    {
+      "expected": {
+        "expected": 1,
+        "has_data": true,
+        "percent": 100,
+        "taken": 1
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789054200000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789054200000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789050600000,
+            "updated_ms": 1789054200000
+          }
+        ],
+        "now_ms": 1789057800000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789054200000
+          }
+        ]
+      },
+      "name": "early_take_counted",
+      "notes": "Inside grace but already taken: terminal -> expected 1, taken 1."
+    },
+    {
+      "expected": {
+        "expected": 0,
+        "has_data": false,
+        "percent": 0,
+        "taken": 0
+      },
+      "input": {
+        "logs": [],
+        "now_ms": 1789057800000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789054200000
+          }
+        ]
+      },
+      "name": "pending_dose_not_expected",
+      "notes": "Still due -> not expected yet; has_data false."
+    },
+    {
+      "expected": {
+        "expected": 2,
+        "has_data": true,
+        "percent": 50,
+        "taken": 1
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007400000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789050600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "snoozed_until_ms": null,
+            "status": "skipped",
+            "taken_at_ms": null,
+            "updated_ms": 1789050600000
+          }
+        ],
+        "now_ms": 1789144200000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ]
+      },
+      "name": "skipped_counts_in_expected",
+      "notes": "1 / 2 -> 50."
+    },
+    {
+      "expected": {
+        "expected": 2,
+        "has_data": true,
+        "percent": 50,
+        "taken": 1
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-old",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "missed",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789050600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789050600000,
+            "updated_ms": 1789050600000
+          }
+        ],
+        "now_ms": 1789144200000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789050600000
+          }
+        ]
+      },
+      "name": "ended_version_log_counted",
+      "notes": "A terminal log of a schedule version not in the occurrences still counts: 1 / 2."
+    },
+    {
+      "expected": {
+        "expected": 0,
+        "has_data": false,
+        "percent": 0,
+        "taken": 0
+      },
+      "input": {
+        "logs": [],
+        "now_ms": 1789057800000,
+        "occurrences": []
+      },
+      "name": "zero_expected",
+      "notes": "percent 0, has_data false."
+    },
+    {
+      "expected": {
+        "expected": 1,
+        "has_data": true,
+        "percent": 0,
+        "taken": 0
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007400000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-2",
+            "note": null,
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "skipped",
+            "taken_at_ms": null,
+            "updated_ms": 1789007400000
+          }
+        ],
+        "medication_id": "med-2",
+        "now_ms": 1789144200000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-2",
+            "schedule_id": "sch-2",
+            "scheduled_at_ms": 1789007400000
+          }
+        ]
+      },
+      "name": "single_medication_filter",
+      "notes": "Only med-2: 0 / 1."
+    },
+    {
+      "expected": {
+        "expected": 0,
+        "has_data": false,
+        "percent": 0,
+        "taken": 0
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789047000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789047000000,
+            "snoozed_until_ms": 1789056000000,
+            "status": "snoozed",
+            "taken_at_ms": null,
+            "updated_ms": 1789047000000
+          }
+        ],
+        "now_ms": 1789057800000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789047000000
+          }
+        ]
+      },
+      "name": "pending_snooze_not_expected",
+      "notes": "Snoozed and still inside snoozed_until + grace -> not expected."
+    },
+    {
+      "expected": {
+        "expected": 8,
+        "has_data": true,
+        "percent": 63,
+        "taken": 5
+      },
+      "input": {
+        "logs": [
+          {
+            "created_ms": 1789007400000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-0",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789007400000,
+            "updated_ms": 1789007400000
+          },
+          {
+            "created_ms": 1789011000000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-1",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789011000000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789011000000,
+            "updated_ms": 1789011000000
+          },
+          {
+            "created_ms": 1789014600000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-2",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789014600000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789014600000,
+            "updated_ms": 1789014600000
+          },
+          {
+            "created_ms": 1789018200000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-3",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789018200000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789018200000,
+            "updated_ms": 1789018200000
+          },
+          {
+            "created_ms": 1789021800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "id": "log-4",
+            "medication_id": "med-1",
+            "note": null,
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789021800000,
+            "snoozed_until_ms": null,
+            "status": "taken",
+            "taken_at_ms": 1789021800000,
+            "updated_ms": 1789021800000
+          }
+        ],
+        "now_ms": 1789144200000,
+        "occurrences": [
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789007400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789011000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789014600000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789018200000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789021800000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789025400000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789029000000
+          },
+          {
+            "medication_id": "med-1",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1789032600000
+          }
+        ]
+      },
+      "name": "rounding_half_up",
+      "notes": "5 / 8 = 62.5 -> 63."
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "adherence",
+  "version": 1
+}

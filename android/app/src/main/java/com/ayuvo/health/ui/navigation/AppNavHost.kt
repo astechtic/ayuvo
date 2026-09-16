@@ -57,6 +57,11 @@ import com.ayuvo.health.ui.records.RecordsScreen
 import com.ayuvo.health.ui.records.SplitReviewScreen
 import com.ayuvo.health.ui.records.TrendScreen
 import com.ayuvo.health.models.QuickActionRequest
+import com.ayuvo.health.medications.model.MedicationRequest
+import com.ayuvo.health.ui.medications.ImportFromRecordScreen
+import com.ayuvo.health.ui.medications.MedicationDetailScreen
+import com.ayuvo.health.ui.medications.MedicationEditorScreen
+import com.ayuvo.health.ui.medications.MedicationHistoryScreen
 import com.ayuvo.health.ui.settings.AddMenuSettingsScreen
 import com.ayuvo.health.ui.about.LicensesScreen
 import com.ayuvo.health.ui.settings.QuickActionsScreen
@@ -80,7 +85,9 @@ fun AppNavHost(
     quickActionRequest: QuickActionRequest? = null,
     onQuickActionHandled: (Long) -> Unit = {},
     recordsRequest: RecordsRequest? = null,
-    onRecordsRequestHandled: (Long) -> Unit = {}
+    onRecordsRequestHandled: (Long) -> Unit = {},
+    medicationRequest: MedicationRequest? = null,
+    onMedicationRequestHandled: (Long) -> Unit = {}
 ) {
     val nav = rememberNavController()
     // Warm the app-scoped Settings state while Home is visible. By the time the user changes
@@ -209,12 +216,12 @@ fun AppNavHost(
                 return
             }
         }
-        // A Health Data type detail is pushed over whichever tab opened it; re-tapping Health
-        // from the detail pops to the tab, like Settings' nested screens.
-        if (target == AppRoutes.HEALTH && AppRoutes.isHealthDetailRoute(route)) {
+        // A Health Data type detail (or a Medications screen) is pushed over whichever tab opened
+        // it; re-tapping Health from the detail pops to the tab, like Settings' nested screens.
+        if (target == AppRoutes.HEALTH && (AppRoutes.isHealthDetailRoute(route) || AppRoutes.isMedicationsChildRoute(route))) {
             if (!nav.popBackStack(AppRoutes.HEALTH, inclusive = false)) {
-                // The detail was pushed from Home: open the tab on its Health Data segment.
-                healthTabRequest = HealthTabDestination.HEALTH_DATA
+                // The detail was pushed from Home: open the tab on the matching segment.
+                healthTabRequest = if (AppRoutes.isMedicationsChildRoute(route)) HealthTabDestination.MEDICATIONS else HealthTabDestination.HEALTH_DATA
                 nav.navigate(AppRoutes.HEALTH) {
                     popUpTo(AppRoutes.HOME) { saveState = true }
                     launchSingleTop = true
@@ -251,6 +258,20 @@ fun AppNavHost(
         }
     }
 
+    /**
+     * Lands on the Meds segment. Restoring the Health tab can bring back a Medications screen that
+     * was pushed earlier; the Home card and a reminder tap should show the segment itself, so that
+     * restored child is popped first (an explicit [medicationId] is then pushed on top).
+     */
+    fun openMedications(medicationId: String? = null) {
+        healthTabRequest = HealthTabDestination.MEDICATIONS
+        navigateToTab(AppRoutes.HEALTH)
+        if (AppRoutes.isMedicationsChildRoute(nav.currentDestination?.route)) {
+            nav.popBackStack(AppRoutes.HEALTH, inclusive = false)
+        }
+        medicationId?.let { nav.navigate(AppRoutes.medicationDetail(it)) }
+    }
+
     /** §27 entry points: select records, prefill the prompt and open the Coach tab. */
     fun askCoach(recordIds: List<String>, prompt: String) {
         container.coachRecordsRequests.value = com.ayuvo.health.records.coach.CoachRecordsRequest(recordIds, prompt)
@@ -266,6 +287,15 @@ fun AppNavHost(
             navigateToTab(AppRoutes.RECORDS)
         }
         onRecordsRequestHandled(request.id)
+    }
+
+    // A medication reminder tap lands on the Meds segment (docs/medications.md §16) and, when the
+    // intent names a medicine, pushes its detail on top — the quick-action block's shape.
+    LaunchedEffect(medicationRequest?.id, currentRoute) {
+        val request = medicationRequest ?: return@LaunchedEffect
+        if (currentRoute == null || currentRoute == AppRoutes.ONBOARDING) return@LaunchedEffect
+        openMedications(request.medicationId)
+        onMedicationRequestHandled(request.id)
     }
 
     CompositionLocalProvider(LocalLaunchFillEpoch provides launchFillEpoch) {
@@ -314,7 +344,8 @@ fun AppNavHost(
                             onOpenWorkouts = {
                                 healthTabRequest = HealthTabDestination.WORKOUTS
                                 navigateToTab(AppRoutes.HEALTH)
-                            }
+                            },
+                            onOpenMedications = { openMedications() }
                         )
                     }
                 }
@@ -337,7 +368,87 @@ fun AppNavHost(
                             onRequestConsumed = { healthTabRequest = null },
                             onOpenType = { key -> nav.navigate(AppRoutes.healthType(key)) },
                             quickActionRequest = quickActionRequest,
-                            onQuickActionHandled = onQuickActionHandled
+                            onQuickActionHandled = onQuickActionHandled,
+                            onOpenMedication = { id -> nav.navigate(AppRoutes.medicationDetail(id)) },
+                            onAddMedication = { nav.navigate(AppRoutes.medicationAdd()) },
+                            onOpenMedicationHistory = { nav.navigate(AppRoutes.medicationHistory()) },
+                            onImportMedicationsFromRecord = { recordId -> nav.navigate(AppRoutes.medicationImport(recordId)) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.MEDICATION_ADD,
+                    arguments = listOf(navArgument(AppRoutes.RECORD_ID_ARG) { type = NavType.StringType; nullable = true; defaultValue = null })
+                ) { entry ->
+                    val recordId = entry.arguments?.getString(AppRoutes.RECORD_ID_ARG)
+                    TabInset {
+                        MedicationEditorScreen(
+                            container = container,
+                            medicationId = null,
+                            recordId = recordId,
+                            onBack = { nav.popBackStack() },
+                            onSaved = { nav.popBackStack() }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.MEDICATION_EDIT,
+                    arguments = listOf(navArgument(AppRoutes.MEDICATION_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val medicationId = entry.arguments?.getString(AppRoutes.MEDICATION_ID_ARG) ?: return@composable
+                    TabInset {
+                        MedicationEditorScreen(
+                            container = container,
+                            medicationId = medicationId,
+                            recordId = null,
+                            onBack = { nav.popBackStack() },
+                            onSaved = { nav.popBackStack() }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.MEDICATION_DETAIL,
+                    arguments = listOf(navArgument(AppRoutes.MEDICATION_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val medicationId = entry.arguments?.getString(AppRoutes.MEDICATION_ID_ARG) ?: return@composable
+                    TabInset {
+                        MedicationDetailScreen(
+                            container = container,
+                            medicationId = medicationId,
+                            onBack = { nav.popBackStack() },
+                            onEdit = { id -> nav.navigate(AppRoutes.medicationEdit(id)) },
+                            onOpenHistory = { id -> nav.navigate(AppRoutes.medicationHistory(id)) },
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.MEDICATION_HISTORY,
+                    arguments = listOf(navArgument(AppRoutes.MEDICATION_ID_ARG) { type = NavType.StringType; nullable = true; defaultValue = null })
+                ) { entry ->
+                    val medicationId = entry.arguments?.getString(AppRoutes.MEDICATION_ID_ARG)
+                    TabInset {
+                        MedicationHistoryScreen(container = container, medicationId = medicationId, onBack = { nav.popBackStack() })
+                    }
+                }
+                composable(
+                    AppRoutes.MEDICATION_IMPORT,
+                    arguments = listOf(navArgument(AppRoutes.RECORD_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val recordId = entry.arguments?.getString(AppRoutes.RECORD_ID_ARG) ?: return@composable
+                    TabInset {
+                        ImportFromRecordScreen(
+                            container = container,
+                            recordId = recordId,
+                            onBack = { nav.popBackStack() },
+                            onDone = {
+                                // Created from a record: land on the Meds segment so the new rows are visible.
+                                nav.popBackStack()
+                                openMedications()
+                            },
+                            onAddManually = { id ->
+                                nav.navigate(AppRoutes.medicationAdd(id)) { popUpTo(AppRoutes.medicationImport(id)) { inclusive = true } }
+                            }
                         )
                     }
                 }
@@ -371,7 +482,8 @@ fun AppNavHost(
                             onOpenTrend = { analyteId -> nav.navigate(AppRoutes.recordTrend(analyteId)) },
                             focusObservationId = focusObservation,
                             onAskCoach = ::askCoach,
-                            onShare = { ids -> nav.navigate(AppRoutes.recordShare(ids)) }
+                            onShare = { ids -> nav.navigate(AppRoutes.recordShare(ids)) },
+                            onAddToMedications = { id -> nav.navigate(AppRoutes.medicationImport(id)) }
                         )
                     }
                 }
