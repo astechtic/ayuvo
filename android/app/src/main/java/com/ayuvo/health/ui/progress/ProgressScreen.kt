@@ -131,6 +131,7 @@ import com.ayuvo.health.models.HomeTopNutrient
 import com.ayuvo.health.models.MacroValueFormatter
 import com.ayuvo.health.models.OptionalNutrientGoals
 import com.ayuvo.health.models.WeightEntry
+import com.ayuvo.health.models.QuickActionRequest
 import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.theme.AppColors
@@ -178,7 +179,9 @@ fun ProgressScreen(
     container: AppContainer,
     requestedDestination: HealthTabDestination? = null,
     onRequestConsumed: () -> Unit = {},
-    onOpenType: (String) -> Unit = {}
+    onOpenType: (String) -> Unit = {},
+    quickActionRequest: QuickActionRequest? = null,
+    onQuickActionHandled: (Long) -> Unit = {}
 ) {
     var destination by rememberSaveable { mutableStateOf(HealthTabDestination.PROGRESS) }
     // Home's "See All" / Settings' "All Health Data" land on the Health Data segment and Home's
@@ -204,6 +207,11 @@ fun ProgressScreen(
         Box(Modifier.weight(1f)) {
             destinationState.SaveableStateProvider(destination.name) {
                 when (destination) {
+                    HealthTabDestination.FOOD -> com.ayuvo.health.ui.home.FoodTabScreen(
+                        container = container,
+                        quickActionRequest = quickActionRequest,
+                        onQuickActionHandled = onQuickActionHandled
+                    )
                     HealthTabDestination.PROGRESS -> MyProgressContent(container)
                     HealthTabDestination.HEALTH_DATA -> HealthHubScreen(container = container, onOpenType = onOpenType)
                     HealthTabDestination.WORKOUTS -> com.ayuvo.health.ui.workouts.WorkoutsScreen(

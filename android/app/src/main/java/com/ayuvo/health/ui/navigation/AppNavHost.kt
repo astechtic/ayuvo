@@ -127,14 +127,18 @@ fun AppNavHost(
         }
     }
 
+    // Food quick actions (widget taps, app shortcuts, notification actions) now land on the
+    // Health tab's Food segment, since the food flow moved out of Home. Matches iOS
+    // consumePendingLaunchRoutes(), which sets selectedTab = .health / healthOverviewMode = .food.
     LaunchedEffect(quickActionRequest?.id, currentRoute) {
-        if (quickActionRequest != null &&
-            currentRoute != AppRoutes.HOME &&
-            currentRoute != AppRoutes.ONBOARDING
-        ) {
-            nav.navigate(AppRoutes.HOME) {
-                popUpTo(AppRoutes.HOME) { inclusive = false }
-                launchSingleTop = true
+        if (quickActionRequest != null && currentRoute != AppRoutes.ONBOARDING) {
+            healthTabRequest = HealthTabDestination.FOOD
+            if (currentRoute != AppRoutes.HEALTH) {
+                nav.navigate(AppRoutes.HEALTH) {
+                    popUpTo(AppRoutes.HOME) { saveState = true }
+                    launchSingleTop = true
+                    restoreState = true
+                }
             }
         }
     }
@@ -294,13 +298,19 @@ fun AppNavHost(
                     TabInset {
                         HomeScreen(
                             container = container,
-                            quickActionRequest = quickActionRequest,
-                            onQuickActionHandled = onQuickActionHandled,
+                            onOpenFood = {
+                                healthTabRequest = HealthTabDestination.FOOD
+                                navigateToTab(AppRoutes.HEALTH)
+                            },
                             onOpenHealth = {
                                 healthTabRequest = HealthTabDestination.HEALTH_DATA
                                 navigateToTab(AppRoutes.HEALTH)
                             },
                             onOpenHealthType = { key -> nav.navigate(AppRoutes.healthType(key)) },
+                            onOpenRecords = {
+                                navigateToTab(AppRoutes.RECORDS)
+                            },
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
                             onOpenWorkouts = {
                                 healthTabRequest = HealthTabDestination.WORKOUTS
                                 navigateToTab(AppRoutes.HEALTH)
@@ -325,7 +335,9 @@ fun AppNavHost(
                             container = container,
                             requestedDestination = healthTabRequest,
                             onRequestConsumed = { healthTabRequest = null },
-                            onOpenType = { key -> nav.navigate(AppRoutes.healthType(key)) }
+                            onOpenType = { key -> nav.navigate(AppRoutes.healthType(key)) },
+                            quickActionRequest = quickActionRequest,
+                            onQuickActionHandled = onQuickActionHandled
                         )
                     }
                 }

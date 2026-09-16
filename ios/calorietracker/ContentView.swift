@@ -155,15 +155,18 @@ struct ContentView: View {
     private var standardTabView: some View {
         TabView(selection: $selectedTab) {
             HomeView(
-                quickActionRequest: quickActionRequest,
-                onQuickActionHandled: { requestID in
-                    if quickActionRequest?.id == requestID { quickActionRequest = nil }
+                onOpenFood: {
+                    selectedTab = .health
+                    healthOverviewMode = .food
                 },
-                foodLogMethodRequest: foodLogMethodRequest,
-                onFoodLogMethodHandled: { requestID in
-                    if foodLogMethodRequest?.id == requestID { foodLogMethodRequest = nil }
+                onOpenHealthData: {
+                    selectedTab = .health
+                    healthOverviewMode = .healthData
                 },
-                onOpenWorkouts: openWorkouts
+                onOpenWorkouts: openWorkouts,
+                onOpenRecords: {
+                    selectedTab = .records
+                }
             )
                 .tag(AppTab.home)
                 .tabItem {
@@ -171,7 +174,17 @@ struct ContentView: View {
                     Text("Home")
                 }
 
-            HealthTabView(progressOverviewMode: $healthOverviewMode)
+            HealthTabView(
+                progressOverviewMode: $healthOverviewMode,
+                quickActionRequest: quickActionRequest,
+                onQuickActionHandled: { requestID in
+                    if quickActionRequest?.id == requestID { quickActionRequest = nil }
+                },
+                foodLogMethodRequest: foodLogMethodRequest,
+                onFoodLogMethodHandled: { requestID in
+                    if foodLogMethodRequest?.id == requestID { foodLogMethodRequest = nil }
+                }
+            )
                 .tag(AppTab.health)
                 .tabItem {
                     Image(systemName: "heart.text.square.fill")
@@ -223,12 +236,14 @@ struct ContentView: View {
 
     private func consumePendingLaunchRoutes() {
         if let action = QuickActionCoordinator.consumePending() {
-            selectedTab = .home
+            selectedTab = .health
+            healthOverviewMode = .food
             quickActionRequest = QuickActionRequest(action: action)
             return
         }
         if let method = FoodLogMethodCoordinator.consumePending() {
-            selectedTab = .home
+            selectedTab = .health
+            healthOverviewMode = .food
             foodLogMethodRequest = FoodLogMethodRequest(method: method)
         }
     }
@@ -557,8 +572,602 @@ struct ActivityShareSheet: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
-// MARK: - Home View (Main Dashboard)
+// MARK: - Home View (Summary Dashboard)
 struct HomeView: View {
+    var onOpenFood: () -> Void = {}
+    var onOpenHealthData: () -> Void = {}
+    var onOpenWorkouts: () -> Void = {}
+    var onOpenRecords: () -> Void = {}
+
+    @Environment(FoodStore.self) private var foodStore
+    @Environment(WaterStore.self) private var waterStore
+    @Environment(FastingStore.self) private var fastingStore
+    @Environment(ProfileStore.self) private var profileStore
+    @Environment(HealthKitManager.self) private var healthKitManager
+    @Environment(HealthDataStore.self) private var healthDataStore
+    @Environment(RecordsStore.self) private var recordsStore
+    @Environment(StrengthWorkoutStore.self) private var strengthWorkoutStore
+
+    @State private var selectedDate: Date = .now
+    @State private var dailySteps: Int?
+    @AppStorage("healthKitEnabled") private var healthKitEnabled = false
+
+    private var userProfile: UserProfile { profileStore.profile }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Date Selector Bar
+                    HomeDateSelectorBar(selectedDate: $selectedDate)
+
+                    // Caloric & Macros Summary Card
+                    HomeCaloricMacrosCard(
+                        selectedDate: selectedDate,
+                        userProfile: userProfile,
+                        foodStore: foodStore,
+                        onOpenFood: onOpenFood
+                    )
+
+                    // Hydration Quick Card
+                    HomeHydrationCard(
+                        selectedDate: selectedDate,
+                        waterStore: waterStore,
+                        onOpenFood: onOpenFood
+                    )
+
+                    // Clinical Highlights / Records Card
+                    HomeClinicalHighlightsCard(
+                        recordsStore: recordsStore,
+                        onOpenRecords: onOpenRecords
+                    )
+
+                    // Health Telemetry Grid (2x2)
+                    HomeTelemetryGrid(
+                        dailySteps: dailySteps,
+                        fastingStore: fastingStore,
+                        healthDataStore: healthDataStore,
+                        onOpenHealthData: onOpenHealthData
+                    )
+
+                    // Workouts Summary Card
+                    HomeWorkoutsSummaryCard(
+                        workoutStore: strengthWorkoutStore,
+                        onOpenWorkouts: onOpenWorkouts
+                    )
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+            .background(AppColors.appBackground.ignoresSafeArea())
+            .navigationTitle("Summary")
+            .navigationBarTitleDisplayMode(.inline)
+            .task(id: selectedDate) {
+                if healthKitEnabled {
+                    dailySteps = await healthKitManager.fetchStepsForDay(selectedDate)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Home Summary Subviews
+
+private struct HomeDateSelectorBar: View {
+    @Binding var selectedDate: Date
+
+    private var dateFormatted: String {
+        selectedDate.formatted(.dateTime.month(.abbreviated).day())
+    }
+
+    var body: some View {
+        HStack {
+            Button {
+                withAnimation {
+                    selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
+                }
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.primary)
+                    .padding(8)
+                    .background(Circle().fill(AppColors.appCard))
+            }
+
+            Spacer()
+
+            DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                .labelsHidden()
+                .tint(AppColors.calorie)
+                .overlay(
+                    Text(dateFormatted)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule()
+                                .fill(AppColors.appCard)
+                                .overlay(Capsule().stroke(Color.white.opacity(0.1), lineWidth: 0.5))
+                        )
+                        .allowsHitTesting(false)
+                )
+
+            Spacer()
+
+            Button {
+                withAnimation {
+                    selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+                }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.primary)
+                    .padding(8)
+                    .background(Circle().fill(AppColors.appCard))
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+private struct HomeCaloricMacrosCard: View {
+    let selectedDate: Date
+    let userProfile: UserProfile
+    let foodStore: FoodStore
+    var onOpenFood: () -> Void
+
+    private var totalCals: Int { foodStore.calories(for: selectedDate) }
+    private var goalCals: Int { userProfile.effectiveCalories }
+    private var remainingCals: Int { max(0, goalCals - totalCals) }
+    private var progress: Double {
+        goalCals > 0 ? min(1.0, Double(totalCals) / Double(goalCals)) : 0
+    }
+
+    private var proteinGrams: Double { foodStore.protein(for: selectedDate) }
+    private var carbsGrams: Double { foodStore.carbs(for: selectedDate) }
+    private var fatGrams: Double { foodStore.fat(for: selectedDate) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("Caloric & Macros")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.primary)
+
+                Spacer()
+
+                Button {
+                    onOpenFood()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus.circle.fill")
+                        Text("Log Food")
+                    }
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [AppColors.calorie, AppColors.calorie.opacity(0.8)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                    )
+                }
+            }
+
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .stroke(Color.gray.opacity(0.2), lineWidth: 8)
+                    Circle()
+                        .trim(from: 0, to: progress)
+                        .stroke(AppColors.calorie, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                        .rotationEffect(.degrees(-90))
+                    VStack(spacing: 2) {
+                        Text("\(totalCals)")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(.primary)
+                        Text("kcal")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .frame(width: 72, height: 72)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text("Goal:")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("\(goalCals) kcal")
+                            .bold()
+                    }
+                    .font(.system(size: 13))
+
+                    HStack {
+                        Text("Remaining:")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("\(remainingCals) kcal")
+                            .bold()
+                            .foregroundColor(AppColors.calorie)
+                    }
+                    .font(.system(size: 13))
+
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(Color.gray.opacity(0.2))
+                            Capsule().fill(AppColors.calorie)
+                                .frame(width: geo.size.width * progress)
+                        }
+                    }
+                    .frame(height: 6)
+                }
+            }
+
+            Divider()
+
+            HStack(spacing: 8) {
+                HomeMacroPill(
+                    label: "Protein",
+                    amount: String(format: "%.0fg", proteinGrams),
+                    goal: "\(userProfile.effectiveProtein)g",
+                    color: AppColors.calorie
+                )
+                HomeMacroPill(
+                    label: "Carbs",
+                    amount: String(format: "%.0fg", carbsGrams),
+                    goal: "\(userProfile.effectiveCarbs)g",
+                    color: AppColors.calorie
+                )
+                HomeMacroPill(
+                    label: "Fat",
+                    amount: String(format: "%.0fg", fatGrams),
+                    goal: "\(userProfile.effectiveFat)g",
+                    color: AppColors.calorie
+                )
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(AppColors.appCard)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
+                )
+        )
+    }
+}
+
+private struct HomeMacroPill: View {
+    let label: String
+    let amount: String
+    let goal: String
+    let color: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(color)
+            Text(amount)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.primary)
+            Text("/ \(goal)")
+                .font(.system(size: 10))
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(color.opacity(0.1))
+        )
+    }
+}
+
+private struct HomeHydrationCard: View {
+    let selectedDate: Date
+    let waterStore: WaterStore
+    var onOpenFood: () -> Void
+
+    private var currentMl: Int { waterStore.total(on: selectedDate) }
+    private var goalMl: Int { WaterSettings.defaultDailyGoalMl }
+    private var progress: Double {
+        goalMl > 0 ? min(1.0, Double(currentMl) / Double(goalMl)) : 0
+    }
+
+    var body: some View {
+        Button {
+            onOpenFood()
+        } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(AppColors.calorie.opacity(0.15))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: "drop.fill")
+                        .foregroundColor(AppColors.calorie)
+                        .font(.system(size: 20))
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("Hydration")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Text("\(currentMl) / \(goalMl) ml")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(AppColors.calorie)
+                    }
+
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(AppColors.calorie.opacity(0.15))
+                            Capsule().fill(AppColors.calorie)
+                                .frame(width: geo.size.width * progress)
+                        }
+                    }
+                    .frame(height: 6)
+                }
+
+                Button {
+                    waterStore.add(milliliters: 250, on: selectedDate)
+                } label: {
+                    Text("+250ml")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(AppColors.calorie)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Capsule().fill(AppColors.calorie.opacity(0.15)))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(AppColors.appCard)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct HomeClinicalHighlightsCard: View {
+    let recordsStore: RecordsStore
+    var onOpenRecords: () -> Void
+
+    var body: some View {
+        Button {
+            onOpenRecords()
+        } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(AppColors.calorie.opacity(0.15))
+                        .frame(width: 42, height: 42)
+                    Image(systemName: "doc.text.fill")
+                        .foregroundColor(AppColors.calorie)
+                        .font(.system(size: 18))
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Clinical & Health Records")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.primary)
+                    Text("\(recordsStore.records.count) Records • Synced to Apple Health")
+                        .font(.system(size: 12))
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.secondary)
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(AppColors.appCard)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct HomeTelemetryGrid: View {
+    let dailySteps: Int?
+    let fastingStore: FastingStore
+    let healthDataStore: HealthDataStore
+    var onOpenHealthData: () -> Void
+
+    private var activeFast: FastingSession? {
+        fastingStore.activeSession
+    }
+
+    private var fastingUnitText: String {
+        if let activeFast {
+            return FastingDurationFormatter.compact(seconds: activeFast.duration())
+        }
+        return "No active fast"
+    }
+
+    private var healthMetricsText: String {
+        if healthDataStore.hasAnyData {
+            return "\(healthDataStore.typeCountWithData) metrics synced"
+        }
+        return "Tap to view hub"
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Health Telemetry")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.primary)
+                Spacer()
+                Button {
+                    onOpenHealthData()
+                } label: {
+                    HStack(spacing: 2) {
+                        Text("View Hub")
+                        Image(systemName: "chevron.right")
+                    }
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(AppColors.calorie)
+                }
+            }
+
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                Button { onOpenHealthData() } label: {
+                    HomeTelemetryTile(
+                        title: "Steps",
+                        value: dailySteps != nil ? "\(dailySteps!)" : "--",
+                        unit: "steps today",
+                        icon: "figure.walk"
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Button { onOpenHealthData() } label: {
+                    HomeTelemetryTile(
+                        title: "Fasting",
+                        value: activeFast != nil ? "Fasting" : "Idle",
+                        unit: fastingUnitText,
+                        icon: "timer"
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Button { onOpenHealthData() } label: {
+                    HomeTelemetryTile(
+                        title: "Vitals Hub",
+                        value: healthDataStore.hasAnyData ? "Synced" : "--",
+                        unit: healthMetricsText,
+                        icon: "heart.fill"
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Button { onOpenHealthData() } label: {
+                    HomeTelemetryTile(
+                        title: "Health Sync",
+                        value: healthDataStore.isEnabled ? "Active" : "Off",
+                        unit: "Apple Health",
+                        icon: "heart.text.square.fill"
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+}
+
+private struct HomeTelemetryTile: View {
+    let title: String
+    let value: String
+    let unit: String
+    let icon: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(AppColors.calorie)
+                Text(title)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.secondary)
+            }
+
+            Text(value)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(.primary)
+
+            Text(unit)
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(AppColors.appCard)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
+                )
+        )
+    }
+}
+
+private struct HomeWorkoutsSummaryCard: View {
+    let workoutStore: StrengthWorkoutStore
+    var onOpenWorkouts: () -> Void
+
+    var body: some View {
+        Button {
+            onOpenWorkouts()
+        } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(AppColors.calorie.opacity(0.15))
+                        .frame(width: 42, height: 42)
+                    Image(systemName: "figure.run")
+                        .foregroundColor(AppColors.calorie)
+                        .font(.system(size: 18))
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Workouts & Training")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.primary)
+                    Text("\(workoutStore.completedSessions.count) Workouts Logged")
+                        .font(.system(size: 12))
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.secondary)
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(AppColors.appCard)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Food Management View (Food Flow)
+struct FoodManagementView: View {
     let quickActionRequest: QuickActionRequest?
     let onQuickActionHandled: (UUID) -> Void
     var foodLogMethodRequest: FoodLogMethodRequest?
@@ -569,7 +1178,6 @@ struct HomeView: View {
     @Environment(FastingStore.self) private var fastingStore
     @Environment(NotificationManager.self) private var notificationManager
     @Environment(HealthKitManager.self) private var healthKitManager
-    @Environment(HealthDataStore.self) private var healthDataStore
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("healthKitEnabled") private var healthKitEnabled = false
     @State private var dailySteps: Int?
@@ -1007,21 +1615,9 @@ private var dailyStepsTaskKey: String {
                     .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 }
 
-                // Whole-health lead: the Health Data tiles (steps, active energy, heart, sleep —
-                // or the standalone steps line while tiles are hidden) and today's fast come
-                // before nutrition so the dashboard reads as a health overview, not a calorie log.
+                // Today's fast comes before nutrition — Health Data and Workouts moved to
+                // their own Health tab segments, so the Food tab stays food-only.
                 Section {
-                    if healthDataStore.showsHomeTile {
-                        HealthHubHomeTile()
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                    } else if let dailySteps {
-                        DailyStepsRow(steps: dailySteps)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                    }
-
                     if isToday, fastingTrackingEnabled {
                         if let activeFast = fastingStore.activeSession {
                             Button {
@@ -1054,11 +1650,6 @@ private var dailyStepsTaskKey: String {
                             .listRowSeparator(.hidden)
                         }
                     }
-
-                    HomeWorkoutsShortcutRow(onOpen: onOpenWorkouts)
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
 
                 // Nutrition summary. Keeping the dome, macros, water and detail affordance in
@@ -2120,8 +2711,8 @@ private var dailyStepsTaskKey: String {
 
 }
 
-// Configurable + menu helpers (same file as HomeView so private state is accessible).
-extension HomeView {
+// Configurable + menu helpers (same file as FoodManagementView so private state is accessible).
+extension FoodManagementView {
     @ViewBuilder
     var configuredFoodAddMenuContent: some View {
         let config = AddMenuSettings.load()
@@ -3463,6 +4054,10 @@ struct HealthTabView: View {
     @State private var showImportedHealthWorkoutHistory = false
     @State private var progressMetric: ProgressMetric = .weight
     @Binding var progressOverviewMode: ProgressOverviewMode
+    var quickActionRequest: QuickActionRequest? = nil
+    var onQuickActionHandled: (UUID) -> Void = { _ in }
+    var foodLogMethodRequest: FoodLogMethodRequest? = nil
+    var onFoodLogMethodHandled: (UUID) -> Void = { _ in }
     @State private var foodRangeStats: ProgressFoodRangeStats?
     @State private var isLoadingFoodRangeStats = false
 
@@ -3528,7 +4123,16 @@ struct HealthTabView: View {
                 .padding(.bottom, 4)
 
                 ZStack {
-                if progressOverviewMode == .progress {
+                if progressOverviewMode == .food {
+                    FoodManagementView(
+                        quickActionRequest: quickActionRequest,
+                        onQuickActionHandled: onQuickActionHandled,
+                        foodLogMethodRequest: foodLogMethodRequest,
+                        onFoodLogMethodHandled: onFoodLogMethodHandled,
+                        onOpenWorkouts: { progressOverviewMode = .workouts }
+                    )
+                    .transition(.opacity)
+                } else if progressOverviewMode == .progress {
                     ScrollView {
                         VStack(spacing: 18) {
                     // Segmented Picker
@@ -7252,7 +7856,24 @@ private struct LabReportAllergenConfirmationSheet: View {
 }
 
 #Preview {
+    // ContentView's subtree (Home / Health / Records / Coach tabs) reads every one of
+    // these via @Environment(Type.self); the Observation framework traps at runtime
+    // instead of failing gracefully when one is missing, so the preview needs the same
+    // full set calorietrackerApp.swift injects at real launch.
     ContentView()
         .environment(FoodStore())
         .environment(WeightStore())
+        .environment(BodyFatStore())
+        .environment(BodyMeasurementStore())
+        .environment(NotificationManager())
+        .environment(HealthKitManager())
+        .environment(ProfileStore())
+        .environment(ChatStore())
+        .environment(WaterStore())
+        .environment(FastingStore())
+        .environment(StrengthWorkoutStore())
+        .environment(ImportedHealthWorkoutStore())
+        .environment(CloudBackupService())
+        .environment(HealthDataStore())
+        .environment(RecordsStore())
 }

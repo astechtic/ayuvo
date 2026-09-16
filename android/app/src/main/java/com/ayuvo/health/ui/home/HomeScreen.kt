@@ -62,13 +62,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.outlined.DirectionsWalk
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.DriveFileRenameOutline
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.CameraAlt
@@ -166,12 +168,14 @@ import com.ayuvo.health.models.CurrentMealSchedule
 import com.ayuvo.health.models.MealType
 import com.ayuvo.health.models.FoodLogMethod
 import com.ayuvo.health.models.FoodLogMethodDefaultGroupIcon
+import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.models.displayName
-import com.ayuvo.health.models.QuickAction
-import com.ayuvo.health.models.QuickActionRequest
 import com.ayuvo.health.models.ServingUnitOption
 import com.ayuvo.health.models.WaterEntry
 import com.ayuvo.health.models.WaterUnit
+import com.ayuvo.health.models.WorkoutSession
+import com.ayuvo.health.records.data.HighlightWithRecord
+import com.ayuvo.health.ui.records.RecordFormat
 import com.ayuvo.health.services.ai.FoodAnalysis
 import com.ayuvo.health.ui.components.InAppCameraCaptureDialog
 import com.ayuvo.health.ui.components.FullScreenImageViewer
@@ -183,6 +187,7 @@ import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.components.GlassPrimaryButton
 import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.GlassTextField
+import com.ayuvo.health.ui.components.IconBubble
 import com.ayuvo.health.ui.components.WeekEnergyStrip
 import com.ayuvo.health.ui.navigation.BottomNavDockedControlPadding
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
@@ -205,7 +210,7 @@ import kotlinx.coroutines.withContext
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-private sealed interface AddMenuDestination {
+internal sealed interface AddMenuDestination {
     data class FoodGroup(val index: Int) : AddMenuDestination
     data object Water : AddMenuDestination
     data object Fasting : AddMenuDestination
@@ -215,17 +220,17 @@ private sealed interface AddMenuDestination {
 @Composable
 fun HomeScreen(
     container: AppContainer,
-    quickActionRequest: QuickActionRequest? = null,
-    onQuickActionHandled: (Long) -> Unit = {},
+    onOpenFood: () -> Unit = {},
     onOpenHealth: () -> Unit = {},
     onOpenHealthType: (String) -> Unit = {},
+    onOpenRecords: () -> Unit = {},
+    onOpenRecord: (String) -> Unit = {},
     onOpenWorkouts: () -> Unit = {}
 ) {
     val vm: HomeViewModel = viewModel(factory = HomeViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
-    val healthStrip by vm.healthStrip.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
-DisposableEffect(lifecycleOwner, vm) {
+    DisposableEffect(lifecycleOwner, vm) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 vm.refreshDailySteps()
@@ -235,278 +240,65 @@ DisposableEffect(lifecycleOwner, vm) {
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
-    val shareScope = rememberCoroutineScope()
-    val ctx = LocalContext.current
+
     val weekStartsOnMonday by container.prefs.weekStartsOnMonday.collectAsState(initial = true)
-    val allEntries by container.foodRepository.entries.collectAsState(initial = emptyList())
-
-    var showText by rememberSaveable { mutableStateOf(false) }
-    var showVoice by rememberSaveable { mutableStateOf(false) }
-    var showManual by rememberSaveable { mutableStateOf(false) }
-    var savedMealsTab by remember { mutableStateOf<SavedTab?>(null) }
-    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
-    var showCopyFromDay by remember { mutableStateOf(false) }
-    var showAddMenu by remember { mutableStateOf(false) }
-    var addMenuDestination by remember { mutableStateOf<AddMenuDestination?>(null) }
-    var showSortMenu by remember { mutableStateOf(false) }
-    var editingEntry by remember { mutableStateOf<FoodEntry?>(null) }
-    var selectedFoodIds by remember { mutableStateOf<Set<UUID>>(emptySet()) }
-    val selectionMode = selectedFoodIds.isNotEmpty()
-    var showNutritionDetail by remember { mutableStateOf(false) }
-    var showCustomWaterLog by remember { mutableStateOf(false) }
-    var showFastingStart by remember { mutableStateOf(false) }
-    var editingFast by remember { mutableStateOf<FastingSession?>(null) }
-    var pendingDiaryDeletion by remember { mutableStateOf<HomeDiaryItem?>(null) }
-    var showFastingQuickActionDisabled by remember { mutableStateOf(false) }
-
-    var showCameraCapture by rememberSaveable { mutableStateOf(false) }
-    var showMultiPhotoCapture by rememberSaveable { mutableStateOf(false) }
-    val captureDraft: PhotoCaptureDraftViewModel = viewModel(factory = PhotoCaptureDraftViewModel.factory(ctx))
-    val pendingCaptureImageBytes by captureDraft.images.collectAsState()
-    val captureDraftBusy by captureDraft.busy.collectAsState()
-    val captureDraftError by captureDraft.error.collectAsState()
-    var captureNote by rememberSaveable { mutableStateOf("") }
-    var captureProgressiveMeal by rememberSaveable { mutableStateOf(false) }
-
-    fun clearCaptureDraft() {
-        captureDraft.clear()
-        captureNote = ""
-        captureProgressiveMeal = false
-    }
-    var isImportingPhotos by rememberSaveable { mutableStateOf(false) }
-
-    val photoPicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia(maxItems = 10)
-    ) { uris ->
-        val remaining = 10 - pendingCaptureImageBytes.size
-        val imported = uris.take(remaining).mapNotNull { uri ->
-            ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() }
-        }
-        if (imported.isNotEmpty()) {
-            captureDraft.append(imported)
-        }
-        if (imported.isNotEmpty() || pendingCaptureImageBytes.isNotEmpty()) showMultiPhotoCapture = true
-    }
-
-    val cameraPermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            clearCaptureDraft()
-            showCameraCapture = true
-        }
-    }
-
-    fun openCamera() {
-        isImportingPhotos = false
-        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            clearCaptureDraft()
-            showCameraCapture = true
-        } else {
-            cameraPermission.launch(Manifest.permission.CAMERA)
-        }
-    }
-
-    val barcodePermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) showBarcodeScanner = true
-    }
-
-    fun openBarcodeScanner() {
-        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            showBarcodeScanner = true
-        } else {
-            barcodePermission.launch(Manifest.permission.CAMERA)
-        }
-    }
-
-    fun performFoodLogMethod(method: FoodLogMethod) {
-        showAddMenu = false
-        addMenuDestination = null
-        when (method) {
-            FoodLogMethod.CAMERA -> openCamera()
-            FoodLogMethod.PHOTOS -> {
-                isImportingPhotos = true
-                clearCaptureDraft()
-                photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }
-            FoodLogMethod.BARCODE -> openBarcodeScanner()
-            FoodLogMethod.VOICE -> showVoice = true
-            FoodLogMethod.TEXT -> showText = true
-            FoodLogMethod.MANUAL -> showManual = true
-            FoodLogMethod.FAVORITES -> savedMealsTab = SavedTab.FAVORITES
-            FoodLogMethod.FREQUENT -> savedMealsTab = SavedTab.FREQUENT
-            FoodLogMethod.RECENT -> savedMealsTab = SavedTab.RECENTS
-            FoodLogMethod.COPY_FROM_DAY -> showCopyFromDay = true
-        }
-    }
-
-    LaunchedEffect(
-        quickActionRequest?.id,
-        ui.analyzing,
-        ui.pendingAnalysis,
-        ui.error
-    ) {
-        val request = quickActionRequest ?: return@LaunchedEffect
-        if (ui.analyzing || ui.pendingAnalysis != null || ui.error != null) return@LaunchedEffect
-
-        showText = false
-        showVoice = false
-        showManual = false
-        savedMealsTab = null
-        showBarcodeScanner = false
-        showCopyFromDay = false
-        showAddMenu = false
-        addMenuDestination = null
-        editingEntry = null
-        showNutritionDetail = false
-        showCustomWaterLog = false
-        showFastingStart = false
-        editingFast = null
-        showCameraCapture = false
-        showMultiPhotoCapture = false
-        vm.setSelectedDate(LocalDate.now())
-
-        // Fasting shortcuts manage the fast itself; food shortcuts stay blocked while one is active.
-        if (request.action != QuickAction.FASTING && ui.activeFast != null) {
-            vm.reportFoodBlockedByFast()
-            onQuickActionHandled(request.id)
-            return@LaunchedEffect
-        }
-
-        when (request.action) {
-            QuickAction.CAMERA -> openCamera()
-            QuickAction.PHOTOS -> {
-                isImportingPhotos = true
-                clearCaptureDraft()
-                photoPicker.launch(
-                    PickVisualMediaRequest(
-                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                    )
-                )
-            }
-            QuickAction.VOICE -> showVoice = true
-            QuickAction.TEXT -> showText = true
-            QuickAction.BARCODE -> openBarcodeScanner()
-            QuickAction.FAVORITES -> savedMealsTab = SavedTab.FAVORITES
-            QuickAction.FREQUENT -> savedMealsTab = SavedTab.FREQUENT
-            QuickAction.RECENT -> savedMealsTab = SavedTab.RECENTS
-            QuickAction.MANUAL -> showManual = true
-            QuickAction.FASTING -> {
-                when {
-                    !ui.fastingTrackingEnabled -> showFastingQuickActionDisabled = true
-                    ui.activeFast != null -> editingFast = ui.activeFast
-                    else -> showFastingStart = true
-                }
-            }
-        }
-        onQuickActionHandled(request.id)
-    }
-
-    BackHandler(enabled = selectionMode) {
-        selectedFoodIds = emptySet()
-    }
-
-    val today = LocalDate.now()
     val selectedDate = ui.date
-    val isToday = selectedDate == today
-    val completedFasts = remember(ui.fastingSessions, selectedDate) {
-        ui.fastingSessions.filter { session ->
-            session.endedAt?.atZone(ZoneId.systemDefault())?.toLocalDate() == selectedDate
-        }.sortedByDescending { it.endedAt }
-    }
-    // Tracking preferences control new-entry UI, not persisted history. Existing
-    // water and fasting logs remain visible after either tracker is disabled.
-    // The active fast is pinned near the top of the dashboard; the diary lists completed ones.
-    val diaryFasts = completedFasts
-    val diaryMealGroups = remember(
-        ui.todayEntries,
-        ui.waterEntriesToday,
-        diaryFasts,
-        ui.foodLogSortOrder
-    ) {
-        homeDiaryMealGroups(
-            foodEntries = ui.todayEntries,
-            waterEntries = ui.waterEntriesToday,
-            fastingSessions = diaryFasts,
-            sortOrder = ui.foodLogSortOrder
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault()) }
+
+    val workoutSessions by container.workoutRepository.completedSessions.collectAsState(initial = emptyList())
+
+    val recordsRevision by container.recordsStore.revision.collectAsState()
+    var recordsSummary by remember { mutableStateOf<HomeRecordsSummary?>(null) }
+    LaunchedEffect(recordsRevision) {
+        val highlights = container.recordsStore.importantHighlights(3)
+        val total = container.recordsStore.count()
+        val processing = container.recordsStore.processingSummary()
+        recordsSummary = HomeRecordsSummary(
+            highlights = highlights,
+            totalRecords = total,
+            pendingCount = processing.processing + processing.awaitingConsent
         )
     }
 
-    // No topBar: the empty TopAppBar used to act as the status-bar spacer, but the
-    // ad strip above this screen (TabWithBanner) now owns that inset.
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = {
-            if (selectionMode) {
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background)
-                        .navigationBarsPadding()
-                        .padding(bottom = BottomNavDockedControlPadding)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        IconButton(onClick = { selectedFoodIds = emptySet() }) {
-                            Icon(
-                                Icons.Filled.Close,
-                                contentDescription = stringResource(R.string.action_cancel),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Text(
-                            stringResource(R.string.combine_selected_count, selectedFoodIds.size),
-                            modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Button(
-                            onClick = {
-                                val ids = selectedFoodIds
-                                vm.combineIntoMeal(ids) { combined ->
-                                    selectedFoodIds = emptySet()
-                                    if (combined != null) editingEntry = combined
-                                }
-                            },
-                            enabled = selectedFoodIds.size >= 2,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = AppColors.Calorie.copy(alpha = 0.12f),
-                                contentColor = AppColors.Calorie,
-                                disabledContainerColor = AppColors.Calorie.copy(alpha = 0.12f),
-                                disabledContentColor = AppColors.Calorie.copy(alpha = 0.45f)
-                            )
-                        ) {
-                            Text(stringResource(R.string.combine_action), fontWeight = FontWeight.SemiBold)
-                        }
-                    }
-                }
-            }
-        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        Box(Modifier.fillMaxSize().padding(padding)) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 8.dp, bottom = if (selectionMode) 8.dp else BottomNavScrollPadding + 72.dp)
+                .fillMaxSize()
+                .padding(padding),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                start = 16.dp,
+                top = 12.dp,
+                end = 16.dp,
+                bottom = BottomNavScrollPadding
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Week strip — verbatim port of WeekEnergyStrip in HomeComponents.swift,
-            // with horizontal pagination across 53 weeks of history.
-            item {
-                Box(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
+            // 1. Header & Calendar Date Strip
+            item(key = "header") {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = stringResource(R.string.home_summary_title),
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            Text(
+                                text = selectedDate.format(dateFormatter),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(4.dp))
                     WeekEnergyStrip(
                         selectedDate = selectedDate,
                         onSelect = { vm.setSelectedDate(it) },
@@ -515,716 +307,502 @@ DisposableEffect(lifecycleOwner, vm) {
                 }
             }
 
-            // Health strip — whole-health summary first (steps, energy, heart, sleep …). Its own
-            // item, outside the day-swipe pointerInput below.
-            if (healthStrip !is HealthStripState.Hidden) {
-                item(key = "health-strip") {
-                    Spacer(Modifier.height(4.dp))
-                    HealthSummaryStrip(
-                        state = healthStrip,
-                        onOpenHealth = onOpenHealth,
-                        onOpenType = onOpenHealthType
+            // 2. Caloric & Macros Quick Card (Links directly to Health -> Food tab)
+            item(key = "caloric-macros-card") {
+                CaloricMacrosSummaryCard(
+                    caloriesToday = ui.caloriesToday,
+                    calorieGoal = ui.profile?.effectiveCalories ?: 2000,
+                    proteinGrams = ui.todayEntries.sumOf { it.protein },
+                    carbsGrams = ui.todayEntries.sumOf { it.carbs },
+                    fatGrams = ui.todayEntries.sumOf { it.fat },
+                    fiberGrams = ui.todayEntries.sumOf { it.fiber ?: 0.0 },
+                    proteinGoal = ui.profile?.effectiveProtein ?: 120,
+                    carbsGoal = ui.profile?.effectiveCarbs ?: 250,
+                    fatGoal = ui.profile?.effectiveFat ?: 65,
+                    fiberGoal = 30,
+                    onOpenFood = onOpenFood
+                )
+            }
+
+            // 3. Hydration Quick-Tracker Widget
+            item(key = "hydration-widget") {
+                HydrationWidgetCard(
+                    waterTodayMl = ui.waterTodayMl,
+                    waterGoalMl = ui.waterDailyGoalMl,
+                    onOpenFood = onOpenFood,
+                    onAddWater = { vm.addWater(250) }
+                )
+            }
+
+            // 4. Important Highlights (Lab & Clinical Alerts) Card
+            item(key = "important-highlights") {
+                ClinicalHighlightsCard(
+                    summary = recordsSummary,
+                    onOpenRecords = onOpenRecords,
+                    onOpenRecord = onOpenRecord
+                )
+            }
+
+            // 5. Health Telemetry 2x2 Grid
+            item(key = "health-telemetry") {
+                HealthTelemetryGrid(
+                    steps = ui.dailySteps,
+                    stepsGoal = 10000,
+                    activeBurn = ui.homeBurnSummary?.burnedCalories ?: 0,
+                    activeFast = if (ui.fastingTrackingEnabled) ui.activeFast else null,
+                    onOpenHealth = onOpenHealth,
+                    onOpenHealthType = onOpenHealthType,
+                    onOpenFood = onOpenFood
+                )
+            }
+
+            // 6. Workouts & Activity Summary Card
+            item(key = "workouts-activity") {
+                WorkoutsSummaryCard(sessions = workoutSessions, onOpenWorkouts = onOpenWorkouts)
+            }
+        }
+    }
+}
+
+// ── Dashboard Component Views ──────────────────────────────────────────────────
+
+@Composable
+private fun CaloricMacrosSummaryCard(
+    caloriesToday: Int,
+    calorieGoal: Int,
+    proteinGrams: Double,
+    carbsGrams: Double,
+    fatGrams: Double,
+    fiberGrams: Double,
+    proteinGoal: Int,
+    carbsGoal: Int,
+    fatGoal: Int,
+    fiberGoal: Int,
+    onOpenFood: () -> Unit
+) {
+    val remaining = (calorieGoal - caloriesToday).coerceAtLeast(0)
+    GlassSurface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .clickable { onOpenFood() },
+        cornerRadius = 24.dp,
+        padding = 18.dp
+    ) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconBubble(icon = Icons.Filled.Restaurant, size = 22.dp, iconSize = 18.dp)
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            text = "Caloric & Macros",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Text(
+                        text = "Daily Budget: $calorieGoal kcal",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 }
-            }
-
-            // Active fast pinned under the health strip (today only).
-            val pinnedFast = if (isToday) ui.activeFast else null
-            if (pinnedFast != null) {
-                item(key = "active-fast") {
-                    Spacer(Modifier.height(8.dp))
-                    SectionCardWrapper(isFirst = true, isLast = true, transparent = true) {
-                        ActiveFastingRow(
-                            session = pinnedFast,
-                            rowShape = sectionCardShape(isFirst = true, isLast = true),
-                            onClick = { editingFast = pinnedFast }
-                        )
-                    }
-                }
-            }
-
-            // Workouts left the tab bar for Records; this shortcut opens the Health tab's Workouts segment.
-            if (!selectionMode) {
-                item(key = "workouts-shortcut") {
-                    Spacer(Modifier.height(8.dp))
-                    WorkoutsShortcutCard(onClick = onOpenWorkouts)
-                }
-            }
-
-            // Calorie hero + macros + View More — grouped so the day-swipe gesture covers only
-            // this top region, not the food log below "View More". Swipe left/right to change day;
-            // the horizontal-only detector lets the LazyColumn keep scrolling vertically.
-            item {
-                Column(
-                    modifier = Modifier.pointerInput(selectedDate) {
-                        var accum = 0f
-                        val threshold = 80.dp.toPx()
-                        detectHorizontalDragGestures(
-                            onDragStart = { accum = 0f },
-                            onDragCancel = { accum = 0f },
-                            onHorizontalDrag = { change, amount -> accum += amount; change.consume() },
-                            onDragEnd = {
-                                if (accum > threshold) {
-                                    vm.setSelectedDate(selectedDate.minusDays(1))
-                                } else if (accum < -threshold) {
-                                    val next = selectedDate.plusDays(1)
-                                    if (!next.isAfter(today)) vm.setSelectedDate(next)
-                                }
-                                accum = 0f
-                            }
-                        )
-                    }
+                Button(
+                    onClick = onOpenFood,
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(containerColor = AppColors.Calorie, contentColor = Color.White)
                 ) {
-                    Spacer(Modifier.height(32.dp))
-CalorieHero(
-                        current = ui.caloriesToday,
-                        goal = ui.profile?.effectiveCalories ?: 2000,
-                        burnSummary = ui.homeBurnSummary
-                    )
-                    // Steps live in the Health strip's tile while the hub is on.
-                    if (healthStrip !is HealthStripState.Tiles) {
-                        ui.dailySteps?.let { steps ->
-                            Spacer(Modifier.height(8.dp))
-                            DailyStepsRow(steps = steps)
-                        }
-                    }
-                    Spacer(Modifier.height(12.dp))
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        ui.homeTopNutrients.take(if (ui.waterTrackingEnabled) 3 else 4).forEach { nutrient ->
-                            MacroCard(
-                                label = stringResource(nutrient.displayNameRes),
-                                current = nutrient.current(ui.todayEntries),
-                                goal = nutrient.goal(ui.profile, ui.optionalNutrientGoals).toDouble(),
-                                unit = nutrient.unit,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        if (ui.waterTrackingEnabled) {
-                            MacroCard(
-                                label = stringResource(R.string.water),
-                                current = ui.waterUnit.displayAmount(ui.waterTodayMl),
-                                goal = ui.waterUnit.displayAmount(ui.waterDailyGoalMl),
-                                unit = if (ui.waterUnit == WaterUnit.FLUID_OUNCES) " fl oz" else "ml",
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Box(modifier = Modifier.clickable { showNutritionDetail = true }) {
-                            ViewMoreButton()
-                        }
+                    Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Log Food", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(AppColors.Calorie.copy(alpha = 0.06f))
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text("EATEN", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppColors.Calorie)
+                    Text("$caloriesToday kcal", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                }
+                Column(horizontalAlignment = Alignment.End) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.LocalFireDepartment, null, tint = AppColors.Calorie, modifier = Modifier.size(14.dp))
+                        Spacer(Modifier.width(2.dp))
+                        Text("$remaining left", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = AppColors.Calorie)
                     }
                 }
             }
 
-            // Unified diary. Water and fasting remain excluded from nutrition totals and sharing.
-            item { Spacer(Modifier.height(8.dp)) }
-            if (diaryMealGroups.isEmpty()) {
-                item { SectionHeader(if (isToday) stringResource(R.string.home_todays_diary) else stringResource(R.string.home_diary)) }
-                item {
-                    SectionCardWrapper(isFirst = true, isLast = true) {
-                        Box(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp)) {
-                            Text(
-                                stringResource(R.string.home_no_diary_entries),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
-                            )
-                        }
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                MacroCard(label = "Protein", current = proteinGrams, goal = proteinGoal.toDouble(), modifier = Modifier.weight(1f))
+                MacroCard(label = "Carbs", current = carbsGrams, goal = carbsGoal.toDouble(), modifier = Modifier.weight(1f))
+                MacroCard(label = "Fat", current = fatGrams, goal = fatGoal.toDouble(), modifier = Modifier.weight(1f))
+                MacroCard(label = "Fiber", current = fiberGrams, goal = fiberGoal.toDouble(), modifier = Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun HydrationWidgetCard(waterTodayMl: Int, waterGoalMl: Int, onOpenFood: () -> Unit, onAddWater: () -> Unit) {
+    val cups = (waterTodayMl / 250).coerceAtLeast(0)
+    val liters = String.format(Locale.US, "%.1f", waterTodayMl / 1000.0)
+    val goalLiters = String.format(Locale.US, "%.1f", waterGoalMl / 1000.0)
+
+    GlassSurface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onOpenFood() },
+        cornerRadius = 20.dp,
+        padding = 16.dp
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconBubble(icon = Icons.Filled.WaterDrop, size = 40.dp, iconSize = 22.dp)
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = "$liters L / $goalLiters L Goal",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "$cups of 8 cups recorded",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
                 }
-            } else {
-                for ((groupIndex, group) in diaryMealGroups.withIndex()) {
-                    item(key = "header-${group.id}") {
-                        val foodEntries = group.foodEntries
-                        MealSectionHeader(
-                            meal = group.meal,
-                            totalCalories = group.totalCalories.takeIf { foodEntries.isNotEmpty() },
-                            totalProtein = group.totalProtein,
-                            totalCarbs = group.totalCarbs,
-                            totalFat = group.totalFat,
-                            onShare = if (foodEntries.isEmpty()) null else {
-                                { shareScope.launch { MealShareText.share(ctx, foodEntries) } }
-                            },
-                            showSortMenu = groupIndex == 0,
-                            sortOrder = ui.foodLogSortOrder,
-                            sortMenuExpanded = showSortMenu,
-                            onSortClick = { showSortMenu = true },
-                            onSortDismiss = { showSortMenu = false },
-                            onSortOrderSelected = { order ->
-                                showSortMenu = false
-                                vm.setFoodLogSortOrder(order)
-                            }
+            }
+            IconButton(
+                onClick = onAddWater,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(AppColors.Calorie.copy(alpha = 0.12f))
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add Water", tint = AppColors.Calorie)
+            }
+        }
+    }
+}
+
+private data class HomeRecordsSummary(
+    val highlights: List<HighlightWithRecord>,
+    val totalRecords: Long,
+    val pendingCount: Int
+)
+
+@Composable
+private fun ClinicalHighlightsCard(
+    summary: HomeRecordsSummary?,
+    onOpenRecords: () -> Unit,
+    onOpenRecord: (String) -> Unit
+) {
+    GlassSurface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .clickable { onOpenRecords() },
+        cornerRadius = 24.dp,
+        padding = 18.dp
+    ) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(stringResource(R.string.home_highlights_title), fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.home_highlights_subtitle), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                }
+                val pending = summary?.pendingCount ?: 0
+                if (pending > 0) {
+                    // Amber matches the pending/review indicator used on the Records tab itself.
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(Color(0xFFE8A33D).copy(alpha = 0.15f))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            pluralStringResource(R.plurals.home_highlights_pending, pending, pending),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFE8A33D)
                         )
                     }
-                    items(group.items, key = { it.stableId }) { item ->
-                        val index = group.items.indexOf(item)
-                        val isFirst = index == 0
-                        val isLast = index == group.items.lastIndex
-                        val rowShape = sectionCardShape(isFirst, isLast)
-                        SectionCardWrapper(isFirst = isFirst, isLast = isLast, transparent = true) {
-                            when (item) {
-                                is HomeDiaryItem.Food -> {
-                                    val entry = item.entry
-                                    // Tap row -> open EditFoodEntrySheet (matches iOS .onTapGesture).
-                                    // Long-press -> multi-select combine. Swipe trailing -> delete;
-                                    // swipe leading -> toggle favorite (disabled while selecting).
-                                    val isFav = ui.isFavorite(entry)
-                                    val isSelected = entry.id in selectedFoodIds
-                                    SwipeableFoodRow(
-                                        entry = entry,
-                                        isFavorite = isFav,
-                                        rowShape = rowShape,
-                                        selectionMode = selectionMode,
-                                        selected = isSelected,
-                                        onTap = {
-                                            if (selectionMode) {
-                                                selectedFoodIds = if (isSelected) {
-                                                    selectedFoodIds - entry.id
-                                                } else {
-                                                    selectedFoodIds + entry.id
-                                                }
-                                            } else {
-                                                editingEntry = entry
-                                            }
-                                        },
-                                        onLongPress = {
-                                            selectedFoodIds = selectedFoodIds + entry.id
-                                        },
-                                        onDelete = { pendingDiaryDeletion = item },
-                                        onToggleFavorite = { vm.toggleFavorite(entry) }
-                                    )
-                                }
-                                is HomeDiaryItem.Water -> {
-                                    SwipeableWaterRow(
-                                        entry = item.entry,
-                                        unit = ui.waterUnit,
-                                        rowShape = rowShape,
-                                        onDelete = { pendingDiaryDeletion = item }
-                                    )
-                                }
-                                is HomeDiaryItem.Fasting -> {
-                                    SwipeableFastingRow(
-                                        session = item.session,
-                                        rowShape = rowShape,
-                                        onTap = { editingFast = item.session },
-                                        onDelete = { pendingDiaryDeletion = item }
-                                    )
-                                }
-                            }
-                            if (!isLast) Divider()
+                }
+            }
+
+            when {
+                summary == null -> {}
+                summary.highlights.isNotEmpty() -> {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        summary.highlights.forEach { item ->
+                            AlertItemRow(
+                                title = item.highlight.text,
+                                subtitle = "${item.record.title} · ${RecordFormat.displayDate(item.record)}",
+                                onClick = { onOpenRecord(item.record.id) }
+                            )
                         }
                     }
                 }
+                else -> {
+                    Text(
+                        stringResource(
+                            if (summary.totalRecords > 0) R.string.home_highlights_none else R.string.home_highlights_empty
+                        ),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+                    )
+                }
+            }
+
+            if (summary != null && summary.totalRecords > 0) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        pluralStringResource(
+                            R.plurals.home_review_all_records,
+                            summary.totalRecords.toInt(),
+                            summary.totalRecords.toInt()
+                        ),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = AppColors.Calorie.copy(alpha = 0.6f)
+                    )
+                    Spacer(Modifier.width(5.dp))
+                    Icon(
+                        Icons.Filled.ChevronRight,
+                        contentDescription = null,
+                        tint = AppColors.Calorie.copy(alpha = 0.6f),
+                        modifier = Modifier.size(11.dp)
+                    )
+                }
             }
         }
+    }
+}
 
-        // Floating "+" add button — overlaid bottom-right and lifted above the docked
-        // bottom nav bar. The parent Scaffold renders content full-screen behind the
-        // bar, so the Scaffold FAB slot would sit hidden underneath it. Mirrors the iOS
-        // ContentView FAB: .overlay(alignment: .bottomTrailing) + .padding(.bottom).
-        if (!selectionMode) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
-                .padding(end = 24.dp, bottom = 100.dp)
+@Composable
+private fun AlertItemRow(title: String, subtitle: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(AppColors.Calorie.copy(alpha = 0.06f))
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, maxLines = 2)
+            Text(subtitle, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
+        }
+        Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+    }
+}
+
+@Composable
+private fun HealthTelemetryGrid(
+    steps: Int?,
+    stepsGoal: Int,
+    activeBurn: Int,
+    activeFast: FastingSession?,
+    onOpenHealth: () -> Unit,
+    onOpenHealthType: (String) -> Unit,
+    onOpenFood: () -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(AppColors.Calorie)
-                    .clickable {
-                        addMenuDestination = null
-                        showAddMenu = true
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.cd_add_food),
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-            // Glass-styled, progressive add menu. Actions read in task order from
-            // top to bottom, with the most common choice first.
-            SheetGlassDropdownMenu(
-                expanded = showAddMenu,
-                onDismissRequest = {
-                    showAddMenu = false
-                    addMenuDestination = null
-                },
-                menuWidth = 238.dp
-            ) {
-                when (val destination = addMenuDestination) {
-                    null -> {
-                        var insertedFoodBlock = false
-                        @Composable
-                        fun maybeFoodBoundaryHairline() {
-                            if (insertedFoodBlock) {
-                                SheetHairline()
-                                insertedFoodBlock = false
-                            }
-                        }
-                        if (ui.activeFast == null) {
-                            val addMenuConfig = ui.addMenuConfig
-                            if (addMenuConfig.usesFlatLayout) {
-                                val methods = addMenuConfig.resolvedFlatMethods()
-                                methods.forEach { method ->
-                                    SheetGlassDropdownMenuItem(
-                                        label = stringResource(method.titleRes),
-                                        leadingIcon = method.icon
-                                    ) { performFoodLogMethod(method) }
-                                }
-                                insertedFoodBlock = methods.isNotEmpty()
-                            } else {
-                                val groups = addMenuConfig.resolvedGroups()
-                                groups.forEachIndexed { index, group ->
-                                    if (index > 0) SheetHairline()
-                                    SheetGlassDropdownMenuItem(
-                                        label = group.displayName(),
-                                        leadingIcon = group.methods.firstOrNull()?.icon ?: FoodLogMethodDefaultGroupIcon,
-                                        trailingIcon = Icons.Filled.ChevronRight
-                                    ) { addMenuDestination = AddMenuDestination.FoodGroup(index) }
-                                }
-                                insertedFoodBlock = groups.isNotEmpty()
-                            }
-                        }
-                        if (ui.waterTrackingEnabled) {
-                            maybeFoodBoundaryHairline()
-                            SheetGlassDropdownMenuItem(
-                                label = stringResource(R.string.water),
-                                leadingIcon = Icons.Filled.WaterDrop,
-                                trailingIcon = Icons.Filled.ChevronRight
-                            ) { addMenuDestination = AddMenuDestination.Water }
-                        }
-                        if (ui.fastingTrackingEnabled) {
-                            maybeFoodBoundaryHairline()
-                            if (ui.activeFast == null) {
-                                SheetGlassDropdownMenuItem(label = stringResource(R.string.fasting_start), leadingIcon = Icons.Filled.Timer) {
-                                    showAddMenu = false
-                                    showFastingStart = true
-                                }
-                            } else {
-                                SheetGlassDropdownMenuItem(
-                                    label = stringResource(R.string.fasting),
-                                    leadingIcon = Icons.Filled.Timer,
-                                    trailingIcon = Icons.Filled.ChevronRight
-                                ) { addMenuDestination = AddMenuDestination.Fasting }
-                            }
-                        }
-                    }
-
-                    is AddMenuDestination.FoodGroup -> {
-                        val group = ui.addMenuConfig.resolvedGroups().getOrNull(destination.index)
-                        group?.methods?.forEach { method ->
-                            SheetGlassDropdownMenuItem(
-                                label = stringResource(method.titleRes),
-                                leadingIcon = method.icon
-                            ) { performFoodLogMethod(method) }
-                        }
-                        SheetGlassDropdownMenuItem(
-                            label = stringResource(R.string.back),
-                            leadingIcon = Icons.Filled.ChevronLeft
-                        ) { addMenuDestination = null }
-                    }
-
-                    AddMenuDestination.Water -> {
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.water_one_glass_dynamic, ui.waterUnit.format(250)), leadingIcon = Icons.Filled.WaterDrop) { showAddMenu = false; addMenuDestination = null; vm.addWater(250) }
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.water_two_glasses_dynamic, ui.waterUnit.format(500)), leadingIcon = Icons.Filled.WaterDrop) { showAddMenu = false; addMenuDestination = null; vm.addWater(500) }
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.water_three_glasses_dynamic, ui.waterUnit.format(750)), leadingIcon = Icons.Filled.WaterDrop) { showAddMenu = false; addMenuDestination = null; vm.addWater(750) }
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.water_custom_amount), leadingIcon = Icons.Filled.DriveFileRenameOutline) { showAddMenu = false; addMenuDestination = null; showCustomWaterLog = true }
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.back), leadingIcon = Icons.Filled.ChevronLeft) { addMenuDestination = null }
-                    }
-
-                    AddMenuDestination.Fasting -> {
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.fasting_end), leadingIcon = Icons.Filled.Stop) {
-                            showAddMenu = false
-                            addMenuDestination = null
-                            vm.endFast()
-                        }
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.fasting_cancel), leadingIcon = Icons.Filled.Delete) {
-                            showAddMenu = false
-                            addMenuDestination = null
-                            vm.cancelFast()
-                        }
-                        SheetGlassDropdownMenuItem(label = stringResource(R.string.back), leadingIcon = Icons.Filled.ChevronLeft) { addMenuDestination = null }
-                    }
-                }
+            Text("Health Telemetry", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Box(modifier = Modifier.clickable { onOpenHealth() }) {
+                ViewMoreButton()
             }
         }
-        }
-        }
-    }
 
-    if (showText) {
-        TextInputDialog(
-            onDismiss = { showText = false },
-            onSubmit = { showText = false; vm.analyzeText(it) }
-        )
-    }
-
-    if (showCustomWaterLog) {
-        WaterCustomAmountSheet(
-            unit = ui.waterUnit,
-            onDismiss = { showCustomWaterLog = false },
-            onAdd = vm::addWater
-        )
-    }
-
-    if (showFastingStart) {
-        FastingGoalDialog(
-            title = stringResource(R.string.fasting_start),
-            initialMinutes = ui.fastingDefaultGoalMinutes,
-            confirmLabel = stringResource(R.string.fasting_start),
-            onConfirm = {
-                showFastingStart = false
-                vm.startFast(it)
-            },
-            onDismiss = { showFastingStart = false }
-        )
-    }
-
-    pendingDiaryDeletion?.let { target ->
-        val title = when (target) {
-            is HomeDiaryItem.Food -> "Delete Food Log?"
-            is HomeDiaryItem.Water -> "Delete Water Log?"
-            is HomeDiaryItem.Fasting -> "Delete Fasting Log?"
-        }
-        val message = when (target) {
-            is HomeDiaryItem.Food -> "This removes the food from your diary. Saved favorites are kept."
-            is HomeDiaryItem.Water -> "This removes the water entry from your diary."
-            is HomeDiaryItem.Fasting -> "This removes the completed fast from your diary."
-        }
-        GlassDialog(onDismissRequest = { pendingDiaryDeletion = null }) {
-            Text(title, fontSize = 21.sp, fontWeight = FontWeight.Bold)
-            Text(
-                message,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f),
-                fontSize = 15.sp,
-                lineHeight = 21.sp
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            TelemetryTile(
+                title = "STEPS",
+                badge = steps?.let { "${(it * 100 / stepsGoal.coerceAtLeast(1))}%" } ?: "--",
+                value = steps?.let { String.format(Locale.US, "%,d", it) } ?: "--",
+                subtitle = "/ ${stepsGoal / 1000}k",
+                icon = Icons.AutoMirrored.Filled.DirectionsRun,
+                modifier = Modifier.weight(1f).clickable { onOpenHealthType(HealthDataType.STEPS.id) }
             )
-            GlassDialogActions(
-                primaryText = stringResource(R.string.action_delete),
-                onPrimary = {
-                    pendingDiaryDeletion = null
-                    when (target) {
-                        is HomeDiaryItem.Food -> vm.deleteEntry(target.entry.id)
-                        is HomeDiaryItem.Water -> vm.deleteWater(target.entry.id)
-                        is HomeDiaryItem.Fasting -> vm.deleteFast(target.session.id)
-                    }
-                },
-                dismissText = stringResource(R.string.action_cancel),
-                onDismiss = { pendingDiaryDeletion = null },
-                destructive = true
+            TelemetryTile(
+                title = "ACTIVE",
+                badge = "Today",
+                value = "$activeBurn",
+                subtitle = "kcal",
+                icon = Icons.Filled.LocalFireDepartment,
+                modifier = Modifier.weight(1f).clickable { onOpenHealthType(HealthDataType.ACTIVE_ENERGY.id) }
             )
         }
-    }
 
-    editingFast?.let { session ->
-        FastingSessionDialog(
-            session = session,
-            onSave = {
-                vm.updateFast(it)
-                editingFast = null
-            },
-            onEndNow = {
-                vm.endFast(it)
-                editingFast = null
-            },
-            onDelete = {
-                vm.deleteFast(session.id)
-                editingFast = null
-            },
-            onDismiss = { editingFast = null }
-        )
-    }
-
-    if (showVoice) {
-        VoiceInputSheet(
-            container = container,
-            onDismiss = { showVoice = false },
-            onSubmit = { showVoice = false; vm.analyzeText(it) }
-        )
-    }
-
-    if (showManual) {
-        ManualEntryDialog(
-            onDismiss = { showManual = false },
-            onSave = { name, kcal, p, c, f, fiber, meal ->
-                showManual = false
-                vm.saveManualEntry(name, kcal, p, c, f, fiber, meal)
-            }
-        )
-    }
-
-    savedMealsTab?.let { tab ->
-        SavedMealsSheet(
-            container = container,
-            tab = tab,
-            onDismiss = { savedMealsTab = null },
-            // Tapping a Saved Meals row opens the FoodResultSheet for review
-            // instead of logging immediately — same UX as the photo flow.
-            onRelogEntry = { vm.reviewSavedMeal(it) }
-        )
-    }
-
-    if (showCopyFromDay) {
-        CopyFromDaySheet(
-            targetDate = ui.date,
-            allEntries = allEntries,
-            onCopy = { entries ->
-                vm.copyEntriesToSelectedDay(entries)
-                showCopyFromDay = false
-            },
-            onDismiss = { showCopyFromDay = false }
-        )
-    }
-
-    if (showBarcodeScanner) {
-        BarcodeScannerSheet(
-            onBarcode = { barcode ->
-                showBarcodeScanner = false
-                vm.lookupBarcode(barcode)
-            },
-            onDismiss = { showBarcodeScanner = false }
-        )
-    }
-
-    if (showCameraCapture) {
-        InAppCameraCaptureDialog(
-            onCapture = { bytes ->
-                showCameraCapture = false
-                captureDraft.append(listOf(bytes))
-                showMultiPhotoCapture = true
-            },
-            onDismiss = {
-                showCameraCapture = false
-                if (pendingCaptureImageBytes.isNotEmpty()) {
-                    showMultiPhotoCapture = true
-                }
-            }
-        )
-    }
-
-    if (showMultiPhotoCapture && captureDraftBusy && pendingCaptureImageBytes.isEmpty()) {
-        AlertDialog(
-            onDismissRequest = { showMultiPhotoCapture = false; clearCaptureDraft() },
-            text = { CircularProgressIndicator() },
-            confirmButton = {}
-        )
-    }
-    if (captureDraftError != null) {
-        AlertDialog(
-            onDismissRequest = { captureDraft.dismissError() },
-            text = { Text(captureDraftError.orEmpty()) },
-            confirmButton = { TextButton(onClick = { captureDraft.dismissError() }) { Text(stringResource(R.string.action_ok)) } }
-        )
-    }
-    if (showMultiPhotoCapture && pendingCaptureImageBytes.isNotEmpty()) {
-        MultiPhotoCaptureSheet(
-            imageBytesList = pendingCaptureImageBytes,
-            addsFromLibrary = isImportingPhotos,
-            isBusy = captureDraftBusy,
-            note = captureNote,
-            onNoteChange = { captureNote = it },
-            progressiveMeal = captureProgressiveMeal,
-            onProgressiveMealChange = { captureProgressiveMeal = it },
-            onAddPhoto = {
-                if (pendingCaptureImageBytes.size < 10) {
-                    if (isImportingPhotos) {
-                        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    } else {
-                        showMultiPhotoCapture = false
-                        showCameraCapture = true
-                    }
-                }
-            },
-            onRemove = { index ->
-                captureDraft.remove(index)
-                if (pendingCaptureImageBytes.size == 1) showMultiPhotoCapture = false
-            },
-            onAnalyze = { note, progressiveMeal ->
-                if (!captureDraft.busy.value) {
-                    val images = captureDraft.images.value
-                    clearCaptureDraft()
-                    showMultiPhotoCapture = false
-                    vm.analyzePhotos(images, note, progressiveMeal)
-                }
-            },
-            onDismiss = {
-                showMultiPhotoCapture = false
-                clearCaptureDraft()
-            }
-        )
-    }
-
-    editingEntry?.let { entry ->
-        EditFoodEntrySheet(
-            entry = entry,
-            preferGramsByDefault = ui.preferGramsByDefault,
-            profile = ui.profile,
-            isFavorite = ui.isFavorite(entry),
-            container = container,
-            analyzeIngredientText = vm::analyzeIngredientText,
-            lookupIngredientBarcode = vm::lookupIngredientBarcode,
-            analyzeIngredientImage = vm::analyzeIngredientImage,
-            onReprocess = { updatedEntry, updatedNote ->
-                vm.reprocessFoodEntry(updatedEntry, updatedNote)
-            },
-            onSave = { updated ->
-                vm.updateEntry(updated)
-                editingEntry = null
-            },
-            onToggleFavorite = { vm.toggleFavorite(entry) },
-            onDelete = {
-                vm.deleteEntry(entry.id)
-                editingEntry = null
-            },
-            onDismiss = { editingEntry = null }
-        )
-    }
-
-    if (showNutritionDetail) {
-        NutritionDetailSheet(
-            entries = ui.todayEntries,
-            profile = ui.profile,
-            homeTopNutrients = ui.homeTopNutrients,
-            optionalGoals = ui.optionalNutrientGoals,
-            waterTrackingEnabled = ui.waterTrackingEnabled,
-            waterCurrentMl = ui.waterTodayMl,
-            waterGoalMl = ui.waterDailyGoalMl,
-            waterUnit = ui.waterUnit,
-            onHomeTopNutrientsChange = vm::setHomeTopNutrients,
-            onDismiss = { showNutritionDetail = false }
-        )
-    }
-
-    if (ui.analyzing) AnalyzingOverlay(imageBytes = ui.pendingImageBytes)
-    ui.pendingAnalysis?.let { analysis ->
-        val initialTimestamp = remember(analysis) { vm.timestampForSelectedDay() }
-        FoodResultSheet(
-            analysis = analysis,
-            imageBytesList = ui.pendingImageBytesList,
-            preferGramsByDefault = ui.preferGramsByDefault,
-            profile = ui.profile,
-            dayEntries = ui.todayEntries,
-            allEntries = allEntries,
-            isSubmitting = ui.foodSaveInProgress,
-            container = container,
-            analyzeIngredientText = vm::analyzeIngredientText,
-            lookupIngredientBarcode = vm::lookupIngredientBarcode,
-            analyzeIngredientImage = vm::analyzeIngredientImage,
-            source = ui.pendingReviewSource?.source
-                ?: ui.pendingFoodSource
-                ?: if (ui.pendingImageBytes != null) FoodSource.SNAP_FOOD else FoodSource.TEXT_INPUT,
-            initialTimestamp = initialTimestamp,
-            onWhatIfSuggestion = vm::suggestMealWhatIf,
-            onSave = { name, grams, servingSizeIsKnown, scale, mealType, selectedServingUnit, selectedServingQuantity, editedAnalysis, timestamp ->
-                vm.saveAnalysis(
-                    name = name,
-                    servingGrams = grams,
-                    servingSizeIsKnown = servingSizeIsKnown,
-                    scale = scale,
-                    mealType = mealType,
-                    selectedServingUnit = selectedServingUnit,
-                    selectedServingQuantity = selectedServingQuantity,
-                    editedAnalysis = editedAnalysis,
-                    timestamp = timestamp
-                )
-            },
-            onDismiss = { vm.dismissPending() }
-        )
-    }
-
-    ui.error?.let { err ->
-        GlassDialog(onDismissRequest = { vm.dismissPending() }) {
-            Text(
-                stringResource(
-                    if (ui.errorOffersScanLabel) R.string.error_barcode_title else R.string.error_title
-                ),
-                fontSize = 21.sp,
-                fontWeight = FontWeight.Bold
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            TelemetryTile(
+                title = "FASTING",
+                badge = if (activeFast != null) "Active" else "Idle",
+                value = activeFast?.let { formatFastingDuration(it.durationSeconds()) } ?: "--",
+                subtitle = if (activeFast != null) "elapsed" else "no active fast",
+                icon = Icons.Filled.Timer,
+                modifier = Modifier.weight(1f).clickable { onOpenFood() }
             )
-            Text(err, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f))
-            GlassDialogActions(
-                primaryText = stringResource(
-                    if (ui.errorOffersScanLabel) R.string.action_scan_label else R.string.action_retry
-                ),
-                onPrimary = {
-                    if (ui.errorOffersScanLabel) {
-                        vm.dismissPending()
-                        openCamera()
-                    } else {
-                        vm.retryPendingAnalysis()
-                    }
-                },
-                dismissText = stringResource(R.string.action_cancel),
-                onDismiss = { vm.dismissPending() }
-            )
-        }
-    }
-    if (ui.foodLoggingBlocked) {
-        GlassDialog(onDismissRequest = vm::dismissFoodBlocked) {
-            Text(stringResource(R.string.food_logging_paused), fontSize = 21.sp, fontWeight = FontWeight.Bold)
-            Text(
-                stringResource(R.string.food_blocked_by_active_fast),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f)
-            )
-            GlassDialogActions(
-                primaryText = stringResource(R.string.action_ok),
-                onPrimary = vm::dismissFoodBlocked,
-                onDismiss = vm::dismissFoodBlocked
-            )
-        }
-    }
-    if (showFastingQuickActionDisabled) {
-        GlassDialog(onDismissRequest = { showFastingQuickActionDisabled = false }) {
-            Text(
-                stringResource(R.string.fasting_quick_action_disabled_title),
-                fontSize = 21.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                stringResource(R.string.fasting_quick_action_disabled_message),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f)
-            )
-            GlassDialogActions(
-                primaryText = stringResource(R.string.action_ok),
-                onPrimary = { showFastingQuickActionDisabled = false },
-                onDismiss = { showFastingQuickActionDisabled = false }
-            )
-        }
-    }
-    if (ui.fastingOverlap) {
-        GlassDialog(onDismissRequest = vm::dismissFastingOverlap) {
-            Text(stringResource(R.string.fasting_overlap_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
-            Text(
-                stringResource(R.string.fasting_overlap_message),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f)
-            )
-            GlassDialogActions(
-                primaryText = stringResource(R.string.action_ok),
-                onPrimary = vm::dismissFastingOverlap,
-                onDismiss = vm::dismissFastingOverlap
+            TelemetryTile(
+                title = "VITALS HUB",
+                badge = "Open",
+                value = "→",
+                subtitle = "steps, heart, sleep",
+                icon = Icons.Filled.MonitorHeart,
+                modifier = Modifier.weight(1f).clickable { onOpenHealth() }
             )
         }
     }
 }
 
 @Composable
-private fun ActiveFastingRow(
+private fun TelemetryTile(
+    title: String,
+    badge: String,
+    value: String,
+    subtitle: String,
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    GlassSurface(
+        modifier = modifier.clip(RoundedCornerShape(20.dp)),
+        cornerRadius = 20.dp,
+        padding = 14.dp
+    ) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(icon, contentDescription = null, tint = AppColors.Calorie, modifier = Modifier.size(14.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text(title, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppColors.Calorie)
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(AppColors.Calorie.copy(alpha = 0.12f))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(badge, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = AppColors.Calorie)
+                }
+            }
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(value, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.width(4.dp))
+                Text(subtitle, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f), modifier = Modifier.padding(bottom = 2.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun WorkoutsSummaryCard(sessions: List<WorkoutSession>, onOpenWorkouts: () -> Unit) {
+    val latest = sessions.firstOrNull()
+    GlassSurface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .clickable { onOpenWorkouts() },
+        cornerRadius = 24.dp,
+        padding = 18.dp
+    ) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text("Workouts & Activity", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        pluralStringResource(R.plurals.home_workouts_logged, sessions.size, sessions.size),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+                Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+            }
+
+            if (latest == null) {
+                Text(
+                    stringResource(R.string.home_workouts_empty),
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+                )
+            } else {
+                val firstExerciseName = latest.exercises.firstOrNull()?.name
+                val title = when {
+                    firstExerciseName == null -> stringResource(R.string.home_workout_fallback_title)
+                    latest.exerciseCount > 1 -> stringResource(R.string.home_workout_title_plus_more, firstExerciseName, latest.exerciseCount - 1)
+                    else -> firstExerciseName
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(AppColors.Calorie.copy(alpha = 0.06f))
+                        .padding(14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        // Green matches the "completed" / goal-reached tone used on the Progress tab.
+                        Text("SESSION COMPLETED", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFF34C759))
+                        Text(title, fontSize = 15.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                        val caloriesSuffix = latest.caloriesBurned?.let { " • $it kcal" }.orEmpty()
+                        Text(
+                            "Duration: ${latest.durationMinutes} mins$caloriesSuffix",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
+                    Icon(Icons.Filled.FitnessCenter, contentDescription = null, tint = AppColors.Calorie)
+                }
+            }
+        }
+    }
+}
+
+
+
+@Composable
+internal fun ActiveFastingRow(
     session: FastingSession,
     rowShape: RoundedCornerShape,
     onClick: () -> Unit
@@ -1360,7 +938,7 @@ private fun FastingEmojiTile() {
 }
 
 @Composable
-private fun FastingGoalDialog(
+internal fun FastingGoalDialog(
     title: String,
     initialMinutes: Int,
     confirmLabel: String,
@@ -1397,7 +975,7 @@ private fun FastingGoalDialog(
 }
 
 @Composable
-private fun FastingSessionDialog(
+internal fun FastingSessionDialog(
     session: FastingSession,
     onSave: (FastingSession) -> Unit,
     onEndNow: (FastingSession) -> Unit,
@@ -1655,7 +1233,7 @@ private fun DailyStepsRow(steps: Int) {
 }
 
 @Composable
-private fun CalorieHero(
+internal fun CalorieHero(
     current: Int,
     goal: Int,
     burnSummary: HomeBurnSummary? = null
@@ -1808,7 +1386,7 @@ private fun homeBurnLineText(summary: HomeBurnSummary): String {
 
 
 @Composable
-private fun ViewMoreButton() {
+internal fun ViewMoreButton() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -1833,7 +1411,7 @@ private fun ViewMoreButton() {
 // ── Section headers / cards / rows ──────────────────────────────────
 
 @Composable
-private fun SectionHeader(title: String) {
+internal fun HomeSectionHeader(title: String) {
     // iOS Section header in .insetGrouped List renders the title in sentence case
     // (no uppercase transform), bold, ~22sp on the iOS calorie/food page. Match that.
     Text(
@@ -1846,7 +1424,7 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun MealSectionHeader(
+internal fun MealSectionHeader(
     meal: MealType,
     totalCalories: Int? = null,
     totalProtein: Double = 0.0,
@@ -2121,7 +1699,7 @@ private fun mealIcon(meal: MealType): ImageVector = when (meal) {
     MealType.OTHER -> Icons.Filled.Restaurant
 }
 
-private fun sectionCardShape(isFirst: Boolean, isLast: Boolean): RoundedCornerShape {
+internal fun sectionCardShape(isFirst: Boolean, isLast: Boolean): RoundedCornerShape {
     // 22dp corners on the meal card matches the softer iOS look (was 14dp).
     return when {
         isFirst && isLast -> RoundedCornerShape(22.dp)
@@ -2132,7 +1710,7 @@ private fun sectionCardShape(isFirst: Boolean, isLast: Boolean): RoundedCornerSh
 }
 
 @Composable
-private fun SectionCardWrapper(
+internal fun SectionCardWrapper(
     isFirst: Boolean,
     isLast: Boolean,
     transparent: Boolean = false,
@@ -2149,7 +1727,7 @@ private fun SectionCardWrapper(
 }
 
 @Composable
-private fun Divider() {
+internal fun Divider() {
     Box(
         Modifier
             .padding(start = 102.dp, end = 14.dp)
@@ -2173,7 +1751,7 @@ private fun Divider() {
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun SwipeableFoodRow(
+internal fun SwipeableFoodRow(
     entry: FoodEntry,
     isFavorite: Boolean,
     rowShape: RoundedCornerShape,
@@ -2245,7 +1823,7 @@ private fun SwipeableFoodRow(
 
 
 @Composable
-private fun SwipeableWaterRow(
+internal fun SwipeableWaterRow(
     entry: WaterEntry,
     unit: WaterUnit,
     rowShape: RoundedCornerShape,
@@ -2284,7 +1862,7 @@ private fun SwipeableWaterRow(
 }
 
 @Composable
-private fun SwipeableFastingRow(
+internal fun SwipeableFastingRow(
     session: FastingSession,
     rowShape: RoundedCornerShape,
     onTap: () -> Unit,
@@ -2666,7 +2244,7 @@ private fun MacroChip(label: String, value: Double) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CopyFromDaySheet(
+internal fun CopyFromDaySheet(
     targetDate: LocalDate,
     allEntries: List<FoodEntry>,
     onCopy: (List<FoodEntry>) -> Unit,
@@ -2835,7 +2413,7 @@ private fun CopyFromDaySheet(
 // ── Dialogs (unchanged styling polish) ──────────────────────────────
 
 @Composable
-private fun AnalyzingOverlay(imageBytes: ByteArray? = null) {
+internal fun AnalyzingOverlay(imageBytes: ByteArray? = null) {
     // Verbatim port of ios/calorietracker/Views/AnalyzingView.swift:
     //   VStack { (image | text.magnifyingglass) → ProgressView(.large) → "Analyzing your food..." }
     //   filling the screen, opaque background, calorie-pink accents.

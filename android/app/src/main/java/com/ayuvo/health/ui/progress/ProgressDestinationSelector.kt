@@ -45,14 +45,17 @@ import androidx.compose.ui.unit.sp
 import com.ayuvo.health.R
 import com.ayuvo.health.ui.theme.AppColors
 
+import androidx.compose.material.icons.filled.Restaurant
+
 /**
- * The segments of the Health tab: the classic Progress charts, the Health Data hub and
- * Workouts (moved out of the tab bar when Records took its place).
+ * The segments of the Health tab: Food management flow, the classic Progress charts,
+ * the Health Data hub and Workouts.
  */
 enum class HealthTabDestination(
     @StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
+    FOOD(R.string.health_tab_food, Icons.Filled.Restaurant),
     PROGRESS(R.string.health_tab_progress, Icons.AutoMirrored.Filled.ShowChart),
     HEALTH_DATA(R.string.health_tab_data, Icons.Filled.MonitorHeart),
     WORKOUTS(R.string.nav_workouts, Icons.Filled.FitnessCenter)

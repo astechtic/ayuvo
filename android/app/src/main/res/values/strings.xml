@@ -363,6 +363,26 @@
         <item quantity="other">%1$s steps</item>
     </plurals>
 
+    <string name="home_summary_title">Summary</string>
+    <string name="home_highlights_title">Important Highlights</string>
+    <string name="home_highlights_subtitle">Lab &amp; Clinical Alerts</string>
+    <string name="home_highlights_none">No new alerts right now.</string>
+    <string name="home_highlights_empty">Add a medical record to see highlights here.</string>
+    <plurals name="home_highlights_pending">
+        <item quantity="one">%1$d Pending</item>
+        <item quantity="other">%1$d Pending</item>
+    </plurals>
+    <plurals name="home_review_all_records">
+        <item quantity="one">Review %1$d Medical Record</item>
+        <item quantity="other">Review All %1$d Medical Records</item>
+    </plurals>
+    <string name="home_workouts_empty">No workouts logged yet — tap to start one.</string>
+    <string name="home_workout_fallback_title">Workout</string>
+    <string name="home_workout_title_plus_more">%1$s +%2$d more</string>
+    <plurals name="home_workouts_logged">
+        <item quantity="one">%1$d Workout Logged</item>
+        <item quantity="other">%1$d Workouts Logged</item>
+    </plurals>
     <string name="home_add_food">Add food</string>
     <string name="home_menu_camera">Camera</string>
     <string name="home_menu_barcode">Barcode</string>
@@ -928,6 +948,7 @@
     <string name="support_subject_feedback">Ayuvo feedback</string>
     <string name="support_body_intro">Describe the problem or idea here:\n\n</string>
     <string name="nav_health">Health</string>
+    <string name="health_tab_food">Food</string>
     <string name="health_tab_progress">Progress</string>
     <string name="health_tab_data">Health Data</string>
     <string name="about_share_message">I track my whole health with Ayuvo — meals by photo, voice or text, workouts, sleep, heart, fasting and water, with an AI coach. Your data stays on your device.\n\nDownload: %1$s</string>
