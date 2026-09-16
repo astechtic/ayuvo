@@ -6,9 +6,25 @@ import UIKit
 @MainActor
 enum ShareSheetPresenter {
     static func present(url: URL, completion: (() -> Void)? = nil) {
-        let controller = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        present(urls: [url]) { _ in completion?() }
+    }
+
+    /// Several files at once (the Health Records share flow produces a summary plus originals).
+    /// `completion` receives the system's `completed` flag, so a cancelled share can be told from
+    /// a finished one (Health Records only counts a finished share).
+    static func present(urls: [URL], completion: ((Bool) -> Void)? = nil) {
+        present(items: urls, completion: completion)
+    }
+
+    /// Arbitrary activity items (Health Records sends the summary text alongside the files).
+    static func present(items: [Any], completion: ((Bool) -> Void)? = nil) {
+        guard !items.isEmpty else {
+            completion?(false)
+            return
+        }
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         if let completion {
-            controller.completionWithItemsHandler = { _, _, _, _ in completion() }
+            controller.completionWithItemsHandler = { _, completed, _, _ in completion(completed) }
         }
         guard let scene = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
@@ -17,7 +33,7 @@ enum ShareSheetPresenter {
               let window = scene.windows.first(where: { $0.isKeyWindow }) ?? scene.windows.first,
               var top = window.rootViewController
         else {
-            completion?()
+            completion?(false)
             return
         }
         while let presented = top.presentedViewController { top = presented }

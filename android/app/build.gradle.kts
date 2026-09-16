@@ -141,6 +141,14 @@ android {
                 "../../local-models/legal"
             )
         }
+        // docs/health-records.md §35.1: the shared `ayuvo-records` fixture archive both platforms
+        // import in tests, read straight from shared/ so it can never drift from the contract.
+        getByName("androidTest") {
+            assets.srcDirs(
+                "src/androidTest/assets",
+                "../../shared/records/fixtures"
+            )
+        }
     }
 }
 

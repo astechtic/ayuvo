@@ -46,6 +46,10 @@ nonisolated struct HealthRecord: Identifiable, Hashable, Sendable {
     var aiProvider: String?
     var typeConfidence: Double?
     var typeMethod: RecordFieldMethod?
+    // Schema v4 (migrations/004_sharing.sql, §33)
+    /// Times this record was included in a completed share.
+    var sharedCount: Int = 0
+    var lastSharedMs: Int64?
 
     /// Split child (shares the parent's file; the viewer shows `page_start…page_end`).
     var isSplitChild: Bool { parentID != nil && pageStart != nil }

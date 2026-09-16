@@ -310,6 +310,8 @@ struct RecordsPrivacyExplainer: View {
             explainerRow("icloud.slash", "Records are not included in Ayuvo's iCloud backup or your iPhone backup.")
             explainerRow("doc.on.doc", "The original file is kept exactly as you imported it.")
             explainerRow("square.and.arrow.up", "Sharing or exporting sends only the records you choose, where you choose.")
+            explainerRow("eye.slash", "Before you share, you can leave out pages and black out names, IDs and phone numbers. Redaction is best-effort, so always check the preview.")
+            explainerRow("archivebox", "A backup archive contains every record and original file. You decide where to keep it; Ayuvo never uploads it.")
             explainerRow("trash", "Deleting a record removes it and its file permanently. Delete All Data removes every record.")
         }
     }

@@ -117,7 +117,8 @@ class SnapshotCoachData(
                     category = r.s("category")?.let { RecordCategory.fromRaw(it) } ?: type.defaultCategory,
                     source = RecordSource.fromRaw(r.s("source")), importMethod = ImportMethod.FILE_PICKER,
                     createdMs = created, updatedMs = created, sortDate = r.s("sort_date") ?: "",
-                    mimeType = "", fileType = RecordFileType.OTHER, pageCount = (r.l("page_count") ?: 0L).toInt(),
+                    mimeType = "", fileType = RecordFileType.fromRaw(r.s("file_type")), pageCount = (r.l("page_count") ?: 0L).toInt(),
+                    filePath = r.s("file_path"), thumbnailPath = r.s("thumbnail_path"),
                     reviewStatus = ReviewStatus.fromRaw(r.s("review_status")), favorite = r.b("favorite"),
                     archived = r.b("archived"), notes = r.s("notes"), aiModeUsed = AiModeUsed.fromRaw(r.s("ai_mode_used"))
                 )

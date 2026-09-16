@@ -19,6 +19,8 @@ struct RecordDetailView: View {
     @State private var showDeleteConfirmation = false
     @State private var showFullScreenViewer = false
     @State private var exportItem: RecordExportItem?
+    /// §34 "What will be shared".
+    @State private var showShare = false
     @State private var newTag = ""
     @State private var showReview = false
     @State private var sourceTarget: RecordSourceTarget?
@@ -177,7 +179,8 @@ struct RecordDetailView: View {
                             Task { await store.reprocess(id: record.id) }
                         } label: { Label("Find details again", systemImage: "arrow.clockwise") }
                     }
-                    Button { export(record) } label: { Label("Export original", systemImage: "square.and.arrow.up") }
+                    Button { showShare = true } label: { Label("Share", systemImage: "square.and.arrow.up") }
+                    Button { export(record) } label: { Label("Export original", systemImage: "doc.badge.arrow.up") }
                     Button {
                         Task { await store.setArchived(ids: [record.id], !record.archived) }
                     } label: {
@@ -209,6 +212,9 @@ struct RecordDetailView: View {
         }
         .sheet(item: $duplicatePrompt) { prompt in
             RecordDuplicateSheet(prompt: prompt)
+        }
+        .sheet(isPresented: $showShare) {
+            ShareRecordScreen(recordIDs: [record.id])
         }
         .sheet(item: $exportItem, onDismiss: { exportItem?.cleanUp() }) { item in
             ActivityShareSheet(activityItems: [item.url])
@@ -425,12 +431,22 @@ struct RecordDetailView: View {
     private func actions(_ record: HealthRecord) -> some View {
         VStack(spacing: 10) {
             Button {
-                export(record)
+                showShare = true
             } label: {
-                Label("Export original", systemImage: "square.and.arrow.up")
+                Label("Share", systemImage: "square.and.arrow.up")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
+            .tint(AppColors.calorie)
+            .accessibilityIdentifier("records.detail.share")
+
+            Button {
+                export(record)
+            } label: {
+                Label("Export original", systemImage: "doc.badge.arrow.up")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
             .tint(AppColors.calorie)
             .accessibilityIdentifier("records.detail.export")
 

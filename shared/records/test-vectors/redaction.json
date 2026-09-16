@@ -1,0 +1,2553 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "classes": [
+          "name"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.53,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 10
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-main",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name"
+        ],
+        "op": "targets",
+        "record_id": "d-main",
+        "snapshot": "redact"
+      },
+      "name": "name_full_and_parts",
+      "notes": "The whole folded name and every part of >= 3 characters, as whole words of a line."
+    },
+    {
+      "expected": {
+        "classes": [
+          "name"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.06,
+                  0.13,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 2
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-short",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name"
+        ],
+        "op": "targets",
+        "record_id": "d-short",
+        "snapshot": "redact"
+      },
+      "name": "name_short_parts_ignored",
+      "notes": "'K' and 'R' are too short: 'Vitamin K 1.2 mg' is not redacted, 'Menon ...' is."
+    },
+    {
+      "expected": {
+        "classes": [
+          "address"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.23,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 4
+              },
+              {
+                "box": [
+                  0.06,
+                  0.28,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 5
+              },
+              {
+                "box": [
+                  0.06,
+                  0.33,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 6
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-main",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "address"
+        ],
+        "op": "targets",
+        "record_id": "d-main",
+        "snapshot": "redact"
+      },
+      "name": "address_block_stops_at_blank"
+    },
+    {
+      "expected": {
+        "classes": [
+          "address"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.13,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 2
+              },
+              {
+                "box": [
+                  0.06,
+                  0.18,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 3
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-addr",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "address"
+        ],
+        "op": "targets",
+        "record_id": "d-addr",
+        "snapshot": "redact"
+      },
+      "name": "address_block_max_four_lines"
+    },
+    {
+      "expected": {
+        "classes": [
+          "phone"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.13,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 2
+              },
+              {
+                "box": [
+                  0.06,
+                  0.38,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 7
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-phone",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "phone"
+        ],
+        "op": "targets",
+        "record_id": "d-phone",
+        "snapshot": "redact"
+      },
+      "name": "phone_number_variants",
+      "notes": "+91, (022) 2345-6789, a bare 10-digit run and any other 7..15 digit run (the invoice number too - the rule errs towards over-redaction) match; an ISO or a dotted numeric date and a 6-digit PIN do not. blocks_json is given as a string here."
+    },
+    {
+      "expected": {
+        "classes": [
+          "phone"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.23,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 4
+              },
+              {
+                "box": [
+                  0.06,
+                  0.28,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 5
+              },
+              {
+                "box": [
+                  0.06,
+                  0.33,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 6
+              },
+              {
+                "box": [
+                  0.06,
+                  0.38,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 7
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-lab",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "phone"
+        ],
+        "op": "targets",
+        "record_id": "d-lab",
+        "snapshot": "redact"
+      },
+      "name": "phone_spares_lab_result_lines",
+      "notes": "Result lines keep their values and ranges: a §13 lab row, a number + units.json unit and a bare printed range are never phone matches. A phone label always wins, even on a line that also carries a unit; a bare 10-digit id line and an unlabelled 8-digit run are still redacted."
+    },
+    {
+      "expected": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.23,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 4
+              },
+              {
+                "box": [
+                  0.06,
+                  0.28,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone",
+                  "patient_id"
+                ],
+                "index": 5
+              },
+              {
+                "box": [
+                  0.06,
+                  0.33,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 6
+              },
+              {
+                "box": [
+                  0.06,
+                  0.38,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 7
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-lab",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "op": "targets",
+        "record_id": "d-lab",
+        "snapshot": "redact"
+      },
+      "name": "lab_result_lines_all_classes",
+      "notes": "The same page with every class: the UHID line is caught by patient_id as well, the result lines stay readable."
+    },
+    {
+      "expected": {
+        "classes": [
+          "phone"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.13,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 2
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-phonelabel",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "phone"
+        ],
+        "op": "targets",
+        "record_id": "d-phonelabel",
+        "snapshot": "redact"
+      },
+      "name": "phone_labels_and_negatives",
+      "notes": "'Mobile:', 'Contact' and 'Ph No' are labels; 'Photometry' is not."
+    },
+    {
+      "expected": {
+        "classes": [
+          "patient_id"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "patient_id"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "patient_id"
+                ],
+                "index": 1
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-ids",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "patient_id"
+        ],
+        "op": "targets",
+        "record_id": "d-ids",
+        "snapshot": "redact"
+      },
+      "name": "patient_id_labels"
+    },
+    {
+      "expected": {
+        "classes": [
+          "insurance_id"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.13,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "insurance_id"
+                ],
+                "index": 2
+              },
+              {
+                "box": [
+                  0.06,
+                  0.18,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "insurance_id"
+                ],
+                "index": 3
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-ids",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "insurance_id"
+        ],
+        "op": "targets",
+        "record_id": "d-ids",
+        "snapshot": "redact"
+      },
+      "name": "insurance_id_labels"
+    },
+    {
+      "expected": {
+        "classes": [
+          "other_ids"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.18,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "other_ids"
+                ],
+                "index": 3
+              },
+              {
+                "box": [
+                  0.06,
+                  0.23,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "other_ids"
+                ],
+                "index": 4
+              },
+              {
+                "box": [
+                  0.06,
+                  0.28,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "other_ids"
+                ],
+                "index": 5
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-ids",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "other_ids"
+        ],
+        "op": "targets",
+        "record_id": "d-ids",
+        "snapshot": "redact"
+      },
+      "name": "other_ids_mixed_alnum",
+      "notes": "A word of >= 6 characters mixing letters and digits on a line that carries an id label."
+    },
+    {
+      "expected": {
+        "classes": [
+          "other_ids"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-nolabel",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "other_ids"
+        ],
+        "op": "targets",
+        "record_id": "d-nolabel",
+        "snapshot": "redact"
+      },
+      "name": "other_ids_need_a_label"
+    },
+    {
+      "expected": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone",
+                  "patient_id"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "patient_id"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.13,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "insurance_id"
+                ],
+                "index": 2
+              },
+              {
+                "box": [
+                  0.06,
+                  0.18,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "insurance_id",
+                  "other_ids"
+                ],
+                "index": 3
+              },
+              {
+                "box": [
+                  0.06,
+                  0.23,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "other_ids"
+                ],
+                "index": 4
+              },
+              {
+                "box": [
+                  0.06,
+                  0.28,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "other_ids"
+                ],
+                "index": 5
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-ids",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "op": "targets",
+        "record_id": "d-ids",
+        "snapshot": "redact"
+      },
+      "name": "all_classes_on_identifiers"
+    },
+    {
+      "expected": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.18,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "phone",
+                  "patient_id"
+                ],
+                "index": 3
+              },
+              {
+                "box": [
+                  0.06,
+                  0.23,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 4
+              },
+              {
+                "box": [
+                  0.06,
+                  0.28,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 5
+              },
+              {
+                "box": [
+                  0.06,
+                  0.33,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "address"
+                ],
+                "index": 6
+              },
+              {
+                "box": [
+                  0.06,
+                  0.53,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 10
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-main",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "op": "targets",
+        "record_id": "d-main",
+        "snapshot": "redact"
+      },
+      "name": "overlapping_classes",
+      "notes": "One line can carry several classes; they are listed in REDACTION_CLASSES order."
+    },
+    {
+      "expected": {
+        "classes": [],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-main",
+        "warnings": []
+      },
+      "input": {
+        "classes": [],
+        "op": "targets",
+        "record_id": "d-main",
+        "snapshot": "redact"
+      },
+      "name": "no_classes_selected"
+    },
+    {
+      "expected": {
+        "classes": [
+          "name"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.08,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 1
+              },
+              {
+                "box": [
+                  0.06,
+                  0.53,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 10
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-main",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name",
+          "tattoo"
+        ],
+        "op": "targets",
+        "record_id": "d-main",
+        "snapshot": "redact"
+      },
+      "name": "unknown_class_ignored"
+    },
+    {
+      "expected": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.0,
+                  0.0,
+                  0.52,
+                  0.06
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 0
+              },
+              {
+                "box": [
+                  0.48,
+                  0.94,
+                  0.52,
+                  0.06
+                ],
+                "classes": [
+                  "phone"
+                ],
+                "index": 1
+              }
+            ],
+            "page_index": 0
+          }
+        ],
+        "record_id": "d-edge",
+        "warnings": []
+      },
+      "input": {
+        "classes": [
+          "name",
+          "address",
+          "phone",
+          "patient_id",
+          "insurance_id",
+          "other_ids"
+        ],
+        "op": "targets",
+        "record_id": "d-edge",
+        "snapshot": "redact"
+      },
+      "name": "box_inflation_is_clamped"
+    },
+    {
+      "expected": {
+        "classes": [
+          "name"
+        ],
+        "excluded_pages": [
+          0
+        ],
+        "pages": [
+          {
+            "lines": [
+              {
+                "box": [
+                  0.06,
+                  0.03,
+                  0.64,
+                  0.07
+                ],
+                "classes": [
+                  "name"
+                ],
+                "index": 0
+              }
+            ],
+            "page_index": 1
+          }
+        ],
+        "record_id": "d-noblocks",
+        "warnings": [
+          {
+            "code": "page_not_redactable",
+            "page_index": 0,
+            "record_id": "d-noblocks",
+            "text": "Page 1 can't be redacted and was left out"
+          }
+        ]
+      },
+      "input": {
+        "classes": [
+          "name"
+        ],
+        "op": "targets",
+        "record_id": "d-noblocks",
+        "snapshot": "redact"
+      },
+      "name": "page_without_blocks_is_excluded",
+      "notes": "Page 1 has no blocks_json: excluded with the §34 warning; page 2 is still redactable."
+    },
+    {
+      "expected": {
+        "classes": [],
+        "excluded_pages": [],
+        "pages": [
+          {
+            "lines": [],
+            "page_index": 1
+          }
+        ],
+        "record_id": "d-noblocks",
+        "warnings": []
+      },
+      "input": {
+        "classes": [],
+        "op": "targets",
+        "record_id": "d-noblocks",
+        "snapshot": "redact"
+      },
+      "name": "page_without_blocks_but_no_classes"
+    },
+    {
+      "expected": {
+        "classes": [
+          "name"
+        ],
+        "excluded_pages": [
+          0
+        ],
+        "pages": [],
+        "record_id": "d-badbox",
+        "warnings": [
+          {
+            "code": "page_not_redactable",
+            "page_index": 0,
+            "record_id": "d-badbox",
+            "text": "Page 1 can't be redacted and was left out"
+          }
+        ]
+      },
+      "input": {
+        "classes": [
+          "name"
+        ],
+        "op": "targets",
+        "record_id": "d-badbox",
+        "snapshot": "redact"
+      },
+      "name": "page_with_unusable_box_is_excluded"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [
+              0
+            ],
+            "record_id": "d-main"
+          }
+        ],
+        "records": [
+          "d-main"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "d-main"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_clean_full_share",
+      "notes": "Whole document, no redaction: no warnings."
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [
+              0,
+              2
+            ],
+            "record_id": "d-plan"
+          }
+        ],
+        "records": [
+          "d-plan"
+        ],
+        "warnings": [
+          {
+            "code": "text_layer_lost",
+            "page_index": null,
+            "record_id": null,
+            "text": "Selected pages are shared as images"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {
+            "d-plan": [
+              0,
+              2
+            ]
+          },
+          "record_ids": [
+            "d-plan"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_page_subset_pdf",
+      "notes": "A page subset of a PDF loses the text layer on Android."
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [
+              0
+            ],
+            "record_id": "d-main"
+          }
+        ],
+        "records": [
+          "d-main"
+        ],
+        "warnings": [
+          {
+            "code": "redacted_text_layer_lost",
+            "page_index": null,
+            "record_id": null,
+            "text": "Redacted pages are shared as images"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "d-main"
+          ],
+          "redactions": [
+            "name",
+            "phone"
+          ],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_redacted_share"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [],
+            "record_id": "d-noblocks"
+          }
+        ],
+        "records": [
+          "d-noblocks"
+        ],
+        "warnings": [
+          {
+            "code": "page_not_redactable",
+            "page_index": 0,
+            "record_id": "d-noblocks",
+            "text": "Page 1 can't be redacted and was left out"
+          },
+          {
+            "code": "record_not_redactable",
+            "page_index": null,
+            "record_id": "d-noblocks",
+            "text": "No page of Photographed report can be redacted, so it was left out"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {
+            "d-noblocks": [
+              0
+            ]
+          },
+          "record_ids": [
+            "d-noblocks"
+          ],
+          "redactions": [
+            "name"
+          ],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_record_not_redactable"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [
+              1
+            ],
+            "record_id": "d-noblocks"
+          }
+        ],
+        "records": [
+          "d-noblocks"
+        ],
+        "warnings": [
+          {
+            "code": "page_not_redactable",
+            "page_index": 0,
+            "record_id": "d-noblocks",
+            "text": "Page 1 can't be redacted and was left out"
+          },
+          {
+            "code": "redacted_text_layer_lost",
+            "page_index": null,
+            "record_id": null,
+            "text": "Redacted pages are shared as images"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "d-noblocks"
+          ],
+          "redactions": [
+            "name"
+          ],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_partly_redactable"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [],
+            "record_id": "d-nofile"
+          }
+        ],
+        "records": [
+          "d-nofile"
+        ],
+        "warnings": [
+          {
+            "code": "no_original",
+            "page_index": null,
+            "record_id": "d-nofile",
+            "text": "The original file of Deleted original is missing and was left out"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "d-nofile"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_missing_original"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [
+              0
+            ],
+            "record_id": "d-main"
+          }
+        ],
+        "records": [
+          "d-main"
+        ],
+        "warnings": [
+          {
+            "code": "unknown_record",
+            "page_index": null,
+            "record_id": "gone",
+            "text": "A selected record is no longer available and was left out"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "gone",
+            "d-main"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_unknown_record"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [
+              0
+            ],
+            "record_id": "d-plan"
+          }
+        ],
+        "records": [
+          "d-plan"
+        ],
+        "warnings": [
+          {
+            "code": "page_missing",
+            "page_index": 7,
+            "record_id": "d-plan",
+            "text": "Page 8 of Discharge Summary doesn't exist and was left out"
+          },
+          {
+            "code": "text_layer_lost",
+            "page_index": null,
+            "record_id": null,
+            "text": "Selected pages are shared as images"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": true,
+          "include_summary": true,
+          "pages": {
+            "d-plan": [
+              0,
+              7
+            ]
+          },
+          "record_ids": [
+            "d-plan"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_page_missing"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [],
+            "record_id": "d-main"
+          }
+        ],
+        "records": [
+          "d-main"
+        ],
+        "warnings": [
+          {
+            "code": "nothing_to_share",
+            "page_index": null,
+            "record_id": null,
+            "text": "Nothing is selected to share"
+          }
+        ]
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": false,
+          "pages": {},
+          "record_ids": [
+            "d-main"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_nothing_to_share"
+    },
+    {
+      "expected": {
+        "pages": [
+          {
+            "pages": [],
+            "record_id": "d-main"
+          }
+        ],
+        "records": [
+          "d-main"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "op": "plan_warnings",
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "d-main"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "redact"
+      },
+      "name": "plan_warnings_summary_only"
+    }
+  ],
+  "fixtures": {
+    "snapshots": {
+      "redact": {
+        "fields": [
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-1",
+            "method": "rules",
+            "record_id": "d-main",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rohan Kumar Mehta"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-2",
+            "method": "rules",
+            "record_id": "d-short",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "K R Menon"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-3",
+            "method": "rules",
+            "record_id": "d-noblocks",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Asha Devi"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-4",
+            "method": "rules",
+            "record_id": "d-badbox",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rohan Kumar Mehta"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-5",
+            "method": "rules",
+            "record_id": "d-plan",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rohan Kumar Mehta"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-6",
+            "method": "rules",
+            "record_id": "d-edge",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rohan Kumar Mehta"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 0,
+            "field_key": "patient_name",
+            "id": "df-7",
+            "method": "rules",
+            "record_id": "d-lab",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rohan Kumar Mehta"
+          }
+        ],
+        "pages": [
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Sunrise Diagnostics and Research Centre"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Patient Name: Rohan Kumar Mehta"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "Age/Sex: 34 Y / M"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.2,
+                  0.6,
+                  0.03
+                ],
+                "t": "UHID: SD2026004417"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.25,
+                  0.6,
+                  0.03
+                ],
+                "t": "Address: 14 Nehru Road"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.3,
+                  0.6,
+                  0.03
+                ],
+                "t": "Andheri East"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.35,
+                  0.6,
+                  0.03
+                ],
+                "t": "Mumbai 400069"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.4,
+                  0.6,
+                  0.03
+                ],
+                "t": ""
+              },
+              {
+                "b": [
+                  0.08,
+                  0.45,
+                  0.6,
+                  0.03
+                ],
+                "t": "Reported On 2026-09-13"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.5,
+                  0.6,
+                  0.03
+                ],
+                "t": "Hemoglobin 7.6 g/dL"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.55,
+                  0.6,
+                  0.03
+                ],
+                "t": "Mehta reviewed the report"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-main",
+            "text": "Sunrise Diagnostics and Research Centre\nPatient Name: Rohan Kumar Mehta\nAge/Sex: 34 Y / M\nUHID: SD2026004417\nAddress: 14 Nehru Road\nAndheri East\nMumbai 400069\n\nReported On 2026-09-13\nHemoglobin 7.6 g/dL\nMehta reviewed the report"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Address: 14 Nehru Road"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Andheri East"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "Mumbai 400069"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.2,
+                  0.6,
+                  0.03
+                ],
+                "t": "Maharashtra"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.25,
+                  0.6,
+                  0.03
+                ],
+                "t": "India"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.3,
+                  0.6,
+                  0.03
+                ],
+                "t": "Hemoglobin 7.6 g/dL"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-addr",
+            "text": "Address: 14 Nehru Road\nAndheri East\nMumbai 400069\nMaharashtra\nIndia\nHemoglobin 7.6 g/dL"
+          },
+          {
+            "blocks_json": "[{\"t\":\"+91 98765 43210\",\"b\":[0.08,0.05,0.6,0.03]},{\"t\":\"(022) 2345-6789\",\"b\":[0.08,0.1,0.6,0.03]},{\"t\":\"9876543210\",\"b\":[0.08,0.15,0.6,0.03]},{\"t\":\"Reported On 2026-09-13\",\"b\":[0.08,0.2,0.6,0.03]},{\"t\":\"Collected 12/09/2026\",\"b\":[0.08,0.25,0.6,0.03]},{\"t\":\"Mumbai 400069\",\"b\":[0.08,0.3,0.6,0.03]},{\"t\":\"Hemoglobin 7.6 g/dL\",\"b\":[0.08,0.35,0.6,0.03]},{\"t\":\"Invoice 1234567\",\"b\":[0.08,0.4,0.6,0.03]}]",
+            "page_index": 0,
+            "record_id": "d-phone",
+            "text": "+91 98765 43210\n(022) 2345-6789\n9876543210\nReported On 2026-09-13\nCollected 12/09/2026\nMumbai 400069\nHemoglobin 7.6 g/dL\nInvoice 1234567"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Mobile: on file"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Contact the lab for a reprint"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "Ph No: 22 2345 6789"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.2,
+                  0.6,
+                  0.03
+                ],
+                "t": "Photometry method"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-phonelabel",
+            "text": "Mobile: on file\nContact the lab for a reprint\nPh No: 22 2345 6789\nPhotometry method"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "UHID: SD2026004417"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "MRN 88231 / Reg No 4471-B"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "Policy No: HDFC-ERGO-99231"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.2,
+                  0.6,
+                  0.03
+                ],
+                "t": "Member ID: MEM4471X  Claim No CLM00871"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.25,
+                  0.6,
+                  0.03
+                ],
+                "t": "Sample ID: LAB2026X7741"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.3,
+                  0.6,
+                  0.03
+                ],
+                "t": "Ref: AB12345"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.35,
+                  0.6,
+                  0.03
+                ],
+                "t": "Hemoglobin 7.6 g/dL"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-ids",
+            "text": "UHID: SD2026004417\nMRN 88231 / Reg No 4471-B\nPolicy No: HDFC-ERGO-99231\nMember ID: MEM4471X  Claim No CLM00871\nSample ID: LAB2026X7741\nRef: AB12345\nHemoglobin 7.6 g/dL"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Hemoglobin A1C12345"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Vitamin B12 value 412"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-nolabel",
+            "text": "Hemoglobin A1C12345\nVitamin B12 value 412"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Patient Name: K R Menon"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Vitamin K 1.2 mg"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "Menon signed the consent"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-short",
+            "text": "Patient Name: K R Menon\nVitamin K 1.2 mg\nMenon signed the consent"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.0,
+                  0.0,
+                  0.5,
+                  0.04
+                ],
+                "t": "Rohan Kumar Mehta"
+              },
+              {
+                "b": [
+                  0.5,
+                  0.96,
+                  0.5,
+                  0.04
+                ],
+                "t": "Mobile 9876543210"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-edge",
+            "text": "Top left line\nBottom right line"
+          },
+          {
+            "page_index": 0,
+            "record_id": "d-noblocks",
+            "text": "Patient Name: Asha Devi"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Patient Name: Asha Devi"
+              }
+            ],
+            "page_index": 1,
+            "record_id": "d-noblocks",
+            "text": "Patient Name: Asha Devi"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Sunrise Diagnostics and Research Centre"
+              },
+              {
+                "t": "Patient Name: Rohan Kumar Mehta"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "Age/Sex: 34 Y / M"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-badbox",
+            "text": "Sunrise Diagnostics and Research Centre\nPatient Name: Rohan Kumar Mehta\nAge/Sex: 34 Y / M"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Patient Name: Rohan Kumar Mehta"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Discharge summary"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-plan",
+            "text": "Patient Name: Rohan Kumar Mehta"
+          },
+          {
+            "page_index": 1,
+            "record_id": "d-plan",
+            "text": "Course in hospital"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Advice on discharge"
+              }
+            ],
+            "page_index": 2,
+            "record_id": "d-plan",
+            "text": "Advice on discharge"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Nothing here"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-nofile",
+            "text": "Nothing here"
+          },
+          {
+            "blocks_json": [
+              {
+                "b": [
+                  0.08,
+                  0.05,
+                  0.6,
+                  0.03
+                ],
+                "t": "Total WBC Count  8200 /cumm  4000 - 11000"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.1,
+                  0.6,
+                  0.03
+                ],
+                "t": "Absolute Eosinophil Count  1234567  40 - 440 /cumm"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.15,
+                  0.6,
+                  0.03
+                ],
+                "t": "4000 - 11000"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.2,
+                  0.6,
+                  0.03
+                ],
+                "t": "Platelet Count  96 10^3/uL  1.5-4.1"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.25,
+                  0.6,
+                  0.03
+                ],
+                "t": "Mobile: 9876543210"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.3,
+                  0.6,
+                  0.03
+                ],
+                "t": "UHID 9876543210"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.35,
+                  0.6,
+                  0.03
+                ],
+                "t": "Mobile 9876543210  Hemoglobin 7.6 g/dL"
+              },
+              {
+                "b": [
+                  0.08,
+                  0.4,
+                  0.6,
+                  0.03
+                ],
+                "t": "Sample received 12345678"
+              }
+            ],
+            "page_index": 0,
+            "record_id": "d-lab",
+            "text": "Total WBC Count  8200 /cumm  4000 - 11000\nAbsolute Eosinophil Count  1234567  40 - 440 /cumm\n4000 - 11000\nPlatelet Count  96 10^3/uL  1.5-4.1\nMobile: 9876543210\nUHID 9876543210\nMobile 9876543210  Hemoglobin 7.6 g/dL\nSample received 12345678"
+          }
+        ],
+        "records": [
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "file_path": "d-main/original.pdf",
+            "file_type": "pdf",
+            "id": "d-main",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Blood Report"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-addr",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Address page"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-phone",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Phone numbers"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-phonelabel",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Phone labels"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-ids",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Identifiers"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-nolabel",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Unlabelled ids"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-short",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Short name parts"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-edge",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Edge boxes"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "d-lab",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "CBC result lines"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "imaging",
+            "created_ms": 1000,
+            "favorite": 0,
+            "file_path": "d-noblocks/original.jpg",
+            "file_type": "image",
+            "id": "d-noblocks",
+            "page_count": 2,
+            "record_type": "imaging_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-12",
+            "source": "import",
+            "title": "Photographed report"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "file_path": "d-badbox/original.pdf",
+            "file_type": "pdf",
+            "id": "d-badbox",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-11",
+            "source": "import",
+            "title": "Report without boxes"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "hospitalization",
+            "created_ms": 1000,
+            "favorite": 0,
+            "file_path": "d-plan/original.pdf",
+            "file_type": "pdf",
+            "id": "d-plan",
+            "page_count": 3,
+            "record_type": "discharge_summary",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-10",
+            "source": "import",
+            "title": "Discharge Summary"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 1000,
+            "favorite": 0,
+            "file_type": "pdf",
+            "id": "d-nofile",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-09-09",
+            "source": "import",
+            "title": "Deleted original"
+          }
+        ]
+      }
+    }
+  },
+  "format": "ayuvo-records-vectors",
+  "function": "redaction",
+  "version": 1
+}

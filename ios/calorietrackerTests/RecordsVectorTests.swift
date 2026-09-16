@@ -18,7 +18,11 @@ struct RecordsVectorTests {
             .map { String($0.dropLast(5)) }
         #expect(!names.isEmpty)
         for name in names.sorted() {
-            #expect(Self.vectorFiles.contains(name) || RecordsCoachVectorTests.files.contains(name), "no Swift runner for test-vectors/\(name).json")
+            #expect(
+                Self.vectorFiles.contains(name) || RecordsCoachVectorTests.files.contains(name)
+                    || RecordsShareVectorTests.files.contains(name),
+                "no Swift runner for test-vectors/\(name).json"
+            )
         }
     }
 
@@ -113,7 +117,7 @@ struct RecordsVectorTests {
     /// Migration statement splitting (§8) matches the reference rule on both shared SQL files.
     @Test func statementSplittingFollowsContract() throws {
         let root = HealthTestFixtures.repoRootURL.appendingPathComponent("shared/records")
-        for file in ["schema.sql", "migrations/002_intelligence.sql", "migrations/003_knowledge.sql"] {
+        for file in ["schema.sql", "migrations/002_intelligence.sql", "migrations/003_knowledge.sql", "migrations/004_sharing.sql"] {
             let sql = try String(contentsOf: root.appendingPathComponent(file), encoding: .utf8)
             #expect(RecordsSchema.parseStatementsStrict(sql) != nil, "\(file) has text after the last ;")
         }

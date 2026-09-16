@@ -31,6 +31,8 @@ struct RecordsHomeView: View {
     @State private var isSelecting = false
     @State private var selection: Set<String> = []
     @State private var showBulkDeleteConfirmation = false
+    /// Non-empty while the §34 "What will be shared" sheet is open.
+    @State private var shareSelection: [String] = []
 
     private let gridColumns = [GridItem(.adaptive(minimum: 104, maximum: 160), spacing: 12)]
 
@@ -147,6 +149,9 @@ struct RecordsHomeView: View {
         }
         .sheet(item: Binding(get: { store.duplicatePrompts.first }, set: { _ in })) { prompt in
             RecordDuplicateSheet(prompt: prompt)
+        }
+        .sheet(isPresented: Binding(get: { !shareSelection.isEmpty }, set: { if !$0 { shareSelection = [] } })) {
+            ShareRecordScreen(recordIDs: shareSelection) { endSelection() }
         }
         .sheet(isPresented: $showPrivacy) {
             NavigationStack {
@@ -775,6 +780,13 @@ struct RecordsHomeView: View {
                 Label("Ask Coach", systemImage: "bubble.left.and.text.bubble.right")
             }
             .accessibilityIdentifier("records.selection.askCoach")
+            Spacer()
+            Button {
+                shareSelection = Array(selection).sorted()
+            } label: {
+                Label("Share", systemImage: "square.and.arrow.up")
+            }
+            .accessibilityIdentifier("records.selection.share")
             Spacer()
             Button(role: .destructive) {
                 showBulkDeleteConfirmation = true

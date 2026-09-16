@@ -35,7 +35,7 @@ object RecordsVectors {
     private val fields by lazy { FieldExtractor(config, units) }
     private val labRows by lazy { LabRowParser(units) }
     private val boundaries by lazy { BoundaryDetector(classifier, units) }
-    private val catalog by lazy { units; AnalyteCatalog.parse(RecordsTestFiles.shared("analytes.json")!!.readText(), units) }
+    val catalog by lazy { units; AnalyteCatalog.parse(RecordsTestFiles.shared("analytes.json")!!.readText(), units) }
 
     data class Outcome(val file: String, val passed: Int, val total: Int, val failures: List<String>)
 
@@ -291,7 +291,7 @@ object RecordsVectors {
                 else -> error("coach_prompt op")
             }
         }
-        else -> error("unknown function $function")
+        else -> com.ayuvo.health.records.share.RecordsPhase5Vectors.runCase(function, input, catalog)
     }
 
     val coachContract by lazy {

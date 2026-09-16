@@ -6,7 +6,7 @@ import Foundation
 /// statement-for-statement and column-for-column. A fresh install runs v1 then each migration.
 nonisolated enum RecordsSchema {
     /// Latest `PRAGMA user_version` / `records_meta.schema_version`.
-    static let schemaVersion = 3
+    static let schemaVersion = 4
     static let baseVersion = 1
 
     nonisolated struct Migration: Sendable {
@@ -20,6 +20,7 @@ nonisolated enum RecordsSchema {
         "records", "record_pages", "tags", "record_tags", "records_fts", "records_meta",
         "record_fields", "record_highlights", "processing_jobs", "duplicate_candidates", "split_proposals",
         "observations", "analyte_user_aliases", "entities", "record_entities", "record_links",
+        "records_backup_state",
     ]
 
     static let indexNames: [String] = [
@@ -177,6 +178,15 @@ nonisolated enum RecordsSchema {
               PRIMARY KEY (a_id, b_id))
             """,
             "CREATE INDEX idx_record_links_b ON record_links(b_id)",
+        ]),
+        Migration(version: 4, fileName: "004_sharing.sql", statements: [
+            "ALTER TABLE records ADD COLUMN shared_count INTEGER NOT NULL DEFAULT 0",
+            "ALTER TABLE records ADD COLUMN last_shared_ms INTEGER",
+            """
+            CREATE TABLE records_backup_state (
+              key TEXT PRIMARY KEY NOT NULL,
+              value TEXT NOT NULL)
+            """,
         ]),
     ]
 

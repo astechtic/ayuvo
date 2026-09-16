@@ -252,6 +252,37 @@ interface RecordsStore {
     /** Record ids with any promoted knowledge missing (v2 backfill). */
     suspend fun recordIdsNeedingKnowledge(): List<String>
 
+    // -- Phase 5: sharing & backup (§33–§37) -----------------------------------
+
+    /** One `records_backup_state` value (§33), or null. */
+    suspend fun backupState(key: String): String?
+    suspend fun setBackupState(key: String, value: String)
+    suspend fun backupStateAll(): Map<String, String>
+
+    /** §34: `shared_count` + 1 and `last_shared_ms` after a successful share. */
+    suspend fun markShared(ids: Collection<String>, nowMs: Long = System.currentTimeMillis())
+
+    /** Stored files of every record (storage sizing, thumbnail rebuild). */
+    suspend fun fileRefs(): List<RecordFileRef>
+
+    /**
+     * A durable "records changed since" marker (§36 `drive_last_revision`): the newest `updated_ms`
+     * folded with the row count, so a deletion also moves it.
+     */
+    suspend fun contentRevision(): Long
+
+    /** Total `record_pages` rows (§37 storage counts). */
+    suspend fun pageCount(): Long
+
+    /** §37 "Rebuild search index": rebuilds every FTS row; returns how many records were indexed. */
+    suspend fun reindexAll(): Int
+
+    /** §35 Replace / Delete All: removes every record row, derived row and file. */
+    suspend fun deleteAllRecords()
+
+    /** Bumps [revision] so screens re-query after an out-of-store write (archive import). */
+    fun bumpRevision()
+
     fun close()
 
     companion object {

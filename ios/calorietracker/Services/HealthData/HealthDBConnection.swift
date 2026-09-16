@@ -231,6 +231,11 @@ nonisolated final class HealthDBStatement {
         sqlite3_column_type(handle, index) == SQLITE_NULL
     }
 
+    /// `SQLITE_INTEGER` / `SQLITE_FLOAT` / `SQLITE_TEXT` / `SQLITE_BLOB` / `SQLITE_NULL`.
+    func columnType(_ index: Int32) -> Int32 {
+        sqlite3_column_type(handle, index)
+    }
+
     func int64(_ index: Int32) -> Int64? {
         isNull(index) ? nil : sqlite3_column_int64(handle, index)
     }

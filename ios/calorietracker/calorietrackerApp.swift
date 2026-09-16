@@ -148,12 +148,14 @@ struct calorietrackerApp: App {
                 // Items shared while Ayuvo was not running.
                 await recordsStore.drainInbox()
                 await importRecordsFixtureIfRequested()
+                await importRecordsArchiveIfRequested()
                 // Health Records processing: resume unfinished jobs (and the one-time Phase 1 backfill).
                 if hasCompletedOnboarding { await recordsStore.resumeProcessing() }
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
+                Task { await exportRecordsArchiveIfRequested() }
                 Task { await cloudBackupService.autoBackupIfNeeded() }
                 healthDataStore.sceneDidEnterBackground()
             }
@@ -417,6 +419,40 @@ struct calorietrackerApp: App {
         await recordsStore.importItems(urls.map {
             RecordImportItem(payload: .file($0), source: .import, importMethod: .filePicker, originalFilename: $0.lastPathComponent)
         }, announce: false)
+        #endif
+    }
+
+    /// Debug / UI-test hook: `-ayuvoRecordsArchive <absolute path>` restores an `ayuvo-records`
+    /// archive through the regular §35 importer (`-ayuvoRecordsArchiveMode replace` for Replace),
+    /// so the export → Delete All Data → restore walk can run without the Files picker.
+    /// Compiled out of release builds.
+    private func importRecordsArchiveIfRequested() async {
+        #if DEBUG
+        let arguments = CommandLine.arguments
+        guard let index = arguments.firstIndex(of: "-ayuvoRecordsArchive"), arguments.indices.contains(index + 1) else { return }
+        let url = URL(fileURLWithPath: arguments[index + 1])
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+        var mode = RecordsImportMode.merge
+        if let modeIndex = arguments.firstIndex(of: "-ayuvoRecordsArchiveMode"), arguments.indices.contains(modeIndex + 1),
+           let parsed = RecordsImportMode(rawValue: arguments[modeIndex + 1]) {
+            mode = parsed
+        }
+        _ = await recordsStore.importArchive(url: url, mode: mode) { _ in }
+        #endif
+    }
+
+    /// Debug / UI-test hook: `-ayuvoRecordsArchiveOut <absolute path>` writes an `ayuvo-records`
+    /// archive of the current store to that path (the §35 exporter), so a UI test can restore it
+    /// in a later launch. Compiled out of release builds.
+    private func exportRecordsArchiveIfRequested() async {
+        #if DEBUG
+        let arguments = CommandLine.arguments
+        guard let index = arguments.firstIndex(of: "-ayuvoRecordsArchiveOut"), arguments.indices.contains(index + 1) else { return }
+        let destination = URL(fileURLWithPath: arguments[index + 1])
+        guard let repository = await recordsStore.openIfNeeded() else { return }
+        try? FileManager.default.createDirectory(at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let exporter = RecordsArchiveExporter(database: repository.database, files: repository.files)
+        _ = try? await exporter.export(to: destination, includeFiles: true, appVersion: RecordsStore.appVersionString)
         #endif
     }
 

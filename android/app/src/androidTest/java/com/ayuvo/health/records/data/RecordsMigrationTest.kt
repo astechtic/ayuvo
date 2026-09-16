@@ -173,7 +173,7 @@ class RecordsMigrationTest {
         val store = SqliteRecordsStore(helper, RecordFileStore(File(tempRoot, "f"), File(tempRoot, "r"), File(tempRoot, "s")))
         try {
             val db = helper.writableDatabase
-            assertEquals(3, db.version)
+            assertEquals(RecordsSchema.VERSION, db.version)
             val tables = mutableSetOf<String>()
             db.rawQuery("SELECT name FROM sqlite_master WHERE type IN ('table', 'index')", null).use { c -> while (c.moveToNext()) tables += c.getString(0) }
             assertTrue(tables.containsAll(listOf("observations", "analyte_user_aliases", "entities", "record_entities", "record_links")))
@@ -194,7 +194,117 @@ class RecordsMigrationTest {
             assertTrue(store.recordIdsNeedingKnowledge().isEmpty())
             db.rawQuery("SELECT value FROM records_meta WHERE key = 'schema_version'", null).use { c ->
                 assertTrue(c.moveToFirst())
-                assertEquals("3", c.getString(0))
+                assertEquals(RecordsSchema.VERSION.toString(), c.getString(0))
+            }
+        } finally {
+            store.close()
+        }
+    }
+
+    /**
+     * A v3 database with records, pages, fields, observations, entities and links upgrades to v4
+     * (docs §33) keeping every row; the new share columns default and `records_backup_state` exists.
+     */
+    @Test
+    fun upgradeFromV3KeepsDataAndAddsSharingSchema() = runBlocking {
+        val path = context.getDatabasePath(DB).apply { parentFile?.mkdirs() }
+        val id = UUID.randomUUID().toString()
+        val other = UUID.randomUUID().toString()
+        SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
+            db.beginTransaction()
+            try {
+                RecordsSchema.STATEMENTS.forEach(db::execSQL)
+                RecordsSchema.MIGRATION_002.forEach(db::execSQL)
+                RecordsSchema.MIGRATION_003.forEach(db::execSQL)
+                db.execSQL("INSERT INTO records_meta(key, value) VALUES ('schema_version', '3')")
+                for ((rid, title, date) in listOf(
+                    Triple(id, "Complete Blood Count", "2026-09-12"),
+                    Triple(other, "Prescription", "2026-09-14")
+                )) {
+                    db.insertOrThrow("records", null, ContentValues().apply {
+                        put("id", rid)
+                        put("title", title)
+                        put("record_type", "lab_report")
+                        put("category", "lab_reports")
+                        put("source", "import")
+                        put("import_method", "file_picker")
+                        put("created_ms", 1_000L)
+                        put("updated_ms", 1_000L)
+                        put("sort_date", date)
+                        put("document_date", date)
+                        put("mime_type", "application/pdf")
+                        put("file_type", "pdf")
+                        put("processing_status", "ready")
+                        put("ai_mode_used", "none")
+                        put("notes", "fasting sample")
+                    })
+                }
+                db.execSQL("INSERT INTO record_pages(record_id, page_index, text, text_source) VALUES (?, 0, 'Hemoglobin 7.6 g/dL', 'pdf_text')", arrayOf(id))
+                db.insertOrThrow("record_fields", null, ContentValues().apply {
+                    put("id", "f1")
+                    put("record_id", id)
+                    put("field_key", "test_result")
+                    put("value_text", "Hemoglobin")
+                    put("value_json", """{"name":"Hemoglobin","value":"7.6","value_num":7.6,"unit":"g/dL","flag":"low"}""")
+                    put("method", "rules")
+                    put("confidence", 0.9)
+                    put("state", "confirmed")
+                    put("source_page", 0)
+                    put("created_ms", 1_000L)
+                    put("updated_ms", 1_000L)
+                })
+                db.execSQL(
+                    "INSERT INTO observations(id, record_id, field_id, raw_name, value_text, flag, method, state, created_ms, updated_ms) " +
+                        "VALUES ('o1', ?, 'f1', 'Hemoglobin', '7.6', 'low', 'rules', 'confirmed', 1000, 1000)",
+                    arrayOf(id)
+                )
+                db.execSQL("INSERT INTO entities(id, kind, display_name, normalized_name, created_ms, updated_ms) VALUES ('e1', 'doctor', 'Anjali Mehta', 'anjali mehta', 1000, 1000)")
+                db.execSQL("INSERT INTO record_entities(record_id, entity_id, role) VALUES (?, 'e1', 'doctor')", arrayOf(id))
+                val (a, b) = listOf(id, other).sorted()
+                db.execSQL(
+                    "INSERT INTO record_links(a_id, b_id, kind, origin, status, score, created_ms, updated_ms) VALUES (?, ?, 'previous_report', 'user', 'accepted', 1.0, 1000, 1000)",
+                    arrayOf(a, b)
+                )
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
+            }
+            db.version = 3
+        }
+        val helper = RecordsDatabase(context, DB)
+        val store = SqliteRecordsStore(helper, RecordFileStore(File(tempRoot, "f"), File(tempRoot, "r"), File(tempRoot, "s")))
+        try {
+            val db = helper.writableDatabase
+            assertEquals(4, db.version)
+            assertEquals(RecordsSchema.VERSION, db.version)
+            val tables = mutableSetOf<String>()
+            db.rawQuery("SELECT name FROM sqlite_master WHERE type IN ('table', 'index')", null).use { c -> while (c.moveToNext()) tables += c.getString(0) }
+            assertTrue(tables.contains("records_backup_state"))
+            assertTrue(tables.containsAll(RecordsSchema.MIGRATION_TABLES))
+            // Every v3 row survives, and the new columns take their defaults.
+            val record = store.record(id)!!
+            assertEquals("Complete Blood Count", record.title)
+            assertEquals("fasting sample", record.notes)
+            assertEquals(0, record.sharedCount)
+            assertEquals(null, record.lastSharedMs)
+            assertEquals(1, store.pages(id).size)
+            assertEquals(1, store.fields(id).size)
+            assertEquals(listOf("7.6"), store.observations(id).map { it.valueText })
+            assertEquals(listOf("anjali mehta"), store.recordEntities(id).map { it.first.normalizedName })
+            assertEquals(1, store.links(id).size)
+            // v4 state table round-trips.
+            assertEquals(null, store.backupState(RecordsBackupKeys.LAST_ARCHIVE_MS))
+            store.setBackupState(RecordsBackupKeys.LAST_ARCHIVE_MS, "1700000000000")
+            assertEquals("1700000000000", store.backupState(RecordsBackupKeys.LAST_ARCHIVE_MS))
+            // §34 share bookkeeping.
+            store.markShared(listOf(id), 1_700_000_000_000L)
+            store.markShared(listOf(id), 1_700_000_001_000L)
+            val shared = store.record(id)!!
+            assertEquals(2, shared.sharedCount)
+            assertEquals(1_700_000_001_000L, shared.lastSharedMs)
+            db.rawQuery("SELECT value FROM records_meta WHERE key = 'schema_version'", null).use { c ->
+                assertTrue(c.moveToFirst())
+                assertEquals("4", c.getString(0))
             }
         } finally {
             store.close()
@@ -210,7 +320,10 @@ class RecordsMigrationTest {
             val columns = mutableListOf<String>()
             db.rawQuery("PRAGMA table_info(records)", null).use { c -> while (c.moveToNext()) columns += c.getString(1) }
             assertTrue(columns.containsAll(listOf("phash", "text_signature", "ai_mode_used", "ai_provider", "type_confidence", "type_method")))
-            assertEquals(SqliteRecordsStore.COLUMNS.split(',').map { it.trim() }, columns.take(SqliteRecordsStore.COLUMN_COUNT - 1) + "ai_mode_used")
+            assertTrue(columns.containsAll(listOf("shared_count", "last_shared_ms")))
+            // Every projected column exists, in the declared order of the base table first.
+            assertEquals(columns.take(31), SqliteRecordsStore.BASE_COLUMNS.split(',').map { it.trim() })
+            assertTrue(columns.containsAll(SqliteRecordsStore.COLUMNS.split(',').map { it.trim() }))
         } finally {
             helper.close()
         }

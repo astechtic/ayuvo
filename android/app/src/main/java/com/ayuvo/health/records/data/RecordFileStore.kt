@@ -85,8 +85,34 @@ class RecordFileStore(val root: File, val renderCache: File, val shareDir: File)
 
     /** A fresh share copy directory (old copies are removed first). */
     fun freshShareDir(): File {
+        runCatching { File(shareDir, EXPORT_DIR).deleteRecursively() }
+        return File(shareDir, EXPORT_DIR).apply { mkdirs() }
+    }
+
+    /** A fresh folder for one §34 share build (previous builds are removed). */
+    fun freshShareBuildDir(): File {
+        runCatching { File(shareDir, BUILD_DIR).deleteRecursively() }
+        return File(shareDir, BUILD_DIR).apply { mkdirs() }
+    }
+
+    /** Where `ayuvo-records` archives are written before the share sheet (§35, §37 "Backups"). */
+    fun archiveDir(): File = File(shareDir, ARCHIVE_DIR).apply { mkdirs() }
+
+    fun archiveBytes(): Long = File(shareDir, ARCHIVE_DIR).walkTopDown().filter { it.isFile }.sumOf { it.length() }
+
+    /** §34/§35 temp cleanup: everything under the share folder, run once on the next launch. */
+    fun clearShareTemp() {
         runCatching { shareDir.deleteRecursively() }
-        return shareDir.apply { mkdirs() }
+    }
+
+    fun shareTempBytes(): Long = shareDir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+
+    fun renderCacheBytes(): Long = renderCache.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+
+    /** §37 "Clear generated cache": page renders and share temp files; originals are untouched. */
+    fun clearGeneratedCache() {
+        runCatching { renderCache.deleteRecursively() }
+        clearShareTemp()
     }
 
     private fun safeId(id: String): String {
@@ -98,6 +124,12 @@ class RecordFileStore(val root: File, val renderCache: File, val shareDir: File)
         const val ROOT_DIR = "ayuvo-records"
         const val RENDER_DIR = "records-render"
         const val SHARE_DIR = "records-share"
+        /** "Export original" copies. */
+        const val EXPORT_DIR = "export"
+        /** §34 produced share files. */
+        const val BUILD_DIR = "build"
+        /** §35 archives waiting for the share sheet. */
+        const val ARCHIVE_DIR = "archives"
         const val THUMB_NAME = "thumb.jpg"
         const val THUMB_MAX_DIMENSION = 320
     }

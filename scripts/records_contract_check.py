@@ -20,15 +20,21 @@ Checks:
      ai_extraction.md carries both prompt variants and the placeholders.
   5. schema.sql and migrations/*.sql split into statements with statements(path) (rule in
      docs/health-records.md §8).
-  6. A small unittest suite for the helpers.
+  6. shared/records/fixtures/ayuvo-records-fixture.zip (§35): entry order, every entry's bytes against
+     archive_manifest/archive_rows, checksums.json, a read + merge round trip, and the 200 KB cap.
+     --write rebuilds it from the "fixture" snapshot of archive.json (byte-deterministic).
+  7. A small unittest suite for the helpers.
 """
 
 import glob
+import hashlib
 import json
 import os
 import re
 import sys
 import unittest
+import zipfile
+import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -47,10 +53,19 @@ EXPECTED_FILES = {
     "relations.json": "suggest_relations",
     "coach_tools_payloads.json": "coach_tools", "coach_context.json": "pack_coach_records",
     "coach_prompt.json": "coach_prompt",
+    "share_summary.json": "share_summary", "redaction.json": "redaction", "archive.json": "archive",
 }
-# Phase 4 vector files may carry top-level "fixtures": {"snapshots": {name: snapshot}}; a case input whose
+# Phase 4/5 vector files may carry top-level "fixtures": {"snapshots": {name: snapshot}}; a case input whose
 # "snapshot" is a string names one of them (ports resolve it the same way before running the case).
-FIXTURE_FILES = frozenset(["coach_tools_payloads.json", "coach_context.json", "coach_prompt.json"])
+FIXTURE_FILES = frozenset(["coach_tools_payloads.json", "coach_context.json", "coach_prompt.json",
+                           "share_summary.json", "redaction.json", "archive.json"])
+# The §35 fixture archive: built from the "fixture" snapshot of archive.json plus the file blobs below.
+FIXTURE_ARCHIVE = os.path.join(SHARED, "fixtures", "ayuvo-records-fixture.zip")
+FIXTURE_SNAPSHOT = "fixture"
+FIXTURE_MANIFEST = {"platform": "android", "app_version": "1.4", "created_ms": 1757462400000,
+                    "time_zone": "Asia/Kolkata"}
+FIXTURE_ZIP_DATE = (2026, 1, 1, 0, 0, 0)
+FIXTURE_MAX_BYTES = 200 * 1024
 
 
 def resolve_input(doc, inp):
@@ -554,8 +569,108 @@ def _check_coach_tools_shape(exp, where, problems, inp):
         problems.append("%s: payload escapes the selected records" % where)
 
 
+_ARCHIVE_WARNING_CODES = frozenset(R.ARCHIVE_READ_WARNINGS)
+_SHARE_WARNING_CODES = frozenset(R.SHARE_WARNINGS)
+
+
+def _check_share_summary_shape(exp, where, problems, inp):
+    if set(exp) != {"text", "record_ids"} or (exp["text"] is None) != (not exp["record_ids"]):
+        problems.append("%s: bad share summary payload" % where)
+        return
+    if exp["text"] is None:
+        return
+    if not exp["text"].endswith(R.SHARE_FOOTER) or exp["text"].count(R.SHARE_FOOTER) != 1:
+        problems.append("%s: the summary must end with the share footer exactly once" % where)
+    if exp["text"].count(R.SHARE_SEPARATOR) != len(exp["record_ids"]) - 1:
+        problems.append("%s: one '---' separator per extra record" % where)
+    if "patient_name" not in set((inp["plan"].get("summary_fields") or [])):
+        snap = inp["snapshot"]
+        blob = " " + R.norm_text(exp["text"]) + " "
+        names = [R.norm_text(f["value_text"]) for f in snap.get("fields") or []
+                 if f["field_key"] == "patient_name" and f["record_id"] in exp["record_ids"]]
+        if any(n and (" " + n + " ") in blob for n in names):
+            problems.append("%s: patient name in a summary that did not select it" % where)
+
+
+def _check_redaction_shape(exp, where, problems, inp):
+    if inp.get("op", "targets") == "plan_warnings":
+        if set(exp) != {"warnings", "pages", "records"} or \
+                any(w["code"] not in _SHARE_WARNING_CODES or "{" in w["text"] for w in exp["warnings"]):
+            problems.append("%s: bad share plan warnings" % where)
+        return
+    if set(exp) != {"record_id", "classes", "pages", "excluded_pages", "warnings"} or \
+            any(c not in R.REDACTION_CLASSES for c in exp["classes"]):
+        problems.append("%s: bad redaction payload" % where)
+        return
+    if set(p["page_index"] for p in exp["pages"]) & set(exp["excluded_pages"]):
+        problems.append("%s: a page is both redactable and excluded" % where)
+    if len(exp["warnings"]) != len(exp["excluded_pages"]):
+        problems.append("%s: one warning per excluded page" % where)
+    for page in exp["pages"]:
+        idx = [l["index"] for l in page["lines"]]
+        if idx != sorted(set(idx)):
+            problems.append("%s: line indexes must be unique and ascending" % where)
+        for line in page["lines"]:
+            if not line["classes"] or any(c not in exp["classes"] for c in line["classes"]):
+                problems.append("%s: bad line classes" % where)
+            x, y, w, h = line["box"]
+            if not (0 <= x <= 1 and 0 <= y <= 1 and 0 <= w <= 1 and 0 <= h <= 1 and x + w <= 1.0001
+                    and y + h <= 1.0001):
+                problems.append("%s: box outside the page" % where)
+
+
+def _check_archive_shape(exp, where, problems, inp):
+    op = inp["op"]
+    if op == "manifest":
+        if list(exp) != R.ARCHIVE_MANIFEST_KEYS or exp["format"] != R.ARCHIVE_FORMAT or \
+                exp["format_version"] != 1 or exp["schema_version"] != 4:
+            problems.append("%s: bad manifest" % where)
+    elif op == "rows":
+        if [e["name"] for e in exp["entries"]] != list(R.ARCHIVE_DATA_ENTRIES):
+            problems.append("%s: entries must follow the §35 order" % where)
+            return
+        for entry in exp["entries"]:
+            columns = R.ARCHIVE_ENTRY_COLUMNS[entry["name"]]
+            for row in entry["rows"]:
+                extra = set(row) - set(columns) - {"text_truncated", "blocks_truncated"}
+                if extra or any(row[c] is None for c in row):
+                    problems.append("%s: %s row has %s or a null" % (where, entry["name"], sorted(extra)))
+                if [c for c in row if c in columns] != [c for c in columns if c in row]:
+                    problems.append("%s: %s row columns are out of schema order" % (where, entry["name"]))
+    elif op == "entries":
+        if exp["entries"][0] != "manifest.json" or exp["entries"][-1] != "checksums.json":
+            problems.append("%s: manifest.json first, checksums.json last" % where)
+    elif op == "truncate":
+        if exp["line_bytes"] > R.ARCHIVE_LINE_CAP:
+            problems.append("%s: the encoded line is over the 256 KB cap" % where)
+        if exp["text_truncated"] != (exp["text_length"] < exp["input_length"]):
+            problems.append("%s: text_truncated must mean the text was cut" % where)
+    elif op == "read":
+        if any(w["code"] not in _ARCHIVE_WARNING_CODES or "{" in w["text"] for w in exp["warnings"]):
+            problems.append("%s: bad archive warning" % where)
+        if exp["ok"] == (exp["error"] is not None):
+            problems.append("%s: ok and error disagree" % where)
+        if not exp["ok"] and exp["rows"]:
+            problems.append("%s: a rejected archive imports nothing" % where)
+    elif op == "merge":
+        if exp.get("error"):
+            return
+        if set(exp["imported"]) & set(s["id"] for s in exp["skipped"] if s["reason"] != "duplicate_in_archive"):
+            problems.append("%s: a record is both imported and skipped" % where)
+        if [r["id"] for r in exp["records"]] != exp["imported"]:
+            problems.append("%s: records must mirror imported" % where)
+        if exp["mode"] == "merge" and exp["deleted"]:
+            problems.append("%s: merge never deletes" % where)
+
+
 def check_shape(function, exp, where, problems, inp=None):
-    if function == "coach_tools":
+    if function == "share_summary":
+        _check_share_summary_shape(exp, where, problems, inp)
+    elif function == "redaction":
+        _check_redaction_shape(exp, where, problems, inp)
+    elif function == "archive":
+        _check_archive_shape(exp, where, problems, inp)
+    elif function == "coach_tools":
         _check_coach_tools_shape(exp, where, problems, inp)
     elif function == "pack_coach_records":
         if set(exp) != {"text", "record_ids", "dropped_results"} or len(exp["record_ids"]) > R.COACH_CONTEXT_MAX_RECORDS \
@@ -728,6 +843,244 @@ def check_vectors(write, schema, problems):
 
 
 # ---------------------------------------------------------------------------------------------
+# §35 fixture archive (shared/records/fixtures/ayuvo-records-fixture.zip)
+# ---------------------------------------------------------------------------------------------
+#
+# Everything here is byte-deterministic: the PDF is assembled with computed xref offsets, the PNG uses
+# stored (uncompressed) deflate blocks, the JPEG carries one-code Huffman tables, and the zip is written
+# with a fixed timestamp and fixed attributes. Rebuild with --write after changing the fixture snapshot.
+
+def fixture_pdf(lines):
+    """A tiny, valid single-page PDF (Helvetica 12pt, US Letter) containing `lines`."""
+    content = "BT\n/F1 12 Tf\n72 720 Td\n14 TL\n"
+    for i, line in enumerate(lines):
+        if i:
+            content += "T*\n"
+        content += "(%s) Tj\n" % line.replace("\\", r"\\").replace("(", r"\(").replace(")", r"\)")
+    content += "ET\n"
+    body = content.encode("ascii")
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >>"
+        b" /Contents 4 0 R >>",
+        b"<< /Length " + str(len(body)).encode("ascii") + b" >>\nstream\n" + body + b"endstream",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    ]
+    out = b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n"
+    offsets = []
+    for i, obj in enumerate(objects, 1):
+        offsets.append(len(out))
+        out += b"%d 0 obj\n" % i + obj + b"\nendobj\n"
+    start = len(out)
+    out += b"xref\n0 %d\n" % (len(objects) + 1) + b"0000000000 65535 f \n"
+    for off in offsets:
+        out += b"%010d 00000 n \n" % off
+    out += b"trailer\n<< /Size %d /Root 1 0 R >>\nstartxref\n%d\n%%%%EOF\n" % (len(objects) + 1, start)
+    return out
+
+
+def _deflate_stored(raw):
+    """A zlib stream using only stored (BTYPE 00) deflate blocks — identical bytes everywhere."""
+    out = b"\x78\x01"
+    i = 0
+    while True:
+        chunk = raw[i:i + 65535]
+        i += len(chunk)
+        final = 1 if i >= len(raw) else 0
+        out += bytes([final]) + len(chunk).to_bytes(2, "little") + (0xFFFF - len(chunk)).to_bytes(2, "little")
+        out += chunk
+        if final:
+            break
+    return out + zlib.adler32(raw).to_bytes(4, "big")
+
+
+def _png_chunk(kind, data):
+    return (len(data).to_bytes(4, "big") + kind + data +
+            (zlib.crc32(kind + data) & 0xFFFFFFFF).to_bytes(4, "big"))
+
+
+def fixture_png(width, height, rgb):
+    """A tiny, valid 8-bit RGB PNG filled with one colour."""
+    raw = b"".join(b"\x00" + bytes(rgb) * width for _ in range(height))
+    ihdr = width.to_bytes(4, "big") + height.to_bytes(4, "big") + bytes([8, 2, 0, 0, 0])
+    return (b"\x89PNG\r\n\x1a\n" + _png_chunk(b"IHDR", ihdr) +
+            _png_chunk(b"IDAT", _deflate_stored(raw)) + _png_chunk(b"IEND", b""))
+
+
+def fixture_jpeg(quant):
+    """A tiny, valid 8x8 greyscale baseline JPEG: one quantization table, two one-code Huffman tables and
+    a single MCU whose DC difference is 0 (code '0') followed by EOB (code '0')."""
+    def seg(marker, payload):
+        return bytes([0xFF, marker]) + (len(payload) + 2).to_bytes(2, "big") + payload
+    dqt = seg(0xDB, bytes([0x00]) + bytes([quant]) * 64)
+    sof = seg(0xC0, bytes([8]) + (8).to_bytes(2, "big") + (8).to_bytes(2, "big") + bytes([1, 1, 0x11, 0]))
+    bits = bytes([1] + [0] * 15)
+    dht_dc = seg(0xC4, bytes([0x00]) + bits + bytes([0x00]))
+    dht_ac = seg(0xC4, bytes([0x10]) + bits + bytes([0x00]))
+    sos = seg(0xDA, bytes([1, 1, 0x00, 0, 63, 0]))
+    return b"\xff\xd8" + dqt + sof + dht_dc + dht_ac + sos + b"\x3f" + b"\xff\xd9"
+
+
+def fixture_blobs():
+    """{files/ entry name: bytes} for the fixture archive, in export order."""
+    return {
+        "files/rec-cbc-0001/original.pdf": fixture_pdf([
+            "Sunrise Diagnostics and Research Centre",
+            "Complete Blood Count",
+            "Patient Name: Rohan Mehta        Age/Sex: 34 Y / M",
+            "UHID: SD2026004417               Mobile: +91 98765 43210",
+            "Collected On: 12-Sep-2026        Reported On: 13-Sep-2026",
+            "Hemoglobin            7.6 g/dL        13.0 - 17.0   L",
+            "Total WBC Count       8.2 10^3/uL     4.0 - 10.0",
+            "Platelet Count        96 10^3/uL      150 - 410     L",
+            "Dr. A. K. Sharma, MD (Internal Medicine)",
+        ]),
+        "files/rec-cbc-0001/thumb.jpg": fixture_jpeg(16),
+        "files/rec-lipid-0004/original.pdf": fixture_pdf([
+            "Sunrise Diagnostics and Research Centre",
+            "Lipid Profile",
+            "Patient Name: Rohan Mehta",
+            "Reported On: 20-Nov-2025",
+            "Total Cholesterol     214 mg/dL       < 200         H",
+            "HDL Cholesterol       38 mg/dL        > 40          L",
+            "LDL Cholesterol       142 mg/dL       < 100         H",
+            "Triglycerides         168 mg/dL       < 150         H",
+            "Dr. A. K. Sharma, MD (Internal Medicine)",
+        ]),
+        "files/rec-lipid-0004/thumb.jpg": fixture_jpeg(20),
+        "files/rec-note-0003/original.txt":
+            ("Felt dizzy again after climbing stairs on 14 Sep.\n"
+             "Started Ferrous ascorbate the same evening.\n"
+             "Ask Dr Iyer whether the dose should change.\n").encode("utf-8"),
+        "files/rec-rx-0002/original.png": fixture_png(8, 8, (240, 244, 248)),
+        "files/rec-rx-0002/thumb.jpg": fixture_jpeg(24),
+    }
+
+
+def fixture_snapshot(problems):
+    path = os.path.join(VECTORS, "archive.json")
+    try:
+        doc = json.load(open(path, encoding="utf-8"))
+        return doc["fixtures"]["snapshots"][FIXTURE_SNAPSHOT]
+    except (OSError, ValueError, KeyError) as e:
+        problems.append("archive.json: no %r snapshot fixture (%s)" % (FIXTURE_SNAPSHOT, e))
+        return None
+
+
+def build_fixture_archive(snapshot):
+    """The fixture archive as an ordered {entry name: bytes}, exactly as §35 orders it."""
+    blobs = fixture_blobs()
+    rows = R.archive_rows(snapshot)
+    manifest = R.archive_manifest(snapshot, **FIXTURE_MANIFEST)
+    entries = {}
+    for name in R.archive_entry_names(snapshot):
+        if name == "manifest.json":
+            data = R.archive_entry_text(name, manifest).encode("utf-8")
+        elif name == "checksums.json":
+            data = R.archive_entry_text(name, dict((k, hashlib.sha256(v).hexdigest())
+                                                   for k, v in entries.items())).encode("utf-8")
+        elif name.startswith("files/"):
+            data = blobs[name]
+        else:
+            data = R.archive_entry_text(name, rows[name]).encode("utf-8")
+        entries[name] = data
+    return entries
+
+
+def write_fixture_archive(entries, path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with zipfile.ZipFile(path, "w") as zf:
+        for name, data in entries.items():
+            info = zipfile.ZipInfo(name, date_time=FIXTURE_ZIP_DATE)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.external_attr = 0o644 << 16
+            zf.writestr(info, data)
+
+
+def check_fixture_archive(write, problems):
+    """Validate (or rebuild with --write) shared/records/fixtures/ayuvo-records-fixture.zip against §35:
+    entry order, entry bytes from archive_rows/archive_manifest, checksums.json, and a read + merge
+    round-trip. -> a short description for the report."""
+    snapshot = fixture_snapshot(problems)
+    if snapshot is None:
+        return None
+    wanted = build_fixture_archive(snapshot)
+    if write:
+        write_fixture_archive(wanted, FIXTURE_ARCHIVE)
+    if not os.path.exists(FIXTURE_ARCHIVE):
+        problems.append("fixtures/ayuvo-records-fixture.zip is missing (run --write)")
+        return None
+    size = os.path.getsize(FIXTURE_ARCHIVE)
+    if size > FIXTURE_MAX_BYTES:
+        problems.append("fixtures/ayuvo-records-fixture.zip is %d bytes (cap %d)" % (size, FIXTURE_MAX_BYTES))
+    with zipfile.ZipFile(FIXTURE_ARCHIVE) as zf:
+        names = zf.namelist()
+        got = dict((n, zf.read(n)) for n in names)
+        if any(zf.getinfo(n).compress_type != zipfile.ZIP_DEFLATED for n in names):
+            problems.append("fixture archive: every entry must be deflated")
+    if names != list(wanted):
+        problems.append("fixture archive: entry order %s, expected %s" % (names, list(wanted)))
+        return None
+    for name in names:
+        if got[name] != wanted[name]:
+            problems.append("fixture archive: %s differs from the reference output" % name)
+    checksums = json.loads(got["checksums.json"].decode("utf-8"))
+    for name in names:
+        if name == "checksums.json":
+            continue
+        if checksums.get(name) != hashlib.sha256(got[name]).hexdigest():
+            problems.append("fixture archive: bad checksum for %s" % name)
+    if set(checksums) != set(names) - {"checksums.json"}:
+        problems.append("fixture archive: checksums.json must cover every other entry")
+    entries = []
+    for name in names:
+        entry = {"name": name, "sha256": hashlib.sha256(got[name]).hexdigest()}
+        if name.endswith(".ndjson"):
+            entry["rows"] = [json.loads(line) for line in got[name].decode("utf-8").split("\n") if line]
+        elif not name.startswith("files/"):
+            value = json.loads(got[name].decode("utf-8"))
+            entry["json" if name in ("manifest.json", "checksums.json") else "rows"] = value
+        entries.append(entry)
+    read = R.read_archive_rows(entries)
+    if not read["ok"] or read["warnings"]:
+        problems.append("fixture archive: read_archive_rows reports %s / %s"
+                        % (read["error"], [w["code"] for w in read["warnings"]]))
+    plan = R.merge_plan({"records": []}, read, "merge")
+    expected_records = len(snapshot.get("records") or [])
+    if len(plan["imported"]) != expected_records or plan["skipped"] or plan["file_missing"]:
+        problems.append("fixture archive: a fresh merge must import every record without warnings")
+    round_trip = build_fixture_archive({"records": read["rows"]["records"], "pages": read["rows"]["pages"],
+                                        "fields": read["rows"]["fields"],
+                                        "observations": read["rows"]["observations"],
+                                        "highlights": read["rows"]["highlights"], "links": read["rows"]["links"],
+                                        "entities": read["rows"]["entities"],
+                                        "record_entities": read["rows"]["record_entities"],
+                                        "tags": [{"id": t["id"], "name": t["name"]} for t in read["rows"]["tags"]],
+                                        "record_tags": [{"record_id": rid, "tag_id": t["id"]}
+                                                        for t in read["rows"]["tags"]
+                                                        for rid in t.get("record_ids") or []],
+                                        "analyte_user_aliases": read["rows"]["analyte_user_aliases"]})
+    # manifest.json and checksums.json depend on the exporting device (file sizes on disk), so only the
+    # data entries must survive an import + re-export. §38: the comparison is structural, never
+    # byte-for-byte (a SQLite REAL column cannot preserve 96 vs 96.0).
+    def parsed(data, name):
+        text = data.decode("utf-8")
+        if name.endswith(".ndjson"):
+            return [json.loads(line) for line in text.split("\n") if line]
+        return json.loads(text)
+    for name in R.ARCHIVE_DATA_ENTRIES:
+        if name not in round_trip:
+            problems.append("fixture archive: re-exporting the imported rows drops %s" % name)
+            continue
+        diff = _first_diff(parsed(round_trip[name], name), parsed(wanted[name], name))
+        if diff:
+            problems.append("fixture archive: re-exporting the imported rows changes %s at %s" % (name, diff))
+    return "%d entries, %d bytes, %d records" % (len(names), size, expected_records)
+
+
+# ---------------------------------------------------------------------------------------------
 # Self-tests
 # ---------------------------------------------------------------------------------------------
 
@@ -794,6 +1147,7 @@ def main(argv):
     sql_counts = check_sql(problems)
     coach_schemas = check_coach_tools(problems)
     counts = check_vectors(write, schema, problems)
+    fixture = check_fixture_archive(write, problems)
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(ReferenceSelfTest)
     result = unittest.TextTestRunner(stream=open(os.devnull, "w"), verbosity=0).run(suite)
     for f, tb in result.failures + result.errors:
@@ -804,6 +1158,8 @@ def main(argv):
         print("vec  %-45s %d cases" % (name, counts[name]))
     for name, compact in coach_schemas:
         print("tool %-45s schema %d chars" % (name, len(compact)))
+    if fixture:
+        print("zip  %-45s %s" % ("fixtures/ayuvo-records-fixture.zip", fixture))
     if "--print-schemas" in argv:
         for name, compact in coach_schemas:
             print("%s %s" % (name, compact))

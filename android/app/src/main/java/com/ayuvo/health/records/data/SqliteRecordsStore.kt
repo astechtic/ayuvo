@@ -912,7 +912,9 @@ class SqliteRecordsStore(
                         reviewStatus = ReviewStatus.NONE,
                         favorite = false,
                         archived = false,
-                        notes = null
+                        notes = null,
+                        sharedCount = 0,
+                        lastSharedMs = null
                     )
                     database.insertOrThrow("records", null, child.toValues().apply {
                         put("type_method", ExtractionMethod.USER.raw)
@@ -1524,6 +1526,88 @@ class SqliteRecordsStore(
         ).use { c -> buildList { while (c.moveToNext()) add(c.getString(0)) } }
     }
 
+    // -- Phase 5: sharing & backup (§33–§37) ------------------------------------------------------
+
+    override suspend fun backupState(key: String): String? = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT value FROM records_backup_state WHERE key = ?", arrayOf(key))
+            .use { c -> if (c.moveToFirst()) c.getString(0) else null }
+    }
+
+    override suspend fun setBackupState(key: String, value: String) {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                database.execSQL("INSERT OR REPLACE INTO records_backup_state(key, value) VALUES (?, ?)", arrayOf(key, value))
+            }
+        }
+    }
+
+    override suspend fun backupStateAll(): Map<String, String> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT key, value FROM records_backup_state", null)
+            .use { c -> buildMap { while (c.moveToNext()) put(c.getString(0), c.getString(1)) } }
+    }
+
+    override suspend fun markShared(ids: Collection<String>, nowMs: Long) {
+        if (ids.isEmpty()) return
+        withContext(Dispatchers.IO) {
+            write { database ->
+                for (id in ids.distinct()) {
+                    database.execSQL(
+                        "UPDATE records SET shared_count = shared_count + 1, last_shared_ms = ? WHERE id = ?",
+                        arrayOf<Any>(nowMs, id)
+                    )
+                }
+            }
+        }
+    }
+
+    override suspend fun fileRefs(): List<RecordFileRef> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT id, file_type, file_path, thumbnail_path FROM records ORDER BY seq", null).use { c ->
+            buildList {
+                while (c.moveToNext()) {
+                    add(RecordFileRef(c.getString(0), c.getString(1), c.getStringOrNull(2), c.getStringOrNull(3)))
+                }
+            }
+        }
+    }
+
+    override suspend fun contentRevision(): Long = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT COUNT(*), COALESCE(MAX(updated_ms), 0) FROM records", null).use { c ->
+            if (!c.moveToFirst()) 0L else c.getLong(1) * 1_000L + c.getLong(0)
+        }
+    }
+
+    override suspend fun pageCount(): Long = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT COUNT(*) FROM record_pages", null).use { c -> if (c.moveToFirst()) c.getLong(0) else 0L }
+    }
+
+    override suspend fun reindexAll(): Int = withContext(Dispatchers.IO) {
+        val ids = db.rawQuery("SELECT id FROM records ORDER BY seq", null)
+            .use { c -> buildList { while (c.moveToNext()) add(c.getString(0)) } }
+        // One transaction per chunk keeps a huge library from holding a single long write lock.
+        ids.chunked(200).forEach { chunk -> write { database -> chunk.forEach { reindexIn(database, it) } } }
+        ids.size
+    }
+
+    override suspend fun deleteAllRecords() {
+        withContext(Dispatchers.IO) {
+            write { database ->
+                database.delete("records_fts", null, null)
+                // record_pages / fields / highlights / observations / links cascade from records.
+                database.delete("records", null, null)
+                database.delete("entities", null, null)
+                database.delete("tags", null, null)
+                database.delete("analyte_user_aliases", null, null)
+                database.delete("processing_jobs", null, null)
+            }
+            runCatching { files.root.deleteRecursively() }
+            runCatching { files.renderCache.deleteRecursively() }
+        }
+    }
+
+    override fun bumpRevision() {
+        _revision.value = _revision.value + 1
+    }
+
     private fun Observation.toValues() = ContentValues().apply {
         put("id", id)
         put("record_id", recordId)
@@ -1671,6 +1755,8 @@ class SqliteRecordsStore(
         put("favorite", if (favorite) 1 else 0)
         put("archived", if (archived) 1 else 0)
         notes?.let { put("notes", it) }
+        put("shared_count", sharedCount)
+        lastSharedMs?.let { put("last_shared_ms", it) }
     }
 
     private fun RecordPage.toValues(recordId: String) = ContentValues().apply {
@@ -1776,7 +1862,9 @@ class SqliteRecordsStore(
         favorite = c.getInt(28) != 0,
         archived = c.getInt(29) != 0,
         notes = c.getStringOrNull(30),
-        aiModeUsed = AiModeUsed.fromRaw(c.getStringOrNull(31))
+        aiModeUsed = AiModeUsed.fromRaw(c.getStringOrNull(31)),
+        sharedCount = if (c.isNull(32)) 0 else c.getInt(32),
+        lastSharedMs = if (c.isNull(33)) null else c.getLong(33)
     )
 
     private fun readField(c: Cursor) = RecordField(
@@ -1833,11 +1921,11 @@ class SqliteRecordsStore(
             "file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, " +
             "favorite, archived, notes"
 
-        /** Narrow list projection: base columns plus `ai_mode_used` (v2). */
-        const val COLUMNS = "$BASE_COLUMNS, ai_mode_used"
+        /** Narrow list projection: base columns plus `ai_mode_used` (v2) and the v4 share columns. */
+        const val COLUMNS = "$BASE_COLUMNS, ai_mode_used, shared_count, last_shared_ms"
 
         /** Number of columns in [COLUMNS]; search appends matchinfo + snippets after them. */
-        const val COLUMN_COUNT = 32
+        const val COLUMN_COUNT = 34
 
         const val FIELD_COLUMNS = "id, record_id, field_key, value_text, value_json, method, confidence, state, source_page, source_bbox, evidence, created_ms, updated_ms"
         const val HIGHLIGHT_COLUMNS = "id, record_id, section, text, method, provider, field_id, source_page, confidence, dismissed, position, created_ms"

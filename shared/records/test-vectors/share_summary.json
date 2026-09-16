@@ -1,0 +1,1494 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nNotes:\nFasting sample.\nRepeat after treatment.\nAI highlights (verify against the original report):\n- Haemoglobin is low and potassium is critically high; discuss both with your doctor.\n- The white cell count is normal.\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": true,
+          "include_notes": true,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "full_plan_single_record",
+      "notes": "Every summary field, notes and AI highlights; §34's full layout."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "test_results"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "subset_results_only",
+      "notes": "Only the Results section; header lines always stay."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "subset_doctor_and_facility"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "dates"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "subset_dates_only",
+      "notes": "Collected · Reported · Follow-up in _SHARE_DATE_LABELS order; the referrer never becomes the doctor."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "no_notes_no_highlights"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report\nNotes:\nFasting sample.\nRepeat after treatment.\nAI highlights (verify against the original report):\n- Haemoglobin is low and potassium is critically high; discuss both with your doctor.\n- The white cell count is normal.\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": true,
+          "include_notes": true,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": []
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "notes_and_highlights_only",
+      "notes": "Empty summary_fields: header, Notes and AI highlights only."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc",
+          "s-rx"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nNotes:\nFasting sample.\nRepeat after treatment.\nAI highlights (verify against the original report):\n- Haemoglobin is low and potassium is critically high; discuss both with your doctor.\n- The white cell count is normal.\n\n---\n\nPrescription — City Care Clinic — 2026-09-14\nPrescription\nDoctor: Meera Iyer\nDates: Prescribed 2026-09-14\nMedications:\n- Ferrous ascorbate 100 mg, twice daily, 30 days, after food\n- Folic acid 5 mg\n- Paracetamol, 1 tab, sos\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after 8 weeks\n- Avoid tea with the tablet\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": true,
+          "include_notes": true,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc",
+            "s-rx"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "multi_record_two",
+      "notes": "Blocks separated by an empty line, '---' and an empty line; one footer."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc",
+          "s-rx",
+          "s-note"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nNotes:\nFasting sample.\nRepeat after treatment.\n\n---\n\nPrescription — City Care Clinic — 2026-09-14\nPrescription\nDoctor: Meera Iyer\nDates: Prescribed 2026-09-14\nMedications:\n- Ferrous ascorbate 100 mg, twice daily, 30 days, after food\n- Folic acid 5 mg\n- Paracetamol, 1 tab, sos\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after 8 weeks\n- Avoid tea with the tablet\n\n---\n\nDizzy spells — 2026-09-15\nNote\nNotes:\nFelt dizzy after stairs.\nStarted iron the same evening.\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": true,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc",
+            "s-rx",
+            "s-note"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "multi_record_three"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-rx",
+          "s-cbc"
+        ],
+        "text": "Prescription — City Care Clinic — 2026-09-14\nPrescription\nDoctor: Meera Iyer\nDates: Prescribed 2026-09-14\nMedications:\n- Ferrous ascorbate 100 mg, twice daily, 30 days, after food\n- Folic acid 5 mg\n- Paracetamol, 1 tab, sos\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after 8 weeks\n- Avoid tea with the tablet\n\n---\n\nComplete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-rx",
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "plan_order_is_kept"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc",
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "duplicate_id_used_once"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report · Sunrise Diagnostics and Research Centre\nDoctor: A. K. Sharma\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nDiagnoses:\n- Iron deficiency anaemia\nRecommendations:\n- Repeat CBC after treatment\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "nope",
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "unknown_id_dropped"
+    },
+    {
+      "expected": {
+        "record_ids": [],
+        "text": null
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "nope",
+            "gone"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "all_ids_unknown",
+      "notes": "No existing record -> text null."
+    },
+    {
+      "expected": {
+        "record_ids": [],
+        "text": null
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": false,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "include_summary_false"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "test_results"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "flagged_result_ordering",
+      "notes": "§29 order: critical, low/high, abnormal, then the rest in report order."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-qual"
+        ],
+        "text": "Urine Routine — 2026-03-04\nLab Report\nResults:\n- Urine Protein: Trace (abnormal, ref Nil)\n- Dengue NS1 Antigen: Negative (ref Negative)\n- Blood Group: B Positive\n- Pus Cells: 4-6 /hpf (ref 0 - 5)\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-qual"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "test_results"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "qualitative_results",
+      "notes": "Qualitative values, a bracketed ref_text, a range value with a unit and a row with no flag and no range."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report\nResults:\n- Potassium: 6.9 mmol/L (critical high, ref 3.5 - 5.1)\n- Hemoglobin: 7.6 g/dL (low, ref 13.0 - 17.0)\n- Urine Glucose: Present (abnormal, ref Absent)\n- Total WBC Count: 8.2 10^3/µL (ref 4.0 - 10.0)\n- Remarks\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "test_results"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "valueless_result_has_no_colon",
+      "notes": "'Urine Glucose: Present (abnormal, ref Absent)' and the name-only row 'Remarks'."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-rx"
+        ],
+        "text": "Prescription — City Care Clinic — 2026-09-14\nPrescription\nMedications:\n- Ferrous ascorbate 100 mg, twice daily, 30 days, after food\n- Folic acid 5 mg\n- Paracetamol, 1 tab, sos\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-rx"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "medications"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "medications_formatting",
+      "notes": "Strength joins the name with a space; dose, frequency, duration and instructions follow after ', '."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-rx"
+        ],
+        "text": "Prescription — City Care Clinic — 2026-09-14\nPrescription\nDoctor: Meera Iyer\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-rx"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "missing_facility_and_doctor",
+      "notes": "s-rx has no facility and no patient name: the type line stays alone and both lines are omitted."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-bare"
+        ],
+        "text": "Scanned document — 2026-01-05\nRecord\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": true,
+          "include_notes": true,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-bare"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "doctor",
+            "facility",
+            "patient_name",
+            "dates",
+            "test_results",
+            "medications",
+            "diagnoses",
+            "recommendations"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "empty_record_header_only",
+      "notes": "No fields, no notes, no highlights: two header lines and the footer."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-note"
+        ],
+        "text": "Dizzy spells — 2026-09-15\nNote\nNotes:\nFelt dizzy after stairs.\nStarted iron the same evening.\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": true,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-note"
+          ],
+          "redactions": [],
+          "summary_fields": []
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "notes_multiline_collapsed",
+      "notes": "Blank lines dropped, every kept line whitespace-collapsed."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-obs"
+        ],
+        "text": "Lipid Profile — 2025-11-20\nLab Report · Sunrise Diagnostics and Research Centre\nDates: Reported 2025-11-20\nResults:\n- Total Cholesterol: 214 mg/dL (high, ref < 200)\n- HbA1c: 6.1 % (high, ref < 5.7)\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-obs"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "test_results",
+            "facility",
+            "dates"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "observations_drive_results",
+      "notes": "A record with observation rows: results come from them (rejected dropped, user-added kept)."
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLaborbericht · Sunrise Diagnostics and Research Centre\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "facility"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": {
+          "bill": "Rechnung",
+          "consultation_note": "Arztnotiz",
+          "diagnostic_report": "Befund",
+          "discharge_summary": "Entlassungsbericht",
+          "imaging_report": "Bildgebung",
+          "insurance": "Versicherung",
+          "lab_report": "Laborbericht",
+          "medication_list": "Medikamentenliste",
+          "other": "Dokument",
+          "personal_note": "Notiz",
+          "prescription": "Rezept",
+          "vaccination_record": "Impfausweis"
+        }
+      },
+      "name": "custom_type_labels"
+    },
+    {
+      "expected": {
+        "record_ids": [
+          "s-cbc"
+        ],
+        "text": "Complete Blood Count — 2026-09-13\nLab Report\nPatient: Rohan Mehta\nDates: Collected 2026-09-12 · Reported 2026-09-13 · Follow-up 2026-11-13\nShared from Ayuvo. Values were read from the original document and may contain mistakes."
+      },
+      "input": {
+        "plan": {
+          "include_highlights": false,
+          "include_notes": false,
+          "include_original": false,
+          "include_summary": true,
+          "pages": {},
+          "record_ids": [
+            "s-cbc"
+          ],
+          "redactions": [],
+          "summary_fields": [
+            "patient_name",
+            "dates"
+          ]
+        },
+        "snapshot": "share",
+        "type_labels": null
+      },
+      "name": "patient_name_selected"
+    }
+  ],
+  "fixtures": {
+    "snapshots": {
+      "share": {
+        "fields": [
+          {
+            "confidence": 0.8,
+            "created_ms": 1,
+            "field_key": "facility",
+            "id": "sf-01",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics and Research Centre"
+          },
+          {
+            "confidence": 0.85,
+            "created_ms": 2,
+            "field_key": "doctor_name",
+            "id": "sf-02",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "A. K. Sharma"
+          },
+          {
+            "confidence": 0.85,
+            "created_ms": 3,
+            "field_key": "doctor_name",
+            "id": "sf-03",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "role": "referrer"
+            },
+            "value_text": "P. Nair"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 4,
+            "field_key": "patient_name",
+            "id": "sf-04",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Rohan Mehta"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 5,
+            "field_key": "collection_date",
+            "id": "sf-05",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-12"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 6,
+            "field_key": "report_date",
+            "id": "sf-06",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-13"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 7,
+            "field_key": "follow_up_date",
+            "id": "sf-07",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-11-13"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 8,
+            "field_key": "test_result",
+            "id": "sf-08",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "low",
+              "name": "Hemoglobin",
+              "ref_high": 17.0,
+              "ref_low": 13.0,
+              "ref_text": "(13.0 - 17.0)",
+              "unit": "g/dL",
+              "value": "7.6",
+              "value_num": 7.6
+            },
+            "value_text": "Hemoglobin"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 9,
+            "field_key": "test_result",
+            "id": "sf-09",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "normal",
+              "name": "Total WBC Count",
+              "ref_high": 10.0,
+              "ref_low": 4.0,
+              "ref_text": "4.0 - 10.0",
+              "unit": "10^3/µL",
+              "value": "8.2",
+              "value_num": 8.2
+            },
+            "value_text": "Total WBC Count"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 10,
+            "field_key": "test_result",
+            "id": "sf-10",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "critical_high",
+              "name": "Potassium",
+              "ref_high": 5.1,
+              "ref_low": 3.5,
+              "ref_text": "3.5 - 5.1",
+              "unit": "mmol/L",
+              "value": "6.9",
+              "value_num": 6.9
+            },
+            "value_text": "Potassium"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 11,
+            "field_key": "test_result",
+            "id": "sf-11",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "abnormal",
+              "name": "Urine Glucose",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Absent",
+              "unit": null,
+              "value": "Present",
+              "value_num": null
+            },
+            "value_text": "Urine Glucose"
+          },
+          {
+            "confidence": 0.6,
+            "created_ms": 12,
+            "field_key": "test_result",
+            "id": "sf-12",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "unknown",
+              "name": "Remarks",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "",
+              "value_num": null
+            },
+            "value_text": "Remarks"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 13,
+            "field_key": "test_result",
+            "id": "sf-13",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "rejected",
+            "value_json": {
+              "flag": "low",
+              "name": "Rejected Row",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": "g/dL",
+              "value": "1",
+              "value_num": 1
+            },
+            "value_text": "Rejected Row"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 14,
+            "field_key": "diagnosis",
+            "id": "sf-14",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Iron deficiency anaemia"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 15,
+            "field_key": "recommendation",
+            "id": "sf-15",
+            "method": "rules",
+            "record_id": "s-cbc",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Repeat CBC after treatment"
+          },
+          {
+            "confidence": 0.85,
+            "created_ms": 1,
+            "field_key": "doctor_name",
+            "id": "sf-16",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Meera Iyer"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 2,
+            "field_key": "prescription_date",
+            "id": "sf-17",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2026-09-14"
+          },
+          {
+            "confidence": 0.75,
+            "created_ms": 3,
+            "field_key": "diagnosis",
+            "id": "sf-18",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Iron deficiency anaemia"
+          },
+          {
+            "confidence": 0.8,
+            "created_ms": 4,
+            "field_key": "medication",
+            "id": "sf-19",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "dose": null,
+              "duration": "30 days",
+              "form": "tablet",
+              "frequency": "twice daily",
+              "instructions": "after food",
+              "name": "Ferrous ascorbate",
+              "strength": "100 mg"
+            },
+            "value_text": "Ferrous ascorbate"
+          },
+          {
+            "confidence": 0.8,
+            "created_ms": 5,
+            "field_key": "medication",
+            "id": "sf-20",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "dose": null,
+              "duration": null,
+              "form": "tablet",
+              "frequency": null,
+              "instructions": null,
+              "name": "Folic acid",
+              "strength": "5 mg"
+            },
+            "value_text": "Folic acid"
+          },
+          {
+            "confidence": 0.6,
+            "created_ms": 6,
+            "field_key": "medication",
+            "id": "sf-21",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "dose": "1 tab",
+              "duration": null,
+              "form": "tablet",
+              "frequency": "sos",
+              "instructions": null,
+              "name": "Paracetamol",
+              "strength": null
+            },
+            "value_text": "Paracetamol"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 7,
+            "field_key": "recommendation",
+            "id": "sf-22",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Repeat CBC after 8 weeks"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 8,
+            "field_key": "recommendation",
+            "id": "sf-23",
+            "method": "rules",
+            "record_id": "s-rx",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Avoid tea with the tablet"
+          },
+          {
+            "confidence": 0.8,
+            "created_ms": 1,
+            "field_key": "facility",
+            "id": "sf-24",
+            "method": "rules",
+            "record_id": "s-obs",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": null,
+            "value_text": "Sunrise Diagnostics and Research Centre"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 2,
+            "field_key": "report_date",
+            "id": "sf-25",
+            "method": "rules",
+            "record_id": "s-obs",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "precision": "day"
+            },
+            "value_text": "2025-11-20"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 3,
+            "field_key": "test_result",
+            "id": "sf-26",
+            "method": "rules",
+            "record_id": "s-obs",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "high",
+              "name": "Total Cholesterol",
+              "ref_high": 200.0,
+              "ref_low": null,
+              "ref_text": "< 200",
+              "unit": "mg/dL",
+              "value": "214",
+              "value_num": 214
+            },
+            "value_text": "Total Cholesterol"
+          },
+          {
+            "confidence": 0.9,
+            "created_ms": 4,
+            "field_key": "test_result",
+            "id": "sf-27",
+            "method": "rules",
+            "record_id": "s-obs",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "low",
+              "name": "HDL Cholesterol",
+              "ref_high": null,
+              "ref_low": 40.0,
+              "ref_text": "> 40",
+              "unit": "mg/dL",
+              "value": "38",
+              "value_num": 38
+            },
+            "value_text": "HDL Cholesterol"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 1,
+            "field_key": "test_result",
+            "id": "sf-28",
+            "method": "rules",
+            "record_id": "s-qual",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "abnormal",
+              "name": "Urine Protein",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "[Nil]",
+              "unit": null,
+              "value": "Trace",
+              "value_num": null
+            },
+            "value_text": "Urine Protein"
+          },
+          {
+            "confidence": 0.7,
+            "created_ms": 2,
+            "field_key": "test_result",
+            "id": "sf-29",
+            "method": "rules",
+            "record_id": "s-qual",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "normal",
+              "name": "Dengue NS1 Antigen",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": "Negative",
+              "unit": null,
+              "value": "Negative",
+              "value_num": null
+            },
+            "value_text": "Dengue NS1 Antigen"
+          },
+          {
+            "confidence": 0.6,
+            "created_ms": 3,
+            "field_key": "test_result",
+            "id": "sf-30",
+            "method": "rules",
+            "record_id": "s-qual",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "unknown",
+              "name": "Blood Group",
+              "ref_high": null,
+              "ref_low": null,
+              "ref_text": null,
+              "unit": null,
+              "value": "B Positive",
+              "value_num": null
+            },
+            "value_text": "Blood Group"
+          },
+          {
+            "confidence": 0.8,
+            "created_ms": 4,
+            "field_key": "test_result",
+            "id": "sf-31",
+            "method": "rules",
+            "record_id": "s-qual",
+            "source_page": 0,
+            "state": "suggested",
+            "value_json": {
+              "flag": "unknown",
+              "name": "Pus Cells",
+              "ref_high": 5.0,
+              "ref_low": 0.0,
+              "ref_text": "0 - 5",
+              "unit": "/hpf",
+              "value": "4-6",
+              "value_num": null
+            },
+            "value_text": "Pus Cells"
+          }
+        ],
+        "highlights": [
+          {
+            "dismissed": 0,
+            "id": "sh-1",
+            "position": 0,
+            "record_id": "s-cbc",
+            "section": "important",
+            "text": "Hemoglobin: 7.6 g/dL — below the report reference range"
+          },
+          {
+            "dismissed": 0,
+            "id": "sh-2",
+            "position": 0,
+            "record_id": "s-cbc",
+            "section": "summary",
+            "text": "Haemoglobin is low and potassium is critically high; discuss both with your doctor."
+          },
+          {
+            "dismissed": 0,
+            "id": "sh-3",
+            "position": 1,
+            "record_id": "s-cbc",
+            "section": "summary",
+            "text": "  The white cell count   is normal.  "
+          },
+          {
+            "dismissed": 1,
+            "id": "sh-4",
+            "position": 2,
+            "record_id": "s-cbc",
+            "section": "summary",
+            "text": "Dismissed summary line"
+          },
+          {
+            "dismissed": 0,
+            "id": "sh-5",
+            "position": 0,
+            "record_id": "s-rx",
+            "section": "medications",
+            "text": "Ferrous ascorbate 100 mg · twice daily · 30 days"
+          }
+        ],
+        "observations": [
+          {
+            "analyte_id": "cholesterol_total",
+            "analyte_method": "catalog",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 214,
+            "confidence": 0.9,
+            "created_ms": 2100,
+            "evidence": null,
+            "excluded_from_trends": 0,
+            "field_id": "sf-26",
+            "flag": "high",
+            "id": "so-1",
+            "method": "rules",
+            "observed_date": "2025-11-20",
+            "observed_date_method": "report_date",
+            "raw_name": "Total Cholesterol",
+            "record_id": "s-obs",
+            "ref_high": 200.0,
+            "ref_low": null,
+            "ref_text": "< 200",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "suggested",
+            "unit": "mg/dL",
+            "updated_ms": 2100,
+            "value_num": 214,
+            "value_text": "214"
+          },
+          {
+            "analyte_id": "hdl_cholesterol",
+            "analyte_method": "catalog",
+            "canonical_unit": "mg/dL",
+            "canonical_value": 38,
+            "confidence": 0.9,
+            "created_ms": 2101,
+            "evidence": null,
+            "excluded_from_trends": 0,
+            "field_id": "sf-27",
+            "flag": "low",
+            "id": "so-2",
+            "method": "rules",
+            "observed_date": "2025-11-20",
+            "observed_date_method": "report_date",
+            "raw_name": "HDL Cholesterol",
+            "record_id": "s-obs",
+            "ref_high": null,
+            "ref_low": 40.0,
+            "ref_text": "> 40",
+            "source_bbox": null,
+            "source_page": 0,
+            "state": "rejected",
+            "unit": "mg/dL",
+            "updated_ms": 2101,
+            "value_num": 38,
+            "value_text": "38"
+          },
+          {
+            "analyte_id": "hba1c",
+            "analyte_method": "user",
+            "canonical_unit": "%",
+            "canonical_value": 6.1,
+            "confidence": 1.0,
+            "created_ms": 2200,
+            "evidence": null,
+            "excluded_from_trends": 0,
+            "field_id": null,
+            "flag": "high",
+            "id": "so-3",
+            "method": "user",
+            "observed_date": "2025-11-20",
+            "observed_date_method": "user",
+            "raw_name": "HbA1c",
+            "record_id": "s-obs",
+            "ref_high": 5.7,
+            "ref_low": null,
+            "ref_text": "< 5.7",
+            "source_bbox": null,
+            "source_page": null,
+            "state": "user",
+            "unit": "%",
+            "updated_ms": 2200,
+            "value_num": 6.1,
+            "value_text": "6.1"
+          }
+        ],
+        "pages": [
+          {
+            "page_index": 0,
+            "record_id": "s-cbc",
+            "text": "Complete Blood Count"
+          },
+          {
+            "page_index": 1,
+            "record_id": "s-cbc",
+            "text": "Page 2"
+          }
+        ],
+        "records": [
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 4000,
+            "favorite": 0,
+            "file_path": "s-cbc/original.pdf",
+            "file_type": "pdf",
+            "id": "s-cbc",
+            "notes": "Fasting sample.\n\nRepeat after treatment.",
+            "page_count": 2,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 4,
+            "sort_date": "2026-09-13",
+            "source": "import",
+            "title": "Complete Blood Count"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "prescriptions",
+            "created_ms": 5000,
+            "favorite": 0,
+            "id": "s-rx",
+            "page_count": 1,
+            "record_type": "prescription",
+            "review_status": "none",
+            "seq": 5,
+            "sort_date": "2026-09-14",
+            "source": "import",
+            "title": "Prescription — City Care Clinic"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "personal_notes",
+            "created_ms": 6000,
+            "favorite": 0,
+            "id": "s-note",
+            "notes": "  Felt dizzy after stairs.  \n\n  Started iron the same evening.\n",
+            "page_count": 1,
+            "record_type": "personal_note",
+            "review_status": "none",
+            "seq": 6,
+            "sort_date": "2026-09-15",
+            "source": "import",
+            "title": "Dizzy spells"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 2000,
+            "favorite": 0,
+            "id": "s-obs",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 2,
+            "sort_date": "2025-11-20",
+            "source": "import",
+            "title": "Lipid Profile"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "other",
+            "created_ms": 1000,
+            "favorite": 0,
+            "id": "s-bare",
+            "page_count": 1,
+            "record_type": "other",
+            "review_status": "none",
+            "seq": 1,
+            "sort_date": "2026-01-05",
+            "source": "import",
+            "title": "Scanned document"
+          },
+          {
+            "ai_mode_used": "none",
+            "archived": 0,
+            "category": "lab_reports",
+            "created_ms": 3000,
+            "favorite": 0,
+            "id": "s-qual",
+            "page_count": 1,
+            "record_type": "lab_report",
+            "review_status": "none",
+            "seq": 3,
+            "sort_date": "2026-03-04",
+            "source": "import",
+            "title": "Urine Routine"
+          }
+        ]
+      }
+    }
+  },
+  "format": "ayuvo-records-vectors",
+  "function": "share_summary",
+  "version": 1
+}

@@ -47,7 +47,6 @@ struct RecordsKnowledgeMigrationTests {
         for (a, b) in zip(shared, embedded.statements) {
             #expect(a == b, "statement differs from 003_knowledge.sql:\n\(a)")
         }
-        #expect(RecordsSchema.schemaVersion == 3)
         #expect(RecordsSchema.schemaVersion == RecordsSchema.migrations.map(\.version).max())
     }
 
@@ -55,7 +54,7 @@ struct RecordsKnowledgeMigrationTests {
         let embedded = try await RecordsDatabase.inMemory()
         let fromFiles = try await RecordsDatabase.inMemory(targetVersion: 0)
         let root = HealthTestFixtures.repoRootURL.appendingPathComponent("shared/records")
-        let files = ["schema.sql", "migrations/002_intelligence.sql", "migrations/003_knowledge.sql"]
+        let files = ["schema.sql", "migrations/002_intelligence.sql", "migrations/003_knowledge.sql", "migrations/004_sharing.sql"]
         let sql = try files.map { try String(contentsOf: root.appendingPathComponent($0), encoding: .utf8) }
         try await fromFiles.withConnection { connection in
             for text in sql { try connection.exec(text) }
@@ -67,8 +66,8 @@ struct RecordsKnowledgeMigrationTests {
         }
         #expect(try await embedded.tableNames() == RecordsSchema.tableNames.sorted())
         #expect(try await embedded.indexNames() == RecordsSchema.indexNames.sorted())
-        #expect(try await embedded.userVersion() == 3)
-        #expect(try await embedded.metaValue("schema_version") == "3")
+        #expect(try await embedded.userVersion() == RecordsSchema.schemaVersion)
+        #expect(try await embedded.metaValue("schema_version") == "\(RecordsSchema.schemaVersion)")
     }
 
     @Test func upgradesAVersionTwoDatabaseOnDiskKeepingDataAndBackfills() async throws {
@@ -89,8 +88,8 @@ struct RecordsKnowledgeMigrationTests {
         await v2.close()
 
         let upgraded = try await RecordsDatabase.open(url: url)
-        #expect(try await upgraded.userVersion() == 3)
-        #expect(try await upgraded.metaValue("schema_version") == "3")
+        #expect(try await upgraded.userVersion() == RecordsSchema.schemaVersion)
+        #expect(try await upgraded.metaValue("schema_version") == "\(RecordsSchema.schemaVersion)")
         #expect(try await upgraded.record(id: "old")?.notes == "fasting")
         #expect(try await upgraded.fields(recordID: "old").count == 1)
         #expect(try await upgraded.observations(recordID: "old").isEmpty, "promotion happens in the pipeline backfill, not the migration")

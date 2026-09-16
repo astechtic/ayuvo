@@ -91,7 +91,9 @@ fun RecordDetailScreen(
     onOpenTrend: (String) -> Unit = {},
     focusObservationId: String? = null,
     /** §27 "Ask about this report" / "Compare with previous report": records + prefilled prompt. */
-    onAskCoach: (recordIds: List<String>, prompt: String) -> Unit = { _, _ -> }
+    onAskCoach: (recordIds: List<String>, prompt: String) -> Unit = { _, _ -> },
+    /** §34 "Share": opens "What will be shared" for this record. */
+    onShare: (List<String>) -> Unit = {}
 ) {
     val vm: RecordDetailViewModel = viewModel(
         key = "record-$recordId-${focusObservationId.orEmpty()}",
@@ -161,6 +163,10 @@ fun RecordDetailScreen(
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.records_action_rename)) },
                             onClick = { menuOpen = false; edit = DetailEdit.TITLE }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.records_action_share)) },
+                            onClick = { menuOpen = false; onShare(listOf(recordId)) }
                         )
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.records_action_export)) },
@@ -383,6 +389,11 @@ fun RecordDetailScreen(
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    GlassTextButton(
+                        text = stringResource(R.string.records_action_share),
+                        onClick = { onShare(listOf(recordId)) },
+                        modifier = Modifier.weight(1f)
+                    )
                     GlassTextButton(
                         text = stringResource(R.string.records_action_export),
                         onClick = { export(view = false) },

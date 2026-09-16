@@ -80,7 +80,17 @@ class RecordsSchemaContractTest {
         for (index in listOf("idx_observations_trend", "idx_observations_record", "idx_observations_field", "idx_entities_kind_name", "idx_record_entities_entity", "idx_record_links_b")) {
             assertTrue("missing $index", sql.contains(" $index ON "))
         }
-        assertEquals(3, RecordsSchema.VERSION)
+    }
+
+    /** docs §33: v4 adds the two `records` share columns and `records_backup_state`. */
+    @Test
+    fun sharingMigrationDeclaresPhase5Schema() {
+        val sql = RecordsSchema.migrationSql(4)
+        assertTrue(sql.contains("ALTER TABLE records ADD COLUMN shared_count INTEGER NOT NULL DEFAULT 0"))
+        assertTrue(sql.contains("ALTER TABLE records ADD COLUMN last_shared_ms INTEGER"))
+        assertTrue(sql.contains("CREATE TABLE records_backup_state ("))
+        assertTrue("records_backup_state" in RecordsSchema.MIGRATION_TABLES)
+        assertEquals(4, RecordsSchema.VERSION)
     }
 
     @Test
@@ -103,7 +113,8 @@ class RecordsSchemaContractTest {
         assertEquals(declared, selected)
         val all = SqliteRecordsStore.COLUMNS.split(',').map { it.trim() }
         assertEquals(SqliteRecordsStore.COLUMN_COUNT, all.size)
-        val added = RecordsSchema.MIGRATION_002.filter { it.startsWith("ALTER TABLE records ADD COLUMN ") }
+        val added = RecordsSchema.MIGRATIONS.values.flatten()
+            .filter { it.startsWith("ALTER TABLE records ADD COLUMN ") }
             .map { it.removePrefix("ALTER TABLE records ADD COLUMN ").substringBefore(' ') }
         assertTrue(all.drop(declared.size).all { it in added })
     }

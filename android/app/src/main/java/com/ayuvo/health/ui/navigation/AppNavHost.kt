@@ -335,7 +335,8 @@ fun AppNavHost(
                             container = container,
                             onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
                             onOpenValue = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) },
-                            onAskCoach = { ids -> askCoach(ids, "") }
+                            onAskCoach = { ids -> askCoach(ids, "") },
+                            onShare = { ids -> nav.navigate(AppRoutes.recordShare(ids)) }
                         )
                     }
                 }
@@ -357,7 +358,8 @@ fun AppNavHost(
                             onOpenSplit = { id -> nav.navigate(AppRoutes.recordSplit(id)) },
                             onOpenTrend = { analyteId -> nav.navigate(AppRoutes.recordTrend(analyteId)) },
                             focusObservationId = focusObservation,
-                            onAskCoach = ::askCoach
+                            onAskCoach = ::askCoach,
+                            onShare = { ids -> nav.navigate(AppRoutes.recordShare(ids)) }
                         )
                     }
                 }
@@ -388,6 +390,30 @@ fun AppNavHost(
                             onBack = { nav.popBackStack() },
                             onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }
                         )
+                    }
+                }
+                composable(
+                    AppRoutes.RECORD_SHARE,
+                    arguments = listOf(navArgument(AppRoutes.RECORD_IDS_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val ids = AppRoutes.parseRecordIds(entry.arguments?.getString(AppRoutes.RECORD_IDS_ARG))
+                    if (ids.isEmpty()) return@composable
+                    TabInset {
+                        com.ayuvo.health.ui.records.ShareRecordScreen(
+                            container = container,
+                            recordIds = ids,
+                            onBack = { nav.popBackStack() }
+                        )
+                    }
+                }
+                composable(AppRoutes.HEALTH_RECORDS_STORAGE) {
+                    TabInset {
+                        com.ayuvo.health.ui.records.RecordsStorageScreen(container = container, onBack = { nav.popBackStack() })
+                    }
+                }
+                composable(AppRoutes.HEALTH_RECORDS_BACKUP) {
+                    TabInset {
+                        com.ayuvo.health.ui.records.RecordsBackupScreen(container = container, onBack = { nav.popBackStack() })
                     }
                 }
                 composable(AppRoutes.COACH) {

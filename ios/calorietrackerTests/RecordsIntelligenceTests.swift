@@ -157,10 +157,12 @@ struct RecordsMigrationTests {
         let schema = try String(contentsOf: F.sharedSchemaURL, encoding: .utf8)
         let migration = try String(contentsOf: I.sharedMigrationURL, encoding: .utf8)
         let knowledge = try String(contentsOf: RecordsKnowledgeFixtures.sharedMigrationURL, encoding: .utf8)
+        let sharing = try String(contentsOf: RecordsSharingFixtures.sharedMigrationURL, encoding: .utf8)
         try await fromFiles.withConnection { connection in
             try connection.exec(schema)
             try connection.exec(migration)
             try connection.exec(knowledge)
+            try connection.exec(sharing)
         }
         #expect(try await embedded.tableNames() == fromFiles.tableNames())
         #expect(try await embedded.indexNames() == fromFiles.indexNames())

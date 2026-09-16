@@ -121,8 +121,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        lifecycleScope.launch {
-            runCatching { (application as AyuvoApp).container.cloudBackup.autoBackupIfNeeded() }
+        val container = (application as AyuvoApp).container
+        container.scope.launch {
+            runCatching { container.cloudBackup.autoBackupIfNeeded() }
+            // docs/health-records.md §36: the opt-in records archive follows the normal backup.
+            container.backupRecordsToDriveIfNeeded()
         }
     }
 

@@ -183,7 +183,7 @@ actor RecordsDatabase {
 
     // MARK: - Records
 
-    nonisolated static let columns = "seq, id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes, phash, text_signature, ai_mode_used, ai_provider, type_confidence, type_method"
+    nonisolated static let columns = "seq, id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes, phash, text_signature, ai_mode_used, ai_provider, type_confidence, type_method, shared_count, last_shared_ms"
 
     /// Contract §5 order, served by `idx_records_timeline`.
     nonisolated static let timelineOrderSQL = "sort_date DESC, created_ms DESC, seq DESC"
@@ -226,7 +226,9 @@ actor RecordsDatabase {
             aiModeUsed: RecordAIModeUsed(rawValue: s.text(33) ?? "") ?? .none,
             aiProvider: s.text(34),
             typeConfidence: s.double(35),
-            typeMethod: s.text(36).flatMap(RecordFieldMethod.init(rawValue:))
+            typeMethod: s.text(36).flatMap(RecordFieldMethod.init(rawValue:)),
+            sharedCount: s.int(37) ?? 0,
+            lastSharedMs: s.int64(38)
         )
     }
 
@@ -238,8 +240,8 @@ actor RecordsDatabase {
         try connection.inTransaction {
             try connection.run(
                 """
-                INSERT INTO records (id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes, phash, text_signature, ai_mode_used, ai_provider, type_confidence, type_method)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO records (id, parent_id, page_start, page_end, title, record_type, category, source, import_method, source_app, original_filename, created_ms, updated_ms, document_date, document_date_precision, document_date_method, sort_date, mime_type, file_type, file_size, page_count, file_path, thumbnail_path, checksum_sha256, processing_status, processing_error, review_status, favorite, archived, notes, phash, text_signature, ai_mode_used, ai_provider, type_confidence, type_method, shared_count, last_shared_ms)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [
                     .text(record.id), .optionalText(record.parentID), .optionalInt(record.pageStart), .optionalInt(record.pageEnd),
@@ -255,6 +257,7 @@ actor RecordsDatabase {
                     .optionalText(record.notes), .optionalText(record.phash), .optionalText(record.textSignature),
                     .text(record.aiModeUsed.rawValue), .optionalText(record.aiProvider), .optionalReal(record.typeConfidence),
                     .optionalText(record.typeMethod?.rawValue),
+                    .int(Int64(record.sharedCount)), .optionalInt64(record.lastSharedMs),
                 ]
             )
             try replacePagesInTransaction(recordID: record.id, pages: pages)

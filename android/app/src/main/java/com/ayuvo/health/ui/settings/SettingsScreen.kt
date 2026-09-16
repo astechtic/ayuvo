@@ -103,6 +103,7 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.outlined.Tune
@@ -1412,6 +1413,21 @@ fun SettingsScreen(
                     container = container,
                     onOpenAiProviders = { selectedCategory = SettingsCategory.AI_PROVIDERS }
                 )
+                Spacer(Modifier.height(18.dp))
+                // docs/health-records.md §35-§37: storage numbers/actions and the archive + Drive backup.
+                SectionCard {
+                    SettingRow(
+                        stringResource(R.string.records_settings_storage),
+                        stringResource(R.string.records_settings_storage_subtitle),
+                        icon = Icons.Outlined.Storage
+                    ) { nav.navigate(AppRoutes.HEALTH_RECORDS_STORAGE) }
+                    HorizontalDivider()
+                    SettingRow(
+                        stringResource(R.string.records_settings_backup),
+                        stringResource(R.string.records_settings_backup_subtitle),
+                        icon = Icons.Outlined.CloudUpload
+                    ) { nav.navigate(AppRoutes.HEALTH_RECORDS_BACKUP) }
+                }
                 Spacer(Modifier.height(18.dp))
                 HealthRecordsPrivacySection()
             }

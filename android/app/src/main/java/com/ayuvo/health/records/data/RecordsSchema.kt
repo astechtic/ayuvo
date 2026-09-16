@@ -11,7 +11,7 @@ object RecordsSchema {
     const val BASE_VERSION = 1
 
     /** Latest `user_version`: [BASE_VERSION] plus every entry of [MIGRATIONS]. */
-    const val VERSION = 3
+    const val VERSION = 4
 
     val STATEMENTS: List<String> = listOf(
         """CREATE TABLE records (
@@ -203,11 +203,22 @@ object RecordsSchema {
         "CREATE INDEX idx_record_links_b ON record_links(b_id)"
     )
 
+    /** `migrations/004_sharing.sql` (user_version 4), verbatim (§8 splitting; docs §33). */
+    val MIGRATION_004: List<String> = listOf(
+        "ALTER TABLE records ADD COLUMN shared_count INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE records ADD COLUMN last_shared_ms INTEGER",
+        """CREATE TABLE records_backup_state (
+  key TEXT PRIMARY KEY NOT NULL,
+  value TEXT NOT NULL)"""
+    )
+
     /** Migration statements keyed by the `user_version` they produce, applied in order. */
-    val MIGRATIONS: Map<Int, List<String>> = linkedMapOf(2 to MIGRATION_002, 3 to MIGRATION_003)
+    val MIGRATIONS: Map<Int, List<String>> = linkedMapOf(2 to MIGRATION_002, 3 to MIGRATION_003, 4 to MIGRATION_004)
 
     /** Shared file name of each migration (contract test). */
-    val MIGRATION_FILES: Map<Int, String> = linkedMapOf(2 to "002_intelligence.sql", 3 to "003_knowledge.sql")
+    val MIGRATION_FILES: Map<Int, String> = linkedMapOf(
+        2 to "002_intelligence.sql", 3 to "003_knowledge.sql", 4 to "004_sharing.sql"
+    )
 
     val SQL: String get() = STATEMENTS.joinToString(";\n", postfix = ";\n")
 
@@ -216,10 +227,11 @@ object RecordsSchema {
 
     val TABLES: List<String> = listOf("records", "record_pages", "tags", "record_tags", "records_fts", "records_meta")
 
-    /** Tables added by migrations (v2, v3). */
+    /** Tables added by migrations (v2, v3, v4). */
     val MIGRATION_TABLES: List<String> = listOf(
         "record_fields", "record_highlights", "processing_jobs", "duplicate_candidates", "split_proposals",
-        "observations", "analyte_user_aliases", "entities", "record_entities", "record_links"
+        "observations", "analyte_user_aliases", "entities", "record_entities", "record_links",
+        "records_backup_state"
     )
 
     val INDEXES: List<String> = listOf(

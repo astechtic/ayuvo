@@ -149,7 +149,11 @@ data class HealthRecord(
     val archived: Boolean = false,
     val notes: String? = null,
     /** `records.ai_mode_used` (v2). */
-    val aiModeUsed: AiModeUsed = AiModeUsed.NONE
+    val aiModeUsed: AiModeUsed = AiModeUsed.NONE,
+    /** `records.shared_count` (v4, §33): successful shares of this record. */
+    val sharedCount: Int = 0,
+    /** `records.last_shared_ms` (v4, §33). */
+    val lastSharedMs: Long? = null
 ) {
     val isReceived: Boolean get() = source == RecordSource.SHARE_IN || source == RecordSource.OPEN_IN
 

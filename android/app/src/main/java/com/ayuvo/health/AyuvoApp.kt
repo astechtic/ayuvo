@@ -303,13 +303,52 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val recordsQueue: RecordProcessingQueue by lazy { RecordProcessingQueue(app, { recordsStore }, { recordsPipeline }) }
     val recordsImports = RecordsImportCoordinator(scope, { recordImporter }, { recordsStore }, { recordsQueue })
 
-    /** Resumes unfinished processing (and the one-time Phase 2 backfill) when a records DB exists. */
+    // Phase 5 "Sharing & backup" (docs/health-records.md §33–§37).
+    val recordShareBuilder: com.ayuvo.health.records.share.RecordShareBuilder by lazy {
+        com.ayuvo.health.records.share.RecordShareBuilder(
+            store = recordsStore,
+            files = recordFiles,
+            catalog = { analyteCatalog },
+            typeLabel = { type -> appContext.getString(type.labelRes()) }
+        )
+    }
+    val recordsBackup: com.ayuvo.health.records.backup.RecordsBackupCoordinator by lazy {
+        com.ayuvo.health.records.backup.RecordsBackupCoordinator(
+            context = appContext,
+            store = recordsStore,
+            helper = recordsDatabase,
+            files = recordFiles,
+            appVersion = BuildConfig.VERSION_NAME
+        )
+    }
+    val recordsDriveBackup: com.ayuvo.health.records.backup.DriveRecordsBackup by lazy {
+        com.ayuvo.health.records.backup.DriveRecordsBackup(
+            context = appContext,
+            store = recordsStore,
+            archives = recordsBackup,
+            drive = com.ayuvo.health.backup.DriveCloudBackupClient(BuildConfig.CLOUD_BACKUP_WEB_CLIENT_ID),
+            accessToken = { keyStore.cloudBackupAccessToken() }
+        )
+    }
+
+    /**
+     * Resumes unfinished processing (and the one-time Phase 2 backfill) when a records DB exists,
+     * and clears the §34/§35 share temp folder left behind by the previous run.
+     */
     fun resumeRecordsProcessing() {
+        scope.launch { runCatching { withContext(Dispatchers.IO) { recordFiles.clearShareTemp() } } }
         if (!appContext.getDatabasePath(RecordsDatabase.NAME).exists()) return
         scope.launch {
             runCatching { recordsQueue.resumeOnStart() }
                 .onFailure { Log.w("AyuvoRecords", "Resume failed: ${it.javaClass.simpleName}") }
         }
+    }
+
+    /** §36: the opt-in records archive upload runs after the normal Drive backup. */
+    suspend fun backupRecordsToDriveIfNeeded() {
+        if (!recordsDatabaseExists()) return
+        runCatching { recordsDriveBackup.backupIfNeeded() }
+            .onFailure { Log.w("AyuvoRecords", "Drive records backup failed: ${it.javaClass.simpleName}") }
     }
 
     /** Deletes records after stopping their processing. */

@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
@@ -102,7 +103,9 @@ fun RecordsScreen(
     /** A Values hit opens its record at the observation's source (§23, §24). */
     onOpenValue: (recordId: String, observationId: String) -> Unit = { recordId, _ -> onOpenRecord(recordId) },
     /** §27 multi-select "Ask Coach": the chosen records, no prompt. */
-    onAskCoach: (List<String>) -> Unit = {}
+    onAskCoach: (List<String>) -> Unit = {},
+    /** §34 multi-select "Share": opens "What will be shared" for the chosen records. */
+    onShare: (List<String>) -> Unit = {}
 ) {
     val vm: RecordsViewModel = viewModel(factory = RecordsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -160,6 +163,11 @@ fun RecordsScreen(
                         val chosen = ui.items.filter { it.id in ui.selection }.map { it.id }
                         vm.clearSelection()
                         onAskCoach(com.ayuvo.health.records.coach.RecordsCoach.normalizeSelection(chosen))
+                    },
+                    onShare = {
+                        val chosen = ui.items.filter { it.id in ui.selection }.map { it.id }
+                        vm.clearSelection()
+                        if (chosen.isNotEmpty()) onShare(chosen)
                     }
                 )
             } else {
@@ -348,7 +356,8 @@ private fun SelectionBar(
     onFavorite: () -> Unit,
     onArchive: () -> Unit,
     onDelete: () -> Unit,
-    onAskCoach: () -> Unit = {}
+    onAskCoach: () -> Unit = {},
+    onShare: () -> Unit = {}
 ) {
     Row(
         Modifier
@@ -366,6 +375,9 @@ private fun SelectionBar(
         )
         IconButton(onClick = onAskCoach) {
             Icon(Icons.Filled.Forum, stringResource(R.string.records_coach_ask_coach), tint = AppColors.Calorie)
+        }
+        IconButton(onClick = onShare) {
+            Icon(Icons.Filled.Share, stringResource(R.string.records_action_share), tint = AppColors.Calorie)
         }
         IconButton(onClick = onFavorite) {
             Icon(Icons.Outlined.StarOutline, stringResource(R.string.records_action_favorite), tint = AppColors.Calorie)

@@ -4412,6 +4412,951 @@ def pack_coach_records(snapshot, selected_ids, type_labels):
             "dropped_results": sum(b["dropped"] for b in blocks)}
 
 
+# =============================================================================================
+# Phase 5: Sharing & backup (docs §33-§37)
+# =============================================================================================
+#
+# The same plain store snapshot as Phase 4, with these optional additions (every function copies the
+# columns it finds and omits the rest):
+#   records:          + mime_type, file_type, file_size, file_path, thumbnail_path, thumbnail_size,
+#                       checksum_sha256, processing_status/-_error, shared_count, last_shared_ms and
+#                       every other §8/§33 column.
+#   pages:            + text_source, ocr_confidence, width, height, blocks_json — a JSON string or an
+#                       already parsed [{"t": "line text", "b": [x, y, w, h]}] list (§9.1, 0-1 origin
+#                       top-left). A page without blocks_json cannot be redacted (§34).
+#   tags:             [{id, name}]   record_tags: [{record_id, tag_id}]
+#   entities / record_entities / analyte_user_aliases: the §19 rows.
+# Summary text and warning strings are exact strings; archive rows compare structurally.
+
+SHARE_SUMMARY_FIELDS = ["doctor", "facility", "patient_name", "dates", "test_results", "medications",
+                        "diagnoses", "recommendations"]
+REDACTION_CLASSES = ["name", "address", "phone", "patient_id", "insurance_id", "other_ids"]
+SHARE_FOOTER = "Shared from Ayuvo. Values were read from the original document and may contain mistakes."
+SHARE_SEPARATOR = "\n\n---\n\n"
+SHARE_NOTES_HEADER = "Notes:"
+SHARE_HIGHLIGHTS_HEADER = "AI highlights (verify against the original report):"
+# Date labels printed on the "Dates:" line, in this order.
+_SHARE_DATE_LABELS = [("collection_date", "Collected"), ("report_date", "Reported"), ("visit_date", "Visit"),
+                      ("prescription_date", "Prescribed"), ("admission_date", "Admitted"),
+                      ("discharge_date", "Discharged"), ("follow_up_date", "Follow-up")]
+# Warning strings (§34). {title} is the record title, {page} the 1-based page number.
+SHARE_WARNINGS = {
+    "unknown_record": "A selected record is no longer available and was left out",
+    "no_original": "The original file of {title} is missing and was left out",
+    "page_missing": "Page {page} of {title} doesn't exist and was left out",
+    "page_not_redactable": "Page {page} can't be redacted and was left out",
+    "record_not_redactable": "No page of {title} can be redacted, so it was left out",
+    "text_layer_lost": "Selected pages are shared as images",
+    "redacted_text_layer_lost": "Redacted pages are shared as images",
+    "nothing_to_share": "Nothing is selected to share",
+}
+REDACTION_INFLATE = 0.02  # each side, in the normalized 0-1 box space (§34)
+_REDACTION_ADDRESS_LINES = 4
+
+_RE_ADDRESS_LABEL = re.compile("(?<![a-z0-9])(?:address|addr|residence|residential)(?![a-z0-9])")
+_RE_PHONE_LABEL = re.compile("(?<![a-z0-9])(?:phone|mobile|mob|tel|telephone|cell|contact|whatsapp|ph)"
+                             "(?![a-z0-9])")
+_RE_PATIENT_ID_LABEL = re.compile("(?<![a-z0-9])(?:uhid|uhid no|mrn|mr no|mrno|patient id|patient no|"
+                                  "hospital no|hosp no|reg no|regn no|registration no|ip no|op no)(?![a-z0-9])")
+_RE_INSURANCE_ID_LABEL = re.compile("(?<![a-z0-9])(?:policy no|policy number|member id|member no|claim no|"
+                                    "claim id|tpa id|tpa no|insurance id)(?![a-z0-9])")
+_RE_ID_LABEL = re.compile("(?<![a-z0-9])(?:id|ids|no|number|ref|reference|barcode|code|serial|accession|"
+                          "sample id|lab no)(?![a-z0-9])")
+_RE_DATE_RUN = re.compile("[0-9]{1,4}[-][0-9]{1,2}[-][0-9]{1,4}")
+_PHONE_CHARS = frozenset("0123456789 -+()")
+_PHONE_MIN_DIGITS = 7
+_PHONE_MAX_DIGITS = 15
+# A whole line that is nothing but a printed reference range ("4000 - 11000", "13.0-17.0"). A tight
+# range without a decimal point ("2345-6789") stays a phone candidate.
+_RE_RANGE_SPACED = re.compile("[0-9]+(?:[.][0-9]+)? [-–—] [0-9]+(?:[.][0-9]+)?")
+_RE_RANGE_DECIMAL = re.compile("[0-9]+[.][0-9]+ ?[-–—] ?[0-9]+(?:[.][0-9]+)?|"
+                               "[0-9]+(?:[.][0-9]+)? ?[-–—] ?[0-9]+[.][0-9]+")
+
+
+# ---------------------------------------------------------------------------------------------
+# §34 Share summary text
+# ---------------------------------------------------------------------------------------------
+
+def _plan_records(snapshot, plan):
+    """The plan's records in plan order, unknown ids dropped, an id repeated once."""
+    rmap = _record_map(snapshot)
+    out, seen = [], set()
+    for rid in (plan.get("record_ids") or []):
+        if rid in rmap and rid not in seen:
+            seen.add(rid)
+            out.append(rmap[rid])
+    return out
+
+
+def _share_result_item(tr):
+    """'<name>: <value> <unit> (<flag word>, ref <ref_text>)'; missing parts are skipped and the colon
+    only appears when a value or a unit follows."""
+    name = collapse_ws(tr["name"]) or ""
+    rest = [collapse_ws(x) for x in (tr["value"], tr["unit"]) if x is not None and collapse_ws(x)]
+    text = name + (": " + " ".join(rest) if rest else "")
+    inner = []
+    if tr["flag"] in _FLAG_WORD:
+        inner.append(_FLAG_WORD[tr["flag"]])
+    ref = _strip_ref_brackets(tr["ref_text"]) if tr["ref_text"] is not None else None
+    if ref:
+        inner.append("ref " + ref)
+    if inner:
+        text += " (" + ", ".join(inner) + ")"
+    return text
+
+
+def _share_medication_item(row):
+    """'<name> <strength>, <dose>, <frequency>, <duration>, <instructions>' — the strength joins the name
+    with a space, every other present part is appended after ', '."""
+    vj = row.get("value_json") or {}
+    text = collapse_ws(vj.get("name") or row["value_text"]) or ""
+    if vj.get("strength") and collapse_ws(vj["strength"]):
+        text += " " + collapse_ws(vj["strength"])
+    for key in ("dose", "frequency", "duration", "instructions"):
+        part = collapse_ws(vj.get(key)) if vj.get(key) else None
+        if part:
+            text += ", " + part
+    return text
+
+
+def _share_notes_lines(notes):
+    """CRLF/CR -> LF, every line whitespace-collapsed, blank lines dropped."""
+    if not notes:
+        return []
+    out = []
+    for line in notes.replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+        line = collapse_ws(line)
+        if line:
+            out.append(line)
+    return out
+
+
+def share_summary_text(snapshot, plan, type_labels):
+    """§34 summary text of a SharePlan -> {text, record_ids}.
+
+    One block per plan record (plan order, unknown ids dropped):
+        '<title> — <date>'                      (always; date = sort_date)
+        '<Type label> · <facility>'             (facility only with the 'facility' summary field)
+        'Doctor: <doctor>'                      ('doctor'), 'Patient: <name>' ('patient_name')
+        'Dates: Collected <d> · Reported <d>'   ('dates'; _SHARE_DATE_LABELS order, best non-rejected row)
+        'Results:' + '- <item>' lines           ('test_results'; §29 order: critical, low/high, abnormal,
+                                                 rest, report order inside a group)
+        'Medications:', 'Diagnoses:', 'Recommendations:' + '- <value>' lines (non-rejected rows, row order)
+        'Notes:' + the record's notes           (include_notes)
+        'AI highlights (verify against the original report):' + '- <text>' lines (include_highlights; the
+                                                 record's non-dismissed 'summary' highlights by position)
+    Empty or unselected sections are omitted. Blocks are joined by an empty line, '---' and an empty line;
+    SHARE_FOOTER ends the whole text once. include_summary false, or no existing record -> text null."""
+    labels = type_labels or TYPE_LABEL
+    fields = set(plan.get("summary_fields") or [])
+    records = _plan_records(snapshot, plan)
+    if not plan.get("include_summary") or not records:
+        return {"text": None, "record_ids": []}
+    highlights = _snap(snapshot, "highlights")
+    blocks = []
+    for r in records:
+        rows = [f for f in _rows_of(snapshot, r["id"]) if f["state"] != "rejected"]
+        lines = ["%s — %s" % (collapse_ws(r["title"]), r.get("sort_date"))]
+        head = _type_label(labels, r["record_type"])
+        facility = collapse_ws(_best_value(rows, "facility")) if "facility" in fields else None
+        if facility:
+            head += " · " + facility
+        lines.append(head)
+        if "doctor" in fields:
+            doctor = collapse_ws(_best_value(rows, "doctor_name"))
+            if doctor:
+                lines.append("Doctor: " + doctor)
+        if "patient_name" in fields:
+            patient = collapse_ws(_best_value(rows, "patient_name"))
+            if patient:
+                lines.append("Patient: " + patient)
+        if "dates" in fields:
+            parts = []
+            for key, label in _SHARE_DATE_LABELS:
+                value = collapse_ws(_best_value(rows, key))
+                if value:
+                    parts.append("%s %s" % (label, value))
+            if parts:
+                lines.append("Dates: " + " · ".join(parts))
+        if "test_results" in fields:
+            results = [(i, tr) for i, tr in enumerate(record_test_results(snapshot, r["id"]))]
+            results.sort(key=lambda t: (_flag_group(t[1]["flag"]), t[0]))
+            items = [_share_result_item(tr) for _, tr in results]
+            items = [x for x in items if x]
+            if items:
+                lines.append("Results:")
+                lines += ["- " + x for x in items]
+        for label, key, section in (("Medications", "medication", "medications"),
+                                    ("Diagnoses", "diagnosis", "diagnoses"),
+                                    ("Recommendations", "recommendation", "recommendations")):
+            if section not in fields:
+                continue
+            items = []
+            for f in rows:
+                if f["field_key"] != key:
+                    continue
+                text = _share_medication_item(f) if key == "medication" else collapse_ws(f["value_text"])
+                if text:
+                    items.append(text)
+            if items:
+                lines.append(label + ":")
+                lines += ["- " + x for x in items]
+        if plan.get("include_notes"):
+            notes = _share_notes_lines(r.get("notes"))
+            if notes:
+                lines.append(SHARE_NOTES_HEADER)
+                lines += notes
+        if plan.get("include_highlights"):
+            hs = [h for h in highlights if h["record_id"] == r["id"] and h["section"] == "summary"
+                  and not h.get("dismissed")]
+            hs.sort(key=lambda h: (h.get("position") or 0, h["id"]))
+            items = [collapse_ws(h["text"]) for h in hs]
+            items = [x for x in items if x]
+            if items:
+                lines.append(SHARE_HIGHLIGHTS_HEADER)
+                lines += ["- " + x for x in items]
+        blocks.append("\n".join(lines))
+    return {"text": SHARE_SEPARATOR.join(blocks) + "\n" + SHARE_FOOTER,
+            "record_ids": [r["id"] for r in records]}
+
+
+# ---------------------------------------------------------------------------------------------
+# §34 Redaction targets
+# ---------------------------------------------------------------------------------------------
+
+def _page_blocks(page):
+    """blocks_json of a page as a list, or None when the page has none (it cannot be redacted)."""
+    raw = page.get("blocks_json")
+    if raw is None:
+        return None
+    if isinstance(raw, str):
+        raw = raw.strip()
+        if not raw:
+            return None
+        try:
+            raw = json.loads(raw)
+        except ValueError:
+            return None
+    return raw if isinstance(raw, list) else None
+
+
+def _block_box(block):
+    b = block.get("b") if isinstance(block, dict) else None
+    if not isinstance(b, list) or len(b) != 4:
+        return None
+    for x in b:
+        if isinstance(x, bool) or not isinstance(x, (int, float)):
+            return None
+    return [float(x) for x in b]
+
+
+def _inflate_box(box):
+    """Inflated by REDACTION_INFLATE on every side in the normalized box space, clamped to 0..1, round4."""
+    x0 = max(0.0, box[0] - REDACTION_INFLATE)
+    y0 = max(0.0, box[1] - REDACTION_INFLATE)
+    x1 = min(1.0, box[0] + box[2] + REDACTION_INFLATE)
+    y1 = min(1.0, box[1] + box[3] + REDACTION_INFLATE)
+    if x1 < x0:
+        x1 = x0
+    if y1 < y0:
+        y1 = y0
+    return [round4(x0), round4(y0), round4(x1 - x0), round4(y1 - y0)]
+
+
+def _patient_name_targets(rows):
+    """The record's best non-rejected patient_name as (full word list, [part words of >= 3 characters])."""
+    value = _best_value(rows, "patient_name")
+    if not value:
+        return [], []
+    full = words(fold(value))
+    return full, [w for w in full if len(w) >= 3]
+
+
+def _line_has_name(line_words, full, parts):
+    if full and len(full) <= len(line_words):
+        for i in range(len(line_words) - len(full) + 1):
+            if line_words[i:i + len(full)] == full:
+                return True
+    for w in line_words:
+        if w in parts:
+            return True
+    return False
+
+
+def _line_has_phone_number(f):
+    """A run of 7..15 digits made only of digits, spaces, '-', '+', '(' and ')' that is not a numeric date."""
+    i, n = 0, len(f)
+    while i < n:
+        if f[i] not in _PHONE_CHARS:
+            i += 1
+            continue
+        j = i
+        while j < n and f[j] in _PHONE_CHARS:
+            j += 1
+        run = f[i:j].strip(" ")
+        digits = sum(1 for ch in run if "0" <= ch <= "9")
+        if _PHONE_MIN_DIGITS <= digits <= _PHONE_MAX_DIGITS and not _RE_DATE_RUN.fullmatch(run):
+            return True
+        i = j
+    return False
+
+
+def _lab_result_line(raw_text, f):
+    """True when the line is a printed result line, so its digit runs are values and ranges rather than a
+    phone number: it parses as a §13 lab row, or it carries a number immediately followed (optional space)
+    by a units.json unit, or the whole line is a printed numeric range."""
+    lines = page_lines(raw_text or "", 0)
+    if lines and parse_lab_line(lines[0]) is not None:
+        return True
+    pos = 0
+    while f:
+        m = _RE_NUMBER_UNIT.search(f, pos)
+        if not m:
+            break
+        if match_unit(f, m.end()):
+            return True
+        pos = m.start() + 1
+    t = f.strip(" ")
+    return bool(_RE_RANGE_SPACED.fullmatch(t) or _RE_RANGE_DECIMAL.fullmatch(t))
+
+
+def _line_has_other_id(f, line_words):
+    if not _RE_ID_LABEL.search(f):
+        return False
+    for w in line_words:
+        if len(w) >= 6 and any("a" <= c <= "z" for c in w) and any("0" <= c <= "9" for c in w):
+            return True
+    return False
+
+
+def _redaction_classes(classes):
+    """Requested classes in REDACTION_CLASSES order; unknown names are ignored."""
+    wanted = set(classes or [])
+    return [c for c in REDACTION_CLASSES if c in wanted]
+
+
+def redaction_targets(snapshot, record_id, classes):
+    """§34 redaction detection -> {record_id, classes, pages, excluded_pages, warnings}.
+
+    pages: one entry per page of the record that has blocks_json, in page_index order:
+      {page_index, lines: [{index, classes, box}]} where index is the 0-based position of the line in
+      blocks_json, classes the matched classes (REDACTION_CLASSES order) and box the line's box inflated
+      by REDACTION_INFLATE on every side (normalized, clamped, round4).
+    A page without blocks_json (and a page whose matched line carries no usable box) cannot be redacted:
+    its index goes to excluded_pages with the 'page_not_redactable' warning. With no requested class
+    nothing is detected and no page is excluded.
+    Detection on the folded line text (§10):
+      name         the record's best non-rejected patient_name: its whole word sequence, or any of its
+                   parts of >= 3 characters, as a whole word of the line.
+      address      an address label line and the following lines until a line without letters or digits,
+                   at most _REDACTION_ADDRESS_LINES lines in total.
+      phone        a phone label, or - on a line that is not a printed result line (_lab_result_line) -
+                   a run of 7..15 digits made of digits, spaces, '-', '+', '(' and ')' that is not a
+                   numeric date ('+91 98765 43210', '(022) 2345-6789', '9876543210'). A phone label always
+                   wins, so 'Mobile 9876543210 Hb 7.6 g/dL' is still redacted while 'WBC 8200 /cumm
+                   4000 - 11000' is not.
+      patient_id / insurance_id   a line carrying one of the labelled forms.
+      other_ids    a line with a generic id label that also carries a word of >= 6 characters mixing
+                   letters and digits."""
+    wanted = _redaction_classes(classes)
+    rows = [f for f in _rows_of(snapshot, record_id) if f["state"] != "rejected"]
+    full, parts = _patient_name_targets(rows) if "name" in wanted else ([], [])
+    pages = sorted([p for p in _snap(snapshot, "pages") if p["record_id"] == record_id],
+                   key=lambda p: p["page_index"])
+    out, excluded, warnings = [], [], []
+    for page in pages:
+        blocks = _page_blocks(page)
+        if blocks is None:
+            if wanted:
+                excluded.append(page["page_index"])
+                warnings.append(_share_warning("page_not_redactable", record_id=record_id,
+                                               page_index=page["page_index"]))
+            continue
+        raw = [b.get("t") if isinstance(b, dict) else None for b in blocks]
+        texts = [collapse_ws(t) for t in raw]
+        folded = [fold(t) if t else "" for t in texts]
+        line_words = [words(f) for f in folded]
+        hits = {}
+
+        def add(i, cls):
+            hits.setdefault(i, set()).add(cls)
+        for i, f in enumerate(folded):
+            if "name" in wanted and _line_has_name(line_words[i], full, parts):
+                add(i, "name")
+            if "phone" in wanted:
+                if _RE_PHONE_LABEL.search(f):
+                    add(i, "phone")
+                elif _line_has_phone_number(f) and not _lab_result_line(raw[i], f):
+                    add(i, "phone")
+            if "patient_id" in wanted and _RE_PATIENT_ID_LABEL.search(f):
+                add(i, "patient_id")
+            if "insurance_id" in wanted and _RE_INSURANCE_ID_LABEL.search(f):
+                add(i, "insurance_id")
+            if "other_ids" in wanted and _line_has_other_id(f, line_words[i]):
+                add(i, "other_ids")
+            if "address" in wanted and _RE_ADDRESS_LABEL.search(f):
+                for j in range(i, min(len(folded), i + _REDACTION_ADDRESS_LINES)):
+                    if j > i and not line_words[j]:
+                        break
+                    add(j, "address")
+        lines, bad = [], False
+        for i in sorted(hits):
+            box = _block_box(blocks[i]) if isinstance(blocks[i], dict) else None
+            if box is None:
+                bad = True
+                break
+            lines.append({"index": i, "classes": [c for c in REDACTION_CLASSES if c in hits[i]],
+                          "box": _inflate_box(box)})
+        if bad:
+            excluded.append(page["page_index"])
+            warnings.append(_share_warning("page_not_redactable", record_id=record_id,
+                                           page_index=page["page_index"]))
+            continue
+        out.append({"page_index": page["page_index"], "lines": lines})
+    return {"record_id": record_id, "classes": wanted, "pages": out, "excluded_pages": excluded,
+            "warnings": warnings}
+
+
+# ---------------------------------------------------------------------------------------------
+# §34 Share plan warnings
+# ---------------------------------------------------------------------------------------------
+
+def _share_warning(code, record_id=None, page_index=None, title=None):
+    values = {"title": title or "", "page": (page_index + 1) if page_index is not None else ""}
+    return {"code": code, "record_id": record_id, "page_index": page_index,
+            "text": fill_placeholders(SHARE_WARNINGS[code], values)}
+
+
+def _plan_pages(plan, record):
+    """The plan's page indexes for a record: 'all' (or a missing entry) -> every page, else the given list
+    de-duplicated in given order. -> (wanted, missing) with missing = indexes the record does not have."""
+    spec = (plan.get("pages") or {}).get(record["id"], "all")
+    count = record.get("page_count") or 0
+    if spec == "all" or spec is None:
+        return list(range(count)), [], True
+    wanted, missing, seen = [], [], set()
+    for idx in spec:
+        if idx in seen:
+            continue
+        seen.add(idx)
+        if isinstance(idx, int) and not isinstance(idx, bool) and 0 <= idx < count:
+            wanted.append(idx)
+        else:
+            missing.append(idx)
+    return wanted, missing, False
+
+
+def share_plan_warnings(snapshot, plan):
+    """§34 warnings a share plan must show before the final confirm -> {warnings, pages, records}.
+
+    Per plan record, in plan order: 'unknown_record'; 'page_missing' per plan page the record does not
+    have; with redactions, 'page_not_redactable' per plan page without blocks_json and
+    'record_not_redactable' when every plan page of the record is excluded; 'no_original' when the
+    original is requested but the record has no file_path; the text-layer notes 'text_layer_lost' (a page
+    subset of a PDF shared without redaction: Android re-renders) and 'redacted_text_layer_lost' (any
+    redaction: the produced PDF has no text layer). 'nothing_to_share' when the plan produces neither a
+    summary nor an original. 'pages' lists the pages that survive per record (originals only)."""
+    warnings, kept = [], []
+    rmap = _record_map(snapshot)
+    redacting = bool(_redaction_classes(plan.get("redactions")))
+    original = bool(plan.get("include_original"))
+    any_original = False
+    for rid in (plan.get("record_ids") or []):
+        record = rmap.get(rid)
+        if record is None:
+            warnings.append(_share_warning("unknown_record", record_id=rid))
+            continue
+        title = collapse_ws(record.get("title")) or ""
+        wanted, missing, is_all = _plan_pages(plan, record)
+        for idx in missing:
+            warnings.append({"code": "page_missing", "record_id": rid, "page_index": idx,
+                             "text": fill_placeholders(SHARE_WARNINGS["page_missing"],
+                                                       {"title": title,
+                                                        "page": (idx + 1) if isinstance(idx, int) and
+                                                        not isinstance(idx, bool) else idx})})
+        pages = wanted if original else []
+        if original and not record.get("file_path"):
+            warnings.append(_share_warning("no_original", record_id=rid, title=title))
+            pages = []
+        elif original:
+            if redacting:
+                targets = redaction_targets(snapshot, rid, plan.get("redactions"))
+                excluded = set(targets["excluded_pages"])
+                for w in targets["warnings"]:
+                    if w["page_index"] in wanted:
+                        warnings.append(w)
+                pages = [p for p in wanted if p not in excluded]
+                if wanted and not pages:
+                    warnings.append(_share_warning("record_not_redactable", record_id=rid, title=title))
+            if pages:
+                any_original = True
+        kept.append({"record_id": rid, "pages": pages})
+    if original and any_original:
+        if redacting:
+            warnings.append(_share_warning("redacted_text_layer_lost"))
+        elif any(not _plan_pages(plan, rmap[k["record_id"]])[2] and k["pages"] and
+                 rmap[k["record_id"]].get("file_type") == "pdf" for k in kept if k["record_id"] in rmap):
+            warnings.append(_share_warning("text_layer_lost"))
+    summary = share_summary_text(snapshot, plan, None)
+    if summary["text"] is None and not any_original:
+        warnings.append(_share_warning("nothing_to_share"))
+    return {"warnings": warnings, "pages": kept, "records": [k["record_id"] for k in kept]}
+
+
+# ---------------------------------------------------------------------------------------------
+# §35 ayuvo-records archive: manifest, rows, entry order
+# ---------------------------------------------------------------------------------------------
+
+ARCHIVE_FORMAT = "ayuvo-records"
+ARCHIVE_FORMAT_VERSION = 1
+ARCHIVE_SCHEMA_VERSION = 4
+ARCHIVE_APP = "Ayuvo"
+ARCHIVE_LINE_CAP = 256 * 1024  # bytes of one encoded ndjson line
+ARCHIVE_MANIFEST_KEYS = ["format", "format_version", "schema_version", "app", "app_version", "platform",
+                         "created_ms", "time_zone", "record_count", "file_count", "total_file_bytes"]
+# Columns in schema order (schema.sql + migrations 002/003/004). records.seq is the local FTS docid and is
+# never exported.
+ARCHIVE_RECORD_COLUMNS = ["id", "parent_id", "page_start", "page_end", "title", "record_type", "category",
+                          "source", "import_method", "source_app", "original_filename", "created_ms",
+                          "updated_ms", "document_date", "document_date_precision", "document_date_method",
+                          "sort_date", "mime_type", "file_type", "file_size", "page_count", "file_path",
+                          "thumbnail_path", "checksum_sha256", "processing_status", "processing_error",
+                          "review_status", "favorite", "archived", "notes", "phash", "text_signature",
+                          "ai_mode_used", "ai_provider", "type_confidence", "type_method", "shared_count",
+                          "last_shared_ms"]
+ARCHIVE_PAGE_COLUMNS = ["record_id", "page_index", "text", "text_source", "ocr_confidence", "width", "height",
+                        "blocks_json"]
+ARCHIVE_FIELD_COLUMNS = ["id", "record_id", "field_key", "value_text", "value_json", "method", "confidence",
+                         "state", "source_page", "source_bbox", "evidence", "created_ms", "updated_ms"]
+ARCHIVE_OBSERVATION_COLUMNS = list(OBSERVATION_KEYS)
+ARCHIVE_HIGHLIGHT_COLUMNS = ["id", "record_id", "section", "text", "method", "provider", "field_id",
+                             "source_page", "confidence", "dismissed", "position", "created_ms"]
+ARCHIVE_LINK_COLUMNS = ["a_id", "b_id", "kind", "origin", "status", "score", "reasons_json", "created_ms",
+                        "updated_ms"]
+ARCHIVE_ENTITY_COLUMNS = ["id", "kind", "display_name", "normalized_name", "specialty", "created_ms",
+                          "updated_ms"]
+ARCHIVE_RECORD_ENTITY_COLUMNS = ["record_id", "entity_id", "role"]
+ARCHIVE_TAG_COLUMNS = ["id", "name", "record_ids"]
+ARCHIVE_ALIAS_COLUMNS = ["normalized_name", "analyte_id", "created_ms"]
+ARCHIVE_DATA_ENTRIES = ["records.ndjson", "pages.ndjson", "fields.ndjson", "observations.ndjson",
+                        "highlights.ndjson", "links.ndjson", "entities.ndjson", "record_entities.ndjson",
+                        "tags.json", "analyte_user_aliases.json"]
+ARCHIVE_ENTRY_TABLE = {"records.ndjson": "records", "pages.ndjson": "pages", "fields.ndjson": "fields",
+                       "observations.ndjson": "observations", "highlights.ndjson": "highlights",
+                       "links.ndjson": "links", "entities.ndjson": "entities",
+                       "record_entities.ndjson": "record_entities", "tags.json": "tags",
+                       "analyte_user_aliases.json": "analyte_user_aliases"}
+ARCHIVE_ENTRY_COLUMNS = {"records.ndjson": ARCHIVE_RECORD_COLUMNS, "pages.ndjson": ARCHIVE_PAGE_COLUMNS,
+                         "fields.ndjson": ARCHIVE_FIELD_COLUMNS,
+                         "observations.ndjson": ARCHIVE_OBSERVATION_COLUMNS,
+                         "highlights.ndjson": ARCHIVE_HIGHLIGHT_COLUMNS, "links.ndjson": ARCHIVE_LINK_COLUMNS,
+                         "entities.ndjson": ARCHIVE_ENTITY_COLUMNS,
+                         "record_entities.ndjson": ARCHIVE_RECORD_ENTITY_COLUMNS,
+                         "tags.json": ARCHIVE_TAG_COLUMNS,
+                         "analyte_user_aliases.json": ARCHIVE_ALIAS_COLUMNS}
+# Columns a row must carry to be imported (§35 reader validation).
+ARCHIVE_REQUIRED_COLUMNS = {"records.ndjson": ["id"], "pages.ndjson": ["record_id", "page_index"],
+                            "fields.ndjson": ["id", "record_id", "field_key"],
+                            "observations.ndjson": ["id", "record_id"],
+                            "highlights.ndjson": ["id", "record_id", "section", "text"],
+                            "links.ndjson": ["a_id", "b_id", "kind"], "entities.ndjson": ["id", "kind"],
+                            "record_entities.ndjson": ["record_id", "entity_id", "role"],
+                            "tags.json": ["id", "name"],
+                            "analyte_user_aliases.json": ["normalized_name", "analyte_id"]}
+
+
+def compact_json(obj):
+    """The archive's line encoding: compact separators, non-ASCII unescaped."""
+    return json.dumps(obj, separators=(",", ":"), ensure_ascii=False)
+
+
+def _sorted_json(value):
+    """A JSON value with every object's keys sorted (§38: value_json is stored in §8 key order but
+    exported sorted, so archives are stable and portable)."""
+    if isinstance(value, dict):
+        return dict((k, _sorted_json(value[k])) for k in sorted(value))
+    if isinstance(value, list):
+        return [_sorted_json(v) for v in value]
+    return value
+
+
+def _row(source, columns):
+    """The columns present in source, in schema order; NULL (None) and absent columns are omitted. A
+    column holding a JSON object (value_json) is written with sorted keys."""
+    out = {}
+    for c in columns:
+        v = source.get(c)
+        if v is not None:
+            out[c] = _sorted_json(v) if isinstance(v, (dict, list)) else v
+    return out
+
+
+def _archive_record_order(snapshot):
+    """records ordered by (sort_date, created_ms, id) — the §35 export order."""
+    return sorted(_snap(snapshot, "records"), key=lambda r: (r.get("sort_date") or "", r.get("created_ms") or 0,
+                                                             r["id"]))
+
+
+def _truncate_page_row(row):
+    """A pages row whose encoded line is longer than ARCHIVE_LINE_CAP bytes keeps the longest prefix of its
+    text (in code points) that still fits and gains "text_truncated": true. When the row does not fit even
+    with an empty text, blocks_json is dropped first ("blocks_truncated": true) and the text is only cut
+    when that is still not enough. No other table's rows are ever truncated."""
+    def encoded(candidate):
+        return len(compact_json(candidate).encode("utf-8"))
+    if encoded(row) <= ARCHIVE_LINE_CAP:
+        return row, False
+    text = row.get("text") or ""
+    probe = dict(row)
+    probe["text"] = ""
+    if encoded(probe) > ARCHIVE_LINE_CAP and "blocks_json" in probe:
+        del probe["blocks_json"]
+        probe["blocks_truncated"] = True
+        probe["text"] = text
+        if encoded(probe) <= ARCHIVE_LINE_CAP:
+            return probe, True
+        probe["text"] = ""
+    probe["text_truncated"] = True
+    lo, hi = 0, len(text)
+    while lo < hi:
+        mid = (lo + hi + 1) // 2
+        probe["text"] = text[:mid]
+        if encoded(probe) <= ARCHIVE_LINE_CAP:
+            lo = mid
+        else:
+            hi = mid - 1
+    probe["text"] = text[:lo]
+    if not probe["text"]:
+        del probe["text"]
+    return probe, True
+
+
+def archive_rows(snapshot):
+    """§35 archive payload -> an ordered mapping {entry name: [row dicts]} for the ten data entries
+    (manifest.json, the files/ members and checksums.json are not rows).
+
+    Every row carries the entry's columns in schema order with NULLs omitted. Order:
+      records.ndjson            (sort_date, created_ms, id)      — records.seq is never exported
+      pages.ndjson              (record_id, page_index)
+      fields.ndjson             (record_id, created_ms, id)      — the row order inside a record is kept
+      observations.ndjson       (record_id, created_ms, id)
+      highlights.ndjson         (record_id, section, position, id)
+      links.ndjson              (a_id, b_id)
+      entities.ndjson           (kind, normalized_name)
+      record_entities.ndjson    (record_id, entity_id, role)
+      tags.json                 by folded name, then id; record_ids in record order
+      analyte_user_aliases.json by normalized_name
+    A pages line longer than ARCHIVE_LINE_CAP bytes is truncated (see _truncate_page_row); no other row is."""
+    order = dict((r["id"], i) for i, r in enumerate(_archive_record_order(snapshot)))
+    out = {}
+    out["records.ndjson"] = [_row(r, ARCHIVE_RECORD_COLUMNS) for r in _archive_record_order(snapshot)]
+    pages = sorted(_snap(snapshot, "pages"), key=lambda p: (p["record_id"], p["page_index"]))
+    out["pages.ndjson"] = [_truncate_page_row(_row(p, ARCHIVE_PAGE_COLUMNS))[0] for p in pages]
+    fields = sorted(_snap(snapshot, "fields"), key=lambda f: (f["record_id"], f.get("created_ms") or 0, f["id"]))
+    out["fields.ndjson"] = [_row(f, ARCHIVE_FIELD_COLUMNS) for f in fields]
+    obs = sorted(_snap(snapshot, "observations"),
+                 key=lambda o: (o["record_id"], o.get("created_ms") or 0, o["id"]))
+    out["observations.ndjson"] = [_row(o, ARCHIVE_OBSERVATION_COLUMNS) for o in obs]
+    hl = sorted(_snap(snapshot, "highlights"),
+                key=lambda h: (h["record_id"], h.get("section") or "", h.get("position") or 0, h["id"]))
+    out["highlights.ndjson"] = [_row(h, ARCHIVE_HIGHLIGHT_COLUMNS) for h in hl]
+    links = sorted(_snap(snapshot, "links"), key=lambda l: (l["a_id"], l["b_id"]))
+    out["links.ndjson"] = [_row(l, ARCHIVE_LINK_COLUMNS) for l in links]
+    ents = sorted(_snap(snapshot, "entities"),
+                  key=lambda e: (e.get("kind") or "", e.get("normalized_name") or "", e["id"]))
+    out["entities.ndjson"] = [_row(e, ARCHIVE_ENTITY_COLUMNS) for e in ents]
+    re_rows = sorted(_snap(snapshot, "record_entities"),
+                     key=lambda x: (x["record_id"], x["entity_id"], x["role"]))
+    out["record_entities.ndjson"] = [_row(x, ARCHIVE_RECORD_ENTITY_COLUMNS) for x in re_rows]
+    by_tag = {}
+    for rt in _snap(snapshot, "record_tags"):
+        by_tag.setdefault(rt["tag_id"], []).append(rt["record_id"])
+    tags = sorted(_snap(snapshot, "tags"), key=lambda t: (fold(t.get("name") or ""), t["id"]))
+    out["tags.json"] = [{"id": t["id"], "name": t["name"],
+                         "record_ids": sorted(set(by_tag.get(t["id"], [])),
+                                              key=lambda rid: (order.get(rid, len(order)), rid))}
+                        for t in tags]
+    aliases = _snap(snapshot, "analyte_user_aliases")
+    if not aliases:
+        aliases = [{"normalized_name": k, "analyte_id": v}
+                   for k, v in sorted((snapshot.get("user_aliases") or {}).items())]
+    out["analyte_user_aliases.json"] = [_row(a, ARCHIVE_ALIAS_COLUMNS)
+                                        for a in sorted(aliases, key=lambda a: a["normalized_name"])]
+    return out
+
+
+def archive_file_entries(snapshot, include_files=True):
+    """The files/ members in export order: per record (record order) its original, then its thumbnail.
+    -> [{name, record_id, kind, bytes}]."""
+    if not include_files:
+        return []
+    out = []
+    for r in _archive_record_order(snapshot):
+        for kind, path_key, size_key in (("original", "file_path", "file_size"),
+                                         ("thumb", "thumbnail_path", "thumbnail_size")):
+            path = r.get(path_key)
+            if not path:
+                continue
+            out.append({"name": "files/%s/%s" % (r["id"], path.replace("\\", "/").split("/")[-1]),
+                        "record_id": r["id"], "kind": kind, "bytes": r.get(size_key) or 0})
+    return out
+
+
+def archive_entry_names(snapshot, include_files=True):
+    """The complete §35 entry order of an export."""
+    return (["manifest.json"] + list(ARCHIVE_DATA_ENTRIES) +
+            [f["name"] for f in archive_file_entries(snapshot, include_files)] + ["checksums.json"])
+
+
+def archive_manifest(snapshot, platform, app_version, created_ms, time_zone, include_files=True):
+    """§35 manifest.json. record_count = every record in the store (archived included); file_count and
+    total_file_bytes cover the files/ members (0 when include_files is false)."""
+    files = archive_file_entries(snapshot, include_files)
+    return {"format": ARCHIVE_FORMAT, "format_version": ARCHIVE_FORMAT_VERSION,
+            "schema_version": ARCHIVE_SCHEMA_VERSION, "app": ARCHIVE_APP, "app_version": app_version,
+            "platform": platform, "created_ms": created_ms, "time_zone": time_zone,
+            "record_count": len(_snap(snapshot, "records")), "file_count": len(files),
+            "total_file_bytes": sum(f["bytes"] for f in files)}
+
+
+def archive_entry_text(name, payload):
+    """The exact text of a data entry: one compact JSON object per line for *.ndjson, one compact JSON
+    value for manifest.json / checksums.json / tags.json / analyte_user_aliases.json; always ending with a
+    single LF (an entry with no rows is a single LF for ndjson, '[]\\n' for a JSON array)."""
+    if name.endswith(".ndjson"):
+        return "".join(compact_json(row) + "\n" for row in payload)
+    return compact_json(payload) + "\n"
+
+
+# ---------------------------------------------------------------------------------------------
+# §35 Reading an archive
+# ---------------------------------------------------------------------------------------------
+
+ARCHIVE_READ_ERRORS = {
+    "manifest_missing": "This file is not an Ayuvo records archive",
+    "bad_format": "This file is not an Ayuvo records archive",
+    "unsupported_version": "This backup was made by a newer version of Ayuvo",
+}
+ARCHIVE_READ_WARNINGS = {
+    "checksums_missing": "checksums.json is missing; nothing could be verified",
+    "checksum_mismatch": "{entry} does not match its checksum and may be damaged",
+    "checksum_unlisted": "{entry} has no checksum",
+    "file_unlisted": "{entry} has no checksum and was skipped",
+    "entry_missing": "{entry} is missing",
+    "entry_order": "The entries are not in the export order",
+    "unknown_entry": "{entry} is not part of this format and was ignored",
+    "bad_row": "{entry} has {count} unreadable row(s)",
+    "unknown_columns": "{entry} has unknown columns that were dropped: {columns}",
+    "record_count_mismatch": "The manifest counts {expected} record(s), the archive holds {actual}",
+}
+
+
+def _archive_warning(code, **values):
+    return {"code": code, "entry": values.get("entry"),
+            "text": fill_placeholders(ARCHIVE_READ_WARNINGS[code], values)}
+
+
+def read_archive_rows(entries):
+    """§35 reader -> {ok, error, error_text, manifest, rows, files, warnings, counts}.
+
+    `entries` is the archive as a list of {name, json?, rows?, sha256?} in zip order: manifest.json and
+    checksums.json carry `json`, every data entry carries `rows`, a files/ member carries only its
+    `sha256`. Fatal (ok false, nothing imported): a missing or unreadable manifest, a format that is not
+    'ayuvo-records', format_version > 1. Everything else is a warning and the rest is still imported:
+    a checksum mismatch (the row or file is kept), a data entry with no checksum, a missing data entry,
+    entries out of the §35 order, unknown entries, rows missing a required column (dropped), unknown
+    columns (dropped), a manifest record_count that does not match. A files/ member without a checksums
+    entry is skipped (§35), so it never reaches `files`."""
+    entries = entries or []
+    by_name = {}
+    names = []
+    for e in entries:
+        names.append(e["name"])
+        by_name[e["name"]] = e
+    out = {"ok": False, "error": None, "error_text": None, "manifest": None, "rows": {}, "files": {},
+           "warnings": [], "counts": {}}
+    manifest = (by_name.get("manifest.json") or {}).get("json")
+    if not isinstance(manifest, dict):
+        out["error"] = "manifest_missing"
+        out["error_text"] = ARCHIVE_READ_ERRORS["manifest_missing"]
+        return out
+    if manifest.get("format") != ARCHIVE_FORMAT:
+        out["error"] = "bad_format"
+        out["error_text"] = ARCHIVE_READ_ERRORS["bad_format"]
+        return out
+    version = manifest.get("format_version")
+    if not isinstance(version, int) or isinstance(version, bool) or version > ARCHIVE_FORMAT_VERSION:
+        out["error"] = "unsupported_version"
+        out["error_text"] = ARCHIVE_READ_ERRORS["unsupported_version"]
+        out["manifest"] = manifest
+        return out
+    out["manifest"] = manifest
+    checksums = (by_name.get("checksums.json") or {}).get("json")
+    if not isinstance(checksums, dict):
+        checksums = None
+        out["warnings"].append(_archive_warning("checksums_missing"))
+    expected_order = [n for n in (["manifest.json"] + list(ARCHIVE_DATA_ENTRIES)) if n in by_name]
+    expected_order += [n for n in names if n.startswith("files/")]
+    expected_order += ["checksums.json"] if "checksums.json" in by_name else []
+    present_known = [n for n in names if n in by_name and (n in ARCHIVE_ENTRY_TABLE or n.startswith("files/")
+                                                           or n in ("manifest.json", "checksums.json"))]
+    if present_known != expected_order:
+        out["warnings"].append(_archive_warning("entry_order"))
+    for name in names:
+        if name not in ARCHIVE_ENTRY_TABLE and not name.startswith("files/") and \
+                name not in ("manifest.json", "checksums.json"):
+            out["warnings"].append(_archive_warning("unknown_entry", entry=name))
+    if checksums is not None:
+        for name in names:
+            if name == "checksums.json":
+                continue
+            want = checksums.get(name)
+            got = by_name[name].get("sha256")
+            if want is None:
+                out["warnings"].append(_archive_warning("file_unlisted" if name.startswith("files/")
+                                                        else "checksum_unlisted", entry=name))
+            elif got is not None and got != want:
+                out["warnings"].append(_archive_warning("checksum_mismatch", entry=name))
+        for name in sorted(checksums):
+            if name not in by_name:
+                out["warnings"].append(_archive_warning("entry_missing", entry=name))
+    for name in ARCHIVE_DATA_ENTRIES:
+        table = ARCHIVE_ENTRY_TABLE[name]
+        rows = (by_name.get(name) or {}).get("rows")
+        if not isinstance(rows, list):
+            out["warnings"].append(_archive_warning("entry_missing" if name not in by_name else "bad_row",
+                                                    entry=name, count=0))
+            out["rows"][table] = []
+            out["counts"][name] = 0
+            continue
+        columns = ARCHIVE_ENTRY_COLUMNS[name]
+        required = ARCHIVE_REQUIRED_COLUMNS[name]
+        kept, bad, unknown = [], 0, set()
+        for row in rows:
+            if not isinstance(row, dict) or any(row.get(c) is None for c in required):
+                bad += 1
+                continue
+            unknown |= set(row) - set(columns) - {"text_truncated", "blocks_truncated"}
+            kept.append(dict((c, row[c]) for c in columns if c in row and row[c] is not None))
+        if bad:
+            out["warnings"].append(_archive_warning("bad_row", entry=name, count=bad))
+        if unknown:
+            out["warnings"].append(_archive_warning("unknown_columns", entry=name,
+                                                    columns=", ".join(sorted(unknown))))
+        out["rows"][table] = kept
+        out["counts"][name] = len(kept)
+    for name in names:
+        if not name.startswith("files/"):
+            continue
+        parts = name.split("/")
+        if len(parts) != 3 or not parts[1] or not parts[2]:
+            continue
+        if checksums is not None and checksums.get(name) is None:
+            continue
+        kind = "thumb" if parts[2].startswith("thumb.") else "original"
+        out["files"].setdefault(parts[1], {})[kind] = name
+    actual = len(out["rows"].get("records") or [])
+    if isinstance(manifest.get("record_count"), int) and manifest["record_count"] != actual:
+        out["warnings"].append(_archive_warning("record_count_mismatch", expected=manifest["record_count"],
+                                                actual=actual))
+    out["ok"] = True
+    return out
+
+
+# ---------------------------------------------------------------------------------------------
+# §35 Merge / Replace
+# ---------------------------------------------------------------------------------------------
+
+ARCHIVE_CHILD_TABLES = [("pages", "record_id"), ("fields", "record_id"), ("observations", "record_id"),
+                        ("highlights", "record_id"), ("record_entities", "record_id")]
+
+
+def merge_plan(existing_snapshot, incoming_rows, mode):
+    """§35 import planning -> what Merge / Replace does, without touching a store.
+
+    Merge skips a record whose id already exists, or whose checksum_sha256 equals an existing record's
+    (reason existing_id / existing_checksum, with the matched id), and imports everything else; a record
+    id repeated inside the archive is skipped as duplicate_in_archive. Replace deletes every existing
+    record first (deleted lists them in timeline order) and then imports everything.
+    Child rows (pages, fields, observations, highlights, record_entities) follow their record and are
+    skipped when it is; links are kept when both ends exist after the import; entities and tags are
+    imported (the store upserts them by their unique key) with tag record_ids filtered to kept records;
+    an alias whose normalized_name already exists is skipped on Merge.
+    Every imported record gets processing_status 'ready' (review and user states are preserved); when the
+    archive has no files/ original for it, file_path becomes null and processing_error 'file_missing'."""
+    if mode not in ("merge", "replace"):
+        return {"error": "bad_mode", "mode": mode}
+    rows = incoming_rows.get("rows") if isinstance(incoming_rows.get("rows"), dict) else incoming_rows
+    files = incoming_rows.get("files") or {}
+    existing = _snap(existing_snapshot, "records")
+    deleted = []
+    if mode == "replace":
+        deleted = [r["id"] for r in sorted(existing, key=_timeline_key, reverse=True)]
+        existing_ids, existing_checksums = set(), {}
+    else:
+        existing_ids = set(r["id"] for r in existing)
+        existing_checksums = {}
+        for r in existing:
+            if r.get("checksum_sha256") and r["checksum_sha256"] not in existing_checksums:
+                existing_checksums[r["checksum_sha256"]] = r["id"]
+    imported, skipped, records = [], [], []
+    seen = set()
+    for r in (rows.get("records") or []):
+        rid = r["id"]
+        if rid in seen:
+            skipped.append({"id": rid, "reason": "duplicate_in_archive", "existing_id": None})
+            continue
+        seen.add(rid)
+        if rid in existing_ids:
+            skipped.append({"id": rid, "reason": "existing_id", "existing_id": rid})
+            continue
+        match = existing_checksums.get(r.get("checksum_sha256")) if r.get("checksum_sha256") else None
+        if match is not None:
+            skipped.append({"id": rid, "reason": "existing_checksum", "existing_id": match})
+            continue
+        imported.append(rid)
+        has_original = bool((files.get(rid) or {}).get("original"))
+        records.append({"id": rid, "processing_status": "ready",
+                        "file_path": r.get("file_path") if has_original else None,
+                        "thumbnail_path": r.get("thumbnail_path") if (files.get(rid) or {}).get("thumb") else None,
+                        "processing_error": None if has_original or not r.get("file_path") else "file_missing"})
+    kept = set(imported)
+    live = kept | existing_ids
+    tables = {}
+    out_rows = {"records": records}
+    for table, key in ARCHIVE_CHILD_TABLES:
+        good = [x for x in (rows.get(table) or []) if x.get(key) in kept]
+        tables[table] = {"imported": len(good), "skipped": len(rows.get(table) or []) - len(good)}
+        out_rows[table] = good
+    links = [l for l in (rows.get("links") or []) if l["a_id"] in live and l["b_id"] in live
+             and (l["a_id"] in kept or l["b_id"] in kept)]
+    tables["links"] = {"imported": len(links), "skipped": len(rows.get("links") or []) - len(links)}
+    out_rows["links"] = links
+    ents = list(rows.get("entities") or [])
+    used = set(x["entity_id"] for x in out_rows.get("record_entities") or [])
+    ents = [e for e in ents if e["id"] in used]
+    tables["entities"] = {"imported": len(ents), "skipped": len(rows.get("entities") or []) - len(ents)}
+    out_rows["entities"] = ents
+    tags = []
+    for t in (rows.get("tags") or []):
+        ids = [rid for rid in (t.get("record_ids") or []) if rid in kept]
+        if ids:
+            tags.append({"id": t["id"], "name": t["name"], "record_ids": ids})
+    tables["tags"] = {"imported": len(tags), "skipped": len(rows.get("tags") or []) - len(tags)}
+    out_rows["tags"] = tags
+    have = set((existing_snapshot.get("user_aliases") or {}).keys()) if mode == "merge" else set()
+    for a in _snap(existing_snapshot, "analyte_user_aliases") if mode == "merge" else []:
+        have.add(a["normalized_name"])
+    aliases = [a for a in (rows.get("analyte_user_aliases") or []) if a["normalized_name"] not in have]
+    tables["analyte_user_aliases"] = {"imported": len(aliases),
+                                      "skipped": len(rows.get("analyte_user_aliases") or []) - len(aliases)}
+    out_rows["analyte_user_aliases"] = aliases
+    return {"mode": mode, "error": None, "deleted": deleted, "imported": imported, "skipped": skipped,
+            "records": records, "tables": tables,
+            "file_missing": [r["id"] for r in records if r["processing_error"] == "file_missing"],
+            "rebuild_fts": True}
+
+
 # ---------------------------------------------------------------------------------------------
 # Vector dispatch (used by scripts/records_contract_check.py)
 # ---------------------------------------------------------------------------------------------
@@ -4517,6 +5462,42 @@ def run_case(function, inp):
         raise ValueError(tool)
     if function == "pack_coach_records":
         return pack_coach_records(inp["snapshot"], inp.get("selected_ids"), inp.get("type_labels"))
+    if function == "share_summary":
+        return share_summary_text(inp["snapshot"], inp["plan"], inp.get("type_labels"))
+    if function == "redaction":
+        op = inp.get("op", "targets")
+        if op == "targets":
+            return redaction_targets(inp["snapshot"], inp["record_id"], inp.get("classes"))
+        if op == "plan_warnings":
+            return share_plan_warnings(inp["snapshot"], inp["plan"])
+        raise ValueError(op)
+    if function == "archive":
+        op = inp["op"]
+        if op == "manifest":
+            return archive_manifest(inp["snapshot"], inp["platform"], inp["app_version"], inp["created_ms"],
+                                    inp["time_zone"], inp.get("include_files", True))
+        if op == "rows":
+            rows = archive_rows(inp["snapshot"])
+            return {"entries": [{"name": name, "rows": rows[name]} for name in ARCHIVE_DATA_ENTRIES]}
+        if op == "entries":
+            return {"entries": archive_entry_names(inp["snapshot"], inp.get("include_files", True))}
+        if op == "truncate":
+            text = (inp.get("text_unit") or "") * (inp.get("text_times") or 0)
+            page = dict(inp["page"])
+            if text:
+                page["text"] = text
+            row, cut = _truncate_page_row(_row(page, ARCHIVE_PAGE_COLUMNS))
+            kept = row.get("text") or ""
+            return {"input_length": len(text), "text_length": len(kept),
+                    "text_bytes": len(kept.encode("utf-8")), "text_truncated": bool(row.get("text_truncated")),
+                    "blocks_truncated": bool(row.get("blocks_truncated")), "changed": cut,
+                    "line_bytes": len(compact_json(row).encode("utf-8")),
+                    "head": kept[:40], "tail": kept[-40:]}
+        if op == "read":
+            return read_archive_rows(inp["entries"])
+        if op == "merge":
+            return merge_plan(inp["snapshot"], inp["incoming"], inp["mode"])
+        raise ValueError(op)
     if function == "coach_prompt":
         op = inp["op"]
         if op == "prompt_lines":

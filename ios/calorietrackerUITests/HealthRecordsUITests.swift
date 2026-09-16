@@ -713,6 +713,275 @@ extension HealthRecordsUITests {
     }
 }
 
+extension HealthRecordsUITests {
+    /// Phase 5 walk: record detail → Share → "What will be shared" (items, summary fields and the
+    /// six redaction toggles) → Preview builds the files and shows a page-1 preview;
+    /// then Settings › Health Records › Backup & restore exports an archive.
+    /// A CBC report that carries a patient name, a UHID and a phone number, so the §34 redaction
+    /// classes have something to black out.
+    private func makeIdentifiedCBCPDF(named name: String) throws -> URL {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("records-ui-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let url = directory.appendingPathComponent(name)
+        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 612, height: 792))
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            let bold: [NSAttributedString.Key: Any] = [.font: UIFont.boldSystemFont(ofSize: 20)]
+            let body: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 12)]
+            func draw(_ text: String, _ x: CGFloat, _ y: CGFloat, _ attributes: [NSAttributedString.Key: Any]) {
+                (text as NSString).draw(at: CGPoint(x: x, y: y), withAttributes: attributes)
+            }
+            draw("City Diagnostics Laboratory", 60, 40, bold)
+            draw("Complete Blood Count", 60, 72, bold)
+            draw("Patient Name: Asha Rao", 60, 110, body)
+            draw("UHID: AB123456", 60, 130, body)
+            draw("Mobile: +91 98765 43210", 60, 150, body)
+            draw("Ref. by: Dr. Suresh Menon", 60, 170, body)
+            draw("Collected: 12/09/2026", 60, 190, body)
+            draw("Reported: 12/09/2026", 300, 190, body)
+            draw("Test", 60, 230, bold)
+            draw("Result", 250, 230, bold)
+            draw("Units", 340, 230, bold)
+            draw("Reference Range", 440, 230, bold)
+            let rows = [("Hemoglobin", "7.6", "g/dL", "13.0 - 17.0"), ("Total WBC Count", "6200", "cells/cumm", "4000 - 11000"),
+                        ("Platelet Count", "250", "10^3/µL", "150 - 410")]
+            for (index, row) in rows.enumerated() {
+                let y = 260 + CGFloat(index) * 24
+                draw(row.0, 60, y, body)
+                draw(row.1, 250, y, body)
+                draw(row.2, 340, y, body)
+                draw(row.3, 440, y, body)
+            }
+        }
+        try data.write(to: url)
+        return url
+    }
+
+    @MainActor
+    func testShareScreenRedactionTogglesAndArchiveExport() throws {
+        let pdf = try makeIdentifiedCBCPDF(named: "cbc_sep.pdf")
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES", "-healthRecordsViewMode", "timeline",
+                                "-healthRecordsAiMode", "off",
+                                "-ayuvoRecordsFixture", pdf.path, "-ayuvoRecordsReset"]
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["Records"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Records"].tap()
+        XCTAssertTrue(app.navigationBars["Records"].waitForExistence(timeout: 8))
+        let strip = app.descendants(matching: .any)["records.processingStrip"]
+        _ = strip.waitForExistence(timeout: 5)
+        _ = strip.waitForNonExistence(timeout: 180)
+
+        let title = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Complete Blood Count' OR label BEGINSWITH 'Cbc Sep'")).firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 30), "the imported record reaches the timeline")
+        title.tap()
+        XCTAssertTrue(app.staticTexts["records.detail.title"].waitForExistence(timeout: 10))
+
+        let share = app.buttons["records.detail.share"].firstMatch
+        scrollTo(share, in: app, maxSwipes: 14)
+        XCTAssertTrue(share.waitForExistence(timeout: 5), "detail offers Share")
+        share.tap()
+
+        // "What will be shared": the checklist of §34.
+        XCTAssertTrue(app.navigationBars["What will be shared"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.switches["records.share.includeOriginal"].waitForExistence(timeout: 5), "Original document")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.6))
+        shot(app, "records-p5-ios-01-share-plan")
+        // The list is lazy: walk down it in order, checking each toggle as it renders.
+        let summaryToggle = app.switches["records.share.includeSummary"]
+        scrollTo(summaryToggle, in: app, maxSwipes: 8)
+        XCTAssertTrue(summaryToggle.exists, "Structured summary")
+        for field in ["doctor", "facility", "patient_name", "dates", "test_results", "medications", "diagnoses", "recommendations"] {
+            let toggle = app.switches["records.share.field.\(field)"]
+            scrollTo(toggle, in: app, maxSwipes: 8)
+            XCTAssertTrue(toggle.exists, "summary field \(field)")
+        }
+        for redaction in ["name", "address", "phone", "patient_id", "insurance_id", "other_ids"] {
+            let toggle = app.switches["records.share.redaction.\(redaction)"]
+            scrollTo(toggle, in: app, maxSwipes: 10)
+            XCTAssertTrue(toggle.exists, "redaction toggle \(redaction)")
+        }
+
+        // Turn on the identifier redactions and build the files.
+        for redaction in ["name", "phone", "patient_id"] {
+            let toggle = app.switches["records.share.redaction.\(redaction)"]
+            scrollTo(toggle, in: app, maxSwipes: 8)
+            if (toggle.value as? String) != "1" {
+                // Tap the switch itself: the row's centre lands on the label.
+                toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+            }
+            XCTAssertEqual(toggle.value as? String, "1", "redaction \(redaction) is on")
+        }
+        shot(app, "records-p5-ios-02-share-redactions")
+        let preview = app.buttons["records.share.preview"]
+        XCTAssertTrue(preview.waitForExistence(timeout: 5))
+        preview.tap()
+
+        XCTAssertTrue(app.navigationBars["Ready to share"].waitForExistence(timeout: 60), "the files are built")
+        let confirm = app.buttons["records.share.confirm"]
+        XCTAssertTrue(confirm.waitForExistence(timeout: 20), "final confirm names the file count")
+        XCTAssertTrue(app.images["records.share.previewImage"].firstMatch.waitForExistence(timeout: 20), "page-1 preview of each produced file")
+        XCTAssertTrue(
+            app.staticTexts.matching(NSPredicate(format: "label CONTAINS '(redacted)'")).firstMatch.waitForExistence(timeout: 20),
+            "the original is shared as the redacted copy"
+        )
+        XCTAssertTrue(
+            app.staticTexts.matching(NSPredicate(format: "label CONTAINS '-redacted.pdf'")).firstMatch.exists,
+            "the redacted PDF is the file that goes to the share sheet"
+        )
+        RunLoop.current.run(until: Date().addingTimeInterval(0.8))
+        shot(app, "records-p5-ios-03-share-preview")
+        app.buttons["Cancel"].firstMatch.tap()
+        _ = app.navigationBars["What will be shared"].waitForExistence(timeout: 5)
+        app.buttons["Cancel"].firstMatch.tap()
+
+        // Settings › Health Records › Backup & restore → Create archive.
+        app.tabBars.buttons["Settings"].tap()
+        let category = app.buttons["settings.category.healthRecords"]
+        for _ in 0..<8 where !category.isHittable { app.swipeUp() }
+        XCTAssertTrue(category.waitForExistence(timeout: 5))
+        category.tap()
+        XCTAssertTrue(app.navigationBars["Health Records"].waitForExistence(timeout: 5))
+        let storage = app.buttons["records.settings.storage"]
+        scrollTo(storage, in: app, maxSwipes: 14)
+        XCTAssertTrue(storage.waitForExistence(timeout: 5), "Storage screen link")
+        storage.tap()
+        XCTAssertTrue(app.navigationBars["Storage"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["records.storage.total"].waitForExistence(timeout: 20), "sizes finish computing")
+        for action in ["clearCache", "rebuildThumbnails", "rebuildIndex", "findDuplicates", "reprocessAll"] {
+            XCTAssertTrue(app.buttons["records.storage.\(action)"].exists, "storage action \(action)")
+        }
+        RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        shot(app, "records-p5-ios-04-storage")
+        app.navigationBars.buttons.firstMatch.tap()
+
+        let backup = app.buttons["records.settings.backup"]
+        scrollTo(backup, in: app, maxSwipes: 14)
+        XCTAssertTrue(backup.waitForExistence(timeout: 5), "Backup & restore link")
+        backup.tap()
+        XCTAssertTrue(app.navigationBars["Backup & restore"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["No archive created yet."].firstMatch.waitForExistence(timeout: 8))
+        shot(app, "records-p5-ios-05-backup")
+        app.buttons["records.backup.export"].tap()
+
+        // The system share sheet appears over the archive; dismiss it and check the status row.
+        let activity = app.otherElements["ActivityListView"].firstMatch
+        if activity.waitForExistence(timeout: 60) {
+            shot(app, "records-p5-ios-06-archive-share-sheet")
+            if app.buttons["Close"].firstMatch.exists {
+                app.buttons["Close"].firstMatch.tap()
+            } else {
+                app.swipeDown()
+            }
+        }
+        let lastArchive = app.staticTexts["Last archive"].firstMatch
+        XCTAssertTrue(lastArchive.waitForExistence(timeout: 60), "the export produced an archive and stamped records_backup_state")
+        XCTAssertTrue(app.staticTexts["Archive size"].firstMatch.waitForExistence(timeout: 10))
+        shot(app, "records-p5-ios-07-archive-done")
+    }
+}
+
+extension HealthRecordsUITests {
+    /// Phase 5 backup walk: two CBCs → archive → Delete All Data (real Settings flow) →
+    /// restore the archive → the records, their values and their links are back.
+    @MainActor
+    func testArchiveExportDeleteAllDataAndRestore() throws {
+        let files = try [("cbc_jul.pdf", "18/07/2026", "7.2"), ("cbc_sep.pdf", "12/09/2026", "9.7")]
+            .map { try makeCBCPDF(named: $0.0, date: $0.1, hemoglobin: $0.2).path }
+        let archive = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ayuvo-p5-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("ayuvo-records.zip")
+
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES", "-healthRecordsViewMode", "timeline",
+                                "-healthRecordsAiMode", "off",
+                                "-ayuvoRecordsFixture", files.joined(separator: ","), "-ayuvoRecordsReset",
+                                "-ayuvoRecordsArchiveOut", archive.path]
+        app.launch()
+        app.tabBars.buttons["Records"].tap()
+        let strip = app.descendants(matching: .any)["records.processingStrip"]
+        XCTAssertTrue(app.staticTexts["September 2026"].firstMatch.waitForExistence(timeout: 60))
+        _ = strip.waitForExistence(timeout: 5)
+        XCTAssertTrue(strip.waitForNonExistence(timeout: 180), "processing finishes")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        shot(app, "records-p5-ios-10-before-backup")
+
+        // Background the app: the DEBUG hook writes the §35 archive to a host path.
+        XCUIDevice.shared.press(.home)
+        let deadline = Date().addingTimeInterval(60)
+        while !FileManager.default.fileExists(atPath: archive.path), Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: archive.path), "the export produced an archive file")
+        let size = ((try? FileManager.default.attributesOfItem(atPath: archive.path))?[.size] as? NSNumber)?.intValue ?? 0
+        XCTAssertGreaterThan(size, 500, "the archive holds the records and their originals")
+
+        // Delete All Data through Settings, then restore the archive on the next launch.
+        app.activate()
+        app.tabBars.buttons["Settings"].tap()
+        let dataCategory = app.buttons["settings.category.dataManagement"]
+        for _ in 0..<10 where !dataCategory.isHittable { app.swipeUp() }
+        if dataCategory.waitForExistence(timeout: 5) { dataCategory.tap() }
+        let deleteAll = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Delete All Data'")).firstMatch
+        for _ in 0..<12 where !deleteAll.isHittable { app.swipeUp() }
+        XCTAssertTrue(deleteAll.waitForExistence(timeout: 8), "Delete All Data is in Data Management")
+        deleteAll.tap()
+        let confirm = app.buttons["Delete Everything"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Delete All Data confirms first")
+        confirm.tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(2.0))
+        app.tabBars.buttons["Records"].tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Complete Blood Count'")).firstMatch
+            .waitForNonExistence(timeout: 20), "Delete All Data wiped Health Records")
+        shot(app, "records-p5-ios-11-after-delete-all")
+        app.terminate()
+
+        // Restore.
+        let restored = XCUIApplication()
+        restored.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES",
+                                     "-healthRecordsViewMode", "timeline", "-healthRecordsAiMode", "off",
+                                     "-ayuvoRecordsArchive", archive.path, "-ayuvoRecordsArchiveMode", "merge"]
+        restored.launch()
+        restored.tabBars.buttons["Records"].tap()
+        let title = restored.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Complete Blood Count'")).firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 60), "the archive restored the records")
+        XCTAssertTrue(restored.staticTexts["September 2026"].firstMatch.waitForExistence(timeout: 20))
+        XCTAssertTrue(restored.staticTexts["July 2026"].firstMatch.waitForExistence(timeout: 20))
+        shot(restored, "records-p5-ios-12-restored-timeline")
+
+        title.tap()
+        XCTAssertTrue(restored.staticTexts["records.detail.title"].waitForExistence(timeout: 10))
+        let observation = restored.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'records.observation.'")).firstMatch
+        scrollTo(observation, in: restored, maxSwipes: 14)
+        XCTAssertTrue(observation.waitForExistence(timeout: 10), "health data points came back")
+        // A restored suggestion renders under "Suggested" (accept/reject), an accepted one as "Linked".
+        let related = restored.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'records.related.'")).firstMatch
+        scrollTo(related, in: restored, maxSwipes: 16)
+        XCTAssertTrue(related.waitForExistence(timeout: 10), "related records came back")
+        shot(restored, "records-p5-ios-13-restored-detail")
+
+        // Storage numbers after the restore.
+        restored.tabBars.buttons["Settings"].tap()
+        let category = restored.buttons["settings.category.healthRecords"]
+        for _ in 0..<8 where !category.isHittable { restored.swipeUp() }
+        XCTAssertTrue(category.waitForExistence(timeout: 5))
+        category.tap()
+        let storage = restored.buttons["records.settings.storage"]
+        scrollTo(storage, in: restored, maxSwipes: 14)
+        storage.tap()
+        XCTAssertTrue(restored.staticTexts["records.storage.total"].waitForExistence(timeout: 30))
+        shot(restored, "records-p5-ios-14-storage-after-restore")
+        restored.buttons["records.storage.rebuildIndex"].tap()
+        let run = restored.buttons["Rebuild search index"].firstMatch
+        if run.waitForExistence(timeout: 5) { run.tap() }
+        let done = restored.buttons["OK"].firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 30), "a storage action finishes with a confirmation")
+        done.tap()
+        shot(restored, "records-p5-ios-15-storage-action")
+    }
+}
+
 private extension XCUIApplication {
     /// A short upward drag (about a third of the screen) so rows stop above the tab bar.
     func swiftUpSmall() {

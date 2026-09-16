@@ -98,7 +98,9 @@ val VECTOR_FILES_WITH_RUNNERS = listOf(
     "fold.json", "classifier.json", "dates.json", "fields.json", "lab_rows.json", "boundaries.json", "highlights.json",
     "review.json", "apply_extraction.json", "ai_validation.json", "ai_chunks.json", "hashing.json", "query_parser.json",
     "analyte_mapping.json", "unit_conversion.json", "observations.json", "trends.json", "entities.json", "relations.json",
-    "coach_tools_payloads.json", "coach_context.json", "coach_prompt.json"
+    "coach_tools_payloads.json", "coach_context.json", "coach_prompt.json",
+    // Phase 5 (docs §34, §35): run by RecordsPhase5VectorTests.
+    "share_summary.json", "redaction.json", "archive.json"
 )
 
 /** Every vector file in shared/records/test-vectors has a test class above (and every runner a file). */

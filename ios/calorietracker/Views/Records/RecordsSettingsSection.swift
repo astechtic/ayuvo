@@ -78,8 +78,30 @@ struct HealthRecordsSettingsSection: View {
                 Text(storageBytes.map { RecordFormatting.sizeText($0) } ?? "…")
                     .foregroundStyle(.secondary)
             }
+            NavigationLink {
+                RecordsStorageScreen()
+            } label: {
+                Label {
+                    Text("Storage")
+                } icon: {
+                    Image(systemName: "externaldrive")
+                        .foregroundStyle(AppColors.calorie)
+                }
+            }
+            .accessibilityIdentifier("records.settings.storage")
+            NavigationLink {
+                RecordsBackupScreen()
+            } label: {
+                Label {
+                    Text("Backup & restore")
+                } icon: {
+                    Image(systemName: "archivebox")
+                        .foregroundStyle(AppColors.calorie)
+                }
+            }
+            .accessibilityIdentifier("records.settings.backup")
         } footer: {
-            Text("Backup archives and storage tools arrive in later updates. Delete All Data in Data Management removes every record and file.")
+            Text("Create an ayuvo-records archive to keep a copy wherever you choose, and restore it later. Health Records are never in iCloud or iPhone backups. Delete All Data in Data Management removes every record and file.")
         }
         .font(.system(.body, design: .rounded))
         .listRowBackground(AppColors.appCard)

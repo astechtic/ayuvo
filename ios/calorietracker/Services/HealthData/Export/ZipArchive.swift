@@ -245,8 +245,10 @@ nonisolated final class ZipArchiveReader {
 nonisolated final class ZipArchiveWriter {
     private struct Record {
         let name: Data
+        let method: UInt16
         let crc: UInt32
         let size: UInt32
+        let compressedSize: UInt32
         let offset: UInt32
     }
 
@@ -288,18 +290,37 @@ nonisolated final class ZipArchiveWriter {
     }
 
     private func addStored(name: String, size: UInt64, crc: UInt32, body: ((Data) throws -> Void) throws -> Void) throws {
+        try addEntry(name: name, method: 0, size: size, compressedSize: size, crc: crc, body: body)
+    }
+
+    /// Deflated entry (method 8) read from an already-compressed raw DEFLATE file — used by the
+    /// `ayuvo-records` archive for its text entries (docs/health-records.md §35).
+    func addDeflated(name: String, deflatedURL: URL, uncompressedSize: UInt64, crc: UInt32) throws {
+        let attributes = try FileManager.default.attributesOfItem(atPath: deflatedURL.path)
+        let compressedSize = (attributes[.size] as? NSNumber)?.uint64Value ?? 0
+        let reader = try FileHandle(forReadingFrom: deflatedURL)
+        defer { try? reader.close() }
+        try addEntry(name: name, method: 8, size: uncompressedSize, compressedSize: compressedSize, crc: crc) { write in
+            while let chunk = try reader.read(upToCount: ZipArchiveReader.chunkSize), !chunk.isEmpty {
+                try write(chunk)
+            }
+        }
+    }
+
+    private func addEntry(name: String, method: UInt16, size: UInt64, compressedSize: UInt64, crc: UInt32, body: ((Data) throws -> Void) throws -> Void) throws {
         guard !finished else { return }
-        guard size <= UInt64(UInt32.max) - 1, offset <= UInt64(UInt32.max) - size - 1 else { throw ZipArchiveError.tooLarge }
+        guard size <= UInt64(UInt32.max) - 1, compressedSize <= UInt64(UInt32.max) - 1,
+              offset <= UInt64(UInt32.max) - compressedSize - 1 else { throw ZipArchiveError.tooLarge }
         let nameData = Data(name.utf8)
         var local = Data()
         local.append(contentsOf: Self.u32(0x0403_4b50))
         local.append(contentsOf: Self.u16(20))
         local.append(contentsOf: Self.u16(0x0800)) // UTF-8 names
-        local.append(contentsOf: Self.u16(0))      // stored
+        local.append(contentsOf: Self.u16(method))
         local.append(contentsOf: Self.u16(0))
         local.append(contentsOf: Self.u16(0))
         local.append(contentsOf: Self.u32(crc))
-        local.append(contentsOf: Self.u32(UInt32(size)))
+        local.append(contentsOf: Self.u32(UInt32(compressedSize)))
         local.append(contentsOf: Self.u32(UInt32(size)))
         local.append(contentsOf: Self.u16(UInt16(nameData.count)))
         local.append(contentsOf: Self.u16(0))
@@ -310,9 +331,9 @@ nonisolated final class ZipArchiveWriter {
             try handle.write(contentsOf: chunk)
             written += UInt64(chunk.count)
         }
-        guard written == size else { throw ZipArchiveError.badEntry(name) }
-        records.append(Record(name: nameData, crc: crc, size: UInt32(size), offset: UInt32(offset)))
-        offset += UInt64(local.count) + size
+        guard written == compressedSize else { throw ZipArchiveError.badEntry(name) }
+        records.append(Record(name: nameData, method: method, crc: crc, size: UInt32(size), compressedSize: UInt32(compressedSize), offset: UInt32(offset)))
+        offset += UInt64(local.count) + compressedSize
     }
 
     func finish() throws {
@@ -324,11 +345,11 @@ nonisolated final class ZipArchiveWriter {
             central.append(contentsOf: Self.u16(20))
             central.append(contentsOf: Self.u16(20))
             central.append(contentsOf: Self.u16(0x0800))
-            central.append(contentsOf: Self.u16(0))
+            central.append(contentsOf: Self.u16(record.method))
             central.append(contentsOf: Self.u16(0))
             central.append(contentsOf: Self.u16(0))
             central.append(contentsOf: Self.u32(record.crc))
-            central.append(contentsOf: Self.u32(record.size))
+            central.append(contentsOf: Self.u32(record.compressedSize))
             central.append(contentsOf: Self.u32(record.size))
             central.append(contentsOf: Self.u16(UInt16(record.name.count)))
             central.append(contentsOf: Self.u16(0))
@@ -359,5 +380,74 @@ nonisolated final class ZipArchiveWriter {
 
     static func u32(_ v: UInt32) -> [UInt8] {
         [UInt8(v & 0xff), UInt8((v >> 8) & 0xff), UInt8((v >> 16) & 0xff), UInt8((v >> 24) & 0xff)]
+    }
+}
+
+/// Streaming raw-DEFLATE compressor (`COMPRESSION_ZLIB` is the headerless deflate stream zip
+/// entries use — it is the same encoding `ZipArchiveReader` inflates).
+nonisolated enum DeflateFile {
+    struct Result {
+        var crc: UInt32
+        var uncompressedSize: UInt64
+    }
+
+    /// Compresses `source` into `destination`, returning the CRC-32 and byte count of the input.
+    static func compress(source: URL, destination: URL) throws -> Result {
+        let reader = try FileHandle(forReadingFrom: source)
+        defer { try? reader.close() }
+        FileManager.default.createFile(atPath: destination.path, contents: nil)
+        guard let writer = try? FileHandle(forWritingTo: destination) else {
+            throw ZipArchiveError.badEntry(destination.lastPathComponent)
+        }
+        defer { try? writer.close() }
+
+        let stream = UnsafeMutablePointer<compression_stream>.allocate(capacity: 1)
+        defer { stream.deallocate() }
+        guard compression_stream_init(stream, COMPRESSION_STREAM_ENCODE, COMPRESSION_ZLIB) == COMPRESSION_STATUS_OK else {
+            throw ZipArchiveError.decompressionFailed(source.lastPathComponent)
+        }
+        defer { compression_stream_destroy(stream) }
+
+        let dstCapacity = ZipArchiveReader.chunkSize
+        let dstBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: dstCapacity)
+        defer { dstBuffer.deallocate() }
+
+        var crc: UInt32 = 0xffff_ffff
+        var total: UInt64 = 0
+        var done = false
+        while !done {
+            let chunk = (try reader.read(upToCount: dstCapacity)) ?? Data()
+            let isLast = chunk.isEmpty
+            if !chunk.isEmpty {
+                total += UInt64(chunk.count)
+                chunk.withUnsafeBytes { CRC32.update(&crc, with: $0) }
+            }
+            // `[UInt8]` (never an empty `Data`): the final FINALIZE pass must run even with no input.
+            let bytes = [UInt8](chunk)
+            try bytes.withUnsafeBufferPointer { (src: UnsafeBufferPointer<UInt8>) in
+                stream.pointee.src_ptr = src.baseAddress ?? UnsafePointer(dstBuffer)
+                stream.pointee.src_size = src.count
+                let flags = isLast ? Int32(COMPRESSION_STREAM_FINALIZE.rawValue) : 0
+                repeat {
+                    stream.pointee.dst_ptr = dstBuffer
+                    stream.pointee.dst_size = dstCapacity
+                    let status = compression_stream_process(stream, flags)
+                    let produced = dstCapacity - stream.pointee.dst_size
+                    if produced > 0 {
+                        try writer.write(contentsOf: Data(bytes: dstBuffer, count: produced))
+                    }
+                    if status == COMPRESSION_STATUS_END {
+                        done = true
+                        return
+                    }
+                    guard status == COMPRESSION_STATUS_OK else {
+                        throw ZipArchiveError.decompressionFailed(source.lastPathComponent)
+                    }
+                    if stream.pointee.src_size == 0, produced < dstCapacity { return }
+                } while true
+            }
+        }
+        try writer.synchronize()
+        return Result(crc: CRC32.finalize(crc), uncompressedSize: total)
     }
 }

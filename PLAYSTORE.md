@@ -36,19 +36,28 @@ WORKOUTS
 HEALTH DATA HUB
 With your permission Ayuvo mirrors the Health Connect data you grant — activity, heart, sleep, vitals, body measurements, cycle tracking, mindfulness, nutrition and hydration (mobility, hearing and symptoms where available) — into a local hub with Home tiles, day/week/month/year charts, Show All Data and Data Sources. Ayuvo writes only the nutrition, weight, height, body fat and active calories you log. Health data is kept on this device and excluded from Google backup and device transfer.
 
+HEALTH RECORDS
+• Lab reports, prescriptions, consultation notes, discharge summaries, imaging reports, vaccination records and bills in one place
+• Scan, photograph, pick files, paste text, or share a PDF to Ayuvo from any app — the original is saved instantly
+• Text is read on your phone; the doctor, hospital, dates and test values are found automatically, and results the report marks outside its reference range are highlighted
+• Timeline, list and grid views; one search across documents, values, doctors, medicines and notes
+• Trend graphs that connect the same test across reports — tap a value to open the page it came from
+• Edit anything, link related records, share only what you choose with identifiers blacked out
+• You choose whether AI helps at all, and whether it runs on-device or with your own key
+
 FASTING & WATER
 • Optional fasting with a 1–168 hour goal, a persistent timer and editable history
 • Optional water goals with quick logging, reminders and Glance widgets
 • Both stay local and are never written to Health Connect
 
 AI COACH — BRING YOUR OWN KEY
-Multi-turn chat that can pull your food log, workouts, weight trend, fasts and — only with your explicit toggle — your Health data. Use Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint with your own key, or run Gemma 4 E2B fully on-device. Keys stay in EncryptedSharedPreferences backed by the Android Keystore; requests go straight from your phone to the provider.
+Multi-turn chat that can pull your food log, workouts, weight trend, fasts and — only with your explicit toggles — your Health data and your health records (ask about one report, compare two, or explain a trend; you pick which records it may read). Use Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint with your own key, or run Gemma 4 E2B fully on-device. Keys stay in EncryptedSharedPreferences backed by the Android Keystore; requests go straight from your phone to the provider.
 
 WIDGETS & MORE
 Calorie, Protein, Today and Water widgets, app shortcuts, 18 languages, dark mode, metric and imperial units, 18 accent colours with matching icons.
 
 PRIVACY
-No account, no ads, no analytics, no tracking. Everything you log stays on your device. Data leaves your phone only when you act: sending a request to the AI provider you chose, scanning a barcode, browsing exercise images, downloading a model, or turning on your own Google Drive backup (which never includes Health data or coach chat). Export everything, delete everything — Settings → Delete All Data.
+No account, no ads, no analytics, no tracking. Everything you log stays on your device. Data leaves your phone only when you act: sending a request to the AI provider you chose, scanning a barcode, browsing exercise images, downloading a model, sharing a health record, or turning on your own Google Drive backup (which never includes Health data or coach chat; health records are included only if you switch that on separately). Export everything, delete everything — Settings → Delete All Data.
 
 Ayuvo is not a medical device and does not give medical advice. Estimates come from AI and formulas; talk to a clinician before changing diet, training or medication.
 
@@ -94,10 +103,11 @@ Privacy policy: https://ayuvo-health.web.app/privacy
 
 **Recommended answer: "Does your app collect or share any of the required user data types?" → No.** Rationale to keep on file:
 
+- Health Records: documents the user adds are stored on device and excluded from Android backup and device transfer. They leave the phone only on a user action — AI processing with the user's own key (only in Cloud AI / Ask me mode, chosen by the user), Coach after a separate opt-in (patient name, address, phone and ID numbers are never sent), an explicit Share (with optional redaction), an archive the user exports, or the opt-in "Include Health Records in Google Drive backup" which writes to the user's own Drive app folder.
 - Google's definitions exempt (a) data processed only on the device, (b) user-initiated transfers where the user reasonably expects the data to go to the specific third party they selected (here: the BYOK AI/speech provider, Open Food Facts on scan, GitHub/Hugging Face file fetches), and (c) transfers to the user's own account storage (Google Drive `appDataFolder`, only after the user signs in at that toggle).
 - The developer operates no server and integrates no analytics, crash or ads SDK; nothing is collected by or shared with the developer.
 - Still answer the security questions: **Data encrypted in transit: Yes** (HTTPS with modern TLS; a user-typed local-network Ollama address is the only plain-HTTP exception and is disclosed). **Users can request deletion: Yes** — Settings → Delete All Data (on device) and the support email.
-- **Conservative alternative** (only if you prefer to over-disclose; then mirror it on App Store Connect): declare Health info, Fitness info and Photos as *collected, optional, for app functionality, not shared, encrypted in transit, deletable*.
+- **Conservative alternative** (only if you prefer to over-disclose; then mirror it on App Store Connect): declare Health info, Fitness info, Photos and Files & docs as *collected, optional, for app functionality, not shared, encrypted in transit, deletable*.
 
 ## 9. Health Connect declaration (App content → Health apps)
 - **Use case:** fitness & wellness — nutrition tracking, workout logging and displaying the user's own health data in the Health Data hub.

@@ -26,6 +26,12 @@ object AppRoutes {
     const val RECORD_DETAIL_FOCUS = "records/detail/{$RECORD_ID_ARG}?$RECORD_FOCUS_ARG={$RECORD_FOCUS_ARG}"
     const val ANALYTE_ID_ARG = "analyteId"
     const val RECORD_TREND = "records/trend/{$ANALYTE_ID_ARG}"
+    const val RECORD_IDS_ARG = "recordIds"
+    /** "What will be shared" for one or more records (docs/health-records.md §34). */
+    const val RECORD_SHARE = "records/share/{$RECORD_IDS_ARG}"
+    /** Settings › Health Records › Storage (§37) and Backup & restore (§35, §36). */
+    const val HEALTH_RECORDS_STORAGE = "settings/health-records/storage"
+    const val HEALTH_RECORDS_BACKUP = "settings/health-records/backup"
 
     /** Workouts is no longer a tab; any legacy `workouts…` destination belongs to the Health tab. */
     private const val LEGACY_WORKOUTS = "workouts"
@@ -35,6 +41,12 @@ object AppRoutes {
     fun recordSplit(recordId: String): String = "records/split/$recordId"
     fun recordTrend(analyteId: String): String = "records/trend/$analyteId"
     fun recordDetailAt(recordId: String, observationId: String): String = "records/detail/$recordId?$RECORD_FOCUS_ARG=$observationId"
+
+    /** Record ids are UUIDs, so a comma-joined path segment needs no escaping. */
+    fun recordShare(recordIds: List<String>): String = "records/share/" + recordIds.joinToString(",")
+
+    fun parseRecordIds(argument: String?): List<String> =
+        argument?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }.orEmpty()
 
     val bottomTabs = listOf(HOME, HEALTH, RECORDS, COACH, SETTINGS)
 
