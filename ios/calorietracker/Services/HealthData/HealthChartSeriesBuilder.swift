@@ -1,6 +1,6 @@
 import Foundation
 
-/// D / W / M / 6M / Y ranges of the metric detail screen (separate from Progress' `TimeRange`).
+/// D / W / M / 6M / Y ranges of the metric detail screen (shared contract, docs/ui-structure.md §5).
 nonisolated enum HealthDetailRange: String, CaseIterable, Sendable, Identifiable, Hashable {
     case day = "D"
     case week = "W"
@@ -33,28 +33,32 @@ nonisolated enum HealthDetailRange: String, CaseIterable, Sendable, Identifiable
 
     var stepCount: Int { self == .sixMonths ? 6 : 1 }
 
-    /// Interval covering `anchor` for this range.
-    func interval(containing anchor: Date, calendar: Calendar) -> DateInterval {
-        switch self {
-        case .day:
-            let start = calendar.startOfDay(for: anchor)
-            let end = calendar.date(byAdding: .day, value: 1, to: start) ?? start.addingTimeInterval(86_400)
-            return DateInterval(start: start, end: end)
-        case .week:
-            return calendar.dateInterval(of: .weekOfYear, for: anchor)
-                ?? DateInterval(start: calendar.startOfDay(for: anchor), duration: 7 * 86_400)
-        case .month:
-            return calendar.dateInterval(of: .month, for: anchor)
-                ?? DateInterval(start: calendar.startOfDay(for: anchor), duration: 30 * 86_400)
-        case .sixMonths:
-            let month = calendar.dateInterval(of: .month, for: anchor)
-                ?? DateInterval(start: calendar.startOfDay(for: anchor), duration: 30 * 86_400)
-            let start = calendar.date(byAdding: .month, value: -5, to: month.start) ?? month.start
-            return DateInterval(start: start, end: month.end)
-        case .year:
-            return calendar.dateInterval(of: .year, for: anchor)
-                ?? DateInterval(start: calendar.startOfDay(for: anchor), duration: 365 * 86_400)
-        }
+    /// Calendar-aligned interval covering `anchor` (shared contract `bucket_bounds`, docs/ui-structure.md §5).
+    func interval(containing anchor: Date, calendar: Calendar, weekStart: MetricsReference.WeekStart = ActivitySettings.weekStart()) -> DateInterval {
+        let bounds = bounds(containing: anchor, calendar: calendar, weekStart: weekStart)
+        return DateInterval(start: Date(timeIntervalSince1970: Double(bounds.startMs) / 1000), end: Date(timeIntervalSince1970: Double(bounds.endMs) / 1000))
+    }
+
+    func bounds(containing anchor: Date, calendar: Calendar, weekStart: MetricsReference.WeekStart = ActivitySettings.weekStart(), now: Date = Date()) -> MetricsReference.Bounds {
+        MetricsReference.bucketBounds(
+            range: self,
+            anchorMs: Int64((anchor.timeIntervalSince1970 * 1000).rounded()),
+            zone: MetricsReference.Zone(calendar: calendar),
+            weekStart: weekStart,
+            nowMs: Int64((now.timeIntervalSince1970 * 1000).rounded())
+        )
+    }
+
+    /// Shared anchor step (‹ ›): calendar units, never past today.
+    func stepped(_ anchor: Date, direction: Int, calendar: Calendar, now: Date = Date()) -> Date {
+        let result = MetricsReference.stepAnchor(
+            range: self,
+            anchorMs: Int64((anchor.timeIntervalSince1970 * 1000).rounded()),
+            direction: direction,
+            zone: MetricsReference.Zone(calendar: calendar),
+            nowMs: Int64((now.timeIntervalSince1970 * 1000).rounded())
+        )
+        return Date(timeIntervalSince1970: Double(result.ms) / 1000)
     }
 }
 
@@ -91,7 +95,10 @@ nonisolated struct HealthChartSeries: Sendable, Equatable {
     /// Per-stage segments (D) or per-night stage totals (W/M/6M/Y) for `sleep`.
     var stagePoints: [HealthChartPoint]
     var highlights: HealthHighlights
-    var isEmpty: Bool { points.isEmpty && stagePoints.isEmpty }
+    /// Headline stat above the chart (shared `headline`).
+    var headline: MetricsReference.Headline?
+    /// True when no bucket has a value (every bucket is always present).
+    var isEmpty: Bool { !points.contains { $0.value != nil } && stagePoints.isEmpty }
 }
 
 /// Turns stored rows / daily rollups into chart-ready buckets. Pure; runs on the
@@ -103,30 +110,98 @@ nonisolated enum HealthChartSeriesBuilder {
         type: HealthMetricType,
         rows: [HealthSampleRow],
         rollups: [HealthDailyRollupRow],
-        calendar: Calendar
+        calendar: Calendar,
+        weekStart: MetricsReference.WeekStart = ActivitySettings.weekStart()
     ) -> HealthChartSeries {
-        let interval = range.interval(containing: anchor, calendar: calendar)
+        let bounds = range.bounds(containing: anchor, calendar: calendar, weekStart: weekStart)
+        let interval = DateInterval(start: date(bounds.startMs), end: date(bounds.endMs))
         var series = HealthChartSeries(range: range, interval: interval, points: [], stagePoints: [], highlights: HealthHighlights())
 
         if type.isSleep {
             series.stagePoints = sleepStagePoints(range: range, rows: rows, calendar: calendar, interval: interval)
         }
 
+        let inRange = rollups.filter { inInterval($0.day, interval, calendar) }
         switch range {
         case .day:
-            series.points = dayPoints(type: type, rows: rows, interval: interval, calendar: calendar)
+            let raw = dayPoints(type: type, rows: rows, interval: interval, calendar: calendar)
             if type.isSleep {
                 series.points = []
+            } else if type.isBloodPressure || (type.kind == .category) {
+                series.points = raw
+            } else {
+                series.points = bounds.buckets.map { bucket in
+                    let start = date(bucket.startMs)
+                    return raw.first { $0.start == start }
+                        ?? HealthChartPoint(start: start, end: date(bucket.endMs), value: nil, min: nil, max: nil, value2: nil, count: 0, stage: nil)
+                }
             }
         case .week, .month:
-            series.points = rollups.filter { inInterval($0.day, interval, calendar) }.compactMap { dailyPoint($0, type: type, calendar: calendar) }
+            let byDay = Dictionary(inRange.map { ($0.day, $0) }, uniquingKeysWith: { first, _ in first })
+            series.points = bounds.buckets.map { bucket in
+                byDay[bucket.label].flatMap { dailyPoint($0, type: type, calendar: calendar) }
+                    ?? HealthChartPoint(start: date(bucket.startMs), end: date(bucket.endMs), value: nil, min: nil, max: nil, value2: nil, count: 0, stage: nil)
+            }
         case .sixMonths, .year:
-            let component: Calendar.Component = range == .sixMonths ? .weekOfYear : .month
-            series.points = bucketed(rollups.filter { inInterval($0.day, interval, calendar) }, by: component, type: type, calendar: calendar)
+            series.points = bounds.buckets.map { bucket in
+                let group = inRange.filter { rollup in
+                    guard let day = dayDate(rollup.day, calendar: calendar) else { return false }
+                    let ms = Int64((day.timeIntervalSince1970 * 1000).rounded())
+                    return ms >= bucket.startMs && ms < bucket.endMs
+                }
+                return aggregatePoint(group, start: date(bucket.startMs), end: date(bucket.endMs), type: type)
+            }
         }
 
         series.highlights = highlights(type: type, points: series.points, rows: rows, rollups: rollups, interval: interval, calendar: calendar)
+        if !type.isSleep {
+            series.headline = headline(type: type, range: range, anchor: anchor, rows: rows, rollups: inRange, interval: interval, calendar: calendar, weekStart: weekStart)
+        }
         return series
+    }
+
+    private static func date(_ ms: Int64) -> Date { Date(timeIntervalSince1970: Double(ms) / 1000) }
+
+    /// Shared headline over day rollups (D: hourly rows). Summed kinds use per-day totals.
+    private static func headline(type: HealthMetricType, range: HealthDetailRange, anchor: Date, rows: [HealthSampleRow], rollups: [HealthDailyRollupRow], interval: DateInterval, calendar: Calendar, weekStart: MetricsReference.WeekStart) -> MetricsReference.Headline {
+        let aggregation: MetricsReference.Aggregation
+        switch type.kind {
+        case .cumulative: aggregation = .sum
+        case .duration, .session: aggregation = .duration
+        case .category: aggregation = .count
+        case .discrete, .series: aggregation = type.aggregation == .latest ? .last : .avg
+        }
+        var entries: [MetricsReference.Entry] = []
+        if range == .day {
+            for row in rows where !row.isDeleted && row.startDate >= interval.start && row.startDate < interval.end {
+                let value: Double?
+                switch aggregation {
+                case .duration: value = row.durationSeconds
+                case .count: value = 1
+                default: value = row.value
+                }
+                entries.append(.init(tMs: row.startMs, value: value))
+            }
+        } else {
+            for rollup in rollups {
+                guard let day = dayDate(rollup.day, calendar: calendar) else { continue }
+                let midnight = Int64((day.timeIntervalSince1970 * 1000).rounded())
+                switch aggregation {
+                case .count:
+                    entries.append(.init(tMs: midnight, value: Double(rollup.count)))
+                case .last:
+                    entries.append(.init(tMs: rollup.lastAtMs ?? midnight, value: rollup.lastValue ?? rollup.avg))
+                default:
+                    entries.append(.init(tMs: midnight, value: primaryValue(rollup, type: type)))
+                }
+            }
+        }
+        // Rollup counts are already per-day totals; count them as sums.
+        let effective: MetricsReference.Aggregation = (range != .day && aggregation == .count) ? .sum : aggregation
+        return MetricsReference.headline(
+            entries: entries, range: range, anchorMs: Int64((anchor.timeIntervalSince1970 * 1000).rounded()),
+            zone: MetricsReference.Zone(calendar: calendar), weekStart: weekStart, aggregation: effective
+        )
     }
 
     // MARK: - Day
@@ -196,48 +271,42 @@ nonisolated enum HealthChartSeriesBuilder {
         )
     }
 
-    private static func bucketed(_ rollups: [HealthDailyRollupRow], by component: Calendar.Component, type: HealthMetricType, calendar: Calendar) -> [HealthChartPoint] {
-        var buckets: [Date: [HealthDailyRollupRow]] = [:]
-        for rollup in rollups {
-            guard let date = dayDate(rollup.day, calendar: calendar),
-                  let bucketInterval = calendar.dateInterval(of: component, for: date) else { continue }
-            buckets[bucketInterval.start, default: []].append(rollup)
-        }
-        return buckets.keys.sorted().compactMap { start -> HealthChartPoint? in
-            guard let group = buckets[start], let bucketInterval = calendar.dateInterval(of: component, for: start) else { return nil }
-            var point = HealthChartPoint(start: bucketInterval.start, end: bucketInterval.end, value: nil, min: nil, max: nil, value2: nil, count: 0, stage: nil)
-            let mins = group.compactMap { type.isBloodPressure ? $0.v2Min : $0.min }
-            let maxs = group.compactMap(\.max)
-            point.min = mins.min()
-            point.max = maxs.max()
-            point.count = group.reduce(0) { $0 + $1.count }
-            switch type.kind {
-            case .cumulative:
-                point.value = group.compactMap(\.sum).reduce(0, +)
-            case .duration, .session:
-                point.value = group.compactMap { $0.durationS ?? $0.sum }.reduce(0, +)
-            case .discrete, .series:
-                if type.aggregation == .latest {
-                    point.value = group.sorted { $0.day < $1.day }.last?.lastValue
-                } else {
-                    var weighted = 0.0, weight = 0
-                    for rollup in group {
-                        if let avg = rollup.avg {
-                            weighted += avg * Double(max(1, rollup.count))
-                            weight += max(1, rollup.count)
-                        }
-                    }
-                    point.value = weight > 0 ? weighted / Double(weight) : nil
-                    if type.isBloodPressure {
-                        let diastolic = group.compactMap(\.v2Avg)
-                        point.value2 = diastolic.isEmpty ? nil : diastolic.reduce(0, +) / Double(diastolic.count)
+    /// One 6M / Y bucket from its day rollups. Summed kinds plot the mean of the daily totals over
+    /// days with data (shared `bucket_series`); discrete kinds a count-weighted average; latest the
+    /// newest day's last value.
+    private static func aggregatePoint(_ group: [HealthDailyRollupRow], start: Date, end: Date, type: HealthMetricType) -> HealthChartPoint {
+        var point = HealthChartPoint(start: start, end: end, value: nil, min: nil, max: nil, value2: nil, count: 0, stage: nil)
+        guard !group.isEmpty else { return point }
+        let mins = group.compactMap { type.isBloodPressure ? $0.v2Min : $0.min }
+        let maxs = group.compactMap(\.max)
+        point.min = mins.min()
+        point.max = maxs.max()
+        point.count = group.reduce(0) { $0 + $1.count }
+        switch type.kind {
+        case .cumulative, .duration, .session:
+            let daily = group.compactMap { primaryValue($0, type: type) }
+            point.value = daily.isEmpty ? nil : MetricsReference.round3(daily.reduce(0, +) / Double(daily.count))
+        case .discrete, .series:
+            if type.aggregation == .latest {
+                point.value = group.sorted { $0.day < $1.day }.last?.lastValue
+            } else {
+                var weighted = 0.0, weight = 0
+                for rollup in group {
+                    if let avg = rollup.avg {
+                        weighted += avg * Double(max(1, rollup.count))
+                        weight += max(1, rollup.count)
                     }
                 }
-            case .category:
-                point.value = Double(point.count)
+                point.value = weight > 0 ? weighted / Double(weight) : nil
+                if type.isBloodPressure {
+                    let diastolic = group.compactMap(\.v2Avg)
+                    point.value2 = diastolic.isEmpty ? nil : diastolic.reduce(0, +) / Double(diastolic.count)
+                }
             }
-            return point
+        case .category:
+            point.value = MetricsReference.round3(Double(point.count) / Double(group.count))
         }
+        return point
     }
 
     // MARK: - Sleep
@@ -302,10 +371,16 @@ nonisolated enum HealthChartSeriesBuilder {
         highlights.count = inRange.reduce(0) { $0 + $1.count }
         switch type.kind {
         case .cumulative, .duration, .session:
-            highlights.total = values.isEmpty ? nil : values.reduce(0, +)
-            highlights.average = values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
-            highlights.min = points.compactMap { $0.value }.min()
-            highlights.max = points.compactMap { $0.value }.max()
+            if interval.duration <= 90_000 {
+                highlights.total = values.isEmpty ? nil : values.reduce(0, +)
+                highlights.average = values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
+            } else {
+                let daily = inRange.compactMap { primaryValue($0, type: type) }
+                highlights.total = daily.isEmpty ? nil : daily.reduce(0, +)
+                highlights.average = daily.isEmpty ? nil : daily.reduce(0, +) / Double(daily.count)
+            }
+            highlights.min = values.min()
+            highlights.max = values.max()
         case .discrete, .series:
             var weighted = 0.0, weight = 0
             for rollup in inRange {

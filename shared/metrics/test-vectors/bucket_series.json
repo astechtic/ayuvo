@@ -1,0 +1,3335 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1789534800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789531200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789538400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789534800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789542000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789538400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789545600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789542000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789549200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789545600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789552800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789549200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789556400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789552800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789560000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789556400000,
+            "value": null
+          },
+          {
+            "count": 2,
+            "end_ms": 1789563600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789560000000,
+            "value": 600
+          },
+          {
+            "count": 0,
+            "end_ms": 1789567200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789563600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789570800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789567200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789574400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789570800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789578000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789574400000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789581600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789578000000,
+            "value": 650
+          },
+          {
+            "count": 0,
+            "end_ms": 1789585200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789581600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789588800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789585200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789592400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789588800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789596000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789592400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789599600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789596000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789603200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789599600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789606800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789603200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789610400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789606800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789614000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789610400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789617600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789614000000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789574400000,
+        "entries": [
+          {
+            "t_ms": 1789560300000,
+            "value": 420
+          },
+          {
+            "t_ms": 1789562400000,
+            "value": 180
+          },
+          {
+            "t_ms": 1789578000000,
+            "value": 650
+          },
+          {
+            "t_ms": 1789601400000,
+            "value": null
+          },
+          {
+            "t_ms": 1789531140000,
+            "value": 300
+          },
+          {
+            "t_ms": 1789617600000,
+            "value": 90
+          }
+        ],
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "sum D calories NY hourly",
+      "notes": "null value ignored; entries on other days excluded"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1772949600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772946000000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1772953200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772949600000,
+            "value": 100
+          },
+          {
+            "count": 1,
+            "end_ms": 1772956800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772953200000,
+            "value": 200
+          },
+          {
+            "count": 0,
+            "end_ms": 1772960400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772956800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772964000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772960400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772967600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772964000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772971200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772967600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772974800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772971200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772978400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772974800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772982000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772978400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772985600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772982000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772989200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772985600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772992800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772989200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772996400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772992800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773000000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772996400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773003600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773000000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773007200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773003600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773010800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773007200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773014400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773010800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773018000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773014400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773021600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773018000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1773025200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773021600000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1773028800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1773025200000,
+            "value": 50
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1772985600000,
+        "entries": [
+          {
+            "t_ms": 1772951400000,
+            "value": 100
+          },
+          {
+            "t_ms": 1772954100000,
+            "value": 200
+          },
+          {
+            "t_ms": 1773025200000,
+            "value": 50
+          }
+        ],
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "sum D on NY spring-forward day"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1793509200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793505600000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1793512800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793509200000,
+            "value": 10
+          },
+          {
+            "count": 1,
+            "end_ms": 1793516400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793512800000,
+            "value": 20
+          },
+          {
+            "count": 0,
+            "end_ms": 1793520000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793516400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793523600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793520000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793527200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793523600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793530800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793527200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793534400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793530800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793538000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793534400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793541600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793538000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793545200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793541600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793548800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793545200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793552400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793548800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793556000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793552400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793559600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793556000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793563200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793559600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793566800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793563200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793570400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793566800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793574000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793570400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793577600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793574000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793581200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793577600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793584800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793581200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793588400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793584800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793592000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793588400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1793595600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793592000000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1793552400000,
+        "entries": [
+          {
+            "t_ms": 1793511000000,
+            "value": 10
+          },
+          {
+            "t_ms": 1793514600000,
+            "value": 20
+          }
+        ],
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "sum D on NY fall-back day",
+      "notes": "second 01:30 falls in the repeated hour bucket"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 2,
+            "end_ms": 1789410600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789324200000,
+            "value": 750
+          },
+          {
+            "count": 0,
+            "end_ms": 1789497000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789410600000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789583400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789497000000,
+            "value": 750
+          },
+          {
+            "count": 0,
+            "end_ms": 1789669800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789583400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789756200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789669800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789842600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789756200000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789929000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789842600000,
+            "value": 250
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789356600000,
+            "value": 250
+          },
+          {
+            "t_ms": 1789378200000,
+            "value": 500
+          },
+          {
+            "t_ms": 1789533000000,
+            "value": 750
+          },
+          {
+            "t_ms": 1789928940000,
+            "value": 250
+          },
+          {
+            "t_ms": 1789929000000,
+            "value": 999
+          }
+        ],
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "sum W water Kolkata gaps are null",
+      "notes": "Sep 21 00:00 belongs to the next week"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1789324200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789237800000,
+            "value": null
+          },
+          {
+            "count": 2,
+            "end_ms": 1789410600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789324200000,
+            "value": 750
+          },
+          {
+            "count": 0,
+            "end_ms": 1789497000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789410600000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789583400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789497000000,
+            "value": 750
+          },
+          {
+            "count": 0,
+            "end_ms": 1789669800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789583400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789756200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789669800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789842600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789756200000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789356600000,
+            "value": 250
+          },
+          {
+            "t_ms": 1789378200000,
+            "value": 500
+          },
+          {
+            "t_ms": 1789533000000,
+            "value": 750
+          },
+          {
+            "t_ms": 1789928940000,
+            "value": 250
+          },
+          {
+            "t_ms": 1789929000000,
+            "value": 999
+          }
+        ],
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "sunday"
+      },
+      "name": "sum W water Kolkata sunday week"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 2,
+            "end_ms": 1788303600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788217200000,
+            "value": 300
+          },
+          {
+            "count": 0,
+            "end_ms": 1788390000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788303600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788476400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788390000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788562800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788476400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788649200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788562800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788735600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788649200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788822000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788735600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788908400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788822000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788994800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788908400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789081200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788994800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789167600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789081200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789254000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789167600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789340400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789254000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789426800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789340400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789513200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789426800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789599600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789513200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789686000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789599600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789772400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789686000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789858800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789772400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789945200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789858800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790031600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789945200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790118000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790031600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790204400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790118000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790290800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790204400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790377200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790290800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790463600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790377200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790550000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790463600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790636400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790550000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790722800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790636400000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1790809200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790722800000,
+            "value": 400
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789556400000,
+        "entries": [
+          {
+            "t_ms": 1788217200000,
+            "value": 100
+          },
+          {
+            "t_ms": 1788303540000,
+            "value": 200
+          },
+          {
+            "t_ms": 1790809140000,
+            "value": 400
+          },
+          {
+            "t_ms": 1790809200000,
+            "value": 800
+          },
+          {
+            "t_ms": 1788217140000,
+            "value": 50
+          }
+        ],
+        "range": "M",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "sum M calories London"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 1,
+            "end_ms": 1775433600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1775001600000,
+            "value": 900
+          },
+          {
+            "count": 0,
+            "end_ms": 1776038400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1775433600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1776643200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1776038400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777248000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1776643200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777852800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777248000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1778457600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777852800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1779062400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1778457600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1779667200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1779062400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780272000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1779667200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780876800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780272000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1781481600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780876800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782086400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1781481600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782691200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782086400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1783296000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782691200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1783900800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1783296000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1784505600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1783900800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785110400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1784505600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785715200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785110400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1786320000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785715200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1786924800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1786320000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1787529600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1786924800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788134400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1787529600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788739200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788134400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789344000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788739200000,
+            "value": null
+          },
+          {
+            "count": 4,
+            "end_ms": 1789948800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789344000000,
+            "value": 1933.333
+          },
+          {
+            "count": 0,
+            "end_ms": 1790553600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789948800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790812800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790553600000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789560000000,
+        "entries": [
+          {
+            "t_ms": 1789372800000,
+            "value": 2000
+          },
+          {
+            "t_ms": 1789416000000,
+            "value": 500
+          },
+          {
+            "t_ms": 1789459200000,
+            "value": 1500
+          },
+          {
+            "t_ms": 1789632000000,
+            "value": 1800
+          },
+          {
+            "t_ms": 1775030400000,
+            "value": 900
+          },
+          {
+            "t_ms": 1774944000000,
+            "value": 700
+          }
+        ],
+        "range": "6M",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "sum 6M daily mean per week",
+      "notes": "week of Sep 14: (2500+1500+1800)/3 days; Mar 31 is outside the interval"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1769904000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1767225600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772323200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1769904000000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1775001600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772323200000,
+            "value": 700
+          },
+          {
+            "count": 1,
+            "end_ms": 1777593600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1775001600000,
+            "value": 900
+          },
+          {
+            "count": 0,
+            "end_ms": 1780272000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777593600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782864000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780272000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785542400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782864000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788220800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785542400000,
+            "value": null
+          },
+          {
+            "count": 4,
+            "end_ms": 1790812800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788220800000,
+            "value": 1933.333
+          },
+          {
+            "count": 0,
+            "end_ms": 1793491200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790812800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1796083200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793491200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1798761600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1796083200000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789560000000,
+        "entries": [
+          {
+            "t_ms": 1789372800000,
+            "value": 2000
+          },
+          {
+            "t_ms": 1789416000000,
+            "value": 500
+          },
+          {
+            "t_ms": 1789459200000,
+            "value": 1500
+          },
+          {
+            "t_ms": 1789632000000,
+            "value": 1800
+          },
+          {
+            "t_ms": 1775030400000,
+            "value": 900
+          },
+          {
+            "t_ms": 1774944000000,
+            "value": 700
+          }
+        ],
+        "range": "Y",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "sum Y daily mean per month"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 3,
+            "end_ms": 1789444800000,
+            "max": 88,
+            "min": 62,
+            "start_ms": 1789358400000,
+            "value": 73.667
+          },
+          {
+            "count": 0,
+            "end_ms": 1789531200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789444800000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789617600000,
+            "max": 59.5,
+            "min": 59.5,
+            "start_ms": 1789531200000,
+            "value": 59.5
+          },
+          {
+            "count": 0,
+            "end_ms": 1789704000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789617600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789790400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789704000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789876800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789790400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789963200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789876800000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "avg",
+        "anchor_ms": 1789574400000,
+        "entries": [
+          {
+            "t_ms": 1789383600000,
+            "value": 62
+          },
+          {
+            "t_ms": 1789401600000,
+            "value": 88
+          },
+          {
+            "t_ms": 1789437600000,
+            "value": 71
+          },
+          {
+            "t_ms": 1789556400000,
+            "value": 59.5
+          }
+        ],
+        "range": "W",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "avg W heart rate"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1775413800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1774981800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1776018600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1775413800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1776623400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1776018600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777228200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1776623400000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1777833000000,
+            "max": 90,
+            "min": 90,
+            "start_ms": 1777228200000,
+            "value": 90
+          },
+          {
+            "count": 0,
+            "end_ms": 1778437800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777833000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1779042600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1778437800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1779647400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1779042600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780252200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1779647400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780857000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780252200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1781461800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780857000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782066600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1781461800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782671400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782066600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1783276200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782671400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1783881000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1783276200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1784485800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1783881000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785090600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1784485800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785695400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785090600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1786300200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785695400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1786905000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1786300200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1787509800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1786905000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788114600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1787509800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788719400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788114600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789324200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788719400000,
+            "value": null
+          },
+          {
+            "count": 3,
+            "end_ms": 1789929000000,
+            "max": 80,
+            "min": 60,
+            "start_ms": 1789324200000,
+            "value": 70
+          },
+          {
+            "count": 0,
+            "end_ms": 1790533800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789929000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790793000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790533800000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "avg",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789349400000,
+            "value": 60
+          },
+          {
+            "t_ms": 1789435800000,
+            "value": 70
+          },
+          {
+            "t_ms": 1789439400000,
+            "value": 80
+          },
+          {
+            "t_ms": 1777685400000,
+            "value": 90
+          }
+        ],
+        "range": "6M",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "avg 6M weekly mean of entries"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 3,
+            "end_ms": 1789426800000,
+            "max": 82.5,
+            "min": 81,
+            "start_ms": 1789340400000,
+            "value": 81
+          },
+          {
+            "count": 0,
+            "end_ms": 1789513200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789426800000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789599600000,
+            "max": 80.9,
+            "min": 80.9,
+            "start_ms": 1789513200000,
+            "value": 80.9
+          },
+          {
+            "count": 0,
+            "end_ms": 1789686000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789599600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789772400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789686000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789858800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789772400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789945200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789858800000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "last",
+        "anchor_ms": 1789556400000,
+        "entries": [
+          {
+            "t_ms": 1789365600000,
+            "value": 81.2
+          },
+          {
+            "t_ms": 1789365600000,
+            "value": 81.0
+          },
+          {
+            "t_ms": 1789362000000,
+            "value": 82.5
+          },
+          {
+            "t_ms": 1789538400000,
+            "value": 80.9
+          }
+        ],
+        "range": "W",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "last W weight tie goes to later input"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 2,
+            "end_ms": 1769904000000,
+            "max": 85.3,
+            "min": 84.9,
+            "start_ms": 1767225600000,
+            "value": 84.9
+          },
+          {
+            "count": 0,
+            "end_ms": 1772323200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1769904000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1774998000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772323200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777590000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1774998000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780268400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777590000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782860400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780268400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785538800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782860400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788217200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785538800000,
+            "value": null
+          },
+          {
+            "count": 4,
+            "end_ms": 1790809200000,
+            "max": 82.5,
+            "min": 80.9,
+            "start_ms": 1788217200000,
+            "value": 80.9
+          },
+          {
+            "count": 0,
+            "end_ms": 1793491200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790809200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1796083200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793491200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1798761600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1796083200000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "last",
+        "anchor_ms": 1789556400000,
+        "entries": [
+          {
+            "t_ms": 1789365600000,
+            "value": 81.2
+          },
+          {
+            "t_ms": 1789365600000,
+            "value": 81.0
+          },
+          {
+            "t_ms": 1789362000000,
+            "value": 82.5
+          },
+          {
+            "t_ms": 1789538400000,
+            "value": 80.9
+          },
+          {
+            "t_ms": 1767423600000,
+            "value": 85.3
+          },
+          {
+            "t_ms": 1768892400000,
+            "value": 84.9
+          }
+        ],
+        "range": "Y",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "last Y weight latest per month"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 2,
+            "end_ms": 1789410600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789324200000,
+            "value": 2
+          },
+          {
+            "count": 0,
+            "end_ms": 1789497000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789410600000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789583400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789497000000,
+            "value": 1
+          },
+          {
+            "count": 0,
+            "end_ms": 1789669800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789583400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789756200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789669800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789842600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789756200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789929000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789842600000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "count",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789497000000,
+            "value": 1
+          },
+          {
+            "t_ms": 1780338600000,
+            "value": 1
+          }
+        ],
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "count W workouts"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1775413800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1774981800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1776018600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1775413800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1776623400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1776018600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777228200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1776623400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777833000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777228200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1778437800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777833000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1779042600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1778437800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1779647400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1779042600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780252200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1779647400000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1780857000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780252200000,
+            "value": 1
+          },
+          {
+            "count": 0,
+            "end_ms": 1781461800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780857000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782066600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1781461800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782671400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782066600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1783276200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782671400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1783881000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1783276200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1784485800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1783881000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785090600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1784485800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785695400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785090600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1786300200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785695400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1786905000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1786300200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1787509800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1786905000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788114600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1787509800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788719400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788114600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789324200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788719400000,
+            "value": null
+          },
+          {
+            "count": 3,
+            "end_ms": 1789929000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789324200000,
+            "value": 1.5
+          },
+          {
+            "count": 0,
+            "end_ms": 1790533800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789929000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790793000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790533800000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "count",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789497000000,
+            "value": 1
+          },
+          {
+            "t_ms": 1780338600000,
+            "value": 1
+          }
+        ],
+        "range": "6M",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "count 6M daily mean",
+      "notes": "week of Sep 14: 3 sessions over 2 days = 1.5"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 1,
+            "end_ms": 1788287400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788201000000,
+            "value": 57600
+          },
+          {
+            "count": 2,
+            "end_ms": 1788373800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788287400000,
+            "value": 57600
+          },
+          {
+            "count": 0,
+            "end_ms": 1788460200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788373800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788546600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788460200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788633000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788546600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788719400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788633000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788805800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788719400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788892200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788805800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788978600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788892200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789065000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788978600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789151400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789065000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789237800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789151400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789324200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789237800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789410600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789324200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789497000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789410600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789583400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789497000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789669800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789583400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789756200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789669800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789842600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789756200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789929000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789842600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790015400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789929000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790101800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790015400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790188200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790101800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790274600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790188200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790361000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790274600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790447400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790361000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790533800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790447400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790620200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790533800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790706600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790620200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1790793000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790706600000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "duration",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1788201000000,
+            "value": 57600
+          },
+          {
+            "t_ms": 1788287400000,
+            "value": 50400
+          },
+          {
+            "t_ms": 1788287400000,
+            "value": 7200
+          }
+        ],
+        "range": "M",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "duration M fasting seconds"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1769884200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1767205800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1772303400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1769884200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1774981800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1772303400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1777573800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1774981800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1780252200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1777573800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1782844200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1780252200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1785522600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1782844200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1788201000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1785522600000,
+            "value": null
+          },
+          {
+            "count": 3,
+            "end_ms": 1790793000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1788201000000,
+            "value": 57600
+          },
+          {
+            "count": 0,
+            "end_ms": 1793471400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1790793000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1796063400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1793471400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1798741800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1796063400000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "duration",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1788201000000,
+            "value": 57600
+          },
+          {
+            "t_ms": 1788287400000,
+            "value": 50400
+          },
+          {
+            "t_ms": 1788287400000,
+            "value": 7200
+          }
+        ],
+        "range": "Y",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "duration Y fasting daily mean"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1789430400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789344000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789516800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789430400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789603200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789516800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789689600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789603200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789776000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789689600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789862400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789776000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789948800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789862400000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789560000000,
+        "entries": [],
+        "range": "W",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "empty entries all null"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1789520400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789516800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789524000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789520400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789527600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789524000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789531200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789527600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789534800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789531200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789538400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789534800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789542000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789538400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789545600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789542000000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789549200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789545600000,
+            "value": 4.25
+          },
+          {
+            "count": 1,
+            "end_ms": 1789552800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789549200000,
+            "value": 1.333
+          },
+          {
+            "count": 0,
+            "end_ms": 1789556400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789552800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789560000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789556400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789563600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789560000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789567200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789563600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789570800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789567200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789574400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789570800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789578000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789574400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789581600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789578000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789585200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789581600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789588800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789585200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789592400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789588800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789596000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789592400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789599600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789596000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789603200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789599600000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789560000000,
+        "entries": [
+          {
+            "t_ms": 1789545600000,
+            "value": null
+          },
+          {
+            "t_ms": 1789547400000,
+            "value": 4.25
+          },
+          {
+            "t_ms": 1789548300000,
+            "value": null
+          },
+          {
+            "t_ms": 1789549200000,
+            "value": 1.3333
+          }
+        ],
+        "range": "D",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "fiber nulls skipped only"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "count": 0,
+            "end_ms": 1789520400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789516800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789524000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789520400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789527600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789524000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789531200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789527600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789534800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789531200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789538400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789534800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789542000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789538400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789545600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789542000000,
+            "value": null
+          },
+          {
+            "count": 1,
+            "end_ms": 1789549200000,
+            "max": 0.001,
+            "min": 0.001,
+            "start_ms": 1789545600000,
+            "value": 0.001
+          },
+          {
+            "count": 2,
+            "end_ms": 1789552800000,
+            "max": 1.002,
+            "min": 1,
+            "start_ms": 1789549200000,
+            "value": 1.001
+          },
+          {
+            "count": 0,
+            "end_ms": 1789556400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789552800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789560000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789556400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789563600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789560000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789567200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789563600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789570800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789567200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789574400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789570800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789578000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789574400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789581600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789578000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789585200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789581600000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789588800000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789585200000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789592400000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789588800000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789596000000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789592400000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789599600000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789596000000,
+            "value": null
+          },
+          {
+            "count": 0,
+            "end_ms": 1789603200000,
+            "max": null,
+            "min": null,
+            "start_ms": 1789599600000,
+            "value": null
+          }
+        ]
+      },
+      "input": {
+        "aggregation": "avg",
+        "anchor_ms": 1789560000000,
+        "entries": [
+          {
+            "t_ms": 1789545600000,
+            "value": 0.0005
+          },
+          {
+            "t_ms": 1789549200000,
+            "value": 1.0015
+          },
+          {
+            "t_ms": 1789549260000,
+            "value": 1.0
+          }
+        ],
+        "range": "D",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "rounding half away from zero"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "bucket_series",
+  "version": 1
+}

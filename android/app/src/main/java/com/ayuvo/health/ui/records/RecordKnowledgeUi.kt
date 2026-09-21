@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.records
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import android.app.DatePickerDialog
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
@@ -318,7 +319,7 @@ private fun MiniTrendRow(seriesPoints: List<TrendSeries.Point>, text: String, ch
 }
 
 @Composable
-internal fun sheetColor(): Color = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) Color(0xF2141416) else Color(0xFFFAF3EE)
+internal fun sheetColor(): Color = AyuvoColors.sheetBackground()
 
 /** §24 edit sheet: test mapping, value, unit, date, range, trends toggle, remove, source jump. */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

@@ -3,7 +3,11 @@ import SwiftUI
 
 @Observable
 class WeightStore {
-    private(set) var entries: [WeightEntry] = []
+    private(set) var entries: [WeightEntry] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `entries` (metric caches key on it).
+    private(set) var revision = 0
     var onEntryAdded: ((WeightEntry) -> Void)?
     var onEntryDeleted: ((UUID) -> Void)?
 

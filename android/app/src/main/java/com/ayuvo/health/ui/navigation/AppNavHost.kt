@@ -1,10 +1,11 @@
 package com.ayuvo.health.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -19,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.first
 import androidx.compose.ui.Modifier
@@ -36,18 +36,35 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ayuvo.health.AppContainer
-import com.ayuvo.health.ui.progress.HealthTabDestination
-import com.ayuvo.health.ui.health.HealthTypeDetailScreen
+import com.ayuvo.health.data.metrics.MetricKey
+import com.ayuvo.health.ui.metrics.AppMetricDestinations
+import com.ayuvo.health.ui.metrics.MetricDetailScreen
 import com.ayuvo.health.services.update.AndroidUpdateChecker
 import com.ayuvo.health.services.update.AndroidUpdateState
 import com.ayuvo.health.ui.coach.CoachScreen
-import com.ayuvo.health.ui.home.HomeScreen
+import com.ayuvo.health.ui.home.FoodLogRequest
+import com.ayuvo.health.ui.browse.ActivityScreen
+import com.ayuvo.health.ui.browse.BodyScreen
+import com.ayuvo.health.ui.browse.BrowseScreen
+import com.ayuvo.health.ui.browse.HealthCategoryScreen
+import com.ayuvo.health.ui.fasting.FastingScreen
+import com.ayuvo.health.ui.nutrition.NutrientListScreen
+import com.ayuvo.health.ui.nutrition.NutritionScreen
+import com.ayuvo.health.ui.summary.SummaryDestinations
+import com.ayuvo.health.ui.summary.SummaryScreen
+import com.ayuvo.health.ui.medications.MedicationsScreen
+import com.ayuvo.health.ui.workouts.WorkoutsScreen
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ayuvo.health.ui.onboarding.OnboardingScreen
-import com.ayuvo.health.ui.progress.BodyMeasurementsScreen
-import com.ayuvo.health.ui.progress.ProgressScreen
+import com.ayuvo.health.ui.body.BodyMeasurementsScreen
 import com.ayuvo.health.ui.settings.AllergenSensitivitiesScreen
 import com.ayuvo.health.ui.settings.CalculationMethodsScreen
 import com.ayuvo.health.ui.settings.OptionalNutrientGoalsScreen
+import com.ayuvo.health.ui.settings.SettingsPage
+import com.ayuvo.health.ui.settings.SettingsPageRequest
 import com.ayuvo.health.ui.settings.SettingsScreen
 import com.ayuvo.health.ui.settings.SettingsViewModel
 import com.ayuvo.health.models.WorkoutTabMode
@@ -77,8 +94,11 @@ val LocalLaunchFillEpoch = compositionLocalOf { 1 }
 private const val WORKOUT_UI_PREFS = "ayuvo_workouts"
 private const val WORKOUT_MODE_V2_DEFAULT_KEY = "mode.diary_default.v2"
 
+/** Tab roots other than the start destination, checked when resolving a shared route's tab. */
+private val NON_START_TABS = listOf(AppRoutes.BROWSE, AppRoutes.RECORDS, AppRoutes.COACH, AppRoutes.SETTINGS)
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun AppNavHost(
     container: AppContainer,
     startOnboarding: Boolean,
@@ -90,7 +110,7 @@ fun AppNavHost(
     onMedicationRequestHandled: (Long) -> Unit = {}
 ) {
     val nav = rememberNavController()
-    // Warm the app-scoped Settings state while Home is visible. By the time the user changes
+    // Warm the app-scoped Settings state while Summary is visible. By the time the user changes
     // tabs, its local profile/preferences are already ready and the page opens like every other
     // tab instead of constructing empty cards on first entry.
     val settingsViewModel: SettingsViewModel = viewModel(
@@ -109,20 +129,26 @@ fun AppNavHost(
     var workoutModeV2Initialized by remember(context) {
         mutableStateOf(workoutUiPrefs.getBoolean(WORKOUT_MODE_V2_DEFAULT_KEY, false))
     }
-    // Match iOS's versioned AppStorage key: reset the former library-first
-    // default once (see the LaunchedEffect below), then keep every user switch persistent.
-    // Nested settings/* screens keep the tab bar visible and highlight Settings,
-    // so re-tapping the Settings icon can return to the hub (iOS parity).
-    val selectedTabRoute = AppRoutes.selectedBottomTab(currentRoute)
+
+    /** Tab roots present in the back stack, nearest first (only one non-start tab can be there). */
+    fun tabAncestors(): List<String> =
+        (NON_START_TABS + AppRoutes.SUMMARY).filter { route -> runCatching { nav.getBackStackEntry(route) }.isSuccess }
+
+    fun routeNow(): String? = nav.currentBackStackEntry?.destination?.route
+    fun tabNow(): String? = AppRoutes.selectedBottomTab(routeNow(), tabAncestors())
+
+    // Shared destinations (metric, workouts, medications) keep the tab that opened them selected.
+    val selectedTabRoute = remember(backStack) { tabNow() }
     val showTabs = selectedTabRoute != null && !analyzing
     // Bumped when the Settings tab is re-tapped so SettingsScreen can pop back to the hub
     // (matches iOS TabView + NavigationStack reselect → root behavior).
     var settingsPopToRootTick by remember { mutableIntStateOf(0) }
     val currentVersion = remember(context) { AndroidUpdateChecker.currentVersion(context) }
     var updateAvailable by remember { mutableStateOf(false) }
-    // One-shot request to land on a Health tab segment (Home "See All" / Settings "All Health Data" /
-    // Home "Workouts").
-    var healthTabRequest by remember { mutableStateOf<HealthTabDestination?>(null) }
+    // One-shot requests consumed by the destination that owns the flow.
+    var foodLogRequest by remember { mutableStateOf<FoodLogRequest?>(null) }
+    var recordsAddRequest by remember { mutableStateOf<Long?>(null) }
+    var settingsPageRequest by remember { mutableStateOf<SettingsPageRequest?>(null) }
 
     // Settings is intentionally warmed before onboarding finishes. Reload the values that
     // onboarding can change outside Settings so the first visit never shows the pre-onboarding
@@ -131,22 +157,6 @@ fun AppNavHost(
     LaunchedEffect(currentRoute) {
         if (currentRoute == AppRoutes.SETTINGS) {
             settingsViewModel.refreshAiConfiguration()
-        }
-    }
-
-    // Food quick actions (widget taps, app shortcuts, notification actions) now land on the
-    // Health tab's Food segment, since the food flow moved out of Home. Matches iOS
-    // consumePendingLaunchRoutes(), which sets selectedTab = .health / healthOverviewMode = .food.
-    LaunchedEffect(quickActionRequest?.id, currentRoute) {
-        if (quickActionRequest != null && currentRoute != AppRoutes.ONBOARDING) {
-            healthTabRequest = HealthTabDestination.FOOD
-            if (currentRoute != AppRoutes.HEALTH) {
-                nav.navigate(AppRoutes.HEALTH) {
-                    popUpTo(AppRoutes.HOME) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
         }
     }
 
@@ -173,7 +183,7 @@ fun AppNavHost(
         }
     }
 
-    // App-open epoch for the Home fill-from-zero reveal. Bumped only on ON_START
+    // App-open epoch for the Summary ring fill. Bumped only on ON_START
     // that follows an ON_STOP (a genuine background -> foreground return), so
     // transient pauses (notification shade, permission dialog) don't retrigger it.
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -191,85 +201,67 @@ fun AppNavHost(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    // The bar memoises its tap lambda against `onTap` (a function reference compares equal across
-    // recompositions), so the navigator must read the *latest* route state rather than the values
-    // captured when it was first created.
-    val latestRoute = rememberUpdatedState(currentRoute)
-    val latestSelectedTab = rememberUpdatedState(selectedTabRoute)
-
     /**
-     * Bottom-bar navigation shared by the bar itself, Home's "See All" and Settings' "All Health
-     * Data": re-tapping the selected tab pops any pushed detail (Settings children, Health type
-     * details); other tabs save/restore their state.
+     * Bottom-bar navigation (also used by in-app "go to tab" links). Re-tapping the selected tab
+     * pops back to its root; other tabs save/restore their state under the graph's start
+     * destination. Reads the controller directly so it never acts on a stale route.
      */
     fun navigateToTab(target: String) {
-        val route = latestRoute.value
-        val selectedTab = latestSelectedTab.value
-        if (target == AppRoutes.SETTINGS) {
-            val onSettingsRoot = route == AppRoutes.SETTINGS
-            val onSettingsChild = route?.startsWith("settings/") == true
-            if (onSettingsRoot || onSettingsChild) {
-                settingsPopToRootTick++
-                if (onSettingsChild) {
-                    nav.popBackStack(AppRoutes.SETTINGS, inclusive = false)
-                }
-                return
-            }
-        }
-        // A Health Data type detail (or a Medications screen) is pushed over whichever tab opened
-        // it; re-tapping Health from the detail pops to the tab, like Settings' nested screens.
-        if (target == AppRoutes.HEALTH && (AppRoutes.isHealthDetailRoute(route) || AppRoutes.isMedicationsChildRoute(route))) {
-            if (!nav.popBackStack(AppRoutes.HEALTH, inclusive = false)) {
-                // The detail was pushed from Home: open the tab on the matching segment.
-                healthTabRequest = if (AppRoutes.isMedicationsChildRoute(route)) HealthTabDestination.MEDICATIONS else HealthTabDestination.HEALTH_DATA
-                nav.navigate(AppRoutes.HEALTH) {
-                    popUpTo(AppRoutes.HOME) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
-            return
-        }
-        // Re-tapping Records from a pushed record screen pops back to the Records home.
-        if (target == AppRoutes.RECORDS && AppRoutes.isRecordsChildRoute(route)) {
-            if (!nav.popBackStack(AppRoutes.RECORDS, inclusive = false)) {
-                nav.navigate(AppRoutes.RECORDS) {
-                    popUpTo(AppRoutes.HOME) { saveState = true }
+        val selected = tabNow()
+        if (target == selected) {
+            if (target == AppRoutes.SETTINGS) settingsPopToRootTick++
+            if (!nav.popBackStack(target, inclusive = false) && routeNow() != target) {
+                // The tab root is not in the stack (a Browse page pushed from Summary): open it fresh.
+                nav.navigate(target) {
+                    popUpTo(nav.graph.findStartDestination().id) { saveState = false }
                     launchSingleTop = true
                 }
             }
             return
         }
-        if (target == selectedTab) return
-        // Tapping HOME (the start destination) needs popBackStack
-        // — `navigate(HOME) { popUpTo(HOME); launchSingleTop = true }`
-        // is a no-op because NavController sees HOME at the top of
-        // the stack and skips re-emitting currentBackStackEntry, so
-        // the bar stays selected on the previous tab.
-        if (target == AppRoutes.HOME) {
-            // saveState keeps the popped tab's UI state (e.g. the Health tab's segment) for restoreState.
-            nav.popBackStack(AppRoutes.HOME, inclusive = false, saveState = true)
+        val start = nav.graph.findStartDestination()
+        if (target == start.route) {
+            // Tapping the start destination needs popBackStack: navigate(start) { popUpTo(start) }
+            // is a no-op when it is already at the bottom, so the bar would keep the old tab.
+            if (!nav.popBackStack(start.id, inclusive = false, saveState = true)) {
+                nav.navigate(target) { launchSingleTop = true }
+            }
         } else {
             nav.navigate(target) {
-                popUpTo(AppRoutes.HOME) { saveState = true }
+                popUpTo(start.id) { saveState = true }
                 launchSingleTop = true
                 restoreState = true
             }
         }
     }
 
+    /** Switches to Browse and shows [route] directly above its root (Nutrition, Fasting, Medications…). */
+    fun openBrowsePlace(route: String) {
+        if (tabNow() != AppRoutes.BROWSE) navigateToTab(AppRoutes.BROWSE)
+        nav.popBackStack(AppRoutes.BROWSE, inclusive = false)
+        nav.navigate(route) { launchSingleTop = true }
+    }
+
+    /** Browse › Nutrition, optionally opening a food log method (or the + menu) there. */
+    fun openNutrition(request: FoodLogRequest? = null) {
+        if (request != null) foodLogRequest = request
+        if (routeNow() != AppRoutes.BROWSE_NUTRITION) openBrowsePlace(AppRoutes.BROWSE_NUTRITION)
+    }
+
     /**
-     * Lands on the Meds segment. Restoring the Health tab can bring back a Medications screen that
-     * was pushed earlier; the Home card and a reminder tap should show the segment itself, so that
-     * restored child is popped first (an explicit [medicationId] is then pushed on top).
+     * Browse › Medications (reminder taps, Summary "Log a dose"), plus the medication's detail when
+     * [medicationId] is given.
      */
     fun openMedications(medicationId: String? = null) {
-        healthTabRequest = HealthTabDestination.MEDICATIONS
-        navigateToTab(AppRoutes.HEALTH)
-        if (AppRoutes.isMedicationsChildRoute(nav.currentDestination?.route)) {
-            nav.popBackStack(AppRoutes.HEALTH, inclusive = false)
-        }
+        openBrowsePlace(AppRoutes.MEDICATIONS)
         medicationId?.let { nav.navigate(AppRoutes.medicationDetail(it)) }
+    }
+
+    /** Records tab with its "Add record" sheet open. */
+    fun openAddRecord() {
+        recordsAddRequest = System.nanoTime()
+        if (tabNow() != AppRoutes.RECORDS) navigateToTab(AppRoutes.RECORDS)
+        nav.popBackStack(AppRoutes.RECORDS, inclusive = false)
     }
 
     /** §27 entry points: select records, prefill the prompt and open the Coach tab. */
@@ -278,19 +270,45 @@ fun AppNavHost(
         navigateToTab(AppRoutes.COACH)
     }
 
+    /** Workouts log ↔ Exercise Library: go back when the other mode is directly below, else replace. */
+    fun switchWorkoutMode(to: String, from: String) {
+        if (nav.previousBackStackEntry?.destination?.route == to) {
+            nav.popBackStack()
+        } else {
+            nav.navigate(to) { popUpTo(from) { inclusive = true } }
+        }
+    }
+
+    val metricDestinations = AppMetricDestinations(
+        openFoodDiary = { openNutrition() },
+        openFasting = { openBrowsePlace(AppRoutes.BROWSE_FASTING) },
+        openWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) }
+    )
+
+    // Food quick actions (widget taps, app shortcuts, notification actions) land on
+    // Browse › Nutrition, whose diary consumes the request (docs/ui-structure.md §10).
+    LaunchedEffect(quickActionRequest?.id, currentRoute) {
+        if (quickActionRequest != null && currentRoute != null && currentRoute != AppRoutes.ONBOARDING &&
+            currentRoute != AppRoutes.BROWSE_NUTRITION
+        ) {
+            openNutrition()
+        }
+    }
+
     // Share / "Open in" landed records: switch to the Records tab once the app is past onboarding.
     // The import itself already started in MainActivity; the Records screen shows its notice.
     LaunchedEffect(recordsRequest?.id, currentRoute) {
         val request = recordsRequest ?: return@LaunchedEffect
         if (currentRoute == null || currentRoute == AppRoutes.ONBOARDING) return@LaunchedEffect
-        if (AppRoutes.selectedBottomTab(currentRoute) != AppRoutes.RECORDS || AppRoutes.isRecordsChildRoute(currentRoute)) {
+        if (tabNow() != AppRoutes.RECORDS || AppRoutes.isRecordsChildRoute(currentRoute)) {
             navigateToTab(AppRoutes.RECORDS)
+            nav.popBackStack(AppRoutes.RECORDS, inclusive = false)
         }
         onRecordsRequestHandled(request.id)
     }
 
-    // A medication reminder tap lands on the Meds segment (docs/medications.md §16) and, when the
-    // intent names a medicine, pushes its detail on top — the quick-action block's shape.
+    // A medication reminder tap lands on Browse › Medications (docs/medications.md §16) and, when
+    // the intent names a medicine, pushes its detail on top.
     LaunchedEffect(medicationRequest?.id, currentRoute) {
         val request = medicationRequest ?: return@LaunchedEffect
         if (currentRoute == null || currentRoute == AppRoutes.ONBOARDING) return@LaunchedEffect
@@ -300,6 +318,11 @@ fun AppNavHost(
 
     CompositionLocalProvider(LocalLaunchFillEpoch provides launchFillEpoch) {
     Scaffold(
+        // Resource ids for uiautomator walkthroughs (docs/ui-structure.md §9).
+        modifier = Modifier.semantics { testTagsAsResourceId = true },
+        // The docked tab bar owns the navigation-bar inset; content is padded by the
+        // bar only, so screens keep handling the status bar themselves (TabInset).
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (showTabs) {
                 AppBottomNavBar(
@@ -309,43 +332,163 @@ fun AppNavHost(
                 )
             }
         }
-    ) { _ ->
-        Box(Modifier.fillMaxSize()) {
+    ) { inner ->
+        val barPadding = PaddingValues(bottom = inner.calculateBottomPadding())
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(barPadding)
+                .consumeWindowInsets(barPadding)
+        ) {
             NavHost(
                 navController = nav,
-                startDestination = if (startOnboarding) AppRoutes.ONBOARDING else AppRoutes.HOME
+                startDestination = if (startOnboarding) AppRoutes.ONBOARDING else AppRoutes.SUMMARY
             ) {
                 composable(AppRoutes.ONBOARDING) {
                     OnboardingScreen(container = container, onComplete = {
                         settingsViewModel.refreshAiConfiguration()
-                        nav.navigate(AppRoutes.HOME) {
+                        // Summary becomes the start destination, so tab switches pop up to it.
+                        nav.graph.setStartDestination(AppRoutes.SUMMARY)
+                        nav.navigate(AppRoutes.SUMMARY) {
                             popUpTo(AppRoutes.ONBOARDING) { inclusive = true }
                             launchSingleTop = true
                         }
                     })
                 }
-                composable(AppRoutes.HOME) {
+                composable(AppRoutes.SUMMARY) {
                     TabInset {
-                        HomeScreen(
+                        SummaryScreen(
                             container = container,
-                            onOpenFood = {
-                                healthTabRequest = HealthTabDestination.FOOD
-                                navigateToTab(AppRoutes.HEALTH)
+                            destinations = SummaryDestinations(
+                                openMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
+                                openBrowse = { navigateToTab(AppRoutes.BROWSE) },
+                                openNutrition = { request -> openNutrition(request) },
+                                openFasting = { openBrowsePlace(AppRoutes.BROWSE_FASTING) },
+                                openWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) },
+                                openMedications = { nav.navigate(AppRoutes.MEDICATIONS) },
+                                addMedication = { nav.navigate(AppRoutes.medicationAdd()) },
+                                openRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
+                                addRecord = { openAddRecord() },
+                                openSettings = { navigateToTab(AppRoutes.SETTINGS) }
+                            )
+                        )
+                    }
+                }
+                composable(AppRoutes.BROWSE) {
+                    TabInset {
+                        BrowseScreen(
+                            container = container,
+                            onOpenTarget = { target ->
+                                when {
+                                    target == "screen:nutrition" -> nav.navigate(AppRoutes.BROWSE_NUTRITION)
+                                    target == "screen:fasting" -> nav.navigate(AppRoutes.BROWSE_FASTING)
+                                    target == "screen:body" -> nav.navigate(AppRoutes.BROWSE_BODY)
+                                    target == "screen:activity" -> nav.navigate(AppRoutes.BROWSE_ACTIVITY)
+                                    target == "screen:medications" -> nav.navigate(AppRoutes.MEDICATIONS)
+                                    target == "tab:records" -> navigateToTab(AppRoutes.RECORDS)
+                                    target.startsWith("metric:") ->
+                                        MetricKey.parse(target.removePrefix("metric:"))?.let { nav.navigate(AppRoutes.metric(it)) }
+                                    target.startsWith("category:") -> nav.navigate(AppRoutes.browseCategory(target.removePrefix("category:")))
+                                }
                             },
-                            onOpenHealth = {
-                                healthTabRequest = HealthTabDestination.HEALTH_DATA
-                                navigateToTab(AppRoutes.HEALTH)
-                            },
-                            onOpenHealthType = { key -> nav.navigate(AppRoutes.healthType(key)) },
-                            onOpenRecords = {
-                                navigateToTab(AppRoutes.RECORDS)
-                            },
-                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
-                            onOpenWorkouts = {
-                                healthTabRequest = HealthTabDestination.WORKOUTS
-                                navigateToTab(AppRoutes.HEALTH)
-                            },
-                            onOpenMedications = { openMedications() }
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
+                            onOpenHealthSync = {
+                                // Browse footer → Settings › Data & Privacy › Health Sync.
+                                settingsPageRequest = SettingsPageRequest(SettingsPage.HEALTH_SYNC)
+                                navigateToTab(AppRoutes.SETTINGS)
+                            }
+                        )
+                    }
+                }
+                composable(AppRoutes.BROWSE_NUTRITION) {
+                    TabInset {
+                        NutritionScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
+                            onOpenNutrients = { nav.navigate(AppRoutes.BROWSE_NUTRIENTS) },
+                            quickActionRequest = quickActionRequest,
+                            onQuickActionHandled = onQuickActionHandled,
+                            logRequest = foodLogRequest,
+                            onLogRequestHandled = { id -> if (foodLogRequest?.id == id) foodLogRequest = null }
+                        )
+                    }
+                }
+                composable(AppRoutes.BROWSE_NUTRIENTS) {
+                    TabInset {
+                        NutrientListScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) }
+                        )
+                    }
+                }
+                composable(AppRoutes.BROWSE_FASTING) {
+                    TabInset {
+                        FastingScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) }
+                        )
+                    }
+                }
+                composable(AppRoutes.BROWSE_BODY) {
+                    TabInset {
+                        BodyScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
+                            onOpenMeasurements = { nav.navigate(AppRoutes.BROWSE_MEASUREMENTS) }
+                        )
+                    }
+                }
+                composable(AppRoutes.BROWSE_MEASUREMENTS) {
+                    TabInset { BodyMeasurementsScreen(container = container, onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.BROWSE_ACTIVITY) {
+                    TabInset {
+                        ActivityScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
+                            onOpenWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) },
+                            onOpenLibrary = { nav.navigate(AppRoutes.WORKOUTS_LIBRARY) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.BROWSE_CATEGORY,
+                    arguments = listOf(navArgument(AppRoutes.CATEGORY_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val categoryId = entry.arguments?.getString(AppRoutes.CATEGORY_ID_ARG) ?: return@composable
+                    TabInset {
+                        HealthCategoryScreen(
+                            container = container,
+                            categoryId = categoryId,
+                            onBack = { nav.popBackStack() },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) }
+                        )
+                    }
+                }
+                composable(AppRoutes.WORKOUTS_LOG) {
+                    TabInset {
+                        WorkoutsScreen(
+                            container = container,
+                            forcedMode = WorkoutTabMode.LOG,
+                            onOpenLibrary = { switchWorkoutMode(AppRoutes.WORKOUTS_LIBRARY, AppRoutes.WORKOUTS_LOG) },
+                            onOpenLog = {},
+                            onBack = { nav.popBackStack() }
+                        )
+                    }
+                }
+                composable(AppRoutes.WORKOUTS_LIBRARY) {
+                    TabInset {
+                        WorkoutsScreen(
+                            container = container,
+                            forcedMode = WorkoutTabMode.LIBRARY,
+                            onOpenLibrary = {},
+                            onOpenLog = { switchWorkoutMode(AppRoutes.WORKOUTS_LOG, AppRoutes.WORKOUTS_LIBRARY) },
+                            onBack = { nav.popBackStack() }
                         )
                     }
                 }
@@ -354,25 +497,37 @@ fun AppNavHost(
                     arguments = listOf(navArgument(AppRoutes.HEALTH_TYPE_ARG) { type = NavType.StringType })
                 ) { entry ->
                     val typeKey = entry.arguments?.getString(AppRoutes.HEALTH_TYPE_ARG) ?: return@composable
-                    HealthTypeDetailScreen(
-                        container = container,
-                        typeKey = typeKey,
-                        onBack = { nav.popBackStack() }
-                    )
-                }
-                composable(AppRoutes.HEALTH) {
                     TabInset {
-                        ProgressScreen(
+                        MetricDetailScreen(
                             container = container,
-                            requestedDestination = healthTabRequest,
-                            onRequestConsumed = { healthTabRequest = null },
-                            onOpenType = { key -> nav.navigate(AppRoutes.healthType(key)) },
-                            quickActionRequest = quickActionRequest,
-                            onQuickActionHandled = onQuickActionHandled,
+                            key = MetricKey.Health(typeKey),
+                            onBack = { nav.popBackStack() }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.METRIC,
+                    arguments = listOf(navArgument(AppRoutes.METRIC_KEY_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val key = entry.arguments?.getString(AppRoutes.METRIC_KEY_ARG)?.let(MetricKey::parse) ?: return@composable
+                    TabInset {
+                        MetricDetailScreen(
+                            container = container,
+                            key = key,
+                            onBack = { nav.popBackStack() },
+                            destinations = metricDestinations
+                        )
+                    }
+                }
+                composable(AppRoutes.MEDICATIONS) {
+                    TabInset {
+                        MedicationsScreen(
+                            container = container,
                             onOpenMedication = { id -> nav.navigate(AppRoutes.medicationDetail(id)) },
                             onAddMedication = { nav.navigate(AppRoutes.medicationAdd()) },
-                            onOpenMedicationHistory = { nav.navigate(AppRoutes.medicationHistory()) },
-                            onImportMedicationsFromRecord = { recordId -> nav.navigate(AppRoutes.medicationImport(recordId)) }
+                            onOpenHistory = { nav.navigate(AppRoutes.medicationHistory()) },
+                            onImportFromRecord = { recordId -> nav.navigate(AppRoutes.medicationImport(recordId)) },
+                            onBack = { nav.popBackStack() }
                         )
                     }
                 }
@@ -442,9 +597,9 @@ fun AppNavHost(
                             recordId = recordId,
                             onBack = { nav.popBackStack() },
                             onDone = {
-                                // Created from a record: land on the Meds segment so the new rows are visible.
+                                // Created from a record: land on Medications so the new rows are visible.
                                 nav.popBackStack()
-                                openMedications()
+                                if (!nav.popBackStack(AppRoutes.MEDICATIONS, inclusive = false)) nav.navigate(AppRoutes.MEDICATIONS)
                             },
                             onAddManually = { id ->
                                 nav.navigate(AppRoutes.medicationAdd(id)) { popUpTo(AppRoutes.medicationImport(id)) { inclusive = true } }
@@ -459,7 +614,9 @@ fun AppNavHost(
                             onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
                             onOpenValue = { recordId, observationId -> nav.navigate(AppRoutes.recordDetailAt(recordId, observationId)) },
                             onAskCoach = { ids -> askCoach(ids, "") },
-                            onShare = { ids -> nav.navigate(AppRoutes.recordShare(ids)) }
+                            onShare = { ids -> nav.navigate(AppRoutes.recordShare(ids)) },
+                            openAddRequest = recordsAddRequest,
+                            onOpenAddHandled = { id -> if (recordsAddRequest == id) recordsAddRequest = null }
                         )
                     }
                 }
@@ -550,10 +707,11 @@ fun AppNavHost(
                             nav = nav,
                             vm = settingsViewModel,
                             popToRootTick = settingsPopToRootTick,
-                            onOpenHealthData = {
-                                healthTabRequest = HealthTabDestination.HEALTH_DATA
-                                navigateToTab(AppRoutes.HEALTH)
-                            }
+                            openPageRequest = settingsPageRequest,
+                            onOpenPageHandled = { id -> if (settingsPageRequest?.id == id) settingsPageRequest = null },
+                            onOpenBrowse = { navigateToTab(AppRoutes.BROWSE) },
+                            onOpenMedications = { nav.navigate(AppRoutes.MEDICATIONS) },
+                            updateAvailable = updateAvailable
                         )
                     }
                 }

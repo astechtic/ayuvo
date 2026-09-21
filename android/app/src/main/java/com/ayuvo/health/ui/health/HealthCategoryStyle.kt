@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.ayuvo.health.R
 import com.ayuvo.health.models.HealthCategory
 import com.ayuvo.health.models.HealthDataType
+import com.ayuvo.health.ui.design.AyuvoColors
 
 /** Icons, tints and display names per category / type — Compose-side only, so the registry stays pure. */
 object HealthCategoryStyle {
@@ -41,21 +42,7 @@ object HealthCategoryStyle {
     }
 
     /** Apple-Health-style category tints (fixed, independent of the app theme colour). */
-    fun tint(category: HealthCategory): Color = when (category) {
-        HealthCategory.ACTIVITY -> Color(0xFFFF9500)
-        HealthCategory.BODY -> Color(0xFFAF52DE)
-        HealthCategory.CYCLE_TRACKING -> Color(0xFFFF2D55)
-        HealthCategory.HEARING -> Color(0xFF007AFF)
-        HealthCategory.HEART -> Color(0xFFFF3B30)
-        HealthCategory.MENTAL_WELLBEING -> Color(0xFF30B0C7)
-        HealthCategory.MOBILITY -> Color(0xFFFF9500)
-        HealthCategory.NUTRITION -> Color(0xFF34C759)
-        HealthCategory.RESPIRATORY -> Color(0xFF5AC8FA)
-        HealthCategory.SLEEP -> Color(0xFF5E5CE6)
-        HealthCategory.SYMPTOMS -> Color(0xFFAF52DE)
-        HealthCategory.VITALS -> Color(0xFFFF3B30)
-        HealthCategory.OTHER -> Color(0xFF8E8E93)
-    }
+    fun tint(category: HealthCategory): Color = AyuvoColors.category(category)
 
     fun categoryName(context: Context, category: HealthCategory): String = context.getString(
         when (category) {

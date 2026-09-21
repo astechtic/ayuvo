@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal मॉडल। मज़बूत सटीकता, मुफ़्त टियर उपलब्ध।</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">होम</string>
     <string name="nav_coach">कोच</string>
     <string name="nav_settings">सेटिंग्स</string>
     <string name="nav_about">परिचय</string>
@@ -441,32 +440,12 @@
     <string name="coach_chip_log_advice">मेरे लॉग के आधार पर कोई सलाह?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1स</string>
-    <string name="progress_range_month">1म</string>
-    <string name="progress_range_3m">3म</string>
-    <string name="progress_range_6m">6म</string>
-    <string name="progress_range_year">1व</string>
-    <string name="progress_range_all">सभी</string>
 
-    <string name="progress_weight_section">वज़न</string>
-    <string name="progress_log_weight">वज़न लॉग करें</string>
-    <string name="progress_stat_current">वर्तमान</string>
-    <string name="progress_stat_goal">लक्ष्य</string>
-    <string name="progress_log_first_weight">ट्रेंड देखने के लिए अपना पहला वज़न लॉग करें</string>
 
     <string name="progress_weight_history">वज़न इतिहास</string>
     <string name="progress_body_fat_history">बॉडी फैट इतिहास</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d प्रविष्टि · देखने या हटाने के लिए टैप करें</item>
-        <item quantity="other">%1$d प्रविष्टियाँ · देखने या हटाने के लिए टैप करें</item>
-    </plurals>
 
-    <string name="progress_calories_section">कैलोरी</string>
-    <string name="progress_avg_format">औसत: %1$,d kcal</string>
-    <string name="progress_no_food">अभी तक कोई भोजन लॉग नहीं किया गया</string>
 
-    <string name="progress_macro_averages">मैक्रो औसत</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">वज़न लॉग करें</string>
 
@@ -475,16 +454,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">व्यक्तिगत जानकारी</string>
-    <string name="settings_section_goals">लक्ष्य और पोषण</string>
     <string name="settings_section_daily_targets">दैनिक लक्ष्य</string>
-    <string name="settings_section_app">ऐप सेटिंग्स</string>
-    <string name="settings_section_tracking_reminders">ट्रैकिंग और रिमाइंडर</string>
-    <string name="settings_category_ai_providers">AI प्रदाता और फ़ॉलबैक</string>
-    <string name="settings_section_workout">वर्कआउट</string>
     <string name="settings_section_ai">AI प्रदाता</string>
     <string name="settings_section_speech">स्पीच-टू-टेक्स्ट</string>
-    <string name="settings_section_health">स्वास्थ्य और डेटा</string>
-    <string name="settings_section_data_management">डेटा प्रबंधन</string>
 
     <string name="settings_gender">लिंग</string>
     <string name="settings_birthday">जन्मदिन</string>
@@ -620,32 +592,15 @@
     <string name="sheet_goal_body_fat">बॉडी फैट लक्ष्य</string>
     <string name="sheet_goal_body_fat_currently">वर्तमान %1$d%%</string>
     <string name="action_remove_goal">लक्ष्य हटाएं</string>
-    <string name="progress_metric_weight">वज़न</string>
-    <string name="progress_metric_body_fat">बॉडी फैट</string>
-    <string name="progress_metric_workouts">वर्कआउट</string>
     <string name="progress_workout_history">वर्कआउट इतिहास</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d गणना किया गया बर्न · देखने या हटाने के लिए टैप करें</item>
-        <item quantity="other">%1$d गणना किए गए बर्न · देखने या हटाने के लिए टैप करें</item>
-    </plurals>
     <string name="progress_workout_delete_title">वर्कआउट बर्न हटाएँ?</string>
     <string name="progress_workout_delete_message">यह Ayuvo और Health Connect से गणना किया गया बर्न हटाता है। आपकी वर्कआउट डायरी योजना सहेजी रहेगी।</string>
-    <string name="progress_workout_section">वर्कआउट गतिविधि</string>
-    <string name="progress_workout_stat_workouts">वर्कआउट</string>
-    <string name="progress_workout_stat_total">कुल बर्न</string>
-    <string name="progress_workout_stat_average">औसत बर्न</string>
-    <string name="progress_workout_stat_latest">नवीनतम</string>
     <string name="progress_workout_stat_days">दिन</string>
-    <string name="progress_workout_no_range">इस अवधि में कोई गणना किया गया वर्कआउट बर्न नहीं है</string>
-    <string name="progress_workout_chart_description">%1$s से %2$s तक वर्कआउट बर्न चार्ट। कुल %3$d किलोकैलोरी; नवीनतम %4$d किलोकैलोरी।</string>
-    <string name="progress_log_body_fat">बॉडी फैट दर्ज करें</string>
-    <string name="progress_log_first_body_fat">रुझान देखने के लिए अपना पहला बॉडी फैट % दर्ज करें</string>
     <string name="progress_log_body_fat_title">बॉडी फैट दर्ज करें</string>
     <string name="notif_body_fat_log_title">बॉडी फैट चेक-इन</string>
     <string name="notif_body_fat_log_text">अपनी संरचना का रुझान देखने के लिए आज का बॉडी फैट % दर्ज करें।</string>
     <string name="saved_meals_search_placeholder">सहेजे गए खानों में खोजें</string>
     <string name="saved_meals_no_match">कोई मेल खाता खाना नहीं</string>
-    <string name="settings_section_custom_instructions">कस्टम AI निर्देश</string>
     <string name="settings_custom_instructions_placeholder">उदा. मैं जर्मनी में रहता हूँ, यूरोपीय पोर्शन साइज़ मानें, ALDI/REWE ब्रांड्स को प्राथमिकता दें। मैं बॉडीबिल्डिंग कट पर हूँ।</string>
     <string name="settings_custom_instructions_footer">हर AI अनुरोध के साथ भेजा जाने वाला वैकल्पिक संदर्भ — क्षेत्र, डाइट, एथलेटिक लक्ष्य, और जो कुछ भी आप हर बार दोहराते हैं। बंद करने के लिए खाली छोड़ें।</string>
     <string name="settings_save">सहेजें</string>

@@ -1,5 +1,8 @@
 package com.ayuvo.health.ui.medications
 
+import androidx.compose.foundation.layout.PaddingValues
+import com.ayuvo.health.ui.design.SurfaceCard
+import com.ayuvo.health.ui.design.AyuvoTopBar
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -58,7 +61,6 @@ import com.ayuvo.health.medications.model.MedicationStatus
 import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.components.GlassPrimaryButton
-import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.IconBubble
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.records.RecordFormat
@@ -93,7 +95,7 @@ fun MedicationDetailScreen(
     }
     val medication = ui.medication
     Column(Modifier.fillMaxSize()) {
-        MedicationTopBar(title = medication?.name ?: "", onBack = onBack) {
+        AyuvoTopBar(title = medication?.name ?: "", onBack = onBack) {
             if (medication != null) {
                 Box {
                     IconButton(onClick = { menuOpen = true }) {
@@ -134,7 +136,7 @@ fun MedicationDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Header
-                GlassSurface(Modifier.fillMaxWidth().testTag("medications.detail.header"), cornerRadius = 22.dp, padding = 16.dp) {
+                SurfaceCard(Modifier.fillMaxWidth().testTag("medications.detail.header"), padding = PaddingValues(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         val photo = remember(medication.photoPath) { medication.photoPath?.let { container.medicationPhotos.loadThumbnail(it) } }
                         if (photo != null) {
@@ -319,7 +321,7 @@ fun MedicationDetailScreen(
 
 @Composable
 private fun DetailCard(title: String, tag: String, content: @Composable () -> Unit) {
-    GlassSurface(Modifier.fillMaxWidth().testTag("medications.detail.$tag"), cornerRadius = 20.dp, padding = 0.dp) {
+    SurfaceCard(Modifier.fillMaxWidth().testTag("medications.detail.$tag"), padding = PaddingValues(0.dp)) {
         Column(Modifier.padding(vertical = 4.dp)) {
             Text(
                 title,

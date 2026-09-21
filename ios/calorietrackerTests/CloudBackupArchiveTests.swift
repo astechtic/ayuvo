@@ -46,6 +46,12 @@ struct CloudBackupArchiveTests {
         }
     }
 
+    @Test func summaryPreferencesAreCloudBacked() {
+        for key in ["dailyStepGoal", "summaryFavourites", "summaryChecklistDismissed", "weekStartsOnMonday"] {
+            #expect(CloudBackupPolicy.include(key), "\(key) should be in the cloud backup")
+        }
+    }
+
     @Test func medicationPreferencesAndPendingRouteNeverEnterTheCloudBackup() throws {
         let values: [String: CloudBackupValue] = [
             "medicationRemindersEnabled": .bool(true),

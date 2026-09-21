@@ -1,7 +1,7 @@
 import UIKit
 import XCTest
 
-/// Health Records Phase 1 walk: tabs, Home → Health › Workouts shortcut, Records timeline with an
+/// Health Records Phase 1 walk: tabs, Browse › Activity › Workouts, Records timeline with an
 /// imported PDF (via the DEBUG `-ayuvoRecordsFixture` hook, which runs the real importer),
 /// detail viewer, search, view modes and Settings › Health Records.
 ///
@@ -56,40 +56,23 @@ final class HealthRecordsUITests: XCTestCase {
         ]
         app.launch()
 
-        for tab in ["Home", "Health", "Records", "Coach", "Settings"] {
+        for tab in ["Summary", "Browse", "Records", "Coach", "Settings"] {
             XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 10), "Missing tab \(tab)")
         }
-        XCTAssertFalse(app.tabBars.buttons["Workouts"].exists, "Workouts moved into the Health tab")
+        XCTAssertFalse(app.tabBars.buttons["Workouts"].exists, "Workouts lives under Browse › Activity")
 
-        // Home → Workouts shortcut → Health tab, Workouts pane.
-        let shortcut = app.buttons["home.workoutsShortcut"]
-        for _ in 0..<4 where !shortcut.isHittable { app.swipeUp() }
-        XCTAssertTrue(shortcut.waitForExistence(timeout: 5), "Home should offer a Workouts shortcut")
-        shot(app, "records-ios-01-home-shortcut")
-        shortcut.tap()
-        XCTAssertTrue(app.buttons["Workouts"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertTrue(
-            app.buttons["Exercise library"].firstMatch.waitForExistence(timeout: 8)
-                || app.textFields["workouts.search"].waitForExistence(timeout: 2),
-            "Workouts pane should show the workout log or library"
-        )
-        XCTAssertFalse(app.navigationBars["Workouts"].exists, "No navigation bar above the Health selector")
-        shot(app, "records-ios-02-health-workouts")
+        // Browse › Activity › Workouts, and the library push lands on the Browse stack.
+        app.tabBars.buttons["Browse"].tap()
+        let activityRow = app.buttons["browse.row.activity"].firstMatch
+        XCTAssertTrue(activityRow.waitForExistence(timeout: 8), "Browse should list Activity")
+        activityRow.tap()
+        let workoutsLink = app.buttons["browse.link.workouts"].firstMatch
+        XCTAssertTrue(workoutsLink.waitForExistence(timeout: 8), "Activity should link to Workouts")
+        workoutsLink.tap()
+        XCTAssertTrue(app.navigationBars["Workouts"].waitForExistence(timeout: 10), "Workouts pushes with its own navigation bar")
+        XCTAssertTrue(app.buttons["Exercise library"].firstMatch.waitForExistence(timeout: 8),
+                      "The workout log should offer the exercise library")
 
-        // The library push must land on the Health stack.
-        let library = app.buttons["Exercise library"].firstMatch
-        if library.exists {
-            library.tap()
-        }
-        let firstExercise = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'workouts.exercise.'")).firstMatch
-        if firstExercise.waitForExistence(timeout: 8) {
-            firstExercise.tap()
-            XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5), "Exercise detail should push inside the Health tab")
-            shot(app, "records-ios-03-workouts-push")
-            app.navigationBars.buttons.firstMatch.tap()
-        }
-
-        // Records timeline shows the imported PDF.
         app.tabBars.buttons["Records"].tap()
         XCTAssertTrue(app.navigationBars["Records"].waitForExistence(timeout: 8))
         let title = recordTitle(app)
@@ -919,12 +902,13 @@ extension HealthRecordsUITests {
         // Delete All Data through Settings, then restore the archive on the next launch.
         app.activate()
         app.tabBars.buttons["Settings"].tap()
-        let dataCategory = app.buttons["settings.category.dataManagement"]
+        let dataCategory = app.buttons["settings.category.deleteData"]
         for _ in 0..<10 where !dataCategory.isHittable { app.swipeUp() }
         if dataCategory.waitForExistence(timeout: 5) { dataCategory.tap() }
-        let deleteAll = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Delete All Data'")).firstMatch
+        XCTAssertTrue(app.navigationBars["Delete All Data"].waitForExistence(timeout: 5), "Delete All Data pane opens")
+        let deleteAll = app.collectionViews.buttons.matching(NSPredicate(format: "label CONTAINS 'Delete All Data'")).firstMatch
         for _ in 0..<12 where !deleteAll.isHittable { app.swipeUp() }
-        XCTAssertTrue(deleteAll.waitForExistence(timeout: 8), "Delete All Data is in Data Management")
+        XCTAssertTrue(deleteAll.waitForExistence(timeout: 8), "Delete All Data is in Settings › Data & Privacy › Delete All Data")
         deleteAll.tap()
         let confirm = app.buttons["Delete Everything"].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Delete All Data confirms first")

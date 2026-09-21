@@ -101,7 +101,7 @@ struct HealthRecordsSettingsSection: View {
             }
             .accessibilityIdentifier("records.settings.backup")
         } footer: {
-            Text("Create an ayuvo-records archive to keep a copy wherever you choose, and restore it later. Health Records are never in iCloud or iPhone backups. Delete All Data in Data Management removes every record and file.")
+            Text("Create an ayuvo-records archive to keep a copy wherever you choose, and restore it later. Health Records are never in iCloud or iPhone backups. Delete All Data (Settings › Data & Privacy) removes every record and file.")
         }
         .font(.system(.body, design: .rounded))
         .listRowBackground(AppColors.appCard)

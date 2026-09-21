@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Browse domain names (Apple-Health-style structure). English source strings; translations follow incrementally. -->
+<resources>
+    <string name="domain_nutrition">Nutrition</string>
+    <string name="domain_hydration">Hydration</string>
+    <string name="domain_fasting">Fasting</string>
+    <string name="domain_body">Body Measurements</string>
+    <string name="domain_activity">Activity</string>
+    <string name="domain_heart">Heart</string>
+    <string name="domain_sleep">Sleep</string>
+    <string name="domain_vitals">Vitals</string>
+    <string name="domain_respiratory">Respiratory</string>
+    <string name="domain_cycle">Cycle Tracking</string>
+    <string name="domain_mindfulness">Mindfulness</string>
+    <string name="domain_mobility">Mobility</string>
+    <string name="domain_hearing">Hearing</string>
+    <string name="domain_symptoms">Symptoms</string>
+    <string name="domain_medications">Medications</string>
+    <string name="domain_records">Health Records</string>
+    <string name="domain_other">Other Data</string>
+    <string name="design_back">Back</string>
+</resources>

@@ -21,6 +21,13 @@ final class ManualEntryPopoverUITests: XCTestCase {
         app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES"]
         app.launch()
 
+        // The food diary (and its + button) lives under Browse › Nutrition.
+        XCTAssertTrue(app.tabBars.buttons["Browse"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Browse"].tap()
+        let nutrition = app.buttons["browse.row.nutrition"].firstMatch
+        XCTAssertTrue(nutrition.waitForExistence(timeout: 8))
+        nutrition.tap()
+
         let add = app.buttons["home.add"]
         XCTAssertTrue(add.waitForExistence(timeout: 10))
         add.tap()

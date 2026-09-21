@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">Model Universal AssemblyAI. Wysoka dokładność, dostępny darmowy plan.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Ekran główny</string>
     <string name="nav_coach">Trener</string>
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_about">O aplikacji</string>
@@ -445,34 +444,12 @@
     <string name="coach_chip_log_advice">Jakaś rada na podstawie mojego dziennika?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1T</string>
-    <string name="progress_range_month">1M</string>
-    <string name="progress_range_3m">3M</string>
-    <string name="progress_range_6m">6M</string>
-    <string name="progress_range_year">1R</string>
-    <string name="progress_range_all">Wszystko</string>
 
-    <string name="progress_weight_section">Waga</string>
-    <string name="progress_log_weight">Dodaj wagę</string>
-    <string name="progress_stat_current">Aktualna</string>
-    <string name="progress_stat_goal">Cel</string>
-    <string name="progress_log_first_weight">Zapisz pierwszą wagę, aby zobaczyć trendy</string>
 
     <string name="progress_weight_history">Historia wagi</string>
     <string name="progress_body_fat_history">Historia tkanki tłuszczowej</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d wpis · dotknij, aby wyświetlić lub usunąć</item>
-        <item quantity="few">%1$d wpisy · dotknij, aby wyświetlić lub usunąć</item>
-        <item quantity="many">%1$d wpisów · dotknij, aby wyświetlić lub usunąć</item>
-        <item quantity="other">%1$d wpisów · dotknij, aby wyświetlić lub usunąć</item>
-    </plurals>
 
-    <string name="progress_calories_section">Kalorie</string>
-    <string name="progress_avg_format">Śr.: %1$,d kcal</string>
-    <string name="progress_no_food">Brak zapisanych posiłków</string>
 
-    <string name="progress_macro_averages">Średnie makro</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Dodaj wagę</string>
 
@@ -481,16 +458,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Dane osobiste</string>
-    <string name="settings_section_goals">Cele i odżywianie</string>
     <string name="settings_section_daily_targets">Cele dzienne</string>
-    <string name="settings_section_app">Ustawienia aplikacji</string>
-    <string name="settings_section_tracking_reminders">Śledzenie i przypomnienia</string>
-    <string name="settings_category_ai_providers">Dostawcy AI i opcje awaryjne</string>
-    <string name="settings_section_workout">Trening</string>
     <string name="settings_section_ai">Główne AI</string>
     <string name="settings_section_speech">Mowa na tekst</string>
-    <string name="settings_section_health">Zdrowie i dane</string>
-    <string name="settings_section_data_management">Zarządzanie danymi</string>
 
     <string name="settings_gender">Płeć</string>
     <string name="settings_birthday">Data urodzenia</string>
@@ -626,34 +596,15 @@
     <string name="sheet_goal_body_fat">Cel tkanki tłuszczowej</string>
     <string name="sheet_goal_body_fat_currently">Obecnie %1$d%%</string>
     <string name="action_remove_goal">Usuń cel</string>
-    <string name="progress_metric_weight">Waga</string>
-    <string name="progress_metric_body_fat">Tkanka tłuszczowa</string>
-    <string name="progress_metric_workouts">Treningi</string>
     <string name="progress_workout_history">Historia treningów</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d obliczony wydatek energii · dotknij, aby wyświetlić lub usunąć</item>
-        <item quantity="few">%1$d obliczone wydatki energii · dotknij, aby wyświetlić lub usunąć</item>
-        <item quantity="many">%1$d obliczonych wydatków energii · dotknij, aby wyświetlić lub usunąć</item>
-        <item quantity="other">%1$d obliczonych wydatków energii · dotknij, aby wyświetlić lub usunąć</item>
-    </plurals>
     <string name="progress_workout_delete_title">Usunąć spalanie z treningu?</string>
     <string name="progress_workout_delete_message">To usuwa obliczone spalanie z Ayuvo i Health Connect. Plan treningu w dzienniku zostaje.</string>
-    <string name="progress_workout_section">Aktywność treningowa</string>
-    <string name="progress_workout_stat_workouts">Treningi</string>
-    <string name="progress_workout_stat_total">Całkowite spalanie</string>
-    <string name="progress_workout_stat_average">Śr. spalanie</string>
-    <string name="progress_workout_stat_latest">Ostatni</string>
     <string name="progress_workout_stat_days">Dni</string>
-    <string name="progress_workout_no_range">Brak obliczonych spałań treningowych w tym zakresie</string>
-    <string name="progress_workout_chart_description">Wykres spalania treningowego od %1$s do %2$s. Razem %3$d kilokalorii; ostatnie %4$d kilokalorii.</string>
-    <string name="progress_log_body_fat">Dodaj pomiar tkanki tłuszczowej</string>
-    <string name="progress_log_first_body_fat">Dodaj pierwszy pomiar % tkanki tłuszczowej, aby zobaczyć trendy</string>
     <string name="progress_log_body_fat_title">Dodaj pomiar tkanki tłuszczowej</string>
     <string name="notif_body_fat_log_title">Kontrola tkanki tłuszczowej</string>
     <string name="notif_body_fat_log_text">Zapisz dzisiejszy % tkanki tłuszczowej, aby śledzić trend sylwetki.</string>
     <string name="saved_meals_search_placeholder">Szukaj zapisanych produktów</string>
     <string name="saved_meals_no_match">Brak pasujących produktów</string>
-    <string name="settings_section_custom_instructions">Własne instrukcje AI</string>
     <string name="settings_custom_instructions_placeholder">np. Mieszkam w Niemczech, zakładaj europejskie porcje, preferuj marki ALDI/REWE. Jestem na redukcji kulturystycznej.</string>
     <string name="settings_custom_instructions_footer">Opcjonalny kontekst wysyłany z każdym żądaniem AI — region, dieta, cele sportowe, wszystko, co normalnie trzeba powtarzać. Zostaw puste, aby wyłączyć.</string>
     <string name="settings_save">Zapisz</string>

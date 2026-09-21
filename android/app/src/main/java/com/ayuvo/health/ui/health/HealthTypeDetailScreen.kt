@@ -68,6 +68,14 @@ import com.ayuvo.health.ui.components.GlassTextButton
 import com.ayuvo.health.ui.components.UnitToggle
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.theme.AppColors
+import com.ayuvo.health.ui.design.AyuvoColors
+import com.ayuvo.health.ui.design.GroupRow
+import com.ayuvo.health.ui.design.InsetGroup
+import com.ayuvo.health.ui.design.RowTrailing
+import com.ayuvo.health.ui.metrics.MetricChartSupport
+import com.ayuvo.health.ui.metrics.MetricDetailScaffold
+import com.ayuvo.health.ui.metrics.MetricHeadlineUi
+import androidx.compose.ui.platform.testTag
 import kotlinx.coroutines.launch
 import java.io.File
 import java.time.Instant
@@ -78,8 +86,9 @@ import java.time.format.FormatStyle
 import java.util.Locale
 
 /**
- * One data type: D/W/M/6M/Y chart with anchor navigation, highlights, Show All Data (keyset
- * pages of 100), Data Sources & Access, and Options (units, Show on Home, Export CSV).
+ * One health data type on the shared metric detail layout (docs/ui-structure.md §6): D/W/M/6M/Y
+ * chart with anchor navigation, highlights, Options (favourite, unit, Export CSV), Show All Data
+ * (keyset pages) and Data Sources & Access.
  */
 @Composable
 fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () -> Unit) {
@@ -117,166 +126,101 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
         }
     }
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(top = 14.dp, bottom = BottomNavScrollPadding),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { onBack() }
-                        .padding(horizontal = 2.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = AppColors.Calorie, modifier = Modifier.size(22.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text(stringResource(R.string.health_back_hub), color = AppColors.Calorie, fontWeight = FontWeight.SemiBold)
-                }
-            }
-            item {
-                Text(name, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
-                Spacer(Modifier.height(4.dp))
+    val windowLabel = MetricChartSupport.windowLabel(ui.range, ui.window)
+    MetricDetailScaffold(
+        title = name,
+        onBack = onBack,
+        ranges = HealthChartRange.entries,
+        range = ui.range,
+        onRange = vm::setRange,
+        headline = ui.headline?.let { (res, value) -> MetricHeadlineUi(stringResource(res), value, "", windowLabel) },
+        windowLabel = windowLabel,
+        canGoForward = ui.canGoForward,
+        onShift = vm::shiftAnchor,
+        stats = ui.highlights.map { (res, value) -> stringResource(res) to value },
+        showEmpty = !ui.loading && !ui.hasChartData,
+        chart = { DetailChart(ui, tint, name, zone) },
+        chartFooter = ui.historyLimitedBeforeMs?.let { floor ->
+            {
                 Text(
-                    pluralStringResource(R.plurals.health_records_count, ui.count.toInt(), ui.count.toInt()),
+                    stringResource(R.string.health_hub_subtitle_limited, formatDate(floor)),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                    color = AyuvoColors.secondaryLabel()
                 )
             }
-            item {
-                IosStyleSegmentedControl(
-                    options = HealthChartRange.entries,
-                    selected = ui.range,
-                    label = { stringResource(it.labelRes) },
-                    onSelect = vm::setRange
-                )
-            }
-            item {
-                GlassSurface(modifier = Modifier.fillMaxWidth(), cornerRadius = 20.dp, padding = 16.dp) {
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(onClick = { vm.shiftAnchor(-1) }, modifier = Modifier.size(36.dp)) {
-                                Icon(Icons.Filled.ChevronLeft, contentDescription = stringResource(R.string.health_detail_previous), tint = AppColors.Calorie)
-                            }
-                            Text(
-                                rangeLabel(ui.range, ui.window, dateFmt),
-                                modifier = Modifier.weight(1f),
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                            )
-                            IconButton(onClick = { vm.shiftAnchor(1) }, enabled = ui.canGoForward, modifier = Modifier.size(36.dp)) {
-                                Icon(Icons.Filled.ChevronRight, contentDescription = stringResource(R.string.health_detail_next), tint = if (ui.canGoForward) AppColors.Calorie else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
-                            }
-                        }
-                        if (ui.highlights.isNotEmpty()) {
-                            StatBadgeRow(ui.highlights.map { (res, value) -> stringResource(res) to value })
-                        }
-                        if (!ui.loading && !ui.hasChartData) {
-                            Box(Modifier.fillMaxWidth().padding(vertical = 28.dp), contentAlignment = Alignment.Center) {
-                                Text(stringResource(R.string.health_detail_no_data_range), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
-                            }
-                        } else {
-                            DetailChart(ui, tint, name, zone)
-                        }
-                        ui.historyLimitedBeforeMs?.let { floor ->
-                            Text(
-                                stringResource(R.string.health_hub_subtitle_limited, formatDate(floor)),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
-                            )
-                        }
-                    }
+        },
+        options = {
+            if (ui.type != null) {
+                row {
+                    GroupRow(
+                        title = stringResource(R.string.metric_add_to_favourites),
+                        modifier = Modifier.testTag("metric.favourite"),
+                        trailing = RowTrailing.Toggle(ui.showOnHome, vm::setShowOnHome)
+                    )
                 }
             }
+            row { Box(Modifier.testTag("metric.unit")) { UnitOptionRow(ui, vm) } }
+            row {
+                GroupRow(
+                    title = stringResource(R.string.health_detail_export_csv),
+                    onClick = { shareCsv() }
+                )
+            }
+        },
+        about = null,
+        extraSections = {
             // Show All Data — 5 newest records up front, 5 more per "Load more" (keyset paged).
-            item {
-                GlassSurface(modifier = Modifier.fillMaxWidth(), cornerRadius = 20.dp, padding = 0.dp) {
-                    Column {
-                        Text(stringResource(R.string.health_detail_show_all_data), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(16.dp))
-                        ui.allData.forEachIndexed { index, record ->
-                            if (index > 0) HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                            HealthRecordRow(record = record, onClick = { selectedRecord = record })
-                        }
-                        if (ui.allData.isEmpty() && !ui.loading) {
-                            Text(stringResource(R.string.health_hub_no_data_title), modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
-                        }
+            item(key = "all-data") {
+                Column(Modifier.padding(top = 12.dp).testTag("metric.allData")) {
+                    InsetGroup(
+                        header = stringResource(R.string.health_detail_show_all_data),
+                        footer = if (ui.allData.isEmpty() && !ui.loading) stringResource(R.string.health_hub_no_data_title) else null,
+                        dividerInset = 16.dp
+                    ) {
+                        ui.allData.forEach { record -> row { HealthRecordRow(record = record, onClick = { selectedRecord = record }) } }
                         if (!ui.allDataEnd) {
-                            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                            Box(Modifier.fillMaxWidth().padding(10.dp), contentAlignment = Alignment.Center) {
-                                GlassTextButton(text = stringResource(R.string.health_load_more), onClick = vm::loadMore, enabled = !ui.loadingMore)
+                            row {
+                                GroupRow(
+                                    title = stringResource(R.string.health_load_more),
+                                    enabled = !ui.loadingMore,
+                                    trailing = RowTrailing.None,
+                                    onClick = vm::loadMore
+                                )
                             }
-                        } else {
-                            Spacer(Modifier.height(6.dp))
                         }
                     }
                 }
             }
             // Data Sources & Access — grouped by origin package.
-            item {
-                GlassSurface(modifier = Modifier.fillMaxWidth(), cornerRadius = 20.dp, padding = 0.dp) {
-                    Column {
-                        Text(stringResource(R.string.health_detail_sources), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp))
-                        Text(
-                            stringResource(R.string.health_detail_sources_body),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Spacer(Modifier.height(8.dp))
+            item(key = "sources") {
+                Column(Modifier.padding(top = 12.dp).testTag("metric.sources")) {
+                    InsetGroup(
+                        header = stringResource(R.string.health_detail_sources),
+                        footer = stringResource(R.string.health_detail_sources_body),
+                        dividerInset = 16.dp
+                    ) {
                         ui.sources.forEach { source ->
-                            HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                            Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Column(Modifier.weight(1f)) {
-                                    Text(source.label, fontSize = 15.sp, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                    if (source.packageName.isNotBlank() && source.packageName != source.label) {
-                                        Text(source.packageName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                    }
-                                }
-                                Spacer(Modifier.width(10.dp))
-                                Text(pluralStringResource(R.plurals.health_records_count, source.count, source.count), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                            row {
+                                GroupRow(
+                                    title = source.label,
+                                    subtitle = source.packageName.takeIf { it.isNotBlank() && it != source.label },
+                                    value = pluralStringResource(R.plurals.health_records_count, source.count, source.count),
+                                    trailing = RowTrailing.None
+                                )
                             }
                         }
-                        HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                        Row(
-                            Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable { openManageAccess() }.padding(horizontal = 16.dp, vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(stringResource(R.string.settings_manage_health_access), color = AppColors.Calorie, fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f))
-                            Icon(Icons.Filled.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f), modifier = Modifier.size(18.dp))
+                        row {
+                            GroupRow(
+                                title = stringResource(R.string.settings_manage_health_access),
+                                onClick = { openManageAccess() }
+                            )
                         }
                     }
                 }
             }
-            // Options — unit, Show on Home, Export CSV.
-            item {
-                GlassSurface(modifier = Modifier.fillMaxWidth(), cornerRadius = 20.dp, padding = 0.dp) {
-                    Column {
-                        Text(stringResource(R.string.health_detail_options), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(16.dp))
-                        UnitOptionRow(ui, vm)
-                        if (ui.type != null) {
-                            HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                            Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).padding(horizontal = 16.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Text(stringResource(R.string.health_detail_show_on_home), modifier = Modifier.weight(1f), fontSize = 15.sp)
-                                Switch(checked = ui.showOnHome, onCheckedChange = vm::setShowOnHome)
-                            }
-                        }
-                        HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                        Row(
-                            Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable { shareCsv() }.padding(horizontal = 16.dp, vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(stringResource(R.string.health_detail_export_csv), color = AppColors.Calorie, fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f))
-                            Icon(Icons.Filled.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f), modifier = Modifier.size(18.dp))
-                        }
-                    }
-                }
-            }
-            item { HealthReadOnlyFooter() }
+            item(key = "footer") { HealthReadOnlyFooter() }
         }
-    }
+    )
 
     selectedRecord?.let { record ->
         val row = record.row
@@ -310,7 +254,7 @@ private fun DetailChart(ui: HealthDetailUiState, tint: Color, name: String, zone
         HealthChartRange.WEEK -> days.map { it.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault()) }
         HealthChartRange.MONTH -> spreadLabels(days.map { monthDay.format(it) }, 5)
         HealthChartRange.SIX_MONTHS -> spreadLabels(ui.points.map { monthDay.format(Instant.ofEpochMilli(it.bucketStartMs).atZone(zone)) }, 6)
-        HealthChartRange.YEAR -> spreadLabels(ui.points.map { month.format(Instant.ofEpochMilli(it.bucketStartMs).atZone(zone)) }, 6)
+        HealthChartRange.YEAR -> ui.points.map { Instant.ofEpochMilli(it.bucketStartMs).atZone(zone).month.getDisplayName(java.time.format.TextStyle.NARROW, Locale.getDefault()) }
     }
     val fmt: (Double) -> String = { v -> HealthValueFormatter.format(ui.typeId, v, ui.unitPrefs, unitOverride = ui.descriptor.unit.takeIf { ui.type == null }).number }
     val tooltip: (Int) -> String = { i ->
@@ -342,7 +286,10 @@ private fun DetailChart(ui: HealthDetailUiState, tint: Color, name: String, zone
             }
         }
         HealthChartKind.PERIOD_BAND -> PeriodBandChart(days, ui.periodDays, tint, spreadLabels(days.map { monthDay.format(it) }, 5))
-        HealthChartKind.BAR -> HealthBucketChart(ui.points, HealthChartStyle.BAR, tint, xLabels, fmt, tooltip, summary = summary)
+        HealthChartKind.BAR -> HealthBucketChart(
+            ui.points, HealthChartStyle.BAR, tint, xLabels, fmt, tooltip, summary = summary,
+            valueSelector = if (ui.range.plotsDailyAverage && (ui.descriptor.aggregation == com.ayuvo.health.models.HealthAggregation.SUM || ui.descriptor.isDurationLike)) { p -> p.avg } else null
+        )
         HealthChartKind.LINE -> HealthBucketChart(ui.points, HealthChartStyle.LINE, tint, xLabels, fmt, tooltip, summary = summary)
         HealthChartKind.RANGE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, tooltip, summary = summary)
         HealthChartKind.BLOOD_PRESSURE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, tooltip, secondaryColor = Color(0xFF0A84FF), summary = summary)
@@ -420,10 +367,4 @@ private fun recordingMethodLabel(method: Int?): String = when (method) {
     2 -> stringResource(R.string.health_method_auto)
     3 -> stringResource(R.string.health_method_manual)
     else -> stringResource(R.string.health_method_unknown)
-}
-
-private fun rangeLabel(range: HealthChartRange, window: ClosedRange<LocalDate>, fmt: DateTimeFormatter): String = when (range) {
-    HealthChartRange.DAY -> fmt.format(window.endInclusive)
-    HealthChartRange.YEAR -> "${DateTimeFormatter.ofPattern("MMM yyyy").format(window.start)} – ${DateTimeFormatter.ofPattern("MMM yyyy").format(window.endInclusive)}"
-    else -> "${fmt.format(window.start)} – ${fmt.format(window.endInclusive)}"
 }

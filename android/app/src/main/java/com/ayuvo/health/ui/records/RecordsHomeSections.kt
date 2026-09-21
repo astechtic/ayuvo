@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.records
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -351,7 +352,7 @@ internal fun RecordsFilterSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE)
+        containerColor = AyuvoColors.sheetBackground()
     ) {
         Column(
             Modifier

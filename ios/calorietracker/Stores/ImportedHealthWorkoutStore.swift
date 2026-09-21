@@ -9,7 +9,11 @@ final class ImportedHealthWorkoutStore {
 
     static let defaultStorageKey = "ayuvo.health.workouts.imported.v1"
 
-    private(set) var workouts: [ImportedHealthWorkout] = []
+    private(set) var workouts: [ImportedHealthWorkout] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `workouts` (metric caches key on it).
+    private(set) var revision = 0
 
     private let defaults: UserDefaults
     private let storageKey: String

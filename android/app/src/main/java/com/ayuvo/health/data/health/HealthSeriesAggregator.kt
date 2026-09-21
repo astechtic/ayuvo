@@ -1,5 +1,8 @@
 package com.ayuvo.health.data.health
 
+import com.ayuvo.health.data.metrics.MetricRange
+import com.ayuvo.health.data.metrics.MetricsReference
+import com.ayuvo.health.data.metrics.WeekStart
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -29,46 +32,13 @@ data class HealthChartPoint(
  */
 object HealthSeriesAggregator {
 
-    fun bucketBounds(range: ClosedRange<LocalDate>, bucket: HealthBucket, zone: ZoneId): List<Pair<Long, Long>> {
-        val out = ArrayList<Pair<Long, Long>>()
-        when (bucket) {
-            HealthBucket.HOUR -> {
-                var d = range.start
-                while (!d.isAfter(range.endInclusive)) {
-                    val dayStart = d.atStartOfDay(zone)
-                    for (h in 0 until 24) {
-                        val s = dayStart.plusHours(h.toLong())
-                        out += s.toInstant().toEpochMilli() to s.plusHours(1).toInstant().toEpochMilli()
-                    }
-                    d = d.plusDays(1)
-                }
-            }
-            HealthBucket.DAY -> {
-                var d = range.start
-                while (!d.isAfter(range.endInclusive)) {
-                    out += d.atStartOfDay(zone).toInstant().toEpochMilli() to d.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
-                    d = d.plusDays(1)
-                }
-            }
-            HealthBucket.WEEK -> {
-                var d = range.start
-                while (!d.isAfter(range.endInclusive)) {
-                    val next = minOf(d.plusWeeks(1), range.endInclusive.plusDays(1))
-                    out += d.atStartOfDay(zone).toInstant().toEpochMilli() to next.atStartOfDay(zone).toInstant().toEpochMilli()
-                    d = next
-                }
-            }
-            HealthBucket.MONTH -> {
-                var d = range.start.withDayOfMonth(1)
-                while (!d.isAfter(range.endInclusive)) {
-                    val next = d.plusMonths(1)
-                    out += d.atStartOfDay(zone).toInstant().toEpochMilli() to next.atStartOfDay(zone).toInstant().toEpochMilli()
-                    d = next
-                }
-            }
-        }
-        return out
-    }
+    /**
+     * Chart bucket bounds (start ms to end ms) for [range] anchored at [anchor], using the shared
+     * calendar-aligned rules (docs/ui-structure.md §5, [MetricsReference.bucketBounds]).
+     */
+    fun bucketBounds(range: MetricRange, anchor: LocalDate, zone: ZoneId, weekStart: WeekStart = WeekStart.MONDAY): List<Pair<Long, Long>> =
+        MetricsReference.bucketBounds(range, MetricsReference.localMidnight(anchor, zone), zone, weekStart, Long.MAX_VALUE)
+            .buckets.map { it.startMs to it.endMs }
 
     /** Buckets by sample rows (cumulative sums, discrete averages, min/max with condensed rows). */
     fun bucketRows(

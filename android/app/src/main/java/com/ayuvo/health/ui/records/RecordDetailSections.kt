@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.records
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -451,7 +452,7 @@ internal fun ReviewDetailsSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE)
+        containerColor = AyuvoColors.sheetBackground()
     ) {
         Column(
             Modifier

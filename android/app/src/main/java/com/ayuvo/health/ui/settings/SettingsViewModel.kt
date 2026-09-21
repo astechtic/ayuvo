@@ -120,10 +120,19 @@ data class SettingsUiState(
     val localModelStates: Map<LocalModelId, LocalModelState> = emptyMap(),
     /** A goal-relevant input changed since the last Recalculate. Drives a soft nudge on the
      *  Recalculate row; the button stays tappable at all times — this never disables it. */
-    val goalsNeedRecalc: Boolean = false
+    val goalsNeedRecalc: Boolean = false,
+    /** Summary Move ring goal (steps per day, 1 000–50 000). */
+    val dailyStepGoal: Int = 10_000,
+    /** "mmol/L" | "mg/dL"; null = locale default (Settings › Units). */
+    val healthGlucoseUnit: String? = null
 ) {
     val heightMetric: Boolean get() = heightUnit == "cm"
     val weightMetric: Boolean get() = weightUnit == "kg"
+    /** The glucose unit actually shown: the stored choice, else the locale default. */
+    val effectiveGlucoseUnit: String
+        get() = healthGlucoseUnit ?: if (
+            com.ayuvo.health.ui.health.HealthValueFormatter.defaultGlucoseMgDl(java.util.Locale.getDefault())
+        ) "mg/dL" else "mmol/L"
     val availableVisionProviders: List<AIProvider>
         get() = AIProvider.remoteVisionProviders + listOfNotNull(
             AIProvider.LOCAL_GEMMA.takeIf { localModelStates[LocalModelId.GEMMA_4_E2B]?.executable == true }
@@ -183,6 +192,18 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.prefs.addMenuConfig.collect { config ->
                 _ui.value = _ui.value.copy(addMenuConfig = config)
+            }
+        }
+
+        viewModelScope.launch {
+            container.prefs.dailyStepGoal.collect { goal ->
+                _ui.value = _ui.value.copy(dailyStepGoal = goal)
+            }
+        }
+
+        viewModelScope.launch {
+            container.prefs.healthGlucoseUnit.collect { unit ->
+                _ui.value = _ui.value.copy(healthGlucoseUnit = unit)
             }
         }
 
@@ -1260,6 +1281,16 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             container.prefs.setCoachHealthDataEnabled(v)
             container.prefs.setCoachHealthDataConsentedAt(if (v) java.time.Instant.now().toString() else null)
         }
+    }
+
+    /** Settings › Tracking › Activity: the Summary Move ring goal. */
+    fun setDailyStepGoal(steps: Int) {
+        viewModelScope.launch { container.prefs.setDailyStepGoal(steps) }
+    }
+
+    /** Settings › Units: blood glucose display unit ("mg/dL" | "mmol/L"). */
+    fun setHealthGlucoseUnit(unit: String?) {
+        viewModelScope.launch { container.prefs.setHealthGlucoseUnit(unit) }
     }
 
     fun dismissHealthHubCta() {

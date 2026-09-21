@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.home
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -153,7 +154,7 @@ fun SavedMealsSheet(
         }
     }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val sheetSurface = if (isDark) MaterialTheme.colorScheme.surface else Color(0xFFFAF3EE)
+    val sheetSurface = AyuvoColors.sheetBackground()
     val searchSurface = if (isDark) Color.Transparent else Color(0xFFF2E9E3).copy(alpha = 0.78f)
 
     ModalBottomSheet(

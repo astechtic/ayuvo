@@ -27,7 +27,7 @@ struct HealthDayTotal: Equatable {
 
 /// Main-actor façade over the health mirror: sync orchestration, snapshots for Home /
 /// hub / detail, pinned tiles, Coach context. Never stores health values in
-/// UserDefaults — only the cloud-backed preferences (`healthHomeTiles`,
+/// UserDefaults — only the cloud-backed preferences (`summaryFavourites` / legacy `healthHomeTiles`,
 /// `coachHealthDataEnabled`, `coachHealthDataConsentedAt`, `healthGlucoseUnit`) and the
 /// device-local `healthKitHub*` throttles (excluded from backup by prefix).
 @Observable
@@ -72,9 +72,7 @@ final class HealthDataStore {
         self.runtime = runtime
         self.defaults = defaults
         self.calendar = calendar
-        self.pinnedTypeIDs = defaults.object(forKey: Self.homeTilesKey) == nil
-            ? HealthMetricRegistry.defaultHomeTileIDs
-            : (defaults.stringArray(forKey: Self.homeTilesKey) ?? [])
+        self.pinnedTypeIDs = MetricPins.load(defaults: defaults)
         self.coachHealthDataEnabled = (defaults.object(forKey: Self.coachEnabledKey) as? Bool) ?? false
         self.coachConsentedAt = defaults.string(forKey: Self.coachConsentedAtKey)
         let lastSync = defaults.double(forKey: Self.lastSyncAtKey)
@@ -93,6 +91,8 @@ final class HealthDataStore {
     var openError: Error? { runtime.openError }
     /// Home shows the card whenever Health exists on the device and tiles are not hidden.
     var showsHomeTile: Bool { isHealthDataAvailable && !pinnedTypeIDs.isEmpty }
+    /// Summary favourites that are health types (app metric keys filtered out).
+    var pinnedHealthTypeIDs: [String] { pinnedTypeIDs.filter { !$0.hasPrefix("app:") } }
     var hasAnyData: Bool { typeSummaries.contains { $0.count > 0 } }
     var typeCountWithData: Int { typeSummaries.filter { $0.count > 0 }.count }
     var isImportingHistory: Bool { syncStates.values.contains { $0.isImporting } }
@@ -237,9 +237,7 @@ final class HealthDataStore {
         defaults.removeObject(forKey: Self.rateLimitedUntilKey)
         lastSyncAt = nil
         needsGrant = nil
-        pinnedTypeIDs = defaults.object(forKey: Self.homeTilesKey) == nil
-            ? HealthMetricRegistry.defaultHomeTileIDs
-            : (defaults.stringArray(forKey: Self.homeTilesKey) ?? [])
+        pinnedTypeIDs = MetricPins.load(defaults: defaults)
         coachHealthDataEnabled = (defaults.object(forKey: Self.coachEnabledKey) as? Bool) ?? false
         coachConsentedAt = defaults.string(forKey: Self.coachConsentedAtKey)
         Task {
@@ -307,7 +305,7 @@ final class HealthDataStore {
         let today = dayKey(now)
         let weekAgo = dayKey(calendar.date(byAdding: .day, value: -6, to: now) ?? now)
         var tiles: [HealthHomeTileModel] = []
-        for typeID in pinnedTypeIDs {
+        for typeID in pinnedTypeIDs where !typeID.hasPrefix("app:") {
             let type = metricType(for: typeID)
             let unit = HealthUnitFormatting.unitLabel(for: type)
             guard let summary = summaries.first(where: { $0.typeID == typeID }), summary.count > 0 else {
@@ -432,19 +430,20 @@ final class HealthDataStore {
     /// Delete All Data: the mirror plus every hub preference.
     func deleteAllData() async {
         await clearSyncedData()
-        for key in [Self.homeTilesKey, Self.coachEnabledKey, Self.coachConsentedAtKey, HealthGlucoseUnit.storageKey, Self.promptedVersionKey] {
+        for key in [Self.homeTilesKey, MetricPins.key, Self.coachEnabledKey, Self.coachConsentedAtKey, HealthGlucoseUnit.storageKey, Self.promptedVersionKey] {
             defaults.removeObject(forKey: key)
         }
-        pinnedTypeIDs = HealthMetricRegistry.defaultHomeTileIDs
+        pinnedTypeIDs = MetricPins.load(defaults: defaults)
         coachHealthDataEnabled = false
         coachConsentedAt = nil
     }
 
     // MARK: - Preferences
 
+    /// Summary favourites (`summaryFavourites`): app metric keys (`app:…`) and health type ids.
     func setPinnedTypeIDs(_ ids: [String]) {
-        pinnedTypeIDs = ids
-        defaults.set(ids, forKey: Self.homeTilesKey)
+        pinnedTypeIDs = Array(ids.prefix(MetricPins.max))
+        MetricPins.save(pinnedTypeIDs, defaults: defaults)
         Task { await refreshSnapshots() }
     }
 
@@ -454,13 +453,14 @@ final class HealthDataStore {
         if isPinned(typeID) {
             setPinnedTypeIDs(pinnedTypeIDs.filter { $0 != typeID })
         } else {
+            guard pinnedTypeIDs.count < MetricPins.max else { return }
             setPinnedTypeIDs(pinnedTypeIDs + [typeID])
         }
     }
 
     /// Home card on/off. Off stores an empty list; on restores the defaults.
     func setHomeTilesVisible(_ visible: Bool) {
-        setPinnedTypeIDs(visible ? HealthMetricRegistry.defaultHomeTileIDs : [])
+        setPinnedTypeIDs(visible ? MetricPins.defaultIDs : [])
     }
 
     /// The visible consent control (onboarding, connect screen, Settings). Never flipped silently.

@@ -1,0 +1,163 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "over": false,
+        "percent": 0,
+        "progress": 0,
+        "state": "value"
+      },
+      "input": {
+        "goal": 2000,
+        "value": 0
+      },
+      "name": "zero"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": 50,
+        "progress": 0.5,
+        "state": "value"
+      },
+      "input": {
+        "goal": 2000,
+        "value": 1000
+      },
+      "name": "half"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": 100,
+        "progress": 1,
+        "state": "value"
+      },
+      "input": {
+        "goal": 2000,
+        "value": 2000
+      },
+      "name": "full"
+    },
+    {
+      "expected": {
+        "over": true,
+        "percent": 130,
+        "progress": 1,
+        "state": "value"
+      },
+      "input": {
+        "goal": 2000,
+        "value": 2600
+      },
+      "name": "over 130"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": null,
+        "progress": null,
+        "state": "no_goal"
+      },
+      "input": {
+        "goal": 0,
+        "value": 500
+      },
+      "name": "goal zero"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": null,
+        "progress": null,
+        "state": "no_goal"
+      },
+      "input": {
+        "goal": null,
+        "value": 500
+      },
+      "name": "goal null"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": null,
+        "progress": null,
+        "state": "no_data"
+      },
+      "input": {
+        "goal": 2000,
+        "value": null
+      },
+      "name": "value null"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": -5,
+        "progress": 0,
+        "state": "value"
+      },
+      "input": {
+        "goal": 100,
+        "value": -5
+      },
+      "name": "negative value"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": 50,
+        "progress": 0.502,
+        "state": "value"
+      },
+      "input": {
+        "goal": 2000,
+        "value": 1005
+      },
+      "name": "percent rounds half up"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": null,
+        "progress": null,
+        "state": "no_goal"
+      },
+      "input": {
+        "goal": -1,
+        "value": 10
+      },
+      "name": "goal negative"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": 17,
+        "progress": 0.167,
+        "state": "value"
+      },
+      "input": {
+        "goal": 2000,
+        "value": 333.3
+      },
+      "name": "fractional water"
+    },
+    {
+      "expected": {
+        "over": false,
+        "percent": 0,
+        "progress": 0,
+        "state": "value"
+      },
+      "input": {
+        "goal": 10000,
+        "value": 1
+      },
+      "name": "tiny"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "ring_progress",
+  "version": 1
+}

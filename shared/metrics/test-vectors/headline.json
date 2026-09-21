@@ -1,0 +1,368 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "days_with_data": 1,
+        "from_ms": 1789531200000,
+        "kind": "TOTAL",
+        "to_ms": 1789617600000,
+        "value": 1250
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789574400000,
+        "entries": [
+          {
+            "t_ms": 1789560300000,
+            "value": 420
+          },
+          {
+            "t_ms": 1789562400000,
+            "value": 180
+          },
+          {
+            "t_ms": 1789578000000,
+            "value": 650
+          },
+          {
+            "t_ms": 1789601400000,
+            "value": null
+          },
+          {
+            "t_ms": 1789531140000,
+            "value": 300
+          },
+          {
+            "t_ms": 1789617600000,
+            "value": 90
+          }
+        ],
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "sum D total"
+    },
+    {
+      "expected": {
+        "days_with_data": 3,
+        "from_ms": 1789324200000,
+        "kind": "AVERAGE",
+        "to_ms": 1789929000000,
+        "value": 583.333
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789356600000,
+            "value": 250
+          },
+          {
+            "t_ms": 1789378200000,
+            "value": 500
+          },
+          {
+            "t_ms": 1789533000000,
+            "value": 750
+          },
+          {
+            "t_ms": 1789928940000,
+            "value": 250
+          },
+          {
+            "t_ms": 1789929000000,
+            "value": 999
+          }
+        ],
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "sum W average over days with data",
+      "notes": "(250+500+750+250)/3 days"
+    },
+    {
+      "expected": {
+        "days_with_data": 4,
+        "from_ms": 1775001600000,
+        "kind": "AVERAGE",
+        "to_ms": 1790812800000,
+        "value": 1675
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789560000000,
+        "entries": [
+          {
+            "t_ms": 1789372800000,
+            "value": 2000
+          },
+          {
+            "t_ms": 1789416000000,
+            "value": 500
+          },
+          {
+            "t_ms": 1789459200000,
+            "value": 1500
+          },
+          {
+            "t_ms": 1789632000000,
+            "value": 1800
+          },
+          {
+            "t_ms": 1775030400000,
+            "value": 900
+          },
+          {
+            "t_ms": 1774944000000,
+            "value": 700
+          }
+        ],
+        "range": "6M",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "sum 6M average"
+    },
+    {
+      "expected": {
+        "days_with_data": 2,
+        "from_ms": 1789358400000,
+        "kind": "AVERAGE",
+        "to_ms": 1789963200000,
+        "value": 69.833
+      },
+      "input": {
+        "aggregation": "avg",
+        "anchor_ms": 1789574400000,
+        "entries": [
+          {
+            "t_ms": 1789383600000,
+            "value": 62
+          },
+          {
+            "t_ms": 1789401600000,
+            "value": 88
+          },
+          {
+            "t_ms": 1789556400000,
+            "value": 59.5
+          }
+        ],
+        "range": "W",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "avg W"
+    },
+    {
+      "expected": {
+        "days_with_data": 2,
+        "from_ms": 1789538400000,
+        "kind": "LATEST",
+        "to_ms": 1789538400000,
+        "value": 80.9
+      },
+      "input": {
+        "aggregation": "last",
+        "anchor_ms": 1789556400000,
+        "entries": [
+          {
+            "t_ms": 1789365600000,
+            "value": 81.2
+          },
+          {
+            "t_ms": 1789365600000,
+            "value": 81.0
+          },
+          {
+            "t_ms": 1789362000000,
+            "value": 82.5
+          },
+          {
+            "t_ms": 1789538400000,
+            "value": 80.9
+          }
+        ],
+        "range": "W",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "last W latest reading"
+    },
+    {
+      "expected": {
+        "days_with_data": 0,
+        "from_ms": 1789340400000,
+        "kind": "LATEST",
+        "to_ms": 1789945200000,
+        "value": null
+      },
+      "input": {
+        "aggregation": "last",
+        "anchor_ms": 1789556400000,
+        "entries": [],
+        "range": "W",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "last no data"
+    },
+    {
+      "expected": {
+        "days_with_data": 0,
+        "from_ms": 1788217200000,
+        "kind": "AVERAGE",
+        "to_ms": 1790809200000,
+        "value": null
+      },
+      "input": {
+        "aggregation": "sum",
+        "anchor_ms": 1789556400000,
+        "entries": [
+          {
+            "t_ms": 1785567600000,
+            "value": 100
+          }
+        ],
+        "range": "M",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "sum no data"
+    },
+    {
+      "expected": {
+        "days_with_data": 2,
+        "from_ms": 1789324200000,
+        "kind": "AVERAGE",
+        "to_ms": 1789929000000,
+        "value": 1.5
+      },
+      "input": {
+        "aggregation": "count",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789497000000,
+            "value": 1
+          },
+          {
+            "t_ms": 1780338600000,
+            "value": 1
+          }
+        ],
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "count W average per day"
+    },
+    {
+      "expected": {
+        "days_with_data": 2,
+        "from_ms": 1767205800000,
+        "kind": "AVERAGE",
+        "to_ms": 1798741800000,
+        "value": 57600
+      },
+      "input": {
+        "aggregation": "duration",
+        "anchor_ms": 1789540200000,
+        "entries": [
+          {
+            "t_ms": 1788201000000,
+            "value": 57600
+          },
+          {
+            "t_ms": 1788287400000,
+            "value": 50400
+          },
+          {
+            "t_ms": 1788287400000,
+            "value": 7200
+          }
+        ],
+        "range": "Y",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "duration Y average"
+    },
+    {
+      "expected": {
+        "days_with_data": 1,
+        "from_ms": 1789324200000,
+        "kind": "TOTAL",
+        "to_ms": 1789410600000,
+        "value": 2
+      },
+      "input": {
+        "aggregation": "count",
+        "anchor_ms": 1789367400000,
+        "entries": [
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789497000000,
+            "value": 1
+          },
+          {
+            "t_ms": 1780338600000,
+            "value": 1
+          }
+        ],
+        "range": "D",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "count D total"
+    },
+    {
+      "expected": {
+        "days_with_data": 1,
+        "from_ms": 1789516800000,
+        "kind": "AVERAGE",
+        "to_ms": 1789603200000,
+        "value": 70
+      },
+      "input": {
+        "aggregation": "avg",
+        "anchor_ms": 1789560000000,
+        "entries": [
+          {
+            "t_ms": 1789545600000,
+            "value": null
+          },
+          {
+            "t_ms": 1789549200000,
+            "value": 70
+          }
+        ],
+        "range": "D",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "avg with null values"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "headline",
+  "version": 1
+}

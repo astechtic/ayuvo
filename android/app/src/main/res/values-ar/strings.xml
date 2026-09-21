@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">نموذج AssemblyAI Universal. دقة قوية، مع توفر طبقة مجانية.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">الرئيسية</string>
     <string name="nav_coach">المدرب</string>
     <string name="nav_settings">الإعدادات</string>
     <string name="nav_about">حول</string>
@@ -449,36 +448,12 @@
     <string name="coach_chip_log_advice">أي نصيحة بناءً على سجلي؟</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1أ</string>
-    <string name="progress_range_month">1ش</string>
-    <string name="progress_range_3m">3ش</string>
-    <string name="progress_range_6m">6ش</string>
-    <string name="progress_range_year">1س</string>
-    <string name="progress_range_all">الكل</string>
 
-    <string name="progress_weight_section">الوزن</string>
-    <string name="progress_log_weight">تسجيل الوزن</string>
-    <string name="progress_stat_current">الحالي</string>
-    <string name="progress_stat_goal">الهدف</string>
-    <string name="progress_log_first_weight">سجّل وزنك الأول لرؤية الاتجاهات</string>
 
     <string name="progress_weight_history">سجل الوزن</string>
     <string name="progress_body_fat_history">سجل نسبة الدهون</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="zero">%1$d إدخال · اضغط للعرض أو الحذف</item>
-        <item quantity="one">%1$d إدخال · اضغط للعرض أو الحذف</item>
-        <item quantity="two">%1$d إدخالان · اضغط للعرض أو الحذف</item>
-        <item quantity="few">%1$d إدخالات · اضغط للعرض أو الحذف</item>
-        <item quantity="many">%1$d إدخالًا · اضغط للعرض أو الحذف</item>
-        <item quantity="other">%1$d إدخال · اضغط للعرض أو الحذف</item>
-    </plurals>
 
-    <string name="progress_calories_section">السعرات الحرارية</string>
-    <string name="progress_avg_format">المتوسط: %1$,d kcal</string>
-    <string name="progress_no_food">لم يتم تسجيل أي طعام بعد</string>
 
-    <string name="progress_macro_averages">متوسطات العناصر الكبرى</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">تسجيل الوزن</string>
 
@@ -487,16 +462,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">المعلومات الشخصية</string>
-    <string name="settings_section_goals">الأهداف والتغذية</string>
     <string name="settings_section_daily_targets">الأهداف اليومية</string>
-    <string name="settings_section_app">إعدادات التطبيق</string>
-    <string name="settings_section_tracking_reminders">التتبع والتذكيرات</string>
-    <string name="settings_category_ai_providers">موفرو الذكاء الاصطناعي والخيارات الاحتياطية</string>
-    <string name="settings_section_workout">التمرين</string>
     <string name="settings_section_ai">مزود الذكاء الاصطناعي</string>
     <string name="settings_section_speech">تحويل الكلام إلى نص</string>
-    <string name="settings_section_health">الصحة والبيانات</string>
-    <string name="settings_section_data_management">إدارة البيانات</string>
 
     <string name="settings_gender">الجنس</string>
     <string name="settings_birthday">تاريخ الميلاد</string>
@@ -632,36 +600,15 @@
     <string name="sheet_goal_body_fat">هدف نسبة الدهون</string>
     <string name="sheet_goal_body_fat_currently">حالياً %1$d%%</string>
     <string name="action_remove_goal">إزالة الهدف</string>
-    <string name="progress_metric_weight">الوزن</string>
-    <string name="progress_metric_body_fat">نسبة الدهون</string>
-    <string name="progress_metric_workouts">التمارين</string>
     <string name="progress_workout_history">سجل التمارين</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="zero">%1$d عملية حرق محسوبة · اضغط للعرض أو الحذف</item>
-        <item quantity="one">%1$d عملية حرق محسوبة · اضغط للعرض أو الحذف</item>
-        <item quantity="two">%1$d عمليتا حرق محسوبتان · اضغط للعرض أو الحذف</item>
-        <item quantity="few">%1$d عمليات حرق محسوبة · اضغط للعرض أو الحذف</item>
-        <item quantity="many">%1$d عملية حرق محسوبة · اضغط للعرض أو الحذف</item>
-        <item quantity="other">%1$d عملية حرق محسوبة · اضغط للعرض أو الحذف</item>
-    </plurals>
     <string name="progress_workout_delete_title">حذف حرق التمرين؟</string>
     <string name="progress_workout_delete_message">يؤدي هذا إلى إزالة الحرق المحسوب من Ayuvo وHealth Connect. ستظل خطة يوميات التمرين محفوظة.</string>
-    <string name="progress_workout_section">نشاط التمارين</string>
-    <string name="progress_workout_stat_workouts">التمارين</string>
-    <string name="progress_workout_stat_total">إجمالي الحرق</string>
-    <string name="progress_workout_stat_average">متوسط الحرق</string>
-    <string name="progress_workout_stat_latest">الأحدث</string>
     <string name="progress_workout_stat_days">أيام</string>
-    <string name="progress_workout_no_range">لا توجد عمليات حرق تمارين محسوبة في هذه الفترة</string>
-    <string name="progress_workout_chart_description">مخطط حرق التمارين من %1$s إلى %2$s. الإجمالي %3$d سعرة حرارية؛ الأحدث %4$d سعرة حرارية.</string>
-    <string name="progress_log_body_fat">تسجيل نسبة الدهون</string>
-    <string name="progress_log_first_body_fat">سجّل أول قياس لنسبة الدهون لرؤية الاتجاهات</string>
     <string name="progress_log_body_fat_title">تسجيل نسبة الدهون</string>
     <string name="notif_body_fat_log_title">فحص نسبة الدهون</string>
     <string name="notif_body_fat_log_text">سجّل نسبة الدهون اليوم لتتبع تطور تكوين جسمك.</string>
     <string name="saved_meals_search_placeholder">ابحث في الأطعمة المحفوظة</string>
     <string name="saved_meals_no_match">لا توجد أطعمة مطابقة</string>
-    <string name="settings_section_custom_instructions">تعليمات الذكاء الاصطناعي المخصصة</string>
     <string name="settings_custom_instructions_placeholder">مثلاً: أعيش في ألمانيا، افترض أحجام حصص أوروبية، أُفضّل ماركات ALDI/REWE. أنا في مرحلة تنشيف لكمال الأجسام.</string>
     <string name="settings_custom_instructions_footer">سياق اختياري يُرسَل مع كل طلب للذكاء الاصطناعي — المنطقة، النظام الغذائي، الأهداف الرياضية، أي شيء كنت ستكرره في كل مرة. اتركه فارغاً للتعطيل.</string>
     <string name="settings_save">حفظ</string>

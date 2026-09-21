@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
-import com.ayuvo.health.data.health.HealthBucket
 import com.ayuvo.health.data.health.HealthChartPoint
 import com.ayuvo.health.data.health.HealthDayKeys
 import com.ayuvo.health.data.health.HealthHourlyRollup
@@ -13,6 +12,8 @@ import com.ayuvo.health.data.health.HealthSampleRow
 import com.ayuvo.health.data.health.HealthSeriesAggregator
 import com.ayuvo.health.data.health.HealthSleepCodes
 import com.ayuvo.health.data.health.HealthTypeDescriptor
+import com.ayuvo.health.data.metrics.MetricKey
+import com.ayuvo.health.data.metrics.WeekStart
 import com.ayuvo.health.data.health.SleepNight
 import com.ayuvo.health.models.HealthAggregation
 import com.ayuvo.health.models.HealthDataType
@@ -37,31 +38,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 
-/** Detail ranges — separate from Progress' TimeRange (D/W/M/6M/Y with an anchor). */
-enum class HealthChartRange(val labelRes: Int, val shiftDays: Long) {
-    DAY(R.string.health_range_day, 1),
-    WEEK(R.string.health_range_week, 7),
-    MONTH(R.string.health_range_month, 30),
-    SIX_MONTHS(R.string.health_range_six_months, 182),
-    YEAR(R.string.health_range_year, 365);
-
-    fun window(anchor: LocalDate): ClosedRange<LocalDate> = when (this) {
-        DAY -> anchor..anchor
-        WEEK -> anchor.minusDays(6)..anchor
-        MONTH -> anchor.minusDays(29)..anchor
-        SIX_MONTHS -> anchor.minusDays(181)..anchor
-        YEAR -> anchor.minusMonths(11).withDayOfMonth(1)..anchor
-    }
-
-    val bucket: HealthBucket
-        get() = when (this) {
-            DAY -> HealthBucket.HOUR
-            WEEK, MONTH -> HealthBucket.DAY
-            SIX_MONTHS -> HealthBucket.WEEK
-            YEAR -> HealthBucket.MONTH
-        }
-}
-
 enum class HealthChartKind { BAR, LINE, RANGE, BLOOD_PRESSURE, SLEEP, PERIOD_BAND, NONE }
 
 /** One "Show All Data" row, formatted off the main thread so the list composes cheaply. */
@@ -85,6 +61,12 @@ data class HealthDetailUiState(
     val range: HealthChartRange = HealthChartRange.WEEK,
     val anchor: LocalDate = LocalDate.now(),
     val today: LocalDate = LocalDate.now(),
+    val weekStart: WeekStart = WeekStart.MONDAY,
+    /** Calendar interval shown (docs/ui-structure.md §5). */
+    val window: ClosedRange<LocalDate> = range.window(anchor),
+    val canGoForward: Boolean = false,
+    /** Big number above the chart: label res → formatted value (null = no data). */
+    val headline: Pair<Int, String?>? = null,
     val points: List<HealthChartPoint> = emptyList(),
     val chartKind: HealthChartKind = HealthChartKind.NONE,
     /** Label res → formatted value, in display order. */
@@ -103,8 +85,6 @@ data class HealthDetailUiState(
     val historyLimitedBeforeMs: Long? = null,
     val loading: Boolean = true
 ) {
-    val window: ClosedRange<LocalDate> get() = range.window(anchor)
-    val canGoForward: Boolean get() = anchor.isBefore(today)
     val hasChartData: Boolean get() = points.any { !it.isEmpty } || sleepNights.isNotEmpty() || periodDays.isNotEmpty()
 }
 
@@ -116,6 +96,7 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
     )
     val ui: StateFlow<HealthDetailUiState> = _ui.asStateFlow()
     private val selection = MutableStateFlow(HealthChartRange.WEEK to LocalDate.now())
+    private var weekStart = WeekStart.MONDAY
     private val zone: ZoneId get() = ZoneId.systemDefault()
     private val hourlyFetched = HashSet<LocalDate>()
     private val labelCache = HashMap<String, String>()
@@ -128,9 +109,13 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
             selection,
             container.healthRepository.revision.debounce(REVISION_DEBOUNCE_MS),
             healthUnitPrefsFlow(container.prefs),
-            container.prefs.healthHomeTiles
-        ) { sel, _, units, tiles -> Triple(sel, units, tiles) }
-            .onEach { (sel, units, tiles) -> recompute(sel.first, sel.second, units, HealthHomeTiles.parse(tiles).any { it.id == typeId }) }
+            container.favoritePins.isPinned(MetricKey.Health(typeId)),
+            container.prefs.weekStartsOnMonday
+        ) { sel, _, units, pinned, monday -> DetailInputs(sel.first, sel.second, units, pinned, WeekStart.of(monday)) }
+            .onEach { i ->
+                weekStart = i.weekStart
+                recompute(i.range, i.anchor, i.units, i.pinned)
+            }
             .launchIn(viewModelScope)
     }
 
@@ -140,8 +125,7 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
 
     fun shiftAnchor(direction: Int) {
         val (range, anchor) = selection.value
-        val next = anchor.plusDays(direction * range.shiftDays)
-        selection.value = range to (if (next.isAfter(LocalDate.now())) LocalDate.now() else next)
+        selection.value = range to range.step(anchor, direction, zone, System.currentTimeMillis())
     }
 
     /** Reveals the next [PAGE] records (keyset paged from the store). */
@@ -159,12 +143,7 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
     }
 
     fun setShowOnHome(show: Boolean) {
-        viewModelScope.launch {
-            val current = HealthHomeTiles.parse(container.prefs.healthHomeTiles.first())
-            val t = type ?: return@launch
-            val next = if (show) (current + t).distinct().take(HealthHomeTiles.MAX_TILES) else current - t
-            container.prefs.setHealthHomeTiles(HealthHomeTiles.serialize(next))
-        }
+        viewModelScope.launch { container.favoritePins.toggle(MetricKey.Health(typeId), show) }
     }
 
     fun setMassUnit(metric: Boolean) = viewModelScope.launch { container.prefs.setWeightUnit(if (metric) "kg" else "lbs") }
@@ -202,6 +181,8 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         .atOffset(java.time.ZoneOffset.ofTotalSeconds(offsetS ?: zone.rules.getOffset(Instant.ofEpochMilli(ms)).totalSeconds))
         .toString()
 
+    private data class DetailInputs(val range: HealthChartRange, val anchor: LocalDate, val units: HealthUnitPrefs, val pinned: Boolean, val weekStart: WeekStart)
+
     private suspend fun recompute(range: HealthChartRange, anchor: LocalDate, units: HealthUnitPrefs, showOnHome: Boolean) {
         val repo = container.healthRepository
         val meta = repo.typeMeta()
@@ -235,9 +216,15 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
 
     private suspend fun compute(range: HealthChartRange, anchor: LocalDate, units: HealthUnitPrefs, descriptor: HealthTypeDescriptor): HealthDetailUiState {
         val repo = container.healthRepository
-        val window = range.window(anchor)
-        val bounds = HealthSeriesAggregator.bucketBounds(window, range.bucket, zone)
-        val base = _ui.value.copy(range = range, anchor = anchor, descriptor = descriptor, points = emptyList(), sleepNights = emptyList(), sleepStages = emptyList(), periodDays = emptySet(), highlights = emptyList())
+        val metricBounds = range.bounds(anchor, weekStart, zone, System.currentTimeMillis())
+        val window = range.window(anchor, weekStart, zone)
+        val bounds = metricBounds.buckets.map { it.startMs to it.endMs }
+        val hours = metricBounds.buckets.map { it.label.toIntOrNull() ?: 0 }
+        val base = _ui.value.copy(
+            range = range, anchor = anchor, descriptor = descriptor, weekStart = weekStart, window = window,
+            canGoForward = metricBounds.canGoForward, headline = null,
+            points = emptyList(), sleepNights = emptyList(), sleepStages = emptyList(), periodDays = emptySet(), highlights = emptyList()
+        )
         val kind = chartKind(descriptor)
 
         if (typeId == HealthDataType.SLEEP.id) {
@@ -251,6 +238,7 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
                 } ?: emptyList()
             } else emptyList()
             return base.copy(
+                headline = R.string.health_detail_average to asleep.takeIf { it.isNotEmpty() }?.let { HealthValueFormatter.duration(it.average()) },
                 chartKind = HealthChartKind.SLEEP,
                 sleepNights = nights,
                 sleepStages = stages,
@@ -264,12 +252,13 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         if (typeId == HealthDataType.MENSTRUATION_PERIOD.id) {
             val rows = repo.samples(typeId, window.start.minusDays(45), window.endInclusive)
             val days = rows.flatMap { HealthDayKeys.daysCovered(it.startMs, it.endMs, it.startOffsetS, it.endOffsetS, zone) }.filter { it in window }.toSet()
-            return base.copy(chartKind = HealthChartKind.PERIOD_BAND, periodDays = days, highlights = listOf(R.string.health_detail_total to "${days.size}"))
+            return base.copy(chartKind = HealthChartKind.PERIOD_BAND, periodDays = days, headline = R.string.health_detail_total to "${days.size}", highlights = listOf(R.string.health_detail_total to "${days.size}"))
         }
 
+        val dailyRows = if (range == HealthChartRange.DAY) emptyList() else repo.daily(typeId, window.start, window.endInclusive)
         val points: List<HealthChartPoint> = when {
-            range == HealthChartRange.DAY -> dayPoints(descriptor, anchor, bounds)
-            else -> HealthSeriesAggregator.bucketDaily(descriptor, repo.daily(typeId, window.start, window.endInclusive), bounds, zone)
+            range == HealthChartRange.DAY -> dayPoints(descriptor, anchor, bounds, hours)
+            else -> HealthSeriesAggregator.bucketDaily(descriptor, dailyRows, bounds, zone)
         }
         val nonEmpty = points.filter { !it.isEmpty }
         val latest = repo.latest(typeId)
@@ -281,12 +270,13 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
                 latest?.let { R.string.health_detail_latest to HealthValueFormatter.formatBloodPressure(it.value, it.value2).text }
             )
             descriptor.aggregation == HealthAggregation.SUM || descriptor.isDurationLike -> listOfNotNull(
-                R.string.health_detail_total to fmt(nonEmpty.sumOf { it.sum ?: 0.0 }),
-                nonEmpty.takeIf { it.isNotEmpty() }?.let { R.string.health_detail_average to fmt(it.sumOf { p -> p.sum ?: 0.0 } / it.size) },
+                // Never show a fabricated 0 for an empty interval (docs/ui-structure.md §1).
+                nonEmpty.takeIf { it.isNotEmpty() }?.let { R.string.health_detail_total to fmt(it.sumOf { p -> p.sum ?: 0.0 }) },
+                dailyAverage(range, nonEmpty, dailyRows, descriptor)?.let { R.string.health_detail_average to fmt(it) },
                 latest?.let { R.string.health_detail_latest to fmt(if (descriptor.isDurationLike) it.durationS else it.value) }
             )
             descriptor.aggregation == HealthAggregation.COUNT || descriptor.kind == HealthKind.CATEGORY -> listOfNotNull(
-                R.string.health_detail_records to "${nonEmpty.sumOf { it.count }}",
+                nonEmpty.takeIf { it.isNotEmpty() }?.let { R.string.health_detail_records to "${it.sumOf { p -> p.count }}" },
                 latest?.let { R.string.health_detail_latest to HealthValueFormatter.categoryLabel(typeId, it.categoryValue) }
             )
             else -> listOfNotNull(
@@ -295,11 +285,30 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
                 latest?.let { R.string.health_detail_latest to fmt(it.value) }
             )
         }
-        return base.copy(chartKind = kind, points = points, highlights = highlights)
+        val headline: Pair<Int, String?> = when {
+            kind == HealthChartKind.BLOOD_PRESSURE -> R.string.health_detail_average to highlights.firstOrNull { it.first == R.string.health_detail_average }?.second
+            descriptor.aggregation == HealthAggregation.SUM || descriptor.isDurationLike ->
+                if (range == HealthChartRange.DAY) R.string.health_detail_total to nonEmpty.takeIf { it.isNotEmpty() }?.let { fmt(it.sumOf { p -> p.sum ?: 0.0 }) }
+                else R.string.health_detail_average to dailyAverage(range, nonEmpty, dailyRows, descriptor)?.let(fmt)
+            descriptor.aggregation == HealthAggregation.COUNT || descriptor.kind == HealthKind.CATEGORY ->
+                R.string.health_detail_records to nonEmpty.takeIf { it.isNotEmpty() }?.let { "${it.sumOf { p -> p.count }}" }
+            descriptor.aggregation == HealthAggregation.LATEST ->
+                R.string.health_detail_latest to nonEmpty.lastOrNull()?.let { fmt(it.avg) }
+            else -> R.string.health_detail_average to highlights.firstOrNull { it.first == R.string.health_detail_average }?.second
+        }
+        return base.copy(chartKind = kind, points = points, highlights = highlights, headline = headline)
+    }
+
+    /** Summed metrics: interval total ÷ days with data (D uses the hourly buckets' day). */
+    private fun dailyAverage(range: HealthChartRange, nonEmpty: List<HealthChartPoint>, dailyRows: List<com.ayuvo.health.data.health.HealthDailyRollup>, descriptor: HealthTypeDescriptor): Double? {
+        if (range == HealthChartRange.DAY) return nonEmpty.takeIf { it.isNotEmpty() }?.sumOf { it.sum ?: 0.0 }
+        val days = dailyRows.filter { it.count > 0 }
+        if (days.isEmpty()) return null
+        return days.sumOf { (if (descriptor.isDurationLike) it.durationS ?: it.sum else it.sum) ?: 0.0 } / days.size
     }
 
     /** D view: hourly cache for SUM types (fetched once per visited day), series points for series types, rows otherwise. */
-    private suspend fun dayPoints(descriptor: HealthTypeDescriptor, day: LocalDate, bounds: List<Pair<Long, Long>>): List<HealthChartPoint> {
+    private suspend fun dayPoints(descriptor: HealthTypeDescriptor, day: LocalDate, bounds: List<Pair<Long, Long>>, hours: List<Int>): List<HealthChartPoint> {
         val repo = container.healthRepository
         val t = type
         if (t != null && t.usesPlatformAggregate) {
@@ -316,7 +325,7 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
             if (hourly.isNotEmpty()) {
                 val byHour = hourly.associateBy { it.hour }
                 return bounds.mapIndexed { i, (s, e) ->
-                    val r = byHour[i]
+                    val r = byHour[hours[i]]
                     if (r == null || r.count == 0) HealthChartPoint(s, e) else HealthChartPoint(s, e, sum = r.sum, avg = r.avg, min = r.min, max = r.max, count = r.count)
                 }
             }

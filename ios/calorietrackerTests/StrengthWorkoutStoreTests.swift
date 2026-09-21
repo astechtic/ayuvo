@@ -5,16 +5,6 @@ import Testing
 
 @MainActor
 struct StrengthWorkoutStoreTests {
-    @Test func workoutTabModeUsesModeSpecificIconsAndSafeFallback() {
-        #expect(WorkoutTabMode.mode(for: WorkoutTabMode.library.rawValue) == .library)
-        #expect(WorkoutTabMode.mode(for: WorkoutTabMode.log.rawValue) == .log)
-        #expect(WorkoutTabMode.mode(for: "unknown") == .log)
-        #expect(WorkoutTabMode.defaultMode == .log)
-        #expect(WorkoutTabMode.storageKey == "ayuvo.workouts.tab.mode.v2")
-        #expect(WorkoutTabMode.library.tabIcon == "dumbbell.fill")
-        #expect(WorkoutTabMode.log.tabIcon == "figure.strengthtraining.traditional")
-    }
-
     @Test func legacyV1WorkoutStateIsDiscardedForTheNewCatalogue() throws {
         let suite = "StrengthWorkoutStoreTests.legacy.\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))

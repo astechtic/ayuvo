@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal-Modell. Hohe Genauigkeit, kostenlose Stufe verfügbar.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Start</string>
     <string name="nav_coach">Coach</string>
     <string name="nav_settings">Einstellungen</string>
     <string name="nav_about">Info</string>
@@ -441,32 +440,12 @@
     <string name="coach_chip_log_advice">Tipps basierend auf meinem Log?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1W</string>
-    <string name="progress_range_month">1M</string>
-    <string name="progress_range_3m">3M</string>
-    <string name="progress_range_6m">6M</string>
-    <string name="progress_range_year">1J</string>
-    <string name="progress_range_all">Alle</string>
 
-    <string name="progress_weight_section">Gewicht</string>
-    <string name="progress_log_weight">Gewicht erfassen</string>
-    <string name="progress_stat_current">Aktuell</string>
-    <string name="progress_stat_goal">Ziel</string>
-    <string name="progress_log_first_weight">Erfasse dein erstes Gewicht, um Trends zu sehen</string>
 
     <string name="progress_weight_history">Gewichtsverlauf</string>
     <string name="progress_body_fat_history">Körperfettverlauf</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d Eintrag · tippen zum Anzeigen oder Löschen</item>
-        <item quantity="other">%1$d Einträge · tippen zum Anzeigen oder Löschen</item>
-    </plurals>
 
-    <string name="progress_calories_section">Kalorien</string>
-    <string name="progress_avg_format">Ø: %1$,d kcal</string>
-    <string name="progress_no_food">Noch kein Essen erfasst</string>
 
-    <string name="progress_macro_averages">Makro-Durchschnitt</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Gewicht erfassen</string>
 
@@ -475,16 +454,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Persönliche Daten</string>
-    <string name="settings_section_goals">Ziele &amp; Ernährung</string>
     <string name="settings_section_daily_targets">Tägliche Ziele</string>
-    <string name="settings_section_app">App-Einstellungen</string>
-    <string name="settings_section_tracking_reminders">Tracking &amp; Erinnerungen</string>
-    <string name="settings_category_ai_providers">KI-Anbieter &amp; Ausweichoptionen</string>
-    <string name="settings_section_workout">Training</string>
     <string name="settings_section_ai">KI-Anbieter</string>
     <string name="settings_section_speech">Spracherkennung</string>
-    <string name="settings_section_health">Gesundheit &amp; Daten</string>
-    <string name="settings_section_data_management">Datenverwaltung</string>
 
     <string name="settings_gender">Geschlecht</string>
     <string name="settings_birthday">Geburtstag</string>
@@ -620,32 +592,15 @@
     <string name="sheet_goal_body_fat">Körperfett-Ziel</string>
     <string name="sheet_goal_body_fat_currently">Aktuell %1$d%%</string>
     <string name="action_remove_goal">Ziel entfernen</string>
-    <string name="progress_metric_weight">Gewicht</string>
-    <string name="progress_metric_body_fat">Körperfett</string>
-    <string name="progress_metric_workouts">Training</string>
     <string name="progress_workout_history">Trainingsverlauf</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d berechneter Verbrauch · zum Anzeigen oder Löschen tippen</item>
-        <item quantity="other">%1$d berechnete Verbräuche · zum Anzeigen oder Löschen tippen</item>
-    </plurals>
     <string name="progress_workout_delete_title">Trainingsverbrauch löschen?</string>
     <string name="progress_workout_delete_message">Dies entfernt den berechneten Verbrauch aus Ayuvo und Health Connect. Dein Trainingsplan bleibt gespeichert.</string>
-    <string name="progress_workout_section">Trainingsaktivität</string>
-    <string name="progress_workout_stat_workouts">Trainings</string>
-    <string name="progress_workout_stat_total">Gesamtverbrauch</string>
-    <string name="progress_workout_stat_average">Ø Verbrauch</string>
-    <string name="progress_workout_stat_latest">Letzter</string>
     <string name="progress_workout_stat_days">Tage</string>
-    <string name="progress_workout_no_range">Keine berechneten Trainingsverbräuche in diesem Zeitraum</string>
-    <string name="progress_workout_chart_description">Diagramm des Trainingsverbrauchs von %1$s bis %2$s. Gesamt %3$d Kilokalorien; zuletzt %4$d Kilokalorien.</string>
-    <string name="progress_log_body_fat">Körperfett protokollieren</string>
-    <string name="progress_log_first_body_fat">Erfasse deinen ersten Körperfettwert, um Trends zu sehen</string>
     <string name="progress_log_body_fat_title">Körperfett protokollieren</string>
     <string name="notif_body_fat_log_title">Körperfett-Check</string>
     <string name="notif_body_fat_log_text">Erfasse heute dein Körperfett, um deinen Verlauf zu verfolgen.</string>
     <string name="saved_meals_search_placeholder">Gespeicherte Mahlzeiten durchsuchen</string>
     <string name="saved_meals_no_match">Keine passenden Mahlzeiten</string>
-    <string name="settings_section_custom_instructions">Eigene KI-Anweisungen</string>
     <string name="settings_custom_instructions_placeholder">z. B. Ich lebe in Deutschland, gehe von europäischen Portionsgrößen aus, bevorzuge ALDI/REWE-Marken. Ich bin in einer Bodybuilding-Diätphase.</string>
     <string name="settings_custom_instructions_footer">Optionaler Kontext, der bei jeder KI-Anfrage mitgesendet wird — Region, Ernährung, sportliche Ziele, alles, was du sonst jedes Mal wiederholen müsstest. Leer lassen, um zu deaktivieren.</string>
     <string name="settings_save">Speichern</string>

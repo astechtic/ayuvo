@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.medications
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
@@ -418,7 +419,7 @@ internal fun ReminderNoticeCards(visible: Boolean, modifier: Modifier = Modifier
 /** Sheet container colour shared with the Records sheets. */
 @Composable
 internal fun medicationSheetColor(): Color =
-    if (MaterialTheme.colorScheme.background.luminance() < 0.5f) Color(0xF2141416) else Color(0xFFFAF3EE)
+    AyuvoColors.sheetBackground()
 
 /** A small circular accent button used for "+" on the Meds home header. */
 @Composable

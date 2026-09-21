@@ -1,6 +1,6 @@
 # Health Data hub — shared contract
 
-This page is the cross-platform contract for the **Health Data** hub: the local mirror of Health Connect (Android) and HealthKit (iOS) that powers the Home tile strip, the hub/detail screens, the Coach health tools and the `ayuvo-health-data` export. Android (`android/…/models/HealthDataType.kt`, `data/health/`) and iOS (`ios/…/Models/Health/HealthMetricType.swift`, `Services/HealthData/`) implement it independently; the only defenses against drift are the parity tests that read the two shared files and the rules written here. Change the shared files first, then both platforms in the same PR.
+This page is the cross-platform contract for the **Health Data** hub: the local mirror of Health Connect (Android) and HealthKit (iOS) that powers Summary › Favourites, Browse and the metric detail screens, the Coach health tools and the `ayuvo-health-data` export. Android (`android/…/models/HealthDataType.kt`, `data/health/`) and iOS (`ios/…/Models/Health/HealthMetricType.swift`, `Services/HealthData/`) implement it independently; the only defenses against drift are the parity tests that read the two shared files and the rules written here. Change the shared files first, then both platforms in the same PR.
 
 Files:
 
@@ -169,7 +169,7 @@ Tool names, descriptions, JSON schemas and payload shapes are **byte-identical**
 ### 7.1 Gating and consent
 
 - Tools are advertised only when health sync is enabled (`healthHubEnabled` on Android, `healthKitEnabled` on iOS) **and** `coachHealthDataEnabled` is `true`.
-- `coachHealthDataEnabled` defaults to on but is set only by an **affirmative act**: every connect step (onboarding, hub connect view, Settings CTA) shows a visible, pre-checked toggle "Let Coach use my health data (sent to your AI provider / your AI provider)" that the user confirms with Connect; `coachHealthDataConsentedAt` (ISO-8601) is stored at that moment. Legacy Android users and iOS v9→v10 re-prompt users pass through that screen before the flag is set — never a silent flip. The toggle also lives in Settings › Health & Data.
+- `coachHealthDataEnabled` defaults to on but is set only by an **affirmative act**: every connect step (onboarding, the Browse connect card, Settings › Data & Privacy › Health Sync) shows a visible, pre-checked toggle "Let Coach use my health data (sent to your AI provider / your AI provider)" that the user confirms with Connect; `coachHealthDataConsentedAt` (ISO-8601) is stored at that moment. Legacy Android users and iOS v9→v10 re-prompt users pass through that screen before the flag is set — never a silent flip. The toggle also lives in Settings › Data & Privacy › Health Sync.
 - When gated off, the tools are absent from the advertised list and the system prompt contains: `No health data is available: the user has not connected a health platform, or has turned off Coach access to it.`
 - Tool payloads are never persisted into chat history; only the visible assistant text is. `coachChatHistory` is excluded from cloud backups on both platforms (§8).
 
@@ -330,7 +330,7 @@ On-device / LiteRT modes (no tools) append a `## Health (last 7 days)` block of 
 - **Cloud-backed preference keys** (same names on both platforms, listed in `docs/cloud-backup.md` › Reserved preference keys): `healthHomeTiles` (JSON array of slugs), `healthGlucoseUnit` (`mmol/L` \| `mg/dL`; iOS: overrides the HealthKit preferred unit when set), `coachHealthDataEnabled` (bool), `coachHealthDataConsentedAt` (ISO-8601). Android only: `healthHubEnabled` (iOS gates on the existing `healthKitEnabled`).
 - **Device-local keys** (excluded from cloud backup): iOS `healthKitHubPromptedVersion`, `healthKitHubLastSyncAt`, `healthKitHubRateLimitedUntil`, `healthKitBackgroundDeliveryVersion` (auto-excluded by the `healthKit` prefix in `CloudBackupPolicy.include`); Android `healthHubPromptedVersion`, `healthHubLastSyncAt`, `healthHubRateLimitedUntil` (added to `CloudBackupPolicy.excludedKeys`).
 - `coachChatHistory` is added to `CloudBackupPolicy.excludedKeys` on both platforms in the Coach PR (App Store 5.1.3(ii)); a backup test asserts it.
-- **No health values in UserDefaults/DataStore, ever** — snapshots for Home live in memory only; backup tests assert that no key holds numeric samples.
+- **No health values in UserDefaults/DataStore, ever** — snapshots for Summary and Browse live in memory only; backup tests assert that no key holds numeric samples.
 - Restore onto a new device re-checks authorization (`getRequestStatusForAuthorization` / `capabilitiesOrNull`) and shows "Grant access", never "Nothing shared yet"; throttle keys are reset on restore.
 - Copy never claims data "never leaves the device"; it says "kept on this device, never stored in iCloud/Drive backup, shared with your AI provider only through Coach".
 
@@ -349,22 +349,24 @@ Same strings on both platforms (`Modifier.testTag`/`semantics { testTag }` on An
 | Per-category Allow row (Android) | `health.hub.allow.<category>` |
 | Connect / Grant access CTA | `health.hub.connect` |
 | Coach consent toggle on the connect step | `health.hub.coachConsent` |
-| Home strip header "See All" | `health.home.seeAll` |
-| Home tile | `health.home.tile.<id>` |
-| Detail range segment | `health.detail.range.<raw>` with `raw ∈ day, week, month, six_months, year` |
-| Detail previous / next anchor | `health.detail.prev`, `health.detail.next` |
-| Detail chart | `health.detail.chart` |
-| Show All Data list | `health.detail.allData` |
-| Data Sources & Access | `health.detail.sources` |
-| Unit picker | `health.detail.unit` |
-| Show on Home toggle | `health.detail.pin` |
-| Settings › All Health Data row | `settings.health.hub` |
-| Settings › Let Coach use health data | `settings.health.coachToggle` |
-| Settings › Sync now | `settings.health.syncNow` |
-| Settings › Home tile toggle (iOS) | `settings.health.homeTile` |
-| Settings › Clear synced health data | `settings.health.clearData` |
-| Settings › Export Health Data | `settings.health.export` |
-| Settings › Import Health Data | `settings.health.import` |
+| Summary favourite tile (was Home tile) | `summary.favourite.<id>` |
+| Summary favourites "Edit" (was Home strip "See All") | `summary.favourites.edit` |
+| Detail range segment | `metric.range.<D\|W\|M\|6M\|Y>` |
+| Detail previous / next anchor | `metric.prev`, `metric.next` |
+| Detail chart | `metric.chart` |
+| Show All Data list | `metric.allData` |
+| Data Sources & Access | `metric.sources` |
+| Unit picker | `metric.unit` |
+| Add to Favourites toggle (was Show on Home) | `metric.favourite` |
+| Settings › Health Sync › Let Coach use health data | `settings.health.coachToggle` |
+| Settings › Health Sync › Sync Now | `settings.health.syncNow` |
+| Settings › Delete All Data › Clear synced health data | `settings.health.clearData` |
+| Settings › Backup & Export › Export Health Data | `settings.health.export` |
+| Settings › Backup & Export › Import Health Data | `settings.health.import` |
+
+The metric detail and Summary identifiers are shared with app metrics and defined in `docs/ui-structure.md` §9. The former `health.home.*`, `health.detail.*`, `settings.health.hub` and `settings.health.homeTile` identifiers are retired: Browse replaces the "All Health Data" row and the one-time hub CTA row (Browse's Health Sync footer opens Settings › Health Sync), and Summary › Favourites › Edit replaces the iOS home-tile toggle.
+
+**Favourites storage.** Pinned tiles move from `healthHomeTiles` to `summaryFavourites` (comma-separated keys, max 12; health ids unprefixed, app metrics `app:<name>`), migrated once by the rule in `docs/ui-structure.md` §7.9. `healthHomeTiles` is no longer written. Its real on-disk format was a comma-separated string on Android and a string array on iOS (not the JSON array described in §8); the migration accepts both by joining the iOS array with ",".
 
 ## 10. Versioning summary
 

@@ -7,9 +7,7 @@ struct RecordsCard<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) { content }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(padding)
-            .background(AppColors.appCard, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .ayuvoCard(padding: padding)
     }
 }
 

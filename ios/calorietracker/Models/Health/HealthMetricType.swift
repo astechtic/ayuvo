@@ -61,21 +61,22 @@ nonisolated enum HealthCategory: String, CaseIterable, Sendable, Hashable, Codab
         }
     }
 
+    /// Fixed domain colour (shared catalog `health.category_domains` → domain colour).
     var tint: Color {
         switch self {
-        case .activity: return .orange
-        case .body: return .purple
-        case .cycleTracking: return .pink
-        case .hearing: return .blue
-        case .heart: return .red
-        case .mentalWellbeing: return .teal
-        case .mobility: return .orange
-        case .nutrition: return .green
-        case .respiratory: return .cyan
-        case .sleep: return .indigo
-        case .symptoms: return .purple
-        case .vitals: return .red
-        case .other: return .gray
+        case .activity: return AyuvoPalette.activity
+        case .body: return AyuvoPalette.body
+        case .cycleTracking: return AyuvoPalette.cycle
+        case .hearing: return AyuvoPalette.hearing
+        case .heart: return AyuvoPalette.heart
+        case .mentalWellbeing: return AyuvoPalette.mindfulness
+        case .mobility: return AyuvoPalette.mobility
+        case .nutrition: return AyuvoPalette.nutrition
+        case .respiratory: return AyuvoPalette.respiratory
+        case .sleep: return AyuvoPalette.sleep
+        case .symptoms: return AyuvoPalette.symptoms
+        case .vitals: return AyuvoPalette.vitals
+        case .other: return AyuvoPalette.other
         }
     }
 }

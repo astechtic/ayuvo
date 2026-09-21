@@ -106,7 +106,6 @@
     <string name="speech_description_assemblyai">Model AssemblyAI Universal. Vysoká přesnost, k dispozici bezplatná úroveň.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Domů</string>
     <string name="nav_coach">Kouč</string>
     <string name="nav_settings">Nastavení</string>
     <string name="nav_about">O aplikaci</string>
@@ -169,10 +168,6 @@
     <string name="onboarding_body_fat_no_worries">V pohodě! Použijeme standardní vzorec\npodle tvé výšky, váhy a věku.</string>
     <string name="onboarding_goal_optional">Cíl (volitelné)</string>
     <string name="onboarding_goal_set_later">Můžeš nastavit později v Nastavení.</string>
-    <string name="progress_metric_weight">Váha</string>
-    <string name="progress_metric_body_fat">Tělesný tuk</string>
-    <string name="progress_log_body_fat">Zapsat tělesný tuk</string>
-    <string name="progress_log_first_body_fat">Zapiš první hodnotu tělesného tuku a sleduj trend</string>
     <string name="progress_log_body_fat_title">Zapsat tělesný tuk</string>
     <string name="saved_meals_search_placeholder">Hledat v uložených jídlech</string>
     <string name="saved_meals_no_match">Žádná odpovídající jídla</string>
@@ -400,36 +395,12 @@
     <string name="coach_chip_log_advice">Nějaká rada podle mého deníku?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1T</string>
-    <string name="progress_range_month">1M</string>
-    <string name="progress_range_3m">3M</string>
-    <string name="progress_range_6m">6M</string>
-    <string name="progress_range_year">1R</string>
-    <string name="progress_range_all">Vše</string>
 
-    <string name="progress_weight_section">Váha</string>
-    <string name="progress_log_weight">Zapsat váhu</string>
-    <string name="progress_stat_current">Aktuální</string>
-    <string name="progress_stat_goal">Cíl</string>
-    <string name="progress_stat_net_change">Změna celkem</string>
-    <string name="progress_stat_average">Průměr</string>
-    <string name="progress_log_first_weight">Zapiš první váhu a sleduj trendy</string>
 
     <string name="progress_weight_history">Historie váhy</string>
     <string name="progress_body_fat_history">Historie tělesného tuku</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d záznam · klepnutím zobrazíš nebo smažeš</item>
-        <item quantity="few">%1$d záznamy · klepnutím zobrazíš nebo smažeš</item>
-        <item quantity="many">%1$d záznamů · klepnutím zobrazíš nebo smažeš</item>
-        <item quantity="other">%1$d záznamů · klepnutím zobrazíš nebo smažeš</item>
-    </plurals>
 
-    <string name="progress_calories_section">Kalorie</string>
-    <string name="progress_avg_format">Průměr: %1$d kcal</string>
-    <string name="progress_no_food">Zatím žádné zapsané jídlo</string>
 
-    <string name="progress_macro_averages">Průměry makroživin</string>
-    <string name="progress_macro_progress_format">%1$d g / %2$d g</string>
 
     <string name="progress_log_weight_title">Zapsat váhu</string>
 
@@ -438,11 +409,8 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Osobní údaje</string>
-    <string name="settings_section_goals">Cíle a výživa</string>
-    <string name="settings_section_app">Nastavení aplikace</string>
     <string name="settings_section_ai">AI poskytovatel</string>
     <string name="settings_section_speech">Převod řeči na text</string>
-    <string name="settings_section_health">Zdraví a data</string>
 
     <string name="settings_gender">Pohlaví</string>
     <string name="settings_birthday">Narozeniny</string>
@@ -533,7 +501,6 @@
     <string name="settings_clear_key">Vymazat klíč</string>
 
     <!-- Custom AI Instructions + Fallback Provider (v1.0.6) -->
-    <string name="settings_section_custom_instructions">Vlastní instrukce pro AI</string>
     <string name="settings_custom_instructions_placeholder">např. Bydlím v Česku, počítej s evropskými velikostmi porcí, preferuji Lidl/Albert. Jsem v rýsovací fázi.</string>
     <string name="settings_custom_instructions_footer">Volitelný kontext posílaný s každým AI požadavkem — region, dieta, sportovní cíle a další věci, ať je nemusíš pokaždé psát znovu. Nech prázdné pro vypnutí.</string>
     <string name="settings_save">Uložit</string>

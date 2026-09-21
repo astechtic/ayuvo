@@ -58,6 +58,7 @@ import com.ayuvo.health.medications.model.Medication
 import com.ayuvo.health.medications.model.MedicationStatus
 import com.ayuvo.health.medications.model.TimelineItem
 import com.ayuvo.health.ui.components.GlassPrimaryButton
+import com.ayuvo.health.ui.design.AyuvoTopBar
 import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.GlassTextButton
 import com.ayuvo.health.ui.components.GlassTextField
@@ -68,8 +69,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * The Meds segment of the Health tab (docs/medications.md §8): today's timeline with Take / Skip /
- * Snooze, as-needed medicines, the searchable list with status chips, and the archive menu.
+ * Browse › Medications (docs/medications.md §8): today's timeline with Take / Skip / Snooze,
+ * as-needed medicines, the searchable list with status chips, and the archive menu, under a
+ * title bar whose actions keep the `medications.add` / `medications.menu` test tags.
  */
 @Composable
 fun MedicationsScreen(
@@ -77,7 +79,8 @@ fun MedicationsScreen(
     onOpenMedication: (String) -> Unit,
     onAddMedication: () -> Unit,
     onOpenHistory: () -> Unit,
-    onImportFromRecord: (String) -> Unit
+    onImportFromRecord: (String) -> Unit,
+    onBack: (() -> Unit)? = null
 ) {
     val vm: MedicationsViewModel = viewModel(factory = MedicationsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -138,29 +141,15 @@ fun MedicationsScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbar) }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding).testTag("medications.home"),
-            contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = BottomNavScrollPadding),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            item(key = "header") {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        stringResource(R.string.medications_title),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.weight(1f)
-                    )
-                    AccentCircleIconButton(
-                        icon = Icons.Filled.Add,
-                        contentDescription = stringResource(R.string.cd_medication_add),
-                        onClick = onAddMedication,
-                        modifier = Modifier.testTag("medications.add")
-                    )
-                    Spacer(Modifier.width(4.dp))
+        snackbarHost = { SnackbarHost(snackbar) },
+        topBar = {
+            AyuvoTopBar(
+                title = stringResource(R.string.medications_title),
+                onBack = onBack,
+                actions = {
+                    IconButton(onClick = onAddMedication, modifier = Modifier.testTag("medications.add")) {
+                        Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.cd_medication_add))
+                    }
                     Box {
                         IconButton(onClick = { menuOpen = true }, modifier = Modifier.testTag("medications.menu")) {
                             Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.cd_medication_menu))
@@ -186,8 +175,14 @@ fun MedicationsScreen(
                         }
                     }
                 }
-            }
-
+            )
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding).testTag("medications.home"),
+            contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = BottomNavScrollPadding),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             if (ui.loading) {
                 item(key = "loading") {
                     Box(Modifier.fillMaxWidth().padding(top = 48.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }

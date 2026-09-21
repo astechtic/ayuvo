@@ -3,6 +3,7 @@ package com.ayuvo.health.ui.workouts
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.ayuvo.health.ui.design.AyuvoPalette
 import com.ayuvo.health.ui.theme.AppColors
 
 /**
@@ -22,7 +23,9 @@ data class WorkoutsColors(
     val secondaryAccent: Color,
     val onAccent: Color,
     val mutedText: Color,
-    val isDark: Boolean
+    val isDark: Boolean,
+    /** Fixed Activity domain colour for workout decoration (not the theme accent). */
+    val domain: Color = AyuvoPalette.Activity
 )
 
 @Composable
@@ -36,10 +39,10 @@ fun workoutsColors(): WorkoutsColors {
         background = if (isDark) AppColors.AppBackgroundDark else AppColors.AppBackgroundLight,
         charcoal = if (isDark) AppColors.OnDark else AppColors.OnLight,
         card = if (isDark) AppColors.AppCardDark else AppColors.AppCardLight,
-        panel = if (isDark) Color(0xFF2A2A2E) else Color(0xFFEFE7DF),
-        hairline = if (isDark) AppColors.DividerDark else AppColors.DividerLight,
+        panel = if (isDark) AyuvoPalette.FillDark else AyuvoPalette.FillLight,
+        hairline = if (isDark) AyuvoPalette.SeparatorDark else AyuvoPalette.SeparatorLight,
         accent = AppColors.Calorie,
-        secondaryAccent = AppColors.CalorieEnd,
+        secondaryAccent = AppColors.Calorie,
         onAccent = Color.White,
         mutedText = if (isDark) AppColors.MutedDark else AppColors.MutedLight,
         isDark = isDark

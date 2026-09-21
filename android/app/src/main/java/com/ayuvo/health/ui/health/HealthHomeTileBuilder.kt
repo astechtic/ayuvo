@@ -52,8 +52,9 @@ object HealthHomeTileBuilder {
         val byDay = rollups.associateBy { it.day }
         val todayKey = day.toString()
         val isToday = day == today
+        // Missing days are NaN (a gap), never a fabricated 0.
         fun spark(pick: (com.ayuvo.health.data.health.HealthDailyRollup) -> Double?): List<Float> =
-            (0..6).map { i -> byDay[weekStart.plusDays(i.toLong()).toString()]?.let(pick)?.toFloat() ?: 0f }
+            (0..6).map { i -> byDay[weekStart.plusDays(i.toLong()).toString()]?.let(pick)?.toFloat() ?: Float.NaN }
 
         return when {
             type == HealthDataType.SLEEP -> {
@@ -67,7 +68,7 @@ object HealthHomeTileBuilder {
                     captionKind = if (asleep == null) HealthTileUi.CaptionKind.NONE else if (isToday) HealthTileUi.CaptionKind.LAST_NIGHT else HealthTileUi.CaptionKind.DATE,
                     captionMs = day.atStartOfDay(zone).toInstant().toEpochMilli(),
                     numeric = null,
-                    spark = (0..6).map { i -> nights[weekStart.plusDays(i.toLong()).toString()]?.asleepS?.toFloat() ?: 0f },
+                    spark = (0..6).map { i -> nights[weekStart.plusDays(i.toLong()).toString()]?.asleepS?.toFloat() ?: Float.NaN },
                     hasData = asleep != null
                 )
             }

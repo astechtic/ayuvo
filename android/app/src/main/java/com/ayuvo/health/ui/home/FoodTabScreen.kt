@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.home
 
+import com.ayuvo.health.ui.navigation.BottomNavFabPadding
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
@@ -59,6 +60,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -98,20 +102,36 @@ import java.util.UUID
 
 
 
+/** A one-shot request to open a food log method (or the + menu when [method] is null). */
+data class FoodLogRequest(val method: FoodLogMethod?, val id: Long = System.nanoTime())
+
 /**
- * Complete Food Management screen embedded as a primary tab inside the Health section.
- * Contains full food diary, calorie/macro goals, water tracker, log methods, camera/scan,
- * meal combine, and fasting sessions.
+ * Complete food diary, hosted by Browse › Nutrition: calorie/macro goals, water tracker, log
+ * methods, camera/scan, meal combine and fasting sessions.
+ *
+ * [viewModelOwner] scopes the [HomeViewModel] (Nutrition passes the Activity so leaving the
+ * screen never cancels an AI analysis in flight). [footer] adds rows after the diary.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodTabScreen(
     container: AppContainer,
     quickActionRequest: QuickActionRequest? = null,
-    onQuickActionHandled: (Long) -> Unit = {}
+    onQuickActionHandled: (Long) -> Unit = {},
+    logRequest: FoodLogRequest? = null,
+    onLogRequestHandled: (Long) -> Unit = {},
+    viewModelOwner: ViewModelStoreOwner? = null,
+    topBar: @Composable () -> Unit = {},
+    footer: LazyListScope.() -> Unit = {}
 ) {
-    val vm: HomeViewModel = viewModel(factory = HomeViewModel.Factory(container))
+    val vm: HomeViewModel = if (viewModelOwner != null) {
+        viewModel(viewModelStoreOwner = viewModelOwner, factory = HomeViewModel.Factory(container))
+    } else {
+        viewModel(factory = HomeViewModel.Factory(container))
+    }
     val ui by vm.ui.collectAsState()
+    // An analysis keeps running if the user leaves, but the overlay owns the screen until it ends.
+    BackHandler(enabled = ui.analyzing) {}
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner, vm) {
         val observer = LifecycleEventObserver { _, event ->
@@ -294,6 +314,22 @@ fun FoodTabScreen(
         onQuickActionHandled(request.id)
     }
 
+    LaunchedEffect(logRequest?.id, ui.analyzing, ui.pendingAnalysis, ui.error) {
+        val request = logRequest ?: return@LaunchedEffect
+        if (ui.analyzing || ui.pendingAnalysis != null || ui.error != null) return@LaunchedEffect
+        vm.setSelectedDate(LocalDate.now())
+        val method = request.method
+        when {
+            method == null -> {
+                addMenuDestination = null
+                showAddMenu = true
+            }
+            ui.activeFast != null -> vm.reportFoodBlockedByFast()
+            else -> performFoodLogMethod(method)
+        }
+        onLogRequestHandled(request.id)
+    }
+
     BackHandler(enabled = selectionMode) {
         selectedFoodIds = emptySet()
     }
@@ -323,6 +359,7 @@ fun FoodTabScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        topBar = topBar,
         bottomBar = {
             if (selectionMode) {
                 Column(
@@ -568,6 +605,7 @@ fun FoodTabScreen(
                         }
                     }
                 }
+                footer()
             }
 
             if (!selectionMode) {
@@ -575,13 +613,14 @@ fun FoodTabScreen(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .navigationBarsPadding()
-                        .padding(end = 24.dp, bottom = 100.dp)
+                        .padding(end = 24.dp, bottom = BottomNavFabPadding)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape)
                             .background(AppColors.Calorie)
+                            .testTag("home.add")
                             .clickable {
                                 addMenuDestination = null
                                 showAddMenu = true

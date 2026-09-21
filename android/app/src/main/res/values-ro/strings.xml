@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">Modelul Universal AssemblyAI. Precizie solidă, nivel gratuit disponibil.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Acasă</string>
     <string name="nav_coach">Antrenor</string>
     <string name="nav_settings">Setări</string>
     <string name="nav_about">Despre</string>
@@ -443,33 +442,12 @@
     <string name="coach_chip_log_advice">Vreun sfat pe baza jurnalului meu?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1S</string>
-    <string name="progress_range_month">1L</string>
-    <string name="progress_range_3m">3L</string>
-    <string name="progress_range_6m">6L</string>
-    <string name="progress_range_year">1A</string>
-    <string name="progress_range_all">Tot</string>
 
-    <string name="progress_weight_section">Greutate</string>
-    <string name="progress_log_weight">Înregistrează greutatea</string>
-    <string name="progress_stat_current">Actual</string>
-    <string name="progress_stat_goal">Obiectiv</string>
-    <string name="progress_log_first_weight">Înregistrează prima greutate pentru a vedea tendințele</string>
 
     <string name="progress_weight_history">Istoric greutate</string>
     <string name="progress_body_fat_history">Istoric grăsime corporală</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d intrare · atinge pentru a vedea sau șterge</item>
-        <item quantity="few">%1$d intrări · atinge pentru a vedea sau șterge</item>
-        <item quantity="other">%1$d de intrări · atinge pentru a vedea sau șterge</item>
-    </plurals>
 
-    <string name="progress_calories_section">Calorii</string>
-    <string name="progress_avg_format">Med.: %1$,d kcal</string>
-    <string name="progress_no_food">Niciun aliment înregistrat încă</string>
 
-    <string name="progress_macro_averages">Medii macronutrienți</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Înregistrează greutatea</string>
 
@@ -478,16 +456,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Informații personale</string>
-    <string name="settings_section_goals">Obiective și nutriție</string>
     <string name="settings_section_daily_targets">Obiective zilnice</string>
-    <string name="settings_section_app">Setări aplicație</string>
-    <string name="settings_section_tracking_reminders">Monitorizare și mementouri</string>
-    <string name="settings_category_ai_providers">Furnizori AI și opțiuni de rezervă</string>
-    <string name="settings_section_workout">Antrenament</string>
     <string name="settings_section_ai">Furnizor AI</string>
     <string name="settings_section_speech">Voce în text</string>
-    <string name="settings_section_health">Sănătate și date</string>
-    <string name="settings_section_data_management">Gestionarea datelor</string>
 
     <string name="settings_gender">Sex</string>
     <string name="settings_birthday">Data nașterii</string>
@@ -623,33 +594,15 @@
     <string name="sheet_goal_body_fat">Țintă grăsime corporală</string>
     <string name="sheet_goal_body_fat_currently">Curent %1$d%%</string>
     <string name="action_remove_goal">Elimină ținta</string>
-    <string name="progress_metric_weight">Greutate</string>
-    <string name="progress_metric_body_fat">Grăsime corporală</string>
-    <string name="progress_metric_workouts">Antrenamente</string>
     <string name="progress_workout_history">Istoric antrenamente</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d consum calculat · atinge pentru a vedea sau șterge</item>
-        <item quantity="few">%1$d consumuri calculate · atinge pentru a vedea sau șterge</item>
-        <item quantity="other">%1$d de consumuri calculate · atinge pentru a vedea sau șterge</item>
-    </plurals>
     <string name="progress_workout_delete_title">Ștergi consumul antrenamentului?</string>
     <string name="progress_workout_delete_message">Se elimină consumul calculat din Ayuvo și Health Connect. Planul din jurnalul de antrenament rămâne salvat.</string>
-    <string name="progress_workout_section">Activitate de antrenament</string>
-    <string name="progress_workout_stat_workouts">Antrenamente</string>
-    <string name="progress_workout_stat_total">Consum total</string>
-    <string name="progress_workout_stat_average">Consum mediu</string>
-    <string name="progress_workout_stat_latest">Recent</string>
     <string name="progress_workout_stat_days">Zile</string>
-    <string name="progress_workout_no_range">Nu există consumuri calculate pentru antrenamente în această perioadă</string>
-    <string name="progress_workout_chart_description">Graficul consumului din antrenamente de la %1$s la %2$s. Total: %3$d kilocalorii; recent: %4$d kilocalorii.</string>
-    <string name="progress_log_body_fat">Înregistrează grăsimea corporală</string>
-    <string name="progress_log_first_body_fat">Înregistrează primul tău % de grăsime corporală pentru a vedea tendințele</string>
     <string name="progress_log_body_fat_title">Înregistrează grăsimea corporală</string>
     <string name="notif_body_fat_log_title">Verificare grăsime corporală</string>
     <string name="notif_body_fat_log_text">Înregistrează grăsimea corporală de azi pentru a urmări tendința compoziției.</string>
     <string name="saved_meals_search_placeholder">Caută în mâncărurile salvate</string>
     <string name="saved_meals_no_match">Nicio mâncare potrivită</string>
-    <string name="settings_section_custom_instructions">Instrucțiuni AI personalizate</string>
     <string name="settings_custom_instructions_placeholder">Ex.: locuiesc în Germania, presupune porții europene, prefer mărcile ALDI/REWE. Sunt într-o etapă de definire la culturism.</string>
     <string name="settings_custom_instructions_footer">Context opțional trimis cu fiecare cerere AI — regiune, dietă, obiective sportive, orice ai repeta altfel de fiecare dată. Lasă gol pentru a dezactiva.</string>
     <string name="settings_save">Salvează</string>

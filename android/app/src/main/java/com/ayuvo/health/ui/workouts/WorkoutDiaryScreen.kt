@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.workouts
 
+import com.ayuvo.health.ui.navigation.BottomNavFabPadding
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -154,6 +155,8 @@ internal fun WorkoutDiaryScreen(
     modifier: Modifier = Modifier,
     weekStartsOnMonday: Boolean = true,
     onShowLibrary: () -> Unit,
+    /** False when a title bar above already offers the library (Browse › Activity › Workouts). */
+    showModeToggle: Boolean = true,
     onCreateExercise: () -> Unit = {},
     onEditUserExercise: (String) -> Unit = {}
 ) {
@@ -219,7 +222,7 @@ internal fun WorkoutDiaryScreen(
             modifier = Modifier.fillMaxSize().imePadding().padding(bottom = 8.dp),
             contentPadding = PaddingValues(
                 start = 16.dp,
-                top = 64.dp,
+                top = if (showModeToggle) 64.dp else 8.dp,
                 end = 16.dp
             ),
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -331,22 +334,24 @@ internal fun WorkoutDiaryScreen(
             }
         }
 
-        WorkoutModeToggleButton(
-            mode = com.ayuvo.health.models.WorkoutTabMode.LOG,
-            onToggle = {
-                dismissKeyboard()
-                onShowLibrary()
-            },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(top = 8.dp, end = 16.dp)
-        )
+        if (showModeToggle) {
+            WorkoutModeToggleButton(
+                mode = com.ayuvo.health.models.WorkoutTabMode.LOG,
+                onToggle = {
+                    dismissKeyboard()
+                    onShowLibrary()
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 8.dp, end = 16.dp)
+            )
+        }
 
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
-                .padding(end = 24.dp, bottom = 100.dp)
+                .padding(end = 24.dp, bottom = BottomNavFabPadding)
         ) {
             Box(
                 modifier = Modifier

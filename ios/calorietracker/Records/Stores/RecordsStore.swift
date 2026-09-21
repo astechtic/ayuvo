@@ -116,6 +116,8 @@ final class RecordsStore {
     private(set) var tabRequest = 0
     /// Record to push on the Records stack (consumed by `RecordsHomeView`).
     var navigationRequest: String?
+    /// Bumped when something outside the tab (Summary "+" → Add record) wants the Add sheet.
+    private(set) var addRecordRequest = 0
     // Phase 4 (Coach) — `healthRecordsCoachAccessEnabled` / `healthRecordsCoachConsentedAt` (§26).
     private(set) var coachAccessEnabled = false
     private(set) var coachConsentedAt: String?
@@ -155,6 +157,12 @@ final class RecordsStore {
     /// Opens a record from Coach's "Used records" chips: Records tab + push the detail.
     func openRecordFromCoach(_ id: String) {
         navigationRequest = id
+        tabRequest += 1
+    }
+
+    /// Opens the Add Record sheet from outside the tab (Summary "+" → Add record).
+    func requestAddRecord() {
+        addRecordRequest += 1
         tabRequest += 1
     }
 

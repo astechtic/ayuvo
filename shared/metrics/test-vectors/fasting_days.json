@@ -1,0 +1,226 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-09-15",
+            "seconds": 7200
+          },
+          {
+            "day": "2026-09-16",
+            "seconds": 50400
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1789619400000,
+        "sessions": [
+          {
+            "ended_at_ms": 1789547400000,
+            "started_at_ms": 1789489800000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "22:00 to 14:00 splits 2h + 14h"
+    },
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-09-16",
+            "seconds": 14400
+          },
+          {
+            "day": "2026-09-17",
+            "seconds": 36000
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1789619400000,
+        "sessions": [
+          {
+            "ended_at_ms": null,
+            "started_at_ms": 1789569000000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "active fast runs to now"
+    },
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-10-31",
+            "seconds": 14400
+          },
+          {
+            "day": "2026-11-01",
+            "seconds": 46800
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1793595600000,
+        "sessions": [
+          {
+            "ended_at_ms": 1793552400000,
+            "started_at_ms": 1793491200000
+          }
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "NY fall-back night",
+      "notes": "Nov 1 portion is 13 real hours"
+    },
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-03-07",
+            "seconds": 14400
+          },
+          {
+            "day": "2026-03-08",
+            "seconds": 39600
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1773028800000,
+        "sessions": [
+          {
+            "ended_at_ms": 1772985600000,
+            "started_at_ms": 1772931600000
+          }
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "NY spring-forward night"
+    },
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-09-10",
+            "seconds": 19800
+          },
+          {
+            "day": "2026-09-11",
+            "seconds": 86400
+          },
+          {
+            "day": "2026-09-12",
+            "seconds": 86400
+          },
+          {
+            "day": "2026-09-13",
+            "seconds": 33300
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1789635600000,
+        "sessions": [
+          {
+            "ended_at_ms": 1789287300000,
+            "started_at_ms": 1789061400000
+          }
+        ],
+        "time_zone": "Europe/London"
+      },
+      "name": "three-day fast London"
+    },
+    {
+      "expected": {
+        "days": []
+      },
+      "input": {
+        "now_ms": 1789639200000,
+        "sessions": [
+          {
+            "ended_at_ms": 1789059600000,
+            "started_at_ms": 1789063200000
+          },
+          {
+            "ended_at_ms": 1789113600000,
+            "started_at_ms": 1789113600000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "ended before start ignored"
+    },
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-09-12",
+            "seconds": 36000
+          },
+          {
+            "day": "2026-09-13",
+            "seconds": 28800
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1789639200000,
+        "sessions": [
+          {
+            "ended_at_ms": 1789192800000,
+            "started_at_ms": 1789171200000
+          },
+          {
+            "ended_at_ms": 1789286400000,
+            "started_at_ms": 1789243200000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "two fasts same day add up"
+    },
+    {
+      "expected": {
+        "days": []
+      },
+      "input": {
+        "now_ms": 1789639200000,
+        "sessions": [],
+        "time_zone": "UTC"
+      },
+      "name": "empty"
+    },
+    {
+      "expected": {
+        "days": [
+          {
+            "day": "2026-09-12",
+            "seconds": 3599
+          },
+          {
+            "day": "2026-09-13",
+            "seconds": 3601
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1789639200000,
+        "sessions": [
+          {
+            "ended_at_ms": 1789261201999,
+            "started_at_ms": 1789254000001
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "sub-second remainder floors"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "fasting_hours_per_day",
+  "version": 1
+}

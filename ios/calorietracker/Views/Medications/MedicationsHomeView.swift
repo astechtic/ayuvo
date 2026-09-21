@@ -1,10 +1,9 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// The Meds segment of the Health tab (docs §8): summary, Today timeline, as-needed medicines,
-/// the searchable list with status chips, add / import entry points and the archive export.
-/// Embedded under the Health selector, so it draws its own compact header (the navigation bar is
-/// hidden) and pushes on the Health stack through `path`.
+/// Browse › Medications (docs §8): summary, Today timeline, as-needed medicines, the searchable
+/// list with status chips, add / import entry points and the archive export. Pushed on the Browse
+/// stack, so it uses the real navigation bar and pushes its detail screens through `path`.
 struct MedicationsHomeView: View {
     @Binding var path: NavigationPath
     @Environment(MedicationStore.self) private var store
@@ -27,7 +26,6 @@ struct MedicationsHomeView: View {
         @Bindable var store = store
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 16) {
-                header
                 if let error = store.openError {
                     RecordsCard {
                         Label("Medications couldn't be opened.", systemImage: "exclamationmark.triangle")
@@ -84,6 +82,23 @@ struct MedicationsHomeView: View {
             .padding(.bottom, 24)
         }
         .background(AppColors.appBackground)
+        .navigationTitle("Medications")
+        .navigationBarTitleDisplayMode(.large)
+        .searchable(text: $store.searchText, prompt: Text("Search medicines"))
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                overflowMenu
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showAddForm = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .accessibilityLabel(Text("Add medication"))
+                .accessibilityIdentifier("medications.add")
+            }
+        }
         .refreshable {
             await store.materializeMissedAndCompletions()
             await store.reload()
@@ -148,54 +163,32 @@ struct MedicationsHomeView: View {
         .accessibilityIdentifier("medications.home")
     }
 
-    // MARK: Header
+    // MARK: Toolbar
 
-    private var header: some View {
-        HStack(spacing: 12) {
-            Text("Medications")
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .accessibilityAddTraits(.isHeader)
-            Spacer(minLength: 0)
-            Menu {
-                Button {
-                    showRecordPicker = true
-                } label: {
-                    Label("Add from prescription", systemImage: "doc.text.magnifyingglass")
-                }
-                Divider()
-                Button {
-                    Task { await exportArchive() }
-                } label: {
-                    Label("Export medications…", systemImage: "square.and.arrow.up")
-                }
-                .disabled(store.totalCount == 0 || isExporting)
-                Button {
-                    showImporter = true
-                } label: {
-                    Label("Import…", systemImage: "square.and.arrow.down")
-                }
-            } label: {
-                Image(systemName: "ellipsis.circle")
-                    .font(.system(size: 22))
-                    .foregroundStyle(AppColors.calorie)
-                    .frame(width: 36, height: 36)
-                    .contentShape(Rectangle())
-            }
-            .accessibilityLabel(Text("More"))
-            .accessibilityIdentifier("medications.menu")
+    private var overflowMenu: some View {
+        Menu {
             Button {
-                showAddForm = true
+                showRecordPicker = true
             } label: {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 26))
-                    .foregroundStyle(AppColors.calorie)
-                    .frame(width: 36, height: 36)
-                    .contentShape(Rectangle())
+                Label("Add from prescription", systemImage: "doc.text.magnifyingglass")
             }
-            .accessibilityLabel(Text("Add medication"))
-            .accessibilityIdentifier("medications.add")
+            Divider()
+            Button {
+                Task { await exportArchive() }
+            } label: {
+                Label("Export medications…", systemImage: "square.and.arrow.up")
+            }
+            .disabled(store.totalCount == 0 || isExporting)
+            Button {
+                showImporter = true
+            } label: {
+                Label("Import…", systemImage: "square.and.arrow.down")
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
         }
-        .padding(.top, 4)
+        .accessibilityLabel(Text("More"))
+        .accessibilityIdentifier("medications.menu")
     }
 
     // MARK: Sections
@@ -268,24 +261,6 @@ struct MedicationsHomeView: View {
         return VStack(alignment: .leading, spacing: 12) {
             MedicationSectionHeader(title: String(localized: "All medicines"), systemImage: "list.bullet",
                                     trailing: "\(store.totalCount)")
-            RecordsCard(padding: 10) {
-                HStack(spacing: 8) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
-                    TextField(String(localized: "Search medicines"), text: $store.searchText)
-                        .textFieldStyle(.plain)
-                        .autocorrectionDisabled()
-                        .accessibilityIdentifier("medications.search")
-                    if !store.searchText.isEmpty {
-                        Button {
-                            store.searchText = ""
-                        } label: {
-                            Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary)
-                        }
-                        .accessibilityLabel(Text("Clear search"))
-                    }
-                }
-            }
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(MedicationFilter.allCases) { item in

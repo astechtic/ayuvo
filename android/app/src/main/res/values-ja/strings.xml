@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal モデル。高い精度、無料プランあり。</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">ホーム</string>
     <string name="nav_coach">コーチ</string>
     <string name="nav_settings">設定</string>
     <string name="nav_about">情報</string>
@@ -440,32 +439,12 @@
     <string name="coach_chip_log_advice">記録に基づいたアドバイスは?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1週</string>
-    <string name="progress_range_month">1ヶ月</string>
-    <string name="progress_range_3m">3ヶ月</string>
-    <string name="progress_range_6m">6ヶ月</string>
-    <string name="progress_range_year">1年</string>
-    <string name="progress_range_all">すべて</string>
 
-    <string name="progress_weight_section">体重</string>
-    <string name="progress_log_weight">体重を記録</string>
-    <string name="progress_stat_current">現在</string>
-    <string name="progress_stat_goal">目標</string>
-    <string name="progress_log_first_weight">最初の体重を記録して傾向を確認</string>
 
     <string name="progress_weight_history">体重履歴</string>
     <string name="progress_body_fat_history">体脂肪履歴</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d件 · タップして表示・削除</item>
-        <item quantity="other">%1$d件 · タップして表示・削除</item>
-    </plurals>
 
-    <string name="progress_calories_section">カロリー</string>
-    <string name="progress_avg_format">平均: %1$,d kcal</string>
-    <string name="progress_no_food">まだ食事が記録されていません</string>
 
-    <string name="progress_macro_averages">マクロ平均</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">体重を記録</string>
 
@@ -474,16 +453,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">個人情報</string>
-    <string name="settings_section_goals">目標と栄養</string>
     <string name="settings_section_daily_targets">1日の目標</string>
-    <string name="settings_section_app">App設定</string>
-    <string name="settings_section_tracking_reminders">トラッキングとリマインダー</string>
-    <string name="settings_category_ai_providers">AIプロバイダーとフォールバック</string>
-    <string name="settings_section_workout">ワークアウト</string>
     <string name="settings_section_ai">AIプロバイダ</string>
     <string name="settings_section_speech">音声入力</string>
-    <string name="settings_section_health">ヘルスとデータ</string>
-    <string name="settings_section_data_management">データ管理</string>
 
     <string name="settings_gender">性別</string>
     <string name="settings_birthday">誕生日</string>
@@ -619,32 +591,15 @@
     <string name="sheet_goal_body_fat">体脂肪目標</string>
     <string name="sheet_goal_body_fat_currently">現在%1$d%%</string>
     <string name="action_remove_goal">目標を削除</string>
-    <string name="progress_metric_weight">体重</string>
-    <string name="progress_metric_body_fat">体脂肪</string>
-    <string name="progress_metric_workouts">ワークアウト</string>
     <string name="progress_workout_history">ワークアウト履歴</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">計算済み消費 %1$d 件 · タップして表示または削除</item>
-        <item quantity="other">計算済み消費 %1$d 件 · タップして表示または削除</item>
-    </plurals>
     <string name="progress_workout_delete_title">ワークアウト消費を削除しますか？</string>
     <string name="progress_workout_delete_message">Ayuvo と Health Connect から計算済み消費を削除します。ワークアウト日記のプランは保存されたままです。</string>
-    <string name="progress_workout_section">ワークアウト活動</string>
-    <string name="progress_workout_stat_workouts">ワークアウト</string>
-    <string name="progress_workout_stat_total">総消費</string>
-    <string name="progress_workout_stat_average">平均消費</string>
-    <string name="progress_workout_stat_latest">最新</string>
     <string name="progress_workout_stat_days">日数</string>
-    <string name="progress_workout_no_range">この期間に計算済みのワークアウト消費はありません</string>
-    <string name="progress_workout_chart_description">%1$sから%2$sまでのワークアウト消費グラフ。合計%3$dキロカロリー、最新%4$dキロカロリー。</string>
-    <string name="progress_log_body_fat">体脂肪を記録</string>
-    <string name="progress_log_first_body_fat">傾向を見るには、最初の体脂肪率を記録してください</string>
     <string name="progress_log_body_fat_title">体脂肪を記録</string>
     <string name="notif_body_fat_log_title">体脂肪チェックイン</string>
     <string name="notif_body_fat_log_text">体組成の変化を追跡するために、今日の体脂肪率を記録しましょう。</string>
     <string name="saved_meals_search_placeholder">保存した食事を検索</string>
     <string name="saved_meals_no_match">一致する食事がありません</string>
-    <string name="settings_section_custom_instructions">カスタムAIインストラクション</string>
     <string name="settings_custom_instructions_placeholder">例: ドイツ在住で、ヨーロッパの分量を想定し、ALDI/REWEのブランドを優先します。ボディビルの減量期です。</string>
     <string name="settings_custom_instructions_footer">すべてのAIリクエストと一緒に送信される任意のコンテキスト — 地域、食事制限、トレーニング目標など、毎回繰り返したくない情報。無効にするには空のままにしてください。</string>
     <string name="settings_save">保存</string>

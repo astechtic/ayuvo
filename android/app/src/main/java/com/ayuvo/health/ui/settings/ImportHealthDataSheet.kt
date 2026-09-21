@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.settings
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -100,7 +101,7 @@ fun ImportHealthDataSheet(container: AppContainer, uri: Uri, onDismiss: () -> Un
         onDismissRequest = { if (!importing) onDismiss() },
         sheetState = state,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE),
+        containerColor = AyuvoColors.sheetBackground(),
     ) {
         Column(
             Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 32.dp),

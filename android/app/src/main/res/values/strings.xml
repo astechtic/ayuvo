@@ -195,7 +195,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal model. Strong accuracy, free tier available.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Home</string>
     <string name="nav_coach">Coach</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_about">About</string>
@@ -261,11 +260,6 @@
     <string name="onboarding_body_fat_no_worries">No worries! We\'ll use a standard formula\nbased on your height, weight, and age.</string>
     <string name="onboarding_goal_optional">Goal (optional)</string>
     <string name="onboarding_goal_set_later">You can set this later in Settings.</string>
-    <string name="progress_metric_weight">Weight</string>
-    <string name="progress_metric_body_fat">Body Fat</string>
-    <string name="progress_metric_workouts">Workouts</string>
-    <string name="progress_log_body_fat">Log Body Fat</string>
-    <string name="progress_log_first_body_fat">Log your first body fat % to see trends</string>
     <string name="progress_log_body_fat_title">Log Body Fat</string>
     <string name="saved_meals_search_placeholder">Search saved foods</string>
     <string name="saved_meals_no_match">No matching foods</string>
@@ -363,26 +357,8 @@
         <item quantity="other">%1$s steps</item>
     </plurals>
 
-    <string name="home_summary_title">Summary</string>
-    <string name="home_highlights_title">Important Highlights</string>
-    <string name="home_highlights_subtitle">Lab &amp; Clinical Alerts</string>
-    <string name="home_highlights_none">No new alerts right now.</string>
-    <string name="home_highlights_empty">Add a medical record to see highlights here.</string>
-    <plurals name="home_highlights_pending">
-        <item quantity="one">%1$d Pending</item>
-        <item quantity="other">%1$d Pending</item>
-    </plurals>
-    <plurals name="home_review_all_records">
-        <item quantity="one">Review %1$d Medical Record</item>
-        <item quantity="other">Review All %1$d Medical Records</item>
-    </plurals>
-    <string name="home_workouts_empty">No workouts logged yet — tap to start one.</string>
     <string name="home_workout_fallback_title">Workout</string>
     <string name="home_workout_title_plus_more">%1$s +%2$d more</string>
-    <plurals name="home_workouts_logged">
-        <item quantity="one">%1$d Workout Logged</item>
-        <item quantity="other">%1$d Workouts Logged</item>
-    </plurals>
     <string name="home_add_food">Add food</string>
     <string name="home_menu_camera">Camera</string>
     <string name="home_menu_barcode">Barcode</string>
@@ -554,55 +530,20 @@
     <string name="coach_chip_training" translatable="false">How is my recent training?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1W</string>
-    <string name="progress_range_month">1M</string>
-    <string name="progress_range_3m">3M</string>
-    <string name="progress_range_6m">6M</string>
-    <string name="progress_range_year">1Y</string>
-    <string name="progress_range_all">All</string>
-
-    <string name="progress_weight_section">Weight</string>
-    <string name="progress_log_weight">Log Weight</string>
-    <string name="progress_stat_current">Current</string>
-    <string name="progress_stat_goal">Goal</string>
-    <string name="progress_stat_net_change">Net Change</string>
-    <string name="progress_stat_average">Average</string>
-    <string name="progress_log_first_weight">Log your first weight to see trends</string>
-
     <string name="progress_weight_history">Weight History</string>
     <string name="progress_body_fat_history">Body Fat History</string>
     <string name="progress_workout_history">Workout History</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d calculated burn · tap to view or delete</item>
-        <item quantity="other">%1$d calculated burns · tap to view or delete</item>
-    </plurals>
     <string name="progress_workout_delete_title">Delete workout burn?</string>
     <string name="progress_workout_delete_message">This removes the calculated burn from Ayuvo and Health Connect. Your workout diary plan stays saved.</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d entry · tap to view or delete</item>
-        <item quantity="other">%1$d entries · tap to view or delete</item>
-    </plurals>
-
-    <string name="progress_workout_section">Workout Activity</string>
-    <string name="progress_workout_stat_workouts">Workouts</string>
-    <string name="progress_workout_stat_total">Total Burn</string>
-    <string name="progress_workout_stat_average">Avg Burn</string>
-    <string name="progress_workout_stat_latest">Latest</string>
     <string name="progress_workout_stat_days">Days</string>
-    <string name="progress_workout_no_range">No calculated workout burns in this range</string>
-    <string name="progress_workout_chart_description">Workout burn chart from %1$s to %2$s. Total %3$d kilocalories; latest %4$d kilocalories.</string>
 
 
-    <string name="progress_calories_section">Calories</string>
-    <string name="progress_avg_format">Avg: %1$,d kcal</string>
-    <string name="progress_no_food">No food logged yet</string>
 
-    <string name="progress_macro_averages">Macro Averages</string>
-    <string name="progress_nutrient_averages">Nutrient Averages</string>
-    <string name="progress_loading_nutrition">Loading nutrition…</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Log Weight</string>
+
+
+
 
     <string name="progress_goal_reached_title">Congratulations! 🎉</string>
     <string name="progress_goal_reached_message">You\'ve reached your goal weight! Head to Settings to switch your goal and tap Recalculate Goals to refresh your targets.</string>
@@ -633,11 +574,7 @@
     <string name="settings_allergen_import_none_found">No clearly positive or elevated sensitizations were found in this report.</string>
     <string name="settings_allergen_import_failed">The lab report could not be read.</string>
     <string name="settings_allergen_import_read_failed">Could not read the selected file.</string>
-    <string name="settings_section_goals">Goals &amp; Nutrition</string>
     <string name="settings_section_daily_targets">Daily Targets</string>
-    <string name="settings_section_app">App Settings</string>
-    <string name="settings_section_tracking_reminders">Tracking &amp; Reminders</string>
-    <string name="settings_category_ai_providers">AI Providers &amp; Fallbacks</string>
     <string name="settings_section_ai_voice">AI &amp; Voice</string>
     <string name="settings_section_ai">Primary AI</string>
     <string name="settings_on_device_models">On-device models</string>
@@ -652,7 +589,6 @@
     <string name="settings_model_low_ram_unsupported">Not supported on low-RAM devices</string>
     <string name="settings_model_processor_unsupported">This device’s processor is not supported</string>
     <string name="settings_section_text_ai">Text AI</string>
-    <string name="settings_info_about_format" translatable="false">About %1$s</string>
     <string name="settings_info_primary_ai" translatable="false">Handles every request that includes a photo. It also handles text-only requests when Use Separate Text Provider is off. When that switch is on, Text AI handles text-only work instead.</string>
     <string name="settings_info_text_ai" translatable="false">An optional provider for requests without photos, including typed food, Coach chat, voice transcripts, goals, and advice. When Use Separate Text Provider is off, Primary AI handles these requests.</string>
     <string name="settings_info_text_fallback" translatable="false">Retries a failed text-only request once. It backs up Text AI when the separate provider is enabled; otherwise it backs up Primary AI for text-only work. It never receives photos.</string>
@@ -667,14 +603,11 @@
     <string name="settings_section_speech_fallback">STT Fallback</string>
     <string name="settings_speech_fallback_footer">Used only when the selected recorded-audio speech provider fails. Native speech already retries its on-device and online recognition modes.</string>
     <string name="settings_native_speech_fallback_footer">Native speech already recovers automatically across Android’s on-device, online, and automatic recognition modes. Choose a remote speech provider above to configure a separate provider fallback.</string>
-    <string name="settings_section_workout">Workout</string>
     <string name="settings_training_split" translatable="false">Training Split</string>
     <string name="settings_rpe_scale" translatable="false">RPE Scale</string>
     <string name="settings_rpe_guide" translatable="false">Strength 1–10: 1 is very easy and 10 is maximum effort.\nCR10 0–10: perceived exertion with decimals allowed.\nBorg 6–20: classic whole-number exertion scale.</string>
     <string name="settings_workout_health_access" translatable="false">Workout Burn Sync</string>
     <string name="settings_grant_permission" translatable="false">Grant permission</string>
-    <string name="settings_section_health">Health &amp; Data</string>
-    <string name="settings_section_data_management">Data Management</string>
 
     <string name="settings_gender">Gender</string>
     <string name="settings_birthday">Birthday</string>
@@ -810,7 +743,6 @@
     <string name="settings_clear_key">Clear key</string>
 
     <!-- Custom AI Instructions + Fallback Provider (v1.0.6) -->
-    <string name="settings_section_custom_instructions">Custom AI Instructions</string>
     <string name="settings_custom_instructions_placeholder">e.g. I live in Germany, assume European portion sizes, prefer ALDI/REWE brands. I\'m on a bodybuilding cut.</string>
     <string name="settings_custom_instructions_footer">Optional context sent with every AI request — region, diet, athletic goals, anything you\'d otherwise repeat each time. Leave empty to disable.</string>
     <string name="settings_save">Save</string>
@@ -947,10 +879,6 @@
     <string name="support_subject_contact">Ayuvo support</string>
     <string name="support_subject_feedback">Ayuvo feedback</string>
     <string name="support_body_intro">Describe the problem or idea here:\n\n</string>
-    <string name="nav_health">Health</string>
-    <string name="health_tab_food">Food</string>
-    <string name="health_tab_progress">Progress</string>
-    <string name="health_tab_data">Health Data</string>
     <string name="about_share_message">I track my whole health with Ayuvo — meals by photo, voice or text, workouts, sleep, heart, fasting and water, with an AI coach. Your data stays on your device.\n\nDownload: %1$s</string>
     <string name="about_share_chooser">Share Ayuvo</string>
 
@@ -1379,7 +1307,6 @@
     <string name="workout_rpe_help_borg">Optional—how hard this set felt. Borg scale: 6 = no exertion; 20 = maximum exertion. Use whole numbers. Leave blank if unsure.</string>
     <!-- Navigation: Records tab + Workouts as a Health segment -->
     <string name="nav_records">Records</string>
-    <string name="home_workouts_shortcut_subtitle">Log a session or browse exercises</string>
 
     <!-- Health Records (docs/health-records.md) -->
     <string name="records_title">Records</string>
@@ -1627,6 +1554,4 @@
     <string name="records_settings_backup_subtitle">Archive, restore, Drive</string>
     <string name="records_backup_drive_backup_now">Back up now to Drive</string>
     <string name="records_backup_drive_reauth">Drive sign-in expired — turn the toggle off and on again to sign in.</string>
-    <string name="settings_data_mgmt_records_storage">Health Records Storage</string>
-    <string name="settings_data_mgmt_records_backup">Health Records Backup &amp; Restore</string>
 </resources>

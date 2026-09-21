@@ -207,7 +207,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.play.app.update)
     implementation(libs.play.services.auth)
-    implementation(libs.vico.compose.m3)
     implementation(libs.litert.lm.android)
     implementation(libs.whisper.android)
 

@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.settings
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import android.content.Intent
 import androidx.core.content.FileProvider
 import androidx.compose.foundation.background
@@ -86,7 +87,7 @@ fun ExportDiarySheet(
         onDismissRequest = onDismiss,
         sheetState = state,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE),
+        containerColor = AyuvoColors.sheetBackground(),
     ) {
         Column(
             Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 28.dp),

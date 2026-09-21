@@ -1,0 +1,218 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "anchor_date": "2026-02-28",
+        "anchor_ms": 1772236800000
+      },
+      "input": {
+        "anchor_ms": 1769860800000,
+        "direction": 1,
+        "now_ms": 1789639200000,
+        "range": "M",
+        "time_zone": "UTC"
+      },
+      "name": "M forward from Jan 31 clamps to Feb 28"
+    },
+    {
+      "expected": {
+        "anchor_date": "2028-02-29",
+        "anchor_ms": 1835395200000
+      },
+      "input": {
+        "anchor_ms": 1832932800000,
+        "direction": 1,
+        "now_ms": 1859241600000,
+        "range": "M",
+        "time_zone": "UTC"
+      },
+      "name": "M forward from Jan 31 leap year"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-02-28",
+        "anchor_ms": 1772217000000
+      },
+      "input": {
+        "anchor_ms": 1774924200000,
+        "direction": -1,
+        "now_ms": 1789619400000,
+        "range": "M",
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "M back from Mar 31"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-17",
+        "anchor_ms": 1789583400000
+      },
+      "input": {
+        "anchor_ms": 1789612200000,
+        "direction": 1,
+        "now_ms": 1789619400000,
+        "range": "D",
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "D forward on today stays today"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-16",
+        "anchor_ms": 1789497000000
+      },
+      "input": {
+        "anchor_ms": 1789612200000,
+        "direction": -1,
+        "now_ms": 1789619400000,
+        "range": "D",
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "D back from today"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-03-08",
+        "anchor_ms": 1772946000000
+      },
+      "input": {
+        "anchor_ms": 1773072000000,
+        "direction": -1,
+        "now_ms": 1789653600000,
+        "range": "D",
+        "time_zone": "America/New_York"
+      },
+      "name": "D back across NY DST start"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-17",
+        "anchor_ms": 1789599600000
+      },
+      "input": {
+        "anchor_ms": 1789369200000,
+        "direction": 1,
+        "now_ms": 1789635600000,
+        "range": "W",
+        "time_zone": "Europe/London"
+      },
+      "name": "W forward capped at today"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-10",
+        "anchor_ms": 1788994800000
+      },
+      "input": {
+        "anchor_ms": 1789628400000,
+        "direction": -1,
+        "now_ms": 1789635600000,
+        "range": "W",
+        "time_zone": "Europe/London"
+      },
+      "name": "W back"
+    },
+    {
+      "expected": {
+        "anchor_date": "2025-09-15",
+        "anchor_ms": 1757894400000
+      },
+      "input": {
+        "anchor_ms": 1773561600000,
+        "direction": -1,
+        "now_ms": 1789639200000,
+        "range": "6M",
+        "time_zone": "UTC"
+      },
+      "name": "6M back across year boundary"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-17",
+        "anchor_ms": 1789617600000
+      },
+      "input": {
+        "anchor_ms": 1781524800000,
+        "direction": 1,
+        "now_ms": 1789653600000,
+        "range": "6M",
+        "time_zone": "America/New_York"
+      },
+      "name": "6M forward capped"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-02-28",
+        "anchor_ms": 1772254800000
+      },
+      "input": {
+        "anchor_ms": 1788177600000,
+        "direction": -1,
+        "now_ms": 1789653600000,
+        "range": "6M",
+        "time_zone": "America/New_York"
+      },
+      "name": "6M back from Aug 31",
+      "notes": "Aug 31 - 6 months = Feb 28"
+    },
+    {
+      "expected": {
+        "anchor_date": "2027-02-28",
+        "anchor_ms": 1803772800000
+      },
+      "input": {
+        "anchor_ms": 1835424000000,
+        "direction": -1,
+        "now_ms": 1835481600000,
+        "range": "Y",
+        "time_zone": "UTC"
+      },
+      "name": "Y back from leap day"
+    },
+    {
+      "expected": {
+        "anchor_date": "2028-02-28",
+        "anchor_ms": 1835308800000
+      },
+      "input": {
+        "anchor_ms": 1803801600000,
+        "direction": 1,
+        "now_ms": 1861920000000,
+        "range": "Y",
+        "time_zone": "UTC"
+      },
+      "name": "Y forward to leap year"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-17",
+        "anchor_ms": 1789583400000
+      },
+      "input": {
+        "anchor_ms": 1768012200000,
+        "direction": 1,
+        "now_ms": 1789619400000,
+        "range": "Y",
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "Y forward capped"
+    },
+    {
+      "expected": {
+        "anchor_date": "2026-09-16",
+        "anchor_ms": 1789497000000
+      },
+      "input": {
+        "anchor_ms": 1789495200000,
+        "direction": 1,
+        "now_ms": 1789619400000,
+        "range": "D",
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "D forward late evening Kolkata"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "step_anchor",
+  "version": 1
+}

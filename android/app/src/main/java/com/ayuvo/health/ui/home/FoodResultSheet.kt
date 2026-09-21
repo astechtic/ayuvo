@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.home
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -239,7 +240,7 @@ fun FoodResultSheet(
     var mealMenuExpanded by rememberSaveable { mutableStateOf(false) }
     var servingMenuExpanded by rememberSaveable { mutableStateOf(false) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val sheetSurface = if (isDark) MaterialTheme.colorScheme.surface else Color(0xFFFAF3EE)
+    val sheetSurface = AyuvoColors.sheetBackground()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val dismissKeyboard = {

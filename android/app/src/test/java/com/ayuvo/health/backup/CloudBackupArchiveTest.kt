@@ -83,6 +83,10 @@ class CloudBackupArchiveTest {
             "coachHealthDataEnabled" to CloudBackupValue.bool(true),
             "coachHealthDataConsentedAt" to CloudBackupValue.string("2026-09-14T12:00:00Z"),
             "healthHomeTiles" to CloudBackupValue.string("steps,sleep"),
+            // Summary preferences (docs/ui-structure.md §4) are cloud-backed.
+            "summaryFavourites" to CloudBackupValue.string("app:calories,steps"),
+            "dailyStepGoal" to CloudBackupValue.int(8000),
+            "summaryChecklistDismissed" to CloudBackupValue.bool(true),
         )
         val unpack = CloudBackupArchive.unpack(
             CloudBackupArchive.pack(values = values, photos = emptyMap(), exportedAt = "2026-09-14T12:00:00Z", appVersion = "7.0")
@@ -92,7 +96,10 @@ class CloudBackupArchiveTest {
             assertFalse("$excluded must be excluded", excluded in kept)
         }
         assertEquals(
-            setOf("healthHubEnabled", "coachHealthDataEnabled", "coachHealthDataConsentedAt", "healthHomeTiles"),
+            setOf(
+                "healthHubEnabled", "coachHealthDataEnabled", "coachHealthDataConsentedAt", "healthHomeTiles",
+                "summaryFavourites", "dailyStepGoal", "summaryChecklistDismissed"
+            ),
             kept
         )
         // No key in the archive may carry a health sample table name or the DB file.

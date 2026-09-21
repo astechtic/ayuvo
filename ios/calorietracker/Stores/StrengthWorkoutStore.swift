@@ -22,7 +22,11 @@ final class StrengthWorkoutStore {
     static let currentStateVersion = 2
 
     private(set) var dayPlans: [String: StrengthWorkoutDayPlan] = [:]
-    private(set) var completedSessions: [StrengthWorkoutSession] = []
+    private(set) var completedSessions: [StrengthWorkoutSession] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `completedSessions` (metric caches key on it).
+    private(set) var revision = 0
     private(set) var savedExerciseIDs: Set<String> = []
     private(set) var preferences = StrengthWorkoutPreferences()
     private(set) var customActivities: [StrengthPlannedExercise] = []

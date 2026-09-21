@@ -62,7 +62,11 @@ struct WaterEntry: Codable, Identifiable, Equatable {
 
 @Observable
 final class WaterStore {
-    private(set) var entries: [WaterEntry] = []
+    private(set) var entries: [WaterEntry] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `entries` (metric caches key on it).
+    private(set) var revision = 0
     var onEntriesChanged: (() -> Void)?
     private let entriesBlob: PersistedBlobGuard
 

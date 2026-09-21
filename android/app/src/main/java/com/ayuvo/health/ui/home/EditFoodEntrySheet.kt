@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.home
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -173,7 +174,7 @@ fun EditFoodEntrySheet(
     var showTimePicker by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val sheetSurface = if (isDark) MaterialTheme.colorScheme.surface else Color(0xFFFAF3EE)
+    val sheetSurface = AyuvoColors.sheetBackground()
     val context = LocalContext.current
     val reprocessingFailed = stringResource(R.string.edit_reprocessing_failed)
     val focusManager = LocalFocusManager.current

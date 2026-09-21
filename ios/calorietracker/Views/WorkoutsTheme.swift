@@ -9,37 +9,26 @@ import UIKit
 // with Ayuvo's default look while keeping their code byte-for-byte close to Delts.
 
 extension Color {
-    /// Screen background — Ayuvo's warm cream in light, near-black in dark.
-    static var workoutBackground: Color { AppColors.appBackground }
+    // Apple-flat aliases (docs/ui-structure.md): the workout surfaces use the neutral grouped
+    // palette and the Activity domain colour instead of a second colour vocabulary.
+
+    /// Screen background.
+    static var workoutBackground: Color { AyuvoPalette.screenBackground }
 
     /// Card surface behind rows and hero imagery.
-    static var workoutCard: Color { AppColors.appCard }
+    static var workoutCard: Color { AyuvoPalette.card }
 
-    /// Elevated panel behind menus / pills — one step off the card tone.
-    static var workoutPanel: Color {
-        Color(uiColor: UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(red: 0.165, green: 0.165, blue: 0.180, alpha: 1)
-                : UIColor(red: 0.937, green: 0.906, blue: 0.875, alpha: 1)
-        })
-    }
+    /// Elevated panel behind menus / pills.
+    static var workoutPanel: Color { AyuvoPalette.panel }
 
-    /// Hairline strokes — matches Ayuvo's divider tones.
-    static var workoutHairline: Color {
-        Color(uiColor: UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(red: 0.173, green: 0.173, blue: 0.180, alpha: 1)
-                : UIColor(red: 0.780, green: 0.760, blue: 0.740, alpha: 1)
-        })
-    }
+    /// Hairline strokes.
+    static var workoutHairline: Color { AyuvoPalette.separator }
 
-    /// Primary accent — the user's Ayuvo theme color (default Rose).
-    static var workoutAccent: Color { AppColors.calorie }
+    /// Primary accent — the Activity domain colour.
+    static var workoutAccent: Color { AyuvoPalette.activity }
 
-    /// Softer companion accent — the gradient end of the theme color.
-    static var workoutSecondaryAccent: Color {
-        AppThemeColor.current.gradientColors.last ?? AppColors.calorie
-    }
+    /// Softer companion accent.
+    static var workoutSecondaryAccent: Color { AyuvoPalette.activity.opacity(0.7) }
 
     /// Delts aliased "inferno" to its secondary accent; keep the alias.
     static var workoutInferno: Color { Color.workoutSecondaryAccent }
@@ -79,23 +68,10 @@ extension View {
 
 private struct WorkoutLiquidBarSurfaceModifier: ViewModifier {
     let cornerRadius: CGFloat
-    @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
-        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-
-        if colorScheme == .light {
-            content
-                .background(Color.workoutPanel.opacity(0.72), in: shape)
-                .overlay(shape.stroke(Color.workoutHairline.opacity(0.58), lineWidth: 0.6))
-        } else if #available(iOS 26.0, *) {
-            content
-                .glassEffect(.regular.interactive(), in: shape)
-        } else {
-            content
-                .background(Color.workoutPanel.opacity(0.62), in: shape)
-                .overlay(shape.stroke(Color.workoutHairline.opacity(0.52), lineWidth: 0.5))
-        }
+        content
+            .background(Color.workoutPanel, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
     }
 }
 

@@ -126,40 +126,38 @@ final class AyuvoSmokeUITests: XCTestCase {
         settleHealthAccessSheet(app, timeout: 8)
 
         // Tab bar
-        for tab in ["Home", "Health", "Records", "Coach", "Settings"] {
+        for tab in ["Summary", "Browse", "Records", "Coach", "Settings"] {
             XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 10), "Missing tab \(tab)")
         }
-        XCTAssertFalse(app.tabBars.buttons["Progress"].exists, "Progress tab should be renamed Health")
-        XCTAssertFalse(app.tabBars.buttons["Workouts"].exists, "Workouts moved into the Health tab")
+        XCTAssertFalse(app.tabBars.buttons["Home"].exists, "Home became Summary")
+        XCTAssertFalse(app.tabBars.buttons["Health"].exists, "The Health tab was replaced by Browse")
 
-        // Home: Health Data card leads the dashboard
-        XCTAssertTrue(app.staticTexts["Health Data"].firstMatch.waitForExistence(timeout: 10))
+        // Summary: rings and favourites
+        XCTAssertTrue(app.otherElements["summary.rings"].waitForExistence(timeout: 10), "Summary should show the rings card")
+        XCTAssertTrue(app.staticTexts["Favourites"].firstMatch.waitForExistence(timeout: 10))
         _ = app.staticTexts["Steps"].firstMatch.waitForExistence(timeout: 120)
-        shot(app, "02-home-dashboard")
+        shot(app, "02-summary")
 
-        // Health tab: Progress | Health Data | Workouts
-        app.tabBars.buttons["Health"].tap()
-        XCTAssertTrue(app.buttons["Progress"].firstMatch.waitForExistence(timeout: 8), "Health tab should show the Progress segment")
-        XCTAssertTrue(app.buttons["Health Data"].firstMatch.exists, "Health tab should show the Health Data segment")
-        let progressSegment = app.buttons["Progress"].firstMatch
-        let healthDataSegment = app.buttons["Health Data"].firstMatch
-        let progressFrame = progressSegment.frame
-        let healthDataFrame = healthDataSegment.frame
-        XCTAssertEqual(progressFrame.width, healthDataFrame.width, accuracy: 1, "Selector segments should share the track equally")
-        shot(app, "03-health-progress")
-        tapLabel(healthDataSegment)
-        XCTAssertTrue(app.textFields["healthHub.search"].waitForExistence(timeout: 8), "Health Data segment should host the hub with its search field")
-        XCTAssertFalse(app.navigationBars["Health Data"].exists, "No navigation bar may appear above the selector")
-        RunLoop.current.run(until: Date().addingTimeInterval(0.6))
-        XCTAssertEqual(progressSegment.frame.minY, progressFrame.minY, accuracy: 0.5, "Selector must not move when switching panes")
-        XCTAssertEqual(healthDataSegment.frame.minY, healthDataFrame.minY, accuracy: 0.5, "Selector must not move when switching panes")
-        XCTAssertEqual(healthDataSegment.frame.width, healthDataFrame.width, accuracy: 0.5, "Selector segments must keep their width")
-        shot(app, "04-health-data-hub")
-        let activity = app.staticTexts["Activity"].firstMatch
+        // Browse: searchable domain list
+        app.tabBars.buttons["Browse"].tap()
+        XCTAssertTrue(app.navigationBars["Browse"].waitForExistence(timeout: 8), "Browse should use a real navigation bar")
+        XCTAssertTrue(app.searchFields.firstMatch.waitForExistence(timeout: 8), "Browse should be searchable")
+        shot(app, "03-browse")
+        let activity = app.buttons["browse.row.activity"].firstMatch
         if activity.waitForExistence(timeout: 10) {
-            tapLabel(activity)
-            XCTAssertTrue(app.navigationBars["Activity"].waitForExistence(timeout: 8), "Category push must work inside the Health tab")
-            shot(app, "05-health-category")
+            activity.tap()
+            XCTAssertTrue(app.navigationBars["Activity"].waitForExistence(timeout: 8), "Category push must work on the Browse stack")
+            shot(app, "04-browse-activity")
+
+            // Workouts and the exercise library live under Activity now.
+            let workouts = app.buttons["browse.link.workouts"].firstMatch
+            if workouts.waitForExistence(timeout: 8) {
+                workouts.tap()
+                XCTAssertTrue(app.navigationBars["Workouts"].waitForExistence(timeout: 10), "Workouts should push with its own title")
+                XCTAssertTrue(app.buttons["Exercise library"].firstMatch.waitForExistence(timeout: 8))
+                shot(app, "05-workouts")
+                goBack(app)
+            }
             goBack(app)
         }
 
@@ -167,18 +165,6 @@ final class AyuvoSmokeUITests: XCTestCase {
         app.tabBars.buttons["Coach"].tap()
         XCTAssertTrue(app.staticTexts["Ask Ayuvo"].waitForExistence(timeout: 8))
         shot(app, "06-coach-empty-state")
-
-        // Workouts: third Health pane (no navigation bar above the selector)
-        app.tabBars.buttons["Health"].tap()
-        let workoutsSegment = app.buttons["Workouts"].firstMatch
-        XCTAssertTrue(workoutsSegment.waitForExistence(timeout: 8), "Health tab should show the Workouts segment")
-        tapLabel(workoutsSegment)
-        XCTAssertTrue(
-            app.buttons["Exercise library"].firstMatch.waitForExistence(timeout: 8)
-                || app.textFields["workouts.search"].waitForExistence(timeout: 2),
-            "Workouts segment should host the workout log or library"
-        )
-        shot(app, "07-workouts")
 
         // Records
         app.tabBars.buttons["Records"].tap()

@@ -5,13 +5,21 @@ import UIKit
 // Serialized: several tests save/mutate/restore shared UserDefaults-backed settings.
 @Suite(.serialized)
 struct AIRequestConfigurationTests {
-    @Test func settingsHubKeepsEveryFocusedCategory() {
-        #expect(ProfileSettingsCategory.allCases.count == 14)
-        #expect(Set(ProfileSettingsCategory.allCases.map(\.rawValue)).count == 14)
-        #expect(ProfileSettingsCategory.preferenceCases.count == 11)
-        #expect(ProfileSettingsCategory.preferenceCases.contains(.healthRecords))
-        #expect(ProfileSettingsCategory.appInfoCases.count == 3)
-        #expect(ProfileSettingsCategory.allCases.compactMap(\.aboutCategory).count == 3)
+    @Test func settingsPanesFollowThePlanGroups() {
+        #expect(SettingsPane.allCases.count == 20)
+        #expect(Set(SettingsPane.allCases.map(\.rawValue)).count == 20)
+        #expect(SettingsGroup.healthProfile.panes == [.personalInfo, .goalsNutrition, .units])
+        #expect(SettingsGroup.tracking.panes == [.nutritionTracking, .hydration, .fasting, .activity, .medications])
+        #expect(SettingsGroup.notifications.panes == [.notifications])
+        #expect(SettingsGroup.dataPrivacy.panes == [.healthData, .healthRecords, .dataManagement, .deleteData])
+        #expect(SettingsGroup.aiSpeech.panes == [.aiProviders, .speechToText, .customInstructions])
+        #expect(SettingsGroup.appearance.panes == [.appearance])
+        #expect(SettingsGroup.about.panes == [.appUpdates, .helpSupport, .legal])
+        #expect(SettingsPane.allCases.compactMap(\.aboutCategory).count == 3)
+        // Raw values back the `settings.category.<rawValue>` ids the UI tests use.
+        for raw in ["appUpdates", "helpSupport", "legal", "dataManagement", "healthRecords", "aiProviders", "speechToText"] {
+            #expect(SettingsPane(rawValue: raw) != nil, "missing settings pane \(raw)")
+        }
     }
 
     @Test func appInfoKeepsEveryFocusedCategory() {

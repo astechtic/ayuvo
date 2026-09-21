@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">Modello AssemblyAI Universal. Forte precisione, piano gratuito disponibile.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Home</string>
     <string name="nav_coach">Coach</string>
     <string name="nav_settings">Impostazioni</string>
     <string name="nav_about">Informazioni</string>
@@ -442,32 +441,12 @@
     <string name="coach_chip_log_advice">Qualche consiglio basato sul mio registro?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1S</string>
-    <string name="progress_range_month">1M</string>
-    <string name="progress_range_3m">3M</string>
-    <string name="progress_range_6m">6M</string>
-    <string name="progress_range_year">1A</string>
-    <string name="progress_range_all">Tutto</string>
 
-    <string name="progress_weight_section">Peso</string>
-    <string name="progress_log_weight">Registra peso</string>
-    <string name="progress_stat_current">Attuale</string>
-    <string name="progress_stat_goal">Obiettivo</string>
-    <string name="progress_log_first_weight">Registra il tuo primo peso per vedere le tendenze</string>
 
     <string name="progress_weight_history">Cronologia peso</string>
     <string name="progress_body_fat_history">Cronologia grasso corporeo</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d voce · tocca per visualizzare o eliminare</item>
-        <item quantity="other">%1$d voci · tocca per visualizzare o eliminare</item>
-    </plurals>
 
-    <string name="progress_calories_section">Calorie</string>
-    <string name="progress_avg_format">Media: %1$,d kcal</string>
-    <string name="progress_no_food">Nessun cibo ancora registrato</string>
 
-    <string name="progress_macro_averages">Medie macro</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Registra peso</string>
 
@@ -476,16 +455,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Informazioni personali</string>
-    <string name="settings_section_goals">Obiettivi e nutrizione</string>
     <string name="settings_section_daily_targets">Obiettivi giornalieri</string>
-    <string name="settings_section_app">Impostazioni app</string>
-    <string name="settings_section_tracking_reminders">Monitoraggio e promemoria</string>
-    <string name="settings_category_ai_providers">Provider IA e alternative</string>
-    <string name="settings_section_workout">Allenamento</string>
     <string name="settings_section_ai">Fornitore IA</string>
     <string name="settings_section_speech">Da voce a testo</string>
-    <string name="settings_section_health">Salute e dati</string>
-    <string name="settings_section_data_management">Gestione dati</string>
 
     <string name="settings_gender">Genere</string>
     <string name="settings_birthday">Data di nascita</string>
@@ -621,32 +593,15 @@
     <string name="sheet_goal_body_fat">Obiettivo grasso corporeo</string>
     <string name="sheet_goal_body_fat_currently">Attuale %1$d%%</string>
     <string name="action_remove_goal">Rimuovi obiettivo</string>
-    <string name="progress_metric_weight">Peso</string>
-    <string name="progress_metric_body_fat">Grasso corporeo</string>
-    <string name="progress_metric_workouts">Allenamenti</string>
     <string name="progress_workout_history">Cronologia allenamenti</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d consumo calcolato · tocca per vedere o eliminare</item>
-        <item quantity="other">%1$d consumi calcolati · tocca per vedere o eliminare</item>
-    </plurals>
     <string name="progress_workout_delete_title">Eliminare il consumo dell’allenamento?</string>
     <string name="progress_workout_delete_message">Rimuove il consumo calcolato da Ayuvo e Health Connect. Il piano del diario allenamenti resta salvato.</string>
-    <string name="progress_workout_section">Attività di allenamento</string>
-    <string name="progress_workout_stat_workouts">Allenamenti</string>
-    <string name="progress_workout_stat_total">Consumo totale</string>
-    <string name="progress_workout_stat_average">Consumo medio</string>
-    <string name="progress_workout_stat_latest">Ultimo</string>
     <string name="progress_workout_stat_days">Giorni</string>
-    <string name="progress_workout_no_range">Nessun consumo di allenamento calcolato in questo intervallo</string>
-    <string name="progress_workout_chart_description">Grafico del consumo degli allenamenti dal %1$s al %2$s. Totale: %3$d chilocalorie; ultimo: %4$d chilocalorie.</string>
-    <string name="progress_log_body_fat">Registra grasso corporeo</string>
-    <string name="progress_log_first_body_fat">Registra il tuo primo % di grasso corporeo per vedere le tendenze</string>
     <string name="progress_log_body_fat_title">Registra grasso corporeo</string>
     <string name="notif_body_fat_log_title">Controllo grasso corporeo</string>
     <string name="notif_body_fat_log_text">Registra il tuo grasso corporeo oggi per seguire l\'andamento della composizione.</string>
     <string name="saved_meals_search_placeholder">Cerca tra i pasti salvati</string>
     <string name="saved_meals_no_match">Nessun pasto corrispondente</string>
-    <string name="settings_section_custom_instructions">Istruzioni IA personalizzate</string>
     <string name="settings_custom_instructions_placeholder">Es. vivo in Germania, considera porzioni europee, preferisco i marchi ALDI/REWE. Sono in fase di definizione per il bodybuilding.</string>
     <string name="settings_custom_instructions_footer">Contesto opzionale inviato a ogni richiesta IA — regione, dieta, obiettivi sportivi, qualsiasi cosa che altrimenti ripeteresti ogni volta. Lascia vuoto per disattivare.</string>
     <string name="settings_save">Salva</string>

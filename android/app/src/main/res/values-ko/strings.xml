@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal 모델. 높은 정확도, 무료 등급 제공.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">홈</string>
     <string name="nav_coach">코치</string>
     <string name="nav_settings">설정</string>
     <string name="nav_about">정보</string>
@@ -440,32 +439,12 @@
     <string name="coach_chip_log_advice">제 기록을 보고 조언해 주세요?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1주</string>
-    <string name="progress_range_month">1개월</string>
-    <string name="progress_range_3m">3개월</string>
-    <string name="progress_range_6m">6개월</string>
-    <string name="progress_range_year">1년</string>
-    <string name="progress_range_all">전체</string>
 
-    <string name="progress_weight_section">체중</string>
-    <string name="progress_log_weight">체중 기록</string>
-    <string name="progress_stat_current">현재</string>
-    <string name="progress_stat_goal">목표</string>
-    <string name="progress_log_first_weight">추세를 보려면 첫 체중을 기록하세요</string>
 
     <string name="progress_weight_history">체중 기록</string>
     <string name="progress_body_fat_history">체지방 기록</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d개 항목 · 탭하여 보거나 삭제</item>
-        <item quantity="other">%1$d개 항목 · 탭하여 보거나 삭제</item>
-    </plurals>
 
-    <string name="progress_calories_section">칼로리</string>
-    <string name="progress_avg_format">평균: %1$,d kcal</string>
-    <string name="progress_no_food">아직 기록된 음식이 없어요</string>
 
-    <string name="progress_macro_averages">매크로 평균</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">체중 기록</string>
 
@@ -474,16 +453,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">개인 정보</string>
-    <string name="settings_section_goals">목표 및 영양</string>
     <string name="settings_section_daily_targets">일일 목표</string>
-    <string name="settings_section_app">앱 설정</string>
-    <string name="settings_section_tracking_reminders">추적 및 알림</string>
-    <string name="settings_category_ai_providers">AI 제공업체 및 대체 옵션</string>
-    <string name="settings_section_workout">운동</string>
     <string name="settings_section_ai">AI 제공자</string>
     <string name="settings_section_speech">음성 텍스트 변환</string>
-    <string name="settings_section_health">건강 및 데이터</string>
-    <string name="settings_section_data_management">데이터 관리</string>
 
     <string name="settings_gender">성별</string>
     <string name="settings_birthday">생일</string>
@@ -619,32 +591,15 @@
     <string name="sheet_goal_body_fat">체지방 목표</string>
     <string name="sheet_goal_body_fat_currently">현재 %1$d%%</string>
     <string name="action_remove_goal">목표 제거</string>
-    <string name="progress_metric_weight">체중</string>
-    <string name="progress_metric_body_fat">체지방</string>
-    <string name="progress_metric_workouts">운동</string>
     <string name="progress_workout_history">운동 기록</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">계산된 소모량 %1$d개 · 탭하여 보기 또는 삭제</item>
-        <item quantity="other">계산된 소모량 %1$d개 · 탭하여 보기 또는 삭제</item>
-    </plurals>
     <string name="progress_workout_delete_title">운동 소모량을 삭제할까요?</string>
     <string name="progress_workout_delete_message">Ayuvo와 Health Connect에서 계산된 소모량을 삭제합니다. 운동 일지 계획은 그대로 저장됩니다.</string>
-    <string name="progress_workout_section">운동 활동</string>
-    <string name="progress_workout_stat_workouts">운동</string>
-    <string name="progress_workout_stat_total">총 소모량</string>
-    <string name="progress_workout_stat_average">평균 소모량</string>
-    <string name="progress_workout_stat_latest">최근</string>
     <string name="progress_workout_stat_days">일수</string>
-    <string name="progress_workout_no_range">이 기간에 계산된 운동 소모량이 없습니다</string>
-    <string name="progress_workout_chart_description">%1$s부터 %2$s까지의 운동 소모 차트. 총 %3$d킬로칼로리, 최근 %4$d킬로칼로리.</string>
-    <string name="progress_log_body_fat">체지방 기록</string>
-    <string name="progress_log_first_body_fat">추이를 보려면 첫 체지방률을 기록하세요</string>
     <string name="progress_log_body_fat_title">체지방 기록</string>
     <string name="notif_body_fat_log_title">체지방 체크인</string>
     <string name="notif_body_fat_log_text">체성분 변화를 추적하려면 오늘의 체지방률을 기록하세요.</string>
     <string name="saved_meals_search_placeholder">저장된 음식 검색</string>
     <string name="saved_meals_no_match">일치하는 음식이 없습니다</string>
-    <string name="settings_section_custom_instructions">사용자 지정 AI 지침</string>
     <string name="settings_custom_instructions_placeholder">예: 독일에 거주하며, 유럽식 1인분 크기를 기준으로 하고, ALDI/REWE 브랜드를 선호합니다. 보디빌딩 감량 중입니다.</string>
     <string name="settings_custom_instructions_footer">모든 AI 요청과 함께 전송되는 선택적 컨텍스트 — 지역, 식단, 운동 목표 등 매번 반복해서 입력해야 하는 정보. 비활성화하려면 비워 두세요.</string>
     <string name="settings_save">저장</string>

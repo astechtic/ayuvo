@@ -39,7 +39,11 @@ struct FoodLogMealGroup: Identifiable {
 
 @Observable
 class FoodStore {
-    private(set) var entries: [FoodEntry] = []
+    private(set) var entries: [FoodEntry] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `entries` (metric caches key on it).
+    private(set) var revision = 0
     var onEntriesChanged: (() -> Void)?
     var onEntryAdded: ((FoodEntry) -> Void)?
     var onEntryDeleted: ((UUID) -> Void)?

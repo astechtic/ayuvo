@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Metric catalog titles/about text (shared/metrics/metric_catalog.json) and metric detail UI. English source strings. -->
+<resources>
+    <string name="metric_calories">Calories</string>
+    <string name="metric_protein">Protein</string>
+    <string name="metric_carbs">Carbohydrates</string>
+    <string name="metric_fat">Total Fat</string>
+    <string name="metric_fiber">Fiber</string>
+    <string name="metric_water">Water</string>
+    <string name="metric_fasting">Fasting</string>
+    <string name="metric_weight">Weight</string>
+    <string name="metric_body_fat">Body Fat Percentage</string>
+    <string name="metric_workouts">Workouts</string>
+    <string name="metric_workout_minutes">Workout Time</string>
+    <string name="metric_workout_burn">Workout Energy</string>
+    <string name="metric_about_calories">Energy from the food you log in Ayuvo, added up per day. Longer ranges show your average on days you logged food.</string>
+    <string name="metric_about_protein">Protein from the food you log in Ayuvo, added up per day.</string>
+    <string name="metric_about_carbs">Carbohydrates from the food you log in Ayuvo, added up per day.</string>
+    <string name="metric_about_fat">Fat from the food you log in Ayuvo, added up per day.</string>
+    <string name="metric_about_fiber">Dietary fiber from the food you log in Ayuvo, added up per day. Foods without fiber information are skipped.</string>
+    <string name="metric_about_water">Water you log in Ayuvo, added up per day.</string>
+    <string name="metric_about_fasting">Time spent fasting per day. A fast that crosses midnight counts toward each day it covers.</string>
+    <string name="metric_about_weight">Weight entries you log in Ayuvo, including readings imported from connected health apps. Each point shows the latest reading of that period.</string>
+    <string name="metric_about_body_fat">Body fat readings you log in Ayuvo. Each point shows the latest reading of that period.</string>
+    <string name="metric_about_workouts">Workouts you complete in Ayuvo, counted on the day they were logged.</string>
+    <string name="metric_about_workout_minutes">Time spent in workouts you complete in Ayuvo.</string>
+    <string name="metric_about_workout_burn">Estimated energy burned in workouts you complete in Ayuvo. Workouts without an estimate are skipped.</string>
+    <string name="metric_add_to_favourites">Add to Favourites</string>
+    <string name="metric_about">About</string>
+    <string name="metric_log">Log</string>
+    <string name="metric_log_weight">Add Weight Data</string>
+    <string name="metric_log_body_fat">Add Body Fat Data</string>
+    <string name="metric_add_water">Add Water</string>
+    <string name="metric_add_water_quick">Add %1$s</string>
+    <string name="metric_add_water_custom">Custom Amount</string>
+    <string name="metric_open_food_diary">Open Food Diary</string>
+    <string name="metric_open_fasting">Open Fasting</string>
+    <string name="metric_open_workouts">Open Workouts</string>
+    <string name="metric_details">Show Details</string>
+    <string name="metric_goal_label">Goal %1$s</string>
+    <string name="metric_no_rows">No entries in this range</string>
+    <string name="metric_row_logged_in_diary">Logged in the food diary</string>
+    <string name="metric_delete_entry">Delete Entry</string>
+    <string name="metric_delete_entry_body">This entry will be removed from Ayuvo.</string>
+    <string name="metric_sources_app">Recorded in Ayuvo</string>
+</resources>

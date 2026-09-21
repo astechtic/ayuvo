@@ -1,7 +1,6 @@
 package com.ayuvo.health.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,11 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,8 +38,15 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ayuvo.health.ui.design.AyuvoColors
+import com.ayuvo.health.ui.design.AyuvoPalette
+import com.ayuvo.health.ui.design.AyuvoShapes
 import com.ayuvo.health.ui.theme.AppColors
 
+/**
+ * Base card. Kept under its historical name so every existing call site picks up the
+ * Apple-flat look: plain surface colour, one radius, no shadow, sheen or border.
+ */
 @Composable
 fun GlassSurface(
     modifier: Modifier = Modifier,
@@ -52,39 +55,11 @@ fun GlassSurface(
     contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val shape = RoundedCornerShape(cornerRadius)
-    val baseColor = if (isDark) Color(0xFF17171B).copy(alpha = 0.84f)
-                    else Color(0xFFFAF2EC).copy(alpha = 0.98f)
-    val shadowColor = if (isDark) Color.Black.copy(alpha = 0.28f)
-                      else Color.Black.copy(alpha = 0.11f)
-    val sheen = Brush.verticalGradient(
-        listOf(
-            Color.White.copy(alpha = if (isDark) 0.070f else 0.34f),
-            Color.White.copy(alpha = if (isDark) 0.018f else 0.08f),
-            AppColors.Calorie.copy(alpha = if (isDark) 0.026f else 0.045f)
-        )
-    )
-    val border = Brush.linearGradient(
-        listOf(
-            Color.White.copy(alpha = if (isDark) 0.18f else 0.78f),
-            Color.White.copy(alpha = if (isDark) 0.045f else 0.28f),
-            AppColors.Calorie.copy(alpha = if (isDark) 0.075f else 0.14f)
-        )
-    )
-
+    val shape = if (cornerRadius >= 16.dp) AyuvoShapes.Card else RoundedCornerShape(cornerRadius)
     Box(
         modifier = modifier
-            .shadow(
-                elevation = if (isDark) 14.dp else 10.dp,
-                shape = shape,
-                ambientColor = shadowColor,
-                spotColor = shadowColor
-            )
             .clip(shape)
-            .background(baseColor)
-            .background(sheen)
-            .border(0.8.dp, border, shape)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(padding),
         contentAlignment = contentAlignment,
         content = content
@@ -107,6 +82,7 @@ fun GlassColumn(
     }
 }
 
+/** Tinted rounded-square icon bubble (Apple Settings / Health style). */
 @Composable
 fun IconBubble(
     icon: ImageVector,
@@ -115,16 +91,19 @@ fun IconBubble(
     iconSize: Dp = 19.dp,
     tint: Color = AppColors.Calorie
 ) {
-    val plainIconSize = if (iconSize < size * 0.88f) size * 0.88f else iconSize
+    val glyph = if (iconSize > size * 0.66f) size * 0.6f else iconSize
     Box(
-        modifier = modifier.size(size),
+        modifier = modifier
+            .size(size)
+            .clip(RoundedCornerShape(size * 0.26f))
+            .background(tint.copy(alpha = 0.14f)),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             icon,
             contentDescription = null,
             tint = tint,
-            modifier = Modifier.size(plainIconSize)
+            modifier = Modifier.size(glyph)
         )
     }
 }
@@ -147,26 +126,8 @@ fun GlassTextField(
         fontWeight = FontWeight.Medium
     )
 ) {
-    val shape = RoundedCornerShape(18.dp)
-    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val fieldFill = if (isDark) {
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.38f)
-    } else {
-        Color(0xFFEDE3DD).copy(alpha = 0.72f)
-    }
-    val fieldSheen = Brush.verticalGradient(
-        listOf(
-            Color.White.copy(alpha = if (isDark) 0.09f else 0.24f),
-            Color.White.copy(alpha = if (isDark) 0.02f else 0.06f),
-            AppColors.Calorie.copy(alpha = if (isDark) 0.025f else 0.040f)
-        )
-    )
-    val fieldBorder = Brush.linearGradient(
-        listOf(
-            Color.White.copy(alpha = if (isDark) 0.16f else 0.62f),
-            AppColors.Calorie.copy(alpha = if (isDark) 0.09f else 0.14f)
-        )
-    )
+    val shape = AyuvoShapes.Field
+    val fieldFill = AyuvoColors.fill()
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -183,8 +144,6 @@ fun GlassTextField(
             .heightIn(min = if (singleLine) 52.dp else 118.dp)
             .clip(shape)
             .background(fieldFill)
-            .background(fieldSheen)
-            .border(0.7.dp, fieldBorder, shape)
             .padding(horizontal = 16.dp, vertical = 14.dp),
         decorationBox = { inner ->
             Box(
@@ -219,7 +178,7 @@ fun GlassDialog(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
-            cornerRadius = 28.dp,
+            cornerRadius = 16.dp,
             padding = 20.dp
         ) {
             Column(
@@ -239,21 +198,12 @@ fun GlassPrimaryButton(
     height: Dp = 50.dp,
     content: (@Composable RowScope.() -> Unit)? = null
 ) {
-    val brush = if (enabled) {
-        Brush.linearGradient(listOf(AppColors.CalorieStart, AppColors.CalorieEnd))
-    } else {
-        Brush.linearGradient(
-            listOf(
-                AppColors.Calorie.copy(alpha = 0.35f),
-                AppColors.Calorie.copy(alpha = 0.35f)
-            )
-        )
-    }
+    val fill = if (enabled) AppColors.Calorie else AppColors.Calorie.copy(alpha = 0.35f)
     Row(
         modifier
             .height(height)
-            .clip(RoundedCornerShape(16.dp))
-            .background(brush)
+            .clip(AyuvoShapes.Tile)
+            .background(fill)
             .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -275,23 +225,10 @@ fun GlassTextButton(
     color: Color = AppColors.Calorie,
     enabled: Boolean = true
 ) {
-    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val shape = RoundedCornerShape(14.dp)
-    val fill = if (isDark) {
-        Color.White.copy(alpha = 0.035f)
-    } else {
-        Color(0xFFEDE3DD).copy(alpha = 0.42f)
-    }
-    val border = if (isDark) {
-        Color.White.copy(alpha = 0.08f)
-    } else {
-        Color.White.copy(alpha = 0.38f)
-    }
+    val shape = AyuvoShapes.Tile
     Box(
         modifier
             .clip(shape)
-            .background(fill)
-            .border(0.6.dp, border, shape)
             .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center
@@ -328,7 +265,7 @@ fun GlassDialogActions(
             )
             Spacer(Modifier.width(6.dp))
         }
-        val primaryColor = if (destructive) Color(0xFFFF453A) else AppColors.Calorie
+        val primaryColor = if (destructive) AyuvoPalette.Destructive else AppColors.Calorie
         GlassTextButton(
             text = primaryText,
             onClick = onPrimary,

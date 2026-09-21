@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal modeli. Güclü dəqiqlik, pulsuz paket mövcuddur.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Ana Səhifə</string>
     <string name="nav_coach">Məşqçi</string>
     <string name="nav_settings">Parametrlər</string>
     <string name="nav_about">Haqqında</string>
@@ -441,32 +440,12 @@
     <string name="coach_chip_log_advice">Qeydlərimə əsasən hər hansı tövsiyə?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1H</string>
-    <string name="progress_range_month">1A</string>
-    <string name="progress_range_3m">3A</string>
-    <string name="progress_range_6m">6A</string>
-    <string name="progress_range_year">1İ</string>
-    <string name="progress_range_all">Hamısı</string>
 
-    <string name="progress_weight_section">Çəki</string>
-    <string name="progress_log_weight">Çəkini Qeyd Et</string>
-    <string name="progress_stat_current">Cari</string>
-    <string name="progress_stat_goal">Hədəf</string>
-    <string name="progress_log_first_weight">Tendensiyaları görmək üçün ilk çəkinizi qeyd edin</string>
 
     <string name="progress_weight_history">Çəki Tarixçəsi</string>
     <string name="progress_body_fat_history">Bədən Yağı Tarixçəsi</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d qeyd · görüntüləmək və ya silmək üçün toxunun</item>
-        <item quantity="other">%1$d qeyd · görüntüləmək və ya silmək üçün toxunun</item>
-    </plurals>
 
-    <string name="progress_calories_section">Kalorilər</string>
-    <string name="progress_avg_format">Orta: %1$,d kcal</string>
-    <string name="progress_no_food">Hələ yemək qeyd edilməyib</string>
 
-    <string name="progress_macro_averages">Makro Ortalamaları</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Çəkini Qeyd Et</string>
 
@@ -475,16 +454,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Şəxsi Məlumat</string>
-    <string name="settings_section_goals">Hədəflər və Qidalanma</string>
     <string name="settings_section_daily_targets">Gündəlik Hədəflər</string>
-    <string name="settings_section_app">Tətbiq Parametrləri</string>
-    <string name="settings_section_tracking_reminders">İzləmə və Xatırlatmalar</string>
-    <string name="settings_category_ai_providers">Süni İntellekt Təminatçıları və Ehtiyat Seçimlər</string>
-    <string name="settings_section_workout">Məşq</string>
     <string name="settings_section_ai">AI Təminatçısı</string>
     <string name="settings_section_speech">Nitqdən Mətnə</string>
-    <string name="settings_section_health">Sağlamlıq və Məlumat</string>
-    <string name="settings_section_data_management">Məlumatların İdarə Edilməsi</string>
 
     <string name="settings_gender">Cins</string>
     <string name="settings_birthday">Doğum Günü</string>
@@ -620,32 +592,15 @@
     <string name="sheet_goal_body_fat">Bədən yağı hədəfi</string>
     <string name="sheet_goal_body_fat_currently">Hazırda %%%1$d</string>
     <string name="action_remove_goal">Hədəfi sil</string>
-    <string name="progress_metric_weight">Çəki</string>
-    <string name="progress_metric_body_fat">Bədən yağı</string>
-    <string name="progress_metric_workouts">Məşqlər</string>
     <string name="progress_workout_history">Məşq tarixçəsi</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d hesablanmış sərfiyyat · baxmaq və ya silmək üçün toxunun</item>
-        <item quantity="other">%1$d hesablanmış sərfiyyat · baxmaq və ya silmək üçün toxunun</item>
-    </plurals>
     <string name="progress_workout_delete_title">Məşq sərfiyyatı silinsin?</string>
     <string name="progress_workout_delete_message">Bu, hesablanmış sərfiyyatı Ayuvo və Health Connect-dən silir. Məşq gündəliyi planınız saxlanılır.</string>
-    <string name="progress_workout_section">Məşq fəaliyyəti</string>
-    <string name="progress_workout_stat_workouts">Məşqlər</string>
-    <string name="progress_workout_stat_total">Ümumi sərfiyyat</string>
-    <string name="progress_workout_stat_average">Orta sərfiyyat</string>
-    <string name="progress_workout_stat_latest">Son</string>
     <string name="progress_workout_stat_days">Gün</string>
-    <string name="progress_workout_no_range">Bu aralıqda hesablanmış məşq sərfiyyatı yoxdur</string>
-    <string name="progress_workout_chart_description">Məşq sərfiyyatı qrafiki: %1$s–%2$s. Cəmi %3$d kkal; son %4$d kkal.</string>
-    <string name="progress_log_body_fat">Bədən yağını qeyd et</string>
-    <string name="progress_log_first_body_fat">Trendləri görmək üçün ilk bədən yağı %-ni qeyd edin</string>
     <string name="progress_log_body_fat_title">Bədən yağını qeyd et</string>
     <string name="notif_body_fat_log_title">Bədən yağı yoxlanışı</string>
     <string name="notif_body_fat_log_text">Bədən tərkibinizin trendini izləmək üçün bu günkü bədən yağı %-ni qeyd edin.</string>
     <string name="saved_meals_search_placeholder">Saxlanılan yeməklərdə axtarın</string>
     <string name="saved_meals_no_match">Uyğun yemək tapılmadı</string>
-    <string name="settings_section_custom_instructions">Fərdi AI Təlimatları</string>
     <string name="settings_custom_instructions_placeholder">məsələn, Almaniyada yaşayıram, Avropa porsiya ölçülərini nəzərə al, ALDI/REWE markalarını üstün tut. Bodibildinq kəsim mərhələsindəyəm.</string>
     <string name="settings_custom_instructions_footer">Hər AI sorğusu ilə göndərilən isteğe bağlı kontekst — region, pəhriz, idman məqsədləri, hər dəfə təkrarlamalı olduğun hər şey. Söndürmək üçün boş burax.</string>
     <string name="settings_save">Yadda saxla</string>

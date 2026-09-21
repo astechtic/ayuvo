@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal-model. Sterke nauwkeurigheid, gratis abonnement beschikbaar.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Home</string>
     <string name="nav_coach">Coach</string>
     <string name="nav_settings">Instellingen</string>
     <string name="nav_about">Over</string>
@@ -441,32 +440,12 @@
     <string name="coach_chip_log_advice">Advies op basis van mijn logboek?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1W</string>
-    <string name="progress_range_month">1M</string>
-    <string name="progress_range_3m">3M</string>
-    <string name="progress_range_6m">6M</string>
-    <string name="progress_range_year">1J</string>
-    <string name="progress_range_all">Alles</string>
 
-    <string name="progress_weight_section">Gewicht</string>
-    <string name="progress_log_weight">Gewicht loggen</string>
-    <string name="progress_stat_current">Huidig</string>
-    <string name="progress_stat_goal">Doel</string>
-    <string name="progress_log_first_weight">Log je eerste gewicht om trends te zien</string>
 
     <string name="progress_weight_history">Gewichtsgeschiedenis</string>
     <string name="progress_body_fat_history">Vetpercentagegeschiedenis</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d invoer · tik om te bekijken of verwijderen</item>
-        <item quantity="other">%1$d invoeren · tik om te bekijken of verwijderen</item>
-    </plurals>
 
-    <string name="progress_calories_section">Calorieën</string>
-    <string name="progress_avg_format">Gem.: %1$,d kcal</string>
-    <string name="progress_no_food">Nog geen eten geregistreerd</string>
 
-    <string name="progress_macro_averages">Macro-gemiddelden</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Gewicht loggen</string>
 
@@ -475,16 +454,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Persoonlijke gegevens</string>
-    <string name="settings_section_goals">Doelen &amp; voeding</string>
     <string name="settings_section_daily_targets">Dagelijkse doelen</string>
-    <string name="settings_section_app">App-instellingen</string>
-    <string name="settings_section_tracking_reminders">Tracking &amp; herinneringen</string>
-    <string name="settings_category_ai_providers">AI-providers en terugvalopties</string>
-    <string name="settings_section_workout">Training</string>
     <string name="settings_section_ai">AI-provider</string>
     <string name="settings_section_speech">Spraak-naar-tekst</string>
-    <string name="settings_section_health">Gezondheid &amp; gegevens</string>
-    <string name="settings_section_data_management">Gegevensbeheer</string>
 
     <string name="settings_gender">Geslacht</string>
     <string name="settings_birthday">Geboortedatum</string>
@@ -620,32 +592,15 @@
     <string name="sheet_goal_body_fat">Vetpercentage-doel</string>
     <string name="sheet_goal_body_fat_currently">Huidig %1$d%%</string>
     <string name="action_remove_goal">Doel verwijderen</string>
-    <string name="progress_metric_weight">Gewicht</string>
-    <string name="progress_metric_body_fat">Vetpercentage</string>
-    <string name="progress_metric_workouts">Work-outs</string>
     <string name="progress_workout_history">Work-outgeschiedenis</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d berekende verbranding · tik om te bekijken of verwijderen</item>
-        <item quantity="other">%1$d berekende verbrandingen · tik om te bekijken of verwijderen</item>
-    </plurals>
     <string name="progress_workout_delete_title">Work-outverbranding verwijderen?</string>
     <string name="progress_workout_delete_message">Dit verwijdert de berekende verbranding uit Ayuvo en Health Connect. Je work-outplan blijft bewaard.</string>
-    <string name="progress_workout_section">Work-outactiviteit</string>
-    <string name="progress_workout_stat_workouts">Work-outs</string>
-    <string name="progress_workout_stat_total">Totaal verbrand</string>
-    <string name="progress_workout_stat_average">Gem. verbrand</string>
-    <string name="progress_workout_stat_latest">Laatste</string>
     <string name="progress_workout_stat_days">Dagen</string>
-    <string name="progress_workout_no_range">Geen berekende work-outverbrandingen in deze periode</string>
-    <string name="progress_workout_chart_description">Grafiek van trainingsverbranding van %1$s tot %2$s. Totaal %3$d kilocalorieën; laatste %4$d kilocalorieën.</string>
-    <string name="progress_log_body_fat">Vetpercentage loggen</string>
-    <string name="progress_log_first_body_fat">Log je eerste vetpercentage om trends te zien</string>
     <string name="progress_log_body_fat_title">Vetpercentage loggen</string>
     <string name="notif_body_fat_log_title">Vetpercentage check-in</string>
     <string name="notif_body_fat_log_text">Log je vetpercentage van vandaag om je samenstellings-trend te volgen.</string>
     <string name="saved_meals_search_placeholder">Zoek in opgeslagen maaltijden</string>
     <string name="saved_meals_no_match">Geen overeenkomende maaltijden</string>
-    <string name="settings_section_custom_instructions">Aangepaste AI-instructies</string>
     <string name="settings_custom_instructions_placeholder">Bijv. ik woon in Duitsland, ga uit van Europese portiegroottes, voorkeur voor ALDI/REWE-merken. Ik zit in een bodybuilding-cut.</string>
     <string name="settings_custom_instructions_footer">Optionele context die met elk AI-verzoek wordt meegestuurd — regio, dieet, sportieve doelen, alles wat je anders elke keer zou herhalen. Laat leeg om uit te schakelen.</string>
     <string name="settings_save">Opslaan</string>

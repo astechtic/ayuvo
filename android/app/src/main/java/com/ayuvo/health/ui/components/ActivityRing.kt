@@ -51,12 +51,19 @@ fun ActivityRing(
     size: Dp = 160.dp,
     strokeWidth: Dp = 14.dp,
     gradientColors: List<Color> = listOf(AppColors.CalorieStart, AppColors.CalorieEnd),
+    /** Restarts the fill-from-zero animation when it changes (e.g. the app-open epoch). */
+    animationKey: Any = Unit,
+    /** Glow dot at the arc end (the original iOS look). Flat Summary rings pass false. */
+    showEndDot: Boolean = true,
+    /** Track colour; defaults to the first gradient colour at 15%. */
+    trackColor: Color? = null,
     centerContent: @Composable () -> Unit = {}
 ) {
     val animated = remember { Animatable(0f) }
 
     // .onAppear { withAnimation(.spring(response: 1.2, dampingFraction: 0.75).delay(0.15)) }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(animationKey) {
+        animated.snapTo(0f)
         delay(150)
         animated.animateTo(
             targetValue = progress.coerceIn(0f, 1.5f),
@@ -73,7 +80,8 @@ fun ActivityRing(
 
     val firstColor = gradientColors.firstOrNull() ?: Color.Transparent
     val lastColor = gradientColors.lastOrNull() ?: Color.White
-    val trackColor = firstColor.copy(alpha = 0.15f)
+    val resolvedTrack = trackColor ?: firstColor.copy(alpha = 0.15f)
+    val flat = gradientColors.distinct().size <= 1
 
     Box(modifier = modifier.size(size).aspectRatio(1f), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.size(size)) {
@@ -91,7 +99,7 @@ fun ActivityRing(
 
             // Background track — Circle().stroke(gradientColors.first?.opacity(0.15) ?? Color.gray.opacity(0.15))
             drawArc(
-                color = trackColor,
+                color = resolvedTrack,
                 startAngle = -90f,
                 sweepAngle = 360f,
                 useCenter = false,
@@ -102,7 +110,17 @@ fun ActivityRing(
 
             // Foreground arc with gradient — AngularGradient + .rotationEffect(.degrees(-90))
             val sweepDegrees = 360f * animated.value.coerceAtMost(1f)
-            if (animated.value > 0f) {
+            if (animated.value > 0f && flat) {
+                drawArc(
+                    color = firstColor,
+                    startAngle = -90f,
+                    sweepAngle = sweepDegrees,
+                    useCenter = false,
+                    topLeft = topLeft,
+                    size = arcSize,
+                    style = stroke
+                )
+            } else if (animated.value > 0f) {
                 drawArc(
                     brush = Brush.sweepGradient(
                         colors = gradientColors + firstColor, // matches `gradientColors + [first]`
@@ -118,7 +136,7 @@ fun ActivityRing(
             }
 
             // Glow dot at arc endpoint — visible when animated > 0.01
-            if (animated.value > 0.01f) {
+            if (showEndDot && animated.value > 0.01f) {
                 // SwiftUI does .offset(y: -radius).rotationEffect(.degrees(360 * progress - 90))
                 // which places the dot at (-90 + 360*p) degrees on the circle.
                 val endAngleRad = Math.toRadians((sweepDegrees - 90f).toDouble())

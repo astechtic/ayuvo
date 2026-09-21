@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">Универсальная модель AssemblyAI. Высокая точность, доступен бесплатный тариф.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Главная</string>
     <string name="nav_coach">Тренер</string>
     <string name="nav_settings">Настройки</string>
     <string name="nav_about">О приложении</string>
@@ -445,34 +444,12 @@
     <string name="coach_chip_log_advice">Есть советы по моему журналу?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1Н</string>
-    <string name="progress_range_month">1М</string>
-    <string name="progress_range_3m">3М</string>
-    <string name="progress_range_6m">6М</string>
-    <string name="progress_range_year">1Г</string>
-    <string name="progress_range_all">Всё</string>
 
-    <string name="progress_weight_section">Вес</string>
-    <string name="progress_log_weight">Записать вес</string>
-    <string name="progress_stat_current">Текущий</string>
-    <string name="progress_stat_goal">Цель</string>
-    <string name="progress_log_first_weight">Запишите первый вес, чтобы увидеть динамику</string>
 
     <string name="progress_weight_history">История веса</string>
     <string name="progress_body_fat_history">История жира тела</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d запись · коснитесь, чтобы посмотреть или удалить</item>
-        <item quantity="few">%1$d записи · коснитесь, чтобы посмотреть или удалить</item>
-        <item quantity="many">%1$d записей · коснитесь, чтобы посмотреть или удалить</item>
-        <item quantity="other">%1$d записей · коснитесь, чтобы посмотреть или удалить</item>
-    </plurals>
 
-    <string name="progress_calories_section">Калории</string>
-    <string name="progress_avg_format">Сред.: %1$,d ккал</string>
-    <string name="progress_no_food">Пока нет записей о еде</string>
 
-    <string name="progress_macro_averages">Средние макросы</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">Записать вес</string>
 
@@ -481,16 +458,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">Личные данные</string>
-    <string name="settings_section_goals">Цели и питание</string>
     <string name="settings_section_daily_targets">Ежедневные цели</string>
-    <string name="settings_section_app">Настройки приложения</string>
-    <string name="settings_section_tracking_reminders">Отслеживание и напоминания</string>
-    <string name="settings_category_ai_providers">Провайдеры ИИ и резервные варианты</string>
-    <string name="settings_section_workout">Тренировка</string>
     <string name="settings_section_ai">ИИ-провайдер</string>
     <string name="settings_section_speech">Речь в текст</string>
-    <string name="settings_section_health">Здоровье и данные</string>
-    <string name="settings_section_data_management">Управление данными</string>
 
     <string name="settings_gender">Пол</string>
     <string name="settings_birthday">Дата рождения</string>
@@ -626,34 +596,15 @@
     <string name="sheet_goal_body_fat">Цель по жиру</string>
     <string name="sheet_goal_body_fat_currently">Сейчас %1$d%%</string>
     <string name="action_remove_goal">Удалить цель</string>
-    <string name="progress_metric_weight">Вес</string>
-    <string name="progress_metric_body_fat">Жир тела</string>
-    <string name="progress_metric_workouts">Тренировки</string>
     <string name="progress_workout_history">История тренировок</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d расчёт расхода · коснитесь, чтобы посмотреть или удалить</item>
-        <item quantity="few">%1$d расчёта расхода · коснитесь, чтобы посмотреть или удалить</item>
-        <item quantity="many">%1$d расчётов расхода · коснитесь, чтобы посмотреть или удалить</item>
-        <item quantity="other">%1$d расчётов расхода · коснитесь, чтобы посмотреть или удалить</item>
-    </plurals>
     <string name="progress_workout_delete_title">Удалить расход тренировки?</string>
     <string name="progress_workout_delete_message">Расчётный расход будет удалён из Ayuvo и Health Connect. План в дневнике тренировок сохранится.</string>
-    <string name="progress_workout_section">Тренировочная активность</string>
-    <string name="progress_workout_stat_workouts">Тренировки</string>
-    <string name="progress_workout_stat_total">Общий расход</string>
-    <string name="progress_workout_stat_average">Средний расход</string>
-    <string name="progress_workout_stat_latest">Последний</string>
     <string name="progress_workout_stat_days">Дни</string>
-    <string name="progress_workout_no_range">За этот период нет рассчитанного расхода тренировок</string>
-    <string name="progress_workout_chart_description">График расхода тренировок с %1$s по %2$s. Всего %3$d килокалорий; последнее значение %4$d килокалорий.</string>
-    <string name="progress_log_body_fat">Записать жир</string>
-    <string name="progress_log_first_body_fat">Запишите первое измерение жира, чтобы увидеть динамику</string>
     <string name="progress_log_body_fat_title">Записать жир</string>
     <string name="notif_body_fat_log_title">Проверка жира</string>
     <string name="notif_body_fat_log_text">Запишите свой % жира сегодня, чтобы отслеживать динамику состава тела.</string>
     <string name="saved_meals_search_placeholder">Поиск сохранённых продуктов</string>
     <string name="saved_meals_no_match">Нет подходящих продуктов</string>
-    <string name="settings_section_custom_instructions">Свои инструкции для ИИ</string>
     <string name="settings_custom_instructions_placeholder">Например: живу в Германии, ориентируйся на европейские размеры порций, предпочитаю бренды ALDI/REWE. Я на сушке для бодибилдинга.</string>
     <string name="settings_custom_instructions_footer">Необязательный контекст, отправляемый с каждым запросом к ИИ — регион, диета, спортивные цели, всё, что ты иначе повторял бы каждый раз. Оставь пустым, чтобы отключить.</string>
     <string name="settings_save">Сохранить</string>
@@ -680,8 +631,6 @@
     <string name="what_if_no_suggestion">Подсказка недоступна.</string>
     <string name="nutrition_unlock_editing">Разблокировать редактирование питания</string>
     <string name="nutrition_lock_editing">Заблокировать редактирование питания</string>
-    <string name="progress_stat_net_change">Итоговое изменение</string>
-    <string name="progress_stat_average">Среднее</string>
     <string name="settings_theme_color">Цвет темы</string>
     <string name="sheet_theme_color">Цвет темы</string>
     <string name="sheet_theme_color_footer">Меняет основной цвет приложения: вкладки, кнопки, иконки, графики и кольца прогресса.</string>

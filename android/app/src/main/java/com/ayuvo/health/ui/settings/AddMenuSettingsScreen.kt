@@ -1,5 +1,10 @@
 package com.ayuvo.health.ui.settings
 
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.PaddingValues
+import com.ayuvo.health.ui.design.SurfaceCard
+import com.ayuvo.health.ui.design.AyuvoTopBar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -49,7 +53,6 @@ import com.ayuvo.health.models.FoodLogMethod
 import com.ayuvo.health.models.defaultGroupNameRes
 import com.ayuvo.health.models.displayName
 import androidx.compose.material3.HorizontalDivider
-import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.theme.AppColors
 
@@ -76,7 +79,16 @@ fun AddMenuSettingsScreen(
         FoodLogMethod.AddMenuCases.filterNot { it in visible }
     }
 
-    androidx.compose.material3.Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
+    androidx.compose.material3.Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            AyuvoTopBar(
+                title = stringResource(R.string.settings_add_menu_title),
+                onBack = onBack,
+                windowInsets = WindowInsets.statusBars
+            )
+        }
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,36 +100,6 @@ fun AddMenuSettingsScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { onBack() }
-                        .padding(horizontal = 2.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = AppColors.Calorie,
-                        modifier = Modifier.size(22.dp)
-                    )
-                    Spacer(Modifier.width(6.dp))
-                    Text(
-                        stringResource(R.string.nav_settings),
-                        color = AppColors.Calorie,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-            }
-            item {
-                Text(
-                    stringResource(R.string.settings_add_menu_title),
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
             item {
                 AddMenuSectionCard(title = stringResource(R.string.settings_add_menu_food_section)) {
                     Row(
@@ -494,11 +476,8 @@ private fun AddMenuSectionCard(title: String? = null, content: @Composable () ->
                 modifier = Modifier.padding(start = 6.dp, bottom = 8.dp)
             )
         }
-        GlassSurface(
-            modifier = Modifier.fillMaxWidth(),
-            cornerRadius = 20.dp,
-            padding = 0.dp
-        ) {
+        SurfaceCard(modifier = Modifier.fillMaxWidth(),
+            padding = PaddingValues(0.dp)) {
             Column(Modifier.padding(vertical = 2.dp)) { content() }
         }
     }

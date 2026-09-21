@@ -1,6 +1,6 @@
 import XCTest
 
-/// Medications walk: the Meds segment of the Health tab with a fixture archive (imported through the
+/// Medications walk: Browse › Medications with a fixture archive (imported through the
 /// DEBUG `-ayuvoMedicationsFixture` hook), Take on a due dose, the detail screen, and the add flow.
 ///
 /// Set `TEST_RUNNER_AYUVO_SMOKE_SHOTS_DIR=<absolute dir>` to also write PNGs there.
@@ -97,14 +97,16 @@ final class MedicationsUITests: XCTestCase {
     }
 
     private func openMedsPane(_ app: XCUIApplication) {
-        XCTAssertTrue(app.tabBars.buttons["Health"].waitForExistence(timeout: 10))
-        app.tabBars.buttons["Health"].tap()
-        let meds = app.buttons["Meds"].firstMatch
-        XCTAssertTrue(meds.waitForExistence(timeout: 8), "Health tab should show the Meds segment")
+        XCTAssertTrue(app.tabBars.buttons["Browse"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Browse"].tap()
+        let meds = app.buttons["browse.row.medications"].firstMatch
+        // Medications sits near the bottom of the domain list.
+        for _ in 0..<6 where !meds.exists { app.swipeUp() }
+        XCTAssertTrue(meds.waitForExistence(timeout: 8), "Browse should list Medications")
         meds.tap()
         XCTAssertTrue(app.otherElements["medications.home"].firstMatch.waitForExistence(timeout: 8)
                       || app.buttons["medications.add"].waitForExistence(timeout: 8),
-                      "Meds segment should render the Medications home")
+                      "Browse › Medications should render the Medications home")
     }
 
     @MainActor
@@ -112,17 +114,17 @@ final class MedicationsUITests: XCTestCase {
         let fixture = try makeFixtureArchive()
         let app = launch(fixture: fixture)
 
-        for tab in ["Home", "Health", "Records", "Coach", "Settings"] {
+        for tab in ["Summary", "Browse", "Records", "Coach", "Settings"] {
             XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 10), "Missing tab \(tab)")
         }
 
-        // Home card appears once there is an active medicine.
-        let homeCard = app.buttons["home.medicationsCard"].firstMatch
-        for _ in 0..<4 where !homeCard.exists { app.swipeUp() }
-        XCTAssertTrue(homeCard.waitForExistence(timeout: 10), "Home should show the Medications card")
+        // Summary card appears once there is an active medicine.
+        let summaryCard = app.buttons["home.medicationsCard"].firstMatch
+        for _ in 0..<4 where !summaryCard.exists { app.swipeUp() }
+        XCTAssertTrue(summaryCard.waitForExistence(timeout: 10), "Summary should show the Medications card")
         shot(app, "medications-ios-01-home-card")
-        homeCard.tap()
-        XCTAssertTrue(app.buttons["Meds"].firstMatch.waitForExistence(timeout: 8))
+        summaryCard.tap()
+        XCTAssertTrue(app.navigationBars["Medications"].waitForExistence(timeout: 8))
 
         // Today timeline with a Take button on the scheduled Metformin dose.
         let take = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'medications.take.ui-med-metformin'")).firstMatch
@@ -143,7 +145,7 @@ final class MedicationsUITests: XCTestCase {
         for _ in 0..<4 where !row.isHittable { app.swipeUp() }
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
-        XCTAssertTrue(app.navigationBars["Metformin"].waitForExistence(timeout: 8), "Detail should push on the Health stack")
+        XCTAssertTrue(app.navigationBars["Metformin"].waitForExistence(timeout: 8), "Detail should push on the Browse stack")
         XCTAssertTrue(app.staticTexts["medications.detail.adherence"].firstMatch.waitForExistence(timeout: 5))
         shot(app, "medications-ios-04-detail")
         app.buttons["medications.detail.menu"].firstMatch.tap()

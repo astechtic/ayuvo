@@ -113,6 +113,11 @@ struct calorietrackerApp: App {
                     Task { await recordsStore.drainInbox() }
                     return
                 }
+                // Share extension "Log as food" hand-off: open the diary, which consumes the image.
+                if url.scheme == "ayuvo", url.host == "import-share-image" {
+                    NotificationCenter.default.post(name: .shareImageImportRequested, object: nil)
+                    return
+                }
                 // ayuvo://medications[?id=<medication id>] opens the Meds pane (optionally at a detail).
                 if url.scheme == "ayuvo", url.host == "medications" {
                     let id = URLComponents(url: url, resolvingAgainstBaseURL: false)?

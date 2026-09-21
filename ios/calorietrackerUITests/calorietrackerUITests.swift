@@ -53,13 +53,16 @@ final class calorietrackerUITests: XCTestCase {
         ]
         app.launch()
 
-        // Workouts is the Health tab's third pane.
-        let health = app.tabBars.buttons["Health"]
-        XCTAssertTrue(health.waitForExistence(timeout: 8))
-        health.tap()
-        let workouts = app.buttons["Workouts"].firstMatch
-        XCTAssertTrue(workouts.waitForExistence(timeout: 5))
-        workouts.tap()
+        // The exercise library lives under Browse › Activity.
+        let browse = app.tabBars.buttons["Browse"]
+        XCTAssertTrue(browse.waitForExistence(timeout: 8))
+        browse.tap()
+        let activityRow = app.buttons["browse.row.activity"].firstMatch
+        XCTAssertTrue(activityRow.waitForExistence(timeout: 8))
+        activityRow.tap()
+        let library = app.buttons["browse.link.exerciseLibrary"].firstMatch
+        XCTAssertTrue(library.waitForExistence(timeout: 8))
+        library.tap()
 
         let search = app.textFields["workouts.search"]
         XCTAssertTrue(search.waitForExistence(timeout: 5))
@@ -182,7 +185,7 @@ final class calorietrackerUITests: XCTestCase {
             app.swipeUp()
         }
         XCTAssertTrue(textProviderSection.waitForExistence(timeout: 3))
-        XCTAssertTrue(app.staticTexts["AI Providers & Fallbacks"].exists)
+        XCTAssertTrue(app.navigationBars["AI Providers"].exists)
         XCTAssertEqual(app.switches["Use Separate Text Provider"].value as? String, "1")
         XCTAssertTrue(app.staticTexts["DeepSeek"].waitForExistence(timeout: 3))
         XCTAssertTrue(app.staticTexts["deepseek-v4-flash"].waitForExistence(timeout: 3))
@@ -223,6 +226,13 @@ final class calorietrackerUITests: XCTestCase {
         ]
         app.launch()
 
+        // The nutrition pillars live in the diary under Browse › Nutrition.
+        XCTAssertTrue(app.tabBars.buttons["Browse"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Browse"].tap()
+        let nutritionRow = app.buttons["browse.row.nutrition"].firstMatch
+        XCTAssertTrue(nutritionRow.waitForExistence(timeout: 8))
+        nutritionRow.tap()
+
         XCTAssertTrue(app.staticTexts["Water"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["View More"].waitForExistence(timeout: 3))
         app.staticTexts["View More"].tap()
@@ -249,6 +259,13 @@ final class calorietrackerUITests: XCTestCase {
         ]
         app.launch()
 
+        // The diary (and its + button) lives under Browse › Nutrition.
+        XCTAssertTrue(app.tabBars.buttons["Browse"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["Browse"].tap()
+        let nutritionRow = app.buttons["browse.row.nutrition"].firstMatch
+        XCTAssertTrue(nutritionRow.waitForExistence(timeout: 8))
+        nutritionRow.tap()
+
         let addButton = app.buttons["home.add"]
         XCTAssertTrue(addButton.waitForExistence(timeout: 8))
         addButton.tap()
@@ -268,7 +285,12 @@ final class calorietrackerUITests: XCTestCase {
         if deleteButton.waitForExistence(timeout: 2) {
             deleteButton.tap()
         }
-        XCTAssertEqual(waterRows.count, countBeforeDelete - 1)
+        // The diary confirms destructive deletes in an alert.
+        let confirm = app.alerts.buttons["Delete"]
+        if confirm.waitForExistence(timeout: 3) {
+            confirm.tap()
+        }
+        XCTAssertTrue(waterRows.firstMatch.waitForNonExistence(timeout: 5) || waterRows.count == countBeforeDelete - 1)
     }
 
     @MainActor

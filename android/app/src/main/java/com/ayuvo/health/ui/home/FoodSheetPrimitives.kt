@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.home
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -582,7 +583,7 @@ internal fun SheetGlassDropdownMenu(
     val shape = RoundedCornerShape(22.dp)
     val sizedModifier = if (menuWidth != null) modifier.width(menuWidth) else modifier
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val menuContainer = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE).copy(alpha = 0.98f)
+    val menuContainer = AyuvoColors.sheetBackground().copy(alpha = 0.98f)
     val menuSheen = Brush.verticalGradient(
         colors = if (isDark) {
             listOf(

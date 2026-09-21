@@ -22,15 +22,10 @@ import com.ayuvo.health.services.OpenFoodFactsService
 import com.ayuvo.health.ui.components.autoSaveMealPhotoIfEnabled
 import com.ayuvo.health.services.ai.AiError
 import com.ayuvo.health.services.ai.FoodAnalysis
-import com.ayuvo.health.services.health.HealthSyncPhase
-import com.ayuvo.health.ui.health.HealthHomeTileBuilder
-import com.ayuvo.health.ui.health.HealthHomeTiles
-import com.ayuvo.health.ui.health.HealthUnitPrefs
-import com.ayuvo.health.ui.health.healthUnitPrefsFlow
+import com.ayuvo.health.ui.fasting.FastingActions
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -147,9 +142,7 @@ internal class FoodSubmissionGate {
 class HomeViewModel(private val container: AppContainer) : ViewModel() {
     private val _ui = MutableStateFlow(HomeUiState())
     val ui: StateFlow<HomeUiState> = _ui.asStateFlow()
-    /** Health strip (tiles / Connect / hidden) for the selected day, computed off the main thread. */
-    private val _healthStrip = MutableStateFlow<HealthStripState>(HealthStripState.Hidden)
-    val healthStrip: StateFlow<HealthStripState> = _healthStrip.asStateFlow()
+    private val fasting = FastingActions(container)
     private val _selectedDate = MutableStateFlow(LocalDate.now())
 private val _stepsRefreshEpoch = MutableStateFlow(0)
     private val _burnRefreshTick = MutableStateFlow(0)
@@ -294,30 +287,6 @@ viewModelScope.launch {
                 }
         }
 
-        // Health strip: only the selected day (indexed) plus one LIMIT 1 query per latest-style
-        // tile; the store revision is debounced so a burst of sync pages recomputes once.
-        combine(
-            container.prefs.healthHubEnabled,
-            container.prefs.healthHomeTiles,
-            _selectedDate,
-            container.healthRepository.revision.debounce(300),
-            container.healthSync.status
-        ) { hub, tiles, day, _, status ->
-            HealthStripInputs(
-                hubEnabled = hub,
-                tilesRaw = tiles,
-                day = day,
-                importing = status.phase == HealthSyncPhase.IMPORTING_HISTORY,
-                permissionsReset = status.phase == HealthSyncPhase.PERMISSIONS_RESET
-            )
-        }
-            .combine(healthUnitPrefsFlow(container.prefs)) { inputs, units -> inputs to units }
-            .combine(_ui.map { it.dailySteps }.distinctUntilChanged()) { (inputs, units), steps -> Triple(inputs, units, steps) }
-            .flatMapLatest { (inputs, units, steps) -> flow { emit(computeHealthStrip(inputs, units, steps)) } }
-            .flowOn(Dispatchers.Default)
-            .onEach { _healthStrip.value = it }
-            .launchIn(viewModelScope)
-
         combine(
             container.prefs.healthConnectEnabled,
             _selectedDate,
@@ -346,33 +315,6 @@ viewModelScope.launch {
         val entries: List<FoodEntry>,
         val profile: UserProfile?
     )
-
-    private data class HealthStripInputs(
-        val hubEnabled: Boolean,
-        val tilesRaw: String?,
-        val day: LocalDate,
-        val importing: Boolean,
-        val permissionsReset: Boolean
-    )
-
-    private suspend fun computeHealthStrip(inputs: HealthStripInputs, units: HealthUnitPrefs, liveSteps: Int?): HealthStripState {
-        if (!inputs.hubEnabled) {
-            // Keep the entry point when Health Connect exists; hide it entirely where it cannot work.
-            return if (runCatching { container.health.isAvailable() }.getOrDefault(false)) HealthStripState.Connect else HealthStripState.Hidden
-        }
-        val today = LocalDate.now()
-        val tiles = runCatching {
-            HealthHomeTileBuilder.build(
-                repo = container.healthRepository,
-                types = HealthHomeTiles.parse(inputs.tilesRaw),
-                day = inputs.day,
-                today = today,
-                unitPrefs = units,
-                liveStepsToday = if (inputs.day == today) liveSteps else null
-            )
-        }.getOrDefault(emptyList())
-        return HealthStripState.Tiles(tiles, inputs.importing, inputs.permissionsReset)
-    }
 
     private suspend fun computeHomeBurnSummary(inputs: BurnRefreshInputs): HomeBurnSummary? {
         if (!inputs.healthEnabled) return null
@@ -417,57 +359,27 @@ viewModelScope.launch {
     }
 
     fun startFast(goalMinutes: Int) {
-        viewModelScope.launch {
-            container.fastingRepository.start(goalMinutes)
-            syncFastingNotification()
-        }
+        viewModelScope.launch { fasting.start(goalMinutes) }
     }
 
     fun endFast(updatedSession: FastingSession? = null) {
         viewModelScope.launch {
-            val ended = container.fastingRepository.endActive(updatedSession = updatedSession)
-            if (ended != null) {
-                container.notifications.cancelFastingGoal()
-            } else {
-                _ui.value = _ui.value.copy(fastingOverlap = true)
-            }
+            if (!fasting.end(updatedSession)) _ui.value = _ui.value.copy(fastingOverlap = true)
         }
     }
 
     fun cancelFast() {
-        viewModelScope.launch {
-            container.fastingRepository.cancelActive()
-            container.notifications.cancelFastingGoal()
-        }
+        viewModelScope.launch { fasting.cancel() }
     }
 
     fun updateFast(session: FastingSession) {
         viewModelScope.launch {
-            if (container.fastingRepository.update(session)) {
-                syncFastingNotification()
-            } else {
-                _ui.value = _ui.value.copy(fastingOverlap = true)
-            }
+            if (!fasting.update(session)) _ui.value = _ui.value.copy(fastingOverlap = true)
         }
     }
 
     fun deleteFast(id: UUID) {
-        viewModelScope.launch {
-            container.fastingRepository.delete(id)
-            syncFastingNotification()
-        }
-    }
-
-    private suspend fun syncFastingNotification() {
-        val shouldNotify = container.prefs.notificationsEnabled.first() &&
-            container.prefs.fastingTrackingEnabled.first() &&
-            container.prefs.fastingGoalNotificationEnabled.first() &&
-            container.notifications.canPostNotifications()
-        if (shouldNotify) {
-            container.notifications.scheduleFastingGoal(container.fastingRepository.active())
-        } else {
-            container.notifications.cancelFastingGoal()
-        }
+        viewModelScope.launch { fasting.delete(id) }
     }
 
     fun reportFoodBlockedByFast() {

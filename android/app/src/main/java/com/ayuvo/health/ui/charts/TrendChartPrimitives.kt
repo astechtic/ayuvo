@@ -1,7 +1,6 @@
 package com.ayuvo.health.ui.charts
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -51,36 +49,17 @@ internal fun <T> IosStyleSegmentedControl(
     onSelect: (T) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(16.dp)
+    // Apple-flat segmented control: translucent grey track, raised selected segment.
+    val shape = RoundedCornerShape(9.dp)
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val trackFill = if (isDark) {
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.34f)
-    } else {
-        Color(0xFFE5DAD3).copy(alpha = 0.88f)
-    }
-    val selectedFill = if (isDark) {
-        Color.White.copy(alpha = 0.18f)
-    } else {
-        Color.White
-    }
-    val shadowAlpha = if (isDark) 0.16f else 0.06f
+    val trackFill = Color(0x1F767680)
+    val selectedFill = if (isDark) Color(0xFF636366) else Color.White
     Row(
         modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = if (isDark) 10.dp else 4.dp,
-                shape = shape,
-                ambientColor = Color.Black.copy(alpha = shadowAlpha),
-                spotColor = Color.Black.copy(alpha = shadowAlpha)
-            )
             .clip(shape)
             .background(trackFill)
-            .border(
-                0.7.dp,
-                Color.White.copy(alpha = if (isDark) 0.10f else 0.45f),
-                shape
-            )
-            .padding(3.dp)
+            .padding(2.dp)
             .selectableGroup()
     ) {
         options.forEach { option ->
@@ -88,17 +67,10 @@ internal fun <T> IosStyleSegmentedControl(
             Box(
                 Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(13.dp))
+                    .clip(RoundedCornerShape(7.dp))
                     .then(
                         if (isSel) {
-                            Modifier
-                                .shadow(
-                                    elevation = if (isDark) 2.dp else 3.dp,
-                                    shape = RoundedCornerShape(13.dp),
-                                    ambientColor = Color.Black.copy(alpha = if (isDark) 0.25f else 0.08f),
-                                    spotColor = Color.Black.copy(alpha = if (isDark) 0.25f else 0.08f)
-                                )
-                                .background(selectedFill)
+                            Modifier.background(selectedFill)
                         } else {
                             Modifier.background(Color.Transparent)
                         }
@@ -108,7 +80,7 @@ internal fun <T> IosStyleSegmentedControl(
                         role = Role.Tab,
                         onClick = { onSelect(option) }
                     )
-                    .padding(vertical = 8.dp, horizontal = 4.dp),
+                    .padding(vertical = 6.dp, horizontal = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -119,7 +91,7 @@ internal fun <T> IosStyleSegmentedControl(
                     color = if (isSel) {
                         MaterialTheme.colorScheme.onSurface
                     } else {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f)
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
                     }
                 )
             }
@@ -131,7 +103,7 @@ internal fun <T> IosStyleSegmentedControl(
 internal fun CardSection(content: @Composable () -> Unit) {
     GlassSurface(
         modifier = Modifier.fillMaxWidth(),
-        cornerRadius = 20.dp,
+        cornerRadius = 16.dp,
         padding = 16.dp
     ) { content() }
 }
@@ -157,7 +129,7 @@ internal fun StatBadge(label: String, value: String, modifier: Modifier = Modifi
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(AppColors.Calorie.copy(alpha = 0.055f))
+            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f))
             .padding(horizontal = 4.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp)

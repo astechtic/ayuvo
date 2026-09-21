@@ -373,6 +373,19 @@ class PreferencesStore(
         ds.edit { if (v == null) it.remove(Keys.HEALTH_HOME_TILES) else it[Keys.HEALTH_HOME_TILES] = v }
     }
 
+    // -- Summary (docs/ui-structure.md §4 prefs; all cloud-backed) -------------
+
+    /** Comma-separated metric keys for Summary › Favourites; null = not migrated yet (see FavoritePins). */
+    val summaryFavourites: Flow<String?> = ds.data.map { it[Keys.SUMMARY_FAVOURITES] }
+    suspend fun setSummaryFavourites(v: String) { ds.edit { it[Keys.SUMMARY_FAVOURITES] = v } }
+
+    /** Move ring goal (steps per day), clamped to the catalog range 1 000–50 000. */
+    val dailyStepGoal: Flow<Int> = ds.data.map { (it[Keys.DAILY_STEP_GOAL] ?: DAILY_STEP_GOAL_DEFAULT).coerceIn(1_000, 50_000) }
+    suspend fun setDailyStepGoal(v: Int) { ds.edit { it[Keys.DAILY_STEP_GOAL] = v.coerceIn(1_000, 50_000) } }
+
+    val summaryChecklistDismissed: Flow<Boolean> = ds.data.map { it[Keys.SUMMARY_CHECKLIST_DISMISSED] ?: false }
+    suspend fun setSummaryChecklistDismissed(v: Boolean) { ds.edit { it[Keys.SUMMARY_CHECKLIST_DISMISSED] = v } }
+
     /** "mmol/L" | "mg/dL"; null = locale default. */
     val healthGlucoseUnit: Flow<String?> = ds.data.map { it[Keys.HEALTH_GLUCOSE_UNIT] }
     suspend fun setHealthGlucoseUnit(v: String?) {
@@ -1472,6 +1485,9 @@ class PreferencesStore(
         val COACH_HEALTH_DATA_ENABLED = booleanPreferencesKey("coachHealthDataEnabled")
         val COACH_HEALTH_DATA_CONSENTED_AT = stringPreferencesKey("coachHealthDataConsentedAt")
         val HEALTH_HOME_TILES = stringPreferencesKey("healthHomeTiles")
+        val SUMMARY_FAVOURITES = stringPreferencesKey("summaryFavourites")
+        val DAILY_STEP_GOAL = intPreferencesKey("dailyStepGoal")
+        val SUMMARY_CHECKLIST_DISMISSED = booleanPreferencesKey("summaryChecklistDismissed")
         val HEALTH_GLUCOSE_UNIT = stringPreferencesKey("healthGlucoseUnit")
         val HEALTH_HUB_CTA_DISMISSED = booleanPreferencesKey("healthHubCtaDismissed")
         val HEALTH_HUB_PROMPTED_VERSION = intPreferencesKey("healthHubPromptedVersion")
@@ -1554,6 +1570,7 @@ class PreferencesStore(
 
     companion object {
         private const val TAG = "PreferencesStore"
+        const val DAILY_STEP_GOAL_DEFAULT = 10_000
         private const val CUSTOM_BASE_URL_PREFIX = "customBaseURL_"
         private const val FALLBACK_BASE_URL_PREFIX = "fallbackCustomBaseURL_"
         private const val MATCHING_SPEECH_PROVIDER_MIGRATION_VERSION = 1

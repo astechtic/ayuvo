@@ -16,15 +16,48 @@ struct HealthDataStoreTests {
         return (store, runtime, defaults, directory)
     }
 
-    @Test func pinsDefaultAndPersistUnderHealthHomeTiles() throws {
+    @Test func pinsDefaultAndPersistUnderSummaryFavourites() throws {
         let (store, _, defaults, directory) = try makeStore()
         defer { try? FileManager.default.removeItem(at: directory) }
-        #expect(store.pinnedTypeIDs == HealthMetricRegistry.defaultHomeTileIDs)
+        #expect(store.pinnedTypeIDs == MetricPins.defaultIDs)
+        #expect(store.pinnedTypeIDs.first == "app:calories")
+        #expect(store.pinnedHealthTypeIDs == ["steps", "sleep", "heart_rate", "active_energy"])
+        #expect(defaults.stringArray(forKey: MetricPins.key) == MetricPins.defaultIDs, "migration result is persisted")
         store.togglePin("weight")
-        #expect(defaults.stringArray(forKey: HealthDataStore.homeTilesKey)?.contains("weight") == true)
+        #expect(defaults.stringArray(forKey: MetricPins.key)?.contains("weight") == true)
+        #expect(defaults.object(forKey: HealthDataStore.homeTilesKey) == nil, "the legacy key is never written")
         store.setHomeTilesVisible(false)
-        #expect(defaults.stringArray(forKey: HealthDataStore.homeTilesKey) == [])
+        #expect(defaults.stringArray(forKey: MetricPins.key) == [])
         #expect(!store.showsHomeTile)
+    }
+
+    @Test func legacyHomeTilesMigrateOnceIntoSummaryFavourites() throws {
+        let directory = try F.temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let suite = "HealthDataStoreTests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(["sleep", "steps"], forKey: HealthDataStore.homeTilesKey)
+        let runtime = HealthDataRuntime(databaseURL: directory.appendingPathComponent("Health/health.sqlite"))
+        let store = HealthDataStore(runtime: runtime, defaults: defaults, calendar: F.calendar)
+        #expect(Array(store.pinnedTypeIDs.prefix(2)) == ["sleep", "steps"])
+        #expect(store.pinnedTypeIDs.contains("app:calories"))
+        // A legacy "tiles off" list stays off.
+        let offSuite = "HealthDataStoreTests-\(UUID().uuidString)"
+        let offDefaults = UserDefaults(suiteName: offSuite)!
+        offDefaults.removePersistentDomain(forName: offSuite)
+        offDefaults.set([String](), forKey: HealthDataStore.homeTilesKey)
+        let off = HealthDataStore(runtime: runtime, defaults: offDefaults, calendar: F.calendar)
+        #expect(off.pinnedTypeIDs.isEmpty)
+    }
+
+    @Test func homeSnapshotSkipsAppMetricPins() async throws {
+        let (store, runtime, _, directory) = try makeStore()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        #expect(await runtime.openIfNeeded())
+        store.setPinnedTypeIDs(["app:calories", "steps"])
+        await store.refreshSnapshots()
+        #expect(store.homeSnapshot?.tiles.map(\.typeID) == ["steps"])
     }
 
     @Test func coachAccessRequiresAnAffirmativeAct() throws {
@@ -78,7 +111,7 @@ struct HealthDataStoreTests {
         store.togglePin("weight")
         await store.refreshSnapshots()
         let allowed: Set<String> = [
-            HealthDataStore.homeTilesKey, HealthDataStore.coachEnabledKey, HealthDataStore.coachConsentedAtKey,
+            HealthDataStore.homeTilesKey, MetricPins.key, HealthDataStore.coachEnabledKey, HealthDataStore.coachConsentedAtKey,
             HealthDataStore.lastSyncAtKey, HealthDataStore.rateLimitedUntilKey, HealthDataStore.promptedVersionKey, HealthGlucoseUnit.storageKey,
         ]
         for (key, value) in defaults.dictionaryRepresentation() where key.hasPrefix("health") || key.hasPrefix("coachHealth") {

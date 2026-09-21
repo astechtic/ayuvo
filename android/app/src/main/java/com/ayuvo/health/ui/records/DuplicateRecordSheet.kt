@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.records
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,7 +62,7 @@ internal fun DuplicateRecordSheet(
         onDismissRequest = onKeepBoth,
         sheetState = state,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE)
+        containerColor = AyuvoColors.sheetBackground()
     ) {
         Column(
             Modifier

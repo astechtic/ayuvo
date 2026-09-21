@@ -2,7 +2,11 @@ import Foundation
 
 @Observable
 final class FastingStore {
-    private(set) var sessions: [FastingSession] = []
+    private(set) var sessions: [FastingSession] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `sessions` (metric caches key on it).
+    private(set) var revision = 0
     var onSessionsChanged: (() -> Void)?
     private let sessionsBlob: PersistedBlobGuard
 

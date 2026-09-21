@@ -1,0 +1,938 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": 1,
+        "domain": "nutrition",
+        "goal_source": "profile.calories",
+        "icon_android": "Filled.LocalFireDepartment",
+        "icon_ios": "flame.fill",
+        "source": "app",
+        "unit": "kcal"
+      },
+      "input": {
+        "key": "app:calories"
+      },
+      "name": "app:calories"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": 2,
+        "domain": "nutrition",
+        "goal_source": "profile.protein",
+        "icon_android": "Filled.Egg",
+        "icon_ios": "fish.fill",
+        "source": "app",
+        "unit": "g"
+      },
+      "input": {
+        "key": "app:protein"
+      },
+      "name": "app:protein"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "profile.carbs",
+        "icon_android": "Filled.BakeryDining",
+        "icon_ios": "carrot.fill",
+        "source": "app",
+        "unit": "g"
+      },
+      "input": {
+        "key": "app:carbs"
+      },
+      "name": "app:carbs"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "profile.fat",
+        "icon_android": "Filled.Opacity",
+        "icon_ios": "drop.triangle.fill",
+        "source": "app",
+        "unit": "g"
+      },
+      "input": {
+        "key": "app:fat"
+      },
+      "name": "app:fat"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "none",
+        "icon_android": "Filled.Grass",
+        "icon_ios": "leaf.fill",
+        "source": "app",
+        "unit": "g"
+      },
+      "input": {
+        "key": "app:fiber"
+      },
+      "name": "app:fiber"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#007AFF",
+        "colour_hex_dark": "#0A84FF",
+        "default_favourite_order": 4,
+        "domain": "hydration",
+        "goal_source": "prefs.waterDailyGoalMl",
+        "icon_android": "Filled.WaterDrop",
+        "icon_ios": "drop.fill",
+        "source": "app",
+        "unit": "mL"
+      },
+      "input": {
+        "key": "app:water"
+      },
+      "name": "app:water"
+    },
+    {
+      "expected": {
+        "aggregation": "duration",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#00C7BE",
+        "colour_hex_dark": "#63E6E2",
+        "default_favourite_order": null,
+        "domain": "fasting",
+        "goal_source": "none",
+        "icon_android": "Filled.Timer",
+        "icon_ios": "timer",
+        "source": "app",
+        "unit": "s"
+      },
+      "input": {
+        "key": "app:fasting"
+      },
+      "name": "app:fasting"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": 5,
+        "domain": "body",
+        "goal_source": "profile.goalWeight",
+        "icon_android": "Filled.MonitorWeight",
+        "icon_ios": "scalemass.fill",
+        "source": "app",
+        "unit": "kg"
+      },
+      "input": {
+        "key": "app:weight"
+      },
+      "name": "app:weight"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "body",
+        "goal_source": "profile.goalBodyFat",
+        "icon_android": "Filled.Percent",
+        "icon_ios": "percent",
+        "source": "app",
+        "unit": "%"
+      },
+      "input": {
+        "key": "app:body_fat"
+      },
+      "name": "app:body_fat"
+    },
+    {
+      "expected": {
+        "aggregation": "count",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.FitnessCenter",
+        "icon_ios": "figure.strengthtraining.traditional",
+        "source": "app",
+        "unit": "count"
+      },
+      "input": {
+        "key": "app:workouts"
+      },
+      "name": "app:workouts"
+    },
+    {
+      "expected": {
+        "aggregation": "duration",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.Schedule",
+        "icon_ios": "clock.fill",
+        "source": "app",
+        "unit": "s"
+      },
+      "input": {
+        "key": "app:workout_minutes"
+      },
+      "name": "app:workout_minutes"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.LocalFireDepartment",
+        "icon_ios": "flame.fill",
+        "source": "app",
+        "unit": "kcal"
+      },
+      "input": {
+        "key": "app:workout_burn"
+      },
+      "name": "app:workout_burn"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": 3,
+        "domain": "activity",
+        "goal_source": "prefs.dailyStepGoal",
+        "icon_android": "AutoMirrored.Filled.DirectionsWalk",
+        "icon_ios": "figure.walk",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "steps"
+      },
+      "name": "first activity type steps"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": true,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "body",
+        "goal_source": "none",
+        "icon_android": "Filled.MonitorWeight",
+        "icon_ios": "scalemass.fill",
+        "source": "health",
+        "unit": "kg"
+      },
+      "input": {
+        "key": "weight"
+      },
+      "name": "first body type weight"
+    },
+    {
+      "expected": {
+        "aggregation": "count",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF2D55",
+        "colour_hex_dark": "#FF375F",
+        "default_favourite_order": null,
+        "domain": "cycle",
+        "goal_source": "none",
+        "icon_android": "Filled.Loop",
+        "icon_ios": "arrow.triangle.2.circlepath",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "menstrual_flow"
+      },
+      "name": "first cycle_tracking type menstrual_flow"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#007AFF",
+        "colour_hex_dark": "#0A84FF",
+        "default_favourite_order": null,
+        "domain": "hearing",
+        "goal_source": "none",
+        "icon_android": "Filled.Hearing",
+        "icon_ios": "ear.fill",
+        "source": "health",
+        "unit": "dBASPL"
+      },
+      "input": {
+        "key": "environmental_audio_exposure"
+      },
+      "name": "first hearing type environmental_audio_exposure"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "range",
+        "colour_hex": "#FF3B30",
+        "colour_hex_dark": "#FF453A",
+        "default_favourite_order": 7,
+        "domain": "heart",
+        "goal_source": "none",
+        "icon_android": "Filled.Favorite",
+        "icon_ios": "heart.fill",
+        "source": "health",
+        "unit": "count/min"
+      },
+      "input": {
+        "key": "heart_rate"
+      },
+      "name": "first heart type heart_rate"
+    },
+    {
+      "expected": {
+        "aggregation": "duration",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#30B0C7",
+        "colour_hex_dark": "#40CBE0",
+        "default_favourite_order": null,
+        "domain": "mindfulness",
+        "goal_source": "none",
+        "icon_android": "Filled.SelfImprovement",
+        "icon_ios": "brain.head.profile",
+        "source": "health",
+        "unit": "s"
+      },
+      "input": {
+        "key": "mindfulness_session"
+      },
+      "name": "first mental_wellbeing type mindfulness_session"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "mobility",
+        "goal_source": "none",
+        "icon_android": "AutoMirrored.Filled.DirectionsWalk",
+        "icon_ios": "figure.walk.motion",
+        "source": "health",
+        "unit": "m/s"
+      },
+      "input": {
+        "key": "walking_speed"
+      },
+      "name": "first mobility type walking_speed"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#007AFF",
+        "colour_hex_dark": "#0A84FF",
+        "default_favourite_order": null,
+        "domain": "hydration",
+        "goal_source": "none",
+        "icon_android": "Filled.WaterDrop",
+        "icon_ios": "drop.fill",
+        "source": "health",
+        "unit": "mL"
+      },
+      "input": {
+        "key": "hydration"
+      },
+      "name": "first nutrition type hydration"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#5AC8FA",
+        "colour_hex_dark": "#64D2FF",
+        "default_favourite_order": null,
+        "domain": "respiratory",
+        "goal_source": "none",
+        "icon_android": "Filled.Air",
+        "icon_ios": "wind",
+        "source": "health",
+        "unit": "count/min"
+      },
+      "input": {
+        "key": "respiratory_rate"
+      },
+      "name": "first respiratory type respiratory_rate"
+    },
+    {
+      "expected": {
+        "aggregation": "duration",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#5E5CE6",
+        "colour_hex_dark": "#7D7AFF",
+        "default_favourite_order": 6,
+        "domain": "sleep",
+        "goal_source": "none",
+        "icon_android": "Filled.Bedtime",
+        "icon_ios": "bed.double.fill",
+        "source": "health",
+        "unit": "s"
+      },
+      "input": {
+        "key": "sleep"
+      },
+      "name": "first sleep type sleep"
+    },
+    {
+      "expected": {
+        "aggregation": "count",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "symptoms",
+        "goal_source": "none",
+        "icon_android": "Filled.HealthAndSafety",
+        "icon_ios": "stethoscope",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "symptom_abdominal_cramps"
+      },
+      "name": "first symptoms type symptom_abdominal_cramps"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF2D55",
+        "colour_hex_dark": "#FF375F",
+        "default_favourite_order": null,
+        "domain": "vitals",
+        "goal_source": "none",
+        "icon_android": "Filled.Bloodtype",
+        "icon_ios": "drop.fill",
+        "source": "health",
+        "unit": "mmol/L"
+      },
+      "input": {
+        "key": "blood_glucose"
+      },
+      "name": "first vitals type blood_glucose"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#8E8E93",
+        "colour_hex_dark": "#98989D",
+        "default_favourite_order": null,
+        "domain": "other",
+        "goal_source": "none",
+        "icon_android": "Filled.MoreHoriz",
+        "icon_ios": "ellipsis.circle",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "uv_exposure"
+      },
+      "name": "first other type uv_exposure"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": 8,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.LocalFireDepartment",
+        "icon_ios": "flame.fill",
+        "source": "health",
+        "unit": "kcal"
+      },
+      "input": {
+        "key": "active_energy"
+      },
+      "name": "active_energy"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": true,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "body",
+        "goal_source": "none",
+        "icon_android": "Filled.Percent",
+        "icon_ios": "percent",
+        "source": "health",
+        "unit": "%"
+      },
+      "input": {
+        "key": "body_fat"
+      },
+      "name": "body_fat"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "range",
+        "colour_hex": "#FF3B30",
+        "colour_hex_dark": "#FF453A",
+        "default_favourite_order": null,
+        "domain": "heart",
+        "goal_source": "none",
+        "icon_android": "Filled.MonitorHeart",
+        "icon_ios": "heart.text.square.fill",
+        "source": "health",
+        "unit": "mmHg"
+      },
+      "input": {
+        "key": "blood_pressure"
+      },
+      "name": "blood_pressure"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.LocalFireDepartment",
+        "icon_ios": "flame.fill",
+        "source": "health",
+        "unit": "m/s"
+      },
+      "input": {
+        "key": "speed"
+      },
+      "name": "aggregation AVERAGE via speed"
+    },
+    {
+      "expected": {
+        "aggregation": "count",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.LocalFireDepartment",
+        "icon_ios": "flame.fill",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "stand_hours"
+      },
+      "name": "aggregation COUNT via stand_hours"
+    },
+    {
+      "expected": {
+        "aggregation": "duration",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.Timer",
+        "icon_ios": "timer",
+        "source": "health",
+        "unit": "s"
+      },
+      "input": {
+        "key": "exercise_minutes"
+      },
+      "name": "aggregation DURATION via exercise_minutes"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.LocalFireDepartment",
+        "icon_ios": "flame.fill",
+        "source": "health",
+        "unit": "W"
+      },
+      "input": {
+        "key": "cycling_ftp"
+      },
+      "name": "aggregation LATEST via cycling_ftp"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#8E8E93",
+        "colour_hex_dark": "#98989D",
+        "default_favourite_order": null,
+        "domain": "other",
+        "goal_source": "none",
+        "icon_android": "Filled.MoreHoriz",
+        "icon_ios": "ellipsis.circle",
+        "source": "unknown",
+        "unit": "none"
+      },
+      "input": {
+        "key": "HKQuantityTypeIdentifierMadeUp"
+      },
+      "name": "unknown HealthKit id"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#8E8E93",
+        "colour_hex_dark": "#98989D",
+        "default_favourite_order": null,
+        "domain": "other",
+        "goal_source": "none",
+        "icon_android": "Filled.MoreHoriz",
+        "icon_ios": "ellipsis.circle",
+        "source": "unknown",
+        "unit": "none"
+      },
+      "input": {
+        "key": "app:unknown"
+      },
+      "name": "unknown app key"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#8E8E93",
+        "colour_hex_dark": "#98989D",
+        "default_favourite_order": null,
+        "domain": "other",
+        "goal_source": "none",
+        "icon_android": "Filled.MoreHoriz",
+        "icon_ios": "ellipsis.circle",
+        "source": "unknown",
+        "unit": "none"
+      },
+      "input": {
+        "key": ""
+      },
+      "name": "empty key"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.Straighten",
+        "icon_ios": "ruler.fill",
+        "source": "health",
+        "unit": "m"
+      },
+      "input": {
+        "key": "distance"
+      },
+      "name": "distance icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.Stairs",
+        "icon_ios": "figure.stairs",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "floors_climbed"
+      },
+      "name": "floors_climbed icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#FF9500",
+        "colour_hex_dark": "#FF9F0A",
+        "default_favourite_order": null,
+        "domain": "activity",
+        "goal_source": "none",
+        "icon_android": "Filled.Bolt",
+        "icon_ios": "bolt.fill",
+        "source": "health",
+        "unit": "kcal"
+      },
+      "input": {
+        "key": "total_energy"
+      },
+      "name": "total_energy icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF3B30",
+        "colour_hex_dark": "#FF453A",
+        "default_favourite_order": null,
+        "domain": "heart",
+        "goal_source": "none",
+        "icon_android": "Filled.MonitorHeart",
+        "icon_ios": "heart.circle.fill",
+        "source": "health",
+        "unit": "count/min"
+      },
+      "input": {
+        "key": "resting_heart_rate"
+      },
+      "name": "resting_heart_rate icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF3B30",
+        "colour_hex_dark": "#FF453A",
+        "default_favourite_order": null,
+        "domain": "heart",
+        "goal_source": "none",
+        "icon_android": "Filled.MonitorHeart",
+        "icon_ios": "waveform.path.ecg",
+        "source": "health",
+        "unit": "ms"
+      },
+      "input": {
+        "key": "hrv_rmssd"
+      },
+      "name": "hrv_rmssd icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#5AC8FA",
+        "colour_hex_dark": "#64D2FF",
+        "default_favourite_order": null,
+        "domain": "respiratory",
+        "goal_source": "none",
+        "icon_android": "Filled.Air",
+        "icon_ios": "lungs.fill",
+        "source": "health",
+        "unit": "%"
+      },
+      "input": {
+        "key": "blood_oxygen"
+      },
+      "name": "blood_oxygen icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "avg",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF2D55",
+        "colour_hex_dark": "#FF375F",
+        "default_favourite_order": null,
+        "domain": "vitals",
+        "goal_source": "none",
+        "icon_android": "Filled.Thermostat",
+        "icon_ios": "thermometer",
+        "source": "health",
+        "unit": "degC"
+      },
+      "input": {
+        "key": "body_temperature"
+      },
+      "name": "body_temperature icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#FF3B30",
+        "colour_hex_dark": "#FF453A",
+        "default_favourite_order": null,
+        "domain": "heart",
+        "goal_source": "none",
+        "icon_android": "Filled.Speed",
+        "icon_ios": "speedometer",
+        "source": "health",
+        "unit": "mL/min·kg"
+      },
+      "input": {
+        "key": "vo2_max"
+      },
+      "name": "vo2_max icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "body",
+        "goal_source": "none",
+        "icon_android": "Filled.Height",
+        "icon_ios": "figure.stand",
+        "source": "health",
+        "unit": "m"
+      },
+      "input": {
+        "key": "height"
+      },
+      "name": "height icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "body",
+        "goal_source": "none",
+        "icon_android": "Filled.Calculate",
+        "icon_ios": "function",
+        "source": "health",
+        "unit": "count"
+      },
+      "input": {
+        "key": "bmi"
+      },
+      "name": "bmi icon (curated override icon)",
+      "notes": "curated override icon"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#AF52DE",
+        "colour_hex_dark": "#BF5AF2",
+        "default_favourite_order": null,
+        "domain": "body",
+        "goal_source": "none",
+        "icon_android": "Filled.Accessibility",
+        "icon_ios": "figure",
+        "source": "health",
+        "unit": "kcal/d"
+      },
+      "input": {
+        "key": "basal_metabolic_rate"
+      },
+      "name": "basal_metabolic_rate icon (falls back to the domain icon)",
+      "notes": "falls back to the domain icon"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "resolve_metric",
+  "version": 1
+}

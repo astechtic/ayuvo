@@ -439,7 +439,7 @@ struct WorkoutLogView: View {
                 }
             }
             // Keep the chrome quiet: the date strip and burn calculator lead.
-            .navigationTitle("")
+            .navigationTitle(showsNavigationBar ? String(localized: "Workouts") : "")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(showsNavigationBar ? .visible : .hidden, for: .navigationBar)
             .toolbar {

@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -25,6 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayuvo.health.R
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import com.ayuvo.health.services.health.HealthAvailabilityMessageKind
 import com.ayuvo.health.services.health.HealthConnectAvailability
 import com.ayuvo.health.services.health.healthAvailabilityMessageKind
@@ -159,4 +165,17 @@ fun relativeTimeText(ms: Long?, nowMs: Long = System.currentTimeMillis()): Strin
         diffMin < 60 * 24 -> pluralStringResource(R.plurals.health_relative_hours, diffMin / 60, diffMin / 60)
         else -> pluralStringResource(R.plurals.health_relative_days, diffMin / (60 * 24), diffMin / (60 * 24))
     }
+}
+
+@Composable
+internal fun formatDate(ms: Long): String {
+    val fmt = remember { DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM) }
+    return Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()).toLocalDate().format(fmt)
+}
+
+/** "yyyy-MM-dd" rollup day → localized medium date; the raw key when unparsable. */
+@Composable
+internal fun formatDayKey(dayKey: String): String {
+    val fmt = remember { DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM) }
+    return runCatching { LocalDate.parse(dayKey).format(fmt) }.getOrDefault(dayKey)
 }

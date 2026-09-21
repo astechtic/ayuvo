@@ -109,7 +109,10 @@ fun RecordsScreen(
     /** §27 multi-select "Ask Coach": the chosen records, no prompt. */
     onAskCoach: (List<String>) -> Unit = {},
     /** §34 multi-select "Share": opens "What will be shared" for the chosen records. */
-    onShare: (List<String>) -> Unit = {}
+    onShare: (List<String>) -> Unit = {},
+    /** One-shot "Add record" request from the Summary log sheet (its id), consumed once. */
+    openAddRequest: Long? = null,
+    onOpenAddHandled: (Long) -> Unit = {}
 ) {
     val vm: RecordsViewModel = viewModel(factory = RecordsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -125,6 +128,12 @@ fun RecordsScreen(
     val launchers = rememberAddRecordLaunchers(onImport = vm::import)
 
     BackHandler(enabled = ui.selecting) { vm.clearSelection() }
+
+    LaunchedEffect(openAddRequest) {
+        val request = openAddRequest ?: return@LaunchedEffect
+        showAddSheet = true
+        onOpenAddHandled(request)
+    }
 
     LaunchedEffect(notice?.id) {
         val current = notice ?: return@LaunchedEffect
@@ -149,7 +158,7 @@ fun RecordsScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbar, modifier = Modifier.padding(bottom = BottomNavScrollPadding - 40.dp)) }
+        snackbarHost = { SnackbarHost(snackbar, modifier = Modifier.padding(bottom = 8.dp)) }
     ) { padding ->
         Column(
             Modifier

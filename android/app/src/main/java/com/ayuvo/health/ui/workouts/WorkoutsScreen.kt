@@ -51,6 +51,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.platform.testTag
+import com.ayuvo.health.ui.design.AyuvoTopBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -95,10 +99,19 @@ import com.ayuvo.health.ui.theme.AppColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * Workouts shell. With [forcedMode] the screen shows only that mode under a title bar (Browse ›
+ * Activity › Workouts / Exercise Library) and the mode button navigates with [onOpenLibrary] /
+ * [onOpenLog] instead of switching in place.
+ */
 @Composable
 fun WorkoutsScreen(
     container: AppContainer,
     modifier: Modifier = Modifier,
+    forcedMode: WorkoutTabMode? = null,
+    onOpenLibrary: (() -> Unit)? = null,
+    onOpenLog: (() -> Unit)? = null,
+    onBack: (() -> Unit)? = null,
     /** True while a full-screen sub-screen (exercise detail) replaces the workouts content. */
     onSubScreenVisibleChange: (Boolean) -> Unit = {}
 ) {
@@ -196,28 +209,53 @@ fun WorkoutsScreen(
             if (vm.diaryUiState.mode == WorkoutTabMode.LOG) WorkoutTabMode.LIBRARY else WorkoutTabMode.LOG
         )
     }
+    val mode = forcedMode ?: vm.diaryUiState.mode
+    val showLibrary: () -> Unit = onOpenLibrary ?: toggleMode
+    val showLog: () -> Unit = onOpenLog ?: toggleMode
+    val titled = onBack != null
 
-    if (vm.diaryUiState.mode == WorkoutTabMode.LOG) {
-        WorkoutDiaryScreen(
-            container = container,
-            bodyWeightKg = bodyWeightKg,
-            state = vm.diaryUiState,
-            exerciseRepository = repo,
-            viewModel = vm,
-            weekStartsOnMonday = weekStartsOnMonday,
-            onShowLibrary = toggleMode,
-            onCreateExercise = { showCreateUserExercise = true },
-            onEditUserExercise = { editingUserExerciseId = it },
-            modifier = modifier
-        )
-    } else {
-        WorkoutLibraryScreen(
-            repo = repo,
-            vm = vm,
-            onShowLog = toggleMode,
-            onCreateExercise = { showCreateUserExercise = true },
-            modifier = modifier
-        )
+    Column(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+        if (titled) {
+            AyuvoTopBar(
+                title = stringResource(if (mode == WorkoutTabMode.LOG) R.string.nav_workouts else R.string.browse_exercise_library),
+                onBack = onBack,
+                actions = {
+                    IconButton(
+                        onClick = if (mode == WorkoutTabMode.LOG) showLibrary else showLog,
+                        modifier = Modifier.testTag(if (mode == WorkoutTabMode.LOG) "workouts.openLibrary" else "workouts.openLog")
+                    ) {
+                        Icon(
+                            imageVector = if (mode == WorkoutTabMode.LOG) Icons.Filled.SportsGymnastics else Icons.Filled.FitnessCenter,
+                            contentDescription = stringResource(if (mode == WorkoutTabMode.LOG) R.string.browse_exercise_library else R.string.nav_workouts)
+                        )
+                    }
+                }
+            )
+        }
+        Box(Modifier.weight(1f)) {
+            if (mode == WorkoutTabMode.LOG) {
+                WorkoutDiaryScreen(
+                    container = container,
+                    bodyWeightKg = bodyWeightKg,
+                    state = vm.diaryUiState,
+                    exerciseRepository = repo,
+                    viewModel = vm,
+                    weekStartsOnMonday = weekStartsOnMonday,
+                    onShowLibrary = showLibrary,
+                    showModeToggle = !titled,
+                    onCreateExercise = { showCreateUserExercise = true },
+                    onEditUserExercise = { editingUserExerciseId = it }
+                )
+            } else {
+                WorkoutLibraryScreen(
+                    repo = repo,
+                    vm = vm,
+                    onShowLog = showLog,
+                    showModeToggle = !titled,
+                    onCreateExercise = { showCreateUserExercise = true }
+                )
+            }
+        }
     }
 }
 
@@ -248,7 +286,8 @@ internal fun WorkoutModeToggleButton(
 private fun WorkoutLibrarySearchRow(
     value: String,
     onValueChange: (String) -> Unit,
-    onShowLog: () -> Unit
+    onShowLog: () -> Unit,
+    showModeToggle: Boolean = true
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -256,7 +295,7 @@ private fun WorkoutLibrarySearchRow(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         SearchPill(value = value, onValueChange = onValueChange, modifier = Modifier.weight(1f))
-        WorkoutModeToggleButton(mode = WorkoutTabMode.LIBRARY, onToggle = onShowLog)
+        if (showModeToggle) WorkoutModeToggleButton(mode = WorkoutTabMode.LIBRARY, onToggle = onShowLog)
     }
 }
 
@@ -270,7 +309,8 @@ private fun WorkoutLibraryScreen(
     vm: WorkoutsViewModel,
     onShowLog: () -> Unit,
     onCreateExercise: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showModeToggle: Boolean = true
 ) {
     // Filtering runs off the main thread in the view model; the list renders one page at a
     // time and asks for the next page as rows near the end appear.
@@ -323,7 +363,8 @@ private fun WorkoutLibraryScreen(
             WorkoutLibrarySearchRow(
                 value = vm.searchInput,
                 onValueChange = { vm.searchInput = it },
-                onShowLog = onShowLog
+                onShowLog = onShowLog,
+                showModeToggle = showModeToggle
             )
             FilterRow(repo, vm)
         }

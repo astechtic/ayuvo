@@ -53,7 +53,7 @@ struct HealthMetricChart: View {
             }
             if let selected, !type.isSleep {
                 RuleMark(x: .value("Selected", selected.start, unit: barUnit))
-                    .foregroundStyle(Color.primary.opacity(0.25))
+                    .foregroundStyle(AppColors.calorie.opacity(0.7))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
             }
         }
@@ -67,22 +67,18 @@ struct HealthMetricChart: View {
                     .foregroundStyle(Color.secondary)
             }
         }
-        .chartPlotStyle { plotArea in
-            plotArea.background(
-                type.category.tint.opacity(0.04),
-                in: RoundedRectangle(cornerRadius: 10, style: .continuous)
-            )
-        }
         .chartLegend(type.isSleep && series.range != .day ? .visible : .hidden)
         .chartOverlay { proxy in
             if !type.isSleep {
-                ChartScrubOverlay(proxy: proxy, points: series.points, date: { $0.start }, selected: $selected) { point in
+                ChartScrubOverlay(proxy: proxy, points: series.points.filter { $0.value != nil }, date: { $0.start }, selected: $selected) { point in
                     HealthChartInspectorLabel(type: type, point: point, range: series.range, displayY: displayY, unit: yUnitLabel)
                 }
             }
         }
         .animation(.snappy(duration: 0.16), value: selected?.start)
         .frame(height: 210)
+        // Headroom so the top axis label is never clipped.
+        .padding(.top, 8)
         .clipped()
         .accessibilityLabel(Text(type.displayName))
         .accessibilityValue(Text(accessibilitySummary))
@@ -93,15 +89,15 @@ struct HealthMetricChart: View {
     @ChartContentBuilder
     private var barMarks: some ChartContent {
         ForEach(series.points) { point in
-            BarMark(
-                x: .value("Time", point.start, unit: barUnit),
-                y: .value(yUnitLabel, displayY(point.value) ?? 0)
-            )
-            .foregroundStyle(
-                LinearGradient(colors: [type.category.tint.opacity(0.55), type.category.tint], startPoint: .bottom, endPoint: .top)
-            )
-            .clipShape(.rect(cornerRadius: 3))
-            .opacity(selected == nil || selected == point ? 1 : 0.45)
+            if let value = displayY(point.value) {
+                BarMark(
+                    x: .value("Time", point.start, unit: barUnit),
+                    y: .value(yUnitLabel, value)
+                )
+                .foregroundStyle(type.category.tint)
+                .clipShape(.rect(cornerRadius: 3))
+                .opacity(selected == nil || selected == point ? 1 : 0.45)
+            }
         }
     }
 
@@ -149,11 +145,13 @@ struct HealthMetricChart: View {
     @ChartContentBuilder
     private var categoryMarks: some ChartContent {
         ForEach(series.points) { point in
-            PointMark(
-                x: .value("Time", point.start, unit: barUnit),
-                y: .value("Count", point.value ?? 1)
-            )
-            .foregroundStyle(type.category.tint)
+            if let value = point.value {
+                PointMark(
+                    x: .value("Time", point.start, unit: barUnit),
+                    y: .value("Count", value)
+                )
+                .foregroundStyle(type.category.tint)
+            }
         }
     }
 

@@ -1,0 +1,235 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "has_data": true,
+        "max": 300,
+        "min": 20,
+        "values": [
+          150,
+          null,
+          null,
+          300,
+          null,
+          null,
+          20
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "entries": [
+          {
+            "t_ms": 1789113600000,
+            "value": 100
+          },
+          {
+            "t_ms": 1789117200000,
+            "value": 50
+          },
+          {
+            "t_ms": 1789372800000,
+            "value": 300
+          },
+          {
+            "t_ms": 1789632000000,
+            "value": 20
+          },
+          {
+            "t_ms": 1789027200000,
+            "value": 999
+          }
+        ],
+        "now_ms": 1789639200000,
+        "time_zone": "UTC"
+      },
+      "name": "sum with gaps"
+    },
+    {
+      "expected": {
+        "has_data": false,
+        "max": null,
+        "min": null,
+        "values": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "entries": [
+          {
+            "t_ms": 1788229800000,
+            "value": 5
+          }
+        ],
+        "now_ms": 1789619400000,
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "all null"
+    },
+    {
+      "expected": {
+        "has_data": true,
+        "max": 81,
+        "min": 80.9,
+        "values": [
+          null,
+          null,
+          null,
+          81,
+          null,
+          80.9,
+          null
+        ]
+      },
+      "input": {
+        "aggregation": "last",
+        "entries": [
+          {
+            "t_ms": 1789365600000,
+            "value": 81.2
+          },
+          {
+            "t_ms": 1789365600000,
+            "value": 81.0
+          },
+          {
+            "t_ms": 1789362000000,
+            "value": 82.5
+          },
+          {
+            "t_ms": 1789538400000,
+            "value": 80.9
+          }
+        ],
+        "now_ms": 1789635600000,
+        "time_zone": "Europe/London"
+      },
+      "name": "last per day"
+    },
+    {
+      "expected": {
+        "has_data": true,
+        "max": 75,
+        "min": 70,
+        "values": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          75,
+          70
+        ]
+      },
+      "input": {
+        "aggregation": "avg",
+        "entries": [
+          {
+            "t_ms": 1789556400000,
+            "value": 62
+          },
+          {
+            "t_ms": 1789574400000,
+            "value": 88
+          },
+          {
+            "t_ms": 1789642800000,
+            "value": 70
+          }
+        ],
+        "now_ms": 1789653600000,
+        "time_zone": "America/New_York"
+      },
+      "name": "avg per day"
+    },
+    {
+      "expected": {
+        "has_data": true,
+        "max": 2,
+        "min": 1,
+        "values": [
+          null,
+          null,
+          null,
+          2,
+          null,
+          1,
+          1
+        ]
+      },
+      "input": {
+        "aggregation": "count",
+        "entries": [
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789324200000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789497000000,
+            "value": 1
+          },
+          {
+            "t_ms": 1780338600000,
+            "value": 1
+          },
+          {
+            "t_ms": 1789605000000,
+            "value": 1
+          }
+        ],
+        "now_ms": 1789619400000,
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "count per day"
+    },
+    {
+      "expected": {
+        "has_data": true,
+        "max": 3,
+        "min": 1,
+        "values": [
+          null,
+          null,
+          null,
+          1,
+          2,
+          null,
+          3
+        ]
+      },
+      "input": {
+        "aggregation": "sum",
+        "entries": [
+          {
+            "t_ms": 1793448000000,
+            "value": 1
+          },
+          {
+            "t_ms": 1793511000000,
+            "value": 2
+          },
+          {
+            "t_ms": 1793768340000,
+            "value": 3
+          }
+        ],
+        "now_ms": 1793768340000,
+        "time_zone": "America/New_York"
+      },
+      "name": "across NY DST end"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "sparkline_7d",
+  "version": 1
+}

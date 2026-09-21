@@ -195,7 +195,6 @@
     <string name="speech_description_assemblyai">Універсальна модель AssemblyAI. Висока точність, доступний безкоштовний тариф.</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">Головна</string>
     <string name="nav_coach">Тренер</string>
     <string name="nav_settings">Налаштування</string>
     <string name="nav_about">Про застосунок</string>
@@ -258,11 +257,6 @@
     <string name="onboarding_body_fat_no_worries">Нічого страшного! Ми використаємо стандартну формулу\nна основі вашого зросту, ваги та віку.</string>
     <string name="onboarding_goal_optional">Мета (необов\'язково)</string>
     <string name="onboarding_goal_set_later">Ви можете встановити це пізніше в налаштуваннях.</string>
-    <string name="progress_metric_weight">Вага</string>
-    <string name="progress_metric_body_fat">Відсоток жиру</string>
-    <string name="progress_metric_workouts">Тренування</string>
-    <string name="progress_log_body_fat">Записати відсоток жиру</string>
-    <string name="progress_log_first_body_fat">Зареєструйте свій перший показник жиру в організмі, щоб переглянути тенденції</string>
     <string name="progress_log_body_fat_title">Записати відсоток жиру</string>
     <string name="saved_meals_search_placeholder">Пошук збережених продуктів</string>
     <string name="saved_meals_no_match">Немає відповідних продуктів</string>
@@ -520,59 +514,20 @@
     <string name="coach_chip_training" translatable="false">How is my recent training?</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1 тиж.</string>
-    <string name="progress_range_month">1 міс.</string>
-    <string name="progress_range_3m">3 міс.</string>
-    <string name="progress_range_6m">6 міс.</string>
-    <string name="progress_range_year">1 рік</string>
-    <string name="progress_range_all">Весь час</string>
-
-    <string name="progress_weight_section">Вага</string>
-    <string name="progress_log_weight">Записати вагу</string>
-    <string name="progress_stat_current">Поточна</string>
-    <string name="progress_stat_goal">Мета</string>
-    <string name="progress_stat_net_change">Зміна</string>
-    <string name="progress_stat_average">Середнє</string>
-    <string name="progress_log_first_weight">Запишіть перше значення ваги, щоб переглянути динаміку</string>
-
     <string name="progress_weight_history">Історія ваги</string>
     <string name="progress_body_fat_history">Історія жиру в організмі</string>
     <string name="progress_workout_history">Історія тренувань</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d розрахований витрат · торкніться, щоб переглянути або видалити</item>
-        <item quantity="few">%1$d розраховані витрати · торкніться, щоб переглянути або видалити</item>
-        <item quantity="many">%1$d розрахованих витрат · торкніться, щоб переглянути або видалити</item>
-        <item quantity="other">%1$d розрахованих витрат · торкніться, щоб переглянути або видалити</item>
-    </plurals>
     <string name="progress_workout_delete_title">Видалити запис тренування?</string>
     <string name="progress_workout_delete_message">Видаляє дані про спалені калорії з Ayuvo і Health Connect. Ваш план щоденника тренування залишається збереженим.</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d запис · торкніться, щоб переглянути або видалити</item>
-        <item quantity="few">%1$d записи · торкніться, щоб переглянути або видалити</item>
-        <item quantity="many">%1$d записів · торкніться, щоб переглянути або видалити</item>
-        <item quantity="other">%1$d записів · торкніться, щоб переглянути або видалити</item>
-    </plurals>
-
-    <string name="progress_workout_section">Тренувальна активність</string>
-    <string name="progress_workout_stat_workouts">Тренування</string>
-    <string name="progress_workout_stat_total">Загальне спалювання</string>
-    <string name="progress_workout_stat_average">Середнє спалювання</string>
-    <string name="progress_workout_stat_latest">Останнє</string>
     <string name="progress_workout_stat_days">Дні</string>
-    <string name="progress_workout_no_range">За цей період немає розрахованого спалювання від тренувань</string>
-    <string name="progress_workout_chart_description">Графік спалювання від тренувань з %1$s по %2$s. Усього %3$d кілокалорій; останнє значення %4$d кілокалорій.</string>
 
 
-    <string name="progress_calories_section">Калорії</string>
-    <string name="progress_avg_format">Середнє: %1$d ккал</string>
-    <string name="progress_no_food">Їжу ще не зареєстровано</string>
 
-    <string name="progress_macro_averages">Середні макроси</string>
-    <string name="progress_nutrient_averages">Середні показники нутрієнтів</string>
-    <string name="progress_loading_nutrition">Завантаження даних про харчування…</string>
-    <string name="progress_macro_progress_format">%1$d г / %2$d г</string>
 
     <string name="progress_log_weight_title">Журнал ваги</string>
+
+
+
 
     <string name="progress_goal_reached_title">Щиро вітаю! 🎉</string>
     <string name="progress_goal_reached_message">Ви досягли цільової ваги! Перейдіть до налаштувань, щоб змінити мету, і натисніть «Перерахувати цілі», щоб оновити їх.</string>
@@ -603,11 +558,7 @@
     <string name="settings_allergen_import_none_found">У цьому звіті не знайдено чітко позитивних або підвищених сенсибілізацій.</string>
     <string name="settings_allergen_import_failed">Не вдалося прочитати лабораторний звіт.</string>
     <string name="settings_allergen_import_read_failed">Не вдалося прочитати вибраний файл.</string>
-    <string name="settings_section_goals">Цілі та харчування</string>
     <string name="settings_section_daily_targets">Щоденні цілі</string>
-    <string name="settings_section_app">Налаштування застосунку</string>
-    <string name="settings_section_tracking_reminders">Відстеження та нагадування</string>
-    <string name="settings_category_ai_providers">Провайдери ШІ та резервні варіанти</string>
     <string name="settings_section_ai_voice">ШІ та голос</string>
     <string name="settings_section_ai">Постачальник ШІ</string>
     <string name="settings_on_device_models">Моделі на пристрої</string>
@@ -622,7 +573,6 @@
     <string name="settings_model_low_ram_unsupported">Не підтримується на пристроях з малим обсягом оперативної пам\'яті</string>
     <string name="settings_model_processor_unsupported">Процесор цього пристрою не підтримується</string>
     <string name="settings_section_text_ai">Текстовий ШІ</string>
-    <string name="settings_info_about_format" translatable="false">About %1$s</string>
     <string name="settings_info_primary_ai" translatable="false">Handles every request that includes a photo. It also handles text-only requests when Use Separate Text Provider is off. When that switch is on, Text AI handles text-only work instead.</string>
     <string name="settings_info_text_ai" translatable="false">An optional provider for requests without photos, including typed food, Coach chat, voice transcripts, goals, and advice. When Use Separate Text Provider is off, Primary AI handles these requests.</string>
     <string name="settings_info_text_fallback" translatable="false">Retries a failed text-only request once. It backs up Text AI when the separate provider is enabled; otherwise it backs up Primary AI for text-only work. It never receives photos.</string>
@@ -637,14 +587,11 @@
     <string name="settings_section_speech_fallback">Резервний STT</string>
     <string name="settings_speech_fallback_footer">Використовується лише коли обраний провайдер записаного аудіо не спрацював. Вбудоване розпізнавання мовлення вже повторює локальні та онлайн-режими.</string>
     <string name="settings_native_speech_fallback_footer">Вбудоване розпізнавання мовлення автоматично відновлюється між локальним, онлайн- і автоматичним режимами Android. Оберіть віддаленого провайдера мовлення вище, щоб налаштувати окремий резервний варіант.</string>
-    <string name="settings_section_workout">Тренування</string>
     <string name="settings_training_split" translatable="false">Training Split</string>
     <string name="settings_rpe_scale" translatable="false">RPE Scale</string>
     <string name="settings_rpe_guide" translatable="false">Strength 1–10: 1 is very easy and 10 is maximum effort.\nCR10 0–10: perceived exertion with decimals allowed.\nBorg 6–20: classic whole-number exertion scale.</string>
     <string name="settings_workout_health_access" translatable="false">Workout Burn Sync</string>
     <string name="settings_grant_permission" translatable="false">Grant permission</string>
-    <string name="settings_section_health">Здоров\'я та дані</string>
-    <string name="settings_section_data_management">Керування даними</string>
 
     <string name="settings_gender">Стать</string>
     <string name="settings_birthday">День народження</string>
@@ -779,7 +726,6 @@
     <string name="settings_clear_key">Очистити ключ</string>
 
     <!-- Custom AI Instructions + Fallback Provider (v1.0.6) -->
-    <string name="settings_section_custom_instructions">Власні інструкції для ШІ</string>
     <string name="settings_custom_instructions_placeholder">напр. Я живу в Німеччині, враховуй європейські розміри порцій, віддаю перевагу брендам ALDI/REWE. Я на сушці.</string>
     <string name="settings_custom_instructions_footer">Додатковий контекст, який надсилається з кожним запитом до ШІ — регіон, дієта, спортивні цілі або будь-що, що б вам довелося повторювати щоразу. Залиште порожнім, щоб вимкнути.</string>
     <string name="settings_save">Зберегти</string>

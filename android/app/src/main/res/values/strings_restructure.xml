@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Summary / Browse restructure (docs/ui-structure.md). English source strings; translations follow incrementally. -->
+<resources>
+    <!-- Tabs -->
+    <string name="nav_summary">Summary</string>
+    <string name="nav_browse">Browse</string>
+
+    <!-- Fasting -->
+    <string name="fasting_off_title">Fasting Tracking Is Off</string>
+    <string name="fasting_off_body">Turn on fasting tracking to time your fasts and see them in your diary and trends.</string>
+    <string name="fasting_turn_on">Turn On Fasting</string>
+    <string name="fasting_section_current">Current Fast</string>
+    <string name="fasting_section_trends">Trends</string>
+    <string name="fasting_section_history">History</string>
+    <string name="fasting_trend_subtitle">Time fasted per day</string>
+    <string name="fasting_history_empty">Completed fasts appear here.</string>
+
+    <!-- Browse -->
+    <string name="browse_search_placeholder">Search</string>
+    <string name="browse_search_empty">No results for “%1$s”</string>
+    <string name="browse_search_categories">Categories</string>
+    <string name="browse_search_ayuvo">Ayuvo</string>
+    <string name="browse_search_health_connect">Health Connect</string>
+    <string name="browse_no_data">No Data</string>
+    <string name="browse_health_sync">Health Sync</string>
+    <string name="browse_sync_off">Health Connect is off</string>
+    <string name="browse_connect_to_see">Connect Health Connect from Browse to see this data.</string>
+    <string name="browse_logged_in_ayuvo">Logged in Ayuvo</string>
+    <string name="browse_from_health_connect">From Health Connect</string>
+    <string name="browse_body_measurements">Body Measurements</string>
+    <string name="browse_exercise_library">Exercise Library</string>
+    <string name="browse_exercise_library_caption">Exercises, muscles and how-tos</string>
+    <string name="browse_workouts_caption_empty">No workouts logged yet</string>
+    <plurals name="browse_measurement_count">
+        <item quantity="one">%1$d entry</item>
+        <item quantity="other">%1$d entries</item>
+    </plurals>
+    <plurals name="browse_workout_count">
+        <item quantity="one">%1$d workout</item>
+        <item quantity="other">%1$d workouts</item>
+    </plurals>
+
+    <!-- Nutrition -->
+    <string name="nutrition_trends">Trends</string>
+    <string name="nutrition_all_nutrients">All Nutrients</string>
+    <string name="nutrition_today_header">Today</string>
+    <string name="nutrition_nothing_logged">No food logged today.</string>
+    <string name="nutrition_not_logged_header">Not Logged Today</string>
+
+    <!-- Summary -->
+    <string name="summary_today">Today</string>
+    <string name="summary_favourites">Favourites</string>
+    <string name="summary_edit">Edit</string>
+    <string name="summary_highlights">Highlights</string>
+    <string name="summary_add_favourites">Add Favourites</string>
+    <string name="summary_add_favourites_body">Pin the metrics you check most to see them here.</string>
+    <string name="summary_edit_favourites">Favourites</string>
+    <string name="summary_edit_favourites_body">%1$d of %2$d selected. Summary shows them in the order you pick them.</string>
+    <string name="summary_ring_eat">Eat</string>
+    <string name="summary_ring_move">Move</string>
+    <string name="summary_ring_drink">Drink</string>
+    <string name="summary_ring_connect">Connect Health</string>
+    <string name="summary_ring_no_data">No data</string>
+    <string name="summary_unit_kcal">kcal</string>
+    <string name="summary_unit_steps">steps</string>
+    <string name="summary_minutes_format">%1$d min</string>
+    <plurals name="summary_workouts_today">
+        <item quantity="one">%1$d workout today</item>
+        <item quantity="other">%1$d workouts today</item>
+    </plurals>
+    <string name="summary_weight_down">Weight down %1$s a week</string>
+    <string name="summary_weight_up">Weight up %1$s a week</string>
+    <string name="summary_weight_steady">Weight holding steady</string>
+    <plurals name="summary_weight_trend_basis">
+        <item quantity="one">Trend from %1$d weigh-in in the last 90 days</item>
+        <item quantity="other">Trend from %1$d weigh-ins in the last 90 days</item>
+    </plurals>
+    <string name="summary_latest_workout">Latest workout</string>
+    <string name="summary_get_more">Get More From Ayuvo</string>
+    <string name="summary_checklist_dismiss">Dismiss</string>
+    <string name="summary_check_connect">Connect Health</string>
+    <string name="summary_check_connect_body">See steps, sleep and heart data alongside your logs.</string>
+    <string name="summary_check_reminders">Turn On Reminders</string>
+    <string name="summary_check_reminders_body">Get nudges for meals, water, fasting and doses.</string>
+    <string name="summary_check_record">Add a Health Record</string>
+    <string name="summary_check_record_body">Keep lab reports and prescriptions in one place.</string>
+    <string name="summary_check_medications">Add Medications</string>
+    <string name="summary_check_medications_body">Track doses and get reminded on time.</string>
+    <string name="summary_log_title">Log</string>
+    <string name="summary_log_food">Food</string>
+    <string name="summary_log_water">Water</string>
+    <string name="summary_log_fasting_active">Fasting</string>
+    <string name="summary_log_weight">Weight</string>
+    <string name="summary_log_body_fat">Body Fat</string>
+    <string name="summary_log_workout">Workout</string>
+    <string name="summary_log_medication">Log a Dose</string>
+    <string name="summary_log_record">Add a Record</string>
+    <!-- Settings (docs/ui-structure.md §2, plan §6) -->
+    <string name="settings_group_health_profile">Health Profile</string>
+    <string name="settings_group_tracking">Tracking</string>
+    <string name="settings_group_data_privacy">Data &amp; Privacy</string>
+    <string name="settings_group_ai_speech">AI &amp; Speech</string>
+    <string name="settings_group_about">About</string>
+    <string name="settings_page_goals">Goals &amp; Targets</string>
+    <string name="settings_page_units">Units</string>
+    <string name="settings_page_nutrition">Nutrition</string>
+    <string name="settings_page_hydration">Hydration</string>
+    <string name="settings_page_fasting">Fasting</string>
+    <string name="settings_page_activity">Activity</string>
+    <string name="settings_page_medications">Medications</string>
+    <string name="settings_page_health_sync">Health Sync</string>
+    <string name="settings_page_backup_export">Backup &amp; Export</string>
+    <string name="settings_page_ai_providers">AI Providers</string>
+    <string name="settings_page_custom_instructions">Custom Instructions</string>
+    <string name="settings_profile_your_profile">Your Profile</string>
+    <string name="settings_profile_summary">Age %1$d · %2$s · %3$s</string>
+    <string name="settings_goals_section_plan">Plan</string>
+    <string name="settings_goals_section_automation">Automation</string>
+    <string name="settings_units_height">Height &amp; Length</string>
+    <string name="settings_units_weight">Weight</string>
+    <string name="settings_units_glucose">Blood Glucose</string>
+    <string name="settings_unit_cm">Centimetres (cm)</string>
+    <string name="settings_unit_ftin">Feet &amp; inches (ft in)</string>
+    <string name="settings_unit_kg">Kilograms (kg)</string>
+    <string name="settings_unit_lbs">Pounds (lbs)</string>
+    <string name="settings_units_footer">Only how values are displayed changes. Stored values are never converted.</string>
+    <string name="settings_units_week_footer">Weekly charts and 6-month buckets start on this day.</string>
+    <string name="settings_daily_step_goal">Daily Step Goal</string>
+    <string name="settings_daily_step_goal_footer">Drives the Move ring on Summary. Steps come from Health Connect.</string>
+    <string name="settings_steps_value">%1$s steps</string>
+    <string name="settings_workout_logging">Workout Logging</string>
+    <string name="settings_add_menu_summary_footer">The + Menu also orders the entries in the Summary log sheet.</string>
+    <string name="settings_hydration_footer">Water Tracking also shows the Drink ring on Summary. Change the water unit in Units.</string>
+    <string name="settings_open_medications">Open Medications</string>
+    <string name="settings_dose_reminders">Dose Reminders</string>
+    <string name="settings_medications_footer">Medications, schedules and history live in Browse › Medications. Dose reminders and snooze are in Notifications.</string>
+    <string name="settings_last_synced">Last synced</string>
+    <string name="settings_sync_now">Sync Now</string>
+    <string name="settings_syncing">Syncing…</string>
+    <string name="settings_never">Never</string>
+    <string name="settings_health_sync_footer">Reads every Health Connect type you allow into a local database on this device for Browse, and keeps weight, nutrition, energy and workouts in sync. The mirror leaves the device only when Coach answers a question with it.</string>
+    <string name="settings_health_connect_access_header">Health Connect Access</string>
+    <string name="settings_records_storage_backup_header">Storage &amp; Backup</string>
+    <string name="settings_export_import_header">Export &amp; Import</string>
+    <string name="settings_export_import_footer">Health Records have their own archive in Health Records › Backup &amp; restore.</string>
+    <string name="settings_clear_health_footer">Removes the local Health Connect mirror. Your data in Health Connect is untouched.</string>
+    <string name="settings_delete_all_footer">Delete All Data removes food logs, weight, workouts, health records, medications, the Health Connect mirror and your profile from this device.</string>
+    <string name="settings_theme_color_footer">Theme Color is used for buttons and primary actions. Health categories keep their own colours.</string>
+    <string name="settings_update_badge">Update</string>
+    <string name="settings_browse_health_data">Browse Health Data</string>
+    <string name="settings_edit_favourites">Edit Favourites</string>
+</resources>

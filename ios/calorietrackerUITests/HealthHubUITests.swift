@@ -61,27 +61,22 @@ final class HealthHubUITests: XCTestCase {
         app.launchArguments += ["-AppleLanguages", "(en)", "-hasCompletedOnboarding", "YES", "-healthKitEnabled", "NO"]
         app.launch()
 
-        let connectTile = app.staticTexts["Connect Apple Health"]
-        XCTAssertTrue(connectTile.waitForExistence(timeout: 10), "Home should show the Connect Apple Health tile while sync is off")
-        attach(app, "01 Home connect tile")
-        if connectTile.isHittable {
-            connectTile.tap()
-        } else {
-            tapLabel(connectTile)
-        }
-        var opened = app.navigationBars["Health Data"].waitForExistence(timeout: 8)
-        if !opened {
-            // The tile sits in a horizontal scroller inside a list row; fall back to the card header link.
-            attach(app, "01b After tile tap")
-            tapLabel(app.staticTexts["Health Data"].firstMatch)
-            opened = app.navigationBars["Health Data"].waitForExistence(timeout: 8)
-        }
-        XCTAssertTrue(opened, "Tile should open the Health Data hub")
-        // Fresh install: "Connect … to start syncing"; a mirror left by an earlier run: "sync is off — read-only".
-        let offStatus = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Connect Apple Health to start' OR label BEGINSWITH 'Health sync is off'")).firstMatch
-        XCTAssertTrue(offStatus.waitForExistence(timeout: 5), "Hub should show the sync-off status line")
+        // The Move ring asks to connect while sync is off; it opens Browse, where the
+        // permission card lives.
+        let moveRing = app.buttons["summary.ring.move"].firstMatch
+        XCTAssertTrue(moveRing.waitForExistence(timeout: 10), "Summary should show the Move ring")
+        XCTAssertTrue(app.staticTexts["Connect Health"].firstMatch.waitForExistence(timeout: 5), "Move ring should ask to connect while sync is off")
+        attach(app, "01 Summary connect ring")
+        moveRing.tap()
+        XCTAssertTrue(app.navigationBars["Browse"].waitForExistence(timeout: 8), "The Move ring should open Browse")
+        let offStatus = app.buttons["browse.healthStatus"].firstMatch
+        // The status row sits under the 17 domain rows.
+        for _ in 0..<8 where !offStatus.exists { app.swipeUp() }
+        XCTAssertTrue(offStatus.waitForExistence(timeout: 5), "Browse should show the Apple Health status row")
+        XCTAssertTrue(offStatus.label.contains("Off"), "The status row should read Off while sync is off; got \(offStatus.label)")
+        for _ in 0..<8 where !app.staticTexts["Let Coach use my health data"].firstMatch.exists { app.swipeDown() }
         XCTAssertTrue(app.staticTexts["Let Coach use my health data"].firstMatch.waitForExistence(timeout: 3))
-        attach(app, "02 Hub not connected")
+        attach(app, "02 Browse not connected")
 
         // "Connect" on a fresh install; "Grant access" once a mirror exists or a grant is pending.
         let connect = app.buttons.matching(NSPredicate(format: "label == 'Connect' OR label == 'Grant access'")).firstMatch
@@ -90,11 +85,13 @@ final class HealthHubUITests: XCTestCase {
 
         // A simulator that already answered the sheet in an earlier run resolves silently.
         settleHealthAccessSheet(app, timeout: 15)
-        XCTAssertTrue(app.navigationBars["Health Data"].waitForExistence(timeout: 20), "Hub should be back after the sheet")
-        attach(app, "04 Hub after sheet")
-        // Any of the hub's sync status lines proves the grant path returned to a rendered hub.
-        let status = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Last synced' OR label BEGINSWITH 'Nothing shared yet' OR label BEGINSWITH 'Not synced yet' OR label BEGINSWITH 'Syncing' OR label BEGINSWITH 'Importing' OR label BEGINSWITH 'Connect Apple Health' OR label BEGINSWITH 'Health sync is off' OR label BEGINSWITH 'Unlock your iPhone'")).firstMatch
-        XCTAssertTrue(status.waitForExistence(timeout: 30), "Hub should show a sync status line after granting")
+        XCTAssertTrue(app.navigationBars["Browse"].waitForExistence(timeout: 20), "Browse should be back after the sheet")
+        attach(app, "04 Browse after sheet")
+        // The Apple Health row proves the grant path returned to a rendered Browse list; its
+        // subtitle is any of the sync status lines.
+        let status = app.buttons["browse.healthStatus"].firstMatch
+        for _ in 0..<8 where !status.exists { app.swipeUp() }
+        XCTAssertTrue(status.waitForExistence(timeout: 30), "Browse should show a sync status line after granting")
         attach(app, "05 Hub status after grant")
     }
 
@@ -122,27 +119,26 @@ final class HealthHubUITests: XCTestCase {
         // Sync being on with nothing granted pops the access sheet; settle it before touching Home.
         settleHealthAccessSheet(app, timeout: 8)
 
-        let hubHeader = app.staticTexts["Health Data"].firstMatch
-        XCTAssertTrue(hubHeader.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Favourites"].firstMatch.waitForExistence(timeout: 10))
         // The fixture import (33k rows) runs at launch; the Steps tile appears once it lands.
         let stepsTile = app.staticTexts["Steps"].firstMatch
-        XCTAssertTrue(stepsTile.waitForExistence(timeout: 120), "Home should show the Steps tile after the fixture import")
-        attach(app, "10 Home tiles")
+        XCTAssertTrue(stepsTile.waitForExistence(timeout: 120), "Summary should show the Steps favourite after the fixture import")
+        attach(app, "10 Summary favourites")
 
-        tapLabel(hubHeader)
-        XCTAssertTrue(app.navigationBars["Health Data"].waitForExistence(timeout: 8))
-        attach(app, "11 Hub")
+        app.tabBars.buttons["Browse"].tap()
+        XCTAssertTrue(app.navigationBars["Browse"].waitForExistence(timeout: 8))
+        attach(app, "11 Browse")
 
-        let activity = app.staticTexts["Activity"].firstMatch
+        let activity = app.buttons["browse.row.activity"].firstMatch
         XCTAssertTrue(activity.waitForExistence(timeout: 5))
-        tapLabel(activity)
+        activity.tap()
         XCTAssertTrue(app.navigationBars["Activity"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Today"].firstMatch.waitForExistence(timeout: 5), "Cumulative rows should read as a day total with a Today caption")
         attach(app, "12 Activity category")
 
-        let stepsRow = app.staticTexts["Steps"].firstMatch
+        let stepsRow = app.buttons["browse.metric.steps"].firstMatch
         XCTAssertTrue(stepsRow.waitForExistence(timeout: 5))
-        tapLabel(stepsRow)
+        stepsRow.tap()
         XCTAssertTrue(app.navigationBars["Steps"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Total"].waitForExistence(timeout: 10))
         attach(app, "13 Steps detail week")

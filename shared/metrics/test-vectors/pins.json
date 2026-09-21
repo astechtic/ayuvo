@@ -1,0 +1,365 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "favourites": [
+          "steps",
+          "sleep",
+          "app:calories",
+          "app:protein",
+          "app:water",
+          "app:weight"
+        ],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "steps,sleep",
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "legacy steps,sleep appends app defaults"
+    },
+    {
+      "expected": {
+        "favourites": [],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "",
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "legacy empty means tiles were off"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:calories",
+          "app:protein",
+          "app:water",
+          "app:weight"
+        ],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "  , ",
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "legacy whitespace only"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "steps",
+          "sleep",
+          "app:calories",
+          "app:protein",
+          "app:water",
+          "app:weight"
+        ],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "steps,HKFoo,app:nope,sleep",
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "legacy unknown ids dropped"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "sleep",
+          "steps",
+          "app:water",
+          "app:calories",
+          "app:protein",
+          "app:weight"
+        ],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": " sleep ,steps,sleep, app:water ",
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "legacy duplicates and spaces"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight",
+          "app:calories",
+          "app:protein",
+          "app:water",
+          "app:weight"
+        ],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "active_energy,blood_pressure,distance,heart_rate,hydration,sleep,steps,weight",
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "legacy eight health ids reaches cap"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:weight",
+          "steps"
+        ],
+        "source": "new"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "sleep",
+        "max": 12,
+        "new_raw": "app:weight,steps"
+      },
+      "name": "new wins over legacy"
+    },
+    {
+      "expected": {
+        "favourites": [],
+        "source": "new"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "steps,sleep",
+        "max": 12,
+        "new_raw": ""
+      },
+      "name": "new empty string is explicit none"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:calories",
+          "app:protein",
+          "app:carbs",
+          "app:fat",
+          "app:fiber",
+          "app:water",
+          "app:fasting",
+          "app:weight",
+          "app:body_fat",
+          "app:workouts",
+          "app:workout_minutes",
+          "app:workout_burn"
+        ],
+        "source": "new"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": null,
+        "max": 12,
+        "new_raw": "app:calories,app:protein,app:carbs,app:fat,app:fiber,app:water,app:fasting,app:weight,app:body_fat,app:workouts,app:workout_minutes,app:workout_burn,steps"
+      },
+      "name": "new capped at 12"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:calories",
+          "heart_rate"
+        ],
+        "source": "new"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": null,
+        "max": 12,
+        "new_raw": "app:calories,app:bogus,heart_rate"
+      },
+      "name": "new with unknown app key"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:calories",
+          "app:protein",
+          "steps",
+          "app:water",
+          "app:weight",
+          "sleep",
+          "heart_rate",
+          "active_energy"
+        ],
+        "source": "default"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": null,
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "nothing stored gives defaults"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:calories",
+          "app:protein",
+          "steps",
+          "app:water",
+          "app:weight"
+        ],
+        "source": "default"
+      },
+      "input": {
+        "known_health_ids": [
+          "steps"
+        ],
+        "legacy_raw": null,
+        "max": 12,
+        "new_raw": null
+      },
+      "name": "defaults drop unknown health ids",
+      "notes": "a platform that cannot read sleep/heart rate"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "steps",
+          "app:calories",
+          "app:protein",
+          "app:water"
+        ],
+        "source": "migrated"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": "steps",
+        "max": 4,
+        "new_raw": null
+      },
+      "name": "max 4"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "favourite_pins_migrate",
+  "version": 1
+}

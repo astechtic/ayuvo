@@ -154,7 +154,6 @@
     <string name="speech_description_assemblyai">AssemblyAI Universal 模型。准确度高，提供免费套餐。</string>
 
     <!-- Bottom navigation -->
-    <string name="nav_home">主页</string>
     <string name="nav_coach">教练</string>
     <string name="nav_settings">设置</string>
     <string name="nav_about">关于</string>
@@ -440,32 +439,12 @@
     <string name="coach_chip_log_advice">根据我的记录有什么建议？</string>
 
     <!-- Progress -->
-    <string name="progress_range_week">1周</string>
-    <string name="progress_range_month">1月</string>
-    <string name="progress_range_3m">3月</string>
-    <string name="progress_range_6m">6月</string>
-    <string name="progress_range_year">1年</string>
-    <string name="progress_range_all">全部</string>
 
-    <string name="progress_weight_section">体重</string>
-    <string name="progress_log_weight">记录体重</string>
-    <string name="progress_stat_current">当前</string>
-    <string name="progress_stat_goal">目标</string>
-    <string name="progress_log_first_weight">记录你的第一个体重以查看趋势</string>
 
     <string name="progress_weight_history">体重历史</string>
     <string name="progress_body_fat_history">体脂历史</string>
-    <plurals name="progress_history_count_format">
-        <item quantity="one">%1$d 条记录 · 点按以查看或删除</item>
-        <item quantity="other">%1$d 条记录 · 点按以查看或删除</item>
-    </plurals>
 
-    <string name="progress_calories_section">卡路里</string>
-    <string name="progress_avg_format">平均：%1$,d kcal</string>
-    <string name="progress_no_food">尚未记录食物</string>
 
-    <string name="progress_macro_averages">宏量平均值</string>
-    <string name="progress_macro_progress_format">%1$dg / %2$dg</string>
 
     <string name="progress_log_weight_title">记录体重</string>
 
@@ -474,16 +453,9 @@
 
     <!-- Settings -->
     <string name="settings_section_personal">个人信息</string>
-    <string name="settings_section_goals">目标与营养</string>
     <string name="settings_section_daily_targets">每日目标</string>
-    <string name="settings_section_app">App 设置</string>
-    <string name="settings_section_tracking_reminders">追踪与提醒</string>
-    <string name="settings_category_ai_providers">AI 提供商与回退选项</string>
-    <string name="settings_section_workout">训练</string>
     <string name="settings_section_ai">AI 提供商</string>
     <string name="settings_section_speech">语音转文字</string>
-    <string name="settings_section_health">健康与数据</string>
-    <string name="settings_section_data_management">数据管理</string>
 
     <string name="settings_gender">性别</string>
     <string name="settings_birthday">生日</string>
@@ -619,32 +591,15 @@
     <string name="sheet_goal_body_fat">体脂目标</string>
     <string name="sheet_goal_body_fat_currently">当前%1$d%%</string>
     <string name="action_remove_goal">移除目标</string>
-    <string name="progress_metric_weight">体重</string>
-    <string name="progress_metric_body_fat">体脂</string>
-    <string name="progress_metric_workouts">锻炼</string>
     <string name="progress_workout_history">锻炼历史</string>
-    <plurals name="progress_workout_history_count_format">
-        <item quantity="one">%1$d 条已计算消耗 · 点按查看或删除</item>
-        <item quantity="other">%1$d 条已计算消耗 · 点按查看或删除</item>
-    </plurals>
     <string name="progress_workout_delete_title">删除锻炼消耗？</string>
     <string name="progress_workout_delete_message">这会从 Ayuvo 和 Health Connect 中移除已计算的消耗。你的锻炼日记计划仍会保留。</string>
-    <string name="progress_workout_section">锻炼活动</string>
-    <string name="progress_workout_stat_workouts">锻炼</string>
-    <string name="progress_workout_stat_total">总消耗</string>
-    <string name="progress_workout_stat_average">平均消耗</string>
-    <string name="progress_workout_stat_latest">最新</string>
     <string name="progress_workout_stat_days">天数</string>
-    <string name="progress_workout_no_range">此时间范围内没有已计算的锻炼消耗</string>
-    <string name="progress_workout_chart_description">%1$s 至 %2$s 的锻炼消耗图表。总计 %3$d 千卡；最新 %4$d 千卡。</string>
-    <string name="progress_log_body_fat">记录体脂</string>
-    <string name="progress_log_first_body_fat">记录你的第一个体脂百分比以查看趋势</string>
     <string name="progress_log_body_fat_title">记录体脂</string>
     <string name="notif_body_fat_log_title">体脂签到</string>
     <string name="notif_body_fat_log_text">记录今天的体脂百分比以追踪你的体成分趋势。</string>
     <string name="saved_meals_search_placeholder">搜索已保存的食物</string>
     <string name="saved_meals_no_match">没有匹配的食物</string>
-    <string name="settings_section_custom_instructions">自定义 AI 指令</string>
     <string name="settings_custom_instructions_placeholder">例如：我住在德国，按欧洲份量计算，优先选择 ALDI/REWE 品牌。我正在进行健美减脂期。</string>
     <string name="settings_custom_instructions_footer">随每次 AI 请求一同发送的可选上下文——地区、饮食、运动目标，任何你本来需要每次都重复的信息。留空即可停用。</string>
     <string name="settings_save">保存</string>

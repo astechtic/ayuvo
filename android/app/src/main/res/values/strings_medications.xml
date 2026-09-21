@@ -2,7 +2,6 @@
 <!-- Medication Management & Reminders (docs/medications.md). English source strings; translations follow incrementally. -->
 <resources>
     <!-- Health tab segment + Home card -->
-    <string name="health_tab_meds">Meds</string>
     <string name="home_medications_title">Medications</string>
     <string name="home_medications_taken">Taken %1$d of %2$d</string>
     <string name="home_medications_next">Next: %1$s at %2$s</string>

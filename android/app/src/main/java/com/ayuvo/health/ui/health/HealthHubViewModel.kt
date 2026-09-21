@@ -328,7 +328,7 @@ class HealthHubViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     fun setHomeTiles(types: List<HealthDataType>) {
-        viewModelScope.launch { container.prefs.setHealthHomeTiles(HealthHomeTiles.serialize(types)) }
+        viewModelScope.launch { container.favoritePins.setHealth(types.map { it.id }) }
     }
 
     private suspend fun reloadNow() {

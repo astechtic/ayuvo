@@ -1,5 +1,9 @@
 package com.ayuvo.health.ui.about
 
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.WindowInsets
+import com.ayuvo.health.ui.design.SurfaceCard
+import com.ayuvo.health.ui.design.AyuvoTopBar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -36,7 +39,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayuvo.health.R
-import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.theme.AppColors
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +59,16 @@ fun LicensesScreen(onBack: () -> Unit) {
         }
     }
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            AyuvoTopBar(
+                title = stringResource(R.string.about_open_source_licence),
+                onBack = onBack,
+                windowInsets = WindowInsets.statusBars
+            )
+        }
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -67,37 +78,6 @@ fun LicensesScreen(onBack: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             item {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable { onBack() }
-                            .padding(horizontal = 2.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = AppColors.Calorie,
-                            modifier = Modifier.size(22.dp)
-                        )
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            stringResource(R.string.about_category_legal),
-                            color = AppColors.Calorie,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-            }
-            item {
-                Text(
-                    stringResource(R.string.about_open_source_licence),
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(Modifier.height(8.dp))
                 Text(
                     stringResource(R.string.about_licenses_intro),
                     style = MaterialTheme.typography.bodyMedium,
@@ -107,7 +87,7 @@ fun LicensesScreen(onBack: () -> Unit) {
             val visible = chunks
             if (visible != null) {
                 item {
-                    GlassSurface(modifier = Modifier.fillMaxWidth(), cornerRadius = 16.dp, padding = 16.dp) {
+                    SurfaceCard(modifier = Modifier.fillMaxWidth(), padding = PaddingValues(16.dp)) {
                         LicenseText(visible)
                     }
                 }

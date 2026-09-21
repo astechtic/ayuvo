@@ -103,6 +103,9 @@ struct RecordsHomeView: View {
             store.navigationRequest = nil
             path.append(RecordsRoute.detail(id))
         }
+        .onChange(of: store.addRecordRequest) { _, _ in
+            showAddSheet = true
+        }
         .sheet(isPresented: $showAddSheet, onDismiss: presentPendingAction) {
             AddRecordSheet { action in
                 pendingAction = action

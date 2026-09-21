@@ -1,25 +1,5 @@
 import Foundation
 
-enum WorkoutTabMode: String {
-    case library
-    case log
-
-    /// v2 resets the former library-first default once; later user switches persist normally.
-    static let storageKey = "ayuvo.workouts.tab.mode.v2"
-    static let defaultMode: WorkoutTabMode = .log
-
-    static func mode(for rawValue: String) -> WorkoutTabMode {
-        return WorkoutTabMode(rawValue: rawValue) ?? defaultMode
-    }
-
-    var tabIcon: String {
-        switch self {
-        case .library: return "dumbbell.fill"
-        case .log: return "figure.strengthtraining.traditional"
-        }
-    }
-}
-
 enum StrengthWorkoutDate {
     static func key(for date: Date, calendar: Calendar = .current) -> String {
         let components = calendar.dateComponents([.year, .month, .day], from: date)

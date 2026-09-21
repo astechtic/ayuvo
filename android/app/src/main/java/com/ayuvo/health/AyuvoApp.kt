@@ -27,6 +27,10 @@ import com.ayuvo.health.models.UserProfile
 import com.ayuvo.health.models.CurrentMealSchedule
 import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.data.health.HealthDataRepository
+import com.ayuvo.health.data.metrics.AppMetricSeriesProvider
+import com.ayuvo.health.data.metrics.FavoritePins
+import com.ayuvo.health.data.metrics.MetricCatalogData
+import com.ayuvo.health.data.metrics.RepositoryMetricSources
 import com.ayuvo.health.data.health.HealthDataStore
 import com.ayuvo.health.data.health.HealthDatabase
 import com.ayuvo.health.data.health.LocalHealthSources
@@ -126,6 +130,8 @@ class AyuvoApp : Application() {
             container.prefs.migrateAIModelSelections()
             container.prefs.migrateMatchingSpeechProviderIfNeeded()
             container.prefs.migrateFallbackBaseUrls()
+            // Summary favourites (docs/ui-structure.md §7.9): one-time migration from healthHomeTiles.
+            container.favoritePins.ensureMigrated()
         }
         // An on-device Gemma choice made before its download finished (onboarding) is applied
         // as soon as the verified model is executable — including on a cold start with it present.
@@ -209,6 +215,7 @@ class AyuvoApp : Application() {
 
 /** Stable labels for the read types a Health Connect changes token was seeded for,
  *  persisted alongside the token so we can detect a newly-granted read capability. */
+const val METRIC_CATALOG_ASSET = "metrics/metric_catalog.json"
 private const val HEALTH_READ_TYPE_WEIGHT = "weight"
 private const val HEALTH_READ_TYPE_BODY_FAT = "bodyfat"
 
@@ -468,6 +475,25 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val waterRepository = WaterRepository(prefs)
     val fastingRepository = FastingRepository(prefs)
     val workoutRepository = WorkoutRepository(prefs, workoutHealthSync)
+
+    // -- Metrics (docs/ui-structure.md): catalog, favourites, app-metric series ---------------
+    val metricCatalog: MetricCatalogData by lazy {
+        MetricCatalogData.parse(app.assets.open(METRIC_CATALOG_ASSET).bufferedReader().use { it.readText() })
+    }
+    val favoritePins: FavoritePins by lazy { FavoritePins(prefs) { metricCatalog } }
+    val appMetrics: AppMetricSeriesProvider by lazy {
+        AppMetricSeriesProvider(
+            sources = RepositoryMetricSources(
+                food = foodRepository.entries,
+                water = waterRepository.entries,
+                fasting = fastingRepository.sessions,
+                weight = weightRepository.entries,
+                bodyFat = bodyFatRepository.entries,
+                workouts = workoutRepository.completedSessions
+            ),
+            scope = scope
+        )
+    }
     val cloudBackup = CloudBackupCoordinator(app, prefs, imageStore, keyStore)
 
     val localGemma = LocalGemmaRuntime(app, localModels)

@@ -10,7 +10,11 @@ import SwiftUI
 ///     BMR/TDEE re-evaluates every time the user logs a new reading
 @Observable
 class BodyFatStore {
-    private(set) var entries: [BodyFatEntry] = []
+    private(set) var entries: [BodyFatEntry] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change to `entries` (metric caches key on it).
+    private(set) var revision = 0
     /// Wired in calorietrackerApp.swift → HealthKitManager.writeBodyFat(for:)
     /// when HealthKit sync is enabled. Mirrors WeightStore.onEntryAdded.
     var onEntryAdded: ((BodyFatEntry) -> Void)?

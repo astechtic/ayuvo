@@ -1,9 +1,8 @@
 import SwiftUI
 
 /// Navigation values for the Health Data hub. Registered with
-/// `navigationDestination(for: HealthRoute.self)` on both Home's and Profile's stacks.
+/// `navigationDestination(for: HealthRoute.self)`; `.metric` opens the unified `MetricDetailView`.
 enum HealthRoute: Hashable {
-    case hub
     case category(HealthCategory)
     case metric(String)
     case allData(String)
@@ -17,12 +16,10 @@ struct HealthRouteDestination: View {
 
     var body: some View {
         switch route {
-        case .hub:
-            HealthHubView()
         case .category(let category):
             HealthCategoryView(category: category)
         case .metric(let typeID):
-            HealthMetricDetailView(typeID: typeID)
+            MetricDetailView(key: .health(typeID))
         case .allData(let typeID):
             HealthAllDataView(typeID: typeID)
         case .sources(let typeID):
@@ -30,16 +27,18 @@ struct HealthRouteDestination: View {
         case .unit(let typeID):
             HealthUnitPickerView(typeID: typeID)
         case .pins:
-            HealthPinsEditorView()
+            FavouritesEditorView()
         }
     }
 }
 
 extension View {
-    /// Attaches the hub destinations to a `NavigationStack` content view.
+    /// Attaches the hub destinations (and the metric destinations the detail screen pushes)
+    /// to a `NavigationStack` content view.
     func healthRouteDestinations() -> some View {
         navigationDestination(for: HealthRoute.self) { route in
             HealthRouteDestination(route: route)
         }
+        .metricRouteDestinations()
     }
 }

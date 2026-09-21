@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.records
 
+import com.ayuvo.health.ui.design.AyuvoColors
 import android.Manifest
 import android.app.Activity
 import android.content.ClipboardManager
@@ -195,7 +196,7 @@ fun AddRecordSheet(onDismiss: () -> Unit, onAction: (AddRecordAction) -> Unit) {
         onDismissRequest = onDismiss,
         sheetState = state,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = if (isDark) Color(0xF2141416) else Color(0xFFFAF3EE)
+        containerColor = AyuvoColors.sheetBackground()
     ) {
         Column(
             Modifier

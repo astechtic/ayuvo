@@ -57,20 +57,21 @@ object AppColors {
     val Calorie: Color
         get() = CalorieStart
 
-    val Protein: Color
-        get() = CalorieStart
+    // Macros use fixed domain colours (Apple Health style); the theme accent is
+    // reserved for primary actions, the selected tab and chart scrub markers.
+    val Protein: Color = Color(0xFF007AFF)
 
-    val Carbs: Color
-        get() = CalorieStart
+    val Carbs: Color = Color(0xFFFF9F0A)
 
-    val Fat: Color
-        get() = CalorieStart
+    val Fat: Color = Color(0xFFBF5AF2)
+
+    val Fiber: Color = Color(0xFF30B0C7)
 
     val CalorieGradient: Brush
         get() = Brush.linearGradient(listOf(CalorieStart, CalorieEnd))
 
-    val AppBackgroundLight = Color(0xFFF3ECE6)
-    val AppBackgroundDark = Color(0xFF0C0C0C)
+    val AppBackgroundLight = Color(0xFFF2F2F7)
+    val AppBackgroundDark = Color(0xFF000000)
 
     val AppCardLight = Color(0xFFFFFFFF)
     val AppCardDark = Color(0xFF1C1C1E)
@@ -81,6 +82,6 @@ object AppColors {
     val MutedLight = Color(0xFF8E8E93)
     val MutedDark = Color(0xFF8E8E93)
 
-    val DividerLight = Color(0xFFE5E5EA)
-    val DividerDark = Color(0xFF2C2C2E)
+    val DividerLight = Color(0xFFC6C6C8)
+    val DividerDark = Color(0xFF38383A)
 }

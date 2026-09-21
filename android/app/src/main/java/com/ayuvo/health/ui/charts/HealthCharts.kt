@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -52,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import com.ayuvo.health.data.health.HealthChartPoint
 import com.ayuvo.health.data.health.HealthSleepCodes
 import com.ayuvo.health.data.health.SleepNight
+import com.ayuvo.health.ui.theme.AppColors
 import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -74,21 +74,27 @@ fun HealthBucketChart(
     tooltipLabel: (Int) -> String,
     modifier: Modifier = Modifier,
     secondaryColor: Color? = null,
-    summary: String = ""
+    summary: String = "",
+    /** Overrides the plotted value for BAR/LINE (e.g. a daily average on week buckets). */
+    valueSelector: ((HealthChartPoint) -> Double?)? = null,
+    /** Draws a dashed goal rule and keeps it inside the y range. */
+    goalValue: Double? = null,
+    /** Scrub line / marker colour; the theme accent by default. */
+    scrubColor: Color = AppColors.Calorie
 ) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        val valuesOf: (HealthChartPoint) -> Double? = when (style) {
-            HealthChartStyle.BAR -> { p -> p.sum }
-            HealthChartStyle.LINE -> { p -> p.avg }
-            HealthChartStyle.RANGE -> { p -> p.avg }
-        }
+        val valuesOf: (HealthChartPoint) -> Double? = valueSelector?.takeIf { style != HealthChartStyle.RANGE }
+            ?: when (style) {
+                HealthChartStyle.BAR -> { p -> p.sum }
+                HealthChartStyle.LINE -> { p -> p.avg }
+                HealthChartStyle.RANGE -> { p -> p.avg }
+            }
         val allValues = points.flatMap { p ->
             when (style) {
-                HealthChartStyle.BAR -> listOfNotNull(p.sum)
-                HealthChartStyle.LINE -> listOfNotNull(p.avg)
+                HealthChartStyle.BAR, HealthChartStyle.LINE -> listOfNotNull(valuesOf(p))
                 HealthChartStyle.RANGE -> listOfNotNull(p.min, p.max, p.v2Min, p.v2Max)
             }
-        }
+        } + listOfNotNull(goalValue)
         val yMinRaw = if (style == HealthChartStyle.BAR) 0.0 else (allValues.minOrNull() ?: 0.0)
         val yMaxRaw = allValues.maxOrNull() ?: 1.0
         val pad = if (style == HealthChartStyle.BAR) 0.0 else maxOf((yMaxRaw - yMinRaw) * 0.15, 1.0)
@@ -108,8 +114,6 @@ fun HealthBucketChart(
                     Modifier
                         .weight(1f)
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(color.copy(alpha = 0.04f))
                 ) {
                     val widthPx = with(density) { maxWidth.toPx() }
                     val n = points.size.coerceAtLeast(1)
@@ -148,12 +152,12 @@ fun HealthBucketChart(
                             HealthChartStyle.BAR -> {
                                 val barW = (slot * 0.62f).coerceAtLeast(2f)
                                 points.forEachIndexed { i, p ->
-                                    val v = p.sum ?: return@forEachIndexed
+                                    val v = valuesOf(p) ?: return@forEachIndexed
                                     if (v <= 0.0) return@forEachIndexed
                                     val x = i * slot + (slot - barW) / 2f
                                     val top = yOf(v, h)
                                     drawRoundRect(
-                                        brush = Brush.verticalGradient(listOf(color, color.copy(alpha = 0.7f)), startY = top, endY = h),
+                                        color = color,
                                         topLeft = Offset(x, top),
                                         size = Size(barW, h - top),
                                         cornerRadius = CornerRadius(5f, 5f)
@@ -161,7 +165,7 @@ fun HealthBucketChart(
                                 }
                             }
                             HealthChartStyle.LINE -> {
-                                val offsets = points.mapIndexedNotNull { i, p -> p.avg?.let { Offset(i * slot + slot / 2f, yOf(it, h)) } }
+                                val offsets = points.mapIndexedNotNull { i, p -> valuesOf(p)?.let { Offset(i * slot + slot / 2f, yOf(it, h)) } }
                                 clipRect {
                                     if (offsets.size >= 2) {
                                         drawPath(smoothTrendAreaPath(offsets, h), brush = Brush.verticalGradient(listOf(color.copy(alpha = 0.14f), color.copy(alpha = 0.01f)), startY = 0f, endY = h))
@@ -189,10 +193,14 @@ fun HealthBucketChart(
                                 }
                             }
                         }
+                        goalValue?.let { goal ->
+                            val gy = yOf(goal, h)
+                            drawLine(secondary, Offset(0f, gy), Offset(w, gy), strokeWidth = 2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 6f)))
+                        }
                         selected?.let { idx ->
                             val x = idx * slot + slot / 2f
-                            drawLine(color.copy(alpha = 0.6f), Offset(x, 0f), Offset(x, h), strokeWidth = 2.5f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(7f, 7f)))
-                            valuesOf(points[idx])?.let { drawCircle(surface, radius = 10f, center = Offset(x, yOf(it, h))); drawCircle(color, radius = 6f, center = Offset(x, yOf(it, h))) }
+                            drawLine(scrubColor.copy(alpha = 0.7f), Offset(x, 0f), Offset(x, h), strokeWidth = 2.5f)
+                            valuesOf(points[idx])?.let { drawCircle(surface, radius = 10f, center = Offset(x, yOf(it, h))); drawCircle(scrubColor, radius = 6f, center = Offset(x, yOf(it, h))) }
                         }
                     }
                     selected?.let { idx ->
@@ -204,17 +212,15 @@ fun HealthBucketChart(
                             Modifier
                                 .offset { IntOffset(left.roundToInt(), with(density) { 6.dp.roundToPx() }) }
                                 .width(tooltipWidth)
-                                .shadow(8.dp, RoundedCornerShape(10.dp))
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(surface.copy(alpha = 0.96f))
-                                .border(0.75.dp, color.copy(alpha = 0.24f), RoundedCornerShape(10.dp))
+                                .background(surface)
+                                .border(0.75.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
                                 .padding(horizontal = 8.dp, vertical = 6.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(tooltipLabel(idx), fontSize = 10.sp, fontWeight = FontWeight.Medium, color = secondary, maxLines = 1)
                             val text = when (style) {
-                                HealthChartStyle.BAR -> p.sum?.let(formatValue) ?: "—"
-                                HealthChartStyle.LINE -> p.avg?.let(formatValue) ?: "—"
+                                HealthChartStyle.BAR, HealthChartStyle.LINE -> valuesOf(p)?.let(formatValue) ?: "—"
                                 HealthChartStyle.RANGE -> if (p.min != null && p.max != null) "${formatValue(p.min)} – ${formatValue(p.max)}" else "—"
                             }
                             Text(text, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 1)

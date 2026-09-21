@@ -1,0 +1,1015 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 1,
+            "duration_s": 1800,
+            "end_ms": 1789410600000,
+            "start_ms": 1789324200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789497000000,
+            "start_ms": 1789410600000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 0,
+            "count": 1,
+            "duration_s": 2700,
+            "end_ms": 1789583400000,
+            "start_ms": 1789497000000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 80,
+            "count": 1,
+            "duration_s": 600,
+            "end_ms": 1789669800000,
+            "start_ms": 1789583400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789756200000,
+            "start_ms": 1789669800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789842600000,
+            "start_ms": 1789756200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789929000000,
+            "start_ms": 1789842600000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "W",
+        "sessions": [
+          {
+            "calories": 320,
+            "diary_date": "2026-09-13",
+            "duration_s": 3600,
+            "started_at_ms": 1789327800000
+          },
+          {
+            "calories": null,
+            "diary_date": null,
+            "duration_s": 1800,
+            "started_at_ms": 1789389000000
+          },
+          {
+            "calories": 0,
+            "diary_date": "2026-09-16",
+            "duration_s": 2700,
+            "started_at_ms": 1789522200000
+          },
+          {
+            "calories": 80,
+            "diary_date": "not-a-date",
+            "duration_s": 600,
+            "started_at_ms": 1789608600000
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "W diary key wins over started date",
+      "notes": "first session is Sunday's diary even though it started Monday"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 1,
+            "burn_kcal": 320,
+            "count": 1,
+            "duration_s": 3600,
+            "end_ms": 1789324200000,
+            "start_ms": 1789237800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 1,
+            "duration_s": 1800,
+            "end_ms": 1789410600000,
+            "start_ms": 1789324200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789497000000,
+            "start_ms": 1789410600000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 0,
+            "count": 1,
+            "duration_s": 2700,
+            "end_ms": 1789583400000,
+            "start_ms": 1789497000000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 80,
+            "count": 1,
+            "duration_s": 600,
+            "end_ms": 1789669800000,
+            "start_ms": 1789583400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789756200000,
+            "start_ms": 1789669800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789842600000,
+            "start_ms": 1789756200000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "W",
+        "sessions": [
+          {
+            "calories": 320,
+            "diary_date": "2026-09-13",
+            "duration_s": 3600,
+            "started_at_ms": 1789327800000
+          },
+          {
+            "calories": null,
+            "diary_date": null,
+            "duration_s": 1800,
+            "started_at_ms": 1789389000000
+          },
+          {
+            "calories": 0,
+            "diary_date": "2026-09-16",
+            "duration_s": 2700,
+            "started_at_ms": 1789522200000
+          },
+          {
+            "calories": 80,
+            "diary_date": "not-a-date",
+            "duration_s": 600,
+            "started_at_ms": 1789608600000
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "week_start": "sunday"
+      },
+      "name": "W burn null vs zero sunday week"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788287400000,
+            "start_ms": 1788201000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788373800000,
+            "start_ms": 1788287400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788460200000,
+            "start_ms": 1788373800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788546600000,
+            "start_ms": 1788460200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788633000000,
+            "start_ms": 1788546600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788719400000,
+            "start_ms": 1788633000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788805800000,
+            "start_ms": 1788719400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788892200000,
+            "start_ms": 1788805800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788978600000,
+            "start_ms": 1788892200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789065000000,
+            "start_ms": 1788978600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789151400000,
+            "start_ms": 1789065000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789237800000,
+            "start_ms": 1789151400000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 320,
+            "count": 1,
+            "duration_s": 3600,
+            "end_ms": 1789324200000,
+            "start_ms": 1789237800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 1,
+            "duration_s": 1800,
+            "end_ms": 1789410600000,
+            "start_ms": 1789324200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789497000000,
+            "start_ms": 1789410600000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 0,
+            "count": 1,
+            "duration_s": 2700,
+            "end_ms": 1789583400000,
+            "start_ms": 1789497000000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 80,
+            "count": 1,
+            "duration_s": 600,
+            "end_ms": 1789669800000,
+            "start_ms": 1789583400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789756200000,
+            "start_ms": 1789669800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789842600000,
+            "start_ms": 1789756200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789929000000,
+            "start_ms": 1789842600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790015400000,
+            "start_ms": 1789929000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790101800000,
+            "start_ms": 1790015400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790188200000,
+            "start_ms": 1790101800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790274600000,
+            "start_ms": 1790188200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790361000000,
+            "start_ms": 1790274600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790447400000,
+            "start_ms": 1790361000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790533800000,
+            "start_ms": 1790447400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790620200000,
+            "start_ms": 1790533800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790706600000,
+            "start_ms": 1790620200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790793000000,
+            "start_ms": 1790706600000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "M",
+        "sessions": [
+          {
+            "calories": 320,
+            "diary_date": "2026-09-13",
+            "duration_s": 3600,
+            "started_at_ms": 1789327800000
+          },
+          {
+            "calories": null,
+            "diary_date": null,
+            "duration_s": 1800,
+            "started_at_ms": 1789389000000
+          },
+          {
+            "calories": 0,
+            "diary_date": "2026-09-16",
+            "duration_s": 2700,
+            "started_at_ms": 1789522200000
+          },
+          {
+            "calories": 80,
+            "diary_date": "not-a-date",
+            "duration_s": 600,
+            "started_at_ms": 1789608600000
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "M totals"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1775413800000,
+            "start_ms": 1774981800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1776018600000,
+            "start_ms": 1775413800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1776623400000,
+            "start_ms": 1776018600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1777228200000,
+            "start_ms": 1776623400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1777833000000,
+            "start_ms": 1777228200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1778437800000,
+            "start_ms": 1777833000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1779042600000,
+            "start_ms": 1778437800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1779647400000,
+            "start_ms": 1779042600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1780252200000,
+            "start_ms": 1779647400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1780857000000,
+            "start_ms": 1780252200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1781461800000,
+            "start_ms": 1780857000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1782066600000,
+            "start_ms": 1781461800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1782671400000,
+            "start_ms": 1782066600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1783276200000,
+            "start_ms": 1782671400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1783881000000,
+            "start_ms": 1783276200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1784485800000,
+            "start_ms": 1783881000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1785090600000,
+            "start_ms": 1784485800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1785695400000,
+            "start_ms": 1785090600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1786300200000,
+            "start_ms": 1785695400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1786905000000,
+            "start_ms": 1786300200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1787509800000,
+            "start_ms": 1786905000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788114600000,
+            "start_ms": 1787509800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788719400000,
+            "start_ms": 1788114600000
+          },
+          {
+            "burn_count": 1,
+            "burn_kcal": 320,
+            "count": 1,
+            "duration_s": 3600,
+            "end_ms": 1789324200000,
+            "start_ms": 1788719400000
+          },
+          {
+            "burn_count": 2,
+            "burn_kcal": 80,
+            "count": 3,
+            "duration_s": 5100,
+            "end_ms": 1789929000000,
+            "start_ms": 1789324200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790533800000,
+            "start_ms": 1789929000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1790793000000,
+            "start_ms": 1790533800000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "6M",
+        "sessions": [
+          {
+            "calories": 320,
+            "diary_date": "2026-09-13",
+            "duration_s": 3600,
+            "started_at_ms": 1789327800000
+          },
+          {
+            "calories": null,
+            "diary_date": null,
+            "duration_s": 1800,
+            "started_at_ms": 1789389000000
+          },
+          {
+            "calories": 0,
+            "diary_date": "2026-09-16",
+            "duration_s": 2700,
+            "started_at_ms": 1789522200000
+          },
+          {
+            "calories": 80,
+            "diary_date": "not-a-date",
+            "duration_s": 600,
+            "started_at_ms": 1789608600000
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "6M weekly totals"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1769884200000,
+            "start_ms": 1767205800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1772303400000,
+            "start_ms": 1769884200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1774981800000,
+            "start_ms": 1772303400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1777573800000,
+            "start_ms": 1774981800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1780252200000,
+            "start_ms": 1777573800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1782844200000,
+            "start_ms": 1780252200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1785522600000,
+            "start_ms": 1782844200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1788201000000,
+            "start_ms": 1785522600000
+          },
+          {
+            "burn_count": 3,
+            "burn_kcal": 400,
+            "count": 4,
+            "duration_s": 8700,
+            "end_ms": 1790793000000,
+            "start_ms": 1788201000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1793471400000,
+            "start_ms": 1790793000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1796063400000,
+            "start_ms": 1793471400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1798741800000,
+            "start_ms": 1796063400000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "Y",
+        "sessions": [
+          {
+            "calories": 320,
+            "diary_date": "2026-09-13",
+            "duration_s": 3600,
+            "started_at_ms": 1789327800000
+          },
+          {
+            "calories": null,
+            "diary_date": null,
+            "duration_s": 1800,
+            "started_at_ms": 1789389000000
+          },
+          {
+            "calories": 0,
+            "diary_date": "2026-09-16",
+            "duration_s": 2700,
+            "started_at_ms": 1789522200000
+          },
+          {
+            "calories": 80,
+            "diary_date": "not-a-date",
+            "duration_s": 600,
+            "started_at_ms": 1789608600000
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "Y monthly totals"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 1,
+            "duration_s": 900,
+            "end_ms": 1789358400000,
+            "start_ms": 1789272000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789444800000,
+            "start_ms": 1789358400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789531200000,
+            "start_ms": 1789444800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789617600000,
+            "start_ms": 1789531200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789704000000,
+            "start_ms": 1789617600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789790400000,
+            "start_ms": 1789704000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789876800000,
+            "start_ms": 1789790400000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "range": "W",
+        "sessions": [
+          {
+            "calories": null,
+            "diary_date": null,
+            "duration_s": 900,
+            "started_at_ms": 1789351200000
+          }
+        ],
+        "time_zone": "America/New_York",
+        "week_start": "sunday"
+      },
+      "name": "started date uses zone when diary missing",
+      "notes": "02:00 UTC Sep 14 is Sep 13 in New York, the first day of a Sunday week"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789430400000,
+            "start_ms": 1789344000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789516800000,
+            "start_ms": 1789430400000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789603200000,
+            "start_ms": 1789516800000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789689600000,
+            "start_ms": 1789603200000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789776000000,
+            "start_ms": 1789689600000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789862400000,
+            "start_ms": 1789776000000
+          },
+          {
+            "burn_count": 0,
+            "burn_kcal": null,
+            "count": 0,
+            "duration_s": 0,
+            "end_ms": 1789948800000,
+            "start_ms": 1789862400000
+          }
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "W",
+        "sessions": [],
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "empty"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "workout_stats_per_bucket",
+  "version": 1
+}

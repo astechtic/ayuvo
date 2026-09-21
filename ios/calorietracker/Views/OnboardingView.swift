@@ -205,11 +205,12 @@ struct OnboardingView: View {
         } label: {
             Text(title)
                 .font(.system(.body, design: .rounded, weight: .semibold))
-                .foregroundStyle(Color(.systemBackground))
                 .frame(maxWidth: .infinity)
-                .frame(height: 54)
-                .background(Color.primary, in: Capsule())
+                .frame(height: 40)
         }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .buttonBorderShape(.capsule)
         .padding(.horizontal, 24)
         .padding(.bottom, 36)
     }
@@ -1595,11 +1596,12 @@ struct OnboardingView: View {
             } label: {
                 Text("Let's get started!")
                     .font(.system(.body, design: .rounded, weight: .semibold))
-                    .foregroundStyle(Color(.systemBackground))
                     .frame(maxWidth: .infinity)
-                    .frame(height: 54)
-                    .background(Color.primary, in: Capsule())
+                    .frame(height: 40)
             }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .buttonBorderShape(.capsule)
             .padding(.horizontal, 24)
             .padding(.bottom, 36)
         }

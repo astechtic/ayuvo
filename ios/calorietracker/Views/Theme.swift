@@ -177,25 +177,26 @@ enum AppThemeColor: String, CaseIterable, Identifiable {
 }
 
 enum AppColors {
-    // Calorie: Red → Pink
-    static var calorieGradient: [Color] { AppThemeColor.current.gradientColors }
+    /// The user's theme accent. Apple-flat design: used for primary actions, the selected tab and
+    /// chart scrub markers only (docs/ui-structure.md §1). Gradients are flat pairs of the accent.
+    static var calorieGradient: [Color] { [calorie, calorie] }
     static var calorie: Color { AppThemeColor.current.color }
 
-    // Protein
-    static var proteinGradient: [Color] { calorieGradient }
-    static var protein: Color { calorie }
+    // Macros have fixed colours (shared catalog `macro_colours`).
+    static var proteinGradient: [Color] { [protein, protein] }
+    static var protein: Color { AyuvoPalette.protein }
 
-    // Carbs
-    static var carbsGradient: [Color] { calorieGradient }
-    static var carbs: Color { calorie }
+    static var carbsGradient: [Color] { [carbs, carbs] }
+    static var carbs: Color { AyuvoPalette.carbs }
 
-    // Fat
-    static var fatGradient: [Color] { calorieGradient }
-    static var fat: Color { calorie }
+    static var fatGradient: [Color] { [fat, fat] }
+    static var fat: Color { AyuvoPalette.fat }
 
-    // Background: warm cream in light, system dark in dark
-    static let appBackground = Color("appBackground")
-    static let appCard = Color("appCard")
+    static var fiber: Color { AyuvoPalette.fiber }
+
+    // Neutral grouped backgrounds (system colours; the asset colours match them for old call sites).
+    static let appBackground = Color(uiColor: .systemGroupedBackground)
+    static let appCard = Color(uiColor: .secondarySystemGroupedBackground)
 }
 
 extension Color {

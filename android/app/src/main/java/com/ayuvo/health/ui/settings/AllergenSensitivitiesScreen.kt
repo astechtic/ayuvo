@@ -1,5 +1,9 @@
 package com.ayuvo.health.ui.settings
 
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.WindowInsets
+import com.ayuvo.health.ui.design.SurfaceCard
+import com.ayuvo.health.ui.design.AyuvoTopBar
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
@@ -36,7 +40,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -73,7 +76,6 @@ import com.ayuvo.health.R
 import com.ayuvo.health.services.ai.FoodAnalysisService
 import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
-import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.GlassTextButton
 import com.ayuvo.health.ui.components.GlassTextField
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
@@ -195,7 +197,16 @@ fun AllergenSensitivitiesScreen(
         }
     }
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            AyuvoTopBar(
+                title = stringResource(R.string.settings_allergen_sensitivities),
+                onBack = onBack,
+                windowInsets = WindowInsets.statusBars
+            )
+        }
+    ) { padding ->
         Box(Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier
@@ -206,35 +217,6 @@ fun AllergenSensitivitiesScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable { onBack() }
-                            .padding(horizontal = 2.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = AppColors.Calorie,
-                            modifier = Modifier.size(22.dp)
-                        )
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            stringResource(R.string.nav_settings),
-                            color = AppColors.Calorie,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-                item {
-                    Text(
-                        stringResource(R.string.settings_allergen_sensitivities),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Spacer(Modifier.height(6.dp))
                     Text(
                         stringResource(R.string.settings_allergen_disclaimer),
                         style = MaterialTheme.typography.bodySmall,
@@ -242,11 +224,8 @@ fun AllergenSensitivitiesScreen(
                     )
                 }
                 item {
-                    GlassSurface(
-                        modifier = Modifier.fillMaxWidth(),
-                        cornerRadius = 22.dp,
-                        padding = 0.dp
-                    ) {
+                    SurfaceCard(modifier = Modifier.fillMaxWidth(),
+                        padding = PaddingValues(0.dp)) {
                         Column {
                             if (allergens.isEmpty()) {
                                 Text(
@@ -274,11 +253,8 @@ fun AllergenSensitivitiesScreen(
                     }
                 }
                 item {
-                    GlassSurface(
-                        modifier = Modifier.fillMaxWidth(),
-                        cornerRadius = 22.dp,
-                        padding = 16.dp
-                    ) {
+                    SurfaceCard(modifier = Modifier.fillMaxWidth(),
+                        padding = PaddingValues(16.dp)) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             Text(
                                 stringResource(R.string.settings_allergen_import_section),
@@ -301,11 +277,8 @@ fun AllergenSensitivitiesScreen(
                     }
                 }
                 item {
-                    GlassSurface(
-                        modifier = Modifier.fillMaxWidth(),
-                        cornerRadius = 22.dp,
-                        padding = 16.dp
-                    ) {
+                    SurfaceCard(modifier = Modifier.fillMaxWidth(),
+                        padding = PaddingValues(16.dp)) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             Text(
                                 stringResource(R.string.settings_allergen_add_section),
@@ -338,8 +311,9 @@ fun AllergenSensitivitiesScreen(
                         .clickable(enabled = false) {},
                     contentAlignment = Alignment.Center
                 ) {
-                    GlassSurface(cornerRadius = 20.dp, padding = 20.dp) {
+                    SurfaceCard(Modifier.padding(horizontal = 64.dp), padding = PaddingValues(20.dp)) {
                         Column(
+                            Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {

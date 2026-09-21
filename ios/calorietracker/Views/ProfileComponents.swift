@@ -1,41 +1,5 @@
 import SwiftUI
 
-// MARK: - Profile Header Section
-
-struct ProfileHeaderSection: View {
-    let profile: UserProfile
-
-    var body: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: AppColors.calorieGradient,
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 80, height: 80)
-                    .shadow(color: AppColors.calorie.opacity(0.3), radius: 8, y: 4)
-
-                Text(profile.initials)
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-            }
-
-            Text(profile.displayName)
-                .font(.system(.title2, design: .rounded, weight: .bold))
-
-            Text("\(profile.effectiveCalories) kcal / day")
-                .font(.system(.subheadline, design: .rounded, weight: .medium))
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-    }
-}
-
 // MARK: - Profile Info Row
 
 struct ProfileInfoRow: View {
@@ -266,7 +230,7 @@ struct WeightPickerSheet: View {
                     .clipped()
 
                     Text(".")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
+                        .font(.system(.largeTitle, design: .rounded, weight: .bold))
                         .offset(y: -1)
 
                     Picker("Decimal", selection: $decimal) {

@@ -1,0 +1,964 @@
+{
+  "browse_sections": [
+    {
+      "domain": "nutrition",
+      "id": "nutrition.energy",
+      "order": 1,
+      "title": "Energy"
+    },
+    {
+      "domain": "nutrition",
+      "id": "nutrition.macros",
+      "order": 2,
+      "title": "Macronutrients"
+    },
+    {
+      "domain": "hydration",
+      "id": "hydration.water",
+      "order": 1,
+      "title": "Water"
+    },
+    {
+      "domain": "fasting",
+      "id": "fasting.time",
+      "order": 1,
+      "title": "Fasting"
+    },
+    {
+      "domain": "body",
+      "id": "body.app",
+      "order": 1,
+      "title": "Logged in Ayuvo"
+    },
+    {
+      "domain": "activity",
+      "id": "activity.workouts",
+      "order": 1,
+      "title": "Workouts"
+    }
+  ],
+  "catalog_version": 1,
+  "domains": [
+    {
+      "browse_order": 1,
+      "colour_hex": "#34C759",
+      "colour_hex_dark": "#30D158",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "nutrition",
+      "target": "screen:nutrition",
+      "title": "Nutrition",
+      "title_res": "domain_nutrition"
+    },
+    {
+      "browse_order": 2,
+      "colour_hex": "#007AFF",
+      "colour_hex_dark": "#0A84FF",
+      "icon": {
+        "android": "Filled.WaterDrop",
+        "ios": "drop.fill"
+      },
+      "id": "hydration",
+      "target": "metric:app:water",
+      "title": "Hydration",
+      "title_res": "domain_hydration"
+    },
+    {
+      "browse_order": 3,
+      "colour_hex": "#00C7BE",
+      "colour_hex_dark": "#63E6E2",
+      "icon": {
+        "android": "Filled.Timer",
+        "ios": "timer"
+      },
+      "id": "fasting",
+      "target": "screen:fasting",
+      "title": "Fasting",
+      "title_res": "domain_fasting"
+    },
+    {
+      "browse_order": 4,
+      "colour_hex": "#AF52DE",
+      "colour_hex_dark": "#BF5AF2",
+      "icon": {
+        "android": "Filled.Accessibility",
+        "ios": "figure"
+      },
+      "id": "body",
+      "target": "screen:body",
+      "title": "Body Measurements",
+      "title_res": "domain_body"
+    },
+    {
+      "browse_order": 5,
+      "colour_hex": "#FF9500",
+      "colour_hex_dark": "#FF9F0A",
+      "icon": {
+        "android": "Filled.LocalFireDepartment",
+        "ios": "flame.fill"
+      },
+      "id": "activity",
+      "target": "screen:activity",
+      "title": "Activity",
+      "title_res": "domain_activity"
+    },
+    {
+      "browse_order": 6,
+      "colour_hex": "#FF3B30",
+      "colour_hex_dark": "#FF453A",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "heart",
+      "target": "category:heart",
+      "title": "Heart",
+      "title_res": "domain_heart"
+    },
+    {
+      "browse_order": 7,
+      "colour_hex": "#5E5CE6",
+      "colour_hex_dark": "#7D7AFF",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep",
+      "target": "category:sleep",
+      "title": "Sleep",
+      "title_res": "domain_sleep"
+    },
+    {
+      "browse_order": 8,
+      "colour_hex": "#FF2D55",
+      "colour_hex_dark": "#FF375F",
+      "icon": {
+        "android": "Filled.MonitorHeart",
+        "ios": "waveform.path.ecg"
+      },
+      "id": "vitals",
+      "target": "category:vitals",
+      "title": "Vitals",
+      "title_res": "domain_vitals"
+    },
+    {
+      "browse_order": 9,
+      "colour_hex": "#5AC8FA",
+      "colour_hex_dark": "#64D2FF",
+      "icon": {
+        "android": "Filled.Air",
+        "ios": "lungs.fill"
+      },
+      "id": "respiratory",
+      "target": "category:respiratory",
+      "title": "Respiratory",
+      "title_res": "domain_respiratory"
+    },
+    {
+      "browse_order": 10,
+      "colour_hex": "#FF2D55",
+      "colour_hex_dark": "#FF375F",
+      "icon": {
+        "android": "Filled.Loop",
+        "ios": "arrow.triangle.2.circlepath"
+      },
+      "id": "cycle",
+      "target": "category:cycle_tracking",
+      "title": "Cycle Tracking",
+      "title_res": "domain_cycle"
+    },
+    {
+      "browse_order": 11,
+      "colour_hex": "#30B0C7",
+      "colour_hex_dark": "#40CBE0",
+      "icon": {
+        "android": "Filled.SelfImprovement",
+        "ios": "brain.head.profile"
+      },
+      "id": "mindfulness",
+      "target": "category:mental_wellbeing",
+      "title": "Mental Wellbeing",
+      "title_res": "domain_mindfulness"
+    },
+    {
+      "browse_order": 12,
+      "colour_hex": "#FF9500",
+      "colour_hex_dark": "#FF9F0A",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk.motion"
+      },
+      "id": "mobility",
+      "target": "category:mobility",
+      "title": "Mobility",
+      "title_res": "domain_mobility"
+    },
+    {
+      "browse_order": 13,
+      "colour_hex": "#007AFF",
+      "colour_hex_dark": "#0A84FF",
+      "icon": {
+        "android": "Filled.Hearing",
+        "ios": "ear.fill"
+      },
+      "id": "hearing",
+      "target": "category:hearing",
+      "title": "Hearing",
+      "title_res": "domain_hearing"
+    },
+    {
+      "browse_order": 14,
+      "colour_hex": "#AF52DE",
+      "colour_hex_dark": "#BF5AF2",
+      "icon": {
+        "android": "Filled.HealthAndSafety",
+        "ios": "stethoscope"
+      },
+      "id": "symptoms",
+      "target": "category:symptoms",
+      "title": "Symptoms",
+      "title_res": "domain_symptoms"
+    },
+    {
+      "browse_order": 15,
+      "colour_hex": "#32ADE6",
+      "colour_hex_dark": "#64D2FF",
+      "icon": {
+        "android": "Filled.Medication",
+        "ios": "pills.fill"
+      },
+      "id": "medications",
+      "target": "screen:medications",
+      "title": "Medications",
+      "title_res": "domain_medications"
+    },
+    {
+      "browse_order": 16,
+      "colour_hex": "#5856D6",
+      "colour_hex_dark": "#5E5CE6",
+      "icon": {
+        "android": "Filled.Description",
+        "ios": "doc.text.fill"
+      },
+      "id": "records",
+      "target": "tab:records",
+      "title": "Health Records",
+      "title_res": "domain_records"
+    },
+    {
+      "browse_order": 17,
+      "colour_hex": "#8E8E93",
+      "colour_hex_dark": "#98989D",
+      "icon": {
+        "android": "Filled.MoreHoriz",
+        "ios": "ellipsis.circle"
+      },
+      "id": "other",
+      "target": "category:other",
+      "title": "Other Data",
+      "title_res": "domain_other"
+    }
+  ],
+  "favourites": {
+    "legacy_pref_key": "healthHomeTiles",
+    "max": 12,
+    "pref_key": "summaryFavourites",
+    "storage": "comma-separated keys"
+  },
+  "format": "ayuvo-metric-catalog",
+  "health": {
+    "aggregation_map": {
+      "AVERAGE": "avg",
+      "COUNT": "count",
+      "DURATION": "duration",
+      "LATEST": "last",
+      "MIN_MAX": "avg",
+      "SUM": "sum"
+    },
+    "category_domains": {
+      "activity": "activity",
+      "body": "body",
+      "cycle_tracking": "cycle",
+      "hearing": "hearing",
+      "heart": "heart",
+      "mental_wellbeing": "mindfulness",
+      "mobility": "mobility",
+      "nutrition": "nutrition",
+      "other": "other",
+      "respiratory": "respiratory",
+      "sleep": "sleep",
+      "symptoms": "symptoms",
+      "vitals": "vitals"
+    },
+    "chart_kind_map": {
+      "AVERAGE": "line",
+      "COUNT": "bar",
+      "DURATION": "bar",
+      "LATEST": "line",
+      "MIN_MAX": "range",
+      "SUM": "bar"
+    },
+    "overrides": [
+      {
+        "default_favourite": {
+          "enabled": true,
+          "order": 3
+        },
+        "goal_source": "prefs.dailyStepGoal",
+        "icon": {
+          "android": "AutoMirrored.Filled.DirectionsWalk",
+          "ios": "figure.walk"
+        },
+        "id": "steps"
+      },
+      {
+        "icon": {
+          "android": "Filled.Straighten",
+          "ios": "ruler.fill"
+        },
+        "id": "distance"
+      },
+      {
+        "icon": {
+          "android": "Filled.Stairs",
+          "ios": "figure.stairs"
+        },
+        "id": "floors_climbed"
+      },
+      {
+        "default_favourite": {
+          "enabled": true,
+          "order": 8
+        },
+        "icon": {
+          "android": "Filled.LocalFireDepartment",
+          "ios": "flame.fill"
+        },
+        "id": "active_energy"
+      },
+      {
+        "icon": {
+          "android": "Filled.Bolt",
+          "ios": "bolt.fill"
+        },
+        "id": "total_energy"
+      },
+      {
+        "icon": {
+          "android": "Filled.Timer",
+          "ios": "timer"
+        },
+        "id": "exercise_minutes"
+      },
+      {
+        "default_favourite": {
+          "enabled": true,
+          "order": 7
+        },
+        "icon": {
+          "android": "Filled.Favorite",
+          "ios": "heart.fill"
+        },
+        "id": "heart_rate"
+      },
+      {
+        "icon": {
+          "android": "Filled.MonitorHeart",
+          "ios": "heart.circle.fill"
+        },
+        "id": "resting_heart_rate"
+      },
+      {
+        "icon": {
+          "android": "Filled.MonitorHeart",
+          "ios": "waveform.path.ecg"
+        },
+        "id": "hrv_rmssd"
+      },
+      {
+        "icon": {
+          "android": "Filled.MonitorHeart",
+          "ios": "heart.text.square.fill"
+        },
+        "id": "blood_pressure"
+      },
+      {
+        "icon": {
+          "android": "Filled.Air",
+          "ios": "lungs.fill"
+        },
+        "id": "blood_oxygen"
+      },
+      {
+        "icon": {
+          "android": "Filled.Air",
+          "ios": "wind"
+        },
+        "id": "respiratory_rate"
+      },
+      {
+        "icon": {
+          "android": "Filled.Thermostat",
+          "ios": "thermometer"
+        },
+        "id": "body_temperature"
+      },
+      {
+        "default_favourite": {
+          "enabled": true,
+          "order": 6
+        },
+        "icon": {
+          "android": "Filled.Bedtime",
+          "ios": "bed.double.fill"
+        },
+        "id": "sleep"
+      },
+      {
+        "icon": {
+          "android": "Filled.SelfImprovement",
+          "ios": "brain.head.profile"
+        },
+        "id": "mindfulness_session"
+      },
+      {
+        "icon": {
+          "android": "Filled.Bloodtype",
+          "ios": "drop.fill"
+        },
+        "id": "blood_glucose"
+      },
+      {
+        "icon": {
+          "android": "Filled.Speed",
+          "ios": "speedometer"
+        },
+        "id": "vo2_max"
+      },
+      {
+        "icon": {
+          "android": "Filled.Height",
+          "ios": "figure.stand"
+        },
+        "id": "height"
+      },
+      {
+        "browse_hidden": true,
+        "icon": {
+          "android": "Filled.MonitorWeight",
+          "ios": "scalemass.fill"
+        },
+        "id": "weight"
+      },
+      {
+        "browse_hidden": true,
+        "icon": {
+          "android": "Filled.Percent",
+          "ios": "percent"
+        },
+        "id": "body_fat"
+      },
+      {
+        "icon": {
+          "android": "Filled.Calculate",
+          "ios": "function"
+        },
+        "id": "bmi"
+      },
+      {
+        "domain": "hydration",
+        "id": "hydration"
+      }
+    ],
+    "registry": "shared/health/metric_registry.json"
+  },
+  "macro_colours": {
+    "carbs": "#FF9F0A",
+    "fat": "#BF5AF2",
+    "fiber": "#30B0C7",
+    "protein": "#007AFF"
+  },
+  "metrics": [
+    {
+      "about": "Energy from the food you log in Ayuvo, added up per day. Longer ranges show your average on days you logged food.",
+      "aggregation": "sum",
+      "browse_order": 1,
+      "browse_section": "nutrition.energy",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "default_favourite": {
+        "enabled": true,
+        "order": 1
+      },
+      "domain": "nutrition",
+      "goal_source": "profile.calories",
+      "icon": {
+        "android": "Filled.LocalFireDepartment",
+        "ios": "flame.fill"
+      },
+      "key": "app:calories",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "calories",
+        "store": "food"
+      },
+      "title": "Calories",
+      "title_res": "metric_calories",
+      "unit": {
+        "canonical": "kcal",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Protein from the food you log in Ayuvo, added up per day.",
+      "aggregation": "sum",
+      "browse_order": 1,
+      "browse_section": "nutrition.macros",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "default_favourite": {
+        "enabled": true,
+        "order": 2
+      },
+      "domain": "nutrition",
+      "goal_source": "profile.protein",
+      "icon": {
+        "android": "Filled.Egg",
+        "ios": "fish.fill"
+      },
+      "key": "app:protein",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "protein",
+        "store": "food"
+      },
+      "title": "Protein",
+      "title_res": "metric_protein",
+      "unit": {
+        "canonical": "g",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Carbohydrates from the food you log in Ayuvo, added up per day.",
+      "aggregation": "sum",
+      "browse_order": 2,
+      "browse_section": "nutrition.macros",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "nutrition",
+      "goal_source": "profile.carbs",
+      "icon": {
+        "android": "Filled.BakeryDining",
+        "ios": "carrot.fill"
+      },
+      "key": "app:carbs",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "carbs",
+        "store": "food"
+      },
+      "title": "Carbohydrates",
+      "title_res": "metric_carbs",
+      "unit": {
+        "canonical": "g",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Fat from the food you log in Ayuvo, added up per day.",
+      "aggregation": "sum",
+      "browse_order": 3,
+      "browse_section": "nutrition.macros",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "nutrition",
+      "goal_source": "profile.fat",
+      "icon": {
+        "android": "Filled.Opacity",
+        "ios": "drop.triangle.fill"
+      },
+      "key": "app:fat",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "fat",
+        "store": "food"
+      },
+      "title": "Total Fat",
+      "title_res": "metric_fat",
+      "unit": {
+        "canonical": "g",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Dietary fiber from the food you log in Ayuvo, added up per day. Foods without fiber information are skipped.",
+      "aggregation": "sum",
+      "browse_order": 4,
+      "browse_section": "nutrition.macros",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "nutrition",
+      "goal_source": "none",
+      "icon": {
+        "android": "Filled.Grass",
+        "ios": "leaf.fill"
+      },
+      "key": "app:fiber",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "fiber",
+        "store": "food"
+      },
+      "title": "Fiber",
+      "title_res": "metric_fiber",
+      "unit": {
+        "canonical": "g",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Water you log in Ayuvo, added up per day.",
+      "aggregation": "sum",
+      "browse_order": 1,
+      "browse_section": "hydration.water",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "default_favourite": {
+        "enabled": true,
+        "order": 4
+      },
+      "domain": "hydration",
+      "goal_source": "prefs.waterDailyGoalMl",
+      "icon": {
+        "android": "Filled.WaterDrop",
+        "ios": "drop.fill"
+      },
+      "key": "app:water",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "milliliters",
+        "store": "water"
+      },
+      "title": "Water",
+      "title_res": "metric_water",
+      "unit": {
+        "canonical": "mL",
+        "decimals": 0,
+        "pref": "waterUnit"
+      }
+    },
+    {
+      "about": "Time spent fasting per day. A fast that crosses midnight counts toward each day it covers.",
+      "aggregation": "duration",
+      "browse_order": 1,
+      "browse_section": "fasting.time",
+      "chart_kind": "bar",
+      "day_bucket": "none",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "fasting",
+      "goal_source": "none",
+      "icon": {
+        "android": "Filled.Timer",
+        "ios": "timer"
+      },
+      "key": "app:fasting",
+      "ranges": [
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "duration",
+        "store": "fasting"
+      },
+      "title": "Fasting",
+      "title_res": "metric_fasting",
+      "unit": {
+        "canonical": "s",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Weight entries you log in Ayuvo, including readings imported from connected health apps. Each point shows the latest reading of that period.",
+      "aggregation": "last",
+      "browse_order": 1,
+      "browse_section": "body.app",
+      "chart_kind": "line",
+      "day_bucket": "none",
+      "default_favourite": {
+        "enabled": true,
+        "order": 5
+      },
+      "domain": "body",
+      "goal_source": "profile.goalWeight",
+      "icon": {
+        "android": "Filled.MonitorWeight",
+        "ios": "scalemass.fill"
+      },
+      "key": "app:weight",
+      "ranges": [
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "weightKg",
+        "store": "weight"
+      },
+      "title": "Weight",
+      "title_res": "metric_weight",
+      "unit": {
+        "canonical": "kg",
+        "decimals": 1,
+        "pref": "weightUnit"
+      }
+    },
+    {
+      "about": "Body fat readings you log in Ayuvo. Each point shows the latest reading of that period.",
+      "aggregation": "last",
+      "browse_order": 2,
+      "browse_section": "body.app",
+      "chart_kind": "line",
+      "day_bucket": "none",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "body",
+      "goal_source": "profile.goalBodyFat",
+      "icon": {
+        "android": "Filled.Percent",
+        "ios": "percent"
+      },
+      "key": "app:body_fat",
+      "ranges": [
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "bodyFatFraction",
+        "store": "bodyFat"
+      },
+      "title": "Body Fat Percentage",
+      "title_res": "metric_body_fat",
+      "unit": {
+        "canonical": "%",
+        "decimals": 1,
+        "pref": null
+      }
+    },
+    {
+      "about": "Workouts you complete in Ayuvo, counted on the day they were logged.",
+      "aggregation": "count",
+      "browse_order": 1,
+      "browse_section": "activity.workouts",
+      "chart_kind": "bar",
+      "day_bucket": "none",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "activity",
+      "goal_source": "none",
+      "icon": {
+        "android": "Filled.FitnessCenter",
+        "ios": "figure.strengthtraining.traditional"
+      },
+      "key": "app:workouts",
+      "ranges": [
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "sessions",
+        "store": "workouts"
+      },
+      "title": "Workouts",
+      "title_res": "metric_workouts",
+      "unit": {
+        "canonical": "count",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Time spent in workouts you complete in Ayuvo.",
+      "aggregation": "duration",
+      "browse_order": 2,
+      "browse_section": "activity.workouts",
+      "chart_kind": "bar",
+      "day_bucket": "none",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "activity",
+      "goal_source": "none",
+      "icon": {
+        "android": "Filled.Schedule",
+        "ios": "clock.fill"
+      },
+      "key": "app:workout_minutes",
+      "ranges": [
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "durationSeconds",
+        "store": "workouts"
+      },
+      "title": "Workout Time",
+      "title_res": "metric_workout_minutes",
+      "unit": {
+        "canonical": "s",
+        "decimals": 0,
+        "pref": null
+      }
+    },
+    {
+      "about": "Estimated energy burned in workouts you complete in Ayuvo. Workouts without an estimate are skipped.",
+      "aggregation": "sum",
+      "browse_order": 3,
+      "browse_section": "activity.workouts",
+      "chart_kind": "bar",
+      "day_bucket": "none",
+      "default_favourite": {
+        "enabled": false,
+        "order": null
+      },
+      "domain": "activity",
+      "goal_source": "none",
+      "icon": {
+        "android": "Filled.LocalFireDepartment",
+        "ios": "flame.fill"
+      },
+      "key": "app:workout_burn",
+      "ranges": [
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "source": {
+        "field": "caloriesBurned",
+        "store": "workouts"
+      },
+      "title": "Workout Energy",
+      "title_res": "metric_workout_burn",
+      "unit": {
+        "canonical": "kcal",
+        "decimals": 0,
+        "pref": null
+      }
+    }
+  ],
+  "prefs": {
+    "dailyStepGoal": {
+      "cloud_backed": true,
+      "default": 10000,
+      "max": 50000,
+      "min": 1000,
+      "step": 500,
+      "type": "int"
+    },
+    "summaryChecklistDismissed": {
+      "cloud_backed": true,
+      "default": false,
+      "type": "bool"
+    }
+  },
+  "summary_rings": [
+    {
+      "domain": "nutrition",
+      "goal_source": "profile.calories",
+      "id": "eat",
+      "metric": "app:calories",
+      "no_source_state": null,
+      "visible_when": "always"
+    },
+    {
+      "domain": "activity",
+      "goal_source": "prefs.dailyStepGoal",
+      "id": "move",
+      "metric": "steps",
+      "no_source_state": "connect",
+      "visible_when": "always"
+    },
+    {
+      "domain": "hydration",
+      "goal_source": "prefs.waterDailyGoalMl",
+      "id": "drink",
+      "metric": "app:water",
+      "no_source_state": null,
+      "visible_when": "prefs.waterTrackingEnabled"
+    }
+  ]
+}

@@ -308,7 +308,7 @@ fun ShareRecordScreen(container: AppContainer, recordIds: List<String>, onBack: 
         }
 
         // The bottom bar clears the floating tab bar, so the confirm button is always reachable.
-        GlassSurface(Modifier.fillMaxWidth().padding(bottom = BottomNavScrollPadding - 40.dp), padding = 0.dp) {
+        GlassSurface(Modifier.fillMaxWidth().padding(bottom = BottomNavScrollPadding), padding = 0.dp) {
             Column(Modifier.padding(16.dp)) {
                 if (ui.failed) {
                     Text(stringResource(R.string.records_share_failed), fontSize = 12.sp, color = AppColors.Calorie)
