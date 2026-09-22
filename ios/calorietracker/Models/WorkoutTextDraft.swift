@@ -159,16 +159,22 @@ struct WorkoutTextDraft: Codable {
         return result.isEmpty ? [fallback] : result
     }
 
-    static func prompt(description: String, selectedDate: Date, unit: WeightUnit, library: [ExerciseLibraryItem], searchQueries: [String]? = nil) -> String {
+    static func prompt(description: String, selectedDate: Date, unit: WeightUnit, library: [ExerciseLibraryItem], searchQueries: [String]? = nil,
+                       chosenExerciseIDs: [String] = [], repeatedQuestion: String? = nil) -> String {
         let encoded = (try? JSONEncoder().encode(description)).flatMap { String(data: $0, encoding: .utf8) } ?? ""
         var seen = Set<String>()
         let ranked = (searchQueries ?? [description]).prefix(30).map { Array(candidates(description: $0, library: library).prefix(12)) }
-        let matches = (0..<12).flatMap { rank in ranked.compactMap { rank < $0.count ? $0[rank] : nil } }
+        // Exercises the user explicitly chose in a follow-up always reach the catalog, first.
+        let chosen = chosenExerciseIDs.compactMap { id in library.first { $0.id == id } }
+        let matches = (chosen + (0..<12).flatMap { rank in ranked.compactMap { rank < $0.count ? $0[rank] : nil } })
             .filter { seen.insert($0.id).inserted }.prefix(60)
+        let repeatNote = repeatedQuestion.map {
+            "\nYou already asked \((try? JSONEncoder().encode($0)).flatMap { String(data: $0, encoding: .utf8) } ?? "\"\"") and the user answered it. Do not ask it again or rephrase it: build the draft from the answers, or ask only about a different missing detail."
+        } ?? ""
         let catalog = matches.map { "\($0.id) | \($0.name) | equipment: \($0.rawEquipment) | muscles: \($0.primaryMuscles.joined(separator: ", "))" }.joined(separator: "\n")
         return """
         Convert the user's completed workout description into a draft for review, never a saved action.
-        Input may contain original_workout and follow_ups. Combine all answers with the original workout; retain sets, reps, weights and dates unless the user explicitly corrects them. Do not ask again for details already answered.
+        Input may contain original_workout and follow_ups. Combine all answers with the original workout; retain sets, reps, weights and dates unless the user explicitly corrects them. Do not ask again for details already answered. A follow-up with chosen_exercise_id is the user's final exercise choice: use exactly that exercise_id and never ask about that exercise's variant again.\(repeatNote)
         Today is \(StrengthWorkoutDate.key(for: .now)). Selected diary date is \(StrengthWorkoutDate.key(for: selectedDate)). Default weight unit is \(unit.rawValue).
         Return ONLY JSON: {"question":null,"options":[],"date":"YYYY-MM-DD","exercises":[{"exercise_id":"exact catalog id or null","name":"activity name","minutes":null,"intensity":"moderate","unit":"kg","sets":[{"weight":40,"reps":10,"rpe":null}]}]}
         Resolve yesterday relative to TODAY, not the selected diary date. Without a date use the selected date.
@@ -227,25 +233,49 @@ struct WorkoutClarification: LocalizedError {
 struct WorkoutFollowUp: Codable, Equatable {
     let question: String
     let answer: String
+    /// Library exercise the answer picked (an option card or an exact library name): a final choice.
+    var exerciseID: String? = nil
 }
 
 struct WorkoutConversation: Codable {
     let original: String
     var turns: [WorkoutFollowUp] = []
 
-    func answering(question: String, answer: String) throws -> Self {
+    func answering(question: String, answer: String, exerciseID: String? = nil) throws -> Self {
         let reply = answer.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !reply.isEmpty, reply.count <= 500 else { throw WorkoutTextError.invalid("Reply in up to 500 characters.") }
         guard turns.count < 6 else { throw WorkoutTextError.invalid("Please start over with the details gathered so far.") }
         var result = self
-        result.turns.append(WorkoutFollowUp(question: String(question.prefix(500)), answer: reply))
+        result.turns.append(WorkoutFollowUp(question: String(question.prefix(500)), answer: reply, exerciseID: exerciseID))
         return result
+    }
+
+    var chosenExerciseIDs: [String] { turns.compactMap(\.exerciseID) }
+
+    /// Whether `question` repeats one the user already answered (case, punctuation and spacing ignored),
+    /// or offers again an exercise the user already picked as final.
+    func alreadyAsked(_ question: WorkoutClarification) -> Bool {
+        let key = Self.questionKey(question.question)
+        if !key.isEmpty && turns.contains(where: { Self.questionKey($0.question) == key }) { return true }
+        let picked = Set(turns.filter { $0.exerciseID != nil }.map { Self.questionKey($0.answer) })
+        return question.options.contains { picked.contains(Self.questionKey($0)) }
+    }
+
+    static func questionKey(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            .lowercased()
+            .split(whereSeparator: { !$0.isLetter && !$0.isNumber })
+            .joined(separator: " ")
     }
 
     func requestDescription() throws -> String {
         guard !turns.isEmpty else { return original }
         let value: [String: Any] = ["original_workout": original,
-            "follow_ups": turns.map { ["question": $0.question, "answer": $0.answer] }]
+            "follow_ups": turns.map { turn -> [String: String] in
+                var entry = ["question": turn.question, "answer": turn.answer]
+                if let id = turn.exerciseID { entry["chosen_exercise_id"] = id }
+                return entry
+            }]
         return String(decoding: try JSONSerialization.data(withJSONObject: value), as: UTF8.self)
     }
 }

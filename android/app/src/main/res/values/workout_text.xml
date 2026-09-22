@@ -31,4 +31,5 @@
     <string name="workout_clarify_hint">Tap an exercise to choose it, or type your answer.</string>
     <string name="workout_clarify_answer">Your answer</string>
     <string name="workout_clarify_voice">Voice reply</string>
+    <string name="workout_text_repeat_error">Couldn\'t finish from your answers. Add the missing detail to your description (for example sets and reps) or start over.</string>
 </resources>

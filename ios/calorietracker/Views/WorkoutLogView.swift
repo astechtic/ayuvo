@@ -432,16 +432,12 @@ struct WorkoutLogView: View {
                         }
                     }
                 }
-                // While the describe popover owns the keyboard, neither the list nor the "+" anchor may
-                // move with it, or UIKit keeps re-positioning the popover (flicker).
-                .ignoresSafeArea(.keyboard, edges: isTextSheetPresented ? .bottom : [])
                 .overlay(alignment: .bottomTrailing) {
                     addExerciseMenu
                         .padding(24)
                         .simultaneousGesture(
                             TapGesture().onEnded(dismissSetKeyboard)
                         )
-                        .ignoresSafeArea(.keyboard, edges: isTextSheetPresented ? .bottom : [])
                 }
             }
             // Keep the chrome quiet: the date strip and burn calculator lead.
@@ -603,10 +599,13 @@ struct WorkoutLogView: View {
         }
         .tint(Color.workoutAccent)
         .accessibilityLabel("Add workout")
-        .popover(isPresented: $isTextSheetPresented) {
+        .sheet(isPresented: $isTextSheetPresented) {
+            // A sheet, not a popover: a popover anchored to "+" is re-positioned by UIKit whenever the
+            // keyboard changes, which flickered on device.
             WorkoutTextView(selectedDate: selectedDate, unit: weightUnit, bodyWeightKg: currentBodyWeightKg,
                 onAdded: { selectedDate = $0 }, startsWithVoice: workoutInputUsesVoice)
-                .presentationCompactAdaptation(.popover)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
         }
     }
 

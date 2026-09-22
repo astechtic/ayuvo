@@ -32,16 +32,14 @@ struct ManualEntryView: View {
     }
 
     var body: some View {
-        // The popover sizes itself to this content, but the keyboard can leave it less room
-        // than the form needs; scrolling keeps the title and Name field reachable instead of
-        // pushing them off the top.
+        // The keyboard can leave the sheet less room than the form needs; scrolling keeps the
+        // title and Name field reachable instead of pushing them off the top.
         ScrollView {
             form
                 .padding(20)
         }
         .scrollBounceBehavior(.basedOnSize)
         .scrollDismissesKeyboard(.interactively)
-        .frame(width: 340)
         .onAppear { focused = .name }
     }
 

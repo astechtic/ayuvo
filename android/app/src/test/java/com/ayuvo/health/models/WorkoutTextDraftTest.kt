@@ -124,4 +124,26 @@ class WorkoutTextDraftTest {
         val invalid = draft.exercises.first().copy(sets = listOf(WorkoutTextSet(reps = "NaN")))
         assertTrue(runCatching { draft.copy(exercises = listOf(invalid)).planned(library, today) }.isFailure)
     }
+
+    @Test fun chosenExerciseIsSentAsFinalAndAlwaysInTheCatalog() {
+        val assisted = ExerciseItem("0017", "assisted pull-up", "Back", "", emptyList(), emptyList(), emptyList())
+        val filler = (0 until 80).map { ExerciseItem("Pull_$it", "Pull variation $it", "Back", "", emptyList(), emptyList(), emptyList()) }
+        val conversation = WorkoutConversation("pull ups").answering("What kind of pull-up?", "Assisted Pull-Up", "0017")
+        val request = conversation.requestDescription()
+        assertTrue(request.contains(""""chosen_exercise_id":"0017""""))
+        assertEquals(listOf("0017"), WorkoutTextDraft.chosenExerciseIds(request))
+        val prompt = WorkoutTextDraft.prompt(request, today, WorkoutWeightUnit.KG, filler + assisted, listOf("pull"))
+        assertTrue(prompt.contains("0017 | assisted pull-up"))
+        assertTrue(prompt.contains("chosen_exercise_id is the user's final exercise choice"))
+    }
+
+    @Test fun repeatedQuestionsAreDetectedAndRetriedWithANote() {
+        val conversation = WorkoutConversation("pull ups")
+            .answering("What kind of pull-up exercise was performed?", "Assisted Pull-Up", "0017")
+        assertTrue(conversation.alreadyAsked("what kind of pull-up exercise was performed", emptyList()))
+        assertTrue(conversation.alreadyAsked("Which pull-up variation?", listOf("assisted pull-up", "Band Assisted Pull-Up")))
+        assertFalse(conversation.alreadyAsked("How many sets and reps of assisted pull-up did you do?", listOf("3x10", "3x8")))
+        val retry = conversation.requestDescription(repeatedQuestion = "What kind?")
+        assertTrue(WorkoutTextDraft.prompt(retry, today, WorkoutWeightUnit.KG, library).contains("Do not ask it again"))
+    }
 }

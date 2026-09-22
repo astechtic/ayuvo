@@ -183,4 +183,32 @@ struct WorkoutTextDraftTests {
         #expect(throws: (any Error).self) { try store.addTextWorkout(invalid, library: library) }
         #expect(store.exercises(for: day).count == 3)
     }
+
+    @Test func chosenExerciseIsSentAsFinalAndAlwaysInTheCatalog() throws {
+        let assisted = ExerciseLibraryItem(id: "0017", name: "assisted pull-up", bodyPart: "back")
+        let filler = (0..<80).map { ExerciseLibraryItem(id: "Pull_\($0)", name: "Pull variation \($0)") }
+        let conversation = try WorkoutConversation(original: "pull ups")
+            .answering(question: "What kind of pull-up?", answer: "Assisted Pull-Up", exerciseID: "0017")
+        #expect(conversation.chosenExerciseIDs == ["0017"])
+        let request = try conversation.requestDescription()
+        #expect(request.contains(#""chosen_exercise_id":"0017""#))
+        let prompt = WorkoutTextDraft.prompt(description: request, selectedDate: today, unit: .kg,
+                                             library: filler + [assisted], searchQueries: ["pull"],
+                                             chosenExerciseIDs: conversation.chosenExerciseIDs)
+        #expect(prompt.contains("0017 | assisted pull-up"))
+        #expect(prompt.contains("chosen_exercise_id is the user's final exercise choice"))
+    }
+
+    @Test func repeatedQuestionsAreDetected() throws {
+        let conversation = try WorkoutConversation(original: "pull ups")
+            .answering(question: "What kind of pull-up exercise was performed?", answer: "Assisted Pull-Up", exerciseID: "0017")
+        #expect(conversation.alreadyAsked(WorkoutClarification(question: "what kind of pull-up exercise was performed")))
+        #expect(conversation.alreadyAsked(WorkoutClarification(question: "Which pull-up variation?",
+                                                               options: ["assisted pull-up", "Band Assisted Pull-Up"])))
+        #expect(!conversation.alreadyAsked(WorkoutClarification(question: "How many sets and reps of assisted pull-up did you do?",
+                                                                options: ["3x10", "3x8"])))
+        let prompt = WorkoutTextDraft.prompt(description: "x", selectedDate: today, unit: .kg, library: [],
+                                             repeatedQuestion: "What kind?")
+        #expect(prompt.contains("Do not ask it again"))
+    }
 }

@@ -161,7 +161,7 @@ struct VoiceInputView: View {
             .foregroundStyle(.secondary)
         }
         .padding(20)
-        .frame(width: 320)
+        .frame(maxWidth: .infinity)
         .onAppear { startRecording() }
         .onDisappear { stopRecording() }
     }

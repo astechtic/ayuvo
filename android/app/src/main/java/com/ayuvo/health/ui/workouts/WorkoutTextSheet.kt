@@ -55,6 +55,7 @@ internal fun WorkoutTextSheet(
     var saving by remember { mutableStateOf(false) }
     var error by rememberSaveable { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    val couldNotFinish = stringResource(R.string.workout_text_repeat_error)
     val keyboard = androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
     var started by rememberSaveable { mutableStateOf(false) }
     val dismiss = { if (!saving) onDismiss() }
@@ -63,7 +64,10 @@ internal fun WorkoutTextSheet(
 
     fun update(value: WorkoutTextDraft) { draftJson = Json.encodeToString(value); error = null; question = null }
 
-    fun analyze(context: String = WorkoutConversation(description.trim(), followUps).requestDescription()) {
+    fun analyze(
+        context: String = WorkoutConversation(description.trim(), followUps).requestDescription(),
+        retried: Boolean = false
+    ) {
         keyboard?.hide()
         busy = true; error = null
         requestGeneration++
@@ -74,7 +78,22 @@ internal fun WorkoutTextSheet(
                 if (generation == requestGeneration) update(result)
             } catch (e: CancellationException) { throw e }
             catch (e: WorkoutClarification) {
-                if (generation == requestGeneration) { question = e.message; options = e.options; reply = "" }
+                if (generation == requestGeneration) {
+                    val conversation = WorkoutConversation(description.trim(), followUps)
+                    val asked = e.message.orEmpty()
+                    if (conversation.alreadyAsked(asked, e.options)) {
+                        // Never show a question the user already answered: retry once with an explicit
+                        // "already answered" note, then stop with guidance instead of looping.
+                        if (!retried) {
+                            busy = false
+                            analyze(conversation.requestDescription(repeatedQuestion = asked), retried = true)
+                            return@launch
+                        }
+                        error = couldNotFinish
+                    } else {
+                        question = e.message; options = e.options; reply = ""
+                    }
+                }
             }
             catch (e: Exception) {
                 if (generation == requestGeneration) error = e.localizedMessage ?: "Could not prepare the workout. Try again."
@@ -85,7 +104,9 @@ internal fun WorkoutTextSheet(
     fun answer(text: String) {
         val currentQuestion = question ?: return
         try {
-            val conversation = WorkoutConversation(description, followUps).answering(currentQuestion, text)
+            // An option card, or a typed exact library name, is a final exercise choice.
+            val chosen = ClarificationOptions.exerciseFor(text, library)
+            val conversation = WorkoutConversation(description, followUps).answering(currentQuestion, text, chosen?.id)
             followUpsJson = Json.encodeToString(conversation.turns)
             question = null; options = emptyList(); reply = ""
             analyze(conversation.requestDescription())

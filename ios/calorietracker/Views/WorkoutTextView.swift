@@ -41,10 +41,7 @@ struct WorkoutTextView: View {
                     ])
                 }
             } else {
-                // Fixed size: answering, loading and errors change the content, never the popover's
-                // frame, so UIKit never re-positions it while the keyboard is up.
                 reviewContent
-                    .frame(width: 340, height: 480)
                     .transaction { $0.animation = nil }
             }
         }
@@ -95,7 +92,7 @@ struct WorkoutTextView: View {
                                 followUps = []
                                 clarification = nil
                             }
-                        Button(action: analyze) {
+                        Button { analyze() } label: {
                             Text(busy ? "Finding exercises…" : (error == nil ? "Analyze" : "Retry"))
                                 .font(.headline).frame(maxWidth: .infinity)
                         }
@@ -116,7 +113,7 @@ struct WorkoutTextView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } }
                 ToolbarItem(placement: .primaryAction) {
-                    // Icon-only so the title keeps its room in the 340 pt popover.
+                    // Icon-only so the title keeps its room.
                     Button(action: startOver) {
                         Image(systemName: "arrow.counterclockwise")
                     }
@@ -177,7 +174,7 @@ struct WorkoutTextView: View {
                     .disabled(reply.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         } else {
-            Button(action: analyze) {
+            Button { analyze() } label: {
                 Text(busy ? "Finding exercises…" : (error == nil ? "Analyze" : "Retry"))
                     .font(.headline).frame(maxWidth: .infinity)
             }
@@ -218,8 +215,11 @@ struct WorkoutTextView: View {
     private func answer(_ text: String) {
         guard let clarification else { return }
         do {
+            // An option card, or a typed exact library name, is a final exercise choice.
+            let key = WorkoutClarificationOptions.key(text)
+            let chosen = optionItems[text] ?? library.first { WorkoutClarificationOptions.key($0.name) == key }
             let conversation = try WorkoutConversation(original: description, turns: followUps)
-                .answering(question: clarification.question, answer: text)
+                .answering(question: clarification.question, answer: text, exerciseID: chosen?.id)
             followUps = conversation.turns
             self.clarification = nil
             reply = ""
@@ -241,7 +241,7 @@ struct WorkoutTextView: View {
         voiceReply = false
     }
 
-    private func analyze() {
+    private func analyze(repeatedQuestion: String? = nil) {
         inputFocused = false
         busy = true; error = nil
         let id = UUID()
@@ -249,9 +249,11 @@ struct WorkoutTextView: View {
         request = Task { @MainActor in
             defer { if requestID == id { busy = false } }
             do {
-                let context = try WorkoutConversation(original: description, turns: followUps).requestDescription()
-                let result = try await GeminiService.analyzeWorkout(description: context, date: selectedDate,
-                                                                     unit: unit, library: library)
+                let conversation = WorkoutConversation(original: description, turns: followUps)
+                let result = try await GeminiService.analyzeWorkout(description: try conversation.requestDescription(),
+                                                                     date: selectedDate, unit: unit, library: library,
+                                                                     chosenExerciseIDs: conversation.chosenExerciseIDs,
+                                                                     repeatedQuestion: repeatedQuestion)
                 try Task.checkCancellation()
                 guard requestID == id else { return }
                 clarification = nil
@@ -259,6 +261,16 @@ struct WorkoutTextView: View {
             } catch is CancellationError { }
             catch let question as WorkoutClarification {
                 guard requestID == id, !Task.isCancelled else { return }
+                if WorkoutConversation(original: description, turns: followUps).alreadyAsked(question) {
+                    // Never show a question the user already answered: retry once with an explicit
+                    // "already answered" note, then stop with guidance instead of looping.
+                    if repeatedQuestion == nil {
+                        analyze(repeatedQuestion: question.question)
+                    } else {
+                        self.error = String(localized: "Couldn't finish from your answers. Add the missing detail to your description (for example sets and reps) or start over.")
+                    }
+                    return
+                }
                 clarification = question
                 reply = ""
             }

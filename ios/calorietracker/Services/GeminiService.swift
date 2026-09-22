@@ -280,13 +280,15 @@ struct GeminiService {
     }
 
     static func analyzeWorkout(description: String, date: Date, unit: WeightUnit,
-                               library: [ExerciseLibraryItem]) async throws -> WorkoutTextDraft {
+                               library: [ExerciseLibraryItem], chosenExerciseIDs: [String] = [],
+                               repeatedQuestion: String? = nil) async throws -> WorkoutTextDraft {
         guard !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, description.count <= 16000 else {
             throw WorkoutTextError.invalid("The workout conversation is too long. Please start over.")
         }
         let searchResponse = try await callAI(prompt: WorkoutTextDraft.searchPrompt(description: description), image: nil)
         let queries = WorkoutTextDraft.searchQueries(searchResponse, fallback: description)
-        let prompt = WorkoutTextDraft.prompt(description: description, selectedDate: date, unit: unit, library: library, searchQueries: queries)
+        let prompt = WorkoutTextDraft.prompt(description: description, selectedDate: date, unit: unit, library: library, searchQueries: queries,
+                                             chosenExerciseIDs: chosenExerciseIDs, repeatedQuestion: repeatedQuestion)
         return try WorkoutTextDraft.parse(try await callAI(prompt: prompt, image: nil), library: library)
     }
 

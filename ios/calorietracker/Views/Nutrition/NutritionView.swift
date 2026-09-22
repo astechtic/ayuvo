@@ -48,9 +48,6 @@ struct NutritionView: View {
     @State private var showVoicePopover = false
     @State private var showTextPopover = false
     @State private var showManualPopover = false
-    private var isInputPopoverPresented: Bool {
-        showTextPopover || showVoicePopover || showManualPopover
-    }
     @State private var showSiriPhrases = false
     @State private var savedMealsMode: SavedMealsMode?
     @State private var showCopyFromDaySheet = false
@@ -785,9 +782,6 @@ private var dailyStepsTaskKey: String {
             }
             .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
-            // The keyboard belongs to the input popover, not the diary: if the list and the "+"
-            // anchor moved with it, UIKit re-positions the popover, which moves them again (flicker).
-            .ignoresSafeArea(.keyboard, edges: isInputPopoverPresented ? .bottom : [])
             .overlay(alignment: .bottomTrailing) {
                 Menu {
                     if fastingTrackingEnabled {
@@ -842,7 +836,9 @@ private var dailyStepsTaskKey: String {
                         .opacity(isFoodSelectionMode ? 0 : 1)
                         .disabled(isFoodSelectionMode)
                         .allowsHitTesting(!isFoodSelectionMode)
-                        .popover(isPresented: $showTextPopover) {
+                        .sheet(isPresented: $showTextPopover) {
+                            // A sheet, not a popover: UIKit re-positions a popover anchored to the "+"
+                            // button whenever the keyboard changes, which flickered on device.
                             TextFoodInputView(
                                 onCancel: {
                                     showTextPopover = false
@@ -856,9 +852,10 @@ private var dailyStepsTaskKey: String {
                                     startTextAnalysis(description)
                                 }
                             )
-                            .presentationCompactAdaptation(.popover)
+                            .presentationDetents([.medium])
+                            .presentationDragIndicator(.visible)
                         }
-                        .popover(isPresented: $showVoicePopover) {
+                        .sheet(isPresented: $showVoicePopover) {
                             VoiceInputView(
                                 onCancel: {
                                     showVoicePopover = false
@@ -872,9 +869,10 @@ private var dailyStepsTaskKey: String {
                                     startTextAnalysis(description)
                                 }
                             )
-                            .presentationCompactAdaptation(.popover)
+                            .presentationDetents([.medium])
+                            .presentationDragIndicator(.visible)
                         }
-                        .popover(isPresented: $showManualPopover) {
+                        .sheet(isPresented: $showManualPopover) {
                             ManualEntryView(
                                 logDate: logDateForSelectedDay,
                                 onCancel: { showManualPopover = false },
@@ -883,10 +881,10 @@ private var dailyStepsTaskKey: String {
                                     if !foodStore.addEntry(entry) { showFoodLoggingBlocked = true }
                                 }
                             )
-                            .presentationCompactAdaptation(.popover)
+                            .presentationDetents([.large])
+                            .presentationDragIndicator(.visible)
                         }
                         .padding(24)
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             .fullScreenCover(isPresented: $showCamera) {
                 CameraView(
