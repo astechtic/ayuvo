@@ -432,12 +432,16 @@ struct WorkoutLogView: View {
                         }
                     }
                 }
+                // While the describe popover owns the keyboard, neither the list nor the "+" anchor may
+                // move with it, or UIKit keeps re-positioning the popover (flicker).
+                .ignoresSafeArea(.keyboard, edges: isTextSheetPresented ? .bottom : [])
                 .overlay(alignment: .bottomTrailing) {
                     addExerciseMenu
                         .padding(24)
                         .simultaneousGesture(
                             TapGesture().onEnded(dismissSetKeyboard)
                         )
+                        .ignoresSafeArea(.keyboard, edges: isTextSheetPresented ? .bottom : [])
                 }
             }
             // Keep the chrome quiet: the date strip and burn calculator lead.

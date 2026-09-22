@@ -20,14 +20,12 @@ struct TextFoodInputView: View {
     private static let fieldLines = 3
 
     var body: some View {
-        // Scrollable so the keyboard can never push the field out of the popover.
-        ScrollView {
-            form
-                .padding(20)
-        }
-        .scrollBounceBehavior(.basedOnSize)
-        .scrollDismissesKeyboard(.interactively)
-        .frame(width: 320)
+        // A fixed-size, non-scrolling body gives the popover one stable preferred size. A ScrollView
+        // has no ideal height, so UIKit kept resizing and re-positioning the popover around the keyboard.
+        form
+            .padding(20)
+            .frame(width: 320)
+            .fixedSize(horizontal: false, vertical: true)
         .onAppear { isFocused = true }
         // A task-owned loop: unlike a `Timer.publish` stored on the struct, it is not recreated
         // (and restarted) every time the parent diary re-renders.

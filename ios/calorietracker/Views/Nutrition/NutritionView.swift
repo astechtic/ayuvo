@@ -48,6 +48,9 @@ struct NutritionView: View {
     @State private var showVoicePopover = false
     @State private var showTextPopover = false
     @State private var showManualPopover = false
+    private var isInputPopoverPresented: Bool {
+        showTextPopover || showVoicePopover || showManualPopover
+    }
     @State private var showSiriPhrases = false
     @State private var savedMealsMode: SavedMealsMode?
     @State private var showCopyFromDaySheet = false
@@ -782,6 +785,9 @@ private var dailyStepsTaskKey: String {
             }
             .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
+            // The keyboard belongs to the input popover, not the diary: if the list and the "+"
+            // anchor moved with it, UIKit re-positions the popover, which moves them again (flicker).
+            .ignoresSafeArea(.keyboard, edges: isInputPopoverPresented ? .bottom : [])
             .overlay(alignment: .bottomTrailing) {
                 Menu {
                     if fastingTrackingEnabled {
@@ -880,6 +886,7 @@ private var dailyStepsTaskKey: String {
                             .presentationCompactAdaptation(.popover)
                         }
                         .padding(24)
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             .fullScreenCover(isPresented: $showCamera) {
                 CameraView(
