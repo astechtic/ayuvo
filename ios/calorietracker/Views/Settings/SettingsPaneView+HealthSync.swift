@@ -107,7 +107,7 @@ extension SettingsPaneView {
             }
 
         } footer: {
-            Text("Reads every Apple Health category you allow into a local database on this iPhone for Browse, and keeps weight, nutrition, energy and workouts in sync. The mirror is never stored in iCloud backup and leaves the device only when Coach answers a question with it. Turning Apple Health off keeps the mirrored history read-only until you clear it.")
+            Text("Reads every Apple Health category you allow into a local database on this iPhone for Browse, and keeps weight, nutrition, energy and workouts in sync. The mirror stays on this iPhone and leaves it only when Coach answers a question with it or you export it with Export All Data. Turning Apple Health off keeps the mirrored history read-only until you clear it.")
         }
         .listRowBackground(AppColors.appCard)
     }

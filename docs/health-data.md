@@ -332,7 +332,7 @@ On-device / LiteRT modes (no tools) append a `## Health (last 7 days)` block of 
 - `coachChatHistory` is added to `CloudBackupPolicy.excludedKeys` on both platforms in the Coach PR (App Store 5.1.3(ii)); a backup test asserts it.
 - **No health values in UserDefaults/DataStore, ever** — snapshots for Summary and Browse live in memory only; backup tests assert that no key holds numeric samples.
 - Restore onto a new device re-checks authorization (`getRequestStatusForAuthorization` / `capabilitiesOrNull`) and shows "Grant access", never "Nothing shared yet"; throttle keys are reset on restore.
-- Copy never claims data "never leaves the device"; it says "kept on this device, never stored in iCloud/Drive backup, shared with your AI provider only through Coach".
+- Copy never claims data "never leaves the device"; it says "kept on this device, shared with your AI provider only through Coach" (Android may add "never stored in Drive backup"; iOS has no cloud backup).
 
 ## 9. Accessibility identifiers
 
@@ -361,8 +361,8 @@ Same strings on both platforms (`Modifier.testTag`/`semantics { testTag }` on An
 | Settings › Health Sync › Let Coach use health data | `settings.health.coachToggle` |
 | Settings › Health Sync › Sync Now | `settings.health.syncNow` |
 | Settings › Delete All Data › Clear synced health data | `settings.health.clearData` |
-| Settings › Backup & Export › Export Health Data | `settings.health.export` |
-| Settings › Backup & Export › Import Health Data | `settings.health.import` |
+| Settings › Backup & Export › Export All Data (includes the `ayuvo-health-data` zip) | `settings.row.exportAllData` |
+| Settings › Backup & Export › Import All Data (merges it) | `settings.row.importAllData` |
 
 The metric detail and Summary identifiers are shared with app metrics and defined in `docs/ui-structure.md` §9. The former `health.home.*`, `health.detail.*`, `settings.health.hub` and `settings.health.homeTile` identifiers are retired: Browse replaces the "All Health Data" row and the one-time hub CTA row (Browse's Health Sync footer opens Settings › Health Sync), and Summary › Favourites › Edit replaces the iOS home-tile toggle.
 

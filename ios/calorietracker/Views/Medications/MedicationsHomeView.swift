@@ -2,7 +2,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 /// Browse › Medications (docs §8): summary, Today timeline, as-needed medicines, the searchable
-/// list with status chips, add / import entry points and the archive export. Pushed on the Browse
+/// list with status chips and the add entry points (bulk export/import lives in Settings › Backup & Export). Pushed on the Browse
 /// stack, so it uses the real navigation bar and pushes its detail screens through `path`.
 struct MedicationsHomeView: View {
     @Binding var path: NavigationPath
@@ -14,11 +14,6 @@ struct MedicationsHomeView: View {
     @State private var prnMedication: Medication?
     @State private var doseItem: MedicationTodayTimeline.Item?
     @State private var showRecordPicker = false
-    @State private var exportDocument: MedicationArchiveDocument?
-    @State private var showExporter = false
-    @State private var showImporter = false
-    @State private var importMessage: String?
-    @State private var isExporting = false
 
     private var timeline: MedicationTodayTimeline { store.today }
 
@@ -146,22 +141,6 @@ struct MedicationsHomeView: View {
                 path.append(MedicationRoute.importFromRecord(record.id))
             }
         }
-        .fileExporter(isPresented: $showExporter, document: exportDocument, contentType: .json,
-                      defaultFilename: "ayuvo-medications") { result in
-            exportDocument = nil
-            if case .success = result {
-                store.showBanner(String(localized: "Medications exported"), systemImage: "square.and.arrow.up")
-            }
-        }
-        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json]) { result in
-            guard case .success(let url) = result else { return }
-            Task { await importFile(url) }
-        }
-        .alert("Import", isPresented: Binding(get: { importMessage != nil }, set: { if !$0 { importMessage = nil } })) {
-            Button("OK", role: .cancel) { importMessage = nil }
-        } message: {
-            Text(importMessage ?? "")
-        }
         .accessibilityIdentifier("medications.home")
     }
 
@@ -173,18 +152,6 @@ struct MedicationsHomeView: View {
                 showRecordPicker = true
             } label: {
                 Label("Add from prescription", systemImage: "doc.text.magnifyingglass")
-            }
-            Divider()
-            Button {
-                Task { await exportArchive() }
-            } label: {
-                Label("Export medications…", systemImage: "square.and.arrow.up")
-            }
-            .disabled(store.totalCount == 0 || isExporting)
-            Button {
-                showImporter = true
-            } label: {
-                Label("Import…", systemImage: "square.and.arrow.down")
             }
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -370,32 +337,4 @@ struct MedicationsHomeView: View {
         }
     }
 
-    private func exportArchive() async {
-        isExporting = true
-        defer { isExporting = false }
-        do {
-            exportDocument = try await store.exportDocument()
-            showExporter = true
-        } catch {
-            store.showBanner(String(localized: "Export failed"), systemImage: "exclamationmark.circle")
-        }
-    }
-
-    private func importFile(_ url: URL) async {
-        let accessed = url.startAccessingSecurityScopedResource()
-        defer { if accessed { url.stopAccessingSecurityScopedResource() } }
-        do {
-            let data = try Data(contentsOf: url)
-            let result = try await store.importArchive(data)
-            let added = result.insertedMedications
-            let updated = result.updatedMedications
-            importMessage = String(localized: "Imported \(MedicationFormatting.medicationCount(added)) (new) and updated \(updated). Nothing was deleted.")
-        } catch MedicationStoreError.archive(let code) {
-            importMessage = code == "unsupported_version"
-                ? String(localized: "This file was made by a newer version of Ayuvo. Update the app to import it.")
-                : String(localized: "This file isn't an Ayuvo medications export.")
-        } catch {
-            importMessage = String(localized: "The file couldn't be imported.")
-        }
-    }
 }

@@ -80,11 +80,8 @@ struct SettingsPaneView: View {
         var id: String { rawValue }
     }
     @State var activeSheet: ActiveSheet?
-    @State var showExportDiary = false
     @State var showExportAllData = false
-    @State var showImportDiary = false
-    @State var showExportHealthData = false
-    @State var showImportHealthData = false
+    @State var showImportAllData = false
     @State var showClearHealthDataConfirmation = false
     @State var showDeleteConfirmation = false
     @State var showClearFoodLogConfirmation = false
@@ -206,20 +203,11 @@ struct SettingsPaneView: View {
             .scrollContentBackground(.hidden)
             .modifier(SettingsKeyboardDismissalModifier())
             .background(AppColors.appBackground)
-            .sheet(isPresented: $showExportDiary) {
-                ExportDiaryView()
-            }
             .sheet(isPresented: $showExportAllData) {
                 ExportAllDataView()
             }
-            .sheet(isPresented: $showImportDiary) {
-                ImportDiaryView()
-            }
-            .sheet(isPresented: $showExportHealthData) {
-                ExportHealthDataView()
-            }
-            .sheet(isPresented: $showImportHealthData) {
-                ImportHealthDataView()
+            .sheet(isPresented: $showImportAllData) {
+                ImportAllDataView()
             }
             .alert("Clear synced health data from this iPhone?", isPresented: $showClearHealthDataConfirmation) {
                 Button("Cancel", role: .cancel) { }

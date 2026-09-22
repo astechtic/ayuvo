@@ -119,7 +119,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         data class Skip(val reason: String) : SectionResult
     }
 
-    /** Food diary: the "All time" JSON the Export Diary sheet writes (and Import Diary reads). */
+    /** Food diary: the "All time" diary JSON (read back by Import All Data and DiaryImporter). */
     private suspend fun foodDiary(work: File): SectionResult {
         val entries = container.foodRepository.entries.first()
         val water = container.waterRepository.entries.first()
@@ -137,14 +137,14 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                 id = SECTION_FOOD_DIARY,
                 format = "ayuvo-food-diary",
                 path = "food-diary/$name",
-                description = "Food diary (all time), JSON. Import with Settings › Backup & Export › Import Diary.",
+                description = "Food diary (all time), JSON. Import with Settings › Backup & Export › Import All Data.",
                 counts = mapOf("food_entries" to entries.size.toLong(), "water_entries" to water.size.toLong(), "days" to days.toLong()),
                 source = file
             )
         )
     }
 
-    /** Health Data mirror: the `ayuvo-health-data` zip from Export Health Data. */
+    /** Health Data mirror: the `ayuvo-health-data` zip. */
     private suspend fun healthData(work: File): SectionResult {
         if (!container.appContext.getDatabasePath(HealthDatabase.NAME).exists()) {
             return SectionResult.Skip(AllDataExportArchive.REASON_NOT_SET_UP)
@@ -158,14 +158,14 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                 id = SECTION_HEALTH_DATA,
                 format = HealthExportFormat.FORMAT,
                 path = "health-data/$name",
-                description = "Synced Health Connect data (ayuvo-health-data zip). Import with Settings › Backup & Export › Import Health Data.",
+                description = "Synced Health Connect data (ayuvo-health-data zip). Import with Settings › Backup & Export › Import All Data.",
                 counts = mapOf("samples" to result.sampleCount, "series_points" to result.seriesCount, "types" to result.typeCount.toLong()),
                 source = file
             )
         )
     }
 
-    /** Medications: the `ayuvo-medications.json` archive from the Meds page. */
+    /** Medications: the `ayuvo-medications.json` archive. */
     private suspend fun medications(work: File): SectionResult {
         if (!container.medicationsDatabaseExists()) return SectionResult.Skip(AllDataExportArchive.REASON_NOT_SET_UP)
         val snapshot = container.medicationsStore.exportSnapshot()
@@ -179,7 +179,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                 id = SECTION_MEDICATIONS,
                 format = MedicationConstants.ARCHIVE_FORMAT,
                 path = "medications/${MedicationsArchive.FILE_NAME}",
-                description = "Medications, schedules and dose history (ayuvo-medications JSON). Import from the Meds page.",
+                description = "Medications, schedules and dose history (ayuvo-medications JSON). Import with Settings › Backup & Export › Import All Data.",
                 counts = mapOf(
                     "medications" to snapshot.medications.size.toLong(),
                     "schedules" to snapshot.schedules.size.toLong(),
@@ -190,7 +190,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         )
     }
 
-    /** Health Records: the portable `ayuvo-records` archive with originals (Records › Backup). */
+    /** Health Records: the portable `ayuvo-records` archive with originals. */
     private suspend fun records(work: File): SectionResult {
         if (!container.recordsDatabaseExists()) return SectionResult.Skip(AllDataExportArchive.REASON_NOT_SET_UP)
         val name = RecordsBackupCoordinator.defaultFileName()
@@ -203,7 +203,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                 id = SECTION_HEALTH_RECORDS,
                 format = RecordsArchiveFormat.FORMAT,
                 path = "health-records/$name",
-                description = "Health Records with their original files (ayuvo-records archive). Restore from Settings › Health Records › Backup.",
+                description = "Health Records with their original files (ayuvo-records archive). Import with Settings › Backup & Export › Import All Data.",
                 counts = mapOf("records" to result.recordCount.toLong(), "files" to result.fileCount.toLong()),
                 source = file
             )

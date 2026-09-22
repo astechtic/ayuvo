@@ -802,7 +802,7 @@ struct OnboardingView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Let Coach use my health data")
                             .font(.system(.subheadline, design: .rounded, weight: .medium))
-                        Text("Sent to your AI provider only when Coach answers a question. Never stored in iCloud backup.")
+                        Text("Sent to your AI provider only when Coach answers a question.")
                             .font(.system(.caption2, design: .rounded))
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)

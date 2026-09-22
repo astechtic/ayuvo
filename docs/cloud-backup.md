@@ -1,89 +1,23 @@
-# Optional iCloud / Google Drive backup
+# Optional Google Drive backup (Android) and the app backup archive
 
-Off by default in Settings → Data Management. Sign-in runs only when the user turns the toggle on.
+Android only: off by default in Settings → Data & Privacy → Backup & Export. Sign-in runs only when the user turns the toggle on.
 
 ## iOS
 
-1. Enable the iCloud CloudKit container `iCloud.com.ayuvo.health` in the Apple Developer portal and Xcode.
-2. Deploy the `AyuvoBackup` record type to the CloudKit **Production** schema before shipping (see below).
-3. The phone’s iCloud account is enough. There is no Sign in with Apple.
+iOS has no cloud backup (iCloud Backup was removed on 2026-09-22, including the CloudKit entitlement). Settings → Data & Privacy → Backup & Export has exactly two rows, on both platforms:
 
-### CloudKit schema
+| Row | Accessibility identifier |
+|-----|-------------------------|
+| Export All Data (`ayuvo-all-data` zip, `AllDataExport`) | `settings.row.exportAllData` |
+| Import All Data (`AllDataImport` + `ImportAllDataView`) | `settings.row.importAllData` |
 
-**Container:** `iCloud.com.ayuvo.health`
-
-**Private Database — Development (done):**
-
-| Record type | Field | Type |
-|-------------|-------|------|
-| `AyuvoBackup` | `backupAsset` | Asset |
-| `AyuvoBackup` | `contentSha256` | String |
-
-The app writes a single record named `current` in the user’s private database (`CloudBackupService.swift`). The smoke test uses a separate record named `smoke-test` so it never overwrites or deletes the user’s real backup.
-
-**Production — deploy before App Store release:**
-
-1. Open [CloudKit Console](https://icloud.developer.apple.com/) and select container `iCloud.com.ayuvo.health`.
-2. Choose **Schema** in the left sidebar.
-3. Confirm **Development** shows record type `AyuvoBackup` with fields `backupAsset` (Asset) and `contentSha256` (String). If Development is missing them, add the record type and fields there first, then test on a Development build.
-4. Open the **Deploy Schema Changes…** action (top of the Schema page).
-5. Review the diff — it should add `AyuvoBackup` with the two fields above to **Production**.
-6. Click **Deploy to Production** and confirm. Production schema changes are irreversible; double-check field types before confirming.
-7. After deploy, run the smoke test below on a **Release** device build signed with the production profile.
-
-### CloudKit smoke test (device)
-
-Automated upload → download/validate → delete check against the dedicated `smoke-test` record. Safe for Release builds; runs once per launch when the argument is present. Does not call production restore (no local prefs, photos, or HealthKit recovery flags are changed). If upload succeeds but a later step fails, the smoke-test record is still deleted before exit.
-
-**Launch argument:** `-ayuvo.cloudBackup.smokeTest`
-
-**Requirements:** iPhone signed into iCloud; Development schema for debug builds, Production schema deployed for Release builds.
-
-**Run from Xcode (Release configuration recommended for pre-ship validation):**
-
-1. Product → Scheme → Edit Scheme → **Run** → **Arguments**.
-2. Under **Arguments Passed On Launch**, add `-ayuvo.cloudBackup.smokeTest`.
-3. Select a physical iPhone (simulator iCloud is unreliable for CloudKit private DB).
-4. Run. On first launch the app uploads to `smoke-test`, validates the downloaded archive hash, deletes the smoke-test record, and leaves the user’s `current` backup and local data untouched.
-
-**Run on an installed Release build:**
-
-```bash
-# Replace DEVICE_UDID with the connected iPhone UDID from Xcode or `xcrun xctrace list devices`
-xcrun devicectl device process launch --device DEVICE_UDID \
-  com.ayuvo.health \
-  -ayuvo.cloudBackup.smokeTest
-```
-
-Or attach the same argument in an Xcode **Test** or **Profile** scheme when validating a Release archive.
-
-**Expected log line** (Xcode console or Console.app, filter `CloudBackupSmoke` or `AyuvoCloudBackupSmokeTest`):
-
-```
-AyuvoCloudBackupSmokeTest: PASS
-```
-
-On failure:
-
-```
-AyuvoCloudBackupSmokeTest: FAIL: <reason>
-```
-
-Common failures: not signed into iCloud, Production schema not deployed (Release builds), or network/CloudKit outage.
-
-### UI automation identifiers
-
-Settings → Data Management → iCloud Backup controls:
-
-| Control | Accessibility identifier |
-|---------|-------------------------|
-| Toggle | `settings.cloudBackup.toggle` |
-| Last backup label | `settings.cloudBackup.lastBackup` |
-| Back up now | `settings.cloudBackup.backupNow` |
-| Restore now | `settings.cloudBackup.restoreNow` |
-| Delete cloud backup | `settings.cloudBackup.delete` |
+The settings/profile/logs part of that zip (`app-backup/ayuvo-backup.zip`) is the same `ayuvo-cloud-backup` archive described below; `AppBackupService.swift` writes and restores it locally. Import All Data restores it only from an iPhone export (preference keys differ per platform) and then skips the food diary part, which the app backup already carries; from an Android export the app backup is skipped and the food diary JSON is merged instead. Health data, medications and Health Records are always merged by their own importers (nothing is deleted). The retired `cloudBackupEnabled` / `cloudBackupLastAt` / `cloudBackupLastHash` keys are cleared on launch and excluded from the archive.
 
 ## Android
+
+Settings → Data & Privacy → Backup & Export: the Google Drive backup section, then the same two rows (Export All Data, Import All Data; `AllDataImportPlan` + `AllDataImportCoordinator`). The per-type Export/Import Diary and Health Data rows, the Browse menu Export/Import Health Data items, the Meds menu Export/Import items and the local Health Records archive export/restore were removed on 2026-09-22; the Drive records backup stays. Import All Data validates `manifest.json` (app `Ayuvo`, format `ayuvo-all-data`, version ≤ 1, safe and present entries; unknown sections ignored), shows a preview, then runs app_backup → food_diary → health_data → medications → health_records on the app scope, reporting each section. The app backup is applied only from an Android export (`CloudBackupCoordinator.applyArchive(fromFile = true)`: keeps the Drive backup state and the device-only excluded keys) and then the food diary part is skipped; from an iPhone export the app backup is skipped and the food diary JSON is merged with `DiaryImportMode.MERGE` (matching entries updated, new ones added, nothing deleted; water deduplicated by id or same time and amount — same rule as iOS `.merge`). Health data (`MERGE`), medications (§14 merge) and Health Records (§35 Merge) never delete.
+
+### Drive setup
 
 1. Create a Google Cloud project and enable the Drive API.
 2. OAuth consent screen, External. Scopes: `drive.appdata` and `userinfo.email` only. Do not request full Drive.
@@ -98,7 +32,7 @@ Restore writes the original food / weight / workout UUIDs and marks Health food-
 
 ## Reserved preference keys
 
-The Health Data hub (see `docs/health-data.md`) keeps its data in a local SQLite database that is **never part of any cloud archive** — not the iCloud (`AyuvoBackup`) record, not the Drive `appdata` file, not device-to-device transfer. Only the preferences below travel with the backup; the health database itself moves between devices exclusively through the health export/import (`docs/health-data-export.md`). `CloudBackupPolicy.VERSION` / `version` stays `1`.
+The Health Data hub (see `docs/health-data.md`) keeps its data in a local SQLite database that is **never part of any cloud archive** — not the app backup archive, not the Drive `appdata` file, not device-to-device transfer. Only the preferences below travel with the backup; the health database itself moves between devices exclusively through the health export/import (`docs/health-data-export.md`). `CloudBackupPolicy.VERSION` / `version` stays `1`.
 
 ### Cloud-backed (same key names on both platforms)
 

@@ -85,18 +85,8 @@ struct HealthRecordsSettingsSection: View {
                 }
             }
             .accessibilityIdentifier("records.settings.storage")
-            NavigationLink {
-                RecordsBackupScreen()
-            } label: {
-                Label {
-                    Text("Backup & restore")
-                } icon: {
-                    SettingsIcon("archivebox.fill", tint: SettingsTint.backup)
-                }
-            }
-            .accessibilityIdentifier("records.settings.backup")
         } footer: {
-            Text("Create an ayuvo-records archive to keep a copy wherever you choose, and restore it later. Health Records are never in iCloud or iPhone backups. Delete All Data (Settings › Data & Privacy) removes every record and file.")
+            Text("Settings › Backup & Export › Export All Data includes your records and their files. Health Records are never in iPhone backups. Delete All Data (Settings › Data & Privacy) removes every record and file.")
         }
         .font(.system(.body, design: .rounded))
         .listRowBackground(AppColors.appCard)

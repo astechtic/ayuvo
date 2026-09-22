@@ -17,7 +17,7 @@ Private, all-in-one health companion for iPhone (SwiftUI) and Android (Jetpack C
 | **Health data hub** | Every Health Connect / HealthKit type the user grants, all history, mirrored into a local SQLite database (`shared/health/schema.sql`, `metric_registry.json`); Home tiles, category lists, D/W/M/6M/Y charts, Show All Data, Data Sources, unit options; export/import as `ayuvo-health-data` zips; never in cloud backups. Contract: `docs/health-data.md`. |
 | **Fasting & water** | Optional fasting timer (1–168 h) with editable history; optional water goals, reminders, widgets. Neither is written to Health. |
 | **AI coach** | Multi-turn chat with tool calls over the user's own data (diary, workouts, weight trend, fasts, and Health data only behind a visible consent toggle). 15 BYOK providers or on-device Gemma 4 E2B / Apple Intelligence; keys in Keychain / EncryptedSharedPreferences. |
-| **Platform** | Apple Watch app + complications, iOS/Android widgets, Siri Shortcuts, iOS Share Extension, 18 languages, 18 accent tints with matching icons, optional iCloud / Google Drive backup (never includes health data or coach chat). |
+| **Platform** | Apple Watch app + complications, iOS/Android widgets, Siri Shortcuts, iOS Share Extension, 18 languages, 18 accent tints with matching icons, Export/Import All Data zip on both platforms plus optional Google Drive backup on Android (the Drive backup never includes health data or coach chat). |
 
 Tabs on both platforms: **Home · Health · Coach · Workouts · Settings**. The Health tab switches between *Progress* (weight, body fat, calories, workouts) and *Health Data* (the hub).
 
@@ -32,11 +32,11 @@ Everything is stored on the device. Data leaves only when the user acts, and onl
 | Barcode | barcode number | Open Food Facts | scan |
 | Exercise media | plain GET | raw.githubusercontent.com (© Gym visual) | browsing Workouts |
 | Model download | plain GET | Hugging Face | tapping Download |
-| Cloud backup | archive without health DB / chat | user's own iCloud / Google Drive | toggle on |
+| Cloud backup (Android) | archive without health DB / chat | user's own Google Drive | toggle on |
 | Update check / review | none (public metadata) | Apple / Google | app open |
 | OS backups | per OS settings; health DB and chat excluded | Apple / Google | — |
 
-No analytics, crash or ad SDKs; no accounts; no first-party endpoints. Copy rule: never claim data "never leaves the device"; say "kept on this device, never stored in iCloud/Drive backup, shared with your AI provider only through Coach".
+No analytics, crash or ad SDKs; no accounts; no first-party endpoints. Copy rule: never claim data "never leaves the device"; say "kept on this device, never stored in Drive backup, shared with your AI provider only through Coach".
 
 ## Repo layout
 

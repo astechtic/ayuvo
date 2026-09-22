@@ -37,7 +37,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,8 +49,6 @@ import androidx.navigation.NavHostController
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
 import com.ayuvo.health.backup.DriveCloudBackupClient
-import com.ayuvo.health.export.DiaryImportMode
-import com.ayuvo.health.export.DiaryImporter
 import com.ayuvo.health.medications.reminders.MedicationAlarms
 import com.ayuvo.health.services.health.HealthAvailabilityMessageKind
 import com.ayuvo.health.services.health.HealthConnectAvailability
@@ -66,10 +63,8 @@ import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.settings.groups.SettingsPageContent
 import com.ayuvo.health.ui.settings.groups.SettingsRoot
 import com.ayuvo.health.ui.summary.FavoritesEditorSheet
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Settings tab (docs/ui-structure.md §2, plan §6): a root with the profile header and one inset
@@ -104,9 +99,6 @@ fun SettingsScreen(
     if (state.showNutritionImport) {
         HealthNutritionImportDialog(container) { state.showNutritionImport = false }
     }
-    val importHealthLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri -> if (uri != null) state.importHealthUri = uri }
 
     // Only a new re-tap pops to the root; returning to the tab keeps the open page.
     var handledPopTick by rememberSaveable { androidx.compose.runtime.mutableIntStateOf(popToRootTick) }
@@ -124,9 +116,7 @@ fun SettingsScreen(
     val settingsHomeScrollState = rememberScrollState()
     val settingsDetailScrollState = remember(state.selectedPage) { ScrollState(initial = 0) }
     val activityContext = LocalContext.current
-    val resources = LocalResources.current
     val settingsScope = rememberCoroutineScope()
-    val importReadFailedMessage = stringResource(R.string.import_read_failed)
     val cloudBackupSignInFailed = stringResource(R.string.cloud_backup_sign_in_failed)
     val cloudBackup by container.cloudBackup.ui.collectAsState()
     LaunchedEffect(state.selectedPage) {
@@ -206,27 +196,6 @@ fun SettingsScreen(
         runCatching {
             driveAccountPickerLauncher.launch(container.cloudBackup.accountPickerIntent())
         }.onFailure { state.cloudBackupError = it.message ?: cloudBackupSignInFailed }
-    }
-
-    val importFileLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        settingsScope.launch {
-            val result = runCatching {
-                withContext(Dispatchers.IO) {
-                    val bytes = activityContext.contentResolver.openInputStream(uri)?.use { input -> input.readBytes() }
-                        ?: throw IllegalArgumentException(importReadFailedMessage)
-                    if (bytes.size > DiaryImporter.MAXIMUM_FILE_SIZE) {
-                        throw IllegalArgumentException("This file is too large to import.")
-                    }
-                    DiaryImporter.parse(bytes.toString(Charsets.UTF_8))
-                }
-            }
-            state.importPreview = result.getOrNull()
-            state.importError = result.exceptionOrNull()?.localizedMessage ?: if (result.isFailure) importReadFailedMessage else null
-            state.showImportSheet = true
-        }
     }
 
     // Notifications: API 33+ requires runtime POST_NOTIFICATIONS. We only flip the
@@ -465,9 +434,7 @@ fun SettingsScreen(
                 container.cloudBackup.signOut(activityContext as? Activity)
                 startDriveSignIn()
             }
-        },
-        importDiary = { importFileLauncher.launch(arrayOf("application/json", "text/plain")) },
-        importHealthData = { importHealthLauncher.launch(arrayOf("application/zip", "application/octet-stream")) }
+        }
     )
     val ctx = SettingsPageContext(
         container = container,
@@ -518,63 +485,6 @@ fun SettingsScreen(
                 state.editFavourites = null
             },
             onDismiss = { state.editFavourites = null }
-        )
-    }
-
-    if (state.showExportSheet) {
-        ExportDiarySheet(
-            container = container,
-            profile = profile,
-            onDismiss = { state.showExportSheet = false },
-        )
-    }
-
-    if (state.showExportHealthSheet) {
-        ExportHealthDataSheet(container = container, onDismiss = { state.showExportHealthSheet = false })
-    }
-
-    state.importHealthUri?.let { uri ->
-        ImportHealthDataSheet(container = container, uri = uri, onDismiss = { state.importHealthUri = null })
-    }
-
-    if (state.showImportSheet) {
-        ImportDiarySheet(
-            preview = state.importPreview,
-            error = state.importError,
-            importing = state.importingDiary,
-            onDismiss = {
-                state.showImportSheet = false
-                state.importPreview = null
-                state.importError = null
-            },
-            onImport = { mode: DiaryImportMode ->
-                state.importPreview?.let { selected ->
-                    settingsScope.launch {
-                        state.importingDiary = true
-                        runCatching {
-                            val current = container.foodRepository.entries.first()
-                            val updated = withContext(Dispatchers.Default) {
-                                DiaryImporter.applying(selected, current, mode)
-                            }
-                            container.foodRepository.replaceFromImport(updated)
-                            container.waterRepository.importDiary(selected, mode)
-                        }.onSuccess {
-                            state.showImportSheet = false
-                            state.importPreview = null
-                            state.importError = null
-                            state.permissionDialog = PermissionDialogState(
-                                resources.getString(
-                                    R.string.import_diary_success,
-                                    selected.entries.size + selected.waterEntries.size
-                                )
-                            )
-                        }.onFailure { error ->
-                            state.importError = error.localizedMessage ?: importReadFailedMessage
-                        }
-                        state.importingDiary = false
-                    }
-                }
-            },
         )
     }
 

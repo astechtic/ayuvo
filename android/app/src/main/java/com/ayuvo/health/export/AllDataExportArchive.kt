@@ -171,8 +171,10 @@ data class AllDataExportFile(
     val name: String,
     val section: String,
     val format: String,
-    val description: String,
-    val bytes: Long,
-    val sha256: String,
+    /** Android extra; iOS manifests leave it out. */
+    val description: String = "",
+    val bytes: Long = 0,
+    /** Android extra; iOS manifests leave it out. */
+    val sha256: String = "",
     val counts: Map<String, Long> = emptyMap()
 )

@@ -17,7 +17,7 @@ Plan: `/Users/macbook/.claude/plans/fluffy-popping-wreath.md`. Shared files live
 | Photos | `filesDir/ayuvo-medications/<medication id>/photo.jpg` (+ `thumb.jpg`, max 320 px) | `Application Support/Ayuvo/Medications/photos/<medication id>.jpg` |
 | Backup exclusion | `backup_rules.xml` + `data_extraction_rules.xml` exclude `ayuvo_medications.db*` and `ayuvo-medications/` | The `Ayuvo/Medications/` directory is created with `isExcludedFromBackup`; `CloudBackupPolicy` drops every `medication*` preference key |
 | Cloud | Never in `ayuvo-backup.zip`, Auto Backup or Drive | Never in iCloud / CloudKit |
-| Portable copy | `ayuvo-medications.json` (§14) via share sheet / `CreateDocument` + `OpenDocument` | via `fileExporter` / `fileImporter` |
+| Portable copy | `ayuvo-medications.json` (§14) inside the Export All Data zip; merged by Import All Data (the Meds menu Export/Import items were removed 2026-09-22) | via `fileExporter` / `fileImporter` |
 
 Connection settings on both platforms: `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=5000`, `foreign_keys=ON`. Delete All Data deletes the database (and its `-wal`/`-shm`/`-journal` siblings), the photo root, cancels every pending medication reminder and clears the `medication*` preferences.
 

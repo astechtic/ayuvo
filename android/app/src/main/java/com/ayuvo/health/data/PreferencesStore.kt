@@ -489,9 +489,18 @@ class PreferencesStore(
         return out
     }
 
-    suspend fun restoreCloudBackupValues(values: Map<String, CloudBackupValue>) {
+    /**
+     * Replaces every backed-up preference with [values]. [keepDeviceLocal] (Import All Data) keeps
+     * the keys that never enter a backup (Coach history, Health Records prefs, sync cursors) instead
+     * of clearing them with the rest.
+     */
+    suspend fun restoreCloudBackupValues(values: Map<String, CloudBackupValue>, keepDeviceLocal: Boolean = false) {
         ds.edit { prefs ->
-            prefs.clear()
+            if (keepDeviceLocal) {
+                prefs.asMap().keys.filter { it.name !in CloudBackupPolicy.excludedKeys }.forEach { prefs.remove(it) }
+            } else {
+                prefs.clear()
+            }
             for ((name, value) in values) {
                 if (name in CloudBackupPolicy.excludedKeys) continue
                 when (value.t) {

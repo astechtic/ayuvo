@@ -33,7 +33,7 @@ struct HealthPermissionView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(store.hasAnyData || store.needsGrant == true ? "Allow Apple Health access" : "Connect Apple Health")
                     .font(.system(compact ? .headline : .title2, design: .rounded, weight: .bold))
-                Text("Ayuvo mirrors every Apple Health category you allow into a local database on this iPhone: kept on this device, never stored in iCloud backup, shared with your AI provider only through Coach.")
+                Text("Ayuvo mirrors every Apple Health category you allow into a local database on this iPhone: kept on this device and shared with your AI provider only through Coach.")
                     .font(.system(.footnote, design: .rounded))
                     .foregroundStyle(.secondary)
             }

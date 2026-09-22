@@ -1482,7 +1482,7 @@
     <string name="settings_section_health_records">Health Records</string>
     <string name="records_privacy_title">How Ayuvo handles your health records</string>
     <string name="records_privacy_point_device">Records and their original files are stored on this device.</string>
-    <string name="records_privacy_point_backup">They are not included in Android phone backups or Ayuvo\'s regular Google Drive backup. You can turn on a separate Drive backup of your records in Backup &amp; restore.</string>
+    <string name="records_privacy_point_backup">They are not included in Android phone backups or Ayuvo\'s regular Google Drive backup. You can turn on a separate Drive backup of your records in Google Drive backup, and Export All Data can include them in its .zip.</string>
     <string name="records_privacy_point_ai">AI processing of records arrives in a later update and will follow the AI choice you make.</string>
     <string name="records_privacy_point_sharing">When you share or export a record, only what you choose is sent.</string>
     <string name="records_privacy_point_delete">Deleting a record, or using Delete All Data, removes it from this device.</string>
@@ -1539,7 +1539,7 @@
     <string name="records_storage_working">Working\u2026</string>
     <string name="records_storage_done">%1$s finished</string>
 
-    <string name="records_backup_title">Backup &amp; restore</string>
+    <string name="records_backup_title">Google Drive backup</string>
     <string name="records_backup_create">Create archive</string>
     <string name="records_backup_include_files">Include original files</string>
     <string name="records_backup_include_files_note">Off shares only the extracted details, not the documents.</string>
@@ -1565,8 +1565,8 @@
     <string name="records_backup_working">Working\u2026</string>
     <string name="records_settings_storage">Storage</string>
     <string name="records_settings_storage_subtitle">Sizes and cleanup</string>
-    <string name="records_settings_backup">Backup &amp; restore</string>
-    <string name="records_settings_backup_subtitle">Archive, restore, Drive</string>
+    <string name="records_settings_backup">Google Drive backup</string>
+    <string name="records_settings_backup_subtitle">Optional copy in your own Drive</string>
     <string name="records_backup_drive_backup_now">Back up now to Drive</string>
     <string name="records_backup_drive_reauth">Drive sign-in expired — turn the toggle off and on again to sign in.</string>
     <!-- Browse search: features section (ids shared with iOS) -->

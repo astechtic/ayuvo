@@ -37,27 +37,3 @@ nonisolated struct MedicationArchive: Sendable {
     var doseLogCount: Int { json["dose_logs"].array?.count ?? 0 }
     var exportedMs: Int64? { MR.int(json["exported_ms"]).map(Int64.init) }
 }
-
-/// `fileExporter` / `fileImporter` document wrapper around the archive bytes.
-nonisolated struct MedicationArchiveDocument: FileDocument, Sendable {
-    static let readableContentTypes: [UTType] = [.json]
-    static let writableContentTypes: [UTType] = [.json]
-
-    var data: Data
-
-    init(data: Data) {
-        self.data = data
-    }
-
-    init(archive: MedicationArchive) {
-        self.data = archive.data
-    }
-
-    init(configuration: ReadConfiguration) throws {
-        data = configuration.file.regularFileContents ?? Data()
-    }
-
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        FileWrapper(regularFileWithContents: data)
-    }
-}

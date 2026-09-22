@@ -1,7 +1,5 @@
 package com.ayuvo.health.ui.medications
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,14 +35,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
-import com.ayuvo.health.medications.export.MedicationsArchive
 import com.ayuvo.health.medications.model.DoseAction
 import com.ayuvo.health.medications.model.Medication
 import com.ayuvo.health.medications.model.MedicationStatus
@@ -64,9 +59,6 @@ import com.ayuvo.health.ui.components.GlassTextButton
 import com.ayuvo.health.ui.components.GlassTextField
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.records.RecordChip
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Browse › Medications (docs/medications.md §8): today's timeline with Take / Skip / Snooze,
@@ -85,7 +77,6 @@ fun MedicationsScreen(
     val vm: MedicationsViewModel = viewModel(factory = MedicationsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
     var doseSheet by remember { mutableStateOf<TimelineItem?>(null) }
     var prnSheet by remember { mutableStateOf<Medication?>(null) }
@@ -98,10 +89,7 @@ fun MedicationsScreen(
         MedicationsMessage.DOSE_SNOOZED to stringResource(R.string.medications_msg_snoozed),
         MedicationsMessage.DOSE_UNDONE to stringResource(R.string.medications_msg_undone),
         MedicationsMessage.ACTION_FAILED to stringResource(R.string.medications_error_generic),
-        MedicationsMessage.PRN_LOGGED to stringResource(R.string.medications_msg_prn_logged),
-        MedicationsMessage.EXPORTED to stringResource(R.string.medications_msg_exported),
-        MedicationsMessage.EXPORT_FAILED to stringResource(R.string.medications_msg_export_failed),
-        MedicationsMessage.IMPORT_FAILED to stringResource(R.string.medications_msg_import_failed)
+        MedicationsMessage.PRN_LOGGED to stringResource(R.string.medications_msg_prn_logged)
     )
     LaunchedEffect(vm) {
         vm.events.collect { event ->
@@ -110,35 +98,6 @@ fun MedicationsScreen(
             }
         }
     }
-    val importResult = ui.lastImport
-    if (importResult != null) {
-        val text = pluralStringResource(R.plurals.medications_msg_imported, importResult.inserted + importResult.updated, importResult.inserted + importResult.updated)
-        LaunchedEffect(importResult) {
-            vm.consumeImportResult()
-            snackbar.showSnackbar(text)
-        }
-    }
-
-    val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(MedicationsArchive.MIME_TYPE)) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
-            val bytes = vm.exportBytes()
-            val ok = bytes != null && withContext(Dispatchers.IO) {
-                runCatching { context.contentResolver.openOutputStream(uri)?.use { it.write(bytes) } != null }.getOrDefault(false)
-            }
-            vm.reportExport(ok)
-        }
-    }
-    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
-            val bytes = withContext(Dispatchers.IO) {
-                runCatching { context.contentResolver.openInputStream(uri)?.use { it.readBytes() } }.getOrNull()
-            }
-            if (bytes == null) vm.reportExport(false) else vm.importBytes(bytes)
-        }
-    }
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbar) },
@@ -162,15 +121,6 @@ fun MedicationsScreen(
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.medications_menu_history)) },
                                 onClick = { menuOpen = false; onOpenHistory() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.medications_menu_export)) },
-                                enabled = !ui.exportBusy,
-                                onClick = { menuOpen = false; exportLauncher.launch(MedicationsArchive.FILE_NAME) }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.medications_menu_import)) },
-                                onClick = { menuOpen = false; importLauncher.launch(arrayOf(MedicationsArchive.MIME_TYPE, "*/*")) }
                             )
                         }
                     }

@@ -307,7 +307,7 @@ struct RecordsPrivacyExplainer: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             explainerRow("iphone", "Your health records are stored on this iPhone, in Ayuvo's own storage.")
-            explainerRow("icloud.slash", "Records are not included in Ayuvo's iCloud backup or your iPhone backup.")
+            explainerRow("icloud.slash", "Records are not included in your iPhone backup. Export All Data can save a copy.")
             explainerRow("doc.on.doc", "The original file is kept exactly as you imported it.")
             explainerRow("square.and.arrow.up", "Sharing or exporting sends only the records you choose, where you choose.")
             explainerRow("eye.slash", "Before you share, you can leave out pages and black out names, IDs and phone numbers. Redaction is best-effort, so always check the preview.")

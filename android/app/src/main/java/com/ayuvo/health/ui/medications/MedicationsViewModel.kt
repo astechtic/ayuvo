@@ -4,13 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ayuvo.health.AppContainer
-import com.ayuvo.health.BuildConfig
 import com.ayuvo.health.medications.data.MedicationsStore
-import com.ayuvo.health.medications.export.MedicationsArchive
 import com.ayuvo.health.medications.logic.MedicationConstants
 import com.ayuvo.health.medications.logic.MedicationLocalTime
 import com.ayuvo.health.medications.model.DoseAction
-import com.ayuvo.health.medications.model.ImportResult
 import com.ayuvo.health.medications.model.Medication
 import com.ayuvo.health.medications.model.MedicationFilter
 import com.ayuvo.health.medications.model.MedicationStatus
@@ -39,7 +36,7 @@ sealed class MedicationsEvent {
 }
 
 /** Snackbar copy keyed by resource so the ViewModel stays free of Context. */
-enum class MedicationsMessage { DOSE_TAKEN, DOSE_SKIPPED, DOSE_SNOOZED, DOSE_UNDONE, ACTION_FAILED, PRN_LOGGED, EXPORTED, EXPORT_FAILED, IMPORT_FAILED }
+enum class MedicationsMessage { DOSE_TAKEN, DOSE_SKIPPED, DOSE_SNOOZED, DOSE_UNDONE, ACTION_FAILED, PRN_LOGGED }
 
 data class MedicationsUiState(
     val loading: Boolean = true,
@@ -47,10 +44,7 @@ data class MedicationsUiState(
     /** The "All medicines" list for the current chip + search. */
     val medications: List<Medication> = emptyList(),
     val filter: MedicationFilter = MedicationFilter(status = MedicationStatus.ACTIVE),
-    val counts: Map<MedicationStatus, Int> = emptyMap(),
-    val exportBusy: Boolean = false,
-    /** Set after an import so the screen can show "Imported N medications". */
-    val lastImport: ImportResult? = null
+    val counts: Map<MedicationStatus, Int> = emptyMap()
 ) {
     val totalMedications: Int get() = counts.values.sum()
     /** Reminder banners only matter while something is scheduled. */
@@ -140,40 +134,6 @@ class MedicationsViewModel(private val container: AppContainer) : ViewModel() {
             val r = store.logPrn(medicationId, System.currentTimeMillis(), takenAtMs, doseQuantity, note)
             _events.emit(MedicationsEvent.Message(if (r.ok) MedicationsMessage.PRN_LOGGED else MedicationsMessage.ACTION_FAILED))
         }
-    }
-
-    /** The `ayuvo-medications.json` bytes for `CreateDocument` (§14). */
-    suspend fun exportBytes(): ByteArray? {
-        _ui.update { it.copy(exportBusy = true) }
-        return try {
-            MedicationsArchive.write(store.exportSnapshot(), System.currentTimeMillis(), zone, BuildConfig.VERSION_NAME)
-        } catch (_: Exception) {
-            null
-        } finally {
-            _ui.update { it.copy(exportBusy = false) }
-        }
-    }
-
-    fun reportExport(ok: Boolean) {
-        viewModelScope.launch { _events.emit(MedicationsEvent.Message(if (ok) MedicationsMessage.EXPORTED else MedicationsMessage.EXPORT_FAILED)) }
-    }
-
-    /** Merges an archive picked with `OpenDocument`; never deletes (§14). */
-    fun importBytes(bytes: ByteArray) {
-        viewModelScope.launch {
-            val archive = runCatching { MedicationsArchive.read(bytes) }.getOrNull()
-            if (archive == null) {
-                _events.emit(MedicationsEvent.Message(MedicationsMessage.IMPORT_FAILED))
-                return@launch
-            }
-            val result = store.importArchive(archive, System.currentTimeMillis())
-            if (result.ok) _ui.update { it.copy(lastImport = result) }
-            else _events.emit(MedicationsEvent.Message(MedicationsMessage.IMPORT_FAILED))
-        }
-    }
-
-    fun consumeImportResult() {
-        _ui.update { it.copy(lastImport = null) }
     }
 
     class Factory(private val container: AppContainer) : ViewModelProvider.Factory {

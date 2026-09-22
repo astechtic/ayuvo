@@ -11,7 +11,7 @@ struct ExportAllDataView: View {
     @Environment(HealthDataStore.self) private var healthDataStore
     @Environment(MedicationStore.self) private var medicationStore
     @Environment(RecordsStore.self) private var recordsStore
-    @Environment(CloudBackupService.self) private var cloudBackup
+    @Environment(AppBackupService.self) private var appBackup
     @Environment(\.dismiss) private var dismiss
 
     @State private var includeRecordFiles = true
@@ -52,7 +52,7 @@ struct ExportAllDataView: View {
                 } header: {
                     Text("Included")
                 } footer: {
-                    Text("Sections with nothing in them are left out. Each file inside the zip can be imported again with its own Import action. API keys are never included.")
+                    Text("Sections with nothing in them are left out. Restore it with Import All Data. API keys are never included.")
                 }
                 .listRowBackground(AppColors.appCard)
 
@@ -234,7 +234,7 @@ struct ExportAllDataView: View {
                 skipped.append("medications")
             }
 
-            // 4. Health Records — the `ayuvo-records` archive (local only; never iCloud). Written
+            // 4. Health Records — the `ayuvo-records` archive. Written
             // straight into this run's work directory: the store's share-temp folder is swept
             // when the store first opens, which could race a first-open export.
             advance(.healthRecords)
@@ -258,11 +258,11 @@ struct ExportAllDataView: View {
                 skipped.append("health_records")
             }
 
-            // 5. Settings, profile and logs — the same `ayuvo-cloud-backup` zip iCloud Backup uploads,
-            // written locally here (profile, goals, workouts, weight, fasting, meal photos; no API keys).
+            // 5. Settings, profile and logs — the `ayuvo-cloud-backup` zip (AppBackupService),
+            // written locally (profile, goals, workouts, weight, fasting, meal photos; no API keys).
             advance(.appBackup)
-            let values = cloudBackup.snapshotValues()
-            let photos = cloudBackup.snapshotPhotos()
+            let values = appBackup.snapshotValues()
+            let photos = appBackup.snapshotPhotos()
             let backup = try CloudBackupArchive.pack(
                 values: values,
                 photos: photos,

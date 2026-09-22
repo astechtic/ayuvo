@@ -24,7 +24,7 @@ struct calorietrackerApp: App {
     @State private var fastingStore = FastingStore()
     @State private var strengthWorkoutStore = StrengthWorkoutStore()
     @State private var importedHealthWorkoutStore = ImportedHealthWorkoutStore()
-    @State private var cloudBackupService = CloudBackupService()
+    @State private var appBackupService = AppBackupService()
     @State private var healthDataStore = HealthDataStore()
     @State private var recordsStore = RecordsStore()
     @State private var medicationStore = MedicationStore()
@@ -74,7 +74,7 @@ struct calorietrackerApp: App {
                         .environment(fastingStore)
                         .environment(strengthWorkoutStore)
                         .environment(importedHealthWorkoutStore)
-                        .environment(cloudBackupService)
+                        .environment(appBackupService)
                         .environment(healthDataStore)
                         .environment(recordsStore)
                         .environment(medicationStore)
@@ -139,7 +139,7 @@ struct calorietrackerApp: App {
             .onReceive(NotificationCenter.default.publisher(for: .userProfileDidChange)) { _ in
                 refreshWidgetSnapshot()
             }
-            .onReceive(NotificationCenter.default.publisher(for: .cloudBackupDidRestore)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .appBackupDidRestore)) { _ in
                 foodStore.reloadFromDefaults()
                 weightStore.reloadFromDefaults()
                 bodyFatStore.reloadFromDefaults()
@@ -150,10 +150,10 @@ struct calorietrackerApp: App {
                 strengthWorkoutStore.reloadFromDefaults()
                 importedHealthWorkoutStore.reloadFromDefaults()
                 profileStore.reloadFromDisk()
-                // The health mirror is never part of the cloud backup; only re-check
+                // The health mirror is never part of the app backup; only re-check
                 // authorization and drop device-local throttles so "Grant access" shows.
                 healthDataStore.reloadAfterRestore()
-                // Medications are never in the cloud backup either; only their preferences may change.
+                // Medications are never in the app backup either; only their preferences may change.
                 medicationStore.reloadAfterRestore()
                 refreshWidgetSnapshot()
             }
@@ -162,7 +162,6 @@ struct calorietrackerApp: App {
                 await Gemma4LocalModelManager.shared.resumePendingSelectionIfNeeded()
             }
             .task {
-                await cloudBackupService.runSmokeTestIfRequested()
                 await importHealthFixtureIfRequested()
             }
             .task {
@@ -183,7 +182,6 @@ struct calorietrackerApp: App {
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
                 Task { await exportRecordsArchiveIfRequested() }
-                Task { await cloudBackupService.autoBackupIfNeeded() }
                 healthDataStore.sceneDidEnterBackground()
             }
             if newPhase == .active {

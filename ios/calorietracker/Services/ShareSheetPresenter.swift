@@ -2,7 +2,7 @@ import UIKit
 
 /// Presents the system share sheet directly via UIKit. A `UIActivityViewController` must be
 /// *presented*, not embedded in a SwiftUI `.sheet` (doubly so from inside another sheet),
-/// which renders blank. Extracted from `ExportDiaryView` so the health export can reuse it.
+/// which renders blank. Used by Export All Data and record sharing.
 @MainActor
 enum ShareSheetPresenter {
     static func present(url: URL, completion: (() -> Void)? = nil) {

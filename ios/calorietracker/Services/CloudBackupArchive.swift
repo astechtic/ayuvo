@@ -6,7 +6,6 @@ enum CloudBackupPolicy {
     static let version = 1
     static let payloadName = "backup.json"
     static let photosDirectory = "photos/"
-    static let minAutoBackupInterval: TimeInterval = 15 * 60
 
     static let excludedKeys: Set<String> = [
         "healthKitFoodRecoveryDone",
@@ -17,8 +16,12 @@ enum CloudBackupPolicy {
         "healthKitTypesVersion",
         "healthKitAuthVersion",
         "lastNotifiedAppUpdateVersion",
-        // Coach transcripts can quote Health data the user asked about; App Store 5.1.3(ii)
-        // forbids health data in iCloud, so the chat history stays on the device.
+        // Retired iCloud Backup state (AppBackupService.retiredKeys).
+        "cloudBackupEnabled",
+        "cloudBackupLastAt",
+        "cloudBackupLastHash",
+        // Coach transcripts can quote Health data the user asked about, so the chat history
+        // stays on the device.
         "coachChatHistory",
     ]
 
@@ -26,8 +29,8 @@ enum CloudBackupPolicy {
         if key == "healthKitEnabled" { return true }
         if excludedKeys.contains(key) { return false }
         if key.hasPrefix("healthKit") { return false }
-        // Health Records preferences never enter iCloud (docs/health-records.md §6); the records
-        // themselves live in the backup-excluded `Application Support/Ayuvo/Records/`.
+        // Health Records preferences stay out of this backup (docs/health-records.md §6); the records
+        // have their own section in Export All Data.
         if key.hasPrefix("healthRecords") { return false }
         // Medication preferences and the pending notification route stay on the device; the
         // medications database lives in the backup-excluded `Application Support/Ayuvo/Medications/`
@@ -162,15 +165,13 @@ enum CloudBackupError: LocalizedError, Equatable {
     case missingPayload
     case invalidFormat
     case needsNewerApp
-    case iCloudUnavailable
-    case noBackup
+    case otherPlatform
 
     var errorDescription: String? {
         switch self {
         case .missingPayload, .invalidFormat: return "This is not a Ayuvo backup."
         case .needsNewerApp: return "This backup needs a newer Ayuvo."
-        case .iCloudUnavailable: return "Sign into iCloud in iOS Settings first."
-        case .noBackup: return "No iCloud backup found."
+        case .otherPlatform: return "Settings from an Android export can't be applied on iPhone."
         }
     }
 }

@@ -196,14 +196,20 @@ class CloudBackupCoordinator(
         prefs.setCloudBackupEnabled(true)
     }
 
-    suspend fun applyArchive(zip: ByteArray) {
+    /**
+     * Replaces preferences and meal photos with the backup in [zip]. [fromFile] is Import All Data:
+     * the Drive backup state (on/off, account, last backup) and device-only keys stay as they are.
+     */
+    suspend fun applyArchive(zip: ByteArray, fromFile: Boolean = false) {
         val unpack = CloudBackupArchive.unpack(zip)
-        val enabled = true
+        val enabled = if (fromFile) prefs.cloudBackupEnabled.first() else true
         val email = prefs.cloudBackupAccountEmail.first()
         val fileId = prefs.cloudBackupFileId.first()
+        val lastHash = prefs.cloudBackupLastHash.first()
+        val lastAt = prefs.cloudBackupLastAt.first()
         images.clearAll()
         unpack.photos.forEach { (name, bytes) -> images.restoreBytes(name, bytes) }
-        prefs.restoreCloudBackupValues(unpack.document.payload.values)
+        prefs.restoreCloudBackupValues(unpack.document.payload.values, keepDeviceLocal = fromFile)
         // Device-specific Health Connect tokens must not transfer. Mark food
         // restore done so Health Connect skips a second import of the same IDs.
         prefs.clearHealthChangesToken()
@@ -214,8 +220,14 @@ class CloudBackupCoordinator(
         prefs.setCloudBackupEnabled(enabled)
         prefs.setCloudBackupAccountEmail(email)
         prefs.setCloudBackupFileId(fileId)
-        prefs.setCloudBackupLastHash(unpack.document.content_sha256)
-        prefs.setCloudBackupLastAt(unpack.document.exported_at)
+        if (fromFile) {
+            prefs.setCloudBackupLastHash(lastHash)
+            prefs.setCloudBackupLastAt(lastAt)
+        } else {
+            prefs.setCloudBackupLastHash(unpack.document.content_sha256)
+            prefs.setCloudBackupLastAt(unpack.document.exported_at)
+        }
+        refresh()
     }
 
     private fun snapshotPhotos(): Map<String, ByteArray> {

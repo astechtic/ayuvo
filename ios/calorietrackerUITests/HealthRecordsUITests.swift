@@ -699,7 +699,7 @@ extension HealthRecordsUITests {
 extension HealthRecordsUITests {
     /// Phase 5 walk: record detail → Share → "What will be shared" (items, summary fields and the
     /// six redaction toggles) → Preview builds the files and shows a page-1 preview;
-    /// then Settings › Health Records › Backup & restore exports an archive.
+    /// then Settings › Health Records shows the Storage tools.
     /// A CBC report that carries a patient name, a UHID and a phone number, so the §34 redaction
     /// classes have something to black out.
     private func makeIdentifiedCBCPDF(named name: String) throws -> URL {
@@ -818,7 +818,7 @@ extension HealthRecordsUITests {
         _ = app.navigationBars["What will be shared"].waitForExistence(timeout: 5)
         app.buttons["Cancel"].firstMatch.tap()
 
-        // Settings › Health Records › Backup & restore → Create archive.
+        // Settings › Health Records › Storage.
         app.tabBars.buttons["Settings"].tap()
         let category = app.buttons["settings.category.healthRecords"]
         for _ in 0..<8 where !category.isHittable { app.swipeUp() }
@@ -838,29 +838,8 @@ extension HealthRecordsUITests {
         shot(app, "records-p5-ios-04-storage")
         app.navigationBars.buttons.firstMatch.tap()
 
-        let backup = app.buttons["records.settings.backup"]
-        scrollTo(backup, in: app, maxSwipes: 14)
-        XCTAssertTrue(backup.waitForExistence(timeout: 5), "Backup & restore link")
-        backup.tap()
-        XCTAssertTrue(app.navigationBars["Backup & restore"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["No archive created yet."].firstMatch.waitForExistence(timeout: 8))
-        shot(app, "records-p5-ios-05-backup")
-        app.buttons["records.backup.export"].tap()
-
-        // The system share sheet appears over the archive; dismiss it and check the status row.
-        let activity = app.otherElements["ActivityListView"].firstMatch
-        if activity.waitForExistence(timeout: 60) {
-            shot(app, "records-p5-ios-06-archive-share-sheet")
-            if app.buttons["Close"].firstMatch.exists {
-                app.buttons["Close"].firstMatch.tap()
-            } else {
-                app.swipeDown()
-            }
-        }
-        let lastArchive = app.staticTexts["Last archive"].firstMatch
-        XCTAssertTrue(lastArchive.waitForExistence(timeout: 60), "the export produced an archive and stamped records_backup_state")
-        XCTAssertTrue(app.staticTexts["Archive size"].firstMatch.waitForExistence(timeout: 10))
-        shot(app, "records-p5-ios-07-archive-done")
+        // Bulk backup lives in Settings › Backup & Export (Export All Data); Health Records has no own archive row.
+        XCTAssertFalse(app.buttons["records.settings.backup"].exists)
     }
 }
 

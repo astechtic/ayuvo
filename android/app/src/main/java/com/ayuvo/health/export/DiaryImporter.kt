@@ -16,7 +16,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeParseException
 import java.util.UUID
 
-enum class DiaryImportMode { REPLACE_DATE_RANGE, ADD_AS_NEW }
+/** MERGE (Import All Data): matching entries are updated, new ones added, nothing is deleted. */
+enum class DiaryImportMode { REPLACE_DATE_RANGE, ADD_AS_NEW, MERGE }
 
 data class DiaryImportPreview(
     val entries: List<FoodEntry>,
@@ -217,6 +218,11 @@ object DiaryImporter {
         existing: List<FoodEntry>,
         mode: DiaryImportMode,
     ): List<FoodEntry> = when (mode) {
+        DiaryImportMode.MERGE -> {
+            val updated = applying(preview, existing, DiaryImportMode.REPLACE_DATE_RANGE)
+            val kept = updated.mapTo(mutableSetOf()) { it.id }
+            updated + existing.filter { it.id !in kept }
+        }
         DiaryImportMode.ADD_AS_NEW -> existing + preview.entries.map { it.copy(id = UUID.randomUUID()) }
         DiaryImportMode.REPLACE_DATE_RANGE -> {
             val outside = existing.filter { entry ->
@@ -253,6 +259,12 @@ object DiaryImporter {
     /** Preserve water when importing legacy food-only documents. */
     fun applyingWater(preview: DiaryImportPreview, existing: List<WaterEntry>, mode: DiaryImportMode): List<WaterEntry> {
         if (!preview.includesWater) return existing
+        if (mode == DiaryImportMode.MERGE) {
+            fun key(entry: WaterEntry) = "${entry.date.epochSecond}|${entry.milliliters}"
+            val ids = existing.mapTo(mutableSetOf()) { it.id }
+            val keys = existing.mapTo(mutableSetOf(), ::key)
+            return existing + preview.waterEntries.filter { ids.add(it.id) && keys.add(key(it)) }
+        }
         val retained = if (mode == DiaryImportMode.ADD_AS_NEW) existing else existing.filter {
             it.date.atZone(zone).toLocalDate() !in preview.startDate..preview.endDate
         }

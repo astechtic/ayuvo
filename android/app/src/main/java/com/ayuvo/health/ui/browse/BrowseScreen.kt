@@ -1,7 +1,5 @@
 package com.ayuvo.health.ui.browse
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -127,9 +125,6 @@ fun BrowseScreen(
     var query by rememberSaveable { mutableStateOf("") }
     var menuOpen by remember { mutableStateOf(false) }
     var showClearConfirm by remember { mutableStateOf(false) }
-    var showExportSheet by remember { mutableStateOf(false) }
-    var importUri by remember { mutableStateOf<android.net.Uri?>(null) }
-    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) importUri = uri }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val bodyVm: BodyLogViewModel = viewModel(key = "browse-body", factory = BodyLogViewModel.Factory(container))
     val body by bodyVm.ui.collectAsState()
@@ -168,11 +163,6 @@ fun BrowseScreen(
                                     text = { Text(stringResource(R.string.health_hub_storage_used, HealthValueFormatter.bytes(hub.storageBytes))) },
                                     onClick = { menuOpen = false },
                                     enabled = false
-                                )
-                                DropdownMenuItem(text = { Text(stringResource(R.string.health_hub_menu_export)) }, onClick = { menuOpen = false; showExportSheet = true })
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.health_hub_menu_import)) },
-                                    onClick = { menuOpen = false; runCatching { importLauncher.launch(arrayOf("application/zip", "application/octet-stream")) } }
                                 )
                                 DropdownMenuItem(text = { Text(stringResource(R.string.health_hub_menu_manage_access)) }, onClick = { menuOpen = false; manageAccess() })
                                 DropdownMenuItem(
@@ -321,12 +311,6 @@ fun BrowseScreen(
             Text(stringResource(R.string.progress_goal_reached_message), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f))
             GlassDialogActions(primaryText = stringResource(R.string.action_keep_going), onPrimary = bodyVm::dismissGoalReached)
         }
-    }
-    if (showExportSheet) {
-        com.ayuvo.health.ui.settings.ExportHealthDataSheet(container = container, onDismiss = { showExportSheet = false })
-    }
-    importUri?.let { uri ->
-        com.ayuvo.health.ui.settings.ImportHealthDataSheet(container = container, uri = uri, onDismiss = { importUri = null })
     }
 }
 

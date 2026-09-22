@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings › Backup & Export: Export All Data + Import All Data -->
+    <string name="all_data_footer">Export saves everything in one .zip that only goes where you choose. Import reads that .zip back, from this phone or another one. API keys are never included.</string>
+    <string name="import_all_title">Import All Data</string>
+    <string name="import_all_reading">Reading file…</string>
+    <string name="import_all_progress">Importing %1$s (%2$d of %3$d)…</string>
+    <string name="import_all_invalid">This isn\'t an Ayuvo export.</string>
+    <string name="import_all_newer">This file was made by a newer version of Ayuvo. Update the app, then try again.</string>
+    <string name="import_all_preview_title">Import this export?</string>
+    <string name="import_all_preview_meta">Made on %1$s · %2$s</string>
+    <string name="import_all_platform_android">Android</string>
+    <string name="import_all_platform_ios">iPhone</string>
+    <string name="import_all_nothing">Nothing in this file can be imported on this phone.</string>
+    <string name="import_all_confirm">Import</string>
+    <string name="import_all_done_title">Import finished</string>
+    <string name="import_all_section_app_backup">Settings, profile &amp; logs</string>
+    <string name="import_all_section_food_diary">Food diary</string>
+    <string name="import_all_section_health_data">Health data</string>
+    <string name="import_all_section_medications">Medications</string>
+    <string name="import_all_section_health_records">Health Records</string>
+    <string name="import_all_effect_app_backup">Replaces the settings, profile, food diary, water, weight, workouts, fasting and meal photos on this phone. Google Drive backup and API keys stay as they are.</string>
+    <string name="import_all_effect_food_diary">Merged: matching entries are updated and new ones are added. Nothing on this phone is deleted.</string>
+    <string name="import_all_effect_health_data">Merged: new samples are added and matching ones keep the newer copy. Nothing is deleted.</string>
+    <string name="import_all_effect_medications">Merged: missing medications, schedules and doses are added and the newer copy wins. Nothing is deleted.</string>
+    <string name="import_all_effect_health_records">Merged: records missing on this phone are added. Existing records are kept.</string>
+    <string name="import_all_skip_other_platform">Skipped: settings from an iPhone export can\'t be applied on Android.</string>
+    <string name="import_all_skip_in_app_backup">Already included in settings, profile &amp; logs.</string>
+    <string name="import_all_skip_unsupported">Skipped: this part is in a format this version can\'t read.</string>
+    <string name="import_all_result_imported">Imported (%1$d)</string>
+    <string name="import_all_result_restored">Restored</string>
+    <string name="import_all_result_failed">Failed: %1$s</string>
+    <string name="import_all_result_failed_unknown">Failed</string>
+    <string name="import_all_count_food_entries">Food entries</string>
+    <string name="import_all_count_water_entries">Water entries</string>
+    <string name="import_all_count_days">Days</string>
+    <string name="import_all_count_samples">Samples</string>
+    <string name="import_all_count_series_points">Series points</string>
+    <string name="import_all_count_types">Types</string>
+    <string name="import_all_count_medications">Medications</string>
+    <string name="import_all_count_schedules">Schedules</string>
+    <string name="import_all_count_dose_logs">Dose logs</string>
+    <string name="import_all_count_records">Records</string>
+    <string name="import_all_count_files">Files</string>
+    <string name="import_all_count_settings">Settings</string>
+    <string name="import_all_count_meal_photos">Meal photos</string>
+</resources>

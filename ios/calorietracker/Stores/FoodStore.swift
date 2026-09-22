@@ -517,7 +517,7 @@ class FoodStore {
         addedEntries.forEach { onEntryAdded?($0) }
     }
 
-    /// Upserts `cloudEntries` (iCloud restore, HealthKit recovery) by id.
+    /// Upserts `cloudEntries` (backup restore, HealthKit recovery) by id.
     /// Duplicate ids — in the local list, the incoming batch, or across both —
     /// resolve newest-wins instead of trapping in `Dictionary(uniqueKeysWithValues:)`.
     func mergeWithCloudEntries(_ cloudEntries: [FoodEntry]) {

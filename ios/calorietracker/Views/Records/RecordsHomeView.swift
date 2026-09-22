@@ -703,7 +703,7 @@ struct RecordsHomeView: View {
                 Button {
                     showPrivacy = true
                 } label: {
-                    Label("Stored on this iPhone and not included in iCloud backup.", systemImage: "lock.fill")
+                    Label("Stored on this iPhone and not included in iPhone backups.", systemImage: "lock.fill")
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)

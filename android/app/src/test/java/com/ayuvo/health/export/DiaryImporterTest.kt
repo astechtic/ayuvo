@@ -62,6 +62,29 @@ class DiaryImporterTest {
     }
 
     @Test
+    fun mergeKeepsSameDayEntriesAndIsIdempotent() {
+        val preview = DiaryImporter.parse(validLegacyDiary)
+        val sameDay = FoodEntry(
+            name = "Local snack",
+            calories = 150,
+            protein = 3.0,
+            carbs = 20.0,
+            fat = 5.0,
+            timestamp = preview.startDate.atTime(16, 0).atZone(ZoneId.systemDefault()).toInstant(),
+            source = FoodSource.TEXT_INPUT,
+            mealType = MealType.SNACK,
+        )
+        val merged = DiaryImporter.applying(preview, listOf(sameDay), DiaryImportMode.MERGE)
+        assertEquals(preview.entries.size + 1, merged.size)
+        assertTrue(merged.any { it.id == sameDay.id })
+        assertEquals(merged.size, DiaryImporter.applying(preview, merged, DiaryImportMode.MERGE).size)
+
+        val water = com.ayuvo.health.models.WaterEntry(date = preview.startDate.atStartOfDay(ZoneId.systemDefault()).toInstant(), milliliters = 250)
+        val withWater = preview.copy(waterEntries = listOf(water.copy(id = UUID.randomUUID())), includesWater = true)
+        assertEquals(listOf(water), DiaryImporter.applyingWater(withWater, listOf(water), DiaryImportMode.MERGE))
+    }
+
+    @Test
     fun legacyExportAddsWithANewIdentity() {
         val preview = DiaryImporter.parse(validLegacyDiary)
         val result = DiaryImporter.applying(preview, preview.entries, DiaryImportMode.ADD_AS_NEW)

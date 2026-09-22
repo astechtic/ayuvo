@@ -17,8 +17,6 @@ struct BrowseView: View {
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
 
     @State private var query = ""
-    @State private var showExport = false
-    @State private var showImport = false
     @State private var isRebuilding = false
     @State private var showLogWeight = false
     @State private var showLogBodyFat = false
@@ -59,7 +57,7 @@ struct BrowseView: View {
                     Section {
                         BrowseHealthStatusRow()
                     } footer: {
-                        Text("Apple Health data is kept on this device, never stored in iCloud backup, and shared with your AI provider only through Coach.")
+                        Text("Apple Health data is kept on this device and shared with your AI provider only through Coach.")
                     }
                 }
             }
@@ -74,12 +72,6 @@ struct BrowseView: View {
             }
             .refreshable {
                 _ = await store.sync(.manual)
-            }
-            .sheet(isPresented: $showExport) {
-                ExportHealthDataView()
-            }
-            .sheet(isPresented: $showImport) {
-                ImportHealthDataView()
             }
             .sheet(isPresented: $showLogWeight) {
                 LogWeightSheet(currentWeightKg: weightStore.latestEntry?.weightKg ?? profileStore.profile.weightKg) { weightKg in
@@ -249,18 +241,6 @@ struct BrowseView: View {
             .disabled(!store.isEnabled || store.isSyncing)
             NavigationLink(value: MetricRoute.favourites) {
                 Label("Edit Favourites", systemImage: "star")
-            }
-            Divider()
-            Button {
-                showExport = true
-            } label: {
-                Label("Export Health Data", systemImage: "square.and.arrow.up")
-            }
-            .disabled(!store.hasAnyData)
-            Button {
-                showImport = true
-            } label: {
-                Label("Import Health Data", systemImage: "square.and.arrow.down")
             }
             Divider()
             Button {

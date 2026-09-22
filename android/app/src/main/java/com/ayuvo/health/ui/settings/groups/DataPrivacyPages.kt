@@ -2,7 +2,12 @@ package com.ayuvo.health.ui.settings.groups
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Archive
@@ -11,21 +16,21 @@ import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.DeleteSweep
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.SwitchAccount
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,21 +38,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ayuvo.health.R
 import com.ayuvo.health.export.AllDataExportArchive
 import com.ayuvo.health.export.AllDataExportCoordinator
 import com.ayuvo.health.export.AllDataExportOutcome
 import com.ayuvo.health.export.AllDataExportStep
+import com.ayuvo.health.export.AllDataImportOutcome
+import com.ayuvo.health.export.AllDataImportPlan
+import com.ayuvo.health.export.AllDataImportUi
+import com.ayuvo.health.ui.components.GlassDialog
+import com.ayuvo.health.ui.components.GlassDialogActions
+import com.ayuvo.health.ui.design.AyuvoPalette
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
 import com.ayuvo.health.ui.health.relativeTimeText
 import com.ayuvo.health.ui.navigation.AppRoutes
 import com.ayuvo.health.ui.settings.SettingsPage
-import com.ayuvo.health.ui.settings.SettingsTint
 import com.ayuvo.health.ui.settings.SettingsPageContext
+import com.ayuvo.health.ui.settings.SettingsTint
 import com.ayuvo.health.ui.theme.AppColors
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 /**
  * Data & Privacy › Health Sync: the Health Connect connection, sync status, Browse and Favourites
@@ -189,7 +207,7 @@ internal fun HealthRecordsPage(ctx: SettingsPageContext) {
     }
 }
 
-/** Data & Privacy › Backup & Export: Google Drive backup (Android) and diary / health data files. */
+/** Data & Privacy › Backup & Export: Google Drive backup (Android only), then Export / Import All Data. */
 @Composable
 internal fun BackupExportPage(ctx: SettingsPageContext) {
     val cloud = ctx.cloudBackup
@@ -271,61 +289,25 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
             }
         }
     }
-    ExportAllDataGroup(ctx)
-    InsetGroup(
-        header = stringResource(R.string.settings_export_import_header),
-        footer = stringResource(R.string.settings_export_import_footer)
-    ) {
-        row {
-            GroupRow(
-                title = stringResource(R.string.export_diary_title),
-                icon = Icons.Filled.IosShare, iconTint = SettingsTint.Nutrition,
-                modifier = Modifier.settingsRow("exportDiary"),
-                trailing = RowTrailing.None,
-                onClick = { ctx.state.showExportSheet = true }
-            )
-        }
-        row {
-            GroupRow(
-                title = stringResource(R.string.import_diary_title),
-                icon = Icons.Filled.Download, iconTint = SettingsTint.Nutrition,
-                modifier = Modifier.settingsRow("importDiary"),
-                trailing = RowTrailing.None,
-                onClick = actions.importDiary
-            )
-        }
-        row {
-            GroupRow(
-                title = stringResource(R.string.health_settings_export),
-                icon = Icons.Filled.MonitorHeart, iconTint = SettingsTint.Vitals,
-                modifier = Modifier.testTag("settings.health.export"),
-                trailing = RowTrailing.None,
-                onClick = { ctx.state.showExportHealthSheet = true }
-            )
-        }
-        row {
-            GroupRow(
-                title = stringResource(R.string.health_settings_import),
-                icon = Icons.Filled.MonitorHeart, iconTint = SettingsTint.Vitals,
-                modifier = Modifier.testTag("settings.health.import"),
-                trailing = RowTrailing.None,
-                onClick = actions.importHealthData
-            )
-        }
-    }
+    AllDataGroup(ctx)
 }
 
 /**
- * Backup & Export › Export All Data: one SAF `CreateDocument` zip holding every individual export
- * (see [AllDataExportCoordinator]). The run lives on the app scope, so the row shows its progress
- * again if the page is reopened; the result stays under the row until the next run.
+ * Backup & Export › Export All Data / Import All Data. Export writes one SAF `CreateDocument` zip
+ * holding every individual export ([AllDataExportCoordinator]); Import reads such a zip back
+ * ([AllDataImportCoordinator]). Both run on the app scope, so reopening the page shows their progress.
  */
 @Composable
-private fun ExportAllDataGroup(ctx: SettingsPageContext) {
+private fun AllDataGroup(ctx: SettingsPageContext) {
     val coordinator = ctx.container.allDataExport
     val export by coordinator.ui.collectAsState()
+    val importer = ctx.container.allDataImport
+    val import by importer.ui.collectAsState()
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(AllDataExportArchive.MIME_TYPE)) { uri ->
         if (uri != null) coordinator.start(uri)
+    }
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) importer.open(uri)
     }
     val progress = export.step?.takeIf { export.running }?.let { step ->
         stringResource(R.string.export_all_progress, stringResource(step.labelRes), export.stepNumber, export.stepCount)
@@ -342,27 +324,173 @@ private fun ExportAllDataGroup(ctx: SettingsPageContext) {
         is AllDataExportOutcome.Failed -> o.message ?: stringResource(R.string.export_failed)
         null -> null
     }
-    InsetGroup(footer = stringResource(R.string.export_all_footer)) {
+    val importing = import is AllDataImportUi.Reading || import is AllDataImportUi.Running
+    val importStatus = when (val u = import) {
+        AllDataImportUi.Reading -> stringResource(R.string.import_all_reading)
+        is AllDataImportUi.Running -> stringResource(R.string.import_all_progress, stringResource(importSectionTitleRes(u.section)), u.number, u.total)
+        else -> null
+    }
+    val spinner = RowTrailing.Custom { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = AppColors.Calorie) }
+    InsetGroup(footer = stringResource(R.string.all_data_footer)) {
         row {
             GroupRow(
                 title = stringResource(R.string.export_all_title),
                 subtitle = progress ?: outcome,
                 icon = Icons.Filled.Archive, iconTint = SettingsTint.Backup,
-                enabled = !export.running,
+                enabled = !export.running && !importing,
                 modifier = Modifier.settingsRow("exportAllData"),
-                trailing = if (export.running) {
-                    RowTrailing.Custom { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = AppColors.Calorie) }
-                } else {
-                    RowTrailing.None
-                },
+                trailing = if (export.running) spinner else RowTrailing.None,
                 onClick = {
                     coordinator.consumeOutcome()
                     launcher.launch(AllDataExportArchive.fileName())
                 }
             )
         }
+        row {
+            GroupRow(
+                title = stringResource(R.string.import_all_title),
+                subtitle = importStatus,
+                icon = Icons.Filled.Unarchive, iconTint = SettingsTint.Backup,
+                enabled = !export.running && !importing,
+                modifier = Modifier.settingsRow("importAllData"),
+                trailing = if (importing) spinner else RowTrailing.None,
+                onClick = { importLauncher.launch(arrayOf(AllDataExportArchive.MIME_TYPE, "application/octet-stream", "application/x-zip-compressed")) }
+            )
+        }
+    }
+    AllDataImportDialogs(import, onConfirm = importer::confirm, onDismiss = importer::dismiss)
+}
+
+@Composable
+private fun AllDataImportDialogs(ui: AllDataImportUi, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    val muted = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f)
+    when (ui) {
+        is AllDataImportUi.Invalid -> GlassDialog(onDismissRequest = onDismiss) {
+            Text(stringResource(R.string.import_all_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(
+                stringResource(if (ui.reason == AllDataImportPlan.Invalid.NEWER_VERSION) R.string.import_all_newer else R.string.import_all_invalid),
+                color = muted
+            )
+            GlassDialogActions(primaryText = stringResource(R.string.action_ok), onPrimary = onDismiss)
+        }
+        is AllDataImportUi.Preview -> GlassDialog(onDismissRequest = onDismiss, modifier = Modifier.testTag("settings.importAll.preview")) {
+            Text(stringResource(R.string.import_all_preview_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(
+                stringResource(R.string.import_all_preview_meta, formatExportDate(ui.plan.manifest.created_at), platformName(ui.plan.manifest.platform)),
+                color = muted, fontSize = 14.sp
+            )
+            Column(
+                Modifier.heightIn(max = 380.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                if (ui.plan.sections.isEmpty() || ui.plan.importCount == 0) {
+                    Text(stringResource(R.string.import_all_nothing), color = muted, fontSize = 14.sp)
+                }
+                for (section in ui.plan.sections) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(stringResource(importSectionTitleRes(section.id)), fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        countsLine(section.counts)?.let { Text(it, fontSize = 13.sp, color = muted) }
+                        Text(
+                            stringResource(section.skip?.let(::skipReasonRes) ?: importEffectRes(section.id)),
+                            fontSize = 13.sp,
+                            color = if (section.imports) MaterialTheme.colorScheme.onSurface else muted
+                        )
+                    }
+                }
+            }
+            GlassDialogActions(
+                primaryText = stringResource(R.string.import_all_confirm),
+                onPrimary = onConfirm,
+                dismissText = stringResource(R.string.action_cancel),
+                onDismiss = onDismiss,
+                primaryEnabled = ui.plan.importCount > 0
+            )
+        }
+        is AllDataImportUi.Done -> GlassDialog(onDismissRequest = onDismiss, modifier = Modifier.testTag("settings.importAll.done")) {
+            Text(stringResource(R.string.import_all_done_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                for (o in ui.outcomes) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(stringResource(importSectionTitleRes(o.section)), fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        Text(
+                            when (o) {
+                                is AllDataImportOutcome.Imported ->
+                                    if (o.section == AllDataExportCoordinator.SECTION_APP_BACKUP) stringResource(R.string.import_all_result_restored)
+                                    else stringResource(R.string.import_all_result_imported, o.count.toInt())
+                                is AllDataImportOutcome.Skipped -> stringResource(skipReasonRes(o.reason))
+                                is AllDataImportOutcome.Failed ->
+                                    o.message?.let { stringResource(R.string.import_all_result_failed, it) } ?: stringResource(R.string.import_all_result_failed_unknown)
+                            },
+                            fontSize = 13.sp,
+                            color = if (o is AllDataImportOutcome.Failed) AyuvoPalette.Destructive else muted
+                        )
+                    }
+                }
+            }
+            GlassDialogActions(primaryText = stringResource(R.string.action_done), onPrimary = onDismiss)
+        }
+        else -> Unit
     }
 }
+
+@Composable
+private fun countsLine(counts: Map<String, Long>): String? {
+    val parts = counts.entries.mapNotNull { (key, value) ->
+        countLabelRes(key)?.let { "${stringResource(it)} ${value}" }
+    }
+    return parts.joinToString(" · ").ifBlank { null }
+}
+
+private fun countLabelRes(key: String): Int? = when (key) {
+    "food_entries" -> R.string.import_all_count_food_entries
+    "water_entries" -> R.string.import_all_count_water_entries
+    "days" -> R.string.import_all_count_days
+    "samples" -> R.string.import_all_count_samples
+    "series_points" -> R.string.import_all_count_series_points
+    "types" -> R.string.import_all_count_types
+    "medications" -> R.string.import_all_count_medications
+    "schedules" -> R.string.import_all_count_schedules
+    "dose_logs" -> R.string.import_all_count_dose_logs
+    "records" -> R.string.import_all_count_records
+    "files" -> R.string.import_all_count_files
+    "settings", "settings_values" -> R.string.import_all_count_settings
+    "meal_photos" -> R.string.import_all_count_meal_photos
+    else -> null
+}
+
+private fun importSectionTitleRes(section: String): Int = when (section) {
+    AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.import_all_section_food_diary
+    AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.import_all_section_health_data
+    AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.import_all_section_medications
+    AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> R.string.import_all_section_health_records
+    else -> R.string.import_all_section_app_backup
+}
+
+private fun importEffectRes(section: String): Int = when (section) {
+    AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.import_all_effect_food_diary
+    AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.import_all_effect_health_data
+    AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.import_all_effect_medications
+    AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> R.string.import_all_effect_health_records
+    else -> R.string.import_all_effect_app_backup
+}
+
+private fun skipReasonRes(reason: AllDataImportPlan.SkipReason): Int = when (reason) {
+    AllDataImportPlan.SkipReason.OTHER_PLATFORM -> R.string.import_all_skip_other_platform
+    AllDataImportPlan.SkipReason.IN_APP_BACKUP -> R.string.import_all_skip_in_app_backup
+    AllDataImportPlan.SkipReason.UNSUPPORTED -> R.string.import_all_skip_unsupported
+}
+
+@Composable
+private fun platformName(platform: String): String = when (platform) {
+    AllDataImportPlan.PLATFORM_IOS -> stringResource(R.string.import_all_platform_ios)
+    AllDataImportPlan.PLATFORM_ANDROID -> stringResource(R.string.import_all_platform_android)
+    else -> platform
+}
+
+private fun formatExportDate(raw: String): String = runCatching {
+    val instant = runCatching { Instant.parse(raw) }.getOrElse { OffsetDateTime.parse(raw).toInstant() }
+    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(instant.atZone(ZoneId.systemDefault()))
+}.getOrDefault(raw)
 
 private val AllDataExportStep.labelRes: Int
     get() = when (this) {

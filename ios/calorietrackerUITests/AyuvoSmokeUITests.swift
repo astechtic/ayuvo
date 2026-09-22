@@ -213,19 +213,15 @@ final class AyuvoSmokeUITests: XCTestCase {
         XCTAssertFalse(app.buttons["settings.category.support"].exists)
         XCTAssertFalse(app.buttons["settings.category.community"].exists)
 
-        // Data Management → Export Health Data description carries the new format id
+        // Backup & Export holds exactly Export All Data + Import All Data (no iCloud Backup).
         let dataManagement = app.buttons["settings.category.dataManagement"]
         scrollTo(dataManagement, in: app, attempts: 12)
         if dataManagement.waitForExistence(timeout: 5) {
             dataManagement.tap()
-            let export = app.staticTexts["Export Health Data"].firstMatch
-            scrollTo(export, in: app)
-            if export.waitForExistence(timeout: 5) {
-                tapLabel(export)
-                let format = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'ayuvo-health-data'")).firstMatch
-                XCTAssertTrue(format.waitForExistence(timeout: 8), "Export sheet should describe the ayuvo-health-data format")
-                shot(app, "11-export-health-data")
-            }
+            XCTAssertTrue(app.buttons["settings.row.exportAllData"].waitForExistence(timeout: 5))
+            XCTAssertTrue(app.buttons["settings.row.importAllData"].exists)
+            XCTAssertFalse(app.staticTexts["iCloud Backup"].exists)
+            shot(app, "11-backup-export")
         }
     }
 }

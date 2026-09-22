@@ -3,6 +3,9 @@ import Foundation
 enum DiaryImportMode {
     case replaceDateRange
     case addAsNew
+    /// Import All Data: file entries update their match (same id, or same meal/time/name) or are
+    /// added; nothing already on the device is removed.
+    case merge
 }
 
 struct DiaryImportPreview {
@@ -249,6 +252,10 @@ enum DiaryImporter {
         calendar: Calendar = .current
     ) -> [FoodEntry] {
         switch mode {
+        case .merge:
+            let updated = applying(preview, to: existing, mode: .replaceDateRange, calendar: calendar)
+            let kept = Set(updated.map(\.id))
+            return updated + existing.filter { !kept.contains($0.id) }
         case .addAsNew:
             return existing + preview.entries.map { imported in
                 entry(from: imported, preserving: nil, id: UUID())
@@ -304,6 +311,18 @@ enum DiaryImporter {
     static func applyingWater(_ preview: DiaryImportPreview, to existing: [WaterEntry],
                               mode: DiaryImportMode, calendar: Calendar = .current) -> [WaterEntry] {
         guard preview.includesWater else { return existing }
+        if mode == .merge {
+            func key(_ entry: WaterEntry) -> String { "\(Int(entry.date.timeIntervalSince1970))|\(entry.milliliters)" }
+            var ids = Set(existing.map(\.id))
+            var keys = Set(existing.map(key))
+            var merged = existing
+            for entry in preview.waterEntries where !ids.contains(entry.id) && !keys.contains(key(entry)) {
+                ids.insert(entry.id)
+                keys.insert(key(entry))
+                merged.append(entry)
+            }
+            return merged
+        }
         let retained = mode == .addAsNew ? existing : existing.filter {
             let day = calendar.startOfDay(for: $0.date)
             return day < preview.startDate || day > preview.endDate

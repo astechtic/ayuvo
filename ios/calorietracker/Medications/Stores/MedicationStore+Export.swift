@@ -11,10 +11,6 @@ extension MedicationStore {
         return try await repository.exportArchive(nowMs: nowMs, zone: zoneIdentifier, platform: "ios", appVersion: Self.appVersion)
     }
 
-    func exportDocument() async throws -> MedicationArchiveDocument {
-        MedicationArchiveDocument(archive: try await exportArchive())
-    }
-
     /// Merges an archive: newer rows win, nothing is deleted. Throws `.archive(code)` for a bad file.
     @discardableResult
     func importArchive(_ data: Data) async throws -> MedicationImportResult {

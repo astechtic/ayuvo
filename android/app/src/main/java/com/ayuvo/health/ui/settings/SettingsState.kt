@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.backup.CloudBackupUi
 import com.ayuvo.health.data.metrics.MetricKey
-import com.ayuvo.health.export.DiaryImportPreview
 import com.ayuvo.health.models.BodyMeasurement
 import com.ayuvo.health.services.health.HealthConnectAvailability
 import com.ayuvo.health.services.health.HealthSyncStatus
@@ -25,7 +24,7 @@ internal data class PermissionDialogState(
 
 /**
  * Every piece of Settings UI state that used to live as locals in `SettingsScreen`: the open
- * sheet, dialog flags, import/export state and the selected page. Pages read and write it
+ * sheet, dialog flags and the selected page. Pages read and write it
  * through [SettingsPageContext]; the host renders the sheets and dialogs it describes.
  */
 @Stable
@@ -36,13 +35,6 @@ internal class SettingsScreenState(selectedPage: MutableState<SettingsPage?>) {
     var showDeleteDialog by mutableStateOf(false)
     var showClearFoodDialog by mutableStateOf(false)
     var showClearHealthDialog by mutableStateOf(false)
-    var showExportHealthSheet by mutableStateOf(false)
-    var importHealthUri by mutableStateOf<android.net.Uri?>(null)
-    var showExportSheet by mutableStateOf(false)
-    var showImportSheet by mutableStateOf(false)
-    var importPreview by mutableStateOf<DiaryImportPreview?>(null)
-    var importError by mutableStateOf<String?>(null)
-    var importingDiary by mutableStateOf(false)
     var invalidGoalWeightMessage by mutableStateOf<String?>(null)
     var showMaxPinnedAlert by mutableStateOf(false)
     var showRebalanceBlockedAlert by mutableStateOf(false)
@@ -83,9 +75,7 @@ internal class SettingsActions(
     val backupNow: () -> Unit,
     val restoreNow: () -> Unit,
     val signOutCloudBackup: () -> Unit,
-    val switchCloudAccount: () -> Unit,
-    val importDiary: () -> Unit,
-    val importHealthData: () -> Unit
+    val switchCloudAccount: () -> Unit
 )
 
 /** Everything a Settings page needs, passed down as one value. */

@@ -9,10 +9,7 @@ extension SettingsPaneView {
 
     @ViewBuilder
     var backupExportPane: some View {
-        CloudBackupSettingsSection()
-
         Section {
-            // One zip with every export below plus medications, Health Records and settings.
             Button {
                 showExportAllData = true
             } label: {
@@ -24,61 +21,20 @@ extension SettingsPaneView {
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("settings.row.exportAllData")
+
+            Button {
+                showImportAllData = true
+            } label: {
+                Label {
+                    Text("Import All Data")
+                } icon: {
+                    SettingsIcon("square.and.arrow.down.on.square.fill", tint: SettingsTint.importData)
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("settings.row.importAllData")
         } footer: {
-            Text("One zip with your food diary, health data, medications, Health Records and settings. Saved only where you choose.")
-        }
-        .listRowBackground(AppColors.appCard)
-
-        Section {
-            // Export Food Diary
-            Button {
-                showExportDiary = true
-            } label: {
-                Label {
-                    Text("Export Food Diary")
-                } icon: {
-                    SettingsIcon("square.and.arrow.up", tint: SettingsTint.nutrition)
-                }
-            }
-            .buttonStyle(.plain)
-
-            Button {
-                showImportDiary = true
-            } label: {
-                Label {
-                    Text("Import Food Diary")
-                } icon: {
-                    SettingsIcon("square.and.arrow.down", tint: SettingsTint.nutrition)
-                }
-            }
-            .buttonStyle(.plain)
-
-            // Health Data export / import (ayuvo-health-data zip, cross-platform)
-            Button {
-                showExportHealthData = true
-            } label: {
-                Label {
-                    Text("Export Health Data")
-                } icon: {
-                    SettingsIcon("square.and.arrow.up", tint: SettingsTint.vitals)
-                }
-            }
-            .buttonStyle(.plain)
-
-            Button {
-                showImportHealthData = true
-            } label: {
-                Label {
-                    Text("Import Health Data")
-                } icon: {
-                    SettingsIcon("square.and.arrow.down", tint: SettingsTint.vitals)
-                }
-            }
-            .buttonStyle(.plain)
-        } header: {
-            Text("Export & Import")
-        } footer: {
-            Text("Health Records have their own archive in Health Records › Backup & restore. Medications export from Browse › Medications.")
+            Text("One zip with your food diary, health data, medications, Health Records and settings, saved only where you choose. Import it again on this or another phone.")
         }
         .listRowBackground(AppColors.appCard)
     }
