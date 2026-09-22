@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview (android:previewLayout); mirrors the Glance layout. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UseAppTint" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/widget_preview_bg_warm" android:orientation="vertical" android:padding="14dp">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_widget_water" android:tint="#FF0A84FF" android:contentDescription="@null"/>
+        <FrameLayout android:layout_width="4dp" android:layout_height="1dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_water" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_preview_gauge_water" android:scaleType="fitCenter" android:contentDescription="@null"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="10dp" android:orientation="vertical" android:gravity="center_horizontal">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_water_value" android:textSize="22sp" android:textColor="#FF0A84FF" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_water_goal" android:textSize="11sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_water_left" android:textSize="12sp" android:textColor="#FF0A84FF" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+</LinearLayout>

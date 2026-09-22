@@ -1,0 +1,64 @@
+{
+  "format": "ayuvo-widget-options",
+  "version": 1,
+  "quick_log": {
+    "slots": 4,
+    "actions": [
+      {"id": "food.menu", "group": "food", "food_method": null},
+      {"id": "food.camera", "group": "food", "food_method": "camera"},
+      {"id": "food.photos", "group": "food", "food_method": "photos"},
+      {"id": "food.barcode", "group": "food", "food_method": "barcode"},
+      {"id": "food.voice", "group": "food", "food_method": "voice"},
+      {"id": "food.text", "group": "food", "food_method": "text"},
+      {"id": "food.manual", "group": "food", "food_method": "manual"},
+      {"id": "food.favorites", "group": "food", "food_method": "favorites"},
+      {"id": "food.recent", "group": "food", "food_method": "recent"},
+      {"id": "food.frequent", "group": "food", "food_method": "frequent"},
+      {"id": "food.copy_from_day", "group": "food", "food_method": "copy_from_day"},
+      {"id": "water", "group": "nutrition", "requires": "water_tracking"},
+      {"id": "fasting", "group": "nutrition", "requires": "fasting_tracking"},
+      {"id": "weight", "group": "body"},
+      {"id": "body_fat", "group": "body"},
+      {"id": "workout", "group": "activity"},
+      {"id": "medication", "group": "more"},
+      {"id": "record", "group": "more"}
+    ],
+    "defaults": ["food.camera", "water", "weight", "workout"]
+  },
+  "my_metrics": {
+    "slots": 4,
+    "metrics": [
+      {"key": "app:calories", "tap": "metric"},
+      {"key": "app:protein", "tap": "metric"},
+      {"key": "app:carbs", "tap": "metric"},
+      {"key": "app:fat", "tap": "metric"},
+      {"key": "app:fiber", "tap": "metric"},
+      {"key": "app:water", "tap": "metric"},
+      {"key": "app:weight", "tap": "metric"},
+      {"key": "app:body_fat", "tap": "metric"},
+      {"key": "app:fasting", "tap": "fasting"},
+      {"key": "app:workouts", "tap": "metric"},
+      {"key": "app:workout_burn", "tap": "metric"},
+      {"key": "steps", "tap": "metric"},
+      {"key": "active_energy", "tap": "metric"},
+      {"key": "sleep", "tap": "metric"},
+      {"key": "heart_rate", "tap": "metric"},
+      {"key": "medications:next_dose", "tap": "medications"}
+    ],
+    "defaults": ["app:calories", "steps", "app:water", "app:weight"]
+  },
+  "deep_links": {
+    "ios": {
+      "log": "ayuvo://log/{action_id}",
+      "metric": "ayuvo://metric/{metric_key}",
+      "summary": "ayuvo://summary"
+    },
+    "android": {
+      "log_action": "com.ayuvo.health.LOG_ENTRY",
+      "log_extra": "log_entry",
+      "metric_action": "com.ayuvo.health.OPEN_METRIC",
+      "metric_extra": "metric_key",
+      "summary_action": "com.ayuvo.health.OPEN_SUMMARY"
+    }
+  }
+}

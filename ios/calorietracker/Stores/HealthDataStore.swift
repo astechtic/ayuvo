@@ -301,11 +301,23 @@ final class HealthDataStore {
     }
 
     private func buildHomeSnapshot(reader: HealthDatabase, summaries: [HealthTypeSummary]) async -> HealthHomeSnapshot {
+        let tiles = await tileModels(typeIDs: pinnedTypeIDs.filter { !$0.hasPrefix("app:") }, reader: reader, summaries: summaries)
+        return HealthHomeSnapshot(tiles: tiles, generatedAt: Date())
+    }
+
+    /// Tiles for any health ids (home-screen widgets), formatted like the Summary favourites.
+    /// Empty while Health sync is off; never opens a mirror that sync has not created.
+    func widgetTiles(for typeIDs: [String]) async -> [HealthHomeTileModel] {
+        guard isEnabled, !typeIDs.isEmpty, let reader = await database() else { return [] }
+        return await tileModels(typeIDs: typeIDs, reader: reader, summaries: typeSummaries)
+    }
+
+    private func tileModels(typeIDs: [String], reader: HealthDatabase, summaries: [HealthTypeSummary]) async -> [HealthHomeTileModel] {
         let now = Date()
         let today = dayKey(now)
         let weekAgo = dayKey(calendar.date(byAdding: .day, value: -6, to: now) ?? now)
         var tiles: [HealthHomeTileModel] = []
-        for typeID in pinnedTypeIDs where !typeID.hasPrefix("app:") {
+        for typeID in typeIDs {
             let type = metricType(for: typeID)
             let unit = HealthUnitFormatting.unitLabel(for: type)
             guard let summary = summaries.first(where: { $0.typeID == typeID }), summary.count > 0 else {
@@ -344,7 +356,7 @@ final class HealthDataStore {
             }
             tiles.append(tile)
         }
-        return HealthHomeSnapshot(tiles: tiles, generatedAt: now)
+        return tiles
     }
 
     // MARK: - Detail data

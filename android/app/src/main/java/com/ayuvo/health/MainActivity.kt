@@ -20,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.ayuvo.health.medications.model.MedicationIntents
 import com.ayuvo.health.medications.model.MedicationRequest
+import com.ayuvo.health.models.LogEntryIntents
 import com.ayuvo.health.models.QuickActionRequest
+import com.ayuvo.health.models.WidgetRequest
 import com.ayuvo.health.records.RecordsRequest
 import com.ayuvo.health.records.ingest.ImportItem
 import com.ayuvo.health.records.ingest.ImportSpec
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
     private var pendingQuickAction by mutableStateOf<QuickActionRequest?>(null)
     private var pendingRecordsRequest by mutableStateOf<RecordsRequest?>(null)
     private var pendingMedicationRequest by mutableStateOf<MedicationRequest?>(null)
+    private var pendingWidgetRequest by mutableStateOf<WidgetRequest?>(null)
     private var startupPrefs by mutableStateOf<StartupPrefs?>(null)
     private var contentReady by mutableStateOf(false)
 
@@ -62,6 +65,13 @@ class MainActivity : ComponentActivity() {
     private fun handleMedicationIntent(intent: Intent?) {
         val request = MedicationIntents.requestFrom(intent) ?: return
         pendingMedicationRequest = request
+        intent?.action = null
+    }
+
+    /** A Today / My Metrics / Quick Log widget tap (docs/widgets.md). */
+    private fun handleWidgetIntent(intent: Intent?) {
+        val request = LogEntryIntents.requestFrom(intent) ?: return
+        pendingWidgetRequest = request
         intent?.action = null
     }
 
@@ -113,6 +123,7 @@ class MainActivity : ComponentActivity() {
         setIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
+        handleWidgetIntent(intent)
         handleIncomingRecordsIntent(intent)
     }
     override fun onStart() {
@@ -177,6 +188,7 @@ class MainActivity : ComponentActivity() {
 
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
+        if (savedInstanceState == null) handleWidgetIntent(intent)
         // A recreated activity (rotation, process restore) still carries the original share intent.
         if (savedInstanceState == null) handleIncomingRecordsIntent(intent)
 
@@ -238,6 +250,10 @@ class MainActivity : ComponentActivity() {
                         medicationRequest = pendingMedicationRequest,
                         onMedicationRequestHandled = { requestID ->
                             if (pendingMedicationRequest?.id == requestID) pendingMedicationRequest = null
+                        },
+                        widgetRequest = pendingWidgetRequest,
+                        onWidgetRequestHandled = { requestID ->
+                            if (pendingWidgetRequest?.id == requestID) pendingWidgetRequest = null
                         }
                     )
                 }

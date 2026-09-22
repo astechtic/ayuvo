@@ -1450,6 +1450,21 @@ class PreferencesStore(
         ds.edit { it.remove(Keys.WIDGET_SNAPSHOT) }
     }
 
+    /** Today / My Metrics widgets (docs/widgets.md). Device-local; never backed up. */
+    val widgetDashboardSnapshot: Flow<com.ayuvo.health.widget.dashboard.WidgetDashboardSnapshot?> = ds.data.map { prefs ->
+        prefs[Keys.WIDGET_DASHBOARD_SNAPSHOT]?.let {
+            runCatching { json.decodeFromString<com.ayuvo.health.widget.dashboard.WidgetDashboardSnapshot>(it) }.getOrNull()
+        }
+    }
+
+    suspend fun setWidgetDashboardSnapshot(snapshot: com.ayuvo.health.widget.dashboard.WidgetDashboardSnapshot) {
+        ds.edit {
+            it[Keys.WIDGET_DASHBOARD_SNAPSHOT] = json.encodeToString(
+                com.ayuvo.health.widget.dashboard.WidgetDashboardSnapshot.serializer(), snapshot
+            )
+        }
+    }
+
     // -- Wipe everything --------------------------------------------------
     suspend fun clearAll() {
         ds.edit { it.clear() }
@@ -1575,6 +1590,7 @@ class PreferencesStore(
         val BODY_MEASUREMENTS = stringPreferencesKey("bodyMeasurements")
         val CHAT_HISTORY = stringPreferencesKey("coachChatHistory")
         val WIDGET_SNAPSHOT = stringPreferencesKey("widget_snapshot_v1")
+        val WIDGET_DASHBOARD_SNAPSHOT = stringPreferencesKey("widgetDashboardSnapshot")
     }
 
     companion object {

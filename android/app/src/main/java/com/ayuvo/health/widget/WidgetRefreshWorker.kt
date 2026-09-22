@@ -11,6 +11,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.ayuvo.health.AyuvoApp
 import java.util.concurrent.TimeUnit
 
 /** Retries Glance rendering after launcher/OEM background scheduling interruptions. */
@@ -23,6 +24,12 @@ class WidgetRefreshWorker(
         if (!WidgetRefreshScheduler.hasInstalledWidgets(applicationContext)) {
             Log.i(TAG, "Widget refresh skipped because no widgets are installed")
             return Result.success()
+        }
+
+        // Today / My Metrics read a snapshot the app writes; rebuild it here so they stay current
+        // while the app is not running (docs/widgets.md "Freshness").
+        (applicationContext as? AyuvoApp)?.container?.widgetDashboardWriter?.let { writer ->
+            runCatching { writer.publishOnce() }.onFailure { Log.e(TAG, "Dashboard snapshot refresh failed", it) }
         }
 
         return if (WidgetUpdateCoordinator.updateAll(applicationContext)) {
@@ -44,15 +51,27 @@ class WidgetRefreshWorker(
 }
 
 object WidgetRefreshScheduler {
+    private const val MIN_BOUNDARY_DELAY_MS = 60_000L
     private const val TAG = "AyuvoWidget"
     private const val IMMEDIATE_WORK = "ayuvo_widget_refresh"
     private const val PERIODIC_WORK = "ayuvo_widget_periodic_refresh"
+    private const val BOUNDARY_WORK = "ayuvo_widget_boundary_refresh"
 
     private val receiverClasses = listOf(
         CalorieWidgetReceiver::class.java,
         ProteinWidgetReceiver::class.java,
         AllMetricsWidgetReceiver::class.java,
-        WaterWidgetReceiver::class.java
+        WaterWidgetReceiver::class.java,
+        TodayWidgetReceiver::class.java,
+        MyMetricsWidgetReceiver::class.java,
+        QuickLogWidgetReceiver::class.java
+    )
+
+    /** Widgets that read the dashboard snapshot (Quick Log uses its water/fasting state). */
+    private val dashboardReceivers = listOf(
+        TodayWidgetReceiver::class.java,
+        MyMetricsWidgetReceiver::class.java,
+        QuickLogWidgetReceiver::class.java
     )
 
     fun onAppStarted(context: Context) {
@@ -85,9 +104,30 @@ object WidgetRefreshScheduler {
         )
     }
 
+    /**
+     * One-time refresh at the next dose time, fasting goal or midnight, so Today and My Metrics
+     * roll over without the app. Replaces any earlier boundary request.
+     */
+    fun scheduleBoundary(context: Context, atMs: Long) {
+        val delay = (atMs - System.currentTimeMillis()).coerceAtLeast(MIN_BOUNDARY_DELAY_MS)
+        val request = OneTimeWorkRequestBuilder<WidgetRefreshWorker>()
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .build()
+        WorkManager.getInstance(context.applicationContext).enqueueUniqueWork(BOUNDARY_WORK, ExistingWorkPolicy.REPLACE, request)
+    }
+
     fun stopIfUnused(context: Context) {
         if (hasInstalledWidgets(context)) return
-        WorkManager.getInstance(context.applicationContext).cancelUniqueWork(PERIODIC_WORK)
+        val work = WorkManager.getInstance(context.applicationContext)
+        work.cancelUniqueWork(PERIODIC_WORK)
+        work.cancelUniqueWork(BOUNDARY_WORK)
+    }
+
+    fun hasDashboardWidgets(context: Context): Boolean {
+        val manager = AppWidgetManager.getInstance(context)
+        return dashboardReceivers.any { receiver ->
+            manager.getAppWidgetIds(ComponentName(context, receiver)).isNotEmpty()
+        }
     }
 
     fun hasInstalledWidgets(context: Context): Boolean {

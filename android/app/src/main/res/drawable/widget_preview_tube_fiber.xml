@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview art (generated; see docs/widgets.md). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="14dp"
+    android:height="60dp"
+    android:viewportWidth="14"
+    android:viewportHeight="60">
+    <path android:fillColor="#260A84FF"
+        android:pathData="M7,0 L7,0 A7,7 0 0,1 14,7 L14,53 A7,7 0 0,1 7,60 L7,60 A7,7 0 0,1 0,53 L0,7 A7,7 0 0,1 7,0 Z" />
+    <path android:pathData="M7,36 A7,7 0 0,1 14,43 L14,53 A7,7 0 0,1 7,60 L7,60 A7,7 0 0,1 0,53 L0,43 A7,7 0 0,1 7,36 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="60"
+                android:endX="0" android:endY="36"
+                android:startColor="#FF0A84FF" android:endColor="#FF5EAEFF" />
+        </aapt:attr>
+    </path>
+</vector>

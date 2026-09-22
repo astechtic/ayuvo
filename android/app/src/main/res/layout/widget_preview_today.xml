@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview (android:previewLayout); mirrors the Glance layout. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UseAppTint" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/widget_preview_bg" android:orientation="vertical" android:padding="12dp">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <ImageView android:layout_width="13dp" android:layout_height="13dp" android:src="@drawable/ic_widget_favorite" android:tint="#FF34C759" android:contentDescription="@null"/>
+        <FrameLayout android:layout_width="4dp" android:layout_height="1dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_today" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal" android:gravity="center_vertical">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center_horizontal">
+            <ImageView android:layout_width="58dp" android:layout_height="58dp" android:src="@drawable/widget_preview_ring_eat" android:contentDescription="@null"/>
+            <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_eat" android:textSize="11sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_eat_value" android:textSize="15sp" android:textColor="#FF34C759" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_eat_goal" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center_horizontal">
+            <ImageView android:layout_width="58dp" android:layout_height="58dp" android:src="@drawable/widget_preview_ring_move" android:contentDescription="@null"/>
+            <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_move" android:textSize="11sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_move_value" android:textSize="15sp" android:textColor="#FFFF9500" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_move_goal" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center_horizontal">
+            <ImageView android:layout_width="58dp" android:layout_height="58dp" android:src="@drawable/widget_preview_ring_drink" android:contentDescription="@null"/>
+            <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_drink" android:textSize="11sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_drink_value" android:textSize="15sp" android:textColor="#FF007AFF" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_drink_goal" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

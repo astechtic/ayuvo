@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview (android:previewLayout); mirrors the Glance layout. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UseAppTint" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/widget_preview_bg" android:orientation="vertical" android:padding="8dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginEnd="4dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center_vertical" android:padding="10dp">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                <ImageView android:layout_width="13dp" android:layout_height="13dp" android:src="@drawable/ic_widget_flame" android:tint="#FF34C759" android:contentDescription="@null"/>
+                <FrameLayout android:layout_width="4dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_calories" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_eat_value" android:textSize="20sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+                <FrameLayout android:layout_width="3dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_unit_kcal" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            </LinearLayout>
+            <ImageView android:layout_width="match_parent" android:layout_height="5dp" android:layout_marginTop="5dp" android:src="@drawable/widget_preview_bar_eat" android:scaleType="fitXY" android:contentDescription="@null"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_caption_today" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:layout_marginTop="3dp"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="4dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center_vertical" android:padding="10dp">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                <ImageView android:layout_width="13dp" android:layout_height="13dp" android:src="@drawable/ic_widget_walk" android:tint="#FFFF9500" android:contentDescription="@null"/>
+                <FrameLayout android:layout_width="4dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_steps" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_move_value" android:textSize="20sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+                <FrameLayout android:layout_width="3dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_unit_steps" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            </LinearLayout>
+            <ImageView android:layout_width="match_parent" android:layout_height="5dp" android:layout_marginTop="5dp" android:src="@drawable/widget_preview_bar_move" android:scaleType="fitXY" android:contentDescription="@null"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_caption_today" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:layout_marginTop="3dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <FrameLayout android:layout_width="1dp" android:layout_height="8dp"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginEnd="4dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center_vertical" android:padding="10dp">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                <ImageView android:layout_width="13dp" android:layout_height="13dp" android:src="@drawable/ic_widget_water" android:tint="#FF007AFF" android:contentDescription="@null"/>
+                <FrameLayout android:layout_width="4dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_water" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_drink_value" android:textSize="20sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+                <FrameLayout android:layout_width="3dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_unit_l" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            </LinearLayout>
+            <ImageView android:layout_width="match_parent" android:layout_height="5dp" android:layout_marginTop="5dp" android:src="@drawable/widget_preview_bar_drink" android:scaleType="fitXY" android:contentDescription="@null"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_caption_today" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:layout_marginTop="3dp"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="4dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center_vertical" android:padding="10dp">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                <ImageView android:layout_width="13dp" android:layout_height="13dp" android:src="@drawable/ic_widget_scale" android:tint="#FFAF52DE" android:contentDescription="@null"/>
+                <FrameLayout android:layout_width="4dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_weight" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_weight_value" android:textSize="20sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:textStyle="bold"/>
+                <FrameLayout android:layout_width="3dp" android:layout_height="1dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_unit_kg" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false"/>
+            </LinearLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wp_caption_weight" android:textSize="10sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:includeFontPadding="false" android:layout_marginTop="3dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

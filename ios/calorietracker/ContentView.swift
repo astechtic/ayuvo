@@ -41,6 +41,9 @@ struct ContentView: View {
             .onReceive(NotificationCenter.default.publisher(for: .foodLogMethodRequested)) { _ in
                 consumePendingLaunchRoutes()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .widgetRouteRequested)) { _ in
+                consumePendingLaunchRoutes()
+            }
             .onReceive(NotificationCenter.default.publisher(for: .shareImageImportRequested)) { _ in
                 // The diary consumes the shared photo when it appears.
                 if let route = LaunchRouteResolver.resolve(medication: nil, action: nil, method: nil, hasSharedImage: true) {
@@ -89,11 +92,15 @@ struct ContentView: View {
         }
     }
 
-    /// Medication beats quick action beats log method beats a shared image, each consumed in turn
-    /// so a lower-priority request is never thrown away (`LaunchRouteResolver`).
+    /// Medication beats a widget route beats quick action beats log method beats a shared image,
+    /// each consumed in turn so a lower-priority request is never thrown away (`LaunchRouteResolver`).
     private func consumePendingLaunchRoutes() {
         if let pending = MedicationCoordinator.consumePending() {
             navigator.apply(LaunchRouteResolver.resolve(medication: pending, action: nil, method: nil) ?? .medications(detailID: pending), medicationStore: medicationStore)
+            return
+        }
+        if let link = WidgetRouteCoordinator.consumePending() {
+            navigator.apply(WidgetRouteAction.resolve(link), medicationStore: medicationStore, recordsStore: recordsStore)
             return
         }
         if let action = QuickActionCoordinator.consumePending() {

@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,8 @@ import com.ayuvo.health.ui.home.WaterCustomAmountSheet
 import com.ayuvo.health.ui.metrics.MetricCatalog
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.navigation.LocalLaunchFillEpoch
+import com.ayuvo.health.ui.settings.SettingsPage
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -78,8 +81,13 @@ data class SummaryDestinations(
     val addMedication: () -> Unit = {},
     val openRecord: (String) -> Unit = {},
     val addRecord: () -> Unit = {},
-    val openSettings: () -> Unit = {}
+    val openSettings: () -> Unit = {},
+    /** Settings › Tracking page for a widget action whose tracking is off (docs/widgets.md). */
+    val openSettingsPage: (SettingsPage) -> Unit = {}
 )
+
+/** A Summary "+" entry requested from outside the screen (Quick Log widget), consumed once. */
+data class SummaryLogRequest(val entry: LogEntry, val id: Long = System.nanoTime())
 
 /**
  * Summary tab (docs/ui-structure.md §8): date, rings, Today cards, Favourites, Highlights and the
@@ -88,7 +96,12 @@ data class SummaryDestinations(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SummaryScreen(container: AppContainer, destinations: SummaryDestinations) {
+fun SummaryScreen(
+    container: AppContainer,
+    destinations: SummaryDestinations,
+    logRequest: SummaryLogRequest? = null,
+    onLogRequestHandled: (Long) -> Unit = {}
+) {
     val vm: SummaryViewModel = viewModel(factory = SummaryViewModel.Factory(container))
     val bodyVm: BodyLogViewModel = viewModel(key = "summary-body", factory = BodyLogViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
@@ -114,6 +127,36 @@ fun SummaryScreen(container: AppContainer, destinations: SummaryDestinations) {
 
     fun openEditor() {
         scope.launch { editFavourites = vm.favouriteKeys() }
+    }
+
+    /** One Summary "+" entry; the "+" sheet and the Quick Log widget both land here. */
+    fun onLogEntry(entry: LogEntry, waterTracking: Boolean, fastingTracking: Boolean, fastActive: Boolean) {
+        when (entry) {
+            LogEntry.FOOD -> destinations.openNutrition(FoodLogRequest(method = null))
+            LogEntry.WATER -> showWater = waterTracking
+            LogEntry.FASTING -> if (!fastActive && fastingTracking) showFastStart = true else destinations.openFasting()
+            LogEntry.WEIGHT -> showWeight = true
+            LogEntry.BODY_FAT -> showBodyFat = true
+            LogEntry.WORKOUT -> destinations.openWorkouts()
+            LogEntry.MEDICATION -> destinations.openMedications()
+            LogEntry.RECORD -> destinations.addRecord()
+        }
+    }
+
+    // Quick Log widget: read tracking switches from the stores (the screen state may still be
+    // loading on a cold start). Water or fasting switched off opens its Settings page instead.
+    LaunchedEffect(logRequest?.id) {
+        val request = logRequest ?: return@LaunchedEffect
+        val water = container.prefs.waterTrackingEnabled.first()
+        val fasting = container.prefs.fastingTrackingEnabled.first()
+        val fastActive = runCatching { container.fastingRepository.active() != null }.getOrDefault(false)
+        when {
+            request.entry == LogEntry.WATER && !water -> destinations.openSettingsPage(SettingsPage.HYDRATION)
+            request.entry == LogEntry.FASTING && !fasting && !fastActive -> destinations.openSettingsPage(SettingsPage.FASTING)
+            else -> onLogEntry(request.entry, water, fasting, fastActive)
+        }
+        // Last: clearing the request changes this effect's key and would cancel it.
+        onLogRequestHandled(request.id)
     }
 
     Scaffold(
@@ -257,16 +300,8 @@ fun SummaryScreen(container: AppContainer, destinations: SummaryDestinations) {
             canStartFast = ui.fastingTracking && ui.activeFast == null,
             onEntry = { entry ->
                 showLog = false
-                when (entry) {
-                    LogEntry.FOOD -> destinations.openNutrition(FoodLogRequest(method = null))
-                    LogEntry.WATER -> showWater = true
-                    LogEntry.FASTING -> if (ui.activeFast == null && ui.fastingTracking) showFastStart = true else destinations.openFasting()
-                    LogEntry.WEIGHT -> showWeight = true
-                    LogEntry.BODY_FAT -> showBodyFat = true
-                    LogEntry.WORKOUT -> destinations.openWorkouts()
-                    LogEntry.MEDICATION -> destinations.openMedications()
-                    LogEntry.RECORD -> destinations.addRecord()
-                }
+                // The sheet only lists Water while tracking is on.
+                onLogEntry(entry, waterTracking = true, fastingTracking = ui.fastingTracking, fastActive = ui.activeFast != null)
             },
             onDismiss = { showLog = false }
         )

@@ -23,6 +23,8 @@ object CloudBackupPolicy {
         "healthChangesTokenTypes",
         "healthFoodRestoreDone",
         "widget_snapshot_v1",
+        // Today / My Metrics widget snapshot (docs/widgets.md): device-local.
+        "widgetDashboardSnapshot",
         "lastNotifiedUpdateVersion",
         "cloudBackupFileId",
         // Health Data hub device-local cursors/throttles (the mirror itself lives in

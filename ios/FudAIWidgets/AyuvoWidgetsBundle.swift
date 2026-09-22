@@ -8,5 +8,8 @@ struct AyuvoWidgetsBundle: WidgetBundle {
         ProteinWidget()
         WaterWidget()
         LogFoodWidget()
+        TodayWidget()
+        MyMetricsWidget()
+        QuickLogWidget()
     }
 }

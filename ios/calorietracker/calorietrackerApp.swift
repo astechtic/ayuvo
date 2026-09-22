@@ -34,6 +34,7 @@ struct calorietrackerApp: App {
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @Environment(\.scenePhase) private var scenePhase
     @State private var isAutoRefreshingAdaptiveGoals = false
+    @State private var widgetDashboardWriter: WidgetDashboardWriter?
 
     private var colorScheme: ColorScheme? {
         switch appearanceMode {
@@ -125,6 +126,11 @@ struct calorietrackerApp: App {
                     MedicationCoordinator.request(medicationID: id?.isEmpty == false ? id : nil)
                     return
                 }
+                // Widgets: ayuvo://log/<action>, ayuvo://metric/<key>, ayuvo://summary (docs/widgets.md).
+                if let link = WidgetDeepLink(url: url) {
+                    WidgetRouteCoordinator.request(link)
+                    return
+                }
                 guard url.scheme == "ayuvo", url.host == "log-food",
                       let raw = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                         .queryItems?.first(where: { $0.name == "method" })?.value,
@@ -214,6 +220,7 @@ struct calorietrackerApp: App {
                 // Refresh on scene-active so widgets roll over at midnight even
                 // without an explicit food change.
                 refreshWidgetSnapshot()
+                if hasCompletedOnboarding { startWidgetDashboard() }
             }
         }
         .onChange(of: hasCompletedOnboarding) { _, completed in
@@ -245,8 +252,25 @@ struct calorietrackerApp: App {
                     }
                 }
                 refreshWidgetSnapshot()
+                startWidgetDashboard()
             }
         }
+    }
+
+    /// Today / My Metrics / Quick Log widgets: one writer observes the stores for the whole session.
+    private func startWidgetDashboard() {
+        if widgetDashboardWriter == nil {
+            widgetDashboardWriter = WidgetDashboardWriter(
+                sources: MetricDataSources(
+                    food: foodStore, water: waterStore, fasting: fastingStore, weight: weightStore,
+                    bodyFat: bodyFatStore, workouts: strengthWorkoutStore, importedWorkouts: importedHealthWorkoutStore,
+                    health: healthDataStore, profile: profileStore
+                ),
+                medicationStore: medicationStore,
+                healthKitManager: healthKitManager
+            )
+        }
+        widgetDashboardWriter?.start()
     }
 
     private func wireUpHealthKit() {
@@ -587,6 +611,7 @@ struct calorietrackerApp: App {
             // shared snapshot so the widget shows an empty day instead of stale
             // numbers from a previous profile.
             WidgetSnapshot.clear()
+            WidgetDashboardSnapshot.clear()
             WidgetCenter.shared.reloadAllTimelines()
             return
         }

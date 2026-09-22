@@ -123,6 +123,7 @@ class AyuvoApp : Application() {
         container.resumeRecordsProcessing()
         WidgetRefreshScheduler.onAppStarted(this)
         container.widgetSnapshotWriter.observe().launchIn(appScope)
+        container.widgetDashboardWriter.observe().launchIn(appScope)
         // Warm exercise catalog off the main thread before the first Workouts tab open.
         ExerciseRepository.warm(this)
         appScope.launch {
@@ -514,6 +515,8 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val speechService = SpeechService(prefs, keyStore, localWhisper = localWhisper)
 
     val widgetSnapshotWriter = WidgetSnapshotWriter(app, prefs, foodRepository, profileRepository)
+    /** Today / My Metrics / Quick Log snapshot (docs/widgets.md). */
+    val widgetDashboardWriter by lazy { com.ayuvo.health.widget.dashboard.WidgetDashboardWriter(app, this) }
     /**
      * App-scoped flag set by [HomeViewModel] while a food analysis request is
      * in flight. The bottom nav reads this so the bar can hide during the

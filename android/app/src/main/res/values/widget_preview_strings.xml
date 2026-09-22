@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Illustrative values for widget picker previews only; never shown as user data. -->
+<resources>
+    <string name="wp_today" translatable="false">Today</string>
+    <string name="wp_protein" translatable="false">Protein</string>
+    <string name="wp_water" translatable="false">Water</string>
+    <string name="wp_carbs" translatable="false">Carbs</string>
+    <string name="wp_fat" translatable="false">Fat</string>
+    <string name="wp_fiber" translatable="false">Fiber</string>
+    <string name="wp_kcal_value" translatable="false">1,240</string>
+    <string name="wp_kcal_goal" translatable="false">/ 2,000</string>
+    <string name="wp_kcal_left" translatable="false">760 kcal left</string>
+    <string name="wp_kcal_left_short" translatable="false">760 left</string>
+    <string name="wp_protein_value" translatable="false">86g</string>
+    <string name="wp_protein_goal" translatable="false">/ 120g</string>
+    <string name="wp_protein_left" translatable="false">34g left</string>
+    <string name="wp_water_value" translatable="false">1.2</string>
+    <string name="wp_water_goal" translatable="false">/ 2.5 L</string>
+    <string name="wp_water_left" translatable="false">1.3 L left</string>
+    <string name="wp_bar_protein" translatable="false">86</string>
+    <string name="wp_bar_protein_goal" translatable="false">/120g</string>
+    <string name="wp_bar_carbs" translatable="false">140</string>
+    <string name="wp_bar_carbs_goal" translatable="false">/250g</string>
+    <string name="wp_bar_fat" translatable="false">42</string>
+    <string name="wp_bar_fat_goal" translatable="false">/65g</string>
+    <string name="wp_bar_fiber" translatable="false">12</string>
+    <string name="wp_bar_fiber_goal" translatable="false">/30g</string>
+    <string name="wp_eat" translatable="false">Eat</string>
+    <string name="wp_move" translatable="false">Move</string>
+    <string name="wp_drink" translatable="false">Drink</string>
+    <string name="wp_eat_value" translatable="false">1,240</string>
+    <string name="wp_eat_goal" translatable="false">/ 2,000 kcal</string>
+    <string name="wp_move_value" translatable="false">6,512</string>
+    <string name="wp_move_goal" translatable="false">/ 10,000 steps</string>
+    <string name="wp_drink_value" translatable="false">1.2</string>
+    <string name="wp_drink_goal" translatable="false">/ 2.5 L</string>
+    <string name="wp_calories" translatable="false">Calories</string>
+    <string name="wp_steps" translatable="false">Steps</string>
+    <string name="wp_weight" translatable="false">Weight</string>
+    <string name="wp_unit_kcal" translatable="false">kcal</string>
+    <string name="wp_unit_steps" translatable="false">steps</string>
+    <string name="wp_unit_l" translatable="false">L</string>
+    <string name="wp_unit_kg" translatable="false">kg</string>
+    <string name="wp_weight_value" translatable="false">72.4</string>
+    <string name="wp_caption_today" translatable="false">Today</string>
+    <string name="wp_caption_weight" translatable="false">2 hr. ago</string>
+    <string name="wp_camera" translatable="false">Camera</string>
+    <string name="wp_workout" translatable="false">Workout</string>
+</resources>

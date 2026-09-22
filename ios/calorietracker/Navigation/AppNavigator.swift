@@ -13,6 +13,8 @@ final class AppNavigator {
     /// One-shot food logging requests, consumed by `NutritionView`.
     var quickActionRequest: QuickActionRequest?
     var foodLogMethodRequest: FoodLogMethodRequest?
+    /// One-shot sheet request for the Summary "+" menu (widget Quick Log taps).
+    var summaryLogRequest: SummaryLogRequest?
     /// Workout log timers survive popping the Workouts screen.
     let workoutLogSession = WorkoutLogSessionState()
 
@@ -78,6 +80,42 @@ final class AppNavigator {
             openNutrition(method: method)
         case .nutrition:
             openBrowse([.nutrition])
+        }
+    }
+
+    /// Lands a widget tap exactly where the Summary "+" menu (or the tapped metric) goes.
+    func apply(_ action: WidgetRouteAction, medicationStore: MedicationStore, recordsStore: RecordsStore) {
+        switch action {
+        case .foodMenu:
+            // A SwiftUI menu cannot be opened programmatically: land on Nutrition, "+" in reach.
+            openBrowse([.nutrition])
+        case .quickAction(let quick):
+            openNutrition(action: quick)
+        case .logMethod(let method):
+            openNutrition(method: method)
+        case .summaryLog(let kind):
+            selectedTab = .summary
+            summaryPath = NavigationPath()
+            summaryLogRequest = SummaryLogRequest(kind: kind)
+        case .settings(let pane):
+            openSettings(pane)
+        case .workouts:
+            openWorkouts()
+        case .medications:
+            openMedications()
+        case .addRecord:
+            recordsStore.requestAddRecord()
+            selectedTab = .records
+        case .fasting:
+            openBrowse([.fasting])
+        case .metric(let key):
+            selectedTab = .summary
+            var path = NavigationPath()
+            path.append(MetricRoute.detail(key))
+            summaryPath = path
+        case .summary:
+            selectedTab = .summary
+            summaryPath = NavigationPath()
         }
     }
 }

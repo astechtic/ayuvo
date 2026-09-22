@@ -22,7 +22,10 @@ object WidgetUpdateCoordinator {
         CalorieAppWidget(),
         ProteinAppWidget(),
         AllMetricsAppWidget(),
-        WaterAppWidget()
+        WaterAppWidget(),
+        TodayAppWidget(),
+        MyMetricsAppWidget(),
+        QuickLogAppWidget()
     )
 
     private const val TAG = "AyuvoWidget"

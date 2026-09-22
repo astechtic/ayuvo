@@ -455,6 +455,7 @@ struct SettingsPaneView: View {
                         SpeechSettings.deleteAllData()
                         chatStore.reset()
                         WidgetSnapshot.clear()
+                        WidgetDashboardSnapshot.clear()
                         WidgetCenter.shared.reloadAllTimelines()
                         hasCompletedOnboarding = false
                     }

@@ -51,6 +51,10 @@ import com.ayuvo.health.ui.fasting.FastingScreen
 import com.ayuvo.health.ui.nutrition.NutrientListScreen
 import com.ayuvo.health.ui.nutrition.NutritionScreen
 import com.ayuvo.health.ui.summary.SummaryDestinations
+import com.ayuvo.health.ui.summary.SummaryLogRequest
+import com.ayuvo.health.models.WidgetRequest
+import com.ayuvo.health.models.WidgetTarget
+import com.ayuvo.health.widget.WidgetMetric
 import com.ayuvo.health.ui.summary.SummaryScreen
 import com.ayuvo.health.ui.medications.MedicationsScreen
 import com.ayuvo.health.ui.workouts.WorkoutsScreen
@@ -107,7 +111,9 @@ fun AppNavHost(
     recordsRequest: RecordsRequest? = null,
     onRecordsRequestHandled: (Long) -> Unit = {},
     medicationRequest: MedicationRequest? = null,
-    onMedicationRequestHandled: (Long) -> Unit = {}
+    onMedicationRequestHandled: (Long) -> Unit = {},
+    widgetRequest: WidgetRequest? = null,
+    onWidgetRequestHandled: (Long) -> Unit = {}
 ) {
     val nav = rememberNavController()
     // Warm the app-scoped Settings state while Summary is visible. By the time the user changes
@@ -149,6 +155,7 @@ fun AppNavHost(
     var foodLogRequest by remember { mutableStateOf<FoodLogRequest?>(null) }
     var recordsAddRequest by remember { mutableStateOf<Long?>(null) }
     var settingsPageRequest by remember { mutableStateOf<SettingsPageRequest?>(null) }
+    var summaryLogRequest by remember { mutableStateOf<SummaryLogRequest?>(null) }
 
     // Settings is intentionally warmed before onboarding finishes. Reload the values that
     // onboarding can change outside Settings so the first visit never shows the pre-onboarding
@@ -264,6 +271,18 @@ fun AppNavHost(
         nav.popBackStack(AppRoutes.RECORDS, inclusive = false)
     }
 
+    /** Summary tab root (pops anything pushed on top of it). */
+    fun openSummaryRoot() {
+        if (tabNow() != AppRoutes.SUMMARY) navigateToTab(AppRoutes.SUMMARY)
+        nav.popBackStack(AppRoutes.SUMMARY, inclusive = false)
+    }
+
+    /** Settings tab on one page (Browse footer, widget actions whose tracking is off). */
+    fun openSettingsPage(page: SettingsPage) {
+        settingsPageRequest = SettingsPageRequest(page)
+        navigateToTab(AppRoutes.SETTINGS)
+    }
+
     /** §27 entry points: select records, prefill the prompt and open the Coach tab. */
     fun askCoach(recordIds: List<String>, prompt: String) {
         container.coachRecordsRequests.value = com.ayuvo.health.records.coach.CoachRecordsRequest(recordIds, prompt)
@@ -292,6 +311,35 @@ fun AppNavHost(
             currentRoute != AppRoutes.BROWSE_NUTRITION
         ) {
             openNutrition()
+        }
+    }
+
+    // Widget taps (docs/widgets.md): food actions land on Nutrition like the + food menu, other
+    // Quick Log actions run the Summary "+" entry, metric tiles open their detail from Summary.
+    LaunchedEffect(widgetRequest?.id, currentRoute) {
+        val request = widgetRequest ?: return@LaunchedEffect
+        if (currentRoute == null || currentRoute == AppRoutes.ONBOARDING) return@LaunchedEffect
+        onWidgetRequestHandled(request.id)
+        when (val target = request.target) {
+            is WidgetTarget.Log -> {
+                val action = target.action
+                val entry = action.logEntry
+                if (action.isFood || entry == null) {
+                    openNutrition(FoodLogRequest(method = action.foodMethod))
+                } else {
+                    openSummaryRoot()
+                    summaryLogRequest = SummaryLogRequest(entry)
+                }
+            }
+            is WidgetTarget.Metric -> when (WidgetMetric.fromKey(target.key)?.tap) {
+                WidgetMetric.Tap.FASTING -> openBrowsePlace(AppRoutes.BROWSE_FASTING)
+                WidgetMetric.Tap.MEDICATIONS -> openMedications()
+                else -> {
+                    openSummaryRoot()
+                    MetricKey.parse(target.key)?.let { nav.navigate(AppRoutes.metric(it)) }
+                }
+            }
+            WidgetTarget.Summary -> openSummaryRoot()
         }
     }
 
@@ -369,8 +417,11 @@ fun AppNavHost(
                                 addMedication = { nav.navigate(AppRoutes.medicationAdd()) },
                                 openRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
                                 addRecord = { openAddRecord() },
-                                openSettings = { navigateToTab(AppRoutes.SETTINGS) }
-                            )
+                                openSettings = { navigateToTab(AppRoutes.SETTINGS) },
+                                openSettingsPage = { page -> openSettingsPage(page) }
+                            ),
+                            logRequest = summaryLogRequest,
+                            onLogRequestHandled = { id -> if (summaryLogRequest?.id == id) summaryLogRequest = null }
                         )
                     }
                 }
@@ -394,8 +445,7 @@ fun AppNavHost(
                             onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
                             onOpenHealthSync = {
                                 // Browse footer → Settings › Data & Privacy › Health Sync.
-                                settingsPageRequest = SettingsPageRequest(SettingsPage.HEALTH_SYNC)
-                                navigateToTab(AppRoutes.SETTINGS)
+                                openSettingsPage(SettingsPage.HEALTH_SYNC)
                             },
                             onOpenFeature = { feature ->
                                 // Browse search "Features" (ids shared with iOS); logWeight / logBodyFat open in Browse.

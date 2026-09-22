@@ -90,6 +90,16 @@ struct SummaryLogMenu: View {
         }
         .accessibilityLabel(Text("Log"))
         .accessibilityIdentifier("summary.add")
+        // Quick Log widget taps open the same sheets as this menu.
+        .task(id: navigator.summaryLogRequest?.id) {
+            guard let request = navigator.summaryLogRequest else { return }
+            navigator.summaryLogRequest = nil
+            switch request.kind {
+            case .water: showCustomWater = true
+            case .weight: showLogWeight = true
+            case .bodyFat: showLogBodyFat = true
+            }
+        }
         .sheet(isPresented: $showLogWeight) {
             LogWeightSheet(currentWeightKg: weightStore.latestEntry?.weightKg ?? profileStore.profile.weightKg) { weightKg in
                 weightStore.addEntry(WeightEntry(weightKg: weightKg))

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview art (generated; see docs/widgets.md). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="100dp"
+    android:height="6dp"
+    android:viewportWidth="100"
+    android:viewportHeight="6">
+    <path
+        android:pathData="M3,3 L97,3"
+        android:strokeColor="#40007AFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M3,3 L48.12,3"
+        android:strokeColor="#FF007AFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

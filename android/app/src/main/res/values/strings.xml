@@ -897,7 +897,7 @@
     <string name="notif_summary_surplus">%1$d kcal eaten · %2$d burned · %3$d kcal estimated surplus</string>
     <string name="notif_summary_balanced">%1$d kcal eaten · %2$d burned · estimated balance</string>
 
-    <string name="widget_all_metrics_label">Ayuvo Today</string>
+    <string name="widget_all_metrics_label">Ayuvo Nutrition</string>
     <string name="widget_all_metrics_description">See today\'s calories, protein, carbs, and fat in one widget.</string>
 
     <!-- Workouts tab (exercise library ported from Delts) -->

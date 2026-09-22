@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home-screen widgets: Today, My Metrics, Quick Log (docs/widgets.md) -->
+    <string name="widget_today_label">Today</string>
+    <string name="widget_today_description">Eat, Move and Drink rings with fasting, next dose, weight and workouts</string>
+    <string name="widget_my_metrics_label">My Metrics</string>
+    <string name="widget_my_metrics_description">Any four metrics you choose</string>
+    <string name="widget_quick_log_label">Quick Log</string>
+    <string name="widget_quick_log_description">Four log buttons you choose</string>
+
+    <string name="widget_ring_eat">Eat</string>
+    <string name="widget_ring_move">Move</string>
+    <string name="widget_ring_drink">Drink</string>
+    <string name="widget_ring_connect">Connect</string>
+    <string name="widget_steps_unit">steps</string>
+    <string name="widget_no_value">—</string>
+    <string name="widget_of_goal">/ %1$s</string>
+
+    <string name="widget_row_fasting">Fasting</string>
+    <string name="widget_row_next_dose">Next dose</string>
+    <string name="widget_row_weight">Weight</string>
+    <string name="widget_row_workout">Workout</string>
+    <string name="widget_fasting_progress">%1$s / %2$s</string>
+    <string name="widget_workouts_summary">%1$d · %2$d min</string>
+    <string name="widget_dose_due">Due</string>
+    <string name="widget_doses_taken">%1$d/%2$d taken</string>
+    <string name="widget_metric_next_dose">Next Dose</string>
+    <string name="widget_fasting_now">Fasting now</string>
+    <string name="widget_caption_today">Today</string>
+    <string name="widget_caption_last_night">Last night</string>
+    <string name="widget_tracking_off">Off in Settings</string>
+
+    <string name="widget_group_food">Food</string>
+    <string name="widget_group_nutrition">Water &amp; Fasting</string>
+    <string name="widget_group_body">Body</string>
+    <string name="widget_group_activity">Activity</string>
+    <string name="widget_group_more">More</string>
+    <string name="widget_group_metrics_nutrition">Nutrition</string>
+    <string name="widget_group_metrics_body">Body</string>
+    <string name="widget_group_metrics_activity">Activity &amp; Health</string>
+    <string name="widget_group_metrics_more">More</string>
+
+    <string name="widget_action_food_menu">Log Food</string>
+    <string name="widget_action_camera">Camera</string>
+    <string name="widget_action_photos">Photos</string>
+    <string name="widget_action_barcode">Barcode</string>
+    <string name="widget_action_voice">Voice</string>
+    <string name="widget_action_text">Describe</string>
+    <string name="widget_action_manual">Manual</string>
+    <string name="widget_action_favorites">Favorites</string>
+    <string name="widget_action_recent">Recent</string>
+    <string name="widget_action_frequent">Frequent</string>
+    <string name="widget_action_copy_day">Copy Day</string>
+    <string name="widget_action_water">Water</string>
+    <string name="widget_action_start_fast">Start Fast</string>
+    <string name="widget_action_end_fast">End Fast</string>
+    <string name="widget_action_weight">Weight</string>
+    <string name="widget_action_body_fat">Body Fat</string>
+    <string name="widget_action_workout">Workout</string>
+    <string name="widget_action_medication">Log Dose</string>
+    <string name="widget_action_record">Add Record</string>
+
+    <string name="widget_config_title_quick_log">Quick Log</string>
+    <string name="widget_config_title_metrics">My Metrics</string>
+    <string name="widget_config_subtitle">Tap a slot, then pick what it shows.</string>
+    <string name="widget_config_slot">Slot %1$d</string>
+    <string name="widget_config_save">Save</string>
+    <string name="widget_config_reset">Reset to defaults</string>
+    <!-- Names in the launcher's widget picker (the in-widget headers keep the short labels). -->
+    <string name="widget_today_picker_label">Ayuvo Today</string>
+    <string name="widget_my_metrics_picker_label">Ayuvo My Metrics</string>
+    <string name="widget_quick_log_picker_label">Ayuvo Quick Log</string>
+</resources>
