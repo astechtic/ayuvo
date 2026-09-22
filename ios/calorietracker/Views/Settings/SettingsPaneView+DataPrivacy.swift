@@ -12,6 +12,24 @@ extension SettingsPaneView {
         CloudBackupSettingsSection()
 
         Section {
+            // One zip with every export below plus medications, Health Records and settings.
+            Button {
+                showExportAllData = true
+            } label: {
+                Label {
+                    Text("Export All Data")
+                } icon: {
+                    SettingsIcon("square.and.arrow.up.on.square.fill", tint: SettingsTint.export)
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("settings.row.exportAllData")
+        } footer: {
+            Text("One zip with your food diary, health data, medications, Health Records and settings. Saved only where you choose.")
+        }
+        .listRowBackground(AppColors.appCard)
+
+        Section {
             // Export Food Diary
             Button {
                 showExportDiary = true
@@ -19,8 +37,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Export Food Diary")
                 } icon: {
-                    Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("square.and.arrow.up", tint: SettingsTint.nutrition)
                 }
             }
             .buttonStyle(.plain)
@@ -31,8 +48,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Import Food Diary")
                 } icon: {
-                    Image(systemName: "square.and.arrow.down")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("square.and.arrow.down", tint: SettingsTint.nutrition)
                 }
             }
             .buttonStyle(.plain)
@@ -44,8 +60,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Export Health Data")
                 } icon: {
-                    Image(systemName: "heart.text.square")
-                        .foregroundStyle(.pink)
+                    SettingsIcon("square.and.arrow.up", tint: SettingsTint.vitals)
                 }
             }
             .buttonStyle(.plain)
@@ -56,15 +71,14 @@ extension SettingsPaneView {
                 Label {
                     Text("Import Health Data")
                 } icon: {
-                    Image(systemName: "heart.text.square.fill")
-                        .foregroundStyle(.pink)
+                    SettingsIcon("square.and.arrow.down", tint: SettingsTint.vitals)
                 }
             }
             .buttonStyle(.plain)
         } header: {
             Text("Export & Import")
         } footer: {
-            Text("Health Records have their own archive in Health Records › Backup & restore.")
+            Text("Health Records have their own archive in Health Records › Backup & restore. Medications export from Browse › Medications.")
         }
         .listRowBackground(AppColors.appCard)
     }
@@ -78,7 +92,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Clear synced health data")
                 } icon: {
-                    Image(systemName: "trash")
+                    SettingsIcon("trash.fill", tint: SettingsTint.destructive)
                 }
                 .foregroundStyle(.red)
             }
@@ -97,7 +111,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Clear Food Log")
                 } icon: {
-                    Image(systemName: "fork.knife")
+                    SettingsIcon("fork.knife", tint: SettingsTint.warning)
                 }
                 .foregroundStyle(.orange)
             }
@@ -110,7 +124,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Delete All Data")
                 } icon: {
-                    Image(systemName: "trash")
+                    SettingsIcon("trash.fill", tint: SettingsTint.destructive)
                 }
                 .foregroundStyle(.red)
             }

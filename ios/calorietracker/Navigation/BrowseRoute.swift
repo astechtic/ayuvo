@@ -3,12 +3,15 @@ import SwiftUI
 /// Pushed "places" of the Browse stack (docs/ui-structure.md §2).
 enum BrowseRoute: Hashable {
     case nutrition, fasting, body, activity, workouts, exerciseLibrary, medications
+    /// Body › Body Measurements (also reached from Browse search).
+    case bodyMeasurements
 }
 
 struct BrowseRouteDestination: View {
     let route: BrowseRoute
     @Binding var path: NavigationPath
     @Environment(AppNavigator.self) private var navigator
+    @Environment(ProfileStore.self) private var profileStore
 
     var body: some View {
         switch route {
@@ -31,6 +34,8 @@ struct BrowseRouteDestination: View {
             ExerciseLibraryScreen()
         case .medications:
             MedicationsHomeView(path: $path)
+        case .bodyMeasurements:
+            BodyMeasurementsDetailView(gender: profileStore.profile.gender, heightCm: profileStore.profile.heightCm)
         }
     }
 }

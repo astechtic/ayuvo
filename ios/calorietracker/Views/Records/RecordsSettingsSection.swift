@@ -35,8 +35,7 @@ struct HealthRecordsSettingsSection: View {
                 Label {
                     Text("Let Coach use my health records")
                 } icon: {
-                    Image(systemName: "bubble.left.and.text.bubble.right")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("bubble.left.and.text.bubble.right.fill", tint: SettingsTint.ai)
                 }
             }
             .accessibilityIdentifier("records.settings.coachAccess")
@@ -60,8 +59,7 @@ struct HealthRecordsSettingsSection: View {
                 Label {
                     Text("Records")
                 } icon: {
-                    Image(systemName: "list.clipboard")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("list.clipboard.fill", tint: SettingsTint.records)
                 }
                 Spacer()
                 Text("\(store.totalCount)")
@@ -71,8 +69,7 @@ struct HealthRecordsSettingsSection: View {
                 Label {
                     Text("Storage used")
                 } icon: {
-                    Image(systemName: "internaldrive")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("internaldrive.fill", tint: SettingsTint.storage)
                 }
                 Spacer()
                 Text(storageBytes.map { RecordFormatting.sizeText($0) } ?? "…")
@@ -84,8 +81,7 @@ struct HealthRecordsSettingsSection: View {
                 Label {
                     Text("Storage")
                 } icon: {
-                    Image(systemName: "externaldrive")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("externaldrive.fill", tint: SettingsTint.storage)
                 }
             }
             .accessibilityIdentifier("records.settings.storage")
@@ -95,8 +91,7 @@ struct HealthRecordsSettingsSection: View {
                 Label {
                     Text("Backup & restore")
                 } icon: {
-                    Image(systemName: "archivebox")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("archivebox.fill", tint: SettingsTint.backup)
                 }
             }
             .accessibilityIdentifier("records.settings.backup")

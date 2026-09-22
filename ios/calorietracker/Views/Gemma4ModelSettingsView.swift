@@ -9,7 +9,7 @@ struct Gemma4ModelSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Label(localized("gemma.name", "Gemma 4 E2B"), systemImage: "cpu")
+                SettingsLabel(localized("gemma.name", "Gemma 4 E2B"), systemImage: "cpu", tint: SettingsTint.ai)
                     .font(.body.weight(.medium))
                 Spacer()
                 Text(statusLabel)

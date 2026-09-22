@@ -18,7 +18,7 @@ struct WhisperBaseModelSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Label(localized("whisper.name", "Whisper Base"), systemImage: "waveform.badge.mic")
+                SettingsLabel(localized("whisper.name", "Whisper Base"), systemImage: "waveform.badge.mic", tint: SettingsTint.speech)
                     .font(.body.weight(.medium))
                 Spacer()
                 Text(statusLabel)

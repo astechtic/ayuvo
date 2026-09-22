@@ -1,8 +1,11 @@
 package com.ayuvo.health.ui.settings.groups
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.CloudUpload
@@ -24,18 +27,25 @@ import androidx.compose.material.icons.filled.SwitchAccount
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ayuvo.health.R
-import com.ayuvo.health.ui.design.AyuvoPalette
+import com.ayuvo.health.export.AllDataExportArchive
+import com.ayuvo.health.export.AllDataExportCoordinator
+import com.ayuvo.health.export.AllDataExportOutcome
+import com.ayuvo.health.export.AllDataExportStep
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
 import com.ayuvo.health.ui.health.relativeTimeText
 import com.ayuvo.health.ui.navigation.AppRoutes
 import com.ayuvo.health.ui.settings.SettingsPage
+import com.ayuvo.health.ui.settings.SettingsTint
 import com.ayuvo.health.ui.settings.SettingsPageContext
 import com.ayuvo.health.ui.theme.AppColors
 
@@ -74,7 +84,7 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
                     sync.lastSyncMs == null -> stringResource(R.string.settings_never)
                     else -> relativeTimeText(sync.lastSyncMs)
                 },
-                icon = Icons.Filled.History, iconTint = tint,
+                icon = Icons.Filled.History, iconTint = SettingsTint.Gray,
                 modifier = Modifier.settingsRow("lastSynced"),
                 trailing = RowTrailing.None
             )
@@ -96,7 +106,7 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_edit_favourites),
-                icon = Icons.Filled.Star, iconTint = tint,
+                icon = Icons.Filled.Star, iconTint = SettingsTint.Orange,
                 modifier = Modifier.settingsRow("editFavourites"),
                 onClick = ctx.actions.openFavourites
             )
@@ -106,7 +116,7 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
                 GroupRow(
                     title = stringResource(R.string.health_settings_coach_toggle),
                     subtitle = stringResource(R.string.health_settings_coach_subtitle),
-                    icon = Icons.Filled.SmartToy, iconTint = tint,
+                    icon = Icons.Filled.SmartToy, iconTint = SettingsTint.Ai,
                     modifier = Modifier.testTag("settings.health.coachToggle"),
                     trailing = RowTrailing.Toggle(ui.coachHealthDataEnabled, ctx.vm::setCoachHealthDataEnabled)
                 )
@@ -119,7 +129,7 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
             GroupRow(
                 title = stringResource(R.string.health_import_title),
                 value = stringResource(R.string.health_import_action),
-                icon = Icons.Filled.Restaurant, iconTint = tint,
+                icon = Icons.Filled.Restaurant, iconTint = SettingsTint.Nutrition,
                 modifier = Modifier.settingsRow("importNutrition"),
                 onClick = { ctx.state.showNutritionImport = true }
             )
@@ -129,7 +139,7 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
                 GroupRow(
                     title = stringResource(R.string.settings_workout_health_access),
                     value = stringResource(R.string.settings_grant_permission),
-                    icon = Icons.Filled.LocalFireDepartment, iconTint = tint,
+                    icon = Icons.Filled.LocalFireDepartment, iconTint = SettingsTint.Activity,
                     modifier = Modifier.settingsRow("workoutAccess"),
                     onClick = ctx.actions.requestWorkoutHealthAccess
                 )
@@ -139,7 +149,7 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
             GroupRow(
                 title = stringResource(R.string.settings_manage_health_access),
                 value = stringResource(R.string.settings_permissions),
-                icon = Icons.Filled.Link, iconTint = tint,
+                icon = Icons.Filled.Link, iconTint = SettingsTint.Gray,
                 modifier = Modifier.settingsRow("manageAccess"),
                 onClick = ctx.actions.openHealthConnectAccess
             )
@@ -194,7 +204,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
             GroupRow(
                 title = stringResource(R.string.cloud_backup_title),
                 subtitle = accountLines.joinToString("\n").ifBlank { null },
-                icon = Icons.Filled.CloudUpload, iconTint = AyuvoPalette.Hydration,
+                icon = Icons.Filled.CloudUpload, iconTint = SettingsTint.Backup,
                 modifier = Modifier.settingsRow("cloudBackup"),
                 trailing = if (cloud.busy) {
                     RowTrailing.Custom { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = AppColors.Calorie) }
@@ -242,7 +252,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
             row {
                 GroupRow(
                     title = stringResource(R.string.cloud_backup_sign_out),
-                    icon = Icons.AutoMirrored.Filled.Logout, iconTint = tint,
+                    icon = Icons.AutoMirrored.Filled.Logout, iconTint = SettingsTint.Gray,
                     enabled = !cloud.busy,
                     modifier = Modifier.settingsRow("cloudSignOut"),
                     trailing = RowTrailing.None,
@@ -252,7 +262,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
             row {
                 GroupRow(
                     title = stringResource(R.string.cloud_backup_switch_account),
-                    icon = Icons.Filled.SwitchAccount, iconTint = tint,
+                    icon = Icons.Filled.SwitchAccount, iconTint = SettingsTint.Gray,
                     enabled = !cloud.busy,
                     modifier = Modifier.settingsRow("cloudSwitchAccount"),
                     trailing = RowTrailing.None,
@@ -261,6 +271,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
             }
         }
     }
+    ExportAllDataGroup(ctx)
     InsetGroup(
         header = stringResource(R.string.settings_export_import_header),
         footer = stringResource(R.string.settings_export_import_footer)
@@ -268,7 +279,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.export_diary_title),
-                icon = Icons.Filled.IosShare, iconTint = AyuvoPalette.Nutrition,
+                icon = Icons.Filled.IosShare, iconTint = SettingsTint.Nutrition,
                 modifier = Modifier.settingsRow("exportDiary"),
                 trailing = RowTrailing.None,
                 onClick = { ctx.state.showExportSheet = true }
@@ -277,7 +288,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.import_diary_title),
-                icon = Icons.Filled.Download, iconTint = AyuvoPalette.Nutrition,
+                icon = Icons.Filled.Download, iconTint = SettingsTint.Nutrition,
                 modifier = Modifier.settingsRow("importDiary"),
                 trailing = RowTrailing.None,
                 onClick = actions.importDiary
@@ -286,7 +297,7 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.health_settings_export),
-                icon = Icons.Filled.MonitorHeart, iconTint = AyuvoPalette.Vitals,
+                icon = Icons.Filled.MonitorHeart, iconTint = SettingsTint.Vitals,
                 modifier = Modifier.testTag("settings.health.export"),
                 trailing = RowTrailing.None,
                 onClick = { ctx.state.showExportHealthSheet = true }
@@ -295,13 +306,80 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.health_settings_import),
-                icon = Icons.Filled.MonitorHeart, iconTint = AyuvoPalette.Vitals,
+                icon = Icons.Filled.MonitorHeart, iconTint = SettingsTint.Vitals,
                 modifier = Modifier.testTag("settings.health.import"),
                 trailing = RowTrailing.None,
                 onClick = actions.importHealthData
             )
         }
     }
+}
+
+/**
+ * Backup & Export › Export All Data: one SAF `CreateDocument` zip holding every individual export
+ * (see [AllDataExportCoordinator]). The run lives on the app scope, so the row shows its progress
+ * again if the page is reopened; the result stays under the row until the next run.
+ */
+@Composable
+private fun ExportAllDataGroup(ctx: SettingsPageContext) {
+    val coordinator = ctx.container.allDataExport
+    val export by coordinator.ui.collectAsState()
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(AllDataExportArchive.MIME_TYPE)) { uri ->
+        if (uri != null) coordinator.start(uri)
+    }
+    val progress = export.step?.takeIf { export.running }?.let { step ->
+        stringResource(R.string.export_all_progress, stringResource(step.labelRes), export.stepNumber, export.stepCount)
+    }
+    val outcome = when (val o = export.outcome) {
+        is AllDataExportOutcome.Done -> buildString {
+            append(pluralStringResource(R.plurals.export_all_done, o.fileCount, o.fileCount))
+            if (o.skippedSections.isNotEmpty()) {
+                append('\n')
+                append(stringResource(R.string.export_all_skipped, o.skippedSections.map { stringResource(sectionLabelRes(it)) }.joinToString(", ")))
+            }
+        }
+        AllDataExportOutcome.NothingToExport -> stringResource(R.string.export_all_nothing)
+        is AllDataExportOutcome.Failed -> o.message ?: stringResource(R.string.export_failed)
+        null -> null
+    }
+    InsetGroup(footer = stringResource(R.string.export_all_footer)) {
+        row {
+            GroupRow(
+                title = stringResource(R.string.export_all_title),
+                subtitle = progress ?: outcome,
+                icon = Icons.Filled.Archive, iconTint = SettingsTint.Backup,
+                enabled = !export.running,
+                modifier = Modifier.settingsRow("exportAllData"),
+                trailing = if (export.running) {
+                    RowTrailing.Custom { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = AppColors.Calorie) }
+                } else {
+                    RowTrailing.None
+                },
+                onClick = {
+                    coordinator.consumeOutcome()
+                    launcher.launch(AllDataExportArchive.fileName())
+                }
+            )
+        }
+    }
+}
+
+private val AllDataExportStep.labelRes: Int
+    get() = when (this) {
+        AllDataExportStep.FOOD_DIARY -> R.string.export_all_step_food_diary
+        AllDataExportStep.HEALTH_DATA -> R.string.export_all_step_health_data
+        AllDataExportStep.MEDICATIONS -> R.string.export_all_step_medications
+        AllDataExportStep.HEALTH_RECORDS -> R.string.export_all_step_health_records
+        AllDataExportStep.APP_BACKUP -> R.string.export_all_step_app_backup
+        AllDataExportStep.WRITING -> R.string.export_all_step_writing
+    }
+
+private fun sectionLabelRes(section: String): Int = when (section) {
+    AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.export_all_step_food_diary
+    AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.export_all_step_health_data
+    AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.export_all_step_medications
+    AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> R.string.export_all_step_health_records
+    else -> R.string.export_all_step_app_backup
 }
 
 /** Data & Privacy › Delete All Data: the three destructive actions (existing confirmations kept). */
@@ -324,7 +402,7 @@ internal fun DeleteDataPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_clear_food_log),
-                icon = Icons.Filled.DeleteSweep, iconTint = AyuvoPalette.Warning,
+                icon = Icons.Filled.DeleteSweep, iconTint = SettingsTint.Warning,
                 modifier = Modifier.settingsRow("clearFoodLog"),
                 trailing = RowTrailing.None,
                 onClick = { state.showClearFoodDialog = true }

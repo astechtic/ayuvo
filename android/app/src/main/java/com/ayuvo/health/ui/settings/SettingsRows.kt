@@ -264,7 +264,9 @@ internal fun SectionCard(title: String? = null, content: @Composable () -> Unit)
 internal fun LocalModelRow(
     state: LocalModelState,
     onDownload: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    icon: ImageVector? = null,
+    iconTint: Color = com.ayuvo.health.ui.design.AyuvoPalette.Other
 ) {
     val uriHandler = LocalUriHandler.current
     val unavailableText = when (state.ineligibility) {
@@ -294,6 +296,10 @@ internal fun LocalModelRow(
             .padding(horizontal = 16.dp, vertical = 11.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (icon != null) {
+            com.ayuvo.health.ui.design.CategoryIcon(icon, iconTint)
+            Spacer(Modifier.width(16.dp))
+        }
         Column(Modifier.weight(1f).padding(end = 8.dp)) {
             Text(
                 state.descriptor.displayName,

@@ -1754,6 +1754,50 @@ def build_highlights(fields, summary=None):
     return out
 
 
+HIGHLIGHT_WINDOW_MONTHS = 6
+
+
+def add_months_clamped(day, months):
+    """yyyy-mm-dd plus `months` calendar months (negative allowed); the day clamps to the target month's
+    last day (2026-08-31 − 6 months → 2026-02-28), like java.time plusMonths and Calendar.date(byAdding:)."""
+    y, m, d = (int(x) for x in day.split("-"))
+    total = y * 12 + (m - 1) + months
+    ty, tm = total // 12, total % 12 + 1
+    return "%04d-%02d-%02d" % (ty, tm, min(d, _days_in_month(ty, tm)))
+
+
+def _days_in_month(y, m):
+    if m == 2:
+        return 29 if (y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)) else 28
+    return 30 if m in (4, 6, 9, 11) else 31
+
+
+def highlights_since(today, months=HIGHLIGHT_WINDOW_MONTHS):
+    """§15 display window: the first local calendar day whose records still show important highlights."""
+    return add_months_clamped(today, -months)
+
+
+def important_highlights(records, highlights, limit, since=None):
+    """§15 "Important highlights" list (Records tab, Summary). records: [{id, sort_date, seq, archived}]
+    (sort_date = document date, else the local day of created_ms, §5); highlights: [{id, record_id,
+    section, text, position, dismissed}]. Keeps non-dismissed 'important' highlights of non-archived records;
+    with `since` (yyyy-mm-dd, optional and additive) only records whose sort_date >= since. Ordered by
+    sort_date desc, seq desc, position asc; first `limit`."""
+    by_id = {r["id"]: r for r in records}
+    rows = []
+    for h in highlights:
+        r = by_id.get(h["record_id"])
+        if r is None or r.get("archived") or h["section"] != "important" or h.get("dismissed"):
+            continue
+        if since is not None and r["sort_date"] < since:
+            continue
+        rows.append((r, h))
+    rows.sort(key=lambda t: t[1].get("position") or 0)
+    rows.sort(key=lambda t: (t[0]["sort_date"], t[0].get("seq") or 0), reverse=True)
+    return [{"id": h["id"], "record_id": h["record_id"], "section": h["section"], "text": h["text"],
+             "position": h.get("position") or 0} for r, h in rows[:limit]]
+
+
 _KEY_FIELDS = frozenset(["report_name", "doctor_name", "facility"] + DATE_KEYS)
 
 
@@ -5376,6 +5420,10 @@ def run_case(function, inp):
     if function == "detect_boundaries":
         return detect_boundaries(inp["pages"], inp["today"], inp["date_order"])
     if function == "build_highlights":
+        if inp.get("op") == "important":
+            since = highlights_since(inp["today"]) if inp.get("today") else None
+            return {"since": since,
+                    "highlights": important_highlights(inp["records"], inp["highlights"], inp["limit"], since)}
         return {"highlights": build_highlights(inp["fields"], inp.get("summary"))}
     if function == "review_status":
         return review_status(inp["record"], inp["rows"], inp.get("pending_split", False),

@@ -77,7 +77,8 @@ extension RecordsStore {
     func reloadSections(repository: RecordsRepository) async {
         async let summary = repository.processingSummary()
         async let review = repository.needsReview(limit: 10)
-        async let highlights = repository.importantHighlights(limit: 8)
+        // Records tab and Summary show only the last 6 calendar months of highlights (§15 window).
+        async let highlights = repository.importantHighlights(limit: 8, since: RecordDates.highlightsSince())
         async let duplicates = repository.database.pendingDuplicateCandidates(limit: 50)
         if let value = try? await summary { processingSummary = value }
         if let value = try? await review { needsReviewRecords = value }

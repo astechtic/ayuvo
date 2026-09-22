@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 
 struct TextFoodInputView: View {
     @State private var foodDescription = ""
@@ -16,7 +15,9 @@ struct TextFoodInputView: View {
         "Greek yogurt with granola and blueberries",
     ]
 
-    private let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    /// Lines the field always occupies. A fixed height means neither the rotating placeholder
+    /// nor typing can resize the popover, which UIKit answers by re-positioning it (the flicker).
+    private static let fieldLines = 3
 
     var body: some View {
         // Scrollable so the keyboard can never push the field out of the popover.
@@ -28,10 +29,13 @@ struct TextFoodInputView: View {
         .scrollDismissesKeyboard(.interactively)
         .frame(width: 320)
         .onAppear { isFocused = true }
-        .onReceive(timer) { _ in
-            guard foodDescription.isEmpty else { return }
-            withAnimation(.easeInOut(duration: 0.3)) {
-                placeholderIndex = (placeholderIndex + 1) % placeholders.count
+        // A task-owned loop: unlike a `Timer.publish` stored on the struct, it is not recreated
+        // (and restarted) every time the parent diary re-renders.
+        .task {
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(2.5))
+                guard !Task.isCancelled, foodDescription.isEmpty else { continue }
+                placeholderIndex = (placeholderIndex + 1) % max(placeholders.count, 1)
             }
         }
     }
@@ -39,28 +43,30 @@ struct TextFoodInputView: View {
     private var form: some View {
         VStack(spacing: 20) {
             ZStack(alignment: .topLeading) {
-                if foodDescription.isEmpty {
-                    Text(placeholders[placeholderIndex])
-                        .foregroundStyle(.tertiary)
-                        .font(.body)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 10)
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .bottom).combined(with: .opacity),
-                            removal: .move(edge: .top).combined(with: .opacity)
-                        ))
-                        .id(placeholderIndex)
-                        .allowsHitTesting(false)
-                }
+                // One Text whose content cross-fades in place: no insertion/removal transitions
+                // and no layout change, only opacity.
+                Text(placeholders.isEmpty ? "" : placeholders[placeholderIndex % placeholders.count])
+                    .foregroundStyle(.tertiary)
+                    .font(.body)
+                    .lineLimit(Self.fieldLines, reservesSpace: true)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 10)
+                    .contentTransition(.opacity)
+                    .animation(.easeInOut(duration: 0.3), value: placeholderIndex)
+                    .opacity(foodDescription.isEmpty ? 1 : 0)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
 
                 TextField("", text: $foodDescription, axis: .vertical)
                     .font(.body)
-                    .lineLimit(2...5)
+                    .lineLimit(Self.fieldLines, reservesSpace: true)
                     .textFieldStyle(.plain)
                     .autocorrectionDisabled()
                     .focused($isFocused)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 10)
+                    .accessibilityLabel(Text("Food description"))
             }
             .padding(12)
             .background(
@@ -85,5 +91,6 @@ struct TextFoodInputView: View {
             }
             .foregroundStyle(.secondary)
         }
+        .transaction { $0.animation = nil }
     }
 }

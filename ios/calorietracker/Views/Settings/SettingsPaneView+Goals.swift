@@ -13,8 +13,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Weight Goal")
                 } icon: {
-                    Image(systemName: profile.goal.icon)
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon(profile.goal.icon, tint: SettingsTint.body)
                 }
             }
             .pickerStyle(.menu)
@@ -49,8 +48,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Activity Level")
                     } icon: {
-                        Image(systemName: profile.activityLevel.icon)
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon(profile.activityLevel.icon, tint: SettingsTint.activity)
                     }
                 }
                 .pickerStyle(.menu)
@@ -59,7 +57,7 @@ extension SettingsPaneView {
                 Text(profile.activityLevel.subtitle)
                     .font(.system(.caption, design: .rounded))
                     .foregroundStyle(.secondary)
-                    .padding(.leading, 34)
+                    .padding(.leading, 41)
             }
             .onChange(of: profile.activityLevel) { _, _ in saveProfile() }
 
@@ -75,8 +73,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Weekly Change")
                     } icon: {
-                        Image(systemName: "gauge.with.dots.needle.33percent")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("gauge.with.dots.needle.33percent", tint: SettingsTint.body)
                     }
                 }
                 .pickerStyle(.menu)
@@ -84,6 +81,7 @@ extension SettingsPaneView {
 
                 ProfileInfoRow(
                     icon: "flag.checkered",
+                    tint: SettingsTint.body,
                     label: "Goal Weight",
                     value: goalWeightDisplay
                 ) {
@@ -95,8 +93,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Adaptive Goals")
                 } icon: {
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("chart.line.uptrend.xyaxis", tint: SettingsTint.nutrition)
                 }
                 Spacer()
                 if isApplyingAdaptiveGoals {
@@ -131,8 +128,7 @@ extension SettingsPaneView {
                         }
                     }
                 } icon: {
-                    Image(systemName: "flame")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("flame.fill", tint: SettingsTint.activity)
                 }
                 Spacer()
                 Button {
@@ -158,16 +154,17 @@ extension SettingsPaneView {
 
         Section("Daily Targets") {
             lockableGoalRow(
-                icon: "flame",
+                icon: "flame.fill",
+                tint: SettingsTint.nutrition,
                 label: "Calories",
                 valueText: "\(profile.effectiveCalories.formatted()) kcal",
                 macro: nil,
                 sheet: .editCalories
             )
 
-            lockableGoalRow(icon: "p.circle", label: "Protein", valueText: "\(profile.effectiveProtein)g", macro: .protein, sheet: .editProtein)
-            lockableGoalRow(icon: "c.circle", label: "Carbs", valueText: "\(profile.effectiveCarbs)g", macro: .carbs, sheet: .editCarbs)
-            lockableGoalRow(icon: "f.circle", label: "Fat", valueText: "\(profile.effectiveFat)g", macro: .fat, sheet: .editFat)
+            lockableGoalRow(icon: "p.circle.fill", tint: AppColors.protein, label: "Protein", valueText: "\(profile.effectiveProtein)g", macro: .protein, sheet: .editProtein)
+            lockableGoalRow(icon: "c.circle.fill", tint: AppColors.carbs, label: "Carbs", valueText: "\(profile.effectiveCarbs)g", macro: .carbs, sheet: .editCarbs)
+            lockableGoalRow(icon: "f.circle.fill", tint: AppColors.fat, label: "Fat", valueText: "\(profile.effectiveFat)g", macro: .fat, sheet: .editFat)
 
             NavigationLink {
                 OptionalNutrientGoalsSettingsView(profile: profile)
@@ -180,8 +177,7 @@ extension SettingsPaneView {
                             .foregroundStyle(.secondary)
                     }
                 } icon: {
-                    Image(systemName: "list.bullet.clipboard")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("list.bullet.clipboard", tint: SettingsTint.nutrition)
                 }
             }
 
@@ -203,8 +199,7 @@ extension SettingsPaneView {
                         }
                     }
                 } icon: {
-                    Image(systemName: "arrow.clockwise")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("arrow.clockwise", tint: SettingsTint.nutrition)
                 }
             }
             .tint(.primary)
@@ -216,8 +211,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Calculation Methods")
                 } icon: {
-                    Image(systemName: "book")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("book.fill", tint: SettingsTint.other)
                 }
             }
             .tint(.primary)
@@ -245,7 +239,7 @@ extension SettingsPaneView {
     /// when a macro is edited. Lock controls are disabled while Adaptive Goals is on (it auto-
     /// recalculates and would overwrite). `macro == nil` means the calories row.
     @ViewBuilder
-    func lockableGoalRow(icon: String, label: String, valueText: String, macro: AutoBalanceMacro?, sheet: ActiveSheet) -> some View {
+    func lockableGoalRow(icon: String, tint: Color, label: String, valueText: String, macro: AutoBalanceMacro?, sheet: ActiveSheet) -> some View {
         let locked = macro.map { profile.isMacroLocked($0) } ?? profile.isCaloriesLocked
         // The lock glyph is a read-only indicator. Saving a value locks it; the picker's "Reset to
         // Auto-balance" releases it. Tapping the row opens the picker (or explains, when Adaptive is
@@ -258,9 +252,7 @@ extension SettingsPaneView {
             }
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: icon)
-                    .foregroundStyle(AppColors.calorie)
-                    .frame(width: 22)
+                SettingsIcon(icon, tint: tint)
                 Text(LocalizedDisplayText.text(label))
                     .foregroundStyle(.primary)
                 Spacer()

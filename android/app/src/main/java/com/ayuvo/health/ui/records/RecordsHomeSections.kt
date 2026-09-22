@@ -75,6 +75,12 @@ import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.GlassTextButton
 import com.ayuvo.health.ui.components.GlassTextField
 import com.ayuvo.health.ui.theme.AppColors
+import com.ayuvo.health.ui.design.SectionHeader
+import com.ayuvo.health.ui.design.SurfaceCard
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.platform.testTag
 import java.time.LocalDate
 
 private val ReviewAmber = Color(0xFFE8A33D)
@@ -123,9 +129,10 @@ internal fun RecordStatusPill(record: HealthRecord) {
     }
 }
 
+/** Records section title: the app-wide [SectionHeader] so every Records section lines up. */
 @Composable
 internal fun SectionTitle(text: String, modifier: Modifier = Modifier) {
-    Text(text, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, modifier = modifier.padding(start = 4.dp, top = 4.dp, bottom = 6.dp))
+    SectionHeader(text, modifier = modifier)
 }
 
 /** Needs review: records waiting for the user's confirmation. */
@@ -134,9 +141,10 @@ internal fun NeedsReviewSection(records: List<HealthRecord>, files: RecordFileSt
     if (records.isEmpty()) return
     Column(Modifier.fillMaxWidth()) {
         SectionTitle(stringResource(R.string.records_filter_needs_review))
-        GlassSurface(Modifier.fillMaxWidth(), cornerRadius = 18.dp, padding = 0.dp) {
+        SurfaceCard(padding = PaddingValues(0.dp)) {
             Column {
-                records.forEach { record ->
+                records.forEachIndexed { index, record ->
+                    if (index > 0) HorizontalDivider(Modifier.padding(start = 58.dp), thickness = 0.5.dp, color = AyuvoColors.separator())
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -170,24 +178,30 @@ internal fun HighlightsSection(items: List<HighlightWithRecord>, onOpen: (Highli
     if (items.isEmpty()) return
     Column(Modifier.fillMaxWidth()) {
         SectionTitle(stringResource(R.string.records_highlights_title))
-        GlassSurface(Modifier.fillMaxWidth(), cornerRadius = 18.dp, padding = 0.dp) {
+        SurfaceCard(padding = PaddingValues(0.dp), modifier = Modifier.testTag("records.highlights")) {
             Column {
-                items.forEach { item ->
+                items.forEachIndexed { index, item ->
+                    if (index > 0) HorizontalDivider(Modifier.padding(start = 44.dp), thickness = 0.5.dp, color = AyuvoColors.separator())
                     Row(
                         Modifier
                             .fillMaxWidth()
                             .clickable { onOpen(item) }
-                            .padding(horizontal = 14.dp, vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.Top
                     ) {
-                        Box(Modifier.size(8.dp).clip(CircleShape).background(AppColors.Calorie))
-                        Spacer(Modifier.width(10.dp))
-                        Column(Modifier.weight(1f)) {
-                            Text(item.highlight.text, fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                        Icon(
+                            Icons.Filled.Warning,
+                            contentDescription = null,
+                            tint = ReviewAmber,
+                            modifier = Modifier.padding(top = 1.dp).size(18.dp)
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                            Text(item.highlight.text, fontSize = 15.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis)
                             Text(
                                 "${item.record.title} · ${RecordFormat.displayDate(item.record)}",
                                 fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                color = AyuvoColors.secondaryLabel(),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -231,8 +245,8 @@ internal fun ParsedChipsRow(chips: List<ParsedChip>, onRemove: (ParsedChip) -> U
 internal fun SearchHitRow(hit: RecordSearchHit, files: RecordFileStore, onClick: () -> Unit) {
     val record = hit.record
     GlassSurface(
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable(onClick = onClick),
-        cornerRadius = 18.dp,
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).clickable(onClick = onClick),
+        cornerRadius = 16.dp,
         padding = 10.dp
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

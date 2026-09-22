@@ -29,7 +29,7 @@ import com.ayuvo.health.ui.design.AyuvoColors
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
-import com.ayuvo.health.ui.settings.SettingsPage
+import com.ayuvo.health.ui.settings.SettingsTint
 import com.ayuvo.health.ui.theme.AppColors
 import kotlinx.coroutines.launch
 
@@ -82,7 +82,7 @@ internal fun HealthRecordsCoachSection(container: AppContainer) {
                 title = stringResource(R.string.records_coach_settings_toggle),
                 subtitle = stringResource(R.string.records_coach_settings_subtitle),
                 icon = Icons.Filled.SmartToy,
-                iconTint = SettingsPage.HEALTH_RECORDS.tint,
+                iconTint = SettingsTint.Ai,
                 modifier = Modifier.settingsRow("recordsCoach"),
                 trailing = RowTrailing.Toggle(enabled, { on ->
                     if (on) {

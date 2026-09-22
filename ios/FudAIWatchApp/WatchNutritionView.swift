@@ -9,8 +9,8 @@ struct WatchNutritionView: View {
 
     private var themeGradient: [Color] {
         [
-            Color(hex: receiver.snapshot.themeStartHex ?? 0xFF375F),
-            Color(hex: receiver.snapshot.themeEndHex ?? 0xFF6B8A),
+            Color(hex: receiver.snapshot.themeStartHex ?? 0x0A84FF),
+            Color(hex: receiver.snapshot.themeEndHex ?? 0x5EAEFF),
         ]
     }
 

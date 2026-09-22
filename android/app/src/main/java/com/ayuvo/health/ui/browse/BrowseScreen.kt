@@ -11,7 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.automirrored.filled.NoteAdd
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Medication
+import androidx.compose.material.icons.filled.MonitorWeight
+import androidx.compose.material.icons.filled.Percent
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Straighten
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sync
@@ -32,10 +46,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
@@ -58,6 +74,11 @@ import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.design.AyuvoColors
 import com.ayuvo.health.ui.design.AyuvoLargeTopBar
+import com.ayuvo.health.ui.design.AyuvoPalette
+import com.ayuvo.health.ui.body.AddBodyFatDialog
+import com.ayuvo.health.ui.body.AddWeightDialog
+import com.ayuvo.health.ui.body.BodyLogViewModel
+import kotlinx.coroutines.launch
 import com.ayuvo.health.ui.design.AyuvoShapes
 import com.ayuvo.health.ui.design.AyuvoSpacing
 import com.ayuvo.health.ui.design.CategoryIcon
@@ -90,7 +111,9 @@ fun BrowseScreen(
     container: AppContainer,
     onOpenTarget: (String) -> Unit,
     onOpenMetric: (MetricKey) -> Unit,
-    onOpenHealthSync: () -> Unit
+    onOpenHealthSync: () -> Unit,
+    /** A "Features" search result; `logWeight` / `logBodyFat` are handled here with the log dialogs. */
+    onOpenFeature: (BrowseFeature) -> Unit = {}
 ) {
     val hubVm: HealthHubViewModel = viewModel(factory = HealthHubViewModel.Factory(container))
     val browseVm: BrowseViewModel = viewModel(factory = BrowseViewModel.Factory(container))
@@ -108,6 +131,18 @@ fun BrowseScreen(
     var importUri by remember { mutableStateOf<android.net.Uri?>(null) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) importUri = uri }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val bodyVm: BodyLogViewModel = viewModel(key = "browse-body", factory = BodyLogViewModel.Factory(container))
+    val body by bodyVm.ui.collectAsState()
+    val scope = rememberCoroutineScope()
+    var showWeight by rememberSaveable { mutableStateOf(false) }
+    var showBodyFat by rememberSaveable { mutableStateOf(false) }
+    val openFeature: (BrowseFeature) -> Unit = { feature ->
+        when (feature.id) {
+            "logWeight" -> showWeight = true
+            "logBodyFat" -> showBodyFat = true
+            else -> onOpenFeature(feature)
+        }
+    }
 
     val domains = remember(catalog) { catalog.domains.sortedBy { it.browseOrder } }
 
@@ -171,7 +206,8 @@ fun BrowseScreen(
                             hub = hub,
                             domains = domains,
                             onOpenTarget = onOpenTarget,
-                            onOpenMetric = onOpenMetric
+                            onOpenMetric = onOpenMetric,
+                            onOpenFeature = openFeature
                         )
                     }
                     return@LazyColumn
@@ -265,6 +301,27 @@ fun BrowseScreen(
             )
         }
     }
+    if (showWeight) {
+        AddWeightDialog(
+            useMetric = app.units.weightMetric,
+            initialKg = body.entries.maxByOrNull { it.date }?.weightKg ?: body.profile?.weightKg ?: 70.0,
+            onUnitChange = { metric -> scope.launch { container.prefs.setWeightUnit(if (metric) "kg" else "lbs") } },
+            onDismiss = { showWeight = false }
+        ) { kg -> bodyVm.addWeight(kg); showWeight = false }
+    }
+    if (showBodyFat) {
+        AddBodyFatDialog(
+            initialFraction = body.bodyFatEntries.maxByOrNull { it.date }?.bodyFatFraction ?: body.profile?.bodyFatPercentage ?: 0.20,
+            onDismiss = { showBodyFat = false }
+        ) { fraction -> bodyVm.addBodyFat(fraction); showBodyFat = false }
+    }
+    if (body.goalReached) {
+        GlassDialog(onDismissRequest = bodyVm::dismissGoalReached) {
+            Text(stringResource(R.string.progress_goal_reached_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.progress_goal_reached_message), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f))
+            GlassDialogActions(primaryText = stringResource(R.string.action_keep_going), onPrimary = bodyVm::dismissGoalReached)
+        }
+    }
     if (showExportSheet) {
         com.ayuvo.health.ui.settings.ExportHealthDataSheet(container = container, onDismiss = { showExportSheet = false })
     }
@@ -317,7 +374,10 @@ private fun BrowseSearchField(query: String, onQuery: (String) -> Unit) {
     )
 }
 
-/** Domains, app metrics and Health Connect types whose name contains [query]. */
+/**
+ * Search results: app features and actions ([BrowseFeatures]), then domains, then the trend graphs
+ * (app metrics and Health Connect types) whose name contains [query].
+ */
 @Composable
 private fun BrowseSearchResults(
     query: String,
@@ -325,11 +385,13 @@ private fun BrowseSearchResults(
     hub: HealthHubUiState,
     domains: List<CatalogDomain>,
     onOpenTarget: (String) -> Unit,
-    onOpenMetric: (MetricKey) -> Unit
+    onOpenMetric: (MetricKey) -> Unit,
+    onOpenFeature: (BrowseFeature) -> Unit
 ) {
     val context = LocalContext.current
     val catalog = container.metricCatalog
     val res = LocalResources.current
+    val features = remember(query, res) { BrowseFeatures.search(query) { res.getString(it.titleRes) } }
     val matchedDomains = domains.filter { res.getString(domainTitleRes(it.id)).contains(query, ignoreCase = true) }
     val appMatches = AppMetricId.entries.filter { res.getString(MetricCatalog.titleRes(it)).contains(query, ignoreCase = true) }
     val withData = hub.categories.flatMap { it.rows }.filter { it.count > 0 }.map { it.typeId }.toSet()
@@ -337,7 +399,7 @@ private fun BrowseSearchResults(
         .filter { !it.reserved && !it.isVirtualDietary && (it.sdkAvailable || it.id in withData) }
         .filter { HealthCategoryStyle.typeName(context, it.id).contains(query, ignoreCase = true) }
         .sortedByDescending { it.id in withData }
-    if (matchedDomains.isEmpty() && appMatches.isEmpty() && healthMatches.isEmpty()) {
+    if (features.isEmpty() && matchedDomains.isEmpty() && appMatches.isEmpty() && healthMatches.isEmpty()) {
         Text(
             stringResource(R.string.browse_search_empty, query),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
@@ -346,6 +408,21 @@ private fun BrowseSearchResults(
         return
     }
     androidx.compose.foundation.layout.Column(verticalArrangement = Arrangement.spacedBy(AyuvoSpacing.SectionGap)) {
+        if (features.isNotEmpty()) {
+            InsetGroup(header = stringResource(R.string.browse_search_features), dividerInset = 60.dp) {
+                features.forEach { feature ->
+                    row {
+                        GroupRow(
+                            title = stringResource(feature.titleRes),
+                            subtitle = stringResource(feature.subtitleRes),
+                            leading = { CategoryIcon(featureIcon(feature.id), featureColor(feature.domain)) },
+                            modifier = Modifier.testTag("browse.feature.${feature.id}"),
+                            onClick = { onOpenFeature(feature) }
+                        )
+                    }
+                }
+            }
+        }
         if (matchedDomains.isNotEmpty()) {
             InsetGroup(header = stringResource(R.string.browse_search_categories)) {
                 matchedDomains.forEach { d ->
@@ -360,7 +437,7 @@ private fun BrowseSearchResults(
             }
         }
         if (appMatches.isNotEmpty()) {
-            InsetGroup(header = stringResource(R.string.browse_search_ayuvo), dividerInset = 60.dp) {
+            InsetGroup(header = stringResource(R.string.browse_search_trends), dividerInset = 60.dp) {
                 appMatches.forEach { id ->
                     row {
                         val key = MetricKey.App(id)
@@ -379,7 +456,7 @@ private fun BrowseSearchResults(
             }
         }
         if (healthMatches.isNotEmpty()) {
-            InsetGroup(header = stringResource(R.string.browse_search_health_connect), dividerInset = 60.dp) {
+            InsetGroup(header = stringResource(R.string.browse_search_trends_health_connect), dividerInset = 60.dp) {
                 healthMatches.take(SEARCH_LIMIT).forEach { type ->
                     row {
                         val key = MetricKey.Health(type.id)
@@ -403,3 +480,35 @@ private fun BrowseSearchResults(
 }
 
 private const val SEARCH_LIMIT = 40
+
+private fun featureIcon(id: String): ImageVector = when (id) {
+    "workouts" -> Icons.Filled.FitnessCenter
+    "workoutLog" -> Icons.Filled.AddCircle
+    "exerciseLibrary" -> Icons.AutoMirrored.Filled.MenuBook
+    "nutrition" -> Icons.Filled.Restaurant
+    "logFood" -> Icons.Filled.AddCircle
+    "water" -> Icons.Filled.WaterDrop
+    "fasting" -> Icons.Filled.Timer
+    "bodyMeasurements" -> Icons.Filled.Straighten
+    "logWeight" -> Icons.Filled.MonitorWeight
+    "logBodyFat" -> Icons.Filled.Percent
+    "medications" -> Icons.Filled.Medication
+    "addMedication" -> Icons.Filled.AddCircle
+    "records" -> Icons.Filled.Description
+    "addRecord" -> Icons.AutoMirrored.Filled.NoteAdd
+    "coach" -> Icons.AutoMirrored.Filled.Chat
+    "settings" -> Icons.Filled.Settings
+    else -> Icons.Filled.Search
+}
+
+private fun featureColor(domain: BrowseFeatureDomain): Color = when (domain) {
+    BrowseFeatureDomain.ACTIVITY -> AyuvoPalette.Activity
+    BrowseFeatureDomain.NUTRITION -> AyuvoPalette.Nutrition
+    BrowseFeatureDomain.HYDRATION -> AyuvoPalette.Hydration
+    BrowseFeatureDomain.FASTING -> AyuvoPalette.Fasting
+    BrowseFeatureDomain.BODY -> AyuvoPalette.Body
+    BrowseFeatureDomain.MEDICATIONS -> AyuvoPalette.Medications
+    BrowseFeatureDomain.RECORDS -> AyuvoPalette.Records
+    BrowseFeatureDomain.COACH -> AyuvoPalette.Mindfulness
+    BrowseFeatureDomain.SETTINGS -> AyuvoPalette.Other
+}

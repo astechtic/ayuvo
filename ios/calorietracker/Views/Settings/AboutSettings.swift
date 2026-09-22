@@ -189,8 +189,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Rate the App")
                     } icon: {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("star.fill", tint: SettingsTint.rating)
                     }
                 }
                 .tint(.primary)
@@ -201,8 +200,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Share the App")
                     } icon: {
-                        Image(systemName: "square.and.arrow.up.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("square.and.arrow.up.fill", tint: SettingsTint.export)
                     }
                 }
                 .tint(.primary)
@@ -219,8 +217,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Contact Support")
                     } icon: {
-                        Image(systemName: "envelope.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("envelope.fill", tint: SettingsTint.privacy)
                     }
                 }
                 .tint(.primary)
@@ -233,8 +230,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Send Feedback")
                     } icon: {
-                        Image(systemName: "lightbulb.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("lightbulb.fill", tint: SettingsTint.feedback)
                     }
                 }
                 .tint(.primary)
@@ -249,8 +245,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Privacy Policy")
                     } icon: {
-                        Image(systemName: "lock.shield.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("hand.raised.fill", tint: SettingsTint.privacy)
                     }
                 }
                 .tint(.primary)
@@ -259,8 +254,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Terms of Service")
                     } icon: {
-                        Image(systemName: "doc.text.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("doc.text.fill", tint: SettingsTint.legal)
                     }
                 }
                 .tint(.primary)
@@ -271,8 +265,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("Licenses")
                     } icon: {
-                        Image(systemName: "doc.text.magnifyingglass")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("doc.text.magnifyingglass", tint: SettingsTint.legal)
                     }
                 }
                 .tint(.primary)
@@ -298,8 +291,7 @@ struct AboutSettingsSections: View {
                 Label {
                     Text("Checking for Updates")
                 } icon: {
-                    Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("arrow.triangle.2.circlepath", tint: SettingsTint.update)
                 }
 
                 Spacer()
@@ -321,15 +313,13 @@ struct AboutSettingsSections: View {
                                 .foregroundStyle(.secondary)
                         }
                     } icon: {
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "arrow.down.circle.fill")
-                                .foregroundStyle(AppColors.calorie)
-
-                            Circle()
-                                .fill(AppColors.calorie)
-                                .frame(width: 8, height: 8)
-                                .offset(x: 3, y: -3)
-                        }
+                        SettingsIcon("arrow.down", tint: SettingsTint.update)
+                            .overlay(alignment: .topTrailing) {
+                                Circle()
+                                    .fill(SettingsTint.notifications)
+                                    .frame(width: 10, height: 10)
+                                    .offset(x: 3, y: -3)
+                            }
                     }
 
                     Spacer()
@@ -356,8 +346,7 @@ struct AboutSettingsSections: View {
                                 .foregroundStyle(.secondary)
                         }
                     } icon: {
-                        Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("arrow.triangle.2.circlepath", tint: SettingsTint.update)
                     }
 
                     Spacer()
@@ -375,8 +364,7 @@ struct AboutSettingsSections: View {
                     Label {
                         Text("App Version")
                     } icon: {
-                        Image(systemName: "checkmark.seal.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("checkmark.seal.fill", tint: SettingsTint.success)
                     }
 
                     Spacer()

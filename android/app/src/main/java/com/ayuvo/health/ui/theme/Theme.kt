@@ -75,7 +75,7 @@ private fun darkColors(themeColor: AppThemeColor) = darkColorScheme(
 @Composable
 fun AyuvoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    themeColor: AppThemeColor = AppThemeColor.ROSE,
+    themeColor: AppThemeColor = AppThemeColor.BLUE,
     content: @Composable () -> Unit
 ) {
     AppColors.setThemeColor(themeColor)

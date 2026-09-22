@@ -10,6 +10,9 @@ struct BrowseView: View {
     @Environment(FastingStore.self) private var fastingStore
     @Environment(MedicationStore.self) private var medicationStore
     @Environment(RecordsStore.self) private var recordsStore
+    @Environment(WeightStore.self) private var weightStore
+    @Environment(BodyFatStore.self) private var bodyFatStore
+    @Environment(ProfileStore.self) private var profileStore
     @AppStorage(WaterSettings.enabledKey) private var waterTrackingEnabled = false
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
 
@@ -17,6 +20,8 @@ struct BrowseView: View {
     @State private var showExport = false
     @State private var showImport = false
     @State private var isRebuilding = false
+    @State private var showLogWeight = false
+    @State private var showLogBodyFat = false
 
     private var categories: [BrowseCategory] {
         BrowseCategory.ordered.filter { category in
@@ -76,6 +81,17 @@ struct BrowseView: View {
             .sheet(isPresented: $showImport) {
                 ImportHealthDataView()
             }
+            .sheet(isPresented: $showLogWeight) {
+                LogWeightSheet(currentWeightKg: weightStore.latestEntry?.weightKg ?? profileStore.profile.weightKg) { weightKg in
+                    weightStore.addEntry(WeightEntry(weightKg: weightKg))
+                }
+            }
+            .sheet(isPresented: $showLogBodyFat) {
+                let seed = bodyFatStore.latestEntry?.bodyFatFraction ?? profileStore.profile.bodyFatPercentage ?? 0.20
+                LogBodyFatSheet(currentFraction: seed) { fraction in
+                    bodyFatStore.addEntry(BodyFatEntry(bodyFatFraction: fraction))
+                }
+            }
             .task(id: store.snapshotRevision) {
                 if store.typeSummaries.isEmpty {
                     await store.refreshSnapshots()
@@ -132,20 +148,81 @@ struct BrowseView: View {
 
     // MARK: Search
 
+    /// Search results: "Go to" features (destinations and actions) first, then metric trends.
     @ViewBuilder
     private var searchSection: some View {
+        let features = BrowseFeatureCatalog.search(query)
         let results = MetricCatalog.search(query, health: store).filter { !$0.browseHidden }
-        Section {
-            if results.isEmpty {
+        if features.isEmpty && results.isEmpty {
+            Section {
                 ContentUnavailableView.search(text: query)
-            } else {
-                ForEach(results) { descriptor in
-                    NavigationLink(value: MetricRoute.detail(descriptor.key)) {
-                        searchRow(descriptor)
+            }
+        } else {
+            if !features.isEmpty {
+                Section {
+                    ForEach(features) { feature in
+                        featureRow(feature)
                     }
-                    .accessibilityIdentifier("browse.metric.\(descriptor.key.id)")
+                } header: {
+                    Text("Go to")
                 }
             }
+            if !results.isEmpty {
+                Section {
+                    ForEach(results) { descriptor in
+                        NavigationLink(value: MetricRoute.detail(descriptor.key)) {
+                            searchRow(descriptor)
+                        }
+                        .accessibilityIdentifier("browse.metric.\(descriptor.key.id)")
+                    }
+                } header: {
+                    Text("Trends")
+                }
+            }
+        }
+    }
+
+    private func featureRow(_ feature: BrowseFeature) -> some View {
+        Button {
+            open(feature)
+        } label: {
+            HStack {
+                MetricRow(systemImage: feature.systemImage, tint: feature.tint, title: feature.title, subtitle: feature.subtitle)
+                Image(systemName: feature.leavesBrowse ? "arrow.up.forward" : "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier(feature.accessibilityID)
+    }
+
+    private func open(_ feature: BrowseFeature) {
+        switch feature.destination {
+        case .browse(let routes):
+            navigator.openBrowse(routes)
+        case .metric(let key):
+            navigator.browsePath.append(MetricRoute.detail(key))
+        case .logFood(let action):
+            navigator.openNutrition(action: action)
+        case .logWeight:
+            showLogWeight = true
+        case .logBodyFat:
+            showLogBodyFat = true
+        case .logWorkout:
+            navigator.openWorkoutLogging()
+        case .addMedication:
+            medicationStore.addMedicationRequested = true
+            navigator.openMedications()
+        case .recordsTab:
+            navigator.selectedTab = .records
+        case .addRecord:
+            recordsStore.requestAddRecord()
+        case .coach:
+            navigator.selectedTab = .coach
+        case .settings:
+            navigator.openSettings()
         }
     }
 

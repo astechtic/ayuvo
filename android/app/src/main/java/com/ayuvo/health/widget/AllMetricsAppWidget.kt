@@ -138,7 +138,7 @@ private fun AllMetricsTall(snapshot: WidgetSnapshot) {
     val barH = (contentH - 34f - gaugeW * 0.58f - 66f).toInt().coerceAtLeast(40)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = "Today")
+        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = "Today", themeHex = snapshot.themeStartHex)
         Spacer(modifier = GlanceModifier.height(4.dp))
         Box(
             modifier = GlanceModifier.fillMaxWidth(),

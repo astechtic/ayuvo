@@ -11,8 +11,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Apple Health")
                 } icon: {
-                    Image(systemName: "heart.fill")
-                        .foregroundStyle(.pink)
+                    SettingsIcon("heart.fill", tint: SettingsTint.vitals)
                 }
                 Spacer()
                 Toggle("", isOn: $healthKitEnabled)
@@ -31,8 +30,7 @@ extension SettingsPaneView {
                     Text("Browse Health Data")
                         .foregroundStyle(.primary)
                 } icon: {
-                    Image(systemName: "heart.text.square.fill")
-                        .foregroundStyle(.pink)
+                    SettingsIcon("heart.text.square.fill", tint: SettingsTint.vitals)
                 }
             }
 
@@ -40,8 +38,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Last synced")
                 } icon: {
-                    Image(systemName: "clock.arrow.2.circlepath")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("clock.arrow.2.circlepath", tint: SettingsTint.other)
                 }
                 Spacer()
                 Text(healthDataStore.isSyncing
@@ -57,8 +54,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Sync Now")
                 } icon: {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("arrow.triangle.2.circlepath", tint: SettingsTint.update)
                 }
             }
             .buttonStyle(.plain)
@@ -69,8 +65,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Edit Favourites")
                 } icon: {
-                    Image(systemName: "star")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("star.fill", tint: SettingsTint.favourite)
                 }
             }
 
@@ -81,8 +76,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Let Coach use Health data")
                 } icon: {
-                    Image(systemName: "bubble.left.and.text.bubble.right")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("bubble.left.and.text.bubble.right.fill", tint: SettingsTint.ai)
                 }
             }
             .tint(AppColors.calorie)
@@ -94,8 +88,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Rebuild Summaries")
                 } icon: {
-                    Image(systemName: "wand.and.stars")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("wand.and.stars", tint: SettingsTint.storage)
                 }
             }
             .buttonStyle(.plain)
@@ -105,8 +98,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Storage used")
                 } icon: {
-                    Image(systemName: "internaldrive")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("internaldrive.fill", tint: SettingsTint.storage)
                 }
                 Spacer()
                 Text(HealthUnitFormatting.byteCountText(healthDataStore.databaseSizeBytes))

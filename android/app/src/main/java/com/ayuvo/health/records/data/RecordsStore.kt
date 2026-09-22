@@ -168,7 +168,12 @@ interface RecordsStore {
     // Home sections
     suspend fun processingSummary(): ProcessingSummary
     suspend fun needsReview(limit: Int): List<HealthRecord>
-    suspend fun importantHighlights(limit: Int): List<HighlightWithRecord>
+    /**
+     * Non-dismissed `important` highlights of live records, newest record first (§15). With [since], only
+     * records whose `sort_date` (record date, else import day) is on or after it — callers pass
+     * `HighlightBuilder.since(today)` for the 6-month display window.
+     */
+    suspend fun importantHighlights(limit: Int, since: java.time.LocalDate? = null): List<HighlightWithRecord>
 
     /** Rebuilds the FTS row (§17 columns). */
     suspend fun reindex(recordId: String)

@@ -746,6 +746,517 @@
         }
       },
       "name": "caps_dedup_rejected_and_summary"
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-nutri",
+            "section": "important",
+            "text": "Vitamin D: 14 ng/mL — below the report reference range"
+          },
+          {
+            "id": "h3",
+            "position": 0,
+            "record_id": "rec-lipid",
+            "section": "important",
+            "text": "LDL Cholesterol: 102.5 mg/dL — above the report reference range"
+          },
+          {
+            "id": "h2",
+            "position": 1,
+            "record_id": "rec-lipid",
+            "section": "important",
+            "text": "VLDL Cholesterol: 20.6 mg/dL — below the report reference range"
+          },
+          {
+            "id": "h6",
+            "position": 0,
+            "record_id": "rec-edge",
+            "section": "important",
+            "text": "HbA1c: 6.1 % — above the report reference range"
+          }
+        ],
+        "since": "2026-03-22"
+      },
+      "input": {
+        "highlights": [
+          {
+            "dismissed": false,
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-nutri",
+            "section": "important",
+            "text": "Vitamin D: 14 ng/mL — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h2",
+            "position": 1,
+            "record_id": "rec-lipid",
+            "section": "important",
+            "text": "VLDL Cholesterol: 20.6 mg/dL — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h3",
+            "position": 0,
+            "record_id": "rec-lipid",
+            "section": "important",
+            "text": "LDL Cholesterol: 102.5 mg/dL — above the report reference range"
+          },
+          {
+            "dismissed": true,
+            "id": "h4",
+            "position": 2,
+            "record_id": "rec-lipid",
+            "section": "important",
+            "text": "HDL Cholesterol: 38 mg/dL — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h5",
+            "position": 0,
+            "record_id": "rec-lipid",
+            "section": "medications",
+            "text": "Atorvastatin 10 mg"
+          },
+          {
+            "dismissed": false,
+            "id": "h6",
+            "position": 0,
+            "record_id": "rec-edge",
+            "section": "important",
+            "text": "HbA1c: 6.1 % — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h7",
+            "position": 0,
+            "record_id": "rec-before",
+            "section": "important",
+            "text": "TSH: 5.9 uIU/mL — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h8",
+            "position": 0,
+            "record_id": "rec-cbc-2024",
+            "section": "important",
+            "text": "LYM%: 51.5 % — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h9",
+            "position": 0,
+            "record_id": "rec-archived",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          }
+        ],
+        "limit": 8,
+        "op": "important",
+        "records": [
+          {
+            "archived": false,
+            "id": "rec-nutri",
+            "seq": 5,
+            "sort_date": "2026-09-12"
+          },
+          {
+            "archived": false,
+            "id": "rec-lipid",
+            "seq": 4,
+            "sort_date": "2026-09-05"
+          },
+          {
+            "archived": false,
+            "id": "rec-edge",
+            "seq": 3,
+            "sort_date": "2026-03-22"
+          },
+          {
+            "archived": false,
+            "id": "rec-before",
+            "seq": 2,
+            "sort_date": "2026-03-21"
+          },
+          {
+            "archived": false,
+            "id": "rec-cbc-2024",
+            "seq": 1,
+            "sort_date": "2024-05-18"
+          },
+          {
+            "archived": true,
+            "id": "rec-archived",
+            "seq": 6,
+            "sort_date": "2026-09-10"
+          }
+        ],
+        "today": "2026-09-22"
+      },
+      "name": "important_window_six_months",
+      "notes": "today 2026-09-22 -> since 2026-03-22 (inclusive). Older, archived, dismissed and non-important rows drop out."
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "id": "h3",
+            "position": 0,
+            "record_id": "rec-mar01",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          },
+          {
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-feb28",
+            "section": "important",
+            "text": "Platelet Count: 1.45 lakhs/cumm — below the report reference range"
+          }
+        ],
+        "since": "2026-02-28"
+      },
+      "input": {
+        "highlights": [
+          {
+            "dismissed": false,
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-feb27",
+            "section": "important",
+            "text": "Haemoglobin: 11.2 g/dL — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-feb28",
+            "section": "important",
+            "text": "Platelet Count: 1.45 lakhs/cumm — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h3",
+            "position": 0,
+            "record_id": "rec-mar01",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          }
+        ],
+        "limit": 8,
+        "op": "important",
+        "records": [
+          {
+            "archived": false,
+            "id": "rec-feb27",
+            "seq": 1,
+            "sort_date": "2026-02-27"
+          },
+          {
+            "archived": false,
+            "id": "rec-feb28",
+            "seq": 2,
+            "sort_date": "2026-02-28"
+          },
+          {
+            "archived": false,
+            "id": "rec-mar01",
+            "seq": 3,
+            "sort_date": "2026-03-01"
+          }
+        ],
+        "today": "2026-08-31"
+      },
+      "name": "important_window_month_end_clamp",
+      "notes": "today 2026-08-31 -> since 2026-02-28 (day clamps to the month's last day)."
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-feb29",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          }
+        ],
+        "since": "2028-02-29"
+      },
+      "input": {
+        "highlights": [
+          {
+            "dismissed": false,
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-feb28",
+            "section": "important",
+            "text": "Haemoglobin: 11.2 g/dL — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-feb29",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          }
+        ],
+        "limit": 8,
+        "op": "important",
+        "records": [
+          {
+            "archived": false,
+            "id": "rec-feb28",
+            "seq": 1,
+            "sort_date": "2028-02-28"
+          },
+          {
+            "archived": false,
+            "id": "rec-feb29",
+            "seq": 2,
+            "sort_date": "2028-02-29"
+          }
+        ],
+        "today": "2028-08-31"
+      },
+      "name": "important_window_leap_year_clamp",
+      "notes": "today 2028-08-31 -> since 2028-02-29."
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "id": "h3",
+            "position": 0,
+            "record_id": "rec-future",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          },
+          {
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-jul15",
+            "section": "important",
+            "text": "HbA1c: 6.1 % — above the report reference range"
+          }
+        ],
+        "since": "2025-07-15"
+      },
+      "input": {
+        "highlights": [
+          {
+            "dismissed": false,
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-jul14",
+            "section": "important",
+            "text": "TSH: 5.9 uIU/mL — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-jul15",
+            "section": "important",
+            "text": "HbA1c: 6.1 % — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h3",
+            "position": 0,
+            "record_id": "rec-future",
+            "section": "important",
+            "text": "ESR: 28 mm/hr — above the report reference range"
+          }
+        ],
+        "limit": 8,
+        "op": "important",
+        "records": [
+          {
+            "archived": false,
+            "id": "rec-jul14",
+            "seq": 1,
+            "sort_date": "2025-07-14"
+          },
+          {
+            "archived": false,
+            "id": "rec-jul15",
+            "seq": 2,
+            "sort_date": "2025-07-15"
+          },
+          {
+            "archived": false,
+            "id": "rec-future",
+            "seq": 3,
+            "sort_date": "2026-02-01"
+          }
+        ],
+        "today": "2026-01-15"
+      },
+      "name": "important_window_year_rollover",
+      "notes": "today 2026-01-15 -> since 2025-07-15."
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "id": "h4",
+            "position": 0,
+            "record_id": "rec-b",
+            "section": "important",
+            "text": "B0: 4 — below the report reference range"
+          },
+          {
+            "id": "h3",
+            "position": 1,
+            "record_id": "rec-b",
+            "section": "important",
+            "text": "B1: 3 — below the report reference range"
+          },
+          {
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-a",
+            "section": "important",
+            "text": "A0: 1 — above the report reference range"
+          }
+        ],
+        "since": "2026-03-22"
+      },
+      "input": {
+        "highlights": [
+          {
+            "dismissed": false,
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-a",
+            "section": "important",
+            "text": "A0: 1 — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h2",
+            "position": 1,
+            "record_id": "rec-a",
+            "section": "important",
+            "text": "A1: 2 — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h3",
+            "position": 1,
+            "record_id": "rec-b",
+            "section": "important",
+            "text": "B1: 3 — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h4",
+            "position": 0,
+            "record_id": "rec-b",
+            "section": "important",
+            "text": "B0: 4 — below the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h5",
+            "position": 0,
+            "record_id": "rec-c",
+            "section": "important",
+            "text": "C0: 5 — above the report reference range"
+          }
+        ],
+        "limit": 3,
+        "op": "important",
+        "records": [
+          {
+            "archived": false,
+            "id": "rec-a",
+            "seq": 7,
+            "sort_date": "2026-09-05"
+          },
+          {
+            "archived": false,
+            "id": "rec-b",
+            "seq": 9,
+            "sort_date": "2026-09-05"
+          },
+          {
+            "archived": false,
+            "id": "rec-c",
+            "seq": 10,
+            "sort_date": "2026-08-01"
+          }
+        ],
+        "today": "2026-09-22"
+      },
+      "name": "important_window_order_and_limit",
+      "notes": "sort_date desc, seq desc, position asc; first `limit`."
+    },
+    {
+      "expected": {
+        "highlights": [
+          {
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-new",
+            "section": "important",
+            "text": "LDL Cholesterol: 102.5 mg/dL — above the report reference range"
+          },
+          {
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-cbc-2024",
+            "section": "important",
+            "text": "PLT: 167 10^3/uL — below the report reference range"
+          }
+        ],
+        "since": null
+      },
+      "input": {
+        "highlights": [
+          {
+            "dismissed": false,
+            "id": "h1",
+            "position": 0,
+            "record_id": "rec-new",
+            "section": "important",
+            "text": "LDL Cholesterol: 102.5 mg/dL — above the report reference range"
+          },
+          {
+            "dismissed": false,
+            "id": "h2",
+            "position": 0,
+            "record_id": "rec-cbc-2024",
+            "section": "important",
+            "text": "PLT: 167 10^3/uL — below the report reference range"
+          }
+        ],
+        "limit": 8,
+        "op": "important",
+        "records": [
+          {
+            "archived": false,
+            "id": "rec-new",
+            "seq": 2,
+            "sort_date": "2026-09-05"
+          },
+          {
+            "archived": false,
+            "id": "rec-cbc-2024",
+            "seq": 1,
+            "sort_date": "2024-05-18"
+          }
+        ]
+      },
+      "name": "important_without_since_keeps_old",
+      "notes": "no `today`: since is null and every live record counts (the additive parameter is optional)."
     }
   ],
   "format": "ayuvo-records-vectors",

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ProfileInfoRow: View {
     let icon: String
+    var tint: Color = SettingsTint.other
     let label: String
     let value: String
     var action: (() -> Void)? = nil
@@ -16,8 +17,7 @@ struct ProfileInfoRow: View {
                 Label {
                     Text(LocalizedDisplayText.text(label))
                 } icon: {
-                    Image(systemName: icon)
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon(icon, tint: tint)
                 }
                 Spacer()
                 Text(value)
@@ -649,24 +649,28 @@ struct MealTimeSettingsView: View {
                 mealTimePicker(
                     title: "Breakfast starts",
                     icon: "sunrise.fill",
+                    tint: SettingsTint.nutrition,
                     minutes: $breakfastStartMinutes,
                     allowedMinutes: validRange(0, lunchStartMinutes - 15)
                 )
                 mealTimePicker(
                     title: "Lunch starts",
                     icon: "sun.max.fill",
+                    tint: SettingsTint.nutrition,
                     minutes: $lunchStartMinutes,
                     allowedMinutes: validRange(breakfastStartMinutes + 15, dinnerStartMinutes - 15)
                 )
                 mealTimePicker(
                     title: "Dinner starts",
                     icon: "moon.fill",
+                    tint: SettingsTint.nutrition,
                     minutes: $dinnerStartMinutes,
                     allowedMinutes: validRange(lunchStartMinutes + 15, snackStartMinutes - 15)
                 )
                 mealTimePicker(
                     title: "Late snack starts",
                     icon: "cup.and.saucer.fill",
+                    tint: SettingsTint.nutrition,
                     minutes: $snackStartMinutes,
                     allowedMinutes: validRange(dinnerStartMinutes + 15, 1439)
                 )
@@ -700,6 +704,7 @@ struct MealTimeSettingsView: View {
     private func mealTimePicker(
         title: String,
         icon: String,
+        tint: Color = SettingsTint.time,
         minutes: Binding<Int>,
         allowedMinutes: ClosedRange<Int>
     ) -> some View {
@@ -711,8 +716,7 @@ struct MealTimeSettingsView: View {
             Label {
                 Text(title)
             } icon: {
-                Image(systemName: icon)
-                    .foregroundStyle(AppColors.calorie)
+                SettingsIcon(icon, tint: tint)
             }
         }
         .tint(AppColors.calorie)
@@ -1113,8 +1117,7 @@ struct NotificationSettingsView: View {
                     Label {
                         Text("Notifications")
                     } icon: {
-                        Image(systemName: "bell.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("bell.fill", tint: SettingsTint.notifications)
                     }
                 }
                 .tint(AppColors.calorie)
@@ -1158,6 +1161,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Breakfast",
                         icon: "sunrise.fill",
+                        tint: SettingsTint.nutrition,
                         isEnabled: $breakfastEnabled,
                         hour: $breakfastHour,
                         minute: $breakfastMinute
@@ -1169,6 +1173,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Lunch",
                         icon: "sun.max.fill",
+                        tint: SettingsTint.nutrition,
                         isEnabled: $lunchEnabled,
                         hour: $lunchHour,
                         minute: $lunchMinute
@@ -1180,6 +1185,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Dinner",
                         icon: "moon.fill",
+                        tint: SettingsTint.nutrition,
                         isEnabled: $dinnerEnabled,
                         hour: $dinnerHour,
                         minute: $dinnerMinute
@@ -1195,6 +1201,7 @@ struct NotificationSettingsView: View {
                         NotificationTimeRow(
                             label: "Water Reminder",
                             icon: "drop.fill",
+                            tint: SettingsTint.hydration,
                             isEnabled: $waterReminderEnabled,
                             hour: $waterReminderHour,
                             minute: $waterReminderMinute
@@ -1212,8 +1219,7 @@ struct NotificationSettingsView: View {
                             Label {
                                 Text("Goal Reached")
                             } icon: {
-                                Image(systemName: "timer")
-                                    .foregroundStyle(AppColors.calorie)
+                                SettingsIcon("timer", tint: SettingsTint.fasting)
                             }
                         }
                         .tint(AppColors.calorie)
@@ -1235,8 +1241,7 @@ struct NotificationSettingsView: View {
                         Label {
                             Text("Dose Reminders")
                         } icon: {
-                            Image(systemName: "pills.fill")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("pills.fill", tint: SettingsTint.medications)
                         }
                     }
                     .tint(AppColors.calorie)
@@ -1262,8 +1267,7 @@ struct NotificationSettingsView: View {
                             Label {
                                 Text("Snooze For")
                             } icon: {
-                                Image(systemName: "clock.arrow.circlepath")
-                                    .foregroundStyle(AppColors.calorie)
+                                SettingsIcon("clock.arrow.circlepath", tint: SettingsTint.medications)
                             }
                         }
                         .pickerStyle(.menu)
@@ -1276,8 +1280,7 @@ struct NotificationSettingsView: View {
                         Label {
                             Text("Pending reminders")
                         } icon: {
-                            Image(systemName: "ladybug")
-                                .foregroundStyle(.secondary)
+                            SettingsIcon("ladybug.fill", tint: SettingsTint.debug)
                         }
                         Spacer()
                         Text(pendingMedicationReminders.map(String.init) ?? "…")
@@ -1299,6 +1302,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Streak Reminder",
                         icon: "flame.fill",
+                        tint: SettingsTint.activity,
                         isEnabled: $streakEnabled,
                         hour: $streakHour,
                         minute: $streakMinute
@@ -1307,6 +1311,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Daily Summary",
                         icon: "chart.bar.fill",
+                        tint: SettingsTint.nutrition,
                         isEnabled: $summaryEnabled,
                         hour: $summaryHour,
                         minute: $summaryMinute
@@ -1315,6 +1320,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Log Weight",
                         icon: "scalemass.fill",
+                        tint: SettingsTint.body,
                         isEnabled: $weightLogEnabled,
                         hour: $weightLogHour,
                         minute: $weightLogMinute
@@ -1323,6 +1329,7 @@ struct NotificationSettingsView: View {
                     NotificationTimeRow(
                         label: "Log Body Fat",
                         icon: "percent",
+                        tint: SettingsTint.body,
                         isEnabled: $bodyFatLogEnabled,
                         hour: $bodyFatLogHour,
                         minute: $bodyFatLogMinute
@@ -1341,8 +1348,7 @@ struct NotificationSettingsView: View {
                         Label {
                             Text("App Updates")
                         } icon: {
-                            Image(systemName: "arrow.down.circle.fill")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("arrow.down.circle.fill", tint: SettingsTint.update)
                         }
                     }
                     .tint(AppColors.calorie)
@@ -1403,6 +1409,7 @@ struct NotificationSettingsView: View {
 struct NotificationTimeRow: View {
     let label: String
     let icon: String
+    var tint: Color = SettingsTint.notifications
     @Binding var isEnabled: Bool
     @Binding var hour: Int
     @Binding var minute: Int
@@ -1426,8 +1433,7 @@ struct NotificationTimeRow: View {
                 Label {
                     Text(LocalizedDisplayText.text(label))
                 } icon: {
-                    Image(systemName: icon)
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon(icon, tint: tint)
                 }
             }
             .tint(AppColors.calorie)
@@ -1450,6 +1456,7 @@ struct NotificationTimeRow: View {
 
 struct ComingSoonRow: View {
     let icon: String
+    var tint: Color = SettingsTint.other
     let label: String
     let action: () -> Void
 
@@ -1459,8 +1466,7 @@ struct ComingSoonRow: View {
                 Label {
                     Text(LocalizedDisplayText.text(label))
                 } icon: {
-                    Image(systemName: icon)
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon(icon, tint: tint)
                 }
                 Spacer()
                 Text("Coming Soon")

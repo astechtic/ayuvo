@@ -396,6 +396,24 @@ fun AppNavHost(
                                 // Browse footer → Settings › Data & Privacy › Health Sync.
                                 settingsPageRequest = SettingsPageRequest(SettingsPage.HEALTH_SYNC)
                                 navigateToTab(AppRoutes.SETTINGS)
+                            },
+                            onOpenFeature = { feature ->
+                                // Browse search "Features" (ids shared with iOS); logWeight / logBodyFat open in Browse.
+                                when (feature.id) {
+                                    "workouts", "workoutLog" -> nav.navigate(AppRoutes.WORKOUTS_LOG)
+                                    "exerciseLibrary" -> nav.navigate(AppRoutes.WORKOUTS_LIBRARY)
+                                    "nutrition" -> nav.navigate(AppRoutes.BROWSE_NUTRITION)
+                                    "logFood" -> openNutrition(FoodLogRequest(method = null))
+                                    "water" -> nav.navigate(AppRoutes.metric(MetricKey.App(com.ayuvo.health.data.metrics.AppMetricId.WATER)))
+                                    "fasting" -> nav.navigate(AppRoutes.BROWSE_FASTING)
+                                    "bodyMeasurements" -> nav.navigate(AppRoutes.BROWSE_MEASUREMENTS)
+                                    "medications" -> nav.navigate(AppRoutes.MEDICATIONS)
+                                    "addMedication" -> nav.navigate(AppRoutes.medicationAdd())
+                                    "records" -> navigateToTab(AppRoutes.RECORDS)
+                                    "addRecord" -> openAddRecord()
+                                    "coach" -> navigateToTab(AppRoutes.COACH)
+                                    "settings" -> navigateToTab(AppRoutes.SETTINGS)
+                                }
                             }
                         )
                     }

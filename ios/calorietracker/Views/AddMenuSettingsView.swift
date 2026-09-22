@@ -18,8 +18,7 @@ struct AddMenuSettingsView: View {
                     Label {
                         Text("Groups")
                     } icon: {
-                        Image(systemName: "square.stack.3d.up.fill")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("square.stack.3d.up.fill", tint: SettingsTint.nutrition)
                     }
                 }
             } header: {
@@ -40,7 +39,7 @@ struct AddMenuSettingsView: View {
             if !hiddenMethods.isEmpty {
                 Section {
                     ForEach(hiddenMethods) { method in
-                        Label(method.title, systemImage: method.systemImageName)
+                        SettingsLabel(method.title, systemImage: method.systemImageName, tint: SettingsTint.other)
                             .foregroundStyle(.secondary)
                     }
                 } header: {
@@ -85,7 +84,7 @@ struct AddMenuSettingsView: View {
     private var groupOrderSection: some View {
         Section {
             ForEach(config.groups) { group in
-                Label(group.name, systemImage: addMenuGroupIcon(for: group))
+                SettingsLabel(group.name, systemImage: addMenuGroupIcon(for: group), tint: SettingsTint.nutrition)
             }
             .onMove { from, to in
                 config.groups.move(fromOffsets: from, toOffset: to)
@@ -98,7 +97,7 @@ struct AddMenuSettingsView: View {
     private var flatMethodsSection: some View {
         Section {
             ForEach(config.flatMethods) { method in
-                Label(method.title, systemImage: method.systemImageName)
+                SettingsLabel(method.title, systemImage: method.systemImageName, tint: SettingsTint.nutrition)
             }
             .onMove { from, to in
                 config.flatMethods.move(fromOffsets: from, toOffset: to)
@@ -113,7 +112,7 @@ struct AddMenuSettingsView: View {
                         config.flatMethods.append(method)
                     }
                 } label: {
-                    Label("Add Method", systemImage: "plus.circle.fill")
+                    SettingsLabel("Add Method", systemImage: "plus", tint: SettingsTint.success)
                 }
             }
         } header: {
@@ -129,7 +128,7 @@ struct AddMenuSettingsView: View {
             TextField("Group Name", text: group.name)
 
             ForEach(group.wrappedValue.methods) { method in
-                Label(method.title, systemImage: method.systemImageName)
+                SettingsLabel(method.title, systemImage: method.systemImageName, tint: SettingsTint.nutrition)
             }
             .onMove { from, to in
                 group.methods.wrappedValue.move(fromOffsets: from, toOffset: to)
@@ -142,7 +141,7 @@ struct AddMenuSettingsView: View {
                 Button {
                     methodPickerGroupID = group.id.wrappedValue
                 } label: {
-                    Label("Add Method", systemImage: "plus.circle.fill")
+                    SettingsLabel("Add Method", systemImage: "plus", tint: SettingsTint.success)
                 }
             }
         } header: {
@@ -221,7 +220,7 @@ private struct MethodAssignmentSheet: View {
                 Button {
                     onSelect(method)
                 } label: {
-                    Label(method.title, systemImage: method.systemImageName)
+                    SettingsLabel(method.title, systemImage: method.systemImageName, tint: SettingsTint.nutrition)
                 }
             }
             .navigationTitle("Add Method")

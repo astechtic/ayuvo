@@ -119,6 +119,8 @@ struct MedicationsHomeView: View {
             store.navigationRequest = nil
             path.append(route)
         }
+        .onAppear(perform: consumeAddMedicationRequest)
+        .onChange(of: store.addMedicationRequested) { _, _ in consumeAddMedicationRequest() }
         .overlay(alignment: .top) {
             if let banner = store.banner {
                 RecordsBannerView(banner: banner)
@@ -299,6 +301,12 @@ struct MedicationsHomeView: View {
         case .stopped: String(localized: "No stopped medicines.")
         case .all: String(localized: "No medicines yet.")
         }
+    }
+
+    private func consumeAddMedicationRequest() {
+        guard store.addMedicationRequested else { return }
+        store.addMedicationRequested = false
+        showAddForm = true
     }
 
     private func listSubtitle(_ medication: Medication) -> String {

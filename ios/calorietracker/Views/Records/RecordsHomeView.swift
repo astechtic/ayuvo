@@ -17,6 +17,8 @@ struct RecordsHomeView: View {
     @State private var consentWaiting: [String] = []
 
     @State private var showAddSheet = false
+    /// Last `RecordsStore.addRecordRequest` this screen has answered.
+    @State private var handledAddRecordRequest = 0
     @State private var pendingAction: AddRecordAction?
     @State private var showScanner = false
     @State private var showCamera = false
@@ -41,6 +43,7 @@ struct RecordsHomeView: View {
             content
                 .background(AppColors.appBackground)
                 .navigationTitle("Records")
+                .navigationBarTitleDisplayMode(.large)
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search records"))
                 .toolbar { toolbarContent }
                 .recordsRouteDestinations()
@@ -65,6 +68,8 @@ struct RecordsHomeView: View {
                 store.navigationRequest = nil
                 path.append(RecordsRoute.detail(id))
             }
+            // "Add record" from Browse search or Summary may arrive before this tab first appears.
+            consumeAddRecordRequest()
             if !store.hasLoadedOnce { await store.reload() }
         }
         .onChange(of: searchText) { _, newValue in
@@ -104,7 +109,7 @@ struct RecordsHomeView: View {
             path.append(RecordsRoute.detail(id))
         }
         .onChange(of: store.addRecordRequest) { _, _ in
-            showAddSheet = true
+            consumeAddRecordRequest()
         }
         .sheet(isPresented: $showAddSheet, onDismiss: presentPendingAction) {
             AddRecordSheet { action in
@@ -211,10 +216,6 @@ struct RecordsHomeView: View {
         } else {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0, pinnedViews: store.viewMode == .timeline ? [.sectionHeaders] : []) {
-                    header
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
-
                     intelligenceSections
 
                     if store.isLoadingFirstPage && store.records.isEmpty {
@@ -237,10 +238,14 @@ struct RecordsHomeView: View {
                         }
                     }
                 }
+                .padding(.top, 8)
                 .padding(.bottom, 24)
             }
             .scrollDismissesKeyboard(.immediately)
             .refreshable { await store.reload() }
+            // Chips sit in their own bar under the search field, so scrolled content never
+            // shows through them and nothing slides between the search field and the chips.
+            .recordsTopBar { chipsBar }
         }
     }
 
@@ -279,9 +284,9 @@ struct RecordsHomeView: View {
         if store.searchState.isActive {
             searchHeader
                 .padding(.horizontal)
-                .padding(.bottom, 8)
+                .padding(.bottom, 12)
         } else if showsSections {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: RecordsLayout.sectionSpacing) {
                 if store.hasLoadedOnce, store.aiMode == nil, store.totalCount > 0 || store.recent.isEmpty == false {
                     RecordsAIChooserCard()
                 }
@@ -302,13 +307,30 @@ struct RecordsHomeView: View {
                 if !store.importantHighlights.isEmpty { highlightsSection }
             }
             .padding(.horizontal)
-            .padding(.bottom, 8)
+            .padding(.bottom, RecordsLayout.sectionSpacing)
         }
     }
 
     private var needsReviewSection: some View {
-        RecordsCard {
-            RecordsSectionTitle(title: "Needs review", systemImage: "exclamationmark.circle.fill", trailing: "\(store.processingSummary.needsReview)")
+        VStack(alignment: .leading, spacing: RecordsLayout.headerSpacing) {
+            AyuvoSectionHeader("Needs review") {
+                Text("\(store.processingSummary.needsReview)")
+                    .font(.system(.caption, design: .rounded, weight: .bold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 2)
+                    .background(AppColors.calorie, in: Capsule())
+            }
+            RecordsCard {
+                needsReviewRows
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("records.needsReviewSection")
+    }
+
+    @ViewBuilder
+    private var needsReviewRows: some View {
             ForEach(store.needsReviewRecords.prefix(3)) { record in
                 Button {
                     reviewRecordID = record.id
@@ -322,28 +344,37 @@ struct RecordsHomeView: View {
                 Button("Show all") { withAnimation(.snappy) { chip = .needsReview } }
                     .font(.system(.subheadline, design: .rounded, weight: .semibold))
             }
-        }
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("records.needsReviewSection")
     }
 
+    /// Only the last 6 months of records feed this list (`RecordsStore.reloadSections`).
     private var highlightsSection: some View {
-        RecordsCard {
-            RecordsSectionTitle(title: "Important highlights", systemImage: "waveform.path.ecg")
-            ForEach(store.importantHighlights) { item in
-                NavigationLink(value: RecordsRoute.detail(item.record.id)) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        RecordHighlightRow(text: item.highlight.text)
-                        Text("\(item.record.title) · \(RecordFormatting.dateText(item.record))")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .padding(.leading, 20)
+        VStack(alignment: .leading, spacing: RecordsLayout.headerSpacing) {
+            AyuvoSectionHeader("Important highlights")
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(store.importantHighlights.enumerated()), id: \.element.id) { index, item in
+                    if index > 0 { Divider().padding(.leading, 34) }
+                    NavigationLink(value: RecordsRoute.detail(item.record.id)) {
+                        HStack(spacing: 8) {
+                            VStack(alignment: .leading, spacing: 3) {
+                                RecordHighlightRow(text: item.highlight.text)
+                                Text("\(item.record.title) · \(RecordFormatting.dateText(item.record))")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .padding(.leading, 20)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(.tertiary)
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 14)
+                        .contentShape(Rectangle())
                     }
-                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
+            .ayuvoCard(padding: 0)
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("records.highlightsSection")
@@ -455,19 +486,18 @@ struct RecordsHomeView: View {
         .accessibilityIdentifier("records.searchResults")
     }
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(RecordsFilterChip.allCases) { item in
-                        chipButton(item)
-                    }
+    private var chipsBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(RecordsFilterChip.allCases) { item in
+                    chipButton(item)
                 }
-                .padding(.vertical, 2)
             }
-            .scrollClipDisabled()
+            .padding(.horizontal)
+            .padding(.vertical, 8)
         }
-        .padding(.top, 4)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("records.chips")
     }
 
     private func chipButton(_ item: RecordsFilterChip) -> some View {
@@ -494,24 +524,23 @@ struct RecordsHomeView: View {
     }
 
     private var recentSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Recent")
-                .font(.system(.headline, design: .rounded))
+        VStack(alignment: .leading, spacing: RecordsLayout.headerSpacing) {
+            AyuvoSectionHeader("Recent")
                 .padding(.horizontal)
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 12) {
+                LazyHStack(alignment: .top, spacing: 12) {
                     ForEach(store.recent) { record in
                         NavigationLink(value: RecordsRoute.detail(record.id)) {
-                            RecordGridCell(record: record)
-                                .frame(width: 104)
+                            RecordRecentCell(record: record)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("records.recent.\(record.id)")
                     }
                 }
                 .padding(.horizontal)
             }
         }
-        .padding(.vertical, 8)
+        .padding(.bottom, RecordsLayout.sectionSpacing)
     }
 
     private var groupedByMonth: [RecordMonthGroup] {
@@ -529,33 +558,39 @@ struct RecordsHomeView: View {
     private var timeline: some View {
         ForEach(groupedByMonth) { group in
             Section {
-                ForEach(Array(group.records.enumerated()), id: \.element.id) { index, record in
-                    let neighbours = store.episodeLinks[record.id]
-                    let next = index + 1 < group.records.count ? group.records[index + 1] : nil
-                    recordLink(record) {
-                        RecordRow(record: record, isSelecting: isSelecting, isSelected: selection.contains(record.id), episode: neighbours != nil)
-                    }
-                    .padding(.horizontal)
-                    .overlay(alignment: .bottomLeading) {
-                        // Thin connector between consecutive linked rows (plan §3.10).
-                        if let next, neighbours?.contains(next.id) == true, !isSelecting {
-                            Capsule()
-                                .fill(Color.teal.opacity(0.55))
-                                .frame(width: 3, height: 18)
-                                .offset(x: 38.5, y: 9)
-                                .accessibilityHidden(true)
+                VStack(spacing: 0) {
+                    ForEach(Array(group.records.enumerated()), id: \.element.id) { index, record in
+                        let neighbours = store.episodeLinks[record.id]
+                        let next = index + 1 < group.records.count ? group.records[index + 1] : nil
+                        recordLink(record) {
+                            RecordRow(record: record, isSelecting: isSelecting, isSelected: selection.contains(record.id), episode: neighbours != nil)
+                        }
+                        .padding(.horizontal, RecordsLayout.rowInset)
+                        .overlay(alignment: .bottomLeading) {
+                            // Thin connector between consecutive linked rows (plan §3.10), centred
+                            // under the 48 pt thumbnail.
+                            if let next, neighbours?.contains(next.id) == true, !isSelecting {
+                                Capsule()
+                                    .fill(Color.teal.opacity(0.55))
+                                    .frame(width: 3, height: 18)
+                                    .offset(x: RecordsLayout.rowInset + 22.5, y: 9)
+                                    .accessibilityHidden(true)
+                            }
+                        }
+                        .zIndex(neighbours == nil ? 0 : 1)
+                        if next != nil {
+                            Divider().padding(.leading, RecordsLayout.rowInset + 60)
                         }
                     }
-                    .zIndex(neighbours == nil ? 0 : 1)
-                    Divider().padding(.leading, 76)
                 }
+                .ayuvoCard(padding: 0)
+                .padding(.horizontal)
+                .padding(.bottom, RecordsLayout.sectionSpacing)
             } header: {
-                Text(RecordFormatting.monthTitle(group.key))
-                    .font(.system(.subheadline, design: .rounded, weight: .bold))
-                    .foregroundStyle(.secondary)
+                AyuvoSectionHeader(verbatim: RecordFormatting.monthTitle(group.key))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
-                    .padding(.vertical, 6)
+                    .padding(.vertical, RecordsLayout.headerSpacing)
                     .background(AppColors.appBackground)
             }
         }
@@ -567,11 +602,13 @@ struct RecordsHomeView: View {
                 recordLink(record) {
                     RecordRow(record: record, isSelecting: isSelecting, isSelected: selection.contains(record.id), compact: true)
                 }
-                .padding(.horizontal)
-                Divider().padding(.leading, 68)
+                .padding(.horizontal, RecordsLayout.rowInset)
+                if record.id != store.records.last?.id {
+                    Divider().padding(.leading, RecordsLayout.rowInset + 52)
+                }
             }
         }
-        .background(AppColors.appCard, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .ayuvoCard(padding: 0)
         .padding(.horizontal)
     }
 
@@ -826,6 +863,12 @@ struct RecordsHomeView: View {
         .background(.bar)
     }
 
+    private func consumeAddRecordRequest() {
+        guard store.addRecordRequest != handledAddRecordRequest else { return }
+        handledAddRecordRequest = store.addRecordRequest
+        showAddSheet = true
+    }
+
     private func toggleSelection(_ id: String) {
         if selection.contains(id) {
             selection.remove(id)
@@ -884,6 +927,61 @@ struct RecordsHomeView: View {
             store.importErrorMessage = String(localized: "Some photos couldn't be loaded.")
         }
         await store.importItems(imports)
+    }
+}
+
+/// Records tab spacing: one scale for every section.
+private enum RecordsLayout {
+    static let sectionSpacing: CGFloat = 20
+    static let headerSpacing: CGFloat = 8
+    /// Horizontal inset of rows inside a card.
+    static let rowInset: CGFloat = 14
+}
+
+/// "Recent" strip cell: fixed thumbnail size, two-line title (space always reserved) and date,
+/// so every cell has the same height whatever the title length.
+private struct RecordRecentCell: View {
+    let record: HealthRecord
+    @ScaledMetric(relativeTo: .caption) private var width: CGFloat = 112
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            RecordThumbnailView(record: record, cornerRadius: 12)
+                .frame(width: width, height: width * 1.28)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(alignment: .topTrailing) {
+                    if record.favorite {
+                        Image(systemName: "star.fill")
+                            .font(.caption)
+                            .foregroundStyle(.yellow)
+                            .padding(6)
+                    }
+                }
+            Text(record.title)
+                .font(.system(.caption, design: .rounded, weight: .semibold))
+                .foregroundStyle(.primary)
+                .lineLimit(2, reservesSpace: true)
+                .multilineTextAlignment(.leading)
+            Text(RecordFormatting.dateText(record))
+                .font(.system(.caption2, design: .rounded))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(width: width, alignment: .leading)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private extension View {
+    /// A bar pinned under the navigation bar and its search field, on the screen background, so
+    /// scrolled content never shows through it. (`safeAreaBar` would pull the large title into
+    /// the soft scroll-edge blur.)
+    func recordsTopBar<Bar: View>(@ViewBuilder _ bar: () -> Bar) -> some View {
+        safeAreaInset(edge: .top, spacing: 0) {
+            // No safe-area expansion: the fill must not reach up over the large title.
+            bar().background(AppColors.appBackground, ignoresSafeAreaEdges: [])
+        }
     }
 }
 

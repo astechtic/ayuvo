@@ -39,7 +39,7 @@ data class WidgetSnapshot(
     val fatGoal: Int,
     /** All 4 saved Home nutrients. Water visibility is derived without overwriting this list. */
     val homeNutrients: List<WidgetNutrient>? = null,
-    /** User's theme gradient as raw RGB hex (e.g. 0xFF375F). Rose when absent. */
+    /** User's theme gradient as raw RGB hex (e.g. 0x0A84FF). The default Blue when absent. */
     val themeStartHex: Int? = null,
     val themeEndHex: Int? = null,
     /** Defaults preserve decoding of snapshots written before the Water widget. */

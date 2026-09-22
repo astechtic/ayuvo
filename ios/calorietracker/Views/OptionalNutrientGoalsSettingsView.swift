@@ -15,9 +15,7 @@ struct OptionalNutrientGoalsSettingsView: View {
                         editingNutrient = nutrient
                     } label: {
                         HStack(spacing: 12) {
-                            Image(systemName: nutrient.iconName)
-                                .foregroundStyle(AppColors.calorie)
-                                .frame(width: 22)
+                            SettingsIcon(nutrient.iconName, tint: SettingsTint.nutrition)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(nutrient.displayName)
                                     .foregroundStyle(.primary)

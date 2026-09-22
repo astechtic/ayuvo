@@ -217,6 +217,7 @@ A break is proposed when the score ≥ 5; otherwise page `i` joins the segment (
   - `medications`: `"<name>[ <strength>][ · <frequency>][ · <duration>]"`, input order, max 10.
   - `recommendations`: the recommendation texts, input order, max 5.
   - `summary`: only the validated AI summary (§9.3), label "AI summary — verify against the original report", > 400 code points → first 399 + `…`, `field_index` null.
+- Important highlights list (Records tab and Summary; reference `important_highlights(records, highlights, limit, since)`, vectors `highlights.json` cases `important_*` with `input.op = "important"`): non-dismissed `important` highlights of non-archived records, ordered by `sort_date` desc, `seq` desc, `position` asc, first `limit`. Display window: only records with `sort_date ≥ since` where `since = highlights_since(today)` = today minus 6 calendar months in the device-local calendar, the day clamped to the target month's last day (2026-08-31 → 2026-02-28; 2028-08-31 → 2028-02-29). `sort_date` is the record date, else the local day of `created_ms` (§5). `since` is optional: without it every live record counts.
 - Review (`review_status(record, rows, pending_split, pending_duplicate)` → `{status, reasons}`; `record` carries `record_type`, `type_confidence`, `type_method`, `document_date`, `processing_error`, `ocr_confidence`, `review_status`), reasons in this order:
   1. `type_uncertain`: `type_method` ≠ `user` and (`record_type` = `other` or `type_confidence` < 0.7).
   2. `no_date`: `document_date` is NULL.

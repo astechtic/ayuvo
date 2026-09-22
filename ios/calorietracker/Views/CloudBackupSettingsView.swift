@@ -16,7 +16,7 @@ struct CloudBackupSettingsSection: View {
                     else { backup.enabled = false }
                 }
             )) {
-                Label("iCloud Backup", systemImage: "icloud")
+                SettingsLabel("iCloud Backup", systemImage: "icloud.fill", tint: SettingsTint.backup)
             }
             .accessibilityIdentifier("settings.cloudBackup.toggle")
             .disabled(backup.busy)
@@ -29,15 +29,21 @@ struct CloudBackupSettingsSection: View {
             }
 
             if backup.enabled {
-                Button("Back up now") { Task { await run { try await backup.backupNow() } } }
-                    .accessibilityIdentifier("settings.cloudBackup.backupNow")
-                    .disabled(backup.busy)
-                Button("Restore now") { Task { await run { try await backup.restoreNow() } } }
-                    .accessibilityIdentifier("settings.cloudBackup.restoreNow")
-                    .disabled(backup.busy)
-                Button("Delete cloud backup", role: .destructive) { showDeleteConfirm = true }
-                    .accessibilityIdentifier("settings.cloudBackup.delete")
-                    .disabled(backup.busy)
+                Button { Task { await run { try await backup.backupNow() } } } label: {
+                    SettingsLabel("Back up now", systemImage: "icloud.and.arrow.up.fill", tint: SettingsTint.backup)
+                }
+                .accessibilityIdentifier("settings.cloudBackup.backupNow")
+                .disabled(backup.busy)
+                Button { Task { await run { try await backup.restoreNow() } } } label: {
+                    SettingsLabel("Restore now", systemImage: "icloud.and.arrow.down.fill", tint: SettingsTint.importData)
+                }
+                .accessibilityIdentifier("settings.cloudBackup.restoreNow")
+                .disabled(backup.busy)
+                Button(role: .destructive) { showDeleteConfirm = true } label: {
+                    SettingsLabel("Delete cloud backup", systemImage: "trash.fill", tint: SettingsTint.destructive)
+                }
+                .accessibilityIdentifier("settings.cloudBackup.delete")
+                .disabled(backup.busy)
             }
         } footer: {
             Text("Off until you turn it on. Uses the iCloud account on this iPhone — change Apple ID in iOS Settings if you need a different account. API keys stay on the device.")

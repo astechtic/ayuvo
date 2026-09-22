@@ -13,7 +13,7 @@ struct LicensesView: View {
                         accessibilityLabel: String(localized: "Base project MIT licence")
                     )
                 } label: {
-                    Label(String(localized: "Base project — MIT"), systemImage: "doc.text")
+                    SettingsLabel(String(localized: "Base project — MIT"), systemImage: "doc.text.fill", tint: SettingsTint.legal)
                 }
             } footer: {
                 Text("Ayuvo is built on an MIT-licensed open-source project. The original notice is retained as required by the licence.")
@@ -27,17 +27,17 @@ struct LicensesView: View {
                         accessibilityLabel: String(localized: "Third-party notices")
                     )
                 } label: {
-                    Label(String(localized: "Exercise library, Open Food Facts, muscle glyphs, provider logos"), systemImage: "list.bullet.rectangle")
+                    SettingsLabel(String(localized: "Exercise library, Open Food Facts, muscle glyphs, provider logos"), systemImage: "list.bullet.rectangle.fill", tint: SettingsTint.legal)
                 }
                 NavigationLink {
                     LiteRTLMNoticesView()
                 } label: {
-                    Label(LocalModelStrings.text("notices.title", defaultValue: "LiteRT-LM Notices"), systemImage: "cpu")
+                    SettingsLabel(LocalModelStrings.text("notices.title", defaultValue: "LiteRT-LM Notices"), systemImage: "cpu", tint: SettingsTint.ai)
                 }
                 NavigationLink {
                     WhisperBaseNoticesView()
                 } label: {
-                    Label("Whisper Base · MIT", systemImage: "waveform")
+                    SettingsLabel("Whisper Base · MIT", systemImage: "waveform", tint: SettingsTint.speech)
                 }
             }
         }

@@ -12,8 +12,7 @@ extension SettingsPaneView {
                     Text("Open Medications")
                         .foregroundStyle(.primary)
                 } icon: {
-                    Image(systemName: "pills.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("pills.fill", tint: SettingsTint.medications)
                 }
             }
             .accessibilityIdentifier("settings.row.openMedications")
@@ -24,8 +23,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Dose Reminders")
                 } icon: {
-                    Image(systemName: "bell.badge")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("bell.badge.fill", tint: SettingsTint.notifications)
                 }
             }
             .accessibilityIdentifier("settings.row.medicationReminders")

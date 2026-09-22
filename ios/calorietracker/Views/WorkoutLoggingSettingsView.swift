@@ -14,8 +14,7 @@ struct WorkoutLoggingSettingsSection: View {
                 Label {
                     Text("Walk & Run")
                 } icon: {
-                    Image(systemName: "figure.walk")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("figure.walk", tint: SettingsTint.activity)
                 }
                 Spacer()
                 Toggle("Walk & Run", isOn: $walkRunQuickLogEnabled)
@@ -65,7 +64,7 @@ struct WorkoutLoggingSettingsSection: View {
         .foregroundStyle(.secondary)
         .lineSpacing(1)
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.leading, 32)
+        .padding(.leading, 41)
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(

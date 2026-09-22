@@ -90,6 +90,10 @@ import com.ayuvo.health.ui.components.GlassSurface
 import com.ayuvo.health.ui.components.GlassTextButton
 import com.ayuvo.health.ui.components.GlassTextField
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
+import com.ayuvo.health.ui.design.AyuvoColors
+import com.ayuvo.health.ui.design.AyuvoShapes
+import com.ayuvo.health.ui.design.SectionHeader
+import androidx.compose.ui.platform.testTag
 import com.ayuvo.health.ui.theme.AppColors
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -194,8 +198,10 @@ fun RecordsScreen(
                     onSelectViewMode = vm::setViewMode
                 )
                 ParsedChipsRow(chips = ui.chips, onRemove = vm::removeChip)
+                // Filter chips get their own row below the search field (never under it).
                 LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                    modifier = Modifier.fillMaxWidth().testTag("records.filters"),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item(key = "filters") {
@@ -411,10 +417,10 @@ private fun RecordsSearchFieldWithViewMode(
 ) {
     var menuOpen by remember { mutableStateOf(false) }
     Row(
-        Modifier.padding(start = 16.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+        Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(Modifier.weight(1f)) {
+        Box(Modifier.weight(1f).testTag("records.search")) {
             GlassTextField(
                 value = value,
                 onValueChange = onValueChange,
@@ -691,47 +697,63 @@ private fun SearchResults(
     }
 }
 
+/**
+ * Recent: fixed-size cards (same thumbnail box, 2-line title, date) in one horizontal row, so
+ * portrait scans and landscape photos line up.
+ */
 @Composable
 private fun RecentStrip(ui: RecordsUiState, container: AppContainer, onOpen: (HealthRecord) -> Unit) {
-    Column(Modifier.fillMaxWidth().padding(bottom = 4.dp)) {
-        Text(
-            stringResource(R.string.records_recent),
-            fontSize = 17.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
-        )
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Column(Modifier.fillMaxWidth().testTag("records.recent")) {
+        SectionHeader(stringResource(R.string.records_recent))
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             items(ui.recent, key = { "recent-${it.id}" }) { record ->
                 Column(
                     Modifier
-                        .width(112.dp)
-                        .clip(RoundedCornerShape(14.dp))
+                        .width(RECENT_CARD_WIDTH)
+                        .clip(AyuvoShapes.Card)
                         .clickable { onOpen(record) },
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     RecordThumbnail(
                         record = record,
                         files = container.recordFiles,
                         size = null,
-                        cornerRadius = 14.dp,
-                        modifier = Modifier.fillMaxWidth().aspectRatio(0.85f)
+                        cornerRadius = 16.dp,
+                        modifier = Modifier.width(RECENT_CARD_WIDTH).height(RECENT_THUMB_HEIGHT)
                     )
-                    Text(record.title, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Column(Modifier.padding(horizontal = 2.dp)) {
+                        Text(
+                            record.title,
+                            fontSize = 14.sp,
+                            lineHeight = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 2,
+                            minLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            RecordFormat.displayDate(record),
+                            fontSize = 12.sp,
+                            maxLines = 1,
+                            color = AyuvoColors.secondaryLabel()
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+/** Sticky month title: same metrics as [SectionHeader], on the screen background. */
 @Composable
 private fun MonthHeader(text: String) {
     Box(
         Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
-            .padding(start = 4.dp, top = 10.dp, bottom = 6.dp)
+            .padding(top = 4.dp)
     ) {
-        Text(text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.72f))
+        SectionHeader(text)
     }
 }
 
@@ -761,9 +783,9 @@ private fun RecordRow(
                     if (connectDown) drawLine(connector, androidx.compose.ui.geometry.Offset(x, size.height), androidx.compose.ui.geometry.Offset(x, size.height + gap), strokeWidth = 2.dp.toPx())
                 } else Modifier
             )
-            .clip(RoundedCornerShape(18.dp))
+            .clip(AyuvoShapes.Card)
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
-        cornerRadius = 18.dp,
+        cornerRadius = 16.dp,
         padding = 10.dp
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -879,7 +901,7 @@ private fun SkeletonRows() {
                 Modifier
                     .fillMaxWidth()
                     .height(68.dp)
-                    .clip(RoundedCornerShape(18.dp))
+                    .clip(AyuvoShapes.Card)
                     .background(fill)
             )
         }
@@ -910,7 +932,7 @@ private fun NoMatches(search: String) {
 
 @Composable
 private fun LoadFailedBanner(onRetry: () -> Unit) {
-    GlassSurface(Modifier.fillMaxWidth().padding(16.dp), cornerRadius = 18.dp, padding = 14.dp) {
+    GlassSurface(Modifier.fillMaxWidth().padding(16.dp), cornerRadius = 16.dp, padding = 14.dp) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.records_load_failed), modifier = Modifier.weight(1f))
             GlassTextButton(text = stringResource(R.string.action_retry), onClick = onRetry)
@@ -919,3 +941,5 @@ private fun LoadFailedBanner(onRetry: () -> Unit) {
 }
 
 private const val PREFETCH_DISTANCE = 12
+private val RECENT_CARD_WIDTH = 124.dp
+private val RECENT_THUMB_HEIGHT = 156.dp

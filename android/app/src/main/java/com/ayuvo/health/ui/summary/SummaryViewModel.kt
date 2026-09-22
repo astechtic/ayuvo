@@ -246,7 +246,7 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     private suspend fun buildHighlights(i: HighlightInputs): List<SummaryHighlight> = buildList {
-        runCatching { container.recordsStore.importantHighlights(1) }.getOrNull()?.firstOrNull()?.let { add(SummaryHighlight.Record(it)) }
+        runCatching { container.recordsStore.importantHighlights(1, com.ayuvo.health.records.processing.HighlightBuilder.since(java.time.LocalDate.now())) }.getOrNull()?.firstOrNull()?.let { add(SummaryHighlight.Record(it)) }
         val profile = i.profile
         if (profile != null && i.weights.size >= 2) {
             val forecast = WeightAnalysisService.compute(i.weights, i.foods, profile)

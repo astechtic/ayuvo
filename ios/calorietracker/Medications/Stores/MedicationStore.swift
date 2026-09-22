@@ -34,6 +34,9 @@ import Observation
     private(set) var tabRequest = 0
     /// Route to push on the Health stack (consumed by the Medications home view).
     var navigationRequest: MedicationRoute?
+    /// One-shot "Add medication" request from outside the screen (Browse search), consumed by
+    /// the Medications home view, which presents its Add form.
+    var addMedicationRequested = false
 
     /// Installed by the reminder scheduler (wave 3); called after every write, debounced.
     @ObservationIgnored var reminderPlannerHook: (@MainActor () async -> Void)?

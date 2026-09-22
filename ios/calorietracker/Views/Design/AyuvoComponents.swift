@@ -29,17 +29,23 @@ extension View {
 // MARK: - Section header
 
 struct AyuvoSectionHeader<Trailing: View>: View {
-    let title: LocalizedStringKey
+    let title: Text
     let trailing: Trailing
 
     init(_ title: LocalizedStringKey, @ViewBuilder trailing: () -> Trailing) {
-        self.title = title
+        self.title = Text(title)
+        self.trailing = trailing()
+    }
+
+    /// Already-localized or data-derived titles (e.g. "September 2026").
+    init(verbatim title: String, @ViewBuilder trailing: () -> Trailing) {
+        self.title = Text(verbatim: title)
         self.trailing = trailing()
     }
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title)
+            title
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .accessibilityAddTraits(.isHeader)
             Spacer()
@@ -53,6 +59,10 @@ struct AyuvoSectionHeader<Trailing: View>: View {
 extension AyuvoSectionHeader where Trailing == EmptyView {
     init(_ title: LocalizedStringKey) {
         self.init(title) { EmptyView() }
+    }
+
+    init(verbatim title: String) {
+        self.init(verbatim: title) { EmptyView() }
     }
 }
 

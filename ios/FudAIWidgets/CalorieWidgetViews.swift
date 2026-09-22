@@ -1,11 +1,11 @@
 import SwiftUI
 import WidgetKit
 
-/// Match the main app's pink/red theme without importing Theme.swift
+/// Match the main app's default (Blue) theme without importing Theme.swift
 /// (which lives in the main app target).
 enum WidgetPalette {
-    static let calorie = Color(red: 0xFF / 255, green: 0x37 / 255, blue: 0x5F / 255)
-    static let calorieLight = Color(red: 0xFF / 255, green: 0x6B / 255, blue: 0x8A / 255)
+    static let calorie = Color(red: 0x0A / 255, green: 0x84 / 255, blue: 0xFF / 255)
+    static let calorieLight = Color(red: 0x5E / 255, green: 0xAE / 255, blue: 0xFF / 255)
     static var calorieGradient: LinearGradient {
         LinearGradient(colors: [calorie, calorieLight], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
@@ -24,10 +24,10 @@ extension Color {
     }
 }
 
-/// The user's theme gradient synced from the app; Rose when absent.
+/// The user's theme gradient synced from the app; the default Blue when absent.
 extension WidgetSnapshot {
     var themeColors: [Color] {
-        [Color(hex: themeStartHex ?? 0xFF375F), Color(hex: themeEndHex ?? 0xFF6B8A)]
+        [Color(hex: themeStartHex ?? 0x0A84FF), Color(hex: themeEndHex ?? 0x5EAEFF)]
     }
     var themeColor: Color { themeColors[0] }
     var themeGradient: LinearGradient {

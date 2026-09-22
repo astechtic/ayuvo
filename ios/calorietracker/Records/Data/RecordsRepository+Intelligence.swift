@@ -10,8 +10,8 @@ extension RecordsRepository {
         try await database.needsReview(limit: limit)
     }
 
-    func importantHighlights(limit: Int = 8) async throws -> [(RecordHighlight, HealthRecord)] {
-        try await database.importantHighlights(limit: limit)
+    func importantHighlights(limit: Int = 8, since: String? = nil) async throws -> [(RecordHighlight, HealthRecord)] {
+        try await database.importantHighlights(limit: limit, since: since)
     }
 
     func search(query: RecordQuery, terms: [String], today: String) async throws -> [RecordSearchHit] {

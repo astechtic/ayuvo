@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -100,7 +101,7 @@ private fun CalorieSmall(snapshot: WidgetSnapshot) {
     val gaugeW = minOf(contentW, (contentH - 44f) / 0.58f).toInt().coerceAtLeast(80)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = "Today")
+        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = "Today", themeHex = snapshot.themeStartHex)
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
             contentAlignment = Alignment.Center
@@ -170,11 +171,13 @@ private fun CalorieMedium(snapshot: WidgetSnapshot) {
 // ─── Shared building blocks ────────────────────────────────────────────────
 
 @Composable
-internal fun WidgetHeader(iconRes: Int, label: String) {
+internal fun WidgetHeader(iconRes: Int, label: String, themeHex: Int? = null) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
             provider = ImageProvider(iconRes),
             contentDescription = null,
+            // The glyph follows the synced theme (default Blue), like the gauge and the numbers.
+            colorFilter = ColorFilter.tint(WidgetTheme.themeTextProvider(themeHex)),
             modifier = GlanceModifier.size(12.dp)
         )
         Spacer(modifier = GlanceModifier.width(4.dp))

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -48,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -61,6 +64,10 @@ import com.ayuvo.health.services.update.AndroidUpdateChecker
 import com.ayuvo.health.services.update.AndroidUpdateState
 import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
+import com.ayuvo.health.ui.design.AyuvoColors
+import com.ayuvo.health.ui.design.AyuvoPalette
+import com.ayuvo.health.ui.design.AyuvoSpacing
+import com.ayuvo.health.ui.design.CategoryIcon
 import com.ayuvo.health.ui.theme.AppColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -168,41 +175,41 @@ fun AboutSettingsRows(
                     onOpenStore = ::openPlayStore
                 )
                 Hairline()
-                AboutRow(Icons.Filled.Star, stringResource(R.string.about_rate), onClick = ::openPlayStore)
+                AboutRow(Icons.Filled.Star, stringResource(R.string.about_rate), tint = AboutTint.Orange, onClick = ::openPlayStore)
                 Hairline()
-                AboutRow(Icons.Filled.Share, stringResource(R.string.about_share), onClick = ::share)
+                AboutRow(Icons.Filled.Share, stringResource(R.string.about_share), tint = AboutTint.Blue, onClick = ::share)
             }
 
             AboutSettingsCategory.HELP_SUPPORT -> {
-                AboutRow(Icons.Filled.Email, stringResource(R.string.about_contact)) {
+                AboutRow(Icons.Filled.Email, stringResource(R.string.about_contact), tint = AboutTint.Blue) {
                     SupportMail.compose(ctx, R.string.support_subject_contact)
                 }
                 Hairline()
-                AboutRow(Icons.Filled.Feedback, stringResource(R.string.about_send_feedback)) {
+                AboutRow(Icons.Filled.Feedback, stringResource(R.string.about_send_feedback), tint = AboutTint.Green) {
                     SupportMail.compose(ctx, R.string.support_subject_feedback)
                 }
             }
 
             AboutSettingsCategory.LEGAL -> {
-                AboutRow(Icons.Filled.Lock, stringResource(R.string.about_privacy)) {
+                AboutRow(Icons.Filled.Lock, stringResource(R.string.about_privacy), tint = AboutTint.Blue) {
                     open(AppLinks.PRIVACY_URL)
                 }
                 Hairline()
-                AboutRow(Icons.Filled.Description, stringResource(R.string.about_terms)) {
+                AboutRow(Icons.Filled.Description, stringResource(R.string.about_terms), tint = AboutTint.Gray) {
                     open(AppLinks.TERMS_URL)
                 }
                 Hairline()
-                AboutRow(Icons.Filled.Code, stringResource(R.string.about_open_source_licence), onClick = onOpenLicence)
+                AboutRow(Icons.Filled.Code, stringResource(R.string.about_open_source_licence), tint = AboutTint.Gray, onClick = onOpenLicence)
                 Hairline()
-                AboutRow(Icons.Filled.Description, stringResource(R.string.about_third_party_notices)) {
+                AboutRow(Icons.Filled.Description, stringResource(R.string.about_third_party_notices), tint = AboutTint.Gray) {
                     showThirdPartyNotices = true
                 }
                 Hairline()
-                AboutRow(Icons.Filled.Description, stringResource(R.string.about_litert_notices)) {
+                AboutRow(Icons.Filled.Description, stringResource(R.string.about_litert_notices), tint = AboutTint.Gray) {
                     showLiteRtNotices = true
                 }
                 Hairline()
-                AboutRow(Icons.Filled.Description, stringResource(R.string.about_whisper_notices)) {
+                AboutRow(Icons.Filled.Description, stringResource(R.string.about_whisper_notices), tint = AboutTint.Gray) {
                     showWhisperNotices = true
                 }
             }
@@ -353,6 +360,7 @@ private fun UpdateRow(
     when (state) {
         AndroidUpdateState.Checking -> AboutRow(
             icon = Icons.Filled.Sync,
+            tint = AboutTint.Gray,
             label = stringResource(R.string.about_update_checking),
             trailing = {
                 CircularProgressIndicator(
@@ -365,6 +373,7 @@ private fun UpdateRow(
         )
         is AndroidUpdateState.Available -> AboutRow(
             icon = Icons.Filled.SystemUpdate,
+            tint = AboutTint.Blue,
             label = stringResource(R.string.about_update_available),
             subtitle = stringResource(R.string.about_update_details_format, state.current, state.latest),
             showDot = true,
@@ -380,12 +389,14 @@ private fun UpdateRow(
         )
         is AndroidUpdateState.Failed -> AboutRow(
             icon = Icons.Filled.Sync,
+            tint = AboutTint.Gray,
             label = stringResource(R.string.about_check_updates),
             subtitle = stringResource(R.string.about_version_format, state.current),
             onClick = onRefresh
         )
         is AndroidUpdateState.UpToDate -> AboutRow(
             icon = Icons.Filled.CheckCircle,
+            tint = AboutTint.Green,
             label = stringResource(R.string.about_app_version),
             trailing = {
                 Text(
@@ -398,6 +409,7 @@ private fun UpdateRow(
         )
         AndroidUpdateState.Idle -> AboutRow(
             icon = Icons.Filled.Sync,
+            tint = AboutTint.Gray,
             label = stringResource(R.string.about_check_updates),
             subtitle = stringResource(R.string.about_version_format, currentVersion),
             onClick = onRefresh
@@ -405,10 +417,19 @@ private fun UpdateRow(
     }
 }
 
+/** Fixed iOS-Settings icon colours for the About rows (same values as `SettingsTint`). */
+private object AboutTint {
+    val Gray = AyuvoPalette.Other
+    val Blue = Color(0xFF007AFF)
+    val Green = Color(0xFF34C759)
+    val Orange = Color(0xFFFF9500)
+}
+
 @Composable
 private fun AboutRow(
     icon: ImageVector,
     label: String,
+    tint: Color,
     subtitle: String? = null,
     showDot: Boolean = false,
     trailing: (@Composable () -> Unit)? = null,
@@ -417,35 +438,32 @@ private fun AboutRow(
     Row(
         Modifier
             .fillMaxWidth()
+            .heightIn(min = AyuvoSpacing.RowMinHeight)
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = AyuvoSpacing.RowH, vertical = AyuvoSpacing.RowV),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(Modifier.size(28.dp), contentAlignment = Alignment.Center) {
-            Icon(
-                icon,
-                contentDescription = null,
-                tint = AppColors.Calorie,
-                modifier = Modifier.size(22.dp)
-            )
+        Box {
+            CategoryIcon(icon, tint)
             if (showDot) {
                 Box(
                     Modifier
                         .align(Alignment.TopEnd)
-                        .size(8.dp)
+                        .offset(x = 3.dp, y = (-3).dp)
+                        .size(9.dp)
                         .clip(CircleShape)
-                        .background(AppColors.Calorie)
+                        .background(AyuvoPalette.Destructive)
                 )
             }
         }
-        Spacer(Modifier.width(14.dp))
+        Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
-            Text(label, fontSize = 17.sp, color = MaterialTheme.colorScheme.onSurface)
+            Text(label, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
             if (!subtitle.isNullOrBlank()) {
                 Text(
                     subtitle,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
         }
@@ -460,9 +478,9 @@ private fun AboutRow(
 private fun Hairline() {
     Box(
         Modifier
-            .padding(start = 58.dp)
+            .padding(start = AyuvoSpacing.DividerInset)
             .fillMaxWidth()
             .height(0.5.dp)
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+            .background(AyuvoColors.separator())
     )
 }

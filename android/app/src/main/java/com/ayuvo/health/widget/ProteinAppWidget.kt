@@ -94,7 +94,7 @@ private fun ProteinSmall(snapshot: WidgetSnapshot) {
     val gaugeW = minOf(contentW, (contentH - 44f) / 0.58f).toInt().coerceAtLeast(80)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_bolt, label = nutrient.label)
+        WidgetHeader(iconRes = R.drawable.ic_widget_bolt, label = nutrient.label, themeHex = snapshot.themeStartHex)
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
             contentAlignment = Alignment.Center

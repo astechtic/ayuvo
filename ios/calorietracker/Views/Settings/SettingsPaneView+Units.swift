@@ -12,8 +12,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Height & Length")
                 } icon: {
-                    Image(systemName: "ruler")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("ruler.fill", tint: SettingsTint.body)
                 }
             }
             .pickerStyle(.menu)
@@ -27,8 +26,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Weight")
                 } icon: {
-                    Image(systemName: "scalemass")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("scalemass.fill", tint: SettingsTint.body)
                 }
             }
             .pickerStyle(.menu)
@@ -43,8 +41,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Water Unit")
                 } icon: {
-                    Image(systemName: "ruler")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("drop.fill", tint: SettingsTint.hydration)
                 }
             }
             .pickerStyle(.menu)
@@ -62,8 +59,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Blood Glucose")
                 } icon: {
-                    Image(systemName: "drop")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("drop.fill", tint: SettingsTint.vitals)
                 }
             }
             .pickerStyle(.menu)
@@ -85,8 +81,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Week Starts On")
                 } icon: {
-                    Image(systemName: "calendar")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("calendar", tint: SettingsTint.calendar)
                 }
             }
             .pickerStyle(.menu)

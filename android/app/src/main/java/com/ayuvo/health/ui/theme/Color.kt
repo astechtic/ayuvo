@@ -31,15 +31,16 @@ enum class AppThemeColor(
     LIME("lime", R.string.theme_color_lime, Color(0xFFA0D911), Color(0xFFC3E956));
 
     companion object {
-        const val DEFAULT_KEY = "rose"
+        /** Blue for anyone who never picked a colour; a stored choice always wins. */
+        const val DEFAULT_KEY = "blue"
 
         fun fromKey(key: String?): AppThemeColor =
-            values().firstOrNull { it.key == key } ?: ROSE
+            values().firstOrNull { it.key == key } ?: BLUE
     }
 }
 
 object AppColors {
-    private var activeThemeColor: AppThemeColor = AppThemeColor.ROSE
+    private var activeThemeColor: AppThemeColor = AppThemeColor.BLUE
 
     fun setThemeColor(themeColor: AppThemeColor) {
         activeThemeColor = themeColor

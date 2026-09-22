@@ -1,11 +1,14 @@
 package com.ayuvo.health.ui.settings.groups
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
@@ -14,6 +17,8 @@ import androidx.compose.material.icons.filled.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,6 +26,7 @@ import com.ayuvo.health.R
 import com.ayuvo.health.models.AIProvider
 import com.ayuvo.health.models.SpeechProvider
 import com.ayuvo.health.services.ondevice.LocalModelId
+import com.ayuvo.health.ui.design.AyuvoShapes
 import com.ayuvo.health.ui.design.AyuvoSpacing
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
@@ -32,12 +38,19 @@ import com.ayuvo.health.ui.settings.LocalModelRow
 import com.ayuvo.health.ui.settings.SettingsPage
 import com.ayuvo.health.ui.settings.SettingsPageContext
 import com.ayuvo.health.ui.settings.SettingsSheet
+import com.ayuvo.health.ui.settings.SettingsTint
 import com.ayuvo.health.ui.settings.SpeechProviderBrandIcon
 
+/** The provider logo in white on the row's fixed-colour square, sized like every other row icon. */
 @Composable
-private fun BrandSlot(content: @Composable () -> Unit) {
-    Box(Modifier.size(AyuvoSpacing.IconSize), contentAlignment = Alignment.Center) { content() }
+private fun BrandSlot(tint: Color, content: @Composable () -> Unit) {
+    Box(
+        Modifier.padding(end = 2.dp).size(AyuvoSpacing.IconSize).clip(AyuvoShapes.Icon).background(tint),
+        contentAlignment = Alignment.Center
+    ) { content() }
 }
+
+private val BrandGlyph = AyuvoSpacing.IconSize * 0.62f
 
 /** Provider / model / key / endpoint rows for one AI route (primary, text, fallbacks). */
 private fun InsetGroupScope.providerRows(
@@ -58,7 +71,7 @@ private fun InsetGroupScope.providerRows(
         GroupRow(
             title = stringResource(R.string.settings_ai_provider),
             value = stringResource(provider.displayNameRes),
-            leading = { BrandSlot { AIProviderBrandIcon(provider, Modifier.size(20.dp)) } },
+            leading = { BrandSlot(tint) { AIProviderBrandIcon(provider, Modifier.size(BrandGlyph), tint = Color.White) } },
             modifier = Modifier.settingsRow("${idPrefix}Provider"),
             onClick = { state.sheet = providerSheet }
         )
@@ -77,7 +90,7 @@ private fun InsetGroupScope.providerRows(
             GroupRow(
                 title = stringResource(R.string.settings_api_key),
                 value = keyMasked.ifEmpty { stringResource(R.string.settings_not_set) },
-                icon = Icons.Filled.Key, iconTint = tint,
+                icon = Icons.Filled.Key, iconTint = SettingsTint.Gray,
                 modifier = Modifier.settingsRow("${idPrefix}Key"),
                 onClick = { state.sheet = keySheet }
             )
@@ -88,7 +101,7 @@ private fun InsetGroupScope.providerRows(
             GroupRow(
                 title = if (provider.requiresCustomEndpoint) stringResource(R.string.settings_base_url) else stringResource(R.string.settings_server_url),
                 value = stringResource(R.string.settings_tap_to_edit),
-                icon = Icons.Filled.Link, iconTint = tint,
+                icon = Icons.Filled.Link, iconTint = SettingsTint.Blue,
                 modifier = Modifier.settingsRow("${idPrefix}BaseUrl"),
                 onClick = { state.sheet = baseUrlSheet }
             )
@@ -98,7 +111,7 @@ private fun InsetGroupScope.providerRows(
                 GroupRow(
                     title = stringResource(R.string.settings_request_timeout),
                     value = stringResource(R.string.settings_seconds_format, ctx.ui.aiRequestTimeoutSeconds),
-                    icon = Icons.Filled.Schedule, iconTint = tint,
+                    icon = Icons.Filled.Schedule, iconTint = SettingsTint.Gray,
                     modifier = Modifier.settingsRow("${idPrefix}Timeout"),
                     onClick = { state.sheet = SettingsSheet.REQUEST_TIMEOUT }
                 )
@@ -123,7 +136,9 @@ internal fun AiProvidersPage(ctx: SettingsPageContext) {
                 LocalModelRow(
                     state = localModel,
                     onDownload = { vm.downloadLocalModel(localModel.descriptor.id) },
-                    onDelete = { vm.deleteLocalModel(localModel.descriptor.id) }
+                    onDelete = { vm.deleteLocalModel(localModel.descriptor.id) },
+                    icon = Icons.Filled.Memory,
+                    iconTint = tint
                 )
             }
         }
@@ -247,7 +262,9 @@ internal fun SpeechToTextPage(ctx: SettingsPageContext) {
                 LocalModelRow(
                     state = localModel,
                     onDownload = { vm.downloadLocalModel(localModel.descriptor.id) },
-                    onDelete = { vm.deleteLocalModel(localModel.descriptor.id) }
+                    onDelete = { vm.deleteLocalModel(localModel.descriptor.id) },
+                    icon = Icons.Filled.Memory,
+                    iconTint = tint
                 )
             }
         }
@@ -260,7 +277,7 @@ internal fun SpeechToTextPage(ctx: SettingsPageContext) {
             GroupRow(
                 title = stringResource(R.string.settings_ai_provider),
                 value = stringResource(ui.selectedSpeech.displayNameRes),
-                leading = { BrandSlot { SpeechProviderBrandIcon(ui.selectedSpeech, Modifier.size(20.dp)) } },
+                leading = { BrandSlot(tint) { SpeechProviderBrandIcon(ui.selectedSpeech, Modifier.size(BrandGlyph), tint = Color.White) } },
                 modifier = Modifier.testTag("settings.speech.provider"),
                 onClick = { state.sheet = SettingsSheet.SPEECH_PROVIDER }
             )
@@ -279,7 +296,7 @@ internal fun SpeechToTextPage(ctx: SettingsPageContext) {
                 GroupRow(
                     title = stringResource(R.string.settings_api_key),
                     value = ui.speechApiKeyMasked.ifEmpty { stringResource(R.string.settings_not_set) },
-                    icon = Icons.Filled.Key, iconTint = tint,
+                    icon = Icons.Filled.Key, iconTint = SettingsTint.Gray,
                     modifier = Modifier.settingsRow("speechKey"),
                     onClick = { state.sheet = SettingsSheet.SPEECH_KEY }
                 )
@@ -304,7 +321,7 @@ internal fun SpeechToTextPage(ctx: SettingsPageContext) {
                     GroupRow(
                         title = stringResource(R.string.settings_ai_provider),
                         value = stringResource(ui.speechFallbackProvider.displayNameRes),
-                        leading = { BrandSlot { SpeechProviderBrandIcon(ui.speechFallbackProvider, Modifier.size(20.dp)) } },
+                        leading = { BrandSlot(tint) { SpeechProviderBrandIcon(ui.speechFallbackProvider, Modifier.size(BrandGlyph), tint = Color.White) } },
                         modifier = Modifier.settingsRow("speechFallbackProvider"),
                         onClick = { state.sheet = SettingsSheet.SPEECH_FALLBACK_PROVIDER }
                     )
@@ -323,7 +340,7 @@ internal fun SpeechToTextPage(ctx: SettingsPageContext) {
                         GroupRow(
                             title = stringResource(R.string.settings_api_key),
                             value = ui.speechFallbackApiKeyMasked.ifEmpty { stringResource(R.string.settings_not_set) },
-                            icon = Icons.Filled.Key, iconTint = tint,
+                            icon = Icons.Filled.Key, iconTint = SettingsTint.Gray,
                             modifier = Modifier.settingsRow("speechFallbackKey"),
                             onClick = { state.sheet = SettingsSheet.SPEECH_FALLBACK_KEY }
                         )

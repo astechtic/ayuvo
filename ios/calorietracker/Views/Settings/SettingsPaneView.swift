@@ -81,6 +81,7 @@ struct SettingsPaneView: View {
     }
     @State var activeSheet: ActiveSheet?
     @State var showExportDiary = false
+    @State var showExportAllData = false
     @State var showImportDiary = false
     @State var showExportHealthData = false
     @State var showImportHealthData = false
@@ -207,6 +208,9 @@ struct SettingsPaneView: View {
             .background(AppColors.appBackground)
             .sheet(isPresented: $showExportDiary) {
                 ExportDiaryView()
+            }
+            .sheet(isPresented: $showExportAllData) {
+                ExportAllDataView()
             }
             .sheet(isPresented: $showImportDiary) {
                 ImportDiaryView()

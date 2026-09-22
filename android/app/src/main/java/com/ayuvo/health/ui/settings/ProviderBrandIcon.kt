@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import com.ayuvo.health.R
@@ -13,19 +14,21 @@ import com.ayuvo.health.models.SpeechProvider
 import com.ayuvo.health.ui.theme.AppColors
 
 @Composable
-internal fun AIProviderBrandIcon(provider: AIProvider, modifier: Modifier = Modifier) {
+internal fun AIProviderBrandIcon(provider: AIProvider, modifier: Modifier = Modifier, tint: Color = AppColors.Calorie) {
     ProviderBrandIcon(
         drawableRes = provider.logoDrawableRes,
         fallback = Icons.Outlined.Settings,
+        tint = tint,
         modifier = modifier
     )
 }
 
 @Composable
-internal fun SpeechProviderBrandIcon(provider: SpeechProvider, modifier: Modifier = Modifier) {
+internal fun SpeechProviderBrandIcon(provider: SpeechProvider, modifier: Modifier = Modifier, tint: Color = AppColors.Calorie) {
     ProviderBrandIcon(
         drawableRes = provider.logoDrawableRes,
         fallback = Icons.Outlined.Settings,
+        tint = tint,
         modifier = modifier
     )
 }
@@ -34,20 +37,21 @@ internal fun SpeechProviderBrandIcon(provider: SpeechProvider, modifier: Modifie
 private fun ProviderBrandIcon(
     drawableRes: Int?,
     fallback: ImageVector,
+    tint: Color,
     modifier: Modifier
 ) {
     if (drawableRes != null) {
         Icon(
             painter = painterResource(drawableRes),
             contentDescription = null,
-            tint = AppColors.Calorie,
+            tint = tint,
             modifier = modifier
         )
     } else {
         Icon(
             imageVector = fallback,
             contentDescription = null,
-            tint = AppColors.Calorie,
+            tint = tint,
             modifier = modifier
         )
     }

@@ -26,7 +26,7 @@ final class SettingsPanesUITests: XCTestCase {
         Pane(id: "notifications", title: "Notifications", expected: []),
         Pane(id: "healthData", title: "Health Sync", expected: ["Apple Health", "Browse Health Data", "Sync Now"]),
         Pane(id: "healthRecords", title: "Health Records", expected: ["Backup & restore"]),
-        Pane(id: "dataManagement", title: "Backup & Export", expected: ["Export Food Diary", "Export Health Data"]),
+        Pane(id: "dataManagement", title: "Backup & Export", expected: ["Export All Data", "Export Food Diary", "Export Health Data"]),
         Pane(id: "deleteData", title: "Delete All Data", expected: ["Clear synced health data", "Clear Food Log"]),
         Pane(id: "aiProviders", title: "AI Providers", expected: ["Provider"]),
         Pane(id: "speechToText", title: "Speech-to-Text", expected: ["Language"]),

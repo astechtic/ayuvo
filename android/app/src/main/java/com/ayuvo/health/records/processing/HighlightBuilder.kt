@@ -7,6 +7,7 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.doubleOrNull
+import java.time.LocalDate
 import kotlin.math.abs
 
 /** §15 deterministic highlights, ported from the reference `build_highlights`. */
@@ -98,6 +99,33 @@ object HighlightBuilder {
     fun build(fields: List<RecordField>): List<HighlightDraft> = buildRows(fields.map {
         Row(it.key, it.valueText, RecordJson.parseObject(it.valueJson), it.confidence, it.sourcePage, it.state.raw, it.id)
     }).filter { it.section != HighlightSection.SUMMARY }
+
+    // -- Important highlights list (docs §15, reference `important_highlights`) ------------------
+
+    /** Records older than this many calendar months drop out of the Records tab / Summary highlights. */
+    const val WINDOW_MONTHS = 6L
+
+    /** today − 6 calendar months (local calendar); java.time clamps the day (2026-08-31 → 2026-02-28). */
+    fun since(today: LocalDate = LocalDate.now()): LocalDate = today.minusMonths(WINDOW_MONTHS)
+
+    data class ListRecord(val id: String, val sortDate: String, val seq: Long, val archived: Boolean)
+    data class ListHighlight(val id: String, val recordId: String, val section: String, val text: String, val position: Int, val dismissed: Boolean)
+
+    /** Mirror of the SQL in `SqliteRecordsStore.importantHighlights`, used by the shared vectors. */
+    fun important(records: List<ListRecord>, highlights: List<ListHighlight>, limit: Int, since: LocalDate?): List<ListHighlight> {
+        val byId = records.associateBy { it.id }
+        val cutoff = since?.toString()
+        return highlights.mapNotNull { h ->
+            val r = byId[h.recordId] ?: return@mapNotNull null
+            if (r.archived || h.section != HighlightSection.IMPORTANT.raw || h.dismissed) return@mapNotNull null
+            if (cutoff != null && r.sortDate < cutoff) return@mapNotNull null
+            r to h
+        }.sortedWith(
+            compareByDescending<Pair<ListRecord, ListHighlight>> { it.first.sortDate }
+                .thenByDescending { it.first.seq }
+                .thenBy { it.second.position }
+        ).take(limit).map { it.second }
+    }
 
     @Suppress("unused")
     private val stateRejected = FieldState.REJECTED

@@ -100,7 +100,7 @@ data class SettingsUiState(
     val apiKeyMasked: String = "",
     val speechApiKeyMasked: String = "",
     val appearanceMode: String = "system",
-    val appThemeColor: AppThemeColor = AppThemeColor.ROSE,
+    val appThemeColor: AppThemeColor = AppThemeColor.BLUE,
     val weekStartsOnMonday: Boolean = true,
     val mealSchedule: MealSchedule = MealSchedule.Default,
     val workoutSplit: WorkoutSplit = WorkoutSplit.FULL_BODY,

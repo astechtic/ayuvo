@@ -13,28 +13,28 @@ extension SettingsPaneView {
                 Label {
                     Text("Gender")
                 } icon: {
-                    Image(systemName: profile.gender.icon)
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon(profile.gender.icon, tint: SettingsTint.body)
                 }
             }
             .pickerStyle(.menu)
             .tint(.secondary)
             .onChange(of: profile.gender) { _, _ in saveProfile() }
 
-            ProfileInfoRow(icon: "birthday.cake", label: "Birthday", value: birthdayDisplay) {
+            ProfileInfoRow(icon: "birthday.cake.fill", tint: SettingsTint.body, label: "Birthday", value: birthdayDisplay) {
                 activeSheet = .editBirthday
             }
 
-            ProfileInfoRow(icon: "ruler", label: "Height", value: heightDisplay) {
+            ProfileInfoRow(icon: "ruler.fill", tint: SettingsTint.body, label: "Height", value: heightDisplay) {
                 activeSheet = .editHeight
             }
 
-            ProfileInfoRow(icon: "scalemass", label: "Weight", value: weightDisplay) {
+            ProfileInfoRow(icon: "scalemass.fill", tint: SettingsTint.body, label: "Weight", value: weightDisplay) {
                 activeSheet = .editWeight
             }
 
             ProfileInfoRow(
                 icon: "percent",
+                tint: SettingsTint.body,
                 label: "Body Fat",
                 value: profile.bodyFatPercentage != nil ? "\(Int(profile.bodyFatPercentage! * 100))%" : "Not set"
             ) {
@@ -48,6 +48,7 @@ extension SettingsPaneView {
             if profile.bodyFatPercentage != nil {
                 ProfileInfoRow(
                     icon: "target",
+                    tint: SettingsTint.body,
                     label: "Goal Body Fat",
                     value: profile.goalBodyFatPercentage != nil ? "\(Int(profile.goalBodyFatPercentage! * 100))%" : "Not set"
                 ) {
@@ -68,8 +69,7 @@ extension SettingsPaneView {
                             .foregroundStyle(.secondary)
                     }
                 } icon: {
-                    Image(systemName: "ruler")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("ruler.fill", tint: SettingsTint.body)
                 }
             }
             let allergenSummary = profile.configuredAllergenSensitivities.joined(separator: ", ")
@@ -88,8 +88,7 @@ extension SettingsPaneView {
                             .lineLimit(1)
                     }
                 } icon: {
-                    Image(systemName: "exclamationmark.triangle")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("exclamationmark.triangle.fill", tint: SettingsTint.warning)
                 }
             }
         }

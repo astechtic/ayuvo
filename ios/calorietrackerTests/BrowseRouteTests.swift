@@ -27,8 +27,8 @@ struct BrowseRouteTests {
     }
 
     @Test func routesAreDistinctHashableValues() {
-        let routes: Set<BrowseRoute> = [.nutrition, .fasting, .body, .activity, .workouts, .exerciseLibrary, .medications]
-        #expect(routes.count == 7)
+        let routes: Set<BrowseRoute> = [.nutrition, .fasting, .body, .activity, .workouts, .exerciseLibrary, .medications, .bodyMeasurements]
+        #expect(routes.count == 8)
         #expect(MetricRoute.detail(.app(.calories)) != MetricRoute.detail(.app(.protein)))
         #expect(MetricRoute.detail(.health("steps")) != MetricRoute.favourites)
     }

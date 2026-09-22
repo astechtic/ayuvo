@@ -48,6 +48,12 @@ final class AppNavigator {
         openBrowse([.activity, .workouts])
     }
 
+    /// Workouts diary on today with the exercise picker open ("Log a Workout" in Browse search).
+    func openWorkoutLogging() {
+        workoutLogSession.addExerciseRequested = true
+        openWorkouts()
+    }
+
     func openMedications() {
         openBrowse([.medications])
     }

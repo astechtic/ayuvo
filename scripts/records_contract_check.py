@@ -694,6 +694,13 @@ def check_shape(function, exp, where, problems, inp=None):
             problems.append("%s: segments are not contiguous" % where)
         if exp["propose"] != (len(segs) >= 2):
             problems.append("%s: propose flag" % where)
+    elif function == "build_highlights" and inp is not None and inp.get("op") == "important":
+        if set(exp) != {"since", "highlights"} or len(exp["highlights"]) > inp["limit"] or \
+                any(set(h) != {"id", "record_id", "section", "text", "position"} or h["section"] != "important"
+                    for h in exp["highlights"]):
+            problems.append("%s: bad important highlights" % where)
+        elif (exp["since"] is None) != (not inp.get("today")):
+            problems.append("%s: since must follow today" % where)
     elif function == "build_highlights":
         for h in exp["highlights"]:
             if h["section"] not in ("important", "medications", "recommendations", "summary"):
@@ -1130,6 +1137,12 @@ class ReferenceSelfTest(unittest.TestCase):
         self.assertEqual(compact_schema({"type": "object", "properties": {"q": {"type": "string", "description": "a \"b\""}}}),
                          '{"type":"object","properties":{"q":{"type":"string","description":"a \\"b\\""}}}')
         self.assertEqual(R.collapse_ws(" a \r\n\tb  "), "a b")
+
+    def test_highlight_window_clamps_month_end(self):
+        self.assertEqual(R.highlights_since("2026-08-31"), "2026-02-28")
+        self.assertEqual(R.highlights_since("2028-08-31"), "2028-02-29")
+        self.assertEqual(R.highlights_since("2026-01-15"), "2025-07-15")
+        self.assertEqual(R.add_months_clamped("2026-03-31", -1), "2026-02-28")
 
     def test_apply_extraction_never_overwrites_confirmed(self):
         rows = [{"id": "r", "field_key": "facility", "value_text": "Metro Labs", "value_json": None, "method": "user",

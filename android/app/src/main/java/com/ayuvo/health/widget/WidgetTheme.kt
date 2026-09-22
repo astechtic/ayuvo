@@ -6,12 +6,12 @@ import androidx.glance.unit.ColorProvider as GlanceColorProvider
 
 /** Brand palette exposed to Glance. Keep in sync with ui/theme/Color.kt. */
 object WidgetTheme {
-    val calorieProvider = ColorProvider(day = Color(0xFFFF375F), night = Color(0xFFFF375F))
+    val calorieProvider = ColorProvider(day = Color(0xFF0A84FF), night = Color(0xFF0A84FF))
     val backgroundProvider = ColorProvider(day = Color(0xFFFFF8F2), night = Color(0xFF0C0C0C))
     val primaryTextProvider = ColorProvider(day = Color(0xFF1C1C1E), night = Color(0xFFF2F2F7))
     val secondaryTextProvider = ColorProvider(day = Color(0xFF8E8E93), night = Color(0xFF8E8E93))
 
-    /** Raw RGB hex from the snapshot, Rose when the field is absent. */
+    /** Raw RGB hex from the snapshot, the default Blue when the field is absent. */
     fun themeStart(hex: Int?): Int = hex ?: DEFAULT_THEME_START
     fun themeEnd(hex: Int?): Int = hex ?: DEFAULT_THEME_END
 

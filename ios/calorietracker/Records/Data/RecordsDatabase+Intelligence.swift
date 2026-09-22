@@ -85,18 +85,23 @@ extension RecordsDatabase {
         return rows
     }
 
-    /// Recent "Important" highlights across non-archived records (home section).
-    func importantHighlights(limit: Int) throws -> [(RecordHighlight, HealthRecord)] {
+    /// Recent "Important" highlights across non-archived records (home section). With `since`
+    /// (`yyyy-MM-dd`), only records whose `sort_date` (record date, else import day) is on or after it.
+    func importantHighlights(limit: Int, since: String? = nil) throws -> [(RecordHighlight, HealthRecord)] {
         var rows: [(RecordHighlight, HealthRecord)] = []
         let qualified = Self.qualifiedColumns
+        let sinceClause = since == nil ? "" : " AND records.sort_date >= ?"
+        var arguments: [SQLValue] = []
+        if let since { arguments.append(.text(since)) }
+        arguments.append(.int(Int64(limit)))
         try connection.query(
             """
             SELECT h.id, h.record_id, h.section, h.text, h.method, h.provider, h.field_id, h.source_page, h.confidence, h.dismissed, h.position, h.created_ms, \(qualified)
             FROM record_highlights h JOIN records ON records.id = h.record_id
-            WHERE h.section='important' AND h.dismissed=0 AND records.archived=0
+            WHERE h.section='important' AND h.dismissed=0 AND records.archived=0\(sinceClause)
             ORDER BY records.sort_date DESC, records.created_ms DESC, h.position LIMIT ?
             """,
-            [.int(Int64(limit))]
+            arguments
         ) { s in
             let highlight = RecordHighlight(
                 id: s.text(0) ?? "", recordID: s.text(1) ?? "", section: .important, text: s.text(3) ?? "",

@@ -12,8 +12,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Daily Step Goal")
                         } icon: {
-                            Image(systemName: "figure.walk")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("figure.walk", tint: SettingsTint.activity)
                         }
                         Stepper(
                             value: $dailyStepGoal,
@@ -40,8 +39,7 @@ extension SettingsPaneView {
                                     .foregroundStyle(.secondary)
                             }
                         } icon: {
-                            Image(systemName: "figure.walk")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("figure.walk", tint: SettingsTint.activity)
                         }
                     }
                 }

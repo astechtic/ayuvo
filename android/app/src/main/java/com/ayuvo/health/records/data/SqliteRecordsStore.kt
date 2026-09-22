@@ -994,14 +994,16 @@ class SqliteRecordsStore(
         ).use { it.readAll() }
     }
 
-    override suspend fun importantHighlights(limit: Int): List<HighlightWithRecord> = withContext(Dispatchers.IO) {
+    override suspend fun importantHighlights(limit: Int, since: java.time.LocalDate?): List<HighlightWithRecord> = withContext(Dispatchers.IO) {
         val database = db
+        val window = if (since != null) "AND r.sort_date >= ? " else ""
+        val args = listOfNotNull(since?.toString(), limit.toString()).toTypedArray()
         val rows = database.rawQuery(
             "SELECT h.id, h.record_id, h.section, h.text, h.method, h.provider, h.field_id, h.source_page, h.confidence, h.dismissed, h.position, h.created_ms " +
                 "FROM record_highlights h JOIN records r ON r.id = h.record_id " +
-                "WHERE h.section = 'important' AND h.dismissed = 0 AND r.archived = 0 " +
+                "WHERE h.section = 'important' AND h.dismissed = 0 AND r.archived = 0 " + window +
                 "ORDER BY r.sort_date DESC, r.seq DESC, h.position LIMIT ?",
-            arrayOf(limit.toString())
+            args
         ).use { c -> buildList { while (c.moveToNext()) add(readHighlight(c)) } }
         val byId = records(rows.map { it.recordId }).associateBy { it.id }
         rows.mapNotNull { h -> byId[h.recordId]?.let { HighlightWithRecord(h, it) } }

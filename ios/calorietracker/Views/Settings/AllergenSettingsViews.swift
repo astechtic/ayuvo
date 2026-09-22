@@ -65,7 +65,7 @@ struct AllergenSensitivitiesDetailView: View {
                 Button {
                     showImportSource = true
                 } label: {
-                    Label("Import from lab report", systemImage: "doc.text.viewfinder")
+                    SettingsLabel("Import from lab report", systemImage: "doc.text.viewfinder", tint: SettingsTint.records)
                 }
                 .disabled(isImportingLabReport)
                 .foregroundStyle(AppColors.calorie)

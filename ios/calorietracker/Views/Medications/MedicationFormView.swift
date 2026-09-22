@@ -87,6 +87,11 @@ struct MedicationFormView: View {
     @State private var showRecordPicker = false
     @State private var relatedRecord: HealthRecord?
     @State private var showDiscardConfirmation = false
+    @FocusState private var focusedField: Field?
+
+    private enum Field: Hashable {
+        case name, strength, genericName, brandName, quantity, instructions
+    }
 
     private let existingMedicationID: String?
     private let existingSchedule: MedicationSchedule?
@@ -169,6 +174,7 @@ struct MedicationFormView: View {
             }
             .scrollContentBackground(.hidden)
             .background(AppColors.appBackground)
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -209,8 +215,10 @@ struct MedicationFormView: View {
         Section {
             TextField(String(localized: "Name"), text: $draft.name)
                 .textInputAutocapitalization(.words)
+                .focused($focusedField, equals: .name)
                 .accessibilityIdentifier("medications.form.name")
             TextField(String(localized: "Strength (e.g. 500 mg)"), text: $draft.strength)
+                .focused($focusedField, equals: .strength)
                 .accessibilityIdentifier("medications.form.strength")
             Picker(selection: $draft.form) {
                 ForEach(MedicationForm.allCases) { form in
@@ -219,13 +227,17 @@ struct MedicationFormView: View {
             } label: {
                 Label("Form", systemImage: "pills")
             }
+            .dismissesKeyboardOnTap($focusedField)
+            .accessibilityIdentifier("medications.form.form")
             .onChange(of: draft.form) { _, form in
                 draft.doseUnit = form.defaultUnit
             }
             TextField(String(localized: "Generic name (optional)"), text: $draft.genericName)
                 .textInputAutocapitalization(.words)
+                .focused($focusedField, equals: .genericName)
             TextField(String(localized: "Brand name (optional)"), text: $draft.brandName)
                 .textInputAutocapitalization(.words)
+                .focused($focusedField, equals: .brandName)
         } header: {
             Text("Medicine")
         } footer: {
@@ -243,6 +255,7 @@ struct MedicationFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: 90)
+                    .focused($focusedField, equals: .quantity)
                     .onChange(of: quantityText) { _, text in
                         draft.doseQuantity = Self.parseQuantity(text)
                     }
@@ -254,6 +267,7 @@ struct MedicationFormView: View {
                     }
                 }
                 .labelsHidden()
+                .dismissesKeyboardOnTap($focusedField)
                 .accessibilityLabel(Text("Dose unit"))
             }
             Picker(selection: $draft.foodRelation) {
@@ -263,6 +277,7 @@ struct MedicationFormView: View {
             } label: {
                 Label("Food", systemImage: "fork.knife")
             }
+            .dismissesKeyboardOnTap($focusedField)
         } header: {
             Text("Dose")
         } footer: {
@@ -280,6 +295,7 @@ struct MedicationFormView: View {
             } label: {
                 Label("Frequency", systemImage: "repeat")
             }
+            .dismissesKeyboardOnTap($focusedField)
             .onChange(of: preset) { _, preset in
                 preset.apply(to: &draft)
             }
@@ -387,6 +403,7 @@ struct MedicationFormView: View {
         Section {
             TextField(String(localized: "Instructions (optional)"), text: $draft.instructions, axis: .vertical)
                 .lineLimit(2...5)
+                .focused($focusedField, equals: .instructions)
                 .accessibilityIdentifier("medications.form.instructions")
         } header: {
             Text("Instructions")
@@ -556,5 +573,14 @@ struct MedicationFormView: View {
         } catch {
             saveError = MedicationFormatting.actionErrorText("unknown")
         }
+    }
+}
+
+private extension View {
+    /// Ends text editing when a menu picker is tapped. With the keyboard up, the menu otherwise
+    /// opens over a keyboard whose QuickType bar keeps changing, and the menu and the form row
+    /// re-layout (flicker) as the keyboard frame moves.
+    func dismissesKeyboardOnTap<Value: Hashable>(_ focus: FocusState<Value?>.Binding) -> some View {
+        simultaneousGesture(TapGesture().onEnded { focus.wrappedValue = nil })
     }
 }

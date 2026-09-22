@@ -17,6 +17,7 @@ import com.ayuvo.health.records.model.RecordPatch
 import com.ayuvo.health.records.model.RecordQuery
 import com.ayuvo.health.records.ai.RecordsAiOptions
 import com.ayuvo.health.records.data.HighlightWithRecord
+import com.ayuvo.health.records.processing.HighlightBuilder
 import com.ayuvo.health.records.data.ProcessingSummary
 import com.ayuvo.health.records.data.RecordSearchHit
 import com.ayuvo.health.records.model.RecordAdvancedFilters
@@ -185,7 +186,7 @@ class RecordsViewModel(private val container: AppContainer) : ViewModel() {
                 val total = store.count()
                 val summary = store.processingSummary()
                 val review = if (browsing) store.needsReview(SECTION_COUNT) else emptyList()
-                val highlights = if (browsing) store.importantHighlights(SECTION_COUNT) else emptyList()
+                val highlights = if (browsing) store.importantHighlights(SECTION_COUNT, HighlightBuilder.since(LocalDate.now())) else emptyList()
                 val tags = store.allTags()
                 val episodes = if (hits == null) store.acceptedLinksAmong(page.items.map { it.id }).map { it.aId to it.bId }.toSet() else emptySet()
                 val doctors = store.entities(com.ayuvo.health.records.model.EntityKind.DOCTOR)

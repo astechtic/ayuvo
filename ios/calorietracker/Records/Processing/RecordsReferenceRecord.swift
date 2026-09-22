@@ -30,6 +30,32 @@ extension RR {
         }
     }
 
+    /// §15 "Important highlights" list (Records tab, Summary): non-dismissed `important` highlights of
+    /// non-archived records, with `since` only records whose `sort_date` >= since; ordered by
+    /// sort_date desc, seq desc, position asc; first `limit`. Mirrors `RecordsDatabase.importantHighlights`.
+    static func importantHighlights(_ records: [RJ], _ highlights: [RJ], limit: Int, since: String?) -> [RJ] {
+        var byID: [String: RJ] = [:]
+        for record in records { if let id = record["id"].string { byID[id] = record } }
+        var rows: [(RJ, RJ)] = []
+        for h in highlights {
+            guard let r = byID[h["record_id"].string ?? ""], !r["archived"].truthy,
+                  h["section"].string == "important", !h["dismissed"].truthy else { continue }
+            if let since, (r["sort_date"].string ?? "") < since { continue }
+            rows.append((r, h))
+        }
+        func position(_ h: RJ) -> Double { h["position"].double ?? 0 }
+        func seq(_ r: RJ) -> Double { r["seq"].double ?? 0 }
+        rows = rows.stableSorted { position($0.1) < position($1.1) }
+        rows = rows.stableSorted { a, b in
+            let (da, db) = (a.0["sort_date"].string ?? "", b.0["sort_date"].string ?? "")
+            return da != db ? da > db : seq(a.0) > seq(b.0)
+        }
+        return rows.prefix(max(limit, 0)).map { _, h in
+            .obj(["id": h["id"], "record_id": h["record_id"], "section": h["section"], "text": h["text"],
+                  "position": .int(Int(position(h)))])
+        }
+    }
+
     static func buildHighlights(_ fields: [RJ], summary: RJ = .null) -> [RJ] {
         var important: [(Int, Double, Int, String, RJ)] = []
         var meds: [(Int, String, RJ)] = []
@@ -1034,6 +1060,12 @@ extension RR {
         case "detect_boundaries":
             return detectBoundaries(pages, inp["today"].string ?? "", inp["date_order"].string ?? "dmy")
         case "build_highlights":
+            if inp["op"].string == "important" {
+                let since = inp["today"].string.flatMap { RecordDates.highlightsSince(today: $0) }
+                return .obj(["since": since.map(RJ.str) ?? .null,
+                             "highlights": .arr(importantHighlights(inp["records"].array ?? [], inp["highlights"].array ?? [],
+                                                                    limit: inp["limit"].double.map { Int($0) } ?? 8, since: since))])
+            }
             return .obj(["highlights": .arr(buildHighlights(inp["fields"].array ?? [], summary: inp["summary"]))])
         case "review_status":
             return reviewStatus(record: inp["record"], rows: inp["rows"].array ?? [], pendingSplit: inp["pending_split"].truthy, pendingDuplicate: inp["pending_duplicate"].truthy)

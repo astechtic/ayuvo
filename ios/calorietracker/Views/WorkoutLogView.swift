@@ -7,6 +7,8 @@ import UIKit
 @Observable
 final class WorkoutLogSessionState {
     var selectedDate = Date.now
+    /// One-shot "Log a Workout" request (Browse search): the diary opens its exercise picker.
+    var addExerciseRequested = false
 
     func reset() {
         selectedDate = .now
@@ -478,6 +480,8 @@ struct WorkoutLogView: View {
             } message: {
                 Text("Stop and save an exercise timer, or enter reps for a strength exercise on \(selectedDateTitle), before calculating workout calories.")
             }
+            .onAppear(perform: consumeAddExerciseRequest)
+            .onChange(of: session.addExerciseRequested) { _, _ in consumeAddExerciseRequest() }
             .sheet(item: $pickerRequest) { request in
                 WorkoutLogExercisePickerSheet(
                     request: request,
@@ -600,6 +604,13 @@ struct WorkoutLogView: View {
                 onAdded: { selectedDate = $0 }, startsWithVoice: workoutInputUsesVoice)
                 .presentationCompactAdaptation(.popover)
         }
+    }
+
+    private func consumeAddExerciseRequest() {
+        guard session.addExerciseRequested else { return }
+        session.addExerciseRequested = false
+        session.selectedDate = .now
+        pickerRequest = WorkoutLogPickerRequest(context: .all, initialSource: .dataset)
     }
 
     private var selectedDateTitle: String {

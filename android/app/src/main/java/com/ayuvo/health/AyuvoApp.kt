@@ -496,6 +496,11 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     }
     val cloudBackup = CloudBackupCoordinator(app, prefs, imageStore, keyStore)
 
+    /** Settings › Backup & Export › Export All Data (one zip of every existing export). */
+    val allDataExport: com.ayuvo.health.export.AllDataExportCoordinator by lazy {
+        com.ayuvo.health.export.AllDataExportCoordinator(this)
+    }
+
     val localGemma = LocalGemmaRuntime(app, localModels)
     val localWhisper = LocalWhisperRuntime(app, localModels)
 

@@ -39,7 +39,8 @@ nonisolated enum MedicationForm: String, CaseIterable, Codable, Sendable, Identi
         case .capsule: "capsule.fill"
         case .syrup: "waterbottle.fill"
         case .injection: "syringe.fill"
-        case .cream: "tube.fill"
+        // "tube.fill" is not an SF Symbol, so the Form menu showed no icon.
+        case .cream: "hands.and.sparkles.fill"
         case .drops: "drop.fill"
         case .inhaler: "lungs.fill"
         case .other: "cross.case.fill"

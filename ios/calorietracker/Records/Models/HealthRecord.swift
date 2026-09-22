@@ -262,4 +262,37 @@ nonisolated enum RecordDates {
     }
 
     static func nowMs() -> Int64 { Int64(Date().timeIntervalSince1970 * 1000) }
+
+    /// Months of records whose "Important highlights" still show (contract §15 display window).
+    static let highlightWindowMonths = 6
+
+    /// `yyyy-MM-dd` plus `months` calendar months (negative allowed); the day clamps to the target
+    /// month's last day (2026-08-31 − 6 months → 2026-02-28), like `Calendar.date(byAdding:)`.
+    static func addingMonths(_ months: Int, to day: String) -> String? {
+        let parts = day.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return nil }
+        let total = parts[0] * 12 + (parts[1] - 1) + months
+        let year = Int((Double(total) / 12).rounded(.down))
+        let month = total - year * 12 + 1
+        let day = min(parts[2], daysInMonth(year: year, month: month))
+        return String(format: "%04d-%02d-%02d", year, month, day)
+    }
+
+    private static func daysInMonth(year: Int, month: Int) -> Int {
+        switch month {
+        case 2: return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) ? 29 : 28
+        case 4, 6, 9, 11: return 30
+        default: return 31
+        }
+    }
+
+    /// First local day whose records still show important highlights: today minus 6 calendar months.
+    static func highlightsSince(today: String) -> String? {
+        addingMonths(-highlightWindowMonths, to: today)
+    }
+
+    /// `highlightsSince` for the device-local today.
+    static func highlightsSince(now: Date = Date(), timeZone: TimeZone = .current) -> String? {
+        highlightsSince(today: dayString(from: now, timeZone: timeZone))
+    }
 }

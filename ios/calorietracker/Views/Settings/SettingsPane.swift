@@ -97,20 +97,30 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         }
     }
 
+    /// Fixed per-row colour (`SettingsTint`): the domain colour for domain panes, a system-like
+    /// colour otherwise. Never the theme accent.
     var tint: Color {
         switch self {
-        case .personalInfo: AyuvoPalette.body
-        case .goalsNutrition, .nutritionTracking: AyuvoPalette.nutrition
-        case .hydration, .appearance: AyuvoPalette.hydration
-        case .fasting: AyuvoPalette.fasting
-        case .activity: AyuvoPalette.activity
-        case .medications: AyuvoPalette.medications
-        case .notifications, .deleteData: AyuvoPalette.heart
-        case .healthData: AyuvoPalette.vitals
-        case .healthRecords: AyuvoPalette.records
-        case .aiProviders: AyuvoPalette.sleep
-        case .speechToText: AyuvoPalette.mindfulness
-        case .units, .dataManagement, .customInstructions, .appUpdates, .helpSupport, .legal: AyuvoPalette.other
+        case .personalInfo: SettingsTint.about
+        case .goalsNutrition: SettingsTint.nutrition
+        case .units: SettingsTint.units
+        case .nutritionTracking: SettingsTint.nutrition
+        case .hydration: SettingsTint.hydration
+        case .fasting: SettingsTint.fasting
+        case .activity: SettingsTint.activity
+        case .medications: SettingsTint.medications
+        case .notifications: SettingsTint.notifications
+        case .healthData: SettingsTint.vitals
+        case .healthRecords: SettingsTint.records
+        case .dataManagement: SettingsTint.backup
+        case .deleteData: SettingsTint.destructive
+        case .aiProviders: SettingsTint.ai
+        case .speechToText: SettingsTint.speech
+        case .customInstructions: SettingsTint.instructions
+        case .appearance: SettingsTint.appearance
+        case .appUpdates: SettingsTint.about
+        case .helpSupport: SettingsTint.support
+        case .legal: SettingsTint.legal
         }
     }
 
@@ -128,12 +138,11 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
 struct SettingsPaneRow: View {
     let pane: SettingsPane
     var badge = false
-    @ScaledMetric(relativeTo: .body) private var iconSize: CGFloat = 29
 
     var body: some View {
         NavigationLink(value: pane) {
             HStack(spacing: 12) {
-                CategoryIconView(systemImage: pane.systemImage, tint: pane.tint, style: .filled, size: iconSize)
+                SettingsIcon(pane.systemImage, tint: pane.tint)
                 Text(pane.title)
                     .font(.system(.body, design: .rounded))
                     .foregroundStyle(pane == .deleteData ? Color.red : Color.primary)

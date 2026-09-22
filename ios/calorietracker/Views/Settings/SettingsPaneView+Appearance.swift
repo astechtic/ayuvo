@@ -13,8 +13,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Appearance")
                 } icon: {
-                    Image(systemName: "circle.lefthalf.filled")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("circle.lefthalf.filled", tint: SettingsTint.appearance)
                 }
             }
             .pickerStyle(.menu)
@@ -33,8 +32,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Theme Color")
                 } icon: {
-                    Image(systemName: "paintpalette.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("paintpalette.fill", tint: SettingsTint.theme)
                 }
             }
             .pickerStyle(.menu)

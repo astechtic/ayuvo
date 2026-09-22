@@ -87,7 +87,7 @@ private fun WaterProgressContent(snapshot: WidgetSnapshot) {
     val gaugeW = minOf(contentW, (contentH - 44f) / 0.58f).toInt().coerceAtLeast(80)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_water, label = "Water")
+        WidgetHeader(iconRes = R.drawable.ic_widget_water, label = "Water", themeHex = snapshot.themeStartHex)
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
             contentAlignment = Alignment.Center

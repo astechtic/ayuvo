@@ -24,7 +24,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Provider")
                     } icon: {
-                        SpeechProviderBrandIcon(provider: selectedSpeechProvider)
+                        SpeechProviderBrandIcon(provider: selectedSpeechProvider, style: .settings)
                     }
                 }
                 .pickerStyle(.menu)
@@ -58,8 +58,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Language")
                     } icon: {
-                        Image(systemName: "globe")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("globe", tint: SettingsTint.language)
                     }
                 }
                 .pickerStyle(.menu)
@@ -73,8 +72,7 @@ extension SettingsPaneView {
                         Label {
                             Text("API Key")
                         } icon: {
-                            Image(systemName: "key.fill")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("key.fill", tint: SettingsTint.keys)
                         }
                         Spacer()
                         Group {
@@ -117,7 +115,7 @@ extension SettingsPaneView {
 
         if selectedSpeechProvider != .nativeIOS {
             Toggle(isOn: $speechFallbackEnabled) {
-                Label("Enable STT Fallback", systemImage: "arrow.triangle.2.circlepath")
+                SettingsLabel("Enable STT Fallback", systemImage: "arrow.triangle.2.circlepath", tint: SettingsTint.fallback)
             }
             .tint(AppColors.calorie)
             .onChange(of: speechFallbackEnabled) { _, newValue in
@@ -142,7 +140,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Provider")
                     } icon: {
-                        SpeechProviderBrandIcon(provider: selectedSpeechFallbackProvider)
+                        SpeechProviderBrandIcon(provider: selectedSpeechFallbackProvider, style: .settings)
                     }
                 }
                 .pickerStyle(.menu)
@@ -163,7 +161,7 @@ extension SettingsPaneView {
                         Text(language.displayName).tag(language)
                     }
                 } label: {
-                    Label("Language", systemImage: "globe")
+                    SettingsLabel("Language", systemImage: "globe", tint: SettingsTint.language)
                 }
                 .pickerStyle(.menu)
                 .tint(.secondary)
@@ -173,7 +171,7 @@ extension SettingsPaneView {
 
                 if selectedSpeechFallbackProvider.requiresAPIKey {
                     HStack {
-                        Label("API Key", systemImage: "key.fill")
+                        SettingsLabel("API Key", systemImage: "key.fill", tint: SettingsTint.keys)
                         Spacer()
                         Group {
                             if showSpeechFallbackAPIKey {

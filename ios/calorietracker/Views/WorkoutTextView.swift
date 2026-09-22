@@ -19,6 +19,8 @@ struct WorkoutTextView: View {
     @State private var busy = false
     @State private var error: String?
     @State private var request: Task<Void, Never>?
+    /// Library exercises behind the clarification options (by option text), resolved once per question.
+    @State private var optionItems: [String: ExerciseLibraryItem] = [:]
     private var library: [ExerciseLibraryItem] { workoutStore.exerciseLibrary.exercises }
 
     var body: some View {
@@ -39,10 +41,17 @@ struct WorkoutTextView: View {
                     ])
                 }
             } else {
-                reviewContent.frame(width: 340, height: 480)
+                // Fixed size: answering, loading and errors change the content, never the popover's
+                // frame, so UIKit never re-positions it while the keyboard is up.
+                reviewContent
+                    .frame(width: 340, height: 480)
+                    .transaction { $0.animation = nil }
             }
         }
         .onDisappear { request?.cancel() }
+        .onChange(of: clarification?.options) { _, _ in
+            optionItems = WorkoutClarificationOptions.items(for: clarification?.options ?? [], library: library)
+        }
     }
 
     private func submit(_ text: String) {
@@ -100,36 +109,70 @@ struct WorkoutTextView: View {
                 .padding(20)
                 .disabled(busy)
             }
-            .navigationTitle(draft == nil ? (startsWithVoice ? "Voice workout" : "Describe workout") : "Review workout")
+            .scrollDismissesKeyboard(.interactively)
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } }
-                ToolbarItem(placement: .primaryAction) { Button("Start over", action: startOver) }
+                ToolbarItem(placement: .primaryAction) {
+                    // Icon-only so the title keeps its room in the 340 pt popover.
+                    Button(action: startOver) {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                    .accessibilityLabel(Text("Start over"))
+                    .accessibilityIdentifier("workout.text.startOver")
+                }
             }
         }
     }
 
+    private var navigationTitle: String {
+        if draft != nil { return String(localized: "Review workout") }
+        if clarification != nil { return String(localized: "Quick question") }
+        return startsWithVoice ? String(localized: "Voice workout") : String(localized: "Describe workout")
+    }
+
     @ViewBuilder
     private func followUpContent(_ question: WorkoutClarification?) -> some View {
-        Text(description).font(.subheadline).foregroundStyle(.secondary)
-        ForEach(followUps.indices, id: \.self) { index in
-            Text(followUps[index].answer).font(.subheadline).foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 6) {
+            Text("You described")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(description)
+                .font(.subheadline)
+                .lineLimit(3)
+            ForEach(followUps.indices, id: \.self) { index in
+                Label(followUps[index].answer, systemImage: "arrowshape.turn.up.right")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+
         if let question {
-            Text(question.question).font(.headline)
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                ForEach(question.options, id: \.self) { option in
-                    Button(option) { answer(option) }.buttonStyle(.bordered)
-                }
+            Text(question.question)
+                .font(.headline)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("workout.clarification.question")
+            if !question.options.isEmpty {
+                optionsRow(question.options)
             }
             TextField("Your answer", text: $reply, axis: .vertical)
-                .lineLimit(1...3).textFieldStyle(.roundedBorder)
+                .lineLimit(2, reservesSpace: true)
+                .textFieldStyle(.plain)
+                .padding(12)
+                .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .accessibilityLabel("Your answer")
                 .onChange(of: reply) { _, value in
                     if value.count > 500 { reply = String(value.prefix(500)) }
                 }
             HStack {
                 Button("Voice reply", systemImage: "mic") { voiceReply = true }.buttonStyle(.bordered)
+                Spacer()
                 Button("Continue") { answer(reply) }.buttonStyle(.borderedProminent)
                     .disabled(reply.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
@@ -141,6 +184,35 @@ struct WorkoutTextView: View {
             .buttonStyle(.borderedProminent).controlSize(.large)
             if busy { ProgressView() }
         }
+    }
+
+    /// Exercise candidates as a horizontal strip of image cards; other answers ("3x10", "Barbell")
+    /// as a row of chips.
+    @ViewBuilder
+    private func optionsRow(_ options: [String]) -> some View {
+        let showsCards = options.contains { optionItems[$0] != nil }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .top, spacing: showsCards ? 12 : 8) {
+                ForEach(Array(options.enumerated()), id: \.element) { index, option in
+                    Group {
+                        if showsCards {
+                            WorkoutClarificationOptionCard(title: option, item: optionItems[option]) { answer(option) }
+                        } else {
+                            Button(option) { answer(option) }
+                                .buttonStyle(.bordered)
+                                .buttonBorderShape(.capsule)
+                                .lineLimit(1)
+                        }
+                    }
+                    .accessibilityIdentifier("workout.clarification.option.\(index)")
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 2)
+        }
+        .padding(.horizontal, -20)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("Suggested answers"))
     }
 
     private func answer(_ text: String) {
@@ -204,6 +276,70 @@ struct WorkoutTextView: View {
             if let date = StrengthWorkoutDate.date(for: draft.date) { onAdded(date) }
             dismiss()
         } catch { self.error = error.localizedDescription }
+    }
+}
+
+/// Resolves clarification options to library exercises by name (case, diacritics and spacing ignored).
+enum WorkoutClarificationOptions {
+    static func key(_ name: String) -> String {
+        name.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            .lowercased()
+            .split(whereSeparator: \.isWhitespace)
+            .joined(separator: " ")
+    }
+
+    static func items(for options: [String], library: [ExerciseLibraryItem]) -> [String: ExerciseLibraryItem] {
+        guard !options.isEmpty else { return [:] }
+        let wanted = Dictionary(options.map { (key($0), $0) }, uniquingKeysWith: { first, _ in first })
+        var result: [String: ExerciseLibraryItem] = [:]
+        for item in library {
+            guard let option = wanted[key(item.name)], result[option] == nil else { continue }
+            result[option] = item
+            if result.count == wanted.count { break }
+        }
+        return result
+    }
+}
+
+/// One exercise candidate: the library thumbnail (placeholder when missing) with its name below.
+private struct WorkoutClarificationOptionCard: View {
+    let title: String
+    let item: ExerciseLibraryItem?
+    let action: () -> Void
+
+    private static let width: CGFloat = 128
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 8) {
+                AnimatedExerciseVisual(
+                    exerciseName: title,
+                    imagePaths: item?.imagePaths ?? [],
+                    imageURL: item?.imageURL,
+                    gifURL: item?.gifURL,
+                    height: 96,
+                    fillsWidth: true,
+                    animatesFrames: false,
+                    fallbackSystemImage: item?.isCardio == true ? "figure.run" : "dumbbell.fill",
+                    fallbackTitle: String(localized: "No image")
+                )
+                .frame(width: Self.width - 16, height: 96)
+                .accessibilityHidden(true)
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2, reservesSpace: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(8)
+            .frame(width: Self.width)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(title))
+        .accessibilityHint(Text("Uses this exercise as your answer"))
     }
 }
 

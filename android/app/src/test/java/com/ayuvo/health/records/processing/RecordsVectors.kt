@@ -103,7 +103,7 @@ object RecordsVectors {
                 "propose" to r.propose
             )
         }
-        "build_highlights" -> {
+        "build_highlights" -> if (input.str("op") == "important") importantHighlights(input) else {
             val rows = (input["fields"] as JsonArray).map { e ->
                 val o = e.jsonObj()
                 HighlightBuilder.Row(o.str("key")!!, o.str("value_text") ?: "", o["value_json"] as? JsonObject, o.num("confidence"), o.num("source_page")?.toInt(), o.str("state"))
@@ -443,6 +443,23 @@ object RecordsVectors {
     // -- JSON helpers -----------------------------------------------------------------------------
 
     fun obj(vararg pairs: Pair<String, Any?>): JsonObject = RuleItem.obj(*pairs)
+
+    private fun importantHighlights(input: JsonObject): JsonObject {
+        val records = (input["records"] as JsonArray).map { e ->
+            val o = e.jsonObj()
+            HighlightBuilder.ListRecord(o.str("id")!!, o.str("sort_date")!!, o.num("seq")?.toLong() ?: 0L, o.bool("archived") == true)
+        }
+        val highlights = (input["highlights"] as JsonArray).map { e ->
+            val o = e.jsonObj()
+            HighlightBuilder.ListHighlight(o.str("id")!!, o.str("record_id")!!, o.str("section")!!, o.str("text")!!, o.num("position")?.toInt() ?: 0, o.bool("dismissed") == true)
+        }
+        val since = input.str("today")?.let { HighlightBuilder.since(LocalDate.parse(it)) }
+        val out = HighlightBuilder.important(records, highlights, input.num("limit")!!.toInt(), since)
+        return obj(
+            "since" to since?.toString(),
+            "highlights" to out.map { obj("id" to it.id, "record_id" to it.recordId, "section" to it.section, "text" to it.text, "position" to it.position) }
+        )
+    }
 
     private fun JsonElement.jsonObj(): JsonObject = this as JsonObject
     private fun JsonObject.str(k: String): String? = (this[k] as? JsonPrimitive)?.takeIf { it !is JsonNull }?.content

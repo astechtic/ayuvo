@@ -22,7 +22,9 @@ enum AppThemeColor: String, CaseIterable, Identifiable {
     case lime
 
     static let storageKey = "appThemeColor"
-    static let defaultColor: AppThemeColor = .rose
+    /// Theme for anyone who has never picked one (nothing stored under `storageKey`). Blue since
+    /// the Apple-flat redesign; a stored choice — including Rose, the old default — is kept.
+    static let defaultColor: AppThemeColor = .blue
 
     var id: String { rawValue }
 
@@ -117,8 +119,12 @@ enum AppThemeColor: String, CaseIterable, Identifiable {
     }
 
     @MainActor
-    static func applyAppIconIfNeeded(for themeColor: AppThemeColor) {
+    static func applyAppIconIfNeeded(for themeColor: AppThemeColor, defaults: UserDefaults = .standard) {
         let application = UIApplication.shared
+        // The default theme without an explicit choice keeps the primary icon: switching icons
+        // raises a system alert, which a first launch must not show. Picking a colour (the
+        // picker stores it) switches the icon as before.
+        if defaults.string(forKey: storageKey) == nil, themeColor == defaultColor { return }
         guard application.supportsAlternateIcons,
               application.alternateIconName != themeColor.alternateIconName else {
             return

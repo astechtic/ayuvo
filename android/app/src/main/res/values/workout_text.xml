@@ -26,4 +26,9 @@
     <string name="workout_text_moderate">Moderate</string>
     <string name="workout_text_vigorous">Vigorous</string>
     <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Start over</string>
+    <string name="workout_clarify_title">A quick question</string>
+    <string name="workout_clarify_hint">Tap an exercise to choose it, or type your answer.</string>
+    <string name="workout_clarify_answer">Your answer</string>
+    <string name="workout_clarify_voice">Voice reply</string>
 </resources>

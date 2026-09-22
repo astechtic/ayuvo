@@ -105,26 +105,27 @@ internal fun WorkoutTextSheet(
     ModalBottomSheet(onDismissRequest = dismiss, sheetState = sheetState) {
         Column(Modifier.fillMaxWidth().imePadding().verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp).padding(bottom = 28.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(stringResource(R.string.workout_text_title), style = MaterialTheme.typography.headlineSmall)
+            if (draft != null || question == null) {
+                Text(stringResource(R.string.workout_text_title), style = MaterialTheme.typography.headlineSmall)
+            }
             if (draft == null && (question != null || followUps.isNotEmpty())) {
-                Text(description, style = MaterialTheme.typography.bodyMedium)
-                followUps.forEach { Text(it.answer, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                 if (question != null) {
-                    Text(question.orEmpty(), style = MaterialTheme.typography.titleMedium)
-                    options.chunked(2).forEach { row ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            row.forEach { option ->
-                                OutlinedButton(onClick = { answer(option) }, enabled = !busy, modifier = Modifier.weight(1f)) { Text(option) }
-                            }
-                        }
-                    }
-                    OutlinedTextField(value = reply, onValueChange = { reply = it.take(500) },
-                        label = { Text("Your answer") }, enabled = !busy, modifier = Modifier.fillMaxWidth())
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedButton(onClick = { voiceReply = true }, enabled = !busy) { Text("Voice reply") }
-                        Button(onClick = { answer(reply) }, enabled = !busy && reply.isNotBlank()) { Text("Continue") }
-                    }
+                    WorkoutClarificationContent(
+                        description = description,
+                        previousAnswers = followUps.map { it.answer },
+                        question = question.orEmpty(),
+                        options = options,
+                        library = library,
+                        reply = reply,
+                        onReplyChange = { reply = it },
+                        busy = busy,
+                        onVoiceReply = { voiceReply = true },
+                        onAnswer = { answer(it) }
+                    )
+                    if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
                 } else {
+                    Text(description, style = MaterialTheme.typography.bodyMedium)
+                    followUps.forEach { Text(it.answer, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                     Button(modifier = Modifier.fillMaxWidth(), onClick = { analyze() }, enabled = !busy) {
                         Text(stringResource(if (busy) R.string.workout_text_preparing else if (error != null) R.string.workout_text_retry else R.string.workout_text_preview))
                     }
@@ -227,7 +228,7 @@ internal fun WorkoutTextSheet(
                     }, enabled = !saving && draft.exercises.isNotEmpty()) { Text(stringResource(if (saving) R.string.workout_text_adding else R.string.workout_text_add)) }
                 }
             }
-            TextButton(onClick = { startOver() }, enabled = !saving) { Text("Start over") }
+            TextButton(onClick = { startOver() }, enabled = !saving) { Text(stringResource(R.string.workout_text_start_over)) }
             error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
         }
     }

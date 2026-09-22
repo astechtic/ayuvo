@@ -24,7 +24,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Provider")
                     } icon: {
-                        AIProviderBrandIcon(provider: selectedProvider)
+                        AIProviderBrandIcon(provider: selectedProvider, style: .settings)
                     }
                 }
                 .pickerStyle(.menu)
@@ -45,8 +45,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Model")
                         } icon: {
-                            Image(systemName: "brain")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("brain", tint: SettingsTint.ai)
                         }
                         Spacer()
                         TextField(
@@ -83,8 +82,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Model")
                         } icon: {
-                            Image(systemName: "brain")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("brain", tint: SettingsTint.ai)
                         }
                     }
                     .pickerStyle(.menu)
@@ -105,8 +103,7 @@ extension SettingsPaneView {
                         Label {
                             Text("API Key")
                         } icon: {
-                            Image(systemName: "key.fill")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("key.fill", tint: SettingsTint.keys)
                         }
                         Spacer()
                         Group {
@@ -140,8 +137,7 @@ extension SettingsPaneView {
                         Label {
                             Text(selectedProvider.requiresCustomEndpoint ? "Base URL" : "Server URL")
                         } icon: {
-                            Image(systemName: "link")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("link", tint: SettingsTint.network)
                         }
                         Spacer()
                         TextField(
@@ -167,8 +163,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Request Timeout")
                         } icon: {
-                            Image(systemName: "timer")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("timer", tint: SettingsTint.time)
                         }
                         Spacer()
                         requestTimeoutInput
@@ -198,8 +193,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Max Response Tokens")
                         } icon: {
-                            Image(systemName: "text.append")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("text.append", tint: SettingsTint.ai)
                         }
                         Spacer()
                         maxResponseTokensInput
@@ -243,8 +237,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Use Separate Text Provider")
                 } icon: {
-                    Image(systemName: "text.bubble.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("text.bubble.fill", tint: SettingsTint.ai)
                 }
             }
             .tint(AppColors.calorie)
@@ -266,7 +259,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Provider")
                     } icon: {
-                        AIProviderBrandIcon(provider: selectedTextProvider)
+                        AIProviderBrandIcon(provider: selectedTextProvider, style: .settings)
                     }
                 }
                 .pickerStyle(.menu)
@@ -282,7 +275,7 @@ extension SettingsPaneView {
 
                 if selectedTextProvider == .appleIntelligence {
                     HStack {
-                        Label("Model", systemImage: "brain")
+                        SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)
                         Spacer()
                         Text(selectedTextProvider.defaultTextModel)
                             .foregroundStyle(.secondary)
@@ -291,7 +284,7 @@ extension SettingsPaneView {
                     appleIntelligenceAvailabilityRow
                 } else if selectedTextProvider.supportsCustomModelName {
                     HStack {
-                        Label("Model", systemImage: "brain")
+                        SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)
                         Spacer()
                         TextField(textModelPlaceholder, text: $selectedTextModel)
                             .textFieldStyle(.plain)
@@ -321,7 +314,7 @@ extension SettingsPaneView {
                             Text(model).tag(model)
                         }
                     } label: {
-                        Label("Model", systemImage: "brain")
+                        SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)
                     }
                     .pickerStyle(.menu)
                     .tint(.secondary)
@@ -338,7 +331,7 @@ extension SettingsPaneView {
 
                 if selectedTextProvider.requiresAPIKey {
                     HStack {
-                        Label("API Key", systemImage: "key.fill")
+                        SettingsLabel("API Key", systemImage: "key.fill", tint: SettingsTint.keys)
                         Spacer()
                         Group {
                             if showTextAPIKey {
@@ -367,9 +360,10 @@ extension SettingsPaneView {
 
                 if selectedTextProvider == .ollama || selectedTextProvider.requiresCustomEndpoint {
                     HStack {
-                        Label(
+                        SettingsLabel(
                             selectedTextProvider.requiresCustomEndpoint ? "Base URL" : "Server URL",
-                            systemImage: "link"
+                            systemImage: "link",
+                            tint: SettingsTint.network
                         )
                         Spacer()
                         TextField(
@@ -392,7 +386,7 @@ extension SettingsPaneView {
 
                     if !selectedProvider.usesConfigurableRequestTimeout {
                         HStack {
-                            Label("Request Timeout", systemImage: "timer")
+                            SettingsLabel("Request Timeout", systemImage: "timer", tint: SettingsTint.time)
                             Spacer()
                             requestTimeoutInput
                             Text("sec").foregroundStyle(.secondary)
@@ -418,8 +412,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Enable Image Fallback")
                     } icon: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("arrow.triangle.2.circlepath", tint: SettingsTint.fallback)
                     }
                 }
                 .tint(AppColors.calorie)
@@ -446,7 +439,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Provider")
                         } icon: {
-                            AIProviderBrandIcon(provider: selectedFallbackProvider)
+                            AIProviderBrandIcon(provider: selectedFallbackProvider, style: .settings)
                         }
                     }
                     .pickerStyle(.menu)
@@ -463,8 +456,7 @@ extension SettingsPaneView {
                             Label {
                                 Text("Model")
                             } icon: {
-                                Image(systemName: "brain")
-                                    .foregroundStyle(AppColors.calorie)
+                                SettingsIcon("brain", tint: SettingsTint.ai)
                             }
                             Spacer()
                             TextField(
@@ -510,8 +502,7 @@ extension SettingsPaneView {
                                 Label {
                                     Text("Model")
                                 } icon: {
-                                    Image(systemName: "brain")
-                                        .foregroundStyle(AppColors.calorie)
+                                    SettingsIcon("brain", tint: SettingsTint.ai)
                                 }
                             }
                             .pickerStyle(.menu)
@@ -534,8 +525,7 @@ extension SettingsPaneView {
                             Label {
                                 Text("API Key")
                             } icon: {
-                                Image(systemName: "key.fill")
-                                    .foregroundStyle(AppColors.calorie)
+                                SettingsIcon("key.fill", tint: SettingsTint.keys)
                             }
                             Spacer()
                             Group {
@@ -568,8 +558,7 @@ extension SettingsPaneView {
                             Label {
                                 Text(selectedFallbackProvider.requiresCustomEndpoint ? "Base URL" : "Server URL")
                             } icon: {
-                                Image(systemName: "link")
-                                    .foregroundStyle(AppColors.calorie)
+                                SettingsIcon("link", tint: SettingsTint.network)
                             }
                             Spacer()
                             TextField(
@@ -595,8 +584,7 @@ extension SettingsPaneView {
                                 Label {
                                     Text("Request Timeout")
                                 } icon: {
-                                    Image(systemName: "timer")
-                                        .foregroundStyle(AppColors.calorie)
+                                    SettingsIcon("timer", tint: SettingsTint.time)
                                 }
                                 Spacer()
                                 requestTimeoutInput
@@ -668,7 +656,7 @@ extension SettingsPaneView {
     @ViewBuilder
     var textFallbackSettingsRows: some View {
         Toggle(isOn: $textFallbackEnabled) {
-            Label("Enable Text Fallback", systemImage: "arrow.triangle.2.circlepath")
+            SettingsLabel("Enable Text Fallback", systemImage: "arrow.triangle.2.circlepath", tint: SettingsTint.fallback)
         }
         .tint(AppColors.calorie)
         .onChange(of: textFallbackEnabled) { _, newValue in
@@ -689,7 +677,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Provider")
                 } icon: {
-                    AIProviderBrandIcon(provider: selectedTextFallbackProvider)
+                    AIProviderBrandIcon(provider: selectedTextFallbackProvider, style: .settings)
                 }
             }
             .pickerStyle(.menu)
@@ -701,7 +689,7 @@ extension SettingsPaneView {
 
             if selectedTextFallbackProvider == .appleIntelligence {
                 HStack {
-                    Label("Model", systemImage: "brain")
+                    SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)
                     Spacer()
                     Text(selectedTextFallbackProvider.defaultTextModel)
                         .foregroundStyle(.secondary)
@@ -709,7 +697,7 @@ extension SettingsPaneView {
                 appleIntelligenceAvailabilityRow
             } else if selectedTextFallbackProvider.supportsCustomModelName {
                 HStack {
-                    Label("Model", systemImage: "brain")
+                    SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)
                     Spacer()
                     TextField(textFallbackModelPlaceholder, text: $selectedTextFallbackModel)
                         .textFieldStyle(.plain)
@@ -739,7 +727,7 @@ extension SettingsPaneView {
                         Text(model).tag(model)
                     }
                 } label: {
-                    Label("Model", systemImage: "brain")
+                    SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)
                 }
                 .pickerStyle(.menu)
                 .tint(.secondary)
@@ -757,7 +745,7 @@ extension SettingsPaneView {
 
             if selectedTextFallbackProvider.requiresAPIKey {
                 HStack {
-                    Label("API Key", systemImage: "key.fill")
+                    SettingsLabel("API Key", systemImage: "key.fill", tint: SettingsTint.keys)
                     Spacer()
                     Group {
                         if showTextFallbackAPIKey {
@@ -785,7 +773,7 @@ extension SettingsPaneView {
 
             if selectedTextFallbackProvider == .ollama || selectedTextFallbackProvider.requiresCustomEndpoint {
                 HStack {
-                    Label(selectedTextFallbackProvider.requiresCustomEndpoint ? "Base URL" : "Server URL", systemImage: "link")
+                    SettingsLabel(selectedTextFallbackProvider.requiresCustomEndpoint ? "Base URL" : "Server URL", systemImage: "link", tint: SettingsTint.network)
                     Spacer()
                     TextField(
                         selectedTextFallbackProvider.requiresCustomEndpoint
@@ -817,15 +805,14 @@ extension SettingsPaneView {
                 Text(OnDeviceAIService.availabilityDescription)
                     .foregroundStyle(.secondary)
             } icon: {
-                Image(systemName: available ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                    .foregroundStyle(available ? Color.green : Color.orange)
+                SettingsIcon(available ? "checkmark.circle.fill" : "exclamationmark.triangle.fill", tint: available ? SettingsTint.success : SettingsTint.warning)
             }
             #else
-            Label("Apple Intelligence is unavailable in this build", systemImage: "exclamationmark.triangle.fill")
+            SettingsLabel("Apple Intelligence is unavailable in this build", systemImage: "exclamationmark.triangle.fill", tint: SettingsTint.warning)
                 .foregroundStyle(.secondary)
             #endif
         } else {
-            Label("Requires iOS 26 or later", systemImage: "exclamationmark.triangle.fill")
+            SettingsLabel("Requires iOS 26 or later", systemImage: "exclamationmark.triangle.fill", tint: SettingsTint.warning)
                 .foregroundStyle(.secondary)
         }
     }

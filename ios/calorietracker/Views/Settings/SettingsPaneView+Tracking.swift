@@ -16,8 +16,7 @@ extension SettingsPaneView {
                             .foregroundStyle(.secondary)
                     }
                 } icon: {
-                    Image(systemName: "clock")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("clock.fill", tint: SettingsTint.time)
                 }
             }
 
@@ -35,8 +34,7 @@ extension SettingsPaneView {
                         .accessibilityLabel("About Default to Grams")
                     }
                 } icon: {
-                    Image(systemName: "scalemass")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("scalemass.fill", tint: SettingsTint.nutrition)
                 }
                 Spacer()
                 Toggle("Default to Grams", isOn: $preferGramsByDefault)
@@ -49,8 +47,7 @@ extension SettingsPaneView {
                     Label {
                         Text("Save to Photos")
                     } icon: {
-                        Image(systemName: "square.and.arrow.down")
-                            .foregroundStyle(AppColors.calorie)
+                        SettingsIcon("photo.on.rectangle", tint: SettingsTint.photos)
                     }
                     Spacer()
                     Toggle("Save to Photos", isOn: $saveMealPhotosToGallery)
@@ -60,7 +57,7 @@ extension SettingsPaneView {
                 Text("Also save meal photos to your gallery when logging")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
-                    .padding(.leading, 32)
+                    .padding(.leading, 41)
             }
         }
         .listRowBackground(AppColors.appCard)
@@ -78,8 +75,7 @@ extension SettingsPaneView {
                             .lineLimit(1)
                     }
                 } icon: {
-                    Image(systemName: "bolt.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("bolt.fill", tint: SettingsTint.quickActions)
                 }
             }
 
@@ -95,8 +91,7 @@ extension SettingsPaneView {
                             .lineLimit(1)
                     }
                 } icon: {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("plus", tint: SettingsTint.nutrition)
                 }
             }
         } footer: {
@@ -112,8 +107,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Water Tracking")
                 } icon: {
-                    Image(systemName: "drop.fill")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("drop.fill", tint: SettingsTint.hydration)
                 }
                 Spacer()
                 Toggle("Water Tracking", isOn: $waterTrackingEnabled)
@@ -136,8 +130,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Daily Water Goal")
                         } icon: {
-                            Image(systemName: "target")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("target", tint: SettingsTint.hydration)
                         }
                         .foregroundStyle(.primary)
                         Spacer()
@@ -163,8 +156,7 @@ extension SettingsPaneView {
                 Label {
                     Text("Fasting Tracking")
                 } icon: {
-                    Image(systemName: "timer")
-                        .foregroundStyle(AppColors.calorie)
+                    SettingsIcon("timer", tint: SettingsTint.fasting)
                 }
                 Spacer()
                 Toggle("Fasting Tracking", isOn: $fastingTrackingEnabled)
@@ -189,8 +181,7 @@ extension SettingsPaneView {
                         Label {
                             Text("Default Fasting Goal")
                         } icon: {
-                            Image(systemName: "target")
-                                .foregroundStyle(AppColors.calorie)
+                            SettingsIcon("target", tint: SettingsTint.fasting)
                         }
                         .foregroundStyle(.primary)
                         Spacer()

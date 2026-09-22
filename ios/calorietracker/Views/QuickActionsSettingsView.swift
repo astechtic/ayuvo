@@ -31,7 +31,7 @@ struct QuickActionsSettingsView: View {
                     .tag(action.rawValue)
             }
         } label: {
-            Label(title, systemImage: numberIcon(for: title))
+            SettingsLabel(title, systemImage: numberIcon(for: title), tint: SettingsTint.quickActions)
         }
         .pickerStyle(.menu)
         .tint(.secondary)

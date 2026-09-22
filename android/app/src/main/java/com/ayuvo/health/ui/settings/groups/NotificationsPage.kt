@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.BatteryAlert
-import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.LocalDining
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorWeight
@@ -29,8 +29,8 @@ import com.ayuvo.health.ui.components.OptionPickerSheet
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
-import com.ayuvo.health.ui.settings.SettingsPage
 import com.ayuvo.health.ui.settings.SettingsPageContext
+import com.ayuvo.health.ui.settings.SettingsTint
 
 /**
  * Notifications: the master switch, then every reminder type, medication reminder options
@@ -40,13 +40,12 @@ import com.ayuvo.health.ui.settings.SettingsPageContext
 internal fun NotificationsPage(ctx: SettingsPageContext) {
     val ui = ctx.ui
     val vm = ctx.vm
-    val tint = SettingsPage.NOTIFICATIONS.tint
     var showSnoozeSheet by remember { mutableStateOf(false) }
     InsetGroup {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notifications),
-                icon = Icons.Filled.Notifications, iconTint = tint,
+                icon = Icons.Filled.Notifications, iconTint = SettingsTint.Notifications,
                 modifier = Modifier.settingsRow("notifications"),
                 trailing = RowTrailing.Toggle(ui.notificationsEnabled, ctx.actions.onNotificationsToggle)
             )
@@ -70,7 +69,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_food_reminders),
-                icon = Icons.Filled.LocalDining, iconTint = tint,
+                icon = Icons.Filled.LocalDining, iconTint = SettingsTint.Nutrition,
                 modifier = Modifier.settingsRow("streakReminder"),
                 trailing = RowTrailing.Toggle(ui.streakReminderEnabled, vm::setStreakReminderEnabled)
             )
@@ -78,7 +77,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_daily_summary),
-                icon = Icons.Filled.GraphicEq, iconTint = tint,
+                icon = Icons.Filled.Insights, iconTint = SettingsTint.Nutrition,
                 modifier = Modifier.settingsRow("dailySummary"),
                 trailing = RowTrailing.Toggle(ui.dailySummaryEnabled, ctx.actions.onDailySummaryToggle)
             )
@@ -86,7 +85,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_weight_reminder),
-                icon = Icons.Filled.MonitorWeight, iconTint = tint,
+                icon = Icons.Filled.MonitorWeight, iconTint = SettingsTint.Body,
                 modifier = Modifier.settingsRow("weightReminder"),
                 trailing = RowTrailing.Toggle(ui.weightReminderEnabled, vm::setWeightReminderEnabled)
             )
@@ -94,7 +93,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_body_fat_reminder),
-                icon = Icons.Filled.Percent, iconTint = tint,
+                icon = Icons.Filled.Percent, iconTint = SettingsTint.Body,
                 modifier = Modifier.settingsRow("bodyFatReminder"),
                 trailing = RowTrailing.Toggle(ui.bodyFatReminderEnabled, vm::setBodyFatReminderEnabled)
             )
@@ -102,7 +101,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_goal_alerts),
-                icon = Icons.Filled.TrackChanges, iconTint = tint,
+                icon = Icons.Filled.TrackChanges, iconTint = SettingsTint.Green,
                 modifier = Modifier.settingsRow("goalAlerts"),
                 trailing = RowTrailing.Toggle(ui.goalReachedNotificationsEnabled, vm::setGoalReachedNotificationsEnabled)
             )
@@ -111,7 +110,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
             row {
                 GroupRow(
                     title = stringResource(R.string.settings_notif_water_reminder),
-                    icon = Icons.Filled.WaterDrop, iconTint = tint,
+                    icon = Icons.Filled.WaterDrop, iconTint = SettingsTint.Hydration,
                     modifier = Modifier.settingsRow("waterReminder"),
                     trailing = RowTrailing.Toggle(ui.waterReminderEnabled, vm::setWaterReminderEnabled)
                 )
@@ -121,7 +120,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
             row {
                 GroupRow(
                     title = stringResource(R.string.settings_notif_fasting_goal),
-                    icon = Icons.Filled.Timer, iconTint = tint,
+                    icon = Icons.Filled.Timer, iconTint = SettingsTint.Fasting,
                     modifier = Modifier.settingsRow("fastingGoalNotification"),
                     trailing = RowTrailing.Toggle(ui.fastingGoalNotificationEnabled, vm::setFastingGoalNotificationEnabled)
                 )
@@ -138,7 +137,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_medication_reminders),
-                icon = Icons.Filled.Medication, iconTint = tint,
+                icon = Icons.Filled.Medication, iconTint = SettingsTint.Medications,
                 modifier = Modifier.settingsRow("doseReminders"),
                 trailing = RowTrailing.Toggle(ui.medicationRemindersEnabled, vm::setMedicationRemindersEnabled)
             )
@@ -148,7 +147,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
                 GroupRow(
                     title = stringResource(R.string.settings_medications_snooze),
                     value = pluralStringResource(R.plurals.settings_medications_snooze_minutes, ui.medicationSnoozeMinutes, ui.medicationSnoozeMinutes),
-                    icon = Icons.Filled.Snooze, iconTint = tint,
+                    icon = Icons.Filled.Snooze, iconTint = SettingsTint.Medications,
                     modifier = Modifier.settingsRow("snooze"),
                     onClick = { showSnoozeSheet = true }
                 )
@@ -161,7 +160,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
                             if (ui.medicationExactAlarms) R.string.settings_medications_exact_timing_on
                             else R.string.settings_medications_exact_timing_off
                         ),
-                        icon = Icons.Filled.Alarm, iconTint = tint,
+                        icon = Icons.Filled.Alarm, iconTint = SettingsTint.Medications,
                         modifier = Modifier.settingsRow("exactTiming"),
                         onClick = ctx.actions.openExactAlarmSettings
                     )
@@ -174,7 +173,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_notif_app_updates),
-                icon = Icons.Filled.SystemUpdate, iconTint = tint,
+                icon = Icons.Filled.SystemUpdate, iconTint = SettingsTint.Gray,
                 modifier = Modifier.settingsRow("appUpdates"),
                 trailing = RowTrailing.Toggle(ui.appUpdateNotificationsEnabled, vm::setAppUpdateNotificationsEnabled)
             )
@@ -183,7 +182,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
             GroupRow(
                 title = stringResource(R.string.settings_battery_opt),
                 value = stringResource(R.string.settings_battery_opt_value),
-                icon = Icons.Filled.BatteryAlert, iconTint = tint,
+                icon = Icons.Filled.BatteryAlert, iconTint = SettingsTint.Green,
                 modifier = Modifier.settingsRow("batteryOptimisation"),
                 onClick = ctx.actions.openBatteryOptimizationSettings
             )
