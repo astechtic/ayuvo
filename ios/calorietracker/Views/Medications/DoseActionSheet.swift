@@ -25,76 +25,25 @@ struct DoseActionSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    HStack(spacing: 12) {
-                        MedicationIconBubble(medication: medication)
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(medication.displayName)
-                                .font(.system(.headline, design: .rounded))
-                            Text("\(MedicationFormatting.doseText(medication)) · \(MedicationFormatting.timeText(ms: item.scheduledAtMs))")
-                                .font(.system(.caption, design: .rounded))
-                                .foregroundStyle(.secondary)
-                            DoseStatusBadge(status: item.status, isLate: item.isLate)
-                        }
-                    }
-                    .listRowBackground(AppColors.appCard)
+                    DoseSheetHeader(item: item, medication: medication)
                 }
+                .listRowBackground(AppColors.appCard)
 
                 if isResolved {
                     Section {
-                        Button(role: .destructive) {
-                            Task { await run(.undo) }
-                        } label: {
-                            Label("Undo", systemImage: "arrow.uturn.backward")
-                        }
-                        .accessibilityIdentifier("medications.dose.undo")
-                    } footer: {
-                        Text("Removes this entry so the dose shows as due again.")
+                        Text("Undo removes this entry so the dose shows as due again.")
+                            .font(.system(.footnote, design: .rounded))
+                            .foregroundStyle(.secondary)
                     }
                     .listRowBackground(AppColors.appCard)
                 } else {
                     Section {
-                        Toggle(isOn: $useCustomTime) {
+                        Toggle(isOn: $useCustomTime.animation(.easeInOut(duration: 0.2))) {
                             Label("Taken at a different time", systemImage: "clock.arrow.circlepath")
                         }
                         .tint(AppColors.calorie)
                         if useCustomTime {
                             DatePicker("Time", selection: $takenAt, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
-                        }
-                        Button {
-                            Task { await run(.taken) }
-                        } label: {
-                            Label(takeTitle, systemImage: "checkmark.circle")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(AppColors.calorie)
-                        .controlSize(.large)
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets())
-                        .accessibilityIdentifier("medications.dose.take")
-                    }
-                    .listRowBackground(AppColors.appCard)
-
-                    Section {
-                        Button {
-                            Task { await run(.skipped) }
-                        } label: {
-                            Label("Skip this dose", systemImage: "forward")
-                        }
-                        .accessibilityIdentifier("medications.dose.skip")
-                        if canSnooze {
-                            Picker("Snooze for", selection: $snoozeMinutes) {
-                                ForEach(MedicationSettings.snoozeOptions, id: \.self) { minutes in
-                                    Text(String(localized: "\(minutes) min")).tag(minutes)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            Button {
-                                Task { await run(.snoozed) }
-                            } label: {
-                                Label("Snooze", systemImage: "clock")
-                            }
-                            .accessibilityIdentifier("medications.dose.snooze")
                         }
                     } footer: {
                         if item.status == .missed {
@@ -105,18 +54,30 @@ struct DoseActionSheet: View {
                     }
                     .listRowBackground(AppColors.appCard)
 
-                    Section("Note") {
+                    if canSnooze {
+                        Section("Snooze") {
+                            Picker("Snooze for", selection: $snoozeMinutes) {
+                                ForEach(MedicationSettings.snoozeOptions, id: \.self) { minutes in
+                                    Text(String(localized: "\(minutes) min")).tag(minutes)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .labelsHidden()
+                            Button {
+                                Task { await run(.snoozed) }
+                            } label: {
+                                Label("Remind me later", systemImage: "clock")
+                            }
+                            .accessibilityIdentifier("medications.dose.snooze")
+                        }
+                        .listRowBackground(AppColors.appCard)
+                    }
+
+                    Section {
                         TextField(String(localized: "Optional note"), text: $note, axis: .vertical)
                             .lineLimit(1...3)
-                    }
-                    .listRowBackground(AppColors.appCard)
-                }
-
-                if let errorText {
-                    Section {
-                        Label(errorText, systemImage: "exclamationmark.circle")
-                            .font(.system(.footnote, design: .rounded))
-                            .foregroundStyle(.orange)
+                    } header: {
+                        Text("Note")
                     }
                     .listRowBackground(AppColors.appCard)
                 }
@@ -130,12 +91,68 @@ struct DoseActionSheet: View {
                     Button("Close") { dismiss() }
                 }
             }
+            // The actions stay pinned above the home indicator, so they never collide with the
+            // list and stay reachable at the medium detent.
+            .safeAreaInset(edge: .bottom, spacing: 0) { actionBar }
             .disabled(isWorking)
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .onAppear { snoozeMinutes = store.snoozeMinutes }
         .accessibilityIdentifier("medications.doseSheet")
+    }
+
+    @ViewBuilder private var actionBar: some View {
+        VStack(spacing: 10) {
+            if let errorText {
+                Label(errorText, systemImage: "exclamationmark.circle")
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundStyle(.orange)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            if isResolved {
+                Button(role: .destructive) {
+                    Task { await run(.undo) }
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward")
+                        .font(.system(.body, design: .rounded, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .accessibilityIdentifier("medications.dose.undo")
+            } else {
+                Button {
+                    Task { await run(.taken) }
+                } label: {
+                    Label(takeTitle, systemImage: "checkmark.circle.fill")
+                        .font(.system(.body, design: .rounded, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(AppColors.calorie)
+                .controlSize(.large)
+                .accessibilityIdentifier("medications.dose.take")
+
+                Button {
+                    Task { await run(.skipped) }
+                } label: {
+                    Text("Skip this dose")
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(AppColors.calorie)
+                .padding(.vertical, 6)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier("medications.dose.skip")
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 14)
+        .padding(.bottom, 10)
+        .background(.bar)
+        .overlay(alignment: .top) { Divider() }
     }
 
     private func run(_ action: DoseAction) async {
@@ -172,16 +189,10 @@ struct PRNLogSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    HStack(spacing: 12) {
-                        MedicationIconBubble(medication: medication)
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(medication.displayName)
-                                .font(.system(.headline, design: .rounded))
-                            Text(String(localized: "As needed · usual dose \(MedicationFormatting.doseText(medication))"))
-                                .font(.system(.caption, design: .rounded))
-                                .foregroundStyle(.secondary)
-                        }
-                    }
+                    DoseSheetHeader(
+                        medication: medication,
+                        subtitle: String(localized: "As needed · usual dose \(MedicationFormatting.doseText(medication))")
+                    )
                 }
                 .listRowBackground(AppColors.appCard)
                 Section {
@@ -248,5 +259,42 @@ struct PRNLogSheet: View {
         } else {
             errorText = MedicationFormatting.actionErrorText(outcome.error ?? "unknown")
         }
+    }
+}
+
+/// The medicine, its dose and the current status at the top of the dose sheets. Keeps the name to
+/// two lines so a long product name cannot push the controls off a medium-detent sheet.
+struct DoseSheetHeader: View {
+    var item: MedicationTodayTimeline.Item?
+    let medication: Medication
+    var subtitle: String?
+
+    private var detailText: String {
+        if let subtitle { return subtitle }
+        guard let item else { return MedicationFormatting.doseText(medication) }
+        return "\(MedicationFormatting.doseText(medication)) · \(MedicationFormatting.timeText(ms: item.scheduledAtMs))"
+    }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            MedicationIconBubble(medication: medication, size: 46)
+            VStack(alignment: .leading, spacing: 5) {
+                Text(medication.displayName)
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+                Text(detailText)
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                if let item {
+                    DoseStatusBadge(status: item.status, isLate: item.isLate)
+                        .padding(.top, 1)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
     }
 }
