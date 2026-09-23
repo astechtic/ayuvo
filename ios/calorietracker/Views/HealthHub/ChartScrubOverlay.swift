@@ -6,6 +6,9 @@ import UIKit
 /// publishes it through `selected`, hapticly ticks on change, and floats `label` above the
 /// plot clamped inside the plot frame. Extracted from the Weight / Body Fat sections so
 /// the Health detail chart shares one implementation.
+///
+/// `persistent` (metric detail charts, docs/charts.md): the selection stays after the finger lifts
+/// and a tap selects too (tapping the selected point again clears it), unless `onTap` handles it.
 struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
     let proxy: ChartProxy
     let points: [Point]
@@ -14,6 +17,9 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
     private let label: (Point) -> Label
     /// Optional tap on the plot: the nearest point by date (Health Records trend → source).
     private let onTap: ((Point) -> Void)?
+    private let persistent: Bool
+    /// Custom hit test by plot date (sleep stages: the segment under the finger).
+    private let match: ((Date) -> Point?)?
 
     init(
         proxy: ChartProxy,
@@ -21,6 +27,8 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
         date: @escaping (Point) -> Date,
         selected: Binding<Point?>,
         onTap: ((Point) -> Void)? = nil,
+        persistent: Bool = false,
+        match: ((Date) -> Point?)? = nil,
         @ViewBuilder label: @escaping (Point) -> Label
     ) {
         self.proxy = proxy
@@ -28,6 +36,8 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
         self.date = date
         self._selected = selected
         self.onTap = onTap
+        self.persistent = persistent
+        self.match = match
         self.label = label
     }
 
@@ -40,10 +50,17 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
                     .contentShape(Rectangle())
                     .gesture(
                         SpatialTapGesture().onEnded { value in
-                            guard let onTap, let plotFrame, let point = nearest(at: value.location.x - plotFrame.minX) else { return }
-                            onTap(point)
+                            guard let plotFrame, let point = nearest(at: value.location.x - plotFrame.minX) else { return }
+                            if let onTap {
+                                onTap(point)
+                            } else if persistent {
+                                withAnimation(.easeOut(duration: 0.16)) {
+                                    selected = selected == point ? nil : point
+                                }
+                                UISelectionFeedbackGenerator().selectionChanged()
+                            }
                         },
-                        including: onTap == nil ? .subviews : .all
+                        including: onTap == nil && !persistent ? .subviews : .all
                     )
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 6)
@@ -53,6 +70,7 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
                                 inspect(at: value.location.x - plotFrame.minX)
                             }
                             .onEnded { _ in
+                                guard !persistent else { return }
                                 withAnimation(.easeOut(duration: 0.16)) {
                                     selected = nil
                                 }
@@ -75,7 +93,9 @@ struct ChartScrubOverlay<Point: Equatable, Label: View>: View {
     }
 
     private func nearest(at plotX: CGFloat) -> Point? {
-        guard let target: Date = proxy.value(atX: plotX), !points.isEmpty else { return nil }
+        guard let target: Date = proxy.value(atX: plotX) else { return nil }
+        if let match { return match(target) }
+        guard !points.isEmpty else { return nil }
         return points.min {
             abs(date($0).timeIntervalSince(target)) < abs(date($1).timeIntervalSince(target))
         }

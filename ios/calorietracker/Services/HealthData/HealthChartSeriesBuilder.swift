@@ -97,8 +97,24 @@ nonisolated struct HealthChartSeries: Sendable, Equatable {
     var highlights: HealthHighlights
     /// Headline stat above the chart (shared `headline`).
     var headline: MetricsReference.Headline?
+    /// Sleep D: the fitted night window (shared `sleep_night_window`, docs/charts.md).
+    var sleepWindow: MetricsReference.SleepWindow?
+    /// Sleep W / M / 6M / Y: bedtime → wake bars on the clock axis (shared `sleep_range_series`).
+    var sleepRange: MetricsReference.SleepRange?
+    /// Sleep W / M: stage segments of each night on the clock axis.
+    var sleepSegments: [SleepSegment] = []
     /// True when no bucket has a value (every bucket is always present).
     var isEmpty: Bool { !points.contains { $0.value != nil } && stagePoints.isEmpty }
+}
+
+/// One stage of one night on the sleep clock axis (minutes from 12:00 the day before waking).
+nonisolated struct SleepSegment: Sendable, Equatable, Identifiable {
+    var day: Date
+    var stage: Int
+    var startMin: Int
+    var endMin: Int
+
+    var id: String { "\(day.timeIntervalSince1970)-\(startMin)-\(stage)" }
 }
 
 /// Turns stored rows / daily rollups into chart-ready buckets. Pure; runs on the
@@ -120,6 +136,7 @@ nonisolated enum HealthChartSeriesBuilder {
         if type.isSleep {
             series.stagePoints = sleepStagePoints(range: range, rows: rows, calendar: calendar, interval: interval)
         }
+        let zone = MetricsReference.Zone(calendar: calendar)
 
         let inRange = rollups.filter { inInterval($0.day, interval, calendar) }
         switch range {
@@ -151,6 +168,10 @@ nonisolated enum HealthChartSeriesBuilder {
                 }
                 return aggregatePoint(group, start: date(bucket.startMs), end: date(bucket.endMs), type: type)
             }
+        }
+
+        if type.isSleep {
+            applySleep(&series, range: range, anchor: anchor, rows: rows, zone: zone, calendar: calendar, weekStart: weekStart)
         }
 
         series.highlights = highlights(type: type, points: series.points, rows: rows, rollups: rollups, interval: interval, calendar: calendar)
@@ -311,37 +332,63 @@ nonisolated enum HealthChartSeriesBuilder {
 
     // MARK: - Sleep
 
+    /// D: the stage rows of the night that woke up on the anchor day (single source, raw times).
     private static func sleepStagePoints(range: HealthDetailRange, rows: [HealthSampleRow], calendar: Calendar, interval: DateInterval) -> [HealthChartPoint] {
-        let sleepRows = rows.filter { !$0.isDeleted }
-        switch range {
-        case .day:
-            // Segments of the night that woke up inside the interval.
-            let nightRows = sleepRows.filter { row in
-                guard let day = dayDate(row.localDay, calendar: calendar) else { return false }
-                return day >= interval.start && day < interval.end
-            }
-            guard let night = HealthSleepAnalysis.nights(rows: nightRows, calendar: calendar).last else { return [] }
-            return nightRows
-                .filter { $0.sourceID == night.source && $0.categoryValue != HealthSleepStage.outOfBed.rawValue }
-                .map { HealthChartPoint(start: $0.startDate, end: $0.endDate, value: $0.durationSeconds, min: nil, max: nil, value2: nil, count: 1, stage: $0.categoryValue) }
-                .sorted { $0.start < $1.start }
-        case .week, .month, .sixMonths, .year:
-            let nights = HealthSleepAnalysis.nights(rows: sleepRows, calendar: calendar).filter { inInterval($0.nightOf, interval, calendar) }
-            var points: [HealthChartPoint] = []
-            for night in nights {
-                guard let day = dayDate(night.nightOf, calendar: calendar) else { continue }
-                let end = calendar.date(byAdding: .day, value: 1, to: day) ?? day
-                let stages: [(HealthSleepStage, Double)] = [
-                    (.deep, night.deepS), (.light, night.lightS), (.rem, night.remS),
-                    (.asleepUnspecified, night.asleepS - night.deepS - night.lightS - night.remS), (.awake, night.awakeS),
-                ]
-                for (stage, seconds) in stages where seconds > 0 {
-                    points.append(HealthChartPoint(start: day, end: end, value: seconds, min: nil, max: nil, value2: nil, count: 1, stage: stage.rawValue))
-                }
-            }
-            return points
-        }
+        guard range == .day else { return [] }
+        let nightRows = HealthSleepAnalysis.rowsByNight(rows)
+            .filter { inInterval($0.key, interval, calendar) }
+            .flatMap(\.value)
+        guard let night = HealthSleepAnalysis.nights(rows: nightRows, calendar: calendar).last else { return [] }
+        return nightRows
+            .filter { $0.sourceID == night.source && $0.categoryValue != HealthSleepStage.outOfBed.rawValue }
+            .map { HealthChartPoint(start: $0.startDate, end: $0.endDate, value: $0.durationSeconds, min: nil, max: nil, value2: nil, count: 1, stage: $0.categoryValue) }
+            .sorted { $0.start < $1.start }
     }
+
+    /// Sleep window (D) or clock-axis bars (W+) from the nights analysis and the shared sleep functions.
+    /// W+ `points` carry one entry per bucket: value = mean asleep seconds, min / max = bed / wake offsets.
+    private static func applySleep(_ series: inout HealthChartSeries, range: HealthDetailRange, anchor: Date, rows: [HealthSampleRow], zone: MetricsReference.Zone, calendar: Calendar, weekStart: MetricsReference.WeekStart) {
+        if range == .day {
+            series.points = []
+            series.sleepWindow = MetricsReference.sleepNightWindow(
+                rows: series.stagePoints.map { .init(startMs: ms($0.start), endMs: ms($0.end), stage: $0.stage ?? -1) },
+                zone: zone
+            )
+            return
+        }
+        let live = rows.filter { !$0.isDeleted }
+        let nights = HealthSleepAnalysis.nights(rows: live, calendar: calendar).filter { inInterval($0.nightOf, series.interval, calendar) }
+        let result = MetricsReference.sleepRangeSeries(
+            nights: nights.map { .init(wakeDay: $0.nightOf, bedtimeMs: $0.startMs, wakeMs: $0.endMs, asleepS: $0.asleepS, inBedS: $0.inBedS) },
+            range: range, anchorMs: ms(anchor), zone: zone, weekStart: weekStart
+        )
+        series.sleepRange = result
+        series.points = result.buckets.map { bucket in
+            HealthChartPoint(
+                start: date(bucket.startMs), end: date(bucket.endMs),
+                value: bucket.count > 0 ? (bucket.asleepS ?? 0) : nil,
+                min: bucket.bedOffsetMin, max: bucket.wakeOffsetMin, value2: bucket.inBedS, count: bucket.count, stage: nil
+            )
+        }
+        guard range == .week || range == .month else { return }
+        var segments: [SleepSegment] = []
+        let byNight = HealthSleepAnalysis.rowsByNight(live)
+        for night in nights {
+            guard let wakeDay = MetricsReference.LocalDay.parse(night.nightOf) else { continue }
+            let day = date(zone.midnight(wakeDay))
+            for row in byNight[night.nightOf] ?? [] where row.sourceID == night.source {
+                guard let code = row.categoryValue, (1...5).contains(code), row.endMs > row.startMs else { continue }
+                segments.append(SleepSegment(
+                    day: day, stage: code,
+                    startMin: MetricsReference.sleepClockOffset(tMs: row.startMs, wakeDay: wakeDay, zone: zone),
+                    endMin: MetricsReference.sleepClockOffset(tMs: row.endMs, wakeDay: wakeDay, zone: zone)
+                ))
+            }
+        }
+        series.sleepSegments = segments.sorted { ($0.day, $0.startMin) < ($1.day, $1.startMin) }
+    }
+
+    private static func ms(_ date: Date) -> Int64 { Int64((date.timeIntervalSince1970 * 1000).rounded()) }
 
     // MARK: - Highlights
 

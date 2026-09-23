@@ -371,7 +371,9 @@ final class HealthDataStore {
             let rollups = try await reader.dailyRollups(type: typeID, fromDay: fromDay, toDay: toDay)
             let rows: [HealthSampleRow]
             if type.isSleep {
-                rows = try await reader.rowsForDays(type: typeID, fromDay: fromDay, toDay: toDay)
+                // One day earlier: stages that end before midnight carry the previous local_day.
+                let sleepFrom = dayKey(interval.start.addingTimeInterval(-86_400))
+                rows = try await reader.rowsForDays(type: typeID, fromDay: sleepFrom, toDay: toDay)
             } else if range == .day {
                 rows = try await reader.rows(type: typeID, startMs: HealthSampleMapper.ms(interval.start), endMs: HealthSampleMapper.ms(interval.end))
             } else {
@@ -398,8 +400,10 @@ final class HealthDataStore {
 
     func nights(from: Date, to: Date) async -> [HealthSleepNight] {
         guard let reader = await database() else { return [] }
-        let rows = (try? await reader.rowsForDays(type: "sleep", fromDay: dayKey(from), toDay: dayKey(to))) ?? []
-        return HealthSleepAnalysis.nights(rows: rows, calendar: calendar)
+        // One day earlier: stages that end before midnight carry the previous local_day.
+        let rows = (try? await reader.rowsForDays(type: "sleep", fromDay: dayKey(from.addingTimeInterval(-86_400)), toDay: dayKey(to))) ?? []
+        let first = dayKey(from)
+        return HealthSleepAnalysis.nights(rows: rows, calendar: calendar).filter { $0.nightOf >= first }
     }
 
     // MARK: - Maintenance

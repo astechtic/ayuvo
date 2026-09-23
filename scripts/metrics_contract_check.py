@@ -42,7 +42,9 @@ EXPECTED_FILES = {
     "bucket_bounds.json": "bucket_bounds", "anchor_step.json": "step_anchor", "bucket_series.json": "bucket_series",
     "headline.json": "headline", "sparkline.json": "sparkline_7d", "fasting_days.json": "fasting_hours_per_day",
     "workouts.json": "workout_stats_per_bucket", "rings.json": "ring_progress", "pins.json": "favourite_pins_migrate",
-    "catalog_resolve.json": "resolve_metric",
+    "catalog_resolve.json": "resolve_metric", "axis_ticks.json": "nice_ticks", "x_ticks.json": "x_ticks",
+    "drill_down.json": "drill_target", "sleep_window.json": "sleep_night_window", "sleep_offset.json": "sleep_clock_offset",
+    "sleep_range.json": "sleep_range_series",
 }
 ALLOWED_ZONES = frozenset(["America/New_York", "Europe/London", "Asia/Kolkata", "UTC"])
 DOCUMENTED = {"FAV_MAX": 12, "DAILY_STEP_GOAL_DEFAULT": 10000, "HOUR_MS": 3_600_000,
@@ -322,6 +324,28 @@ def check_shape(function, got, where, problems, inp):
         f = got["favourites"]
         if len(f) != len(set(f)) or len(f) > inp["max"] or got["source"] not in R.PIN_SOURCES:
             problems.append("%s: bad favourites output" % where)
+    elif function == "nice_ticks":
+        tk = got["ticks"]
+        if tk[0] != got["min"] or tk[-1] != got["max"] or len(tk) > max(2, inp["count"]) or tk[0] > inp["min"] or tk[-1] < inp["max"]:
+            problems.append("%s: ticks must cover the input with at most count ticks" % where)
+        if inp["include_zero"] and not (tk[0] <= 0 <= tk[-1]):
+            problems.append("%s: bar ticks must include 0" % where)
+    elif function == "x_ticks":
+        ix = got["indices"]
+        if ix != sorted(set(ix)):
+            problems.append("%s: indices not ascending/unique" % where)
+    elif function == "sleep_night_window" and got["window"] is not None:
+        w = got["window"]
+        if not (w["domain_start_ms"] <= w["bedtime_ms"] < w["wake_ms"] <= w["domain_end_ms"]):
+            problems.append("%s: domain does not contain the night" % where)
+        if w["domain_end_ms"] - w["domain_start_ms"] < R.SLEEP_MIN_DAY_SPAN_MS or w["asleep_s"] > w["in_bed_s"]:
+            problems.append("%s: span < 4 h or asleep > in bed" % where)
+    elif function == "sleep_range_series":
+        b = got["buckets"]
+        _check_contiguous(b, (b[0]["start_ms"], b[-1]["end_ms"]) if b else (0, 0), where, problems)
+        _count_rule(inp["range"], len(b), where, problems)
+        if (got["domain"] is None) != (got["headline"]["nights"] == 0):
+            problems.append("%s: domain null must mean no nights" % where)
     elif function == "resolve_metric":
         if got["domain"] not in DOMAIN_IDS or got["aggregation"] not in R.AGGREGATIONS or got["chart_kind"] not in R.CHART_KINDS:
             problems.append("%s: bad resolved metric" % where)
@@ -478,6 +502,28 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual(no_override["icon_ios"], R.DOMAINS[no_override["domain"]]["icon"]["ios"])
         self.assertEqual(R.resolve_metric("HKQuantityTypeIdentifierMadeUp")["icon_ios"],
                          R.DOMAINS["other"]["icon"]["ios"])
+
+    def test_sleep_day_window_starts_before_midnight(self):
+        s = R.local_instant(_dt.date(2026, 9, 15), 22, 40, self.NY)
+        e = R.local_instant(_dt.date(2026, 9, 16), 6, 55, self.NY)
+        w = R.sleep_night_window([{"start_ms": s, "end_ms": e, "stage": 3}], self.NY)
+        self.assertEqual(w["domain_start_ms"], R.local_instant(_dt.date(2026, 9, 15), 22, 0, self.NY))
+        self.assertEqual(w["domain_end_ms"], R.local_instant(_dt.date(2026, 9, 16), 7, 0, self.NY))
+        self.assertEqual(w["tick_step_ms"], R.HOUR_MS * 3)          # 9 h domain -> Apple's 3 h stride
+
+    def test_sleep_6m_bucket_is_mean_of_nights(self):
+        z = "UTC"
+        nights = []
+        for day, bed_h, asleep in (("2026-09-14", 22, 25200), ("2026-09-15", 23, 28800)):
+            d = R.parse_date(day)
+            nights.append({"wake_day": day, "bedtime_ms": R.local_instant(d - _dt.timedelta(days=1), bed_h, 0, z),
+                           "wake_ms": R.local_instant(d, 7, 0, z), "asleep_s": asleep, "in_bed_s": asleep})
+        anchor = R.local_instant(_dt.date(2026, 9, 16), 12, 0, z)
+        week = [b for b in R.sleep_range_series(nights, "6M", anchor, z, "monday")["buckets"] if b["count"]][0]
+        self.assertEqual((week["count"], week["asleep_s"], week["bed_offset_min"]), (2, 27000, 630))
+
+    def test_nice_ticks_calories(self):
+        self.assertEqual(R.nice_ticks(0, 2350, 4, True)["ticks"], [0, 1000, 2000, 3000])
 
     def test_round3(self):
         self.assertEqual(R.round3(1.0005), 1.001)

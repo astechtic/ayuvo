@@ -10,6 +10,7 @@ struct MetricsVectorTests {
     static let vectorFiles = [
         "bucket_bounds", "anchor_step", "bucket_series", "headline", "sparkline",
         "fasting_days", "workouts", "rings", "pins", "catalog_resolve",
+        "axis_ticks", "x_ticks", "drill_down", "sleep_window", "sleep_offset", "sleep_range",
     ]
 
     static var vectorsDirectory: URL {

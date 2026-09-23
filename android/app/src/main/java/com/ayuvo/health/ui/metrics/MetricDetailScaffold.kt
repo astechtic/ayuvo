@@ -69,6 +69,8 @@ fun MetricDetailScaffold(
     about: String?,
     modifier: Modifier = Modifier,
     chartFooter: (@Composable ColumnScope.() -> Unit)? = null,
+    /** Replaces the standard headline (sleep D shows Apple's TIME IN BED / TIME ASLEEP pair). */
+    headlineContent: (@Composable () -> Unit)? = null,
     extraSections: LazyListScope.() -> Unit = {}
 ) {
     Scaffold(
@@ -94,7 +96,9 @@ fun MetricDetailScaffold(
             }
             item(key = "headline") {
                 val h = headline
-                if (h != null) {
+                if (headlineContent != null) {
+                    Box(Modifier.padding(horizontal = 4.dp, vertical = 4.dp).testTag("metric.headline")) { headlineContent() }
+                } else if (h != null) {
                     HeadlineStat(
                         label = h.label,
                         value = h.value ?: "—",

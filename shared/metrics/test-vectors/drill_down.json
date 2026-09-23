@@ -1,0 +1,170 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "target": {
+          "anchor_date": "2026-09-15",
+          "anchor_ms": 1789444800000,
+          "range": "D"
+        }
+      },
+      "input": {
+        "bucket_start_ms": 1789444800000,
+        "has_data": true,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "W",
+        "time_zone": "America/New_York"
+      },
+      "name": "W day with data"
+    },
+    {
+      "expected": {
+        "target": {
+          "anchor_date": "2026-09-03",
+          "anchor_ms": 1788373800000,
+          "range": "D"
+        }
+      },
+      "input": {
+        "bucket_start_ms": 1788373800000,
+        "has_data": true,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "M",
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "M day with data"
+    },
+    {
+      "expected": {
+        "target": null
+      },
+      "input": {
+        "bucket_start_ms": 1789444800000,
+        "has_data": false,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "W",
+        "time_zone": "America/New_York"
+      },
+      "name": "W empty day"
+    },
+    {
+      "expected": {
+        "target": null
+      },
+      "input": {
+        "bucket_start_ms": 1789444800000,
+        "has_data": true,
+        "metric_ranges": [
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "W",
+        "time_zone": "America/New_York"
+      },
+      "name": "W metric without D"
+    },
+    {
+      "expected": {
+        "target": null
+      },
+      "input": {
+        "bucket_start_ms": 1789466400000,
+        "has_data": true,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "D",
+        "time_zone": "America/New_York"
+      },
+      "name": "D range"
+    },
+    {
+      "expected": {
+        "target": null
+      },
+      "input": {
+        "bucket_start_ms": 1789344000000,
+        "has_data": true,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "6M",
+        "time_zone": "UTC"
+      },
+      "name": "6M week"
+    },
+    {
+      "expected": {
+        "target": null
+      },
+      "input": {
+        "bucket_start_ms": 1772323200000,
+        "has_data": true,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "Y",
+        "time_zone": "Europe/London"
+      },
+      "name": "Y month"
+    },
+    {
+      "expected": {
+        "target": {
+          "anchor_date": "2026-03-29",
+          "anchor_ms": 1774742400000,
+          "range": "D"
+        }
+      },
+      "input": {
+        "bucket_start_ms": 1774742400000,
+        "has_data": true,
+        "metric_ranges": [
+          "D",
+          "W",
+          "M",
+          "6M",
+          "Y"
+        ],
+        "range": "W",
+        "time_zone": "Europe/London"
+      },
+      "name": "W London DST day"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "drill_target",
+  "version": 1
+}

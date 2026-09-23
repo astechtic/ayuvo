@@ -1,0 +1,516 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 26580,
+          "bedtime_ms": 1789526400000,
+          "domain_end_ms": 1789556400000,
+          "domain_start_ms": 1789524000000,
+          "in_bed_s": 29700,
+          "pct": {
+            "core": 50,
+            "deep": 21,
+            "rem": 28,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 1980,
+            "core": 13380,
+            "deep": 5700,
+            "rem": 7500,
+            "unspecified": 0
+          },
+          "tick_step_ms": 10800000,
+          "ticks": [
+            1789524000000,
+            1789534800000,
+            1789545600000,
+            1789556400000
+          ],
+          "wake_ms": 1789556100000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789556100000,
+            "stage": 0,
+            "start_ms": 1789526400000
+          },
+          {
+            "end_ms": 1789530000000,
+            "stage": 3,
+            "start_ms": 1789527120000
+          },
+          {
+            "end_ms": 1789533300000,
+            "stage": 4,
+            "start_ms": 1789530000000
+          },
+          {
+            "end_ms": 1789537800000,
+            "stage": 3,
+            "start_ms": 1789533300000
+          },
+          {
+            "end_ms": 1789538700000,
+            "stage": 2,
+            "start_ms": 1789537800000
+          },
+          {
+            "end_ms": 1789541400000,
+            "stage": 5,
+            "start_ms": 1789538700000
+          },
+          {
+            "end_ms": 1789547400000,
+            "stage": 3,
+            "start_ms": 1789541400000
+          },
+          {
+            "end_ms": 1789549800000,
+            "stage": 4,
+            "start_ms": 1789547400000
+          },
+          {
+            "end_ms": 1789554600000,
+            "stage": 5,
+            "start_ms": 1789549800000
+          },
+          {
+            "end_ms": 1789555680000,
+            "stage": 2,
+            "start_ms": 1789554600000
+          }
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "NY night across midnight with stages"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 0,
+          "bedtime_ms": 1789513500000,
+          "domain_end_ms": 1789545600000,
+          "domain_start_ms": 1789513200000,
+          "in_bed_s": 29700,
+          "pct": {
+            "core": null,
+            "deep": null,
+            "rem": null,
+            "unspecified": null
+          },
+          "stages": {
+            "awake": 0,
+            "core": 0,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "tick_step_ms": 10800000,
+          "ticks": [
+            1789513200000,
+            1789524000000,
+            1789534800000,
+            1789545600000
+          ],
+          "wake_ms": 1789543200000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789543200000,
+            "stage": 0,
+            "start_ms": 1789513500000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "in bed only"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 23400,
+          "bedtime_ms": 1789495200000,
+          "domain_end_ms": 1789518600000,
+          "domain_start_ms": 1789493400000,
+          "in_bed_s": 23400,
+          "pct": {
+            "core": 0,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 100
+          },
+          "stages": {
+            "awake": 0,
+            "core": 0,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 23400
+          },
+          "tick_step_ms": 7200000,
+          "ticks": [
+            1789493400000,
+            1789500600000,
+            1789507800000,
+            1789515000000
+          ],
+          "wake_ms": 1789518600000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789518600000,
+            "stage": 1,
+            "start_ms": 1789495200000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "asleep unspecified only"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 3300,
+          "bedtime_ms": 1789567800000,
+          "domain_end_ms": 1789581600000,
+          "domain_start_ms": 1789567200000,
+          "in_bed_s": 3300,
+          "pct": {
+            "core": 0,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 100
+          },
+          "stages": {
+            "awake": 0,
+            "core": 0,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 3300
+          },
+          "tick_step_ms": 3600000,
+          "ticks": [
+            1789567200000,
+            1789570800000,
+            1789574400000,
+            1789578000000,
+            1789581600000
+          ],
+          "wake_ms": 1789571100000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789571100000,
+            "stage": 1,
+            "start_ms": 1789567800000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "short nap grows to 4 h"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 41400,
+          "bedtime_ms": 1789506900000,
+          "domain_end_ms": 1789549200000,
+          "domain_start_ms": 1789506000000,
+          "in_bed_s": 41400,
+          "pct": {
+            "core": 100,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 0,
+            "core": 41400,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "tick_step_ms": 10800000,
+          "ticks": [
+            1789506000000,
+            1789516800000,
+            1789527600000,
+            1789538400000,
+            1789549200000
+          ],
+          "wake_ms": 1789548300000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789548300000,
+            "stage": 3,
+            "start_ms": 1789506900000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "long night two-hour ticks"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 31200,
+          "bedtime_ms": 1792881000000,
+          "domain_end_ms": 1792915200000,
+          "domain_start_ms": 1792879200000,
+          "in_bed_s": 31200,
+          "pct": {
+            "core": 100,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 0,
+            "core": 31200,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "tick_step_ms": 10800000,
+          "ticks": [
+            1792879200000,
+            1792890000000,
+            1792900800000,
+            1792911600000
+          ],
+          "wake_ms": 1792912200000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1792912200000,
+            "stage": 3,
+            "start_ms": 1792881000000
+          }
+        ],
+        "time_zone": "Europe/London"
+      },
+      "name": "London fall-back night"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 24000,
+          "bedtime_ms": 1774740600000,
+          "domain_end_ms": 1774767600000,
+          "domain_start_ms": 1774738800000,
+          "in_bed_s": 24000,
+          "pct": {
+            "core": 0,
+            "deep": 100,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 0,
+            "core": 0,
+            "deep": 24000,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "tick_step_ms": 7200000,
+          "ticks": [
+            1774738800000,
+            1774746000000,
+            1774753200000,
+            1774760400000,
+            1774767600000
+          ],
+          "wake_ms": 1774764600000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1774764600000,
+            "stage": 4,
+            "start_ms": 1774740600000
+          }
+        ],
+        "time_zone": "Europe/London"
+      },
+      "name": "London spring-forward night"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 21600,
+          "bedtime_ms": 1789516800000,
+          "domain_end_ms": 1789538400000,
+          "domain_start_ms": 1789516800000,
+          "in_bed_s": 21600,
+          "pct": {
+            "core": 83,
+            "deep": 33,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 0,
+            "core": 18000,
+            "deep": 7200,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "tick_step_ms": 7200000,
+          "ticks": [
+            1789516800000,
+            1789524000000,
+            1789531200000,
+            1789538400000
+          ],
+          "wake_ms": 1789538400000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789527600000,
+            "stage": 3,
+            "start_ms": 1789516800000
+          },
+          {
+            "end_ms": 1789534800000,
+            "stage": 3,
+            "start_ms": 1789524000000
+          },
+          {
+            "end_ms": 1789538400000,
+            "stage": 4,
+            "start_ms": 1789531200000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "overlapping rows are unioned"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 25200,
+          "bedtime_ms": 1789513200000,
+          "domain_end_ms": 1789538400000,
+          "domain_start_ms": 1789513200000,
+          "in_bed_s": 25200,
+          "pct": {
+            "core": 0,
+            "deep": 0,
+            "rem": 100,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 0,
+            "core": 0,
+            "deep": 0,
+            "rem": 25200,
+            "unspecified": 0
+          },
+          "tick_step_ms": 7200000,
+          "ticks": [
+            1789513200000,
+            1789520400000,
+            1789527600000,
+            1789534800000
+          ],
+          "wake_ms": 1789538400000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789538400000,
+            "stage": 5,
+            "start_ms": 1789513200000
+          },
+          {
+            "end_ms": 1789506000000,
+            "stage": 6,
+            "start_ms": 1789502400000
+          },
+          {
+            "end_ms": 1789545600000,
+            "stage": 3,
+            "start_ms": 1789549200000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "out of bed and bad rows ignored"
+    },
+    {
+      "expected": {
+        "window": {
+          "asleep_s": 28800,
+          "bedtime_ms": 1789513200000,
+          "domain_end_ms": 1789542000000,
+          "domain_start_ms": 1789513200000,
+          "in_bed_s": 28800,
+          "pct": {
+            "core": 100,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "stages": {
+            "awake": 0,
+            "core": 28800,
+            "deep": 0,
+            "rem": 0,
+            "unspecified": 0
+          },
+          "tick_step_ms": 7200000,
+          "ticks": [
+            1789513200000,
+            1789520400000,
+            1789527600000,
+            1789534800000,
+            1789542000000
+          ],
+          "wake_ms": 1789542000000
+        }
+      },
+      "input": {
+        "rows": [
+          {
+            "end_ms": 1789542000000,
+            "stage": 3,
+            "start_ms": 1789513200000
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "exact hours"
+    },
+    {
+      "expected": {
+        "window": null
+      },
+      "input": {
+        "rows": [],
+        "time_zone": "UTC"
+      },
+      "name": "no rows"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "sleep_night_window",
+  "version": 1
+}

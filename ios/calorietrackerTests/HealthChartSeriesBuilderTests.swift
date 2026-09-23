@@ -90,10 +90,54 @@ struct HealthChartSeriesBuilderTests {
         let day = HealthChartSeriesBuilder.build(range: .day, anchor: F.date(2026, 9, 10, 10), type: F.sleep, rows: rows, rollups: [], calendar: F.calendar)
         #expect(day.stagePoints.count == 3)
         #expect(day.points.isEmpty)
-        let week = HealthChartSeriesBuilder.build(range: .week, anchor: F.date(2026, 9, 10, 10), type: F.sleep, rows: rows, rollups: [], calendar: F.calendar)
-        #expect(week.stagePoints.compactMap(\.stage).sorted() == [2, 3, 4])
+        // The Day chart is fitted to the night (23:00 → 05:00), not midnight → midnight.
+        let window = day.sleepWindow
+        #expect(window != nil)
+        #expect(window?.domainStartMs == F.ms(bed))
+        #expect(window?.domainEndMs == F.ms(F.date(2026, 9, 10, 5, 0)))
+        #expect(window.map { Int($0.asleepS) } == 18_000)
+        let week = HealthChartSeriesBuilder.build(range: .week, anchor: F.date(2026, 9, 10, 10), type: F.sleep, rows: rows, rollups: [], calendar: F.calendar, weekStart: .monday)
+        #expect(week.stagePoints.isEmpty)
+        #expect(week.sleepSegments.map(\.stage).sorted() == [2, 3, 4])
+        #expect(week.sleepSegments.map(\.startMin).min() == 660) // 23:00 the evening before
+        let night = week.points.filter { $0.value != nil }
+        #expect(night.count == 1)
+        #expect(night.first?.min == 660)
+        #expect(week.sleepRange?.headline.nights == 1)
         #expect(abs((week.highlights.total ?? -1) - 5.0 * 3600.0) < 0.5)
         #expect(week.highlights.count == 1)
+    }
+
+    @Test func stagesEndingBeforeMidnightStayWithTheirNight() {
+        // HealthKit stores each stage separately: the first one ends on the evening before waking.
+        let bed = F.date(2026, 9, 9, 22, 50)
+        let rows = [
+            F.row(id: "a", type: F.sleep, start: bed, end: F.date(2026, 9, 9, 23, 50), categoryValue: 3),
+            F.row(id: "b", type: F.sleep, start: F.date(2026, 9, 9, 23, 50), end: F.date(2026, 9, 10, 6, 0), categoryValue: 4),
+        ]
+        #expect(rows[0].localDay == "2026-09-09")
+        #expect(HealthSleepAnalysis.rowsByNight(rows).keys.sorted() == ["2026-09-10"])
+        let day = HealthChartSeriesBuilder.build(range: .day, anchor: F.date(2026, 9, 10, 10), type: F.sleep, rows: rows, rollups: [], calendar: F.calendar)
+        #expect(day.stagePoints.count == 2)
+        #expect(day.sleepWindow?.domainStartMs == F.ms(F.date(2026, 9, 9, 22, 0)))
+        #expect(day.sleepWindow.map { Int($0.asleepS) } == 7 * 3600 + 600)
+        let week = HealthChartSeriesBuilder.build(range: .week, anchor: F.date(2026, 9, 10, 10), type: F.sleep, rows: rows, rollups: [], calendar: F.calendar, weekStart: .monday)
+        #expect(week.sleepRange?.headline.nights == 1)
+        #expect(week.sleepSegments.count == 2)
+    }
+
+    @Test func sleepSixMonthsAveragesNightsPerWeek() {
+        var rows: [HealthSampleRow] = []
+        for (i, day) in [8, 9].enumerated() {
+            let bed = F.date(2026, 9, day, 22 + i, 0)
+            rows.append(F.row(id: "n\(i)", type: F.sleep, start: bed, end: bed.addingTimeInterval(Double(7 + i) * 3600), categoryValue: 3))
+        }
+        let series = HealthChartSeriesBuilder.build(range: .sixMonths, anchor: F.date(2026, 9, 10, 10), type: F.sleep, rows: rows, rollups: [], calendar: F.calendar, weekStart: .monday)
+        let week = series.points.filter { $0.value != nil }
+        #expect(week.count == 1)
+        #expect(week.first?.count == 2)
+        #expect(week.first?.value == 7.5 * 3600)
+        #expect(series.sleepSegments.isEmpty)
     }
 
     @Test func latestAggregationUsesLastValuePerBucket() {

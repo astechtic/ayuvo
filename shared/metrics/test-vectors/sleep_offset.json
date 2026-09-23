@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "offset_min": 630
+      },
+      "input": {
+        "t_ms": 1789525800000,
+        "time_zone": "America/New_York",
+        "wake_day": "2026-09-16"
+      },
+      "name": "evening before"
+    },
+    {
+      "expected": {
+        "offset_min": 1125
+      },
+      "input": {
+        "t_ms": 1789555500000,
+        "time_zone": "America/New_York",
+        "wake_day": "2026-09-16"
+      },
+      "name": "morning of wake day"
+    },
+    {
+      "expected": {
+        "offset_min": 720
+      },
+      "input": {
+        "t_ms": 1789497000000,
+        "time_zone": "Asia/Kolkata",
+        "wake_day": "2026-09-16"
+      },
+      "name": "midnight"
+    },
+    {
+      "expected": {
+        "offset_min": 75
+      },
+      "input": {
+        "t_ms": 1789478100000,
+        "time_zone": "UTC",
+        "wake_day": "2026-09-16"
+      },
+      "name": "afternoon before"
+    },
+    {
+      "expected": {
+        "offset_min": 1150
+      },
+      "input": {
+        "t_ms": 1792912200000,
+        "time_zone": "Europe/London",
+        "wake_day": "2026-10-25"
+      },
+      "name": "London fall-back morning"
+    },
+    {
+      "expected": {
+        "offset_min": 1150
+      },
+      "input": {
+        "t_ms": 1774764600000,
+        "time_zone": "Europe/London",
+        "wake_day": "2026-03-29"
+      },
+      "name": "London spring-forward morning"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "sleep_clock_offset",
+  "version": 1
+}

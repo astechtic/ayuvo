@@ -97,7 +97,12 @@ class AppMetricDetailViewModel(private val container: AppContainer, private val 
     }
 
     fun setRange(range: HealthChartRange) {
-        if (range in ranges) selection.value = range to selection.value.second
+        if (range in ranges) selection.value = MetricNavigation.changeRange(selection.value, range, LocalDate.now(zone))
+    }
+
+    /** Tap on a W/M day bucket: open the Day chart of that day (docs/charts.md). */
+    fun drillTo(day: LocalDate) {
+        if (HealthChartRange.DAY in ranges) selection.value = MetricNavigation.changeRange(selection.value.first to day, HealthChartRange.DAY, LocalDate.now(zone))
     }
 
     fun shiftAnchor(direction: Int) {

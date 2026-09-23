@@ -13,6 +13,13 @@ import com.ayuvo.health.data.health.HealthSeriesAggregator
 import com.ayuvo.health.data.health.HealthSleepCodes
 import com.ayuvo.health.data.health.HealthTypeDescriptor
 import com.ayuvo.health.data.metrics.MetricKey
+import com.ayuvo.health.data.metrics.MetricsReference
+import com.ayuvo.health.data.metrics.SleepNightSpan
+import com.ayuvo.health.data.metrics.SleepRangeSeries
+import com.ayuvo.health.data.metrics.SleepRow
+import com.ayuvo.health.data.metrics.SleepWindow
+import com.ayuvo.health.ui.charts.ChartClock
+import com.ayuvo.health.ui.metrics.MetricNavigation
 import com.ayuvo.health.data.metrics.WeekStart
 import com.ayuvo.health.data.health.SleepNight
 import com.ayuvo.health.models.HealthAggregation
@@ -72,8 +79,14 @@ data class HealthDetailUiState(
     /** Label res → formatted value, in display order. */
     val highlights: List<Pair<Int, String>> = emptyList(),
     val sleepNights: List<SleepNight> = emptyList(),
-    /** D view only: (stage code, start, end) segments of the shown night. */
-    val sleepStages: List<Triple<Int, Long, Long>> = emptyList(),
+    /** D view: the shown night's window (`sleep_night_window`) and its rows (one source, in bed included). */
+    val sleepWindow: SleepWindow? = null,
+    val sleepRows: List<SleepRow> = emptyList(),
+    /** W/M/6M/Y: `sleep_range_series` buckets; W/M also carry each night's stage rows by wake day. */
+    val sleepRange: SleepRangeSeries? = null,
+    val sleepNightRows: Map<LocalDate, List<SleepRow>> = emptyMap(),
+    /** Text under the headline when it is not the window label (sleep: bedtime – wake). */
+    val headlineRange: String? = null,
     val periodDays: Set<LocalDate> = emptySet(),
     val allData: List<HealthRecordUi> = emptyList(),
     val allDataEnd: Boolean = false,
@@ -85,7 +98,7 @@ data class HealthDetailUiState(
     val historyLimitedBeforeMs: Long? = null,
     val loading: Boolean = true
 ) {
-    val hasChartData: Boolean get() = points.any { !it.isEmpty } || sleepNights.isNotEmpty() || periodDays.isNotEmpty()
+    val hasChartData: Boolean get() = points.any { !it.isEmpty } || sleepWindow != null || sleepRange?.domain != null || periodDays.isNotEmpty()
 }
 
 @OptIn(FlowPreview::class)
@@ -120,7 +133,12 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
     }
 
     fun setRange(range: HealthChartRange) {
-        selection.value = range to selection.value.second
+        selection.value = MetricNavigation.changeRange(selection.value, range, LocalDate.now(zone))
+    }
+
+    /** Tap on a W/M day bucket: open the Day chart of that day (docs/charts.md). */
+    fun drillTo(day: LocalDate) {
+        selection.value = MetricNavigation.changeRange(selection.value.first to day, HealthChartRange.DAY, LocalDate.now(zone))
     }
 
     fun shiftAnchor(direction: Int) {
@@ -223,32 +241,12 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         val base = _ui.value.copy(
             range = range, anchor = anchor, descriptor = descriptor, weekStart = weekStart, window = window,
             canGoForward = metricBounds.canGoForward, headline = null,
-            points = emptyList(), sleepNights = emptyList(), sleepStages = emptyList(), periodDays = emptySet(), highlights = emptyList()
+            points = emptyList(), sleepNights = emptyList(), sleepWindow = null, sleepRows = emptyList(), sleepRange = null,
+            sleepNightRows = emptyMap(), headlineRange = null, periodDays = emptySet(), highlights = emptyList()
         )
         val kind = chartKind(descriptor)
 
-        if (typeId == HealthDataType.SLEEP.id) {
-            val nights = repo.sleepNights(window.start, window.endInclusive)
-            val asleep = nights.map { it.asleepS }
-            val stages = if (range == HealthChartRange.DAY) {
-                nights.firstOrNull()?.let { night ->
-                    repo.samples(typeId, window.start, window.endInclusive)
-                        .filter { it.sourceId == night.sourceId && it.localDay == night.nightOf && it.categoryValue != null && it.categoryValue != HealthSleepCodes.IN_BED }
-                        .map { Triple(it.categoryValue!!, it.startMs, it.endMs) }
-                } ?: emptyList()
-            } else emptyList()
-            return base.copy(
-                headline = R.string.health_detail_average to asleep.takeIf { it.isNotEmpty() }?.let { HealthValueFormatter.duration(it.average()) },
-                chartKind = HealthChartKind.SLEEP,
-                sleepNights = nights,
-                sleepStages = stages,
-                highlights = listOfNotNull(
-                    asleep.takeIf { it.isNotEmpty() }?.let { R.string.health_detail_average to HealthValueFormatter.duration(it.average()) },
-                    asleep.takeIf { it.isNotEmpty() }?.let { R.string.health_detail_range to "${HealthValueFormatter.duration(it.min())}–${HealthValueFormatter.duration(it.max())}" },
-                    nights.lastOrNull()?.let { R.string.health_detail_latest to HealthValueFormatter.duration(it.asleepS) }
-                )
-            )
-        }
+        if (typeId == HealthDataType.SLEEP.id) return sleepState(base, range, anchor, window)
         if (typeId == HealthDataType.MENSTRUATION_PERIOD.id) {
             val rows = repo.samples(typeId, window.start.minusDays(45), window.endInclusive)
             val days = rows.flatMap { HealthDayKeys.daysCovered(it.startMs, it.endMs, it.startOffsetS, it.endOffsetS, zone) }.filter { it in window }.toSet()
@@ -297,6 +295,60 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
             else -> R.string.health_detail_average to highlights.firstOrNull { it.first == R.string.health_detail_average }?.second
         }
         return base.copy(chartKind = kind, points = points, highlights = highlights, headline = headline)
+    }
+
+    /**
+     * Sleep (docs/charts.md): D plots the night that woke up on the anchor day over its own window;
+     * W/M/6M/Y plot bedtime → wake bars on the clock axis. No asleep time is shown for in-bed-only nights.
+     */
+    private suspend fun sleepState(base: HealthDetailUiState, range: HealthChartRange, anchor: LocalDate, window: ClosedRange<LocalDate>): HealthDetailUiState {
+        val repo = container.healthRepository
+        val is24 = android.text.format.DateFormat.is24HourFormat(container.appContext)
+        val nights = repo.sleepNights(window.start, window.endInclusive)
+        val asleep = nights.map { it.asleepS }.filter { it > 0 }
+        val highlights = listOfNotNull(
+            asleep.takeIf { it.isNotEmpty() }?.let { R.string.health_detail_average to HealthValueFormatter.duration(it.average()) },
+            asleep.takeIf { it.size > 1 }?.let { R.string.health_detail_range to "${HealthValueFormatter.duration(it.min())}–${HealthValueFormatter.duration(it.max())}" },
+            nights.lastOrNull()?.takeIf { it.asleepS > 0 }?.let { R.string.health_detail_latest to HealthValueFormatter.duration(it.asleepS) }
+        )
+        val rowsByNight: Map<String, List<SleepRow>> = if (range == HealthChartRange.DAY || range == HealthChartRange.WEEK || range == HealthChartRange.MONTH) {
+            val chosen = nights.associate { it.nightOf to it.sourceId }
+            repo.samples(typeId, window.start, window.endInclusive)
+                .filter { !it.deleted && it.categoryValue != null && chosen[it.localDay] == it.sourceId }
+                .groupBy({ it.localDay }, { SleepRow(it.startMs, it.endMs, it.categoryValue!!) })
+        } else emptyMap()
+        if (range == HealthChartRange.DAY) {
+            val night = nights.firstOrNull { it.nightOf == anchor.toString() } ?: nights.firstOrNull()
+            val rows = night?.let { rowsByNight[it.nightOf] }.orEmpty()
+            val w = MetricsReference.sleepNightWindow(rows, zone)
+            val headline = when {
+                w == null -> R.string.sleep_time_asleep to null
+                w.asleepS > 0 -> R.string.sleep_time_asleep to HealthValueFormatter.duration(w.asleepS.toDouble())
+                else -> R.string.sleep_in_bed to HealthValueFormatter.duration(w.inBedS.toDouble())
+            }
+            return base.copy(
+                chartKind = HealthChartKind.SLEEP, sleepNights = listOfNotNull(night), sleepWindow = w, sleepRows = rows,
+                headline = headline,
+                headlineRange = w?.let {
+                    container.appContext.getString(R.string.sleep_time_span, ChartClock.time(it.bedtimeMs, zone, is24), ChartClock.time(it.wakeMs, zone, is24))
+                },
+                highlights = emptyList()
+            )
+        }
+        val spans = nights.map { SleepNightSpan(it.nightOf, it.startMs, it.endMs, it.asleepS, it.inBedS) }
+        val series = MetricsReference.sleepRangeSeries(spans, range.metricRange, MetricsReference.localMidnight(anchor, zone), zone, weekStart)
+        val h = series.headline
+        return base.copy(
+            chartKind = HealthChartKind.SLEEP,
+            sleepNights = nights,
+            sleepRange = series,
+            sleepNightRows = rowsByNight.mapKeys { LocalDate.parse(it.key) },
+            headline = R.string.sleep_avg_time_asleep to h.asleepS?.takeIf { it > 0 }?.let { HealthValueFormatter.duration(it) },
+            headlineRange = if (h.bedOffsetMin != null && h.wakeOffsetMin != null) {
+                container.appContext.getString(R.string.sleep_time_span, ChartClock.offset(h.bedOffsetMin, is24), ChartClock.offset(h.wakeOffsetMin, is24))
+            } else null,
+            highlights = highlights
+        )
     }
 
     /** Summed metrics: interval total ÷ days with data (D uses the hourly buckets' day). */

@@ -536,6 +536,199 @@ def _unknown():
 
 
 # ---------------------------------------------------------------------------------------------
+# Charts: axis ticks, drill-down, sleep (docs/charts.md)
+# ---------------------------------------------------------------------------------------------
+
+NICE_STEPS = (1.0, 2.0, 2.5, 5.0, 10.0)
+SLEEP_ASLEEP_STAGES = (1, 3, 4, 5)       # unspecified, core/light, deep, REM
+SLEEP_STAGE_NAMES = {1: "unspecified", 2: "awake", 3: "core", 4: "deep", 5: "rem"}
+SLEEP_MIN_DAY_SPAN_MS = 4 * HOUR_MS
+SLEEP_MIN_RANGE_SPAN_MIN = 240
+
+
+def nice_ticks(lo, hi, count, include_zero):
+    """Y-axis ticks. The domain grows to whole steps around [lo, hi]; step is 1/2/2.5/5/10 x 10^n and
+    chosen as the smallest one giving at most `count` - 1 intervals over the raw span.
+    include_zero (bars) pulls lo down to 0 when lo > 0 (and hi up to 0 when hi < 0).
+    lo == hi (a flat series): [lo - 1, hi + 1], except 0 -> [0, 1]. Output: min, max, step, ticks
+    (min..max by step). Every number is round3'd."""
+    lo, hi = float(lo), float(hi)
+    if include_zero:
+        lo, hi = min(lo, 0.0), max(hi, 0.0)
+    if hi <= lo:
+        if lo == 0.0:
+            hi = 1.0
+        else:
+            lo, hi = lo - 1.0, hi + 1.0
+    intervals = max(1, count - 1)
+    raw = (hi - lo) / intervals
+    mag = 10.0 ** math.floor(math.log10(raw))
+    step = 20.0 * mag                     # always fits: span / step <= intervals / 2
+    for s in NICE_STEPS:
+        cand = s * mag
+        if math.ceil(hi / cand - 1e-9) - math.floor(lo / cand + 1e-9) <= intervals:
+            step = cand
+            break
+    first = int(math.floor(lo / step + 1e-9))
+    last = int(math.ceil(hi / step - 1e-9))
+    ticks = [round3(k * step) for k in range(first, last + 1)]
+    return {"min": ticks[0], "max": ticks[-1], "step": round3(step), "ticks": ticks}
+
+
+def x_ticks(range_, anchor_ms, time_zone, week_start):
+    """Indices (into bucket_bounds buckets) that carry an x-axis label.
+    D : buckets starting at local hour 0, 6, 12, 18 (first bucket with that hour on DST days).
+    W : every day.  M : days that start a week (week_start).  6M : first bucket of each month.
+    Y : every month."""
+    buckets = bucket_bounds(range_, anchor_ms, time_zone, week_start, anchor_ms)["buckets"]
+    if range_ == "D":
+        out, seen = [], set()
+        for i, b in enumerate(buckets):
+            h = local_hour_of(b["start_ms"], time_zone)
+            if h % 6 == 0 and h not in seen:
+                seen.add(h)
+                out.append(i)
+        return out
+    if range_ in ("W", "Y"):
+        return list(range(len(buckets)))
+    if range_ == "M":
+        return [i for i, b in enumerate(buckets)
+                if week_start_of(parse_date(b["label"]), week_start) == parse_date(b["label"])]
+    out, prev = [], None
+    for i, b in enumerate(buckets):
+        m = parse_date(b["label"]).month
+        if m != prev:
+            out.append(i)
+            prev = m
+    return out
+
+
+def drill_target(range_, bucket_start_ms, has_data, metric_ranges, time_zone):
+    """Tapping a day bucket on W or M opens the D range for that day when the bucket has data and the
+    metric offers D. Anything else -> null (the tap only selects)."""
+    if range_ not in ("W", "M") or not has_data or "D" not in metric_ranges:
+        return None
+    d = local_date_of(bucket_start_ms, time_zone)
+    return {"range": "D", "anchor_date": fmt_date(d), "anchor_ms": local_midnight(d, time_zone)}
+
+
+def _union_ms(intervals):
+    """Total length of the union of [start, end) intervals."""
+    total, cur_s, cur_e = 0, None, None
+    for s, e in sorted(intervals):
+        if e <= s:
+            continue
+        if cur_e is None or s > cur_e:
+            if cur_e is not None:
+                total += cur_e - cur_s
+            cur_s, cur_e = s, e
+        elif e > cur_e:
+            cur_e = e
+    if cur_e is not None:
+        total += cur_e - cur_s
+    return total
+
+
+def _pct(part_s, whole_s):
+    if not whole_s:
+        return None
+    return int(math.floor(part_s * 100.0 / whole_s + 0.5))
+
+
+def sleep_night_window(rows, time_zone):
+    """Day-range sleep chart for one night (rows of a single source, already picked by the nights
+    analysis). rows: [{start_ms, end_ms, stage}] with stage codes 0 in bed, 1 unspecified, 2 awake,
+    3 core, 4 deep, 5 REM, 6 out of bed (ignored); rows with end <= start are ignored.
+    bedtime/wake = earliest start / latest end of stages 0..5. Domain = bedtime floored to the local
+    hour .. wake ceiled to the local hour, extended at the end to at least 4 h. Ticks from the domain
+    start, both ends included: every hour up to a 4 h domain, every 2 h up to 8 h, then every 3 h
+    (Apple's night stride).
+    Seconds are floor(union ms / 1000): asleep = union of stages 1,3,4,5; in_bed = union of 0..5;
+    each stage its own union. pct = share of asleep (whole percent, null when asleep is 0).
+    No usable rows -> null."""
+    use = [r for r in rows if r["end_ms"] > r["start_ms"] and r["stage"] in (0, 1, 2, 3, 4, 5)]
+    if not use:
+        return None
+    bed = min(r["start_ms"] for r in use)
+    wake = max(r["end_ms"] for r in use)
+    zi = ZoneInfo(time_zone)
+    bdt = _dt.datetime.fromtimestamp(bed / 1000.0, zi)
+    start = local_instant(bdt.date(), bdt.hour, 0, time_zone)
+    if start > bed:          # fold / gap safety: never start after bedtime
+        start -= HOUR_MS
+    wdt = _dt.datetime.fromtimestamp(wake / 1000.0, zi)
+    end = local_instant(wdt.date(), wdt.hour, 0, time_zone)
+    if end < wake:
+        end += HOUR_MS
+    if end - start < SLEEP_MIN_DAY_SPAN_MS:
+        end = start + SLEEP_MIN_DAY_SPAN_MS
+    span = end - start
+    step = HOUR_MS if span <= 4 * HOUR_MS else (2 * HOUR_MS if span <= 8 * HOUR_MS else 3 * HOUR_MS)
+    ticks = list(range(start, end + 1, step))
+    asleep = _union_ms([(r["start_ms"], r["end_ms"]) for r in use if r["stage"] in SLEEP_ASLEEP_STAGES]) // 1000
+    in_bed = _union_ms([(r["start_ms"], r["end_ms"]) for r in use]) // 1000
+    stages = {}
+    for code, name in SLEEP_STAGE_NAMES.items():
+        stages[name] = _union_ms([(r["start_ms"], r["end_ms"]) for r in use if r["stage"] == code]) // 1000
+    pct = dict((name, _pct(stages[name], asleep)) for name in ("unspecified", "core", "deep", "rem"))
+    return {"bedtime_ms": bed, "wake_ms": wake, "domain_start_ms": start, "domain_end_ms": end,
+            "tick_step_ms": step, "ticks": ticks, "asleep_s": asleep, "in_bed_s": in_bed,
+            "stages": stages, "pct": pct}
+
+
+def sleep_clock_offset(t_ms, wake_day, time_zone):
+    """Wall-clock minutes from 12:00 on the day before `wake_day` (yyyy-MM-dd) to t_ms: 22:30 the
+    evening before -> 630, 06:45 on the wake day -> 1125. Wall clock, so DST nights keep their labels."""
+    wd = parse_date(wake_day)
+    local = _dt.datetime.fromtimestamp(t_ms / 1000.0, ZoneInfo(time_zone))
+    days = (local.date() - (wd - _dt.timedelta(days=1))).days
+    return days * 1440 + local.hour * 60 + local.minute - 720
+
+
+def sleep_range_series(nights, range_, anchor_ms, time_zone, week_start):
+    """W / M / 6M / Y sleep chart. nights: [{wake_day, bedtime_ms, wake_ms, asleep_s, in_bed_s}], one per
+    wake day. A night belongs to the bucket containing local midnight of its wake day. Per bucket (every
+    bucket of bucket_bounds): count and, when count > 0, the means of bed_offset / wake_offset
+    (sleep_clock_offset against each night's own wake day), asleep_s and in_bed_s; else nulls.
+    y domain: min bed offset floored to the hour .. max wake offset ceiled to the hour over the bucket
+    values, grown at the end to 4 h; ticks every 120 min from the floor. No nights -> domain null.
+    headline: mean asleep_s / bed_offset / wake_offset over all nights in the interval, and nights."""
+    if range_ not in ("W", "M", "6M", "Y"):
+        raise ValueError("bad range %r" % (range_,))
+    bounds = bucket_bounds(range_, anchor_ms, time_zone, week_start, anchor_ms)
+    placed = []
+    for n in nights:
+        d = parse_date(n["wake_day"])
+        if d is None:
+            continue
+        placed.append((local_midnight(d, time_zone), n, sleep_clock_offset(n["bedtime_ms"], n["wake_day"], time_zone),
+                       sleep_clock_offset(n["wake_ms"], n["wake_day"], time_zone)))
+
+    def mean(xs):
+        return round3(sum(xs) / len(xs)) if xs else None
+
+    out, every = [], []
+    for b in bounds["buckets"]:
+        inside = [p for p in placed if b["start_ms"] <= p[0] < b["end_ms"]]
+        every.extend(inside)
+        out.append({"start_ms": b["start_ms"], "end_ms": b["end_ms"], "count": len(inside),
+                    "bed_offset_min": mean([p[2] for p in inside]), "wake_offset_min": mean([p[3] for p in inside]),
+                    "asleep_s": mean([p[1]["asleep_s"] for p in inside]),
+                    "in_bed_s": mean([p[1]["in_bed_s"] for p in inside])})
+    filled = [o for o in out if o["count"]]
+    domain = None
+    if filled:
+        lo = int(math.floor(min(o["bed_offset_min"] for o in filled) / 60.0)) * 60
+        hi = int(math.ceil(max(o["wake_offset_min"] for o in filled) / 60.0)) * 60
+        if hi - lo < SLEEP_MIN_RANGE_SPAN_MIN:
+            hi = lo + SLEEP_MIN_RANGE_SPAN_MIN
+        domain = {"min": lo, "max": hi, "ticks": list(range(lo, hi + 1, 120))}
+    head = {"nights": len(every), "asleep_s": mean([p[1]["asleep_s"] for p in every]),
+            "bed_offset_min": mean([p[2] for p in every]), "wake_offset_min": mean([p[3] for p in every])}
+    return {"buckets": out, "domain": domain, "headline": head}
+
+
+# ---------------------------------------------------------------------------------------------
 # Vector dispatch
 # ---------------------------------------------------------------------------------------------
 
@@ -564,4 +757,17 @@ def run_case(function, inp):
         return favourite_pins_migrate(inp["new_raw"], inp["legacy_raw"], inp["known_health_ids"], inp["max"])
     if function == "resolve_metric":
         return resolve_metric(inp["key"])
+    if function == "nice_ticks":
+        return nice_ticks(inp["min"], inp["max"], inp["count"], inp["include_zero"])
+    if function == "x_ticks":
+        return {"indices": x_ticks(inp["range"], inp["anchor_ms"], inp["time_zone"], inp["week_start"])}
+    if function == "drill_target":
+        return {"target": drill_target(inp["range"], inp["bucket_start_ms"], inp["has_data"], inp["metric_ranges"],
+                                       inp["time_zone"])}
+    if function == "sleep_night_window":
+        return {"window": sleep_night_window(inp["rows"], inp["time_zone"])}
+    if function == "sleep_clock_offset":
+        return {"offset_min": sleep_clock_offset(inp["t_ms"], inp["wake_day"], inp["time_zone"])}
+    if function == "sleep_range_series":
+        return sleep_range_series(inp["nights"], inp["range"], inp["anchor_ms"], inp["time_zone"], inp["week_start"])
     raise ValueError("unknown function %r" % (function,))

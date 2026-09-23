@@ -27,6 +27,26 @@ nonisolated enum AyuvoPalette {
     static let fat = dynamic(0xBF5AF2, 0xBF5AF2)
     static let fiber = dynamic(0x30B0C7, 0x30B0C7)
 
+    /// Sleep stage colours (docs/charts.md). Deep is lifted in dark mode so it stays visible on black.
+    static let sleepAwake = dynamic(0xFF6250, 0xFF6250)
+    static let sleepREM = dynamic(0x3ACBFF, 0x3ACBFF)
+    static let sleepCore = dynamic(0x0A84FF, 0x0A84FF)
+    static let sleepDeep = dynamic(0x3634A3, 0x5856D6)
+    static let sleepAsleep = dynamic(0x5E5CE6, 0x7D7AFF)
+    static let sleepInBed = dynamic(0x5E5CE6, 0x7D7AFF).opacity(0.25)
+
+    /// Colour of a sleep stage code (0 in bed, 1 asleep, 2 awake, 3 core, 4 deep, 5 REM).
+    static func sleepStage(_ code: Int?) -> Color {
+        switch code {
+        case 0: sleepInBed
+        case 2: sleepAwake
+        case 3: sleepCore
+        case 4: sleepDeep
+        case 5: sleepREM
+        default: sleepAsleep
+        }
+    }
+
     static let screenBackground = Color(uiColor: .systemGroupedBackground)
     static let card = Color(uiColor: .secondarySystemGroupedBackground)
     static let panel = Color(uiColor: .tertiarySystemGroupedBackground)

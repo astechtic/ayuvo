@@ -92,6 +92,24 @@ fun AppMetricDetailScreen(
     val window = series?.let { MetricsReference.localDateOf(it.bounds.startMs, zone)..MetricsReference.localDateOf(it.bounds.endMs, zone).minusDays(1) }
     val windowLabel = window?.let { MetricChartSupport.windowLabel(ui.range, it) } ?: ""
     val fmt: (Double) -> String = { v -> MetricCatalog.formatDisplay(id, v) }
+    val is24 = android.text.format.DateFormat.is24HourFormat(context)
+    val points = remember(series, units) { series?.let { s -> MetricChartSupport.points(s.buckets) { MetricCatalog.display(id, it, units) } }.orEmpty() }
+    // Selection is cleared by a new range, anchor or data set (docs/charts.md "Selection").
+    var selected by remember(ui.range, ui.anchor, points) { mutableStateOf<Int?>(null) }
+    val selectedHeadline = selected?.let { i -> points.getOrNull(i) }?.takeIf { it.avg != null }?.let { p ->
+        MetricHeadlineUi(
+            label = stringResource(
+                when {
+                    AppMetricAggregator.aggregation(id) == MetricAggregation.LAST -> R.string.health_detail_latest
+                    AppMetricAggregator.aggregation(id).summed && !ui.range.plotsDailyAverage -> R.string.health_detail_total
+                    else -> R.string.health_detail_average
+                }
+            ),
+            value = MetricCatalog.format(id, series!!.buckets[selected!!].value!!, units),
+            unit = MetricCatalog.unitLabel(id, units),
+            rangeText = MetricChartSupport.tooltip(ui.range, p.bucketStartMs, p.bucketEndMs, zone, is24)
+        )
+    }
 
     MetricDetailScaffold(
         title = MetricCatalog.title(context, key),
@@ -99,7 +117,7 @@ fun AppMetricDetailScreen(
         ranges = ui.ranges,
         range = ui.range,
         onRange = vm::setRange,
-        headline = series?.let { headlineUi(id, it, units, windowLabel, zone) },
+        headline = selectedHeadline ?: series?.let { headlineUi(id, it, units, windowLabel, zone) },
         windowLabel = windowLabel,
         canGoForward = ui.canGoForward,
         onShift = vm::shiftAnchor,
@@ -107,18 +125,23 @@ fun AppMetricDetailScreen(
         showEmpty = !ui.loading && series?.hasData != true,
         chart = {
             if (series != null) {
-                val points = MetricChartSupport.points(series.buckets) { MetricCatalog.display(id, it, units) }
                 val style = if (MetricCatalog.spec(catalog, id).chartKind == "line") HealthChartStyle.LINE else HealthChartStyle.BAR
                 val name = MetricCatalog.title(context, key)
                 HealthBucketChart(
                     points = points,
                     style = style,
                     color = tint,
-                    xLabels = MetricChartSupport.xLabels(ui.range, series.buckets.map { it.startMs }, zone),
+                    xLabels = remember(ui.range, ui.anchor, ui.weekStart, is24) { MetricChartSupport.xLabels(ui.range, ui.anchor, ui.weekStart, zone, is24) },
                     formatValue = fmt,
-                    tooltipLabel = { i -> MetricChartSupport.tooltip(ui.range, points[i].bucketStartMs, zone) },
+                    selected = selected,
+                    onSelect = { selected = it },
                     summary = stringResource(R.string.health_detail_chart_summary, name, points.count { !it.isEmpty }, windowLabel),
-                    goalValue = ui.goal?.let { MetricCatalog.display(id, it, units) }
+                    goalValue = ui.goal?.let { MetricCatalog.display(id, it, units) },
+                    onBucketTap = { i ->
+                        val day = MetricNavigation.drillDay(ui.range, points, i, !points[i].isEmpty, ui.ranges, zone)
+                        if (day != null) vm.drillTo(day)
+                        day != null
+                    }
                 )
             }
         },

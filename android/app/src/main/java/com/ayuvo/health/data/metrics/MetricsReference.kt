@@ -2,9 +2,15 @@ package com.ayuvo.health.data.metrics
 
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 
 /** Chart ranges shared by app and health metrics (docs/ui-structure.md §5). */
 enum class MetricRange(val raw: String) {
@@ -107,6 +113,52 @@ data class ResolvedMetric(
     val iconAndroid: String,
     val iconIos: String
 )
+
+/** Y-axis ticks (`nice_ticks`). */
+data class NiceTicks(val min: Double, val max: Double, val step: Double, val ticks: List<Double>)
+
+/** Where a tap on a W/M day bucket leads (`drill_target`). */
+data class DrillTarget(val range: MetricRange, val anchorDate: LocalDate, val anchorMs: Long)
+
+/** One sleep row of a single source: stage 0 in bed, 1 unspecified, 2 awake, 3 core, 4 deep, 5 REM, 6 out of bed. */
+data class SleepRow(val startMs: Long, val endMs: Long, val stage: Int)
+
+data class SleepStageTotals(val unspecifiedS: Long, val awakeS: Long, val coreS: Long, val deepS: Long, val remS: Long)
+
+data class SleepStagePct(val unspecified: Int?, val core: Int?, val deep: Int?, val rem: Int?)
+
+/** Day-range sleep chart geometry and totals (`sleep_night_window`). */
+data class SleepWindow(
+    val bedtimeMs: Long,
+    val wakeMs: Long,
+    val domainStartMs: Long,
+    val domainEndMs: Long,
+    val tickStepMs: Long,
+    val ticks: List<Long>,
+    val asleepS: Long,
+    val inBedS: Long,
+    val stages: SleepStageTotals,
+    val pct: SleepStagePct
+)
+
+/** One night for the W/M/6M/Y sleep chart (`sleep_range_series` input). */
+data class SleepNightSpan(val wakeDay: String, val bedtimeMs: Long, val wakeMs: Long, val asleepS: Double, val inBedS: Double)
+
+data class SleepRangeBucket(
+    val startMs: Long,
+    val endMs: Long,
+    val count: Int,
+    val bedOffsetMin: Double?,
+    val wakeOffsetMin: Double?,
+    val asleepS: Double?,
+    val inBedS: Double?
+)
+
+data class SleepRangeDomain(val min: Int, val max: Int, val ticks: List<Int>)
+
+data class SleepRangeHeadline(val nights: Int, val asleepS: Double?, val bedOffsetMin: Double?, val wakeOffsetMin: Double?)
+
+data class SleepRangeSeries(val buckets: List<SleepRangeBucket>, val domain: SleepRangeDomain?, val headline: SleepRangeHeadline)
 
 /**
  * Line-by-line port of `scripts/metrics_reference.py`. Pure and zone-explicit; run against
@@ -418,6 +470,172 @@ object MetricsReference {
     private fun unknown(catalog: MetricCatalogData): ResolvedMetric {
         val d = catalog.domainById.getValue("other")
         return ResolvedMetric("unknown", "other", d.colourHex, d.colourHexDark, "last", "line", "none", "none", null, false, d.iconAndroid, d.iconIos)
+    }
+
+    // -- Charts: axis ticks, drill-down, sleep (docs/charts.md) ---------------------------------
+
+    private val NICE_STEPS = doubleArrayOf(1.0, 2.0, 2.5, 5.0, 10.0)
+    private val SLEEP_ASLEEP_STAGES = setOf(1, 3, 4, 5)
+    const val SLEEP_MIN_DAY_SPAN_MS = 4 * HOUR_MS
+    private const val SLEEP_MIN_RANGE_SPAN_MIN = 240
+
+    fun niceTicks(min: Double, max: Double, count: Int, includeZero: Boolean): NiceTicks {
+        var lo = min
+        var hi = max
+        if (includeZero) {
+            lo = minOf(lo, 0.0)
+            hi = maxOf(hi, 0.0)
+        }
+        if (hi <= lo) {
+            if (lo == 0.0) hi = 1.0 else { lo -= 1.0; hi += 1.0 }
+        }
+        val intervals = maxOf(1, count - 1)
+        val raw = (hi - lo) / intervals
+        val mag = 10.0.pow(floor(log10(raw)))
+        var step = 20.0 * mag
+        for (s in NICE_STEPS) {
+            val cand = s * mag
+            if (ceil(hi / cand - 1e-9) - floor(lo / cand + 1e-9) <= intervals) {
+                step = cand
+                break
+            }
+        }
+        val first = floor(lo / step + 1e-9).toLong()
+        val last = ceil(hi / step - 1e-9).toLong()
+        val ticks = (first..last).map { round3(it * step)!! }
+        return NiceTicks(ticks.first(), ticks.last(), round3(step)!!, ticks)
+    }
+
+    fun xTicks(range: MetricRange, anchorMs: Long, zone: ZoneId, weekStart: WeekStart): List<Int> {
+        val buckets = bucketBounds(range, anchorMs, zone, weekStart, anchorMs).buckets
+        return when (range) {
+            MetricRange.D -> {
+                val out = ArrayList<Int>()
+                val seen = HashSet<Int>()
+                buckets.forEachIndexed { i, b ->
+                    val h = localHourOf(b.startMs, zone)
+                    if (h % 6 == 0 && seen.add(h)) out += i
+                }
+                out
+            }
+            MetricRange.W, MetricRange.Y -> buckets.indices.toList()
+            MetricRange.M -> buckets.indices.filter { i ->
+                val d = LocalDate.parse(buckets[i].label)
+                weekStartOf(d, weekStart) == d
+            }
+            MetricRange.SIX_MONTHS -> {
+                val out = ArrayList<Int>()
+                var prev = -1
+                buckets.forEachIndexed { i, b ->
+                    val m = LocalDate.parse(b.label).monthValue
+                    if (m != prev) {
+                        out += i
+                        prev = m
+                    }
+                }
+                out
+            }
+        }
+    }
+
+    fun drillTarget(range: MetricRange, bucketStartMs: Long, hasData: Boolean, metricRanges: Collection<MetricRange>, zone: ZoneId): DrillTarget? {
+        if ((range != MetricRange.W && range != MetricRange.M) || !hasData || MetricRange.D !in metricRanges) return null
+        val d = localDateOf(bucketStartMs, zone)
+        return DrillTarget(MetricRange.D, d, localMidnight(d, zone))
+    }
+
+    private fun unionMs(intervals: List<Pair<Long, Long>>): Long {
+        var total = 0L
+        var curS = 0L
+        var curE: Long? = null
+        for ((s, e) in intervals.sortedWith(compareBy<Pair<Long, Long>> { it.first }.thenBy { it.second })) {
+            if (e <= s) continue
+            val ce = curE
+            if (ce == null || s > ce) {
+                if (ce != null) total += ce - curS
+                curS = s
+                curE = e
+            } else if (e > ce) {
+                curE = e
+            }
+        }
+        curE?.let { total += it - curS }
+        return total
+    }
+
+    private fun pct(part: Long, whole: Long): Int? = if (whole == 0L) null else floor(part * 100.0 / whole + 0.5).toInt()
+
+    private fun localInstant(d: LocalDate, hour: Int, minute: Int, zone: ZoneId): Long =
+        ZonedDateTime.of(d, LocalTime.of(hour, minute), zone).toInstant().toEpochMilli()
+
+    fun sleepNightWindow(rows: List<SleepRow>, zone: ZoneId): SleepWindow? {
+        val use = rows.filter { it.endMs > it.startMs && it.stage in 0..5 }
+        if (use.isEmpty()) return null
+        val bed = use.minOf { it.startMs }
+        val wake = use.maxOf { it.endMs }
+        val bdt = Instant.ofEpochMilli(bed).atZone(zone)
+        var start = localInstant(bdt.toLocalDate(), bdt.hour, 0, zone)
+        if (start > bed) start -= HOUR_MS
+        val wdt = Instant.ofEpochMilli(wake).atZone(zone)
+        var end = localInstant(wdt.toLocalDate(), wdt.hour, 0, zone)
+        if (end < wake) end += HOUR_MS
+        if (end - start < SLEEP_MIN_DAY_SPAN_MS) end = start + SLEEP_MIN_DAY_SPAN_MS
+        val span = end - start
+        val step = if (span <= 4 * HOUR_MS) HOUR_MS else if (span <= 8 * HOUR_MS) 2 * HOUR_MS else 3 * HOUR_MS
+        val ticks = ArrayList<Long>()
+        var t = start
+        while (t <= end) {
+            ticks += t
+            t += step
+        }
+        fun union(pred: (SleepRow) -> Boolean) = unionMs(use.filter(pred).map { it.startMs to it.endMs }) / 1000
+        val asleep = union { it.stage in SLEEP_ASLEEP_STAGES }
+        val inBed = union { true }
+        val stages = SleepStageTotals(
+            unspecifiedS = union { it.stage == 1 }, awakeS = union { it.stage == 2 }, coreS = union { it.stage == 3 },
+            deepS = union { it.stage == 4 }, remS = union { it.stage == 5 }
+        )
+        val p = SleepStagePct(pct(stages.unspecifiedS, asleep), pct(stages.coreS, asleep), pct(stages.deepS, asleep), pct(stages.remS, asleep))
+        return SleepWindow(bed, wake, start, end, step, ticks, asleep, inBed, stages, p)
+    }
+
+    /** Wall-clock minutes from 12:00 on the day before [wakeDay] to [tMs]. */
+    fun sleepClockOffset(tMs: Long, wakeDay: LocalDate, zone: ZoneId): Int {
+        val local = Instant.ofEpochMilli(tMs).atZone(zone)
+        val days = ChronoUnit.DAYS.between(wakeDay.minusDays(1), local.toLocalDate()).toInt()
+        return days * 1440 + local.hour * 60 + local.minute - 720
+    }
+
+    fun sleepRangeSeries(nights: List<SleepNightSpan>, range: MetricRange, anchorMs: Long, zone: ZoneId, weekStart: WeekStart): SleepRangeSeries {
+        require(range != MetricRange.D) { "bad range D" }
+        val bounds = bucketBounds(range, anchorMs, zone, weekStart, anchorMs)
+        data class Placed(val tMs: Long, val night: SleepNightSpan, val bed: Int, val wake: Int)
+        val placed = nights.mapNotNull { n ->
+            val d = n.wakeDay.takeIf { DATE_RE.matches(it) }?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return@mapNotNull null
+            Placed(localMidnight(d, zone), n, sleepClockOffset(n.bedtimeMs, d, zone), sleepClockOffset(n.wakeMs, d, zone))
+        }
+        fun mean(xs: List<Double>): Double? = if (xs.isEmpty()) null else round3(sum(xs) / xs.size)
+        val every = ArrayList<Placed>()
+        val out = bounds.buckets.map { b ->
+            val inside = placed.filter { b.startMs <= it.tMs && it.tMs < b.endMs }
+            every += inside
+            SleepRangeBucket(
+                b.startMs, b.endMs, inside.size,
+                mean(inside.map { it.bed.toDouble() }), mean(inside.map { it.wake.toDouble() }),
+                mean(inside.map { it.night.asleepS }), mean(inside.map { it.night.inBedS })
+            )
+        }
+        val filled = out.filter { it.count > 0 }
+        val domain = if (filled.isEmpty()) null else {
+            val lo = floor(filled.minOf { it.bedOffsetMin!! } / 60.0).toInt() * 60
+            var hi = ceil(filled.maxOf { it.wakeOffsetMin!! } / 60.0).toInt() * 60
+            if (hi - lo < SLEEP_MIN_RANGE_SPAN_MIN) hi = lo + SLEEP_MIN_RANGE_SPAN_MIN
+            SleepRangeDomain(lo, hi, (lo..hi step 120).toList())
+        }
+        val head = SleepRangeHeadline(
+            every.size, mean(every.map { it.night.asleepS }), mean(every.map { it.bed.toDouble() }), mean(every.map { it.wake.toDouble() })
+        )
+        return SleepRangeSeries(out, domain, head)
     }
 
     private val DATE_RE = Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")

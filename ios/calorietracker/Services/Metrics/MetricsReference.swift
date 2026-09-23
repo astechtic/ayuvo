@@ -134,6 +134,19 @@ nonisolated enum MetricsReference {
         func hour(of ms: Int64) -> Int {
             calendar.component(.hour, from: Date(timeIntervalSince1970: Double(ms) / 1000))
         }
+
+        /// Local date, hour and minute of `ms`.
+        func wallClock(of ms: Int64) -> (day: LocalDay, hour: Int, minute: Int) {
+            let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date(timeIntervalSince1970: Double(ms) / 1000))
+            return (LocalDay(year: parts.year ?? 1970, month: parts.month ?? 1, day: parts.day ?? 1), parts.hour ?? 0, parts.minute ?? 0)
+        }
+
+        /// Epoch ms of wall-clock `hour`:`minute` on `day` (reference `local_instant`).
+        func instant(_ day: LocalDay, hour: Int, minute: Int) -> Int64 {
+            let components = DateComponents(year: day.year, month: day.month, day: day.day, hour: hour, minute: minute, second: 0)
+            let date = calendar.date(from: components) ?? Date(timeIntervalSince1970: Double(day.ordinal) * 86_400 + Double(hour * 3600 + minute * 60))
+            return Int64((date.timeIntervalSince1970 * 1000).rounded())
+        }
     }
 
     static func weekStartOf(_ day: LocalDay, _ weekStart: WeekStart) -> LocalDay {
@@ -544,6 +557,258 @@ nonisolated enum MetricsReference {
         )
     }
 
+    // MARK: - Charts: axis ticks, drill-down, sleep (docs/charts.md)
+
+    static let niceSteps: [Double] = [1, 2, 2.5, 5, 10]
+    static let sleepAsleepStages: Set<Int> = [1, 3, 4, 5]
+    static let sleepStageNames: [(code: Int, name: String)] = [(1, "unspecified"), (2, "awake"), (3, "core"), (4, "deep"), (5, "rem")]
+    static let sleepMinDaySpanMs: Int64 = 4 * hourMs
+    static let sleepMinRangeSpanMin = 240
+
+    struct NiceTicks: Equatable, Sendable {
+        let min: Double
+        let max: Double
+        let step: Double
+        let ticks: [Double]
+    }
+
+    /// Y-axis ticks: 1 / 2 / 2.5 / 5 / 10 × 10ⁿ steps, domain grown to whole steps (reference `nice_ticks`).
+    static func niceTicks(min lowIn: Double, max highIn: Double, count: Int, includeZero: Bool) -> NiceTicks {
+        var lo = lowIn, hi = highIn
+        if includeZero {
+            lo = Swift.min(lo, 0)
+            hi = Swift.max(hi, 0)
+        }
+        if hi <= lo {
+            if lo == 0 {
+                hi = 1
+            } else {
+                lo -= 1
+                hi += 1
+            }
+        }
+        let intervals = Swift.max(1, count - 1)
+        let raw = (hi - lo) / Double(intervals)
+        let mag = pow(10.0, floor(log10(raw)))
+        var step = 20.0 * mag
+        for s in niceSteps {
+            let cand = s * mag
+            if Int(ceil(hi / cand - 1e-9)) - Int(floor(lo / cand + 1e-9)) <= intervals {
+                step = cand
+                break
+            }
+        }
+        let first = Int(floor(lo / step + 1e-9))
+        let last = Int(ceil(hi / step - 1e-9))
+        let ticks = (first...last).map { round3(Double($0) * step)! }
+        return NiceTicks(min: ticks[0], max: ticks[ticks.count - 1], step: round3(step)!, ticks: ticks)
+    }
+
+    /// Bucket indices that carry an x label (reference `x_ticks`).
+    static func xTicks(range: HealthDetailRange, anchorMs: Int64, zone: Zone, weekStart: WeekStart) -> [Int] {
+        let buckets = bucketBounds(range: range, anchorMs: anchorMs, zone: zone, weekStart: weekStart, nowMs: anchorMs).buckets
+        switch range {
+        case .day:
+            var out: [Int] = []
+            var seen = Set<Int>()
+            for (i, b) in buckets.enumerated() {
+                let h = zone.hour(of: b.startMs)
+                if h % 6 == 0, !seen.contains(h) {
+                    seen.insert(h)
+                    out.append(i)
+                }
+            }
+            return out
+        case .week, .year:
+            return Array(buckets.indices)
+        case .month:
+            return buckets.indices.filter { i in
+                guard let d = LocalDay.parse(buckets[i].label) else { return false }
+                return weekStartOf(d, weekStart) == d
+            }
+        case .sixMonths:
+            var out: [Int] = []
+            var prev: Int?
+            for (i, b) in buckets.enumerated() {
+                let m = LocalDay.parse(b.label)?.month
+                if m != prev {
+                    out.append(i)
+                    prev = m
+                }
+            }
+            return out
+        }
+    }
+
+    struct DrillTarget: Equatable, Sendable {
+        let range: HealthDetailRange
+        let anchorDay: LocalDay
+        let anchorMs: Int64
+    }
+
+    /// W / M day bucket with data → D for that day when the metric offers D (reference `drill_target`).
+    static func drillTarget(range: HealthDetailRange, bucketStartMs: Int64, hasData: Bool, metricRanges: [HealthDetailRange], zone: Zone) -> DrillTarget? {
+        guard range == .week || range == .month, hasData, metricRanges.contains(.day) else { return nil }
+        let d = zone.day(of: bucketStartMs)
+        return DrillTarget(range: .day, anchorDay: d, anchorMs: zone.midnight(d))
+    }
+
+    private static func unionMs(_ intervals: [(Int64, Int64)]) -> Int64 {
+        var total: Int64 = 0
+        var cur: (Int64, Int64)?
+        for (s, e) in intervals.sorted(by: { $0.0 != $1.0 ? $0.0 < $1.0 : $0.1 < $1.1 }) {
+            if e <= s { continue }
+            if let c = cur {
+                if s > c.1 {
+                    total += c.1 - c.0
+                    cur = (s, e)
+                } else if e > c.1 {
+                    cur = (c.0, e)
+                }
+            } else {
+                cur = (s, e)
+            }
+        }
+        if let c = cur { total += c.1 - c.0 }
+        return total
+    }
+
+    private static func pct(_ part: Int64, _ whole: Int64) -> Int? {
+        guard whole != 0 else { return nil }
+        return Int(floor(Double(part) * 100 / Double(whole) + 0.5))
+    }
+
+    struct SleepRow: Equatable, Sendable {
+        let startMs: Int64
+        let endMs: Int64
+        let stage: Int
+    }
+
+    struct SleepWindow: Equatable, Sendable {
+        let bedtimeMs: Int64
+        let wakeMs: Int64
+        let domainStartMs: Int64
+        let domainEndMs: Int64
+        let tickStepMs: Int64
+        let ticks: [Int64]
+        let asleepS: Int64
+        let inBedS: Int64
+        /// awake, core, deep, rem, unspecified → seconds.
+        let stages: [String: Int64]
+        /// unspecified, core, deep, rem → whole percent of asleep (nil when asleep is 0).
+        let pct: [String: Int?]
+    }
+
+    /// Day-range sleep window of one night (reference `sleep_night_window`).
+    static func sleepNightWindow(rows: [SleepRow], zone: Zone) -> SleepWindow? {
+        let use = rows.filter { $0.endMs > $0.startMs && (0...5).contains($0.stage) }
+        guard !use.isEmpty else { return nil }
+        let bed = use.map(\.startMs).min()!
+        let wake = use.map(\.endMs).max()!
+        let b = zone.wallClock(of: bed)
+        var start = zone.instant(b.day, hour: b.hour, minute: 0)
+        if start > bed { start -= hourMs }
+        let w = zone.wallClock(of: wake)
+        var end = zone.instant(w.day, hour: w.hour, minute: 0)
+        if end < wake { end += hourMs }
+        if end - start < sleepMinDaySpanMs { end = start + sleepMinDaySpanMs }
+        let span = end - start
+        let step = span <= 4 * hourMs ? hourMs : (span <= 8 * hourMs ? 2 * hourMs : 3 * hourMs)
+        let ticks = Array(stride(from: start, through: end, by: Int(step)))
+        let asleep = unionMs(use.filter { sleepAsleepStages.contains($0.stage) }.map { ($0.startMs, $0.endMs) }) / 1000
+        let inBed = unionMs(use.map { ($0.startMs, $0.endMs) }) / 1000
+        var stages: [String: Int64] = [:]
+        for (code, name) in sleepStageNames {
+            stages[name] = unionMs(use.filter { $0.stage == code }.map { ($0.startMs, $0.endMs) }) / 1000
+        }
+        var pcts: [String: Int?] = [:]
+        for name in ["unspecified", "core", "deep", "rem"] {
+            pcts[name] = pct(stages[name] ?? 0, asleep)
+        }
+        return SleepWindow(bedtimeMs: bed, wakeMs: wake, domainStartMs: start, domainEndMs: end, tickStepMs: step, ticks: ticks,
+                           asleepS: asleep, inBedS: inBed, stages: stages, pct: pcts)
+    }
+
+    /// Wall-clock minutes from 12:00 on the day before `wakeDay` (reference `sleep_clock_offset`).
+    static func sleepClockOffset(tMs: Int64, wakeDay: LocalDay, zone: Zone) -> Int {
+        let local = zone.wallClock(of: tMs)
+        let days = local.day.ordinal - wakeDay.adding(days: -1).ordinal
+        return days * 1440 + local.hour * 60 + local.minute - 720
+    }
+
+    struct SleepNightInput: Equatable, Sendable {
+        let wakeDay: String
+        let bedtimeMs: Int64
+        let wakeMs: Int64
+        let asleepS: Double
+        let inBedS: Double
+    }
+
+    struct SleepRangeBucket: Equatable, Sendable {
+        let startMs: Int64
+        let endMs: Int64
+        let count: Int
+        let bedOffsetMin: Double?
+        let wakeOffsetMin: Double?
+        let asleepS: Double?
+        let inBedS: Double?
+    }
+
+    struct SleepRangeDomain: Equatable, Sendable {
+        let min: Int
+        let max: Int
+        let ticks: [Int]
+    }
+
+    struct SleepRangeHeadline: Equatable, Sendable {
+        let nights: Int
+        let asleepS: Double?
+        let bedOffsetMin: Double?
+        let wakeOffsetMin: Double?
+    }
+
+    struct SleepRange: Equatable, Sendable {
+        let buckets: [SleepRangeBucket]
+        let domain: SleepRangeDomain?
+        let headline: SleepRangeHeadline
+    }
+
+    /// W / M / 6M / Y sleep bars: mean bedtime → wake per bucket (reference `sleep_range_series`).
+    static func sleepRangeSeries(nights: [SleepNightInput], range: HealthDetailRange, anchorMs: Int64, zone: Zone, weekStart: WeekStart) -> SleepRange {
+        let bounds = bucketBounds(range: range, anchorMs: anchorMs, zone: zone, weekStart: weekStart, nowMs: anchorMs)
+        var placed: [(t: Int64, night: SleepNightInput, bed: Int, wake: Int)] = []
+        for n in nights {
+            guard let d = LocalDay.parse(n.wakeDay) else { continue }
+            placed.append((zone.midnight(d), n, sleepClockOffset(tMs: n.bedtimeMs, wakeDay: d, zone: zone),
+                           sleepClockOffset(tMs: n.wakeMs, wakeDay: d, zone: zone)))
+        }
+        func mean(_ xs: [Double]) -> Double? { xs.isEmpty ? nil : round3(xs.reduce(0, +) / Double(xs.count)) }
+        var out: [SleepRangeBucket] = []
+        var every: [(t: Int64, night: SleepNightInput, bed: Int, wake: Int)] = []
+        for b in bounds.buckets {
+            let inside = placed.filter { b.startMs <= $0.t && $0.t < b.endMs }
+            every.append(contentsOf: inside)
+            out.append(SleepRangeBucket(
+                startMs: b.startMs, endMs: b.endMs, count: inside.count,
+                bedOffsetMin: mean(inside.map { Double($0.bed) }), wakeOffsetMin: mean(inside.map { Double($0.wake) }),
+                asleepS: mean(inside.map(\.night.asleepS)), inBedS: mean(inside.map(\.night.inBedS))
+            ))
+        }
+        let filled = out.filter { $0.count > 0 }
+        var domain: SleepRangeDomain?
+        if !filled.isEmpty {
+            let lo = Int(floor(filled.compactMap(\.bedOffsetMin).min()! / 60)) * 60
+            var hi = Int(ceil(filled.compactMap(\.wakeOffsetMin).max()! / 60)) * 60
+            if hi - lo < sleepMinRangeSpanMin { hi = lo + sleepMinRangeSpanMin }
+            domain = SleepRangeDomain(min: lo, max: hi, ticks: Array(stride(from: lo, through: hi, by: 120)))
+        }
+        let head = SleepRangeHeadline(
+            nights: every.count, asleepS: mean(every.map(\.night.asleepS)),
+            bedOffsetMin: mean(every.map { Double($0.bed) }), wakeOffsetMin: mean(every.map { Double($0.wake) })
+        )
+        return SleepRange(buckets: out, domain: domain, headline: head)
+    }
+
     // MARK: - Vector dispatch
 
     private static func int64(_ value: RJ) -> Int64 { Int64(value.double ?? 0) }
@@ -619,6 +884,47 @@ nonisolated enum MetricsReference {
                 "default_favourite_order": r.defaultFavouriteOrder.map { RJ.int($0) } ?? .null,
                 "browse_hidden": .bool(r.browseHidden),
                 "icon_android": .str(r.iconAndroid), "icon_ios": .str(r.iconIOS),
+            ])
+        case "nice_ticks":
+            let t = niceTicks(min: input["min"].double ?? 0, max: input["max"].double ?? 0, count: Int(input["count"].double ?? 4), includeZero: input["include_zero"].bool ?? false)
+            return .obj(["min": .number(t.min), "max": .number(t.max), "step": .number(t.step), "ticks": .arr(t.ticks.map { RJ.number($0) })])
+        case "x_ticks":
+            let ix = xTicks(range: range(input["range"]), anchorMs: int64(input["anchor_ms"]), zone: zone, weekStart: weekStart(input["week_start"]))
+            return .obj(["indices": .arr(ix.map { RJ.int($0) })])
+        case "drill_target":
+            let ranges = (input["metric_ranges"].array ?? []).compactMap { HealthDetailRange(rawValue: $0.string ?? "") }
+            guard let t = drillTarget(range: range(input["range"]), bucketStartMs: int64(input["bucket_start_ms"]), hasData: input["has_data"].bool ?? false, metricRanges: ranges, zone: zone) else {
+                return .obj(["target": .null])
+            }
+            return .obj(["target": .obj(["range": .str(t.range.rawValue), "anchor_date": .str(t.anchorDay.text), "anchor_ms": ms(t.anchorMs)])])
+        case "sleep_night_window":
+            let rows = (input["rows"].array ?? []).map { SleepRow(startMs: int64($0["start_ms"]), endMs: int64($0["end_ms"]), stage: Int($0["stage"].double ?? -1)) }
+            guard let w = sleepNightWindow(rows: rows, zone: zone) else { return .obj(["window": .null]) }
+            return .obj(["window": .obj([
+                "bedtime_ms": ms(w.bedtimeMs), "wake_ms": ms(w.wakeMs), "domain_start_ms": ms(w.domainStartMs),
+                "domain_end_ms": ms(w.domainEndMs), "tick_step_ms": ms(w.tickStepMs), "ticks": .arr(w.ticks.map { ms($0) }),
+                "asleep_s": ms(w.asleepS), "in_bed_s": ms(w.inBedS),
+                "stages": .obj(w.stages.mapValues { ms($0) }),
+                "pct": .obj(w.pct.mapValues { $0.map { RJ.int($0) } ?? .null }),
+            ])])
+        case "sleep_clock_offset":
+            let day = LocalDay.parse(input["wake_day"].string) ?? LocalDay(year: 1970, month: 1, day: 1)
+            return .obj(["offset_min": .int(sleepClockOffset(tMs: int64(input["t_ms"]), wakeDay: day, zone: zone))])
+        case "sleep_range_series":
+            let nights = (input["nights"].array ?? []).map {
+                SleepNightInput(wakeDay: $0["wake_day"].string ?? "", bedtimeMs: int64($0["bedtime_ms"]), wakeMs: int64($0["wake_ms"]),
+                                asleepS: $0["asleep_s"].double ?? 0, inBedS: $0["in_bed_s"].double ?? 0)
+            }
+            let r = sleepRangeSeries(nights: nights, range: range(input["range"]), anchorMs: int64(input["anchor_ms"]), zone: zone, weekStart: weekStart(input["week_start"]))
+            return .obj([
+                "buckets": .arr(r.buckets.map {
+                    .obj(["start_ms": ms($0.startMs), "end_ms": ms($0.endMs), "count": .int($0.count),
+                          "bed_offset_min": .number($0.bedOffsetMin), "wake_offset_min": .number($0.wakeOffsetMin),
+                          "asleep_s": .number($0.asleepS), "in_bed_s": .number($0.inBedS)])
+                }),
+                "domain": r.domain.map { d in RJ.obj(["min": .int(d.min), "max": .int(d.max), "ticks": .arr(d.ticks.map { RJ.int($0) })]) } ?? .null,
+                "headline": .obj(["nights": .int(r.headline.nights), "asleep_s": .number(r.headline.asleepS),
+                                  "bed_offset_min": .number(r.headline.bedOffsetMin), "wake_offset_min": .number(r.headline.wakeOffsetMin)]),
             ])
         default:
             return .null

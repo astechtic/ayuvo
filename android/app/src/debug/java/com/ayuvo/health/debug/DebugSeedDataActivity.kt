@@ -18,9 +18,12 @@ class DebugSeedDataActivity : ComponentActivity() {
         lifecycleScope.launch {
             runCatching {
                 withContext(Dispatchers.IO) {
-                    DebugDemoDataSeeder(
-                        application = application as AyuvoApp
-                    ).seed(futureDays = intent.getIntExtra("future_days", 0))
+                    val app = application as AyuvoApp
+                    // `--ez health true` also writes demo sleep / steps / heart rate to the local health mirror.
+                    if (intent.getBooleanExtra("health", false)) {
+                        Log.i(TAG, "Demo health rows: ${DebugHealthSeeder(app).seed()}")
+                    }
+                    DebugDemoDataSeeder(application = app).seed(futureDays = intent.getIntExtra("future_days", 0))
                 }
             }.onSuccess { report ->
                 Log.i(TAG, "Demo seed complete: $report")

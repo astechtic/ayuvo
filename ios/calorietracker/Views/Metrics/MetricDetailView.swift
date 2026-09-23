@@ -86,8 +86,7 @@ struct MetricDetailView: View {
             await model.load(sources: sources, calendar: calendar)
         }
         .onChange(of: model.range) { _, _ in
-            model.selected = nil
-            model.anchor = Date()
+            model.rangeChanged()
         }
         .sheet(isPresented: $showLogWeight) {
             LogWeightSheet(currentWeightKg: weightStore.latestEntry?.weightKg ?? profileStore.profile.weightKg) { weightKg in
@@ -119,10 +118,77 @@ struct MetricDetailView: View {
 
     @ViewBuilder
     private var headline: some View {
-        if let headline = model.series?.headline {
+        if healthType?.isSleep == true, model.series?.range == .day, let window = model.series?.sleepWindow {
+            // Apple's sleep D header: TIME IN BED next to TIME ASLEEP (docs/charts.md › Sleep).
+            SleepDayHeader(window: window)
+        } else if healthType?.isSleep == true, let series = model.series {
+            let parts = sleepHeadlineParts(series)
+            HeadlineStat(label: parts.label, value: parts.value, unit: "", caption: parts.caption)
+                .accessibilityIdentifier("metric.headline")
+        } else if let selected = model.selected, let series = model.series {
+            let parts = selectedHeadlineParts(selected, range: series.range)
+            HeadlineStat(label: parts.label, value: parts.value, unit: parts.unit, caption: parts.caption)
+                .accessibilityIdentifier("metric.headline")
+        } else if let headline = model.series?.headline {
             let parts = headlineParts(headline)
             HeadlineStat(label: parts.label, value: parts.value, unit: parts.unit, caption: parts.caption)
+                .accessibilityIdentifier("metric.headline")
         }
+    }
+
+    /// Headline while a bucket is selected: its value and date (docs/charts.md › Selection).
+    private func selectedHeadlineParts(_ point: HealthChartPoint, range: HealthDetailRange) -> (label: String, value: String, unit: String, caption: String) {
+        let summed: Bool
+        if let type = healthType {
+            summed = type.kind == .cumulative || type.kind == .duration || type.kind == .session || type.kind == .category
+        } else {
+            summed = isSummed
+        }
+        let label: String
+        if summed {
+            label = range == .sixMonths || range == .year ? String(localized: "Daily Average") : String(localized: "Total")
+        } else if descriptor.aggregation == .last {
+            label = String(localized: "Latest")
+        } else {
+            label = String(localized: "Average")
+        }
+        let shown: (value: String, unit: String)
+        if let type = healthType, type.isBloodPressure {
+            shown = (HealthUnitFormatting.bloodPressureText(systolic: point.value, diastolic: point.value2 ?? point.min), "mmHg")
+        } else {
+            shown = valueParts(point.value)
+        }
+        return (label, shown.value, shown.unit, ChartAxisStyle.bucketTitle(point, range: range))
+    }
+
+    /// TIME ASLEEP (D), AVG TIME ASLEEP (W+), IN BED for an in-bed-only night; never an invented value.
+    private func sleepHeadlineParts(_ series: HealthChartSeries) -> (label: String, value: String, caption: String) {
+        let time = Date.FormatStyle.dateTime.hour().minute()
+        if series.range == .day {
+            guard let window = series.sleepWindow else {
+                return (String(localized: "Time Asleep"), "—", model.rangeTitle(calendar: calendar))
+            }
+            let span = "\(ChartAxisStyle.date(window.bedtimeMs).formatted(time)) – \(ChartAxisStyle.date(window.wakeMs).formatted(time))"
+            if window.asleepS > 0 {
+                return (String(localized: "Time Asleep"), HealthUnitFormatting.durationText(seconds: Double(window.asleepS)), span)
+            }
+            return (String(localized: "In Bed"), HealthUnitFormatting.durationText(seconds: Double(window.inBedS)), span)
+        }
+        if let selected = model.selected, let asleep = selected.value {
+            var caption = ChartAxisStyle.bucketTitle(selected, range: series.range)
+            if let bed = selected.min, let wake = selected.max {
+                caption += " · \(SleepChart.clockText(bed, calendar: calendar))–\(SleepChart.clockText(wake, calendar: calendar))"
+            }
+            return (String(localized: "Time Asleep"), HealthUnitFormatting.durationText(seconds: asleep), caption)
+        }
+        guard let head = series.sleepRange?.headline, head.nights > 0, let asleep = head.asleepS else {
+            return (String(localized: "Avg Time Asleep"), "—", model.rangeTitle(calendar: calendar))
+        }
+        var caption = model.rangeTitle(calendar: calendar)
+        if let bed = head.bedOffsetMin, let wake = head.wakeOffsetMin {
+            caption += " · \(SleepChart.clockText(bed, calendar: calendar))–\(SleepChart.clockText(wake, calendar: calendar))"
+        }
+        return (String(localized: "Avg Time Asleep"), HealthUnitFormatting.durationText(seconds: asleep), caption)
     }
 
     private func headlineParts(_ headline: MetricsReference.Headline) -> (label: String, value: String, unit: String, caption: String) {
@@ -210,12 +276,20 @@ struct MetricDetailView: View {
                     tint: descriptor.tint,
                     series: series,
                     selected: $model.selected,
-                    goal: sources.goal(for: descriptor.goalSource)
+                    goal: sources.goal(for: descriptor.goalSource),
+                    calendar: calendar,
+                    onTap: tapBucket
                 )
             case .health:
                 if let type = healthType {
-                    HealthMetricChart(type: type, series: series, selected: $model.selected, calendar: calendar)
-                        .accessibilityIdentifier("metric.chart")
+                    if type.isSleep {
+                        SleepChart(series: series, selected: $model.selected, calendar: calendar, onTap: tapBucket)
+                            .accessibilityIdentifier("metric.chart")
+                    } else {
+                        HealthMetricChart(type: type, series: series, selected: $model.selected, calendar: calendar,
+                                          goal: sources.goal(for: descriptor.goalSource), onTap: tapBucket)
+                            .accessibilityIdentifier("metric.chart")
+                    }
                 }
             }
         } else if model.isLoading {
@@ -228,6 +302,12 @@ struct MetricDetailView: View {
         }
     }
 
+    private func tapBucket(_ point: HealthChartPoint) {
+        withAnimation(.easeOut(duration: 0.2)) {
+            model.tap(point, ranges: descriptor.ranges, calendar: calendar)
+        }
+    }
+
     private var emptyDescription: LocalizedStringKey {
         switch key {
         case .app: return "Log an entry to see your trend here."
@@ -235,9 +315,14 @@ struct MetricDetailView: View {
         }
     }
 
+    /// Sleep D hides them: Total / Average / Latest would all repeat the header (docs/charts.md).
+    private var hidesBadges: Bool { healthType?.isSleep == true && model.range == .day }
+
     @ViewBuilder
     private var badges: some View {
-        if dynamicTypeSize.isAccessibilitySize {
+        if hidesBadges {
+            EmptyView()
+        } else if dynamicTypeSize.isAccessibilitySize {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) { badgeContent }
         } else {
             HStack(spacing: 8) { badgeContent }

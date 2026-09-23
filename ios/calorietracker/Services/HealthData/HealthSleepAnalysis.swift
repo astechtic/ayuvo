@@ -1,7 +1,7 @@
 import Foundation
 
 /// Night derivation shared with Android (`docs/health-data.md` §1.3): rows are grouped by
-/// wake day (`local_day`, end-attributed), the source with the most asleep time wins,
+/// wake day (the `local_day` of the episode's last row, see `rowsByNight`), the source with the most asleep time wins,
 /// overlapping intervals within that source are unioned, other sources are ignored.
 nonisolated enum HealthSleepAnalysis {
     typealias Interval = (start: Int64, end: Int64)
@@ -34,9 +34,38 @@ nonisolated enum HealthSleepAnalysis {
         return total
     }
 
+    /// Rows closer than this belong to one sleep episode.
+    static let episodeGapMs: Int64 = 3 * 3_600_000
+
+    /// Rows grouped by the wake day of their sleep episode. HealthKit stores each stage as its own
+    /// sample, so a stage that ends before midnight carries the previous `local_day`; chaining rows
+    /// into episodes (gaps under 3 h) and keying each episode by the `local_day` of its last row puts
+    /// the whole night on its wake day, like Android's session rows.
+    static func rowsByNight(_ rows: [HealthSampleRow]) -> [String: [HealthSampleRow]] {
+        let live = rows.filter { !$0.isDeleted }.sorted { $0.startMs != $1.startMs ? $0.startMs < $1.startMs : $0.id < $1.id }
+        var groups: [String: [HealthSampleRow]] = [:]
+        var episode: [HealthSampleRow] = []
+        var episodeEnd: Int64 = .min
+
+        func flush() {
+            guard let last = episode.max(by: { $0.endMs != $1.endMs ? $0.endMs < $1.endMs : $0.id < $1.id }) else { return }
+            groups[last.localDay, default: []].append(contentsOf: episode)
+            episode.removeAll()
+        }
+
+        for row in live {
+            if !episode.isEmpty, row.startMs > episodeEnd + episodeGapMs { flush() }
+            if episode.isEmpty { episodeEnd = row.endMs }
+            episode.append(row)
+            episodeEnd = max(episodeEnd, row.endMs)
+        }
+        flush()
+        return groups
+    }
+
     /// Nights for every wake day present in `rows`, oldest first.
     static func nights(rows: [HealthSampleRow], calendar: Calendar) -> [HealthSleepNight] {
-        let byDay = Dictionary(grouping: rows.filter { !$0.isDeleted }, by: \.localDay)
+        let byDay = rowsByNight(rows)
         return byDay.keys.sorted().compactMap { day in
             night(rows: byDay[day] ?? [], nightOf: day)
         }

@@ -1,0 +1,488 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "indices": [
+          0,
+          6,
+          12,
+          18
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "D America/New_York monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "range": "W",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "W America/New_York monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          6,
+          13,
+          20,
+          27
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "range": "M",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "M America/New_York monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          9,
+          14,
+          18,
+          23
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "range": "6M",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "6M America/New_York monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "range": "Y",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "Y America/New_York monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          6,
+          12,
+          18
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789556400000,
+        "range": "D",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "D Europe/London monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789556400000,
+        "range": "W",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "W Europe/London monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          6,
+          13,
+          20,
+          27
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789556400000,
+        "range": "M",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "M Europe/London monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          9,
+          14,
+          18,
+          23
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789556400000,
+        "range": "6M",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "6M Europe/London monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789556400000,
+        "range": "Y",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "Y Europe/London monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          6,
+          12,
+          18
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "D",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "D Asia/Kolkata monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "W Asia/Kolkata monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          6,
+          13,
+          20,
+          27
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "M",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "M Asia/Kolkata monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          9,
+          14,
+          18,
+          23
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "6M",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "6M Asia/Kolkata monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "range": "Y",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "Y Asia/Kolkata monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          6,
+          12,
+          18
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "D",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "D UTC monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "W",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "W UTC monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          6,
+          13,
+          20,
+          27
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "M",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "M UTC monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          9,
+          14,
+          18,
+          23
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "6M",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "6M UTC monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "Y",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "Y UTC monday"
+    },
+    {
+      "expected": {
+        "indices": [
+          5,
+          12,
+          19,
+          26
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "M",
+        "time_zone": "UTC",
+        "week_start": "sunday"
+      },
+      "name": "M UTC sunday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          10,
+          14,
+          18,
+          23
+        ]
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "range": "6M",
+        "time_zone": "UTC",
+        "week_start": "sunday"
+      },
+      "name": "6M UTC sunday"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          11,
+          17
+        ]
+      },
+      "input": {
+        "anchor_ms": 1772985600000,
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "D NY spring-forward"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          7,
+          13,
+          19
+        ]
+      },
+      "input": {
+        "anchor_ms": 1793552400000,
+        "range": "D",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "D NY fall-back"
+    },
+    {
+      "expected": {
+        "indices": [
+          0,
+          5,
+          9,
+          14,
+          18,
+          22
+        ]
+      },
+      "input": {
+        "anchor_ms": 1802260800000,
+        "range": "6M",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "6M across year"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "x_ticks",
+  "version": 1
+}

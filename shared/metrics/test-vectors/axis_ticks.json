@@ -1,0 +1,301 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "max": 3000,
+        "min": 0,
+        "step": 1000,
+        "ticks": [
+          0,
+          1000,
+          2000,
+          3000
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 2350,
+        "min": 0
+      },
+      "name": "calories bar"
+    },
+    {
+      "expected": {
+        "max": 1,
+        "min": 0,
+        "step": 0.5,
+        "ticks": [
+          0,
+          0.5,
+          1
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 0,
+        "min": 0
+      },
+      "name": "all zero bar"
+    },
+    {
+      "expected": {
+        "max": 65,
+        "min": 62,
+        "step": 1,
+        "ticks": [
+          62,
+          63,
+          64,
+          65
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": false,
+        "max": 64.1,
+        "min": 62.4
+      },
+      "name": "weight line narrow"
+    },
+    {
+      "expected": {
+        "max": 7.5,
+        "min": 0,
+        "step": 2.5,
+        "ticks": [
+          0,
+          2.5,
+          5,
+          7.5
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 7.3,
+        "min": 0
+      },
+      "name": "hours bar"
+    },
+    {
+      "expected": {
+        "max": 1,
+        "min": 0,
+        "step": 0.5,
+        "ticks": [
+          0,
+          0.5,
+          1
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": false,
+        "max": 0.9,
+        "min": 0.2
+      },
+      "name": "fractions"
+    },
+    {
+      "expected": {
+        "max": 200,
+        "min": 50,
+        "step": 50,
+        "ticks": [
+          50,
+          100,
+          150,
+          200
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": false,
+        "max": 190,
+        "min": 55
+      },
+      "name": "heart rate range"
+    },
+    {
+      "expected": {
+        "max": 10000,
+        "min": 0,
+        "step": 5000,
+        "ticks": [
+          0,
+          5000,
+          10000
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 10000,
+        "min": 0
+      },
+      "name": "steps exact"
+    },
+    {
+      "expected": {
+        "max": 15000,
+        "min": 0,
+        "step": 5000,
+        "ticks": [
+          0,
+          5000,
+          10000,
+          15000
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 12500,
+        "min": 0
+      },
+      "name": "steps above goal"
+    },
+    {
+      "expected": {
+        "max": 5,
+        "min": -5,
+        "step": 5,
+        "ticks": [
+          -5,
+          0,
+          5
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": false,
+        "max": 5,
+        "min": -3
+      },
+      "name": "negative span"
+    },
+    {
+      "expected": {
+        "max": 1501,
+        "min": 1499,
+        "step": 1,
+        "ticks": [
+          1499,
+          1500,
+          1501
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": false,
+        "max": 1500,
+        "min": 1500
+      },
+      "name": "flat line"
+    },
+    {
+      "expected": {
+        "max": 1,
+        "min": 0,
+        "step": 0.5,
+        "ticks": [
+          0,
+          0.5,
+          1
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 1,
+        "min": 0
+      },
+      "name": "unit"
+    },
+    {
+      "expected": {
+        "max": 81.2,
+        "min": 80.4,
+        "step": 0.2,
+        "ticks": [
+          80.4,
+          80.6,
+          80.8,
+          81,
+          81.2
+        ]
+      },
+      "input": {
+        "count": 5,
+        "include_zero": false,
+        "max": 81.2,
+        "min": 80.5
+      },
+      "name": "five ticks"
+    },
+    {
+      "expected": {
+        "max": 150,
+        "min": 0,
+        "step": 50,
+        "ticks": [
+          0,
+          50,
+          100,
+          150
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 120,
+        "min": 35
+      },
+      "name": "bars lift to zero"
+    },
+    {
+      "expected": {
+        "max": 4,
+        "min": 0,
+        "step": 2,
+        "ticks": [
+          0,
+          2,
+          4
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": true,
+        "max": 3.2,
+        "min": 0
+      },
+      "name": "water litres"
+    },
+    {
+      "expected": {
+        "max": 25,
+        "min": 17.5,
+        "step": 2.5,
+        "ticks": [
+          17.5,
+          20,
+          22.5,
+          25
+        ]
+      },
+      "input": {
+        "count": 4,
+        "include_zero": false,
+        "max": 24.9,
+        "min": 18.2
+      },
+      "name": "body fat"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "nice_ticks",
+  "version": 1
+}

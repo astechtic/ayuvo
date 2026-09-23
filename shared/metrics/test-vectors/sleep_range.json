@@ -1,0 +1,2005 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": 25200,
+            "bed_offset_min": 670,
+            "count": 1,
+            "end_ms": 1789444800000,
+            "in_bed_s": 27600,
+            "start_ms": 1789358400000,
+            "wake_offset_min": 1130
+          },
+          {
+            "asleep_s": 26100,
+            "bed_offset_min": 645,
+            "count": 1,
+            "end_ms": 1789531200000,
+            "in_bed_s": 27900,
+            "start_ms": 1789444800000,
+            "wake_offset_min": 1110
+          },
+          {
+            "asleep_s": 24000,
+            "bed_offset_min": 740,
+            "count": 1,
+            "end_ms": 1789617600000,
+            "in_bed_s": 26400,
+            "start_ms": 1789531200000,
+            "wake_offset_min": 1180
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789704000000,
+            "in_bed_s": null,
+            "start_ms": 1789617600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 27000,
+            "bed_offset_min": 715,
+            "count": 1,
+            "end_ms": 1789790400000,
+            "in_bed_s": 29700,
+            "start_ms": 1789704000000,
+            "wake_offset_min": 1210
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789876800000,
+            "in_bed_s": null,
+            "start_ms": 1789790400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789963200000,
+            "in_bed_s": null,
+            "start_ms": 1789876800000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1260,
+          "min": 600,
+          "ticks": [
+            600,
+            720,
+            840,
+            960,
+            1080,
+            1200
+          ]
+        },
+        "headline": {
+          "asleep_s": 25575,
+          "bed_offset_min": 692.5,
+          "nights": 4,
+          "wake_offset_min": 1157.5
+        }
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "nights": [
+          {
+            "asleep_s": 25200,
+            "bedtime_ms": 1789355400000,
+            "in_bed_s": 27600,
+            "wake_day": "2026-09-14",
+            "wake_ms": 1789383000000
+          },
+          {
+            "asleep_s": 26100,
+            "bedtime_ms": 1789440300000,
+            "in_bed_s": 27900,
+            "wake_day": "2026-09-15",
+            "wake_ms": 1789468200000
+          },
+          {
+            "asleep_s": 24000,
+            "bedtime_ms": 1789532400000,
+            "in_bed_s": 26400,
+            "wake_day": "2026-09-16",
+            "wake_ms": 1789558800000
+          },
+          {
+            "asleep_s": 27000,
+            "bedtime_ms": 1789703700000,
+            "in_bed_s": 29700,
+            "wake_day": "2026-09-18",
+            "wake_ms": 1789733400000
+          }
+        ],
+        "range": "W",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "W NY four nights"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789358400000,
+            "in_bed_s": null,
+            "start_ms": 1789272000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 25200,
+            "bed_offset_min": 670,
+            "count": 1,
+            "end_ms": 1789444800000,
+            "in_bed_s": 27600,
+            "start_ms": 1789358400000,
+            "wake_offset_min": 1130
+          },
+          {
+            "asleep_s": 26100,
+            "bed_offset_min": 645,
+            "count": 1,
+            "end_ms": 1789531200000,
+            "in_bed_s": 27900,
+            "start_ms": 1789444800000,
+            "wake_offset_min": 1110
+          },
+          {
+            "asleep_s": 24000,
+            "bed_offset_min": 740,
+            "count": 1,
+            "end_ms": 1789617600000,
+            "in_bed_s": 26400,
+            "start_ms": 1789531200000,
+            "wake_offset_min": 1180
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789704000000,
+            "in_bed_s": null,
+            "start_ms": 1789617600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 27000,
+            "bed_offset_min": 715,
+            "count": 1,
+            "end_ms": 1789790400000,
+            "in_bed_s": 29700,
+            "start_ms": 1789704000000,
+            "wake_offset_min": 1210
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789876800000,
+            "in_bed_s": null,
+            "start_ms": 1789790400000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1260,
+          "min": 600,
+          "ticks": [
+            600,
+            720,
+            840,
+            960,
+            1080,
+            1200
+          ]
+        },
+        "headline": {
+          "asleep_s": 25575,
+          "bed_offset_min": 692.5,
+          "nights": 4,
+          "wake_offset_min": 1157.5
+        }
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "nights": [
+          {
+            "asleep_s": 25200,
+            "bedtime_ms": 1789355400000,
+            "in_bed_s": 27600,
+            "wake_day": "2026-09-14",
+            "wake_ms": 1789383000000
+          },
+          {
+            "asleep_s": 26100,
+            "bedtime_ms": 1789440300000,
+            "in_bed_s": 27900,
+            "wake_day": "2026-09-15",
+            "wake_ms": 1789468200000
+          },
+          {
+            "asleep_s": 24000,
+            "bedtime_ms": 1789532400000,
+            "in_bed_s": 26400,
+            "wake_day": "2026-09-16",
+            "wake_ms": 1789558800000
+          },
+          {
+            "asleep_s": 27000,
+            "bedtime_ms": 1789703700000,
+            "in_bed_s": 29700,
+            "wake_day": "2026-09-18",
+            "wake_ms": 1789733400000
+          }
+        ],
+        "range": "W",
+        "time_zone": "America/New_York",
+        "week_start": "sunday"
+      },
+      "name": "W NY sunday start"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788321600000,
+            "in_bed_s": null,
+            "start_ms": 1788235200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788408000000,
+            "in_bed_s": null,
+            "start_ms": 1788321600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788494400000,
+            "in_bed_s": null,
+            "start_ms": 1788408000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788580800000,
+            "in_bed_s": null,
+            "start_ms": 1788494400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788667200000,
+            "in_bed_s": null,
+            "start_ms": 1788580800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788753600000,
+            "in_bed_s": null,
+            "start_ms": 1788667200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788840000000,
+            "in_bed_s": null,
+            "start_ms": 1788753600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788926400000,
+            "in_bed_s": null,
+            "start_ms": 1788840000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789012800000,
+            "in_bed_s": null,
+            "start_ms": 1788926400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789099200000,
+            "in_bed_s": null,
+            "start_ms": 1789012800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789185600000,
+            "in_bed_s": null,
+            "start_ms": 1789099200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789272000000,
+            "in_bed_s": null,
+            "start_ms": 1789185600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789358400000,
+            "in_bed_s": null,
+            "start_ms": 1789272000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 25200,
+            "bed_offset_min": 670,
+            "count": 1,
+            "end_ms": 1789444800000,
+            "in_bed_s": 27600,
+            "start_ms": 1789358400000,
+            "wake_offset_min": 1130
+          },
+          {
+            "asleep_s": 26100,
+            "bed_offset_min": 645,
+            "count": 1,
+            "end_ms": 1789531200000,
+            "in_bed_s": 27900,
+            "start_ms": 1789444800000,
+            "wake_offset_min": 1110
+          },
+          {
+            "asleep_s": 24000,
+            "bed_offset_min": 740,
+            "count": 1,
+            "end_ms": 1789617600000,
+            "in_bed_s": 26400,
+            "start_ms": 1789531200000,
+            "wake_offset_min": 1180
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789704000000,
+            "in_bed_s": null,
+            "start_ms": 1789617600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 27000,
+            "bed_offset_min": 715,
+            "count": 1,
+            "end_ms": 1789790400000,
+            "in_bed_s": 29700,
+            "start_ms": 1789704000000,
+            "wake_offset_min": 1210
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789876800000,
+            "in_bed_s": null,
+            "start_ms": 1789790400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789963200000,
+            "in_bed_s": null,
+            "start_ms": 1789876800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790049600000,
+            "in_bed_s": null,
+            "start_ms": 1789963200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790136000000,
+            "in_bed_s": null,
+            "start_ms": 1790049600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790222400000,
+            "in_bed_s": null,
+            "start_ms": 1790136000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790308800000,
+            "in_bed_s": null,
+            "start_ms": 1790222400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790395200000,
+            "in_bed_s": null,
+            "start_ms": 1790308800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790481600000,
+            "in_bed_s": null,
+            "start_ms": 1790395200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790568000000,
+            "in_bed_s": null,
+            "start_ms": 1790481600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790654400000,
+            "in_bed_s": null,
+            "start_ms": 1790568000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790740800000,
+            "in_bed_s": null,
+            "start_ms": 1790654400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790827200000,
+            "in_bed_s": null,
+            "start_ms": 1790740800000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1260,
+          "min": 600,
+          "ticks": [
+            600,
+            720,
+            840,
+            960,
+            1080,
+            1200
+          ]
+        },
+        "headline": {
+          "asleep_s": 25575,
+          "bed_offset_min": 692.5,
+          "nights": 4,
+          "wake_offset_min": 1157.5
+        }
+      },
+      "input": {
+        "anchor_ms": 1789574400000,
+        "nights": [
+          {
+            "asleep_s": 25200,
+            "bedtime_ms": 1789355400000,
+            "in_bed_s": 27600,
+            "wake_day": "2026-09-14",
+            "wake_ms": 1789383000000
+          },
+          {
+            "asleep_s": 26100,
+            "bedtime_ms": 1789440300000,
+            "in_bed_s": 27900,
+            "wake_day": "2026-09-15",
+            "wake_ms": 1789468200000
+          },
+          {
+            "asleep_s": 24000,
+            "bedtime_ms": 1789532400000,
+            "in_bed_s": 26400,
+            "wake_day": "2026-09-16",
+            "wake_ms": 1789558800000
+          },
+          {
+            "asleep_s": 27000,
+            "bedtime_ms": 1789703700000,
+            "in_bed_s": 29700,
+            "wake_day": "2026-09-18",
+            "wake_ms": 1789733400000
+          }
+        ],
+        "range": "M",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "M NY"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1772409600000,
+            "in_bed_s": null,
+            "start_ms": 1772323200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1773014400000,
+            "in_bed_s": null,
+            "start_ms": 1772409600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1773619200000,
+            "in_bed_s": null,
+            "start_ms": 1773014400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1774224000000,
+            "in_bed_s": null,
+            "start_ms": 1773619200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1774828800000,
+            "in_bed_s": null,
+            "start_ms": 1774224000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 24145.5,
+            "bed_offset_min": 610.5,
+            "count": 2,
+            "end_ms": 1775433600000,
+            "in_bed_s": 27145.5,
+            "start_ms": 1774828800000,
+            "wake_offset_min": 1126.5
+          },
+          {
+            "asleep_s": 24727.5,
+            "bed_offset_min": 622.5,
+            "count": 2,
+            "end_ms": 1776038400000,
+            "in_bed_s": 27727.5,
+            "start_ms": 1775433600000,
+            "wake_offset_min": 1132.5
+          },
+          {
+            "asleep_s": 25309.5,
+            "bed_offset_min": 634.5,
+            "count": 2,
+            "end_ms": 1776643200000,
+            "in_bed_s": 28309.5,
+            "start_ms": 1776038400000,
+            "wake_offset_min": 1138.5
+          },
+          {
+            "asleep_s": 26037,
+            "bed_offset_min": 627,
+            "count": 3,
+            "end_ms": 1777248000000,
+            "in_bed_s": 29037,
+            "start_ms": 1776643200000,
+            "wake_offset_min": 1131
+          },
+          {
+            "asleep_s": 26764.5,
+            "bed_offset_min": 619.5,
+            "count": 2,
+            "end_ms": 1777852800000,
+            "in_bed_s": 29764.5,
+            "start_ms": 1777248000000,
+            "wake_offset_min": 1153.5
+          },
+          {
+            "asleep_s": 27346.5,
+            "bed_offset_min": 631.5,
+            "count": 2,
+            "end_ms": 1778457600000,
+            "in_bed_s": 30346.5,
+            "start_ms": 1777852800000,
+            "wake_offset_min": 1129.5
+          },
+          {
+            "asleep_s": 28074,
+            "bed_offset_min": 634,
+            "count": 3,
+            "end_ms": 1779062400000,
+            "in_bed_s": 31074,
+            "start_ms": 1778457600000,
+            "wake_offset_min": 1142
+          },
+          {
+            "asleep_s": 28801.5,
+            "bed_offset_min": 646.5,
+            "count": 2,
+            "end_ms": 1779667200000,
+            "in_bed_s": 31801.5,
+            "start_ms": 1779062400000,
+            "wake_offset_min": 1144.5
+          },
+          {
+            "asleep_s": 24383.5,
+            "bed_offset_min": 628.5,
+            "count": 2,
+            "end_ms": 1780272000000,
+            "in_bed_s": 27383.5,
+            "start_ms": 1779667200000,
+            "wake_offset_min": 1150.5
+          },
+          {
+            "asleep_s": 25111,
+            "bed_offset_min": 621,
+            "count": 3,
+            "end_ms": 1780876800000,
+            "in_bed_s": 28111,
+            "start_ms": 1780272000000,
+            "wake_offset_min": 1113
+          },
+          {
+            "asleep_s": 25838.5,
+            "bed_offset_min": 613.5,
+            "count": 2,
+            "end_ms": 1781481600000,
+            "in_bed_s": 28838.5,
+            "start_ms": 1780876800000,
+            "wake_offset_min": 1135.5
+          },
+          {
+            "asleep_s": 26420.5,
+            "bed_offset_min": 625.5,
+            "count": 2,
+            "end_ms": 1782086400000,
+            "in_bed_s": 29420.5,
+            "start_ms": 1781481600000,
+            "wake_offset_min": 1141.5
+          },
+          {
+            "asleep_s": 27148,
+            "bed_offset_min": 628,
+            "count": 3,
+            "end_ms": 1782691200000,
+            "in_bed_s": 30148,
+            "start_ms": 1782086400000,
+            "wake_offset_min": 1164
+          },
+          {
+            "asleep_s": 27875.5,
+            "bed_offset_min": 640.5,
+            "count": 2,
+            "end_ms": 1783296000000,
+            "in_bed_s": 30875.5,
+            "start_ms": 1782691200000,
+            "wake_offset_min": 1126.5
+          },
+          {
+            "asleep_s": 28457.5,
+            "bed_offset_min": 622.5,
+            "count": 2,
+            "end_ms": 1783900800000,
+            "in_bed_s": 31457.5,
+            "start_ms": 1783296000000,
+            "wake_offset_min": 1132.5
+          },
+          {
+            "asleep_s": 25851.667,
+            "bed_offset_min": 635,
+            "count": 3,
+            "end_ms": 1784505600000,
+            "in_bed_s": 28851.667,
+            "start_ms": 1783900800000,
+            "wake_offset_min": 1135
+          },
+          {
+            "asleep_s": 24912.5,
+            "bed_offset_min": 637.5,
+            "count": 2,
+            "end_ms": 1785110400000,
+            "in_bed_s": 27912.5,
+            "start_ms": 1784505600000,
+            "wake_offset_min": 1147.5
+          },
+          {
+            "asleep_s": 25494.5,
+            "bed_offset_min": 619.5,
+            "count": 2,
+            "end_ms": 1785715200000,
+            "in_bed_s": 28494.5,
+            "start_ms": 1785110400000,
+            "wake_offset_min": 1123.5
+          },
+          {
+            "asleep_s": 26222,
+            "bed_offset_min": 622,
+            "count": 3,
+            "end_ms": 1786320000000,
+            "in_bed_s": 29222,
+            "start_ms": 1785715200000,
+            "wake_offset_min": 1146
+          },
+          {
+            "asleep_s": 26949.5,
+            "bed_offset_min": 634.5,
+            "count": 2,
+            "end_ms": 1786924800000,
+            "in_bed_s": 29949.5,
+            "start_ms": 1786320000000,
+            "wake_offset_min": 1138.5
+          },
+          {
+            "asleep_s": 27531.5,
+            "bed_offset_min": 616.5,
+            "count": 2,
+            "end_ms": 1787529600000,
+            "in_bed_s": 30531.5,
+            "start_ms": 1786924800000,
+            "wake_offset_min": 1144.5
+          },
+          {
+            "asleep_s": 28113.5,
+            "bed_offset_min": 628.5,
+            "count": 2,
+            "end_ms": 1788134400000,
+            "in_bed_s": 31113.5,
+            "start_ms": 1787529600000,
+            "wake_offset_min": 1150.5
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1788220800000,
+            "in_bed_s": null,
+            "start_ms": 1788134400000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1200,
+          "min": 600,
+          "ticks": [
+            600,
+            720,
+            840,
+            960,
+            1080,
+            1200
+          ]
+        },
+        "headline": {
+          "asleep_s": 26429.5,
+          "bed_offset_min": 627.3,
+          "nights": 50,
+          "wake_offset_min": 1138.5
+        }
+      },
+      "input": {
+        "anchor_ms": 1787227200000,
+        "nights": [
+          {
+            "asleep_s": 24000,
+            "bedtime_ms": 1775080800000,
+            "in_bed_s": 27000,
+            "wake_day": "2026-04-02",
+            "wake_ms": 1775109600000
+          },
+          {
+            "asleep_s": 24291,
+            "bedtime_ms": 1775341260000,
+            "in_bed_s": 27291,
+            "wake_day": "2026-04-05",
+            "wake_ms": 1775374380000
+          },
+          {
+            "asleep_s": 24582,
+            "bedtime_ms": 1775601720000,
+            "in_bed_s": 27582,
+            "wake_day": "2026-04-08",
+            "wake_ms": 1775628360000
+          },
+          {
+            "asleep_s": 24873,
+            "bedtime_ms": 1775858580000,
+            "in_bed_s": 27873,
+            "wake_day": "2026-04-11",
+            "wake_ms": 1775893140000
+          },
+          {
+            "asleep_s": 25164,
+            "bedtime_ms": 1776119040000,
+            "in_bed_s": 28164,
+            "wake_day": "2026-04-14",
+            "wake_ms": 1776147120000
+          },
+          {
+            "asleep_s": 25455,
+            "bedtime_ms": 1776379500000,
+            "in_bed_s": 28455,
+            "wake_day": "2026-04-17",
+            "wake_ms": 1776411900000
+          },
+          {
+            "asleep_s": 25746,
+            "bedtime_ms": 1776636360000,
+            "in_bed_s": 28746,
+            "wake_day": "2026-04-20",
+            "wake_ms": 1776665880000
+          },
+          {
+            "asleep_s": 26037,
+            "bedtime_ms": 1776896820000,
+            "in_bed_s": 29037,
+            "wake_day": "2026-04-23",
+            "wake_ms": 1776930660000
+          },
+          {
+            "asleep_s": 26328,
+            "bedtime_ms": 1777157280000,
+            "in_bed_s": 29328,
+            "wake_day": "2026-04-26",
+            "wake_ms": 1777184640000
+          },
+          {
+            "asleep_s": 26619,
+            "bedtime_ms": 1777414140000,
+            "in_bed_s": 29619,
+            "wake_day": "2026-04-29",
+            "wake_ms": 1777449420000
+          },
+          {
+            "asleep_s": 26910,
+            "bedtime_ms": 1777674600000,
+            "in_bed_s": 29910,
+            "wake_day": "2026-05-02",
+            "wake_ms": 1777703400000
+          },
+          {
+            "asleep_s": 27201,
+            "bedtime_ms": 1777935060000,
+            "in_bed_s": 30201,
+            "wake_day": "2026-05-05",
+            "wake_ms": 1777964580000
+          },
+          {
+            "asleep_s": 27492,
+            "bedtime_ms": 1778191920000,
+            "in_bed_s": 30492,
+            "wake_day": "2026-05-08",
+            "wake_ms": 1778222160000
+          },
+          {
+            "asleep_s": 27783,
+            "bedtime_ms": 1778452380000,
+            "in_bed_s": 30783,
+            "wake_day": "2026-05-11",
+            "wake_ms": 1778483340000
+          },
+          {
+            "asleep_s": 28074,
+            "bedtime_ms": 1778712840000,
+            "in_bed_s": 31074,
+            "wake_day": "2026-05-14",
+            "wake_ms": 1778740920000
+          },
+          {
+            "asleep_s": 28365,
+            "bedtime_ms": 1778969700000,
+            "in_bed_s": 31365,
+            "wake_day": "2026-05-17",
+            "wake_ms": 1779002100000
+          },
+          {
+            "asleep_s": 28656,
+            "bedtime_ms": 1779230160000,
+            "in_bed_s": 31656,
+            "wake_day": "2026-05-20",
+            "wake_ms": 1779259680000
+          },
+          {
+            "asleep_s": 28947,
+            "bedtime_ms": 1779490620000,
+            "in_bed_s": 31947,
+            "wake_day": "2026-05-23",
+            "wake_ms": 1779520860000
+          },
+          {
+            "asleep_s": 24238,
+            "bedtime_ms": 1779747480000,
+            "in_bed_s": 27238,
+            "wake_day": "2026-05-26",
+            "wake_ms": 1779778440000
+          },
+          {
+            "asleep_s": 24529,
+            "bedtime_ms": 1780007940000,
+            "in_bed_s": 27529,
+            "wake_day": "2026-05-29",
+            "wake_ms": 1780039620000
+          },
+          {
+            "asleep_s": 24820,
+            "bedtime_ms": 1780264800000,
+            "in_bed_s": 27820,
+            "wake_day": "2026-06-01",
+            "wake_ms": 1780293600000
+          },
+          {
+            "asleep_s": 25111,
+            "bedtime_ms": 1780525260000,
+            "in_bed_s": 28111,
+            "wake_day": "2026-06-04",
+            "wake_ms": 1780558380000
+          },
+          {
+            "asleep_s": 25402,
+            "bedtime_ms": 1780785720000,
+            "in_bed_s": 28402,
+            "wake_day": "2026-06-07",
+            "wake_ms": 1780812360000
+          },
+          {
+            "asleep_s": 25693,
+            "bedtime_ms": 1781042580000,
+            "in_bed_s": 28693,
+            "wake_day": "2026-06-10",
+            "wake_ms": 1781077140000
+          },
+          {
+            "asleep_s": 25984,
+            "bedtime_ms": 1781303040000,
+            "in_bed_s": 28984,
+            "wake_day": "2026-06-13",
+            "wake_ms": 1781331120000
+          },
+          {
+            "asleep_s": 26275,
+            "bedtime_ms": 1781563500000,
+            "in_bed_s": 29275,
+            "wake_day": "2026-06-16",
+            "wake_ms": 1781595900000
+          },
+          {
+            "asleep_s": 26566,
+            "bedtime_ms": 1781820360000,
+            "in_bed_s": 29566,
+            "wake_day": "2026-06-19",
+            "wake_ms": 1781849880000
+          },
+          {
+            "asleep_s": 26857,
+            "bedtime_ms": 1782080820000,
+            "in_bed_s": 29857,
+            "wake_day": "2026-06-22",
+            "wake_ms": 1782114660000
+          },
+          {
+            "asleep_s": 27148,
+            "bedtime_ms": 1782341280000,
+            "in_bed_s": 30148,
+            "wake_day": "2026-06-25",
+            "wake_ms": 1782368640000
+          },
+          {
+            "asleep_s": 27439,
+            "bedtime_ms": 1782598140000,
+            "in_bed_s": 30439,
+            "wake_day": "2026-06-28",
+            "wake_ms": 1782633420000
+          },
+          {
+            "asleep_s": 27730,
+            "bedtime_ms": 1782858600000,
+            "in_bed_s": 30730,
+            "wake_day": "2026-07-01",
+            "wake_ms": 1782887400000
+          },
+          {
+            "asleep_s": 28021,
+            "bedtime_ms": 1783119060000,
+            "in_bed_s": 31021,
+            "wake_day": "2026-07-04",
+            "wake_ms": 1783148580000
+          },
+          {
+            "asleep_s": 28312,
+            "bedtime_ms": 1783375920000,
+            "in_bed_s": 31312,
+            "wake_day": "2026-07-07",
+            "wake_ms": 1783406160000
+          },
+          {
+            "asleep_s": 28603,
+            "bedtime_ms": 1783636380000,
+            "in_bed_s": 31603,
+            "wake_day": "2026-07-10",
+            "wake_ms": 1783667340000
+          },
+          {
+            "asleep_s": 28894,
+            "bedtime_ms": 1783896840000,
+            "in_bed_s": 31894,
+            "wake_day": "2026-07-13",
+            "wake_ms": 1783924920000
+          },
+          {
+            "asleep_s": 24185,
+            "bedtime_ms": 1784153700000,
+            "in_bed_s": 27185,
+            "wake_day": "2026-07-16",
+            "wake_ms": 1784186100000
+          },
+          {
+            "asleep_s": 24476,
+            "bedtime_ms": 1784414160000,
+            "in_bed_s": 27476,
+            "wake_day": "2026-07-19",
+            "wake_ms": 1784443680000
+          },
+          {
+            "asleep_s": 24767,
+            "bedtime_ms": 1784674620000,
+            "in_bed_s": 27767,
+            "wake_day": "2026-07-22",
+            "wake_ms": 1784704860000
+          },
+          {
+            "asleep_s": 25058,
+            "bedtime_ms": 1784931480000,
+            "in_bed_s": 28058,
+            "wake_day": "2026-07-25",
+            "wake_ms": 1784962440000
+          },
+          {
+            "asleep_s": 25349,
+            "bedtime_ms": 1785191940000,
+            "in_bed_s": 28349,
+            "wake_day": "2026-07-28",
+            "wake_ms": 1785223620000
+          },
+          {
+            "asleep_s": 25640,
+            "bedtime_ms": 1785448800000,
+            "in_bed_s": 28640,
+            "wake_day": "2026-07-31",
+            "wake_ms": 1785477600000
+          },
+          {
+            "asleep_s": 25931,
+            "bedtime_ms": 1785709260000,
+            "in_bed_s": 28931,
+            "wake_day": "2026-08-03",
+            "wake_ms": 1785742380000
+          },
+          {
+            "asleep_s": 26222,
+            "bedtime_ms": 1785969720000,
+            "in_bed_s": 29222,
+            "wake_day": "2026-08-06",
+            "wake_ms": 1785996360000
+          },
+          {
+            "asleep_s": 26513,
+            "bedtime_ms": 1786226580000,
+            "in_bed_s": 29513,
+            "wake_day": "2026-08-09",
+            "wake_ms": 1786261140000
+          },
+          {
+            "asleep_s": 26804,
+            "bedtime_ms": 1786487040000,
+            "in_bed_s": 29804,
+            "wake_day": "2026-08-12",
+            "wake_ms": 1786515120000
+          },
+          {
+            "asleep_s": 27095,
+            "bedtime_ms": 1786747500000,
+            "in_bed_s": 30095,
+            "wake_day": "2026-08-15",
+            "wake_ms": 1786779900000
+          },
+          {
+            "asleep_s": 27386,
+            "bedtime_ms": 1787004360000,
+            "in_bed_s": 30386,
+            "wake_day": "2026-08-18",
+            "wake_ms": 1787033880000
+          },
+          {
+            "asleep_s": 27677,
+            "bedtime_ms": 1787264820000,
+            "in_bed_s": 30677,
+            "wake_day": "2026-08-21",
+            "wake_ms": 1787298660000
+          },
+          {
+            "asleep_s": 27968,
+            "bedtime_ms": 1787525280000,
+            "in_bed_s": 30968,
+            "wake_day": "2026-08-24",
+            "wake_ms": 1787552640000
+          },
+          {
+            "asleep_s": 28259,
+            "bedtime_ms": 1787782140000,
+            "in_bed_s": 31259,
+            "wake_day": "2026-08-27",
+            "wake_ms": 1787817420000
+          }
+        ],
+        "range": "6M",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "6M UTC averages not samples"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1769904000000,
+            "in_bed_s": null,
+            "start_ms": 1767225600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1772323200000,
+            "in_bed_s": null,
+            "start_ms": 1769904000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1775001600000,
+            "in_bed_s": null,
+            "start_ms": 1772323200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 25309.5,
+            "bed_offset_min": 622.5,
+            "count": 10,
+            "end_ms": 1777593600000,
+            "in_bed_s": 28309.5,
+            "start_ms": 1775001600000,
+            "wake_offset_min": 1138.5
+          },
+          {
+            "asleep_s": 27219.5,
+            "bed_offset_min": 634.5,
+            "count": 10,
+            "end_ms": 1780272000000,
+            "in_bed_s": 30219.5,
+            "start_ms": 1777593600000,
+            "wake_offset_min": 1138.5
+          },
+          {
+            "asleep_s": 26129.5,
+            "bed_offset_min": 622.5,
+            "count": 10,
+            "end_ms": 1782864000000,
+            "in_bed_s": 29129.5,
+            "start_ms": 1780272000000,
+            "wake_offset_min": 1138.5
+          },
+          {
+            "asleep_s": 26457.727,
+            "bed_offset_min": 631.364,
+            "count": 11,
+            "end_ms": 1785542400000,
+            "in_bed_s": 29457.727,
+            "start_ms": 1782864000000,
+            "wake_offset_min": 1133.182
+          },
+          {
+            "asleep_s": 27095,
+            "bed_offset_min": 625,
+            "count": 9,
+            "end_ms": 1788220800000,
+            "in_bed_s": 30095,
+            "start_ms": 1785542400000,
+            "wake_offset_min": 1145
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1790812800000,
+            "in_bed_s": null,
+            "start_ms": 1788220800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1793491200000,
+            "in_bed_s": null,
+            "start_ms": 1790812800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1796083200000,
+            "in_bed_s": null,
+            "start_ms": 1793491200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1798761600000,
+            "in_bed_s": null,
+            "start_ms": 1796083200000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1200,
+          "min": 600,
+          "ticks": [
+            600,
+            720,
+            840,
+            960,
+            1080,
+            1200
+          ]
+        },
+        "headline": {
+          "asleep_s": 26429.5,
+          "bed_offset_min": 627.3,
+          "nights": 50,
+          "wake_offset_min": 1138.5
+        }
+      },
+      "input": {
+        "anchor_ms": 1787227200000,
+        "nights": [
+          {
+            "asleep_s": 24000,
+            "bedtime_ms": 1775080800000,
+            "in_bed_s": 27000,
+            "wake_day": "2026-04-02",
+            "wake_ms": 1775109600000
+          },
+          {
+            "asleep_s": 24291,
+            "bedtime_ms": 1775341260000,
+            "in_bed_s": 27291,
+            "wake_day": "2026-04-05",
+            "wake_ms": 1775374380000
+          },
+          {
+            "asleep_s": 24582,
+            "bedtime_ms": 1775601720000,
+            "in_bed_s": 27582,
+            "wake_day": "2026-04-08",
+            "wake_ms": 1775628360000
+          },
+          {
+            "asleep_s": 24873,
+            "bedtime_ms": 1775858580000,
+            "in_bed_s": 27873,
+            "wake_day": "2026-04-11",
+            "wake_ms": 1775893140000
+          },
+          {
+            "asleep_s": 25164,
+            "bedtime_ms": 1776119040000,
+            "in_bed_s": 28164,
+            "wake_day": "2026-04-14",
+            "wake_ms": 1776147120000
+          },
+          {
+            "asleep_s": 25455,
+            "bedtime_ms": 1776379500000,
+            "in_bed_s": 28455,
+            "wake_day": "2026-04-17",
+            "wake_ms": 1776411900000
+          },
+          {
+            "asleep_s": 25746,
+            "bedtime_ms": 1776636360000,
+            "in_bed_s": 28746,
+            "wake_day": "2026-04-20",
+            "wake_ms": 1776665880000
+          },
+          {
+            "asleep_s": 26037,
+            "bedtime_ms": 1776896820000,
+            "in_bed_s": 29037,
+            "wake_day": "2026-04-23",
+            "wake_ms": 1776930660000
+          },
+          {
+            "asleep_s": 26328,
+            "bedtime_ms": 1777157280000,
+            "in_bed_s": 29328,
+            "wake_day": "2026-04-26",
+            "wake_ms": 1777184640000
+          },
+          {
+            "asleep_s": 26619,
+            "bedtime_ms": 1777414140000,
+            "in_bed_s": 29619,
+            "wake_day": "2026-04-29",
+            "wake_ms": 1777449420000
+          },
+          {
+            "asleep_s": 26910,
+            "bedtime_ms": 1777674600000,
+            "in_bed_s": 29910,
+            "wake_day": "2026-05-02",
+            "wake_ms": 1777703400000
+          },
+          {
+            "asleep_s": 27201,
+            "bedtime_ms": 1777935060000,
+            "in_bed_s": 30201,
+            "wake_day": "2026-05-05",
+            "wake_ms": 1777964580000
+          },
+          {
+            "asleep_s": 27492,
+            "bedtime_ms": 1778191920000,
+            "in_bed_s": 30492,
+            "wake_day": "2026-05-08",
+            "wake_ms": 1778222160000
+          },
+          {
+            "asleep_s": 27783,
+            "bedtime_ms": 1778452380000,
+            "in_bed_s": 30783,
+            "wake_day": "2026-05-11",
+            "wake_ms": 1778483340000
+          },
+          {
+            "asleep_s": 28074,
+            "bedtime_ms": 1778712840000,
+            "in_bed_s": 31074,
+            "wake_day": "2026-05-14",
+            "wake_ms": 1778740920000
+          },
+          {
+            "asleep_s": 28365,
+            "bedtime_ms": 1778969700000,
+            "in_bed_s": 31365,
+            "wake_day": "2026-05-17",
+            "wake_ms": 1779002100000
+          },
+          {
+            "asleep_s": 28656,
+            "bedtime_ms": 1779230160000,
+            "in_bed_s": 31656,
+            "wake_day": "2026-05-20",
+            "wake_ms": 1779259680000
+          },
+          {
+            "asleep_s": 28947,
+            "bedtime_ms": 1779490620000,
+            "in_bed_s": 31947,
+            "wake_day": "2026-05-23",
+            "wake_ms": 1779520860000
+          },
+          {
+            "asleep_s": 24238,
+            "bedtime_ms": 1779747480000,
+            "in_bed_s": 27238,
+            "wake_day": "2026-05-26",
+            "wake_ms": 1779778440000
+          },
+          {
+            "asleep_s": 24529,
+            "bedtime_ms": 1780007940000,
+            "in_bed_s": 27529,
+            "wake_day": "2026-05-29",
+            "wake_ms": 1780039620000
+          },
+          {
+            "asleep_s": 24820,
+            "bedtime_ms": 1780264800000,
+            "in_bed_s": 27820,
+            "wake_day": "2026-06-01",
+            "wake_ms": 1780293600000
+          },
+          {
+            "asleep_s": 25111,
+            "bedtime_ms": 1780525260000,
+            "in_bed_s": 28111,
+            "wake_day": "2026-06-04",
+            "wake_ms": 1780558380000
+          },
+          {
+            "asleep_s": 25402,
+            "bedtime_ms": 1780785720000,
+            "in_bed_s": 28402,
+            "wake_day": "2026-06-07",
+            "wake_ms": 1780812360000
+          },
+          {
+            "asleep_s": 25693,
+            "bedtime_ms": 1781042580000,
+            "in_bed_s": 28693,
+            "wake_day": "2026-06-10",
+            "wake_ms": 1781077140000
+          },
+          {
+            "asleep_s": 25984,
+            "bedtime_ms": 1781303040000,
+            "in_bed_s": 28984,
+            "wake_day": "2026-06-13",
+            "wake_ms": 1781331120000
+          },
+          {
+            "asleep_s": 26275,
+            "bedtime_ms": 1781563500000,
+            "in_bed_s": 29275,
+            "wake_day": "2026-06-16",
+            "wake_ms": 1781595900000
+          },
+          {
+            "asleep_s": 26566,
+            "bedtime_ms": 1781820360000,
+            "in_bed_s": 29566,
+            "wake_day": "2026-06-19",
+            "wake_ms": 1781849880000
+          },
+          {
+            "asleep_s": 26857,
+            "bedtime_ms": 1782080820000,
+            "in_bed_s": 29857,
+            "wake_day": "2026-06-22",
+            "wake_ms": 1782114660000
+          },
+          {
+            "asleep_s": 27148,
+            "bedtime_ms": 1782341280000,
+            "in_bed_s": 30148,
+            "wake_day": "2026-06-25",
+            "wake_ms": 1782368640000
+          },
+          {
+            "asleep_s": 27439,
+            "bedtime_ms": 1782598140000,
+            "in_bed_s": 30439,
+            "wake_day": "2026-06-28",
+            "wake_ms": 1782633420000
+          },
+          {
+            "asleep_s": 27730,
+            "bedtime_ms": 1782858600000,
+            "in_bed_s": 30730,
+            "wake_day": "2026-07-01",
+            "wake_ms": 1782887400000
+          },
+          {
+            "asleep_s": 28021,
+            "bedtime_ms": 1783119060000,
+            "in_bed_s": 31021,
+            "wake_day": "2026-07-04",
+            "wake_ms": 1783148580000
+          },
+          {
+            "asleep_s": 28312,
+            "bedtime_ms": 1783375920000,
+            "in_bed_s": 31312,
+            "wake_day": "2026-07-07",
+            "wake_ms": 1783406160000
+          },
+          {
+            "asleep_s": 28603,
+            "bedtime_ms": 1783636380000,
+            "in_bed_s": 31603,
+            "wake_day": "2026-07-10",
+            "wake_ms": 1783667340000
+          },
+          {
+            "asleep_s": 28894,
+            "bedtime_ms": 1783896840000,
+            "in_bed_s": 31894,
+            "wake_day": "2026-07-13",
+            "wake_ms": 1783924920000
+          },
+          {
+            "asleep_s": 24185,
+            "bedtime_ms": 1784153700000,
+            "in_bed_s": 27185,
+            "wake_day": "2026-07-16",
+            "wake_ms": 1784186100000
+          },
+          {
+            "asleep_s": 24476,
+            "bedtime_ms": 1784414160000,
+            "in_bed_s": 27476,
+            "wake_day": "2026-07-19",
+            "wake_ms": 1784443680000
+          },
+          {
+            "asleep_s": 24767,
+            "bedtime_ms": 1784674620000,
+            "in_bed_s": 27767,
+            "wake_day": "2026-07-22",
+            "wake_ms": 1784704860000
+          },
+          {
+            "asleep_s": 25058,
+            "bedtime_ms": 1784931480000,
+            "in_bed_s": 28058,
+            "wake_day": "2026-07-25",
+            "wake_ms": 1784962440000
+          },
+          {
+            "asleep_s": 25349,
+            "bedtime_ms": 1785191940000,
+            "in_bed_s": 28349,
+            "wake_day": "2026-07-28",
+            "wake_ms": 1785223620000
+          },
+          {
+            "asleep_s": 25640,
+            "bedtime_ms": 1785448800000,
+            "in_bed_s": 28640,
+            "wake_day": "2026-07-31",
+            "wake_ms": 1785477600000
+          },
+          {
+            "asleep_s": 25931,
+            "bedtime_ms": 1785709260000,
+            "in_bed_s": 28931,
+            "wake_day": "2026-08-03",
+            "wake_ms": 1785742380000
+          },
+          {
+            "asleep_s": 26222,
+            "bedtime_ms": 1785969720000,
+            "in_bed_s": 29222,
+            "wake_day": "2026-08-06",
+            "wake_ms": 1785996360000
+          },
+          {
+            "asleep_s": 26513,
+            "bedtime_ms": 1786226580000,
+            "in_bed_s": 29513,
+            "wake_day": "2026-08-09",
+            "wake_ms": 1786261140000
+          },
+          {
+            "asleep_s": 26804,
+            "bedtime_ms": 1786487040000,
+            "in_bed_s": 29804,
+            "wake_day": "2026-08-12",
+            "wake_ms": 1786515120000
+          },
+          {
+            "asleep_s": 27095,
+            "bedtime_ms": 1786747500000,
+            "in_bed_s": 30095,
+            "wake_day": "2026-08-15",
+            "wake_ms": 1786779900000
+          },
+          {
+            "asleep_s": 27386,
+            "bedtime_ms": 1787004360000,
+            "in_bed_s": 30386,
+            "wake_day": "2026-08-18",
+            "wake_ms": 1787033880000
+          },
+          {
+            "asleep_s": 27677,
+            "bedtime_ms": 1787264820000,
+            "in_bed_s": 30677,
+            "wake_day": "2026-08-21",
+            "wake_ms": 1787298660000
+          },
+          {
+            "asleep_s": 27968,
+            "bedtime_ms": 1787525280000,
+            "in_bed_s": 30968,
+            "wake_day": "2026-08-24",
+            "wake_ms": 1787552640000
+          },
+          {
+            "asleep_s": 28259,
+            "bedtime_ms": 1787782140000,
+            "in_bed_s": 31259,
+            "wake_day": "2026-08-27",
+            "wake_ms": 1787817420000
+          }
+        ],
+        "range": "Y",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "Y UTC monthly means"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789430400000,
+            "in_bed_s": null,
+            "start_ms": 1789344000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789516800000,
+            "in_bed_s": null,
+            "start_ms": 1789430400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789603200000,
+            "in_bed_s": null,
+            "start_ms": 1789516800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789689600000,
+            "in_bed_s": null,
+            "start_ms": 1789603200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789776000000,
+            "in_bed_s": null,
+            "start_ms": 1789689600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789862400000,
+            "in_bed_s": null,
+            "start_ms": 1789776000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789948800000,
+            "in_bed_s": null,
+            "start_ms": 1789862400000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": null,
+        "headline": {
+          "asleep_s": null,
+          "bed_offset_min": null,
+          "nights": 0,
+          "wake_offset_min": null
+        }
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "nights": [],
+        "range": "W",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "W empty"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789430400000,
+            "in_bed_s": null,
+            "start_ms": 1789344000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789516800000,
+            "in_bed_s": null,
+            "start_ms": 1789430400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 4500,
+            "bed_offset_min": 790,
+            "count": 1,
+            "end_ms": 1789603200000,
+            "in_bed_s": 4800,
+            "start_ms": 1789516800000,
+            "wake_offset_min": 870
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789689600000,
+            "in_bed_s": null,
+            "start_ms": 1789603200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789776000000,
+            "in_bed_s": null,
+            "start_ms": 1789689600000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789862400000,
+            "in_bed_s": null,
+            "start_ms": 1789776000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789948800000,
+            "in_bed_s": null,
+            "start_ms": 1789862400000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1020,
+          "min": 780,
+          "ticks": [
+            780,
+            900,
+            1020
+          ]
+        },
+        "headline": {
+          "asleep_s": 4500,
+          "bed_offset_min": 790,
+          "nights": 1,
+          "wake_offset_min": 870
+        }
+      },
+      "input": {
+        "anchor_ms": 1789560000000,
+        "nights": [
+          {
+            "asleep_s": 4500,
+            "bedtime_ms": 1789521000000,
+            "in_bed_s": 4800,
+            "wake_day": "2026-09-16",
+            "wake_ms": 1789525800000
+          }
+        ],
+        "range": "W",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "W narrow span grows to 4 h"
+    },
+    {
+      "expected": {
+        "buckets": [
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789410600000,
+            "in_bed_s": null,
+            "start_ms": 1789324200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": 25000,
+            "bed_offset_min": 660,
+            "count": 1,
+            "end_ms": 1789497000000,
+            "in_bed_s": 28800,
+            "start_ms": 1789410600000,
+            "wake_offset_min": 1140
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789583400000,
+            "in_bed_s": null,
+            "start_ms": 1789497000000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789669800000,
+            "in_bed_s": null,
+            "start_ms": 1789583400000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789756200000,
+            "in_bed_s": null,
+            "start_ms": 1789669800000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789842600000,
+            "in_bed_s": null,
+            "start_ms": 1789756200000,
+            "wake_offset_min": null
+          },
+          {
+            "asleep_s": null,
+            "bed_offset_min": null,
+            "count": 0,
+            "end_ms": 1789929000000,
+            "in_bed_s": null,
+            "start_ms": 1789842600000,
+            "wake_offset_min": null
+          }
+        ],
+        "domain": {
+          "max": 1140,
+          "min": 660,
+          "ticks": [
+            660,
+            780,
+            900,
+            1020,
+            1140
+          ]
+        },
+        "headline": {
+          "asleep_s": 25000,
+          "bed_offset_min": 660,
+          "nights": 1,
+          "wake_offset_min": 1140
+        }
+      },
+      "input": {
+        "anchor_ms": 1789540200000,
+        "nights": [
+          {
+            "asleep_s": 1,
+            "bedtime_ms": 0,
+            "in_bed_s": 1,
+            "wake_day": "nope",
+            "wake_ms": 1
+          },
+          {
+            "asleep_s": 25000,
+            "bedtime_ms": 1789407000000,
+            "in_bed_s": 28800,
+            "wake_day": "2026-09-15",
+            "wake_ms": 1789435800000
+          }
+        ],
+        "range": "W",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "W bad wake day skipped"
+    }
+  ],
+  "format": "ayuvo-metrics-vectors",
+  "function": "sleep_range_series",
+  "version": 1
+}

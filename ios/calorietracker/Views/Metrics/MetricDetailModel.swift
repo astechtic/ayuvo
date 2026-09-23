@@ -53,6 +53,35 @@ final class MetricDetailModel {
         anchor = range.stepped(anchor, direction: direction, calendar: calendar)
     }
 
+    /// Shared `drill_target`: a W / M day with data opens D for that day when the metric offers D.
+    func drillTarget(for point: HealthChartPoint, ranges: [HealthDetailRange], calendar: Calendar) -> MetricsReference.DrillTarget? {
+        MetricsReference.drillTarget(
+            range: range, bucketStartMs: Int64((point.start.timeIntervalSince1970 * 1000).rounded()),
+            hasData: point.value != nil, metricRanges: ranges, zone: MetricsReference.Zone(calendar: calendar)
+        )
+    }
+
+    /// A tap on a chart bucket: drill into its day when possible, otherwise toggle the selection.
+    func tap(_ point: HealthChartPoint, ranges: [HealthDetailRange], calendar: Calendar) {
+        if let target = drillTarget(for: point, ranges: ranges, calendar: calendar) {
+            drill(to: target)
+        } else {
+            selected = selected == point ? nil : point
+        }
+    }
+
+    func drill(to target: MetricsReference.DrillTarget) {
+        selected = nil
+        anchor = Date(timeIntervalSince1970: Double(target.anchorMs) / 1000)
+        range = target.range
+    }
+
+    /// After a range change the anchor is kept (W after a drill shows that day's week), never past now.
+    func rangeChanged(now: Date = Date()) {
+        selected = nil
+        if anchor > now { anchor = now }
+    }
+
     func rangeTitle(calendar: Calendar) -> String {
         let interval = range.interval(containing: anchor, calendar: calendar)
         let start = interval.start

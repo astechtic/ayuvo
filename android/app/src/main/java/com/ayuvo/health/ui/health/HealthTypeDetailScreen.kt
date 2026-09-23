@@ -57,8 +57,14 @@ import com.ayuvo.health.ui.charts.HealthBucketChart
 import com.ayuvo.health.ui.charts.HealthChartStyle
 import com.ayuvo.health.ui.charts.IosStyleSegmentedControl
 import com.ayuvo.health.ui.charts.PeriodBandChart
-import com.ayuvo.health.ui.charts.SleepStackedBars
-import com.ayuvo.health.ui.charts.SleepStageStrip
+import com.ayuvo.health.ui.charts.ChartClock
+import com.ayuvo.health.ui.charts.SleepDayHeader
+import com.ayuvo.health.ui.charts.SleepHypnogram
+import com.ayuvo.health.ui.charts.SleepRangeBars
+import com.ayuvo.health.ui.charts.SleepStageList
+import com.ayuvo.health.ui.charts.chartValueOf
+import com.ayuvo.health.models.HealthAggregation
+import com.ayuvo.health.ui.metrics.MetricNavigation
 import com.ayuvo.health.ui.charts.StatBadgeRow
 import com.ayuvo.health.ui.charts.spreadLabels
 import com.ayuvo.health.ui.components.GlassDialog
@@ -127,19 +133,30 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
     }
 
     val windowLabel = MetricChartSupport.windowLabel(ui.range, ui.window)
+    val is24 = android.text.format.DateFormat.is24HourFormat(context)
+    // Selection is cleared by a new range, anchor or data set (docs/charts.md "Selection").
+    var selected by remember(ui.range, ui.anchor, ui.points, ui.sleepRange) { mutableStateOf<Int?>(null) }
+    val selectedHeadline = selected?.let { selectedHeadline(ui, it, zone, is24) }
     MetricDetailScaffold(
         title = name,
         onBack = onBack,
         ranges = HealthChartRange.entries,
         range = ui.range,
         onRange = vm::setRange,
-        headline = ui.headline?.let { (res, value) -> MetricHeadlineUi(stringResource(res), value, "", windowLabel) },
+        headline = selectedHeadline ?: ui.headline?.let { (res, value) -> MetricHeadlineUi(stringResource(res), value, "", ui.headlineRange ?: windowLabel) },
+        // Sleep D uses Apple's TIME IN BED / TIME ASLEEP header, unless a stage is selected.
+        headlineContent = ui.sleepWindow?.takeIf { ui.range == HealthChartRange.DAY && selectedHeadline == null }?.let { w ->
+            // The card's ‹ date › row already names the night, so the header stays date-free.
+            { SleepDayHeader(w, "") }
+        },
         windowLabel = windowLabel,
         canGoForward = ui.canGoForward,
         onShift = vm::shiftAnchor,
         stats = ui.highlights.map { (res, value) -> stringResource(res) to value },
         showEmpty = !ui.loading && !ui.hasChartData,
-        chart = { DetailChart(ui, tint, name, zone) },
+        chart = {
+            DetailChart(ui, tint, name, zone, is24, selected, { selected = it }) { day -> vm.drillTo(day) }
+        },
         chartFooter = ui.historyLimitedBeforeMs?.let { floor ->
             {
                 Text(
@@ -243,56 +260,112 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
     }
 }
 
+/** Headline for the selected bucket: its value and date (Apple Health behaviour). */
 @Composable
-private fun DetailChart(ui: HealthDetailUiState, tint: Color, name: String, zone: ZoneId) {
+private fun selectedHeadline(ui: HealthDetailUiState, index: Int, zone: ZoneId, is24: Boolean): MetricHeadlineUi? {
+    if (ui.chartKind == HealthChartKind.SLEEP) {
+        val b = ui.sleepRange?.buckets?.getOrNull(index) ?: return null
+        if (b.count == 0 || b.bedOffsetMin == null || b.wakeOffsetMin == null) return null
+        val daily = ui.range == HealthChartRange.WEEK || ui.range == HealthChartRange.MONTH
+        val date = MetricChartSupport.tooltip(ui.range, b.startMs, b.endMs, zone, is24)
+        val span = stringResource(R.string.sleep_time_span, ChartClock.offset(b.bedOffsetMin, is24), ChartClock.offset(b.wakeOffsetMin, is24))
+        return MetricHeadlineUi(
+            stringResource(if (daily) R.string.sleep_time_asleep else R.string.sleep_avg_time_asleep),
+            b.asleepS?.takeIf { it > 0 }?.let { HealthValueFormatter.duration(it) },
+            "",
+            stringResource(R.string.chart_selected_on, date, span)
+        )
+    }
+    val p = ui.points.getOrNull(index) ?: return null
+    val style = chartStyle(ui) ?: return null
+    val fmt: (Double) -> String = { v -> HealthValueFormatter.format(ui.typeId, v, ui.unitPrefs, unitOverride = ui.descriptor.unit.takeIf { ui.type == null }).text }
+    val summed = ui.descriptor.aggregation == HealthAggregation.SUM || ui.descriptor.isDurationLike
+    val value = when (style) {
+        HealthChartStyle.RANGE -> if (p.min != null && p.max != null) {
+            if (ui.chartKind == HealthChartKind.BLOOD_PRESSURE && p.v2Min != null && p.v2Max != null) {
+                "${p.min.toInt()}–${p.max.toInt()} / ${p.v2Min.toInt()}–${p.v2Max.toInt()}"
+            } else "${HealthValueFormatter.format(ui.typeId, p.min, ui.unitPrefs).number}–${fmt(p.max)}"
+        } else null
+        else -> chartValueOf(style, barValueSelector(ui))(p)?.let(fmt)
+    }
+    val label = when {
+        style == HealthChartStyle.RANGE -> R.string.health_detail_range
+        summed && !ui.range.plotsDailyAverage -> R.string.health_detail_total
+        ui.descriptor.aggregation == HealthAggregation.COUNT || ui.descriptor.kind == com.ayuvo.health.models.HealthKind.CATEGORY -> R.string.health_detail_records
+        else -> R.string.health_detail_average
+    }
+    val shown = if (label == R.string.health_detail_records) "${p.count}" else value
+    return MetricHeadlineUi(stringResource(label), shown, "", MetricChartSupport.tooltip(ui.range, p.bucketStartMs, p.bucketEndMs, zone, is24))
+}
+
+private fun chartStyle(ui: HealthDetailUiState): HealthChartStyle? = when (ui.chartKind) {
+    HealthChartKind.BAR -> HealthChartStyle.BAR
+    HealthChartKind.LINE -> HealthChartStyle.LINE
+    HealthChartKind.RANGE, HealthChartKind.BLOOD_PRESSURE -> HealthChartStyle.RANGE
+    else -> null
+}
+
+/** 6M/Y bars of summed types plot the daily average. */
+private fun barValueSelector(ui: HealthDetailUiState): ((com.ayuvo.health.data.health.HealthChartPoint) -> Double?)? =
+    if (ui.chartKind == HealthChartKind.BAR && ui.range.plotsDailyAverage && (ui.descriptor.aggregation == HealthAggregation.SUM || ui.descriptor.isDurationLike)) { p -> p.avg } else null
+
+@Composable
+private fun DetailChart(
+    ui: HealthDetailUiState,
+    tint: Color,
+    name: String,
+    zone: ZoneId,
+    is24: Boolean,
+    selected: Int?,
+    onSelect: (Int?) -> Unit,
+    onDrill: (LocalDate) -> Unit
+) {
     val window = ui.window
     val days = remember(window) { generateSequence(window.start) { it.plusDays(1) }.takeWhile { !it.isAfter(window.endInclusive) }.toList() }
     val monthDay = remember { DateTimeFormatter.ofPattern("MMM d", Locale.getDefault()) }
-    val month = remember { DateTimeFormatter.ofPattern("MMM", Locale.getDefault()) }
-    val xLabels = when (ui.range) {
-        HealthChartRange.DAY -> listOf("0", "6", "12", "18", "24")
-        HealthChartRange.WEEK -> days.map { it.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault()) }
-        HealthChartRange.MONTH -> spreadLabels(days.map { monthDay.format(it) }, 5)
-        HealthChartRange.SIX_MONTHS -> spreadLabels(ui.points.map { monthDay.format(Instant.ofEpochMilli(it.bucketStartMs).atZone(zone)) }, 6)
-        HealthChartRange.YEAR -> ui.points.map { Instant.ofEpochMilli(it.bucketStartMs).atZone(zone).month.getDisplayName(java.time.format.TextStyle.NARROW, Locale.getDefault()) }
-    }
+    val xLabels = remember(ui.range, ui.anchor, ui.weekStart, is24) { MetricChartSupport.xLabels(ui.range, ui.anchor, ui.weekStart, zone, is24) }
     val fmt: (Double) -> String = { v -> HealthValueFormatter.format(ui.typeId, v, ui.unitPrefs, unitOverride = ui.descriptor.unit.takeIf { ui.type == null }).number }
-    val tooltip: (Int) -> String = { i ->
-        val p = ui.points[i]
-        val at = Instant.ofEpochMilli(p.bucketStartMs).atZone(zone)
-        when (ui.range) {
-            HealthChartRange.DAY -> String.format(Locale.getDefault(), "%02d:00", at.hour)
-            HealthChartRange.YEAR -> month.format(at)
-            else -> monthDay.format(at)
-        }
-    }
     val summary = stringResource(R.string.health_detail_chart_summary, name, ui.points.count { !it.isEmpty }, ui.highlights.joinToString(", ") { it.second })
+    val ranges = HealthChartRange.entries
+    val drill: (Int) -> Boolean = { i ->
+        val p = ui.points.getOrNull(i)
+        val day = p?.let { MetricNavigation.drillDay(ui.range, it.bucketStartMs, !it.isEmpty, ranges, zone) }
+        if (day != null) onDrill(day)
+        day != null
+    }
     when (ui.chartKind) {
         HealthChartKind.SLEEP -> {
-            if (ui.range == HealthChartRange.DAY) {
-                val night = ui.sleepNights.firstOrNull()
-                if (night != null) {
-                    // Stage segments are resolved by the view model from the night's source rows.
-                    SleepStageStrip(night, ui.sleepStages)
-                    Text(
-                        "${stringResource(R.string.health_sleep_bedtime)} ${DateTimeFormatter.ofPattern("HH:mm").format(Instant.ofEpochMilli(night.startMs).atZone(zone))} · ${stringResource(R.string.health_sleep_wake)} ${DateTimeFormatter.ofPattern("HH:mm").format(Instant.ofEpochMilli(night.endMs).atZone(zone))}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
-                }
-            } else {
-                val nightDays = if (ui.range == HealthChartRange.WEEK || ui.range == HealthChartRange.MONTH) days else days.filterIndexed { i, _ -> i % (days.size / 30).coerceAtLeast(1) == 0 }
-                SleepStackedBars(nightDays, ui.sleepNights.associateBy { it.nightOf }, spreadLabels(nightDays.map { monthDay.format(it) }, 5))
+            val w = ui.sleepWindow
+            val series = ui.sleepRange
+            if (ui.range == HealthChartRange.DAY && w != null) {
+                SleepHypnogram(w, ui.sleepRows, zone, is24)
+                SleepStageList(w, Modifier.padding(top = 8.dp))
+            } else if (series != null) {
+                SleepRangeBars(
+                    series = series,
+                    nightRows = ui.sleepNightRows,
+                    xLabels = xLabels,
+                    zone = zone,
+                    is24 = is24,
+                    selected = selected,
+                    onSelect = onSelect,
+                    onBucketTap = { i ->
+                        val b = series.buckets[i]
+                        val day = MetricNavigation.drillDay(ui.range, b.startMs, b.count > 0, ranges, zone)
+                        if (day != null) onDrill(day)
+                        day != null
+                    }
+                )
             }
         }
         HealthChartKind.PERIOD_BAND -> PeriodBandChart(days, ui.periodDays, tint, spreadLabels(days.map { monthDay.format(it) }, 5))
         HealthChartKind.BAR -> HealthBucketChart(
-            ui.points, HealthChartStyle.BAR, tint, xLabels, fmt, tooltip, summary = summary,
-            valueSelector = if (ui.range.plotsDailyAverage && (ui.descriptor.aggregation == com.ayuvo.health.models.HealthAggregation.SUM || ui.descriptor.isDurationLike)) { p -> p.avg } else null
+            ui.points, HealthChartStyle.BAR, tint, xLabels, fmt, selected, onSelect, summary = summary,
+            valueSelector = barValueSelector(ui), onBucketTap = drill
         )
-        HealthChartKind.LINE -> HealthBucketChart(ui.points, HealthChartStyle.LINE, tint, xLabels, fmt, tooltip, summary = summary)
-        HealthChartKind.RANGE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, tooltip, summary = summary)
-        HealthChartKind.BLOOD_PRESSURE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, tooltip, secondaryColor = Color(0xFF0A84FF), summary = summary)
+        HealthChartKind.LINE -> HealthBucketChart(ui.points, HealthChartStyle.LINE, tint, xLabels, fmt, selected, onSelect, summary = summary, onBucketTap = drill)
+        HealthChartKind.RANGE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, selected, onSelect, summary = summary, onBucketTap = drill)
+        HealthChartKind.BLOOD_PRESSURE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, selected, onSelect, secondaryColor = Color(0xFF0A84FF), summary = summary, onBucketTap = drill)
         HealthChartKind.NONE -> Unit
     }
 }

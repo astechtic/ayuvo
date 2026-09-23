@@ -7,6 +7,8 @@ import com.ayuvo.health.data.metrics.MetricEntry
 import com.ayuvo.health.data.metrics.MetricRange
 import com.ayuvo.health.data.metrics.MetricsReference
 import com.ayuvo.health.data.metrics.RegistryFacts
+import com.ayuvo.health.data.metrics.SleepNightSpan
+import com.ayuvo.health.data.metrics.SleepRow
 import com.ayuvo.health.data.metrics.WeekStart
 import com.ayuvo.health.data.metrics.WorkoutSpan
 import com.ayuvo.health.medications.logic.MedicationJson
@@ -24,6 +26,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import java.io.File
+import java.time.LocalDate
 import java.time.ZoneId
 
 /** Locates shared metrics contract files from the Gradle unit-test working directory (android/app). */
@@ -151,6 +154,60 @@ object MetricsVectors {
                     "aggregation" to r.aggregation, "chart_kind" to r.chartKind, "unit" to r.unit, "goal_source" to r.goalSource,
                     "default_favourite_order" to r.defaultFavouriteOrder, "browse_hidden" to r.browseHidden,
                     "icon_android" to r.iconAndroid, "icon_ios" to r.iconIos
+                )
+            }
+            "nice_ticks" -> {
+                val t = MetricsReference.niceTicks(input.double("min")!!, input.double("max")!!, input.int("count")!!, (input["include_zero"] as JsonPrimitive).content == "true")
+                obj("min" to t.min, "max" to t.max, "step" to t.step, "ticks" to t.ticks)
+            }
+            "x_ticks" -> obj("indices" to MetricsReference.xTicks(range(), input.long("anchor_ms")!!, zone(), week()))
+            "drill_target" -> {
+                val t = MetricsReference.drillTarget(
+                    range(), input.long("bucket_start_ms")!!, (input["has_data"] as JsonPrimitive).content == "true",
+                    strings(input["metric_ranges"]).map { MetricRange.fromRaw(it) }, zone()
+                )
+                obj("target" to t?.let { obj("range" to it.range.raw, "anchor_date" to it.anchorDate.toString(), "anchor_ms" to it.anchorMs) })
+            }
+            "sleep_night_window" -> {
+                val rows = (input["rows"] as JsonArray).map {
+                    val o = it as JsonObject
+                    SleepRow(o.long("start_ms")!!, o.long("end_ms")!!, o.int("stage")!!)
+                }
+                val w = MetricsReference.sleepNightWindow(rows, zone())
+                obj("window" to w?.let {
+                    obj(
+                        "bedtime_ms" to it.bedtimeMs, "wake_ms" to it.wakeMs, "domain_start_ms" to it.domainStartMs,
+                        "domain_end_ms" to it.domainEndMs, "tick_step_ms" to it.tickStepMs, "ticks" to it.ticks,
+                        "asleep_s" to it.asleepS, "in_bed_s" to it.inBedS,
+                        "stages" to obj(
+                            "unspecified" to it.stages.unspecifiedS, "awake" to it.stages.awakeS, "core" to it.stages.coreS,
+                            "deep" to it.stages.deepS, "rem" to it.stages.remS
+                        ),
+                        "pct" to obj("unspecified" to it.pct.unspecified, "core" to it.pct.core, "deep" to it.pct.deep, "rem" to it.pct.rem)
+                    )
+                })
+            }
+            "sleep_clock_offset" -> obj(
+                "offset_min" to MetricsReference.sleepClockOffset(input.long("t_ms")!!, LocalDate.parse(input.str("wake_day")!!), zone())
+            )
+            "sleep_range_series" -> {
+                val nights = (input["nights"] as JsonArray).map {
+                    val o = it as JsonObject
+                    SleepNightSpan(o.str("wake_day")!!, o.long("bedtime_ms")!!, o.long("wake_ms")!!, o.double("asleep_s")!!, o.double("in_bed_s")!!)
+                }
+                val r = MetricsReference.sleepRangeSeries(nights, range(), input.long("anchor_ms")!!, zone(), week())
+                obj(
+                    "buckets" to r.buckets.map {
+                        obj(
+                            "start_ms" to it.startMs, "end_ms" to it.endMs, "count" to it.count, "bed_offset_min" to it.bedOffsetMin,
+                            "wake_offset_min" to it.wakeOffsetMin, "asleep_s" to it.asleepS, "in_bed_s" to it.inBedS
+                        )
+                    },
+                    "domain" to r.domain?.let { obj("min" to it.min, "max" to it.max, "ticks" to it.ticks) },
+                    "headline" to obj(
+                        "nights" to r.headline.nights, "asleep_s" to r.headline.asleepS,
+                        "bed_offset_min" to r.headline.bedOffsetMin, "wake_offset_min" to r.headline.wakeOffsetMin
+                    )
                 )
             }
             else -> error("unknown function $function")

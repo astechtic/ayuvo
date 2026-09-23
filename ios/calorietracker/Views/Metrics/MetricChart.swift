@@ -11,87 +11,52 @@ extension HealthDetailRange {
         case .year: return .month
         }
     }
-
-    var axisStride: (component: Calendar.Component, count: Int) {
-        switch self {
-        case .day: return (.hour, 6)
-        case .week: return (.day, 1)
-        case .month: return (.day, 7)
-        case .sixMonths, .year: return (.month, 1)
-        }
-    }
-
-    var axisFormat: Date.FormatStyle {
-        switch self {
-        case .day: return .dateTime.hour()
-        case .week: return .dateTime.weekday(.narrow)
-        case .month: return .dateTime.day()
-        case .sixMonths, .year: return .dateTime.month(.narrow)
-        }
-    }
 }
 
-/// Swift Charts rendering of an app metric: flat bars (summed) or a line with points (latest),
-/// a dashed goal rule and a scrub marker in the theme accent.
+/// Swift Charts rendering of an app metric (docs/charts.md): top-rounded bars (summed) or a
+/// monotone line with a soft area (latest), a dashed goal rule, nice y ticks and a persistent
+/// selection that the detail headline mirrors.
 struct MetricChart: View {
     let metric: AppMetric
     let chartKind: MetricChartKind
     let tint: Color
     let series: HealthChartSeries
     @Binding var selected: HealthChartPoint?
-    /// Goal in canonical units.
+    /// Goal in canonical units (hidden on D: a daily goal against hourly bars says nothing).
     let goal: Double?
+    var calendar: Calendar = .current
+    /// Tap on a bucket (drill-down or select); nil → the tap toggles the selection.
+    var onTap: ((HealthChartPoint) -> Void)?
 
     private var plotted: [HealthChartPoint] { series.points.filter { $0.value != nil } }
     private var unit: String { AppMetricFormat.chartUnit(metric) }
+    private var shownGoal: Double? { series.range == .day ? nil : y(goal) }
 
     private func y(_ value: Double?) -> Double? { AppMetricFormat.chartValue(value, metric: metric) }
 
-    private var yDomain: ClosedRange<Double>? {
-        guard chartKind == .line else { return nil }
+    private var ticks: MetricsReference.NiceTicks {
         var values = plotted.compactMap { y($0.value) }
-        values += plotted.compactMap { y($0.min) } + plotted.compactMap { y($0.max) }
-        if let goal = y(goal) { values.append(goal) }
-        guard let low = values.min(), let high = values.max() else { return nil }
-        let pad = max((high - low) * 0.15, 1)
-        return (low - pad)...(high + pad)
+        if chartKind == .line {
+            values += plotted.compactMap { y($0.min) } + plotted.compactMap { y($0.max) }
+        }
+        if let goal = shownGoal { values.append(goal) }
+        return ChartAxisStyle.yTicks(values, includeZero: chartKind != .line)
     }
 
     var body: some View {
-        chart
+        let ticks = ticks
+        Chart { marks(floor: ticks.min) }
+            .chartYScale(domain: ticks.min...ticks.max)
             .chartXScale(domain: series.interval.start...series.interval.end)
-            .chartXAxis {
-                AxisMarks(values: .stride(by: series.range.axisStride.component, count: series.range.axisStride.count)) { _ in
-                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.6, dash: [3, 4]))
-                        .foregroundStyle(Color.primary.opacity(0.11))
-                    AxisValueLabel(format: series.range.axisFormat)
-                        .foregroundStyle(Color.secondary)
-                }
-            }
-            .chartYAxis {
-                AxisMarks(position: .trailing, values: .automatic(desiredCount: 4)) {
-                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.6))
-                        .foregroundStyle(Color.primary.opacity(0.10))
-                    AxisValueLabel()
-                        .foregroundStyle(Color.secondary)
-                }
-            }
+            .chartXAxis { ChartAxisStyle.xAxis(ChartAxisStyle.xMarks(range: series.range, interval: series.interval, calendar: calendar), range: series.range) }
+            .chartYAxis { ChartAxisStyle.yAxis(ticks.ticks) }
             .chartOverlay { proxy in
-                ChartScrubOverlay(proxy: proxy, points: plotted, date: { $0.start }, selected: $selected) { point in
-                    VStack(spacing: 2) {
-                        Text(AppMetricFormat.text(point.value, metric: metric))
-                            .font(.system(.footnote, design: .rounded, weight: .semibold))
-                        Text(timeText(point))
-                            .font(.system(.caption2, design: .rounded))
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                ChartScrubOverlay(proxy: proxy, points: plotted, date: { ChartAxisStyle.mid($0) }, selected: $selected, onTap: onTap, persistent: true) { point in
+                    ChartCallout(value: AppMetricFormat.text(point.value, metric: metric), caption: ChartAxisStyle.bucketTitle(point, range: series.range))
                 }
             }
-            .animation(.snappy(duration: 0.16), value: selected?.start)
-            .frame(height: 210)
+            .animation(ChartAxisStyle.revealAnimation, value: series)
+            .frame(height: ChartAxisStyle.plotHeight)
             // Headroom so the top axis label is never clipped.
             .padding(.top, 8)
             .clipped()
@@ -99,57 +64,84 @@ struct MetricChart: View {
             .accessibilityLabel(Text(MetricCatalog.descriptor(for: .app(metric)).title))
     }
 
-    @ViewBuilder
-    private var chart: some View {
-        if let domain = yDomain {
-            Chart { marks }
-                .chartYScale(domain: domain)
-        } else {
-            Chart { marks }
-        }
-    }
+    private var spans: Bool { ChartAxisStyle.usesSpans(series.range) }
 
     @ChartContentBuilder
-    private var marks: some ChartContent {
+    private func marks(floor: Double) -> some ChartContent {
         if chartKind == .line {
             ForEach(plotted) { point in
                 if let value = y(point.value) {
-                    LineMark(x: .value("Time", point.start, unit: series.range.barUnit), y: .value(unit, value))
-                        .interpolationMethod(.catmullRom)
-                        .foregroundStyle(tint)
-                    PointMark(x: .value("Time", point.start, unit: series.range.barUnit), y: .value(unit, value))
-                        .symbolSize(plotted.count > 31 ? 10 : 26)
-                        .foregroundStyle(tint)
+                    if spans {
+                        lineMarks(point, x: .value("Time", ChartAxisStyle.mid(point)), value: value, floor: floor)
+                    } else {
+                        lineMarks(point, x: .value("Time", point.start, unit: series.range.barUnit), value: value, floor: floor)
+                    }
                 }
             }
         } else {
             ForEach(plotted) { point in
                 if let value = y(point.value) {
-                    BarMark(x: .value("Time", point.start, unit: series.range.barUnit), y: .value(unit, value))
-                        .foregroundStyle(tint)
-                        .clipShape(.rect(cornerRadius: 3))
-                        .opacity(selected == nil || selected == point ? 1 : 0.45)
+                    if spans {
+                        let span = ChartAxisStyle.span(point)
+                        BarMark(xStart: .value("Start", span.start), xEnd: .value("End", span.end), y: .value(unit, value))
+                            .foregroundStyle(tint)
+                            .clipShape(ChartAxisStyle.barShape)
+                            .opacity(faded(point))
+                            .accessibilityLabel(Text(ChartAxisStyle.bucketTitle(point, range: series.range)))
+                            .accessibilityValue(Text(AppMetricFormat.text(point.value, metric: metric)))
+                    } else {
+                        BarMark(x: .value("Time", point.start, unit: series.range.barUnit), y: .value(unit, value), width: ChartAxisStyle.barWidth)
+                            .foregroundStyle(tint)
+                            .clipShape(ChartAxisStyle.barShape)
+                            .opacity(faded(point))
+                            .accessibilityLabel(Text(ChartAxisStyle.bucketTitle(point, range: series.range)))
+                            .accessibilityValue(Text(AppMetricFormat.text(point.value, metric: metric)))
+                    }
                 }
             }
         }
-        if let goal = y(goal) {
+        if let goal = shownGoal {
             RuleMark(y: .value("Goal", goal))
                 .foregroundStyle(Color.secondary.opacity(0.8))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [6, 4]))
+                .annotation(position: .top, alignment: .trailing, spacing: 2) {
+                    Text("Goal")
+                        .font(.system(.caption2, design: .rounded, weight: .medium))
+                        .foregroundStyle(.secondary)
+                }
         }
         if let selected {
-            RuleMark(x: .value("Selected", selected.start, unit: series.range.barUnit))
-                .foregroundStyle(AppColors.calorie.opacity(0.7))
-                .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
+            if spans {
+                RuleMark(x: .value("Selected", ChartAxisStyle.mid(selected)))
+                    .foregroundStyle(Color.primary.opacity(0.28))
+                    .lineStyle(StrokeStyle(lineWidth: 1))
+            } else {
+                RuleMark(x: .value("Selected", selected.start, unit: series.range.barUnit))
+                    .foregroundStyle(Color.primary.opacity(0.28))
+                    .lineStyle(StrokeStyle(lineWidth: 1))
+            }
         }
     }
 
-    private func timeText(_ point: HealthChartPoint) -> String {
-        switch series.range {
-        case .day: return point.start.formatted(.dateTime.hour().minute())
-        case .week, .month: return point.start.formatted(.dateTime.month(.abbreviated).day())
-        case .sixMonths: return "\(point.start.formatted(.dateTime.month(.abbreviated).day())) – \(point.end.addingTimeInterval(-1).formatted(.dateTime.month(.abbreviated).day()))"
-        case .year: return point.start.formatted(.dateTime.month(.wide).year())
+    private func faded(_ point: HealthChartPoint) -> Double {
+        selected == nil || selected == point ? 1 : ChartAxisStyle.fadedOpacity
+    }
+
+    @ChartContentBuilder
+    private func lineMarks(_ point: HealthChartPoint, x: PlottableValue<Date>, value: Double, floor: Double) -> some ChartContent {
+        AreaMark(x: x, yStart: .value("Floor", floor), yEnd: .value(unit, value))
+            .interpolationMethod(.monotone)
+            .foregroundStyle(LinearGradient(colors: [tint.opacity(0.22), tint.opacity(0.02)], startPoint: .top, endPoint: .bottom))
+        LineMark(x: x, y: .value(unit, value))
+            .interpolationMethod(.monotone)
+            .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+            .foregroundStyle(tint)
+        if plotted.count <= 40 || selected == point {
+            PointMark(x: x, y: .value(unit, value))
+                .symbolSize(selected == point ? 70 : 28)
+                .foregroundStyle(tint)
+                .accessibilityLabel(Text(ChartAxisStyle.bucketTitle(point, range: series.range)))
+                .accessibilityValue(Text(AppMetricFormat.text(point.value, metric: metric)))
         }
     }
 }
