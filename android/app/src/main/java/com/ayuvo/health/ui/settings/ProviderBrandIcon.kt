@@ -60,6 +60,7 @@ private fun ProviderBrandIcon(
 private val AIProvider.logoDrawableRes: Int?
     get() = when (this) {
         AIProvider.GEMINI -> R.drawable.provider_gemini
+        AIProvider.VERTEX_AI -> R.drawable.provider_gemini
         AIProvider.OPENAI -> R.drawable.provider_openai
         AIProvider.ANTHROPIC -> R.drawable.provider_anthropic
         AIProvider.XAI -> R.drawable.provider_xai

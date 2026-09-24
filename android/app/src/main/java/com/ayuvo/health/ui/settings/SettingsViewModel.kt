@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
+import com.ayuvo.health.medications.logic.MedicationJson.str
 import com.ayuvo.health.models.AIProvider
+import com.ayuvo.health.services.ai.AIReference
+import kotlinx.serialization.json.JsonObject
 import com.ayuvo.health.models.AddMenuConfig
 import com.ayuvo.health.models.AutoBalanceMacro
 import com.ayuvo.health.models.CurrentMealSchedule
@@ -37,6 +40,18 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import com.ayuvo.health.medications.reminders.MedicationAlarms
 import com.ayuvo.health.medications.reminders.MedicationNotifications
+
+/** One saved model as the Settings list shows it (docs/ai-models.md 3). */
+data class AiProfileUi(
+    val id: String,
+    val nickname: String,
+    val providerToken: String,
+    val provider: AIProvider?,
+    val model: String,
+    val baseUrl: String?,
+    /** The roles this profile currently serves, already localised. */
+    val usedByRoles: List<String>,
+)
 
 data class SettingsUiState(
     val selectedAI: AIProvider = AIProvider.GEMINI,
@@ -124,7 +139,9 @@ data class SettingsUiState(
     /** Summary Move ring goal (steps per day, 1 000–50 000). */
     val dailyStepGoal: Int = 10_000,
     /** "mmol/L" | "mg/dL"; null = locale default (Settings › Units). */
-    val healthGlucoseUnit: String? = null
+    val healthGlucoseUnit: String? = null,
+    val aiProfiles: List<AiProfileUi> = emptyList(),
+    val huggingFaceTokenMasked: String = ""
 ) {
     val heightMetric: Boolean get() = heightUnit == "cm"
     val weightMetric: Boolean get() = weightUnit == "kg"
@@ -172,6 +189,26 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             container.localModels.states.collect { states ->
                 _ui.value = _ui.value.copy(localModelStates = states)
             }
+        }
+        viewModelScope.launch {
+            // The saved models list. Roles are folded in here so a row can say what it is used for.
+            combine(container.prefs.aiModelProfiles, container.prefs.aiRolePointers) { profiles, roles ->
+                profiles.filterIsInstance<JsonObject>().map { p ->
+                    val id = p.str("id").orEmpty()
+                    val token = p.str("provider").orEmpty()
+                    AiProfileUi(
+                        id = id,
+                        nickname = p.str("nickname").orEmpty(),
+                        providerToken = token,
+                        provider = AIProvider.fromToken(token),
+                        model = p.str("model_id").orEmpty(),
+                        baseUrl = p.str("base_url"),
+                        usedByRoles = AIReference.ROLES.filter { role ->
+                            (roles[role] as? JsonObject)?.str("profile_id") == id
+                        },
+                    )
+                }
+            }.collect { _ui.value = _ui.value.copy(aiProfiles = it) }
         }
 
         viewModelScope.launch {
@@ -644,6 +681,91 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
         }
     }
 
+    // -- Saved model profiles (docs/ai-models.md 3) --------------------------------------------
+
+    /** "Add model": a new saved configuration, not yet wired to any role. */
+    fun addModelProfile(provider: AIProvider) {
+        viewModelScope.launch { container.prefs.addAiProfile(provider, provider.defaultModel) }
+    }
+
+    /** "project" or "project/location" — one field, because Vertex defaults to the global endpoint. */
+    fun setModelProfileVertex(id: String, raw: String) {
+        viewModelScope.launch {
+            val parts = raw.trim().split("/", limit = 2)
+            container.prefs.setAiProfileVertex(
+                id,
+                parts.firstOrNull()?.trim(),
+                parts.getOrNull(1)?.trim()?.ifEmpty { null },
+            )
+        }
+    }
+
+    fun renameModelProfile(id: String, name: String) {
+        viewModelScope.launch { container.prefs.renameAiProfile(id, name) }
+    }
+
+    fun setModelProfileModel(id: String, model: String) {
+        viewModelScope.launch { container.prefs.updateAiProfileModel(id, model) }
+    }
+
+    /** A key typed for one profile. The provider's own key is never touched here. */
+    fun setModelProfileKey(id: String, raw: String) {
+        viewModelScope.launch {
+            val profile = _ui.value.aiProfiles.firstOrNull { it.id == id } ?: return@launch
+            val provider = profile.provider ?: return@launch
+            val typed = raw.trim().takeIf { it.isNotEmpty() }
+            // Matching the provider's key keeps the provider-level reference, so a later rotation on
+            // the per-provider screen still reaches this model (docs/ai-models.md 4).
+            if (typed == null || typed == container.keyStore.apiKey(provider)) {
+                container.keyStore.setProfileApiKey(id, null)
+            } else {
+                container.keyStore.setProfileApiKey(id, typed)
+            }
+            refreshProfileCredentialRef(id, ownsKey = typed != null &&
+                typed != container.keyStore.apiKey(provider))
+        }
+    }
+
+    private suspend fun refreshProfileCredentialRef(id: String, ownsKey: Boolean) {
+        container.prefs.setAiProfileCredentialRef(
+            id,
+            if (ownsKey) "profile:$id" else null,
+        )
+    }
+
+    fun assignModelProfile(id: String, role: String) {
+        viewModelScope.launch {
+            container.prefs.setAiRolePointer(role, id, enabled = true)
+            refreshAiSelections()
+        }
+    }
+
+    fun deleteModelProfile(id: String) {
+        viewModelScope.launch {
+            container.prefs.deleteAiProfile(id)
+            // Rule 3: only this profile's own key goes; `apikey_<provider>` has other owners.
+            container.keyStore.setProfileApiKey(id, null)
+            refreshAiSelections()
+        }
+    }
+
+    /** Re-reads the four routes after a profile change repointed one of them. */
+    private suspend fun refreshAiSelections() {
+        val provider = container.prefs.selectedAIProvider.first()
+        val model = container.prefs.selectedAIModel.first().orEmpty()
+        _ui.value = _ui.value.copy(
+            selectedAI = provider,
+            selectedModel = model,
+            apiKeyMasked = maskKey(container.keyStore.apiKey(provider)),
+            selectedTextAI = container.prefs.selectedTextAIProvider.first(),
+            selectedTextModel = container.prefs.selectedTextAIModel.first().orEmpty(),
+            fallbackProvider = container.prefs.selectedFallbackProvider.first(),
+            fallbackModel = container.prefs.selectedFallbackModel.first().orEmpty(),
+            textFallbackProvider = container.prefs.selectedTextFallbackProvider.first(),
+            textFallbackModel = container.prefs.selectedTextFallbackModel.first().orEmpty(),
+        )
+    }
+
     fun selectProvider(p: AIProvider) {
         if (p !in _ui.value.availableVisionProviders) return
         viewModelScope.launch {
@@ -828,6 +950,14 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
         }
     }
 
+    /** The optional Hugging Face token, needed only by gated catalogue entries. */
+    fun setHuggingFaceToken(raw: String) {
+        container.keyStore.setHuggingFaceToken(raw.takeIf { it.isNotBlank() })
+        _ui.value = _ui.value.copy(
+            huggingFaceTokenMasked = maskKey(container.keyStore.huggingFaceToken())
+        )
+    }
+
     fun downloadLocalModel(id: LocalModelId) {
         container.localModels.download(id)
     }
@@ -835,8 +965,10 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
     fun deleteLocalModel(id: LocalModelId) {
         viewModelScope.launch {
             when (id) {
-                LocalModelId.GEMMA_4_E2B -> resetGemmaSelectionsBeforeDelete()
+                // Every chat model shares the one on-device provider, so deleting any of them has
+                // to take the routes that named it with it (docs/ai-models.md rule 1).
                 LocalModelId.WHISPER_BASE -> resetWhisperSelectionsBeforeDelete()
+                else -> resetGemmaSelectionsBeforeDelete()
             }
             container.localModels.delete(id)
         }

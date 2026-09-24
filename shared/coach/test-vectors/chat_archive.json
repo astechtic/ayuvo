@@ -1068,6 +1068,51 @@
         }
       },
       "name": "newer format version is refused"
+    },
+    {
+      "expected": {
+        "attachments": [],
+        "conversations": [
+          {
+            "archived": 0,
+            "created_ms": 1000,
+            "data_sources": {},
+            "id": "c-pinned",
+            "last_message_ms": 2000,
+            "pinned": 0,
+            "provider_override": "profile:aip_0004|OpenAI",
+            "selected_record_ids": [],
+            "title": "Pinned to a saved model",
+            "updated_ms": 2000
+          }
+        ],
+        "format": "ayuvo-coach-chats",
+        "format_version": 1,
+        "messages": []
+      },
+      "input": {
+        "snapshot": {
+          "attachments": [],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {},
+              "deleted": 0,
+              "id": "c-pinned",
+              "last_message_ms": 2000,
+              "pinned": 0,
+              "provider_override": "profile:aip_0004|OpenAI",
+              "selected_record_ids": [],
+              "title": "Pinned to a saved model",
+              "updated_ms": 2000
+            }
+          ],
+          "messages": []
+        }
+      },
+      "name": "a conversation pinned to a saved model travels as written",
+      "notes": "The column carries the provider after the profile id so an import onto another device degrades to the provider instead of answering on the wrong model."
     }
   ],
   "format": "ayuvo-coach-vectors",

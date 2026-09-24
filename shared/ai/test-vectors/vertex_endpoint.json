@@ -1,0 +1,209 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "body_extras": {},
+        "drops_model_from_body": true,
+        "location": "global",
+        "ok": true,
+        "publisher": "google",
+        "transport": "gemini",
+        "url": "https://aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/global/publishers/google/models/gemini-3.8-flash:generateContent"
+      },
+      "input": {
+        "location": "global",
+        "model": "gemini-3.8-flash",
+        "project": "ayuvo-prod"
+      },
+      "name": "gemini on the global endpoint"
+    },
+    {
+      "expected": {
+        "body_extras": {},
+        "drops_model_from_body": true,
+        "location": "us",
+        "ok": true,
+        "publisher": "google",
+        "transport": "gemini",
+        "url": "https://aiplatform.us.rep.googleapis.com/v1/projects/ayuvo-prod/locations/us/publishers/google/models/gemini-3.8-flash:generateContent"
+      },
+      "input": {
+        "location": "us",
+        "model": "gemini-3.8-flash",
+        "project": "ayuvo-prod"
+      },
+      "name": "gemini on a multi region endpoint"
+    },
+    {
+      "expected": {
+        "body_extras": {},
+        "drops_model_from_body": true,
+        "location": "europe-west1",
+        "ok": true,
+        "publisher": "google",
+        "transport": "gemini",
+        "url": "https://europe-west1-aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/europe-west1/publishers/google/models/gemini-3.8-flash:generateContent"
+      },
+      "input": {
+        "location": "europe-west1",
+        "model": "gemini-3.8-flash",
+        "project": "ayuvo-prod"
+      },
+      "name": "gemini on a regional endpoint"
+    },
+    {
+      "expected": {
+        "body_extras": {
+          "anthropic_version": "vertex-2023-10-16"
+        },
+        "drops_model_from_body": true,
+        "location": "global",
+        "ok": true,
+        "publisher": "anthropic",
+        "transport": "anthropic",
+        "url": "https://aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/global/publishers/anthropic/models/claude-opus-5-5:rawPredict"
+      },
+      "input": {
+        "location": "global",
+        "model": "claude-opus-5-5",
+        "project": "ayuvo-prod"
+      },
+      "name": "claude on the global endpoint"
+    },
+    {
+      "expected": {
+        "body_extras": {
+          "anthropic_version": "vertex-2023-10-16"
+        },
+        "drops_model_from_body": true,
+        "location": "eu",
+        "ok": true,
+        "publisher": "anthropic",
+        "transport": "anthropic",
+        "url": "https://aiplatform.eu.rep.googleapis.com/v1/projects/ayuvo-prod/locations/eu/publishers/anthropic/models/claude-sonnet-5:rawPredict"
+      },
+      "input": {
+        "location": "eu",
+        "model": "claude-sonnet-5",
+        "project": "ayuvo-prod"
+      },
+      "name": "claude on a multi region endpoint"
+    },
+    {
+      "expected": {
+        "body_extras": {
+          "anthropic_version": "vertex-2023-10-16"
+        },
+        "drops_model_from_body": true,
+        "location": "us-east5",
+        "ok": true,
+        "publisher": "anthropic",
+        "transport": "anthropic",
+        "url": "https://us-east5-aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/us-east5/publishers/anthropic/models/claude-haiku-4-5@20251001:rawPredict"
+      },
+      "input": {
+        "location": "us-east5",
+        "model": "claude-haiku-4-5@20251001",
+        "project": "ayuvo-prod"
+      },
+      "name": "claude on a regional endpoint"
+    },
+    {
+      "expected": {
+        "body_extras": {
+          "anthropic_version": "vertex-2023-10-16"
+        },
+        "drops_model_from_body": true,
+        "location": "global",
+        "ok": true,
+        "publisher": "anthropic",
+        "transport": "anthropic",
+        "url": "https://aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/global/publishers/anthropic/models/anthropic/claude-sonnet-5:rawPredict"
+      },
+      "input": {
+        "location": "global",
+        "model": "anthropic/claude-sonnet-5",
+        "project": "ayuvo-prod"
+      },
+      "name": "a publisher prefixed claude id"
+    },
+    {
+      "expected": {
+        "body_extras": {},
+        "drops_model_from_body": true,
+        "location": "global",
+        "ok": true,
+        "publisher": "google",
+        "transport": "gemini",
+        "url": "https://aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/global/publishers/google/models/google/gemini-3.8-flash:generateContent"
+      },
+      "input": {
+        "location": "global",
+        "model": "google/gemini-3.8-flash",
+        "project": "ayuvo-prod"
+      },
+      "name": "a publisher prefixed gemini id"
+    },
+    {
+      "expected": {
+        "body_extras": {},
+        "drops_model_from_body": false,
+        "location": "us-central1",
+        "ok": true,
+        "publisher": "openapi",
+        "transport": "openai_compatible",
+        "url": "https://us-central1-aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/us-central1/endpoints/openapi/chat/completions"
+      },
+      "input": {
+        "location": "us-central1",
+        "model": "meta/llama-4-maverick",
+        "project": "ayuvo-prod"
+      },
+      "name": "anything else takes the openai surface"
+    },
+    {
+      "expected": {
+        "body_extras": {},
+        "drops_model_from_body": true,
+        "location": "global",
+        "ok": true,
+        "publisher": "google",
+        "transport": "gemini",
+        "url": "https://aiplatform.googleapis.com/v1/projects/ayuvo-prod/locations/global/publishers/google/models/gemini-3.8-flash:generateContent"
+      },
+      "input": {
+        "location": "",
+        "model": "gemini-3.8-flash",
+        "project": "ayuvo-prod"
+      },
+      "name": "an empty location defaults to global"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_project"
+      },
+      "input": {
+        "location": "global",
+        "model": "gemini-3.8-flash",
+        "project": ""
+      },
+      "name": "no project is refused"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_model"
+      },
+      "input": {
+        "location": "global",
+        "model": "",
+        "project": "ayuvo-prod"
+      },
+      "name": "no model is refused"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "vertex_endpoint",
+  "version": 1
+}

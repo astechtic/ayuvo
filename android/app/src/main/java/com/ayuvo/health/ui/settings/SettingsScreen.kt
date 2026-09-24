@@ -495,7 +495,11 @@ fun SettingsScreen(
             vm = vm,
             onDismiss = { state.sheet = null },
             onInvalidGoalWeight = { state.invalidGoalWeightMessage = it },
-            onRebalanceBlocked = { state.showRebalanceBlockedAlert = true }
+            onRebalanceBlocked = { state.showRebalanceBlockedAlert = true },
+            selectedProfileId = state.selectedModelProfileId,
+            // The actions sheet hands off to another sheet about the same model, so the selection
+            // survives the swap.
+            onProfileAction = { next -> state.sheet = next }
         )
     }
 

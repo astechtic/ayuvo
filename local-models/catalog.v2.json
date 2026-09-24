@@ -1,0 +1,266 @@
+{
+  "catalogVersion": "2026.09.24.1",
+  "downloadPolicy": {
+    "checksumAlgorithm": "sha256",
+    "headroomPercent": 10,
+    "minimumHeadroomBytes": 268435456,
+    "stagingSuffix": ".part"
+  },
+  "models": [
+    {
+      "artifact": {
+        "access": {
+          "anonymous": true,
+          "gated": false,
+          "supportsByteRanges": true
+        },
+        "filename": "gemma-4-E2B-it.litertlm",
+        "repository": "litert-community/gemma-4-E2B-it-litert-lm",
+        "revision": "6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+        "sizeBytes": 2588147712,
+        "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94/gemma-4-E2B-it.litertlm"
+      },
+      "capabilities": [
+        "text",
+        "image"
+      ],
+      "contextTokens": 4096,
+      "displayName": "Gemma 4 E2B",
+      "format": "litertlm",
+      "id": "gemma-4-e2b-it-litertlm",
+      "license": {
+        "declaredByURL": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/blob/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94/README.md",
+        "spdx": "Apache-2.0",
+        "textURL": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+      },
+      "memoryPolicy": {
+        "minimumPhysicalMemoryBytes": 8589934592,
+        "rule": "max(6 GiB, artifact * 2 + 2 GiB rounded up to an even GiB)"
+      },
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "quantisation": "mixed",
+      "runtime": {
+        "family": "LiteRT-LM",
+        "version": "0.16.0"
+      }
+    },
+    {
+      "artifact": {
+        "access": {
+          "anonymous": true,
+          "gated": false,
+          "supportsByteRanges": true
+        },
+        "filename": "Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+        "repository": "litert-community/Qwen3-1.7B",
+        "revision": "73fbc3fe8271c162a603ee66f6e7ed25b6211195",
+        "sha256": "2eeffef7b51bc3e1225ea69fe7aa5f417397934b56a5b6c20cc068d6fd2c918b",
+        "sizeBytes": 977184032,
+        "url": "https://huggingface.co/litert-community/Qwen3-1.7B/resolve/73fbc3fe8271c162a603ee66f6e7ed25b6211195/Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm"
+      },
+      "capabilities": [
+        "text"
+      ],
+      "contextTokens": 4096,
+      "displayName": "Qwen3 1.7B",
+      "format": "litertlm",
+      "id": "qwen3-1.7b-litertlm",
+      "license": {
+        "declaredByURL": "https://huggingface.co/litert-community/Qwen3-1.7B/blob/73fbc3fe8271c162a603ee66f6e7ed25b6211195/README.md",
+        "spdx": "Apache-2.0",
+        "textURL": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+      },
+      "memoryPolicy": {
+        "minimumPhysicalMemoryBytes": 6442450944,
+        "rule": "max(6 GiB, artifact * 2 + 2 GiB rounded up to an even GiB)"
+      },
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "quantisation": "dynamic-int4-block32",
+      "runtime": {
+        "family": "LiteRT-LM",
+        "version": "0.16.0"
+      }
+    },
+    {
+      "artifact": {
+        "access": {
+          "anonymous": true,
+          "gated": false,
+          "supportsByteRanges": true
+        },
+        "filename": "qwen3_4b_mixed_int4.litertlm",
+        "repository": "litert-community/Qwen3-4B",
+        "revision": "84cc5a35c9c65cd18fcd65bb1f3a7d77a4acfe6e",
+        "sha256": "f0794bc77efeaaf4f7af815f04c483b19b8f2ae4a102cef1b7b760a25848a18e",
+        "sizeBytes": 2659057664,
+        "url": "https://huggingface.co/litert-community/Qwen3-4B/resolve/84cc5a35c9c65cd18fcd65bb1f3a7d77a4acfe6e/qwen3_4b_mixed_int4.litertlm"
+      },
+      "capabilities": [
+        "text"
+      ],
+      "contextTokens": 4096,
+      "displayName": "Qwen3 4B",
+      "format": "litertlm",
+      "id": "qwen3-4b-litertlm",
+      "license": {
+        "declaredByURL": "https://huggingface.co/litert-community/Qwen3-4B/blob/84cc5a35c9c65cd18fcd65bb1f3a7d77a4acfe6e/README.md",
+        "spdx": "Apache-2.0",
+        "textURL": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+      },
+      "memoryPolicy": {
+        "minimumPhysicalMemoryBytes": 8589934592,
+        "rule": "max(6 GiB, artifact * 2 + 2 GiB rounded up to an even GiB)"
+      },
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "quantisation": "mixed-int4",
+      "runtime": {
+        "family": "LiteRT-LM",
+        "version": "0.16.0"
+      }
+    },
+    {
+      "artifact": {
+        "access": {
+          "anonymous": true,
+          "gated": false,
+          "supportsByteRanges": true
+        },
+        "filename": "qwen3_8b_mixed_int4.litertlm",
+        "repository": "litert-community/Qwen3-8B",
+        "revision": "71ff705588319d52d374977eff3da4eee0c0d26e",
+        "sha256": "cb4e6d0de4bbf6656d177812cf0c6a983967dedd17e7f88e84b901c3a9862a42",
+        "sizeBytes": 4887412736,
+        "url": "https://huggingface.co/litert-community/Qwen3-8B/resolve/71ff705588319d52d374977eff3da4eee0c0d26e/qwen3_8b_mixed_int4.litertlm"
+      },
+      "capabilities": [
+        "text"
+      ],
+      "contextTokens": 4096,
+      "displayName": "Qwen3 8B",
+      "format": "litertlm",
+      "id": "qwen3-8b-litertlm",
+      "license": {
+        "declaredByURL": "https://huggingface.co/litert-community/Qwen3-8B/blob/71ff705588319d52d374977eff3da4eee0c0d26e/README.md",
+        "spdx": "Apache-2.0",
+        "textURL": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+      },
+      "memoryPolicy": {
+        "minimumPhysicalMemoryBytes": 12884901888,
+        "rule": "max(6 GiB, artifact * 2 + 2 GiB rounded up to an even GiB)"
+      },
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "quantisation": "mixed-int4",
+      "runtime": {
+        "family": "LiteRT-LM",
+        "version": "0.16.0"
+      }
+    },
+    {
+      "artifact": {
+        "access": {
+          "anonymous": true,
+          "gated": false,
+          "supportsByteRanges": true
+        },
+        "filename": "qwen3_14b_mixed_int4.litertlm",
+        "repository": "litert-community/Qwen3-14B",
+        "revision": "e4122fd370cec85c61467274b180e0954e4f422d",
+        "sha256": "71de7d58f1b46a3fcba2f7bb700ebcc3c3715877d9a7028d93dd1bcd89bbe946",
+        "sizeBytes": 8655863808,
+        "url": "https://huggingface.co/litert-community/Qwen3-14B/resolve/e4122fd370cec85c61467274b180e0954e4f422d/qwen3_14b_mixed_int4.litertlm"
+      },
+      "capabilities": [
+        "text"
+      ],
+      "contextTokens": 4096,
+      "displayName": "Qwen3 14B",
+      "format": "litertlm",
+      "id": "qwen3-14b-litertlm",
+      "license": {
+        "declaredByURL": "https://huggingface.co/litert-community/Qwen3-14B/blob/e4122fd370cec85c61467274b180e0954e4f422d/README.md",
+        "spdx": "Apache-2.0",
+        "textURL": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+      },
+      "memoryPolicy": {
+        "minimumPhysicalMemoryBytes": 21474836480,
+        "rule": "max(6 GiB, artifact * 2 + 2 GiB rounded up to an even GiB)"
+      },
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "quantisation": "mixed-int4",
+      "runtime": {
+        "family": "LiteRT-LM",
+        "version": "0.16.0"
+      }
+    },
+    {
+      "artifact": {
+        "access": {
+          "anonymous": false,
+          "gated": true,
+          "supportsByteRanges": true
+        },
+        "filename": "medgemma-1.5-4b-it_q4_block32_vision_ekv2048.litertlm",
+        "repository": "litert-community/MedGemma-1.5-4B-IT",
+        "revision": "abba4da1132343617b51c180e7147a9742a26559",
+        "sha256": "1627e2e433c3799e4ff06ff0895408ca65b255f786dc270fb5cfa325e349233a",
+        "sizeBytes": 3023069488,
+        "url": "https://huggingface.co/litert-community/MedGemma-1.5-4B-IT/resolve/abba4da1132343617b51c180e7147a9742a26559/medgemma-1.5-4b-it_q4_block32_vision_ekv2048.litertlm"
+      },
+      "capabilities": [
+        "text",
+        "image"
+      ],
+      "contextTokens": 2048,
+      "displayName": "MedGemma 1.5 4B",
+      "format": "litertlm",
+      "id": "medgemma-1.5-4b-it-litertlm",
+      "license": {
+        "declaredByURL": "https://huggingface.co/litert-community/MedGemma-1.5-4B-IT/blob/abba4da1132343617b51c180e7147a9742a26559/README.md",
+        "spdx": "LicenseRef-HealthAI-DeveloperFoundations",
+        "textURL": "https://developers.google.com/health-ai-developer-foundations/terms"
+      },
+      "memoryPolicy": {
+        "minimumPhysicalMemoryBytes": 8589934592,
+        "rule": "max(6 GiB, artifact * 2 + 2 GiB rounded up to an even GiB)"
+      },
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "quantisation": "q4-block32-vision",
+      "runtime": {
+        "family": "LiteRT-LM",
+        "version": "0.16.0"
+      }
+    }
+  ],
+  "notes": [
+    "Every artifact is a LiteRT-LM .litertlm package pinned to an immutable Hugging Face revision.",
+    "sha256 is the file's Git-LFS oid as reported by the Hub API; verify_catalog.py --online re-reads it.",
+    "contextTokens is PER MODEL and the runtime must clamp to it: MedGemma's build exports a 2048-entry KV cache, so the engine's global 4096 would overrun it.",
+    "Qwen3 has no vision tower, so those entries are text-only and can never fill the image role.",
+    "Qwen3 30B/32B are absent because litert-community publishes no LiteRT-LM build above 14B."
+  ],
+  "observedAt": "2026-09-24",
+  "schemaVersion": 2,
+  "supportedAbis": [
+    "arm64-v8a",
+    "x86_64"
+  ]
+}

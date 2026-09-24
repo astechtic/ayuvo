@@ -4,6 +4,13 @@ import SwiftUI
 extension SettingsPaneView {
     @ViewBuilder
     var aiProvidersPane: some View {
+        AIModelProfilesSection(revision: localModelAvailabilityRevision) {
+            // A profile edit can repoint a role, so the rows below re-read their state.
+            selectedProvider = AIProviderSettings.selectedProvider
+            selectedModel = AIProviderSettings.selectedModel
+            apiKeyText = AIProviderSettings.apiKey(for: selectedProvider) ?? ""
+            customBaseURL = AIProviderSettings.customBaseURL(for: selectedProvider) ?? ""
+        }
         Section {
                 AISettingsSubsectionHeader(
                     title: "Primary AI",
@@ -211,6 +218,12 @@ extension SettingsPaneView {
                     .foregroundStyle(AppColors.calorie)
                     .textCase(.uppercase)
                     .accessibilityAddTraits(.isHeader)
+
+                AILocalModelsSection {
+                    selectedProvider = AIProviderSettings.selectedProvider
+                    selectedModel = AIProviderSettings.selectedModel
+                    localModelAvailabilityRevision += 1
+                }
 
                 Gemma4ModelSettingsView {
                     selectedProvider = AIProviderSettings.selectedProvider

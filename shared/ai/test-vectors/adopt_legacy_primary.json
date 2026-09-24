@@ -1,0 +1,385 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "changed": false,
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "reason": "match",
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "now_ms": 1700000000001,
+        "observed": {
+          "base_url": null,
+          "model": "gpt-5.4-mini",
+          "provider": "OpenAI"
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "the projection is unchanged so nothing happens"
+    },
+    {
+      "expected": {
+        "changed": true,
+        "fingerprint": "Anthropic Claude\u0000claude-sonnet-5\u0000",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000001,
+            "credential_ref": "provider:Anthropic Claude",
+            "id": "aip_0002",
+            "model_id": "claude-sonnet-5",
+            "nickname": "Anthropic Claude · claude-sonnet-5",
+            "provider": "Anthropic Claude",
+            "updated_ms": 1700000000001,
+            "vertex": null
+          }
+        ],
+        "reason": "created",
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "now_ms": 1700000000001,
+        "observed": {
+          "base_url": null,
+          "model": "claude-sonnet-5",
+          "provider": "Anthropic Claude"
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "onboarding picked something new and it is adopted",
+      "notes": "Onboarding is unchanged and writes only the flat keys; this is how that choice survives."
+    },
+    {
+      "expected": {
+        "changed": false,
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "reason": "adopted",
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "fingerprint": "stale",
+        "now_ms": 1700000000001,
+        "observed": {
+          "base_url": null,
+          "model": "gpt-5.4-mini",
+          "provider": "OpenAI"
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "onboarding picked a configuration that already exists"
+    },
+    {
+      "expected": {
+        "changed": true,
+        "fingerprint": "Google Gemini\u0000gemini-3.8-flash\u0000",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0001",
+            "model_id": "gemini-3.8-flash",
+            "nickname": "Google Gemini · gemini-3.8-flash",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "reason": "created",
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "fingerprint": null,
+        "now_ms": 1700000000000,
+        "observed": {
+          "base_url": null,
+          "model": "gemini-3.8-flash",
+          "provider": "Google Gemini"
+        },
+        "profiles": [],
+        "roles": {}
+      },
+      "name": "a first run with no fingerprint adopts what it finds"
+    },
+    {
+      "expected": {
+        "changed": false,
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "reason": "ignored",
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "now_ms": 1700000000001,
+        "observed": {
+          "base_url": null,
+          "model": "x",
+          "provider": "Nonesuch"
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "an unknown provider is ignored rather than adopted"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "adopt_legacy_primary",
+  "version": 1
+}

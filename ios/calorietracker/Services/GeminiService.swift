@@ -912,6 +912,23 @@ struct GeminiService {
     }
 
     private static func dispatch(provider: AIProvider, model: String, baseURL: String, apiKey: String?, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
+        // Vertex is one provider with three transports, picked per model by the routing table.
+        if provider == .vertexAI {
+            let call = try await ChatService.vertexCall(
+                profileID: AIProviderSettings.rolePointers[.image]?.profileID, model: model
+            )
+            switch call.transport {
+            case "anthropic":
+                return try await callAnthropic(baseURL: "", model: model, apiKey: "", prompt: prompt, imageDataList: imageDataList, maxOutputTokens: maxOutputTokens, vertex: call)
+            case "openai_compatible":
+                // The OpenAI surface already speaks bearer tokens, so the token IS the key here.
+                return try await callOpenAICompatible(baseURL: call.url.absoluteString
+                    .replacingOccurrences(of: "/chat/completions", with: ""),
+                    model: model, apiKey: call.token, provider: provider, prompt: prompt, imageDataList: imageDataList, maxOutputTokens: maxOutputTokens)
+            default:
+                return try await callGemini(baseURL: "", model: model, apiKey: nil, prompt: prompt, imageDataList: imageDataList, maxOutputTokens: maxOutputTokens, vertex: call)
+            }
+        }
         switch provider.apiFormat {
         case .onDevice:
             guard imageDataList.isEmpty else {
@@ -927,7 +944,10 @@ struct GeminiService {
             #endif
             throw AnalysisError.requestFailed(.unsupportedDevice)
         case .liteRTLocal:
-            return try await Gemma4LocalModelManager.shared.generate(
+            let manager = await MainActor.run {
+                Gemma4LocalModelManager.manager(forModelID: model) ?? Gemma4LocalModelManager.shared
+            }
+            return try await manager.generate(
                 prompt: prompt,
                 images: imageDataList,
                 systemPrompt: AIProviderSettings.currentUserContext,
@@ -946,7 +966,7 @@ struct GeminiService {
 
     // MARK: - Gemini Format
 
-    private static func callGemini(baseURL: String, model: String, apiKey: String?, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
+    private static func callGemini(baseURL: String, model: String, apiKey: String?, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil, vertex: ChatService.VertexCall? = nil) async throws -> String {
         // Send the API key in the X-goog-api-key header, not the URL query string,
         // so it doesn't end up in server logs / proxies (CodeQL: cleartext transmission).
         var parts: [[String: Any]] = []
@@ -970,13 +990,16 @@ struct GeminiService {
             body["generationConfig"] = generationConfig
         }
 
-        guard let apiKey else { throw AnalysisError.noAPIKey }
-        guard let url = URL(string: "\(baseURL)/models/\(model):generateContent") else {
+        guard vertex != nil || apiKey != nil else { throw AnalysisError.noAPIKey }
+        guard let url = vertex?.url ?? URL(string: "\(baseURL)/models/\(model):generateContent") else {
             throw AnalysisError.requestFailed(.invalidURL)
         }
         let data = try await makeRequest(
             url: url,
-            headers: ["Content-Type": "application/json", "X-goog-api-key": apiKey],
+            // Vertex authenticates the same Gemini API with an OAuth token instead of a key.
+            headers: vertex.map {
+                ["Content-Type": "application/json", "Authorization": "Bearer \($0.token)"]
+            } ?? ["Content-Type": "application/json", "X-goog-api-key": apiKey ?? ""],
             body: body,
             provider: .gemini
         )
@@ -1131,12 +1154,15 @@ struct GeminiService {
         """
     }
 
-    private static func callAnthropic(baseURL: String, model: String, apiKey: String, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil) async throws -> String {
-        guard let url = URL(string: "\(baseURL)/messages") else {
+    private static func callAnthropic(baseURL: String, model: String, apiKey: String, prompt: String, imageDataList: [Data], maxOutputTokens: Int? = nil, vertex: ChatService.VertexCall? = nil) async throws -> String {
+        guard let url = vertex?.url ?? URL(string: "\(baseURL)/messages") else {
             throw AnalysisError.requestFailed(.invalidURL)
         }
 
-        let headers = [
+        // On Vertex the credential is an OAuth token and the model is already in the path.
+        let headers: [String: String] = vertex.map {
+            ["Content-Type": "application/json", "Authorization": "Bearer \($0.token)"]
+        } ?? [
             "Content-Type": "application/json",
             "x-api-key": apiKey,
             "anthropic-version": "2023-06-01",
@@ -1156,10 +1182,12 @@ struct GeminiService {
             content.append(["type": "text", "text": requestPrompt])
 
             var body: [String: Any] = [
-                "model": model,
                 "max_tokens": effectiveMaxOutputTokens(maxOutputTokens),
                 "messages": [["role": "user", "content": content]],
             ]
+            // Vertex carries the model in the path and wants `anthropic_version` in the body.
+            if vertex?.dropsModel != true { body["model"] = model }
+            for (key, value) in vertex?.bodyExtras ?? [:] { body[key] = value }
             if let userContext = AIProviderSettings.currentUserContext {
                 body["system"] = userContext
             }

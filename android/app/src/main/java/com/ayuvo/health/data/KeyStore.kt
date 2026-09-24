@@ -32,6 +32,25 @@ class KeyStore(context: Context) {
         if (key.isNullOrEmpty()) delete(storageKey) else save(storageKey, key)
     }
 
+    /**
+     * Per-profile keys (docs/ai-models.md 4). A profile may own a key; when it does not, or when
+     * this store wiped itself after an AEADBadTagException, lookup falls back to the provider key.
+     * Deleting a profile removes only its own entry -- never `apikey_<provider>`, which onboarding,
+     * the per-provider screen and [speechApiKey] all still depend on.
+     */
+    fun profileApiKey(profileId: String): String? = load(PROFILE_PREFIX + profileId)
+
+    fun setProfileApiKey(profileId: String, key: String?) {
+        val storageKey = PROFILE_PREFIX + profileId
+        if (key.isNullOrEmpty()) delete(storageKey) else save(storageKey, key)
+    }
+
+    fun profileIdsWithOwnKey(ids: Collection<String>): List<String> =
+        ids.filter { !profileApiKey(it).isNullOrEmpty() }
+
+    fun providersWithKeys(): List<AIProvider> =
+        AIProvider.entries.filter { !apiKey(it).isNullOrEmpty() }
+
     // Speech providers
     fun speechApiKey(provider: SpeechProvider): String? {
         val dedicated = load(STT_PREFIX + provider.name)
@@ -41,6 +60,17 @@ class KeyStore(context: Context) {
     fun setSpeechApiKey(provider: SpeechProvider, key: String?) {
         val storageKey = STT_PREFIX + provider.name
         if (key.isNullOrEmpty()) delete(storageKey) else save(storageKey, key)
+    }
+
+    /**
+     * The optional Hugging Face token, sent only for catalogue entries marked gated
+     * (docs/ai-models.md 7). MedGemma is `gated: auto` on the Hub; without a token its row is
+     * listed and blocked rather than started and failed a third of the way through a 3 GB download.
+     */
+    fun huggingFaceToken(): String? = load(HUGGING_FACE_TOKEN)
+
+    fun setHuggingFaceToken(token: String?) {
+        if (token.isNullOrBlank()) delete(HUGGING_FACE_TOKEN) else save(HUGGING_FACE_TOKEN, token.trim())
     }
 
     fun cloudBackupAccessToken(): String? = load(CLOUD_BACKUP_ACCESS_TOKEN)
@@ -58,7 +88,9 @@ class KeyStore(context: Context) {
         private const val FILE_NAME = "ayuvo_keychain"
         private const val AI_PREFIX = "apikey_"
         private const val STT_PREFIX = "speechApiKey_"
+        private const val PROFILE_PREFIX = "aiprofilekey_"
         private const val CLOUD_BACKUP_ACCESS_TOKEN = "cloud_backup_access_token_v1"
+        private const val HUGGING_FACE_TOKEN = "huggingFaceToken"
 
         /**
          * Open EncryptedSharedPreferences. On Android 14/15 (and occasionally

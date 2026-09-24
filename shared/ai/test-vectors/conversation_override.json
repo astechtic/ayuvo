@@ -1,0 +1,151 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "profile_id": "aip_0004",
+        "provider": "OpenAI"
+      },
+      "input": {
+        "op": "parse",
+        "raw": "profile:aip_0004|OpenAI"
+      },
+      "name": "parse a profile scoped override"
+    },
+    {
+      "expected": {
+        "profile_id": null,
+        "provider": "Gemma 4 E2B (On-Device)"
+      },
+      "input": {
+        "op": "parse",
+        "raw": "Gemma 4 E2B (On-Device)"
+      },
+      "name": "parse the bare provider token the records flow writes"
+    },
+    {
+      "expected": {
+        "profile_id": null,
+        "provider": null
+      },
+      "input": {
+        "op": "parse",
+        "raw": ""
+      },
+      "name": "parse an empty column"
+    },
+    {
+      "expected": {
+        "profile_id": null,
+        "provider": null
+      },
+      "input": {
+        "op": "parse",
+        "raw": null
+      },
+      "name": "parse a null column"
+    },
+    {
+      "expected": {
+        "profile_id": null,
+        "provider": null
+      },
+      "input": {
+        "op": "parse",
+        "raw": "   "
+      },
+      "name": "parse whitespace only"
+    },
+    {
+      "expected": {
+        "profile_id": "aip_0004",
+        "provider": null
+      },
+      "input": {
+        "op": "parse",
+        "raw": "profile:aip_0004|"
+      },
+      "name": "parse a profile with no provider carried"
+    },
+    {
+      "expected": {
+        "profile_id": "aip_0004",
+        "provider": null
+      },
+      "input": {
+        "op": "parse",
+        "raw": "profile:aip_0004"
+      },
+      "name": "parse a profile with no separator"
+    },
+    {
+      "expected": {
+        "profile_id": null,
+        "provider": "profile:not a valid id|OpenAI"
+      },
+      "input": {
+        "op": "parse",
+        "raw": "profile:not a valid id|OpenAI"
+      },
+      "name": "parse an unparseable id degrades to a provider token"
+    },
+    {
+      "expected": {
+        "profile_id": "aip_0004",
+        "provider": "Custom (OpenAI-compatible)"
+      },
+      "input": {
+        "op": "parse",
+        "raw": "profile:aip_0004|Custom (OpenAI-compatible)"
+      },
+      "name": "parse a provider token with spaces and brackets"
+    },
+    {
+      "expected": {
+        "raw": "profile:aip_0004|OpenAI"
+      },
+      "input": {
+        "op": "encode",
+        "profile_id": "aip_0004",
+        "provider": "OpenAI"
+      },
+      "name": "encode a profile scoped override"
+    },
+    {
+      "expected": {
+        "raw": "Gemma 4 E2B (On-Device)"
+      },
+      "input": {
+        "op": "encode",
+        "profile_id": null,
+        "provider": "Gemma 4 E2B (On-Device)"
+      },
+      "name": "encode the bare provider token"
+    },
+    {
+      "expected": {
+        "raw": null
+      },
+      "input": {
+        "op": "encode",
+        "profile_id": null,
+        "provider": ""
+      },
+      "name": "encode nothing to write"
+    },
+    {
+      "expected": {
+        "error": "a provider token or profile id may not contain '|'",
+        "raw": null
+      },
+      "input": {
+        "op": "encode",
+        "profile_id": "aip_0004",
+        "provider": "Weird|Provider"
+      },
+      "name": "encode a separator in the token is refused"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "override",
+  "version": 1
+}

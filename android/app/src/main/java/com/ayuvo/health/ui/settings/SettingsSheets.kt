@@ -239,6 +239,8 @@ import kotlin.math.roundToInt
 
 internal enum class SettingsSheet {
     AI_PROVIDER, AI_MODEL, REASONING_EFFORT, MAX_TOKENS, REQUEST_TIMEOUT, API_KEY, CUSTOM_BASE_URL, SPEECH_PROVIDER, SPEECH_LANGUAGE, SPEECH_KEY,
+    MODEL_PROFILE_ADD, MODEL_PROFILE_ACTIONS, MODEL_PROFILE_RENAME, MODEL_PROFILE_MODEL, MODEL_PROFILE_KEY,
+    MODEL_PROFILE_VERTEX, HUGGING_FACE_TOKEN,
     TEXT_PROVIDER, TEXT_MODEL, TEXT_KEY, TEXT_BASE_URL,
     TEXT_FALLBACK_PROVIDER, TEXT_FALLBACK_MODEL, TEXT_FALLBACK_KEY, TEXT_FALLBACK_BASE_URL,
     FALLBACK_PROVIDER, FALLBACK_MODEL, FALLBACK_KEY, FALLBACK_BASE_URL,
@@ -257,7 +259,9 @@ internal fun SettingsSheets(
     vm: SettingsViewModel,
     onDismiss: () -> Unit,
     onInvalidGoalWeight: (String) -> Unit,
-    onRebalanceBlocked: () -> Unit
+    onRebalanceBlocked: () -> Unit,
+    selectedProfileId: String? = null,
+    onProfileAction: (SettingsSheet) -> Unit = {}
 ) {
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val invalidLoseMsg = stringResource(R.string.settings_invalid_goal_lose)
@@ -271,6 +275,86 @@ internal fun SettingsSheets(
     ) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp)) {
             when (sheet) {
+                // -- Saved model profiles (docs/ai-models.md 3) --
+                SettingsSheet.HUGGING_FACE_TOKEN -> ApiKeySheet(
+                    title = stringResource(R.string.settings_hf_token),
+                    placeholder = "hf_...",
+                    onSave = { vm.setHuggingFaceToken(it); onDismiss() }
+                )
+                SettingsSheet.MODEL_PROFILE_ADD -> ListSheet(
+                    title = stringResource(R.string.sheet_model_add_title),
+                    items = ui.availableVisionProviders,
+                    label = { stringResource(it.displayNameRes) },
+                    selected = { false },
+                    onSelect = { vm.addModelProfile(it); onDismiss() },
+                    leadingContent = { AIProviderBrandIcon(it, Modifier.size(20.dp)) }
+                )
+                SettingsSheet.MODEL_PROFILE_ACTIONS -> {
+                    val profile = ui.aiProfiles.firstOrNull { it.id == selectedProfileId }
+                    if (profile == null) {
+                        onDismiss()
+                    } else {
+                        ModelProfileActionsSheet(
+                            profile = profile,
+                            onAction = { onProfileAction(it) },
+                            onDelete = { vm.deleteModelProfile(profile.id); onDismiss() }
+                        )
+                    }
+                }
+                SettingsSheet.MODEL_PROFILE_RENAME -> {
+                    val profile = ui.aiProfiles.firstOrNull { it.id == selectedProfileId }
+                    TextFieldSheet(
+                        title = stringResource(R.string.sheet_model_rename),
+                        initial = profile?.nickname.orEmpty(),
+                        placeholder = stringResource(R.string.sheet_model_rename_placeholder),
+                        onSave = {
+                            if (profile != null) vm.renameModelProfile(profile.id, it)
+                            onDismiss()
+                        }
+                    )
+                }
+                SettingsSheet.MODEL_PROFILE_MODEL -> {
+                    val profile = ui.aiProfiles.firstOrNull { it.id == selectedProfileId }
+                    val provider = profile?.provider
+                    ListSheet(
+                        title = stringResource(R.string.sheet_model),
+                        items = provider?.models.orEmpty(),
+                        label = { it },
+                        selected = { it == profile?.model },
+                        onSelect = {
+                            if (profile != null) vm.setModelProfileModel(profile.id, it)
+                            onDismiss()
+                        },
+                        footer = stringResource(R.string.sheet_model_footer),
+                        customField = { m ->
+                            if (profile != null) vm.setModelProfileModel(profile.id, m)
+                            onDismiss()
+                        }
+                    )
+                }
+                SettingsSheet.MODEL_PROFILE_VERTEX -> {
+                    val profile = ui.aiProfiles.firstOrNull { it.id == selectedProfileId }
+                    TextFieldSheet(
+                        title = stringResource(R.string.sheet_model_vertex),
+                        initial = "",
+                        placeholder = stringResource(R.string.sheet_model_vertex_placeholder),
+                        onSave = {
+                            if (profile != null) vm.setModelProfileVertex(profile.id, it)
+                            onDismiss()
+                        }
+                    )
+                }
+                SettingsSheet.MODEL_PROFILE_KEY -> {
+                    val profile = ui.aiProfiles.firstOrNull { it.id == selectedProfileId }
+                    ApiKeySheet(
+                        title = stringResource(R.string.sheet_model_key),
+                        placeholder = profile?.provider?.let { stringResource(it.apiKeyPlaceholderRes) }.orEmpty(),
+                        onSave = {
+                            if (profile != null) vm.setModelProfileKey(profile.id, it)
+                            onDismiss()
+                        }
+                    )
+                }
                 SettingsSheet.AI_PROVIDER -> ListSheet(
                     title = stringResource(R.string.sheet_ai_provider),
                     items = ui.availableVisionProviders,
@@ -1840,5 +1924,65 @@ internal fun GradientSaveButton(
         contentAlignment = Alignment.Center
     ) {
         Text(text ?: stringResource(R.string.action_save), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+    }
+}
+
+/** Rename, re-point or remove one saved model (docs/ai-models.md 3). */
+@Composable
+private fun ModelProfileActionsSheet(
+    profile: AiProfileUi,
+    onAction: (SettingsSheet) -> Unit,
+    onDelete: () -> Unit
+) {
+    Column(Modifier.fillMaxWidth()) {
+        Text(
+            text = profile.nickname.ifEmpty { profile.providerToken },
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        Text(
+            text = if (profile.model.isEmpty()) profile.providerToken
+            else "${profile.providerToken} \u00b7 ${profile.model}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+        SheetAction(stringResource(R.string.sheet_model_rename)) {
+            onAction(SettingsSheet.MODEL_PROFILE_RENAME)
+        }
+        SheetAction(stringResource(R.string.sheet_model_change_model)) {
+            onAction(SettingsSheet.MODEL_PROFILE_MODEL)
+        }
+        if (profile.provider?.requiresApiKey == true) {
+            SheetAction(stringResource(R.string.sheet_model_key)) {
+                onAction(SettingsSheet.MODEL_PROFILE_KEY)
+            }
+        }
+        if (profile.provider?.usesServiceAccount == true) {
+            SheetAction(stringResource(R.string.sheet_model_vertex)) {
+                onAction(SettingsSheet.MODEL_PROFILE_VERTEX)
+            }
+        }
+        SheetAction(stringResource(R.string.sheet_model_use_primary)) {
+            onAction(SettingsSheet.AI_PROVIDER)
+        }
+        Text(
+            text = stringResource(R.string.sheet_model_delete_note),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
+        )
+        SheetAction(stringResource(R.string.sheet_model_delete), destructive = true, onClick = onDelete)
+    }
+}
+
+@Composable
+private fun SheetAction(label: String, destructive: Boolean = false, onClick: () -> Unit) {
+    TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            color = if (destructive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }

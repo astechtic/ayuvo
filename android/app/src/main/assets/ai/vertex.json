@@ -1,0 +1,85 @@
+{
+  "auth": {
+    "assertion_algorithm": "RS256",
+    "assertion_lifetime_seconds": 3600,
+    "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    "refresh_margin_seconds": 60,
+    "scope": "https://www.googleapis.com/auth/cloud-platform",
+    "service_account_fields": [
+      "client_email",
+      "private_key",
+      "token_uri"
+    ],
+    "token_endpoint": "https://oauth2.googleapis.com/token"
+  },
+  "default_location": "global",
+  "format": "ayuvo-ai-vertex",
+  "hosts": [
+    {
+      "host": "https://aiplatform.googleapis.com",
+      "match": "global"
+    },
+    {
+      "host": "https://aiplatform.{location}.rep.googleapis.com",
+      "match": "multi_region",
+      "values": [
+        "us",
+        "eu"
+      ]
+    },
+    {
+      "host": "https://{location}-aiplatform.googleapis.com",
+      "match": "region"
+    }
+  ],
+  "model_presets": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash",
+    "gemini-3.1-pro-preview",
+    "claude-sonnet-5",
+    "claude-opus-5-5",
+    "claude-haiku-4-5@20251001"
+  ],
+  "notes": [
+    "Google Vertex AI routing. One provider, three transports, chosen by the model id's publisher.",
+    "Verified 2026-09-24 against cloud.google.com/vertex-ai and platform.claude.com/docs (Claude on Google Cloud).",
+    "Auth is always `Authorization: Bearer <access token>`, minted from the profile's service-account JSON.",
+    "The `openai_compatible` route is the least-documented of the three; scripts/ai_contract_check.py pins its shape, and a live call must confirm it before the route is offered in the model preset menu."
+  ],
+  "path_prefix": "/v1/projects/{project}/locations/{location}",
+  "routes": [
+    {
+      "body_extras": {},
+      "drops_model_from_body": true,
+      "path": "/publishers/google/models/{model}:generateContent",
+      "prefixes": [
+        "gemini-",
+        "google/"
+      ],
+      "publisher": "google",
+      "transport": "gemini"
+    },
+    {
+      "body_extras": {
+        "anthropic_version": "vertex-2023-10-16"
+      },
+      "drops_model_from_body": true,
+      "path": "/publishers/anthropic/models/{model}:rawPredict",
+      "prefixes": [
+        "claude-",
+        "anthropic/"
+      ],
+      "publisher": "anthropic",
+      "transport": "anthropic"
+    },
+    {
+      "body_extras": {},
+      "drops_model_from_body": false,
+      "path": "/endpoints/openapi/chat/completions",
+      "prefixes": [],
+      "publisher": "openapi",
+      "transport": "openai_compatible"
+    }
+  ],
+  "version": 1
+}

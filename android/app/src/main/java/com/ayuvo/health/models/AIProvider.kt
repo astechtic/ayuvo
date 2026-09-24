@@ -2,12 +2,14 @@ package com.ayuvo.health.models
 
 import androidx.annotation.StringRes
 import com.ayuvo.health.R
+import com.ayuvo.health.services.ondevice.InstalledLocalModels
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AIProvider {
     @SerialName("Google Gemini") GEMINI,
+    @SerialName("Google Vertex AI") VERTEX_AI,
     @SerialName("OpenAI") OPENAI,
     @SerialName("Anthropic Claude") ANTHROPIC,
     @SerialName("xAI Grok") XAI,
@@ -27,6 +29,7 @@ enum class AIProvider {
     @get:StringRes
     val displayNameRes: Int get() = when (this) {
         GEMINI -> R.string.ai_provider_gemini
+        VERTEX_AI -> R.string.ai_provider_vertex
         OPENAI -> R.string.ai_provider_openai
         ANTHROPIC -> R.string.ai_provider_anthropic
         XAI -> R.string.ai_provider_xai
@@ -45,6 +48,8 @@ enum class AIProvider {
     }
 
     val baseUrl: String get() = when (this) {
+        // Vertex builds its URL from the profile's project and location (docs/ai-models.md 6).
+        VERTEX_AI -> ""
         GEMINI -> "https://generativelanguage.googleapis.com/v1beta"
         OPENAI -> "https://api.openai.com/v1"
         ANTHROPIC -> "https://api.anthropic.com/v1"
@@ -68,6 +73,14 @@ enum class AIProvider {
      * Lineups verified against provider docs on 2026-09-07. Mirrors iOS AIProvider.swift.
      */
     val models: List<String> get() = when (this) {
+        VERTEX_AI -> listOf(
+            "gemini-3.5-flash-lite",
+            "gemini-3.8-flash",
+            "gemini-3.1-pro-preview",
+            "claude-sonnet-5",
+            "claude-opus-5-5",
+            "claude-haiku-4-5@20251001"
+        )
         GEMINI -> listOf(
             "gemini-3.5-flash-lite",
             "gemini-3.8-flash",
@@ -146,7 +159,8 @@ enum class AIProvider {
             "mistral-large-2512",
             "ministral-14b-2512"
         )
-        LOCAL_GEMMA -> listOf("gemma-4-E2B-it")
+        // The installed catalogue models, published by the runtime (docs/ai-models.md 7).
+        LOCAL_GEMMA -> InstalledLocalModels.orLegacy()
         OLLAMA -> listOf(
             "qwen3-vl",
             "qwen3.8",
@@ -193,6 +207,9 @@ enum class AIProvider {
     val defaultTextModel: String get() = textModels.firstOrNull() ?: defaultModel
     val supportsVision: Boolean get() = this != DEEPSEEK && this != CEREBRAS
 
+    /** This provider's `@SerialName`: the token shared data and the iOS app both use. */
+    val token: String get() = serializer().descriptor.getElementName(ordinal)
+
     fun supportedModelOrDefault(model: String?): String {
         val normalized = model?.let(::normalizeModelId)
         return when {
@@ -214,14 +231,21 @@ enum class AIProvider {
     }
 
     val requiresApiKey: Boolean get() = this != OLLAMA && this != LOCAL_GEMMA
+
+    /**
+     * Vertex authenticates with a service-account JSON, not an API key. It is stored in the same
+     * place and pasted into the same field, but it is a credential document, not a token.
+     */
+    val usesServiceAccount: Boolean get() = this == VERTEX_AI
     val requiresCustomEndpoint: Boolean get() = this == CUSTOM_OPENAI
     val requiresCustomModelName: Boolean get() = this == CUSTOM_OPENAI
     val usesConfigurableRequestTimeout: Boolean get() = this == OLLAMA || this == CUSTOM_OPENAI
     val supportsCustomModelName: Boolean
-        get() = this == OPENROUTER || this == HUGGING_FACE || this == CUSTOM_OPENAI
+        get() = this == OPENROUTER || this == HUGGING_FACE || this == CUSTOM_OPENAI || this == VERTEX_AI
 
     val apiFormat: ApiFormat get() = when (this) {
-        GEMINI -> ApiFormat.GEMINI
+        // Nominal only: Vertex picks its transport per model (docs/ai-models.md 6).
+        GEMINI, VERTEX_AI -> ApiFormat.GEMINI
         ANTHROPIC -> ApiFormat.ANTHROPIC
         LOCAL_GEMMA -> ApiFormat.LOCAL
         OPENAI, XAI, OPENROUTER, TOGETHER_AI, GROQ, HUGGING_FACE,
@@ -231,6 +255,7 @@ enum class AIProvider {
     @get:StringRes
     val apiKeyPlaceholderRes: Int get() = when (this) {
         GEMINI -> R.string.ai_key_placeholder_gemini
+        VERTEX_AI -> R.string.ai_key_placeholder_vertex
         OPENAI -> R.string.ai_key_placeholder_openai
         ANTHROPIC -> R.string.ai_key_placeholder_anthropic
         XAI -> R.string.ai_key_placeholder_xai
@@ -262,6 +287,17 @@ enum class AIProvider {
             get() = textProviders.filter { it != LOCAL_GEMMA }
 
         fun normalizedRequestTimeoutSeconds(value: Int): Int = value.coerceIn(30, 600)
+
+        /**
+         * The cross-platform provider token: this enum's `@SerialName`, which equals the iOS
+         * `rawValue` by contract (docs/ai-models.md 2). Android's own preference keys store the
+         * enum NAME instead, so every value that crosses to shared data goes through here.
+         *
+         * Read off the serializer's descriptor rather than re-typed, so it cannot drift from the
+         * annotations above.
+         */
+        fun fromToken(token: String?): AIProvider? =
+            entries.firstOrNull { it.token == token }
 
         fun normalizeModelId(model: String): String =
             when (model.trim()) {

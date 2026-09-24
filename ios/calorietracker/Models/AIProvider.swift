@@ -4,6 +4,7 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
     case appleIntelligence = "Apple Intelligence (On-Device)"
     case gemma4Local = "Gemma 4 E2B (On-Device)"
     case gemini = "Google Gemini"
+    case vertexAI = "Google Vertex AI"
     case openai = "OpenAI"
     case anthropic = "Anthropic Claude"
     case xai = "xAI Grok"
@@ -35,6 +36,7 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
         switch self {
         case .appleIntelligence, .gemma4Local, .customOpenAI: nil
         case .gemini: "provider_gemini"
+        case .vertexAI: "provider_gemini"
         case .openai: "provider_openai"
         case .anthropic: "provider_anthropic"
         case .xai: "provider_xai"
@@ -63,6 +65,8 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
     var baseURL: String {
         switch self {
         case .appleIntelligence, .gemma4Local: ""
+        // Vertex builds its URL from the profile's project and location (docs/ai-models.md §6).
+        case .vertexAI: ""
         case .gemini: "https://generativelanguage.googleapis.com/v1beta"
         case .openai: "https://api.openai.com/v1"
         case .anthropic: "https://api.anthropic.com/v1"
@@ -186,7 +190,19 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
     var models: [String] {
         switch self {
         case .appleIntelligence: [] // text-only system model; never offered for image requests
-        case .gemma4Local: [Gemma4LocalModelManager.modelID]
+        // The installed catalogue models, published by the manager (docs/ai-models.md §7).
+        case .gemma4Local:
+            MainActor.assumeIsolated { Gemma4LocalModelManager.installedChatModelIDs }
+                .isEmpty ? [Gemma4LocalModelManager.modelID]
+                : MainActor.assumeIsolated { Gemma4LocalModelManager.installedChatModelIDs }
+        case .vertexAI: [
+            "gemini-3.5-flash-lite",
+            "gemini-3.8-flash",
+            "gemini-3.1-pro-preview",
+            "claude-sonnet-5",
+            "claude-opus-5-5",
+            "claude-haiku-4-5@20251001",
+        ]
         case .gemini: [
             "gemini-3.5-flash-lite",         // vision, cheapest current stable model (default)
             "gemini-3.8-flash",              // vision, latest Flash model (GA 2026-09-02)
@@ -325,6 +341,10 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
         self != .ollama && self != .appleIntelligence && self != .gemma4Local
     }
 
+    /// Vertex authenticates with a service-account JSON, not an API key. It is stored in the same
+    /// place and pasted into the same field, but it is a credential document, not a token.
+    var usesServiceAccount: Bool { self == .vertexAI }
+
     /// True for providers where the user supplies the base URL and model name themselves.
     var requiresCustomEndpoint: Bool {
         self == .customOpenAI
@@ -344,7 +364,7 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
     /// True for providers where free-form input is allowed in addition to the preset list
     /// (e.g., OpenRouter / Hugging Face — user can pick a preset OR type any model ID).
     var supportsCustomModelName: Bool {
-        self == .openrouter || self == .huggingface || self == .customOpenAI
+        self == .openrouter || self == .huggingface || self == .customOpenAI || self == .vertexAI
     }
 
     /// API format grouping
@@ -360,7 +380,8 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
         switch self {
         case .appleIntelligence: .onDevice
         case .gemma4Local: .liteRTLocal
-        case .gemini: .gemini
+        // Nominal only: Vertex picks its transport per model (docs/ai-models.md §6).
+        case .gemini, .vertexAI: .gemini
         case .anthropic: .anthropic
         case .openai, .xai, .openrouter, .togetherai, .groq, .huggingface, .fireworks, .deepinfra, .mistral, .deepseek, .cerebras, .ollama, .customOpenAI: .openaiCompatible
         }
@@ -369,6 +390,7 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
     var apiKeyPlaceholder: String {
         switch self {
         case .appleIntelligence, .gemma4Local: "No key needed"
+        case .vertexAI: "Service account JSON"
         case .gemini: "AIza..."
         case .openai: "sk-..."
         case .anthropic: "sk-ant-..."
@@ -506,6 +528,7 @@ struct AIProviderSettings {
         set {
             let resolved = AIProvider.visionProviders.contains(newValue) ? newValue : .gemini
             UserDefaults.standard.set(resolved.rawValue, forKey: providerKey)
+            syncRoleFromLegacy(.image)
         }
     }
 
@@ -536,7 +559,10 @@ struct AIProviderSettings {
 
     static var separateTextProviderEnabled: Bool {
         get { UserDefaults.standard.bool(forKey: separateTextProviderEnabledKey) }
-        set { UserDefaults.standard.set(newValue, forKey: separateTextProviderEnabledKey) }
+        set {
+            UserDefaults.standard.set(newValue, forKey: separateTextProviderEnabledKey)
+            syncRoleEnabledFromLegacy(.text)
+        }
     }
 
     static var selectedTextProvider: AIProvider {
@@ -556,6 +582,7 @@ struct AIProviderSettings {
         set {
             let resolved = AIProvider.textProviders.contains(newValue) ? newValue : .gemini
             UserDefaults.standard.set(resolved.rawValue, forKey: textProviderKey)
+            syncRoleFromLegacy(.text)
         }
     }
 
@@ -569,7 +596,10 @@ struct AIProviderSettings {
             }
             return resolved
         }
-        set { UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: textModelKey) }
+        set {
+            UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: textModelKey)
+            syncRoleFromLegacy(.text)
+        }
     }
 
     /// Upgrades legacy Gemini choices exactly once, including the fallback.
@@ -663,6 +693,7 @@ struct AIProviderSettings {
         }
         set {
             UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: modelKey)
+            syncRoleFromLegacy(.image)
         }
     }
 
@@ -689,6 +720,11 @@ struct AIProviderSettings {
         } else {
             UserDefaults.standard.removeObject(forKey: baseURLKey + provider.rawValue)
         }
+        // The key is per provider but a profile is per role, so only the roles actually running
+        // this provider are re-synced.
+        for role in [AIRole.image, .text] where legacyProvider(for: role) == provider {
+            syncRoleFromLegacy(role)
+        }
     }
 
     /// Base URL override used when the provider runs in the fallback role. Stored
@@ -703,6 +739,9 @@ struct AIProviderSettings {
             UserDefaults.standard.set(url, forKey: fallbackBaseURLKey + provider.rawValue)
         } else {
             UserDefaults.standard.removeObject(forKey: fallbackBaseURLKey + provider.rawValue)
+        }
+        for role in [AIRole.imageFallback, .textFallback] where legacyProvider(for: role) == provider {
+            syncRoleFromLegacy(role)
         }
     }
 
@@ -761,7 +800,10 @@ struct AIProviderSettings {
     /// once on the configured fallback provider before surfacing the error.
     static var fallbackEnabled: Bool {
         get { UserDefaults.standard.bool(forKey: fallbackEnabledKey) }
-        set { UserDefaults.standard.set(newValue, forKey: fallbackEnabledKey) }
+        set {
+            UserDefaults.standard.set(newValue, forKey: fallbackEnabledKey)
+            syncRoleEnabledFromLegacy(.imageFallback)
+        }
     }
 
     static var selectedFallbackProvider: AIProvider {
@@ -782,6 +824,7 @@ struct AIProviderSettings {
         set {
             let resolved = AIProvider.visionProviders.contains(newValue) ? newValue : .gemini
             UserDefaults.standard.set(resolved.rawValue, forKey: fallbackProviderKey)
+            syncRoleFromLegacy(.imageFallback)
         }
     }
 
@@ -795,14 +838,20 @@ struct AIProviderSettings {
             }
             return resolved
         }
-        set { UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: fallbackModelKey) }
+        set {
+            UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: fallbackModelKey)
+            syncRoleFromLegacy(.imageFallback)
+        }
     }
 
     // MARK: - Text AI Fallback
 
     static var textFallbackEnabled: Bool {
         get { UserDefaults.standard.bool(forKey: textFallbackEnabledKey) }
-        set { UserDefaults.standard.set(newValue, forKey: textFallbackEnabledKey) }
+        set {
+            UserDefaults.standard.set(newValue, forKey: textFallbackEnabledKey)
+            syncRoleEnabledFromLegacy(.textFallback)
+        }
     }
 
     static var selectedTextFallbackProvider: AIProvider {
@@ -822,6 +871,7 @@ struct AIProviderSettings {
         set {
             let resolved = AIProvider.textProviders.contains(newValue) ? newValue : .gemini
             UserDefaults.standard.set(resolved.rawValue, forKey: textFallbackProviderKey)
+            syncRoleFromLegacy(.textFallback)
         }
     }
 
@@ -835,7 +885,10 @@ struct AIProviderSettings {
             }
             return resolved
         }
-        set { UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: textFallbackModelKey) }
+        set {
+            UserDefaults.standard.set(AIProvider.normalizedModelID(newValue), forKey: textFallbackModelKey)
+            syncRoleFromLegacy(.textFallback)
+        }
     }
 
     /// Providers that have a saved API key (or don't require one, e.g. Ollama),
@@ -914,6 +967,12 @@ struct AIProviderSettings {
         UserDefaults.standard.removeObject(forKey: fallbackBaseURLMigrationVersionKey)
         UserDefaults.standard.removeObject(forKey: requestTimeoutSecondsKey)
         UserDefaults.standard.removeObject(forKey: pendingLocalModelSelectionKey)
+        // These two were forgotten here, so a reset used to leave the migrations marked done and a
+        // legacy model id could survive it. With them cleared, a reset followed by onboarding
+        // re-runs every migration and yields exactly one profile (docs/ai-models.md §4).
+        UserDefaults.standard.removeObject(forKey: geminiModelMigrationVersionKey)
+        UserDefaults.standard.removeObject(forKey: modelRegistryMigrationVersionKey)
+        deleteAllProfileData()
     }
 
     static func replaceDeletedLocalGemmaSelections(defaults: UserDefaults = .standard) {
@@ -937,5 +996,28 @@ struct AIProviderSettings {
             defaults.set(AIProvider.gemini.defaultTextModel, forKey: textFallbackModelKey)
             defaults.set(false, forKey: textFallbackEnabledKey)
         }
+        repointRolesOffTheDeletedLocalModel(defaults: defaults)
+    }
+
+    /// The profile half of the line above: a role may not keep pointing at a model that is no
+    /// longer on the device. The profile itself is kept — the user may install it again — and only
+    /// the pointers move, so nothing silently answers from a provider they did not choose.
+    private static func repointRolesOffTheDeletedLocalModel(defaults: UserDefaults) {
+        let local = profiles.filter { $0.providerToken == AIProvider.gemma4Local.rawValue }
+        guard !local.isEmpty else { return }
+        let doomed = Set(local.map(\.id))
+        var pointers = rolePointers
+        var touched = false
+        for role in AIRole.allCases where pointers[role].map({ doomed.contains($0.profileID ?? "") }) == true {
+            pointers[role] = AIRolePointer(profileID: nil, enabled: false)
+            touched = true
+        }
+        guard touched else { return }
+        setStore(profiles: profiles, roles: pointers, defaults: defaults)
+        // The flat keys now name Gemini again, so let the usual inbound channel rebuild the primary
+        // rather than duplicating find-or-create here.
+        defaults.removeObject(forKey: primaryFingerprintKey)
+        adoptLegacyPrimaryIfNeeded(defaults: defaults,
+                                   nowMs: Int(Date().timeIntervalSince1970 * 1000))
     }
 }

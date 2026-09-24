@@ -1,0 +1,1296 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "https://api.openai.com/v1",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_OpenAI",
+          "source": "provider"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gpt-5.4-mini",
+        "profile_id": "aip_0001",
+        "provider": "OpenAI",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_completion_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": true
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "an image request uses the image role"
+    },
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "https://api.openai.com/v1",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_OpenAI",
+          "source": "provider"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gpt-5.4-mini",
+        "profile_id": "aip_0001",
+        "provider": "OpenAI",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_completion_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a text request with no separate text provider uses the image role"
+    },
+    {
+      "expected": {
+        "api_format": "gemini",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_Google Gemini",
+          "source": "provider"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gemini-3.5-flash-lite",
+        "profile_id": "aip_0002",
+        "provider": "Google Gemini",
+        "request_timeout_seconds": null,
+        "role": "text",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a text request uses the text role when one is configured"
+    },
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "https://api.openai.com/v1",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": "aiprofilekey_aip_0008",
+          "source": "profile"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gpt-5.4-mini",
+        "profile_id": "aip_0008",
+        "provider": "OpenAI",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_completion_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [
+            "aip_0008"
+          ],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "profile:aip_0008",
+            "id": "aip_0008",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "Work OpenAI",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0008"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a profile-scoped key wins over the provider key"
+    },
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "https://api.openai.com/v1",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_OpenAI",
+          "source": "provider"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gpt-5.4-mini",
+        "profile_id": "aip_0008",
+        "provider": "OpenAI",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_completion_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "profile:aip_0008",
+            "id": "aip_0008",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "Work OpenAI",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0008"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a vanished profile key falls back to the provider key",
+      "notes": "EncryptedSharedPreferences wipes itself after an AEADBadTagException; without this fall-through a working setup would be permanently dead."
+    },
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "https://api.groq.com/openai/v1",
+        "blocked": "no_key",
+        "context_tokens": null,
+        "credential": {
+          "ref": null,
+          "source": "missing"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "qwen/qwen3.6-27b",
+        "profile_id": "aip_0009",
+        "provider": "Groq",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Groq",
+            "id": "aip_0009",
+            "model_id": "qwen/qwen3.6-27b",
+            "nickname": "Groq · qwen/qwen3.6-27b",
+            "provider": "Groq",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0009"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a keyless profile is blocked, never swapped for a usable one",
+      "notes": "Answering on the second profile would report an answer from a provider the user did not choose. The caller surfaces the same no-key error it does today."
+    },
+    {
+      "expected": {
+        "api_format": "litert_local",
+        "base_url": "",
+        "blocked": "model_not_installed",
+        "context_tokens": null,
+        "credential": {
+          "ref": null,
+          "source": "none"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gemma-4-e2b-it-litertlm",
+        "profile_id": "aip_0004",
+        "provider": "Gemma 4 E2B (On-Device)",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {},
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "none",
+            "id": "aip_0004",
+            "model_id": "gemma-4-e2b-it-litertlm",
+            "nickname": "Gemma 4 E2B (On-Device) · gemma-4-e2b-it-litertlm",
+            "provider": "Gemma 4 E2B (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0004"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "an on-device model that is not installed is blocked, not replaced by the cloud",
+      "notes": "The substitution this refuses would put health data on someone else's server without a word."
+    },
+    {
+      "expected": {
+        "api_format": "litert_local",
+        "base_url": "",
+        "blocked": null,
+        "context_tokens": 4096,
+        "credential": {
+          "ref": null,
+          "source": "none"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "gemma-4-e2b-it-litertlm",
+        "profile_id": "aip_0004",
+        "provider": "Gemma 4 E2B (On-Device)",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "none",
+            "id": "aip_0004",
+            "model_id": "gemma-4-e2b-it-litertlm",
+            "nickname": "Gemma 4 E2B (On-Device) · gemma-4-e2b-it-litertlm",
+            "provider": "Gemma 4 E2B (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0004"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "an installed on-device model answers with no key and no base url"
+    },
+    {
+      "expected": {
+        "api_format": "litert_local",
+        "base_url": "",
+        "blocked": "no_vision",
+        "context_tokens": 4096,
+        "credential": {
+          "ref": null,
+          "source": "none"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "qwen3-4b-litertlm",
+        "profile_id": "aip_0005",
+        "provider": "Gemma 4 E2B (On-Device)",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": true
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "none",
+            "id": "aip_0005",
+            "model_id": "qwen3-4b-litertlm",
+            "nickname": "Gemma 4 E2B (On-Device) · qwen3-4b-litertlm",
+            "provider": "Gemma 4 E2B (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0005"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a text only local model is blocked for an image request",
+      "notes": "Qwen3 has no vision tower. The provider-level supportsVision flag cannot say this, so the guard is per model."
+    },
+    {
+      "expected": {
+        "api_format": "litert_local",
+        "base_url": "",
+        "blocked": null,
+        "context_tokens": 4096,
+        "credential": {
+          "ref": null,
+          "source": "none"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "qwen3-4b-litertlm",
+        "profile_id": "aip_0005",
+        "provider": "Gemma 4 E2B (On-Device)",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "none",
+            "id": "aip_0005",
+            "model_id": "qwen3-4b-litertlm",
+            "nickname": "Gemma 4 E2B (On-Device) · qwen3-4b-litertlm",
+            "provider": "Gemma 4 E2B (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0005"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a text only local model answers a text request"
+    },
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "",
+        "blocked": "no_base_url",
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_Custom (OpenAI-compatible)",
+          "source": "provider"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "my-model",
+        "profile_id": "aip_0007",
+        "provider": "Custom (OpenAI-compatible)",
+        "request_timeout_seconds": 180,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "Custom (OpenAI-compatible)",
+            "OpenAI"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Custom (OpenAI-compatible)",
+            "id": "aip_0007",
+            "model_id": "my-model",
+            "nickname": "Custom (OpenAI-compatible) · my-model",
+            "provider": "Custom (OpenAI-compatible)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0007"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a custom endpoint with no url is blocked"
+    },
+    {
+      "expected": {
+        "api_format": "openai_compatible",
+        "base_url": "http://10.0.0.5:8080/v1",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_Custom (OpenAI-compatible)",
+          "source": "provider"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "my-model",
+        "profile_id": "aip_0006",
+        "provider": "Custom (OpenAI-compatible)",
+        "request_timeout_seconds": 180,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "Custom (OpenAI-compatible)"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": "http://10.0.0.5:8080/v1",
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Custom (OpenAI-compatible)",
+            "id": "aip_0006",
+            "model_id": "my-model",
+            "nickname": "Custom (OpenAI-compatible) · my-model",
+            "provider": "Custom (OpenAI-compatible)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0006"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a custom endpoint carries its own url and timeout"
+    },
+    {
+      "expected": {
+        "api_format": "gemini",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta",
+        "blocked": null,
+        "context_tokens": null,
+        "credential": {
+          "ref": null,
+          "source": "missing"
+        },
+        "fell_back": true,
+        "max_response_tokens": 1024,
+        "model": "gemini-3.5-flash-lite",
+        "profile_id": null,
+        "provider": "Google Gemini",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": null
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a device with nothing configured gets the default provider",
+      "notes": "The only unblocked synthesized route: what the app shows before the first key."
+    },
+    {
+      "expected": {
+        "api_format": "gemini",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta",
+        "blocked": "no_profile",
+        "context_tokens": null,
+        "credential": {
+          "ref": "apikey_Google Gemini",
+          "source": "provider"
+        },
+        "fell_back": true,
+        "max_response_tokens": 1024,
+        "model": "gemini-3.5-flash-lite",
+        "profile_id": null,
+        "provider": "Google Gemini",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_9999"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "a role pointing at a deleted profile is blocked",
+      "notes": "Deleting a profile must repoint every role that named it (rule 1); a dangling pointer is a bug, and answering from an unrelated profile would hide it."
+    },
+    {
+      "expected": {
+        "api_format": "on_device",
+        "base_url": "",
+        "blocked": "model_not_installed",
+        "context_tokens": null,
+        "credential": {
+          "ref": null,
+          "source": "none"
+        },
+        "fell_back": false,
+        "max_response_tokens": 1024,
+        "model": "System Language Model",
+        "profile_id": "aip_0010",
+        "provider": "Apple Intelligence (On-Device)",
+        "request_timeout_seconds": null,
+        "role": "image",
+        "token_limit_key": "max_tokens",
+        "vertex": null
+      },
+      "input": {
+        "env": {
+          "local_models": {
+            "gemma-4-e2b-it-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": true
+            },
+            "medgemma-1.5-4b-it-litertlm": {
+              "context_tokens": 2048,
+              "installed": false,
+              "vision": true
+            },
+            "qwen3-4b-litertlm": {
+              "context_tokens": 4096,
+              "installed": true,
+              "vision": false
+            }
+          },
+          "max_response_tokens": 1024,
+          "on_device_available": false,
+          "platform": "ios",
+          "profiles_with_keys": [],
+          "providers_with_keys": [
+            "OpenAI",
+            "Google Gemini"
+          ],
+          "request_timeout_seconds": 180,
+          "requires_vision": false
+        },
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "none",
+            "id": "aip_0010",
+            "model_id": "System Language Model",
+            "nickname": "Apple Intelligence (On-Device) · System Language Model",
+            "provider": "Apple Intelligence (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0010"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "apple intelligence is blocked until the platform says it is available",
+      "notes": "Apple Intelligence is iOS-only, so the case names its platform: an Android build must not be able to resolve a route to a provider it does not have."
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "resolve_role",
+  "version": 1
+}

@@ -31,6 +31,8 @@ internal data class PermissionDialogState(
 internal class SettingsScreenState(selectedPage: MutableState<SettingsPage?>) {
     var selectedPage by selectedPage
     var sheet by mutableStateOf<SettingsSheet?>(null)
+    /** Which saved model the open model sheet is about (docs/ai-models.md 3). */
+    var selectedModelProfileId by mutableStateOf<String?>(null)
     var showNutritionImport by mutableStateOf(false)
     var showDeleteDialog by mutableStateOf(false)
     var showClearFoodDialog by mutableStateOf(false)

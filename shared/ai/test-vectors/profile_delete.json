@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "profile_keys": [
+          "aiprofilekey_aip_0009"
+        ],
+        "provider_keys": []
+      },
+      "input": {
+        "profile": {
+          "credential_ref": "profile:aip_0009",
+          "id": "aip_0009",
+          "provider": "OpenAI"
+        },
+        "remaining": [
+          {
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "provider": "OpenAI"
+          }
+        ]
+      },
+      "name": "a profile with its own key"
+    },
+    {
+      "expected": {
+        "profile_keys": [
+          "aiprofilekey_aip_0001"
+        ],
+        "provider_keys": []
+      },
+      "input": {
+        "profile": {
+          "credential_ref": "provider:Groq",
+          "id": "aip_0001",
+          "provider": "Groq"
+        },
+        "remaining": []
+      },
+      "name": "the last profile on a provider keeps the provider key",
+      "notes": "KeyStore.speechApiKey falls back to the matching AI provider's key, so deleting it would silently break speech-to-text."
+    },
+    {
+      "expected": {
+        "profile_keys": [],
+        "provider_keys": []
+      },
+      "input": {
+        "profile": {},
+        "remaining": []
+      },
+      "name": "a profile with no id removes nothing"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "keys_to_delete",
+  "version": 1
+}

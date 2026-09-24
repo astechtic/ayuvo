@@ -58,6 +58,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.automirrored.filled.List
@@ -67,6 +68,8 @@ import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -167,6 +170,8 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
     var showResetConfirm by remember { mutableStateOf(false) }
     var showConversations by remember { mutableStateOf(false) }
     var showPrompts by remember { mutableStateOf(false) }
+    var showMenu by remember { mutableStateOf(false) }
+    var showModelPicker by remember { mutableStateOf(false) }
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -307,6 +312,29 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
                     }
                 },
                 actions = {
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.10f))
+                            .clickable { showMenu = true }
+                            .testTag("coach.menu"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Filled.MoreVert,
+                            contentDescription = stringResource(R.string.coach_menu),
+                            tint = AppColors.Calorie,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.coach_model)) },
+                                onClick = { showMenu = false; showModelPicker = true }
+                            )
+                        }
+                    }
                     Box(
                         modifier = Modifier
                             .size(44.dp)
@@ -543,6 +571,17 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
             onDelete = { vm.deleteConversation(it) },
             onExport = { id, format -> exportConversation(id, format) },
             onDismiss = { showConversations = false }
+        )
+    }
+
+    if (showModelPicker) {
+        CoachModelPickerSheet(
+            profiles = ui.aiProfiles,
+            selectedProfileId = ui.modelOverrideProfileId,
+            selectedProvider = ui.modelOverrideProvider,
+            onPick = { vm.setModelOverride(it) },
+            onSetDefault = { vm.setModelAsDefault(it) },
+            onDismiss = { showModelPicker = false }
         )
     }
 

@@ -101,6 +101,15 @@ class CoachRepository(
         conversation
     }
 
+    /**
+     * Pins a conversation to a model (docs/ai-models.md §8). The column already existed; what was
+     * missing was anything writing it from the chat.
+     */
+    suspend fun setProviderOverride(id: String, raw: String?, nowMs: Long) {
+        val conversation = conversation(id) ?: return
+        updateConversation(conversation.copy(providerOverride = raw), nowMs)
+    }
+
     suspend fun updateConversation(conversation: Conversation, nowMs: Long) {
         write { db ->
             val cv = values(conversation.copy(updatedMs = nowMs))

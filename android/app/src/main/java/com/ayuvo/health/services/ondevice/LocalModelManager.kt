@@ -45,7 +45,12 @@ data class LocalModelState(
 /** Owns verified model artifacts in no-backup app storage. */
 class LocalModelManager(
     context: Context,
-    private val client: OkHttpClient
+    private val client: OkHttpClient,
+    /**
+     * The optional Hugging Face token, read at download time. Only entries marked gated send it
+     * (docs/ai-models.md 7); everything else is fetched anonymously, as it always was.
+     */
+    private val huggingFaceToken: () -> String? = { null }
 ) {
     private val appContext = context.applicationContext
     private val modelDir = File(appContext.noBackupFilesDir, "local-models").apply { mkdirs() }
@@ -138,13 +143,45 @@ class LocalModelManager(
                 "Not enough free storage for ${descriptor.displayName}."
             }
             part.delete()
-            val request = Request.Builder().url(descriptor.downloadUrl).get().build()
+            val request = Request.Builder().url(descriptor.downloadUrl).get().apply {
+                if (descriptor.requiresAuth) {
+                    val token = huggingFaceToken()
+                        ?: throw IllegalStateException(
+                            descriptor.repositoryUrl?.let {
+                                "${descriptor.displayName} is gated. Add a Hugging Face token in " +
+                                    "Settings, and accept its terms at $it with the same account."
+                            } ?: "${descriptor.displayName} needs a Hugging Face token. Add one in Settings."
+                        )
+                    addHeader("Authorization", "Bearer $token")
+                }
+            }.build()
             val digest = MessageDigest.getInstance("SHA-256")
             val call = client.newCall(request)
             activeCalls[id] = call
             currentCoroutineContext().ensureActive()
             call.execute().use { response ->
-                if (!response.isSuccessful) error("Download failed (HTTP ${response.code}).")
+                if (!response.isSuccessful) {
+                    // 401/403 on a gated model is almost always the token or the unaccepted
+                    // licence, not a server fault. "HTTP 403" sends people looking in the wrong place.
+                    if (response.code == 401 || response.code == 403) {
+                        // 401/403 on a gated model is the token or the unaccepted licence, never a
+                        // server fault -- and "accept the terms" without saying where is barely
+                        // better than "HTTP 403", so name the page.
+                        val page = descriptor.repositoryUrl
+                        error(
+                            if (page != null) {
+                                "Hugging Face refused the download (HTTP ${response.code}). Open " +
+                                    "$page, accept the model's terms with the account your token " +
+                                    "belongs to, then try again."
+                            } else {
+                                "Hugging Face refused the download (HTTP ${response.code}). Check " +
+                                    "the token in Settings and that its account has accepted this " +
+                                    "model's terms."
+                            }
+                        )
+                    }
+                    error("Download failed (HTTP ${response.code}).")
+                }
                 val body = response.body ?: error("The download response was empty.")
                 val declaredLength = body.contentLength()
                 if (declaredLength >= 0L && declaredLength != descriptor.expectedBytes) {

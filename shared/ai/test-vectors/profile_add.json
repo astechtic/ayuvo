@@ -1,0 +1,228 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "action": "created",
+        "profile_id": "aip_0001",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ]
+      },
+      "input": {
+        "model": "gpt-5.4-mini",
+        "now_ms": 1700000000000,
+        "profiles": [],
+        "provider": "OpenAI"
+      },
+      "name": "the first model"
+    },
+    {
+      "expected": {
+        "action": "created",
+        "profile_id": "aip_0002",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0002",
+            "model_id": "gpt-5.5",
+            "nickname": "Work account",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ]
+      },
+      "input": {
+        "model": "gpt-5.5",
+        "nickname": "Work account",
+        "now_ms": 1700000000000,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "provider": "OpenAI"
+      },
+      "name": "a second account on the same provider",
+      "notes": "Two keys on one provider is the case the four flat slots could never express."
+    },
+    {
+      "expected": {
+        "action": "reused",
+        "profile_id": "aip_0001",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ]
+      },
+      "input": {
+        "model": "gpt-5.4-mini",
+        "now_ms": 1700000000000,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "provider": "OpenAI"
+      },
+      "name": "an identical configuration is reused not duplicated"
+    },
+    {
+      "expected": {
+        "action": "created",
+        "profile_id": "aip_0001",
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0001",
+            "model_id": "gemini-3.8-flash",
+            "nickname": "Personal",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ]
+      },
+      "input": {
+        "model": "gemini-3.8-flash",
+        "nickname": "Personal",
+        "now_ms": 1700000000000,
+        "profiles": [],
+        "provider": "Google Gemini"
+      },
+      "name": "a name the user typed is kept"
+    },
+    {
+      "expected": {
+        "action": "ignored",
+        "profile_id": null,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ]
+      },
+      "input": {
+        "model": "x",
+        "now_ms": 1700000000000,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "provider": "Nonesuch"
+      },
+      "name": "an unknown provider adds nothing"
+    },
+    {
+      "expected": {
+        "action": "ignored",
+        "profile_id": null,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ]
+      },
+      "input": {
+        "env": {
+          "platform": "android"
+        },
+        "model": "System Language Model",
+        "now_ms": 1700000000000,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "provider": "Apple Intelligence (On-Device)"
+      },
+      "name": "an ios only provider is refused on android"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "add_profile",
+  "version": 1
+}

@@ -1,0 +1,77 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "key": "max_completion_tokens"
+      },
+      "input": {
+        "model": "gpt-4o-mini",
+        "provider": "OpenAI"
+      },
+      "name": "openai always uses the completion key"
+    },
+    {
+      "expected": {
+        "key": "max_completion_tokens"
+      },
+      "input": {
+        "model": "gpt-5.6-sol",
+        "provider": "OpenAI"
+      },
+      "name": "openai on a 5.6 model"
+    },
+    {
+      "expected": {
+        "key": "max_completion_tokens"
+      },
+      "input": {
+        "model": "gpt-5-turbo",
+        "provider": "Custom (OpenAI-compatible)"
+      },
+      "name": "a custom endpoint serving a gpt-5 model"
+    },
+    {
+      "expected": {
+        "key": "max_completion_tokens"
+      },
+      "input": {
+        "model": "vendor/o3-mini",
+        "provider": "Custom (OpenAI-compatible)"
+      },
+      "name": "a namespaced o3 model"
+    },
+    {
+      "expected": {
+        "key": "max_tokens"
+      },
+      "input": {
+        "model": "llama-3.3-70b",
+        "provider": "Custom (OpenAI-compatible)"
+      },
+      "name": "a custom endpoint serving anything else"
+    },
+    {
+      "expected": {
+        "key": "max_tokens"
+      },
+      "input": {
+        "model": "gemini-3.8-flash",
+        "provider": "Google Gemini"
+      },
+      "name": "gemini never sees either key"
+    },
+    {
+      "expected": {
+        "key": "max_tokens"
+      },
+      "input": {
+        "model": "qwen/qwen3.6-27b",
+        "provider": "Groq"
+      },
+      "name": "an openai compatible provider that is not openai"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "token_limit_key",
+  "version": 1
+}

@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.ayuvo.health.R
 import com.ayuvo.health.models.AIProvider
 import com.ayuvo.health.models.SpeechProvider
+import com.ayuvo.health.services.ondevice.LocalModelCatalog
+import com.ayuvo.health.services.ondevice.LocalModelInstallStatus
 import com.ayuvo.health.services.ondevice.LocalModelId
 import com.ayuvo.health.ui.design.AyuvoShapes
 import com.ayuvo.health.ui.design.AyuvoSpacing
@@ -132,20 +134,87 @@ internal fun AiProvidersPage(ctx: SettingsPageContext) {
     val vm = ctx.vm
     val state = ctx.state
     val tint = SettingsPage.AI_PROVIDERS.tint
-    ui.localModelStates[LocalModelId.GEMMA_4_E2B]?.let { localModel ->
+    // Every downloadable chat model, installed ones first (docs/ai-models.md §7). The row itself is
+    // the one onboarding shares, so its signature is deliberately unchanged.
+    val chatModels = LocalModelCatalog.chatModels.mapNotNull { ui.localModelStates[it.id] }
+    val installedFirst = chatModels.sortedBy { if (it.status is LocalModelInstallStatus.Installed) 0 else 1 }
+    if (installedFirst.isNotEmpty()) {
         InsetGroup(
             header = stringResource(R.string.settings_on_device_models),
             footer = stringResource(R.string.settings_on_device_models_info)
         ) {
+            installedFirst.forEach { localModel ->
+                row {
+                    LocalModelRow(
+                        state = localModel,
+                        onDownload = { vm.downloadLocalModel(localModel.descriptor.id) },
+                        onDelete = { vm.deleteLocalModel(localModel.descriptor.id) },
+                        icon = Icons.Filled.Memory,
+                        iconTint = tint
+                    )
+                }
+            }
+            // Only shown while a gated entry is listed: MedGemma needs a token, the rest do not.
+            if (chatModels.any { it.descriptor.requiresAuth }) {
+                row {
+                    GroupRow(
+                        title = stringResource(R.string.settings_hf_token),
+                        value = ui.huggingFaceTokenMasked,
+                        icon = Icons.Filled.Key, iconTint = tint,
+                        modifier = Modifier.settingsRow("hfToken"),
+                        onClick = { state.sheet = SettingsSheet.HUGGING_FACE_TOKEN }
+                    )
+                }
+            }
+        }
+    }
+
+    // The saved models (docs/ai-models.md §3). The role groups below still edit the model they run
+    // and write through the same store, so this list always shows what the app would send.
+    // `stringResource` cannot be called from inside joinToString's lambda, so the four role names
+    // are resolved once here.
+    val roleNames = mapOf(
+        "image" to stringResource(R.string.settings_role_primary),
+        "text" to stringResource(R.string.settings_role_text),
+        "image_fallback" to stringResource(R.string.settings_role_image_fallback),
+        "text_fallback" to stringResource(R.string.settings_role_text_fallback),
+    )
+    val unusedLabel = stringResource(R.string.settings_model_unused)
+    InsetGroup(
+        header = stringResource(R.string.settings_section_models),
+        footer = stringResource(R.string.settings_models_info)
+    ) {
+        ui.aiProfiles.forEach { profile ->
             row {
-                LocalModelRow(
-                    state = localModel,
-                    onDownload = { vm.downloadLocalModel(localModel.descriptor.id) },
-                    onDelete = { vm.deleteLocalModel(localModel.descriptor.id) },
-                    icon = Icons.Filled.Memory,
-                    iconTint = tint
+                GroupRow(
+                    title = profile.nickname.ifEmpty { profile.providerToken },
+                    value = if (profile.usedByRoles.isEmpty()) {
+                        unusedLabel
+                    } else {
+                        profile.usedByRoles.joinToString(", ") { roleNames[it].orEmpty() }
+                    },
+                    leading = {
+                        profile.provider?.let { p ->
+                            BrandSlot(tint) { AIProviderBrandIcon(p, Modifier.size(BrandGlyph)) }
+                        }
+                    },
+                    icon = if (profile.provider == null) Icons.Filled.SmartToy else null,
+                    iconTint = tint,
+                    modifier = Modifier.settingsRow("model.${profile.id}"),
+                    onClick = {
+                        state.selectedModelProfileId = profile.id
+                        state.sheet = SettingsSheet.MODEL_PROFILE_ACTIONS
+                    }
                 )
             }
+        }
+        row {
+            GroupRow(
+                title = stringResource(R.string.settings_model_add),
+                icon = Icons.Filled.AutoAwesome, iconTint = tint,
+                modifier = Modifier.settingsRow("model.add"),
+                onClick = { state.sheet = SettingsSheet.MODEL_PROFILE_ADD }
+            )
         }
     }
 

@@ -28,11 +28,16 @@ struct ChatService {
         case invalidResponse
         /// §30: the user chose "Use on-device Coach" while a records tool call waited for approval.
         case recordsSwitchToOnDevice
+        /// The model this conversation is pinned to cannot answer right now (docs/ai-models.md §5).
+        /// It is never silently replaced by another one.
+        case modelUnavailable(String)
 
         var errorDescription: String? {
             switch self {
             case .noAPIKey:
                 return "No API key configured. Add your key in Settings → AI Provider."
+            case .modelUnavailable(let reason):
+                return reason
             case .networkError(let err):
                 return "Network error: \(err.localizedDescription)"
             case .apiError(let msg):
@@ -75,7 +80,8 @@ struct ChatService {
         medications: CoachMedicationsContext? = nil,
         /// The conversation's data switches (docs/coach.md §8); they only ever narrow.
         sources: CoachDataSwitches = .allOn,
-        providerOverride: AIProvider? = nil
+        providerOverride: AIProvider? = nil,
+        profileOverride: String? = nil
     ) async throws -> String {
         // A switch that is off removes the source before the prompt or the tools see it, so nothing
         // downstream has to remember to check again.
@@ -121,7 +127,20 @@ struct ChatService {
         // plus the selected Health Records packed by §29.
         let onDeviceSystemPrompt = systemPrompt + onDeviceHealthBlock(health) + onDeviceRecordsBlock(records)
 
-        let config = providerOverride.map {
+        // A conversation pinned to a saved model resolves through the resolver, so its guards apply
+        // and a model that cannot answer refuses by name instead of being swapped for another one.
+        let pinned = profileOverride.flatMap { id -> AIRoleResolver.Route? in
+            guard AIProviderSettings.profile(id: id) != nil else { return nil }
+            return AIRoleResolver.resolve(requiresVision: !images.isEmpty,
+                                          pinnedProfileID: id)
+        }
+        if let pinned, let blocked = pinned.blocked {
+            throw ChatError.modelUnavailable(AIRoleResolver.refusal(for: pinned, reason: blocked))
+        }
+        let config = pinned.map {
+            AIProviderSettings.RequestConfig(provider: $0.provider, model: $0.model,
+                                             baseURL: $0.baseURL, apiKey: $0.apiKey)
+        } ?? providerOverride.map {
             AIProviderSettings.RequestConfig(provider: $0, model: $0 == .gemma4Local ? Gemma4LocalModelManager.modelID : "", baseURL: $0.baseURL, apiKey: nil)
         } ?? AIProviderSettings.currentConfig(requiresVision: !images.isEmpty)
         func request(
@@ -134,6 +153,23 @@ struct ChatService {
                 throw ChatError.noAPIKey
             }
 
+            // Vertex is one provider with three transports, picked per model by the routing table.
+            if provider == .vertexAI {
+                let call = try await vertexCall(profileID: pinned?.profileID
+                                                ?? AIProviderSettings.rolePointers[.image]?.profileID,
+                                                model: model)
+                switch call.transport {
+                case "anthropic":
+                    return try await callAnthropic(baseURL: "", model: model, apiKey: nil, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, images: images, tools: tools, vertex: call)
+                case "openai_compatible":
+                    // The OpenAI surface already speaks bearer tokens, so the token IS the key here.
+                    return try await callOpenAICompatible(baseURL: call.url.absoluteString
+                        .replacingOccurrences(of: "/chat/completions", with: ""),
+                        model: model, apiKey: call.token, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, images: images, provider: provider, tools: tools)
+                default:
+                    return try await callGemini(baseURL: "", model: model, apiKey: nil, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, images: images, tools: tools, vertex: call)
+                }
+            }
             switch provider.apiFormat {
             case .onDevice:
                 await records?.session.add(records?.onDeviceBlock.isEmpty == false ? (records?.packedRefs ?? []) : [])
@@ -157,7 +193,11 @@ struct ChatService {
                 ON-DEVICE MODE
                 You cannot call data tools in this mode. Answer only from the profile, forecast, and data summary above. If the question requires unavailable detailed history, say that briefly instead of inventing facts.
                 """
-                return try await Gemma4LocalModelManager.shared.generate(
+                // The selected model finally means something: several can be installed at once.
+                let manager = await MainActor.run {
+                    Gemma4LocalModelManager.manager(forModelID: model) ?? Gemma4LocalModelManager.shared
+                }
+                return try await manager.generate(
                     prompt: newUserMessage,
                     systemPrompt: localInstructions,
                     history: localHistory,
@@ -182,7 +222,8 @@ struct ChatService {
         } catch {
             if error is CancellationError { throw error }
             if case ChatError.recordsSwitchToOnDevice = error { throw error }
-            if providerOverride != nil { throw error }
+            // A pinned conversation never falls back: the user named the model it must use.
+            if providerOverride != nil || profileOverride != nil { throw error }
             let fallback = images.isEmpty
                 ? AIProviderSettings.currentTextFallbackConfig(
                     excludingPrimary: config.provider,
@@ -605,9 +646,50 @@ struct ChatService {
         }
     }
 
-    private static func callAnthropic(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools) async throws -> String {
-        guard let apiKey else { throw ChatError.noAPIKey }
-        guard let url = URL(string: "\(baseURL)/messages") else {
+    /// One Vertex call: the URL the routing table produced, a bearer token, and the body tweaks that
+    /// transport needs (docs/ai-models.md §6).
+    struct VertexCall {
+        let url: URL
+        let token: String
+        let bodyExtras: [String: Any]
+        let dropsModel: Bool
+        let transport: String
+    }
+
+    /// Resolves a Vertex request for `model`, minting (or reusing) an access token.
+    static func vertexCall(profileID: String?, model: String) async throws -> VertexCall {
+        guard let profile = AIProviderSettings.profile(id: profileID),
+              let project = profile.vertexProjectID, !project.isEmpty else {
+            throw ChatError.modelUnavailable(
+                String(localized: "This Vertex AI model has no Google Cloud project. Add one in Settings.")
+            )
+        }
+        let endpoint = AIRef.vertexEndpoint(project, profile.vertexLocation, model)
+        guard endpoint["ok"].bool == true, let raw = endpoint["url"].string,
+              let url = URL(string: raw) else {
+            throw ChatError.modelUnavailable(
+                String(localized: "That Vertex AI model id could not be turned into an endpoint.")
+            )
+        }
+        guard let json = AIProviderSettings.apiKey(for: profile),
+              let account = VertexAuth.ServiceAccount(json: json) else {
+            throw ChatError.modelUnavailable(
+                String(localized: "This Vertex AI model has no service-account JSON. Add one in Settings.")
+            )
+        }
+        let token = try await VertexAuth.accessToken(for: account)
+        var extras: [String: Any] = [:]
+        for (key, value) in endpoint["body_extras"].object ?? [:] {
+            if let text = value.string { extras[key] = text }
+        }
+        return VertexCall(url: url, token: token, bodyExtras: extras,
+                          dropsModel: endpoint["drops_model_from_body"].bool ?? false,
+                          transport: endpoint["transport"].string ?? "gemini")
+    }
+
+    private static func callAnthropic(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools, vertex: VertexCall? = nil) async throws -> String {
+        guard vertex != nil || apiKey != nil else { throw ChatError.noAPIKey }
+        guard let url = vertex?.url ?? URL(string: "\(baseURL)/messages") else {
             throw ChatError.apiError("Invalid API URL.")
         }
         var messages: [[String: Any]] = []
@@ -621,20 +703,25 @@ struct ChatService {
         }
 
         let toolsArray = anthropicToolsArray(for: tools)
-        let headers = [
+        // On Vertex the credential is an OAuth token and the model is already in the path, so the
+        // Anthropic key header and the body's `model` both go away (docs/ai-models.md §6).
+        let headers: [String: String] = vertex.map {
+            ["Content-Type": "application/json", "Authorization": "Bearer \($0.token)"]
+        } ?? [
             "Content-Type": "application/json",
-            "x-api-key": apiKey,
+            "x-api-key": apiKey ?? "",
             "anthropic-version": "2023-06-01",
         ]
 
         for _ in 0..<maxToolRounds {
-            let body: [String: Any] = [
-                "model": model,
+            var body: [String: Any] = [
                 "max_tokens": AIProviderSettings.maxResponseTokens,
                 "system": systemPrompt,
                 "tools": toolsArray,
                 "messages": messages,
             ]
+            if vertex?.dropsModel != true { body["model"] = model }
+            for (key, value) in vertex?.bodyExtras ?? [:] { body[key] = value }
             let data = try await send(url: url, headers: headers, body: body, provider: .anthropic)
             guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let contentArray = json["content"] as? [[String: Any]]
@@ -722,9 +809,9 @@ struct ChatService {
         return ["functionResponse": functionResponse]
     }
 
-    private static func callGemini(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools) async throws -> String {
-        guard let apiKey else { throw ChatError.noAPIKey }
-        guard let url = URL(string: "\(baseURL)/models/\(model):generateContent") else {
+    private static func callGemini(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools, vertex: VertexCall? = nil) async throws -> String {
+        guard vertex != nil || apiKey != nil else { throw ChatError.noAPIKey }
+        guard let url = vertex?.url ?? URL(string: "\(baseURL)/models/\(model):generateContent") else {
             throw ChatError.apiError("Invalid API URL.")
         }
 
@@ -745,7 +832,10 @@ struct ChatService {
             ]
             let data = try await send(
                 url: url,
-                headers: ["Content-Type": "application/json", "X-goog-api-key": apiKey],
+                // Vertex authenticates the same Gemini API with an OAuth token instead of a key.
+                headers: vertex.map {
+                    ["Content-Type": "application/json", "Authorization": "Bearer \($0.token)"]
+                } ?? ["Content-Type": "application/json", "X-goog-api-key": apiKey ?? ""],
                 body: body,
                 provider: .gemini
             )

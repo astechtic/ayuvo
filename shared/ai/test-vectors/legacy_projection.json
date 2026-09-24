@@ -1,0 +1,206 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "input": {
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "the primary projects into the flat keys"
+    },
+    {
+      "expected": {
+        "fingerprint": "OpenAI\u0000gpt-5.4-mini\u0000",
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "input": {
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": true,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "an unset role projects as empty and disabled"
+    },
+    {
+      "expected": {
+        "fingerprint": "Google Gemini\u0000gemini-3.8-flash\u0000",
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gemini-3.8-flash",
+            "provider": "Google Gemini"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "input": {
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "profile:aip_0002",
+            "id": "aip_0002",
+            "model_id": "gemini-3.8-flash",
+            "nickname": "Work Vertex",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": {
+              "location": "global",
+              "project_id": "ayuvo-prod"
+            }
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "name": "vertex and nickname have no flat home",
+      "notes": "Lossy on purpose: nothing that reads the flat keys wants these fields."
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "project_legacy",
+  "version": 1
+}

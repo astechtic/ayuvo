@@ -1767,4 +1767,41 @@
     <string name="coach_chart_failed_unsupported">Chart could not be read: that chart type is not supported</string>
     <string name="coach_chart_failed_too_big">Chart could not be read: it was too large to draw</string>
     <string name="coach_chart_failed_no_readings">Chart could not be read: it had no readings to draw</string>
+    <!-- Saved model profiles (docs/ai-models.md 3) -->
+    <string name="settings_section_models">Models</string>
+    <string name="settings_models_info">Each model keeps its own provider, model name and key. Pick which one answers below, or from the menu in a chat.</string>
+    <string name="settings_model_add">Add model</string>
+    <string name="settings_model_unused">Not in use</string>
+    <string name="sheet_model_add_title">Add a model</string>
+    <string name="sheet_model_actions_title">Model options</string>
+    <string name="sheet_model_rename">Rename</string>
+    <string name="sheet_model_rename_placeholder">Name this model</string>
+    <string name="sheet_model_change_model">Change model</string>
+    <string name="sheet_model_key">API key</string>
+    <string name="sheet_model_key_footer">Leave this empty to use the provider\'s key, or type a different one to use only for this model.</string>
+    <string name="sheet_model_use_primary">Use as Primary</string>
+    <string name="sheet_model_use_text">Use as Text</string>
+    <string name="sheet_model_use_image_fallback">Use as Image fallback</string>
+    <string name="sheet_model_use_text_fallback">Use as Text fallback</string>
+    <string name="sheet_model_delete">Delete this model</string>
+    <string name="sheet_model_delete_note">Any role using it will need a model chosen again. The provider\'s API key is kept.</string>
+    <string name="settings_role_primary">Primary</string>
+    <string name="settings_role_text">Text</string>
+    <string name="settings_role_image_fallback">Image fallback</string>
+    <string name="settings_role_text_fallback">Text fallback</string>
+    <!-- Coach model picker (docs/ai-models.md 8) -->
+    <string name="coach_menu">More</string>
+    <string name="coach_model">Model</string>
+    <string name="coach_model_picker_title">Model for this chat</string>
+    <string name="coach_model_default">Default for new chats</string>
+    <string name="coach_model_default_note">Whatever Settings says answers this chat.</string>
+    <string name="coach_model_saved">Saved models</string>
+    <string name="coach_model_set_default">Use for new chats too</string>
+    <string name="coach_model_none">No saved models yet. Add one in Settings \u2192 AI &amp; Speech.</string>
+    <string name="ai_provider_vertex">Google Vertex AI</string>
+    <string name="ai_key_placeholder_vertex">Service account JSON</string>
+    <string name="sheet_model_vertex">Google Cloud project</string>
+    <string name="sheet_model_vertex_placeholder">my-project or my-project/europe-west1</string>
+    <string name="settings_hf_token">Hugging Face token</string>
+    <string name="settings_hf_token_none">Not set</string>
 </resources>

@@ -846,6 +846,98 @@
         "title": "a very long conversation title that goes on and on and on"
       },
       "name": "slug is capped"
+    },
+    {
+      "expected": {
+        "filename": "how-did-i-sleep-this-week-2026-09-24.md",
+        "text": "# How did I sleep this week?\n\n2026-09-24 · 2 messages · Gemini\n\n---\n\n**You:** How did I sleep this week?\n\nAttached: sleep-study.pdf\n\n**Coach:** You averaged 6 h 40 m.\n\nUsed records: Sleep study — 2026-08-02\n"
+      },
+      "input": {
+        "attachments": [
+          {
+            "bytes": 2048,
+            "char_count": 120,
+            "created_ms": 1700000050000,
+            "deleted": 0,
+            "excerpt": "x",
+            "filename": "sleep-study.pdf",
+            "id": "a1",
+            "kind": "pdf",
+            "mime_type": "application/pdf",
+            "page_count": 2,
+            "sha256": "aa"
+          }
+        ],
+        "conversation": {
+          "archived": 0,
+          "created_ms": 1700000000000,
+          "data_sources": {},
+          "id": "c1",
+          "last_message_ms": 1700000900000,
+          "pinned": 0,
+          "provider_override": "profile:aip_0004|OpenAI",
+          "selected_record_ids": [],
+          "title": "How did I sleep this week?",
+          "updated_ms": 1700000900000
+        },
+        "local_day": "2026-09-24",
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          }
+        ],
+        "op": "markdown",
+        "provider": "Gemini"
+      },
+      "name": "markdown export of a conversation pinned to a saved model",
+      "notes": "Only the newest variant of a regenerated reply appears; attachment contents are never inlined."
     }
   ],
   "format": "ayuvo-coach-vectors",

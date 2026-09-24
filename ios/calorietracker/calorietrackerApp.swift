@@ -51,6 +51,10 @@ struct calorietrackerApp: App {
         AIProviderSettings.migrateLegacyGeminiModelsIfNeeded()
         SpeechSettings.migrateMatchingPrimaryProviderIfNeeded()
         AIProviderSettings.migrateFallbackBaseURLsIfNeeded()
+        // Profiles are built from the flat keys, so this runs AFTER the two migrations above:
+        // the model-registry upgrades have to land in the profiles, not after them. It also adopts
+        // whatever onboarding wrote since the last launch (docs/ai-models.md §4).
+        AIProviderSettings.prepareProfiles(nowMs: Int(Date().timeIntervalSince1970 * 1000))
         if CommandLine.arguments.contains("--reset-onboarding") {
             UserDefaults.standard.removeObject(forKey: "hasCompletedOnboarding")
             UserDefaults.standard.removeObject(forKey: "userProfile")

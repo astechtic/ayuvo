@@ -32,6 +32,10 @@ import com.ayuvo.health.backup.CloudBackupPolicy
 import com.ayuvo.health.backup.CloudBackupValue
 import com.ayuvo.health.models.WaterUnit
 import com.ayuvo.health.models.WorkoutPersistedState
+import com.ayuvo.health.medications.logic.MedicationJson
+import com.ayuvo.health.medications.logic.MedicationJson.objOrNull
+import com.ayuvo.health.medications.logic.MedicationJson.str
+import com.ayuvo.health.services.ai.AIReference
 import com.ayuvo.health.services.health.HealthSyncPrefs
 import com.ayuvo.health.ui.theme.AppThemeColor
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +51,8 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.SetSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import java.io.File
 
 @Serializable
@@ -835,6 +841,7 @@ class PreferencesStore(
             it[Keys.SELECTED_AI_PROVIDER] = resolved.name
             // An explicit remote choice supersedes an on-device choice still waiting for its download.
             if (resolved != AIProvider.LOCAL_GEMMA) it.remove(Keys.PENDING_LOCAL_GEMMA_SELECTION)
+            it.syncAi("image")
         }
     }
 
@@ -855,6 +862,7 @@ class PreferencesStore(
                 prefs[Keys.SELECTED_AI_PROVIDER] = AIProvider.LOCAL_GEMMA.name
                 prefs[Keys.SELECTED_AI_MODEL] = AIProvider.LOCAL_GEMMA.defaultModel
                 prefs.remove(Keys.PENDING_LOCAL_GEMMA_SELECTION)
+                prefs.syncAi("image")
             } else {
                 prefs[Keys.PENDING_LOCAL_GEMMA_SELECTION] = true
             }
@@ -870,6 +878,7 @@ class PreferencesStore(
                 prefs[Keys.SELECTED_AI_PROVIDER] = AIProvider.LOCAL_GEMMA.name
                 prefs[Keys.SELECTED_AI_MODEL] = AIProvider.LOCAL_GEMMA.defaultModel
                 prefs.remove(Keys.PENDING_LOCAL_GEMMA_SELECTION)
+                prefs.syncAi("image")
                 applied = true
             }
         }
@@ -890,14 +899,20 @@ class PreferencesStore(
         )
     }
     suspend fun setSelectedAIModel(model: String) {
-        ds.edit { it[Keys.SELECTED_AI_MODEL] = AIProvider.normalizeModelId(model) }
+        ds.edit {
+            it[Keys.SELECTED_AI_MODEL] = AIProvider.normalizeModelId(model)
+            it.syncAi("image")
+        }
     }
 
     val separateTextProviderEnabled: Flow<Boolean> = ds.data.map {
         it[Keys.SEPARATE_TEXT_PROVIDER_ENABLED] ?: false
     }
     suspend fun setSeparateTextProviderEnabled(enabled: Boolean) {
-        ds.edit { it[Keys.SEPARATE_TEXT_PROVIDER_ENABLED] = enabled }
+        ds.edit {
+            it[Keys.SEPARATE_TEXT_PROVIDER_ENABLED] = enabled
+            syncAiRoleEnabled(it, "text")
+        }
     }
 
     val selectedTextAIProvider: Flow<AIProvider> = ds.data.map {
@@ -912,7 +927,10 @@ class PreferencesStore(
             provider.takeIf { it in AIProvider.textProviders },
             isLocalGemmaExecutable()
         )
-        ds.edit { it[Keys.SELECTED_TEXT_AI_PROVIDER] = resolved.name }
+        ds.edit {
+            it[Keys.SELECTED_TEXT_AI_PROVIDER] = resolved.name
+            it.syncAi("text")
+        }
     }
 
     val selectedTextAIModel: Flow<String?> = ds.data.map {
@@ -924,7 +942,10 @@ class PreferencesStore(
         )
     }
     suspend fun setSelectedTextAIModel(model: String) {
-        ds.edit { it[Keys.SELECTED_TEXT_AI_MODEL] = AIProvider.normalizeModelId(model) }
+        ds.edit {
+            it[Keys.SELECTED_TEXT_AI_MODEL] = AIProvider.normalizeModelId(model)
+            it.syncAi("text")
+        }
     }
 
     /** Upgrade removed AI model presets exactly once, including the fallback model. */
@@ -1040,6 +1061,7 @@ class PreferencesStore(
                     prefs[Keys.TEXT_FALLBACK_MODEL] = AIProvider.GEMINI.defaultTextModel
                 }
             }
+            if (!gemmaExecutable) repointAiRolesOffLocalModels(prefs, System.currentTimeMillis())
             if (!whisperExecutable) {
                 if (prefs[Keys.SELECTED_SPEECH_PROVIDER] == SpeechProvider.LOCAL_WHISPER.name) {
                     prefs[Keys.SELECTED_SPEECH_PROVIDER] = SpeechProvider.NATIVE.name
@@ -1104,6 +1126,530 @@ class PreferencesStore(
         }
     }
 
+    // -- Saved model profiles (docs/ai-models.md 3-5) ----------------------
+    //
+    // Profiles are the source of truth; the flat keys above stay behind as a write-through mirror so
+    // every existing reader keeps working untouched. Writes flow profiles -> flat keys, with exactly
+    // one exception: onboarding still writes only the flat keys, and `adoptLegacyPrimaryIfNeeded`
+    // folds that choice back in.
+
+    val aiModelProfiles: Flow<JsonArray> = ds.data.map { parseProfiles(it[Keys.AI_MODEL_PROFILES]) }
+
+    val aiRolePointers: Flow<JsonObject> = ds.data.map { parseRoles(it[Keys.AI_ROLE_POINTERS]) }
+
+    private fun parseProfiles(text: String?): JsonArray =
+        runCatching { MedicationJson.json.parseToJsonElement(text ?: "[]") as? JsonArray }
+            .getOrNull() ?: JsonArray(emptyList())
+
+    private fun parseRoles(text: String?): JsonObject =
+        runCatching { MedicationJson.json.parseToJsonElement(text ?: "{}") as? JsonObject }
+            .getOrNull() ?: JsonObject(emptyMap())
+
+    suspend fun aiProfilesSnapshot(): JsonArray = parseProfiles(ds.data.first()[Keys.AI_MODEL_PROFILES])
+
+    suspend fun aiRolesSnapshot(): JsonObject = parseRoles(ds.data.first()[Keys.AI_ROLE_POINTERS])
+
+    /**
+     * Replaces the whole store and re-projects the flat keys in the same edit. Every mutation goes
+     * through here; that is what keeps the mirror from ever going stale.
+     */
+    suspend fun setAiProfileStore(profiles: JsonArray, roles: JsonObject) {
+        ds.edit { prefs -> writeAiProfileStore(prefs, profiles, roles) }
+    }
+
+    private fun writeAiProfileStore(prefs: MutablePreferences, profiles: JsonArray, roles: JsonObject) {
+        prefs[Keys.AI_MODEL_PROFILES] = profiles.toString()
+        prefs[Keys.AI_ROLE_POINTERS] = roles.toString()
+        projectAiProfilesToLegacyKeys(prefs, profiles, roles)
+    }
+
+    /** The provider a role's flat keys currently name, read raw. */
+    private fun legacyAiProvider(prefs: Preferences, role: String): AIProvider? {
+        val stored = when (role) {
+            "image" -> prefs[Keys.SELECTED_AI_PROVIDER]
+            "text" -> prefs[Keys.SELECTED_TEXT_AI_PROVIDER]
+            "image_fallback" -> prefs[Keys.FALLBACK_PROVIDER]
+            else -> prefs[Keys.TEXT_FALLBACK_PROVIDER]
+        }
+        return AIProvider.entries.firstOrNull { it.name == stored }
+    }
+
+    /** The role's on/off flag as the flat keys hold it. The image role has no flag: it is always on. */
+    private fun legacyAiEnabled(prefs: Preferences, role: String): Boolean = when (role) {
+        "image" -> true
+        "text" -> prefs[Keys.SEPARATE_TEXT_PROVIDER_ENABLED] ?: false
+        "image_fallback" -> prefs[Keys.FALLBACK_ENABLED] ?: false
+        else -> prefs[Keys.TEXT_FALLBACK_ENABLED] ?: false
+    }
+
+    /**
+     * Folds a write to the legacy flat keys into the profile store, inside the same edit.
+     *
+     * Every setter below calls this, which is why the mirror cannot go stale: the older Settings
+     * rows and onboarding both still assign `SELECTED_AI_PROVIDER` and end up creating or editing
+     * the right profile without knowing profiles exist. The role's on/off flag is an *input* here,
+     * never an output -- writing the pointer's stale flag back would undo a toggle the caller just
+     * made.
+     */
+    private fun syncAiRoleFromLegacy(prefs: MutablePreferences, role: String, nowMs: Long) {
+        val provider = legacyAiProvider(prefs, role) ?: return
+        val model = when (role) {
+            "image" -> prefs[Keys.SELECTED_AI_MODEL]
+            "text" -> prefs[Keys.SELECTED_TEXT_AI_MODEL]
+            "image_fallback" -> prefs[Keys.FALLBACK_MODEL]
+            else -> prefs[Keys.TEXT_FALLBACK_MODEL]
+        }.orEmpty()
+        val urlPrefix =
+            if (role == "image" || role == "text") CUSTOM_BASE_URL_PREFIX else FALLBACK_BASE_URL_PREFIX
+        val result = AIReference.assignRole(
+            MedicationJson.obj(
+                "profiles" to parseProfiles(prefs[Keys.AI_MODEL_PROFILES]),
+                "roles" to parseRoles(prefs[Keys.AI_ROLE_POINTERS]),
+                "role" to role,
+                "provider" to provider.token,
+                "model" to model,
+                "base_url" to prefs[stringPreferencesKey(urlPrefix + provider.name)],
+                "now_ms" to nowMs,
+                "env" to MedicationJson.obj("platform" to AIReference.PLATFORM),
+            ),
+        )
+        if (result.str("action") == "ignored") return
+        val roles = LinkedHashMap<String, JsonObject>()
+        val resolved = result.objOrNull("roles") ?: JsonObject(emptyMap())
+        for (name in AIReference.ROLES) {
+            roles[name] = if (name == role) {
+                MedicationJson.obj(
+                    "profile_id" to result.str("profile_id"),
+                    "enabled" to legacyAiEnabled(prefs, role),
+                )
+            } else {
+                resolved.objOrNull(name) ?: JsonObject(emptyMap())
+            }
+        }
+        prefs[Keys.AI_MODEL_PROFILES] =
+            (result["profiles"] as? JsonArray ?: JsonArray(emptyList())).toString()
+        prefs[Keys.AI_ROLE_POINTERS] =
+            MedicationJson.obj(*roles.map { it.key to it.value }.toTypedArray()).toString()
+        // Only the role that changed is mirrored back; rewriting all four would undo a slot set
+        // directly since the last sync.
+        projectAiProfilesToLegacyKeys(
+            prefs,
+            result["profiles"] as? JsonArray ?: JsonArray(emptyList()),
+            MedicationJson.obj(*roles.map { it.key to it.value }.toTypedArray()),
+            only = setOf(role),
+        )
+    }
+
+    /** Keeps a role pointer's flag in step when only the flat toggle was flipped. */
+    private fun syncAiRoleEnabled(prefs: MutablePreferences, role: String) {
+        val roles = parseRoles(prefs[Keys.AI_ROLE_POINTERS])
+        val row = roles.objOrNull(role) ?: JsonObject(emptyMap())
+        val enabled = legacyAiEnabled(prefs, role)
+        if (row["enabled"]?.let(MedicationJson::truthy) == enabled) return
+        val next = LinkedHashMap<String, JsonObject>()
+        for (name in AIReference.ROLES) {
+            val current = roles.objOrNull(name) ?: JsonObject(emptyMap())
+            next[name] = if (name == role) {
+                MedicationJson.obj("profile_id" to current.str("profile_id"), "enabled" to enabled)
+            } else {
+                current
+            }
+        }
+        prefs[Keys.AI_ROLE_POINTERS] =
+            MedicationJson.obj(*next.map { it.key to it.value }.toTypedArray()).toString()
+    }
+
+    /**
+     * Points a role at a configuration, forking the profile when another role shares it.
+     *
+     * This is what the per-role editors in Settings write through. Changing the primary must not
+     * silently change a fallback that happens to share its profile -- the four flat slots used to
+     * guarantee that, and [AIReference.assignRole] keeps the guarantee.
+     *
+     * Returns the profile id now serving the role, plus the id of a profile-scoped key the caller
+     * must delete (a key issued for one provider is meaningless at another).
+     */
+    suspend fun assignAiRole(
+        role: String,
+        provider: AIProvider,
+        model: String,
+        baseUrl: String? = null,
+        nowMs: Long = System.currentTimeMillis(),
+    ): Pair<String?, String?> {
+        var assigned: String? = null
+        var staleKey: String? = null
+        ds.edit { prefs ->
+            val result = AIReference.assignRole(
+                MedicationJson.obj(
+                    "profiles" to parseProfiles(prefs[Keys.AI_MODEL_PROFILES]),
+                    "roles" to parseRoles(prefs[Keys.AI_ROLE_POINTERS]),
+                    "role" to role,
+                    "provider" to provider.token,
+                    "model" to model,
+                    "base_url" to baseUrl,
+                    "now_ms" to nowMs,
+                    "env" to MedicationJson.obj("platform" to AIReference.PLATFORM),
+                ),
+            )
+            if (result.str("action") == "ignored") return@edit
+            assigned = result.str("profile_id")
+            staleKey = result.str("cleared_profile_key")
+            writeAiProfileStore(
+                prefs,
+                result["profiles"] as? JsonArray ?: JsonArray(emptyList()),
+                result.objOrNull("roles") ?: JsonObject(emptyMap()),
+            )
+        }
+        return assigned to staleKey
+    }
+
+    /** Points a role at a profile that already exists, and mirrors that role's flat keys. */
+    suspend fun setAiRolePointer(role: String, profileId: String?, enabled: Boolean? = null) {
+        ds.edit { prefs ->
+            val roles = parseRoles(prefs[Keys.AI_ROLE_POINTERS])
+            val next = LinkedHashMap<String, JsonObject>()
+            for (name in AIReference.ROLES) {
+                val row = roles.objOrNull(name) ?: JsonObject(emptyMap())
+                next[name] = if (name == role) {
+                    MedicationJson.obj(
+                        "profile_id" to profileId,
+                        "enabled" to (enabled ?: legacyAiEnabled(prefs, role)),
+                    )
+                } else {
+                    row
+                }
+            }
+            val rolesJson = MedicationJson.obj(*next.map { it.key to it.value }.toTypedArray())
+            val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES])
+            prefs[Keys.AI_ROLE_POINTERS] = rolesJson.toString()
+            projectAiProfilesToLegacyKeys(prefs, profiles, rolesJson, only = setOf(role))
+            if (enabled != null) {
+                when (role) {
+                    "text" -> prefs[Keys.SEPARATE_TEXT_PROVIDER_ENABLED] = enabled
+                    "image_fallback" -> prefs[Keys.FALLBACK_ENABLED] = enabled
+                    "text_fallback" -> prefs[Keys.TEXT_FALLBACK_ENABLED] = enabled
+                }
+            }
+        }
+    }
+
+    /** Edits one profile's model (and optionally its base URL), leaving its role pointers alone. */
+    suspend fun updateAiProfileModel(id: String, model: String, baseUrl: String? = null) {
+        ds.edit { prefs ->
+            val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES]).filterIsInstance<JsonObject>()
+            val next = profiles.map { p ->
+                if (p.str("id") != id) p else {
+                    val fields = LinkedHashMap<String, Any?>()
+                    for ((k, v) in p) fields[k] = v
+                    fields["model_id"] = AIProvider.normalizeModelId(model)
+                    if (baseUrl != null) fields["base_url"] = baseUrl.ifEmpty { null }
+                    fields["updated_ms"] = System.currentTimeMillis()
+                    MedicationJson.obj(*fields.map { it.key to it.value }.toTypedArray())
+                }
+            }
+            val roles = parseRoles(prefs[Keys.AI_ROLE_POINTERS])
+            prefs[Keys.AI_MODEL_PROFILES] = JsonArray(next).toString()
+            // Only the roles this profile serves see the change in their flat keys.
+            val touched = AIReference.ROLES
+                .filter { roles.objOrNull(it)?.str("profile_id") == id }.toSet()
+            if (touched.isNotEmpty()) {
+                projectAiProfilesToLegacyKeys(prefs, JsonArray(next), roles, only = touched)
+            }
+        }
+    }
+
+    /** Adds a saved configuration that no role uses yet -- Settings' "Add model". */
+    suspend fun addAiProfile(
+        provider: AIProvider,
+        model: String,
+        baseUrl: String? = null,
+        nickname: String? = null,
+        nowMs: Long = System.currentTimeMillis(),
+    ): String? {
+        var created: String? = null
+        ds.edit { prefs ->
+            val result = AIReference.addProfile(
+                MedicationJson.obj(
+                    "profiles" to parseProfiles(prefs[Keys.AI_MODEL_PROFILES]),
+                    "provider" to provider.token,
+                    "model" to model,
+                    "base_url" to baseUrl,
+                    "nickname" to nickname,
+                    "now_ms" to nowMs,
+                    "env" to MedicationJson.obj("platform" to AIReference.PLATFORM),
+                ),
+            )
+            if (result.str("action") == "ignored") return@edit
+            created = result.str("profile_id")
+            // No role changed, so nothing is mirrored into the flat keys.
+            prefs[Keys.AI_MODEL_PROFILES] =
+                (result["profiles"] as? JsonArray ?: JsonArray(emptyList())).toString()
+        }
+        return created
+    }
+
+    /**
+     * Records whether a profile owns its key. `ref` null means it inherits the provider's, which is
+     * what a cleared field or a value equal to the provider key means (docs/ai-models.md 4).
+     */
+    suspend fun setAiProfileCredentialRef(id: String, ref: String?) {
+        ds.edit { prefs ->
+            val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES]).filterIsInstance<JsonObject>()
+            val next = profiles.map { p ->
+                if (p.str("id") != id) p else {
+                    val fields = LinkedHashMap<String, Any?>()
+                    for ((k, v) in p) fields[k] = v
+                    fields["credential_ref"] = ref ?: "provider:${p.str("provider").orEmpty()}"
+                    fields["updated_ms"] = System.currentTimeMillis()
+                    MedicationJson.obj(*fields.map { it.key to it.value }.toTypedArray())
+                }
+            }
+            prefs[Keys.AI_MODEL_PROFILES] = JsonArray(next).toString()
+        }
+    }
+
+    /**
+     * Stores a Vertex profile's Google Cloud project and location (docs/ai-models.md 6). The URL is
+     * built from these, which is why a Vertex row ships no default base URL.
+     */
+    suspend fun setAiProfileVertex(id: String, projectId: String?, location: String?) {
+        ds.edit { prefs ->
+            val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES]).filterIsInstance<JsonObject>()
+            val next = profiles.map { p ->
+                if (p.str("id") != id) p else {
+                    val fields = LinkedHashMap<String, Any?>()
+                    for ((k, v) in p) fields[k] = v
+                    fields["vertex"] = projectId?.takeIf { it.isNotBlank() }?.let {
+                        MedicationJson.obj(
+                            "project_id" to it.trim(),
+                            "location" to (location?.trim()?.takeIf { l -> l.isNotEmpty() } ?: "global"),
+                        )
+                    }
+                    fields["updated_ms"] = System.currentTimeMillis()
+                    MedicationJson.obj(*fields.map { it.key to it.value }.toTypedArray())
+                }
+            }
+            prefs[Keys.AI_MODEL_PROFILES] = JsonArray(next).toString()
+        }
+    }
+
+    /** Renames one profile, leaving its configuration alone. */
+    suspend fun renameAiProfile(id: String, name: String) {
+        ds.edit { prefs ->
+            val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES]).filterIsInstance<JsonObject>()
+            val next = profiles.map { p ->
+                if (p.str("id") != id) p else {
+                    val fields = LinkedHashMap<String, Any?>()
+                    for ((k, v) in p) fields[k] = v
+                    fields["nickname"] = name.trim()
+                    fields["updated_ms"] = System.currentTimeMillis()
+                    MedicationJson.obj(*fields.map { it.key to it.value }.toTypedArray())
+                }
+            }
+            writeAiProfileStore(prefs, JsonArray(next), parseRoles(prefs[Keys.AI_ROLE_POINTERS]))
+        }
+    }
+
+    /**
+     * Removes a profile and every role that pointed at it. The provider key is deliberately left
+     * alone (docs/ai-models.md rule 3); the caller deletes only `aiprofilekey_<id>`.
+     */
+    suspend fun deleteAiProfile(id: String) {
+        ds.edit { prefs ->
+            val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES]).filterIsInstance<JsonObject>()
+            val roles = parseRoles(prefs[Keys.AI_ROLE_POINTERS])
+            val next = LinkedHashMap<String, JsonObject>()
+            for (role in AIReference.ROLES) {
+                val row = roles.objOrNull(role) ?: JsonObject(emptyMap())
+                next[role] = if (row.str("profile_id") == id) {
+                    MedicationJson.obj("profile_id" to null, "enabled" to false)
+                } else {
+                    row
+                }
+            }
+            writeAiProfileStore(
+                prefs,
+                JsonArray(profiles.filter { it.str("id") != id }),
+                MedicationJson.obj(*next.map { it.key to it.value }.toTypedArray()),
+            )
+        }
+    }
+
+    /**
+     * The four flat slots, read raw. Android persists the enum NAME, so every provider crossing into
+     * shared data is converted to its token first.
+     */
+    private fun legacyAiSlots(prefs: Preferences): JsonObject {
+        fun slot(
+            providerKey: Preferences.Key<String>,
+            modelKey: Preferences.Key<String>,
+            urlPrefix: String,
+            enabled: Boolean,
+        ): JsonObject {
+            val stored = prefs[providerKey]
+            val provider = AIProvider.entries.firstOrNull { it.name == stored }
+            val baseUrl = provider?.let { prefs[stringPreferencesKey(urlPrefix + it.name)] }
+            return MedicationJson.obj(
+                "provider" to provider?.token,
+                "model" to (prefs[modelKey] ?: ""),
+                "base_url" to baseUrl,
+                "enabled" to enabled,
+            )
+        }
+        return MedicationJson.obj(
+            "image" to slot(Keys.SELECTED_AI_PROVIDER, Keys.SELECTED_AI_MODEL,
+                            CUSTOM_BASE_URL_PREFIX, true),
+            "text" to slot(Keys.SELECTED_TEXT_AI_PROVIDER, Keys.SELECTED_TEXT_AI_MODEL,
+                           CUSTOM_BASE_URL_PREFIX,
+                           prefs[Keys.SEPARATE_TEXT_PROVIDER_ENABLED] ?: false),
+            "image_fallback" to slot(Keys.FALLBACK_PROVIDER, Keys.FALLBACK_MODEL,
+                                     FALLBACK_BASE_URL_PREFIX, prefs[Keys.FALLBACK_ENABLED] ?: false),
+            "text_fallback" to slot(Keys.TEXT_FALLBACK_PROVIDER, Keys.TEXT_FALLBACK_MODEL,
+                                    FALLBACK_BASE_URL_PREFIX,
+                                    prefs[Keys.TEXT_FALLBACK_ENABLED] ?: false),
+        )
+    }
+
+    /**
+     * Profiles -> the flat keys. Lossy on purpose: nickname, id, `vertex{}` and `credential_ref`
+     * have no legacy home.
+     *
+     * A base URL is written when the profile has one and left alone when it does not: clearing a
+     * shared per-provider key here could destroy a setting the profile layer does not own.
+     */
+    private fun projectAiProfilesToLegacyKeys(
+        prefs: MutablePreferences,
+        profiles: JsonArray,
+        roles: JsonObject,
+        only: Set<String>? = null,
+    ) {
+        val projection = AIReference.projectLegacy(profiles.filterIsInstance<JsonObject>(), roles)
+        val slots = projection.objOrNull("slots") ?: return
+        fun write(
+            role: String,
+            providerKey: Preferences.Key<String>,
+            modelKey: Preferences.Key<String>,
+            urlPrefix: String,
+            enabledKey: Preferences.Key<Boolean>?,
+        ) {
+            if (only != null && role !in only) return
+            val slot = slots.objOrNull(role) ?: return
+            val provider = AIProvider.fromToken(slot.str("provider")) ?: return
+            prefs[providerKey] = provider.name
+            prefs[modelKey] = slot.str("model") ?: ""
+            val url = slot.str("base_url")
+            if (!url.isNullOrEmpty()) prefs[stringPreferencesKey(urlPrefix + provider.name)] = url
+            enabledKey?.let { prefs[it] = slot["enabled"]?.let(MedicationJson::truthy) ?: false }
+        }
+        write("image", Keys.SELECTED_AI_PROVIDER, Keys.SELECTED_AI_MODEL, CUSTOM_BASE_URL_PREFIX, null)
+        write("text", Keys.SELECTED_TEXT_AI_PROVIDER, Keys.SELECTED_TEXT_AI_MODEL,
+              CUSTOM_BASE_URL_PREFIX, Keys.SEPARATE_TEXT_PROVIDER_ENABLED)
+        write("image_fallback", Keys.FALLBACK_PROVIDER, Keys.FALLBACK_MODEL,
+              FALLBACK_BASE_URL_PREFIX, Keys.FALLBACK_ENABLED)
+        write("text_fallback", Keys.TEXT_FALLBACK_PROVIDER, Keys.TEXT_FALLBACK_MODEL,
+              FALLBACK_BASE_URL_PREFIX, Keys.TEXT_FALLBACK_ENABLED)
+        prefs[Keys.AI_PRIMARY_FINGERPRINT] = projection.str("fingerprint") ?: ""
+    }
+
+    private fun MutablePreferences.syncAi(role: String) {
+        syncAiRoleFromLegacy(this, role, System.currentTimeMillis())
+    }
+
+    /**
+     * Runs the one-shot migration, then adopts anything onboarding wrote since the last launch.
+     * Safe on every launch and after a data reset.
+     */
+    suspend fun prepareAiProfiles(nowMs: Long) {
+        ds.edit { prefs ->
+            val version = prefs[Keys.AI_PROFILES_MIGRATION_VERSION] ?: 0
+            if (version < AIReference.MIGRATION_VERSION) {
+                val result = AIReference.migrateProfiles(
+                    MedicationJson.obj(
+                        "migration_version" to version,
+                        "now_ms" to nowMs,
+                        "slots" to legacyAiSlots(prefs),
+                        "existing_profiles" to parseProfiles(prefs[Keys.AI_MODEL_PROFILES]),
+                        "roles" to parseRoles(prefs[Keys.AI_ROLE_POINTERS]),
+                        "env" to MedicationJson.obj("platform" to AIReference.PLATFORM),
+                    ),
+                )
+                writeAiProfileStore(
+                    prefs,
+                    result["profiles"] as? JsonArray ?: JsonArray(emptyList()),
+                    result.objOrNull("roles") ?: JsonObject(emptyMap()),
+                )
+                prefs[Keys.AI_PROFILES_MIGRATION_VERSION] = AIReference.MIGRATION_VERSION
+            }
+            adoptLegacyPrimary(prefs, nowMs)
+        }
+    }
+
+    /**
+     * Onboarding writes only the flat keys. When what it wrote differs from the last projection,
+     * that choice is adopted as a profile -- never ignored, and never duplicated.
+     */
+    private fun adoptLegacyPrimary(prefs: MutablePreferences, nowMs: Long) {
+        val slots = legacyAiSlots(prefs)
+        val image = slots.objOrNull("image") ?: return
+        val result = AIReference.adoptLegacyPrimary(
+            MedicationJson.obj(
+                "observed" to MedicationJson.obj(
+                    "provider" to image.str("provider"),
+                    "model" to image.str("model"),
+                    "base_url" to image.str("base_url"),
+                ),
+                "fingerprint" to prefs[Keys.AI_PRIMARY_FINGERPRINT],
+                "profiles" to parseProfiles(prefs[Keys.AI_MODEL_PROFILES]),
+                "roles" to parseRoles(prefs[Keys.AI_ROLE_POINTERS]),
+                "now_ms" to nowMs,
+                "env" to MedicationJson.obj("platform" to AIReference.PLATFORM),
+            ),
+        )
+        if (result["changed"]?.let(MedicationJson::truthy) != true) return
+        writeAiProfileStore(
+            prefs,
+            result["profiles"] as? JsonArray ?: JsonArray(emptyList()),
+            result.objOrNull("roles") ?: JsonObject(emptyMap()),
+        )
+    }
+
+    /**
+     * The profile half of [reconcileLocalModelSelections]: a role may not keep pointing at a model
+     * that is no longer on the device. The profile itself is kept -- the user may install it again
+     * -- and only the pointers move, so nothing silently answers from a provider they did not choose.
+     */
+    private fun repointAiRolesOffLocalModels(prefs: MutablePreferences, nowMs: Long) {
+        val profiles = parseProfiles(prefs[Keys.AI_MODEL_PROFILES])
+        val doomed = profiles.filterIsInstance<JsonObject>()
+            .filter { it.str("provider") == AIProvider.LOCAL_GEMMA.token }
+            .mapNotNull { it.str("id") }
+            .toSet()
+        if (doomed.isEmpty()) return
+        val roles = parseRoles(prefs[Keys.AI_ROLE_POINTERS])
+        var touched = false
+        val next = LinkedHashMap<String, JsonObject>()
+        for (role in AIReference.ROLES) {
+            val row = roles.objOrNull(role) ?: JsonObject(emptyMap())
+            if (row.str("profile_id") in doomed) {
+                next[role] = MedicationJson.obj("profile_id" to null, "enabled" to false)
+                touched = true
+            } else {
+                next[role] = row
+            }
+        }
+        if (!touched) return
+        writeAiProfileStore(prefs, profiles, MedicationJson.obj(*next.map { it.key to it.value }.toTypedArray()))
+        // The flat keys now name Gemini again, so let the usual inbound channel rebuild the primary
+        // rather than duplicating find-or-create here.
+        prefs.remove(Keys.AI_PRIMARY_FINGERPRINT)
+        adoptLegacyPrimary(prefs, nowMs)
+    }
+
+    // "Delete all data" calls [clearAll], which wipes the whole DataStore -- profile list, role
+    // pointers, fingerprint and every migration version included. With those gone, a reset followed
+    // by onboarding re-runs the migration and yields exactly one profile, so the profile layer needs
+    // no reset path of its own (iOS removes its keys one by one and does).
+
     fun customBaseUrl(provider: AIProvider): Flow<String?> = ds.data.map {
         it[stringPreferencesKey(CUSTOM_BASE_URL_PREFIX + provider.name)]
     }
@@ -1112,6 +1658,11 @@ class PreferencesStore(
         val key = stringPreferencesKey(CUSTOM_BASE_URL_PREFIX + provider.name)
         ds.edit {
             if (url.isNullOrEmpty()) it.remove(key) else it[key] = url
+            // The key is per provider but a profile is per role, so only the roles actually running
+            // this provider are re-synced.
+            for (role in listOf("image", "text")) {
+                if (legacyAiProvider(it, role) == provider) it.syncAi(role)
+            }
         }
     }
 
@@ -1126,6 +1677,9 @@ class PreferencesStore(
         val key = stringPreferencesKey(FALLBACK_BASE_URL_PREFIX + provider.name)
         ds.edit {
             if (url.isNullOrEmpty()) it.remove(key) else it[key] = url
+            for (role in listOf("image_fallback", "text_fallback")) {
+                if (legacyAiProvider(it, role) == provider) it.syncAi(role)
+            }
         }
     }
 
@@ -1177,7 +1731,12 @@ class PreferencesStore(
         (it[Keys.FALLBACK_ENABLED] ?: false) &&
             (it[Keys.FALLBACK_PROVIDER] != AIProvider.LOCAL_GEMMA.name || isLocalGemmaExecutable())
     }
-    suspend fun setFallbackEnabled(v: Boolean) { ds.edit { it[Keys.FALLBACK_ENABLED] = v } }
+    suspend fun setFallbackEnabled(v: Boolean) {
+        ds.edit {
+            it[Keys.FALLBACK_ENABLED] = v
+            syncAiRoleEnabled(it, "image_fallback")
+        }
+    }
 
     val selectedFallbackProvider: Flow<AIProvider> = ds.data.map {
         val raw = it[Keys.FALLBACK_PROVIDER]
@@ -1191,7 +1750,10 @@ class PreferencesStore(
             p.takeIf { it.supportsVision },
             isLocalGemmaExecutable()
         )
-        ds.edit { it[Keys.FALLBACK_PROVIDER] = resolved.name }
+        ds.edit {
+            it[Keys.FALLBACK_PROVIDER] = resolved.name
+            it.syncAi("image_fallback")
+        }
     }
 
     val selectedFallbackModel: Flow<String?> = ds.data.map {
@@ -1203,7 +1765,10 @@ class PreferencesStore(
         )
     }
     suspend fun setSelectedFallbackModel(model: String) {
-        ds.edit { it[Keys.FALLBACK_MODEL] = AIProvider.normalizeModelId(model) }
+        ds.edit {
+            it[Keys.FALLBACK_MODEL] = AIProvider.normalizeModelId(model)
+            it.syncAi("image_fallback")
+        }
     }
 
     // -- Text AI fallback -------------------------------------------------
@@ -1211,7 +1776,12 @@ class PreferencesStore(
         (it[Keys.TEXT_FALLBACK_ENABLED] ?: false) &&
             (it[Keys.TEXT_FALLBACK_PROVIDER] != AIProvider.LOCAL_GEMMA.name || isLocalGemmaExecutable())
     }
-    suspend fun setTextFallbackEnabled(v: Boolean) { ds.edit { it[Keys.TEXT_FALLBACK_ENABLED] = v } }
+    suspend fun setTextFallbackEnabled(v: Boolean) {
+        ds.edit {
+            it[Keys.TEXT_FALLBACK_ENABLED] = v
+            syncAiRoleEnabled(it, "text_fallback")
+        }
+    }
 
     val selectedTextFallbackProvider: Flow<AIProvider> = ds.data.map {
         val raw = it[Keys.TEXT_FALLBACK_PROVIDER]
@@ -1225,7 +1795,10 @@ class PreferencesStore(
             provider.takeIf { it in AIProvider.textProviders },
             isLocalGemmaExecutable()
         )
-        ds.edit { it[Keys.TEXT_FALLBACK_PROVIDER] = resolved.name }
+        ds.edit {
+            it[Keys.TEXT_FALLBACK_PROVIDER] = resolved.name
+            it.syncAi("text_fallback")
+        }
     }
 
     val selectedTextFallbackModel: Flow<String?> = ds.data.map {
@@ -1237,7 +1810,10 @@ class PreferencesStore(
         )
     }
     suspend fun setSelectedTextFallbackModel(model: String) {
-        ds.edit { it[Keys.TEXT_FALLBACK_MODEL] = AIProvider.normalizeModelId(model) }
+        ds.edit {
+            it[Keys.TEXT_FALLBACK_MODEL] = AIProvider.normalizeModelId(model)
+            it.syncAi("text_fallback")
+        }
     }
 
     // -- Speech Provider selection ---------------------------------------
@@ -1619,6 +2195,12 @@ class PreferencesStore(
         val TEXT_FALLBACK_PROVIDER = stringPreferencesKey("selectedTextFallbackAIProvider")
         val TEXT_FALLBACK_MODEL = stringPreferencesKey("selectedTextFallbackAIModel")
         val FALLBACK_BASE_URL_MIGRATION_VERSION = intPreferencesKey("fallbackBaseURLMigrationVersion")
+
+        // -- Saved model profiles (docs/ai-models.md 3-4) --
+        val AI_MODEL_PROFILES = stringPreferencesKey("aiModelProfiles")
+        val AI_ROLE_POINTERS = stringPreferencesKey("aiRolePointers")
+        val AI_PRIMARY_FINGERPRINT = stringPreferencesKey("aiPrimaryProjectedFingerprint")
+        val AI_PROFILES_MIGRATION_VERSION = intPreferencesKey("aiProfilesMigrationVersion")
         val SELECTED_SPEECH_PROVIDER = stringPreferencesKey("selectedSpeechProvider")
         val SPEECH_FALLBACK_ENABLED = booleanPreferencesKey("speechFallbackEnabled")
         val SPEECH_FALLBACK_PROVIDER = stringPreferencesKey("selectedSpeechFallbackProvider")

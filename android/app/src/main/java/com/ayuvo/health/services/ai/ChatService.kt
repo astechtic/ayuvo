@@ -1,5 +1,13 @@
 package com.ayuvo.health.services.ai
 
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.JsonObject
+import com.ayuvo.health.medications.logic.MedicationJson.str
+import com.ayuvo.health.medications.logic.MedicationJson.objOrNull
+import com.ayuvo.health.medications.logic.MedicationJson
 import com.ayuvo.health.data.KeyStore
 import com.ayuvo.health.data.PreferencesStore
 import com.ayuvo.health.data.health.HealthCoachSnapshot
@@ -159,7 +167,9 @@ class ChatService(
         /** The conversation's data switches (docs/coach.md §8); they only ever narrow. */
         sources: CoachDataSwitches = CoachDataSwitches.ALL_ON,
         /** §30 "Use on-device Coach": this conversation runs on the on-device model. */
-        providerOverride: AIProvider? = null
+        providerOverride: AIProvider? = null,
+        /** The saved model this conversation is pinned to (docs/ai-models.md §8). */
+        profileOverride: String? = null
     ): CoachReply {
         // A switch that is off removes the source before the prompt or the tools see it, so nothing
         // downstream has to remember to check again.
@@ -223,19 +233,29 @@ class ChatService(
             records = records?.tools
         )
 
+        // A conversation pinned to a saved model resolves through the resolver, so its guards apply
+        // and a model that cannot answer refuses by name instead of being swapped for another one.
+        val pinned = profileOverride?.let { id ->
+            AIRoleResolver(prefs, keyStore) { id -> localGemma?.isInstalled(id) == true }
+                .resolve(requiresVision = imageBytes != null, pinnedProfileId = id)
+        }
+        pinned?.blocked?.let { throw AiError.Api(AIRoleResolver.refusal(pinned, it)) }
+
         val useSeparateTextProvider = imageBytes == null && prefs.separateTextProviderEnabled.first()
-        val provider = providerOverride ?: if (useSeparateTextProvider) {
+        val provider = pinned?.provider ?: providerOverride ?: if (useSeparateTextProvider) {
             prefs.selectedTextAIProvider.first()
         } else {
             prefs.selectedAIProvider.first()
         }
         val model = when {
+            pinned != null -> pinned.model
             providerOverride != null -> provider.defaultModel
             useSeparateTextProvider -> provider.supportedTextModelOrDefault(prefs.selectedTextAIModel.first())
             else -> provider.supportedModelOrDefault(prefs.selectedAIModel.first())
         }
-        val baseUrl = prefs.customBaseUrl(provider).first()?.takeIf { it.isNotEmpty() } ?: provider.baseUrl
-        val apiKey = keyStore.apiKey(provider)
+        val baseUrl = pinned?.baseUrl?.takeIf { it.isNotEmpty() }
+            ?: prefs.customBaseUrl(provider).first()?.takeIf { it.isNotEmpty() } ?: provider.baseUrl
+        val apiKey = pinned?.apiKey ?: keyStore.apiKey(provider)
         val maxTokens = prefs.maxResponseTokens.first()
         val requestTimeoutSeconds = prefs.aiRequestTimeoutSeconds.first()
 
@@ -247,7 +267,8 @@ class ChatService(
             reply(
                 runProvider(
                     provider, model, baseUrl, apiKey, systemPrompt, history, newUserMessage,
-                    tools, imageBytes, maxTokens, requestTimeoutSeconds, localSystemPrompt
+                    tools, imageBytes, maxTokens, requestTimeoutSeconds, localSystemPrompt,
+                    pinnedProfileId = profileOverride
                 ),
                 provider
             )
@@ -291,6 +312,48 @@ class ChatService(
     private fun schemaObject(tools: CoachTools, name: String): JSONObject =
         tools.rawSchemaFor(name)?.let { JSONObject(it) } ?: JSONObject(CoachTools.parameterSchemaFor(name))
 
+    /**
+     * One Vertex call: the URL the routing table produced, a bearer token, and the body tweaks that
+     * transport needs (docs/ai-models.md 6).
+     */
+    data class VertexCall(
+        val url: String,
+        val token: String,
+        val bodyExtras: Map<String, String>,
+        val dropsModel: Boolean,
+        val transport: String,
+    )
+
+    /** Resolves a Vertex request for [model], minting (or reusing) an access token. */
+    private suspend fun vertexCall(profileId: String?, model: String): VertexCall {
+        val profiles = prefs.aiProfilesSnapshot().filterIsInstance<JsonObject>()
+        val id = profileId ?: prefs.aiRolesSnapshot().objOrNull("image")?.str("profile_id")
+        val profile = profiles.firstOrNull { it.str("id") == id }
+            ?: throw AiError.Api("This Vertex AI model is not set up. Add its project in Settings.")
+        val vertex = profile.objOrNull("vertex")
+        val project = vertex?.str("project_id")?.takeIf { it.isNotEmpty() }
+            ?: throw AiError.Api("This Vertex AI model has no Google Cloud project. Add one in Settings.")
+        val endpoint = AIReference.vertexEndpoint(project, vertex.str("location"), model)
+        val url = endpoint.str("url")
+        if (endpoint["ok"]?.let(MedicationJson::truthy) != true || url.isNullOrEmpty()) {
+            throw AiError.Api("That Vertex AI model id could not be turned into an endpoint.")
+        }
+        val json = AIRoleResolver(prefs, keyStore).apiKeyFor(profile, AIProvider.VERTEX_AI)
+        val account = VertexAuth.ServiceAccount.parse(json)
+            ?: throw AiError.Api("This Vertex AI model has no service-account JSON. Add one in Settings.")
+        val token = withContext(Dispatchers.IO) { VertexAuth.accessToken(account, okHttp) }
+        val extras = endpoint.objOrNull("body_extras")?.entries
+            ?.mapNotNull { (k, v) -> (v as? JsonPrimitive)?.contentOrNull?.let { k to it } }
+            ?.toMap().orEmpty()
+        return VertexCall(
+            url = url,
+            token = token,
+            bodyExtras = extras,
+            dropsModel = endpoint["drops_model_from_body"]?.let(MedicationJson::truthy) ?: false,
+            transport = endpoint.str("transport") ?: "gemini",
+        )
+    }
+
     private suspend fun runProvider(
         provider: AIProvider,
         model: String,
@@ -303,7 +366,9 @@ class ChatService(
         imageBytes: ByteArray?,
         maxTokens: Int,
         requestTimeoutSeconds: Int,
-        localSystemPrompt: String = systemPrompt
+        localSystemPrompt: String = systemPrompt,
+        /** The saved Vertex profile this request is pinned to, when it is (docs/ai-models.md 6). */
+        pinnedProfileId: String? = null
     ): String {
         if (provider == AIProvider.LOCAL_GEMMA) {
             val conversation = buildString {
@@ -318,8 +383,22 @@ class ChatService(
                 prompt = conversation,
                 images = imageBytes?.let(::listOf).orEmpty(),
                 maxOutputTokens = maxTokens,
-                systemInstruction = localSystemPrompt
-            ) ?: throw AiError.Api("The on-device Gemma runtime is unavailable.")
+                systemInstruction = localSystemPrompt,
+                // The selected model finally means something: several can be installed at once.
+                modelId = model
+            ) ?: throw AiError.Api("The on-device runtime is unavailable.")
+        }
+        // Vertex is one provider with three transports, picked per model by the routing table.
+        if (provider == AIProvider.VERTEX_AI) {
+            val call = vertexCall(pinnedProfileId, model)
+            val vertexClient =
+                FoodAnalysisService.clientForProvider(okHttp, provider, requestTimeoutSeconds)
+            return when (call.transport) {
+                "anthropic" -> runAnthropicToolLoop(vertexClient, "", model, "", systemPrompt, history, newUserMessage, tools, imageBytes, maxTokens, call)
+                // The OpenAI surface already speaks bearer tokens, so the token IS the key here.
+                "openai_compatible" -> runOpenAIToolLoop(vertexClient, call.url.removeSuffix("/chat/completions"), model, call.token, systemPrompt, history, newUserMessage, provider, tools, imageBytes, maxTokens)
+                else -> runGeminiToolLoop(vertexClient, "", model, "", systemPrompt, history, newUserMessage, tools, imageBytes, call)
+            }
         }
         if (provider.requiresApiKey && apiKey.isNullOrEmpty()) throw AiError.NoApiKey
         if (baseUrl.isEmpty()) throw AiError.InvalidUrl(baseUrl)
@@ -621,9 +700,10 @@ class ChatService(
         newUserMessage: String,
         tools: CoachTools,
         imageBytes: ByteArray?,
-        maxTokens: Int
+        maxTokens: Int,
+        vertex: VertexCall? = null
     ): String {
-        val url = "$baseUrl/messages"
+        val url = vertex?.url ?: "$baseUrl/messages"
         // Anthropic tool schema: {name, description, input_schema}
         val toolsArr = JSONArray()
         for (name in tools.advertisedToolNames) {
@@ -644,7 +724,9 @@ class ChatService(
 
         repeat(MAX_TOOL_ROUNDS) {
             val body = JSONObject().apply {
-                put("model", model)
+                // Vertex carries the model in the path and wants `anthropic_version` in the body.
+                if (vertex?.dropsModel != true) put("model", model)
+                vertex?.bodyExtras?.forEach { (key, value) -> put(key, value) }
                 put("max_tokens", maxTokens)
                 put("system", systemPrompt)
                 put("tools", toolsArr)
@@ -655,7 +737,11 @@ class ChatService(
                     Request.Builder()
                         .url(url)
                         .addHeader("Content-Type", "application/json")
-                        .addHeader("x-api-key", apiKey)
+                        // On Vertex the credential is an OAuth token, not an Anthropic key.
+                .apply {
+                    if (vertex != null) addHeader("Authorization", "Bearer ${vertex.token}")
+                    else addHeader("x-api-key", apiKey)
+                }
                         .addHeader("anthropic-version", "2023-06-01")
                         .post(body.toString().toRequestBody(JSON_MEDIA))
                         .build()
@@ -712,9 +798,10 @@ class ChatService(
         history: List<CoachMessage>,
         newUserMessage: String,
         tools: CoachTools,
-        imageBytes: ByteArray?
+        imageBytes: ByteArray?,
+        vertex: VertexCall? = null
     ): String {
-        val url = "$baseUrl/models/$model:generateContent"
+        val url = vertex?.url ?: "$baseUrl/models/$model:generateContent"
         // Gemini tool schema: tools=[{functionDeclarations:[{name,description,parameters}]}]
         val declarations = JSONArray()
         for (name in tools.advertisedToolNames) {
@@ -752,7 +839,11 @@ class ChatService(
                     Request.Builder()
                         .url(url)
                         .addHeader("Content-Type", "application/json")
-                        .addHeader("X-goog-api-key", apiKey)
+                        // Vertex authenticates the same Gemini API with an OAuth token instead of a key.
+                .apply {
+                    if (vertex != null) addHeader("Authorization", "Bearer ${vertex.token}")
+                    else addHeader("X-goog-api-key", apiKey)
+                }
                         .post(body.toString().toRequestBody(JSON_MEDIA))
                         .build()
                 )

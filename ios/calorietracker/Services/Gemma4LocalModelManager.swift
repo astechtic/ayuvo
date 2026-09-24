@@ -126,7 +126,7 @@ final class Gemma4LocalModelManager {
     static var isCurrentDeviceSelectable: Bool {
         guard isCurrentDeviceEligible else { return false }
         let fileManager = FileManager.default
-        let root = defaultRootDirectory(fileManager: fileManager)
+        let root = defaultRootDirectory(fileManager: fileManager, descriptor: gemmaDescriptor)
         return hasPreparedInstall(
             modelURL: root.appendingPathComponent(artifactFilename),
             verificationMarkerURL: root.appendingPathComponent("verified.sha256"),
@@ -146,27 +146,84 @@ final class Gemma4LocalModelManager {
     @ObservationIgnored private var engine: Engine?
     @ObservationIgnored private var activeDownload: GemmaArtifactDownloadOperation?
 
+    /// Which catalogue model this manager owns. Defaults to Gemma so every existing caller —
+    /// `shared`, the onboarding card, the tests — behaves exactly as it did.
+    @ObservationIgnored let descriptor: LocalModelDescriptor
+
     init(
+        descriptor: LocalModelDescriptor? = nil,
         rootDirectory: URL? = nil,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
         fileManager: FileManager = .default
     ) {
+        self.descriptor = descriptor ?? Self.gemmaDescriptor
         self.fileManager = fileManager
-        self.rootDirectory = rootDirectory ?? Self.defaultRootDirectory(fileManager: fileManager)
+        self.rootDirectory = rootDirectory
+            ?? Self.defaultRootDirectory(fileManager: fileManager, descriptor: self.descriptor)
         self.physicalMemoryBytes = physicalMemoryBytes
         refresh()
     }
 
+    /// The Gemma entry, or the constants this file shipped with when the catalogue is unreadable.
+    /// The optional Hugging Face token, shared by every gated catalogue entry.
+    nonisolated static var huggingFaceToken: String? {
+        get { KeychainHelper.load(key: "huggingFaceToken")?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        set {
+            let trimmed = newValue?.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let trimmed, !trimmed.isEmpty {
+                KeychainHelper.save(key: "huggingFaceToken", value: trimmed)
+            } else {
+                KeychainHelper.delete(key: "huggingFaceToken")
+            }
+        }
+    }
+
+    nonisolated static var gemmaDescriptor: LocalModelDescriptor {
+        LocalModelCatalog.gemma ?? LocalModelDescriptor(
+            id: LocalModelCatalog.gemmaCatalogID, displayName: "Gemma 4 E2B",
+            filename: artifactFilename, url: artifactURL, sizeBytes: artifactByteCount,
+            sha256: artifactSHA256, minimumMemoryBytes: Int64(minimumPhysicalMemoryBytes),
+            supportsVision: true, contextTokens: maxContextTokens, requiresAuth: false,
+            repository: "litert-community/gemma-4-E2B-it-litert-lm",
+            licenseName: "Apache-2.0", licenseURL: licenseURL, sourceURL: sourceURL
+        )
+    }
+
+    /// One manager per catalogue model, so several can be installed at once.
+    @ObservationIgnored private static var managers: [String: Gemma4LocalModelManager] = [:]
+
+    static func manager(for descriptor: LocalModelDescriptor) -> Gemma4LocalModelManager {
+        if descriptor.id == LocalModelCatalog.gemmaCatalogID { return shared }
+        if let existing = managers[descriptor.id] { return existing }
+        let made = Gemma4LocalModelManager(descriptor: descriptor)
+        managers[descriptor.id] = made
+        return made
+    }
+
+    static func manager(forModelID id: String?) -> Gemma4LocalModelManager? {
+        LocalModelCatalog.descriptor(id: id).map(manager(for:))
+    }
+
+    /// The installed chat models — what `AIProvider.gemma4Local.models` reports.
+    static var installedChatModelIDs: [String] {
+        LocalModelCatalog.chatModels.filter { manager(for: $0).isSelectable }.map(\.id)
+    }
+
     var isEligible: Bool {
-        Self.isEligible(physicalMemoryBytes: physicalMemoryBytes)
+        // Per model: a 0.98 GB Qwen3 and an 8 GB Qwen3 do not belong on the same phone.
+        //
+        // Compared as memory CLASSES, never as raw bytes. iOS reports slightly less than the
+        // marketed RAM, so an 8 GB iPhone reads as about 7.6 GiB and a byte-for-byte comparison
+        // against an 8 GiB gate rejects every 8 GB phone — including ones the model already runs on.
+        Self.memoryClassGB(physicalMemoryBytes: physicalMemoryBytes) >= descriptor.minimumMemoryClassGB
     }
 
     var isDownloaded: Bool {
         Self.hasVerifiedInstall(
             modelURL: modelURL,
             verificationMarkerURL: verificationMarkerURL,
-            expectedByteCount: Self.artifactByteCount,
-            expectedSHA256: Self.artifactSHA256,
+            expectedByteCount: descriptor.sizeBytes,
+            expectedSHA256: descriptor.sha256,
             fileManager: fileManager
         )
     }
@@ -176,8 +233,8 @@ final class Gemma4LocalModelManager {
             modelURL: modelURL,
             verificationMarkerURL: verificationMarkerURL,
             preparedMarkerURL: preparedMarkerURL,
-            expectedByteCount: Self.artifactByteCount,
-            expectedSHA256: Self.artifactSHA256,
+            expectedByteCount: descriptor.sizeBytes,
+            expectedSHA256: descriptor.sha256,
             fileManager: fileManager
         )
     }
@@ -221,7 +278,8 @@ final class Gemma4LocalModelManager {
             state = .downloading(0)
             let download = GemmaArtifactDownloadOperation(
                 destinationURL: partialModelURL,
-                fileManager: fileManager
+                fileManager: fileManager,
+                termsURL: descriptor.repositoryURL
             ) { [weak self] progress in
                 Task { @MainActor [weak self] in
                     guard let self, case .downloading = self.state else { return }
@@ -229,7 +287,17 @@ final class Gemma4LocalModelManager {
                 }
             }
             activeDownload = download
-            try await download.start(url: Self.artifactURL)
+            // A gated entry needs the token before a single byte moves; failing here beats failing
+            // a third of the way through a 3 GB download.
+            if descriptor.requiresAuth, Self.huggingFaceToken == nil {
+                throw LocalModelError.invalidDownload(
+                    descriptor.repositoryURL.map {
+                        "\(descriptor.displayName) is gated. Add a Hugging Face token in Settings, and accept its terms at \($0.absoluteString) with the same account."
+                    } ?? "\(descriptor.displayName) needs a Hugging Face token. Add one in Settings."
+                )
+            }
+            try await download.start(url: descriptor.url,
+                                     bearerToken: descriptor.requiresAuth ? Self.huggingFaceToken : nil)
             activeDownload = nil
 
             state = .verifying
@@ -237,17 +305,17 @@ final class Gemma4LocalModelManager {
             let verification = try await Task.detached(priority: .utility) {
                 try Self.verifyArtifact(at: partialURL)
             }.value
-            guard verification.byteCount == Self.artifactByteCount else {
+            guard verification.byteCount == descriptor.sizeBytes else {
                 throw LocalModelError.invalidDownload(
                     LocalModelStrings.format(
                         "gemma.verification.wrongSize",
                         defaultValue: "expected %@ bytes, received %@",
-                        String(Self.artifactByteCount),
+                        String(descriptor.sizeBytes),
                         String(verification.byteCount)
                     )
                 )
             }
-            guard verification.sha256 == Self.artifactSHA256 else {
+            guard verification.sha256 == descriptor.sha256 else {
                 throw LocalModelError.invalidDownload(LocalModelStrings.text(
                     "gemma.verification.hashMismatch",
                     defaultValue: "SHA-256 mismatch"
@@ -255,7 +323,7 @@ final class Gemma4LocalModelManager {
             }
 
             try fileManager.moveItem(at: partialModelURL, to: modelURL)
-            try Data(Self.artifactSHA256.utf8).write(to: verificationMarkerURL, options: .atomic)
+            try Data(descriptor.sha256.utf8).write(to: verificationMarkerURL, options: .atomic)
             installedByteCount = Self.directorySize(at: rootDirectory, fileManager: fileManager)
 
             // Downloading always prepares the engine, which also covers a pending
@@ -355,7 +423,9 @@ final class Gemma4LocalModelManager {
             let contents = images.map(Content.imageData) + [.text(prompt)]
             let response = try await conversation.sendMessage(
                 Message(contents: contents),
-                maxOutputTokens: max(1, min(maxOutputTokens, 4_096)),
+                // Clamped to this model's own context, not a constant: MedGemma's build exports a
+                // 2048-entry KV cache and the engine's global 4096 would overrun it.
+                maxOutputTokens: max(1, min(maxOutputTokens, descriptor.contextTokens)),
                 thinkingConfig: ThinkingConfig(enableThinking: false)
             )
             let text = response.toString.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -396,7 +466,8 @@ final class Gemma4LocalModelManager {
     nonisolated static func engineConfig(
         modelPath: String,
         backend: Backend,
-        cacheDir: String
+        cacheDir: String,
+        contextTokens: Int = maxContextTokens
     ) throws -> EngineConfig {
         try EngineConfig(
             modelPath: modelPath,
@@ -405,7 +476,7 @@ final class Gemma4LocalModelManager {
             // (STABLEHLO_COMPOSITE). Keep text generation on the requested backend,
             // but compile the vision tower with XNNPACK.
             visionBackend: .cpu(threadCount: visionThreadCount),
-            maxNumTokens: maxContextTokens,
+            maxNumTokens: contextTokens,
             cacheDir: cacheDir
         )
     }
@@ -490,11 +561,11 @@ final class Gemma4LocalModelManager {
     }
 
     private var modelURL: URL {
-        rootDirectory.appendingPathComponent(Self.artifactFilename)
+        rootDirectory.appendingPathComponent(descriptor.filename)
     }
 
     private var partialModelURL: URL {
-        rootDirectory.appendingPathComponent("\(Self.artifactFilename).partial")
+        rootDirectory.appendingPathComponent("\(descriptor.filename).partial")
     }
 
     private var verificationMarkerURL: URL {
@@ -509,7 +580,8 @@ final class Gemma4LocalModelManager {
         rootDirectory.appendingPathComponent("Cache", isDirectory: true)
     }
 
-    private static func defaultRootDirectory(fileManager: FileManager) -> URL {
+    private static func defaultRootDirectory(fileManager: FileManager,
+                                             descriptor: LocalModelDescriptor) -> URL {
         let applicationSupport = (try? fileManager.url(
             for: .applicationSupportDirectory,
             in: .userDomainMask,
@@ -520,7 +592,13 @@ final class Gemma4LocalModelManager {
         return applicationSupport
             .appendingPathComponent("Ayuvo", isDirectory: true)
             .appendingPathComponent("LocalModels", isDirectory: true)
-            .appendingPathComponent("Gemma4E2B", isDirectory: true)
+            // One directory per catalogue model; Gemma keeps the name it has always had so an
+            // existing install is found exactly where it already is.
+            .appendingPathComponent(
+                descriptor.id == LocalModelCatalog.gemmaCatalogID
+                    ? "Gemma4E2B" : descriptor.storageName,
+                isDirectory: true
+            )
     }
 
     private func prepareRootDirectory() throws {
@@ -543,9 +621,12 @@ final class Gemma4LocalModelManager {
         guard let available = values.volumeAvailableCapacityForImportantUsage else {
             throw LocalModelError.storageCapacityUnavailable
         }
-        guard Self.hasRequiredStorage(availableBytes: available) else {
+        // This model's size, not Gemma's: the default argument here is the Gemma constant, and a
+        // 3 GB model checked against a 2.59 GB requirement would pass and then run out of disk.
+        guard Self.hasRequiredStorage(availableBytes: available,
+                                      artifactBytes: descriptor.sizeBytes) else {
             throw LocalModelError.insufficientStorage(
-                required: Self.artifactByteCount + Self.installationHeadroomBytes,
+                required: descriptor.sizeBytes + Self.installationHeadroomBytes,
                 available: available
             )
         }
@@ -564,7 +645,8 @@ final class Gemma4LocalModelManager {
             let gpuConfig = try Self.engineConfig(
                 modelPath: modelURL.path,
                 backend: .gpu,
-                cacheDir: gpuCache.path
+                cacheDir: gpuCache.path,
+                contextTokens: descriptor.contextTokens
             )
             let gpuEngine = Engine(engineConfig: gpuConfig)
             do {
@@ -579,14 +661,15 @@ final class Gemma4LocalModelManager {
                 let cpuConfig = try Self.engineConfig(
                     modelPath: modelURL.path,
                     backend: .cpu(),
-                    cacheDir: cpuCache.path
+                    cacheDir: cpuCache.path,
+                    contextTokens: descriptor.contextTokens
                 )
                 let cpuEngine = Engine(engineConfig: cpuConfig)
                 try await cpuEngine.initialize()
                 loadedEngine = cpuEngine
             }
 
-            try Data(Self.preparedMarkerContents.utf8).write(to: preparedMarkerURL, options: .atomic)
+            try Data(descriptor.preparedMarkerContents.utf8).write(to: preparedMarkerURL, options: .atomic)
             engine = loadedEngine
             state = .ready
             return loadedEngine
@@ -613,6 +696,8 @@ private final class GemmaArtifactDownloadOperation: NSObject, URLSessionDownload
     enum DownloadError: LocalizedError {
         case invalidHTTPResponse
         case httpStatus(Int)
+        /// A gated model refused the token. Carries the page where its terms are accepted.
+        case notAuthorised(status: Int, termsURL: URL?)
         case missingDownloadedFile
 
         var errorDescription: String? {
@@ -628,6 +713,24 @@ private final class GemmaArtifactDownloadOperation: NSObject, URLSessionDownload
                     defaultValue: "The model server returned HTTP %@.",
                     String(status)
                 )
+            case .notAuthorised(let status, let termsURL):
+                // 401/403 on a gated model is the token or the unaccepted licence, never a server
+                // fault. "HTTP 403" sends people looking in the wrong place, and "accept the terms"
+                // without saying where is barely better — so name the page.
+                if let termsURL {
+                    LocalModelStrings.format(
+                        "gemma.download.notAuthorised",
+                        defaultValue: "Hugging Face refused the download (HTTP %@). Open %@, accept the model's terms with the account your token belongs to, then try again.",
+                        String(status),
+                        termsURL.absoluteString
+                    )
+                } else {
+                    LocalModelStrings.format(
+                        "gemma.download.notAuthorisedNoPage",
+                        defaultValue: "Hugging Face refused the download (HTTP %@). Check the token in Settings and that its account has accepted this model's terms.",
+                        String(status)
+                    )
+                }
             case .missingDownloadedFile:
                 LocalModelStrings.text(
                     "gemma.download.missingFile",
@@ -646,17 +749,23 @@ private final class GemmaArtifactDownloadOperation: NSObject, URLSessionDownload
     private var task: URLSessionDownloadTask?
     private var movedDownloadedFile = false
 
+    /// Where a gated model's terms are accepted, named in the refusal so nobody has to guess.
+    private let termsURL: URL?
+
     init(
         destinationURL: URL,
         fileManager: FileManager,
+        termsURL: URL? = nil,
         progressHandler: @escaping @Sendable (Double) -> Void
     ) {
         self.destinationURL = destinationURL
         self.fileManager = fileManager
+        self.termsURL = termsURL
         self.progressHandler = progressHandler
     }
 
-    func start(url: URL) async throws {
+    /// The optional Hugging Face token, sent only for catalogue entries marked gated.
+    func start(url: URL, bearerToken: String? = nil) async throws {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 let configuration = URLSessionConfiguration.ephemeral
@@ -673,7 +782,11 @@ private final class GemmaArtifactDownloadOperation: NSObject, URLSessionDownload
                     delegate: self,
                     delegateQueue: delegateQueue
                 )
-                let task = session.downloadTask(with: url)
+                var request = URLRequest(url: url)
+                if let bearerToken, !bearerToken.isEmpty {
+                    request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+                }
+                let task = session.downloadTask(with: request)
 
                 lock.lock()
                 self.continuation = continuation
@@ -718,7 +831,9 @@ private final class GemmaArtifactDownloadOperation: NSObject, URLSessionDownload
                 throw DownloadError.invalidHTTPResponse
             }
             guard (200..<300).contains(response.statusCode) else {
-                throw DownloadError.httpStatus(response.statusCode)
+                throw response.statusCode == 401 || response.statusCode == 403
+                    ? DownloadError.notAuthorised(status: response.statusCode, termsURL: termsURL)
+                    : DownloadError.httpStatus(response.statusCode)
             }
             if fileManager.fileExists(atPath: destinationURL.path) {
                 try fileManager.removeItem(at: destinationURL)

@@ -1,0 +1,1110 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "text": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "text_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "text": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          }
+        }
+      },
+      "name": "one provider in all four slots collapses to one profile",
+      "notes": "The commonest real state. Four slots, one endpoint, one profile."
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Anthropic Claude",
+            "id": "aip_0003",
+            "model_id": "claude-sonnet-5",
+            "nickname": "Anthropic Claude · claude-sonnet-5",
+            "provider": "Anthropic Claude",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Groq",
+            "id": "aip_0004",
+            "model_id": "qwen/qwen3.6-27b",
+            "nickname": "Groq · qwen/qwen3.6-27b",
+            "provider": "Groq",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0003"
+          },
+          "text": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "text_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0004"
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": true,
+            "model": "claude-sonnet-5",
+            "provider": "Anthropic Claude"
+          },
+          "text": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gemini-3.5-flash-lite",
+            "provider": "Google Gemini"
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": true,
+            "model": "qwen/qwen3.6-27b",
+            "provider": "Groq"
+          }
+        }
+      },
+      "name": "four distinct slots become four profiles"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": "http://10.0.0.5:8080/v1",
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Custom (OpenAI-compatible)",
+            "id": "aip_0001",
+            "model_id": "my-model",
+            "nickname": "Custom (OpenAI-compatible) · my-model",
+            "provider": "Custom (OpenAI-compatible)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": "http://10.0.0.9:8080/v1",
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Custom (OpenAI-compatible)",
+            "id": "aip_0002",
+            "model_id": "my-model",
+            "nickname": "Custom (OpenAI-compatible) · my-model (2)",
+            "provider": "Custom (OpenAI-compatible)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": "http://10.0.0.5:8080/v1",
+            "enabled": true,
+            "model": "my-model",
+            "provider": "Custom (OpenAI-compatible)"
+          },
+          "image_fallback": {
+            "base_url": "http://10.0.0.9:8080/v1",
+            "enabled": true,
+            "model": "my-model",
+            "provider": "Custom (OpenAI-compatible)"
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "the same provider at two servers stays two profiles",
+      "notes": "customBaseURL_ and fallbackCustomBaseURL_ are different keys today. Collapsing them would silently point a self-hosted fallback at the primary's server."
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0001",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.8-flash",
+            "nickname": "Google Gemini · gemini-3.8-flash",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gemini-3.5-flash-lite",
+            "provider": "Google Gemini"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gemini-3.8-flash",
+            "provider": "Google Gemini"
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "same provider different model"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0002",
+            "model_id": "gemini-3.8-flash",
+            "nickname": "Google Gemini · gemini-3.8-flash",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": "aip_0002"
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "gemini-3.8-flash",
+            "provider": "Google Gemini"
+          }
+        }
+      },
+      "name": "a disabled fallback is still given a profile",
+      "notes": "Otherwise toggling the fallback back on in Settings would silently resolve elsewhere."
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": true,
+            "model": "x",
+            "provider": "Nonesuch"
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "an unknown provider token drops its slot"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": true,
+            "model": "  ",
+            "provider": "OpenAI"
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "a slot with no model drops"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0001",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "an empty legacy state still yields a usable primary"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Gemma 4 E2B (On-Device)",
+            "id": "aip_0001",
+            "model_id": "gemma-4-e2b-it-litertlm",
+            "nickname": "Gemma 4 E2B (On-Device) · gemma-4-e2b-it-litertlm",
+            "provider": "Gemma 4 E2B (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gemma-4-e2b-it-litertlm",
+            "provider": "Gemma 4 E2B (On-Device)"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "an on-device primary keeps its model id"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": "http://a:11434/v1",
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Ollama (Local)",
+            "id": "aip_0001",
+            "model_id": "qwen3.8",
+            "nickname": "Ollama (Local) · qwen3.8",
+            "provider": "Ollama (Local)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": "http://b:11434/v1",
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Ollama (Local)",
+            "id": "aip_0002",
+            "model_id": "qwen3.8",
+            "nickname": "Ollama (Local) · qwen3.8 (2)",
+            "provider": "Ollama (Local)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": "http://a:11434/v1",
+            "enabled": true,
+            "model": "qwen3.8",
+            "provider": "Ollama (Local)"
+          },
+          "image_fallback": {
+            "base_url": "http://b:11434/v1",
+            "enabled": true,
+            "model": "qwen3.8",
+            "provider": "Ollama (Local)"
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "nickname collision gets a counter"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "migration_version": 1,
+        "now_ms": 1700000000000,
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        },
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "already migrated is the identity"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0007",
+            "model_id": "gpt-4.1",
+            "nickname": "Kept",
+            "provider": "OpenAI",
+            "updated_ms": 1,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Google Gemini",
+            "id": "aip_0008",
+            "model_id": "gemini-3.5-flash-lite",
+            "nickname": "Google Gemini · gemini-3.5-flash-lite",
+            "provider": "Google Gemini",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0008"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "existing_profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0007",
+            "model_id": "gpt-4.1",
+            "nickname": "Kept",
+            "provider": "OpenAI",
+            "updated_ms": 1,
+            "vertex": null
+          }
+        ],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gemini-3.5-flash-lite",
+            "provider": "Google Gemini"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "migration continues an existing id counter"
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "env": {
+          "platform": "android"
+        },
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": true,
+            "model": "System Language Model",
+            "provider": "Apple Intelligence (On-Device)"
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "an ios only provider is dropped on android",
+      "notes": "Apple Intelligence is iOS-only. Migrating a profile onto it would leave Android with a route it can never resolve."
+    },
+    {
+      "expected": {
+        "migration_version": 1,
+        "profiles": [
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:OpenAI",
+            "id": "aip_0001",
+            "model_id": "gpt-5.4-mini",
+            "nickname": "OpenAI · gpt-5.4-mini",
+            "provider": "OpenAI",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          },
+          {
+            "base_url": null,
+            "created_ms": 1700000000000,
+            "credential_ref": "provider:Apple Intelligence (On-Device)",
+            "id": "aip_0002",
+            "model_id": "System Language Model",
+            "nickname": "Apple Intelligence (On-Device) · System Language Model",
+            "provider": "Apple Intelligence (On-Device)",
+            "updated_ms": 1700000000000,
+            "vertex": null
+          }
+        ],
+        "roles": {
+          "image": {
+            "enabled": true,
+            "profile_id": "aip_0001"
+          },
+          "image_fallback": {
+            "enabled": false,
+            "profile_id": null
+          },
+          "text": {
+            "enabled": true,
+            "profile_id": "aip_0002"
+          },
+          "text_fallback": {
+            "enabled": false,
+            "profile_id": null
+          }
+        }
+      },
+      "input": {
+        "env": {
+          "platform": "ios"
+        },
+        "existing_profiles": [],
+        "migration_version": 0,
+        "now_ms": 1700000000000,
+        "slots": {
+          "image": {
+            "base_url": null,
+            "enabled": true,
+            "model": "gpt-5.4-mini",
+            "provider": "OpenAI"
+          },
+          "image_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          },
+          "text": {
+            "base_url": null,
+            "enabled": true,
+            "model": "System Language Model",
+            "provider": "Apple Intelligence (On-Device)"
+          },
+          "text_fallback": {
+            "base_url": null,
+            "enabled": false,
+            "model": "",
+            "provider": null
+          }
+        }
+      },
+      "name": "the same slots keep the ios only provider on ios"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "migrate_profiles",
+  "version": 1
+}

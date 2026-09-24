@@ -692,7 +692,9 @@ class FoodAnalysisService(
             return localGemma?.generate(
                 prompt = prompt,
                 images = imageBytesList,
-                maxOutputTokens = maxTokens
+                maxOutputTokens = maxTokens,
+                // The selected model finally means something: several can be installed at once.
+                modelId = model
             ) ?: throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
         }
         if (baseUrl.isEmpty()) throw AiError.InvalidUrl(baseUrl)

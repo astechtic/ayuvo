@@ -6,6 +6,8 @@ import com.ayuvo.health.data.BodyFatRepository
 import com.ayuvo.health.data.BodyMeasurementRepository
 import com.ayuvo.health.coach.data.CoachDatabase
 import com.ayuvo.health.coach.logic.CoachCatalogs
+import com.ayuvo.health.services.ai.AICatalogs
+import com.ayuvo.health.services.ondevice.InstalledLocalModels
 import com.ayuvo.health.medications.logic.MedicationsCoachContract
 import com.ayuvo.health.medications.logic.MedicationsCoachTools
 import com.ayuvo.health.coach.data.CoachFileStore
@@ -136,6 +138,10 @@ class AyuvoApp : Application() {
             container.prefs.migrateAIModelSelections()
             container.prefs.migrateMatchingSpeechProviderIfNeeded()
             container.prefs.migrateFallbackBaseUrls()
+            // Profiles are built from the flat keys, so this runs AFTER the migrations above: the
+            // model-registry upgrades have to land in the profiles, not after them. It also adopts
+            // whatever onboarding wrote since the last launch (docs/ai-models.md §4).
+            container.prefs.prepareAiProfiles(System.currentTimeMillis())
             // Summary favourites (docs/ui-structure.md §7.9): one-time migration from healthHomeTiles.
             container.favoritePins.ensureMigrated()
         }
@@ -146,6 +152,12 @@ class AyuvoApp : Application() {
             .distinctUntilChanged()
             .filter { it }
             .onEach { container.prefs.applyPendingLocalGemmaSelection() }
+            .launchIn(appScope)
+        // `AIProvider.LOCAL_GEMMA.models` is the installed set, which only the manager knows.
+        container.localModels.states
+            .map { container.localGemma.installedChatModelIds() }
+            .distinctUntilChanged()
+            .onEach { InstalledLocalModels.ids = it }
             .launchIn(appScope)
         // Prune only unreferenced JPEGs; logged foods, saved meals, and pending
         // analysis drafts remain untouched.
@@ -236,7 +248,7 @@ data class GoalCalculationEvidenceContext(
  */
 class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val appContext = app.applicationContext
-    val localModels = LocalModelManager(app, FoodAnalysisService.defaultClient)
+    val localModels = LocalModelManager(app, FoodAnalysisService.defaultClient) { keyStore.huggingFaceToken() }
     val prefs = PreferencesStore(
         app,
         isLocalGemmaExecutable = { localModels.isExecutable(LocalModelId.GEMMA_4_E2B) },
@@ -308,6 +320,16 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val coachOcrEngine: () -> OcrEngine = { MlKitOcrEngine() }
 
     init {
+        // The shared AI catalogues, bundled verbatim (docs/ai-models.md §2, §6, §7). These are read
+        // by the profile migration below, so they are installed before anything resolves a route.
+        runCatching {
+            AICatalogs.parse(app.assets.open(AICatalogs.PROVIDERS_ASSET).bufferedReader().use { it.readText() })
+                ?.let { AICatalogs.providers = it }
+            AICatalogs.parse(app.assets.open(AICatalogs.VERTEX_ASSET).bufferedReader().use { it.readText() })
+                ?.let { AICatalogs.vertex = it }
+            AICatalogs.parse(app.assets.open(AICatalogs.MODELS_ASSET).bufferedReader().use { it.readText() })
+                ?.let { AICatalogs.models = it }
+        }
         // The shared Coach catalogs, bundled verbatim (docs/coach.md §5, §9).
         runCatching {
             CoachCatalogs.parse(app.assets.open(CoachCatalogs.CHART_SPEC_ASSET).bufferedReader().use { it.readText() })

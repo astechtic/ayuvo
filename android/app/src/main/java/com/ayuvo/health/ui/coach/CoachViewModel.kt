@@ -123,7 +123,12 @@ data class CoachUiState(
     val modePrompt: CoachRecordsModePrompt? = null,
     val prefill: CoachPrefill? = null,
     val pickerOpen: Boolean = false,
-    val pickerCandidates: List<HealthRecord> = emptyList()
+    val pickerCandidates: List<HealthRecord> = emptyList(),
+    /** The model this conversation is pinned to, if any (docs/ai-models.md 8). */
+    val modelOverrideProfileId: String? = null,
+    val modelOverrideProvider: AIProvider? = null,
+    /** The saved models the picker offers. */
+    val aiProfiles: List<CoachModelChoice> = emptyList()
 )
 
 @OptIn(FlowPreview::class)
@@ -136,10 +141,32 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
     private var pendingRequest: CoachRecordsRequest? = null
     /** §30 decision for this conversation: null = not asked yet. */
     private var modeDecision: CoachRecordsModeChoice? = null
-    private var providerOverride: AIProvider? = null
+    /**
+     * This conversation's model choice, as `conversations.provider_override` holds it
+     * (docs/ai-models.md §8). It used to live only here and was never written back, so an on-device
+     * conversation silently reverted to the cloud provider after a switch or process death.
+     */
+    private var modelOverride: ConversationOverride = ConversationOverride()
+    private val providerOverride: AIProvider? get() = modelOverride.provider
     private var modeAnswer: CompletableDeferred<CoachRecordsModeChoice>? = null
 
     init {
+        viewModelScope.launch {
+            // The saved models the ⋯ › Model picker offers (docs/ai-models.md §8).
+            container.prefs.aiModelProfiles.collect { profiles ->
+                val choices = profiles.filterIsInstance<JsonObject>().map { p ->
+                    val token = p.str("provider").orEmpty()
+                    CoachModelChoice(
+                        id = p.str("id").orEmpty(),
+                        name = p.str("nickname").orEmpty().ifEmpty { token },
+                        providerToken = token,
+                        provider = AIProvider.fromToken(token),
+                        model = p.str("model_id").orEmpty(),
+                    )
+                }
+                _ui.update { it.copy(aiProfiles = choices) }
+            }
+        }
         viewModelScope.launch {
             // Conversations live in ayuvo_coach.db now; the legacy blob moves in once (docs §12).
             CoachMigration.runIfNeeded(container.coachRepository, container.prefs)
@@ -364,7 +391,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
             }
             CoachRecordsModeChoice.ON_DEVICE -> {
                 modeDecision = CoachRecordsModeChoice.ON_DEVICE
-                providerOverride = AIProvider.LOCAL_GEMMA
+                setModelOverride(ConversationOverride(provider = AIProvider.LOCAL_GEMMA))
             }
         }
         return choice
@@ -539,7 +566,8 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                 records = runCatching { recordsTurn(plainText, provider) }.getOrNull(),
                 medications = medicationsContext(),
                 sources = _ui.value.dataSwitches,
-                providerOverride = providerOverride
+                providerOverride = providerOverride,
+                profileOverride = modelOverride.profileId
             )
         }
 
@@ -822,10 +850,33 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
 
     // -- Conversations (docs/coach.md §7) ----------------------------------------------------------
 
+    /**
+     * Pins this conversation to a saved model (docs/ai-models.md §8), persisting it so a switch or a
+     * process restart does not lose the choice.
+     */
+    fun setModelOverride(override: ConversationOverride) {
+        modelOverride = override
+        _ui.update {
+            it.copy(modelOverrideProfileId = override.profileId,
+                    modelOverrideProvider = override.provider)
+        }
+        val id = _ui.value.currentConversationId ?: return
+        viewModelScope.launch {
+            container.coachRepository.setProviderOverride(id, override.encoded(), System.currentTimeMillis())
+        }
+    }
+
+    /** "Use for new chats too": the picked model becomes the app's primary. */
+    fun setModelAsDefault(profileId: String) {
+        viewModelScope.launch {
+            container.prefs.setAiRolePointer("image", profileId, enabled = true)
+        }
+    }
+
     /** "New chat" adds a conversation; it never clears one. */
     fun newConversation() {
         modeDecision = null
-        providerOverride = null
+        modelOverride = ConversationOverride()
         _ui.update { it.copy(selectedRecords = emptyList()) }
         viewModelScope.launch {
             val conversation = Conversation(createdMs = System.currentTimeMillis())
@@ -839,9 +890,14 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             val conversation = container.coachRepository.conversation(id) ?: return@launch
             val messages = container.coachRepository.messages(id)
+            // Rehydrate the model this chat is pinned to; without this it silently reverted.
+            modelOverride = ConversationOverride.parse(conversation.providerOverride)
+            modeDecision = null
             _ui.update {
                 it.copy(messages = messages, currentConversationId = conversation.id,
-                        selectedRecords = emptyList())
+                        selectedRecords = emptyList(),
+                        modelOverrideProfileId = modelOverride.profileId,
+                        modelOverrideProvider = modelOverride.provider)
             }
             loadAttachmentImages(messages)
             loadVariants()

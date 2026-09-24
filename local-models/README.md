@@ -1,45 +1,88 @@
 # Local model artifact contract
 
-Ayuvo intentionally offers only two downloadable model families:
+Ayuvo offers two kinds of downloadable model:
 
 - **Whisper Base** for speech-to-text on supported phones in every RAM tier.
-- **Gemma 4 E2B** for text and image requests on phones in the 8 GB RAM tier.
+- **A catalogue of LiteRT-LM chat models** for text (and, where the model has a
+  vision tower, image) requests, listed in [`catalog.v2.json`](catalog.v2.json).
 
-Qwen, SmolVLM, GGUF/llama.cpp chat models, and Gemma E4B are not part of this release.
+More than one chat model may be installed at once; exactly one is loaded into
+the runtime at a time, and switching closes the previous engine.
 
-## Gemma 4 E2B
+GGUF / llama.cpp, MLX and safetensors builds are still out of scope: both
+platforms run LiteRT-LM `0.16.0` and accept `.litertlm` packages only. **Qwen3
+30B and 32B are absent because `litert-community` publishes no LiteRT-LM build
+above 14B** — not because of a policy choice. The catalogue is data, so the day
+such a build appears it is one entry plus a `--online` verification.
 
-Both apps use LiteRT-LM `0.16.0` with the same immutable
-`gemma-4-E2B-it.litertlm` artifact in [`catalog.v1.json`](catalog.v1.json).
-The Hugging Face revision is public and ungated, so the apps download it
-anonymously and never ask for a Hugging Face token.
+## The catalogue
 
-| Artifact | Exact size | SHA-256 | Model license | RAM gate |
-| --- | ---: | --- | --- | ---: |
-| Gemma 4 E2B LiteRT-LM | 2,588,147,712 bytes (2.59 GB / 2.41 GiB) | `181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c` | Apache-2.0 | 8 GB device class |
+| Model | Artifact | Exact size | Modality | Context | Licence | RAM gate |
+| --- | --- | ---: | --- | ---: | --- | ---: |
+| Gemma 4 E2B | `gemma-4-E2B-it.litertlm` | 2,588,147,712 B (2.41 GiB) | text + image | 4096 | Apache-2.0 | 8 GiB |
+| Qwen3 1.7B | `Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm` | 977,184,032 B (0.91 GiB) | text | 4096 | Apache-2.0 | 6 GiB |
+| Qwen3 4B | `qwen3_4b_mixed_int4.litertlm` | 2,659,057,664 B (2.48 GiB) | text | 4096 | Apache-2.0 | 8 GiB |
+| Qwen3 8B | `qwen3_8b_mixed_int4.litertlm` | 4,887,412,736 B (4.55 GiB) | text | 4096 | Apache-2.0 | 12 GiB |
+| Qwen3 14B | `qwen3_14b_mixed_int4.litertlm` | 8,655,863,808 B (8.06 GiB) | text | 4096 | Apache-2.0 | 20 GiB |
+| MedGemma 1.5 4B | `medgemma-1.5-4b-it_q4_block32_vision_ekv2048.litertlm` | 3,023,069,488 B (2.82 GiB) | text + image | 2048 | Health AI Developer Foundations | 8 GiB |
+
+Exact revisions and SHA-256 checksums live in `catalog.v2.json`; the checksum is
+the file's Git-LFS object id as the Hugging Face API reports it, and
+`verify_catalog.py --online` re-reads it from the Hub.
+
+### Three rules the catalogue encodes
+
+1. **The RAM gate is derived, never typed.** It is
+   `max(6 GiB, artifact x 2 + 2 GiB rounded up to an even GiB)`, which reproduces
+   the shipped Gemma gate of 8 GiB exactly, so adding models cannot quietly
+   re-gate the one already installed on people's phones. Both
+   `verify_catalog.py` and `scripts/ai_contract_check.py` assert it.
+2. **Context length is per model.** MedGemma's build exports a 2048-entry KV
+   cache; the engine's global 4096 would overrun it. The runtime clamps to the
+   catalogue value, not to a constant.
+3. **Vision is per model, not per provider.** Qwen3 has no vision tower, so a
+   Qwen3 profile can serve the text role and never the image role. The
+   provider-level `supportsVision` flag cannot express this.
+
+### Gated artifacts
+
+`MedGemma 1.5 4B` is gated on the Hub (`gated: "auto"`). The app therefore
+supports an optional Hugging Face token, stored beside the AI keys, and sends it
+as `Authorization: Bearer` for gated entries only. Without a token the row is
+listed and blocked with the reason, never hidden — and never started and failed
+halfway through a 3 GB download.
+
+MedGemma is a research model under the Health AI Developer Foundations terms,
+**not** a medical device and not a clinician. Coach's existing guardrails are
+unchanged when it answers: describe, never diagnose, never suggest starting,
+stopping or changing a dose, and defer to the prescriber.
+
+Before release, each new model needs its notice bundle committed under
+`legal/` alongside the LiteRT-LM and Whisper ones, and the MedGemma terms must
+be accepted on the account whose token ships in CI.
 
 Android determines the marketed memory class from
 `ActivityManager.MemoryInfo.totalMem` because the OS reserves part of physical
 RAM before reporting it. iOS similarly rounds the GiB value reported by
 `ProcessInfo.physicalMemory` upward to the marketed memory class.
-The model remains visible with an 8 GB requirement on smaller phones, but it
-does not appear in provider selectors until the artifact is verified and
-executable.
+A model remains visible with its requirement on smaller phones, but it does not
+appear in provider selectors until the artifact is verified and executable.
 
 Before downloading, check free capacity on the app-private install volume.
 Android reserves the larger of 256 MiB or 10% of the artifact; iOS reserves
 1 GiB. Download to a sibling partial file, verify exact byte length and a
 streaming SHA-256, then atomically move the verified file into place. A partial,
-unverified, unsupported, or deleted model must never be selectable.
+unverified, unsupported, gated-without-a-token or deleted model must never be
+selectable.
 
-Deleting an active model first replaces every primary and fallback selection
+Deleting an installed model first replaces every profile and role selection
 that references it, closes the runtime, and removes only model files. It must
 not remove meals, settings, or other user data.
 
 ## Whisper Base
 
 Whisper uses platform-specific runtimes and formats, so it is not represented
-as one shared artifact in `catalog.v1.json`:
+as one shared artifact in `catalog.v2.json`:
 
 - iOS pins `argmax-oss-swift` / WhisperKit `1.1.0`, variant `base`, which owns
   the multi-file `openai_whisper-base` Core ML download.

@@ -49,6 +49,101 @@ struct Gemma4LocalModelManagerTests {
         #expect(Gemma4LocalModelManager.isEligible(physicalMemoryBytes: 8 * gib))
     }
 
+    /// The path the Settings rows and the provider picker actually read.
+    ///
+    /// The static check above rounds the device's memory up to its marketed class; the per-model
+    /// check has to do the same. Comparing raw bytes instead rejected every 8 GB iPhone — which
+    /// reports about 7.6 GiB — against an 8 GiB model, including one already downloaded and running.
+    @Test func perModelEligibilityUsesTheMarketedMemoryClassToo() {
+        let gib: UInt64 = 1_024 * 1_024 * 1_024
+        // What an "8 GB" iPhone actually reports.
+        let eightGBPhone: UInt64 = 7 * gib + 600_000_000
+
+        for descriptor in LocalModelCatalog.chatModels {
+            let manager = Gemma4LocalModelManager(
+                descriptor: descriptor,
+                rootDirectory: makeTemporaryDirectory(),
+                physicalMemoryBytes: eightGBPhone
+            )
+            let expected = descriptor.minimumMemoryClassGB <= 8
+            #expect(manager.isEligible == expected,
+                    "\(descriptor.displayName) gated at \(descriptor.minimumMemoryClassGB) GB")
+        }
+    }
+
+    @Test func aModelGatedAboveThisPhoneStaysBlocked() {
+        let gib: UInt64 = 1_024 * 1_024 * 1_024
+        let eightGBPhone: UInt64 = 7 * gib + 600_000_000
+        let big = LocalModelCatalog.chatModels.first { $0.minimumMemoryClassGB > 8 }
+        // The catalogue ships at least one desktop-class entry; if that ever stops being true the
+        // test has nothing to prove and says so rather than passing silently.
+        #expect(big != nil, "no model in the catalogue is gated above 8 GB")
+        if let big {
+            let manager = Gemma4LocalModelManager(
+                descriptor: big,
+                rootDirectory: makeTemporaryDirectory(),
+                physicalMemoryBytes: eightGBPhone
+            )
+            #expect(!manager.isEligible)
+        }
+    }
+
+    /// A gated model with no token must fail *visibly*, before any bytes move.
+    ///
+    /// The refusal reaching `.failed` is the whole point: a download that ends in `.failed` with
+    /// nobody rendering it looks exactly like a button that does nothing.
+    @Test func aGatedModelWithoutATokenFailsWithAMessage() async throws {
+        let gated = LocalModelCatalog.chatModels.first { $0.requiresAuth }
+        #expect(gated != nil, "no gated model in the catalogue")
+        guard let gated else { return }
+
+        let previousToken = Gemma4LocalModelManager.huggingFaceToken
+        Gemma4LocalModelManager.huggingFaceToken = nil
+        defer { Gemma4LocalModelManager.huggingFaceToken = previousToken }
+
+        let manager = Gemma4LocalModelManager(
+            descriptor: gated,
+            rootDirectory: makeTemporaryDirectory(),
+            physicalMemoryBytes: gated.minimumMemoryBytes == 0
+                ? Gemma4LocalModelManager.minimumPhysicalMemoryBytes
+                : UInt64(gated.minimumMemoryBytes)
+        )
+        await manager.download()
+
+        guard case .failed(let message) = manager.state else {
+            Issue.record("expected a visible failure, got \(manager.state)")
+            return
+        }
+        #expect(message.localizedCaseInsensitiveContains("token"))
+        // "Accept the terms" is useless without saying where, so the page is named.
+        if let page = gated.repositoryURL {
+            #expect(message.contains(page.absoluteString))
+        }
+    }
+
+    /// Every gated catalogue entry must be able to name the page where its terms are accepted.
+    @Test func everyGatedModelNamesItsTermsPage() {
+        for descriptor in LocalModelCatalog.chatModels where descriptor.requiresAuth {
+            let page = descriptor.repositoryURL
+            #expect(page != nil, "\(descriptor.displayName) has no repository page")
+            #expect(page?.absoluteString.hasPrefix("https://huggingface.co/") == true)
+        }
+    }
+
+    /// The headroom check must size itself on the model being downloaded, not on Gemma.
+    @Test func storageHeadroomUsesTheModelBeingDownloaded() {
+        let biggest = LocalModelCatalog.chatModels.max { $0.sizeBytes < $1.sizeBytes }
+        guard let biggest, biggest.sizeBytes > Gemma4LocalModelManager.artifactByteCount else {
+            return
+        }
+        let justEnoughForGemma = Gemma4LocalModelManager.artifactByteCount
+            + Gemma4LocalModelManager.installationHeadroomBytes
+        #expect(Gemma4LocalModelManager.hasRequiredStorage(availableBytes: justEnoughForGemma))
+        #expect(!Gemma4LocalModelManager.hasRequiredStorage(
+            availableBytes: justEnoughForGemma, artifactBytes: biggest.sizeBytes
+        ))
+    }
+
     @Test func storageCheckIncludesInstallationHeadroom() {
         let required = Gemma4LocalModelManager.artifactByteCount
             + Gemma4LocalModelManager.installationHeadroomBytes

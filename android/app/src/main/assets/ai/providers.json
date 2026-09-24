@@ -1,0 +1,586 @@
+{
+  "format": "ayuvo-ai-providers",
+  "notes": [
+    "The BYOK provider registry, verified against provider docs on 2026-09-07.",
+    "`id` is the persisted token: the iOS rawValue and the Android @SerialName, which are equal by contract.",
+    "Android stores the enum NAME in its own flat preference keys; `android_case` is that name.",
+    "Apple Intelligence is iOS-only, so `platforms` is per row.",
+    "Both platforms keep their enums; AIVectorTests / AiVectorTests compare them with this file field by field.",
+    "Known defect preserved verbatim: Ollama's text_models is `literal + models`, so 'qwen3.8' and 'gemma4' appear twice in the picker. This file records what the app does; de-duplicating it is a behaviour change and belongs in its own step.",
+    "Google Vertex AI's key is a service-account JSON, not an API key; it is stored in the same place and always profile-scoped, because two projects is the motivating case."
+  ],
+  "providers": [
+    {
+      "android_case": null,
+      "api_format": "on_device",
+      "base_url": "",
+      "configurable_timeout": false,
+      "id": "Apple Intelligence (On-Device)",
+      "ios_case": "appleIntelligence",
+      "key_placeholder": "No key needed",
+      "models": [],
+      "platforms": [
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": false,
+      "supports_custom_model_name": false,
+      "supports_vision": false,
+      "text_models": [
+        "System Language Model"
+      ]
+    },
+    {
+      "android_case": "LOCAL_GEMMA",
+      "api_format": "litert_local",
+      "base_url": "",
+      "configurable_timeout": false,
+      "id": "Gemma 4 E2B (On-Device)",
+      "ios_case": "gemma4Local",
+      "key_placeholder": "No key needed",
+      "models": [],
+      "models_from": "local-models/catalog.v2.json",
+      "note": "Today both platforms hardcode a one-element list holding the single installed artifact id. With a multi-model catalog the list is the set of INSTALLED model ids, so it is resolved at runtime and not compared by the parity test.",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": false,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": []
+    },
+    {
+      "android_case": "GEMINI",
+      "api_format": "gemini",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "configurable_timeout": false,
+      "id": "Google Gemini",
+      "ios_case": "gemini",
+      "key_placeholder": "AIza...",
+      "models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash",
+        "gemini-3.1-pro-preview"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash",
+        "gemini-3.1-pro-preview"
+      ]
+    },
+    {
+      "android_case": "OPENAI",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.openai.com/v1",
+      "configurable_timeout": false,
+      "id": "OpenAI",
+      "ios_case": "openai",
+      "key_placeholder": "sk-...",
+      "models": [
+        "gpt-5.4-mini",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-luna",
+        "gpt-5.5",
+        "gpt-5.4-nano",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "gpt-4o-mini"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "gpt-5.4-mini",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-luna",
+        "gpt-5.5",
+        "gpt-5.4-nano",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "gpt-4o-mini"
+      ]
+    },
+    {
+      "android_case": "ANTHROPIC",
+      "api_format": "anthropic",
+      "base_url": "https://api.anthropic.com/v1",
+      "configurable_timeout": false,
+      "id": "Anthropic Claude",
+      "ios_case": "anthropic",
+      "key_placeholder": "sk-ant-...",
+      "models": [
+        "claude-sonnet-5",
+        "claude-opus-5",
+        "claude-fable-5",
+        "claude-opus-4-8",
+        "claude-haiku-4-5"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "claude-sonnet-5",
+        "claude-opus-5",
+        "claude-fable-5",
+        "claude-opus-4-8",
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "android_case": "XAI",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.x.ai/v1",
+      "configurable_timeout": false,
+      "id": "xAI Grok",
+      "ios_case": "xai",
+      "key_placeholder": "xai-...",
+      "models": [
+        "grok-4.6",
+        "grok-4.3"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "grok-4.6",
+        "grok-4.3"
+      ]
+    },
+    {
+      "android_case": "OPENROUTER",
+      "api_format": "openai_compatible",
+      "base_url": "https://openrouter.ai/api/v1",
+      "configurable_timeout": false,
+      "id": "OpenRouter",
+      "ios_case": "openrouter",
+      "key_placeholder": "sk-or-...",
+      "models": [
+        "openrouter/free",
+        "google/gemini-3.5-flash-lite",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.7-flash",
+        "openai/gpt-5.6-luna",
+        "qwen/qwen3.8-27b",
+        "openai/gpt-5-mini",
+        "anthropic/claude-sonnet-5",
+        "qwen/qwen3-vl-8b-instruct"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": true,
+      "supports_vision": true,
+      "text_models": [
+        "openrouter/free",
+        "google/gemini-3.5-flash-lite",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.7-flash",
+        "openai/gpt-5.6-luna",
+        "qwen/qwen3.8-27b",
+        "openai/gpt-5-mini",
+        "anthropic/claude-sonnet-5",
+        "qwen/qwen3-vl-8b-instruct"
+      ]
+    },
+    {
+      "android_case": "TOGETHER_AI",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.together.xyz/v1",
+      "configurable_timeout": false,
+      "id": "Together AI",
+      "ios_case": "togetherai",
+      "key_placeholder": "...",
+      "models": [
+        "Qwen/Qwen3.5-9B",
+        "moonshotai/Kimi-K3",
+        "Qwen/Qwen3.8-2.4T-A95B",
+        "google/gemma-4-31B-it",
+        "MiniMaxAI/MiniMax-M3"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "MiniMaxAI/MiniMax-M2.7",
+        "Qwen/Qwen3.7-Max",
+        "Qwen/Qwen3.5-397B-A17B",
+        "Qwen/Qwen3.6-Plus",
+        "Qwen/Qwen3.5-9B",
+        "moonshotai/Kimi-K2.6",
+        "zai-org/GLM-5.1",
+        "zai-org/GLM-5",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "deepseek-ai/DeepSeek-V4-Pro"
+      ]
+    },
+    {
+      "android_case": "GROQ",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.groq.com/openai/v1",
+      "configurable_timeout": false,
+      "id": "Groq",
+      "ios_case": "groq",
+      "key_placeholder": "gsk_...",
+      "models": [
+        "qwen/qwen3.6-27b"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "openai/gpt-oss-20b",
+        "openai/gpt-oss-120b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+        "qwen/qwen3.6-27b",
+        "qwen/qwen3.8-27b"
+      ]
+    },
+    {
+      "android_case": "HUGGING_FACE",
+      "api_format": "openai_compatible",
+      "base_url": "https://router.huggingface.co/v1",
+      "configurable_timeout": false,
+      "id": "Hugging Face",
+      "ios_case": "huggingface",
+      "key_placeholder": "hf_...",
+      "models": [
+        "google/gemma-4-31B-it",
+        "Qwen/Qwen3.8-27B",
+        "moonshotai/Kimi-K3",
+        "google/gemma-3-27b-it",
+        "Qwen/Qwen3.5-9B"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": true,
+      "supports_vision": true,
+      "text_models": [
+        "google/gemma-4-31B-it",
+        "Qwen/Qwen3.8-27B",
+        "moonshotai/Kimi-K3",
+        "google/gemma-3-27b-it",
+        "Qwen/Qwen3.5-9B"
+      ]
+    },
+    {
+      "android_case": "FIREWORKS",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.fireworks.ai/inference/v1",
+      "configurable_timeout": false,
+      "id": "Fireworks AI",
+      "ios_case": "fireworks",
+      "key_placeholder": "fw_...",
+      "models": [
+        "accounts/fireworks/models/qwen3p7-plus",
+        "accounts/fireworks/models/kimi-k3",
+        "accounts/fireworks/models/muse-glimmer-30b",
+        "accounts/fireworks/models/minimax-m3",
+        "accounts/fireworks/models/kimi-k2p6"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "accounts/fireworks/models/qwen3p7-plus",
+        "accounts/fireworks/models/kimi-k3",
+        "accounts/fireworks/models/muse-glimmer-30b",
+        "accounts/fireworks/models/minimax-m3",
+        "accounts/fireworks/models/kimi-k2p6"
+      ]
+    },
+    {
+      "android_case": "DEEP_INFRA",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.deepinfra.com/v1/openai",
+      "configurable_timeout": false,
+      "id": "DeepInfra",
+      "ios_case": "deepinfra",
+      "key_placeholder": "...",
+      "models": [
+        "google/gemma-3-27b-it",
+        "Qwen/Qwen3.8-27B",
+        "MiniMaxAI/MiniMax-M3",
+        "google/gemma-4-31B-it",
+        "google/gemma-4-26B-A4B-it"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "google/gemma-3-27b-it",
+        "Qwen/Qwen3.8-27B",
+        "MiniMaxAI/MiniMax-M3",
+        "google/gemma-4-31B-it",
+        "google/gemma-4-26B-A4B-it"
+      ]
+    },
+    {
+      "android_case": "MISTRAL",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.mistral.ai/v1",
+      "configurable_timeout": false,
+      "id": "Mistral",
+      "ios_case": "mistral",
+      "key_placeholder": "...",
+      "models": [
+        "mistral-small-2603",
+        "mistral-medium-3-5",
+        "mistral-large-2512",
+        "ministral-14b-2512"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "mistral-small-2603",
+        "mistral-medium-3-5",
+        "mistral-large-2512",
+        "ministral-14b-2512"
+      ]
+    },
+    {
+      "android_case": "DEEPSEEK",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.deepseek.com",
+      "configurable_timeout": false,
+      "id": "DeepSeek",
+      "ios_case": "deepseek",
+      "key_placeholder": "sk-...",
+      "models": [],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": false,
+      "text_models": [
+        "deepseek-v4-flash",
+        "deepseek-v4-pro"
+      ]
+    },
+    {
+      "android_case": "CEREBRAS",
+      "api_format": "openai_compatible",
+      "base_url": "https://api.cerebras.ai/v1",
+      "configurable_timeout": false,
+      "id": "Cerebras",
+      "ios_case": "cerebras",
+      "key_placeholder": "csk-...",
+      "models": [],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": false,
+      "supports_vision": false,
+      "text_models": [
+        "gpt-oss-120b",
+        "gemma-4-31b"
+      ]
+    },
+    {
+      "android_case": "OLLAMA",
+      "api_format": "openai_compatible",
+      "base_url": "http://localhost:11434/v1",
+      "configurable_timeout": true,
+      "id": "Ollama (Local)",
+      "ios_case": "ollama",
+      "key_placeholder": "No key needed",
+      "models": [
+        "qwen3-vl",
+        "qwen3.8",
+        "gemma4",
+        "llama3.2-vision",
+        "llava",
+        "moondream"
+      ],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": false,
+      "supports_custom_model_name": false,
+      "supports_vision": true,
+      "text_models": [
+        "qwen3.8",
+        "gemma4",
+        "llama3.2",
+        "qwen3",
+        "mistral-small3.2",
+        "qwen3-vl",
+        "qwen3.8",
+        "gemma4",
+        "llama3.2-vision",
+        "llava",
+        "moondream"
+      ]
+    },
+    {
+      "android_case": "CUSTOM_OPENAI",
+      "api_format": "openai_compatible",
+      "base_url": "",
+      "configurable_timeout": true,
+      "id": "Custom (OpenAI-compatible)",
+      "ios_case": "customOpenAI",
+      "key_placeholder": "API key (or anything if endpoint doesn't need one)",
+      "models": [],
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": true,
+      "requires_custom_model_name": true,
+      "requires_key": true,
+      "supports_custom_model_name": true,
+      "supports_vision": true,
+      "text_models": []
+    },
+    {
+      "android_case": "VERTEX_AI",
+      "api_format": "gemini",
+      "base_url": "",
+      "computed_base_url": true,
+      "configurable_timeout": false,
+      "id": "Google Vertex AI",
+      "ios_case": "vertexAI",
+      "key_placeholder": "Service account JSON",
+      "models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.1-pro-preview",
+        "claude-sonnet-5",
+        "claude-opus-5-5",
+        "claude-haiku-4-5@20251001"
+      ],
+      "note": "The api_format here is nominal. Vertex is one provider with three transports, chosen per model by shared/ai/vertex.json: Gemini and Claude are different APIs that happen to share a host. `vertex_endpoint` decides, not this field.",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "requires_custom_endpoint": false,
+      "requires_custom_model_name": false,
+      "requires_key": true,
+      "supports_custom_model_name": true,
+      "supports_vision": true,
+      "text_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.1-pro-preview",
+        "claude-sonnet-5",
+        "claude-opus-5-5",
+        "claude-haiku-4-5@20251001"
+      ]
+    }
+  ],
+  "request_timeout": {
+    "default_seconds": 180,
+    "max_seconds": 600,
+    "min_seconds": 30
+  },
+  "token_limit": {
+    "always_completion": [
+      "OpenAI"
+    ],
+    "completion": "max_completion_tokens",
+    "completion_prefixes": [
+      "gpt-5",
+      "o1",
+      "o3",
+      "o4"
+    ],
+    "conditional": [
+      "Custom (OpenAI-compatible)"
+    ],
+    "default": "max_tokens",
+    "note": "The model id is lowercased and its last '/'-separated component is tested against the prefixes."
+  },
+  "version": 1
+}

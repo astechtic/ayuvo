@@ -1,0 +1,740 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "available",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "available",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 42949672960,
+          "physical_memory_bytes": 8589934592
+        },
+        "has_hf_token": true,
+        "installed": [],
+        "platform": "android"
+      },
+      "name": "an eight gigabyte phone with a token"
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "available",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "needs_token",
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "needs_token",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 42949672960,
+          "physical_memory_bytes": 8589934592
+        },
+        "has_hf_token": false,
+        "installed": [],
+        "platform": "android"
+      },
+      "name": "the same phone with no hugging face token",
+      "notes": "MedGemma is gated on the Hub, so it is listed and blocked rather than hidden."
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "installed",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "installed",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "available",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": null,
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 64424509440,
+          "physical_memory_bytes": 12884901888
+        },
+        "has_hf_token": true,
+        "installed": [
+          "qwen3-4b-litertlm",
+          "medgemma-1.5-4b-it-litertlm"
+        ],
+        "platform": "android"
+      },
+      "name": "installed models are listed first"
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "available",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": null,
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": null,
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "available",
+            "vision": true
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 214748364800,
+          "physical_memory_bytes": 34359738368
+        },
+        "has_hf_token": true,
+        "installed": [],
+        "platform": "ios"
+      },
+      "name": "a desktop class device unlocks the fourteen billion model"
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "ineligible",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "ineligible",
+            "vision": true
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 42949672960,
+          "physical_memory_bytes": 6442450944
+        },
+        "has_hf_token": true,
+        "installed": [],
+        "platform": "android"
+      },
+      "name": "a six gigabyte phone only gets the smallest model"
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "low_ram_device",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "ineligible",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": "low_ram_device",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "low_ram_device",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": "low_ram_device",
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "low_ram_device",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "low_ram_device",
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "ineligible",
+            "vision": true
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 42949672960,
+          "low_ram": true,
+          "physical_memory_bytes": 8589934592
+        },
+        "has_hf_token": true,
+        "installed": [],
+        "platform": "android"
+      },
+      "name": "a low ram device is refused everything"
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "unsupported_abi",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "ineligible",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": "unsupported_abi",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "unsupported_abi",
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": "unsupported_abi",
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "unsupported_abi",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "unsupported_abi",
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "ineligible",
+            "vision": true
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "armeabi-v7a"
+          ],
+          "free_bytes": 42949672960,
+          "physical_memory_bytes": 12884901888
+        },
+        "has_hf_token": true,
+        "installed": [],
+        "platform": "android"
+      },
+      "name": "an unsupported abi is refused everything"
+    },
+    {
+      "expected": {
+        "models": [
+          {
+            "context_tokens": 4096,
+            "display_name": "Gemma 4 E2B",
+            "gated": false,
+            "id": "gemma-4-e2b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2588147712,
+            "state": "available",
+            "vision": true
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 1.7B",
+            "gated": false,
+            "id": "qwen3-1.7b-litertlm",
+            "minimum_memory_bytes": 6442450944,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 977184032,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 4B",
+            "gated": false,
+            "id": "qwen3-4b-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": null,
+            "required_headroom_bytes": 268435456,
+            "size_bytes": 2659057664,
+            "state": "available",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 8B",
+            "gated": false,
+            "id": "qwen3-8b-litertlm",
+            "minimum_memory_bytes": 12884901888,
+            "reason": "insufficient_space",
+            "required_headroom_bytes": 488741273,
+            "size_bytes": 4887412736,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 4096,
+            "display_name": "Qwen3 14B",
+            "gated": false,
+            "id": "qwen3-14b-litertlm",
+            "minimum_memory_bytes": 21474836480,
+            "reason": "insufficient_memory",
+            "required_headroom_bytes": 865586380,
+            "size_bytes": 8655863808,
+            "state": "ineligible",
+            "vision": false
+          },
+          {
+            "context_tokens": 2048,
+            "display_name": "MedGemma 1.5 4B",
+            "gated": true,
+            "id": "medgemma-1.5-4b-it-litertlm",
+            "minimum_memory_bytes": 8589934592,
+            "reason": "insufficient_space",
+            "required_headroom_bytes": 302306948,
+            "size_bytes": 3023069488,
+            "state": "ineligible",
+            "vision": true
+          }
+        ]
+      },
+      "input": {
+        "device": {
+          "abis": [
+            "arm64-v8a"
+          ],
+          "free_bytes": 3221225472,
+          "physical_memory_bytes": 12884901888
+        },
+        "has_hf_token": true,
+        "installed": [],
+        "platform": "android"
+      },
+      "name": "a full disk blocks the download before it starts"
+    }
+  ],
+  "format": "ayuvo-ai-vectors",
+  "function": "local_catalog_state",
+  "version": 1
+}

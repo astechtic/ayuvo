@@ -376,12 +376,30 @@ final class CoachStore {
         }
     }
 
+    /// This conversation's model choice, as `conversations.provider_override` holds it.
+    ///
+    /// Two forms live in that one column (docs/ai-models.md §8): a bare provider token, which the
+    /// Health-Records "Use on-device Coach" flow has always written, and `profile:<id>|<token>` from
+    /// the model picker. The provider is carried after the id so a conversation imported from
+    /// another device — where that profile id means nothing — degrades to the provider instead of
+    /// quietly answering on the wrong model.
+    var modelOverride: (profileID: String?, provider: AIProvider?) {
+        let parsed = AIRef.parseOverride(current?.providerOverride)
+        return (parsed["profile_id"].string,
+                parsed["provider"].string.flatMap(AIProvider.init(rawValue:)))
+    }
+
+    /// The provider half only. Every §30 consent surface reads this, and none of them care which
+    /// profile it came from.
     var providerOverride: AIProvider? {
-        get { current?.providerOverride.flatMap { AIProvider(rawValue: $0) } }
-        set {
-            current?.providerOverride = newValue?.rawValue
-            persistCurrent()
-        }
+        get { modelOverride.provider }
+        set { setModelOverride(profileID: nil, provider: newValue) }
+    }
+
+    func setModelOverride(profileID: String?, provider: AIProvider?) {
+        current?.providerOverride = (try? AIRef.encodeOverride(profileID, provider?.rawValue))
+            .flatMap { $0 }
+        persistCurrent()
     }
 
     var dataSwitches: CoachDataSwitches {

@@ -30,6 +30,7 @@ struct ChatView: View {
     @State private var errorMessage: String?
     @State private var showConversations = false
     @State private var showPromptGallery = false
+    @State private var showModelPicker = false
     @State private var showCamera = false
     @State private var showPhotoPicker = false
     @State private var showComposerSheet = false
@@ -106,6 +107,19 @@ struct ChatView: View {
                     .accessibilityIdentifier("coach.conversations")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            showModelPicker = true
+                        } label: {
+                            Label("Model", systemImage: "cpu")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                    .accessibilityLabel(Text("More"))
+                    .accessibilityIdentifier("coach.menu")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showPromptGallery = true
                     } label: {
@@ -133,6 +147,18 @@ struct ChatView: View {
             }
             .sheet(isPresented: $showConversations) {
                 ConversationListView()
+            }
+            .sheet(isPresented: $showModelPicker) {
+                CoachModelPickerSheet(
+                    selectedProfileID: chatStore.modelOverride.profileID,
+                    selectedProvider: chatStore.modelOverride.provider,
+                    onPick: { profileID, provider in
+                        chatStore.setModelOverride(profileID: profileID, provider: provider)
+                    },
+                    onSetDefault: { profileID in
+                        AIProviderSettings.setRole(.image, profileID: profileID, enabled: true)
+                    }
+                )
             }
             .sheet(isPresented: $showPromptGallery) {
                 // Picking a prompt fills the composer; the user still decides when to send it (§9).
@@ -1246,7 +1272,8 @@ struct ChatView: View {
                     records: records,
                     medications: await medicationStore.coachContext(),
                     sources: chatStore.dataSwitches,
-                    providerOverride: chatStore.providerOverride
+                    providerOverride: chatStore.providerOverride,
+                    profileOverride: chatStore.modelOverride.profileID
                 )
                 if needsApproval, let decision = await session.decision { applyOnlineDecision(decision) }
                 return (reply, await session.refs)
