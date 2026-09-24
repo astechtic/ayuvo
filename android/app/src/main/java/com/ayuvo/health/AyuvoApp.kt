@@ -4,7 +4,12 @@ import android.app.Application
 import android.util.Log
 import com.ayuvo.health.data.BodyFatRepository
 import com.ayuvo.health.data.BodyMeasurementRepository
-import com.ayuvo.health.data.ChatRepository
+import com.ayuvo.health.coach.data.CoachDatabase
+import com.ayuvo.health.coach.logic.CoachCatalogs
+import com.ayuvo.health.medications.logic.MedicationsCoachContract
+import com.ayuvo.health.medications.logic.MedicationsCoachTools
+import com.ayuvo.health.coach.data.CoachFileStore
+import com.ayuvo.health.coach.data.CoachRepository
 import com.ayuvo.health.data.ExerciseRepository
 import com.ayuvo.health.data.FoodRepository
 import com.ayuvo.health.data.FastingRepository
@@ -295,6 +300,25 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         )
     }
     private val recordsOcr: OcrEngine by lazy { MlKitOcrEngine() }
+
+    /**
+     * A fresh OCR engine for one Coach attachment (docs/coach.md §6). Separate from [recordsOcr],
+     * which the records pipeline owns and closes on its own schedule.
+     */
+    val coachOcrEngine: () -> OcrEngine = { MlKitOcrEngine() }
+
+    init {
+        // The shared Coach catalogs, bundled verbatim (docs/coach.md §5, §9).
+        runCatching {
+            CoachCatalogs.parse(app.assets.open(CoachCatalogs.CHART_SPEC_ASSET).bufferedReader().use { it.readText() })
+                ?.let { CoachCatalogs.chartSpec = it }
+            CoachCatalogs.parse(app.assets.open(CoachCatalogs.PROMPT_GALLERY_ASSET).bufferedReader().use { it.readText() })
+                ?.let { CoachCatalogs.promptGallery = it }
+            MedicationsCoachTools.contract = MedicationsCoachContract.parse(
+                app.assets.open(MedicationsCoachContract.ASSET_PATH).bufferedReader().use { it.readText() }
+            ) ?: MedicationsCoachContract.empty
+        }
+    }
     val recordsPipeline: RecordPipeline by lazy {
         RecordPipeline(
             store = { recordsStore },
@@ -472,7 +496,14 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val weightRepository = WeightRepository(prefs, profileRepository, health)
     val bodyFatRepository = BodyFatRepository(prefs, profileRepository, health)
     val bodyMeasurementRepository = BodyMeasurementRepository(prefs)
-    val chatRepository = ChatRepository(prefs)
+    // Coach conversations (docs/coach.md §2). Lazily opened: a user who never opens Coach never
+    // creates the database.
+    val coachRepository: CoachRepository by lazy {
+        CoachRepository(CoachDatabase(appContext), CoachFileStore(appContext))
+    }
+
+    /** Whether Coach has a database yet (an export never creates one just to look for chats). */
+    fun coachDatabaseExists(): Boolean = CoachDatabase.exists(appContext)
     val waterRepository = WaterRepository(prefs)
     val fastingRepository = FastingRepository(prefs)
     val workoutRepository = WorkoutRepository(prefs, workoutHealthSync)
@@ -495,7 +526,40 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             scope = scope
         )
     }
-    val cloudBackup = CloudBackupCoordinator(app, prefs, imageStore, keyStore)
+    val cloudBackup = CloudBackupCoordinator(
+        app, prefs, imageStore, keyStore,
+        buildChatArchive = { coachChatArchiveBytes() },
+        restoreChatArchive = { bytes -> restoreCoachChatArchive(bytes) }
+    )
+
+    /** The Coach chats archive as bytes, for the Drive backup (docs/coach.md §12). */
+    private suspend fun coachChatArchiveBytes(): ByteArray? {
+        if (!coachDatabaseExists()) return null
+        val file = java.io.File(appContext.cacheDir, "coach-chats-backup.zip")
+        return try {
+            val result = com.ayuvo.health.coach.export.CoachChatArchiveWriter(
+                coachRepository, BuildConfig.VERSION_NAME
+            ).export(file)
+            if (result.isEmpty) null else file.readBytes()
+        } catch (e: Throwable) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
+            null
+        } finally {
+            runCatching { file.delete() }
+        }
+    }
+
+    private suspend fun restoreCoachChatArchive(bytes: ByteArray) {
+        val file = java.io.File(appContext.cacheDir, "coach-chats-restore.zip")
+        try {
+            file.writeBytes(bytes)
+            com.ayuvo.health.coach.export.CoachChatArchiveReader(coachRepository).import(file)
+        } catch (e: Throwable) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
+        } finally {
+            runCatching { file.delete() }
+        }
+    }
 
     /** Settings › Backup & Export › Export All Data (one zip of every existing export). */
     val allDataExport: com.ayuvo.health.export.AllDataExportCoordinator by lazy {

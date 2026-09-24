@@ -31,6 +31,12 @@ struct CoachTools {
     /// Health Records (docs/health-records.md §26): tools advertised only with Coach access on and at
     /// least one non-archived record.
     var records: CoachRecordsContext? = nil
+    /// Medications (docs/medications.md §20): tools advertised only with Coach access on and at
+    /// least one medicine.
+    var medications: CoachMedicationsContext? = nil
+    /// The conversation's data switches (docs/coach.md §8). A switch can only ever narrow what the
+    /// source's own consent already permits; it never grants access.
+    var sources: CoachDataSwitches = .allOn
 
     static let nutritionToolNames: [String] = [
         "get_data_summary",
@@ -60,14 +66,41 @@ struct CoachTools {
     /// Names, descriptions and schemas come from `shared/records/coach_tools.json` (exact).
     static let recordsToolNames: [String] = RecordsCoachContract.toolNames
 
-    /// The provider schemas are built from this instance value, preventing any
-    /// workout tool from being disclosed when the user has the diary disabled, and
-    /// any health tool from being disclosed without Health sync + Coach consent.
+    /// Names, descriptions and schemas come from `shared/medications/coach_tools.json` (exact).
+    static let medicationToolNames: [String] = MedicationsCoachContract.shared.names
+
+    /// The provider schemas are built from this instance value, so a tool is never disclosed for a
+    /// source the user has not connected, consented to, or has switched off for this conversation.
+    /// The decision itself is `resolve_data_sources` (docs/coach.md §8), shared with Android.
     var availableToolNames: [String] {
-        Self.nutritionToolNames
-            + (workoutAccessEnabled ? Self.workoutToolNames : [])
-            + (healthAccessEnabled && health != nil ? Self.healthToolNames : [])
-            + (records?.toolsAvailable == true ? Self.recordsToolNames : [])
+        let resolved = CR.resolveDataSources(
+            available: .obj([
+                "food": .bool(true),
+                "health": .bool(health != nil),
+                "medications": .bool(medications?.toolsAvailable == true),
+                "records": .bool(records?.toolsAvailable == true),
+            ]),
+            consents: .obj([
+                "health": .bool(healthAccessEnabled),
+                // Both already encode their own consent: a context is nil without it.
+                "medications": .bool(medications != nil),
+                "records": .bool(records != nil),
+            ]),
+            switches: sources.referenceValue,
+            workoutsAvailable: workoutAccessEnabled
+        )
+        return (resolved["tools"].array ?? []).compactMap(\.string)
+    }
+
+    /// Which sources ended up effective, for the prompt lines and the composer summary row.
+    var effectiveSources: Set<CoachSource> {
+        let names = availableToolNames
+        var out: Set<CoachSource> = []
+        if names.contains(where: Self.nutritionToolNames.contains) { out.insert(.food) }
+        if names.contains(where: Self.healthToolNames.contains) { out.insert(.health) }
+        if names.contains(where: Self.medicationToolNames.contains) { out.insert(.medications) }
+        if names.contains(where: Self.recordsToolNames.contains) { out.insert(.records) }
+        return out
     }
 
     /// Timer-era builds could store several completed sessions for one diary
@@ -92,7 +125,10 @@ struct CoachTools {
 
     /// Per-provider tool descriptions kept in one place so all three formats
     /// see the same human-readable text.
-    static let toolDescriptions: [String: String] = baseToolDescriptions.merging(RecordsCoachContract.shared.descriptions) { base, _ in base }
+    static let toolDescriptions: [String: String] = baseToolDescriptions
+        .merging(RecordsCoachContract.shared.descriptions) { base, _ in base }
+        .merging(Dictionary(MedicationsCoachContract.shared.tools.map { ($0.name, $0.description) },
+                            uniquingKeysWith: { first, _ in first })) { base, _ in base }
 
     private static let baseToolDescriptions: [String: String] = [
         "get_data_summary": "Get a quick summary of the user's available data: total counts and earliest/latest dates for weights, body-fat readings, and food entries. Call this first when the user asks anything about their history range or data spanning more than 14 days.",
@@ -226,6 +262,9 @@ struct CoachTools {
     func executeAsync(name: String, arguments: [String: Any]) async -> String {
         if Self.recordsToolNames.contains(name) {
             return await RecordsCoachToolExecutor.execute(name: name, arguments: arguments, context: records?.toolsAvailable == true ? records : nil)
+        }
+        if Self.medicationToolNames.contains(name) {
+            return executeMedicationTool(name: name, arguments: arguments)
         }
         guard Self.healthToolNames.contains(name) else {
             return execute(name: name, arguments: arguments)

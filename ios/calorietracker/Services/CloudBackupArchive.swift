@@ -20,8 +20,10 @@ enum CloudBackupPolicy {
         "cloudBackupEnabled",
         "cloudBackupLastAt",
         "cloudBackupLastHash",
-        // Coach transcripts can quote Health data the user asked about, so the chat history
-        // stays on the device.
+        // Coach transcripts can quote Health data the user asked about, so they stay on the
+        // device. Conversations now live in coach.sqlite (docs/coach.md §2), but this key is kept
+        // excluded for good: an upgrading device still holds it until the §12 migration runs, and a
+        // restore from an older archive can put it back.
         "coachChatHistory",
     ]
 

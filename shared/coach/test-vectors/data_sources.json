@@ -1,0 +1,347 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "blocked": [],
+        "sources": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "tools": [
+          "get_data_summary",
+          "get_weight_history",
+          "get_body_fat_history",
+          "get_calorie_totals",
+          "get_food_entries",
+          "get_fasting_history",
+          "get_workout_history",
+          "get_workout_plans",
+          "get_workout_preferences",
+          "get_training_summary",
+          "get_exercise_lift_history",
+          "get_health_data_types",
+          "get_health_summary",
+          "get_health_samples",
+          "get_sleep_history",
+          "get_medications",
+          "get_dose_history",
+          "get_medication_adherence",
+          "records_search",
+          "records_get",
+          "records_observation_series"
+        ]
+      },
+      "input": {
+        "available": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "consents": {
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "switches": {},
+        "workouts_available": true
+      },
+      "name": "everything available, consented and on"
+    },
+    {
+      "expected": {
+        "blocked": [
+          {
+            "reason": "not_consented",
+            "source": "health"
+          }
+        ],
+        "sources": {
+          "food": true,
+          "health": false,
+          "medications": true,
+          "records": true
+        },
+        "tools": [
+          "get_data_summary",
+          "get_weight_history",
+          "get_body_fat_history",
+          "get_calorie_totals",
+          "get_food_entries",
+          "get_fasting_history",
+          "get_workout_history",
+          "get_workout_plans",
+          "get_workout_preferences",
+          "get_training_summary",
+          "get_exercise_lift_history",
+          "get_medications",
+          "get_dose_history",
+          "get_medication_adherence",
+          "records_search",
+          "records_get",
+          "records_observation_series"
+        ]
+      },
+      "input": {
+        "available": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "consents": {
+          "health": false,
+          "medications": true,
+          "records": true
+        },
+        "switches": {
+          "health": true
+        },
+        "workouts_available": true
+      },
+      "name": "a switch cannot grant consent",
+      "notes": "Rule 3 of docs/coach.md: the switch only ever narrows what consent already permits."
+    },
+    {
+      "expected": {
+        "blocked": [
+          {
+            "reason": "switched_off",
+            "source": "records"
+          }
+        ],
+        "sources": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": false
+        },
+        "tools": [
+          "get_data_summary",
+          "get_weight_history",
+          "get_body_fat_history",
+          "get_calorie_totals",
+          "get_food_entries",
+          "get_fasting_history",
+          "get_workout_history",
+          "get_workout_plans",
+          "get_workout_preferences",
+          "get_training_summary",
+          "get_exercise_lift_history",
+          "get_health_data_types",
+          "get_health_summary",
+          "get_health_samples",
+          "get_sleep_history",
+          "get_medications",
+          "get_dose_history",
+          "get_medication_adherence"
+        ]
+      },
+      "input": {
+        "available": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "consents": {
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "switches": {
+          "records": false
+        },
+        "workouts_available": true
+      },
+      "name": "records switched off for this conversation"
+    },
+    {
+      "expected": {
+        "blocked": [
+          {
+            "reason": "unavailable",
+            "source": "medications"
+          }
+        ],
+        "sources": {
+          "food": true,
+          "health": true,
+          "medications": false,
+          "records": true
+        },
+        "tools": [
+          "get_data_summary",
+          "get_weight_history",
+          "get_body_fat_history",
+          "get_calorie_totals",
+          "get_food_entries",
+          "get_fasting_history",
+          "get_health_data_types",
+          "get_health_summary",
+          "get_health_samples",
+          "get_sleep_history",
+          "records_search",
+          "records_get",
+          "records_observation_series"
+        ]
+      },
+      "input": {
+        "available": {
+          "food": true,
+          "health": true,
+          "medications": false,
+          "records": true
+        },
+        "consents": {
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "switches": {},
+        "workouts_available": false
+      },
+      "name": "medications not added yet"
+    },
+    {
+      "expected": {
+        "blocked": [
+          {
+            "reason": "unavailable",
+            "source": "health"
+          },
+          {
+            "reason": "unavailable",
+            "source": "medications"
+          },
+          {
+            "reason": "unavailable",
+            "source": "records"
+          }
+        ],
+        "sources": {
+          "food": true,
+          "health": false,
+          "medications": false,
+          "records": false
+        },
+        "tools": [
+          "get_data_summary",
+          "get_weight_history",
+          "get_body_fat_history",
+          "get_calorie_totals",
+          "get_food_entries",
+          "get_fasting_history"
+        ]
+      },
+      "input": {
+        "available": {
+          "food": true,
+          "health": false,
+          "medications": false,
+          "records": false
+        },
+        "consents": {},
+        "switches": {},
+        "workouts_available": false
+      },
+      "name": "food only, no workouts logged"
+    },
+    {
+      "expected": {
+        "blocked": [
+          {
+            "reason": "switched_off",
+            "source": "food"
+          },
+          {
+            "reason": "switched_off",
+            "source": "health"
+          },
+          {
+            "reason": "switched_off",
+            "source": "medications"
+          },
+          {
+            "reason": "switched_off",
+            "source": "records"
+          }
+        ],
+        "sources": {
+          "food": false,
+          "health": false,
+          "medications": false,
+          "records": false
+        },
+        "tools": []
+      },
+      "input": {
+        "available": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "consents": {
+          "health": true,
+          "medications": true,
+          "records": true
+        },
+        "switches": {
+          "food": false,
+          "health": false,
+          "medications": false,
+          "records": false
+        },
+        "workouts_available": true
+      },
+      "name": "everything switched off"
+    },
+    {
+      "expected": {
+        "blocked": [
+          {
+            "reason": "unavailable",
+            "source": "food"
+          },
+          {
+            "reason": "unavailable",
+            "source": "health"
+          },
+          {
+            "reason": "unavailable",
+            "source": "medications"
+          },
+          {
+            "reason": "unavailable",
+            "source": "records"
+          }
+        ],
+        "sources": {
+          "food": false,
+          "health": false,
+          "medications": false,
+          "records": false
+        },
+        "tools": []
+      },
+      "input": {
+        "available": {
+          "food": false,
+          "health": false,
+          "medications": false,
+          "records": false
+        },
+        "consents": {},
+        "switches": {},
+        "workouts_available": false
+      },
+      "name": "fresh install"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "resolve_data_sources",
+  "version": 1
+}

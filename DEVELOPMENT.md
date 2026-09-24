@@ -69,5 +69,7 @@ until reviewed. Brand name "Ayuvo" is never translated.
 
 - `docs/health-data.md`, `docs/health-data-export.md` — Health data hub (shared registry/schema, export
   format `ayuvo-health-data`, Coach tools identical on both platforms).
+- `docs/coach.md` — Coach chat (conversations, attachments, markdown/chart blocks, data switches,
+  prompt gallery, `ayuvo-coach-chats` archive); tool sources point at the three docs above.
 - `docs/cloud-backup.md` — optional iCloud / Google Drive backup; reserved preference keys.
 - `android/docs/` — Android-specific notes.

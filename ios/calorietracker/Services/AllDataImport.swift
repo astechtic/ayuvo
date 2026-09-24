@@ -12,6 +12,7 @@ nonisolated enum AllDataImport {
         case healthData = "health_data"
         case medications
         case healthRecords = "health_records"
+        case coachChats = "coach_chats"
     }
 
     enum Disposition: Equatable, Sendable {

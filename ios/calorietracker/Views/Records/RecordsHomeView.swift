@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 /// multi-select and the Add Record flows.
 struct RecordsHomeView: View {
     @Environment(RecordsStore.self) private var store
-    @Environment(ChatStore.self) private var chatStore
+    @Environment(CoachStore.self) private var chatStore
     @State private var path = NavigationPath()
     @State private var searchText = ""
     @State private var chip: RecordsFilterChip = .all

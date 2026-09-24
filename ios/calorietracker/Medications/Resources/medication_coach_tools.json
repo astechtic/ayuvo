@@ -1,0 +1,34 @@
+{
+  "format": "ayuvo-medications-coach-tools",
+  "version": 1,
+  "notes": "Coach tools over Medications (docs/coach.md §3, docs/medications.md §20). Both platforms advertise these names, descriptions and input schemas EXACTLY (schema strings are serialized compactly, keys in the order written here). Parity tests byte-compare their embedded copies with this file. Payload shapes and their vectors live in shared/medications/test-vectors/coach_tools_payloads.json.",
+  "tools": [
+    {
+      "name": "get_medications",
+      "description": "List the medicines the user tracks in Ayuvo: name, strength, form, dose, how often it is taken, whether it is as-needed, start and end dates, and status (active, paused, completed, stopped). Call this first before any other medication tool, and to learn the exact medication_id values.",
+      "input_schema": {"type":"object","properties":{"include_inactive":{"type":"boolean","description":"Also list paused, completed and stopped medicines. Default false."}}}
+    },
+    {
+      "name": "get_dose_history",
+      "description": "Individual doses between two dates (inclusive): the medicine, the time the dose was scheduled, the time it was actually taken, and whether it was taken, taken late, skipped or missed. As-needed doses are included. Use when a specific day matters; prefer get_medication_adherence for how the user is doing overall.",
+      "input_schema": {"type":"object","properties":{"medication_id":{"type":"string","description":"Optional medication_id returned by get_medications. Omit for every medicine."},"from":{"type":"string","description":"Inclusive start date, ISO yyyy-MM-dd."},"to":{"type":"string","description":"Inclusive end date, ISO yyyy-MM-dd."},"limit":{"type":"integer","description":"Maximum number of doses to return, most recent first (cap 200)."}},"required":["from","to"]}
+    },
+    {
+      "name": "get_medication_adherence",
+      "description": "How well the user kept to their medicines between two dates (inclusive): overall and per medicine, the number of doses scheduled, taken, taken late, skipped and missed, the adherence percentage, and which time of day is missed most. Use for questions like \"am I taking my medicines on time?\".",
+      "input_schema": {"type":"object","properties":{"medication_id":{"type":"string","description":"Optional medication_id returned by get_medications. Omit for every medicine."},"from":{"type":"string","description":"Inclusive start date, ISO yyyy-MM-dd."},"to":{"type":"string","description":"Inclusive end date, ISO yyyy-MM-dd."}},"required":["from","to"]}
+    }
+  ],
+  "prompt": {
+    "mentions_words": ["medicine", "medicines", "medication", "medications", "med", "meds", "pill", "pills", "tablet", "tablets", "capsule", "capsules", "dose", "doses", "dosage", "prescription", "prescriptions", "inhaler", "injection", "adherence"],
+    "available_line": "{n} medicines are tracked in Ayuvo ({active} active). Use get_medications, get_dose_history and get_medication_adherence to read them.",
+    "not_available_line": "No medication data is available: the user has not added any medicines, or has turned off Coach access to them.",
+    "guardrails": "Medication guardrails:\n- Never tell the user to start, stop, change, skip or combine a medicine, and never suggest a dose. Those are decisions for the person who prescribed it.\n- Use only the medicines, times and doses returned by the tools; never invent a name, strength or schedule.\n- You may describe adherence patterns and suggest practical ways to remember a dose.\n- For side effects, interactions, or whether a medicine is working, say to ask their doctor or pharmacist."
+  },
+  "errors": {
+    "unknown_medication": "unknown medication_id '{id}'; call get_medications",
+    "bad_date": "invalid date '{value}' (expected yyyy-MM-dd)",
+    "date_order": "from must be on or before to",
+    "unavailable": "medication data is not available"
+  }
+}

@@ -1,0 +1,854 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "filename": "how-did-i-sleep-this-week-2026-09-24.md",
+        "text": "# How did I sleep this week?\n\n2026-09-24 · 2 messages · Gemini\n\n---\n\n**You:** How did I sleep this week?\n\nAttached: sleep-study.pdf\n\n**Coach:** You averaged 6 h 40 m.\n\nUsed records: Sleep study — 2026-08-02\n"
+      },
+      "input": {
+        "attachments": [
+          {
+            "bytes": 2048,
+            "char_count": 120,
+            "created_ms": 1700000050000,
+            "deleted": 0,
+            "excerpt": "x",
+            "filename": "sleep-study.pdf",
+            "id": "a1",
+            "kind": "pdf",
+            "mime_type": "application/pdf",
+            "page_count": 2,
+            "sha256": "aa"
+          }
+        ],
+        "conversation": {
+          "archived": 0,
+          "created_ms": 1700000000000,
+          "data_sources": {},
+          "id": "c1",
+          "last_message_ms": 1700000900000,
+          "pinned": 0,
+          "provider_override": null,
+          "selected_record_ids": [],
+          "title": "How did I sleep this week?",
+          "updated_ms": 1700000900000
+        },
+        "local_day": "2026-09-24",
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          }
+        ],
+        "op": "markdown",
+        "provider": "Gemini"
+      },
+      "name": "markdown transcript",
+      "notes": "Only the newest variant of a regenerated reply appears; attachment contents are never inlined."
+    },
+    {
+      "expected": {
+        "filename": "how-did-i-sleep-this-week-2026-09-24.md",
+        "text": "# How did I sleep this week?\n\n2026-09-24 · 2 messages\n\n---\n\n**You:** How did I sleep this week?\n\nAttached: sleep-study.pdf\n\n**Coach:** You averaged 6 h 40 m.\n\nUsed records: Sleep study — 2026-08-02\n"
+      },
+      "input": {
+        "attachments": [
+          {
+            "bytes": 2048,
+            "char_count": 120,
+            "created_ms": 1700000050000,
+            "deleted": 0,
+            "excerpt": "x",
+            "filename": "sleep-study.pdf",
+            "id": "a1",
+            "kind": "pdf",
+            "mime_type": "application/pdf",
+            "page_count": 2,
+            "sha256": "aa"
+          }
+        ],
+        "conversation": {
+          "archived": 0,
+          "created_ms": 1700000000000,
+          "data_sources": {},
+          "id": "c1",
+          "last_message_ms": 1700000900000,
+          "pinned": 0,
+          "provider_override": null,
+          "selected_record_ids": [],
+          "title": "How did I sleep this week?",
+          "updated_ms": 1700000900000
+        },
+        "local_day": "2026-09-24",
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          }
+        ],
+        "op": "markdown"
+      },
+      "name": "markdown without a provider"
+    },
+    {
+      "expected": {
+        "filename": "new-chat-2026-09-24.md",
+        "text": "# New chat\n\n2026-09-24 · 0 messages\n\n---\n"
+      },
+      "input": {
+        "attachments": [],
+        "conversation": {
+          "created_ms": 1,
+          "id": "c9",
+          "title": ""
+        },
+        "local_day": "2026-09-24",
+        "messages": [],
+        "op": "markdown"
+      },
+      "name": "markdown of an untitled empty chat"
+    },
+    {
+      "expected": {
+        "archive": {
+          "attachments": [
+            {
+              "bytes": 2048,
+              "char_count": 120,
+              "created_ms": 1700000050000,
+              "excerpt": "x",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 2,
+              "sha256": "aa"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1700000000000,
+              "data_sources": {},
+              "id": "c1",
+              "last_message_ms": 1700000900000,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "How did I sleep this week?",
+              "updated_ms": 1700000900000
+            }
+          ],
+          "format": "ayuvo-coach-chats",
+          "format_version": 1,
+          "messages": [
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "How did I sleep this week?",
+              "conversation_id": "c1",
+              "created_ms": 1700000100000,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1700000100000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "First answer.",
+              "conversation_id": "c1",
+              "created_ms": 1700000200000,
+              "id": "m2",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 1700000200000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "You averaged 6 h 40 m.",
+              "conversation_id": "c1",
+              "created_ms": 1700000900000,
+              "id": "m3",
+              "record_refs": [
+                {
+                  "date": "2026-08-02",
+                  "record_id": "r1",
+                  "title": "Sleep study"
+                }
+              ],
+              "regenerated_from": "m2",
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 1700000900000,
+              "variant_index": 1
+            }
+          ]
+        },
+        "filename": "how-did-i-sleep-this-week-2026-09-24.json"
+      },
+      "input": {
+        "attachments": [
+          {
+            "bytes": 2048,
+            "char_count": 120,
+            "created_ms": 1700000050000,
+            "deleted": 0,
+            "excerpt": "x",
+            "filename": "sleep-study.pdf",
+            "id": "a1",
+            "kind": "pdf",
+            "mime_type": "application/pdf",
+            "page_count": 2,
+            "sha256": "aa"
+          }
+        ],
+        "conversation": {
+          "archived": 0,
+          "created_ms": 1700000000000,
+          "data_sources": {},
+          "id": "c1",
+          "last_message_ms": 1700000900000,
+          "pinned": 0,
+          "provider_override": null,
+          "selected_record_ids": [],
+          "title": "How did I sleep this week?",
+          "updated_ms": 1700000900000
+        },
+        "local_day": "2026-09-24",
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          }
+        ],
+        "op": "json"
+      },
+      "name": "json is one conversation in the archive shape"
+    },
+    {
+      "expected": {
+        "archive": {
+          "attachments": [
+            {
+              "bytes": 2048,
+              "char_count": 120,
+              "created_ms": 1700000050000,
+              "excerpt": "x",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 2,
+              "sha256": "aa"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1700000000000,
+              "data_sources": {},
+              "id": "c1",
+              "last_message_ms": 1700000900000,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "How did I sleep this week?",
+              "updated_ms": 1700000900000
+            }
+          ],
+          "format": "ayuvo-coach-chats",
+          "format_version": 1,
+          "messages": [
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "How did I sleep this week?",
+              "conversation_id": "c1",
+              "created_ms": 1700000100000,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1700000100000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "First answer.",
+              "conversation_id": "c1",
+              "created_ms": 1700000200000,
+              "id": "m2",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 1700000200000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "You averaged 6 h 40 m.",
+              "conversation_id": "c1",
+              "created_ms": 1700000900000,
+              "id": "m3",
+              "record_refs": [
+                {
+                  "date": "2026-08-02",
+                  "record_id": "r1",
+                  "title": "Sleep study"
+                }
+              ],
+              "regenerated_from": "m2",
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 1700000900000,
+              "variant_index": 1
+            }
+          ]
+        },
+        "filename": "how-did-i-sleep-this-week-2026-09-24.json"
+      },
+      "input": {
+        "attachments": [
+          {
+            "bytes": 2048,
+            "char_count": 120,
+            "created_ms": 1700000050000,
+            "deleted": 0,
+            "excerpt": "x",
+            "filename": "sleep-study.pdf",
+            "id": "a1",
+            "kind": "pdf",
+            "mime_type": "application/pdf",
+            "page_count": 2,
+            "sha256": "aa"
+          }
+        ],
+        "conversation": {
+          "archived": 0,
+          "created_ms": 1700000000000,
+          "data_sources": {},
+          "id": "c1",
+          "last_message_ms": 1700000900000,
+          "pinned": 0,
+          "provider_override": null,
+          "selected_record_ids": [],
+          "title": "How did I sleep this week?",
+          "updated_ms": 1700000900000
+        },
+        "local_day": "2026-09-24",
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          },
+          {
+            "attachment_ids": [],
+            "content": "elsewhere",
+            "conversation_id": "cx",
+            "created_ms": 1,
+            "deleted": 0,
+            "id": "mx",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1,
+            "variant_index": 0
+          }
+        ],
+        "op": "json"
+      },
+      "name": "json drops messages of another conversation"
+    },
+    {
+      "expected": {
+        "attachment_ids": [
+          "a1"
+        ],
+        "ok": true,
+        "prompt_id": "m1",
+        "prompt_seq": 1,
+        "regenerated_from": "m2",
+        "seq": 2,
+        "variant_index": 2
+      },
+      "input": {
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          }
+        ],
+        "op": "regenerate",
+        "seq": 2
+      },
+      "name": "regenerate the latest reply",
+      "notes": "The new row keeps seq 2 and takes variant_index 2; regenerated_from stays the FIRST variant."
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_prompt"
+      },
+      "input": {
+        "messages": [
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          }
+        ],
+        "op": "regenerate",
+        "seq": 2
+      },
+      "name": "regenerate a reply with no user turn before it"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "not_a_reply"
+      },
+      "input": {
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          }
+        ],
+        "op": "regenerate",
+        "seq": 1
+      },
+      "name": "regenerate something that is not a reply"
+    },
+    {
+      "expected": {
+        "attachment_ids": [
+          "a1",
+          "a2"
+        ],
+        "ok": true,
+        "prompt_id": "m4",
+        "prompt_seq": 3,
+        "regenerated_from": "m5",
+        "seq": 4,
+        "variant_index": 1
+      },
+      "input": {
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep this week?",
+            "conversation_id": "c1",
+            "created_ms": 1700000100000,
+            "deleted": 0,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 1700000100000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "First answer.",
+            "conversation_id": "c1",
+            "created_ms": 1700000200000,
+            "deleted": 0,
+            "id": "m2",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000200000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 1700000900000,
+            "deleted": 0,
+            "id": "m3",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "Sleep study"
+              }
+            ],
+            "regenerated_from": "m2",
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 1700000900000,
+            "variant_index": 1
+          },
+          {
+            "attachment_ids": [
+              "a1",
+              "a2"
+            ],
+            "content": "and this one",
+            "conversation_id": "c1",
+            "created_ms": 1700001000000,
+            "deleted": 0,
+            "id": "m4",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 3,
+            "updated_ms": 1700001000000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "ok",
+            "conversation_id": "c1",
+            "created_ms": 1700001100000,
+            "deleted": 0,
+            "id": "m5",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 4,
+            "updated_ms": 1700001100000,
+            "variant_index": 0
+          }
+        ],
+        "op": "regenerate",
+        "seq": 4
+      },
+      "name": "regenerate carries the prompt's attachments"
+    },
+    {
+      "expected": {
+        "slug": "compare-my-last-two-blood-reports"
+      },
+      "input": {
+        "op": "slug",
+        "title": "Compare my last two blood reports!"
+      },
+      "name": "slug from a title"
+    },
+    {
+      "expected": {
+        "slug": "chat"
+      },
+      "input": {
+        "op": "slug",
+        "title": "   "
+      },
+      "name": "slug from an empty title"
+    },
+    {
+      "expected": {
+        "slug": "a-very-long-conversation-title-that-goes"
+      },
+      "input": {
+        "op": "slug",
+        "title": "a very long conversation title that goes on and on and on"
+      },
+      "name": "slug is capped"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "export",
+  "version": 1
+}

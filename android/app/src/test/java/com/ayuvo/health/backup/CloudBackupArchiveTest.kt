@@ -119,6 +119,38 @@ class CloudBackupArchiveTest {
         assertEquals(setOf("healthHubEnabled"), unpack.document.payload.values.keys)
     }
 
+    /**
+     * Coach chats ride in the Drive archive only when the user turned that on (docs/coach.md §12).
+     * The toggle lives in the coordinator; here it is simply present or absent.
+     */
+    @Test
+    fun chatsAreAbsentUnlessTheyAreHandedIn() {
+        val values = mapOf("useMetric" to CloudBackupValue.bool(true))
+        val without = CloudBackupArchive.unpack(
+            CloudBackupArchive.pack(values, emptyMap(), "2026-09-24T12:00:00Z", "7.0")
+        )
+        assertEquals(null, without.chats)
+
+        val chats = "PK-coach-chats".toByteArray()
+        val with = CloudBackupArchive.unpack(
+            CloudBackupArchive.pack(values, emptyMap(), "2026-09-24T12:00:00Z", "7.0", chats = chats)
+        )
+        assertEquals(chats.toList(), with.chats?.toList())
+    }
+
+    /** A changed transcript has to make the next auto-backup run. */
+    @Test
+    fun chatsChangeTheContentHash() {
+        val values = mapOf("useMetric" to CloudBackupValue.bool(true))
+        val without = CloudBackupArchive.contentHash(values, emptyMap())
+        val one = CloudBackupArchive.contentHash(values, emptyMap(), "one".toByteArray())
+        val two = CloudBackupArchive.contentHash(values, emptyMap(), "two".toByteArray())
+        // A store with no chats hashes exactly as it always did.
+        assertEquals(without, CloudBackupArchive.contentHash(values, emptyMap(), null))
+        assertTrue(without != one)
+        assertTrue(one != two)
+    }
+
     @Test
     fun rejectsPathTraversalPhotoNames() {
         assertEquals("secret.jpg", CloudBackupPolicy.safePhotoName("../secret.jpg"))

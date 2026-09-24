@@ -1,0 +1,98 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "title": "How did I sleep this week"
+      },
+      "input": {
+        "text": "How did I sleep this week? Also tell me about my steps and my resting heart rate."
+      },
+      "name": "first sentence of a longer message"
+    },
+    {
+      "expected": {
+        "title": "Compare my last two blood reports and explain…"
+      },
+      "input": {
+        "text": "## **Compare** my last two blood reports and explain every single value"
+      },
+      "name": "markdown is stripped and the title is capped"
+    },
+    {
+      "expected": {
+        "title": "Am I eating enough"
+      },
+      "input": {
+        "text": "Am I eating enough?"
+      },
+      "name": "short question is kept whole"
+    },
+    {
+      "expected": {
+        "title": ""
+      },
+      "input": {
+        "text": "   \n\t "
+      },
+      "name": "empty"
+    },
+    {
+      "expected": {
+        "title": "😀 😀"
+      },
+      "input": {
+        "text": "😀 😀"
+      },
+      "name": "emoji only"
+    },
+    {
+      "expected": {
+        "title": "Pneumonoultramicroscopicsilicovolcanoconiosisand…"
+      },
+      "input": {
+        "text": "Pneumonoultramicroscopicsilicovolcanoconiosisandmorebesides"
+      },
+      "name": "one very long word"
+    },
+    {
+      "expected": {
+        "title": "steps last month compared with the month before…"
+      },
+      "input": {
+        "text": "steps last month compared with the month before that one"
+      },
+      "name": "no sentence end"
+    },
+    {
+      "expected": {
+        "title": "Dr. Mehta said my thyroid is fine but I want a…"
+      },
+      "input": {
+        "text": "Dr. Mehta said my thyroid is fine but I want a second opinion"
+      },
+      "name": "early full stop is not a sentence end",
+      "notes": "The stop at 'Dr.' is before MIN_SENTENCE_LENGTH, so it does not cut the title."
+    },
+    {
+      "expected": {
+        "title": "Explain this report for me"
+      },
+      "input": {
+        "text": "Explain [this report](https://example.com/r/1) for me"
+      },
+      "name": "link text survives"
+    },
+    {
+      "expected": {
+        "title": "what should I ask my doctor"
+      },
+      "input": {
+        "text": "> what should I ask my doctor"
+      },
+      "name": "quote marker is stripped"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "conversation_title",
+  "version": 1
+}

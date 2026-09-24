@@ -1,0 +1,280 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "text": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "name": "a clean spec is untouched"
+    },
+    {
+      "expected": {
+        "text": "{\"type\":\"bar\", \"series\":[]}"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\", // the chart\n\"series\":[]}"
+      },
+      "name": "line comments are dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"type\":\"bar\"}"
+      },
+      "input": {
+        "raw": "{\"type\":/* kind */\"bar\"}"
+      },
+      "name": "block comments are dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"type\":\"bar\"}"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",}"
+      },
+      "name": "a trailing comma before a brace is dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"points\":[1,2]}"
+      },
+      "input": {
+        "raw": "{\"points\":[1,2,]}"
+      },
+      "name": "a trailing comma before a bracket is dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"a\":1,\"b\":2}"
+      },
+      "input": {
+        "raw": "{\"a\":1,\"b\":2}"
+      },
+      "name": "a comma between members is kept"
+    },
+    {
+      "expected": {
+        "text": "{\"y\":null}"
+      },
+      "input": {
+        "raw": "{\"y\":NaN}"
+      },
+      "name": "NaN becomes null"
+    },
+    {
+      "expected": {
+        "text": "{\"y\":null}"
+      },
+      "input": {
+        "raw": "{\"y\":-Infinity}"
+      },
+      "name": "negative infinity becomes null"
+    },
+    {
+      "expected": {
+        "text": "{\"unit\":\"mmol\"}"
+      },
+      "input": {
+        "raw": "{\"unit\":\"mmol\"}"
+      },
+      "name": "a word ending in NaN is left alone"
+    },
+    {
+      "expected": {
+        "text": "{\"type\":\"bar\"}"
+      },
+      "input": {
+        "raw": "Here you go:\n{\"type\":\"bar\"}\nHope that helps."
+      },
+      "name": "prose around the object is dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"10 // 20\",\"note\":\"a /* b\"}"
+      },
+      "input": {
+        "raw": "{\"title\":\"10 // 20\",\"note\":\"a /* b\"}"
+      },
+      "name": "comment markers inside a string survive"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"Mon, Tue,\"}"
+      },
+      "input": {
+        "raw": "{\"title\":\"Mon, Tue,\"}"
+      },
+      "name": "a comma inside a string survives"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"NaN readings\"}"
+      },
+      "input": {
+        "raw": "{\"title\":\"NaN readings\"}"
+      },
+      "name": "NaN inside a string survives"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"a \\\" ,}\",\"type\":\"bar\"}"
+      },
+      "input": {
+        "raw": "{\"title\":\"a \\\" ,}\",\"type\":\"bar\",}"
+      },
+      "name": "an escaped quote does not end the string"
+    },
+    {
+      "expected": {
+        "text": ""
+      },
+      "input": {
+        "raw": ""
+      },
+      "name": "nothing to repair in an empty body"
+    },
+    {
+      "expected": {
+        "text": "[1,2,3]"
+      },
+      "input": {
+        "raw": "[1,2,3]"
+      },
+      "name": "a body with no object is left as it is"
+    },
+    {
+      "expected": {
+        "text": "{\"y\":null}"
+      },
+      "input": {
+        "raw": "{\"y\":7.1.0}"
+      },
+      "name": "a number with two decimal points becomes null"
+    },
+    {
+      "expected": {
+        "text": "{\"y\":null}"
+      },
+      "input": {
+        "raw": "{\"y\":01}"
+      },
+      "name": "a leading zero becomes null"
+    },
+    {
+      "expected": {
+        "text": "{\"a\":1,\"b\":-2.5,\"c\":1.5e2,\"d\":0}"
+      },
+      "input": {
+        "raw": "{\"a\":1,\"b\":-2.5,\"c\":1.5e2,\"d\":0}"
+      },
+      "name": "a plain number is untouched"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"7.1.0 nights\"}"
+      },
+      "input": {
+        "raw": "{\"title\":\"7.1.0 nights\"}"
+      },
+      "name": "a number inside a string is untouched"
+    },
+    {
+      "expected": {
+        "text": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2]"
+      },
+      "name": "open containers are closed"
+    },
+    {
+      "expected": {
+        "text": "{\"series\":[1,2]}"
+      },
+      "input": {
+        "raw": "{\"series\":[1,2,"
+      },
+      "name": "a dangling comma at the cut is dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"Sleep last"
+      },
+      "input": {
+        "raw": "{\"title\":\"Sleep last"
+      },
+      "name": "a cut inside a string is left alone"
+    },
+    {
+      "expected": {
+        "text": "{\"a\":{\"b\":1}}"
+      },
+      "input": {
+        "raw": "{\"a\":{\"b\":1}} and then some words"
+      },
+      "name": "trailing prose after the root value is dropped"
+    },
+    {
+      "expected": {
+        "text": "{\"title\":\"a } b\",\"type\":\"bar\"}"
+      },
+      "input": {
+        "raw": "{\"title\":\"a } b\",\"type\":\"bar\"} trailing"
+      },
+      "name": "a closing brace inside a string does not end the value"
+    },
+    {
+      "expected": {
+        "text": "{\"y\":null,\"z\":9223372036854775807}"
+      },
+      "input": {
+        "raw": "{\"y\":9223372036854775808,\"z\":9223372036854775807}"
+      },
+      "name": "an integer wider than 64 bits is not a reading",
+      "notes": "Swift's Int and Kotlin's Long both stop at 64 bits, so all three ports stop there."
+    },
+    {
+      "expected": {
+        "text": "{\"y\":5.38}"
+      },
+      "input": {
+        "raw": "{\"y\":5.38\"}"
+      },
+      "name": "a quote glued to a number is dropped",
+      "notes": "Left in, it opens a string that swallows every reading after it."
+    },
+    {
+      "expected": {
+        "text": "{\"y\":null}"
+      },
+      "input": {
+        "raw": "{\"y\":6.6.6\"}"
+      },
+      "name": "a quote glued to an unreadable number is dropped too"
+    },
+    {
+      "expected": {
+        "text": "{\"a\":1 \"b\"}"
+      },
+      "input": {
+        "raw": "{\"a\":1 \"b\"}"
+      },
+      "name": "a quote after a number and a space still opens a string",
+      "notes": "Only a quote *glued* to the number is a stray mark; one after whitespace is a quote the model meant to write, and guessing otherwise could lose a key."
+    },
+    {
+      "expected": {
+        "text": "{\"y\":\"6.2\"}"
+      },
+      "input": {
+        "raw": "{\"y\":\"6.2\"}"
+      },
+      "name": "a quoted number keeps its quotes"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "repair_chart_json",
+  "version": 1
+}

@@ -54,10 +54,15 @@ class ValidationVectorsTest {
     @Test fun allCases() = MedicationsVectors.assertAll("validation.json")
 }
 
+class MedicationsCoachToolsVectorsTest {
+    @Test fun allCases() = MedicationsVectors.assertAll("coach_tools_payloads.json")
+}
+
 /** Files that have a runner above; a new shared vector file without one fails [MedicationsVectorCoverageTest]. */
 val MEDICATION_VECTOR_FILES_WITH_RUNNERS = listOf(
     "occurrences.json", "dose_status.json", "missed.json", "timeline.json", "adherence.json", "reminders.json",
-    "dose_actions.json", "lifecycle.json", "auto_complete.json", "frequency_hint.json", "archive.json", "validation.json"
+    "dose_actions.json", "lifecycle.json", "auto_complete.json", "frequency_hint.json", "archive.json", "validation.json",
+    "coach_tools_payloads.json"
 )
 
 /** Every vector file in shared/medications/test-vectors has a test class above (and every runner a file). */

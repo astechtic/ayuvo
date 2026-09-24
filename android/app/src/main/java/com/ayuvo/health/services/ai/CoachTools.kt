@@ -15,6 +15,13 @@ import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.models.WorkoutWeightUnit
 import com.ayuvo.health.models.WeightEntry
 import com.google.gson.GsonBuilder
+import com.ayuvo.health.coach.logic.CoachReference
+import com.ayuvo.health.coach.model.CoachDataSwitches
+import com.ayuvo.health.coach.model.CoachSource
+import com.ayuvo.health.medications.coach.CoachMedicationsContext
+import com.ayuvo.health.medications.logic.MedicationJson
+import com.ayuvo.health.medications.logic.MedicationsCoachTools
+import kotlinx.serialization.json.JsonObject
 import org.json.JSONObject
 import java.time.Clock
 import java.time.Instant
@@ -41,24 +48,90 @@ class CoachTools(
     private val clock: Clock = Clock.systemDefaultZone(),
     private val healthSnapshot: HealthCoachSnapshot? = null,
     /** Health Records tools (docs/health-records.md §26) — non-null only when access is on and records exist. */
-    val records: com.ayuvo.health.records.coach.RecordsCoachTools? = null
+    val records: com.ayuvo.health.records.coach.RecordsCoachTools? = null,
+    /** Medication tools (docs/medications.md §20) — non-null only when access is on and medicines exist. */
+    val medications: CoachMedicationsContext? = null,
+    /**
+     * The conversation's data switches (docs/coach.md §8). A switch can only ever narrow what the
+     * source's own consent already permits; it never grants access.
+     */
+    private val sources: CoachDataSwitches = CoachDataSwitches.ALL_ON
 ) {
     private val healthData: CoachHealthData? = healthSnapshot?.let { CoachHealthData(it, clock) }
 
-    /** Tools offered to the model for this message: the fixed set plus health / records tools when consented. */
+    /**
+     * Tools offered to the model for this message. The decision is `resolve_data_sources`
+     * (docs/coach.md §8), shared with iOS, so a tool is never disclosed for a source the user has not
+     * connected, consented to, or has switched off for this conversation.
+     */
     val advertisedToolNames: List<String>
-        get() = (if (healthData != null) TOOL_NAMES + HEALTH_TOOL_NAMES else TOOL_NAMES) + records?.names.orEmpty()
+        get() {
+            val resolved = CoachReference.resolveDataSources(
+                available = MedicationJson.obj(
+                    "food" to true,
+                    "health" to (healthData != null),
+                    "medications" to (medications?.toolsAvailable == true),
+                    "records" to (records != null)
+                ),
+                consents = MedicationJson.obj(
+                    // Each context already encodes its own consent: it is null without one.
+                    "health" to (healthData != null),
+                    "medications" to (medications != null),
+                    "records" to (records != null)
+                ),
+                switches = sources.asJson(),
+                workoutsAvailable = true
+            )
+            return MedicationJson.strings(resolved["tools"])
+        }
 
-    /** Description advertised for [name]; records tools use the shared contract strings exactly. */
+    /** Which sources ended up effective, for the prompt lines and the composer summary row. */
+    val effectiveSources: Set<CoachSource>
+        get() {
+            val names = advertisedToolNames.toSet()
+            val out = mutableSetOf<CoachSource>()
+            if (NUTRITION_TOOL_NAMES.any { it in names }) out += CoachSource.FOOD
+            if (HEALTH_TOOL_NAMES.any { it in names }) out += CoachSource.HEALTH
+            if (MEDICATION_TOOL_NAMES.any { it in names }) out += CoachSource.MEDICATIONS
+            if (records?.names.orEmpty().any { it in names }) out += CoachSource.RECORDS
+            return out
+        }
+
+    /** Description advertised for [name]; records and medication tools use their contract strings exactly. */
     fun descriptionFor(name: String): String =
-        records?.contract?.tool(name)?.description ?: TOOL_DESCRIPTIONS[name] ?: ""
+        records?.contract?.tool(name)?.description
+            ?: MedicationsCoachTools.contract.tool(name)?.description
+            ?: TOOL_DESCRIPTIONS[name]
+            ?: ""
 
-    /** Compact input schema exactly as written in `coach_tools.json` for records tools, else null. */
-    fun rawSchemaFor(name: String): String? = records?.contract?.tool(name)?.schemaJson
+    /** Compact input schema exactly as written in the contract file, else null. */
+    fun rawSchemaFor(name: String): String? =
+        records?.contract?.tool(name)?.schemaJson
+            ?: MedicationsCoachTools.contract.tool(name)?.schemaText
 
     /** Runs a records tool when [name] is one; null otherwise (the caller falls back to [execute]). */
     suspend fun executeRecords(name: String, args: Map<String, Any?>): String? =
         records?.takeIf { it.handles(name) }?.execute(name, args)
+
+    /**
+     * Runs a medication tool when [name] is one; null otherwise. Fails closed with
+     * `errors.unavailable` when the user turned the source off while a call was in flight.
+     */
+    fun executeMedications(name: String, args: Map<String, Any?>): String? {
+        if (name !in MEDICATION_TOOL_NAMES) return null
+        val context = medications?.takeIf { it.toolsAvailable }
+            ?: return MedicationsCoachTools.error("unavailable").toString()
+        val arguments = MedicationJson.element(args) as? JsonObject ?: MedicationJson.obj()
+        val payload = when (name) {
+            "get_medications" -> MedicationsCoachTools.medicationsPayload(context.snapshot, arguments)
+            "get_dose_history" ->
+                MedicationsCoachTools.doseHistoryPayload(context.snapshot, arguments, context.nowMs, context.timeZone)
+            "get_medication_adherence" ->
+                MedicationsCoachTools.adherencePayload(context.snapshot, arguments, context.nowMs, context.timeZone)
+            else -> return null
+        }
+        return payload.toString()
+    }
 
     /** Android provider loops already deal in [JSONObject], so keep this adapter at the edge. */
     fun execute(name: String, args: JSONObject): String = execute(
@@ -713,6 +786,10 @@ class CoachTools(
 
         /** Health Data hub tools — advertised per message via [advertisedToolNames], never here. */
         val HEALTH_TOOL_NAMES: List<String> = CoachHealthData.TOOL_NAMES
+
+        /** Names, descriptions and schemas come from `shared/medications/coach_tools.json` (exact). */
+        val MEDICATION_TOOL_NAMES: List<String> = MedicationsCoachTools.contract.names
+            .ifEmpty { listOf("get_medications", "get_dose_history", "get_medication_adherence") }
 
         val TOOL_DESCRIPTIONS: Map<String, String> = CoachHealthData.TOOL_DESCRIPTIONS + mapOf(
             "get_data_summary" to "Get a quick summary of the user's available data: total counts and earliest/latest dates for weights, body-fat readings, and food entries. Call this first when the user asks anything about their history range or data spanning more than 14 days.",

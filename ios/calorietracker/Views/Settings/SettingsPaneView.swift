@@ -15,7 +15,7 @@ import UniformTypeIdentifiers
 struct SettingsPaneView: View {
     @Environment(AppNavigator.self) var navigator
     @Environment(ProfileStore.self) var profileStore
-    @Environment(ChatStore.self) var chatStore
+    @Environment(CoachStore.self) var chatStore
     @Environment(WeightStore.self) var weightStore
     @Environment(BodyFatStore.self) var bodyFatStore
     @Environment(FoodStore.self) var foodStore
@@ -45,6 +45,8 @@ struct SettingsPaneView: View {
     @AppStorage(AdaptiveGoalSettings.enabledKey) var adaptiveGoalsEnabled = true
     @AppStorage(EnergyBurnSettings.enabledKey) var energyBurnEnabled = false
     @AppStorage("weekStartsOnMonday") var weekStartsOnMonday = true
+    /// Coach's suggested-prompt chips (docs/coach.md §9). Off hides them; the gallery stays reachable.
+    @AppStorage("coachPromptSuggestions") var coachPromptSuggestions = true
     @AppStorage(FoodMeasurementSettings.preferGramsByDefaultKey) var preferGramsByDefault = false
     @AppStorage(MealPhotoSettings.saveToGalleryKey) var saveMealPhotosToGallery = false
     @AppStorage(AppThemeColor.storageKey) var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
@@ -453,7 +455,8 @@ struct SettingsPaneView: View {
                         UserDefaults.standard.removePersistentDomain(forName: domain)
                         AIProviderSettings.deleteAllData()
                         SpeechSettings.deleteAllData()
-                        chatStore.reset()
+                        // Coach: conversations, messages and every attachment blob.
+                        await chatStore.deleteAllConversations()
                         WidgetSnapshot.clear()
                         WidgetDashboardSnapshot.clear()
                         WidgetCenter.shared.reloadAllTimelines()

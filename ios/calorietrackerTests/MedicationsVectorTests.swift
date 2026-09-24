@@ -9,6 +9,7 @@ struct MedicationsVectorTests {
     static let vectorFiles = [
         "occurrences", "dose_status", "missed", "timeline", "adherence", "reminders",
         "dose_actions", "lifecycle", "auto_complete", "frequency_hint", "archive", "validation",
+        "coach_tools_payloads",
     ]
 
     static var vectorsDirectory: URL {

@@ -159,6 +159,14 @@ object MedicationsVectors {
             else -> error("archive op")
         }
         "validate_draft" -> MedicationJson.obj("errors" to DraftValidation.validate(input["draft"] as JsonObject).map { MedicationJson.obj("field" to it.field, "code" to it.code) })
+        "coach_tools" -> {
+            // The contract is loaded from assets at runtime; the tests inject the shared file so a
+            // drift between the two is caught by MedicationsCoachContractTest, not silently here.
+            MedicationsCoachTools.contract = MedicationsCoachContract.parse(
+                MedicationsTestFiles.shared("coach_tools.json")!!.readText()
+            )!!
+            MedicationsCoachTools.runCase(input)
+        }
         else -> error("unknown function $function")
     }
 

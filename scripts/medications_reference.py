@@ -23,6 +23,7 @@ Portability rules (same as scripts/records_reference.py):
 import datetime as _dt
 import json
 import math
+import os
 import re
 from zoneinfo import ZoneInfo
 
@@ -1246,6 +1247,17 @@ def run_case(function, inp):
         raise ValueError(op)
     if function == "validate_draft":
         return {"errors": validate_draft(inp["draft"])}
+    if function == "coach_tools":
+        tool = inp["tool"]
+        if tool == "get_medications":
+            return coach_medications_payload(inp["snapshot"], inp.get("args"))
+        if tool == "get_dose_history":
+            return coach_dose_history_payload(inp["snapshot"], inp.get("args"), inp["now_ms"], inp["time_zone"])
+        if tool == "get_medication_adherence":
+            return coach_adherence_payload(inp["snapshot"], inp.get("args"), inp["now_ms"], inp["time_zone"])
+        if tool == "prompt_lines":
+            return coach_prompt_lines(inp["snapshot"], inp["access_enabled"])
+        raise ValueError(tool)
     raise ValueError("unknown function %s" % function)
 
 
@@ -1253,3 +1265,273 @@ if __name__ == "__main__":
     import sys
     doc = json.load(sys.stdin)
     print(json.dumps(run_case(doc["function"], doc["input"]), indent=2, sort_keys=True, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------------------------------------
+# §20 Coach tools
+# ---------------------------------------------------------------------------------------------
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+_MED_ROOT = os.path.dirname(HERE)
+COACH_TOOLS_PATH = os.path.join(_MED_ROOT, "shared", "medications", "coach_tools.json")
+COACH_TOOLS_FORMAT = "ayuvo-medications-coach-tools"
+COACH_DOSE_LIMIT = 200
+_RE_COACH_PLACEHOLDER = re.compile("\\{([a-z_]+)\\}")
+
+
+def coach_tools_doc():
+    """shared/medications/coach_tools.json (tools, prompt strings, error strings)."""
+    with open(COACH_TOOLS_PATH, "r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+COACH_TOOLS = coach_tools_doc() if os.path.exists(COACH_TOOLS_PATH) else {"errors": {}, "prompt": {}}
+COACH_TOOL_NAMES = tuple(t["name"] for t in COACH_TOOLS.get("tools") or [])
+
+
+def coach_error(key, **values):
+    """{"error": <errors.key with {placeholders} filled in ONE left-to-right pass>}."""
+    template = (COACH_TOOLS.get("errors") or {}).get(key, key)
+
+    def fill(match):
+        name = match.group(1)
+        return values[name] if name in values else match.group(0)
+
+    return {"error": _RE_COACH_PLACEHOLDER.sub(fill, template)}
+
+
+def _coach_date(value, out):
+    """A required yyyy-MM-dd argument -> the date string, or None with `out` holding the error."""
+    if not isinstance(value, str) or parse_date(value) is None:
+        text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+        out.append(coach_error("bad_date", value=text))
+        return None
+    return value
+
+
+def _coach_range(args, out):
+    """(from, to) validated together: bad_date first (from before to), then date_order."""
+    start = _coach_date((args or {}).get("from"), out)
+    if out:
+        return None, None
+    end = _coach_date((args or {}).get("to"), out)
+    if out:
+        return None, None
+    if start > end:
+        out.append(coach_error("date_order"))
+        return None, None
+    return start, end
+
+
+def _coach_limit(value, cap):
+    """Whole numbers clamp to 1..cap; anything else (strings, fractions, booleans) -> cap."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return cap
+    if float(value) != int(value):
+        return cap
+    return max(1, min(cap, int(value)))
+
+
+def _active_schedule(schedules, medication_id):
+    """The open schedule row of a medication (active_until_ms IS NULL), else the newest closed one."""
+    rows = [s for s in schedules or [] if s.get("medication_id") == medication_id]
+    open_rows = [s for s in rows if s.get("active_until_ms") is None]
+    if open_rows:
+        return sorted(open_rows, key=lambda s: (s.get("active_from_ms") or 0, s.get("id") or ""))[-1]
+    if not rows:
+        return None
+    return sorted(rows, key=lambda s: (s.get("active_until_ms") or 0, s.get("id") or ""))[-1]
+
+
+def _schedule_payload(schedule):
+    """Structured, never a localized sentence: the model phrases it."""
+    if schedule is None:
+        return None
+    return {"frequency": schedule.get("frequency_kind"),
+            "times": list(schedule.get("times") or []),
+            "days": list(schedule.get("days") or []),
+            "interval_hours": schedule.get("interval_hours"),
+            "anchor_time": schedule.get("anchor_time"),
+            "reminders_on": bool(_truthy(schedule.get("reminder_enabled")))}
+
+
+def _med_payload(medication, schedule):
+    return {"medication_id": medication.get("id"), "name": medication.get("name"),
+            "generic_name": medication.get("generic_name"), "brand_name": medication.get("brand_name"),
+            "strength": medication.get("strength"), "form": medication.get("form"),
+            "dose_quantity": _clean_number(medication.get("dose_quantity")),
+            "dose_unit": medication.get("dose_unit"), "food_relation": medication.get("food_relation"),
+            "instructions": medication.get("instructions"), "status": medication.get("status"),
+            "is_prn": bool(_truthy(medication.get("is_prn"))), "start_date": medication.get("start_date"),
+            "end_date": medication.get("end_date"),
+            "schedule": None if _truthy(medication.get("is_prn")) else _schedule_payload(schedule)}
+
+
+def coach_medications_payload(snapshot, args):
+    """`get_medications`. Active medicines unless include_inactive is exactly true. Sorted by folded
+    name, then id, so two devices list them identically."""
+    args = args or {}
+    include_inactive = args.get("include_inactive") is True
+    meds = [m for m in snapshot.get("medications") or []
+            if include_inactive or m.get("status") == "active"]
+    meds.sort(key=lambda m: (fold_name(m.get("name")), m.get("id") or ""))
+    schedules = snapshot.get("schedules") or []
+    rows = [_med_payload(m, _active_schedule(schedules, m.get("id"))) for m in meds]
+    return {"count": len(rows), "medications": rows}
+
+
+def _coach_dose_rows(snapshot, medication_id, start_ms, end_ms, now_ms, time_zone):
+    """Every dose of the window: scheduled occurrences with their resolved status, stored logs of
+    scheduled doses that match no occurrence (the schedule was edited), and PRN logs."""
+    meds = snapshot.get("medications") or []
+    by_id = dict((m.get("id"), m) for m in meds)
+    logs = [l for l in snapshot.get("dose_logs") or []
+            if start_ms <= (l.get("scheduled_at_ms") or 0) < end_ms
+            and (medication_id is None or l.get("medication_id") == medication_id)]
+    index = _index_logs(logs)
+    matched = set()
+    rows = []
+    for occ in expand_all(meds, snapshot.get("schedules") or [], start_ms, end_ms, time_zone):
+        if medication_id is not None and occ.get("medication_id") != medication_id:
+            continue
+        log = index.get(_log_key(occ["schedule_id"], occ["scheduled_at_ms"]))
+        if log is not None:
+            matched.add(id(log))
+        rows.append(_coach_dose_row(occ["medication_id"], by_id, occ["scheduled_at_ms"], log,
+                                    resolve_dose_status(occ, log, now_ms), False, time_zone))
+    for log in logs:
+        if id(log) in matched:
+            continue
+        if log.get("schedule_id") is None:
+            rows.append(_coach_dose_row(log.get("medication_id"), by_id, log.get("scheduled_at_ms"), log,
+                                        {"status": log.get("status"), "is_late": False}, True, time_zone))
+        elif log.get("status") in DOSE_STATUSES:
+            rows.append(_coach_dose_row(log.get("medication_id"), by_id, log.get("scheduled_at_ms"), log,
+                                        {"status": log.get("status"), "is_late": False}, False, time_zone))
+    rows.sort(key=lambda r: (-r["scheduled_at_ms"], fold_name(r["name"]), r["medication_id"] or ""))
+    return rows
+
+
+def _coach_dose_row(medication_id, by_id, scheduled_at_ms, log, resolved, is_prn, time_zone):
+    med = by_id.get(medication_id) or {}
+    status = resolved.get("status")
+    if status == "taken" and resolved.get("is_late"):
+        status = "taken_late"
+    taken_at = log.get("taken_at_ms") if log else None
+    return {"medication_id": medication_id, "name": med.get("name"),
+            "date": local_date_of(scheduled_at_ms, time_zone),
+            "scheduled_at": local_hhmm_of(scheduled_at_ms, time_zone),
+            "scheduled_at_ms": scheduled_at_ms,
+            "taken_at": local_hhmm_of(taken_at, time_zone) if _is_int(taken_at) else None,
+            "status": status, "is_prn": bool(is_prn),
+            "dose_quantity": _clean_number(log.get("dose_quantity")) if log else None,
+            "dose_unit": (log.get("dose_unit") if log else None),
+            "note": (log.get("note") if log else None)}
+
+
+def coach_dose_history_payload(snapshot, args, now_ms, time_zone):
+    """`get_dose_history`. Newest first, `limit` omitted -> 200."""
+    args = args or {}
+    errors = []
+    start, end = _coach_range(args, errors)
+    if errors:
+        return errors[0]
+    medication_id = args.get("medication_id") if isinstance(args.get("medication_id"), str) else None
+    if medication_id:
+        if medication_id not in set(m.get("id") for m in snapshot.get("medications") or []):
+            return coach_error("unknown_medication", id=medication_id)
+    else:
+        medication_id = None
+    start_ms = day_window(start, time_zone)[0]
+    end_ms = day_window(end, time_zone)[1]
+    rows = _coach_dose_rows(snapshot, medication_id, start_ms, end_ms, now_ms, time_zone)
+    limit = _coach_limit(args.get("limit"), COACH_DOSE_LIMIT)
+    rows = rows[:limit]
+    return {"from": start, "to": end, "count": len(rows), "doses": rows}
+
+
+def _counts_of(rows):
+    out = {"taken": 0, "taken_late": 0, "skipped": 0, "missed": 0, "open": 0}
+    for row in rows:
+        if row["status"] == "taken_late":
+            out["taken"] += 1
+            out["taken_late"] += 1
+        elif row["status"] in out:
+            out[row["status"]] += 1
+        else:
+            out["open"] += 1
+    return out
+
+
+def _most_missed_time(rows):
+    """The scheduled slot with the most missed or skipped doses; ties go to the earlier time."""
+    tally = {}
+    for row in rows:
+        if row["status"] in ("missed", "skipped") and not row["is_prn"]:
+            tally[row["scheduled_at"]] = tally.get(row["scheduled_at"], 0) + 1
+    if not tally:
+        return None
+    return sorted(tally.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+
+
+def coach_adherence_payload(snapshot, args, now_ms, time_zone):
+    """`get_medication_adherence`. `percent` comes from §9 `adherence`, so the tool and the app's own
+    adherence screen can never disagree."""
+    args = args or {}
+    errors = []
+    start, end = _coach_range(args, errors)
+    if errors:
+        return errors[0]
+    medication_id = args.get("medication_id") if isinstance(args.get("medication_id"), str) else None
+    meds = snapshot.get("medications") or []
+    if medication_id:
+        if medication_id not in set(m.get("id") for m in meds):
+            return coach_error("unknown_medication", id=medication_id)
+    else:
+        medication_id = None
+    start_ms = day_window(start, time_zone)[0]
+    end_ms = day_window(end, time_zone)[1]
+    occurrences = expand_all(meds, snapshot.get("schedules") or [], start_ms, end_ms, time_zone)
+    logs = [l for l in snapshot.get("dose_logs") or [] if start_ms <= (l.get("scheduled_at_ms") or 0) < end_ms]
+    rows = _coach_dose_rows(snapshot, medication_id, start_ms, end_ms, now_ms, time_zone)
+
+    def block(mid):
+        scoped = [r for r in rows if mid is None or r["medication_id"] == mid]
+        counts = _counts_of(scoped)
+        summary = adherence(occurrences, logs, now_ms, mid)
+        return {"scheduled": summary["expected"], "taken": summary["taken"],
+                "taken_late": counts["taken_late"], "skipped": counts["skipped"],
+                "missed": counts["missed"], "still_open": counts["open"],
+                "percent": summary["percent"], "has_data": summary["has_data"],
+                "most_missed_time": _most_missed_time(scoped)}
+
+    per = []
+    scoped_meds = [m for m in meds if medication_id is None or m.get("id") == medication_id]
+    scoped_meds.sort(key=lambda m: (fold_name(m.get("name")), m.get("id") or ""))
+    for med in scoped_meds:
+        entry = block(med.get("id"))
+        if entry["scheduled"] == 0 and entry["still_open"] == 0:
+            continue
+        entry["medication_id"] = med.get("id")
+        entry["name"] = med.get("name")
+        per.append(entry)
+    return {"from": start, "to": end, "overall": block(medication_id), "medications": per}
+
+
+def coach_prompt_lines(snapshot, access_enabled):
+    """The `## Data available` lines for medications (docs/coach.md §3). Tools are advertised only
+    when access is on and at least one medicine exists."""
+    meds = snapshot.get("medications") or []
+    active = [m for m in meds if m.get("status") == "active"]
+    prompt = COACH_TOOLS.get("prompt") or {}
+    if not access_enabled or not meds:
+        return {"advertise_tools": False, "available_line": None,
+                "not_available_line": prompt.get("not_available_line"), "guardrails": None}
+
+    def fill(match):
+        name = match.group(1)
+        return {"n": str(len(meds)), "active": str(len(active))}.get(name, match.group(0))
+
+    return {"advertise_tools": True,
+            "available_line": _RE_COACH_PLACEHOLDER.sub(fill, prompt.get("available_line") or ""),
+            "not_available_line": None, "guardrails": prompt.get("guardrails")}

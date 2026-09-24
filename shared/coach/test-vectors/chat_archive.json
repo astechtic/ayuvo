@@ -1,0 +1,1076 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "attachments": [
+          {
+            "bytes": 20480,
+            "char_count": 900,
+            "created_ms": 1900,
+            "excerpt": "Sleep efficiency 88%",
+            "filename": "sleep-study.pdf",
+            "id": "a1",
+            "kind": "pdf",
+            "mime_type": "application/pdf",
+            "page_count": 3,
+            "sha256": "aa11"
+          }
+        ],
+        "conversations": [
+          {
+            "archived": 0,
+            "created_ms": 1000,
+            "data_sources": {
+              "health": true,
+              "records": false
+            },
+            "id": "c1",
+            "last_message_ms": 3000,
+            "pinned": 1,
+            "provider_override": null,
+            "selected_record_ids": [
+              "r1"
+            ],
+            "title": "Sleep this week",
+            "updated_ms": 3000
+          }
+        ],
+        "format": "ayuvo-coach-chats",
+        "format_version": 1,
+        "messages": [
+          {
+            "attachment_ids": [
+              "a1"
+            ],
+            "content": "How did I sleep?",
+            "conversation_id": "c1",
+            "created_ms": 2000,
+            "id": "m1",
+            "record_refs": [],
+            "regenerated_from": null,
+            "role": "user",
+            "seq": 1,
+            "updated_ms": 2000,
+            "variant_index": 0
+          },
+          {
+            "attachment_ids": [],
+            "content": "You averaged 6 h 40 m.",
+            "conversation_id": "c1",
+            "created_ms": 3000,
+            "id": "m2",
+            "record_refs": [
+              {
+                "date": "2026-08-02",
+                "record_id": "r1",
+                "title": "CBC"
+              }
+            ],
+            "regenerated_from": null,
+            "role": "assistant",
+            "seq": 2,
+            "updated_ms": 3000,
+            "variant_index": 0
+          }
+        ]
+      },
+      "input": {
+        "snapshot": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "deleted": 0,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            },
+            {
+              "bytes": 2048,
+              "char_count": null,
+              "created_ms": 1800,
+              "deleted": 0,
+              "excerpt": null,
+              "filename": "unused.jpg",
+              "id": "a2",
+              "kind": "image",
+              "mime_type": "image/jpeg",
+              "page_count": null,
+              "sha256": "bb22"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true,
+                "records": false
+              },
+              "deleted": 0,
+              "id": "c1",
+              "last_message_ms": 3000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [
+                "r1"
+              ],
+              "title": "Sleep this week",
+              "updated_ms": 3000
+            },
+            {
+              "archived": 0,
+              "created_ms": 500,
+              "data_sources": {},
+              "deleted": 1,
+              "id": "c0",
+              "last_message_ms": 600,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Deleted chat",
+              "updated_ms": 600
+            }
+          ],
+          "messages": [
+            {
+              "attachment_ids": [],
+              "content": "You averaged 6 h 40 m.",
+              "conversation_id": "c1",
+              "created_ms": 3000,
+              "deleted": 0,
+              "id": "m2",
+              "record_refs": [
+                {
+                  "date": "2026-08-02",
+                  "record_id": "r1",
+                  "title": "CBC"
+                }
+              ],
+              "regenerated_from": null,
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 3000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "How did I sleep?",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "deleted": 0,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 2000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "gone",
+              "conversation_id": "c0",
+              "created_ms": 550,
+              "deleted": 0,
+              "id": "m3",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 550,
+              "variant_index": 0
+            }
+          ]
+        }
+      },
+      "name": "export drops tombstones and unreferenced attachments",
+      "notes": "A deleted conversation, its messages and an attachment no message points at never leave the device."
+    },
+    {
+      "expected": {
+        "attachments": [],
+        "conversations": [],
+        "format": "ayuvo-coach-chats",
+        "format_version": 1,
+        "messages": []
+      },
+      "input": {
+        "snapshot": {
+          "attachments": [],
+          "conversations": [],
+          "messages": []
+        }
+      },
+      "name": "export of an empty store"
+    },
+    {
+      "expected": {
+        "counts": {
+          "attachments_inserted": 1,
+          "attachments_rejected": 0,
+          "attachments_skipped_older": 0,
+          "attachments_skipped_tombstoned": 0,
+          "attachments_updated": 0,
+          "conversations_inserted": 2,
+          "conversations_rejected": 0,
+          "conversations_skipped_older": 0,
+          "conversations_skipped_tombstoned": 0,
+          "conversations_updated": 0,
+          "messages_inserted": 2,
+          "messages_rejected": 0,
+          "messages_skipped_older": 0,
+          "messages_skipped_orphan": 1,
+          "messages_skipped_tombstoned": 0,
+          "messages_updated": 0
+        },
+        "error": null,
+        "snapshot": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "deleted": 0,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true
+              },
+              "deleted": 0,
+              "id": "c1",
+              "last_message_ms": 9000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Sleep this week (edited)",
+              "updated_ms": 9000
+            },
+            {
+              "archived": 0,
+              "created_ms": 400,
+              "data_sources": {},
+              "deleted": 0,
+              "id": "c9",
+              "last_message_ms": 450,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "From the old phone",
+              "updated_ms": 450
+            }
+          ],
+          "messages": [
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "stale copy",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "deleted": 0,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1500,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "hello",
+              "conversation_id": "c9",
+              "created_ms": 420,
+              "deleted": 0,
+              "id": "m9",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 420,
+              "variant_index": 0
+            }
+          ]
+        }
+      },
+      "input": {
+        "archive": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true
+              },
+              "id": "c1",
+              "last_message_ms": 9000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Sleep this week (edited)",
+              "updated_ms": 9000
+            },
+            {
+              "archived": 0,
+              "created_ms": 400,
+              "data_sources": {},
+              "id": "c9",
+              "last_message_ms": 450,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "From the old phone",
+              "updated_ms": 450
+            }
+          ],
+          "format": "ayuvo-coach-chats",
+          "format_version": 1,
+          "messages": [
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "stale copy",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1500,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "hello",
+              "conversation_id": "c9",
+              "created_ms": 420,
+              "id": "m9",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 420,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "orphan",
+              "conversation_id": "cx",
+              "created_ms": 1,
+              "id": "mx",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1,
+              "variant_index": 0
+            }
+          ]
+        },
+        "snapshot": {
+          "attachments": [],
+          "conversations": [],
+          "messages": []
+        }
+      },
+      "name": "merge into an empty store",
+      "notes": "The orphan message is skipped and counted; nothing else is lost."
+    },
+    {
+      "expected": {
+        "counts": {
+          "attachments_inserted": 0,
+          "attachments_rejected": 0,
+          "attachments_skipped_older": 1,
+          "attachments_skipped_tombstoned": 0,
+          "attachments_updated": 0,
+          "conversations_inserted": 1,
+          "conversations_rejected": 0,
+          "conversations_skipped_older": 0,
+          "conversations_skipped_tombstoned": 0,
+          "conversations_updated": 1,
+          "messages_inserted": 1,
+          "messages_rejected": 0,
+          "messages_skipped_older": 1,
+          "messages_skipped_orphan": 1,
+          "messages_skipped_tombstoned": 0,
+          "messages_updated": 0
+        },
+        "error": null,
+        "snapshot": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "deleted": 0,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            },
+            {
+              "bytes": 2048,
+              "char_count": null,
+              "created_ms": 1800,
+              "deleted": 0,
+              "excerpt": null,
+              "filename": "unused.jpg",
+              "id": "a2",
+              "kind": "image",
+              "mime_type": "image/jpeg",
+              "page_count": null,
+              "sha256": "bb22"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true
+              },
+              "deleted": 0,
+              "id": "c1",
+              "last_message_ms": 9000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Sleep this week (edited)",
+              "updated_ms": 9000
+            },
+            {
+              "archived": 0,
+              "created_ms": 500,
+              "data_sources": {},
+              "deleted": 1,
+              "id": "c0",
+              "last_message_ms": 600,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Deleted chat",
+              "updated_ms": 600
+            },
+            {
+              "archived": 0,
+              "created_ms": 400,
+              "data_sources": {},
+              "deleted": 0,
+              "id": "c9",
+              "last_message_ms": 450,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "From the old phone",
+              "updated_ms": 450
+            }
+          ],
+          "messages": [
+            {
+              "attachment_ids": [],
+              "content": "You averaged 6 h 40 m.",
+              "conversation_id": "c1",
+              "created_ms": 3000,
+              "deleted": 0,
+              "id": "m2",
+              "record_refs": [
+                {
+                  "date": "2026-08-02",
+                  "record_id": "r1",
+                  "title": "CBC"
+                }
+              ],
+              "regenerated_from": null,
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 3000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "How did I sleep?",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "deleted": 0,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 2000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "gone",
+              "conversation_id": "c0",
+              "created_ms": 550,
+              "deleted": 0,
+              "id": "m3",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 550,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "hello",
+              "conversation_id": "c9",
+              "created_ms": 420,
+              "deleted": 0,
+              "id": "m9",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 420,
+              "variant_index": 0
+            }
+          ]
+        }
+      },
+      "input": {
+        "archive": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true
+              },
+              "id": "c1",
+              "last_message_ms": 9000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Sleep this week (edited)",
+              "updated_ms": 9000
+            },
+            {
+              "archived": 0,
+              "created_ms": 400,
+              "data_sources": {},
+              "id": "c9",
+              "last_message_ms": 450,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "From the old phone",
+              "updated_ms": 450
+            }
+          ],
+          "format": "ayuvo-coach-chats",
+          "format_version": 1,
+          "messages": [
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "stale copy",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1500,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "hello",
+              "conversation_id": "c9",
+              "created_ms": 420,
+              "id": "m9",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 420,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "orphan",
+              "conversation_id": "cx",
+              "created_ms": 1,
+              "id": "mx",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1,
+              "variant_index": 0
+            }
+          ]
+        },
+        "snapshot": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "deleted": 0,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            },
+            {
+              "bytes": 2048,
+              "char_count": null,
+              "created_ms": 1800,
+              "deleted": 0,
+              "excerpt": null,
+              "filename": "unused.jpg",
+              "id": "a2",
+              "kind": "image",
+              "mime_type": "image/jpeg",
+              "page_count": null,
+              "sha256": "bb22"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true,
+                "records": false
+              },
+              "deleted": 0,
+              "id": "c1",
+              "last_message_ms": 3000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [
+                "r1"
+              ],
+              "title": "Sleep this week",
+              "updated_ms": 3000
+            },
+            {
+              "archived": 0,
+              "created_ms": 500,
+              "data_sources": {},
+              "deleted": 1,
+              "id": "c0",
+              "last_message_ms": 600,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Deleted chat",
+              "updated_ms": 600
+            }
+          ],
+          "messages": [
+            {
+              "attachment_ids": [],
+              "content": "You averaged 6 h 40 m.",
+              "conversation_id": "c1",
+              "created_ms": 3000,
+              "deleted": 0,
+              "id": "m2",
+              "record_refs": [
+                {
+                  "date": "2026-08-02",
+                  "record_id": "r1",
+                  "title": "CBC"
+                }
+              ],
+              "regenerated_from": null,
+              "role": "assistant",
+              "seq": 2,
+              "updated_ms": 3000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "How did I sleep?",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "deleted": 0,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 2000,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "gone",
+              "conversation_id": "c0",
+              "created_ms": 550,
+              "deleted": 0,
+              "id": "m3",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 550,
+              "variant_index": 0
+            }
+          ]
+        }
+      },
+      "name": "newer local row wins",
+      "notes": "m1 in the archive is older than the local row, so it is skipped; c1 in the archive is newer, so it updates."
+    },
+    {
+      "expected": {
+        "counts": {
+          "attachments_inserted": 1,
+          "attachments_rejected": 0,
+          "attachments_skipped_older": 0,
+          "attachments_skipped_tombstoned": 0,
+          "attachments_updated": 0,
+          "conversations_inserted": 1,
+          "conversations_rejected": 0,
+          "conversations_skipped_older": 0,
+          "conversations_skipped_tombstoned": 1,
+          "conversations_updated": 0,
+          "messages_inserted": 1,
+          "messages_rejected": 0,
+          "messages_skipped_older": 0,
+          "messages_skipped_orphan": 2,
+          "messages_skipped_tombstoned": 0,
+          "messages_updated": 0
+        },
+        "error": null,
+        "snapshot": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "deleted": 0,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true,
+                "records": false
+              },
+              "deleted": 1,
+              "id": "c1",
+              "last_message_ms": 3000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [
+                "r1"
+              ],
+              "title": "Sleep this week",
+              "updated_ms": 1
+            },
+            {
+              "archived": 0,
+              "created_ms": 400,
+              "data_sources": {},
+              "deleted": 0,
+              "id": "c9",
+              "last_message_ms": 450,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "From the old phone",
+              "updated_ms": 450
+            }
+          ],
+          "messages": [
+            {
+              "attachment_ids": [],
+              "content": "hello",
+              "conversation_id": "c9",
+              "created_ms": 420,
+              "deleted": 0,
+              "id": "m9",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 420,
+              "variant_index": 0
+            }
+          ]
+        }
+      },
+      "input": {
+        "archive": {
+          "attachments": [
+            {
+              "bytes": 20480,
+              "char_count": 900,
+              "created_ms": 1900,
+              "excerpt": "Sleep efficiency 88%",
+              "filename": "sleep-study.pdf",
+              "id": "a1",
+              "kind": "pdf",
+              "mime_type": "application/pdf",
+              "page_count": 3,
+              "sha256": "aa11"
+            }
+          ],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true
+              },
+              "id": "c1",
+              "last_message_ms": 9000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "Sleep this week (edited)",
+              "updated_ms": 9000
+            },
+            {
+              "archived": 0,
+              "created_ms": 400,
+              "data_sources": {},
+              "id": "c9",
+              "last_message_ms": 450,
+              "pinned": 0,
+              "provider_override": null,
+              "selected_record_ids": [],
+              "title": "From the old phone",
+              "updated_ms": 450
+            }
+          ],
+          "format": "ayuvo-coach-chats",
+          "format_version": 1,
+          "messages": [
+            {
+              "attachment_ids": [
+                "a1"
+              ],
+              "content": "stale copy",
+              "conversation_id": "c1",
+              "created_ms": 2000,
+              "id": "m1",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1500,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "hello",
+              "conversation_id": "c9",
+              "created_ms": 420,
+              "id": "m9",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 420,
+              "variant_index": 0
+            },
+            {
+              "attachment_ids": [],
+              "content": "orphan",
+              "conversation_id": "cx",
+              "created_ms": 1,
+              "id": "mx",
+              "record_refs": [],
+              "regenerated_from": null,
+              "role": "user",
+              "seq": 1,
+              "updated_ms": 1,
+              "variant_index": 0
+            }
+          ]
+        },
+        "snapshot": {
+          "attachments": [],
+          "conversations": [
+            {
+              "archived": 0,
+              "created_ms": 1000,
+              "data_sources": {
+                "health": true,
+                "records": false
+              },
+              "deleted": 1,
+              "id": "c1",
+              "last_message_ms": 3000,
+              "pinned": 1,
+              "provider_override": null,
+              "selected_record_ids": [
+                "r1"
+              ],
+              "title": "Sleep this week",
+              "updated_ms": 1
+            }
+          ],
+          "messages": []
+        }
+      },
+      "name": "local tombstone is never resurrected"
+    },
+    {
+      "expected": {
+        "counts": {
+          "attachments_inserted": 0,
+          "attachments_rejected": 0,
+          "attachments_skipped_older": 0,
+          "attachments_skipped_tombstoned": 0,
+          "attachments_updated": 0,
+          "conversations_inserted": 0,
+          "conversations_rejected": 0,
+          "conversations_skipped_older": 0,
+          "conversations_skipped_tombstoned": 0,
+          "conversations_updated": 0,
+          "messages_inserted": 0,
+          "messages_rejected": 0,
+          "messages_skipped_older": 0,
+          "messages_skipped_orphan": 0,
+          "messages_skipped_tombstoned": 0,
+          "messages_updated": 0
+        },
+        "error": "bad_format",
+        "snapshot": {
+          "attachments": [],
+          "conversations": [],
+          "messages": []
+        }
+      },
+      "input": {
+        "archive": {
+          "format": "ayuvo-records",
+          "format_version": 1
+        },
+        "snapshot": {
+          "attachments": [],
+          "conversations": [],
+          "messages": []
+        }
+      },
+      "name": "wrong format is refused"
+    },
+    {
+      "expected": {
+        "counts": {
+          "attachments_inserted": 0,
+          "attachments_rejected": 0,
+          "attachments_skipped_older": 0,
+          "attachments_skipped_tombstoned": 0,
+          "attachments_updated": 0,
+          "conversations_inserted": 0,
+          "conversations_rejected": 0,
+          "conversations_skipped_older": 0,
+          "conversations_skipped_tombstoned": 0,
+          "conversations_updated": 0,
+          "messages_inserted": 0,
+          "messages_rejected": 0,
+          "messages_skipped_older": 0,
+          "messages_skipped_orphan": 0,
+          "messages_skipped_tombstoned": 0,
+          "messages_updated": 0
+        },
+        "error": "newer_version",
+        "snapshot": {
+          "attachments": [],
+          "conversations": [],
+          "messages": []
+        }
+      },
+      "input": {
+        "archive": {
+          "attachments": [],
+          "conversations": [],
+          "format": "ayuvo-coach-chats",
+          "format_version": 2,
+          "messages": []
+        },
+        "snapshot": {
+          "attachments": [],
+          "conversations": [],
+          "messages": []
+        }
+      },
+      "name": "newer format version is refused"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "chat_archive",
+  "version": 1
+}

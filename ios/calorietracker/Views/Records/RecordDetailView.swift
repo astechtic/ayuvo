@@ -9,7 +9,7 @@ struct RecordDetailView: View {
     /// Opens the source viewer at this observation once loaded (trend point / Values hit).
     var initialObservationID: String? = nil
     @Environment(RecordsStore.self) private var store
-    @Environment(ChatStore.self) private var chatStore
+    @Environment(CoachStore.self) private var chatStore
     @Environment(\.dismiss) private var dismiss
     @State private var detail: RecordDetail?
     /// §27 previous report for "Compare with previous report".

@@ -3,6 +3,7 @@ package com.ayuvo.health.export
 import android.net.Uri
 import android.util.Log
 import com.ayuvo.health.AppContainer
+import com.ayuvo.health.coach.export.CoachChatArchiveReader
 import com.ayuvo.health.medications.export.MedicationsArchive
 import com.ayuvo.health.records.backup.RecordsArchiveFormat
 import com.ayuvo.health.services.health.HealthSyncTrigger
@@ -188,7 +189,19 @@ class AllDataImportCoordinator(private val container: AppContainer) {
         AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> {
             container.recordsBackup.importFile(file, RecordsArchiveFormat.ImportMode.MERGE).importedRecords.toLong()
         }
+        AllDataExportCoordinator.SECTION_COACH_CHATS -> {
+            // Merge, never delete: a chat the user removed here stays removed (docs/coach.md §11).
+            val result = CoachChatArchiveReader(container.coachRepository).import(file)
+            check(result.ok) { importErrorMessage(result.error) }
+            result.imported.toLong()
+        }
         else -> error("Unknown section")
+    }
+
+    /** The two refusals the archive reader can return, in the user's words. */
+    private fun importErrorMessage(error: String?): String = when (error) {
+        "newer_version" -> "This file was made by a newer version of Ayuvo"
+        else -> "Couldn't import chats"
     }
 
     private fun ZipInputStream.readNBytesCompat(limit: Int): ByteArray {

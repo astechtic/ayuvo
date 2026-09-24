@@ -1,0 +1,205 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "chars": 35,
+        "pages_skipped": 0,
+        "pages_total": 1,
+        "pages_used": 1,
+        "redacted_lines": 2,
+        "text": "Hemoglobin 11.2 g/dL\nTSH 3.4 uIU/mL",
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Patient Name: Ravi Kumar\nUHID: 88213\nHemoglobin 11.2 g/dL\nTSH 3.4 uIU/mL"
+        ]
+      },
+      "name": "identity lines are dropped",
+      "notes": "Same rule as records_get text (docs/health-records.md §28)."
+    },
+    {
+      "expected": {
+        "chars": 16,
+        "pages_skipped": 0,
+        "pages_total": 1,
+        "pages_used": 1,
+        "redacted_lines": 1,
+        "text": "Glucose 96 mg/dL",
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Sample 9876543210123\nGlucose 96 mg/dL"
+        ]
+      },
+      "name": "a long digit run is dropped even without a label"
+    },
+    {
+      "expected": {
+        "chars": 69,
+        "pages_skipped": 0,
+        "pages_total": 2,
+        "pages_used": 2,
+        "redacted_lines": 0,
+        "text": "--- page 1 ---\nGlucose 96 mg/dL\n\n--- page 2 ---\nCholesterol 180 mg/dL",
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Glucose 96 mg/dL",
+          "Cholesterol 180 mg/dL"
+        ]
+      },
+      "name": "page markers appear only with several pages"
+    },
+    {
+      "expected": {
+        "chars": 16,
+        "pages_skipped": 0,
+        "pages_total": 1,
+        "pages_used": 1,
+        "redacted_lines": 0,
+        "text": "Glucose 96 mg/dL",
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Glucose 96 mg/dL"
+        ]
+      },
+      "name": "single page has no marker"
+    },
+    {
+      "expected": {
+        "chars": 57,
+        "pages_skipped": 0,
+        "pages_total": 3,
+        "pages_used": 2,
+        "redacted_lines": 0,
+        "text": "--- page 1 ---\nGlucose 96\n\n--- page 3 ---\nCholesterol 180",
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Glucose 96",
+          "   \n\n",
+          "Cholesterol 180"
+        ]
+      },
+      "name": "blank pages are skipped but still counted"
+    },
+    {
+      "expected": {
+        "chars": 479,
+        "pages_skipped": 5,
+        "pages_total": 25,
+        "pages_used": 20,
+        "redacted_lines": 0,
+        "text": "--- page 1 ---\nline 0\n\n--- page 2 ---\nline 1\n\n--- page 3 ---\nline 2\n\n--- page 4 ---\nline 3\n\n--- page 5 ---\nline 4\n\n--- page 6 ---\nline 5\n\n--- page 7 ---\nline 6\n\n--- page 8 ---\nline 7\n\n--- page 9 ---\nline 8\n\n--- page 10 ---\nline 9\n\n--- page 11 ---\nline 10\n\n--- page 12 ---\nline 11\n\n--- page 13 ---\nline 12\n\n--- page 14 ---\nline 13\n\n--- page 15 ---\nline 14\n\n--- page 16 ---\nline 15\n\n--- page 17 ---\nline 16\n\n--- page 18 ---\nline 17\n\n--- page 19 ---\nline 18\n\n--- page 20 ---\nline 19",
+        "truncated": true
+      },
+      "input": {
+        "max_pages": 20,
+        "pages": [
+          "line 0",
+          "line 1",
+          "line 2",
+          "line 3",
+          "line 4",
+          "line 5",
+          "line 6",
+          "line 7",
+          "line 8",
+          "line 9",
+          "line 10",
+          "line 11",
+          "line 12",
+          "line 13",
+          "line 14",
+          "line 15",
+          "line 16",
+          "line 17",
+          "line 18",
+          "line 19",
+          "line 20",
+          "line 21",
+          "line 22",
+          "line 23",
+          "line 24"
+        ]
+      },
+      "name": "page cap"
+    },
+    {
+      "expected": {
+        "chars": 25,
+        "pages_skipped": 0,
+        "pages_total": 1,
+        "pages_used": 1,
+        "redacted_lines": 0,
+        "text": "abcdefghijabcdefghijabcde",
+        "truncated": true
+      },
+      "input": {
+        "max_chars": 25,
+        "pages": [
+          "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij"
+        ]
+      },
+      "name": "character cap"
+    },
+    {
+      "expected": {
+        "chars": 0,
+        "pages_skipped": 0,
+        "pages_total": 1,
+        "pages_used": 0,
+        "redacted_lines": 2,
+        "text": null,
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Patient Name: Ravi Kumar\nPhone: 98765 43210"
+        ]
+      },
+      "name": "everything redacted leaves nothing"
+    },
+    {
+      "expected": {
+        "chars": 0,
+        "pages_skipped": 0,
+        "pages_total": 0,
+        "pages_used": 0,
+        "redacted_lines": 0,
+        "text": null,
+        "truncated": false
+      },
+      "input": {
+        "pages": []
+      },
+      "name": "no pages"
+    },
+    {
+      "expected": {
+        "chars": 26,
+        "pages_skipped": 0,
+        "pages_total": 1,
+        "pages_used": 1,
+        "redacted_lines": 0,
+        "text": "Glucose 96\nCholesterol 180",
+        "truncated": false
+      },
+      "input": {
+        "pages": [
+          "Glucose 96\r\nCholesterol 180"
+        ]
+      },
+      "name": "CRLF is normalised"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "attachment_excerpt",
+  "version": 1
+}

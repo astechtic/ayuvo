@@ -1,0 +1,1429 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2],[\"Tue\",7.1]]}]}"
+      },
+      "name": "bar minimal"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "Weight",
+              "points": [
+                {
+                  "x": "Jan",
+                  "y": 81.2
+                },
+                {
+                  "x": "Feb",
+                  "y": 80.4
+                }
+              ]
+            },
+            {
+              "label": "Trend",
+              "points": [
+                {
+                  "x": "Jan",
+                  "y": 81.0
+                },
+                {
+                  "x": "Feb",
+                  "y": 80.6
+                }
+              ]
+            }
+          ],
+          "title": "Weight",
+          "type": "line",
+          "unit": "kg",
+          "x_label": null,
+          "y_label": "kg"
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"title\":\"Weight\",\"unit\":\"kg\",\"y_label\":\"kg\",\"series\":[{\"label\":\"Weight\",\"points\":[{\"x\":\"Jan\",\"y\":81.2},{\"x\":\"Feb\",\"y\":80.4}]},{\"label\":\"Trend\",\"points\":[{\"x\":\"Jan\",\"y\":81.0},{\"x\":\"Feb\",\"y\":80.6}]}]}"
+      },
+      "name": "line with object points and two series"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 78,
+                  "y2": 121
+                },
+                {
+                  "x": "Tue",
+                  "y": 80,
+                  "y2": 126
+                }
+              ]
+            }
+          ],
+          "title": "Blood pressure",
+          "type": "range",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"range\",\"title\":\"Blood pressure\",\"series\":[{\"points\":[[\"Mon\",78,121],[\"Tue\",80,126]]}]}"
+      },
+      "name": "range needs y2"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Protein",
+                  "y": 25
+                },
+                {
+                  "x": "Carbs",
+                  "y": 45
+                },
+                {
+                  "x": "Fat",
+                  "y": 30
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "pie",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"pie\",\"series\":[{\"points\":[[\"Protein\",25],[\"Carbs\",45],[\"Fat\",30]]}]}"
+      },
+      "name": "pie"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": 10000,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Steps",
+                  "y": 7400
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "progress",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"progress\",\"max\":10000,\"series\":[{\"points\":[[\"Steps\",7400]]}]}"
+      },
+      "name": "progress with max"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "1",
+                  "y": 3
+                },
+                {
+                  "x": "2",
+                  "y": 5
+                },
+                {
+                  "x": "3",
+                  "y": 4
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[3,5,4]}]}"
+      },
+      "name": "bare numbers get positional labels"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "1",
+                  "y": 2.5
+                },
+                {
+                  "x": "2",
+                  "y": 3
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "scatter",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"scatter\",\"series\":[{\"points\":[[1,2.5],[2.0,3]]}]}"
+      },
+      "name": "numeric x is formatted without a trailing zero"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":{\"points\":[[\"a\",1]]}}"
+      },
+      "name": "series given as a single object"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "Asleep",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6
+                }
+              ]
+            }
+          ],
+          "title": "Sleep over the last week",
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"  Sleep   over\\n the last week  \",\"series\":[{\"label\":\"  Asleep  \",\"points\":[[\"Mon\",6]]}]}"
+      },
+      "name": "title and labels are collapsed and capped"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_points"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",NaN]]}]}"
+      },
+      "name": "NaN is a missing reading, not a zero",
+      "notes": "Python and Swift both accept NaN in some readers; the reference forbids it so a chart can never carry one."
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_points"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",Infinity]]}]}"
+      },
+      "name": "Infinity is a missing reading, not a zero"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",1]]}],}"
+      },
+      "name": "a trailing comma is repaired"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "not_an_object"
+      },
+      "input": {
+        "raw": "[1, 2, 3]"
+      },
+      "name": "not an object"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "invalid_json"
+      },
+      "input": {
+        "raw": ""
+      },
+      "name": "empty body"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "unknown_type"
+      },
+      "input": {
+        "raw": "{\"type\":\"sankey\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "unknown type"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_series"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[]}"
+      },
+      "name": "no series"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "too_many_series"
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"series\":[{\"points\":[[\"a\",0]]},{\"points\":[[\"a\",1]]},{\"points\":[[\"a\",2]]},{\"points\":[[\"a\",3]]},{\"points\":[[\"a\",4]]}]}"
+      },
+      "name": "too many series"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "too_many_series_for_type"
+      },
+      "input": {
+        "raw": "{\"type\":\"pie\",\"series\":[{\"points\":[[\"a\",1]]},{\"points\":[[\"b\",2]]}]}"
+      },
+      "name": "pie takes only one series"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_points"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[]}]}"
+      },
+      "name": "no points"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "too_many_points"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"0\",0],[\"1\",1],[\"2\",2],[\"3\",3],[\"4\",4],[\"5\",5],[\"6\",6],[\"7\",7],[\"8\",8],[\"9\",9],[\"10\",10],[\"11\",11],[\"12\",12],[\"13\",13],[\"14\",14],[\"15\",15],[\"16\",16],[\"17\",17],[\"18\",18],[\"19\",19],[\"20\",20],[\"21\",21],[\"22\",22],[\"23\",23],[\"24\",24],[\"25\",25],[\"26\",26],[\"27\",27],[\"28\",28],[\"29\",29],[\"30\",30],[\"31\",31],[\"32\",32],[\"33\",33],[\"34\",34],[\"35\",35],[\"36\",36],[\"37\",37],[\"38\",38],[\"39\",39],[\"40\",40],[\"41\",41],[\"42\",42],[\"43\",43],[\"44\",44],[\"45\",45],[\"46\",46],[\"47\",47],[\"48\",48],[\"49\",49],[\"50\",50],[\"51\",51],[\"52\",52],[\"53\",53],[\"54\",54],[\"55\",55],[\"56\",56],[\"57\",57],[\"58\",58],[\"59\",59],[\"60\",60]]}]}"
+      },
+      "name": "too many points"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "label_too_long"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",1]]}]}"
+      },
+      "name": "label too long"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "missing_y2"
+      },
+      "input": {
+        "raw": "{\"type\":\"range\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "missing y2 on a range"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "bad_number"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",true]]}]}"
+      },
+      "name": "boolean y is not a number"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "1",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[null,1]]}]}"
+      },
+      "name": "a missing label falls back to its position"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "bad_max"
+      },
+      "input": {
+        "raw": "{\"type\":\"progress\",\"max\":0,\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "bad max on progress"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "bad_max"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"max\":\"ten\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "non-numeric max"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "invalid_json"
+      },
+      "input": {
+        "raw": "{'type':'bar','series':[{'points':[['a',1]]}]}"
+      },
+      "name": "single quotes are rejected",
+      "notes": "Guessing where a quoted string starts could change a value, so a spec written with single quotes is refused rather than repaired."
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "invalid_json"
+      },
+      "input": {
+        "raw": "{type:\"bar\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "an unquoted key is rejected",
+      "notes": "Repairs never guess at structure."
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_points"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",01]]}]}"
+      },
+      "name": "a leading zero is not a readable number",
+      "notes": "01 could mean 1 or the string \"01\". It is read as no reading at all, so the point is left out rather than guessed at."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\", // chart\n\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "a comment is stripped"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "invalid_json"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"a\nb\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "a raw newline inside a string is rejected"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",1]]}]} oops"
+      },
+      "name": "prose around the object is dropped"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": "Sleep",
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"Sl\\u0065ep\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "unicode escapes are decoded"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 150.0
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",1.5e2]]}]}"
+      },
+      "name": "exponent numbers are accepted"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",1]]}]}"
+      },
+      "name": "a repeated key keeps the last value"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "invalid_json"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]}"
+      },
+      "name": "deeply nested input is rejected"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"Column Chart\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "name": "a known alias for the type is accepted",
+      "notes": "Case, spaces, dashes and a \"chart\" suffix are noise; \"column\" means bar."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "Asleep",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                },
+                {
+                  "x": "Wed",
+                  "y": 5.4
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "line",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"labels\":[\"Mon\",\"Tue\",\"Wed\"],\"series\":[{\"label\":\"Asleep\",\"values\":[6.2,7.1,5.4]}]}"
+      },
+      "name": "shared labels with bare values"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 1,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Wed",
+                  "y": 5.4
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"labels\":[\"Mon\",\"Tue\",\"Wed\"],\"series\":[{\"values\":[6.2,null,5.4]}]}"
+      },
+      "name": "a missing reading in a labelled series is left out",
+      "notes": "Tuesday has no reading, so Tuesday is not drawn. A gap is never drawn as zero."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",\"6.2\"],[\"Tue\",\"7\"]]}]}"
+      },
+      "name": "quoted numbers are read back",
+      "notes": "A quoted number is still the reading the model took; reading it back invents nothing."
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "bad_number"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",\"6.2 h\"]]}]}"
+      },
+      "name": "a number with a unit in it is not a number"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Protein",
+                  "y": 25
+                },
+                {
+                  "x": "Carbs",
+                  "y": 45
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "pie",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"pie\",\"data\":[{\"name\":\"Protein\",\"value\":25},{\"name\":\"Carbs\",\"value\":45}]}"
+      },
+      "name": "points written as name/value objects",
+      "notes": "`data` for the series, `name`/`value` for a point: the shapes chart libraries use."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[[\"Mon\",6.2],[\"Tue\",7.1]]}"
+      },
+      "name": "a bare list of pairs is one series"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                }
+              ]
+            },
+            {
+              "label": "2",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 1.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 1.1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "line",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"series\":[[[\"Mon\",6.2],[\"Tue\",7.1]],[[\"Mon\",1.2],[\"Tue\",1.1]]]}"
+      },
+      "name": "a list of point lists is one series each"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "line",
+          "unit": null,
+          "x_label": "Night",
+          "y_label": "Hours"
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"xLabel\":\"Night\",\"yLabel\":\"Hours\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "name": "camelCase axis labels"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 1,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "Asleep",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "line",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"line\",\"series\":[{\"label\":\"Asleep\",\"points\":[[\"Mon\",6.2]]},{\"label\":\"Deep\",\"points\":[[\"Mon\",null]]}]}"
+      },
+      "name": "a series with no readings at all is left out"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "no_points"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",null],[\"Tue\",null]]}]}"
+      },
+      "name": "a spec whose every reading is missing is refused",
+      "notes": "Nothing left to draw: the fence renders as a code block, not as an empty axis."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "Here is the chart:\n{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "name": "prose before the object is dropped"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": 10000,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Steps",
+                  "y": 7400
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "progress",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"progress\",\"max\":\"10000\",\"series\":[{\"points\":[[\"Steps\",7400]]}]}"
+      },
+      "name": "a quoted max is read back"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",/* sleep */\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "name": "a block comment is stripped"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2],[\"Tue\",7.1],]},]}"
+      },
+      "name": "a trailing comma inside an array is repaired"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": "Sleep } last week",
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"Sleep } last week\",\"series\":[{\"points\":[[\"Mon\",6.2]]}]}"
+      },
+      "name": "a brace inside a title is not a boundary",
+      "notes": "Repairs never look inside a string."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 3,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "Asleep",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 5.3
+                },
+                {
+                  "x": "Wed",
+                  "y": 5.4
+                },
+                {
+                  "x": "Sat",
+                  "y": 8.1
+                },
+                {
+                  "x": "Sun",
+                  "y": 7.3
+                }
+              ]
+            }
+          ],
+          "title": "Sleep last 7 nights",
+          "type": "bar",
+          "unit": "h",
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"Sleep last 7 nights\",\"unit\":\"h\",\"series\":[{\"label\":\"Asleep\",\"points\":[[\"Mon\",5.3],[\"Tue\",7.1.0],[\"Wed\",5.4],[\"Thu\",7.8.0],[\"Fri\",6.6.6],[\"Sat\",8.1],[\"Sun\",7.3]]}"
+      },
+      "name": "a number with two decimal points is left out",
+      "notes": "The real thing: three values that are not numbers and a body cut off before its last two brackets. The four readable nights are drawn, the three unreadable ones are counted in `dropped`, and nothing is rounded into place."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2],[\"Tue\",7.1]"
+      },
+      "name": "a body cut short is completed",
+      "notes": "Completion adds brackets, never values."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 6.2
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"Mon\",6.2],"
+      },
+      "name": "a body cut short after a comma is completed"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "reason": "invalid_json"
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"Sleep last"
+      },
+      "name": "a body cut short inside a string is refused",
+      "notes": "Finishing a label would be putting words in the model's mouth."
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 0,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "1",
+              "points": [
+                {
+                  "x": "a",
+                  "y": 150.0
+                },
+                {
+                  "x": "b",
+                  "y": -0.03
+                }
+              ]
+            }
+          ],
+          "title": null,
+          "type": "bar",
+          "unit": null,
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"series\":[{\"points\":[[\"a\",1.5e2],[\"b\",-3E-2]]}]}"
+      },
+      "name": "an exponent is still a number"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "spec": {
+          "dropped": 2,
+          "max": null,
+          "note": null,
+          "series": [
+            {
+              "label": "Asleep",
+              "points": [
+                {
+                  "x": "Mon",
+                  "y": 5.38
+                },
+                {
+                  "x": "Tue",
+                  "y": 7.1
+                },
+                {
+                  "x": "Wed",
+                  "y": 5.4
+                },
+                {
+                  "x": "Thu",
+                  "y": 7.8
+                },
+                {
+                  "x": "Sat",
+                  "y": 8.1
+                }
+              ]
+            }
+          ],
+          "title": "Sleep last 7 nights",
+          "type": "bar",
+          "unit": "h",
+          "x_label": null,
+          "y_label": null
+        }
+      },
+      "input": {
+        "raw": "{\"type\":\"bar\",\"title\":\"Sleep last 7 nights\",\"unit\":\"h\",\"series\":[{\"label\":\"Asleep\",\"points\":[[\"Mon\",5.38\"],[\"Tue\",7.1\"],[\"Wed\",5.4\"],[\"Thu\",7.8],[\"Fri\",6.6.6\"],[\"Sat\",8.1],[\"Sun\",7.3.3]]}"
+      },
+      "name": "a quote glued to a number does not swallow the line",
+      "notes": "The second real one: a stray quote after four of the seven values, two unreadable numbers and the same truncated tail. Five nights are drawn, two are counted in `dropped`."
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "parse_chart_spec",
+  "version": 1
+}

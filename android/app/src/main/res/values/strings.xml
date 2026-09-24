@@ -508,9 +508,149 @@
     <string name="coach_input_placeholder">Ask Coach…</string>
     <string name="coach_empty_title">Ask your Coach</string>
     <string name="coach_empty_subtitle">Ayuvo can see the food, weight, workouts, sleep, heart, fasting and water data you allow. Ask what to eat, how to train, or how you slept.</string>
-    <string name="coach_reset_dialog_title">Reset Chat</string>
-    <string name="coach_reset_dialog_message">Clear all messages and start fresh? This can\'t be undone.</string>
-    <string name="coach_reset_confirm">Reset</string>
+    <string name="coach_reset_dialog_title">Start a new chat?</string>
+    <string name="coach_reset_dialog_message">Your current chat is kept. You can reopen it from Chats.</string>
+    <string name="coach_reset_confirm">New chat</string>
+
+    <!-- Conversations (docs/coach.md §7) -->
+    <string name="coach_chats_title">Chats</string>
+    <string name="coach_chats_a11y">Chats</string>
+    <string name="coach_new_chat">New chat</string>
+    <string name="coach_chats_search">Search chats</string>
+    <string name="coach_chats_empty_title">No chats yet</string>
+    <string name="coach_chats_empty_subtitle">Ask Coach something and it will show up here.</string>
+    <string name="coach_chats_no_matches_title">No chats match that</string>
+    <string name="coach_chats_no_matches_subtitle">Try a different word.</string>
+    <string name="coach_chat_untitled">New chat</string>
+    <string name="coach_chat_rename">Rename</string>
+    <string name="coach_chat_rename_title">Rename chat</string>
+    <string name="coach_chat_rename_label">Name</string>
+    <string name="coach_chat_duplicate">Start again from this chat</string>
+    <string name="coach_chat_pin">Pin</string>
+    <string name="coach_chat_unpin">Unpin</string>
+    <string name="coach_chat_delete">Delete</string>
+    <string name="coach_chat_delete_title">Delete this chat?</string>
+    <string name="coach_chat_delete_message">The messages and any files you attached are deleted from this device.</string>
+    <string name="coach_chat_export">Export</string>
+    <string name="coach_chat_export_markdown">Export as Markdown</string>
+    <string name="coach_chat_export_json">Export as JSON</string>
+    <string name="coach_chat_export_failed">That chat could not be exported.</string>
+    <string name="coach_message_copy">Copy</string>
+    <string name="coach_message_copied">Copied</string>
+    <string name="coach_message_regenerate">Regenerate</string>
+    <string name="coach_message_share">Share</string>
+    <string name="coach_message_version_previous">Previous version</string>
+    <string name="coach_message_version_next">Next version</string>
+    <string name="coach_prompts_title">Prompt gallery</string>
+    <string name="coach_prompts_a11y">Prompt gallery</string>
+    <string name="coach_prompts_browse">Browse all prompts</string>
+    <string name="coach_prompts_search">Search prompts</string>
+    <string name="coach_prompts_no_matches">No prompts match that</string>
+    <string name="coach_prompts_no_matches_subtitle">Try a different word.</string>
+    <string name="coach_prompts_empty_title">Nothing to ask about yet</string>
+    <string name="coach_prompts_empty_subtitle">Turn a data source on in the composer, or log something, and prompts will appear here.</string>
+    <!-- Coach prompt gallery (docs/coach.md §9). Generated from shared/coach/prompt_gallery.json;
+         `title_en` / `prompt_en` there are the source of truth and PromptGalleryTextTest compares them. -->
+    <string name="coach_prompt_category_nutrition">Nutrition</string>
+    <string name="coach_prompt_category_sleep">Sleep &amp; recovery</string>
+    <string name="coach_prompt_category_training">Training</string>
+    <string name="coach_prompt_category_labs">Labs &amp; reports</string>
+    <string name="coach_prompt_category_medications">Medications</string>
+    <string name="coach_prompt_category_planning">Trends &amp; planning</string>
+    <string name="coach_prompt_diet_chart_from_health_title">Make a diet chart from my health data</string>
+    <string name="coach_prompt_diet_chart_from_health_text">Make me a diet chart using my health data. Use what you know about my intake, weight trend and activity, and explain why each meal is there.</string>
+    <string name="coach_prompt_macro_balance_title">Are my macros balanced?</string>
+    <string name="coach_prompt_macro_balance_text">How balanced are my macros over the last two weeks? Chart protein, carbs and fat and tell me what to change.</string>
+    <string name="coach_prompt_dinner_tonight_title">What should I eat for dinner?</string>
+    <string name="coach_prompt_dinner_tonight_text">Based on what I have already eaten today, what should I have for dinner to stay on target?</string>
+    <string name="coach_prompt_protein_sources_title">Help me hit my protein target</string>
+    <string name="coach_prompt_protein_sources_text">I want more protein without many more calories. Look at what I usually eat and suggest realistic swaps.</string>
+    <string name="coach_prompt_week_review_title">Review my week of eating</string>
+    <string name="coach_prompt_week_review_text">Review my last week of eating. What went well, what slipped, and what is the one thing to fix next week?</string>
+    <string name="coach_prompt_improve_sleep_cycle_title">How do I improve my sleep cycle?</string>
+    <string name="coach_prompt_improve_sleep_cycle_text">How do I improve my sleep cycle? Look at my bedtimes, wake times and sleep stages, chart the pattern, and give me a plan I can actually keep.</string>
+    <string name="coach_prompt_sleep_week_title">How did I sleep this week?</string>
+    <string name="coach_prompt_sleep_week_text">How did I sleep this week? Chart it night by night and tell me whether it is enough.</string>
+    <string name="coach_prompt_sleep_consistency_title">Is my sleep schedule consistent?</string>
+    <string name="coach_prompt_sleep_consistency_text">Is my sleep schedule consistent? Show me how much my bedtime moves around and what that is costing me.</string>
+    <string name="coach_prompt_sleep_and_resting_hr_title">Sleep and my resting heart rate</string>
+    <string name="coach_prompt_sleep_and_resting_hr_text">Does my resting heart rate change with how I sleep? Compare the two over the last month.</string>
+    <string name="coach_prompt_training_review_title">Analyze my last 4 weeks of training</string>
+    <string name="coach_prompt_training_review_text">Analyze my last four weeks of training. Where am I progressing, where have I stalled, and what should next week look like?</string>
+    <string name="coach_prompt_moving_enough_title">Am I moving enough?</string>
+    <string name="coach_prompt_moving_enough_text">Am I moving enough? Chart my steps and active energy for the last month against what would be a good target for me.</string>
+    <string name="coach_prompt_lift_progress_title">How are my lifts progressing?</string>
+    <string name="coach_prompt_lift_progress_text">Chart how my main lifts have moved over the last three months and tell me what to push next.</string>
+    <string name="coach_prompt_recovery_check_title">Am I recovering between sessions?</string>
+    <string name="coach_prompt_recovery_check_text">Am I recovering well between sessions? Look at my training load alongside my sleep and resting heart rate.</string>
+    <string name="coach_prompt_explain_latest_report_title">Explain my latest blood report</string>
+    <string name="coach_prompt_explain_latest_report_text">Explain my latest blood report: what stands out, what is normal, and what should I ask my doctor?</string>
+    <string name="coach_prompt_find_abnormal_title">Find abnormal values in my reports</string>
+    <string name="coach_prompt_find_abnormal_text">Find any abnormal values across my health records and tell me which ones are worth asking about.</string>
+    <string name="coach_prompt_compare_reports_title">Compare my last two reports</string>
+    <string name="coach_prompt_compare_reports_text">Compare my latest report with the previous one. What changed, and does the direction matter?</string>
+    <string name="coach_prompt_analyte_trend_title">Chart my lab values over time</string>
+    <string name="coach_prompt_analyte_trend_text">Chart how my key lab values have changed over time and explain the trend in plain language.</string>
+    <string name="coach_prompt_questions_for_doctor_title">What should I ask my doctor?</string>
+    <string name="coach_prompt_questions_for_doctor_text">Based on my records, what should I ask at my next appointment? Keep it to a short list I can read out.</string>
+    <string name="coach_prompt_adherence_check_title">Am I taking my medicines on time?</string>
+    <string name="coach_prompt_adherence_check_text">Am I taking my medicines on time? Show my adherence for the last month and when I most often miss a dose.</string>
+    <string name="coach_prompt_medication_schedule_title">Explain my current schedule</string>
+    <string name="coach_prompt_medication_schedule_text">Walk me through my current medicines and when I am meant to take each one.</string>
+    <string name="coach_prompt_missed_dose_pattern_title">Which doses do I keep missing?</string>
+    <string name="coach_prompt_missed_dose_pattern_text">Which doses do I miss most often, and what would make them easier to remember?</string>
+    <string name="coach_prompt_reach_my_goal_title">When will I reach my goal?</string>
+    <string name="coach_prompt_reach_my_goal_text">At my current rate, when do I reach my goal weight? Chart the projection and tell me what would move it.</string>
+    <string name="coach_prompt_month_over_month_title">Compare this month with last</string>
+    <string name="coach_prompt_month_over_month_text">Compare this month with last month across everything you can see, and chart what changed most.</string>
+    <string name="coach_prompt_one_thing_to_change_title">One thing to change this month</string>
+    <string name="coach_prompt_one_thing_to_change_text">If I could only change one habit this month, what does my data say it should be?</string>
+    <string name="coach_prompt_whole_picture_title">Give me the whole picture</string>
+    <string name="coach_prompt_whole_picture_text">Put my whole picture together: intake, movement, sleep, labs and medicines. What is the headline?</string>
+
+    <!-- Composer sheet (docs/coach.md §3, §6, §8) -->
+    <string name="coach_add_a11y">Add</string>
+    <string name="coach_attach_header">Attach</string>
+    <string name="coach_attach_camera">Camera</string>
+    <string name="coach_attach_camera_hint">Take a photo</string>
+    <string name="coach_attach_photos">Photos</string>
+    <string name="coach_attach_photos_hint">Up to 4 pictures</string>
+    <string name="coach_attach_files">Files</string>
+    <string name="coach_attach_files_hint">PDF or text; read on this device</string>
+    <string name="coach_attach_record">Health record</string>
+    <string name="coach_attach_record_hint">Pick a report to talk about</string>
+    <string name="coach_attach_note">Note</string>
+    <string name="coach_attach_note_hint">Type or paste something</string>
+    <string name="coach_sources_header">What Coach can use</string>
+    <string name="coach_sources_footer">Turning a source off applies to this chat only. Coach never reads anything you have not connected.</string>
+    <string name="coach_source_food">Food &amp; activity</string>
+    <string name="coach_source_health">Health data</string>
+    <string name="coach_source_medications">Medications</string>
+    <string name="coach_source_records">Health records</string>
+    <string name="coach_source_connect">Connect</string>
+    <string name="coach_source_no_data">No data</string>
+    <string name="coach_source_off_here">Off for this chat</string>
+    <string name="coach_source_nothing_yet">Nothing to read yet</string>
+    <string name="coach_source_not_connected">Not connected</string>
+    <string name="coach_sources_using">Using: %1$s</string>
+    <string name="coach_sources_using_nothing">Using: nothing</string>
+    <string name="coach_attachment_empty">No readable text was found in %1$s.</string>
+    <string name="coach_attachment_excerpt_footer">This is exactly what Coach will send. Names, phone numbers and ID numbers are removed before sending.</string>
+    <string name="coach_attachment_no_text">No readable text was found in this file, so nothing from it will be sent.</string>
+    <string name="coach_note_title">Note</string>
+    <string name="coach_note_attach">Attach</string>
+    <string name="coach_images_limit">You can attach up to %1$d pictures.</string>
+    <string name="coach_file_too_large">That file is too large to attach.</string>
+    <string name="coach_file_unreadable">That file could not be read.</string>
+    <string name="coach_file_unsupported">That file type can\'t be attached.</string>
+
+    <!-- Medications consent (docs/coach.md §3) -->
+    <string name="coach_medications_consent_title">Let Coach use your medicines?</string>
+    <string name="coach_medications_consent_body">Coach sends the medicines it reads — names, strengths and dose times — to %1$s to answer you. They stay stored on this device.</string>
+    <string name="coach_medications_consent_body_on_device">Coach reads your medicines on this device; nothing is sent online.</string>
+    <string name="coach_medications_consent_note">Coach never tells you to start, stop or change a medicine.</string>
+    <string name="coach_medications_consent_allow">Allow</string>
+    <string name="coach_medications_consent_not_now">Not now</string>
     <string name="coach_no_profile_error">No profile yet. Finish onboarding first.</string>
     <string name="coach_chat_failed">Chat failed</string>
 
@@ -940,6 +1080,11 @@
     <string name="onboarding_feature_widgets">1300+ exercises, widgets and more</string>
     <string name="cloud_backup_title">Google Drive Backup</string>
     <string name="cloud_backup_footer">Off until you turn it on. Sign-in is only for this backup. API keys stay on the phone. Rolling out — Google may show an extra warning until the app is verified.</string>
+    <string name="cloud_backup_chats_title">Include Coach chats</string>
+    <string name="cloud_backup_chats_subtitle">Off by default. Your conversations and the files you attached go in the Drive backup.</string>
+    <string name="cloud_backup_chats_consent_title">Back up Coach chats?</string>
+    <string name="cloud_backup_chats_consent_message">Coach conversations can quote your health values, test results and medicines. Turning this on stores them, and the files you attached, in your own Google Drive app folder along with the rest of the backup. They are kept on this device either way; you can turn this off at any time and the next backup will drop them.</string>
+    <string name="cloud_backup_chats_consent_confirm">Include chats</string>
     <string name="cloud_backup_enable_message">Uploads your diary, workouts, fasting, photos, and settings to your Google Drive. API keys stay on the phone.\n\nGoogle Drive backup is rolling out. Sign-in may show an extra Google warning until our app is verified.</string>
     <string name="cloud_backup_restore_title">Restore backup?</string>
     <string name="cloud_backup_restore_message">Restore it, or keep this phone.</string>
@@ -1073,6 +1218,7 @@
     <string name="export_all_step_health_data">health data</string>
     <string name="export_all_step_medications">medications</string>
     <string name="export_all_step_health_records">health records</string>
+    <string name="export_all_step_coach_chats">Coach chats</string>
     <string name="export_all_step_app_backup">app backup</string>
     <string name="export_all_step_writing">zip file</string>
     <plurals name="export_all_done">
@@ -1605,4 +1751,20 @@
     <string name="browse_feature_coach_sub">Ask the AI coach about your health</string>
     <string name="browse_feature_settings">Settings</string>
     <string name="browse_feature_settings_sub">Goals, reminders, AI and data</string>
+    <!-- Settings > AI > Coach (docs/coach.md §9) -->
+    <string name="settings_section_coach">Coach</string>
+    <string name="settings_coach_suggestions">Suggested prompts</string>
+    <string name="settings_coach_suggestions_info">Shows a row of suggested questions in Coach. The prompt gallery stays available from the Coach toolbar.</string>
+
+    <!-- Coach: readings a chart spec carried but could not be read (docs/coach.md §5) -->
+    <plurals name="coach_chart_dropped_readings">
+        <item quantity="one">%1$d reading could not be read and is not shown</item>
+        <item quantity="other">%1$d readings could not be read and are not shown</item>
+    </plurals>
+
+    <!-- Coach: why a chart could not be drawn (docs/coach.md §5) -->
+    <string name="coach_chart_failed_malformed">Chart could not be read: the chart data was malformed</string>
+    <string name="coach_chart_failed_unsupported">Chart could not be read: that chart type is not supported</string>
+    <string name="coach_chart_failed_too_big">Chart could not be read: it was too large to draw</string>
+    <string name="coach_chart_failed_no_readings">Chart could not be read: it had no readings to draw</string>
 </resources>

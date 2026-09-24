@@ -3,7 +3,9 @@
    journal files) is excluded from both cloud backup and device-to-device transfer:
    it holds heart rate, sleep, blood pressure and other platform health records
    that must stay on this device. Health Records (ayuvo_records.db and the ayuvo-records/
-   files root) are excluded the same way. Everything else keeps the default behaviour.
+   files root) are excluded the same way, as are Medications and Coach conversations
+   (ayuvo_coach.db and ayuvo-coach/), which quote health values. Everything else keeps
+   the default behaviour.
 -->
 <data-extraction-rules>
     <cloud-backup>
@@ -21,6 +23,11 @@
         <exclude domain="database" path="ayuvo_medications.db-shm" />
         <exclude domain="database" path="ayuvo_medications.db-journal" />
         <exclude domain="file" path="ayuvo-medications/" />
+        <exclude domain="database" path="ayuvo_coach.db" />
+        <exclude domain="database" path="ayuvo_coach.db-wal" />
+        <exclude domain="database" path="ayuvo_coach.db-shm" />
+        <exclude domain="database" path="ayuvo_coach.db-journal" />
+        <exclude domain="file" path="ayuvo-coach/" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="database" path="ayuvo_health.db" />
@@ -37,5 +44,10 @@
         <exclude domain="database" path="ayuvo_medications.db-shm" />
         <exclude domain="database" path="ayuvo_medications.db-journal" />
         <exclude domain="file" path="ayuvo-medications/" />
+        <exclude domain="database" path="ayuvo_coach.db" />
+        <exclude domain="database" path="ayuvo_coach.db-wal" />
+        <exclude domain="database" path="ayuvo_coach.db-shm" />
+        <exclude domain="database" path="ayuvo_coach.db-journal" />
+        <exclude domain="file" path="ayuvo-coach/" />
     </device-transfer>
 </data-extraction-rules>

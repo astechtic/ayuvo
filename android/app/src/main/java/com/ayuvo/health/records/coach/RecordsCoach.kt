@@ -371,7 +371,8 @@ object RecordsCoach {
 
     // -- records_get ------------------------------------------------------------------------------------------
 
-    private fun piiLine(folded: String, patientNames: List<String>): Boolean {
+    /** Public so Coach attachments are redacted by exactly this rule (docs/coach.md §6). */
+    fun piiLine(folded: String, patientNames: List<String>): Boolean {
         if (RE_PII_LABEL.containsMatchIn(folded) || RE_PII_DIGITS.containsMatchIn(folded)) return true
         val padded = " " + RecordText.normalizedValue(folded) + " "
         return patientNames.any { it.isNotEmpty() && padded.contains(" $it ") }

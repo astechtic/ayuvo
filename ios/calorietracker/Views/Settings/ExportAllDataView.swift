@@ -12,6 +12,7 @@ struct ExportAllDataView: View {
     @Environment(MedicationStore.self) private var medicationStore
     @Environment(RecordsStore.self) private var recordsStore
     @Environment(AppBackupService.self) private var appBackup
+    @Environment(CoachStore.self) private var chatStore
     @Environment(\.dismiss) private var dismiss
 
     @State private var includeRecordFiles = true
@@ -22,7 +23,7 @@ struct ExportAllDataView: View {
     @State private var errorMessage: String?
 
     enum Step: Int, CaseIterable {
-        case foodDiary, healthData, medications, healthRecords, appBackup, packing
+        case foodDiary, healthData, medications, healthRecords, coachChats, appBackup, packing
 
         var title: LocalizedStringResource {
             switch self {
@@ -30,6 +31,7 @@ struct ExportAllDataView: View {
             case .healthData: "Health data"
             case .medications: "Medications"
             case .healthRecords: "Health Records"
+            case .coachChats: "Coach chats"
             case .appBackup: "Settings, profile & logs"
             case .packing: "Creating zip"
             }
@@ -258,7 +260,30 @@ struct ExportAllDataView: View {
                 skipped.append("health_records")
             }
 
-            // 5. Settings, profile and logs — the `ayuvo-cloud-backup` zip (AppBackupService),
+            // 5. Coach chats — the `ayuvo-coach-chats` archive with the files the user attached.
+            advance(.coachChats)
+            if let repository = await chatStore.repositoryIfOpen(), let files = await chatStore.fileStore() {
+                let url = parts.appendingPathComponent(CoachChatArchiveFormat.fileName)
+                let writer = CoachChatArchiveWriter(repository: repository, files: files, appVersion: appVersion)
+                let result = try await writer.export(to: url)
+                if result.isEmpty {
+                    try? FileManager.default.removeItem(at: url)
+                    skipped.append("coach_chats")
+                } else {
+                    included.append(.init(
+                        section: "coach_chats", format: CoachChatArchiveFormat.format,
+                        name: "coach-chats/\(CoachChatArchiveFormat.fileName)", fileURL: url,
+                        counts: [
+                            "conversations": result.conversations, "messages": result.messages,
+                            "attachments": result.attachments, "files": result.files,
+                        ]
+                    ))
+                }
+            } else {
+                skipped.append("coach_chats")
+            }
+
+            // 6. Settings, profile and logs — the `ayuvo-cloud-backup` zip (AppBackupService),
             // written locally (profile, goals, workouts, weight, fasting, meal photos; no API keys).
             advance(.appBackup)
             let values = appBackup.snapshotValues()
@@ -276,7 +301,7 @@ struct ExportAllDataView: View {
                 counts: ["settings": values.count, "meal_photos": photos.count]
             ))
 
-            // 6. The outer zip.
+            // 7. The outer zip.
             advance(.packing)
             let destination = work.appendingPathComponent(AllDataExport.fileName(now: now))
             let assembled = included

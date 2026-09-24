@@ -6,7 +6,7 @@ struct ContentView: View {
     @Environment(NotificationManager.self) private var notificationManager
     @Environment(\.scenePhase) private var scenePhase
     @Environment(RecordsStore.self) private var recordsStore
-    @Environment(ChatStore.self) private var chatStore
+    @Environment(CoachStore.self) private var chatStore
     @Environment(MedicationStore.self) private var medicationStore
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @State private var appUpdateState: AppUpdateState = .idle

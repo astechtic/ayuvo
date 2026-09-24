@@ -7,7 +7,7 @@ import SwiftUI
 struct RecordTrendView: View {
     let analyteID: String
     @Environment(RecordsStore.self) private var store
-    @Environment(ChatStore.self) private var chatStore
+    @Environment(CoachStore.self) private var chatStore
     @State private var trend: RecordAnalyteTrend?
     @State private var didLoad = false
     @State private var seriesID: String?

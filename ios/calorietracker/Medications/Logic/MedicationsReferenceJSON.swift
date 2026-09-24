@@ -56,6 +56,8 @@ nonisolated extension MR {
             }
         case "validate_draft":
             return .obj(["errors": .arr(validateDraft(inp["draft"]))])
+        case "coach_tools":
+            return runCoachCase(inp)
         default:
             return .obj(["error": .str("unknown function \(function)")])
         }

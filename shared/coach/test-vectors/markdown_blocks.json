@@ -1,0 +1,342 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "heading",
+            "level": 1,
+            "text": "Your week"
+          },
+          {
+            "kind": "paragraph",
+            "text": "You logged six days. That is up from four."
+          },
+          {
+            "kind": "heading",
+            "level": 2,
+            "text": "Sleep"
+          },
+          {
+            "kind": "paragraph",
+            "text": "Steady."
+          }
+        ]
+      },
+      "input": {
+        "markdown": "# Your week\nYou logged six days.\nThat is up from four.\n\n## Sleep\nSteady."
+      },
+      "name": "headings and paragraphs"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "depth": 0,
+            "kind": "bullet",
+            "text": "Protein is low"
+          },
+          {
+            "depth": 1,
+            "kind": "bullet",
+            "text": "add eggs at breakfast"
+          },
+          {
+            "depth": 2,
+            "kind": "bullet",
+            "text": "two is enough"
+          },
+          {
+            "depth": 3,
+            "kind": "bullet",
+            "text": "deeper still"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "- Protein is low\n  - add eggs at breakfast\n    - two is enough\n      - deeper still"
+      },
+      "name": "nested bullets",
+      "notes": "Depth is capped at MAX_LIST_DEPTH, so the fourth level renders at depth 3."
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "depth": 0,
+            "kind": "numbered",
+            "marker": "1",
+            "text": "Weigh in"
+          },
+          {
+            "depth": 0,
+            "kind": "numbered",
+            "marker": "2",
+            "text": "Log breakfast"
+          },
+          {
+            "checked": true,
+            "depth": 0,
+            "kind": "task",
+            "text": "Walk"
+          },
+          {
+            "checked": false,
+            "depth": 0,
+            "kind": "task",
+            "text": "Stretch"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "1. Weigh in\n2) Log breakfast\n\n- [x] Walk\n- [ ] Stretch"
+      },
+      "name": "numbered and tasks"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "aligns": [
+              "left",
+              "right",
+              "center"
+            ],
+            "headers": [
+              "Day",
+              "Asleep",
+              "Deep"
+            ],
+            "kind": "table",
+            "rows": [
+              [
+                "Mon",
+                "6.2",
+                "1.1"
+              ],
+              [
+                "Tue",
+                "7.1",
+                ""
+              ]
+            ]
+          }
+        ]
+      },
+      "input": {
+        "markdown": "| Day | Asleep | Deep |\n|:--|---:|:-:|\n| Mon | 6.2 | 1.1 |\n| Tue | 7.1 |\n"
+      },
+      "name": "table with alignment and a short row",
+      "notes": "A row shorter than the header is padded; a longer one is cut."
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "depth": 1,
+            "kind": "quote",
+            "text": "Ask your doctor before changing anything."
+          },
+          {
+            "kind": "rule"
+          },
+          {
+            "kind": "paragraph",
+            "text": "Back to normal text."
+          }
+        ]
+      },
+      "input": {
+        "markdown": "> Ask your doctor\n> before changing anything.\n\n---\n\nBack to normal text."
+      },
+      "name": "quote and rule"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "paragraph",
+            "text": "Here:"
+          },
+          {
+            "kind": "code",
+            "lang": "json",
+            "text": "{\"a\": 1}"
+          },
+          {
+            "kind": "paragraph",
+            "text": "Done."
+          }
+        ]
+      },
+      "input": {
+        "markdown": "Here:\n\n```json\n{\"a\": 1}\n```\n\nDone."
+      },
+      "name": "code fence with a language"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "paragraph",
+            "text": "Your nights:"
+          },
+          {
+            "kind": "chart",
+            "ok": true,
+            "spec": {
+              "dropped": 0,
+              "max": null,
+              "note": null,
+              "series": [
+                {
+                  "label": "Asleep",
+                  "points": [
+                    {
+                      "x": "Mon",
+                      "y": 6.2
+                    },
+                    {
+                      "x": "Tue",
+                      "y": 7.1
+                    }
+                  ]
+                }
+              ],
+              "title": "Sleep",
+              "type": "bar",
+              "unit": "h",
+              "x_label": null,
+              "y_label": null
+            }
+          },
+          {
+            "kind": "paragraph",
+            "text": "That is below target."
+          }
+        ]
+      },
+      "input": {
+        "markdown": "Your nights:\n\n```ayuvo-chart\n{\"type\":\"bar\",\"title\":\"Sleep\",\"unit\":\"h\",\"series\":[{\"label\":\"Asleep\",\"points\":[[\"Mon\",6.2],[\"Tue\",7.1]]}]}\n```\n\nThat is below target."
+      },
+      "name": "chart block"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "chart",
+            "ok": false,
+            "reason": "no_series",
+            "text": "{\"type\":\"bar\",\"series\":[]}"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "```ayuvo-chart\n{\"type\":\"bar\",\"series\":[]}\n```"
+      },
+      "name": "malformed chart falls back to a code block",
+      "notes": "ok=false carries the reason and the raw text; the renderer shows a code block, never a guessed chart."
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "depth": 0,
+            "kind": "bullet",
+            "text": "one"
+          },
+          {
+            "depth": 2,
+            "kind": "bullet",
+            "text": "tabbed child"
+          },
+          {
+            "kind": "paragraph",
+            "text": "plain"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "- one\r\n\t- tabbed child\r\n\r\nplain"
+      },
+      "name": "tabs and CRLF"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "paragraph",
+            "text": "I ate rice | dal | roti today"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "I ate rice | dal | roti today"
+      },
+      "name": "pipes without a delimiter row stay a paragraph"
+    },
+    {
+      "expected": {
+        "blocks": []
+      },
+      "input": {
+        "markdown": ""
+      },
+      "name": "empty message"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "code",
+            "lang": null,
+            "text": "still open"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "```\nstill open"
+      },
+      "name": "unterminated fence"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "paragraph",
+            "text": "Title"
+          },
+          {
+            "kind": "rule"
+          },
+          {
+            "kind": "paragraph",
+            "text": "body"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "Title\n***\nbody"
+      },
+      "name": "setext-like underline is a rule"
+    },
+    {
+      "expected": {
+        "blocks": [
+          {
+            "kind": "paragraph",
+            "text": "##### too deep"
+          }
+        ]
+      },
+      "input": {
+        "markdown": "##### too deep"
+      },
+      "name": "heading deeper than four hashes is a paragraph"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "parse_blocks",
+  "version": 1
+}

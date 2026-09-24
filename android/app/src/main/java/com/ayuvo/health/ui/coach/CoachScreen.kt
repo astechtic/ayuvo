@@ -1,7 +1,9 @@
 package com.ayuvo.health.ui.coach
 
 import android.Manifest
+import android.content.ClipData
 import android.content.pm.PackageManager
+import android.widget.Toast
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -56,8 +58,11 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -100,6 +105,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -115,7 +123,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ayuvo.health.AppContainer
-import com.ayuvo.health.models.ChatMessage
+import com.ayuvo.health.coach.model.CoachExportFormat
+import com.ayuvo.health.coach.model.CoachMessage
 import com.ayuvo.health.ui.components.InAppCameraCaptureDialog
 import com.ayuvo.health.models.SpeechLanguage
 import com.ayuvo.health.models.SpeechProvider
@@ -150,10 +159,14 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
         input = prefill.text
         vm.consumePrefill(prefill.id)
     }
-    var attachedImageBytes by remember { mutableStateOf<ByteArray?>(null) }
+    var attachedImages by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
+    var showComposerSheet by remember { mutableStateOf(false) }
+    var showNoteSheet by remember { mutableStateOf(false) }
     var showCameraCapture by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     var showResetConfirm by remember { mutableStateOf(false) }
+    var showConversations by remember { mutableStateOf(false) }
+    var showPrompts by remember { mutableStateOf(false) }
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -175,18 +188,47 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
         keyboard?.hide()
     }
 
-    val photoPicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            scope.launch {
-                val bytes = withContext(Dispatchers.IO) {
-                    ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                } ?: return@launch
-                attachedImageBytes = resizedJpeg(bytes, maxDimension = 1800, quality = 86) ?: bytes
+    // -- Message actions and export (docs/coach.md §10) ------------------------------------------
+    val clipboard = LocalClipboard.current
+    val shareChooserTitle = stringResource(R.string.coach_message_share)
+    val exportChooserTitle = stringResource(R.string.coach_chat_export)
+    val exportFailedMessage = stringResource(R.string.coach_chat_export_failed)
+
+    /** Copy puts the raw markdown on the clipboard — what the model wrote, not what we rendered. */
+    fun copyMessage(message: CoachMessage) {
+        scope.launch {
+            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("Ayuvo Coach", message.content)))
+        }
+    }
+
+    fun exportConversation(id: String, format: CoachExportFormat) {
+        scope.launch {
+            val file = vm.exportConversation(id, format)
+            if (file == null || !CoachShare.file(ctx, file, exportChooserTitle)) {
+                Toast.makeText(ctx, exportFailedMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+    val photoPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(CoachViewModel.MAX_IMAGES)
+    ) { uris: List<Uri> ->
+        if (uris.isNotEmpty()) {
+            scope.launch {
+                for (uri in uris.take(CoachViewModel.MAX_IMAGES - attachedImages.size)) {
+                    val bytes = withContext(Dispatchers.IO) {
+                        ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                    } ?: continue
+                    attachedImages = attachedImages + (resizedJpeg(bytes, maxDimension = 1800, quality = 86) ?: bytes)
+                }
+            }
+        }
+    }
+
+    // PDF and text are read and redacted on this device; only the excerpt is sent (docs §6).
+    val documentPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris: List<Uri> -> vm.attachDocuments(uris) }
 
     val cameraPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -203,16 +245,18 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
     }
 
     fun sendCurrentDraft(textOverride: String? = null) {
-        val image = attachedImageBytes
+        val images = attachedImages
         val trimmed = (textOverride ?: input).trim()
-        if (trimmed.isEmpty() && image == null) return
-        if (ui.sending) return
+        if (trimmed.isEmpty() && images.isEmpty() && ui.pendingAttachments.isEmpty()) return
+        if (ui.sending || ui.processingAttachment) return
         hideKeyboard()
         input = ""
-        attachedImageBytes = null
+        attachedImages = emptyList()
         scope.launch {
-            val imageForAi = image?.let { resizedJpeg(it, maxDimension = 1600, quality = 78) ?: it }
-            val thumbnail = image?.let { resizedJpeg(it, maxDimension = 700, quality = 68) ?: it }
+            // The provider paths still take one picture; the rest ride as attachments on the bubble.
+            val first = images.firstOrNull()
+            val imageForAi = first?.let { resizedJpeg(it, maxDimension = 1600, quality = 78) ?: it }
+            val thumbnail = first?.let { resizedJpeg(it, maxDimension = 700, quality = 68) ?: it }
             vm.send(trimmed, imageBytes = imageForAi, thumbnailBytes = thumbnail)
         }
     }
@@ -244,21 +288,56 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
+                navigationIcon = {
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.10f))
+                            .clickable { showConversations = true },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.List,
+                            contentDescription = stringResource(R.string.coach_chats_a11y),
+                            tint = AppColors.Calorie,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                },
                 actions = {
-                    val canReset = ui.messages.isNotEmpty()
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.10f))
+                            .clickable { showPrompts = true }
+                            .testTag("coach.prompts.open"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Filled.GridView,
+                            contentDescription = stringResource(R.string.coach_prompts_a11y),
+                            tint = AppColors.Calorie,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    // A fresh, empty conversation is already a new chat.
+                    val canStartNew = ui.messages.isNotEmpty()
                     Box(
                         modifier = Modifier
                             .padding(end = 12.dp)
                             .size(44.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.10f))
-                            .clickable(enabled = canReset) { showResetConfirm = true },
+                            .clickable(enabled = canStartNew) { showResetConfirm = true },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            Icons.Filled.Replay,
-                            contentDescription = stringResource(R.string.coach_reset_chat_a11y),
-                            tint = if (canReset)
+                            Icons.Filled.Edit,
+                            contentDescription = stringResource(R.string.coach_new_chat),
+                            tint = if (canStartNew)
                                 AppColors.Calorie
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
                             modifier = Modifier.size(18.dp)
@@ -289,13 +368,25 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
                 )
         ) {
             val recordChipTexts = ui.recordChips.map { it to stringResource(it.labelRes) }
-            val resolvedChips = recordChipTexts.map { it.second } + ui.suggestions.map { stringResource(it) }
+            // A chip shows the gallery entry's short title and sends its full prompt (§9).
+            val galleryChips = ui.suggestions.map { id ->
+                val title = PromptGalleryText.title(id)?.let { stringResource(it) } ?: id
+                val prompt = PromptGalleryText.prompt(id)?.let { stringResource(it) } ?: id
+                title to prompt
+            }
+            // Suggestions can be turned off in Settings › AI › Coach; the gallery stays in the toolbar.
+            val resolvedChips = if (!ui.suggestionsVisible) emptyList()
+                                else recordChipTexts.map { it.second } + galleryChips.map { it.first }
             val onPromptTap: (String) -> Unit = { chip ->
                 hideKeyboard()
                 input = ""
-                attachedImageBytes = null
+                attachedImages = emptyList()
                 val recordsChip = recordChipTexts.firstOrNull { it.second == chip }?.first
-                if (recordsChip != null) vm.sendRecordsChip(recordsChip, chip) else vm.send(chip)
+                if (recordsChip != null) {
+                    vm.sendRecordsChip(recordsChip, chip)
+                } else {
+                    vm.send(galleryChips.firstOrNull { it.first == chip }?.second ?: chip)
+                }
             }
 
             // Top region — empty state OR message list
@@ -312,6 +403,7 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
                         prompts = resolvedChips,
                         enabled = !ui.sending,
                         onPromptTap = onPromptTap,
+                        onBrowsePrompts = { showPrompts = true },
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
@@ -321,13 +413,19 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
                         sending = ui.sending,
                         error = resolvedError,
                         listState = listState,
+                        attachmentImages = ui.attachmentImages,
+                        variantsBySeq = ui.variantsBySeq,
                         onOpenRecord = onOpenRecord,
+                        onCopyMessage = { copyMessage(it) },
+                        onRegenerate = { vm.regenerate(it) },
+                        onShareMessage = { CoachShare.text(ctx, it.content, shareChooserTitle) },
+                        onShowVariant = { vm.showVariant(it) },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
             }
 
-            if (ui.messages.isNotEmpty()) {
+            if (ui.messages.isNotEmpty() && resolvedChips.isNotEmpty()) {
                 PromptChipRow(
                     chips = resolvedChips,
                     enabled = !ui.sending,
@@ -344,14 +442,11 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
             InputBar(
                 value = input,
                 onValueChange = { input = it },
-                attachedImageBytes = attachedImageBytes,
+                attachedImageBytes = attachedImages.firstOrNull(),
                 sending = ui.sending,
-                onPickImage = {
-                    photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
-                onCaptureImage = { openCamera() },
+                onAdd = { hideKeyboard(); showComposerSheet = true },
                 voice = voice,
-                onRemoveImage = { attachedImageBytes = null },
+                onRemoveImage = { attachedImages = emptyList() },
                 onSend = { sendCurrentDraft() }
             )
         }
@@ -362,7 +457,7 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
             onCapture = { bytes ->
                 showCameraCapture = false
                 scope.launch {
-                    attachedImageBytes = resizedJpeg(bytes, maxDimension = 1800, quality = 86) ?: bytes
+                    attachedImages = attachedImages + (resizedJpeg(bytes, maxDimension = 1800, quality = 86) ?: bytes)
                 }
             },
             onDismiss = { showCameraCapture = false }
@@ -396,6 +491,74 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
         )
     }
 
+    LaunchedEffect(showComposerSheet) {
+        if (showComposerSheet) vm.refreshSourceStates()
+    }
+
+    if (showComposerSheet) {
+        CoachComposerSheet(
+            states = ui.sourceStates,
+            onAttach = { action ->
+                showComposerSheet = false
+                when (action) {
+                    CoachAttachAction.CAMERA -> openCamera()
+                    CoachAttachAction.PHOTOS ->
+                        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    CoachAttachAction.FILES ->
+                        documentPicker.launch(arrayOf("application/pdf", "text/plain", "text/markdown", "text/csv"))
+                    CoachAttachAction.RECORD -> vm.openPicker()
+                    CoachAttachAction.NOTE -> showNoteSheet = true
+                }
+            },
+            onToggle = { source, on -> vm.setSource(source, on) },
+            onConnect = { showComposerSheet = false; vm.connectSource(it) },
+            onDismiss = { showComposerSheet = false }
+        )
+    }
+
+    if (showNoteSheet) {
+        CoachNoteDialog(
+            onAttach = { text -> vm.attachNote(text); showNoteSheet = false },
+            onDismiss = { showNoteSheet = false }
+        )
+    }
+
+    if (ui.medicationsConsent) {
+        CoachMedicationsConsentDialog(
+            onAllow = { vm.answerMedicationsConsent(true) },
+            onNotNow = { vm.answerMedicationsConsent(false) }
+        )
+    }
+
+    if (showConversations) {
+        ConversationListSheet(
+            conversations = ui.conversations,
+            currentId = ui.currentConversationId,
+            onSearch = { vm.searchConversations(it) },
+            onOpen = { vm.selectConversation(it); showConversations = false },
+            onNew = { vm.newConversation(); showConversations = false },
+            onRename = { id, title -> vm.renameConversation(id, title) },
+            onDuplicate = { vm.duplicateConversation(it); showConversations = false },
+            onPin = { id, pinned -> vm.setConversationPinned(id, pinned) },
+            onDelete = { vm.deleteConversation(it) },
+            onExport = { id, format -> exportConversation(id, format) },
+            onDismiss = { showConversations = false }
+        )
+    }
+
+    if (showPrompts) {
+        // Picking a prompt fills the composer; the user still decides when to send it (§9).
+        val groups = remember(ui.sourceStates) { vm.galleryGroups() }
+        PromptGallerySheet(
+            groups = groups,
+            onPick = { prompt ->
+                input = prompt
+                showPrompts = false
+            },
+            onDismiss = { showPrompts = false }
+        )
+    }
+
     if (showResetConfirm) {
         AlertDialog(
             onDismissRequest = { showResetConfirm = false },
@@ -403,7 +566,7 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
             text = { Text(stringResource(R.string.coach_reset_dialog_message)) },
             confirmButton = {
                 TextButton(onClick = {
-                    vm.resetConversation()
+                    vm.newConversation()
                     showResetConfirm = false
                 }) { Text(stringResource(R.string.coach_reset_confirm), color = Color(0xFFD32F2F)) }
             },
@@ -425,6 +588,7 @@ private fun EmptyState(
     prompts: List<String>,
     enabled: Boolean,
     onPromptTap: (String) -> Unit,
+    onBrowsePrompts: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -497,6 +661,30 @@ private fun EmptyState(
                 }
             }
         }
+        Spacer(Modifier.height(14.dp))
+        // Everything else the gallery holds, one tap away (docs/coach.md §9).
+        Row(
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .clickable(onClick = onBrowsePrompts)
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .testTag("coach.prompts.browse"),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                Icons.Filled.AutoAwesome,
+                contentDescription = null,
+                tint = AppColors.Calorie,
+                modifier = Modifier.size(14.dp)
+            )
+            Text(
+                stringResource(R.string.coach_prompts_browse),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = AppColors.Calorie
+            )
+        }
     }
 }
 
@@ -543,11 +731,17 @@ private fun EmptyPromptCard(
 
 @Composable
 private fun MessageList(
-    messages: List<ChatMessage>,
+    messages: List<CoachMessage>,
     sending: Boolean,
     error: String?,
     listState: androidx.compose.foundation.lazy.LazyListState,
+    attachmentImages: Map<String, android.graphics.Bitmap> = emptyMap(),
+    variantsBySeq: Map<Int, List<CoachMessage>> = emptyMap(),
     onOpenRecord: (String) -> Unit = {},
+    onCopyMessage: (CoachMessage) -> Unit = {},
+    onRegenerate: (CoachMessage) -> Unit = {},
+    onShareMessage: (CoachMessage) -> Unit = {},
+    onShowVariant: (CoachMessage) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -556,7 +750,26 @@ private fun MessageList(
         contentPadding = PaddingValues(top = 14.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        items(messages, key = { it.id }) { MessageBubble(it, onOpenRecord) }
+        items(messages, key = { it.id }) { message ->
+            Column {
+                MessageBubble(
+                    msg = message,
+                    images = message.attachmentIds.mapNotNull { attachmentImages[it] },
+                    onOpenRecord = onOpenRecord
+                )
+                if (message.role == CoachMessage.Role.ASSISTANT) {
+                    CoachMessageActions(
+                        message = message,
+                        variants = variantsBySeq[message.seq].orEmpty(),
+                        isBusy = sending,
+                        onCopy = { onCopyMessage(message) },
+                        onRegenerate = { onRegenerate(message) },
+                        onShare = { onShareMessage(message) },
+                        onShowVariant = onShowVariant
+                    )
+                }
+            }
+        }
 
         if (sending) {
             item("typing") {
@@ -652,8 +865,12 @@ private fun TypingIndicator() {
 }
 
 @Composable
-private fun MessageBubble(msg: ChatMessage, onOpenRecord: (String) -> Unit = {}) {
-    val isUser = msg.role == ChatMessage.Role.USER
+private fun MessageBubble(
+    msg: CoachMessage,
+    images: List<android.graphics.Bitmap> = emptyList(),
+    onOpenRecord: (String) -> Unit = {}
+) {
+    val isUser = msg.role == CoachMessage.Role.USER
     Column(Modifier.fillMaxWidth()) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -667,7 +884,7 @@ private fun MessageBubble(msg: ChatMessage, onOpenRecord: (String) -> Unit = {})
             Spacer(Modifier.width(48.dp))
         } else {
             Spacer(Modifier.width(48.dp))
-            Bubble(content = msg.content, isUser = true, attachmentImageBase64 = msg.attachmentImageBase64)
+            Bubble(content = msg.content, isUser = true, attachmentImage = images.firstOrNull())
         }
     }
     if (!isUser && msg.recordRefs.isNotEmpty()) {
@@ -713,7 +930,7 @@ private fun AssistantBadge() {
  *   shadow asst: Black 0.12, radius 6, y 3
  */
 @Composable
-private fun Bubble(content: String, isUser: Boolean, attachmentImageBase64: String? = null) {
+private fun Bubble(content: String, isUser: Boolean, attachmentImage: Bitmap? = null) {
     val shape = RoundedCornerShape(
         topStart = if (isUser) 20.dp else 8.dp,
         topEnd = if (isUser) 8.dp else 20.dp,
@@ -767,27 +984,19 @@ private fun Bubble(content: String, isUser: Boolean, attachmentImageBase64: Stri
             )
         }
         Column(Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) {
-            attachmentImageBase64?.let { encoded ->
-                val bitmap by produceState<Bitmap?>(initialValue = null, encoded) {
-                    value = withContext(Dispatchers.IO) {
-                        runCatching {
-                            val bytes = Base64.getDecoder().decode(encoded)
-                            FoodImageDecoder.decode(bytes, COACH_BUBBLE_IMAGE_MAX_DIMENSION)
-                        }.getOrNull()
-                    }
-                }
-                bitmap?.let { attachmentBitmap ->
-                    Image(
-                        bitmap = attachmentBitmap.asImageBitmap(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                            .clip(RoundedCornerShape(14.dp))
-                    )
-                    Spacer(Modifier.height(8.dp))
-                }
+            // Decoded by the view model from the attachment store (docs/coach.md §6); the bubble
+            // never touches the file system itself.
+            attachmentImage?.let { attachmentBitmap ->
+                Image(
+                    bitmap = attachmentBitmap.asImageBitmap(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                )
+                Spacer(Modifier.height(8.dp))
             }
             if (isUser) {
                 // User's own typed text — show verbatim, no markdown.
@@ -800,7 +1009,7 @@ private fun Bubble(content: String, isUser: Boolean, attachmentImageBase64: Stri
                 )
             } else {
                 // Coach replies often use markdown — render it.
-                MarkdownText(content = content, color = MaterialTheme.colorScheme.onSurface)
+                CoachMarkdown(content = content, color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -885,8 +1094,8 @@ private fun InputBar(
     onValueChange: (String) -> Unit,
     attachedImageBytes: ByteArray?,
     sending: Boolean,
-    onPickImage: () -> Unit,
-    onCaptureImage: () -> Unit,
+    /** Opens the composer sheet: what to attach, and which data Coach may use (docs §3, §6, §8). */
+    onAdd: () -> Unit,
     voice: CoachVoiceController,
     onRemoveImage: () -> Unit,
     onSend: () -> Unit
@@ -959,10 +1168,11 @@ private fun InputBar(
                 // recording indicator (timer + slide-to-cancel hint / live text).
                 CoachRecordingIndicator(voice, Modifier.weight(1f))
             } else {
-                CoachMediaActions(
+                CoachMediaActionButton(
+                    icon = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.coach_add_a11y),
                     enabled = !sending,
-                    onPickImage = onPickImage,
-                    onCaptureImage = onCaptureImage
+                    onClick = onAdd
                 )
 
                 Box(Modifier.weight(1f).padding(horizontal = 2.dp, vertical = 8.dp)) {
@@ -1002,31 +1212,6 @@ private fun InputBar(
                 else -> CoachMicButton(voice)
             }
         }
-    }
-}
-
-@Composable
-private fun CoachMediaActions(
-    enabled: Boolean,
-    onPickImage: () -> Unit,
-    onCaptureImage: () -> Unit
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CoachMediaActionButton(
-            icon = Icons.Filled.PhotoLibrary,
-            contentDescription = stringResource(R.string.cd_add_image),
-            enabled = enabled,
-            onClick = onPickImage
-        )
-        CoachMediaActionButton(
-            icon = Icons.Filled.CameraAlt,
-            contentDescription = stringResource(R.string.cd_open_camera),
-            enabled = enabled,
-            onClick = onCaptureImage
-        )
     }
 }
 
@@ -1123,65 +1308,7 @@ private const val COACH_COMPOSER_PREVIEW_MAX_DIMENSION = 280
 // "- / * / 1." lists, ``` code fences ```, `inline code`, **bold**, *italic*, [links](url).
 // Block layout here; inline styling via AnnotatedString. No third-party dependency.
 
-private sealed class MdBlock {
-    data class Heading(val level: Int, val text: String) : MdBlock()
-    data class Bullet(val text: String) : MdBlock()
-    data class Numbered(val number: String, val text: String) : MdBlock()
-    data class Code(val text: String) : MdBlock()
-    data class Paragraph(val text: String) : MdBlock()
-}
-
-private fun parseMarkdownBlocks(raw: String): List<MdBlock> {
-    val blocks = mutableListOf<MdBlock>()
-    val lines = raw.replace("\r\n", "\n").split("\n")
-    var i = 0
-    while (i < lines.size) {
-        val trimmed = lines[i].trim()
-        when {
-            trimmed.startsWith("```") -> {
-                val code = mutableListOf<String>()
-                i++
-                while (i < lines.size && !lines[i].trim().startsWith("```")) {
-                    code.add(lines[i]); i++
-                }
-                i++ // skip closing fence
-                blocks.add(MdBlock.Code(code.joinToString("\n")))
-            }
-            trimmed.isEmpty() -> i++
-            headingLevel(trimmed) != null -> {
-                val level = headingLevel(trimmed)!!
-                blocks.add(MdBlock.Heading(level, trimmed.trimStart('#').trim()))
-                i++
-            }
-            trimmed.startsWith("- ") || trimmed.startsWith("* ") || trimmed.startsWith("+ ") -> {
-                blocks.add(MdBlock.Bullet(trimmed.drop(2).trim())); i++
-            }
-            numberedItem(trimmed) != null -> {
-                val (num, rest) = numberedItem(trimmed)!!
-                blocks.add(MdBlock.Numbered(num, rest)); i++
-            }
-            else -> { blocks.add(MdBlock.Paragraph(trimmed)); i++ }
-        }
-    }
-    return blocks
-}
-
-private fun headingLevel(s: String): Int? {
-    val hashes = s.takeWhile { it == '#' }.length
-    if (hashes in 1..3 && s.getOrNull(hashes) == ' ') return hashes
-    return null
-}
-
-private fun numberedItem(s: String): Pair<String, String>? {
-    val dot = s.indexOf('.')
-    if (dot <= 0) return null
-    val num = s.substring(0, dot)
-    if (!num.all { it.isDigit() } || s.getOrNull(dot + 1) != ' ') return null
-    return num to s.substring(dot + 1).trim()
-}
-
-/** Inline markdown → AnnotatedString: **bold**, *italic* / _italic_, `code`, [text](url). */
-private fun inlineMarkdown(text: String, linkColor: Color, codeBg: Color): AnnotatedString = buildAnnotatedString {
+internal fun inlineMarkdown(text: String, linkColor: Color, codeBg: Color): AnnotatedString = buildAnnotatedString {
     var i = 0
     val n = text.length
     while (i < n) {
@@ -1228,41 +1355,3 @@ private fun inlineMarkdown(text: String, linkColor: Color, codeBg: Color): Annot
     }
 }
 
-@Composable
-private fun MarkdownText(content: String, color: Color) {
-    val linkColor = AppColors.Calorie
-    val codeBg = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.10f)
-    val blocks = remember(content) { parseMarkdownBlocks(content) }
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        blocks.forEach { block ->
-            when (block) {
-                is MdBlock.Heading -> Text(
-                    inlineMarkdown(block.text, linkColor, codeBg),
-                    color = color,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = when (block.level) { 1 -> 20.sp; 2 -> 18.sp; else -> 16.sp },
-                    lineHeight = 24.sp
-                )
-                is MdBlock.Bullet -> Row {
-                    Text("•", color = color, fontSize = 17.sp, lineHeight = 22.sp)
-                    Spacer(Modifier.width(8.dp))
-                    Text(inlineMarkdown(block.text, linkColor, codeBg), color = color, fontSize = 17.sp, lineHeight = 22.sp)
-                }
-                is MdBlock.Numbered -> Row {
-                    Text("${block.number}.", color = color, fontSize = 17.sp, fontWeight = FontWeight.Medium, lineHeight = 22.sp)
-                    Spacer(Modifier.width(8.dp))
-                    Text(inlineMarkdown(block.text, linkColor, codeBg), color = color, fontSize = 17.sp, lineHeight = 22.sp)
-                }
-                is MdBlock.Code -> Box(
-                    Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(codeBg).padding(10.dp)
-                ) {
-                    Text(block.text, color = color, fontFamily = FontFamily.Monospace, fontSize = 14.sp, lineHeight = 20.sp)
-                }
-                is MdBlock.Paragraph -> Text(
-                    inlineMarkdown(block.text, linkColor, codeBg),
-                    color = color, fontSize = 17.sp, lineHeight = 22.sp
-                )
-            }
-        }
-    }
-}

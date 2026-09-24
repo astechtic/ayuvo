@@ -19,7 +19,7 @@ struct calorietrackerApp: App {
     @State private var notificationManager = NotificationManager()
     @State private var healthKitManager = HealthKitManager()
     @State private var profileStore = ProfileStore()
-    @State private var chatStore = ChatStore()
+    @State private var chatStore = CoachStore()
     @State private var waterStore = WaterStore()
     @State private var fastingStore = FastingStore()
     @State private var strengthWorkoutStore = StrengthWorkoutStore()
@@ -152,7 +152,8 @@ struct calorietrackerApp: App {
                 bodyMeasurementStore.reloadFromDefaults()
                 waterStore.reloadFromDefaults()
                 fastingStore.reloadFromDefaults()
-                chatStore.reloadFromDefaults()
+                // Coach lives in its own SQLite database, never in the app backup archive
+                // (docs/coach.md §2), so a restore leaves the conversations alone.
                 strengthWorkoutStore.reloadFromDefaults()
                 importedHealthWorkoutStore.reloadFromDefaults()
                 profileStore.reloadFromDisk()

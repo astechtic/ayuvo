@@ -2,7 +2,6 @@ package com.ayuvo.health.records.coach
 
 import com.ayuvo.health.backup.CloudBackupArchive
 import com.ayuvo.health.backup.CloudBackupValue
-import com.ayuvo.health.models.ChatMessage
 import com.ayuvo.health.records.analytes.AnalyteCatalog
 import com.ayuvo.health.records.processing.RecordsTestFiles
 import com.ayuvo.health.records.processing.UnitsCatalog
@@ -143,17 +142,20 @@ class RecordsCoachToolsTest {
         assertEquals("{\"a\":1.5}", json["nested"].toString())
     }
 
+    /**
+     * §26: an assistant reply persists the records it relied on. Messages live in `ayuvo_coach.db`
+     * now, where this list is the `record_refs_json` column, so the wire shape is what matters.
+     */
     @Test
-    fun assistantMessagesPersistRecordRefsAndOldHistoryStillDecodes() {
+    fun recordRefsKeepTheirPersistedShape() {
         val codec = Json { ignoreUnknownKeys = true; coerceInputValues = true }
-        val message = ChatMessage(role = ChatMessage.Role.ASSISTANT, content = "Hb is low.", recordRefs = listOf(CoachRecordRef("r1", "CBC", "2026-07-10")))
-        val encoded = codec.encodeToString(ListSerializer(ChatMessage.serializer()), listOf(message))
-        assertTrue(encoded.contains("\"record_refs\":[{\"record_id\":\"r1\",\"title\":\"CBC\",\"date\":\"2026-07-10\"}]"))
-        assertEquals(message.recordRefs, codec.decodeFromString(ListSerializer(ChatMessage.serializer()), encoded).single().recordRefs)
-        // Messages without refs are written exactly as before (no key), and such history decodes with none.
-        val legacy = codec.encodeToString(ListSerializer(ChatMessage.serializer()), listOf(ChatMessage(role = ChatMessage.Role.ASSISTANT, content = "hi")))
-        assertFalse(legacy.contains("record_refs"))
-        assertTrue(codec.decodeFromString(ListSerializer(ChatMessage.serializer()), legacy).single().recordRefs.isEmpty())
+        val refs = listOf(CoachRecordRef("r1", "CBC", "2026-07-10"))
+        val encoded = codec.encodeToString(ListSerializer(CoachRecordRef.serializer()), refs)
+        assertEquals("""[{"record_id":"r1","title":"CBC","date":"2026-07-10"}]""", encoded)
+        assertEquals(refs, codec.decodeFromString(ListSerializer(CoachRecordRef.serializer()), encoded))
+        // A reply that used no records stores nothing at all, and such a row reads back as empty.
+        assertEquals("[]", codec.encodeToString(ListSerializer(CoachRecordRef.serializer()), emptyList()))
+        assertTrue(codec.decodeFromString(ListSerializer(CoachRecordRef.serializer()), "[]").isEmpty())
     }
 
     @Test

@@ -15,7 +15,6 @@ import com.ayuvo.health.models.AIProvider
 import com.ayuvo.health.models.AutoBalanceMacro
 import com.ayuvo.health.models.BodyFatEntry
 import com.ayuvo.health.models.BodyMeasurement
-import com.ayuvo.health.models.ChatMessage
 import com.ayuvo.health.models.FoodEntry
 import com.ayuvo.health.models.FastingSession
 import com.ayuvo.health.models.HomeTopNutrient
@@ -358,6 +357,49 @@ class PreferencesStore(
     /** Coach may read the mirror. Set only by an affirmative act (visible consent toggle). */
     val coachHealthDataEnabled: Flow<Boolean> = ds.data.map { it[Keys.COACH_HEALTH_DATA_ENABLED] ?: false }
     suspend fun setCoachHealthDataEnabled(v: Boolean) { ds.edit { it[Keys.COACH_HEALTH_DATA_ENABLED] = v } }
+
+    /**
+     * Coach may read the user's medicines (docs/coach.md §3). Default **false**, set only by an
+     * affirmative act: the confirmation shown the first time Medications is switched on in the
+     * composer. Cloud-backed, like the other Coach consents.
+     */
+    val coachMedicationsEnabled: Flow<Boolean> = ds.data.map { it[Keys.COACH_MEDICATIONS_ENABLED] ?: false }
+    suspend fun setCoachMedicationsEnabled(v: Boolean) {
+        ds.edit {
+            it[Keys.COACH_MEDICATIONS_ENABLED] = v
+            if (v) it[Keys.COACH_MEDICATIONS_CONSENTED_AT] = java.time.Instant.now().toString()
+            else it.remove(Keys.COACH_MEDICATIONS_CONSENTED_AT)
+        }
+    }
+
+    val coachMedicationsConsentedAt: Flow<String?> = ds.data.map { it[Keys.COACH_MEDICATIONS_CONSENTED_AT] }
+
+    /**
+     * Whether Coach shows its row of suggested prompts (docs/coach.md §9). Default **true**; turning
+     * it off hides the chips and the empty-state grid, and the prompt gallery stays in the toolbar.
+     */
+    val coachPromptSuggestions: Flow<Boolean> = ds.data.map { it[Keys.COACH_PROMPT_SUGGESTIONS] ?: true }
+    suspend fun setCoachPromptSuggestions(v: Boolean) {
+        ds.edit { it[Keys.COACH_PROMPT_SUGGESTIONS] = v }
+    }
+
+    /**
+     * Whether the Google Drive backup may carry Coach conversations (docs/coach.md §12,
+     * docs/cloud-backup.md). Default **false**: a transcript can quote test results and medicines,
+     * so it takes an affirmative act on the consent sheet. It governs Ayuvo's own Drive archive
+     * only — the coach database and its attachment files stay out of Android's auto-backup and
+     * device transfer whatever this says.
+     */
+    val coachChatBackupEnabled: Flow<Boolean> = ds.data.map { it[Keys.COACH_CHAT_BACKUP_ENABLED] ?: false }
+    suspend fun setCoachChatBackupEnabled(v: Boolean) {
+        ds.edit {
+            it[Keys.COACH_CHAT_BACKUP_ENABLED] = v
+            if (v) it[Keys.COACH_CHAT_BACKUP_CONSENTED_AT] = java.time.Instant.now().toString()
+            else it.remove(Keys.COACH_CHAT_BACKUP_CONSENTED_AT)
+        }
+    }
+
+    val coachChatBackupConsentedAt: Flow<String?> = ds.data.map { it[Keys.COACH_CHAT_BACKUP_CONSENTED_AT] }
 
     val coachHealthDataConsentedAt: Flow<String?> = ds.data.map { it[Keys.COACH_HEALTH_DATA_CONSENTED_AT] }
     suspend fun setCoachHealthDataConsentedAt(iso: String?) {
@@ -1424,15 +1466,13 @@ class PreferencesStore(
     suspend fun updateBodyMeasurements(transform: (List<BodyMeasurement>) -> List<BodyMeasurement>): List<BodyMeasurement> =
         updateJsonList(Keys.BODY_MEASUREMENTS, BodyMeasurement.serializer(), transform)
 
-    // -- Coach chat history ----------------------------------------------
-    val chatHistory: Flow<List<ChatMessage>> = ds.data.map { prefs ->
-        prefs[Keys.CHAT_HISTORY]?.let {
-            runCatching { json.decodeFromString(ListSerializer(ChatMessage.serializer()), it) }.getOrNull()
-        } ?: emptyList()
-    }.flowOn(Dispatchers.Default)
+    // -- Coach chat history (legacy) --------------------------------------
+    // Conversations now live in `ayuvo_coach.db` (docs/coach.md §2). These two survive only so
+    // `CoachMigration` can read the old blob once and clear the key; nothing else may use them.
+    suspend fun legacyChatHistoryJson(): String? = ds.data.map { it[Keys.CHAT_HISTORY] }.first()
 
-    suspend fun setChatHistory(history: List<ChatMessage>) {
-        ds.edit { it[Keys.CHAT_HISTORY] = json.encodeToString(ListSerializer(ChatMessage.serializer()), history) }
+    suspend fun clearLegacyChatHistory() {
+        ds.edit { it.remove(Keys.CHAT_HISTORY) }
     }
 
     // -- Widget snapshot --------------------------------------------------
@@ -1508,6 +1548,11 @@ class PreferencesStore(
         val HEALTH_HUB_ENABLED = booleanPreferencesKey("healthHubEnabled")
         val COACH_HEALTH_DATA_ENABLED = booleanPreferencesKey("coachHealthDataEnabled")
         val COACH_HEALTH_DATA_CONSENTED_AT = stringPreferencesKey("coachHealthDataConsentedAt")
+        val COACH_MEDICATIONS_ENABLED = booleanPreferencesKey("coachMedicationsEnabled")
+        val COACH_MEDICATIONS_CONSENTED_AT = stringPreferencesKey("coachMedicationsConsentedAt")
+        val COACH_PROMPT_SUGGESTIONS = booleanPreferencesKey("coachPromptSuggestions")
+        val COACH_CHAT_BACKUP_ENABLED = booleanPreferencesKey("coachChatBackupEnabled")
+        val COACH_CHAT_BACKUP_CONSENTED_AT = stringPreferencesKey("coachChatBackupConsentedAt")
         val HEALTH_HOME_TILES = stringPreferencesKey("healthHomeTiles")
         val SUMMARY_FAVOURITES = stringPreferencesKey("summaryFavourites")
         val DAILY_STEP_GOAL = intPreferencesKey("dailyStepGoal")

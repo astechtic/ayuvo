@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Link
@@ -34,6 +35,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
@@ -213,6 +219,10 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
     val cloud = ctx.cloudBackup
     val actions = ctx.actions
     val tint = SettingsPage.BACKUP_EXPORT.tint
+    // Coach chats in Drive are opt-in and off by default (docs/coach.md §12).
+    val chatBackup by ctx.container.prefs.coachChatBackupEnabled.collectAsState(initial = false)
+    var showChatConsent by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     val accountLines = listOfNotNull(
         cloud.accountEmail?.let { stringResource(R.string.cloud_backup_signed_in, it) },
         cloud.lastAt?.let { stringResource(R.string.cloud_backup_last, it.take(16).replace('T', ' ')) }
@@ -267,6 +277,27 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
                     )
                 }
             }
+            if (cloud.enabled) {
+                row {
+                    GroupRow(
+                        title = stringResource(R.string.cloud_backup_chats_title),
+                        subtitle = stringResource(R.string.cloud_backup_chats_subtitle),
+                        icon = Icons.Filled.Forum, iconTint = tint,
+                        modifier = Modifier.settingsRow("cloudBackupChats"),
+                        trailing = RowTrailing.Toggle(
+                            checked = chatBackup,
+                            onChange = { on ->
+                                if (on) {
+                                    showChatConsent = true
+                                } else {
+                                    scope.launch { ctx.container.prefs.setCoachChatBackupEnabled(false) }
+                                }
+                            },
+                            enabled = !cloud.busy
+                        )
+                    )
+                }
+            }
             row {
                 GroupRow(
                     title = stringResource(R.string.cloud_backup_sign_out),
@@ -290,6 +321,29 @@ internal fun BackupExportPage(ctx: SettingsPageContext) {
         }
     }
     AllDataGroup(ctx)
+
+    if (showChatConsent) {
+        GlassDialog(
+            onDismissRequest = { showChatConsent = false },
+            modifier = Modifier.testTag("settings.cloudBackupChats.consent")
+        ) {
+            Text(stringResource(R.string.cloud_backup_chats_consent_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(
+                stringResource(R.string.cloud_backup_chats_consent_message),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f),
+                fontSize = 14.sp
+            )
+            GlassDialogActions(
+                primaryText = stringResource(R.string.cloud_backup_chats_consent_confirm),
+                onPrimary = {
+                    showChatConsent = false
+                    scope.launch { ctx.container.prefs.setCoachChatBackupEnabled(true) }
+                },
+                dismissText = stringResource(R.string.action_cancel),
+                onDismiss = { showChatConsent = false }
+            )
+        }
+    }
 }
 
 /**
@@ -498,6 +552,7 @@ private val AllDataExportStep.labelRes: Int
         AllDataExportStep.HEALTH_DATA -> R.string.export_all_step_health_data
         AllDataExportStep.MEDICATIONS -> R.string.export_all_step_medications
         AllDataExportStep.HEALTH_RECORDS -> R.string.export_all_step_health_records
+        AllDataExportStep.COACH_CHATS -> R.string.export_all_step_coach_chats
         AllDataExportStep.APP_BACKUP -> R.string.export_all_step_app_backup
         AllDataExportStep.WRITING -> R.string.export_all_step_writing
     }
@@ -507,6 +562,7 @@ private fun sectionLabelRes(section: String): Int = when (section) {
     AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.export_all_step_health_data
     AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.export_all_step_medications
     AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> R.string.export_all_step_health_records
+    AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.export_all_step_coach_chats
     else -> R.string.export_all_step_app_backup
 }
 

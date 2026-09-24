@@ -6,7 +6,7 @@ import UIKit
 /// weight history, food log, computed forecast, and workout diary. Handles multi-turn
 /// chat with memory, a reset button, and prompt chips.
 struct ChatView: View {
-    @Environment(ChatStore.self) private var chatStore
+    @Environment(CoachStore.self) private var chatStore
     @Environment(ProfileStore.self) private var profileStore
     @Environment(WeightStore.self) private var weightStore
     @Environment(BodyFatStore.self) private var bodyFatStore
@@ -16,24 +16,39 @@ struct ChatView: View {
     @Environment(StrengthWorkoutStore.self) private var strengthWorkoutStore
     @Environment(HealthDataStore.self) private var healthDataStore
     @Environment(RecordsStore.self) private var recordsStore
+    @Environment(MedicationStore.self) private var medicationStore
     @AppStorage("heightUnit") private var heightUnitRaw = "ftin"
     @AppStorage("weightUnit") private var weightUnitRaw = "lbs"
+    /// Settings › AI › Coach › Suggested Prompts (docs/coach.md §9).
+    @AppStorage("coachPromptSuggestions") private var coachPromptSuggestions = true
 
     @State private var draft = ""
-    @State private var attachedImage: UIImage?
+    @State private var attachedImages: [UIImage] = []
     @State private var capturedImage: UIImage?
-    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var selectedPhotoItems: [PhotosPickerItem] = []
     @State private var isSending = false
     @State private var errorMessage: String?
-    @State private var showResetConfirmation = false
+    @State private var showConversations = false
+    @State private var showPromptGallery = false
     @State private var showCamera = false
     @State private var showPhotoPicker = false
+    @State private var showComposerSheet = false
+    @State private var showFileImporter = false
+    @State private var showNoteEditor = false
+    @State private var noteDraft = ""
+    @State private var pendingAttachments: [ChatAttachment] = []
+    @State private var excerptPreview: ChatAttachment?
+    @State private var isProcessingAttachment = false
+    @State private var variantsBySeq: [Int: [ChatMessage]] = [:]
+    @State private var shareItems: [Any]?
+    @State private var exportError: String?
     @State private var voice = CoachVoiceRecorder()
     @State private var voicePressStart: Date?
     @State private var voicePulse = false
     @FocusState private var isInputFocused: Bool
     // Health Records (§26–§30)
     @State private var showRecordsConsent = false
+    @State private var showMedicationsConsent = false
     @State private var pendingHandoff: CoachRecordsHandoff?
     @State private var showRecordsPicker = false
     @State private var recordsSuggestions = CoachRecordsSuggestions()
@@ -61,7 +76,7 @@ struct ChatView: View {
                     TapGesture().onEnded { isInputFocused = false }
                 )
 
-                if !messages.isEmpty {
+                if !messages.isEmpty, coachPromptSuggestions {
                     promptChips
                 }
 
@@ -80,31 +95,100 @@ struct ChatView: View {
             .navigationTitle("Coach")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showConversations = true
+                    } label: {
+                        Image(systemName: "list.bullet")
+                            .foregroundStyle(AppColors.calorie)
+                    }
+                    .accessibilityLabel(Text("Chats"))
+                    .accessibilityIdentifier("coach.conversations")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        if !messages.isEmpty { showResetConfirmation = true }
+                        showPromptGallery = true
                     } label: {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image(systemName: "square.grid.2x2")
+                            .foregroundStyle(AppColors.calorie)
+                    }
+                    .accessibilityLabel(Text("Prompt gallery"))
+                    .accessibilityIdentifier("coach.prompts.open")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task {
+                            await chatStore.startNewConversation()
+                            errorMessage = nil
+                        }
+                    } label: {
+                        Image(systemName: "square.and.pencil")
                             .foregroundStyle(messages.isEmpty ? Color.secondary : AppColors.calorie)
                     }
+                    // A fresh, empty conversation is already a new chat.
                     .disabled(messages.isEmpty)
-                    .accessibilityLabel("Reset Chat")
+                    .accessibilityLabel(Text("New chat"))
+                    .accessibilityIdentifier("coach.newChat")
                 }
             }
-            .alert("Reset Chat", isPresented: $showResetConfirmation) {
-                Button("Cancel", role: .cancel) { }
-                Button("Reset", role: .destructive) {
-                    chatStore.reset()
-                    errorMessage = nil
+            .sheet(isPresented: $showConversations) {
+                ConversationListView()
+            }
+            .sheet(isPresented: $showPromptGallery) {
+                // Picking a prompt fills the composer; the user still decides when to send it (§9).
+                PromptGalleryView(sections: gallerySections) { prompt in
+                    draft = prompt
+                    isInputFocused = true
                 }
-            } message: {
-                Text("Clear all messages and start fresh? This can't be undone.")
+            }
+            .sheet(isPresented: Binding(get: { shareItems != nil }, set: { if !$0 { shareItems = nil } })) {
+                if let shareItems {
+                    CoachShareSheet(items: shareItems)
+                }
+            }
+            .task(id: messages.count) { await loadVariants() }
+            .sheet(isPresented: $showComposerSheet) {
+                CoachComposerSheet(
+                    states: sourceStates,
+                    onAttach: handleAttachment,
+                    onToggle: { source, on in setSource(source, on) },
+                    onConnect: connectSource
+                )
+            }
+            .sheet(item: $excerptPreview) { attachment in
+                CoachAttachmentExcerptSheet(attachment: attachment)
+            }
+            .sheet(isPresented: $showMedicationsConsent) {
+                let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride)
+                CoachMedicationsConsentSheet(
+                    providerName: provider.name,
+                    onDevice: provider.onDevice,
+                    onAllow: {
+                        medicationStore.setCoachAccess(true)
+                        setSource(.medications, true)
+                        showMedicationsConsent = false
+                    },
+                    onNotNow: { showMedicationsConsent = false }
+                )
+            }
+            .sheet(isPresented: $showNoteEditor) {
+                CoachNoteSheet(text: $noteDraft) { text in
+                    Task { await attachNote(text) }
+                }
+            }
+            .fileImporter(
+                isPresented: $showFileImporter,
+                allowedContentTypes: [.pdf, .plainText, .text, .commaSeparatedText],
+                allowsMultipleSelection: true
+            ) { result in
+                Task { await importDocuments(result) }
             }
             .fullScreenCover(isPresented: $showCamera) {
                 CameraView(image: $capturedImage)
                     .ignoresSafeArea()
             }
-            .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
+            .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItems,
+                          maxSelectionCount: CoachComposerLimits.maxImages, matching: .images)
             .sheet(isPresented: $showRecordsConsent) {
                 let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride)
                 CoachRecordsConsentSheet(providerName: provider.name, onDevice: provider.onDevice, onAllow: {
@@ -143,22 +227,25 @@ struct ChatView: View {
             .onChange(of: capturedImage) { _, newValue in
                 guard let image = newValue else { return }
                 capturedImage = nil
-                attachedImage = image
+                appendImage(image)
                 errorMessage = nil
             }
-            .onChange(of: selectedPhotoItem) { _, newValue in
-                guard let item = newValue else { return }
-                selectedPhotoItem = nil
+            .onChange(of: selectedPhotoItems) { _, newValue in
+                guard !newValue.isEmpty else { return }
+                let items = newValue
+                selectedPhotoItems = []
                 Task {
                     do {
-                        guard let data = try await item.loadTransferable(type: Data.self),
-                              let image = UIImage(data: data) else {
-                            await MainActor.run { errorMessage = "Could not load that photo." }
-                            return
-                        }
-                        await MainActor.run {
-                            attachedImage = image
-                            errorMessage = nil
+                        for item in items {
+                            guard let data = try await item.loadTransferable(type: Data.self),
+                                  let image = UIImage(data: data) else {
+                                await MainActor.run { errorMessage = "Could not load that photo." }
+                                continue
+                            }
+                            await MainActor.run {
+                                appendImage(image)
+                                errorMessage = nil
+                            }
                         }
                     } catch {
                         await MainActor.run {
@@ -211,9 +298,23 @@ struct ChatView: View {
                 }
                 .accessibilityElement(children: .combine)
 
-                emptyPromptGrid
-                    .padding(.top, 26)
-                if !recordsPromptChips.isEmpty {
+                if coachPromptSuggestions {
+                    emptyPromptGrid
+                        .padding(.top, 26)
+                }
+
+                // Everything else the gallery holds, one tap away (docs/coach.md §9).
+                Button {
+                    showPromptGallery = true
+                } label: {
+                    Label("Browse all prompts", systemImage: "sparkles")
+                        .font(.system(.footnote, design: .rounded, weight: .semibold))
+                        .foregroundStyle(AppColors.calorie)
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 14)
+                .accessibilityIdentifier("coach.prompts.browse")
+                if coachPromptSuggestions, !recordsPromptChips.isEmpty {
                     VStack(spacing: 8) {
                         ForEach(recordsPromptChips, id: \.0) { chip in
                             Button {
@@ -245,10 +346,27 @@ struct ChatView: View {
             ScrollView {
                 VStack(spacing: 14) {
                     ForEach(messages) { msg in
-                        MessageBubble(message: msg, onOpenRecord: { ref in
-                            recordsStore.openRecordFromCoach(ref.recordID)
-                        })
-                            .id(msg.id)
+                        VStack(alignment: .leading, spacing: 2) {
+                            MessageBubble(
+                                attachmentImages: msg.attachmentIDs.compactMap { chatStore.image(for: $0) },
+                                message: msg,
+                                onOpenRecord: { ref in recordsStore.openRecordFromCoach(ref.recordID) }
+                            )
+                            if msg.role == .assistant {
+                                CoachMessageActions(
+                                    message: msg,
+                                    variants: variantsBySeq[msg.seq] ?? [],
+                                    isBusy: isSending,
+                                    onCopy: { UIPasteboard.general.string = msg.content },
+                                    onRegenerate: { Task { await regenerate(msg) } },
+                                    onShare: { shareItems = [msg.content] },
+                                    onShowVariant: { chatStore.showVariant($0) }
+                                )
+                                .padding(.leading, 52)
+                                .padding(.trailing, 48)
+                            }
+                        }
+                        .id(msg.id)
                     }
                     if isSending {
                         HStack(alignment: .top, spacing: 8) {
@@ -328,42 +446,56 @@ struct ChatView: View {
         }
     }
 
-    private var suggestedPrompts: [String] {
-        var values: [String]
-        switch userProfile.goal {
-        case .lose:
-            values = [
-                "What's my expected weight in 30 days?",
-                "How do I lose weight faster safely?",
-                "Am I eating too much?",
-                "What should I eat for dinner?",
-            ]
-        case .gain:
-            values = [
-                "What's my expected weight in 30 days?",
-                "How do I gain weight healthily?",
-                "Am I eating enough?",
-                "High-protein foods I can add?",
-            ]
-        case .maintain:
-            values = [
-                "Am I holding my weight?",
-                "What's my average intake?",
-                "Macro suggestions?",
-                "How's my trend?",
-            ]
+    // MARK: - Prompt chips and gallery (docs/coach.md §9)
+
+    /// Effective sources in the shape ``CR.galleryFor`` and ``CR.chipsFor`` expect.
+    private var sourcesValue: RJ {
+        .obj(Dictionary(uniqueKeysWithValues: CoachSource.allCases.map {
+            ($0.rawValue, RJ.bool(effectiveSources.contains($0)))
+        }))
+    }
+
+    private var hasSleepData: Bool {
+        healthDataStore.typeSummaries.contains { $0.typeID.lowercased().contains("sleep") && $0.count > 0 }
+    }
+
+    /// The chips above the composer: gallery entries, gated by the same rule as the gallery cards,
+    /// so a chip can never offer what the gallery hides.
+    private var suggestedPrompts: [GalleryPrompt] {
+        let ids = CR.chipsFor(goal: userProfile.goal.rawValue,
+                              hasWorkouts: !strengthWorkoutStore.completedSessions.isEmpty,
+                              hasSleep: hasSleepData,
+                              sources: sourcesValue,
+                              catalog: CoachCatalog.gallery)["ids"].array ?? []
+        return ids.compactMap { entry in
+            guard let id = entry.string,
+                  let title = PromptGalleryText.title(id),
+                  let prompt = PromptGalleryText.prompt(id) else { return nil }
+            return GalleryPrompt(id: id, title: title, prompt: prompt)
         }
-        if !strengthWorkoutStore.completedSessions.isEmpty {
-            values.insert("Analyze my last 4 weeks of training", at: 0)
+    }
+
+    /// The whole gallery, grouped by category, for what this device can actually answer from.
+    private var gallerySections: [(String, [GalleryPrompt])] {
+        let groups = CR.galleryFor(sourcesValue, catalog: CoachCatalog.gallery)["categories"].array ?? []
+        return groups.compactMap { group in
+            guard let name = group["category"].string,
+                  let label = PromptGalleryText.category(name) else { return nil }
+            let entries: [GalleryPrompt] = (group["ids"].array ?? []).compactMap { value in
+                guard let id = value.string,
+                      let title = PromptGalleryText.title(id),
+                      let prompt = PromptGalleryText.prompt(id) else { return nil }
+                return GalleryPrompt(id: id, title: title, prompt: prompt)
+            }
+            return entries.isEmpty ? nil : (label, entries)
         }
-        return values
     }
 
     private var emptyPromptGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-            ForEach(Array(suggestedPrompts.prefix(4)), id: \.self) { prompt in
+            ForEach(Array(suggestedPrompts.prefix(4))) { entry in
                 Button {
-                    draft = prompt
+                    draft = entry.prompt
                     send()
                 } label: {
                     HStack(alignment: .top, spacing: 9) {
@@ -372,7 +504,7 @@ struct ChatView: View {
                             .foregroundStyle(AppColors.calorie)
                             .padding(.top, 2)
                             .accessibilityHidden(true)
-                        Text(prompt)
+                        Text(entry.title)
                             .font(.system(.footnote, design: .rounded, weight: .medium))
                             .foregroundStyle(.primary)
                             .multilineTextAlignment(.leading)
@@ -421,12 +553,6 @@ struct ChatView: View {
         send()
     }
 
-    /// Shown only while Coach can actually reach the Health Data hub.
-    private var healthPromptChips: [String] {
-        guard healthDataStore.isEnabled, healthDataStore.coachHealthDataEnabled else { return [] }
-        return [String(localized: "How did I sleep this week?"), String(localized: "Am I moving enough?")]
-    }
-
     /// Context-aware suggested prompts — pick a different set based on goal to keep them relevant.
     private var promptChips: some View {
 
@@ -455,12 +581,12 @@ struct ChatView: View {
                     .disabled(isSending)
                     .accessibilityIdentifier("coach.recordsChip.\(chip.0)")
                 }
-                ForEach(suggestedPrompts + healthPromptChips, id: \.self) { chip in
+                ForEach(suggestedPrompts) { chip in
                     Button {
-                        draft = chip
+                        draft = chip.prompt
                         send()
                     } label: {
-                        Text(chip)
+                        Text(chip.title)
                             .font(.system(.footnote, design: .rounded, weight: .medium))
                             .padding(.horizontal, 14)
                             .frame(minHeight: 44)
@@ -495,14 +621,31 @@ struct ChatView: View {
 
     private var inputArea: some View {
         VStack(spacing: 8) {
-            if let attachedImage {
-                attachmentPreview(attachedImage)
+            if !pendingAttachments.isEmpty {
+                CoachPendingAttachmentsRow(
+                    attachments: pendingAttachments,
+                    onOpen: { excerptPreview = $0 },
+                    onRemove: { attachment in
+                        pendingAttachments.removeAll { $0.id == attachment.id }
+                    }
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+
+            if !attachedImages.isEmpty {
+                attachmentPreview(attachedImages)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+
+            if !offSources.isEmpty {
+                CoachSourceSummaryRow(effective: effectiveSources) { showComposerSheet = true }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 16)
             }
 
             inputBar
         }
-        .animation(.easeInOut(duration: 0.18), value: attachedImage == nil)
+        .animation(.easeInOut(duration: 0.18), value: attachedImages.count)
         .onChange(of: voice.submittedTranscript) { _, newValue in
             guard let text = newValue, !text.isEmpty else { return }
             draft = text
@@ -511,9 +654,9 @@ struct ChatView: View {
         }
     }
 
-    private func attachmentPreview(_ image: UIImage) -> some View {
+    private func attachmentPreview(_ images: [UIImage]) -> some View {
         HStack(spacing: 10) {
-            Image(uiImage: image)
+            Image(uiImage: images[0])
                 .resizable()
                 .scaledToFill()
                 .frame(width: 62, height: 62)
@@ -524,7 +667,8 @@ struct ChatView: View {
                 )
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Image attached")
+                Text(images.count == 1 ? String(localized: "Image attached")
+                                        : String(localized: "\(images.count) images attached"))
                     .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 Text("Send with your message")
                     .font(.system(.caption, design: .rounded))
@@ -534,7 +678,7 @@ struct ChatView: View {
             Spacer()
 
             Button {
-                attachedImage = nil
+                attachedImages = []
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 12, weight: .bold))
@@ -596,17 +740,39 @@ struct ChatView: View {
     }
 
     private var attachMenu: some View {
-        Menu {
-            Button { openCamera() } label: { Label("Camera", systemImage: "camera.fill") }
-            Button { showPhotoPicker = true } label: { Label("Photo Library", systemImage: "photo.on.rectangle") }
+        Button {
+            isInputFocused = false
+            showComposerSheet = true
         } label: {
-            Image(systemName: attachedImage == nil ? "plus.circle.fill" : "photo.fill")
+            Image(systemName: hasAttachment ? "paperclip.circle.fill" : "plus.circle.fill")
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundStyle(AppColors.calorie)
                 .frame(width: composerControlSize, height: composerControlSize)
         }
-        .disabled(isSending)
+        .disabled(isSending || isProcessingAttachment)
         .padding(.leading, 6)
+        .accessibilityLabel(Text("Add"))
+        .accessibilityIdentifier("coach.attach")
+    }
+
+    private var hasAttachment: Bool { !attachedImages.isEmpty || !pendingAttachments.isEmpty }
+
+    /// Pictures are capped per turn (docs/coach.md §6); the sheet says so before the user picks.
+    private func appendImage(_ image: UIImage) {
+        guard attachedImages.count < CoachComposerLimits.maxImages else {
+            errorMessage = String(localized: "You can attach up to \(CoachComposerLimits.maxImages) pictures.")
+            return
+        }
+        attachedImages.append(image)
+    }
+
+    /// Sources the user switched off or has not connected — the summary row only appears when one is.
+    private var offSources: [CoachSource] {
+        CoachSource.allCases.filter { (sourceStates[$0] ?? .unavailable) != .on }
+    }
+
+    private var effectiveSources: Set<CoachSource> {
+        Set(CoachSource.allCases.filter { (sourceStates[$0] ?? .unavailable) == .on })
     }
 
     @ViewBuilder private var trailingControl: some View {
@@ -759,7 +925,8 @@ struct ChatView: View {
     }
 
     private var canSend: Bool {
-        !isSending && (!draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || attachedImage != nil)
+        !isSending && !isProcessingAttachment
+            && (!draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || hasAttachment)
     }
 
     // MARK: - Send
@@ -793,8 +960,8 @@ struct ChatView: View {
 
     private func send() {
         let typedText = draft.trimmingCharacters(in: .whitespacesAndNewlines)
-        let image = attachedImage
-        guard (!typedText.isEmpty || image != nil), !isSending else { return }
+        let images = attachedImages
+        guard (!typedText.isEmpty || !images.isEmpty || !pendingAttachments.isEmpty), !isSending else { return }
         if !chatStore.selectedRecords.isEmpty, chatStore.recordsOnlineDecision == nil, recordsNeedOnlineApproval() {
             Task {
                 let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride)
@@ -805,36 +972,228 @@ struct ChatView: View {
             return
         }
 
-        let text = typedText.isEmpty ? "Analyze this image." : typedText
-        let imageDataForAI = image.flatMap {
+        let text = typedText.isEmpty && !images.isEmpty ? "Analyze this image." : typedText
+        let imagesForAI = images.compactMap {
             resizedJPEGData(from: $0, maxDimension: 1600, compressionQuality: 0.78)
         }
-        let thumbnailData = image.flatMap {
+        let thumbnails = images.compactMap {
             resizedJPEGData(from: $0, maxDimension: 700, compressionQuality: 0.68)
         }
-        if image != nil, imageDataForAI == nil {
+        if !images.isEmpty, imagesForAI.count != images.count {
             errorMessage = "Failed to process the image."
             return
         }
 
-        chatStore.append(ChatMessage(role: .user, content: text, attachmentImageData: thumbnailData))
         draft = ""
-        attachedImage = nil
+        attachedImages = []
         errorMessage = nil
         isSending = true
-        let historyForCall = chatStore.contextMessages().dropLast()  // exclude the user msg we just appended
 
         Task {
             defer { isSending = false }
+            let documents = pendingAttachments
+            pendingAttachments = []
+            var attachmentIDs: [String] = []
+            for thumbnail in thumbnails {
+                attachmentIDs += await storeImageAttachment(thumbnail)
+            }
+            attachmentIDs += documents.map(\.id)
+            await chatStore.append(ChatMessage(role: .user, content: text, attachmentIDs: attachmentIDs))
+            // Exclude the user message we just appended; the call carries it as `newUserMessage`.
+            let historyForCall = Array(chatStore.contextMessages().dropLast())
+            // The excerpts are already redacted and are exactly what the excerpt sheet showed (§6).
+            let textForAI = CoachAttachmentComposer.messageWithAttachments(text, documents)
             do {
                 // Health Data hub: nil unless Health sync and the Coach consent are both on.
                 let health = await healthDataStore.coachContext()
-                let reply = try await sendWithRecords(history: Array(historyForCall), text: text, imageDataForAI: imageDataForAI, health: health)
-                chatStore.append(ChatMessage(role: .assistant, content: reply.text, recordRefs: reply.refs.isEmpty ? nil : reply.refs))
+                let reply = try await sendWithRecords(history: historyForCall, text: textForAI, images: imagesForAI, health: health)
+                await chatStore.append(ChatMessage(role: .assistant, content: reply.text,
+                                                   recordRefs: reply.refs.isEmpty ? nil : reply.refs))
             } catch {
                 errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             }
         }
+    }
+
+    // MARK: - Message actions (docs/coach.md §10)
+
+    /// Which replies have more than one version, so the stepper only appears where it means
+    /// something. Loaded off the transcript rather than per row, to keep the list cheap.
+    private func loadVariants() async {
+        var out: [Int: [ChatMessage]] = [:]
+        for message in messages where message.role == .assistant {
+            let rows = await chatStore.variants(seq: message.seq)
+            if rows.count > 1 { out[message.seq] = rows }
+        }
+        variantsBySeq = out
+    }
+
+    /// Re-sends the user turn this reply answered, with the same attachments, records and switches.
+    /// The old answer is kept — it becomes version 1 of 2.
+    private func regenerate(_ message: ChatMessage) async {
+        guard !isSending else { return }
+        guard let plan = await chatStore.regeneratePlan(for: message) else { return }
+        guard let promptID = plan["prompt_id"].string else { return }
+        var prompt = messages.first { $0.id == promptID }
+        if prompt == nil {
+            // The prompt is older than the visible slice, or is itself an earlier variant.
+            let older = await chatStore.variants(seq: Int(plan["prompt_seq"].double ?? 0))
+            prompt = older.first { $0.id == promptID }
+        }
+        guard let prompt else { return }
+
+        isSending = true
+        errorMessage = nil
+        defer { isSending = false }
+        do {
+            let health = await healthDataStore.coachContext()
+            // Exclude the prompt itself and everything after it: the model gets the same view it had.
+            let history = Array(messages.filter { $0.seq < prompt.seq }.suffix(CoachStore.maxMessagesInContext))
+            let documents = await chatStore.attachments(ids: prompt.attachmentIDs)
+            let textForAI = CoachAttachmentComposer.messageWithAttachments(prompt.content, documents)
+            let reply = try await sendWithRecords(history: history, text: textForAI, images: [], health: health)
+            let variant = ChatMessage(
+                conversationID: prompt.conversationID,
+                seq: Int(plan["seq"].double ?? Double(message.seq)),
+                variantIndex: Int(plan["variant_index"].double ?? 1),
+                role: .assistant,
+                content: reply.text,
+                regeneratedFrom: plan["regenerated_from"].string,
+                recordRefs: reply.refs.isEmpty ? nil : reply.refs
+            )
+            await chatStore.appendVariant(variant)
+            await loadVariants()
+        } catch {
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
+    }
+
+    /// §10 "Export as Markdown" / "Export as JSON".
+    private func exportConversation(_ format: CoachExportFormat) async {
+        guard let id = chatStore.current?.id else { return }
+        let provider = CoachRecordsFormatting.coachProvider(override: chatStore.providerOverride).name
+        guard let file = await chatStore.export(conversationID: id, format: format, provider: provider),
+              let url = file.writeToTemporaryFile()
+        else {
+            exportError = String(localized: "That chat could not be exported.")
+            return
+        }
+        shareItems = [url]
+    }
+
+    // MARK: - Attachments and data sources (docs/coach.md §3, §6, §8)
+
+    /// What the composer sheet shows per source: on, off for this chat, not connected, or nothing to
+    /// read yet. A switch can only narrow, so "not connected" offers Connect instead of a toggle.
+    private var sourceStates: [CoachSource: CoachComposerSheet.SourceState] {
+        var out: [CoachSource: CoachComposerSheet.SourceState] = [:]
+        let switches = chatStore.dataSwitches
+        func state(available: Bool, consented: Bool, source: CoachSource) -> CoachComposerSheet.SourceState {
+            if !available { return .unavailable }
+            if !consented { return .notConnected }
+            return switches.isOn(source) ? .on : .off
+        }
+        out[.food] = switches.isOn(.food) ? .on : .off
+        out[.health] = state(available: healthDataStore.isEnabled,
+                             consented: healthDataStore.coachHealthDataEnabled, source: .health)
+        out[.medications] = state(available: medicationStore.hasAnyMedication,
+                                  consented: medicationStore.coachAccessEnabled, source: .medications)
+        out[.records] = state(available: recordsStore.revision > 0 || recordsStore.coachAccessEnabled,
+                              consented: recordsStore.coachAccessEnabled, source: .records)
+        return out
+    }
+
+    private func setSource(_ source: CoachSource, _ on: Bool) {
+        var switches = chatStore.dataSwitches
+        switches.set(source, on)
+        chatStore.dataSwitches = switches
+    }
+
+    /// "Connect" never flips the switch itself — it opens the consent that owns that decision.
+    private func connectSource(_ source: CoachSource) {
+        switch source {
+        case .records:
+            showComposerSheet = false
+            showRecordsConsent = true
+        case .medications:
+            showComposerSheet = false
+            showMedicationsConsent = true
+        case .health, .food:
+            // Health sync lives in Settings; Coach cannot grant it.
+            break
+        }
+    }
+
+    private func handleAttachment(_ item: CoachComposerSheet.Attachment) {
+        switch item {
+        case .camera: openCamera()
+        case .photos: showPhotoPicker = true
+        case .files: showFileImporter = true
+        case .record: showRecordsPicker = true
+        case .note:
+            noteDraft = ""
+            showNoteEditor = true
+        }
+    }
+
+    /// Documents are read and redacted on this device; only the excerpt is ever sent (§6).
+    private func importDocuments(_ result: Result<[URL], Error>) async {
+        guard case .success(let urls) = result, !urls.isEmpty else {
+            if case .failure(let error) = result { errorMessage = error.localizedDescription }
+            return
+        }
+        guard let files = await chatStore.fileStore() else { return }
+        isProcessingAttachment = true
+        defer { isProcessingAttachment = false }
+        let processor = CoachAttachmentProcessor(files: files)
+        for url in urls.prefix(CoachComposerLimits.maxDocuments) {
+            do {
+                let outcome = try await processor.process(url: url)
+                guard await chatStore.store(outcome.attachment) != nil else { continue }
+                pendingAttachments.append(outcome.attachment)
+                if outcome.isEmpty {
+                    errorMessage = String(localized: "No readable text was found in \(outcome.attachment.filename).")
+                }
+            } catch {
+                errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            }
+        }
+    }
+
+    private func attachNote(_ text: String) async {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, let files = await chatStore.fileStore() else { return }
+        let outcome = CoachAttachmentProcessor(files: files).processNote(trimmed)
+        guard await chatStore.store(outcome.attachment) != nil else { return }
+        pendingAttachments.append(outcome.attachment)
+    }
+
+    /// Writes the bubble thumbnail to the attachment store and returns its id (docs/coach.md §6).
+    /// A failure here costs the picture, never the message, so the turn still sends.
+    private func storeImageAttachment(_ thumbnailData: Data?) async -> [String] {
+        guard let thumbnailData, !thumbnailData.isEmpty,
+              let files = await chatStore.fileStore()
+        else { return [] }
+        let id = UUID().uuidString.lowercased()
+        guard let path = try? files.writeOriginal(thumbnailData, attachmentID: id, fileExtension: "jpg") else {
+            return []
+        }
+        let attachment = ChatAttachment(
+            id: id,
+            kind: .image,
+            filename: "photo.jpg",
+            mimeType: "image/jpeg",
+            bytes: thumbnailData.count,
+            sha256: CoachFileStore.sha256(thumbnailData),
+            filePath: path,
+            createdMs: CoachStore.nowMs()
+        )
+        guard await chatStore.store(attachment) != nil else {
+            files.delete(attachmentID: id)
+            return []
+        }
+        if let image = UIImage(data: thumbnailData) { chatStore.cacheImage(image, for: id) }
+        return [id]
     }
 
     private func applyOnlineDecision(_ decision: CoachRecordsOnlineDecision) {
@@ -853,7 +1212,7 @@ struct ChatView: View {
 
     /// Builds the records context, sends, and retries on the on-device Coach when the user picks it
     /// during a records tool call.
-    private func sendWithRecords(history: [ChatMessage], text: String, imageDataForAI: Data?, health: CoachHealthContext?) async throws -> (text: String, refs: [ChatRecordRef]) {
+    private func sendWithRecords(history: [ChatMessage], text: String, images: [Data], health: CoachHealthContext?) async throws -> (text: String, refs: [ChatRecordRef]) {
         for attempt in 0..<2 {
             let needsApproval = recordsNeedOnlineApproval()
             let box = approvalBox
@@ -870,7 +1229,7 @@ struct ChatView: View {
                 let reply = try await ChatService.sendMessage(
                     history: history,
                     newUserMessage: text,
-                    imageData: imageDataForAI,
+                    images: images,
                     profile: userProfile,
                     weights: weightStore.entries,
                     bodyFats: bodyFatStore.entries,
@@ -885,6 +1244,8 @@ struct ChatView: View {
                     workoutAccessEnabled: true,
                     health: health,
                     records: records,
+                    medications: await medicationStore.coachContext(),
+                    sources: chatStore.dataSwitches,
                     providerOverride: chatStore.providerOverride
                 )
                 if needsApproval, let decision = await session.decision { applyOnlineDecision(decision) }
@@ -933,136 +1294,9 @@ struct ChatView: View {
 /// actually emits: #/##/### headings, "- / * / 1." lists, ``` code fences ```, `inline code`,
 /// **bold**, *italic*, and [links](url). Block layout is done here; inline styling uses
 /// AttributedString's inline-only markdown so no third-party dependency is needed.
-private struct MarkdownMessageText: View {
-    let text: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            ForEach(MarkdownMessageBlockCache.blocks(for: text)) { block in
-                switch block.kind {
-                case .heading(let level):
-                    Text(inline(block.text))
-                        .font(.system(headingStyle(level), design: .rounded, weight: .bold))
-                case .bullet:
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("•").font(.system(.body, design: .rounded))
-                        Text(inline(block.text)).font(.system(.body, design: .rounded))
-                    }
-                case .numbered(let number):
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("\(number).").font(.system(.body, design: .rounded, weight: .medium))
-                        Text(inline(block.text)).font(.system(.body, design: .rounded))
-                    }
-                case .code:
-                    Text(block.text)
-                        .font(.system(.callout, design: .monospaced))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(10)
-                        .background(Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
-                case .paragraph:
-                    Text(inline(block.text)).font(.system(.body, design: .rounded))
-                }
-            }
-        }
-    }
-
-    private func headingStyle(_ level: Int) -> Font.TextStyle {
-        switch level {
-        case 1: return .title3
-        case 2: return .headline
-        default: return .subheadline
-        }
-    }
-
-    private func inline(_ string: String) -> AttributedString {
-        (try? AttributedString(markdown: string, options: .init(
-            interpretedSyntax: .inlineOnlyPreservingWhitespace,
-            failurePolicy: .returnPartiallyParsedIfPossible
-        ))) ?? AttributedString(string)
-    }
-
-    struct Block: Identifiable, Equatable {
-        enum Kind: Equatable { case heading(Int), bullet, numbered(String), code, paragraph }
-        let id: String
-        let kind: Kind
-        let text: String
-    }
-
-    fileprivate static func parse(_ raw: String) -> [Block] {
-        var blocks: [Block] = []
-        let lines = raw.replacingOccurrences(of: "\r\n", with: "\n").components(separatedBy: "\n")
-        var index = 0
-        var blockIndex = 0
-        while index < lines.count {
-            let trimmed = lines[index].trimmingCharacters(in: .whitespaces)
-
-            if trimmed.hasPrefix("```") {
-                var codeLines: [String] = []
-                index += 1
-                while index < lines.count, !lines[index].trimmingCharacters(in: .whitespaces).hasPrefix("```") {
-                    codeLines.append(lines[index])
-                    index += 1
-                }
-                index += 1 // skip the closing fence
-                let text = codeLines.joined(separator: "\n")
-                blocks.append(Block(id: "code-\(blockIndex)", kind: .code, text: text))
-                blockIndex += 1
-                continue
-            }
-
-            if trimmed.isEmpty { index += 1; continue }
-
-            if let level = headingLevel(trimmed) {
-                let content = String(trimmed.drop(while: { $0 == "#" })).trimmingCharacters(in: .whitespaces)
-                blocks.append(Block(id: "heading-\(blockIndex)", kind: .heading(level), text: content))
-            } else if trimmed.hasPrefix("- ") || trimmed.hasPrefix("* ") || trimmed.hasPrefix("+ ") {
-                blocks.append(Block(id: "bullet-\(blockIndex)", kind: .bullet, text: String(trimmed.dropFirst(2)).trimmingCharacters(in: .whitespaces)))
-            } else if let (number, rest) = numberedItem(trimmed) {
-                blocks.append(Block(id: "numbered-\(blockIndex)", kind: .numbered(number), text: rest))
-            } else {
-                blocks.append(Block(id: "paragraph-\(blockIndex)", kind: .paragraph, text: trimmed))
-            }
-            blockIndex += 1
-            index += 1
-        }
-        return blocks
-    }
-
-    private static func headingLevel(_ string: String) -> Int? {
-        let hashes = string.prefix(while: { $0 == "#" }).count
-        guard hashes >= 1, hashes <= 3, string.dropFirst(hashes).first == " " else { return nil }
-        return hashes
-    }
-
-    private static func numberedItem(_ string: String) -> (String, String)? {
-        guard let dotIndex = string.firstIndex(of: ".") else { return nil }
-        let numberPart = string[string.startIndex..<dotIndex]
-        guard !numberPart.isEmpty, numberPart.allSatisfy(\.isNumber),
-              string[string.index(after: dotIndex)...].first == " " else { return nil }
-        let rest = String(string[string.index(after: dotIndex)...]).trimmingCharacters(in: .whitespaces)
-        return (String(numberPart), rest)
-    }
-}
-
-private enum MarkdownMessageBlockCache {
-    private static let cache: NSCache<NSString, NSArray> = {
-        let cache = NSCache<NSString, NSArray>()
-        cache.countLimit = 48
-        return cache
-    }()
-
-    static func blocks(for text: String) -> [MarkdownMessageText.Block] {
-        let key = text as NSString
-        if let cached = cache.object(forKey: key) as? [MarkdownMessageText.Block] {
-            return cached
-        }
-        let parsed = MarkdownMessageText.parse(text)
-        cache.setObject(parsed as NSArray, forKey: key)
-        return parsed
-    }
-}
-
 private struct MessageBubble: View {
+    /// Resolved by `ChatView` from the attachment store; the bubble never does file IO itself.
+    var attachmentImages: [UIImage] = []
     let message: ChatMessage
     var onOpenRecord: (ChatRecordRef) -> Void = { _ in }
 
@@ -1106,8 +1340,7 @@ private struct MessageBubble: View {
 
     private var bubble: some View {
         VStack(alignment: .leading, spacing: 9) {
-            if let imageData = message.attachmentImageData,
-               let uiImage = UIImage(data: imageData) {
+            if let uiImage = attachmentImages.first {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
@@ -1127,7 +1360,7 @@ private struct MessageBubble: View {
                     .foregroundStyle(.white)
             } else {
                 // Coach replies often use markdown — render it.
-                MarkdownMessageText(text: message.content)
+                CoachMarkdownView(text: message.content)
                     .textSelection(.enabled)
                     .foregroundStyle(.primary)
             }

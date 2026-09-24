@@ -283,18 +283,29 @@ struct RecordsCoachToolTests {
         #expect(ChatService.recordsPromptLines(.disabled, newUserMessage: "show my lab reports") == ["- No health records are available: the user has not allowed Coach to use Health Records."])
     }
 
-    @Test func chatHistoryPersistsRecordRefsAndReadsOldHistory() throws {
-        let message = ChatMessage(role: .assistant, content: "Hb improved", recordRefs: [ChatRecordRef(recordID: "r1", title: "CBC", date: "2026-09-12")])
-        let data = try JSONEncoder().encode([message])
-        let text = String(decoding: data, as: UTF8.self)
-        #expect(text.contains("\"record_refs\":[{"))
+    /// §26: an assistant reply persists the records it relied on. Messages live in `coach.sqlite`
+    /// now, where this list is the `record_refs_json` column, so the wire shape is what matters.
+    @Test func recordRefsKeepTheirPersistedShape() throws {
+        let refs = [ChatRecordRef(recordID: "r1", title: "CBC", date: "2026-09-12")]
+        let text = try #require(CoachRepository.encodeRecordRefs(refs))
         #expect(text.contains("\"record_id\":\"r1\""))
         #expect(!text.contains("record_type"))
-        let decoded = try JSONDecoder().decode([ChatMessage].self, from: data)
-        #expect(decoded.first?.recordRefs?.first?.recordID == "r1")
+        #expect(CoachRepository.decodeRecordRefs(text)?.first?.recordID == "r1")
+        // A reply that used no records stores nothing at all, and such a row reads back as none.
+        #expect(CoachRepository.encodeRecordRefs([]) == nil)
+        #expect(CoachRepository.decodeRecordRefs(nil) == nil)
+        #expect(CoachRepository.decodeRecordRefs("[]") == nil)
+    }
+
+    /// The legacy `coachChatHistory` blob must still decode so §12 can move it in.
+    @Test func legacyHistoryStillDecodes() throws {
         let old = #"[{"id":"11111111-2222-3333-4444-555555555555","role":"assistant","content":"hi","timestamp":0}]"#
-        let legacy = try JSONDecoder().decode([ChatMessage].self, from: Data(old.utf8))
+        let legacy = try JSONDecoder().decode([LegacyChatMessage].self, from: Data(old.utf8))
+        #expect(legacy.first?.content == "hi")
         #expect(legacy.first?.recordRefs == nil)
+        let withRefs = #"[{"role":"assistant","content":"Hb improved","record_refs":[{"record_id":"r1","title":"CBC","date":"2026-09-12"}]}]"#
+        let decoded = try JSONDecoder().decode([LegacyChatMessage].self, from: Data(withRefs.utf8))
+        #expect(decoded.first?.recordRefs?.first?.recordID == "r1")
     }
 }
 
@@ -496,7 +507,7 @@ struct RecordsCoachChatServiceTests {
         let reply = try await ChatHTTP.$transport.withValue(transport) {
             try await ChatService.callOpenAICompatible(
                 baseURL: "https://stub.invalid/v1", model: "stub-model", apiKey: "k", systemPrompt: "system",
-                history: [], newUserMessage: "Explain this report", imageData: nil, provider: .openai, tools: tools
+                history: [], newUserMessage: "Explain this report", images: [], provider: .openai, tools: tools
             )
         }
         #expect(reply == "Your hemoglobin is 9.7 g/dL (CBC, 2026-09-12).")

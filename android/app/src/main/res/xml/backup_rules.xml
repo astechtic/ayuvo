@@ -21,4 +21,11 @@
     <exclude domain="database" path="ayuvo_medications.db-shm" />
     <exclude domain="database" path="ayuvo_medications.db-journal" />
     <exclude domain="file" path="ayuvo-medications/" />
+    <!-- Coach conversations (docs/coach.md §2): transcripts quote health values, test results and
+         medicines, so they never leave the device through Android backup. -->
+    <exclude domain="database" path="ayuvo_coach.db" />
+    <exclude domain="database" path="ayuvo_coach.db-wal" />
+    <exclude domain="database" path="ayuvo_coach.db-shm" />
+    <exclude domain="database" path="ayuvo_coach.db-journal" />
+    <exclude domain="file" path="ayuvo-coach/" />
 </full-backup-content>

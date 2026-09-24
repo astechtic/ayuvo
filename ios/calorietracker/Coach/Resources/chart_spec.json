@@ -1,0 +1,153 @@
+{
+  "caps": {
+    "max_label_chars": 60,
+    "max_points": 60,
+    "max_series": 4,
+    "max_title_chars": 120
+  },
+  "fence": "ayuvo-chart",
+  "format": "ayuvo-coach-chart-spec",
+  "keys": {
+    "max": [
+      "max",
+      "target"
+    ],
+    "note": [
+      "note",
+      "subtitle",
+      "caption"
+    ],
+    "point_high": [
+      "y2",
+      "high",
+      "y_high"
+    ],
+    "point_label": [
+      "x",
+      "label",
+      "name",
+      "t"
+    ],
+    "point_value": [
+      "y",
+      "value",
+      "v"
+    ],
+    "points": [
+      "points",
+      "data",
+      "values",
+      "y"
+    ],
+    "series": [
+      "series",
+      "datasets",
+      "data"
+    ],
+    "series_label": [
+      "label",
+      "name",
+      "title"
+    ],
+    "shared_labels": [
+      "labels",
+      "categories",
+      "x_labels"
+    ],
+    "title": [
+      "title"
+    ],
+    "unit": [
+      "unit",
+      "units"
+    ],
+    "x_label": [
+      "x_label",
+      "xLabel",
+      "x_axis",
+      "xAxis"
+    ],
+    "y_label": [
+      "y_label",
+      "yLabel",
+      "y_axis",
+      "yAxis"
+    ]
+  },
+  "missing_readings": "A point whose value is null, absent or unreadable is left out of the chart and counted in `spec.dropped`, which the renderer shows under the plot; a series with no readings left is left out; a spec with nothing left to draw is refused (no_points). A gap is never drawn as zero and a broken number is never read approximately.",
+  "not_repaired": [
+    "single quotes and unquoted keys: guessing what they meant could change a value",
+    "a number with a unit in it (\"6.2 h\")",
+    "a body cut short inside a string, because finishing a label would invent one"
+  ],
+  "notes": "The ayuvo-chart fenced block Coach may emit, and the exact system-prompt section that teaches it. Both platforms embed a verbatim copy and a parity test byte-compares it with this file. scripts/coach_reference.py parse_chart_spec is the executable grammar; where this file and the reference disagree, the reference wins. A spec is read after repair_chart_json, and the keys and type spellings below are accepted alongside the ones the prompt teaches: strictness is about parity between the two phones, not about punishing a model for punctuation.",
+  "point_forms": [
+    "labels + values: {\"labels\": [...], \"series\": [{\"values\": [...]}]}, paired by position",
+    "[label, value]",
+    "[label, low, high] for range",
+    "{\"x\": label, \"y\": value}",
+    "{\"x\": label, \"y\": low, \"y2\": high} for range",
+    "a bare number, whose label becomes its 1-based position"
+  ],
+  "prompt": {
+    "charts_section": "## Charts\nWhen a number is easier to see than to read, draw it. Emit a fenced block tagged `ayuvo-chart` holding one JSON object; the app renders it as a native chart.\n\n```ayuvo-chart\n{\"type\":\"bar\",\"title\":\"Sleep last 7 nights\",\"unit\":\"h\",\"labels\":[\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\",\"Sun\"],\"series\":[{\"label\":\"Asleep\",\"values\":[6.2,7.1,5.4,7.8,6.6,8.1,7.3]}]}\n```\n\n- `type` is one of bar, grouped_bar, stacked_bar, line, area, pie, scatter, range, progress.\n- Optional: `title`, `unit`, `x_label`, `y_label`, `note`, and `max` for progress.\n- At most 4 series and 60 points per series. Every value must be a plain finite number.\n- Write each value as JSON writes numbers: one decimal point at most, no units and no quotes (6.6, never 6.6.6 or \"6.6 h\"), and close every bracket you open. A value the app cannot read is left out of the chart and the chart says so.\n- Put the x labels in `labels` and each series' numbers in `values`, in the same order and the same length. (A `points` list of `[label, value]` pairs is also accepted.)\n- Put one chart in its own block and keep explaining in normal text around it.\n\nEvery value in a chart must come from a tool result, the user's own message or a file they attached. Never estimate, extrapolate or fill a gap to make a chart look complete: leave the day out instead, and say in the text that it is missing. If you do not have real numbers, do not draw a chart.",
+    "guardrails": "Chart guardrails:\n- A chart repeats data you already have; it never introduces a number you did not read from a tool, the user's message or an attachment.\n- Days, weeks or readings with no data are omitted from the chart, never drawn as zero.\n- Keep labels short (a weekday, a date, a test name); the chart is read on a phone."
+  },
+  "reasons": [
+    "invalid_json",
+    "not_an_object",
+    "unknown_type",
+    "no_series",
+    "too_many_series",
+    "too_many_series_for_type",
+    "no_points",
+    "too_many_points",
+    "bad_point",
+    "bad_number",
+    "label_too_long",
+    "missing_y2",
+    "bad_max"
+  ],
+  "repairs": [
+    "// and /* */ comments are dropped",
+    "a comma directly before } or ] is dropped",
+    "NaN, Infinity, -Infinity and undefined become null, which means 'no reading'",
+    "a quote glued to the end of a number (5.38\") is dropped, since it can never start a string",
+    "a number token that is not a number (7.1.0, 01) becomes null for the same reason",
+    "prose after the root value is dropped, and a body that was cut short has its open containers closed"
+  ],
+  "type_aliases": {
+    "band": "range",
+    "bars": "bar",
+    "bubble": "scatter",
+    "column": "bar",
+    "columns": "bar",
+    "donut": "pie",
+    "doughnut": "pie",
+    "gauge": "progress",
+    "group_bar": "grouped_bar",
+    "grouped": "grouped_bar",
+    "horizontal_bar": "bar",
+    "lines": "line",
+    "multi_bar": "grouped_bar",
+    "progress_bar": "progress",
+    "scatter_plot": "scatter",
+    "scatterplot": "scatter",
+    "spline": "line",
+    "stacked": "stacked_bar",
+    "stacked_column": "stacked_bar",
+    "vertical_bar": "bar"
+  },
+  "types": {
+    "area": "One series filled under the line. Same point shape as line.",
+    "bar": "One series of labelled bars. points: [[label, value], ...].",
+    "grouped_bar": "Two to four series sharing the same labels, drawn side by side.",
+    "line": "One to four series over shared labels.",
+    "pie": "Exactly one series; every point is a slice.",
+    "progress": "Exactly one series; each point is a value against `max`.",
+    "range": "One series where every point carries y and y2 (low and high).",
+    "scatter": "One to four series of independent points.",
+    "stacked_bar": "Two to four series stacked on the same labels."
+  },
+  "version": 1
+}

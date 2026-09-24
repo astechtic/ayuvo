@@ -33,6 +33,10 @@ class CloudBackupCoordinator(
     private val drive: DriveCloudBackupClient = DriveCloudBackupClient(
         BuildConfig.CLOUD_BACKUP_WEB_CLIENT_ID
     ),
+    /** The `ayuvo-coach-chats` archive, or null when there is nothing to carry (docs/coach.md §12). */
+    private val buildChatArchive: suspend () -> ByteArray? = { null },
+    /** Merges a restored chats archive; never replaces, never deletes. */
+    private val restoreChatArchive: suspend (ByteArray) -> Unit = {},
 ) {
     private val mutex = Mutex()
     private val _ui = MutableStateFlow(CloudBackupUi())
@@ -174,13 +178,18 @@ class CloudBackupCoordinator(
     private suspend fun upload(token: String, skipIfUnchanged: Boolean = false) {
         val values = prefs.snapshotCloudBackupValues()
         val photos = snapshotPhotos()
-        val hash = CloudBackupArchive.contentHash(values, photos)
+        // Off by default; the toggle is the only thing that puts a transcript in Drive.
+        val chats = if (prefs.coachChatBackupEnabled.first()) {
+            runCatching { buildChatArchive() }.getOrNull()
+        } else null
+        val hash = CloudBackupArchive.contentHash(values, photos, chats)
         if (skipIfUnchanged && hash == prefs.cloudBackupLastHash.first()) return
         val zip = CloudBackupArchive.pack(
             values = values,
             photos = photos,
             exportedAt = Instant.now().toString(),
             appVersion = BuildConfig.VERSION_NAME,
+            chats = chats,
         )
         val fileId = drive.upload(token, zip, prefs.cloudBackupFileId.first())
         prefs.setCloudBackupFileId(fileId)
@@ -210,6 +219,8 @@ class CloudBackupCoordinator(
         images.clearAll()
         unpack.photos.forEach { (name, bytes) -> images.restoreBytes(name, bytes) }
         prefs.restoreCloudBackupValues(unpack.document.payload.values, keepDeviceLocal = fromFile)
+        // Chats are merged, so restoring twice cannot duplicate a conversation (docs/coach.md §11).
+        unpack.chats?.let { runCatching { restoreChatArchive(it) } }
         // Device-specific Health Connect tokens must not transfer. Mark food
         // restore done so Health Connect skips a second import of the same IDs.
         prefs.clearHealthChangesToken()

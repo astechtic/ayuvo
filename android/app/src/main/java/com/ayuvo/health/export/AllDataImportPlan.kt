@@ -1,6 +1,7 @@
 package com.ayuvo.health.export
 
 import com.ayuvo.health.backup.CloudBackupPolicy
+import com.ayuvo.health.coach.export.CoachChatArchiveFormat
 import com.ayuvo.health.medications.logic.MedicationConstants
 import com.ayuvo.health.records.backup.RecordsArchiveFormat
 import kotlinx.serialization.SerializationException
@@ -20,7 +21,8 @@ object AllDataImportPlan {
         AllDataExportCoordinator.SECTION_FOOD_DIARY,
         AllDataExportCoordinator.SECTION_HEALTH_DATA,
         AllDataExportCoordinator.SECTION_MEDICATIONS,
-        AllDataExportCoordinator.SECTION_HEALTH_RECORDS
+        AllDataExportCoordinator.SECTION_HEALTH_RECORDS,
+        AllDataExportCoordinator.SECTION_COACH_CHATS
     )
 
     /** The format each section's file must be in. */
@@ -29,7 +31,8 @@ object AllDataImportPlan {
         AllDataExportCoordinator.SECTION_FOOD_DIARY to FOOD_DIARY_FORMAT,
         AllDataExportCoordinator.SECTION_HEALTH_DATA to HealthExportFormat.FORMAT,
         AllDataExportCoordinator.SECTION_MEDICATIONS to MedicationConstants.ARCHIVE_FORMAT,
-        AllDataExportCoordinator.SECTION_HEALTH_RECORDS to RecordsArchiveFormat.FORMAT
+        AllDataExportCoordinator.SECTION_HEALTH_RECORDS to RecordsArchiveFormat.FORMAT,
+        AllDataExportCoordinator.SECTION_COACH_CHATS to CoachChatArchiveFormat.FORMAT
     )
 
     enum class Invalid { NOT_AYUVO, NEWER_VERSION }

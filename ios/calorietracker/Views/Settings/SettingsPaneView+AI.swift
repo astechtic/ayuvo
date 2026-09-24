@@ -594,6 +594,25 @@ extension SettingsPaneView {
                         }
                     }
                 }
+
+                Label {
+                    Text("Coach").textCase(.uppercase)
+                } icon: {
+                    Image(systemName: "bubble.left.and.text.bubble.right.fill")
+                }
+                .accessibilityAddTraits(.isHeader)
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                .foregroundStyle(AppColors.calorie)
+
+                Toggle(isOn: $coachPromptSuggestions) {
+                    SettingsLabel("Suggested Prompts", systemImage: "sparkles", tint: SettingsTint.ai)
+                }
+                .tint(AppColors.calorie)
+                .accessibilityIdentifier("settings.coach.suggestions")
+
+                Text("Shows a row of suggested questions in Coach. The prompt gallery stays available from the Coach toolbar.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
         }
         .listRowBackground(AppColors.appCard)
     }

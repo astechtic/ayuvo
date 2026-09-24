@@ -294,6 +294,9 @@ nonisolated struct MedicationsRepository: Sendable {
 
     // MARK: - Archive (docs §14)
 
+    /// The same three tables the archive uses, for the Coach tools (docs/medications.md §20).
+    func coachSnapshot() async throws -> RJ { try await snapshot() }
+
     private func snapshot() async throws -> RJ {
         let medications = try await database.allMedications()
         let schedules = try await database.allSchedules()

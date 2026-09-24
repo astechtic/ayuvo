@@ -15,6 +15,12 @@ object CloudBackupPolicy {
     const val VERSION = 1
     const val PAYLOAD_NAME = "backup.json"
     const val PHOTOS_DIR = "photos/"
+
+    /**
+     * Coach conversations, only when the user turned that on (docs/coach.md §12). Off by default:
+     * a transcript can quote test results and medicines, so it takes an affirmative act.
+     */
+    const val CHATS_ENTRY = "coach-chats/ayuvo-coach-chats.zip"
     const val FILE_NAME = "ayuvo-backup.zip"
     const val MIN_AUTO_BACKUP_INTERVAL_MS = 15 * 60 * 1000L
 
@@ -32,7 +38,10 @@ object CloudBackupPolicy {
         "healthHubPromptedVersion",
         "healthHubLastSyncAt",
         "healthHubRateLimitedUntil",
-        // Coach transcripts can quote health data; store policy (5.1.3(ii)) keeps them off the cloud.
+        // Coach transcripts can quote health data; store policy (5.1.3(ii)) keeps them off the
+        // cloud. Conversations now live in ayuvo_coach.db (docs/coach.md §2), but this key is kept
+        // excluded for good: an upgrading device still holds it until the §12 migration runs, and a
+        // restore from an older archive can put it back.
         "coachChatHistory",
         // Health Records preferences stay on this device (docs/health-records.md §6).
         "healthRecordsViewMode",
@@ -84,6 +93,8 @@ data class CloudBackupValue(
 data class CloudBackupUnpack(
     val document: CloudBackupDocument,
     val photos: Map<String, ByteArray>,
+    /** The Coach chats archive, present only when the device that made this backup opted in. */
+    val chats: ByteArray? = null,
 )
 
 object CloudBackupArchive {
@@ -92,7 +103,11 @@ object CloudBackupArchive {
         encodeDefaults = true
     }
 
-    fun contentHash(values: Map<String, CloudBackupValue>, photos: Map<String, ByteArray>): String {
+    fun contentHash(
+        values: Map<String, CloudBackupValue>,
+        photos: Map<String, ByteArray>,
+        chats: ByteArray? = null
+    ): String {
         val canonical = buildString {
             values.toSortedMap().forEach { (key, value) ->
                 append(key).append('=')
@@ -108,6 +123,8 @@ object CloudBackupArchive {
             photos.toSortedMap().forEach { (name, bytes) ->
                 append("photo:").append(name).append(':').append(bytes.size).append('\n')
             }
+            // Only when chats are being backed up, so a store that has none hashes as it always did.
+            if (chats != null) append("chats:").append(sha256(chats)).append('\n')
         }
         return sha256(canonical.toByteArray(Charsets.UTF_8))
     }
@@ -118,6 +135,8 @@ object CloudBackupArchive {
         exportedAt: String,
         appVersion: String,
         platform: String = "android",
+        /** The `ayuvo-coach-chats` archive, or null — the toggle's only effect (docs/coach.md §12). */
+        chats: ByteArray? = null,
     ): ByteArray {
         val filtered = values.filterKeys { it !in CloudBackupPolicy.excludedKeys }
         val safePhotos = photos.mapNotNull { (name, bytes) ->
@@ -129,7 +148,7 @@ object CloudBackupArchive {
             exported_at = exportedAt,
             app_version = appVersion,
             platform = platform,
-            content_sha256 = contentHash(filtered, safePhotos),
+            content_sha256 = contentHash(filtered, safePhotos, chats),
             payload = CloudBackupPayload(values = filtered),
         )
         val payload = json.encodeToString(document).toByteArray(Charsets.UTF_8)
@@ -143,12 +162,18 @@ object CloudBackupArchive {
                 zip.write(bytes)
                 zip.closeEntry()
             }
+            if (chats != null) {
+                zip.putNextEntry(ZipEntry(CloudBackupPolicy.CHATS_ENTRY))
+                zip.write(chats)
+                zip.closeEntry()
+            }
         }
         return out.toByteArray()
     }
 
     fun unpack(bytes: ByteArray): CloudBackupUnpack {
         var payload: ByteArray? = null
+        var chats: ByteArray? = null
         val photos = linkedMapOf<String, ByteArray>()
         ZipInputStream(ByteArrayInputStream(bytes)).use { zip ->
             while (true) {
@@ -159,6 +184,7 @@ object CloudBackupArchive {
                     entry.name.startsWith(CloudBackupPolicy.PHOTOS_DIR) -> {
                         CloudBackupPolicy.safePhotoName(entry.name)?.let { photos[it] = data }
                     }
+                    entry.name == CloudBackupPolicy.CHATS_ENTRY -> chats = data
                 }
             }
         }
@@ -168,7 +194,7 @@ object CloudBackupArchive {
         require(document.format_version <= CloudBackupPolicy.VERSION) {
             "This backup needs a newer Ayuvo"
         }
-        return CloudBackupUnpack(document, photos)
+        return CloudBackupUnpack(document, photos, chats)
     }
 
     fun sha256(bytes: ByteArray): String {

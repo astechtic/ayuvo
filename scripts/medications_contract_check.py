@@ -41,7 +41,7 @@ EXPECTED_FILES = {
     "missed.json": "materialize_missed", "timeline.json": "today_timeline", "adherence.json": "adherence",
     "reminders.json": "plan_reminders", "dose_actions.json": "dose_actions", "lifecycle.json": "lifecycle",
     "auto_complete.json": "auto_complete", "frequency_hint.json": "frequency_hint", "archive.json": "archive",
-    "validation.json": "validate_draft",
+    "validation.json": "validate_draft", "coach_tools_payloads.json": "coach_tools",
 }
 TABLES = ["medications", "medication_schedules", "dose_logs", "medications_meta"]
 INDEXES = ["idx_medications_status", "idx_medications_record", "idx_schedules_medication", "idx_schedules_open",

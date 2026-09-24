@@ -7,7 +7,11 @@ import com.ayuvo.health.models.AIProvider
 import com.ayuvo.health.models.ActivityLevel
 import com.ayuvo.health.models.BodyFatEntry
 import com.ayuvo.health.models.BodyMeasurement
-import com.ayuvo.health.models.ChatMessage
+import com.ayuvo.health.coach.logic.CoachCatalogs
+import com.ayuvo.health.coach.model.CoachDataSwitches
+import com.ayuvo.health.coach.model.CoachMessage
+import com.ayuvo.health.coach.model.CoachSource
+import com.ayuvo.health.medications.coach.CoachMedicationsContext
 import com.ayuvo.health.models.WeightGoal
 import com.ayuvo.health.models.FoodEntry
 import com.ayuvo.health.models.FastingSession
@@ -47,6 +51,34 @@ import java.util.Locale
  * Per-format multi-turn loops are capped at MAX_TOOL_ROUNDS to bound any
  * runaway recursion from a misbehaving model.
  */
+/**
+ * Medication lines of `## Data available` plus the guardrails (docs/medications.md §20). The
+ * "not available" line is only worth the tokens when the user actually asked about medicines.
+ */
+/**
+ * The `## Charts` section that teaches the model the `ayuvo-chart` block, plus its guardrails
+ * (docs/coach.md §5). Both come verbatim from `shared/coach/chart_spec.json`.
+ */
+internal fun chartPromptLines(): List<String> {
+    val section = CoachCatalogs.chartsPromptSection()
+    if (section.isEmpty()) return emptyList()
+    return listOf("", section, "", CoachCatalogs.chartGuardrails())
+}
+
+internal fun medicationsDataLines(medications: CoachMedicationsContext?, message: String): List<String> {
+    if (medications == null || !medications.toolsAvailable) {
+        if (!CoachMedicationsContext.mentionsMedicines(message)) return emptyList()
+        val line = CoachMedicationsContext.notAvailableLine()
+        return if (line.isEmpty()) emptyList() else listOf("- $line")
+    }
+    return buildList {
+        medications.promptLines().forEachIndexed { index, text ->
+            // The first line is the availability sentence; the rest is the guardrail block.
+            if (index == 0) add("- $text") else addAll(text.split("\n"))
+        }
+    }
+}
+
 class ChatService(
     private val prefs: PreferencesStore,
     private val keyStore: KeyStore,
@@ -81,7 +113,7 @@ class ChatService(
         if (!hasImage && prefs.separateTextProviderEnabled.first()) prefs.selectedTextAIProvider.first() else prefs.selectedAIProvider.first()
 
     suspend fun sendMessage(
-        history: List<ChatMessage>,
+        history: List<CoachMessage>,
         newUserMessage: String,
         profile: UserProfile,
         weights: List<WeightEntry>,
@@ -105,7 +137,7 @@ class ChatService(
     ).text
 
     suspend fun send(
-        history: List<ChatMessage>,
+        history: List<CoachMessage>,
         newUserMessage: String,
         profile: UserProfile,
         weights: List<WeightEntry>,
@@ -123,9 +155,17 @@ class ChatService(
         healthSnapshot: HealthCoachSnapshot? = null,
         healthHubEnabled: Boolean = false,
         records: RecordsTurn? = null,
+        medications: CoachMedicationsContext? = null,
+        /** The conversation's data switches (docs/coach.md §8); they only ever narrow. */
+        sources: CoachDataSwitches = CoachDataSwitches.ALL_ON,
         /** §30 "Use on-device Coach": this conversation runs on the on-device model. */
         providerOverride: AIProvider? = null
     ): CoachReply {
+        // A switch that is off removes the source before the prompt or the tools see it, so nothing
+        // downstream has to remember to check again.
+        @Suppress("NAME_SHADOWING") val records = records?.takeIf { sources.isOn(CoachSource.RECORDS) }
+        @Suppress("NAME_SHADOWING") val medications = medications?.takeIf { sources.isOn(CoachSource.MEDICATIONS) }
+        @Suppress("NAME_SHADOWING") val healthSnapshot = healthSnapshot?.takeIf { sources.isOn(CoachSource.HEALTH) }
         val baseSystemPrompt = buildSystemPrompt(
             profile = profile,
             weights = weights,
@@ -140,6 +180,8 @@ class ChatService(
             healthSnapshot = healthSnapshot,
             healthHubEnabled = healthHubEnabled,
             recordsLines = records?.let(::recordsDataLines).orEmpty()
+                + medicationsDataLines(medications, newUserMessage)
+                + chartPromptLines()
         )
         val userContext = prefs.userContext.first()
         val systemPrompt = if (userContext.isNotBlank())
@@ -159,10 +201,16 @@ class ChatService(
         val healthDigest = healthSnapshot?.let { CoachHealthData(it).promptSummary().joinToString("\n") }
         val withDigest = if (healthDigest.isNullOrBlank()) localBase else "$localBase\n\n$healthDigest"
         // §29/§32: the packed block, then the records guardrails (outside the 1,800-character limit).
-        val localSystemPrompt = records?.onDeviceBlock?.takeIf { it.isNotBlank() }?.let { block ->
+        val withRecords = records?.onDeviceBlock?.takeIf { it.isNotBlank() }?.let { block ->
             withDigest + "\n\n" + onDeviceRecordsTail(block, records.guardrails)
         } ?: withDigest
+        // docs/coach.md §3: names and schedules only, never a dose recommendation.
+        val localSystemPrompt = medications?.takeIf { it.toolsAvailable }?.onDeviceBlock()?.let { block ->
+            withRecords + "\n\n" + block
+        } ?: withRecords
         val tools = CoachTools(
+            medications = medications,
+            sources = sources,
             weights = weights,
             bodyFats = bodyFats,
             foods = foods,
@@ -225,7 +273,9 @@ class ChatService(
 
     /** Records tools run through their suspend executor; every other tool through [CoachTools.execute]. */
     private suspend fun executeTool(tools: CoachTools, name: String, args: JSONObject): String =
-        tools.executeRecords(name, jsonToMap(args)) ?: tools.execute(name, args)
+        tools.executeRecords(name, jsonToMap(args))
+            ?: tools.executeMedications(name, jsonToMap(args))
+            ?: tools.execute(name, args)
 
     private fun jsonToMap(o: JSONObject): Map<String, Any?> {
         val out = LinkedHashMap<String, Any?>()
@@ -247,7 +297,7 @@ class ChatService(
         baseUrl: String,
         apiKey: String?,
         systemPrompt: String,
-        history: List<ChatMessage>,
+        history: List<CoachMessage>,
         newUserMessage: String,
         tools: CoachTools,
         imageBytes: ByteArray?,
@@ -258,7 +308,7 @@ class ChatService(
         if (provider == AIProvider.LOCAL_GEMMA) {
             val conversation = buildString {
                 history.takeLast(12).forEach { message ->
-                    append(if (message.role == ChatMessage.Role.USER) "User: " else "Assistant: ")
+                    append(if (message.role == CoachMessage.Role.USER) "User: " else "Assistant: ")
                     appendLine(message.content)
                 }
                 append("User: ")
@@ -452,7 +502,7 @@ class ChatService(
         model: String,
         apiKey: String?,
         systemPrompt: String,
-        history: List<ChatMessage>,
+        history: List<CoachMessage>,
         newUserMessage: String,
         provider: AIProvider,
         tools: CoachTools,
@@ -478,7 +528,7 @@ class ChatService(
         val messages = JSONArray()
         messages.put(JSONObject().put("role", "system").put("content", systemPrompt))
         for (msg in history) {
-            val role = if (msg.role == ChatMessage.Role.USER) "user" else "assistant"
+            val role = if (msg.role == CoachMessage.Role.USER) "user" else "assistant"
             messages.put(JSONObject().put("role", role).put("content", msg.content))
         }
         messages.put(JSONObject().put("role", "user").put("content", openAIUserContent(newUserMessage, imageBytes)))
@@ -567,7 +617,7 @@ class ChatService(
         model: String,
         apiKey: String,
         systemPrompt: String,
-        history: List<ChatMessage>,
+        history: List<CoachMessage>,
         newUserMessage: String,
         tools: CoachTools,
         imageBytes: ByteArray?,
@@ -587,7 +637,7 @@ class ChatService(
         // get appended into messages as the loop runs.
         val messages = JSONArray()
         for (msg in history) {
-            val role = if (msg.role == ChatMessage.Role.USER) "user" else "assistant"
+            val role = if (msg.role == CoachMessage.Role.USER) "user" else "assistant"
             messages.put(JSONObject().put("role", role).put("content", msg.content))
         }
         messages.put(JSONObject().put("role", "user").put("content", anthropicUserContent(newUserMessage, imageBytes)))
@@ -659,7 +709,7 @@ class ChatService(
         model: String,
         apiKey: String,
         systemPrompt: String,
-        history: List<ChatMessage>,
+        history: List<CoachMessage>,
         newUserMessage: String,
         tools: CoachTools,
         imageBytes: ByteArray?
@@ -680,7 +730,7 @@ class ChatService(
         // be either text or function_call / function_response.
         val contents = JSONArray()
         for (msg in history) {
-            val role = if (msg.role == ChatMessage.Role.USER) "user" else "model"
+            val role = if (msg.role == CoachMessage.Role.USER) "user" else "model"
             contents.put(JSONObject().apply {
                 put("role", role)
                 put("parts", JSONArray().put(JSONObject().put("text", msg.content)))

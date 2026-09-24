@@ -5,6 +5,8 @@ import android.util.Log
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.BuildConfig
 import com.ayuvo.health.backup.CloudBackupArchive
+import com.ayuvo.health.coach.export.CoachChatArchiveFormat
+import com.ayuvo.health.coach.export.CoachChatArchiveWriter
 import com.ayuvo.health.backup.CloudBackupPolicy
 import com.ayuvo.health.data.health.HealthDatabase
 import com.ayuvo.health.medications.export.MedicationsArchive
@@ -25,7 +27,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 /** The steps of one "Export All Data" run, in order (progress + the UI's step label). */
-enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, MEDICATIONS, HEALTH_RECORDS, APP_BACKUP, WRITING }
+enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, MEDICATIONS, HEALTH_RECORDS, COACH_CHATS, APP_BACKUP, WRITING }
 
 sealed interface AllDataExportOutcome {
     data class Done(val fileCount: Int, val skippedSections: List<String>) : AllDataExportOutcome
@@ -95,6 +97,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
             section(SECTION_HEALTH_DATA, AllDataExportStep.HEALTH_DATA) { healthData(work) }
             section(SECTION_MEDICATIONS, AllDataExportStep.MEDICATIONS) { medications(work) }
             section(SECTION_HEALTH_RECORDS, AllDataExportStep.HEALTH_RECORDS) { records(work) }
+            section(SECTION_COACH_CHATS, AllDataExportStep.COACH_CHATS) { coachChats(work) }
             section(SECTION_APP_BACKUP, AllDataExportStep.APP_BACKUP) { appBackup(work) }
 
             if (sections.isEmpty()) return@withContext AllDataExportOutcome.NothingToExport
@@ -210,6 +213,29 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         )
     }
 
+    /** Coach chats: the `ayuvo-coach-chats` archive with the files the user attached (docs/coach.md §11). */
+    private suspend fun coachChats(work: File): SectionResult {
+        if (!container.coachDatabaseExists()) return SectionResult.Skip(AllDataExportArchive.REASON_NOT_SET_UP)
+        val file = File(work, CoachChatArchiveFormat.FILE_NAME)
+        val result = CoachChatArchiveWriter(container.coachRepository, BuildConfig.VERSION_NAME).export(file)
+        if (result.isEmpty) return SectionResult.Skip(AllDataExportArchive.REASON_EMPTY)
+        return SectionResult.Ok(
+            AllDataExportArchive.Section(
+                id = SECTION_COACH_CHATS,
+                format = CoachChatArchiveFormat.FORMAT,
+                path = "coach-chats/${CoachChatArchiveFormat.FILE_NAME}",
+                description = "Coach conversations with the files you attached (ayuvo-coach-chats archive). Import with Settings › Backup & Export › Import All Data.",
+                counts = mapOf(
+                    "conversations" to result.conversations.toLong(),
+                    "messages" to result.messages.toLong(),
+                    "attachments" to result.attachments.toLong(),
+                    "files" to result.files.toLong()
+                ),
+                source = file
+            )
+        )
+    }
+
     /** App data: the same `ayuvo-backup.zip` the Google Drive backup uploads (settings, profile, logs, meal photos). */
     private suspend fun appBackup(work: File): SectionResult {
         val values = container.prefs.snapshotCloudBackupValues()
@@ -247,6 +273,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         const val SECTION_HEALTH_DATA = "health_data"
         const val SECTION_MEDICATIONS = "medications"
         const val SECTION_HEALTH_RECORDS = "health_records"
+        const val SECTION_COACH_CHATS = "coach_chats"
         const val SECTION_APP_BACKUP = "app_backup"
     }
 }

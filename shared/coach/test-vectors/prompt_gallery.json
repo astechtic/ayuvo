@@ -1,0 +1,219 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "categories": [
+          {
+            "category": "nutrition",
+            "ids": [
+              "macro_balance",
+              "dinner_tonight",
+              "protein_sources",
+              "week_review"
+            ]
+          },
+          {
+            "category": "training",
+            "ids": [
+              "training_review",
+              "lift_progress"
+            ]
+          },
+          {
+            "category": "planning",
+            "ids": [
+              "reach_my_goal",
+              "month_over_month",
+              "one_thing_to_change"
+            ]
+          }
+        ],
+        "count": 9
+      },
+      "input": {
+        "sources": {
+          "food": true
+        }
+      },
+      "name": "food only"
+    },
+    {
+      "expected": {
+        "categories": [
+          {
+            "category": "nutrition",
+            "ids": [
+              "diet_chart_from_health",
+              "macro_balance",
+              "dinner_tonight",
+              "protein_sources",
+              "week_review"
+            ]
+          },
+          {
+            "category": "sleep",
+            "ids": [
+              "improve_sleep_cycle",
+              "sleep_week",
+              "sleep_consistency",
+              "sleep_and_resting_hr"
+            ]
+          },
+          {
+            "category": "training",
+            "ids": [
+              "training_review",
+              "moving_enough",
+              "lift_progress",
+              "recovery_check"
+            ]
+          },
+          {
+            "category": "planning",
+            "ids": [
+              "reach_my_goal",
+              "month_over_month",
+              "one_thing_to_change"
+            ]
+          }
+        ],
+        "count": 16
+      },
+      "input": {
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "food and health"
+    },
+    {
+      "expected": {
+        "categories": [
+          {
+            "category": "labs",
+            "ids": [
+              "explain_latest_report",
+              "find_abnormal",
+              "compare_reports",
+              "analyte_trend",
+              "questions_for_doctor"
+            ]
+          }
+        ],
+        "count": 5
+      },
+      "input": {
+        "sources": {
+          "records": true
+        }
+      },
+      "name": "records only"
+    },
+    {
+      "expected": {
+        "categories": [
+          {
+            "category": "medications",
+            "ids": [
+              "adherence_check",
+              "medication_schedule",
+              "missed_dose_pattern"
+            ]
+          }
+        ],
+        "count": 3
+      },
+      "input": {
+        "sources": {
+          "medications": true
+        }
+      },
+      "name": "medications only"
+    },
+    {
+      "expected": {
+        "categories": [
+          {
+            "category": "nutrition",
+            "ids": [
+              "diet_chart_from_health",
+              "macro_balance",
+              "dinner_tonight",
+              "protein_sources",
+              "week_review"
+            ]
+          },
+          {
+            "category": "sleep",
+            "ids": [
+              "improve_sleep_cycle",
+              "sleep_week",
+              "sleep_consistency",
+              "sleep_and_resting_hr"
+            ]
+          },
+          {
+            "category": "training",
+            "ids": [
+              "training_review",
+              "moving_enough",
+              "lift_progress",
+              "recovery_check"
+            ]
+          },
+          {
+            "category": "labs",
+            "ids": [
+              "explain_latest_report",
+              "find_abnormal",
+              "compare_reports",
+              "analyte_trend",
+              "questions_for_doctor"
+            ]
+          },
+          {
+            "category": "medications",
+            "ids": [
+              "adherence_check",
+              "medication_schedule",
+              "missed_dose_pattern"
+            ]
+          },
+          {
+            "category": "planning",
+            "ids": [
+              "reach_my_goal",
+              "month_over_month",
+              "one_thing_to_change",
+              "whole_picture"
+            ]
+          }
+        ],
+        "count": 25
+      },
+      "input": {
+        "sources": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        }
+      },
+      "name": "everything"
+    },
+    {
+      "expected": {
+        "categories": [],
+        "count": 0
+      },
+      "input": {
+        "sources": {}
+      },
+      "name": "nothing connected"
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "gallery_for",
+  "version": 1
+}

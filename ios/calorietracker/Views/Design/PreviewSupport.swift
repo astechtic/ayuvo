@@ -11,7 +11,7 @@ private struct AyuvoPreviewEnvironment: ViewModifier {
     @State private var notificationManager = NotificationManager()
     @State private var healthKitManager = HealthKitManager()
     @State private var profileStore = ProfileStore()
-    @State private var chatStore = ChatStore()
+    @State private var chatStore = CoachStore()
     @State private var waterStore = WaterStore()
     @State private var fastingStore = FastingStore()
     @State private var strengthWorkoutStore = StrengthWorkoutStore()

@@ -56,7 +56,8 @@ struct ChatService {
     static func sendMessage(
         history: [ChatMessage],
         newUserMessage: String,
-        imageData: Data? = nil,
+        /// Pictures the user attached to this turn, in order (docs/coach.md §6, cap 4).
+        images: [Data] = [],
         profile: UserProfile,
         weights: [WeightEntry],
         bodyFats: [BodyFatEntry],
@@ -71,8 +72,17 @@ struct ChatService {
         workoutAccessEnabled: Bool = false,
         health: CoachHealthContext? = nil,
         records: CoachRecordsContext? = nil,
+        medications: CoachMedicationsContext? = nil,
+        /// The conversation's data switches (docs/coach.md §8); they only ever narrow.
+        sources: CoachDataSwitches = .allOn,
         providerOverride: AIProvider? = nil
     ) async throws -> String {
+        // A switch that is off removes the source before the prompt or the tools see it, so nothing
+        // downstream has to remember to check again.
+        let health = sources.isOn(.health) ? health : nil
+        let records = sources.isOn(.records) ? records : nil
+        let medications = sources.isOn(.medications) ? medications : nil
+        let workoutAccessEnabled = workoutAccessEnabled && sources.isOn(.food)
         let systemPrompt = buildSystemPrompt(
             profile: profile,
             weights: weights,
@@ -87,6 +97,7 @@ struct ChatService {
             workoutAccessEnabled: workoutAccessEnabled,
             health: health,
             records: records,
+            medications: medications,
             newUserMessage: newUserMessage
         )
         let tools = CoachTools(
@@ -101,7 +112,9 @@ struct ChatService {
             workoutAccessEnabled: workoutAccessEnabled,
             health: health,
             healthAccessEnabled: health?.context.enabled ?? false,
-            records: records
+            records: records,
+            medications: medications,
+            sources: sources
         )
 
         // Tool-less modes cannot call the health tools; give them a short 7-day digest instead,
@@ -110,7 +123,7 @@ struct ChatService {
 
         let config = providerOverride.map {
             AIProviderSettings.RequestConfig(provider: $0, model: $0 == .gemma4Local ? Gemma4LocalModelManager.modelID : "", baseURL: $0.baseURL, apiKey: nil)
-        } ?? AIProviderSettings.currentConfig(requiresVision: imageData != nil)
+        } ?? AIProviderSettings.currentConfig(requiresVision: !images.isEmpty)
         func request(
             provider: AIProvider,
             model: String,
@@ -128,7 +141,7 @@ struct ChatService {
                     systemPrompt: onDeviceSystemPrompt,
                     history: history,
                     newUserMessage: newUserMessage,
-                    imageData: imageData
+                    images: images
                 )
             case .liteRTLocal:
                 await records?.session.add(records?.onDeviceBlock.isEmpty == false ? (records?.packedRefs ?? []) : [])
@@ -146,17 +159,16 @@ struct ChatService {
                 """
                 return try await Gemma4LocalModelManager.shared.generate(
                     prompt: newUserMessage,
-                    images: imageData.map { [$0] } ?? [],
                     systemPrompt: localInstructions,
                     history: localHistory,
                     maxOutputTokens: AIProviderSettings.maxResponseTokens
                 )
             case .gemini:
-                return try await callGemini(baseURL: baseURL, model: model, apiKey: apiKey, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, imageData: imageData, tools: tools)
+                return try await callGemini(baseURL: baseURL, model: model, apiKey: apiKey, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, images: images, tools: tools)
             case .anthropic:
-                return try await callAnthropic(baseURL: baseURL, model: model, apiKey: apiKey, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, imageData: imageData, tools: tools)
+                return try await callAnthropic(baseURL: baseURL, model: model, apiKey: apiKey, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, images: images, tools: tools)
             case .openaiCompatible:
-                return try await callOpenAICompatible(baseURL: baseURL, model: model, apiKey: apiKey, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, imageData: imageData, provider: provider, tools: tools)
+                return try await callOpenAICompatible(baseURL: baseURL, model: model, apiKey: apiKey, systemPrompt: systemPrompt, history: history, newUserMessage: newUserMessage, images: images, provider: provider, tools: tools)
             }
         }
 
@@ -171,7 +183,7 @@ struct ChatService {
             if error is CancellationError { throw error }
             if case ChatError.recordsSwitchToOnDevice = error { throw error }
             if providerOverride != nil { throw error }
-            let fallback = imageData == nil
+            let fallback = images.isEmpty
                 ? AIProviderSettings.currentTextFallbackConfig(
                     excludingPrimary: config.provider,
                     model: config.model
@@ -203,9 +215,9 @@ struct ChatService {
         systemPrompt: String,
         history: [ChatMessage],
         newUserMessage: String,
-        imageData: Data?
+        images: [Data]
     ) async throws -> String {
-        guard imageData == nil else {
+        guard images.isEmpty else {
             throw ChatError.apiError("Apple Intelligence is available for text-only conversations.")
         }
 
@@ -257,6 +269,22 @@ struct ChatService {
         return block
     }
 
+    /// Medication lines of `## Data available` plus the guardrails (docs/medications.md §20). The
+    /// "not available" line is only worth the tokens when the user actually asked about medicines.
+    static func medicationsPromptLines(_ medications: CoachMedicationsContext?, newUserMessage: String) -> [String] {
+        guard let medications, medications.toolsAvailable else {
+            guard CoachMedicationsContext.mentionsMedicines(newUserMessage) else { return [] }
+            let line = CoachMedicationsContext.notAvailableLine
+            return line.isEmpty ? [] : ["- " + line]
+        }
+        var lines: [String] = []
+        for (index, text) in medications.promptLines.enumerated() {
+            // The first line is the availability sentence; the rest is the guardrail block.
+            lines.append(contentsOf: index == 0 ? ["- " + text] : text.components(separatedBy: "\n"))
+        }
+        return lines
+    }
+
     /// Records lines of `## Data available`, the guardrails block and the selected records (§26).
     static func recordsPromptLines(_ records: CoachRecordsContext?, newUserMessage: String) -> [String] {
         guard let records else { return [] }
@@ -298,6 +326,7 @@ struct ChatService {
         workoutAccessEnabled: Bool = false,
         health: CoachHealthContext? = nil,
         records: CoachRecordsContext? = nil,
+        medications: CoachMedicationsContext? = nil,
         newUserMessage: String = ""
     ) -> String {
         let forecast = WeightAnalysisService.compute(weights: weights, foods: foods, profile: profile)
@@ -416,6 +445,13 @@ struct ChatService {
             lines.append("- No health data is available (Apple Health sync or Coach health access is off).")
         }
         lines.append(contentsOf: recordsPromptLines(records, newUserMessage: newUserMessage))
+        lines.append(contentsOf: medicationsPromptLines(medications, newUserMessage: newUserMessage))
+        if !CoachCatalog.chartsPromptSection.isEmpty {
+            lines.append("")
+            lines.append(CoachCatalog.chartsPromptSection)
+            lines.append("")
+            lines.append(CoachCatalog.chartGuardrails)
+        }
         if let latest = measurements.max(by: { $0.date < $1.date }),
            let summary = latest.promptSummary(gender: profile.gender, heightCm: profile.heightCm) {
             lines.append("")
@@ -449,7 +485,7 @@ struct ChatService {
         }
     }
 
-    static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, imageData: Data?, provider: AIProvider, tools: CoachTools) async throws -> String {
+    static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], provider: AIProvider, tools: CoachTools) async throws -> String {
         guard let url = URL(string: "\(baseURL)/chat/completions") else {
             throw ChatError.apiError("Invalid API URL.")
         }
@@ -458,8 +494,8 @@ struct ChatService {
         for msg in history {
             messages.append(["role": msg.role.rawValue, "content": msg.content])
         }
-        if let imageData {
-            messages.append(["role": "user", "content": openAIUserContent(text: newUserMessage, imageData: imageData)])
+        if !images.isEmpty {
+            messages.append(["role": "user", "content": openAIUserContent(text: newUserMessage, images: images)])
         } else {
             messages.append(["role": "user", "content": newUserMessage])
         }
@@ -545,14 +581,13 @@ struct ChatService {
         throw ChatError.apiError("Coach exceeded the tool-call round limit. Try rephrasing your question.")
     }
 
-    private static func openAIUserContent(text: String, imageData: Data) -> [[String: Any]] {
-        [
+    private static func openAIUserContent(text: String, images: [Data]) -> [[String: Any]] {
+        images.map { data -> [String: Any] in
             [
                 "type": "image_url",
-                "image_url": ["url": "data:image/jpeg;base64,\(imageData.base64EncodedString())"],
-            ],
-            ["type": "text", "text": text],
-        ]
+                "image_url": ["url": "data:image/jpeg;base64,\(data.base64EncodedString())"],
+            ]
+        } + [["type": "text", "text": text]]
     }
 
     // MARK: - Anthropic Messages API
@@ -570,7 +605,7 @@ struct ChatService {
         }
     }
 
-    private static func callAnthropic(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, imageData: Data?, tools: CoachTools) async throws -> String {
+    private static func callAnthropic(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools) async throws -> String {
         guard let apiKey else { throw ChatError.noAPIKey }
         guard let url = URL(string: "\(baseURL)/messages") else {
             throw ChatError.apiError("Invalid API URL.")
@@ -579,8 +614,8 @@ struct ChatService {
         for msg in history {
             messages.append(["role": msg.role.rawValue, "content": msg.content])
         }
-        if let imageData {
-            messages.append(["role": "user", "content": anthropicUserContent(text: newUserMessage, imageData: imageData)])
+        if !images.isEmpty {
+            messages.append(["role": "user", "content": anthropicUserContent(text: newUserMessage, images: images)])
         } else {
             messages.append(["role": "user", "content": newUserMessage])
         }
@@ -641,18 +676,17 @@ struct ChatService {
         throw ChatError.apiError("Coach exceeded the tool-call round limit. Try rephrasing your question.")
     }
 
-    private static func anthropicUserContent(text: String, imageData: Data) -> [[String: Any]] {
-        [
+    private static func anthropicUserContent(text: String, images: [Data]) -> [[String: Any]] {
+        images.map { data -> [String: Any] in
             [
                 "type": "image",
                 "source": [
                     "type": "base64",
                     "media_type": "image/jpeg",
-                    "data": imageData.base64EncodedString(),
+                    "data": data.base64EncodedString(),
                 ],
-            ],
-            ["type": "text", "text": text],
-        ]
+            ]
+        } + [["type": "text", "text": text]]
     }
 
     // MARK: - Gemini (v1beta generateContent with system_instruction + tools)
@@ -688,7 +722,7 @@ struct ChatService {
         return ["functionResponse": functionResponse]
     }
 
-    private static func callGemini(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, imageData: Data?, tools: CoachTools) async throws -> String {
+    private static func callGemini(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools) async throws -> String {
         guard let apiKey else { throw ChatError.noAPIKey }
         guard let url = URL(string: "\(baseURL)/models/\(model):generateContent") else {
             throw ChatError.apiError("Invalid API URL.")
@@ -699,7 +733,7 @@ struct ChatService {
             let role = msg.role == .user ? "user" : "model"
             contents.append(["role": role, "parts": [["text": msg.content]]])
         }
-        contents.append(["role": "user", "parts": geminiUserParts(text: newUserMessage, imageData: imageData)])
+        contents.append(["role": "user", "parts": geminiUserParts(text: newUserMessage, images: images)])
 
         let toolsObj = geminiToolsObject(for: tools)
 
@@ -755,15 +789,14 @@ struct ChatService {
         throw ChatError.apiError("Coach exceeded the tool-call round limit. Try rephrasing your question.")
     }
 
-    private static func geminiUserParts(text: String, imageData: Data?) -> [[String: Any]] {
-        var parts: [[String: Any]] = []
-        if let imageData {
-            parts.append([
+    private static func geminiUserParts(text: String, images: [Data]) -> [[String: Any]] {
+        var parts: [[String: Any]] = images.map { data -> [String: Any] in
+            [
                 "inlineData": [
                     "mimeType": "image/jpeg",
-                    "data": imageData.base64EncodedString(),
+                    "data": data.base64EncodedString(),
                 ],
-            ])
+            ]
         }
         parts.append(["text": text])
         return parts

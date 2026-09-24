@@ -1,0 +1,4424 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "count": 3,
+        "medications": [
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "before",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "schedule": {
+              "anchor_time": null,
+              "days": [
+                1,
+                4
+              ],
+              "frequency": "weekly",
+              "interval_hours": null,
+              "reminders_on": true,
+              "times": [
+                "07:00"
+              ]
+            },
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "50 mcg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "schedule": {
+              "anchor_time": null,
+              "days": [],
+              "frequency": "daily",
+              "interval_hours": null,
+              "reminders_on": true,
+              "times": [
+                "08:00",
+                "20:00"
+              ]
+            },
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "anytime",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": true,
+            "medication_id": "m-para",
+            "name": "Paracetamol",
+            "schedule": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "650 mg"
+          }
+        ]
+      },
+      "input": {
+        "args": {},
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "tool": "get_medications"
+      },
+      "name": "get_medications lists active only"
+    },
+    {
+      "expected": {
+        "count": 4,
+        "medications": [
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": "2026-09-10",
+            "food_relation": "anytime",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-amox",
+            "name": "Amoxicillin",
+            "schedule": null,
+            "start_date": "2026-09-01",
+            "status": "completed",
+            "strength": "625 mg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "before",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "schedule": {
+              "anchor_time": null,
+              "days": [
+                1,
+                4
+              ],
+              "frequency": "weekly",
+              "interval_hours": null,
+              "reminders_on": true,
+              "times": [
+                "07:00"
+              ]
+            },
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "50 mcg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "schedule": {
+              "anchor_time": null,
+              "days": [],
+              "frequency": "daily",
+              "interval_hours": null,
+              "reminders_on": true,
+              "times": [
+                "08:00",
+                "20:00"
+              ]
+            },
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "anytime",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": true,
+            "medication_id": "m-para",
+            "name": "Paracetamol",
+            "schedule": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "650 mg"
+          }
+        ]
+      },
+      "input": {
+        "args": {
+          "include_inactive": true
+        },
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "tool": "get_medications"
+      },
+      "name": "get_medications include_inactive"
+    },
+    {
+      "expected": {
+        "count": 3,
+        "medications": [
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "before",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "schedule": {
+              "anchor_time": null,
+              "days": [
+                1,
+                4
+              ],
+              "frequency": "weekly",
+              "interval_hours": null,
+              "reminders_on": true,
+              "times": [
+                "07:00"
+              ]
+            },
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "50 mcg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "schedule": {
+              "anchor_time": null,
+              "days": [],
+              "frequency": "daily",
+              "interval_hours": null,
+              "reminders_on": true,
+              "times": [
+                "08:00",
+                "20:00"
+              ]
+            },
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg"
+          },
+          {
+            "brand_name": null,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "anytime",
+            "form": "tablet",
+            "generic_name": null,
+            "instructions": null,
+            "is_prn": true,
+            "medication_id": "m-para",
+            "name": "Paracetamol",
+            "schedule": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "650 mg"
+          }
+        ]
+      },
+      "input": {
+        "args": {
+          "include_inactive": "yes"
+        },
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "tool": "get_medications"
+      },
+      "name": "get_medications include_inactive must be exactly true"
+    },
+    {
+      "expected": {
+        "count": 0,
+        "medications": []
+      },
+      "input": {
+        "args": {},
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        },
+        "tool": "get_medications"
+      },
+      "name": "get_medications on an empty store"
+    },
+    {
+      "expected": {
+        "count": 17,
+        "doses": [
+          {
+            "date": "2026-09-20",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789914600000,
+            "status": "due",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-20",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789871400000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-19",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789828200000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-19",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789785000000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-18",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789741800000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-18",
+            "dose_quantity": 2,
+            "dose_unit": "tablet",
+            "is_prn": true,
+            "medication_id": "m-para",
+            "name": "Paracetamol",
+            "note": "headache",
+            "scheduled_at": "14:00",
+            "scheduled_at_ms": 1789720200000,
+            "status": "taken",
+            "taken_at": "14:00"
+          },
+          {
+            "date": "2026-09-18",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789698600000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-17",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789655400000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-17",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789612200000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-17",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "note": null,
+            "scheduled_at": "07:00",
+            "scheduled_at_ms": 1789608600000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-16",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789569000000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-16",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789525800000,
+            "status": "taken",
+            "taken_at": "08:12"
+          },
+          {
+            "date": "2026-09-15",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789482600000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-15",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789439400000,
+            "status": "skipped",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-14",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": "forgot after dinner",
+            "scheduled_at": "20:00",
+            "scheduled_at_ms": 1789396200000,
+            "status": "taken_late",
+            "taken_at": "23:30"
+          },
+          {
+            "date": "2026-09-14",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-metformin",
+            "name": "Metformin",
+            "note": null,
+            "scheduled_at": "08:00",
+            "scheduled_at_ms": 1789353000000,
+            "status": "taken",
+            "taken_at": "08:05"
+          },
+          {
+            "date": "2026-09-14",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "note": null,
+            "scheduled_at": "07:00",
+            "scheduled_at_ms": 1789349400000,
+            "status": "taken",
+            "taken_at": "07:02"
+          }
+        ],
+        "from": "2026-09-14",
+        "to": "2026-09-20"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history for the week",
+      "notes": "Occurrences with no log resolve to missed because now is past their grace window."
+    },
+    {
+      "expected": {
+        "count": 2,
+        "doses": [
+          {
+            "date": "2026-09-17",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "note": null,
+            "scheduled_at": "07:00",
+            "scheduled_at_ms": 1789608600000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-14",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "note": null,
+            "scheduled_at": "07:00",
+            "scheduled_at_ms": 1789349400000,
+            "status": "taken",
+            "taken_at": "07:02"
+          }
+        ],
+        "from": "2026-09-14",
+        "to": "2026-09-20"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "limit": 2,
+          "medication_id": "m-levo",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history for one medicine with a limit"
+    },
+    {
+      "expected": {
+        "count": 1,
+        "doses": [
+          {
+            "date": "2026-09-18",
+            "dose_quantity": 2,
+            "dose_unit": "tablet",
+            "is_prn": true,
+            "medication_id": "m-para",
+            "name": "Paracetamol",
+            "note": "headache",
+            "scheduled_at": "14:00",
+            "scheduled_at_ms": 1789720200000,
+            "status": "taken",
+            "taken_at": "14:00"
+          }
+        ],
+        "from": "2026-09-14",
+        "to": "2026-09-20"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "medication_id": "m-para",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history includes an as-needed dose"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "doses": [
+          {
+            "date": "2026-09-17",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "note": null,
+            "scheduled_at": "07:00",
+            "scheduled_at_ms": 1789608600000,
+            "status": "missed",
+            "taken_at": null
+          },
+          {
+            "date": "2026-09-14",
+            "dose_quantity": null,
+            "dose_unit": null,
+            "is_prn": false,
+            "medication_id": "m-levo",
+            "name": "Levothyroxine",
+            "note": null,
+            "scheduled_at": "07:00",
+            "scheduled_at_ms": 1789349400000,
+            "status": "taken",
+            "taken_at": "07:02"
+          }
+        ],
+        "from": "2026-09-14",
+        "to": "2026-09-20"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "limit": 1.5,
+          "medication_id": "m-levo",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history a fractional limit falls back to the cap"
+    },
+    {
+      "expected": {
+        "error": "invalid date '14-09-2026' (expected yyyy-MM-dd)"
+      },
+      "input": {
+        "args": {
+          "from": "14-09-2026",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history rejects a bad date"
+    },
+    {
+      "expected": {
+        "error": "from must be on or before to"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-20",
+          "to": "2026-09-14"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history rejects a reversed range"
+    },
+    {
+      "expected": {
+        "error": "unknown medication_id 'm-nope'; call get_medications"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "medication_id": "m-nope",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_dose_history"
+      },
+      "name": "get_dose_history rejects an unknown medicine"
+    },
+    {
+      "expected": {
+        "from": "2026-09-14",
+        "medications": [
+          {
+            "has_data": true,
+            "medication_id": "m-levo",
+            "missed": 1,
+            "most_missed_time": "07:00",
+            "name": "Levothyroxine",
+            "percent": 50,
+            "scheduled": 2,
+            "skipped": 0,
+            "still_open": 0,
+            "taken": 1,
+            "taken_late": 0
+          },
+          {
+            "has_data": true,
+            "medication_id": "m-metformin",
+            "missed": 9,
+            "most_missed_time": "08:00",
+            "name": "Metformin",
+            "percent": 23,
+            "scheduled": 13,
+            "skipped": 1,
+            "still_open": 1,
+            "taken": 3,
+            "taken_late": 1
+          }
+        ],
+        "overall": {
+          "has_data": true,
+          "missed": 10,
+          "most_missed_time": "08:00",
+          "percent": 27,
+          "scheduled": 15,
+          "skipped": 1,
+          "still_open": 1,
+          "taken": 4,
+          "taken_late": 1
+        },
+        "to": "2026-09-20"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_medication_adherence"
+      },
+      "name": "get_medication_adherence for the week",
+      "notes": "percent comes from the §9 adherence function, so the tool and the adherence screen agree."
+    },
+    {
+      "expected": {
+        "from": "2026-09-14",
+        "medications": [
+          {
+            "has_data": true,
+            "medication_id": "m-metformin",
+            "missed": 9,
+            "most_missed_time": "08:00",
+            "name": "Metformin",
+            "percent": 23,
+            "scheduled": 13,
+            "skipped": 1,
+            "still_open": 1,
+            "taken": 3,
+            "taken_late": 1
+          }
+        ],
+        "overall": {
+          "has_data": true,
+          "missed": 9,
+          "most_missed_time": "08:00",
+          "percent": 23,
+          "scheduled": 13,
+          "skipped": 1,
+          "still_open": 1,
+          "taken": 3,
+          "taken_late": 1
+        },
+        "to": "2026-09-20"
+      },
+      "input": {
+        "args": {
+          "from": "2026-09-14",
+          "medication_id": "m-metformin",
+          "to": "2026-09-20"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_medication_adherence"
+      },
+      "name": "get_medication_adherence for one medicine"
+    },
+    {
+      "expected": {
+        "from": "2026-01-01",
+        "medications": [],
+        "overall": {
+          "has_data": false,
+          "missed": 0,
+          "most_missed_time": null,
+          "percent": 0,
+          "scheduled": 0,
+          "skipped": 0,
+          "still_open": 0,
+          "taken": 0,
+          "taken_late": 0
+        },
+        "to": "2026-01-07"
+      },
+      "input": {
+        "args": {
+          "from": "2026-01-01",
+          "to": "2026-01-07"
+        },
+        "now_ms": 1789918200000,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "time_zone": "Asia/Kolkata",
+        "tool": "get_medication_adherence"
+      },
+      "name": "get_medication_adherence with nothing in the window"
+    },
+    {
+      "expected": {
+        "advertise_tools": true,
+        "available_line": "4 medicines are tracked in Ayuvo (3 active). Use get_medications, get_dose_history and get_medication_adherence to read them.",
+        "guardrails": "Medication guardrails:\n- Never tell the user to start, stop, change, skip or combine a medicine, and never suggest a dose. Those are decisions for the person who prescribed it.\n- Use only the medicines, times and doses returned by the tools; never invent a name, strength or schedule.\n- You may describe adherence patterns and suggest practical ways to remember a dose.\n- For side effects, interactions, or whether a medicine is working, say to ask their doctor or pharmacist.",
+        "not_available_line": null
+      },
+      "input": {
+        "access_enabled": true,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "tool": "prompt_lines"
+      },
+      "name": "prompt lines when access is on"
+    },
+    {
+      "expected": {
+        "advertise_tools": false,
+        "available_line": null,
+        "guardrails": null,
+        "not_available_line": "No medication data is available: the user has not added any medicines, or has turned off Coach access to them."
+      },
+      "input": {
+        "access_enabled": false,
+        "snapshot": {
+          "dose_logs": [
+            {
+              "created_ms": 1789353300000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l1",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789353000000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789353300000,
+              "updated_ms": 1789353300000
+            },
+            {
+              "created_ms": 1789408800000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l2",
+              "medication_id": "m-metformin",
+              "note": "forgot after dinner",
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789396200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789408800000,
+              "updated_ms": 1789408800000
+            },
+            {
+              "created_ms": 1789439400000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l3",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789439400000,
+              "snoozed_until_ms": null,
+              "status": "skipped",
+              "taken_at_ms": null,
+              "updated_ms": 1789439400000
+            },
+            {
+              "created_ms": 1789482600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l4",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789482600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789482600000
+            },
+            {
+              "created_ms": 1789526520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l5",
+              "medication_id": "m-metformin",
+              "note": null,
+              "schedule_id": "s-metformin",
+              "scheduled_at_ms": 1789525800000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789526520000,
+              "updated_ms": 1789526520000
+            },
+            {
+              "created_ms": 1789349520000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l6",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789349400000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789349520000,
+              "updated_ms": 1789349520000
+            },
+            {
+              "created_ms": 1789608600000,
+              "dose_quantity": null,
+              "dose_unit": null,
+              "id": "l7",
+              "medication_id": "m-levo",
+              "note": null,
+              "schedule_id": "s-levo",
+              "scheduled_at_ms": 1789608600000,
+              "snoozed_until_ms": null,
+              "status": "missed",
+              "taken_at_ms": null,
+              "updated_ms": 1789608600000
+            },
+            {
+              "created_ms": 1789720200000,
+              "dose_quantity": 2,
+              "dose_unit": "tablet",
+              "id": "l8",
+              "medication_id": "m-para",
+              "note": "headache",
+              "schedule_id": null,
+              "scheduled_at_ms": 1789720200000,
+              "snoozed_until_ms": null,
+              "status": "taken",
+              "taken_at_ms": 1789720200000,
+              "updated_ms": 1789720200000
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "500 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "before",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-levo",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Levothyroxine",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "50 mcg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-para",
+              "instructions": null,
+              "is_prn": 1,
+              "name": "Paracetamol",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": "650 mg",
+              "updated_ms": 1788233400000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788233400000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": "2026-09-10",
+              "food_relation": "anytime",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "m-amox",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Amoxicillin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "completed",
+              "strength": "625 mg",
+              "updated_ms": 1788233400000
+            }
+          ],
+          "schedules": [
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [],
+              "frequency_kind": "daily",
+              "id": "s-metformin",
+              "interval_hours": null,
+              "medication_id": "m-metformin",
+              "reminder_enabled": 1,
+              "times": [
+                "08:00",
+                "20:00"
+              ],
+              "updated_ms": 1788233400000
+            },
+            {
+              "active_from_ms": 1788233400000,
+              "active_until_ms": null,
+              "anchor_time": null,
+              "created_ms": 1788233400000,
+              "days": [
+                1,
+                4
+              ],
+              "frequency_kind": "weekly",
+              "id": "s-levo",
+              "interval_hours": null,
+              "medication_id": "m-levo",
+              "reminder_enabled": 1,
+              "times": [
+                "07:00"
+              ],
+              "updated_ms": 1788233400000
+            }
+          ]
+        },
+        "tool": "prompt_lines"
+      },
+      "name": "prompt lines when access is off"
+    },
+    {
+      "expected": {
+        "advertise_tools": false,
+        "available_line": null,
+        "guardrails": null,
+        "not_available_line": "No medication data is available: the user has not added any medicines, or has turned off Coach access to them."
+      },
+      "input": {
+        "access_enabled": true,
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        },
+        "tool": "prompt_lines"
+      },
+      "name": "prompt lines with no medicines"
+    }
+  ],
+  "format": "ayuvo-medications-vectors",
+  "function": "coach_tools",
+  "version": 1
+}

@@ -1,0 +1,188 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "ids": [
+          "reach_my_goal",
+          "week_review",
+          "dinner_tonight",
+          "one_thing_to_change"
+        ]
+      },
+      "input": {
+        "goal": "lose",
+        "has_sleep": false,
+        "has_workouts": false,
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "lose, food and health on"
+    },
+    {
+      "expected": {
+        "ids": [
+          "training_review",
+          "reach_my_goal",
+          "week_review",
+          "dinner_tonight",
+          "one_thing_to_change"
+        ]
+      },
+      "input": {
+        "goal": "lose",
+        "has_sleep": false,
+        "has_workouts": true,
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "lose, training history"
+    },
+    {
+      "expected": {
+        "ids": [
+          "sleep_week",
+          "training_review",
+          "reach_my_goal",
+          "week_review",
+          "dinner_tonight",
+          "one_thing_to_change"
+        ]
+      },
+      "input": {
+        "goal": "lose",
+        "has_sleep": true,
+        "has_workouts": true,
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "lose, training and sleep",
+      "notes": "Sleep leads, then training, then the goal's own prompts."
+    },
+    {
+      "expected": {
+        "ids": [
+          "reach_my_goal",
+          "protein_sources",
+          "week_review",
+          "one_thing_to_change"
+        ]
+      },
+      "input": {
+        "goal": "gain",
+        "has_sleep": false,
+        "has_workouts": false,
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "gain"
+    },
+    {
+      "expected": {
+        "ids": [
+          "month_over_month",
+          "week_review",
+          "macro_balance"
+        ]
+      },
+      "input": {
+        "goal": "maintain",
+        "has_sleep": false,
+        "has_workouts": false,
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "maintain"
+    },
+    {
+      "expected": {
+        "ids": [
+          "week_review",
+          "reach_my_goal",
+          "one_thing_to_change"
+        ]
+      },
+      "input": {
+        "goal": null,
+        "has_sleep": false,
+        "has_workouts": false,
+        "sources": {
+          "food": true,
+          "health": true
+        }
+      },
+      "name": "no goal yet"
+    },
+    {
+      "expected": {
+        "ids": [
+          "training_review",
+          "reach_my_goal",
+          "week_review",
+          "dinner_tonight",
+          "one_thing_to_change"
+        ]
+      },
+      "input": {
+        "goal": "lose",
+        "has_sleep": true,
+        "has_workouts": true,
+        "sources": {
+          "food": true
+        }
+      },
+      "name": "food only hides what health would answer",
+      "notes": "A chip is hidden by the same rule as a gallery card: its requires are not satisfied."
+    },
+    {
+      "expected": {
+        "ids": []
+      },
+      "input": {
+        "goal": "lose",
+        "has_sleep": true,
+        "has_workouts": true,
+        "sources": {}
+      },
+      "name": "nothing connected",
+      "notes": "No chips at all rather than chips that cannot be answered."
+    },
+    {
+      "expected": {
+        "ids": [
+          "sleep_week",
+          "training_review",
+          "month_over_month",
+          "week_review",
+          "macro_balance",
+          "whole_picture"
+        ]
+      },
+      "input": {
+        "goal": "maintain",
+        "has_sleep": true,
+        "has_workouts": true,
+        "sources": {
+          "food": true,
+          "health": true,
+          "medications": true,
+          "records": true
+        }
+      },
+      "name": "cap",
+      "notes": "Sleep + training + four goal prompts is exactly MAX_CHIPS."
+    }
+  ],
+  "format": "ayuvo-coach-vectors",
+  "function": "chips_for",
+  "version": 1
+}

@@ -20,11 +20,12 @@ struct AllDataImportTests {
         ("medications/m.json", "medications"),
         ("app-backup/ayuvo-backup.zip", "app_backup"),
         ("health-data/h.zip", "health_data"),
+        ("coach-chats/ayuvo-coach-chats.zip", "coach_chats"),
     ]
 
     @Test func validSamePlatformPlanRunsInOrderAndLetsTheBackupCoverTheDiary() throws {
         let plan = try AllDataImport.plan(manifestData: manifest(files: allFiles), entryNames: Set(allFiles.map(\.0) + ["manifest.json"]))
-        #expect(plan.items.map(\.section) == [.appBackup, .foodDiary, .healthData, .medications, .healthRecords])
+        #expect(plan.items.map(\.section) == [.appBackup, .foodDiary, .healthData, .medications, .healthRecords, .coachChats])
         #expect(plan.items.first { $0.section == .appBackup }?.disposition == .importIt)
         let diary = try #require(plan.items.first { $0.section == .foodDiary })
         #expect(diary.disposition == .coveredByAppBackup)

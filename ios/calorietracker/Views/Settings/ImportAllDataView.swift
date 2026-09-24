@@ -12,6 +12,7 @@ struct ImportAllDataView: View {
     @Environment(MedicationStore.self) private var medicationStore
     @Environment(RecordsStore.self) private var recordsStore
     @Environment(AppBackupService.self) private var appBackup
+    @Environment(CoachStore.self) private var chatStore
     @Environment(\.dismiss) private var dismiss
 
     @State private var showPicker = false
@@ -198,6 +199,7 @@ struct ImportAllDataView: View {
         case .healthData: "Health data"
         case .medications: "Medications"
         case .healthRecords: "Health Records"
+        case .coachChats: "Coach chats"
         }
     }
 
@@ -208,6 +210,7 @@ struct ImportAllDataView: View {
         case .healthData: "heart.text.square.fill"
         case .medications: "pills.fill"
         case .healthRecords: "doc.text.fill"
+        case .coachChats: "bubble.left.and.bubble.right.fill"
         }
     }
 
@@ -218,6 +221,7 @@ struct ImportAllDataView: View {
         case .healthData: AyuvoPalette.vitals
         case .medications: AyuvoPalette.medications
         case .healthRecords: AyuvoPalette.records
+        case .coachChats: AyuvoPalette.other
         }
     }
 
@@ -238,6 +242,8 @@ struct ImportAllDataView: View {
             String(localized: "Adds new medications, schedules and doses and keeps the newer copy of each. Nothing is deleted.")
         case (.healthRecords, _):
             String(localized: "Adds records that aren't on this iPhone yet. Nothing is removed.")
+        case (.coachChats, _):
+            String(localized: "Adds chats that aren't on this iPhone and keeps the newer copy of each. A chat you deleted here stays deleted.")
         }
     }
 
@@ -375,6 +381,22 @@ struct ImportAllDataView: View {
             case .failure(let error):
                 throw error
             }
+
+        case .coachChats:
+            // Merge, never delete: a chat the user removed here stays removed (docs/coach.md §11).
+            guard let repository = await chatStore.repositoryIfOpen(), let files = await chatStore.fileStore() else {
+                throw AllDataImport.ImportError.damaged
+            }
+            let result = try await CoachChatArchiveReader(repository: repository, files: files).import(from: file)
+            guard result.ok else {
+                throw result.error == "newer_version"
+                    ? AllDataImport.ImportError.newerVersion
+                    : AllDataImport.ImportError.damaged
+            }
+            await chatStore.reloadConversations()
+            let added = result.counts["conversations_inserted"] ?? 0
+            let messages = (result.counts["messages_inserted"] ?? 0) + (result.counts["messages_updated"] ?? 0)
+            return String(localized: "\(added) chats added, \(messages) messages merged.")
         }
     }
 }

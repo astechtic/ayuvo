@@ -1,0 +1,295 @@
+{
+  "categories": [
+    "nutrition",
+    "sleep",
+    "training",
+    "labs",
+    "medications",
+    "planning"
+  ],
+  "format": "ayuvo-coach-prompt-gallery",
+  "notes": "The Coach prompt gallery. `id` is the key both platforms use for their localized title and prompt (iOS *.xcstrings, Android strings.xml); `title_en` / `prompt_en` are the English source of truth those resources are seeded from and what the parity test compares. `requires` lists the data sources that must be effective (scripts/coach_reference.py resolve_data_sources) for the entry to be offered at all — an entry is hidden, never greyed out. Order inside a category is `order` ascending, then `id`.",
+  "prompts": [
+    {
+      "category": "nutrition",
+      "icon": "fork.knife",
+      "id": "diet_chart_from_health",
+      "order": 10,
+      "prompt_en": "Make me a diet chart using my health data. Use what you know about my intake, weight trend and activity, and explain why each meal is there.",
+      "requires": [
+        "food",
+        "health"
+      ],
+      "title_en": "Make a diet chart from my health data"
+    },
+    {
+      "category": "nutrition",
+      "icon": "chart.pie",
+      "id": "macro_balance",
+      "order": 20,
+      "prompt_en": "How balanced are my macros over the last two weeks? Chart protein, carbs and fat and tell me what to change.",
+      "requires": [
+        "food"
+      ],
+      "title_en": "Are my macros balanced?"
+    },
+    {
+      "category": "nutrition",
+      "icon": "takeoutbag.and.cup.and.straw",
+      "id": "dinner_tonight",
+      "order": 30,
+      "prompt_en": "Based on what I have already eaten today, what should I have for dinner to stay on target?",
+      "requires": [
+        "food"
+      ],
+      "title_en": "What should I eat for dinner?"
+    },
+    {
+      "category": "nutrition",
+      "icon": "drop",
+      "id": "protein_sources",
+      "order": 40,
+      "prompt_en": "I want more protein without many more calories. Look at what I usually eat and suggest realistic swaps.",
+      "requires": [
+        "food"
+      ],
+      "title_en": "Help me hit my protein target"
+    },
+    {
+      "category": "nutrition",
+      "icon": "calendar",
+      "id": "week_review",
+      "order": 50,
+      "prompt_en": "Review my last week of eating. What went well, what slipped, and what is the one thing to fix next week?",
+      "requires": [
+        "food"
+      ],
+      "title_en": "Review my week of eating"
+    },
+    {
+      "category": "sleep",
+      "icon": "moon.zzz",
+      "id": "improve_sleep_cycle",
+      "order": 10,
+      "prompt_en": "How do I improve my sleep cycle? Look at my bedtimes, wake times and sleep stages, chart the pattern, and give me a plan I can actually keep.",
+      "requires": [
+        "health"
+      ],
+      "title_en": "How do I improve my sleep cycle?"
+    },
+    {
+      "category": "sleep",
+      "icon": "bed.double",
+      "id": "sleep_week",
+      "order": 20,
+      "prompt_en": "How did I sleep this week? Chart it night by night and tell me whether it is enough.",
+      "requires": [
+        "health"
+      ],
+      "title_en": "How did I sleep this week?"
+    },
+    {
+      "category": "sleep",
+      "icon": "clock.arrow.circlepath",
+      "id": "sleep_consistency",
+      "order": 30,
+      "prompt_en": "Is my sleep schedule consistent? Show me how much my bedtime moves around and what that is costing me.",
+      "requires": [
+        "health"
+      ],
+      "title_en": "Is my sleep schedule consistent?"
+    },
+    {
+      "category": "sleep",
+      "icon": "heart.text.square",
+      "id": "sleep_and_resting_hr",
+      "order": 40,
+      "prompt_en": "Does my resting heart rate change with how I sleep? Compare the two over the last month.",
+      "requires": [
+        "health"
+      ],
+      "title_en": "Sleep and my resting heart rate"
+    },
+    {
+      "category": "training",
+      "icon": "figure.strengthtraining.traditional",
+      "id": "training_review",
+      "order": 10,
+      "prompt_en": "Analyze my last four weeks of training. Where am I progressing, where have I stalled, and what should next week look like?",
+      "requires": [
+        "food"
+      ],
+      "title_en": "Analyze my last 4 weeks of training"
+    },
+    {
+      "category": "training",
+      "icon": "figure.walk",
+      "id": "moving_enough",
+      "order": 20,
+      "prompt_en": "Am I moving enough? Chart my steps and active energy for the last month against what would be a good target for me.",
+      "requires": [
+        "health"
+      ],
+      "title_en": "Am I moving enough?"
+    },
+    {
+      "category": "training",
+      "icon": "arrow.up.right",
+      "id": "lift_progress",
+      "order": 30,
+      "prompt_en": "Chart how my main lifts have moved over the last three months and tell me what to push next.",
+      "requires": [
+        "food"
+      ],
+      "title_en": "How are my lifts progressing?"
+    },
+    {
+      "category": "training",
+      "icon": "bolt.heart",
+      "id": "recovery_check",
+      "order": 40,
+      "prompt_en": "Am I recovering well between sessions? Look at my training load alongside my sleep and resting heart rate.",
+      "requires": [
+        "food",
+        "health"
+      ],
+      "title_en": "Am I recovering between sessions?"
+    },
+    {
+      "category": "labs",
+      "icon": "list.clipboard",
+      "id": "explain_latest_report",
+      "order": 10,
+      "prompt_en": "Explain my latest blood report: what stands out, what is normal, and what should I ask my doctor?",
+      "requires": [
+        "records"
+      ],
+      "title_en": "Explain my latest blood report"
+    },
+    {
+      "category": "labs",
+      "icon": "exclamationmark.triangle",
+      "id": "find_abnormal",
+      "order": 20,
+      "prompt_en": "Find any abnormal values across my health records and tell me which ones are worth asking about.",
+      "requires": [
+        "records"
+      ],
+      "title_en": "Find abnormal values in my reports"
+    },
+    {
+      "category": "labs",
+      "icon": "arrow.left.arrow.right",
+      "id": "compare_reports",
+      "order": 30,
+      "prompt_en": "Compare my latest report with the previous one. What changed, and does the direction matter?",
+      "requires": [
+        "records"
+      ],
+      "title_en": "Compare my last two reports"
+    },
+    {
+      "category": "labs",
+      "icon": "chart.xyaxis.line",
+      "id": "analyte_trend",
+      "order": 40,
+      "prompt_en": "Chart how my key lab values have changed over time and explain the trend in plain language.",
+      "requires": [
+        "records"
+      ],
+      "title_en": "Chart my lab values over time"
+    },
+    {
+      "category": "labs",
+      "icon": "stethoscope",
+      "id": "questions_for_doctor",
+      "order": 50,
+      "prompt_en": "Based on my records, what should I ask at my next appointment? Keep it to a short list I can read out.",
+      "requires": [
+        "records"
+      ],
+      "title_en": "What should I ask my doctor?"
+    },
+    {
+      "category": "medications",
+      "icon": "pills",
+      "id": "adherence_check",
+      "order": 10,
+      "prompt_en": "Am I taking my medicines on time? Show my adherence for the last month and when I most often miss a dose.",
+      "requires": [
+        "medications"
+      ],
+      "title_en": "Am I taking my medicines on time?"
+    },
+    {
+      "category": "medications",
+      "icon": "calendar.badge.clock",
+      "id": "medication_schedule",
+      "order": 20,
+      "prompt_en": "Walk me through my current medicines and when I am meant to take each one.",
+      "requires": [
+        "medications"
+      ],
+      "title_en": "Explain my current schedule"
+    },
+    {
+      "category": "medications",
+      "icon": "questionmark.circle",
+      "id": "missed_dose_pattern",
+      "order": 30,
+      "prompt_en": "Which doses do I miss most often, and what would make them easier to remember?",
+      "requires": [
+        "medications"
+      ],
+      "title_en": "Which doses do I keep missing?"
+    },
+    {
+      "category": "planning",
+      "icon": "target",
+      "id": "reach_my_goal",
+      "order": 10,
+      "prompt_en": "At my current rate, when do I reach my goal weight? Chart the projection and tell me what would move it.",
+      "requires": [
+        "food"
+      ],
+      "title_en": "When will I reach my goal?"
+    },
+    {
+      "category": "planning",
+      "icon": "calendar.badge.exclamationmark",
+      "id": "month_over_month",
+      "order": 20,
+      "prompt_en": "Compare this month with last month across everything you can see, and chart what changed most.",
+      "requires": [
+        "food"
+      ],
+      "title_en": "Compare this month with last"
+    },
+    {
+      "category": "planning",
+      "icon": "sparkles",
+      "id": "one_thing_to_change",
+      "order": 30,
+      "prompt_en": "If I could only change one habit this month, what does my data say it should be?",
+      "requires": [
+        "food"
+      ],
+      "title_en": "One thing to change this month"
+    },
+    {
+      "category": "planning",
+      "icon": "doc.text.magnifyingglass",
+      "id": "whole_picture",
+      "order": 40,
+      "prompt_en": "Put my whole picture together: intake, movement, sleep, labs and medicines. What is the headline?",
+      "requires": [
+        "food",
+        "health",
+        "medications",
+        "records"
+      ],
+      "title_en": "Give me the whole picture"
+    }
+  ],
+  "version": 1
+}

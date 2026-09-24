@@ -13,8 +13,12 @@ import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.SmartToy
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +44,7 @@ import com.ayuvo.health.ui.settings.SettingsPageContext
 import com.ayuvo.health.ui.settings.SettingsSheet
 import com.ayuvo.health.ui.settings.SettingsTint
 import com.ayuvo.health.ui.settings.SpeechProviderBrandIcon
+import kotlinx.coroutines.launch
 
 /** The provider logo in white on the row's fixed-colour square, sized like every other row icon. */
 @Composable
@@ -241,6 +246,26 @@ internal fun AiProvidersPage(ctx: SettingsPageContext) {
                 ctx, ui.fallbackProvider, ui.fallbackModel, ui.fallbackApiKeyMasked,
                 SettingsSheet.FALLBACK_PROVIDER, SettingsSheet.FALLBACK_MODEL, SettingsSheet.FALLBACK_KEY, SettingsSheet.FALLBACK_BASE_URL,
                 showTimeout = !ui.selectedAI.usesConfigurableRequestTimeout, idPrefix = "imageFallback"
+            )
+        }
+    }
+
+    // Coach's suggested prompts (docs/coach.md §9). The gallery stays in the Coach toolbar either way.
+    val suggestions by ctx.container.prefs.coachPromptSuggestions.collectAsState(initial = true)
+    val scope = rememberCoroutineScope()
+    InsetGroup(
+        header = stringResource(R.string.settings_section_coach),
+        footer = stringResource(R.string.settings_coach_suggestions_info)
+    ) {
+        row {
+            GroupRow(
+                title = stringResource(R.string.settings_coach_suggestions),
+                icon = Icons.Filled.AutoAwesome, iconTint = tint,
+                modifier = Modifier.settingsRow("coachSuggestions"),
+                trailing = RowTrailing.Toggle(
+                    checked = suggestions,
+                    onChange = { value -> scope.launch { ctx.container.prefs.setCoachPromptSuggestions(value) } }
+                )
             )
         }
     }

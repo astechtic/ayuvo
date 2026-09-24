@@ -32,11 +32,13 @@ class AllDataImportPlanTest {
         file("medications", "medications/ayuvo-medications.json"),
         file("food_diary", "food-diary/d.json"),
         file("app_backup", "app-backup/ayuvo-backup.zip"),
-        file("health_data", "health-data/h.zip")
+        file("health_data", "health-data/h.zip"),
+        file("coach_chats", "coach-chats/ayuvo-coach-chats.zip")
     )
     private val entries = setOf(
         "manifest.json", "health-records/r.zip", "medications/ayuvo-medications.json",
-        "food-diary/d.json", "app-backup/ayuvo-backup.zip", "health-data/h.zip"
+        "food-diary/d.json", "app-backup/ayuvo-backup.zip", "health-data/h.zip",
+        "coach-chats/ayuvo-coach-chats.zip"
     )
 
     private fun ok(result: AllDataImportPlan.Result) = (result as AllDataImportPlan.Result.Ok).plan
@@ -49,7 +51,7 @@ class AllDataImportPlanTest {
         assertNull(plan.sections[0].skip)
         assertEquals(SkipReason.IN_APP_BACKUP, plan.sections[1].skip)
         assertTrue(plan.sections.drop(2).all { it.imports })
-        assertEquals(4, plan.importCount)
+        assertEquals(5, plan.importCount)
         assertEquals(mapOf("records" to 2L), plan.sections[4].counts)
     }
 
@@ -58,7 +60,7 @@ class AllDataImportPlanTest {
         val plan = ok(AllDataImportPlan.plan(manifest(all, platform = "ios"), entries))
         assertEquals(SkipReason.OTHER_PLATFORM, plan.sections.first { it.id == "app_backup" }.skip)
         assertTrue(plan.sections.first { it.id == "food_diary" }.imports)
-        assertEquals(4, plan.importCount)
+        assertEquals(5, plan.importCount)
     }
 
     @Test
