@@ -17,6 +17,7 @@ WEB = ROOT / "web"
 
 BASE = "https://ayuvo-health.web.app"
 GITHUB = "https://github.com/astechtic/ayuvo"
+GITHUB_OWNER = "https://github.com/astechtic"
 FUD_AI = "https://github.com/apoorvdarshan/fud-ai"
 EMAIL = "yaaratech@gmail.com"
 SITE_NAME = "Ayuvo"
@@ -113,7 +114,8 @@ def phone(slug: str, alt: str, lazy: bool = True, eager: bool = False) -> str:
 
 
 def phones(items: list[tuple[str, str]], cls: str = "", eager_index: int | None = None) -> str:
-    inner = "".join(phone(s, a, eager=(i == eager_index)) for i, (s, a) in enumerate(items))
+    hero = eager_index is not None
+    inner = "".join(phone(s, a, lazy=not hero, eager=(i == eager_index)) for i, (s, a) in enumerate(items))
     klass = f"phones {cls}".strip()
     return f'<div class="{klass}">{inner}</div>'
 
@@ -250,15 +252,15 @@ def nav(current: str) -> str:
 
 def footer() -> str:
     MARK = asset("/assets/brand/ayuvo-mark.svg")
-    feat = "".join(f'<li><a href="{u}">{t}</a></li>' for u, t, _ in FEATURE_LINKS[:6])
+    feat = "".join(f'<li><a href="{u}">{t}</a></li>' for u, t, _ in FEATURE_LINKS[:6]) + '<li><a href="/compare">Compare apps</a></li>'
     return f"""<footer class="footer"><div class="container">
 <div class="footer-grid">
 <div class="footer-brand"><a href="/" class="footer-brand-mark"><img src="{MARK}" alt="" width="30" height="30"><span>Ayuvo</span></a>
 <p>Your whole health in one private app for iPhone and Android. Open source under the MIT licence.</p></div>
-<div class="footer-col"><h4>Features</h4><ul>{feat}</ul></div>
-<div class="footer-col"><h4>Privacy</h4><ul><li><a href="/privacy-first">Private by design</a></li><li><a href="/features/on-device-ai">On-device AI</a></li><li><a href="/ai-providers">AI providers</a></li><li><a href="/features/switch-phones">Switch phones</a></li><li><a href="/privacy">Privacy Policy</a></li></ul></div>
-<div class="footer-col"><h4>Open source</h4><ul><li><a href="{GITHUB}" rel="noopener">GitHub</a></li><li><a href="/open-source">Contribute</a></li><li><a href="{GITHUB}/blob/main/LICENSE" rel="noopener">MIT licence</a></li><li><a href="{GITHUB}/blob/main/SECURITY.md" rel="noopener">Security policy</a></li></ul></div>
-<div class="footer-col"><h4>Help</h4><ul><li><a href="/download">Download</a></li><li><a href="/support">Support</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Features</p><ul>{feat}</ul></div>
+<div class="footer-col"><p class="footer-h">Privacy</p><ul><li><a href="/privacy-first">Private by design</a></li><li><a href="/features/on-device-ai">On-device AI</a></li><li><a href="/ai-providers">AI providers</a></li><li><a href="/features/switch-phones">Switch phones</a></li><li><a href="/privacy">Privacy Policy</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Open source</p><ul><li><a href="{GITHUB}" rel="noopener">GitHub</a></li><li><a href="/open-source">Contribute</a></li><li><a href="{GITHUB}/blob/main/LICENSE" rel="noopener">MIT licence</a></li><li><a href="{GITHUB}/blob/main/SECURITY.md" rel="noopener">Security policy</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Help</p><ul><li><a href="/download">Download</a></li><li><a href="/about">About</a></li><li><a href="/support">Support</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
 </div>
 <p class="footer-legal">Apple, the Apple logo, iPhone and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Google Play, Android and Health Connect are trademarks of Google LLC. Gemma and MedGemma are trademarks of Google. Ayuvo is an independent app and is not affiliated with or endorsed by Apple or Google. Ayuvo is not a medical device and does not give medical advice.</p>
 <div class="footer-bottom"><span>© 2026 Yaara Tech · MIT licensed</span><span>Set in Fraunces &amp; Manrope · No cookies, no trackers</span></div>
@@ -287,6 +289,12 @@ class Page:
     in_sitemap: bool = True
     robots: str = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
     crumb: str = ""
+    mentions: list[dict] = field(default_factory=list)   # other products the page discusses (name + url only)
+    main_entity: str | None = None                         # @id of the node this page is mainly about
+
+    @property
+    def noindex(self) -> bool:
+        return "noindex" in self.robots
 
     @property
     def slug(self) -> str:
@@ -300,8 +308,8 @@ class Page:
     def out_file(self) -> Path:
         if self.path == "/":
             return WEB / "index.html"
-        if self.path == "/features":
-            return WEB / "features" / "index.html"
+        if self.path in ("/features", "/compare"):
+            return WEB / self.path.strip("/") / "index.html"
         return WEB / (self.path.strip("/") + ".html")
 
     @property
@@ -324,7 +332,7 @@ def organization_node() -> dict:
         "name": "Yaara Tech",
         "url": BASE + "/",
         "logo": {"@type": "ImageObject", "url": f"{BASE}/assets/brand/logo-512.png", "width": 512, "height": 512},
-        "sameAs": [GITHUB],
+        "sameAs": [GITHUB_OWNER],
         "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": EMAIL, "url": f"{BASE}/support"},
     }
 
@@ -369,6 +377,9 @@ def software_node(screens: list[str]) -> dict:
             "18 languages, no account, no ads, no analytics",
         ],
         "publisher": {"@id": f"{BASE}/#organization"},
+        "author": {"@id": f"{BASE}/#organization"},
+        "inLanguage": "en",
+        "mainEntityOfPage": {"@id": f"{BASE}/#webpage"},
         "license": "https://opensource.org/licenses/MIT",
         "sameAs": [GITHUB],
         "url": BASE + "/",
@@ -433,22 +444,44 @@ def render(page: Page, css_v: str, js_v: str) -> str:
         head.append(f'<link rel="preload" as="image" type="image/webp" href="{asset(page.lcp)}" fetchpriority="high">')
     head += [f'<link rel="stylesheet" href="/styles.css?v={css_v}">', f'<script defer src="/site.js?v={js_v}"></script>']
 
-    # structured data
+    if page.noindex:
+        head = [h for h in head if not h.startswith(('<link rel="canonical"', '<link rel="alternate" href='))]
+
+    # structured data (none on noindex pages)
     blocks: list[dict] = []
-    if home:
+    if page.noindex:
+        pass
+    elif home:
         blocks.append({"@context": "https://schema.org", "@graph": [organization_node(), website_node()]})
         blocks.append({"@context": "https://schema.org", **software_node(["summary", "records", "coach", "medications"])})
+        blocks.append({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "@id": f"{BASE}/#webpage",
+            "url": url,
+            "name": page.title,
+            "description": page.description,
+            "inLanguage": "en",
+            "dateModified": page.modified,
+            "isPartOf": {"@id": f"{BASE}/#website"},
+            "about": {"@id": f"{BASE}/#software"},
+            "publisher": {"@id": f"{BASE}/#organization"},
+            "primaryImageOfPage": {"@type": "ImageObject", "url": og_url, "width": 1200, "height": 630},
+        })
     else:
+        # every page carries the nodes it references, because crawlers do not merge graphs across pages
+        blocks.append({"@context": "https://schema.org", "@graph": [organization_node(), website_node()]})
         crumbs = [("Home", "/")] + page.crumbs + [(page.crumb or page.title.split(" — ")[0].split(" | ")[0], page.path)]
         blocks.append({
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
+            "@id": f"{url}#breadcrumb",
             "itemListElement": [
                 {"@type": "ListItem", "position": i, "name": n, "item": BASE + ("/" if p == "/" else p)}
                 for i, (n, p) in enumerate(crumbs, 1)
             ],
         })
-        wp_type = {"collection": "CollectionPage", "legal": "WebPage", "source": "WebPage"}.get(page.kind, "WebPage")
+        wp_type = {"collection": "CollectionPage", "about": "AboutPage", "legal": "WebPage", "source": "WebPage"}.get(page.kind, "WebPage")
         wp = {
             "@context": "https://schema.org",
             "@type": wp_type,
@@ -459,13 +492,21 @@ def render(page: Page, css_v: str, js_v: str) -> str:
             "inLanguage": "en",
             "dateModified": page.modified,
             "isPartOf": {"@id": f"{BASE}/#website"},
+            "publisher": {"@id": f"{BASE}/#organization"},
+            "breadcrumb": {"@id": f"{url}#breadcrumb"},
             "primaryImageOfPage": {"@type": "ImageObject", "url": og_url, "width": 1200, "height": 630},
         }
         if not page.legal:
-            wp["about"] = {"@id": f"{BASE}/#software"}
+            wp["about"] = {"@type": "Thing", "name": "Ayuvo", "url": BASE + "/"}
+            wp["author"] = {"@id": f"{BASE}/#organization"}
+        if page.mentions:
+            wp["mentions"] = page.mentions
+        if page.main_entity:
+            wp["mainEntity"] = {"@id": page.main_entity}
         blocks.append(wp)
-    blocks += [{"@context": "https://schema.org", **b} if "@context" not in b else b for b in page.ld]
-    if page.faqs:
+    if not page.noindex:
+        blocks += [{"@context": "https://schema.org", **b} if "@context" not in b else b for b in page.ld]
+    if page.faqs and not page.noindex:
         blocks.append({
             "@context": "https://schema.org",
             "@type": "FAQPage",

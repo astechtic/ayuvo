@@ -46,6 +46,15 @@
         ]
       },
       {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=600"
+          }
+        ]
+      },
+      {
         "source": "**/*.@(css|js|svg|png|jpg|jpeg|webp|ico|woff2)",
         "headers": [
           {

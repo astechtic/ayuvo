@@ -1,0 +1,102 @@
+{
+ "/": {
+  "date": "2026-09-25",
+  "hash": "f5073bdde108"
+ },
+ "/404": {
+  "date": "2026-09-25",
+  "hash": "9cc2026fa7a7"
+ },
+ "/about": {
+  "date": "2026-09-25",
+  "hash": "e7ecd5dd4985"
+ },
+ "/ai-providers": {
+  "date": "2026-09-25",
+  "hash": "e6df747be20b"
+ },
+ "/compare": {
+  "date": "2026-09-25",
+  "hash": "aa216d97de2d"
+ },
+ "/compare/apple-health": {
+  "date": "2026-09-25",
+  "hash": "1d9d942f7ea9"
+ },
+ "/compare/guava-health": {
+  "date": "2026-09-25",
+  "hash": "20bfa5ab3c79"
+ },
+ "/compare/health-connect": {
+  "date": "2026-09-25",
+  "hash": "9a11d0bf81cf"
+ },
+ "/compare/mychart": {
+  "date": "2026-09-25",
+  "hash": "48327c5ab613"
+ },
+ "/compare/picnichealth": {
+  "date": "2026-09-25",
+  "hash": "9d5f16e62963"
+ },
+ "/download": {
+  "date": "2026-09-25",
+  "hash": "4510b7b69351"
+ },
+ "/features": {
+  "date": "2026-09-25",
+  "hash": "d9c4eafaae74"
+ },
+ "/features/coach": {
+  "date": "2026-09-25",
+  "hash": "41e0cb860ff3"
+ },
+ "/features/fasting-and-water": {
+  "date": "2026-09-25",
+  "hash": "051c28558c4b"
+ },
+ "/features/health-data": {
+  "date": "2026-09-25",
+  "hash": "4dab5f8596c3"
+ },
+ "/features/nutrition": {
+  "date": "2026-09-25",
+  "hash": "7b9be145a20a"
+ },
+ "/features/on-device-ai": {
+  "date": "2026-09-25",
+  "hash": "a3dd947b6b71"
+ },
+ "/features/records-and-medications": {
+  "date": "2026-09-25",
+  "hash": "58bf56d48ffa"
+ },
+ "/features/switch-phones": {
+  "date": "2026-09-25",
+  "hash": "d0599486c881"
+ },
+ "/features/workouts": {
+  "date": "2026-09-25",
+  "hash": "3526ace65c6a"
+ },
+ "/open-source": {
+  "date": "2026-09-25",
+  "hash": "fcc0cdb823b4"
+ },
+ "/privacy": {
+  "date": "2026-09-16",
+  "hash": "a7fabf666978"
+ },
+ "/privacy-first": {
+  "date": "2026-09-25",
+  "hash": "e16950a20afd"
+ },
+ "/support": {
+  "date": "2026-09-14",
+  "hash": "befb722f0d99"
+ },
+ "/terms": {
+  "date": "2026-09-14",
+  "hash": "974bf0c4dcd3"
+ }
+}

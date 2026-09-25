@@ -13,6 +13,7 @@ import json
 import re
 from pathlib import Path
 
+from compare_pages import compare_pages, compare_strip
 from site_lib import (
     BASE, EMAIL, FUD_AI, GITHUB, MEDGEMMA_DISCLAIMER, STORES, WEB, Page, catalog_card, catalog_table, cta_section,
     asset, eyebrow, faq_section, gib, icon, medgemma, phone, phones, privacy_band, section_head, store_buttons,
@@ -31,8 +32,17 @@ def crumbs_html(trail: list[tuple[str, str]], here: str) -> str:
     return f'<ol class="crumbs">{items}<li aria-current="page">{here}</li></ol>'
 
 
+def eager_hero(visual: str) -> str:
+    """Images in a hero are above the fold: never lazy, and the first one is the high-priority LCP candidate."""
+    if "fetchpriority" in visual:
+        return visual.replace(' loading="lazy"', "")
+    visual = visual.replace('loading="lazy" decoding="async"', 'decoding="async"')
+    return visual.replace('decoding="async"', 'fetchpriority="high" decoding="async"', 1)
+
+
 def hero_split(trail, here, eyebrow_text, h1, lede, visual, ctas=True) -> str:
     cta = store_buttons("hero") if ctas else ""
+    visual = eager_hero(visual)
     return (
         f'<header class="hero compact"><div class="container">{crumbs_html(trail, here)}'
         f'<div class="hero-split"><div class="hero-text">{eyebrow(eyebrow_text)}'
@@ -66,7 +76,7 @@ def related(items: list[tuple[str, str, str]], title="Keep exploring") -> str:
 
 
 def feature_page(path, title, description, crumb, h1, lede, eyebrow_text, hero_visual, blocks, sends, related_items,
-                 faqs=(), og_headline="", og_screens=(), og_alt="", lcp_slug=None, med=False, ld=None) -> Page:
+                 faqs=(), og_headline="", og_screens=(), og_alt="", lcp_slug=None, med=False, ld=None, compare=False) -> Page:
     body = hero_split([("Features", "/features")], crumb, eyebrow_text, h1, lede, hero_visual)
     body += privacy_band()
     body += band("paper", "".join(blocks))
@@ -74,6 +84,8 @@ def feature_page(path, title, description, crumb, h1, lede, eyebrow_text, hero_v
     if med:
         body += band("paper alt", MEDGEMMA_DISCLAIMER)
     body += related(related_items)
+    if compare:
+        body += compare_strip()
     if faqs:
         body += faq_section(list(faqs), heading="Questions <em>about this feature</em>.")
     body += cta_section()
@@ -240,7 +252,7 @@ def build_home() -> Page:
         '<div class="step"><div class="step-num">Step 03</div><h3>Keep</h3><p>Saved on your device. Nutrition, weight and calculated burn go to Apple Health or Health Connect only if you enable it.</p></div>'
         '<div class="step"><div class="step-num">Step 04</div><h3>Ask Ayuvo</h3><p>The coach pulls the slice of your data it needs, from the sources you allowed, and answers in context.</p></div></div>'))
 
-    body = hero + privacy_band() + features + privacy + records + ondevice + worksw + switch + oss + steps
+    body = hero + privacy_band() + features + privacy + records + ondevice + worksw + switch + oss + compare_strip() + steps
     body += faq_section(HOME_FAQ, "03") + cta_section()
     return Page(path="/", title="Ayuvo: Private AI Health App for iPhone & Android",
                 description="Nutrition, workouts, health records, medications and Apple Health or Health Connect data in one private, open-source app. No account, no ads, no analytics.",
@@ -269,6 +281,7 @@ def build_features() -> Page:
                  f'<div class="panel"><span class="kicker">{icon("globe")} Languages</span><h3>18 languages</h3><p>English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian.</p></div>'
                  f'<div class="panel"><span class="kicker">{icon("sparkle")} Appearance</span><h3>Dark mode, units and 18 accent colours</h3><p>Metric or imperial, kilograms or pounds, millilitres or fluid ounces, with matching app icons.</p></div>'
                  f'<div class="panel"><span class="kicker">{icon("swap")} Your data</span><h3>Export, import, delete</h3><p>Export All Data, import it on either platform, or delete everything from Settings.</p></div></div>')
+        + compare_strip()
         + cta_section()
     )
     return Page(path="/features", title="Ayuvo Features: Nutrition, Workouts, Records & More",
@@ -375,7 +388,7 @@ def build_health() -> Page:
         "Health data", "Every Health chart. <em>One private hub.</em>",
         "Mirror the Apple Health or Health Connect data you grant into a local hub, with charts, sources and history for every metric.",
         "Health data", phones([("browse", "Ayuvo Browse health categories"), ("heart-rate", "Ayuvo heart rate chart")], "pair"), blocks, sends,
-        [REL["coach"], REL["records"], REL["switch"]], lcp_slug="browse", og_screens=["browse", "heart-rate"],
+        [REL["coach"], REL["records"], REL["switch"]], lcp_slug="browse", og_screens=["browse", "heart-rate"], compare=True,
         faqs=[("Which Android versions can use Health Connect?", "Health Connect is built into Android 14 and later, and is a Play Store app on Android 9 to 13. Ayuvo's Connect button opens the right screen."),
               ("Does Ayuvo change my Health data?", "Only by adding what you log in Ayuvo: nutrition, weight, height, body fat and calculated active calories. Fasting and water are never written."),
               ("Will Ayuvo see my old history?", "It reads the history you grant. On Android, without the special history permission, history starts 30 days before you first grant access, and Ayuvo says so on screen.")],
@@ -421,7 +434,7 @@ def build_records() -> Page:
         "Records & medications", "Your paperwork, <em>read on your phone.</em>",
         "Scan or import lab reports and prescriptions, keep the originals, and add medication schedules with dose reminders, all stored on this device.",
         "Records &amp; medications", phones([("records", "Ayuvo health records"), ("medications", "Ayuvo medications")], "pair"), blocks, sends,
-        [REL["coach"], REL["ondevice"], REL["switch"]], lcp_slug="records", og_screens=["records", "medications"],
+        [REL["coach"], REL["ondevice"], REL["switch"]], lcp_slug="records", og_screens=["records", "medications"], compare=True,
         faqs=[("Does Ayuvo interpret my results?", "No. It shows what the document says and highlights values the report itself marks as outside its reference range. Talk to your clinician about what they mean."),
               ("Can Ayuvo tell me when to take a medicine?", "It reminds you at the times you set. It never suggests a dose, and it never tells you to start, stop, change or skip a medicine."),
               ("Does the coach see my records or medications?", "Only after you turn on the separate consent for each, and both are off by default.")],
@@ -698,12 +711,13 @@ def build_open_source() -> Page:
                               [], f'<div class="repo"><a class="gh-btn" href="{FUD_AI}" rel="noopener">{icon("github")}<span>Fud AI on GitHub</span></a></div>', reverse=True))
         + cta_section("Read it. <em>Then trust it.</em>")
     )
-    ld = [{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "Ayuvo", "codeRepository": GITHUB,
+    ld = [{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "@id": f"{BASE}/open-source#code", "name": "Ayuvo source code",
+           "url": GITHUB, "codeRepository": GITHUB, "description": "Source code of the Ayuvo iPhone and Android apps, under the MIT licence.",
            "license": "https://opensource.org/licenses/MIT", "programmingLanguage": ["Swift", "Kotlin"],
            "runtimePlatform": ["iOS", "Android"], "author": {"@id": f"{BASE}/#organization"}}]
     return Page(path="/open-source", title="Open Source Health App (MIT) | Ayuvo on GitHub",
                 description="Ayuvo is an MIT-licensed health app for iPhone and Android. Read the code, build it, and contribute code, translations, exercise data or docs on GitHub.",
-                body=body, kind="source", crumb="Open source", ld=ld, og_headline="Open source, so you can check.", og_screens=["settings"],
+                body=body, kind="source", crumb="Open source", ld=ld, main_entity=f"{BASE}/open-source#code", og_headline="Open source, so you can check.", og_screens=["settings"],
                 og_alt="Ayuvo is open source under the MIT licence on GitHub")
 
 
@@ -741,6 +755,35 @@ def build_download() -> Page:
                 og_alt="Download Ayuvo for iPhone and Android")
 
 
+def build_about() -> Page:
+    body = (
+        '<header class="hero compact"><div class="container">' + crumbs_html([], "About")
+        + f'<div class="hero-center">{eyebrow("About")}<h1 class="hero-title">Private by design, <em>and open to check.</em></h1>'
+        '<p class="hero-lede">Ayuvo is a free health app for iPhone and Android, published by Yaara Tech and released as open source. This page says who is behind it, how it is built and how to reach us.</p></div></div></header>'
+        + privacy_band()
+        + band("paper", split(
+            "Who", "Published by <em>Yaara Tech</em>.",
+            f'<p>Yaara Tech publishes Ayuvo. The source code is public at <a href="{GITHUB}" rel="noopener">github.com/astechtic/ayuvo</a> under the MIT licence, so what the app stores and sends can be read rather than taken on trust.</p>'
+            f'<p>Questions, corrections and security reports go to <a href="mailto:{EMAIL}">{EMAIL}</a>. There is no account, and there are no ads or analytics, so there is no profile of you to look at either.</p>',
+            ["Free, with no subscription, credits or in-app purchases", "Built natively: SwiftUI on iPhone, Jetpack Compose on Android", "Built on earlier open-source work, credited on the open-source page with its licence notice kept"],
+            f'<div class="repo"><a class="gh-btn" href="{GITHUB}" rel="noopener">{icon("github")}<span>View on GitHub</span></a><code>MIT licence</code></div>',
+            link=("/open-source", "How to contribute")))
+        + band("ink raised", section_head("Principles", "How Ayuvo is built.", num="01") + (
+            '<div class="grid-3">'
+            '<div class="panel"><span class="kicker">Local first</span><h3>Your data stays with you</h3><p>Your diary, records, medications and chats are stored on your phone. Data leaves it only when you act, and only to a service you chose. <a class="link-arrow" href="/privacy-first">See every data flow</a></p></div>'
+            '<div class="panel"><span class="kicker">Honest claims</span><h3>We say what is not covered</h3><p>Ayuvo is not a medical device and does not give medical advice. We are precise about what can leave the phone and when, and our comparison pages say where other products are stronger.</p></div>'
+            '<div class="panel"><span class="kicker">Checkable</span><h3>Sources on every comparison</h3><p>Facts about other products come from their own public pages, with the date we checked them. <a class="link-arrow" href="/compare">See the comparisons</a></p></div></div>'))
+        + band("paper", '<div class="prose wide"><h2>Trademarks and independence</h2>'
+               "<p>Apple, iPhone, Apple Health and Apple Watch are trademarks of Apple Inc. Google, Android and Health Connect are trademarks of Google. "
+               "Other product names on this site belong to their owners. Ayuvo is an independent app and is not affiliated with or endorsed by any of them.</p></div>")
+        + cta_section()
+    )
+    return Page(path="/about", title="About Ayuvo and Yaara Tech: Open-Source Health App",
+                description="Ayuvo is a free, private, open-source health app for iPhone and Android, published by Yaara Tech. Who we are, how it is built and how to contact us.",
+                body=body, kind="about", crumb="About", og_headline="Private by design, and open to check.", og_screens=["summary", "settings"],
+                og_alt="About Ayuvo: a private, open-source health app for iPhone and Android")
+
+
 # ---------------------------------------------------------------------------
 # legal + 404
 # ---------------------------------------------------------------------------
@@ -754,8 +797,8 @@ def legal_pages() -> list[Page]:
         meta = json.loads(m.group(1))
         body = text[m.end():]
         out.append(Page(path=meta["path"], title=meta["title"], description=meta["description"], body=body, kind="legal", legal=True,
-                        modified=meta["modified"], og_headline=meta["title"].split(" — ")[0], og_screens=["settings"],
-                        og_alt=meta["title"], crumb=meta["title"].split(" — ")[0]))
+                        modified=meta["modified"], og_headline=meta.get("crumb") or meta["title"].split(" — ")[0], og_screens=["settings"],
+                        og_alt=meta["title"], crumb=meta.get("crumb") or meta["title"].split(" — ")[0]))
     return out
 
 
@@ -771,6 +814,8 @@ def build_404() -> Page:
 def all_pages() -> list[Page]:
     pages = [build_home(), build_features(), build_nutrition(), build_workouts(), build_health(), build_records(), build_coach(),
              build_fasting(), build_switch(), build_ondevice(), build_privacy_first(), build_providers(), build_open_source(), build_download()]
+    pages += compare_pages()
+    pages.append(build_about())
     pages += legal_pages()
     pages.append(build_404())
     return pages

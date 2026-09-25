@@ -9,11 +9,13 @@ Legal bodies (privacy, terms, support) live in web/_src/pages/*.html and are onl
 """
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import re
 import shutil
 import sys
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -77,6 +79,9 @@ def lint(page: site_lib.Page, doc: str) -> list[str]:
     if page.legal or page.path == "/404":
         return problems
     body = re.sub(r'<div class="disclaimer">.*?</div>', "", doc, flags=re.S)
+    if page.path.startswith("/compare/"):
+        # a competitor's own compliance wording is allowed, but only when it is attributed and marked
+        body = re.sub(r'<span class="vclaim">states .*?</span>', "", body, flags=re.S)
     tt = _Text()
     tt.feed(body)
     text = " ".join(tt.parts)
@@ -90,10 +95,68 @@ def lint(page: site_lib.Page, doc: str) -> list[str]:
         problems.append(f"{page.path}: names MedGemma without the disclaimer")
     if page.path not in ("/features/records-and-medications",) and "1,329" in text:
         problems.append(f"{page.path}: use 1,300+ exercises")
+    if page.path.startswith("/compare"):
+        problems += lint_compare(page, text, main_html)
+    return problems
+
+
+COMPARE_BANNED = [
+    (r"\b(better than|beats?|outperforms?|superior|best alternative|the best|number one|#1|only app)\b", "comparative superlative"),
+    (r"\b(worse|inferior|unsafe|insecure|leaks?|breach(es|ed)?|sells? your data)\b", "disparaging or privacy-failure wording about another product"),
+    (r"\$\s?\d|\b\d+\s?(USD|per month|/month|/mo)\b", "price claim"),
+]
+
+
+def lint_compare(page: site_lib.Page, text: str, main_html: str) -> list[str]:
+    problems = []
+    for pattern, why in COMPARE_BANNED:
+        m = re.search(pattern, text, re.I)
+        if m:
+            problems.append(f"{page.path}: {why}: ...{text[max(0, m.start() - 30):m.end() + 30]}...")
+    if "is not affiliated with or endorsed by" not in main_html:
+        problems.append(f"{page.path}: missing the trademark / not-affiliated disclaimer")
+    if page.path != "/compare":
+        refs = set(re.findall(r'href="#src-(\d+)"', main_html))
+        ids = set(re.findall(r'id="src-(\d+)"', main_html))
+        if not refs:
+            problems.append(f"{page.path}: no source links for claims about the other product")
+        if refs - ids:
+            problems.append(f"{page.path}: source link without a source: {sorted(refs - ids)}")
+        cells = re.findall(r'<tr><th scope="row">.*?</th><td[^>]*>.*?</td><td[^>]*>(.*?)</td></tr>', main_html, re.S)
+        if len(cells) < 6:
+            problems.append(f"{page.path}: comparison table not found or too short ({len(cells)} rows)")
+        for cell in cells:
+            if "#src-" not in cell:
+                problems.append(f"{page.path}: table cell about the other product has no source: {cell[:60]}")
+        if "Where Ayuvo is limited" not in main_html:
+            problems.append(f"{page.path}: missing the Where Ayuvo is limited section")
+        if "checked 20" not in main_html:
+            problems.append(f"{page.path}: sources must show the date they were checked")
     return problems
 
 
 # --------------------------------------------------------------------------- outputs
+
+LASTMOD = ROOT / "scripts" / "web" / "lastmod.json"
+
+
+def apply_lastmod(pages: list[site_lib.Page], write: bool) -> None:
+    """Give every page the date its content last changed (sitemap lastmod and JSON-LD dateModified).
+
+    A page keeps its date until the hash of its title, description and body changes, so a rebuild that changes
+    nothing does not claim freshness. The first time a page is seen it keeps the date it already carried.
+    """
+    state = json.loads(LASTMOD.read_text(encoding="utf-8")) if LASTMOD.exists() else {}
+    today, new = date.today().isoformat(), {}
+    for p in pages:
+        h = hashlib.sha1(f"{p.title}\0{p.description}\0{p.body}".encode()).hexdigest()[:12]
+        prev = state.get(p.path)
+        when = p.modified if prev is None else (prev["date"] if prev["hash"] == h else today)
+        p.modified = when
+        new[p.path] = {"hash": h, "date": when}
+    if write:
+        LASTMOD.write_text(json.dumps(new, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
 
 def sitemap(pages: list[site_lib.Page]) -> str:
     rows = []
@@ -120,7 +183,7 @@ def llms_txt(pages: list[site_lib.Page]) -> str:
     lines = [
         "# Ayuvo",
         "",
-        "> Ayuvo is a private, open-source health companion for iPhone and Android: nutrition, workouts, health records, medications,",
+        "> Ayuvo, published by Yaara Tech, is a private, open-source health companion for iPhone and Android: nutrition, workouts, health records, medications,",
         "> fasting, water and a local mirror of Apple Health or Health Connect, with an AI coach that runs on your own API key or",
         "> on a model that stays on the phone. No account, no ads, no analytics, no Ayuvo servers. MIT licensed.",
         "",
@@ -133,6 +196,9 @@ def llms_txt(pages: list[site_lib.Page]) -> str:
     for p in pages:
         if p.in_sitemap:
             lines.append(f"- [{p.crumb or p.title}]({p.url}): {p.description}")
+    lines += ["", "## About the comparisons", "",
+              "The /compare pages are written by the Ayuvo team, so they are not neutral. Each fact about another product cites that product's own",
+              "public page with the date it was checked, and every page states where Ayuvo is limited. Corrections: " + EMAIL, ""]
     lines += ["", "## Source", "", f"- [GitHub repository]({GITHUB}): MIT-licensed source for the iPhone and Android apps", f"- Support: {EMAIL}", ""]
     return "\n".join(lines)
 
@@ -164,6 +230,7 @@ Sitemap: {BASE}/sitemap.xml
 def main(argv: list[str]) -> int:
     check_only = "--check" in argv
     pages = pages_mod.all_pages()
+    apply_lastmod(pages, write=not check_only)
     css_v, js_v = asset_hash("styles.css"), asset_hash("site.js")
 
     problems: list[str] = []
@@ -192,6 +259,10 @@ def main(argv: list[str]) -> int:
         src = ROOT / "marketing" / "badges" / name
         if src.exists():
             shutil.copyfile(src, badges / dst)
+
+    fav = WEB / "assets" / "brand" / "favicon.ico"
+    if fav.exists():
+        shutil.copyfile(fav, WEB / "favicon.ico")   # some crawlers request /favicon.ico directly
 
     for p in pages:
         out = p.out_file

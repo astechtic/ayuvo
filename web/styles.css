@@ -371,6 +371,27 @@ section { padding: clamp(64px, 9vw, 120px) 0; }
 .tag.plain { color: var(--fg-faint); }
 .ink .tag.plain { color: var(--cream-faint); }
 
+/* comparison pages */
+.compare-table th[scope="row"] { white-space: normal; min-width: 9.5rem; background: var(--surface-2); }
+.compare-table td { min-width: 15rem; }
+.compare-table sup a, .prose sup a { color: var(--accent-text); font-weight: 700; padding: 0 2px; }
+@media (max-width: 720px) {
+  .compare-table, .compare-table tbody, .compare-table tr, .compare-table th, .compare-table td { display: block; }
+  .compare-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .compare-table tr { border-bottom: 1px solid var(--line); }
+  .compare-table tr:last-child { border-bottom: 0; }
+  .compare-table th[scope="row"] { min-width: 0; border-bottom: 0; }
+  .compare-table td { min-width: 0; border-bottom: 0; padding-top: 6px; padding-bottom: 6px; }
+  .compare-table td:last-child { padding-bottom: 14px; }
+  .compare-table td::before { content: attr(data-label); display: block; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-text); }
+}
+.hero-lede.verdict { font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
+.src-list { padding-left: 1.4em; display: grid; gap: 8px; margin: 12px 0 8px; }
+.src-list li { color: var(--fg-dim); }
+.src-list a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+a.chip { transition: border-color 0.25s, transform 0.25s var(--ease-snap); }
+a.chip:hover { border-color: var(--accent); transform: translateY(-2px); }
+
 /* disclaimer */
 .disclaimer { margin: 26px 0 0; padding: 18px 22px; border-radius: 16px; border: 1px solid var(--line); border-left: 4px solid var(--accent-2); background: var(--surface-2); color: var(--fg-dim); font-size: 0.93rem; }
 .disclaimer strong { color: var(--fg); }
@@ -447,7 +468,7 @@ ol.steps-list li::before { counter-increment: s; content: counter(s); display: g
 .footer-brand-mark { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 600; font-size: 1.3rem; color: var(--cream-text); margin-bottom: 14px; }
 .footer-brand-mark img { width: 30px; height: 30px; }
 .footer-brand p { font-size: 0.93rem; max-width: 40ch; }
-.footer-col h4 { font-family: var(--body); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream-faint); margin-bottom: 14px; }
+.footer-col .footer-h { margin: 0 0 14px; font-weight: 700; font-family: var(--body); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream-faint); margin-bottom: 14px; }
 .footer-col ul { list-style: none; padding: 0; display: grid; gap: 10px; font-size: 0.93rem; }
 .footer-col a:hover { color: var(--cream-text); }
 .footer-legal { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--hair-on-ink); font-size: 0.78rem; line-height: 1.6; color: var(--cream-faint); max-width: 110ch; }

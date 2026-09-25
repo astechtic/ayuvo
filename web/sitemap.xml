@@ -113,11 +113,67 @@
     </image:image>
   </url>
   <url>
+    <loc>https://ayuvo-health.web.app/compare</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/compare.jpg</image:loc>
+      <image:title>Compare Ayuvo with Guava Health, PicnicHealth, Apple Health, MyChart and Health Connect</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/compare/guava-health</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/compare-guava-health.jpg</image:loc>
+      <image:title>Guava Health Alternative: Ayuvo, Private and No Account</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/compare/picnichealth</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/compare-picnichealth.jpg</image:loc>
+      <image:title>PicnicHealth Alternative: A Private App, Not a Service</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/compare/apple-health</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/compare-apple-health.jpg</image:loc>
+      <image:title>Apple Health Alternative? Ayuvo Adds Records and Meds</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/compare/mychart</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/compare-mychart.jpg</image:loc>
+      <image:title>MyChart Alternative? Keep a Private Copy of Your Records</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/compare/health-connect</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/compare-health-connect.jpg</image:loc>
+      <image:title>Health Connect Companion App: What Ayuvo Adds on Android</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/about</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/about.jpg</image:loc>
+      <image:title>About Ayuvo: a private, open-source health app for iPhone and Android</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://ayuvo-health.web.app/privacy</loc>
     <lastmod>2026-09-16</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/privacy.jpg</image:loc>
-      <image:title>Privacy Policy — Ayuvo</image:title>
+      <image:title>Ayuvo Privacy Policy: How Your Health Data Is Handled</image:title>
     </image:image>
   </url>
   <url>
@@ -125,7 +181,7 @@
     <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/support.jpg</image:loc>
-      <image:title>Support — Ayuvo</image:title>
+      <image:title>Ayuvo Support: Help, Backups and Data Deletion</image:title>
     </image:image>
   </url>
   <url>
@@ -133,7 +189,7 @@
     <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/terms.jpg</image:loc>
-      <image:title>Terms of Service — Ayuvo</image:title>
+      <image:title>Ayuvo Terms of Service: Licence, AI Keys and Disclaimers</image:title>
     </image:image>
   </url>
 </urlset>

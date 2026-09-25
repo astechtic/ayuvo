@@ -18,11 +18,24 @@ third-party requests (fonts and icons are self-hosted; `scripts/web_check.py` as
 | `/privacy-first` | Private by design: principles and every data flow |
 | `/ai-providers` | 15 bring-your-own-key providers |
 | `/open-source` | MIT licence, repo layout, how to contribute, credits |
+| `/compare`, `/compare/guava-health`, `/picnichealth`, `/apple-health`, `/mychart`, `/health-connect` | Honest side-by-sides with each product. Facts, sources and the check date live in `scripts/web/compare_facts.py` |
+| `/about` | Who publishes Ayuvo, principles, trademarks, contact |
 | `/download` | Store badges (or "coming soon"), requirements, build from source |
 | `/privacy`, `/terms`, `/support` | Legal and support (linked from both apps and the store listings; keep these URLs stable) |
 | `/404.html` | Firebase serves it for unknown paths |
 
 Clean URLs are on (`firebase.json`), so `/privacy.html` 301-redirects to `/privacy`.
+
+## Comparison pages
+
+Copy and facts are in `scripts/web/compare_facts.py`, the layout in `scripts/web/compare_pages.py`. Every statement about
+another product carries a `[n]` marker for a source (the product's own public page) and the pages show `CHECKED`. Re-fetch
+the sources and bump `CHECKED` whenever you edit a fact. Every page must keep its "Where Ayuvo is limited" section. The lint
+rejects comparative superlatives, price claims, privacy-failure wording, uncited table cells and a missing not-affiliated
+disclaimer; a vendor's own compliance wording is allowed only inside `<span class="vclaim">states ...</span>`.
+
+`scripts/web/lastmod.json` records a content hash and date per page. `web_build.py` bumps a page's date (sitemap `lastmod`
+and JSON-LD `dateModified`) only when its title, description or body changes, so commit that file with the pages.
 
 ## Store listings
 

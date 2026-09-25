@@ -1,6 +1,6 @@
 # Ayuvo
 
-> Ayuvo is a private, open-source health companion for iPhone and Android: nutrition, workouts, health records, medications,
+> Ayuvo, published by Yaara Tech, is a private, open-source health companion for iPhone and Android: nutrition, workouts, health records, medications,
 > fasting, water and a local mirror of Apple Health or Health Connect, with an AI coach that runs on your own API key or
 > on a model that stays on the phone. No account, no ads, no analytics, no Ayuvo servers. MIT licensed.
 
@@ -23,9 +23,22 @@ the user acts, to a service they chose.
 - [AI providers](https://ayuvo-health.web.app/ai-providers): Use Google Gemini, OpenAI, Anthropic, xAI, Mistral, Groq and more with your own key, or run a model on-device. Ayuvo has no AI servers of its own.
 - [Open source](https://ayuvo-health.web.app/open-source): Ayuvo is an MIT-licensed health app for iPhone and Android. Read the code, build it, and contribute code, translations, exercise data or docs on GitHub.
 - [Download](https://ayuvo-health.web.app/download): Get Ayuvo, the free private health app for iPhone (iOS 17.6+) and Android (8.0+). No account. Or build it from source on GitHub.
-- [Privacy Policy](https://ayuvo-health.web.app/privacy): How Ayuvo for iPhone and Android handles your data: everything stays on your device; data leaves only when you send it to an AI provider you chose, scan a barcode, fetch exercise images or models, or turn on your own cloud backup.
-- [Support](https://ayuvo-health.web.app/support): Get help with Ayuvo on iPhone and Android: contact support, troubleshooting for AI providers, Health Connect and Apple Health, exports, backups and deleting your data.
-- [Terms of Service](https://ayuvo-health.web.app/terms): Terms of Service for the Ayuvo apps on iPhone and Android: licence to use, bring-your-own-key responsibility, no medical advice, third-party services, health integrations, disclaimers and governing law.
+- [Compare](https://ayuvo-health.web.app/compare): Compare Ayuvo with Guava Health, PicnicHealth, Apple Health, MyChart and Health Connect. Honest differences on records, AI and privacy, with sources.
+- [Ayuvo vs Guava Health](https://ayuvo-health.web.app/compare/guava-health): Guava syncs with your patient portals; Ayuvo doesn't. Compare records, medications, AI and privacy, and see who each app suits. Ayuvo needs no account.
+- [Ayuvo vs PicnicHealth](https://ayuvo-health.web.app/compare/picnichealth): PicnicHealth gathers your records for you. With Ayuvo you add them yourself and they stay on your phone, with no account. See which approach fits you.
+- [Apple Health and Ayuvo](https://ayuvo-health.web.app/compare/apple-health): Ayuvo reads Apple Health, then adds records, medications, meals and a coach, all stored on your phone. See where each fits, and how to use both.
+- [MyChart and Ayuvo](https://ayuvo-health.web.app/compare/mychart): Ayuvo can't connect to MyChart. Download your documents, add them by scan, file or share sheet, and keep them on your phone with no account.
+- [Health Connect and Ayuvo](https://ayuvo-health.web.app/compare/health-connect): Health Connect is Android's shared health data layer. Ayuvo reads it and adds charts, records, medications and meals, kept on your phone.
+- [About](https://ayuvo-health.web.app/about): Ayuvo is a free, private, open-source health app for iPhone and Android, published by Yaara Tech. Who we are, how it is built and how to contact us.
+- [Privacy Policy](https://ayuvo-health.web.app/privacy): How Ayuvo for iPhone and Android handles your data: it is stored on your device and leaves only when you send it to a service you chose.
+- [Support](https://ayuvo-health.web.app/support): Get help with Ayuvo on iPhone and Android: contact support, troubleshooting for AI providers, Health Connect and Apple Health, exports and deleting data.
+- [Terms of Service](https://ayuvo-health.web.app/terms): Terms for the Ayuvo apps on iPhone and Android: licence, bring-your-own-key responsibility, no medical advice, third-party services and disclaimers.
+
+## About the comparisons
+
+The /compare pages are written by the Ayuvo team, so they are not neutral. Each fact about another product cites that product's own
+public page with the date it was checked, and every page states where Ayuvo is limited. Corrections: yaaratech@gmail.com
+
 
 ## Source
 

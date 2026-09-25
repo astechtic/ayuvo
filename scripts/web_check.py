@@ -40,6 +40,8 @@ REQUIRED = [
     "features/records-and-medications.html", "features/coach.html", "features/fasting-and-water.html",
     "features/switch-phones.html", "features/on-device-ai.html",
     "privacy-first.html", "ai-providers.html", "open-source.html", "download.html",
+    "compare/index.html", "compare/guava-health.html", "compare/picnichealth.html", "compare/apple-health.html",
+    "compare/mychart.html", "compare/health-connect.html", "about.html",
     "robots.txt", "sitemap.xml", "llms.txt", "manifest.webmanifest", "styles.css", "site.js", "firebase.json", ".firebaserc",
     "assets/opengraph.jpg", "assets/brand/ayuvo-mark.svg", "assets/brand/favicon.svg",
     "assets/brand/favicon.ico", "assets/brand/apple-touch-icon.png",

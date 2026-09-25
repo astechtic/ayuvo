@@ -34,12 +34,51 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin.woff2" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=494fdca1">
+<link rel="stylesheet" href="/styles.css?v=a4573a23">
 <script defer src="/site.js?v=bc05a280"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ayuvo-health.web.app/#organization",
+      "name": "Yaara Tech",
+      "url": "https://ayuvo-health.web.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://ayuvo-health.web.app/assets/brand/logo-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://github.com/astechtic"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "yaaratech@gmail.com",
+        "url": "https://ayuvo-health.web.app/support"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ayuvo-health.web.app/#website",
+      "name": "Ayuvo",
+      "url": "https://ayuvo-health.web.app/",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://ayuvo-health.web.app/#organization"
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "https://ayuvo-health.web.app/open-source#breadcrumb",
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -69,6 +108,12 @@
   "isPartOf": {
     "@id": "https://ayuvo-health.web.app/#website"
   },
+  "publisher": {
+    "@id": "https://ayuvo-health.web.app/#organization"
+  },
+  "breadcrumb": {
+    "@id": "https://ayuvo-health.web.app/open-source#breadcrumb"
+  },
   "primaryImageOfPage": {
     "@type": "ImageObject",
     "url": "https://ayuvo-health.web.app/assets/og/open-source.jpg?v=c7d009b2",
@@ -76,7 +121,15 @@
     "height": 630
   },
   "about": {
-    "@id": "https://ayuvo-health.web.app/#software"
+    "@type": "Thing",
+    "name": "Ayuvo",
+    "url": "https://ayuvo-health.web.app/"
+  },
+  "author": {
+    "@id": "https://ayuvo-health.web.app/#organization"
+  },
+  "mainEntity": {
+    "@id": "https://ayuvo-health.web.app/open-source#code"
   }
 }
 </script>
@@ -84,8 +137,11 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
-  "name": "Ayuvo",
+  "@id": "https://ayuvo-health.web.app/open-source#code",
+  "name": "Ayuvo source code",
+  "url": "https://github.com/astechtic/ayuvo",
   "codeRepository": "https://github.com/astechtic/ayuvo",
+  "description": "Source code of the Ayuvo iPhone and Android apps, under the MIT licence.",
   "license": "https://opensource.org/licenses/MIT",
   "programmingLanguage": [
     "Swift",
@@ -140,10 +196,10 @@
 <div class="footer-grid">
 <div class="footer-brand"><a href="/" class="footer-brand-mark"><img src="/assets/brand/ayuvo-mark.svg?v=b444082e" alt="" width="30" height="30"><span>Ayuvo</span></a>
 <p>Your whole health in one private app for iPhone and Android. Open source under the MIT licence.</p></div>
-<div class="footer-col"><h4>Features</h4><ul><li><a href="/features/nutrition">Nutrition</a></li><li><a href="/features/workouts">Workouts</a></li><li><a href="/features/health-data">Health data</a></li><li><a href="/features/records-and-medications">Records & medications</a></li><li><a href="/features/coach">AI coach</a></li><li><a href="/features/fasting-and-water">Fasting & water</a></li></ul></div>
-<div class="footer-col"><h4>Privacy</h4><ul><li><a href="/privacy-first">Private by design</a></li><li><a href="/features/on-device-ai">On-device AI</a></li><li><a href="/ai-providers">AI providers</a></li><li><a href="/features/switch-phones">Switch phones</a></li><li><a href="/privacy">Privacy Policy</a></li></ul></div>
-<div class="footer-col"><h4>Open source</h4><ul><li><a href="https://github.com/astechtic/ayuvo" rel="noopener">GitHub</a></li><li><a href="/open-source">Contribute</a></li><li><a href="https://github.com/astechtic/ayuvo/blob/main/LICENSE" rel="noopener">MIT licence</a></li><li><a href="https://github.com/astechtic/ayuvo/blob/main/SECURITY.md" rel="noopener">Security policy</a></li></ul></div>
-<div class="footer-col"><h4>Help</h4><ul><li><a href="/download">Download</a></li><li><a href="/support">Support</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Features</p><ul><li><a href="/features/nutrition">Nutrition</a></li><li><a href="/features/workouts">Workouts</a></li><li><a href="/features/health-data">Health data</a></li><li><a href="/features/records-and-medications">Records & medications</a></li><li><a href="/features/coach">AI coach</a></li><li><a href="/features/fasting-and-water">Fasting & water</a></li><li><a href="/compare">Compare apps</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Privacy</p><ul><li><a href="/privacy-first">Private by design</a></li><li><a href="/features/on-device-ai">On-device AI</a></li><li><a href="/ai-providers">AI providers</a></li><li><a href="/features/switch-phones">Switch phones</a></li><li><a href="/privacy">Privacy Policy</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Open source</p><ul><li><a href="https://github.com/astechtic/ayuvo" rel="noopener">GitHub</a></li><li><a href="/open-source">Contribute</a></li><li><a href="https://github.com/astechtic/ayuvo/blob/main/LICENSE" rel="noopener">MIT licence</a></li><li><a href="https://github.com/astechtic/ayuvo/blob/main/SECURITY.md" rel="noopener">Security policy</a></li></ul></div>
+<div class="footer-col"><p class="footer-h">Help</p><ul><li><a href="/download">Download</a></li><li><a href="/about">About</a></li><li><a href="/support">Support</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
 </div>
 <p class="footer-legal">Apple, the Apple logo, iPhone and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Google Play, Android and Health Connect are trademarks of Google LLC. Gemma and MedGemma are trademarks of Google. Ayuvo is an independent app and is not affiliated with or endorsed by Apple or Google. Ayuvo is not a medical device and does not give medical advice.</p>
 <div class="footer-bottom"><span>© 2026 Yaara Tech · MIT licensed</span><span>Set in Fraunces &amp; Manrope · No cookies, no trackers</span></div>
