@@ -510,10 +510,18 @@ private fun countLabelRes(key: String): Int? = when (key) {
     "files" -> R.string.import_all_count_files
     "settings", "settings_values" -> R.string.import_all_count_settings
     "meal_photos" -> R.string.import_all_count_meal_photos
+    "weights" -> R.string.import_all_count_weights
+    "body_fat" -> R.string.import_all_count_body_fat
+    "body_measurements" -> R.string.import_all_count_body_measurements
+    "fasting_sessions" -> R.string.import_all_count_fasting_sessions
+    "workout_sessions" -> R.string.import_all_count_workout_sessions
+    "user_exercises" -> R.string.import_all_count_user_exercises
     else -> null
 }
 
 private fun importSectionTitleRes(section: String): Int = when (section) {
+    AllDataExportCoordinator.SECTION_PORTABLE -> R.string.import_all_section_portable
+    AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.import_all_section_coach_chats
     AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.import_all_section_food_diary
     AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.import_all_section_health_data
     AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.import_all_section_medications
@@ -522,6 +530,8 @@ private fun importSectionTitleRes(section: String): Int = when (section) {
 }
 
 private fun importEffectRes(section: String): Int = when (section) {
+    AllDataExportCoordinator.SECTION_PORTABLE -> R.string.import_all_effect_portable
+    AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.import_all_effect_coach_chats
     AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.import_all_effect_food_diary
     AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.import_all_effect_health_data
     AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.import_all_effect_medications
@@ -555,6 +565,7 @@ private val AllDataExportStep.labelRes: Int
         AllDataExportStep.HEALTH_RECORDS -> R.string.export_all_step_health_records
         AllDataExportStep.COACH_CHATS -> R.string.export_all_step_coach_chats
         AllDataExportStep.APP_BACKUP -> R.string.export_all_step_app_backup
+        AllDataExportStep.PORTABLE -> R.string.export_all_step_portable
         AllDataExportStep.WRITING -> R.string.export_all_step_writing
     }
 
@@ -564,6 +575,7 @@ private fun sectionLabelRes(section: String): Int = when (section) {
     AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.export_all_step_medications
     AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> R.string.export_all_step_health_records
     AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.export_all_step_coach_chats
+    AllDataExportCoordinator.SECTION_PORTABLE -> R.string.export_all_step_portable
     else -> R.string.export_all_step_app_backup
 }
 

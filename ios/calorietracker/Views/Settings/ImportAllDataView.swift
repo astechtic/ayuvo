@@ -28,6 +28,8 @@ struct ImportAllDataView: View {
     @State private var current: AllDataImport.Section?
     @State private var results: [SectionResult]?
     @State private var errorMessage: String?
+    /// The portable part replaced the profile (the app backup may not have run: other platform).
+    @State private var portableProfileRestored = false
 
     struct SectionResult: Identifiable {
         enum Outcome {
@@ -77,9 +79,23 @@ struct ImportAllDataView: View {
             }
             .onDisappear {
                 cleanUp()
-                onFinish?(restoredAppBackup)
+                onFinish?(restoredAppBackup || portableProfileRestored)
             }
+            .onAppear(perform: loadFixtureIfRequested)
         }
+    }
+
+    /// Debug / UI-test hook: `-ayuvoImportAllFile <absolute path>` opens that export zip as if it had
+    /// been picked in Files, so the restore flows can run on a simulator without the picker.
+    /// Compiled out of release builds.
+    private func loadFixtureIfRequested() {
+        #if DEBUG
+        guard plan == nil, results == nil, !isLoading,
+              let path = UserDefaults.standard.string(forKey: "ayuvoImportAllFile"),
+              FileManager.default.fileExists(atPath: path)
+        else { return }
+        load(.success(URL(fileURLWithPath: path)))
+        #endif
     }
 
     private var restoredAppBackup: Bool {
@@ -209,6 +225,7 @@ struct ImportAllDataView: View {
     private func title(_ section: AllDataImport.Section) -> LocalizedStringKey {
         switch section {
         case .appBackup: "Settings, profile & logs"
+        case .portableData: "Profile, goals & logs"
         case .foodDiary: "Food diary"
         case .healthData: "Health data"
         case .medications: "Medications"
@@ -220,6 +237,7 @@ struct ImportAllDataView: View {
     private func symbol(_ section: AllDataImport.Section) -> String {
         switch section {
         case .appBackup: "gearshape.fill"
+        case .portableData: "person.crop.circle.fill"
         case .foodDiary: "fork.knife"
         case .healthData: "heart.text.square.fill"
         case .medications: "pills.fill"
@@ -231,6 +249,7 @@ struct ImportAllDataView: View {
     private func tint(_ section: AllDataImport.Section) -> Color {
         switch section {
         case .appBackup: AyuvoPalette.other
+        case .portableData: AyuvoPalette.other
         case .foodDiary: AyuvoPalette.nutrition
         case .healthData: AyuvoPalette.vitals
         case .medications: AyuvoPalette.medications
@@ -248,6 +267,8 @@ struct ImportAllDataView: View {
             String(localized: "Restored with settings, profile & logs.")
         case (.appBackup, _):
             String(localized: "Replaces this iPhone's settings, profile, food diary, water, weight, workouts, fasting and meal photos with the ones in the file.")
+        case (.portableData, _):
+            String(localized: "Replaces your profile, goals and settings with the ones in the file and adds weights, body fat, fasting and workout logs that aren't here yet. Nothing is deleted.")
         case (.foodDiary, _):
             String(localized: "Adds entries that aren't on this iPhone and updates matching ones. Nothing is deleted.")
         case (.healthData, _):
@@ -368,6 +389,15 @@ struct ImportAllDataView: View {
         case .appBackup:
             try appBackup.restore(zip: Data(contentsOf: file))
             return String(localized: "Restored settings, profile and logs.")
+
+        case .portableData:
+            let size = (try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
+            if size > 50 * 1_024 * 1_024 { throw AllDataImport.ImportError.damaged }
+            let summary = try PortableDataImport.restore(data: Data(contentsOf: file, options: [.mappedIfSafe]))
+            if summary.profileApplied { portableProfileRestored = true }
+            // The stores reload from what was written; nothing is sent to Health.
+            if summary.didApplyAnything { NotificationCenter.default.post(name: .appBackupDidRestore, object: nil) }
+            return summary.text
 
         case .foodDiary:
             let size = (try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0

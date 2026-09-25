@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Settings › Backup & Export: Export All Data + Import All Data -->
-    <string name="all_data_footer">Export saves everything in one .zip that only goes where you choose. Import reads that .zip back, from this phone or another one. API keys are never included.</string>
+    <string name="all_data_footer">Export saves everything in one .zip that only goes where you choose. Import reads that .zip back, from this phone or another one, including an iPhone or Android export. API keys are never included.</string>
     <string name="import_all_title">Import All Data</string>
     <string name="import_all_reading">Reading file…</string>
     <string name="import_all_progress">Importing %1$s (%2$d of %3$d)…</string>
@@ -15,11 +15,15 @@
     <string name="import_all_confirm">Import</string>
     <string name="import_all_done_title">Import finished</string>
     <string name="import_all_section_app_backup">Settings, profile &amp; logs</string>
+    <string name="import_all_section_portable">Profile, goals &amp; logs</string>
+    <string name="import_all_section_coach_chats">Coach chats</string>
     <string name="import_all_section_food_diary">Food diary</string>
     <string name="import_all_section_health_data">Health data</string>
     <string name="import_all_section_medications">Medications</string>
     <string name="import_all_section_health_records">Health Records</string>
     <string name="import_all_effect_app_backup">Replaces the settings, profile, food diary, water, weight, workouts, fasting and meal photos on this phone. Google Drive backup and API keys stay as they are.</string>
+    <string name="import_all_effect_portable">Replaces your profile, goals and settings with the ones in the file and adds weights, body fat, fasting and workout logs that aren\'t here yet. Nothing is deleted.</string>
+    <string name="import_all_effect_coach_chats">Merged: conversations missing on this phone are added. Chats you deleted here stay deleted.</string>
     <string name="import_all_effect_food_diary">Merged: matching entries are updated and new ones are added. Nothing on this phone is deleted.</string>
     <string name="import_all_effect_health_data">Merged: new samples are added and matching ones keep the newer copy. Nothing is deleted.</string>
     <string name="import_all_effect_medications">Merged: missing medications, schedules and doses are added and the newer copy wins. Nothing is deleted.</string>
@@ -44,4 +48,11 @@
     <string name="import_all_count_files">Files</string>
     <string name="import_all_count_settings">Settings</string>
     <string name="import_all_count_meal_photos">Meal photos</string>
+    <string name="import_all_count_weights">Weights</string>
+    <string name="import_all_count_body_fat">Body fat</string>
+    <string name="import_all_count_body_measurements">Measurements</string>
+    <string name="import_all_count_fasting_sessions">Fasts</string>
+    <string name="import_all_count_workout_sessions">Workouts</string>
+    <string name="import_all_count_user_exercises">Your exercises</string>
+    <string name="export_all_step_portable">profile and logs</string>
 </resources>

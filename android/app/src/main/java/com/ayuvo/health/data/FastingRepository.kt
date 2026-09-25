@@ -83,9 +83,12 @@ class FastingRepository(private val prefs: PreferencesStore) {
         prefs.updateFastingSessions { current -> current.filterNot { it.id == id } }
     }
 
-    private fun overlaps(left: FastingSession, right: FastingSession): Boolean {
-        val leftEnd = left.endedAt ?: Instant.MAX
-        val rightEnd = right.endedAt ?: Instant.MAX
-        return left.startedAt < rightEnd && right.startedAt < leftEnd
+    companion object {
+        /** An active session runs to the end of time. Shared with the portable-data import, which must never overlap either. */
+        fun overlaps(left: FastingSession, right: FastingSession): Boolean {
+            val leftEnd = left.endedAt ?: Instant.MAX
+            val rightEnd = right.endedAt ?: Instant.MAX
+            return left.startedAt < rightEnd && right.startedAt < leftEnd
+        }
     }
 }

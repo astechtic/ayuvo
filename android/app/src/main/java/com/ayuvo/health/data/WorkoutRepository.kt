@@ -553,6 +553,15 @@ class WorkoutRepository(
         deletedBurn?.let { performHealthDelete(it.first, it.second) }
     }
 
+    /**
+     * Portable-data import (docs/portable-data.md): [transform] runs under the state lock and is
+     * saved like any other edit, but never reaches the Health Connect adapter, so imported sessions
+     * are not written back to Health.
+     */
+    suspend fun importPortable(transform: (WorkoutPersistedState) -> WorkoutPersistedState) {
+        updateState(transform)
+    }
+
     /** Health imports never trigger a write callback, preventing an echo loop. */
     suspend fun importWorkoutBurnSessions(imported: List<WorkoutSession>) {
         if (imported.isEmpty()) return

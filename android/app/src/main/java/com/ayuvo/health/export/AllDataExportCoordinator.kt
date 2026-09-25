@@ -27,7 +27,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 /** The steps of one "Export All Data" run, in order (progress + the UI's step label). */
-enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, MEDICATIONS, HEALTH_RECORDS, COACH_CHATS, APP_BACKUP, WRITING }
+enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, MEDICATIONS, HEALTH_RECORDS, COACH_CHATS, APP_BACKUP, PORTABLE, WRITING }
 
 sealed interface AllDataExportOutcome {
     data class Done(val fileCount: Int, val skippedSections: List<String>) : AllDataExportOutcome
@@ -99,6 +99,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
             section(SECTION_HEALTH_RECORDS, AllDataExportStep.HEALTH_RECORDS) { records(work) }
             section(SECTION_COACH_CHATS, AllDataExportStep.COACH_CHATS) { coachChats(work) }
             section(SECTION_APP_BACKUP, AllDataExportStep.APP_BACKUP) { appBackup(work) }
+            section(SECTION_PORTABLE, AllDataExportStep.PORTABLE) { portable(work) }
 
             if (sections.isEmpty()) return@withContext AllDataExportOutcome.NothingToExport
             step(AllDataExportStep.WRITING)
@@ -267,6 +268,28 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         )
     }
 
+    /**
+     * Profile, goals, units, preferences and the weight / body fat / measurement / fasting / workout
+     * logs in the format iPhone and Android both read (docs/portable-data.md). Written next to the
+     * app backup on every export, because the app backup only restores on the platform that made it.
+     */
+    private suspend fun portable(work: File): SectionResult {
+        val export = PortableDataExporter(container.prefs, container.workoutRepository)
+            .export(BuildConfig.VERSION_NAME)
+            ?: return SectionResult.Skip(AllDataExportArchive.REASON_EMPTY)
+        val file = File(work, PortableFormat.FILE_NAME).apply { writeText(export.json) }
+        return SectionResult.Ok(
+            AllDataExportArchive.Section(
+                id = SECTION_PORTABLE,
+                format = PortableFormat.FORMAT,
+                path = PortableFormat.ENTRY_PATH,
+                description = "Profile, goals, units, preferences and weight, body fat, measurement, fasting and workout logs in a format iPhone and Android both read. Import with Settings › Backup & Export › Import All Data.",
+                counts = export.counts,
+                source = file
+            )
+        )
+    }
+
     companion object {
         private const val TAG = "AyuvoExportAll"
         const val SECTION_FOOD_DIARY = "food_diary"
@@ -275,5 +298,6 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         const val SECTION_HEALTH_RECORDS = "health_records"
         const val SECTION_COACH_CHATS = "coach_chats"
         const val SECTION_APP_BACKUP = "app_backup"
+        const val SECTION_PORTABLE = "portable_data"
     }
 }

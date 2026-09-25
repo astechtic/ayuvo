@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayuvo.health.AppContainer
-import com.ayuvo.health.BuildConfig
 import com.ayuvo.health.R
 import com.ayuvo.health.backup.DriveCloudBackupClient
 import com.ayuvo.health.export.AllDataExportArchive
@@ -121,17 +120,15 @@ internal fun OnboardingRestoreHost(
                 },
                 modifier = Modifier.fillMaxWidth().testTag("onboarding.restore.file")
             )
-            // Google Drive backup exists only where the OAuth client is configured for this build.
-            if (BuildConfig.CLOUD_BACKUP_WEB_CLIENT_ID.isNotBlank()) {
-                GlassPrimaryButton(
-                    text = stringResource(R.string.onboarding_restore_drive),
-                    onClick = {
-                        onChooserDismiss()
-                        startDriveRestore()
-                    },
-                    modifier = Modifier.fillMaxWidth().testTag("onboarding.restore.drive")
-                )
-            }
+            // Same Drive backup Settings › Backup & Export turns on; always offered, like there.
+            GlassPrimaryButton(
+                text = stringResource(R.string.onboarding_restore_drive),
+                onClick = {
+                    onChooserDismiss()
+                    startDriveRestore()
+                },
+                modifier = Modifier.fillMaxWidth().testTag("onboarding.restore.drive")
+            )
             GlassDialogActions(
                 primaryText = stringResource(R.string.action_cancel),
                 onPrimary = onChooserDismiss
@@ -149,8 +146,13 @@ internal fun OnboardingRestoreHost(
             val done = importUi as? AllDataImportUi.Done
             importer.dismiss()
             vm.onImportFinished(
+                // The portable part carries the profile too: it is how an iPhone zip restores here. The
+                // view model still refuses (NO_PROFILE) when no profile ended up on the phone.
                 done?.outcomes?.any {
-                    it is AllDataImportOutcome.Imported && it.section == AllDataExportCoordinator.SECTION_APP_BACKUP
+                    it is AllDataImportOutcome.Imported && (
+                        it.section == AllDataExportCoordinator.SECTION_APP_BACKUP ||
+                            it.section == AllDataExportCoordinator.SECTION_PORTABLE
+                        )
                 } == true
             )
         }

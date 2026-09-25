@@ -5,9 +5,11 @@ import Foundation
 /// importers. Pure logic only; `ImportAllDataView` extracts the entries and runs the importers.
 nonisolated enum AllDataImport {
     /// Known sections, in the order they are imported. Settings go first so a same-platform
-    /// restore can stand in for the food diary part (the app backup already carries the diary).
+    /// restore can stand in for the food diary part (the app backup already carries the diary) and
+    /// for the portable profile-and-logs part.
     enum Section: String, CaseIterable, Sendable {
         case appBackup = "app_backup"
+        case portableData = "portable_data"
         case foodDiary = "food_diary"
         case healthData = "health_data"
         case medications
@@ -18,9 +20,9 @@ nonisolated enum AllDataImport {
     enum Disposition: Equatable, Sendable {
         /// Handed to the section's importer.
         case importIt
-        /// Food diary when a same-platform app backup is in the file: the backup restores the
-        /// diary and water, so importing the JSON too would duplicate it. Imported after all if
-        /// the app backup fails.
+        /// Food diary or portable data when a same-platform app backup is in the file: the backup
+        /// restores the diary, water, profile and logs, so importing the JSON too would duplicate
+        /// or overwrite them. Imported after all if the app backup fails.
         case coveredByAppBackup
         /// App backup from another platform: its preference keys don't map across platforms.
         case otherPlatform
@@ -99,7 +101,7 @@ nonisolated enum AllDataImport {
             let disposition: Disposition
             switch section {
             case .appBackup: disposition = sameAppBackup ? .importIt : .otherPlatform
-            case .foodDiary: disposition = sameAppBackup ? .coveredByAppBackup : .importIt
+            case .portableData, .foodDiary: disposition = sameAppBackup ? .coveredByAppBackup : .importIt
             default: disposition = .importIt
             }
             return Item(section: section, entryName: file.name, format: file.format, counts: file.counts, disposition: disposition)

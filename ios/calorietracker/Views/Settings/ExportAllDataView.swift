@@ -23,7 +23,7 @@ struct ExportAllDataView: View {
     @State private var errorMessage: String?
 
     enum Step: Int, CaseIterable {
-        case foodDiary, healthData, medications, healthRecords, coachChats, appBackup, packing
+        case foodDiary, healthData, medications, healthRecords, coachChats, appBackup, portableData, packing
 
         var title: LocalizedStringResource {
             switch self {
@@ -33,6 +33,7 @@ struct ExportAllDataView: View {
             case .healthRecords: "Health Records"
             case .coachChats: "Coach chats"
             case .appBackup: "Settings, profile & logs"
+            case .portableData: "Profile, goals & logs"
             case .packing: "Creating zip"
             }
         }
@@ -51,6 +52,7 @@ struct ExportAllDataView: View {
                     contentRow("pills.fill", AyuvoPalette.medications, "Medications", "Medications, schedules and dose log")
                     contentRow("doc.text.fill", AyuvoPalette.records, "Health Records", "Records and their details")
                     contentRow("gearshape.fill", AyuvoPalette.other, "Settings, profile & logs", "Profile, goals, workouts, weight, fasting, meal photos")
+                    contentRow("person.crop.circle.fill", AyuvoPalette.other, "Profile, goals & logs", "Also readable on Android: profile, goals, weight, body fat, fasting, workouts")
                 } header: {
                     Text("Included")
                 } footer: {
@@ -301,7 +303,20 @@ struct ExportAllDataView: View {
                 counts: ["settings": values.count, "meal_photos": photos.count]
             ))
 
-            // 7. The outer zip.
+            // 7. Profile, goals and logs in the format both platforms read (docs/portable-data.md).
+            advance(.portableData)
+            if let portable = PortableDataExport.build(now: now, appVersion: appVersion) {
+                let url = parts.appendingPathComponent("ayuvo-portable-data.json")
+                try portable.data.write(to: url, options: .atomic)
+                included.append(.init(
+                    section: PortableData.sectionID, format: PortableData.format, name: PortableData.entryName,
+                    fileURL: url, counts: portable.counts
+                ))
+            } else {
+                skipped.append(PortableData.sectionID)
+            }
+
+            // 8. The outer zip.
             advance(.packing)
             let destination = work.appendingPathComponent(AllDataExport.fileName(now: now))
             let assembled = included

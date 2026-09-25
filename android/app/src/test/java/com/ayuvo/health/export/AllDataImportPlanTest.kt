@@ -32,12 +32,13 @@ class AllDataImportPlanTest {
         file("medications", "medications/ayuvo-medications.json"),
         file("food_diary", "food-diary/d.json"),
         file("app_backup", "app-backup/ayuvo-backup.zip"),
+        file("portable_data", "portable-data/ayuvo-portable-data.json"),
         file("health_data", "health-data/h.zip"),
         file("coach_chats", "coach-chats/ayuvo-coach-chats.zip")
     )
     private val entries = setOf(
         "manifest.json", "health-records/r.zip", "medications/ayuvo-medications.json",
-        "food-diary/d.json", "app-backup/ayuvo-backup.zip", "health-data/h.zip",
+        "food-diary/d.json", "app-backup/ayuvo-backup.zip", "portable-data/ayuvo-portable-data.json", "health-data/h.zip",
         "coach-chats/ayuvo-coach-chats.zip"
     )
 
@@ -50,9 +51,19 @@ class AllDataImportPlanTest {
         assertEquals(AllDataImportPlan.ORDER, plan.sections.map { it.id })
         assertNull(plan.sections[0].skip)
         assertEquals(SkipReason.IN_APP_BACKUP, plan.sections[1].skip)
-        assertTrue(plan.sections.drop(2).all { it.imports })
+        assertEquals(SkipReason.IN_APP_BACKUP, plan.sections[2].skip)
+        assertTrue(plan.sections.drop(3).all { it.imports })
         assertEquals(5, plan.importCount)
-        assertEquals(mapOf("records" to 2L), plan.sections[4].counts)
+        assertEquals(mapOf("records" to 2L), plan.sections[5].counts)
+    }
+
+    @Test
+    fun theOrderPutsPortableDataRightAfterTheAppBackup() {
+        assertEquals(
+            listOf("app_backup", "portable_data", "food_diary", "health_data", "medications", "health_records", "coach_chats"),
+            AllDataImportPlan.ORDER
+        )
+        assertEquals("ayuvo-portable-data", AllDataImportPlan.EXPECTED_FORMAT.getValue("portable_data"))
     }
 
     @Test
@@ -60,7 +71,42 @@ class AllDataImportPlanTest {
         val plan = ok(AllDataImportPlan.plan(manifest(all, platform = "ios"), entries))
         assertEquals(SkipReason.OTHER_PLATFORM, plan.sections.first { it.id == "app_backup" }.skip)
         assertTrue(plan.sections.first { it.id == "food_diary" }.imports)
-        assertEquals(5, plan.importCount)
+        // The portable part is what restores the profile and logs from the other platform.
+        assertTrue(plan.sections.first { it.id == "portable_data" }.imports)
+        assertEquals(6, plan.importCount)
+    }
+
+    @Test
+    fun portableDataIsNeverSkippedAsAnotherPlatform() {
+        for (platform in listOf("ios", "android", "windows")) {
+            val skip = ok(AllDataImportPlan.plan(manifest(all, platform = platform), entries)).sections.first { it.id == "portable_data" }.skip
+            assertTrue(platform, skip != SkipReason.OTHER_PLATFORM)
+        }
+    }
+
+    @Test
+    fun portableDataImportsWhenThereIsNoAppBackupPartOrItCannotBeRead() {
+        val onlyPortable = listOf(file("portable_data", "portable-data/ayuvo-portable-data.json"), file("food_diary", "food-diary/d.json"))
+        val names = setOf("manifest.json", "portable-data/ayuvo-portable-data.json", "food-diary/d.json")
+        val plan = ok(AllDataImportPlan.plan(manifest(onlyPortable), names))
+        assertEquals(listOf("portable_data", "food_diary"), plan.sections.map { it.id })
+        assertTrue(plan.sections.all { it.imports })
+
+        // an app backup in a format this build can't read is not "applied", so the portable part still imports
+        val unreadable = listOf(
+            file("app_backup", "app-backup/ayuvo-backup.zip", format = "ayuvo-cloud-backup-v9"),
+            file("portable_data", "portable-data/ayuvo-portable-data.json")
+        )
+        val plan2 = ok(AllDataImportPlan.plan(manifest(unreadable), entries))
+        assertEquals(SkipReason.UNSUPPORTED, plan2.sections[0].skip)
+        assertTrue(plan2.sections[1].imports)
+    }
+
+    @Test
+    fun aPortableFileInAnotherFormatIsSkippedAsUnsupported() {
+        val files = listOf(file("portable_data", "portable-data/ayuvo-portable-data.json", format = "ayuvo-portable-data-v9"))
+        val plan = ok(AllDataImportPlan.plan(manifest(files), entries))
+        assertEquals(SkipReason.UNSUPPORTED, plan.sections.single().skip)
     }
 
     @Test

@@ -1,0 +1,160 @@
+{
+  "app": "Ayuvo",
+  "format": "ayuvo-portable-data",
+  "format_version": 1,
+  "created_at": "2026-09-25T10:30:00.000Z",
+  "platform": "android",
+  "app_version": "1.0",
+  "profile": {
+    "name": "Sample User",
+    "gender": "female",
+    "birthday": "1994-03-17",
+    "height_cm": 168.5,
+    "weight_kg": 64.2,
+    "activity_level": "veryActive",
+    "goal": "lose",
+    "body_fat_fraction": 0.27,
+    "goal_body_fat_fraction": 0.22,
+    "weekly_change_kg": 0.5,
+    "goal_weight_kg": 58.0,
+    "custom_calories": 1850,
+    "custom_protein_g": 130,
+    "custom_fat_g": 60,
+    "custom_carbs_g": 190,
+    "auto_balance_macro": "carbs",
+    "allergens": ["peanut", "shellfish"],
+    "calories_locked": true,
+    "locked_macros": ["protein"]
+  },
+  "units": {
+    "height_unit": "cm",
+    "weight_unit": "kg",
+    "water_unit": "floz",
+    "glucose_unit": "mmol/L"
+  },
+  "preferences": {
+    "week_starts_on_monday": false,
+    "daily_step_goal": 8500,
+    "appearance_mode": "dark",
+    "app_theme_color": "teal",
+    "adaptive_goals_enabled": false,
+    "food_measurement_prefer_grams": true,
+    "meal_start_minutes": { "breakfast": 360, "lunch": 780, "dinner": 1140, "snack": 1320 },
+    "summary_favourites": ["app:calories", "app:water", "steps"],
+    "optional_nutrient_goals": { "fiber": 35, "sodium": 2000, "creatine": 5 }
+  },
+  "water": { "settings": { "tracking_enabled": true, "daily_goal_ml": 2500 } },
+  "fasting": {
+    "settings": { "tracking_enabled": true, "default_goal_minutes": 960, "goal_notification_enabled": false },
+    "sessions": [
+      { "id": "0b1c2d3e-0000-4000-8000-000000000001", "started_at": "2026-09-20T18:00:00.000Z", "ended_at": "2026-09-21T10:15:00.000Z", "goal_minutes": 960 },
+      { "id": "0b1c2d3e-0000-4000-8000-000000000002", "started_at": "2026-09-24T19:00:00.000Z", "goal_minutes": 840 }
+    ]
+  },
+  "weights": [
+    { "id": "11111111-0000-4000-8000-000000000001", "date": "2026-09-01T07:30:00.000Z", "weight_kg": 65.4 },
+    { "id": "11111111-0000-4000-8000-000000000002", "date": "2026-09-15T07:31:10.000Z", "weight_kg": 64.9 },
+    { "id": "11111111-0000-4000-8000-000000000003", "date": "2026-09-25T07:29:00.000Z", "weight_kg": 64.2 }
+  ],
+  "body_fat": [
+    { "id": "22222222-0000-4000-8000-000000000001", "date": "2026-09-10T08:00:00.000Z", "fraction": 0.275 },
+    { "id": "22222222-0000-4000-8000-000000000002", "date": "2026-09-25T08:00:00.000Z", "fraction": 0.27 }
+  ],
+  "body_measurements": [
+    { "id": "33333333-0000-4000-8000-000000000001", "date": "2026-09-12T09:00:00.000Z", "waist_cm": 74.5, "hips_cm": 98.0, "neck_cm": 31.5 }
+  ],
+  "workouts": {
+    "preferences": {
+      "target_muscles": ["chest", "back"],
+      "issues": ["lower_back", "knee"],
+      "additional_issues": "old ankle sprain",
+      "frequency_days": 4,
+      "duration_minutes": 75,
+      "split": "upper_lower",
+      "custom_split": "",
+      "equipment": ["barbell", "dumbbell"],
+      "rpe_scale": "cr10",
+      "strength": { "bench_press_kg": 60, "squat_kg": 85.5, "deadlift_kg": 105, "overhead_press_kg": 40 }
+    },
+    "saved_exercise_ids": ["0001", "user_exercise_44444444-0000-4000-8000-000000000001"],
+    "user_exercises": [
+      {
+        "id": "55555555-0000-4000-8000-000000000001",
+        "item_id": "user_exercise_44444444-0000-4000-8000-000000000001",
+        "name": "Sandbag carry",
+        "body_part": "cardio",
+        "equipment": "sandbag",
+        "primary_muscles": ["core"],
+        "secondary_muscles": ["glutes"],
+        "instructions": ["Hug the bag", "Walk 20 m"],
+        "sets": []
+      }
+    ],
+    "custom_activities": [
+      {
+        "id": "55555555-0000-4000-8000-000000000002",
+        "item_id": "custom_activity_66666666-0000-4000-8000-000000000001",
+        "name": "Padel",
+        "body_part": "cardio",
+        "equipment": "",
+        "primary_muscles": [],
+        "secondary_muscles": [],
+        "instructions": [],
+        "sets": []
+      }
+    ],
+    "day_plans": {
+      "2026-09-26": [
+        {
+          "id": "55555555-0000-4000-8000-000000000003",
+          "item_id": "0001",
+          "name": "3/4 Sit-up",
+          "body_part": "waist",
+          "equipment": "body weight",
+          "primary_muscles": ["abs"],
+          "secondary_muscles": ["hip flexors"],
+          "instructions": ["Lie on your back"],
+          "image_url": "https://example.com/0001.png",
+          "gif_url": "https://example.com/0001.gif",
+          "sets": [
+            { "id": "77777777-0000-4000-8000-000000000001", "weight": "0", "weight_unit": "kg", "reps": "15", "rpe": "6", "rpe_scale": "cr10" },
+            { "id": "77777777-0000-4000-8000-000000000002", "weight": "", "reps": "12", "rpe": "7.5" }
+          ]
+        }
+      ]
+    },
+    "sessions": [
+      {
+        "id": "88888888-0000-4000-8000-000000000001",
+        "diary_date_key": "2026-09-24",
+        "started_at": "2026-09-24T17:00:00.000Z",
+        "completed_at": "2026-09-24T17:52:30.000Z",
+        "duration_seconds": 3150,
+        "exercises": [
+          {
+            "id": "99999999-0000-4000-8000-000000000001",
+            "item_id": "0001",
+            "name": "3/4 Sit-up",
+            "target_muscles": ["abs"],
+            "equipment": "body weight",
+            "duration_seconds": 240.5,
+            "intensity": "vigorous",
+            "sets": [
+              { "id": "aaaaaaaa-0000-4000-8000-000000000001", "set_number": 1, "weight": "20", "weight_unit": "lbs", "reps": "10", "rpe": "8", "rpe_scale": "borg" },
+              { "id": "aaaaaaaa-0000-4000-8000-000000000002", "set_number": 2, "weight": "22.5", "weight_unit": "lbs", "reps": "8", "rpe": "9" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "88888888-0000-4000-8000-000000000002",
+        "diary_date_key": "2026-09-25",
+        "started_at": "2026-09-25T06:00:00.000Z",
+        "completed_at": "2026-09-25T06:00:00.000Z",
+        "duration_seconds": 0,
+        "calories_burned": 420,
+        "exercises": []
+      }
+    ]
+  }
+}

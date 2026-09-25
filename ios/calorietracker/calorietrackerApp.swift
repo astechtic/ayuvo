@@ -156,7 +156,8 @@ struct calorietrackerApp: App {
             .onReceive(NotificationCenter.default.publisher(for: .appBackupDidRestore)) { _ in
                 // Restored from the onboarding welcome screen: the file's goals and adaptive/energy
                 // settings win over the new-install defaults applied when onboarding completes.
-                if !hasCompletedOnboarding { restoredDuringOnboarding = true }
+                // Only a restore that brought a profile replaces the new-install setup; logs alone don't.
+                if !hasCompletedOnboarding, UserProfile.load() != nil { restoredDuringOnboarding = true }
                 foodStore.reloadFromDefaults()
                 weightStore.reloadFromDefaults()
                 bodyFatStore.reloadFromDefaults()

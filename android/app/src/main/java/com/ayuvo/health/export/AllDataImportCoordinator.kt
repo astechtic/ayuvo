@@ -39,8 +39,8 @@ sealed interface AllDataImportUi {
 /**
  * Settings › Backup & Export › Import All Data: reads an [AllDataExportArchive] zip picked with
  * SAF, shows its [AllDataImportPlan] and, once confirmed, hands each section to the importer that
- * reads that format (settings backup restore, DiaryImporter, HealthDataImporter, medications merge,
- * Health Records archive restore). Runs on the app scope so leaving Settings does not cancel it; a failing
+ * reads that format (settings backup restore, portable profile and logs, DiaryImporter,
+ * HealthDataImporter, medications merge, Health Records archive restore). Runs on the app scope so leaving Settings does not cancel it; a failing
  * section is reported and the rest still run.
  */
 class AllDataImportCoordinator(private val container: AppContainer) {
@@ -117,23 +117,44 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             mkdirs()
         }
         try {
-            val files = extract(uri, sections.filter { it.imports }, work)
             val importing = sections.filter { it.imports }
-            sections.map { section ->
-                val skip = section.skip
-                if (skip != null) return@map AllDataImportOutcome.Skipped(section.id, skip)
-                _ui.value = AllDataImportUi.Running(section.id, importing.indexOf(section) + 1, importing.size)
+            // The portable part is normally covered by the app backup; its file is read anyway so it can
+            // step in when that backup fails to apply.
+            val files = extract(uri, sections.filter { it.imports || it.isPortableCoveredByAppBackup }, work)
+            var appBackupFailed = false
+            val outcomes = mutableListOf<AllDataImportOutcome>()
+            for (section in sections) {
+                var skip = section.skip
+                if (section.isPortableCoveredByAppBackup && appBackupFailed) skip = null
+                if (skip != null) {
+                    outcomes += AllDataImportOutcome.Skipped(section.id, skip)
+                    continue
+                }
+                _ui.value = AllDataImportUi.Running(
+                    section.id,
+                    (importing.indexOf(section) + 1).coerceAtLeast(1),
+                    importing.size.coerceAtLeast(1)
+                )
                 val file = files[section.id]
-                    ?: return@map AllDataImportOutcome.Failed(section.id, null)
-                runCatching { AllDataImportOutcome.Imported(section.id, import(section.id, file)) }
-                    .onFailure { Log.w(TAG, "Section ${section.id} failed: ${it.javaClass.simpleName}") }
-                    .getOrElse { AllDataImportOutcome.Failed(section.id, it.localizedMessage) }
-                    .also { runCatching { file.delete() } }
+                val outcome = if (file == null) {
+                    AllDataImportOutcome.Failed(section.id, null)
+                } else {
+                    runCatching { AllDataImportOutcome.Imported(section.id, import(section.id, file)) }
+                        .onFailure { Log.w(TAG, "Section ${section.id} failed: ${it.javaClass.simpleName}") }
+                        .getOrElse { AllDataImportOutcome.Failed(section.id, it.localizedMessage) }
+                        .also { runCatching { file.delete() } }
+                }
+                if (section.id == AllDataExportCoordinator.SECTION_APP_BACKUP && outcome is AllDataImportOutcome.Failed) appBackupFailed = true
+                outcomes += outcome
             }
+            outcomes
         } finally {
             runCatching { work.deleteRecursively() }
         }
     }
+
+    private val AllDataImportPlan.Section.isPortableCoveredByAppBackup: Boolean
+        get() = id == AllDataExportCoordinator.SECTION_PORTABLE && skip == AllDataImportPlan.SkipReason.IN_APP_BACKUP
 
     /** One streaming pass over the zip, copying each wanted entry to its own temp file. */
     private fun extract(uri: Uri, wanted: List<AllDataImportPlan.Section>, work: File): Map<String, File> {
@@ -158,6 +179,14 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             // Same restore as Google Drive, minus the Drive state: settings, profile, logs, photos.
             container.cloudBackup.applyArchive(file.readBytes(), fromFile = true)
             1L
+        }
+        AllDataExportCoordinator.SECTION_PORTABLE -> {
+            require(file.length() <= PortableFormat.MAX_FILE_BYTES) { "This file is too large to import." }
+            // Profile, goals, units and logs merge in; the profile is written last and nothing reaches Health Connect.
+            val store = PreferencesPortableStore(
+                container.prefs, container.weightRepository, container.bodyFatRepository, container.workoutRepository
+            )
+            PortableDataImporter(store).import(file.readText()).total
         }
         AllDataExportCoordinator.SECTION_FOOD_DIARY -> {
             require(file.length() <= DiaryImporter.MAXIMUM_FILE_SIZE) { "This file is too large to import." }

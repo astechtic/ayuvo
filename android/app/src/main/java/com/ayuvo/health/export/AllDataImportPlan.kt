@@ -18,6 +18,7 @@ object AllDataImportPlan {
     /** Import order: settings first (it replaces preferences), then the merged stores. */
     val ORDER = listOf(
         AllDataExportCoordinator.SECTION_APP_BACKUP,
+        AllDataExportCoordinator.SECTION_PORTABLE,
         AllDataExportCoordinator.SECTION_FOOD_DIARY,
         AllDataExportCoordinator.SECTION_HEALTH_DATA,
         AllDataExportCoordinator.SECTION_MEDICATIONS,
@@ -28,6 +29,7 @@ object AllDataImportPlan {
     /** The format each section's file must be in. */
     val EXPECTED_FORMAT = mapOf(
         AllDataExportCoordinator.SECTION_APP_BACKUP to CloudBackupPolicy.FORMAT,
+        AllDataExportCoordinator.SECTION_PORTABLE to PortableFormat.FORMAT,
         AllDataExportCoordinator.SECTION_FOOD_DIARY to FOOD_DIARY_FORMAT,
         AllDataExportCoordinator.SECTION_HEALTH_DATA to HealthExportFormat.FORMAT,
         AllDataExportCoordinator.SECTION_MEDICATIONS to MedicationConstants.ARCHIVE_FORMAT,
@@ -40,7 +42,7 @@ object AllDataImportPlan {
     enum class SkipReason {
         /** The settings backup keeps platform-specific preference keys; an iPhone one can't be applied here. */
         OTHER_PLATFORM,
-        /** The applied settings backup already holds the food diary and water log. */
+        /** The applied settings backup already holds this part (the food diary and water log, or the portable profile and logs). */
         IN_APP_BACKUP,
         /** The section's file is in a format this version can't read. */
         UNSUPPORTED
@@ -99,6 +101,8 @@ object AllDataImportPlan {
             val skip = when {
                 file.format != EXPECTED_FORMAT[id] -> SkipReason.UNSUPPORTED
                 id == AllDataExportCoordinator.SECTION_APP_BACKUP && manifest.platform != platform -> SkipReason.OTHER_PLATFORM
+                // The portable part is what makes an iPhone zip restore here, so it is never an OTHER_PLATFORM skip.
+                id == AllDataExportCoordinator.SECTION_PORTABLE && appBackupApplied -> SkipReason.IN_APP_BACKUP
                 id == AllDataExportCoordinator.SECTION_FOOD_DIARY && appBackupApplied -> SkipReason.IN_APP_BACKUP
                 else -> null
             }

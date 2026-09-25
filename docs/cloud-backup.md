@@ -24,15 +24,20 @@ The Welcome step has a "Restore from a backup" button under Get Started.
 | Platform | Sources |
 |----------|---------|
 | iOS | An Export All Data zip picked in Files (iCloud Drive and other providers included): the whole `ImportAllDataView` (preview, then each section's importer). |
-| Android | The same Export All Data import through the system picker (`ACTION_OPEN_DOCUMENT` lists Google Drive), **or** the Google Drive backup (account picker → Drive authorization → download → the same `applyArchive` as Settings › Restore now). The Drive option needs `CLOUD_BACKUP_WEB_CLIENT_ID` and is hidden without it. |
+| Android | The same Export All Data import through the system picker (`ACTION_OPEN_DOCUMENT` lists Google Drive when the Drive app is installed), **or** the Google Drive backup (account picker → Drive authorization → download → the same `applyArchive` as Settings › Restore now). The Drive option is always offered, like the Settings toggle; without a Drive backup on the chosen account it says so and signs that account out again. |
 
-When the **app backup** part was restored (iPhone zip on iPhone, Android zip or Drive backup on Android) the profile, goals and settings are in place, so onboarding skips the profile steps, Building Plan and Plan Ready and runs only what needs this phone: notifications (permission), Apple Health / Health Connect (permission), AI setup (on-device model download or API key; API keys are never in a backup). The last of those completes onboarding. A restore that carries no app backup (an iPhone zip on Android, an Android zip on iPhone, or no profile in it) leaves the normal onboarding in place after its other sections were merged.
+When the **app backup** part or the cross-platform **portable data** part (`docs/portable-data.md`) restored a profile (iPhone zip on iPhone, Android zip or Drive backup on Android, or a zip from the *other* platform), the profile, goals and settings are in place, so onboarding skips the profile steps, Building Plan and Plan Ready and runs only what needs this phone: notifications (permission), Apple Health / Health Connect (permission), AI setup (on-device model download or API key; API keys are never in a backup). The last of those completes onboarding. A restore that carries no profile leaves the normal onboarding in place after its other sections were merged.
+
+### Between iPhone and Android
+
+The app backup part stays same-platform only (preference keys and date encodings differ). Every export also carries `portable_data` (`docs/portable-data.md`, fixture `shared/portable/fixtures/portable-sample.json`): profile and goals, units and the preferences both apps share, water/fasting settings, weights, body fat, body measurements, fasting sessions and workouts, in one normalized JSON. Importing a zip from the other platform applies it; from the same platform it is covered by the app backup. The food diary (including water entries) keeps travelling as `food_diary` and Health data, medications, Health Records and Coach chats as before. API keys, notification schedules, AI provider choice and Add-menu / quick-action layouts never cross platforms.
 
 Details that keep the restore honest:
 
 - `hasCompletedOnboarding` is in `CloudBackupPolicy.excludedKeys` on both platforms. It is device state; restoring it would end onboarding (iOS swaps to the main UI at once) before the permission and AI steps ran.
 - A restored onboarding does not run the new-install seeding: no profile overwrite, no first weight or body-fat entry, no default speech provider, and the backup's Adaptive Goals / Energy Burn settings and Records AI mode are kept (iOS: `restoredDuringOnboarding` in `calorietrackerApp`; Android: `OnboardingState.restored` in `complete()`).
 - iOS skips the Apple Health write-back / read-back of profile fields for a restored profile, and clears `healthKitEnabled` if this phone did not grant access.
+- iOS has a DEBUG-only hook, `-ayuvoImportAllFile <absolute path>`, that opens an export zip in Import All Data as if it had been picked in Files; `OnboardingRestoreUITests` uses it (`TEST_RUNNER_AYUVO_RESTORE_ZIP=<zip>`).
 - The state is in memory: quitting mid-way returns to the Welcome step (the restored profile is still there and can be restored again or replaced by the normal steps).
 
 ### Drive setup
