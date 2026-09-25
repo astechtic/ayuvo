@@ -22,6 +22,7 @@ Geometry (1024 × 1024 design grid, `scripts/brand/ayuvo_mark.py` is the source 
 - Primary "Rose" = the app's default accent, `#FF375F → #FF6B8A` (135°). All 18 accent tints in
   `tints.json` are shared verbatim with iOS (`Views/Theme.swift`) and Android (`ui/theme/Color.kt`).
 - Icon background ink `#0F1412`, constant across tints (Android `ic_launcher_background`).
+- **Website:** the mark is the Blue tint (`#0A84FF → #5EAEFF`) on pale sky `#EEF6FD` (`WEB_TINT` / `WEB_BG` in `render_icons.py`); the apps, store icons and Play graphics keep Rose.
 - Secondary for charts and web accents: Teal `#30B0C7`, used sparingly.
 - Monochrome: ink on paper (`#0F1412` on `#F5F2EC`) and white on ink. iOS "tinted" appearance uses a
   greyscale mark on transparent.

@@ -1,0 +1,63 @@
+<!--meta
+{
+ "path": "/support",
+ "title": "Support — Ayuvo",
+ "kind": "support",
+ "modified": "2026-09-14",
+ "description": "Get help with Ayuvo on iPhone and Android: contact support, troubleshooting for AI providers, Health Connect and Apple Health, exports, backups and deleting your data."
+}
+-->
+      <h1>Support</h1>
+      <span class="page-date">Ayuvo for iPhone and Android</span>
+
+      <div class="summary">
+        <p><strong>Email us.</strong> Every question, bug or idea goes to a person. Replies usually arrive within a few days.</p>
+        <p><a class="mail-btn" href="mailto:yaaratech@gmail.com?subject=Ayuvo%20support"><svg class="icon"><use href="#i-mail"/></svg> yaaratech@gmail.com</a></p>
+      </div>
+
+      <h2 id="before-you-write">Before you write</h2>
+      <p>The fastest way is <strong>Settings → Help &amp; Support → Contact Support</strong> inside the app: it opens an email with the app version, build, OS version, device and language already filled in. If you write from elsewhere, please include:</p>
+      <ul>
+        <li>Platform and app version (Settings → App &amp; Updates)</li>
+        <li>Which AI or speech provider you use, and the model, if the issue is about analysis or the coach</li>
+        <li>What you did, what you expected, and what happened instead — a screenshot helps</li>
+      </ul>
+
+      <h2 id="faq">Frequently asked</h2>
+      <div class="card-grid">
+        <div class="card"><h3>Is Ayuvo free?</h3><p>Yes. No subscriptions, credits or in-app purchases. AI features use an API key you create with a provider; any usage is billed by that provider, never by Ayuvo.</p></div>
+        <div class="card"><h3>Which AI can I use?</h3><p>Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones, on-device models such as Gemma 4 E2B and MedGemma 1.5 4B run on the phone itself; iPhones can also use Apple Intelligence as a fallback.</p></div>
+        <div class="card"><h3>Where is my data?</h3><p>In the app's storage on your phone. There is no Ayuvo account or server. Data leaves the device only when you act — see the <a href="privacy">Privacy Policy</a>.</p></div>
+        <div class="card"><h3>Does the coach see my health data?</h3><p>Only while "Let Coach use my health data" is on. It is shown at every connect step and in Settings → Health &amp; Data.</p></div>
+        <div class="card"><h3>How do backups work?</h3><p>Off by default. iPhone uses your private iCloud database, Android your Google Drive app folder. Backups never include the health hub database or coach chat.</p></div>
+        <div class="card"><h3>Which languages?</h3><p>18: English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian. The app follows your phone's language.</p></div>
+      </div>
+
+      <h2 id="troubleshooting">Troubleshooting</h2>
+      <h3>"401", "403" or "invalid key" from the AI provider</h3>
+      <p>The key is missing, mistyped or belongs to another product. Open Settings → AI Providers, paste the key again and make sure the provider and model match the key. Most providers show usage and limits in their own console.</p>
+      <h3>"429" or "quota exceeded"</h3>
+      <p>Your provider's free tier or rate limit is exhausted. Ayuvo retries transient overloads automatically; a persistent 429 means the provider account needs credit or a slower pace. A fallback provider can be configured in Settings.</p>
+      <h3>Health Connect is missing or out of date (Android)</h3>
+      <p>Health Connect is part of Android 14+ and a Play Store app on Android 9–13. The Health tab's Connect button opens the right screen; if it says "not installed", install or update Health Connect from Google Play, then grant the categories you want Ayuvo to read.</p>
+      <h3>Apple Health shows nothing (iPhone)</h3>
+      <p>Open the Health app → Sharing → Apps &amp; Services → Ayuvo and turn on the categories you want to share. Reads that were denied show as "Nothing shared yet" in Ayuvo. On iOS 27 a "past 30 days" grant limits history; grant full history from the same screen.</p>
+      <h3>Ollama on your local network</h3>
+      <p>Enter the base URL of your Ollama server (for example <code>http://192.168.1.20:11434/v1</code>) under Settings → AI Providers → Ollama. Plain HTTP is allowed only for local-network addresses; everything else must use HTTPS. iPhone will ask for Local Network permission once.</p>
+      <h3>On-device models and storage</h3>
+      <p>Gemma 4 E2B is about 2.6 GB, MedGemma 1.5 4B about 3 GB and Whisper Base about 150 MB. Models download only when you tap Download and can be removed from the same screen to free space. A phone with less memory than a model needs still lists it, together with the reason it is blocked. The full list is on the <a href="/features/on-device-ai">on-device AI page</a>.</p>
+      <h3>MedGemma asks for a Hugging Face token</h3>
+      <p>MedGemma is a gated download: Google requires you to accept its Health AI Developer Foundations terms on the model's Hugging Face page first. Create a free Hugging Face account, accept the terms, create an access token with read access and paste it into the on-device models settings. Ayuvo sends the token only to Hugging Face, and only for gated downloads. Without it the MedGemma row stays listed but blocked.</p>
+
+      <h2 id="your-data">Your data</h2>
+      <ul>
+        <li><strong>Export:</strong> Settings → Data Management exports the food diary (JSON, CSV or Markdown) and the Health hub (an <code>ayuvo-health-data</code> zip).</li>
+        <li><strong>Switch phones:</strong> Settings → Data Management → Export All Data on the old phone, then Import All Data (or "Restore from a backup" while setting up Ayuvo) on the new one, iPhone to Android or Android to iPhone. See <a href="/features/switch-phones">Move between iPhone and Android</a> for what carries over and what deliberately does not, such as API keys.</li>
+        <li><strong>Delete everything:</strong> Settings → Delete All Data wipes the app's local storage on this device. It does not delete Apple Health / Health Connect samples, nor backups you keep in iCloud or Google Drive (delete those from the same Settings screen).</li>
+        <li><strong>Revoke Health access:</strong> iPhone: Settings → Health → Data Access &amp; Devices → Ayuvo. Android: Health Connect → App permissions → Ayuvo.</li>
+        <li><strong>Turn off cloud backup:</strong> Settings → Data Management → Cloud Backup, then "Delete cloud backup" if you want the stored archive gone too.</li>
+      </ul>
+
+      <h2 id="legal">Legal</h2>
+      <p><a href="privacy">Privacy Policy</a> · <a href="terms">Terms of Service</a></p>
+    

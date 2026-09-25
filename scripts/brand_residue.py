@@ -42,9 +42,15 @@ ALLOW = [
     ("scripts/brand_residue.py", None),
     (".cursor/rules/ayuvo-brand.mdc", None),
     ("DEVELOPMENT.md", re.compile(r"calorietracker")),          # Xcode target/scheme names (internal)
-    ("README.md", re.compile(r"calorietracker|Fud AI code base")),
+    ("README.md", re.compile(r"calorietracker|Fud AI|fud-ai|Apoorv")),
     ("APPSTORE.md", re.compile(r"CURRENT_PROJECT_VERSION|calorietracker")),
     ("web/privacy.html", re.compile(r"\"Fud AI\" open-source code base")),
+    ("web/_src/pages/privacy.html", re.compile(r"\"Fud AI\" open-source code base")),
+    ("web/_src/pages/terms.html", re.compile(r"Copyright \(c\) 2026 Apoorv Darshan")),
+    # The open-source page credits the project Ayuvo is inspired by (and its licence notice travels with the code).
+    ("web/open-source.html", re.compile(r"Fud AI|fud-ai|Apoorv")),
+    ("scripts/web/pages.py", re.compile(r"Fud AI|FUD_AI|Apoorv")),
+    ("scripts/web/site_lib.py", re.compile(r"FUD_AI")),
     (".github/workflows/ios-release.yml", re.compile(r"calorietracker")),
     ("docs/health-data.md", re.compile(r"calorietracker")),
     ("docs/health-data-export.md", re.compile(r"calorietrackerTests")),

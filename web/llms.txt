@@ -1,0 +1,33 @@
+# Ayuvo
+
+> Ayuvo is a private, open-source health companion for iPhone and Android: nutrition, workouts, health records, medications,
+> fasting, water and a local mirror of Apple Health or Health Connect, with an AI coach that runs on your own API key or
+> on a model that stays on the phone. No account, no ads, no analytics, no Ayuvo servers. MIT licensed.
+
+Ayuvo is not a medical device and does not give medical advice. Data is stored on the user's device and leaves it only when
+the user acts, to a service they chose.
+
+## Pages
+
+- [Ayuvo: Private AI Health App for iPhone & Android](https://ayuvo-health.web.app/): Nutrition, workouts, health records, medications and Apple Health or Health Connect data in one private, open-source app. No account, no ads, no analytics.
+- [Features](https://ayuvo-health.web.app/features): Explore Ayuvo: AI food logging, workouts, an Apple Health and Health Connect hub, records, medications, fasting, water and a coach that respects your consent.
+- [Nutrition](https://ayuvo-health.web.app/features/nutrition): Log meals by photo, barcode, voice or text and review 30+ nutrients before saving. Your diary stays on your phone. Use your own AI key or an on-device model.
+- [Workouts](https://ayuvo-health.web.app/features/workouts): Plan and log workouts with sets, reps, weight and RPE, calculated calorie burn and a 1,300+ exercise library. Your training diary stays on your phone.
+- [Health data](https://ayuvo-health.web.app/features/health-data): Mirror Apple Health or Health Connect into a private local hub with day-to-year charts, sources and units. Health data stays on your phone and out of cloud backups.
+- [Records & medications](https://ayuvo-health.web.app/features/records-and-medications): Scan lab reports and prescriptions, read on your phone, and get values, highlights and search. Add medication schedules with dose reminders. Stored on-device.
+- [AI coach](https://ayuvo-health.web.app/features/coach): Ask an AI coach about your food, workouts, sleep, records and medications. You control each data source, and you can use your own key or a model on your phone.
+- [Fasting & water](https://ayuvo-health.web.app/features/fasting-and-water): An optional fasting timer with goals from 1 to 168 hours and a water tracker with reminders and widgets. Both stay on your phone and are off until you turn them on.
+- [Switch phones](https://ayuvo-health.web.app/features/switch-phones): Export All Data on one phone, import it on iPhone or Android. Your profile, logs, workouts, health data, medications and records move with you. Keys stay behind.
+- [On-device AI](https://ayuvo-health.web.app/features/on-device-ai): Run Gemma 4, Qwen3 or MedGemma 1.5 4B on your phone with Ayuvo. No key, no server. See sizes, memory needs and licences, and how the gated MedGemma download works.
+- [Private by design](https://ayuvo-health.web.app/privacy-first): No account, no server, no ads, no analytics. See what Ayuvo stores on your phone, exactly what can leave it and when, and how to run health AI on-device.
+- [AI providers](https://ayuvo-health.web.app/ai-providers): Use Google Gemini, OpenAI, Anthropic, xAI, Mistral, Groq and more with your own key, or run a model on-device. Ayuvo has no AI servers of its own.
+- [Open source](https://ayuvo-health.web.app/open-source): Ayuvo is an MIT-licensed health app for iPhone and Android. Read the code, build it, and contribute code, translations, exercise data or docs on GitHub.
+- [Download](https://ayuvo-health.web.app/download): Get Ayuvo, the free private health app for iPhone (iOS 17.6+) and Android (8.0+). No account. Or build it from source on GitHub.
+- [Privacy Policy](https://ayuvo-health.web.app/privacy): How Ayuvo for iPhone and Android handles your data: everything stays on your device; data leaves only when you send it to an AI provider you chose, scan a barcode, fetch exercise images or models, or turn on your own cloud backup.
+- [Support](https://ayuvo-health.web.app/support): Get help with Ayuvo on iPhone and Android: contact support, troubleshooting for AI providers, Health Connect and Apple Health, exports, backups and deleting your data.
+- [Terms of Service](https://ayuvo-health.web.app/terms): Terms of Service for the Ayuvo apps on iPhone and Android: licence to use, bring-your-own-key responsibility, no medical advice, third-party services, health integrations, disclaimers and governing law.
+
+## Source
+
+- [GitHub repository](https://github.com/astechtic/ayuvo): MIT-licensed source for the iPhone and Android apps
+- Support: yaaratech@gmail.com

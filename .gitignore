@@ -13,6 +13,10 @@ local.properties
 *.jks
 .cxx/
 
+# Raw device captures: real prescriptions, lab values, doctor names. Publish only the
+# redacted copies in marketing/raw/ios-real/ (scripts/web/redact_screens.py).
+ayuvo_screenshots/
+
 # Local configuration
 ios/Local.xcconfig
 android/oauth.properties

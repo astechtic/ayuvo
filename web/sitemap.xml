@@ -2,30 +2,138 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://ayuvo-health.web.app/</loc>
-    <lastmod>2026-09-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/opengraph.jpg</image:loc>
-      <image:title>Ayuvo — your whole health, in one place</image:title>
+      <image:loc>https://ayuvo-health.web.app/assets/og/home.jpg</image:loc>
+      <image:title>Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features.jpg</image:loc>
+      <image:title>Ayuvo features: nutrition, workouts, health data, records, coach</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/nutrition</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-nutrition.jpg</image:loc>
+      <image:title>Private AI Food Scanner &amp; Calorie Tracker | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/workouts</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-workouts.jpg</image:loc>
+      <image:title>Workout Tracker with 1,300+ Exercises | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/health-data</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-health-data.jpg</image:loc>
+      <image:title>Apple Health &amp; Health Connect Data Hub | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/records-and-medications</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-records-and-medications.jpg</image:loc>
+      <image:title>Private Health Records &amp; Medication Tracker | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/coach</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-coach.jpg</image:loc>
+      <image:title>AI Health Coach on Your Own Data and Key | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/fasting-and-water</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-fasting-and-water.jpg</image:loc>
+      <image:title>Fasting Timer &amp; Water Tracker | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/switch-phones</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-switch-phones.jpg</image:loc>
+      <image:title>Move Health Data from iPhone to Android and Back | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/on-device-ai</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-on-device-ai.jpg</image:loc>
+      <image:title>On-Device AI for Health: MedGemma, Gemma, Qwen | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/privacy-first</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/privacy-first.jpg</image:loc>
+      <image:title>Ayuvo is private by design: your health data stays on your phone.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/ai-providers</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/ai-providers.jpg</image:loc>
+      <image:title>Ayuvo works with 15 AI providers on your own key</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/open-source</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/open-source.jpg</image:loc>
+      <image:title>Ayuvo is open source under the MIT licence on GitHub</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/download</loc>
+    <lastmod>2026-09-25</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/download.jpg</image:loc>
+      <image:title>Download Ayuvo for iPhone and Android</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/privacy</loc>
-    <lastmod>2026-09-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://ayuvo-health.web.app/terms</loc>
-    <lastmod>2026-09-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-09-16</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/privacy.jpg</image:loc>
+      <image:title>Privacy Policy — Ayuvo</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/support</loc>
     <lastmod>2026-09-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/support.jpg</image:loc>
+      <image:title>Support — Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/terms</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/terms.jpg</image:loc>
+      <image:title>Terms of Service — Ayuvo</image:title>
+    </image:image>
   </url>
 </urlset>

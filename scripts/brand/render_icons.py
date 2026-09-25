@@ -244,22 +244,29 @@ def render_ios(out: Outputs, data: dict, tint_keys: set[str] | None):
         out.add_image(logo_dir / "logo@3x.png", mark.render(900, FRACTION_TRANSPARENT_LOGO, rose["gradient"], None))
 
 
+# The website mark is Blue (the existing "blue" tint) on a pale-sky ground; the apps, store icons and Play
+# graphics keep the default Rose tint. Change WEB_TINT to re-colour the site's logo, favicons and OG card.
+WEB_TINT = "blue"
+WEB_BG = "#EEF6FD"
+WEB_TEXT = (15, 42, 71)
+
+
 def render_web(out: Outputs, data: dict):
-    rose = next(t for t in data["tints"] if t["key"] == data["default"])
-    bg = data["background"]
+    tint = next(t for t in data["tints"] if t["key"] == WEB_TINT)
+    grad, bg = tint["gradient"], WEB_BG
     brand_dir = WEB / "assets/brand"
-    out.add_text(brand_dir / "ayuvo-mark.svg", mark.svg(rose["gradient"]))
-    out.add_text(brand_dir / "favicon.svg", mark.svg(rose["gradient"], geometry=mark.SMALL, size=64, mark_height_fraction=FRACTION_FAVICON))
-    fav = {s: mark.render(s, FRACTION_FAVICON, rose["gradient"], None, geometry=mark.SMALL) for s in (16, 32, 48)}
+    out.add_text(brand_dir / "ayuvo-mark.svg", mark.svg(grad))
+    out.add_text(brand_dir / "favicon.svg", mark.svg(grad, geometry=mark.SMALL, size=64, mark_height_fraction=FRACTION_FAVICON))
+    fav = {s: mark.render(s, FRACTION_FAVICON, grad, None, geometry=mark.SMALL) for s in (16, 32, 48)}
     ico = Image.new("RGBA", (48, 48), (0, 0, 0, 0))
     ico.paste(fav[48], (0, 0))
     out.add_image(brand_dir / "favicon.ico", ico, sizes=[(16, 16), (32, 32), (48, 48)])
     out.add_image(brand_dir / "favicon-32.png", fav[32])
-    out.add_image(brand_dir / "apple-touch-icon.png", mark.render(180, FRACTION_ICON, rose["gradient"], bg))
-    out.add_image(brand_dir / "logo-192.png", with_shape(mark.render(192, FRACTION_ICON, rose["gradient"], bg), rounded_mask(192, 0.22)))
-    out.add_image(brand_dir / "logo-512.png", with_shape(mark.render(512, FRACTION_ICON, rose["gradient"], bg), rounded_mask(512, 0.22)))
-    out.add_image(WEB / "assets/opengraph.jpg", marketing.opengraph(rose["gradient"], bg))
-    out.add_text(brand_dir / "ayuvo-lockup.svg", marketing.lockup_svg(rose["gradient"]))
+    out.add_image(brand_dir / "apple-touch-icon.png", mark.render(180, FRACTION_ICON, grad, bg))
+    out.add_image(brand_dir / "logo-192.png", with_shape(mark.render(192, FRACTION_ICON, grad, bg), rounded_mask(192, 0.22)))
+    out.add_image(brand_dir / "logo-512.png", with_shape(mark.render(512, FRACTION_ICON, grad, bg), rounded_mask(512, 0.22)))
+    out.add_image(WEB / "assets/opengraph.jpg", marketing.opengraph(grad, bg, text=WEB_TEXT, sub=(70, 92, 120), accent=(11, 87, 194), hairline=(190, 208, 228)))
+    out.add_text(brand_dir / "ayuvo-lockup.svg", marketing.lockup_svg(grad))
 
 
 def render_marketing(out: Outputs, data: dict):

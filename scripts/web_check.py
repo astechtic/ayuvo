@@ -11,7 +11,7 @@ Checks
     (CSP: style-src 'self'; script-src 'self')
   * every application/ld+json block parses; FAQPage questions == visible FAQ headings
   * sitemap <loc> entries resolve; <img> tags carry alt/width/height
-  * image dimensions match marketing/MANIFEST.json and the screenshot storyboard
+  * image dimensions match marketing/MANIFEST.json, web/assets/screens (588x1280) and web/assets/og (1200x630)
   * --fail-on-placeholders: any LEGAL_/SUPPORT_EMAIL/FIREBASE_/AYUVO_/APP_STORE_URL/... token fails
   * --store-docs: provider list and Health read/write lists agree across APPSTORE.md,
     PLAYSTORE.md and privacy.html
@@ -36,11 +36,17 @@ WEB = ROOT / "web"
 
 REQUIRED = [
     "index.html", "privacy.html", "terms.html", "support.html", "404.html",
-    "robots.txt", "sitemap.xml", "styles.css", "site.js", "firebase.json", ".firebaserc",
+    "features/index.html", "features/nutrition.html", "features/workouts.html", "features/health-data.html",
+    "features/records-and-medications.html", "features/coach.html", "features/fasting-and-water.html",
+    "features/switch-phones.html", "features/on-device-ai.html",
+    "privacy-first.html", "ai-providers.html", "open-source.html", "download.html",
+    "robots.txt", "sitemap.xml", "llms.txt", "manifest.webmanifest", "styles.css", "site.js", "firebase.json", ".firebaserc",
     "assets/opengraph.jpg", "assets/brand/ayuvo-mark.svg", "assets/brand/favicon.svg",
     "assets/brand/favicon.ico", "assets/brand/apple-touch-icon.png",
 ]
-PAGES = ["index.html", "privacy.html", "terms.html", "support.html", "404.html"]
+# Every generated page (scripts/web_build.py); _src holds page sources, not served pages.
+PAGES = sorted(p.relative_to(WEB).as_posix() for p in WEB.rglob("*.html")
+               if "_src" not in p.parts and ".firebase" not in p.parts)
 FORBIDDEN_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com", "cdnjs.cloudflare.com", "unpkg.com",
                    "cdn.jsdelivr.net", "googletagmanager.com", "google-analytics.com"]
 PLACEHOLDER = re.compile(r"\b(LEGAL_ENTITY_NAME|LEGAL_ADDRESS|SUPPORT_EMAIL|GOVERNING_LAW|EFFECTIVE_DATE|"
@@ -257,24 +263,21 @@ def check_images(problems: list[str]):
             with Image.open(p) as im:
                 if (im.width, im.height) != (w, h):
                     problems.append(f"{rel}: {im.size} != {(w, h)}")
-    storyboard = ROOT / "marketing/storyboard.json"
-    if storyboard.exists():
-        sb = json.loads(storyboard.read_text())
-        size = tuple(sb["web"]["size"])
-        for screen in sb["screens"]:
-            p = ROOT / sb["web"]["dir"] / f"{screen['id']}.png"
-            if not p.exists():
-                problems.append(f"screenshot missing: {p.relative_to(ROOT)}")
-                continue
-            with Image.open(p) as im:
-                if im.size != size:
-                    problems.append(f"{p.relative_to(ROOT)}: {im.size} != {size}")
+    # Website screenshots are the redacted captures in web/assets/screens (scripts/web/redact_screens.py).
+    for shot in sorted((WEB / "assets" / "screens").glob("*.webp")):
+        with Image.open(shot) as im:
+            if im.size != (588, 1280):
+                problems.append(f"{shot.relative_to(ROOT)}: {im.size} != (588, 1280)")
+    for card in sorted((WEB / "assets" / "og").glob("*.jpg")):
+        with Image.open(card) as im:
+            if im.size != (1200, 630):
+                problems.append(f"{card.relative_to(ROOT)}: {im.size} != (1200, 630)")
 
 
 def check_placeholders(problems: list[str]):
     hits = []
     for p in sorted(WEB.rglob("*")):
-        if p.is_file() and p.suffix in (".html", ".xml", ".txt", ".json", ".js", ".css") and ".firebase" not in p.parts:
+        if p.is_file() and p.suffix in (".html", ".xml", ".txt", ".json", ".js", ".css") and ".firebase" not in p.parts and "_src" not in p.parts:
             for i, line in enumerate(p.read_text(encoding="utf-8", errors="ignore").splitlines(), 1):
                 for m in PLACEHOLDER.finditer(line):
                     hits.append(f"{p.relative_to(ROOT)}:{i}: {m.group(1)}")

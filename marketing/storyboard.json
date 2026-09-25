@@ -1,34 +1,88 @@
 {
-  "$comment": "Store / website screenshot storyboard. Raw captures go to `raw_dir` as `NN-<id>.png`; run `python3 scripts/brand/compose_marketing.py` to build the composites. Missing raw captures are replaced by labelled placeholders so the site validates before the real captures exist (see marketing/seed/README.md).",
+  "$comment": "Store screenshot storyboard. iOS uses the redacted device captures in marketing/raw/ios-real/ (scripts/web/redact_screens.py); Android raw captures go to marketing/raw/android as NN-<id>.png and are placeholders until they are captured (marketing/seed/README.md). Run `python3 scripts/brand/compose_marketing.py` to build the composites.",
   "screens": [
-    {"id": "home",          "title": "Home dashboard",   "caption": "Your whole health, one app"},
-    {"id": "health",        "title": "Health hub",       "caption": "Every Health metric, one hub"},
-    {"id": "health-detail", "title": "Health detail",    "caption": "Trends you can read"},
-    {"id": "snap",          "title": "Snap a meal",      "caption": "Snap it, log it"},
-    {"id": "review",        "title": "Review nutrition", "caption": "Check before you save"},
-    {"id": "coach",         "title": "AI Coach",         "caption": "A coach with context"},
-    {"id": "workouts",      "title": "Workouts",         "caption": "Plan the week, log the set"},
-    {"id": "fasting",       "title": "Fasting & water",  "caption": "Fast and hydrate on purpose"}
+    {
+      "id": "summary",
+      "title": "Summary",
+      "caption": "Your health. Your device. Your call."
+    },
+    {
+      "id": "nutrition",
+      "title": "Nutrition",
+      "caption": "Log meals your way"
+    },
+    {
+      "id": "workouts",
+      "title": "Workouts",
+      "caption": "Plan the week, log the set"
+    },
+    {
+      "id": "heart-rate",
+      "title": "Health data",
+      "caption": "Every Health chart, one hub"
+    },
+    {
+      "id": "records",
+      "title": "Health records",
+      "caption": "Records read on your phone"
+    },
+    {
+      "id": "record-extraction",
+      "title": "Record details",
+      "caption": "You confirm every value"
+    },
+    {
+      "id": "medications",
+      "title": "Medications",
+      "caption": "Reminders for your medicines"
+    },
+    {
+      "id": "coach",
+      "title": "AI Coach",
+      "caption": "A coach that reads only what you allow"
+    },
+    {
+      "id": "export-data",
+      "title": "Export All Data",
+      "caption": "Switch phones, keep your history"
+    }
   ],
   "platforms": {
     "ios": {
       "raw_dir": "marketing/raw/ios",
-      "raw_size": [1179, 2556],
+      "real_dir": "marketing/raw/ios-real",
+      "raw_size": [
+        588,
+        1280
+      ],
+      "write_placeholders": false,
       "outputs": [
-        {"dir": "marketing/store/ios/6.9", "size": [1290, 2796], "kind": "composite"}
+        {
+          "dir": "marketing/store/ios/6.9",
+          "size": [
+            1290,
+            2796
+          ],
+          "kind": "composite"
+        }
       ]
     },
     "android": {
       "raw_dir": "marketing/raw/android",
-      "raw_size": [1080, 2400],
+      "raw_size": [
+        1080,
+        2400
+      ],
       "outputs": [
-        {"dir": "marketing/store/android/phone", "size": [1080, 2400], "kind": "composite"}
+        {
+          "dir": "marketing/store/android/phone",
+          "size": [
+            1080,
+            2400
+          ],
+          "kind": "composite"
+        }
       ]
     }
-  },
-  "web": {
-    "raw_dir": "marketing/raw/ios",
-    "dir": "web/assets/screenshots",
-    "size": [1179, 2556]
   }
 }

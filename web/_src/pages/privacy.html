@@ -1,0 +1,151 @@
+<!--meta
+{
+ "path": "/privacy",
+ "title": "Privacy Policy — Ayuvo",
+ "kind": "legal",
+ "modified": "2026-09-16",
+ "description": "How Ayuvo for iPhone and Android handles your data: everything stays on your device; data leaves only when you send it to an AI provider you chose, scan a barcode, fetch exercise images or models, or turn on your own cloud backup."
+}
+-->
+      <h1>Privacy Policy</h1>
+      <span class="page-date">Effective date: 16 Sep 2026</span>
+
+      <div class="summary">
+        <p><strong>Summary.</strong> Ayuvo has no account and no server of its own. Everything you log stays in the app's storage on your device. Data leaves your device only when you take one of the actions listed in section 4, and it goes to a service you chose — not to us. We never see your food, health, workout or chat data, and we have no analytics, advertising or tracking of any kind.</p>
+      </div>
+
+      <ul class="toc">
+        <li><a href="#who">1. Who we are</a></li>
+        <li><a href="#on-device">2. What the app stores on your device</a></li>
+        <li><a href="#storage">3. Where it is stored</a></li>
+        <li><a href="#leaves">4. When data leaves your device (only on your action)</a></li>
+        <li><a href="#health">5. Apple Health and Health Connect</a></li>
+        <li><a href="#permissions">6. Permissions</a></li>
+        <li><a href="#not">7. What we do not do</a></li>
+        <li><a href="#security">8. Security</a></li>
+        <li><a href="#retention">9. Retention and deletion</a></li>
+        <li><a href="#children">10. Children</a></li>
+        <li><a href="#changes">11. Changes to this policy</a></li>
+        <li><a href="#contact">12. Contact</a></li>
+      </ul>
+
+      <h2 id="who">1. Who we are</h2>
+      <p>Ayuvo ("the app") is published by <strong>Yaara Tech</strong>, Karauli, Rajasthan, India ("we", "us"). You can reach us at <a href="mailto:yaaratech@gmail.com">yaaratech@gmail.com</a>. The app is built on the MIT-licensed "Fud AI" open-source code base; the original licence notice is reproduced in the app under Settings → Legal → Licenses.</p>
+      <p>This policy applies to the Ayuvo apps for iPhone, Apple Watch and Android and to this website. The website is a static site that sets no cookies and loads nothing from third parties.</p>
+
+      <h2 id="on-device">2. What the app stores on your device</h2>
+      <p>Everything below is kept in the app's private storage on your phone. We cannot access any of it.</p>
+      <ul>
+        <li><strong>Profile:</strong> gender, date of birth, height, weight, body fat percentage, activity level, goals, target weight, weekly rate, custom meal times, units and appearance preferences.</li>
+        <li><strong>Food diary:</strong> entries, nutrition values, ingredients, serving details, meal photos and thumbnails, saved meals, notes.</li>
+        <li><strong>Body:</strong> weight and body-fat history.</li>
+        <li><strong>Water and fasting:</strong> water entries and goal; fasting sessions you explicitly start, with goal, start/end times and completion status.</li>
+        <li><strong>Workouts:</strong> plans, logged sets (reps, weight, RPE), completed sessions, calculated calorie burn, library preferences.</li>
+        <li><strong>Health data hub:</strong> a local SQLite mirror of the Apple Health / Health Connect data types you granted (see section 5).</li>
+        <li><strong>Health records:</strong> the documents you add — lab reports, prescriptions, consultation notes, discharge summaries, imaging reports, bills, photos, scans and text notes — kept as the original files, plus the text read from them, the details and test values extracted from them, highlights, your notes, tags and the links between records.</li>
+        <li><strong>Coach:</strong> your chat history with the AI coach, kept locally so the conversation has memory.</li>
+        <li><strong>API keys:</strong> the AI and speech-to-text provider keys you enter, stored in the iOS Keychain or in Android EncryptedSharedPreferences (AES-256, backed by the Android Keystore).</li>
+        <li><strong>Widget and Watch snapshots:</strong> today's totals and goals, written to the app group container so widgets and the Watch app can show them.</li>
+      </ul>
+
+      <h2 id="storage">3. Where it is stored</h2>
+      <div class="table-wrap">
+      <table class="legal-table">
+        <thead><tr><th>Data</th><th>iPhone</th><th>Android</th><th>Accessible by</th></tr></thead>
+        <tbody>
+          <tr><td>Profile, diary, weight, body fat, water, fasting, workouts, saved meals, preferences</td><td>UserDefaults</td><td>DataStore Preferences</td><td>You only</td></tr>
+          <tr><td>Meal photos and thumbnails</td><td>Application Support</td><td>App files directory</td><td>You only</td></tr>
+          <tr><td>Health data hub</td><td>SQLite in Application Support (excluded from iCloud and device backups)</td><td>SQLite database (excluded from Google backup and device transfer)</td><td>You; the coach only while the health toggle is on</td></tr>
+          <tr><td>Health records (originals, extracted text and values)</td><td>Files and a SQLite database in Application Support (excluded from iCloud and device backups)</td><td>Files and a SQLite database in app storage (excluded from Google backup and device transfer)</td><td>You; the coach only while "Let Coach read your health records" is on</td></tr>
+          <tr><td>Coach chat history</td><td>UserDefaults</td><td>DataStore Preferences</td><td>You only (never included in cloud backups)</td></tr>
+          <tr><td>API keys</td><td>iOS Keychain</td><td>EncryptedSharedPreferences</td><td>You only</td></tr>
+          <tr><td>Widget / Watch snapshot</td><td>App Group container</td><td>App files + Glance state</td><td>You only</td></tr>
+          <tr><td>Optional cloud backup archive</td><td>Your private iCloud database</td><td>Your Google Drive app folder</td><td>You only</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2 id="leaves">4. When data leaves your device (only on your action)</h2>
+      <p>Ayuvo makes no network request on its own behalf. Each flow below happens only when you trigger it, and it goes directly from your phone to the service named.</p>
+
+      <h3>4.1 AI providers you configure (bring your own key)</h3>
+      <p>When you analyse a meal, ask the coach, request a nutrient-goal estimate or a "What if?" suggestion, the app sends the request directly to the provider you selected: Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama, or a custom OpenAI-compatible endpoint you enter. What is sent depends on the action: meal photos and notes, text descriptions, voice transcripts, coach messages, and the context the coach requests (profile, targets, food log, workouts, weight trend, explicitly logged fasts). <strong>Your Health data hub is included only while the "Let Coach use my health data" toggle is on</strong>, and your health records only as described in 4.9; the toggle is shown at every connect step and in Settings → Health &amp; Data. Apple Intelligence (iPhone) and the on-device Gemma 4 E2B model process on your phone and send nothing anywhere. Each provider's own privacy policy governs what it does with your request: <a href="https://policies.google.com/privacy" rel="noopener">Google</a>, <a href="https://openai.com/policies/privacy-policy" rel="noopener">OpenAI</a>, <a href="https://www.anthropic.com/legal/privacy" rel="noopener">Anthropic</a>, <a href="https://x.ai/legal/privacy-policy" rel="noopener">xAI</a>, <a href="https://openrouter.ai/privacy" rel="noopener">OpenRouter</a>, <a href="https://www.together.ai/privacy" rel="noopener">Together AI</a>, <a href="https://groq.com/privacy-policy/" rel="noopener">Groq</a>, <a href="https://huggingface.co/privacy" rel="noopener">Hugging Face</a>, <a href="https://fireworks.ai/privacy-policy" rel="noopener">Fireworks AI</a>, <a href="https://deepinfra.com/privacy" rel="noopener">DeepInfra</a>, <a href="https://mistral.ai/terms/#privacy-policy" rel="noopener">Mistral</a>, <a href="https://www.deepseek.com/" rel="noopener">DeepSeek</a>, <a href="https://www.cerebras.ai/privacy-policy" rel="noopener">Cerebras</a>.</p>
+
+      <h3>4.2 Speech-to-text providers</h3>
+      <p>Voice input uses on-device recognition by default (Native iOS / Native Android, or the on-device Whisper Base model). If you choose a cloud provider — Gemini, OpenAI, Groq, Mistral, Deepgram or AssemblyAI — the audio clip is sent to that provider with your key (<a href="https://deepgram.com/privacy" rel="noopener">Deepgram</a>, <a href="https://www.assemblyai.com/legal/privacy-policy" rel="noopener">AssemblyAI</a>).</p>
+
+      <h3>4.3 Open Food Facts (barcodes)</h3>
+      <p>When you scan a barcode, the barcode number — and nothing else — is sent to the public <a href="https://world.openfoodfacts.org" rel="noopener">Open Food Facts</a> database to look up the product (<a href="https://world.openfoodfacts.org/privacy" rel="noopener">their privacy notice</a>). Product data is licensed under the Open Database License.</p>
+
+      <h3>4.4 Exercise images</h3>
+      <p>When you open the Workouts library, exercise thumbnails and animations are fetched from <code>raw.githubusercontent.com</code> (the open exercises-dataset repository; media © Gym visual). This is a plain image request with no account or identifier; GitHub sees your IP address, as any web request would.</p>
+
+      <h3>4.5 On-device model downloads</h3>
+      <p>Tapping Download fetches the Gemma 4 E2B or Whisper Base model files from <a href="https://huggingface.co" rel="noopener">Hugging Face</a> (anonymous, checksum-verified). Hugging Face sees your IP address. The models then run entirely on your phone.</p>
+
+      <h3>4.6 Optional iCloud / Google Drive backup</h3>
+      <p>Off by default. If you turn it on in Settings → Data Management, iPhone stores an archive in <em>your</em> private iCloud (CloudKit) database and Android stores it in <em>your</em> Google Drive app folder after you sign in at that toggle. The archive contains your logs, saved meals, photos, water, fasts, workouts, goals and preferences. <strong>It never contains the Health data hub database or the coach chat history, on either platform.</strong> Apple or Google process the archive under their own terms; we cannot access it.</p>
+
+      <h3>4.7 App update checks and review prompts</h3>
+      <p>iPhone asks Apple's public App Store lookup service for the current listing of Ayuvo's App Store ID; Android asks the Google Play In-App Update API. Store review prompts are handled by the operating system. Nothing from your logs is sent.</p>
+
+      <h3>4.8 Operating-system backups</h3>
+      <p>Apple and Google device backups and device-to-device transfers may include eligible app data according to your OS settings. The Health data hub and the coach chat are explicitly excluded from those backups. Keychain items may survive an uninstall on iPhone.</p>
+
+      <h3>4.9 Health records: AI processing, sharing and backup</h3>
+      <p><strong>AI processing.</strong> When you add a document, Ayuvo saves the original and reads it on your phone — the text layer of a PDF, or on-device text recognition for photos and scans. Details such as the doctor, hospital, dates and test values are found by rules that run entirely on your phone. You choose how AI may help, during setup and in Settings → Health Records → AI processing: <em>Local AI</em> (the on-device model only), <em>Cloud AI</em> (your configured provider), <em>Ask me</em> (asked per document) or <em>Skip AI</em> (no AI at all). With Cloud AI, the text read from the document is sent to the provider you chose with your own key; pages with no readable text may be sent as images. The status on each record says whether it was processed on this device, processed with online AI (naming the provider), or not processed by AI.</p>
+      <p><strong>Coach.</strong> Coach can read your records only after you allow it ("Let Coach read your health records", off by default). When you select records for a conversation, Coach can read only those. Patient name, address, phone numbers and ID numbers are never included in what Coach receives. With an on-device Coach model, nothing leaves your phone.</p>
+      <p><strong>Sharing.</strong> Sharing happens only when you tap Share. You choose which records, which pages and which details go out, and you can black out name, address, phone, patient ID, insurance ID and other identifiers; blacked-out pages are shared as images so covered text cannot be recovered. The final screen lists every file before anything is sent, and where it goes is entirely up to the app you pick.</p>
+      <p><strong>Backup.</strong> Health records are never part of the normal iCloud or Google Drive backup in 4.6. You can export an archive of your records and save it wherever you choose; on Android you can additionally turn on "Include Health Records in Google Drive backup", which uploads that archive to your own Google Drive app folder. Both are off until you act.</p>
+
+
+      <h2 id="health">5. Apple Health and Health Connect</h2>
+      <p><strong>Purpose.</strong> With your permission, Ayuvo reads the Health / Health Connect data types you grant so it can show them in the Health Data hub — Home tiles, category lists, detail charts and history — and keep that local history in sync on this phone. It writes only the nutrition, body measurements (weight, height, body fat) and calculated workout calories that you log in Ayuvo.</p>
+      <p><strong>Read types</strong> (each requested separately; grant only what you want): activity (steps, distance, energy, floors, exercise sessions), body measurements, heart (heart rate, resting heart rate, heart rate variability, blood pressure, VO2 max), sleep, vitals (blood glucose, body temperature, oxygen saturation, respiratory rate), mobility, hearing, cycle tracking, mindfulness, symptoms, nutrition and hydration. <strong>Write types:</strong> nutrition, weight, height, body fat, active calories burned. Fasting and water are never written to Health.</p>
+      <p><strong>Storage and sharing.</strong> Health data is kept on this device, in the app's local hub database. It is never stored in iCloud or Google Drive backups, never used for advertising, never sold, and never shared with anyone except your chosen AI provider through the coach — and only while the "Let Coach use my health data" toggle is on.</p>
+      <p><strong>Revoking access.</strong> iPhone: Settings → Health → Data Access &amp; Devices → Ayuvo, or the Health app → Sharing → Apps. Android: Health Connect → App permissions → Ayuvo. When you revoke a type, the hub stops syncing it; the mirrored history stays until you use "Clear synced health data" or Delete All Data in Ayuvo.</p>
+
+      <h2 id="permissions">6. Permissions</h2>
+      <ul>
+        <li><strong>Camera</strong> — photographing meals, scanning barcodes, and photographing or scanning health records.</li>
+        <li><strong>Photos and files</strong> — only the images and documents you pick, or that you send to Ayuvo from another app, to add them to Health Records.</li>
+        <li><strong>Microphone and speech recognition</strong> — voice meal input.</li>
+        <li><strong>Photos</strong> — picking existing meal photos through the system picker (no library access) and, on iPhone, saving a photo when you tap Save.</li>
+        <li><strong>Notifications</strong> — meal, streak, daily-summary, weight, water and fasting reminders you enable; all scheduled locally.</li>
+        <li><strong>Health</strong> — only if you enable Apple Health or Health Connect (section 5).</li>
+        <li><strong>Local network</strong> (iPhone) — only if you point the app at an Ollama server on your network.</li>
+        <li><strong>Internet</strong> — for the flows in section 4.</li>
+        <li><strong>Battery optimisation exemption</strong> (Android, optional) — so scheduled reminders fire on time.</li>
+      </ul>
+
+      <h2 id="not">7. What we do not do</h2>
+      <ul>
+        <li>No analytics, crash-reporting or advertising SDKs of any kind.</li>
+        <li>No account, sign-in, cloud sync or Ayuvo-operated servers.</li>
+        <li>No tracking of your behaviour, location or browsing.</li>
+        <li>No selling, renting or sharing of personal data.</li>
+        <li>We never see your API keys, your health data, your photos or your conversations.</li>
+      </ul>
+
+      <h2 id="security">8. Security</h2>
+      <p>All app-initiated requests use HTTPS with modern TLS. The only exception is a local-network endpoint you enter yourself (for example an Ollama server), which may use plain HTTP within your own network. API keys are stored in the iOS Keychain or Android EncryptedSharedPreferences and never transmitted anywhere except, as part of the request, to the provider that issued them.</p>
+
+      <h2 id="retention">9. Retention and deletion</h2>
+      <ul>
+        <li>Your data stays on your device until you delete it.</li>
+        <li><strong>Delete All Data</strong> (Settings) wipes food, weight, body fat, water, fasting, workouts, the Health data hub database, health records (originals and everything read from them), coach history, saved meals, keys and preferences on this device.</li>
+        <li>You can delete a single health record at any time from the record itself; that removes its original file, its extracted details and values, and its links. Archives you exported earlier are yours to delete wherever you saved them.</li>
+        <li>It does <em>not</em> delete Apple Health / Health Connect samples (manage those in Health or Health Connect), logs kept by your AI provider under its own policy, or backups you keep in iCloud / Google Drive (delete those from Settings → Data Management → Cloud Backup).</li>
+        <li>You can export the food diary (JSON, CSV, Markdown) and the Health data hub (zip) from Settings → Data Management, and your health records (zip, with the original files) from Settings → Health Records → Backup.</li>
+        <li>Uninstalling removes the app's sandbox; Keychain items on iPhone and OS backups may persist according to your device settings.</li>
+      </ul>
+
+      <h2 id="children">10. Children</h2>
+      <p>Ayuvo is not directed at children under 13 and is listed for ages 13 and over. We do not knowingly collect personal information from children; since the app has no account and no server, we hold no personal information from anyone.</p>
+
+      <h2 id="changes">11. Changes to this policy</h2>
+      <p>We may update this policy as the app evolves. The effective date at the top changes with every revision, and material changes are noted in the app's release notes.</p>
+
+      <h2 id="contact">12. Contact</h2>
+      <p>Questions or requests: <a href="mailto:yaaratech@gmail.com">yaaratech@gmail.com</a> · Yaara Tech, Karauli, Rajasthan, India.</p>
+    

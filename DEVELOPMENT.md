@@ -1,7 +1,8 @@
 # Development
 
-Internal guide for building, testing and releasing Ayuvo. The repo is private; there is no
-contribution process.
+Guide for building, testing and releasing Ayuvo. The code is open source
+(<https://github.com/astechtic/ayuvo>, MIT); see `CONTRIBUTING.md` for how to propose a change, and
+`SECURITY.md` for private vulnerability reports.
 
 ## Setup
 
@@ -27,6 +28,7 @@ xcodebuild -project ios/calorietracker.xcodeproj -scheme calorietracker \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test
 
 # Website, brand, repo hygiene
+python3 scripts/web_build.py --check          # copy lint: privacy wording, MedGemma disclaimer, titles, headings
 python3 scripts/web_check.py                  # add --store-docs, --fail-on-placeholders before release
 python3 scripts/brand/render_icons.py --check
 python3 scripts/brand/test_render.py
@@ -36,9 +38,14 @@ python3 local-models/verify_catalog.py        # add --online before release
 
 ## Website
 
-`web/` is a static Firebase Hosting site (see `web/README.md`).
+`web/` is a static Firebase Hosting site (see `web/README.md`). Its pages are generated: edit the content
+in `scripts/web/pages.py` (components in `scripts/web/site_lib.py`; the legal and support bodies live in
+`web/_src/pages/*.html`), then rebuild and commit the output.
 
 ```bash
+python3 scripts/web/redact_screens.py         # raw captures in ayuvo_screenshots/ -> marketing/raw/ios-real (redacted)
+python3 scripts/web/social_cards.py           # web/assets/og/*.jpg from page headlines + screenshots
+python3 scripts/web_build.py                  # web/**/*.html, sitemap.xml, llms.txt, manifest.webmanifest, robots.txt
 cd web && firebase emulators:start --only hosting --project demo-ayuvo   # http://127.0.0.1:5055
 cd web && firebase hosting:channel:deploy preview --expires 7d
 cd web && firebase deploy --only hosting

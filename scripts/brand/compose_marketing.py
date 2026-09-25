@@ -8,7 +8,7 @@ Everything is drawn with Pillow from `ayuvo_mark.py` and the self-hosted OFL fon
 Usage (standalone)
   python3 scripts/brand/compose_marketing.py --storyboard marketing/storyboard.json
     Builds `marketing/store/**` and `web/assets/screenshots/*` composites from
-    `marketing/raw/{ios,android}/*.png`. Missing raw captures produce clearly labelled
+    `marketing/raw/{ios,android}/*.png` (iOS: the redacted captures in `marketing/raw/ios-real/`). Missing raw captures produce clearly labelled
     placeholder frames at the right dimensions so the site validates before the real
     screenshots exist.
 """
@@ -20,7 +20,7 @@ import json
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import ayuvo_mark as mark  # noqa: E402
@@ -35,6 +35,8 @@ INK_2 = "#151B18"
 PAPER = "#F5F2EC"
 PAPER_DIM = (245, 242, 236, 160)
 ACCENT_2 = "#30B0C7"
+STORE_BG = "#EEF6FD"  # store screenshots and website cards: light, calm (the brand INK above stays for the icon set)
+STORE_TEXT = (15, 42, 71)
 
 TAGLINE = "Your whole health, in one place."
 SUBLINE = "Nutrition · Workouts · Health data · Fasting · Water · AI coach — private, on your device."
@@ -145,20 +147,22 @@ def _wrap(draw, text: str, font, max_width: int) -> list[str]:
     return lines
 
 
-def opengraph(fill: tuple[str, str], background: str = INK) -> Image.Image:
+def opengraph(fill: tuple[str, str], background: str = INK, text=PAPER, sub=(245, 242, 236, 190),
+              accent=ACCENT_2, hairline=(245, 242, 236, 40)) -> Image.Image:
+    """Default: the dark brand card. The website passes a light palette (see render_icons.render_web)."""
     w, h = 1200, 630
     img = Image.new("RGB", (w, h), background)
     draw = ImageDraw.Draw(img)
-    end_x = draw_lockup(img, 80, 96, 150, fill)
+    end_x = draw_lockup(img, 80, 96, 150, fill, text_colour=text)
     tag_font = display_font(60, 500)
-    draw.text((80, 300), TAGLINE, font=tag_font, fill=PAPER)
+    draw.text((80, 300), TAGLINE, font=tag_font, fill=text)
     sub_font = body_font(28, 500)
     for i, line in enumerate(_wrap(draw, SUBLINE, sub_font, 1040)):
-        draw.text((80, 400 + i * 40), line, font=sub_font, fill=(245, 242, 236, 190))
+        draw.text((80, 400 + i * 40), line, font=sub_font, fill=sub)
     foot = body_font(22, 600)
-    draw.text((80, 548), "iPhone · Android · No account · Bring your own AI key", font=foot, fill=ACCENT_2)
+    draw.text((80, 548), "iPhone · Android · No account · Bring your own AI key", font=foot, fill=accent)
     # hairline
-    draw.line([(80, 520), (w - 80, 520)], fill=(245, 242, 236, 40), width=1)
+    draw.line([(80, 520), (w - 80, 520)], fill=hairline, width=1)
     return img
 
 
@@ -237,14 +241,17 @@ def placeholder_screenshot(size: tuple[int, int], title: str, note: str) -> Imag
 def store_composite(screenshot: Image.Image, caption: str, size: tuple[int, int]) -> Image.Image:
     """Device-style composite: caption on top, screenshot in a rounded frame."""
     w, h = size
-    img = Image.new("RGB", (w, h), INK)
+    img = Image.new("RGB", (w, h), STORE_BG)
+    glow = Image.new("RGB", (w, h), STORE_BG)
+    ImageDraw.Draw(glow).ellipse([int(w * 0.1), int(h * 0.5), int(w * 1.3), int(h * 1.1)], fill=(150, 200, 250))
+    img = Image.blend(img, glow.filter(ImageFilter.GaussianBlur(int(w * 0.16))), 0.75)
     draw = ImageDraw.Draw(img)
     cap_font = display_font(int(w * 0.062), 600)
     lines = _wrap(draw, caption, cap_font, int(w * 0.86))
     y = int(h * 0.05)
     for line in lines:
         lw = _text_width(draw, line, cap_font)
-        draw.text(((w - lw) // 2, y), line, font=cap_font, fill=PAPER)
+        draw.text(((w - lw) // 2, y), line, font=cap_font, fill=STORE_TEXT)
         y += int(w * 0.075)
     top = y + int(h * 0.02)
     frame_h = h - top - int(h * 0.02)
@@ -273,7 +280,10 @@ def build_storyboard(storyboard_path: Path, write=True) -> list[Path]:
         raw_size = tuple(spec["raw_size"])
         for n, screen in enumerate(sb["screens"], start=1):
             raw_path = raw_dir / f"{n:02d}-{screen['id']}.png"
-            if raw_path.exists():
+            real_path = ROOT / spec["real_dir"] / f"{screen['id']}.png" if spec.get("real_dir") else None
+            if real_path is not None and real_path.exists():
+                shot = Image.open(real_path).convert("RGB")
+            elif raw_path.exists():
                 shot = Image.open(raw_path).convert("RGB")
             else:
                 shot = placeholder_screenshot(raw_size, screen["title"], f"Screenshot pending: capture {platform} {screen['id']} per marketing/seed/README.md")

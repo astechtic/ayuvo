@@ -1,3 +1,4 @@
+# Ayuvo has no accounts, so there is nothing private to hide from crawlers.
 User-agent: *
 Allow: /
 

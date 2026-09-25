@@ -2,79 +2,130 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ayuvo – AI Health Companion for iPhone &amp; Android</title>
-<meta name="description" content="Nutrition, workouts, fasting, water and your Apple Health / Health Connect data in one private app. Bring your own AI key for photo food logging and a coach that knows your day.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayuvo: Private AI Health App for iPhone &amp; Android</title>
+<meta name="description" content="Nutrition, workouts, health records, medications and Apple Health or Health Connect data in one private, open-source app. No account, no ads, no analytics.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://ayuvo-health.web.app/">
 <link rel="alternate" href="https://ayuvo-health.web.app/" hreflang="en">
 <link rel="alternate" href="https://ayuvo-health.web.app/" hreflang="x-default">
-<meta name="theme-color" content="#FF375F">
-<meta name="apple-itunes-app" content="app-id=6811947230">
-<!-- Open Graph -->
+<meta name="theme-color" content="#EEF6FD">
+<meta name="color-scheme" content="light">
+<meta name="google-site-verification" content="Bw5_BS8q9GGMSX_JCouSwaPHmNi-zUr1rnStY9cnjMA" />
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ayuvo">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://ayuvo-health.web.app/">
-<meta property="og:title" content="Ayuvo – AI Health Companion for iPhone &amp; Android">
-<meta property="og:description" content="Nutrition, workouts, fasting, water and your Apple Health / Health Connect data in one private app, on your device, with an AI coach powered by the key you bring.">
-<meta property="og:image" content="https://ayuvo-health.web.app/assets/opengraph.jpg?v=1">
-<meta property="og:image:secure_url" content="https://ayuvo-health.web.app/assets/opengraph.jpg?v=1">
+<meta property="og:title" content="Ayuvo: Private AI Health App for iPhone &amp; Android">
+<meta property="og:description" content="Nutrition, workouts, health records, medications and Apple Health or Health Connect data in one private, open-source app. No account, no ads, no analytics.">
+<meta property="og:image" content="https://ayuvo-health.web.app/assets/og/home.jpg?v=a29e1d34">
+<meta property="og:image:secure_url" content="https://ayuvo-health.web.app/assets/og/home.jpg?v=a29e1d34">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ayuvo — your whole health, in one place.">
+<meta property="og:image:alt" content="Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ayuvo – AI Health Companion for iPhone &amp; Android">
-<meta name="twitter:description" content="Nutrition, workouts, fasting, water and your Health data in one private app, with an AI coach on your own key.">
-<meta name="twitter:image" content="https://ayuvo-health.web.app/assets/opengraph.jpg?v=1">
-<meta name="google-site-verification" content="Bw5_BS8q9GGMSX_JCouSwaPHmNi-zUr1rnStY9cnjMA" />
-<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="assets/brand/favicon.ico" sizes="16x16 32x32 48x48">
-<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
-<link rel="preload" as="image" href="assets/screenshots/home.png" fetchpriority="high">
-<link rel="stylesheet" href="styles.css?v=1">
+<meta name="twitter:title" content="Ayuvo: Private AI Health App for iPhone &amp; Android">
+<meta name="twitter:description" content="Nutrition, workouts, health records, medications and Apple Health or Health Connect data in one private, open-source app. No account, no ads, no analytics.">
+<meta name="twitter:image" content="https://ayuvo-health.web.app/assets/og/home.jpg?v=a29e1d34">
+<meta name="twitter:image:alt" content="Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.">
+<link rel="icon" href="/assets/brand/favicon.svg?v=ff932748" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon.ico?v=2bd23fc5" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png?v=8396d4f0">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin.woff2" crossorigin>
+<link rel="preload" as="image" type="image/webp" href="/assets/screens/summary.webp?v=4bf9dab9" fetchpriority="high">
+<link rel="stylesheet" href="/styles.css?v=494fdca1">
+<script defer src="/site.js?v=bc05a280"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "@id": "https://ayuvo-health.web.app/#software",
-  "name": "Ayuvo",
-  "alternateName": ["Ayuvo app", "Ayuvo health app"],
-  "operatingSystem": "iOS, Android",
-  "applicationCategory": "HealthApplication",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "isAccessibleForFree": true,
-  "description": "Ayuvo is a private, all-in-one health companion for iPhone and Android: nutrition, workouts, fasting, hydration and your Apple Health or Health Connect data in one place, on your device, with an AI coach powered by the API key you bring. Log meals by photo, barcode, voice, text or manual entry; plan and log workouts from a 1,300-exercise library; mirror every Health data type you grant into a local hub with charts and history; track fasts and water; and ask a coach that can see the whole picture. No account, no ads, no analytics, no Ayuvo servers.",
-  "featureList": [
-    "Photo, barcode, voice, text and manual meal logging with 30+ nutrients",
-    "Workout diary with sets, reps, weight, RPE and calculated burn",
-    "Local Health data hub mirroring Apple Health / Health Connect with charts and history",
-    "Optional fasting timer and water tracking",
-    "AI coach with bring-your-own-key providers or on-device models",
-    "Apple Watch app, widgets, Siri Shortcuts and iOS Share Extension",
-    "Optional iCloud / Google Drive backup that never includes health data",
-    "18 languages, dark mode, metric and imperial units",
-    "No account, no ads, no analytics",
-    "Export everything, delete everything"
-  ],
-  "publisher": { "@type": "Organization", "name": "Yaara Tech" },
-  "url": "https://ayuvo-health.web.app/",
-  "image": "https://ayuvo-health.web.app/assets/opengraph.jpg",
-  "screenshot": "https://ayuvo-health.web.app/assets/screenshots/home.png",
-  "downloadUrl": ["APP_STORE_URL", "PLAY_STORE_URL"],
-  "dateModified": "2026-09-14"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ayuvo-health.web.app/#organization",
+      "name": "Yaara Tech",
+      "url": "https://ayuvo-health.web.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://ayuvo-health.web.app/assets/brand/logo-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://github.com/astechtic/ayuvo"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "yaaratech@gmail.com",
+        "url": "https://ayuvo-health.web.app/support"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ayuvo-health.web.app/#website",
+      "name": "Ayuvo",
+      "url": "https://ayuvo-health.web.app/",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://ayuvo-health.web.app/#organization"
+      }
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://ayuvo-health.web.app/#website",
+  "@type": [
+    "SoftwareApplication",
+    "MobileApplication"
+  ],
+  "@id": "https://ayuvo-health.web.app/#software",
   "name": "Ayuvo",
+  "alternateName": [
+    "Ayuvo health app",
+    "Ayuvo AI health companion"
+  ],
+  "operatingSystem": "iOS 17.6+, Android 8.0+",
+  "applicationCategory": "HealthApplication",
+  "applicationSubCategory": "Nutrition, workouts, health records and medications",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isAccessibleForFree": true,
+  "description": "Ayuvo is a private, open-source health companion for iPhone and Android: nutrition, workouts, fasting, water, medications, health records and a local mirror of Apple Health or Health Connect, with an AI coach that runs on the API key you bring or on a model that stays on your phone. No account, no ads, no analytics, no Ayuvo servers.",
+  "featureList": [
+    "Photo, barcode, voice, text and manual meal logging with 30+ nutrients",
+    "Workout diary with sets, reps, weight, RPE and a 1,300+ exercise library",
+    "Local health data hub mirroring Apple Health and Health Connect with charts and history",
+    "Health records: scan or import documents, read on-device, extract values and highlights",
+    "Medication schedules with dose reminders",
+    "AI coach on your own key (15 providers) or on-device models including MedGemma 1.5 4B",
+    "Export All Data and import it on iPhone or Android to switch phones",
+    "Optional fasting timer and water tracking",
+    "Apple Watch app, widgets, Siri Shortcuts and iOS Share Extension",
+    "18 languages, no account, no ads, no analytics"
+  ],
+  "publisher": {
+    "@id": "https://ayuvo-health.web.app/#organization"
+  },
+  "license": "https://opensource.org/licenses/MIT",
+  "sameAs": [
+    "https://github.com/astechtic/ayuvo"
+  ],
   "url": "https://ayuvo-health.web.app/",
-  "publisher": { "@type": "Organization", "name": "Yaara Tech" },
-  "about": { "@id": "https://ayuvo-health.web.app/#software" }
+  "image": "https://ayuvo-health.web.app/assets/opengraph.jpg",
+  "screenshot": [
+    "https://ayuvo-health.web.app/assets/screens/summary.webp",
+    "https://ayuvo-health.web.app/assets/screens/records.webp",
+    "https://ayuvo-health.web.app/assets/screens/coach.webp",
+    "https://ayuvo-health.web.app/assets/screens/medications.webp"
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -82,312 +133,152 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Is Ayuvo free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. There are no subscriptions, credits or in-app purchases. AI features use an API key you create with a provider (many have free tiers); any usage is billed by that provider, never by Ayuvo." } },
-    { "@type": "Question", "name": "Which AI can I use?", "acceptedAnswer": { "@type": "Answer", "text": "Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones Gemma 4 E2B runs fully on-device after a one-time download; iPhones can also use Apple Intelligence as a fallback." } },
-    { "@type": "Question", "name": "Where is my data?", "acceptedAnswer": { "@type": "Answer", "text": "In the app's storage on your phone. Ayuvo has no account and no server. Data leaves the device only when you act: sending a photo or message to your AI provider, scanning a barcode, browsing exercise images, downloading a model, or turning on backup." } },
-    { "@type": "Question", "name": "What does the Health data hub do with Apple Health or Health Connect?", "acceptedAnswer": { "@type": "Answer", "text": "With your permission it keeps a local mirror of the data types you grant so Ayuvo can show tiles, charts and history. It writes only nutrition, body measurements and calculated workout calories that you log. You can revoke access any time in Health or Health Connect settings." } },
-    { "@type": "Question", "name": "Does the coach see my health data?", "acceptedAnswer": { "@type": "Answer", "text": "Only if you turn on \"Let Coach use my health data\". When on, the coach can request summaries of your granted health types and sends them to the AI provider you chose. The toggle is shown at every connect step and in Settings." } },
-    { "@type": "Question", "name": "How do backups work?", "acceptedAnswer": { "@type": "Answer", "text": "Off by default. iPhone backs up to your private iCloud (CloudKit) database; Android to your Google Drive app folder. Backups include logs, settings and photos but never the health hub database or coach chat." } },
-    { "@type": "Question", "name": "Can I export or delete everything?", "acceptedAnswer": { "@type": "Answer", "text": "Export your diary (JSON, CSV or Markdown) and your health hub (ayuvo-health-data zip). Settings → Delete All Data wipes the app's local storage; Health and Health Connect samples are left untouched by design." } },
-    { "@type": "Question", "name": "Which languages does Ayuvo support?", "acceptedAnswer": { "@type": "Answer", "text": "18: English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian." } },
-    { "@type": "Question", "name": "Is it medical advice?", "acceptedAnswer": { "@type": "Answer", "text": "No. Estimates come from AI and formulas; talk to a clinician before changing diet, training or medication." } },
-    { "@type": "Question", "name": "How do I get support?", "acceptedAnswer": { "@type": "Answer", "text": "Email yaaratech@gmail.com or open the Support page at ayuvo-health.web.app/support. In the app, Settings → Help & Support opens a pre-filled email." } }
+    {
+      "@type": "Question",
+      "name": "Is Ayuvo free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. There are no subscriptions, credits or in-app purchases. AI features use an API key you create with a provider (many have free tiers); any usage is billed by that provider, never by Ayuvo. On-device models cost nothing to run after the download."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which AI can I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones, on-device models such as Gemma 4 E2B and MedGemma 1.5 4B run on the phone after a one-time download; iPhones can also use Apple Intelligence."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is my data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In the app's storage on your phone. Ayuvo has no account and no server. Data leaves the device only when you act: sending a photo or message to your AI provider, scanning a barcode, browsing exercise images, downloading a model, sharing a record, exporting, or turning on Android's Google Drive backup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the Health data hub do with Apple Health or Health Connect?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With your permission it keeps a local mirror of the data types you grant so Ayuvo can show charts and history. It writes only nutrition, body measurements and calculated workout calories that you log. You can revoke access any time in Health or Health Connect settings."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the coach see my health data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only if you allow it. Health data, medications and health records each have their own consent, and medications and records are off by default. When a source is on, the coach can request summaries of it and sends them to the AI provider you chose, or to an on-device model that keeps them on the phone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I move from iPhone to Android, or back?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Export All Data on one phone creates a zip that Ayuvo on the other platform imports, during setup (Restore from a backup) or later. Your profile, goals, units, logs, workouts, health data, medications, health records and coach chats come along. API keys, reminder schedules and your AI provider choice deliberately do not."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is MedGemma, and is it medical advice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MedGemma is Google's open model family for medical text and images. Ayuvo offers MedGemma 1.5 4B as an optional on-device model: after a one-time gated download from Hugging Face it runs on the phone. It is a research model, not a medical device. Its answers can be wrong, and Ayuvo never diagnoses or advises on doses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do backups work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Export All Data creates a zip on either platform that you save wherever you choose. Android can also back up to your own Google Drive app folder, off by default. Health data and medications are never in that Drive backup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export or delete everything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Export All Data covers your diary, health data, medications, health records and settings, and API keys are never included. Settings, Delete All Data wipes the app's local storage; Health and Health Connect samples are left untouched by design."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which languages does Ayuvo support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "18: English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it medical advice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Ayuvo is not a medical device. Estimates come from AI and formulas; talk to a clinician before changing diet, training or medication."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Ayuvo open source?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Ayuvo is MIT-licensed and the code is at github.com/astechtic/ayuvo. Read how to build it and contribute."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Email yaaratech@gmail.com or open the Support page. In the app, Settings, Help & Support opens a pre-filled email."
+      }
+    }
   ]
 }
 </script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <svg width="0" height="0" class="sr-only" aria-hidden="true" focusable="false">
   <symbol id="i-apple" viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></symbol>
   <symbol id="i-mail" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.5 3.4 10.7 8 12 4.6-1.3 8-6.5 8-12V5z"/></symbol>
   <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4z"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3.4 5 7 5c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.6 0 5.8 3.6 4.5 6.8C19.5 16.4 12 21 12 21z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8zm0 3.4h8V17H8z"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><path d="M8.6 3.6a5 5 0 0 1 7.1 0l4.7 4.7a5 5 0 0 1 0 7.1l-5 5a5 5 0 0 1-7.1 0l-4.7-4.7a5 5 0 0 1 0-7.1zm.5 5.6L5.6 12.8a3 3 0 0 0 0 4.2l1.4 1.4a3 3 0 0 0 4.2 0l3.6-3.6z"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M3 9h2V7h2v10H5v-2H3zm18 0h-2V7h-2v10h2v-2h2zM8 11h8v2H8z"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><path d="M7 2v7a2.5 2.5 0 0 0 2 2.4V22h2V11.4A2.5 2.5 0 0 0 13 9V2h-1.5v6h-1V2H9v6H8V2zm9.5 0C14.6 3.4 14 6 14 8.5c0 1.8.9 3 2.5 3.4V22h2V2z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V11h4v9zm6-16h4v16h-4zm6 9h4v7h-4z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.5S5.5 9.3 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.3 12 2.5 12 2.5z"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><path d="M9 2h6v2H9zm3 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-.8 3h1.6v4.4l3 1.8-.8 1.3-3.8-2.3z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 7h11l-3-3 1.4-1.4L22 8l-5.6 5.4L15 12l3-3H7zm10 10H6l3 3-1.4 1.4L2 16l5.6-5.4L9 12l-3 3h11z"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M9 2h2v3h2V2h2v3h1a2 2 0 0 1 2 2v1h3v2h-3v2h3v2h-3v1a2 2 0 0 1-2 2h-1v3h-2v-3h-2v3H9v-3H8a2 2 0 0 1-2-2v-1H3v-2h3v-2H3V8h3V7a2 2 0 0 1 2-2h1zM8 7v10h8V7z"/></symbol>
+  <symbol id="i-watch" viewBox="0 0 24 24"><path d="M8 2h8l1 4H7zm-1 16h10l-1 4H8zM6 8h12a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3a15 15 0 0 0-1.2-5.2A8 8 0 0 1 18.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8C10.3 7.3 11.1 5.2 12 4zM4.1 13h3a15 15 0 0 0 1.2 5.2A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.2A15 15 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.8A15 15 0 0 0 16.9 13h3a8 8 0 0 1-4.2 5.2z"/></symbol>
 </svg>
-
-<nav class="nav" id="nav">
-  <div class="container">
-    <a href="#" class="nav-brand">
-      <img src="assets/brand/ayuvo-mark.svg" alt="" width="30" height="30">
-      <span>Ayuvo</span>
-    </a>
-    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
-    <label for="nav-toggle" class="hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </label>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="#faq">FAQ</a>
-      <a href="support">Support</a>
-      <a href="privacy">Privacy</a>
-    </div>
-  </div>
-</nav>
-
-<!-- ========== HERO ========== -->
-<section class="hero" id="hero">
-  <div class="container">
-    <header class="hero-meta">
-      <span><span class="dot"></span> iOS 17.6+ · Android 8.0+</span>
-      <span>No account · No ads · No analytics</span>
-      <span>Bring your own AI key</span>
-    </header>
-    <div class="hero-grid">
-      <div class="hero-text">
-        <h1 class="hero-title">Your whole health, <em>one app</em>.</h1>
-        <p class="hero-lede">Ayuvo brings nutrition, workouts, fasting, water and your Apple Health or Health Connect data together in one place — on your device. Snap a meal, log a set, start a fast, and ask a coach that can see the whole picture, using the AI key you bring.</p>
-        <div class="cta-group">
-          <a href="APP_STORE_URL" class="store-btn"><svg class="icon"><use href="#i-apple"/></svg><span>Download on the App Store</span></a>
-          <a href="PLAY_STORE_URL" class="store-btn secondary"><svg class="icon"><use href="#i-play"/></svg><span>Get it on Google Play</span></a>
-        </div>
-        <p class="cta-note">Free. Your data stays on your phone; only the AI provider you choose ever sees what you send it.</p>
-      </div>
-      <aside class="hero-card">
-        <div class="phone-frame">
-          <div class="phone-screen">
-            <img src="assets/screenshots/home.png" alt="Ayuvo Home dashboard with health tiles, calorie ring and today's meals" width="1179" height="2556" decoding="async" fetchpriority="high">
-          </div>
-        </div>
-      </aside>
-    </div>
-  </div>
-</section>
-
-<!-- ========== TRUST STRIP ========== -->
-<div class="trust">
-  <div class="container">
-    <div class="trust-item"><svg class="icon"><use href="#i-lock"/></svg><div>Stays on your device<small>No Ayuvo account, no Ayuvo server.</small></div></div>
-    <div class="trust-item"><svg class="icon"><use href="#i-sparkle"/></svg><div>Bring your own AI<small>15 providers, or run models on-device.</small></div></div>
-    <div class="trust-item"><svg class="icon"><use href="#i-shield"/></svg><div>No ads, no analytics<small>Nothing is tracked, sold or profiled.</small></div></div>
-  </div>
+<nav class="nav" id="nav" aria-label="Main"><div class="container"><a href="/" class="nav-brand"><img src="/assets/brand/ayuvo-mark.svg?v=b444082e" alt="" width="30" height="30"><span>Ayuvo</span></a><button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><span></span><span></span><span></span></button><div class="nav-links" id="nav-links"><div class="has-menu"><a href="/features">Features</a><div class="menu"><a href="/features/nutrition">Nutrition<small>Photo, barcode, voice</small></a><a href="/features/workouts">Workouts<small>Sets, reps, 1,300+ exercises</small></a><a href="/features/health-data">Health data<small>Apple Health and Health Connect</small></a><a href="/features/records-and-medications">Records & medications<small>Documents and reminders</small></a><a href="/features/coach">AI coach<small>Ask about your own data</small></a><a href="/features/fasting-and-water">Fasting & water<small>Optional timers and goals</small></a><a href="/features/switch-phones">Switch phones<small>iPhone ⇄ Android</small></a><a href="/features/on-device-ai">On-device AI<small>Run models on the phone</small></a></div></div><a href="/privacy-first">Privacy</a><a href="/features/on-device-ai">On-device AI</a><a href="/open-source">Open source</a><a href="/support">Support</a><a class="nav-cta" href="/download">Download</a></div></div></nav>
+<main id="main"><header class="hero"><div class="container"><div class="hero-center"><div class="hero-meta"><span><span class="dot"></span> iOS 17.6+ · Android 8.0+</span><span>No account · No ads · No analytics</span><span>Open source</span></div><h1 class="hero-title">Your health. Your device. <em>Your call.</em></h1><p class="hero-lede">Ayuvo brings nutrition, workouts, health records, medications and your Apple Health or Health Connect data together in one private app. Everything is kept on your phone. Ask an AI coach only if you want to, with a key you bring or a model that runs on the phone itself.</p><div class="cta-group"><span class="soon"><svg class="icon" aria-hidden="true"><use href="#i-apple"/></svg><span>Coming soon to the App Store</span></span><span class="soon"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg><span>Coming soon to Google Play</span></span></div><p class="cta-note">Free for iPhone and Android. No account. Open source under the MIT licence.</p></div><div class="hero-stage"><div class="phones fan"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/records.webp?v=bb54402f" alt="Ayuvo health records with important highlights" width="588" height="1280" loading="lazy" decoding="async"></div></div><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/summary.webp?v=4bf9dab9" alt="Ayuvo Summary with Eat, Move and Drink rings" width="588" height="1280" fetchpriority="high" decoding="async"></div></div><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/coach.webp?v=12d43190" alt="Ayuvo coach chat with suggested prompts" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></div></div></header><div class="pband" aria-label="Privacy at a glance"><div class="container"><div class="pband-item"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div>Stays on your device<small>No Ayuvo account, no Ayuvo server.</small></div></div><div class="pband-item"><svg class="icon" aria-hidden="true"><use href="#i-cpu"/></svg><div>You choose the AI<small>Bring your own key, or run a model on the phone.</small></div></div><div class="pband-item"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><div>No ads, no analytics<small>Nothing is tracked, sold or profiled.</small></div></div><div class="pband-item"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg><div>Open source<small>MIT-licensed. Read every line.</small></div></div></div></div><section class="paper" id="features"><div class="container"><header class="section-head"><span class="eyebrow"><span class="num">01</span> Everything in one place</span><h2>One app for the whole picture.</h2><p>The parts of your health that usually live in six apps, kept together on your phone, with an AI coach that can read across them only when you allow it.</p></header><div class="bento"><a class="tile" href="/features/nutrition"><span class="eyebrow">Nutrition</span><h3>Snap it, scan it, say it.</h3><p>Photos, barcodes, voice or text, reviewed before anything is saved.</p><div class="tile-art"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/nutrition.webp?v=603d8801" alt="Ayuvo daily nutrition diary with calories, macros and water" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></a><a class="tile" href="/features/workouts"><span class="eyebrow">Workouts</span><h3>Plan the week, log the set.</h3><p>Sets, reps, weight and RPE, with a 1,300+ exercise library.</p><div class="tile-art"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/workouts.webp?v=25c679b1" alt="Ayuvo workout diary with calculated calorie burn" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></a><a class="tile" href="/features/health-data"><span class="eyebrow">Health data</span><h3>Every chart, one hub.</h3><p>Apple Health and Health Connect, mirrored on your phone.</p><div class="tile-art"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/heart-rate.webp?v=45eae45b" alt="Ayuvo heart rate chart with day, week, month and year ranges" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></a><a class="tile" href="/features/records-and-medications"><span class="eyebrow">Records</span><h3>Documents that read themselves.</h3><p>Scan a report. Values and highlights appear, processed on your phone.</p><div class="tile-art"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/records.webp?v=bb54402f" alt="Ayuvo health records with important highlights" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></a><a class="tile" href="/features/coach"><span class="eyebrow">AI coach</span><h3>Ask about your own day.</h3><p>Consent for every data source, on your key or on your phone.</p><div class="tile-art"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/coach.webp?v=12d43190" alt="Ayuvo coach chat with suggested prompts" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></a><a class="tile" href="/features/fasting-and-water"><span class="eyebrow">Fasting & water</span><h3>Timers that stay optional.</h3><p>Off by default. Goals, reminders and widgets when you want them.</p><div class="tile-art"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/summary.webp?v=4bf9dab9" alt="Ayuvo Summary with Eat, Move and Drink rings" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></a><a class="tile wide text-only" href="/features/switch-phones"><svg class="tile-glyph icon" aria-hidden="true"><use href="#i-swap"/></svg><span class="eyebrow">Switch phones</span><h3>iPhone to Android, and back.</h3><p>Export All Data on one phone, import it on the other. Your history moves with you.</p></a><a class="tile wide text-only" href="/features/on-device-ai"><svg class="tile-glyph icon" aria-hidden="true"><use href="#i-cpu"/></svg><span class="eyebrow">On-device AI</span><h3>Models that live on the phone.</h3><p>Run Gemma, Qwen or a medical model on the phone itself. No key, no server, nothing to send.</p></a></div></div></section><section class="ink" id="privacy"><div class="container"><div class="split"><div class="split-text"><span class="eyebrow">Privacy</span><h2>Private by design. <em>Not as a setting.</em></h2><p>There is no Ayuvo account and no Ayuvo server. Your food, workouts, health data, records and chats are stored in the app on your phone. Data leaves it only when you take an action, and only to a service you chose.</p><ul><li><span>Health data, medications and records each need their own consent before the coach can read them</span></li><li><span>API keys live in the iOS Keychain or Android EncryptedSharedPreferences, never in a backup</span></li><li><span>No analytics, crash-reporting or advertising SDKs. This website sets no cookies</span></li><li><span>Open source, so the claims above can be checked</span></li></ul><p><a class="link-arrow" href="/privacy-first">See every data flow</a></p></div><div class="split-media"><div class="panel"><span class="kicker">What can leave your phone, and only when you act</span><ul><li>Photos, text and coach messages to the AI provider you configured</li><li>Audio to a speech provider, only if you pick a cloud one</li><li>A barcode number to Open Food Facts, when you scan</li><li>Exercise images and model files, as plain requests to GitHub and Hugging Face</li><li>A record or export, when you tap Share or Export</li><li>Your own Google Drive, if you turn on Android backup</li></ul></div></div></div><div class="stats"><div class="stat"><strong>0</strong><span>Ayuvo accounts or servers</span></div><div class="stat"><strong>0</strong><span>analytics, crash or ad SDKs</span></div><div class="stat"><strong>15</strong><span>AI providers on your own key</span></div><div class="stat"><strong>18</strong><span>languages</span></div></div></div></section><section class="paper"><div class="container"><div class="split"><div class="split-text"><span class="eyebrow">Health records &amp; medications</span><h2>Your paperwork, <em>read on your phone</em>.</h2><p>Add lab reports, prescriptions and visit notes from the camera, a file, or the share sheet. Ayuvo keeps the original, reads the text on your phone and pulls out the doctor, dates and test values. Results the report itself marks as outside its range are highlighted. Medications get schedules and dose reminders.</p><ul><li><span>You choose how AI helps: on this device, your own provider, ask each time, or not at all</span></li><li><span>Every record says whether it was processed on this device, online, or not by AI</span></li><li><span>Share pages with name, address and ID numbers blacked out</span></li><li><span>Medication reminders with Taken, Skip and Snooze right from the notification</span></li></ul><p><a class="link-arrow" href="/features/records-and-medications">See records and medications</a></p></div><div class="split-media"><div class="phones pair"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/records.webp?v=bb54402f" alt="Ayuvo health records list with highlights" width="588" height="1280" loading="lazy" decoding="async"></div></div><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/medications.webp?v=edbccaa4" alt="Ayuvo medications with today&#x27;s doses" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></div></div></div></section><section class="ink raised" id="on-device"><div class="container"><div class="split reverse"><div class="split-text"><span class="eyebrow">On-device AI</span><h2>Run a health model <em>on the phone itself</em>.</h2><p>Download Gemma, Qwen or MedGemma once and ask questions with no key, no server and nothing to send. MedGemma is Google's open model family for medical text and images. Ayuvo offers MedGemma 1.5 4B, a 2.82 GiB download for phones with 8 GB of memory or more.</p><ul><li><span>Gated download: accept Google's terms on Hugging Face, then add a free access token</span></li><li><span>Text and image understanding, in a 2,048-token context window</span></li><li><span>A research model, not a medical device. It never replaces your clinician</span></li></ul><p><a class="link-arrow" href="/features/on-device-ai">See the on-device models</a></p></div><div class="split-media"><div class="catalog" role="group" aria-label="On-device model catalogue"><div class="catalog-head"><span>On-device models</span><span>Size · memory</span></div><div class="catalog-row"><strong>Gemma 4 E2B</strong><span>2.41 GiB · 8 GB RAM</span><span class="meta">text + images · 4,096-token context · Apache-2.0</span></div><div class="catalog-row"><strong>Qwen3 1.7B</strong><span>0.91 GiB · 6 GB RAM</span><span class="meta">text · 4,096-token context · Apache-2.0</span></div><div class="catalog-row"><strong>Qwen3 4B</strong><span>2.48 GiB · 8 GB RAM</span><span class="meta">text · 4,096-token context · Apache-2.0</span></div><div class="catalog-row"><strong>Qwen3 8B</strong><span>4.55 GiB · 12 GB RAM</span><span class="meta">text · 4,096-token context · Apache-2.0</span></div><div class="catalog-row"><strong>Qwen3 14B</strong><span>8.06 GiB · 20 GB RAM</span><span class="meta">text · 4,096-token context · Apache-2.0</span></div><div class="catalog-row spot"><strong>MedGemma 1.5 4B</strong><span>2.82 GiB · 8 GB RAM</span><span class="meta">text + images · 2,048-token context · Health AI Developer Foundations terms</span></div></div></div></div><div class="disclaimer"><p><strong>Not a medical device.</strong> MedGemma is a research model released under Google's Health AI Developer Foundations terms. Its output is preliminary, can be inaccurate and needs independent verification: it is not intended to inform clinical diagnosis, patient management decisions or treatment recommendations. Coach keeps its own rules whichever model answers. It describes, never diagnoses, never suggests starting, stopping or changing a dose, and defers to your prescriber.</p><p>MedGemma and Gemma are trademarks of Google. Ayuvo is an independent app and is not affiliated with or endorsed by Google.</p></div></div></section><section class="paper alt" id="health"><div class="container"><div class="split"><div class="split-text"><span class="eyebrow">Works with</span><h2>Apple Health and <em>Health Connect</em>, mirrored locally.</h2><p>With your permission Ayuvo keeps a local copy of the Health data you grant, then shows day, week, month, six-month and year charts, sources and units for every metric. It writes back only nutrition, body measurements and calculated workout calories that you log.</p><div class="works-with"><span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg><span>Works with Apple Health<small>iPhone</small></span></span><span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg><span>Works with Health Connect<small>Android</small></span></span></div><ul><li><span>13 categories, from activity and sleep to cycle tracking and vitals</span></li><li><span>Pin up to 12 favourites to Summary, with 7-day sparklines</span></li><li><span>Your Health data is never in a cloud backup</span></li></ul><p><a class="link-arrow" href="/features/health-data">See the Health data hub</a></p></div><div class="split-media"><div class="phones pair"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/browse.webp?v=7f1b371b" alt="Ayuvo Browse list of health categories" width="588" height="1280" loading="lazy" decoding="async"></div></div><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/heart-rate.webp?v=45eae45b" alt="Ayuvo heart rate detail chart" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></div></div></div></section><section class="paper" id="switch"><div class="container"><div class="split reverse"><div class="split-text"><span class="eyebrow">Switch phones</span><h2>Change phones. <em>Or platforms.</em></h2><p>Export All Data creates one zip. Import it on an iPhone or an Android phone, or choose Restore from a backup while setting Ayuvo up, and your profile, goals, logs, workouts, medications, records and chats are back.</p><ul><li><span>Merge, never overwrite: importing twice adds nothing, and nothing is deleted</span></li><li><span>API keys are never exported. You add them again on the new phone</span></li><li><span>An open, documented format you can inspect</span></li></ul><p><a class="link-arrow" href="/features/switch-phones">See what moves and what stays</a></p></div><div class="split-media"><div class="phone-frame"><div class="phone-screen"><img src="/assets/screens/export-data.webp?v=24b2f8a2" alt="Ayuvo Export All Data sheet listing food diary, health data, medications, records and settings" width="588" height="1280" loading="lazy" decoding="async"></div></div></div></div></div></section><section class="ink" id="open-source"><div class="container"><div class="split"><div class="split-text"><span class="eyebrow">Open source</span><h2>Read it. Build it. <em>Make it better.</em></h2><p>Ayuvo is MIT-licensed, with the iPhone app in SwiftUI, the Android app in Jetpack Compose and shared contracts between them. Developers can contribute code, exercises, translations and docs. The project is inspired by an earlier open-source app, and its licence notice travels with it.</p><p><a class="link-arrow" href="/open-source">How to contribute</a></p></div><div class="split-media"><div class="repo"><a class="gh-btn" href="https://github.com/astechtic/ayuvo" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg><span>View on GitHub</span></a><code>astechtic/ayuvo</code></div></div></div></div></section><section class="paper"><div class="container"><header class="section-head"><span class="eyebrow"><span class="num">02</span> How it works</span><h2>From capture to coaching <em>in seconds</em>.</h2></header><div class="steps"><div class="step"><div class="step-num">Step 01</div><h3>Capture</h3><p>Snap up to 10 photos, scan a barcode, speak, type, or scan a document. Log a set, a glass of water, a dose or start a fast from the same + menu.</p></div><div class="step"><div class="step-num">Step 02</div><h3>Review</h3><p>Your chosen provider, or a model on your phone, reads the photo or document. Correct anything before it is saved.</p></div><div class="step"><div class="step-num">Step 03</div><h3>Keep</h3><p>Saved on your device. Nutrition, weight and calculated burn go to Apple Health or Health Connect only if you enable it.</p></div><div class="step"><div class="step-num">Step 04</div><h3>Ask Ayuvo</h3><p>The coach pulls the slice of your data it needs, from the sources you allowed, and answers in context.</p></div></div></div></section><section class="paper" id="faq"><div class="container"><header class="section-head"><span class="eyebrow"><span class="num">03</span> FAQ</span><h2>Ayuvo, <em>plainly answered</em>.</h2></header><div class="faq-grid"><article class="faq-item"><h3>Is Ayuvo free?</h3><p>Yes. There are no subscriptions, credits or in-app purchases. AI features use an API key you create with a provider (many have free tiers); any usage is billed by that provider, never by Ayuvo. On-device models cost nothing to run after the download.</p></article><article class="faq-item"><h3>Which AI can I use?</h3><p>Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones, on-device models such as Gemma 4 E2B and MedGemma 1.5 4B run on the phone after a one-time download; iPhones can also use Apple Intelligence.</p></article><article class="faq-item"><h3>Where is my data?</h3><p>In the app's storage on your phone. Ayuvo has no account and no server. Data leaves the device only when you act: sending a photo or message to your AI provider, scanning a barcode, browsing exercise images, downloading a model, sharing a record, exporting, or turning on Android's Google Drive backup.</p></article><article class="faq-item"><h3>What does the Health data hub do with Apple Health or Health Connect?</h3><p>With your permission it keeps a local mirror of the data types you grant so Ayuvo can show charts and history. It writes only nutrition, body measurements and calculated workout calories that you log. You can revoke access any time in Health or Health Connect settings.</p></article><article class="faq-item"><h3>Does the coach see my health data?</h3><p>Only if you allow it. Health data, medications and health records each have their own consent, and medications and records are off by default. When a source is on, the coach can request summaries of it and sends them to the AI provider you chose, or to an on-device model that keeps them on the phone.</p></article><article class="faq-item"><h3>Can I move from iPhone to Android, or back?</h3><p>Yes. Export All Data on one phone creates a zip that Ayuvo on the other platform imports, during setup (Restore from a backup) or later. Your profile, goals, units, logs, workouts, health data, medications, health records and coach chats come along. API keys, reminder schedules and your AI provider choice deliberately do not.</p></article><article class="faq-item"><h3>What is MedGemma, and is it medical advice?</h3><p>MedGemma is Google's open model family for medical text and images. Ayuvo offers MedGemma 1.5 4B as an optional on-device model: after a one-time gated download from Hugging Face it runs on the phone. It is a research model, not a medical device. Its answers can be wrong, and Ayuvo never diagnoses or advises on doses.</p></article><article class="faq-item"><h3>How do backups work?</h3><p>Export All Data creates a zip on either platform that you save wherever you choose. Android can also back up to your own Google Drive app folder, off by default. Health data and medications are never in that Drive backup.</p></article><article class="faq-item"><h3>Can I export or delete everything?</h3><p>Yes. Export All Data covers your diary, health data, medications, health records and settings, and API keys are never included. Settings, Delete All Data wipes the app's local storage; Health and Health Connect samples are left untouched by design.</p></article><article class="faq-item"><h3>Which languages does Ayuvo support?</h3><p>18: English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian.</p></article><article class="faq-item"><h3>Is it medical advice?</h3><p>No. Ayuvo is not a medical device. Estimates come from AI and formulas; talk to a clinician before changing diet, training or medication.</p></article><article class="faq-item"><h3>Is Ayuvo open source?</h3><p>Yes. Ayuvo is MIT-licensed and the code is at <a href="https://github.com/astechtic/ayuvo" rel="noopener">github.com/astechtic/ayuvo</a>. Read <a href="/open-source">how to build it and contribute</a>.</p></article><article class="faq-item"><h3>How do I get support?</h3><p>Email <a href="mailto:yaaratech@gmail.com">yaaratech@gmail.com</a> or open the <a href="/support">Support page</a>. In the app, Settings, Help &amp; Support opens a pre-filled email.</p></article></div></div></section><section class="cta-section ink"><div class="container"><div class="cta-content"><span class="eyebrow">Get started</span><h2>Start with <em>the whole picture</em>.</h2><p>Free, private, on your device. Bring your own AI key. No account, no subscription, no ads.</p><div class="cta-group"><span class="soon"><svg class="icon" aria-hidden="true"><use href="#i-apple"/></svg><span>Coming soon to the App Store</span></span><span class="soon"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg><span>Coming soon to Google Play</span></span></div><p class="cta-note">Or read the code: <a class="link-arrow" href="/open-source">Ayuvo is open source</a></p></div></div></section></main>
+<footer class="footer"><div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><a href="/" class="footer-brand-mark"><img src="/assets/brand/ayuvo-mark.svg?v=b444082e" alt="" width="30" height="30"><span>Ayuvo</span></a>
+<p>Your whole health in one private app for iPhone and Android. Open source under the MIT licence.</p></div>
+<div class="footer-col"><h4>Features</h4><ul><li><a href="/features/nutrition">Nutrition</a></li><li><a href="/features/workouts">Workouts</a></li><li><a href="/features/health-data">Health data</a></li><li><a href="/features/records-and-medications">Records & medications</a></li><li><a href="/features/coach">AI coach</a></li><li><a href="/features/fasting-and-water">Fasting & water</a></li></ul></div>
+<div class="footer-col"><h4>Privacy</h4><ul><li><a href="/privacy-first">Private by design</a></li><li><a href="/features/on-device-ai">On-device AI</a></li><li><a href="/ai-providers">AI providers</a></li><li><a href="/features/switch-phones">Switch phones</a></li><li><a href="/privacy">Privacy Policy</a></li></ul></div>
+<div class="footer-col"><h4>Open source</h4><ul><li><a href="https://github.com/astechtic/ayuvo" rel="noopener">GitHub</a></li><li><a href="/open-source">Contribute</a></li><li><a href="https://github.com/astechtic/ayuvo/blob/main/LICENSE" rel="noopener">MIT licence</a></li><li><a href="https://github.com/astechtic/ayuvo/blob/main/SECURITY.md" rel="noopener">Security policy</a></li></ul></div>
+<div class="footer-col"><h4>Help</h4><ul><li><a href="/download">Download</a></li><li><a href="/support">Support</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
 </div>
-
-<!-- ========== FEATURES ========== -->
-<section class="paper" id="features">
-  <div class="container">
-    <header class="section-head">
-      <span class="eyebrow"><span class="num">01</span> Features</span>
-      <h2>Everything <em>in one place</em>.</h2>
-      <p>Six parts of your health that usually live in six apps. Ayuvo keeps them together, offline first, and lets an AI coach read across all of them.</p>
-    </header>
-
-    <div class="chapters">
-      <article class="chapter">
-        <div>
-          <div class="chapter-num">01 · Nutrition</div>
-          <h3>Log meals your way.</h3>
-          <span class="chapter-tag">Photo · Barcode · Voice · Text · Saved meals · Manual</span>
-          <p>Photos (up to 10 at once), barcode via Open Food Facts, voice, text, saved meals or manual entry. Review calories, macros and 30+ nutrients before anything is saved, and ask "What if?" before you log.</p>
-          <ul>
-            <li>Smart serving units — slices, cups, ml — with grams as the source of truth</li>
-            <li>Personalised calorie and macro targets (Mifflin-St Jeor / Katch-McArdle) you can override</li>
-            <li>Custom meal times, nutrient goals, Home nutrient cards</li>
-          </ul>
-        </div>
-        <div class="chapter-media pair">
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/snap.png" alt="Ayuvo camera capture for a meal" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/review.png" alt="Ayuvo review screen with editable nutrition" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div>
-          <div class="chapter-num">02 · Workouts</div>
-          <h3>Plan the week, log the set.</h3>
-          <span class="chapter-tag">Diary · Sets, reps, weight, RPE · 1,300+ exercises</span>
-          <p>A day-by-day workout diary with sets, reps, weight and RPE, calculated calorie burn, and a 1,300-exercise library with photos and animations, filtered by body part, target muscle and equipment.</p>
-          <ul>
-            <li>Swipe between weeks, copy plans, log without a timer</li>
-            <li>Calculated burn can sync to Apple Health / Health Connect</li>
-            <li>The coach can read your plans, sets and completed sessions</li>
-          </ul>
-        </div>
-        <div class="chapter-media">
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/workouts.png" alt="Ayuvo workout diary and exercise library" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div>
-          <div class="chapter-num">03 · Health data</div>
-          <h3>Your Health data, one hub.</h3>
-          <span class="chapter-tag">Apple Health · Health Connect · Local mirror</span>
-          <p>Mirror Apple Health or Health Connect — activity, heart, sleep, vitals, body, cycle and more — into a local hub with Home tiles, detail charts and full history. Read-only unless you log something in Ayuvo.</p>
-          <ul>
-            <li>Day, week, month, six-month and year charts with highlights</li>
-            <li>Show All Data, Data Sources and unit options per metric</li>
-            <li>Export and import the whole hub as a zip; it never rides in cloud backups</li>
-          </ul>
-        </div>
-        <div class="chapter-media pair">
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/health.png" alt="Ayuvo Health hub with categories and latest values" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/health-detail.png" alt="Ayuvo Health detail chart" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div>
-          <div class="chapter-num">04 · Fasting &amp; water</div>
-          <h3>Timers that respect your day.</h3>
-          <span class="chapter-tag">1–168 h fasting goals · Water goals · Reminders</span>
-          <p>Optional fasting with a 1–168 hour goal, a timer that survives restarts and editable history; optional water goals with quick logging, reminders and widgets. Both stay local and are never written to Health.</p>
-          <ul>
-            <li>Off by default — turn each on in Settings when you want it</li>
-            <li>Fasting is never inferred from missing meals</li>
-            <li>Water progress on Apple Watch and in widgets</li>
-          </ul>
-        </div>
-        <div class="chapter-media">
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/fasting.png" alt="Ayuvo fasting timer and water card" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div>
-          <div class="chapter-num">05 · AI Coach</div>
-          <h3>A coach that knows your day.</h3>
-          <span class="chapter-tag">Multi-turn chat · Tool calls over your own data</span>
-          <p>Multi-turn chat that can pull your food log, workouts, weight trend, fasts and — only with your explicit toggle — your health data. Choose from 15 providers, or run Gemma 4 / Ollama locally.</p>
-          <ul>
-            <li>Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint</li>
-            <li>Keys live in iOS Keychain / Android EncryptedSharedPreferences; requests go straight to the provider</li>
-            <li>Apple Intelligence and on-device Gemma 4 E2B send nothing anywhere</li>
-          </ul>
-        </div>
-        <div class="chapter-media">
-          <div class="phone-frame"><div class="phone-screen"><img src="assets/screenshots/coach.png" alt="Ayuvo coach conversation with health context" width="1179" height="2556" loading="lazy" decoding="async"></div></div>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div>
-          <div class="chapter-num">06 · Privacy</div>
-          <h3>Private by construction.</h3>
-          <span class="chapter-tag">No account · No server · No analytics</span>
-          <p>There is no Ayuvo account or server. Requests go straight from your phone to the provider you chose. Optional iCloud / Google Drive backup never includes health data. Delete All Data wipes the device copy in one tap.</p>
-        </div>
-        <div class="chapter-card">
-          <h4>What can leave your phone, and only when you act</h4>
-          <ul>
-            <li><svg class="icon"><use href="#i-check"/></svg><span>Photos, text and coach messages → the AI provider you configured</span></li>
-            <li><svg class="icon"><use href="#i-check"/></svg><span>Audio → the speech provider you chose (or nothing, on-device)</span></li>
-            <li><svg class="icon"><use href="#i-check"/></svg><span>A barcode number → Open Food Facts, when you scan</span></li>
-            <li><svg class="icon"><use href="#i-check"/></svg><span>Exercise images and model downloads → GitHub and Hugging Face, as plain file requests</span></li>
-            <li><svg class="icon"><use href="#i-check"/></svg><span>Your backup → your own iCloud or Google Drive, if you turn it on</span></li>
-          </ul>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ========== HOW IT WORKS ========== -->
-<section class="paper" id="how">
-  <div class="container">
-    <header class="section-head">
-      <span class="eyebrow"><span class="num">02</span> How it works</span>
-      <h2>From capture to coaching <em>in seconds</em>.</h2>
-    </header>
-    <div class="steps">
-      <div class="step"><div class="step-num">Step 01</div><h3>Capture</h3><p>Snap up to 10 photos, scan a barcode, speak, type, or reuse a saved meal. Log a set, a glass of water, or start a fast from the same + menu.</p></div>
-      <div class="step"><div class="step-num">Step 02</div><h3>Review</h3><p>Your provider identifies the food and estimates the nutrition. Correct anything, adjust servings, preview the impact on today's targets.</p></div>
-      <div class="step"><div class="step-num">Step 03</div><h3>Log</h3><p>Saved on your device. Nutrition, body metrics and calculated burn sync to Apple Health / Health Connect only if you enable it.</p></div>
-      <div class="step"><div class="step-num">Step 04</div><h3>Ask Ayuvo</h3><p>The coach pulls the slice of your data it needs — food, training, weight trend, sleep or heart with your toggle — and answers in context.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== PLATFORMS ========== -->
-<section class="paper" id="platforms">
-  <div class="container">
-    <header class="section-head">
-      <span class="eyebrow"><span class="num">03</span> Platforms</span>
-      <h2>At home on <em>iPhone, Android and Watch</em>.</h2>
-    </header>
-    <ul class="platforms">
-      <li><svg class="icon"><use href="#i-check"/></svg><span><strong>Apple Watch</strong> app and complications for calories, macros and water</span></li>
-      <li><svg class="icon"><use href="#i-check"/></svg><span><strong>Widgets</strong> — iOS Home and Lock Screen, Android Glance widgets</span></li>
-      <li><svg class="icon"><use href="#i-check"/></svg><span><strong>Siri Shortcuts</strong> to log food, read today's calories and log weight</span></li>
-      <li><svg class="icon"><use href="#i-check"/></svg><span><strong>iOS Share Extension</strong> to send a food photo straight into Ayuvo</span></li>
-      <li><svg class="icon"><use href="#i-check"/></svg><span><strong>18 languages</strong>, dark mode, metric and imperial units, 18 accent colours with matching icons</span></li>
-      <li><svg class="icon"><use href="#i-check"/></svg><span><strong>Export &amp; import</strong> — diary as JSON, CSV or Markdown; Health hub as a zip; optional iCloud / Google Drive backup</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ========== CTA ========== -->
-<section class="cta-section ink">
-  <div class="container">
-    <div class="cta-content">
-      <span class="eyebrow">Get started</span>
-      <h2>Start with <em>the whole picture</em>.</h2>
-      <p>Free, private, on your device. Bring your own AI key — no account, no subscription, no ads.</p>
-      <div class="cta-group">
-        <a href="APP_STORE_URL" class="store-btn"><svg class="icon"><use href="#i-apple"/></svg><span>Download on the App Store</span></a>
-        <a href="PLAY_STORE_URL" class="store-btn secondary"><svg class="icon"><use href="#i-play"/></svg><span>Get it on Google Play</span></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== FAQ ========== -->
-<section class="paper" id="faq">
-  <div class="container">
-    <header class="section-head">
-      <span class="eyebrow"><span class="num">04</span> FAQ</span>
-      <h2>Ayuvo, <em>plainly answered</em>.</h2>
-    </header>
-    <div class="faq-grid">
-      <article class="faq-item"><h3>Is Ayuvo free?</h3><p>Yes. There are no subscriptions, credits or in-app purchases. AI features use an API key you create with a provider (many have free tiers); any usage is billed by that provider, never by Ayuvo.</p></article>
-      <article class="faq-item"><h3>Which AI can I use?</h3><p>Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones Gemma 4 E2B runs fully on-device after a one-time download; iPhones can also use Apple Intelligence as a fallback.</p></article>
-      <article class="faq-item"><h3>Where is my data?</h3><p>In the app's storage on your phone. Ayuvo has no account and no server. Data leaves the device only when you act: sending a photo or message to your AI provider, scanning a barcode, browsing exercise images, downloading a model, or turning on backup.</p></article>
-      <article class="faq-item"><h3>What does the Health data hub do with Apple Health or Health Connect?</h3><p>With your permission it keeps a local mirror of the data types you grant so Ayuvo can show tiles, charts and history. It writes only nutrition, body measurements and calculated workout calories that you log. You can revoke access any time in Health or Health Connect settings.</p></article>
-      <article class="faq-item"><h3>Does the coach see my health data?</h3><p>Only if you turn on "Let Coach use my health data". When on, the coach can request summaries of your granted health types and sends them to the AI provider you chose. The toggle is shown at every connect step and in Settings.</p></article>
-      <article class="faq-item"><h3>How do backups work?</h3><p>Off by default. iPhone backs up to your private iCloud (CloudKit) database; Android to your Google Drive app folder. Backups include logs, settings and photos but never the health hub database or coach chat.</p></article>
-      <article class="faq-item"><h3>Can I export or delete everything?</h3><p>Export your diary (JSON, CSV or Markdown) and your health hub (<code>ayuvo-health-data</code> zip). Settings → Delete All Data wipes the app's local storage; Health and Health Connect samples are left untouched by design.</p></article>
-      <article class="faq-item"><h3>Which languages does Ayuvo support?</h3><p>18: English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian.</p></article>
-      <article class="faq-item"><h3>Is it medical advice?</h3><p>No. Estimates come from AI and formulas; talk to a clinician before changing diet, training or medication.</p></article>
-      <article class="faq-item"><h3>How do I get support?</h3><p>Email <a href="mailto:yaaratech@gmail.com">yaaratech@gmail.com</a> or open the <a href="support">Support page</a>. In the app, Settings → Help &amp; Support opens a pre-filled email.</p></article>
-    </div>
-  </div>
-</section>
-
-<!-- ========== FOOTER ========== -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="#" class="footer-brand-mark"><img src="assets/brand/ayuvo-mark.svg" alt="" width="30" height="30"><span>Ayuvo</span></a>
-        <p>A private, all-in-one health companion for iPhone and Android. Built on an MIT-licensed base; see the <a href="terms#licence">licence notice</a>.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <ul>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#how">How it works</a></li>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="support">Support</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <ul>
-          <li><a href="privacy">Privacy Policy</a></li>
-          <li><a href="terms">Terms of Service</a></li>
-          <li><a href="sitemap.xml">Sitemap</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Yaara Tech</span>
-      <span>Set in Fraunces &amp; Manrope · No cookies, no trackers</span>
-    </div>
-  </div>
-</footer>
-<script src="site.js?v=1"></script>
+<p class="footer-legal">Apple, the Apple logo, iPhone and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Google Play, Android and Health Connect are trademarks of Google LLC. Gemma and MedGemma are trademarks of Google. Ayuvo is an independent app and is not affiliated with or endorsed by Apple or Google. Ayuvo is not a medical device and does not give medical advice.</p>
+<div class="footer-bottom"><span>© 2026 Yaara Tech · MIT licensed</span><span>Set in Fraunces &amp; Manrope · No cookies, no trackers</span></div>
+</div></footer>
 </body>
 </html>
