@@ -685,7 +685,7 @@
     <string name="about_litert_notices_load_error">No se pudieron cargar los avisos de terceros de LiteRT-LM.</string>
     <string name="settings_model_source">Fuente del modelo</string>
     <string name="settings_model_license_format">Licencia %1$s</string>
-    <string name="settings_model_requires_8gb">Requiere un dispositivo con 8 GB de RAM</string>
+    <string name="settings_model_requires_ram_format">Requiere un dispositivo con %1$d GB de RAM</string>
     <string name="settings_model_low_ram_unsupported">No compatible con dispositivos con poca RAM</string>
     <string name="settings_model_processor_unsupported">El procesador de este dispositivo no es compatible</string>
     <string name="action_download">Descargar</string>

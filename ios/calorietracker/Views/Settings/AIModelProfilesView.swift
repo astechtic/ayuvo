@@ -194,7 +194,7 @@ struct AIModelProfileEditor: View {
                         }
                     } else {
                         Picker("Model", selection: $model) {
-                            ForEach(provider.models, id: \.self) { Text($0).tag($0) }
+                            ForEach(provider.models, id: \.self) { Text(provider.modelDisplayName($0)).tag($0) }
                         }
                     }
 

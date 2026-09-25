@@ -3,6 +3,7 @@ package com.ayuvo.health.models
 import androidx.annotation.StringRes
 import com.ayuvo.health.R
 import com.ayuvo.health.services.ondevice.InstalledLocalModels
+import com.ayuvo.health.services.ondevice.LocalModelCatalog
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -46,6 +47,17 @@ enum class AIProvider {
         OLLAMA -> R.string.ai_provider_ollama
         CUSTOM_OPENAI -> R.string.ai_provider_custom
     }
+
+    /**
+     * What a model id is called on screen. The on-device provider stores catalogue ids
+     * (`medgemma-1.5-4b-it-litertlm`), which are not something to show a person.
+     */
+    fun modelDisplayName(model: String): String =
+        if (this == LOCAL_GEMMA) {
+            LocalModelCatalog.chatModels.firstOrNull { it.catalogId == model }?.displayName ?: model
+        } else {
+            model
+        }
 
     val baseUrl: String get() = when (this) {
         // Vertex builds its URL from the profile's project and location (docs/ai-models.md 6).

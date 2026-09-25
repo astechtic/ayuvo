@@ -685,7 +685,7 @@
     <string name="about_litert_notices_load_error">Impossible de charger les avis relatifs aux composants tiers de LiteRT-LM.</string>
     <string name="settings_model_source">Source du modèle</string>
     <string name="settings_model_license_format">Licence %1$s</string>
-    <string name="settings_model_requires_8gb">Nécessite un appareil doté de 8 Go de RAM</string>
+    <string name="settings_model_requires_ram_format">Nécessite un appareil doté de %1$d Go de RAM</string>
     <string name="settings_model_low_ram_unsupported">Non pris en charge sur les appareils disposant de peu de RAM</string>
     <string name="settings_model_processor_unsupported">Le processeur de cet appareil n’est pas pris en charge</string>
     <string name="action_download">Télécharger</string>

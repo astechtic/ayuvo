@@ -153,7 +153,9 @@ object LocalModelCatalog {
         licenseUrl = "https://developers.google.com/health-ai-developer-foundations/terms",
         sourceUrl = "https://huggingface.co/litert-community/MedGemma-1.5-4B-IT/tree/abba4da1132343617b51c180e7147a9742a26559",
         repository = "litert-community/MedGemma-1.5-4B-IT",
-        minimumMemoryClassGb = 8,
+        // Above the catalogue's derived 8 GiB gate: the 3 GB file plus an fp32 vision encoder ran an
+        // 8 GB iPhone out of memory while loading, so it is offered on 12 GB phones only.
+        minimumMemoryClassGb = 12,
         supportedAbis = setOf("arm64-v8a", "x86_64"),
         catalogId = "medgemma-1.5-4b-it-litertlm",
         supportsVision = true,

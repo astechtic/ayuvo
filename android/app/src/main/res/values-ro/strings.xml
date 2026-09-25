@@ -686,7 +686,7 @@
     <string name="about_litert_notices_load_error">Notificările privind terții pentru LiteRT-LM nu au putut fi încărcate.</string>
     <string name="settings_model_source">Sursa modelului</string>
     <string name="settings_model_license_format">Licență %1$s</string>
-    <string name="settings_model_requires_8gb">Necesită un dispozitiv cu 8 GB de RAM</string>
+    <string name="settings_model_requires_ram_format">Necesită un dispozitiv cu %1$d GB de RAM</string>
     <string name="settings_model_low_ram_unsupported">Nu este acceptat pe dispozitivele cu memorie RAM redusă</string>
     <string name="settings_model_processor_unsupported">Procesorul acestui dispozitiv nu este acceptat</string>
     <string name="action_download">Descarcă</string>

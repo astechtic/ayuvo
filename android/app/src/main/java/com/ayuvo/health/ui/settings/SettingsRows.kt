@@ -271,7 +271,8 @@ internal fun LocalModelRow(
     val uriHandler = LocalUriHandler.current
     val unavailableText = when (state.ineligibility) {
         LocalModelIneligibility.INSUFFICIENT_MEMORY ->
-            stringResource(R.string.settings_model_requires_8gb)
+            // The model's own gate: Qwen3 14B needs 20 GB and MedGemma 12 GB, not "8" for every row.
+            stringResource(R.string.settings_model_requires_ram_format, state.descriptor.minimumMemoryClassGb ?: 8)
         LocalModelIneligibility.LOW_RAM_DEVICE ->
             stringResource(R.string.settings_model_low_ram_unsupported)
         LocalModelIneligibility.UNSUPPORTED_ABI ->
@@ -324,11 +325,19 @@ internal fun LocalModelRow(
                 Text(
                     stringResource(
                         R.string.settings_model_license_format,
-                        state.descriptor.licenseName
+                        // An SPDX `LicenseRef-…` id is a catalogue key, not something to show a person;
+                        // Google's own short name for MedGemma's terms is HAI-DEF.
+                        state.descriptor.licenseName.let {
+                            if (it == "LicenseRef-HealthAI-DeveloperFoundations") "HAI-DEF" else it.removePrefix("LicenseRef-")
+                        }
                     ),
                     color = AppColors.Calorie,
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.clickable {
+                    // The licence label shrinks, and the source link never wraps: a long licence name
+                    // used to squeeze "Model source" into a one-letter-wide column.
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false).clickable {
                         uriHandler.openUri(state.descriptor.licenseUrl)
                     }
                 )
@@ -336,6 +345,8 @@ internal fun LocalModelRow(
                     stringResource(R.string.settings_model_source),
                     color = AppColors.Calorie,
                     style = MaterialTheme.typography.labelMedium,
+                    maxLines = 1,
+                    softWrap = false,
                     modifier = Modifier.clickable {
                         uriHandler.openUri(state.descriptor.sourceUrl)
                     }

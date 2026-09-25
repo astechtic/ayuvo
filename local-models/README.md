@@ -61,6 +61,11 @@ Before release, each new model needs its notice bundle committed under
 `legal/` alongside the LiteRT-LM and Whisper ones, and the MedGemma terms must
 be accepted on the account whose token ships in CI.
 
+**iOS holds MedGemma to 12 GiB phones** (iPhone 17 Pro, Air), above the derived 8 GiB
+gate: on an 8 GB iPhone 17 the engine died with an uncatchable C++ `std::bad_alloc` while
+loading it. The floor lives in `LocalModelCatalog.iosMemoryFloorGB`, not in this catalogue,
+so Android and the shared vectors keep the derived gate.
+
 Android determines the marketed memory class from
 `ActivityManager.MemoryInfo.totalMem` because the OS reserves part of physical
 RAM before reporting it. iOS similarly rounds the GiB value reported by

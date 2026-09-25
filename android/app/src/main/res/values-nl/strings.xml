@@ -684,7 +684,7 @@
     <string name="about_litert_notices_load_error">De kennisgevingen van derden voor LiteRT-LM konden niet worden geladen.</string>
     <string name="settings_model_source">Modelbron</string>
     <string name="settings_model_license_format">%1$s-licentie</string>
-    <string name="settings_model_requires_8gb">Vereist een apparaat met 8 GB RAM</string>
+    <string name="settings_model_requires_ram_format">Vereist een apparaat met %1$d GB RAM</string>
     <string name="settings_model_low_ram_unsupported">Niet ondersteund op apparaten met weinig RAM</string>
     <string name="settings_model_processor_unsupported">De processor van dit apparaat wordt niet ondersteund</string>
     <string name="action_download">Downloaden</string>

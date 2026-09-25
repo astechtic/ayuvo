@@ -684,7 +684,7 @@
     <string name="about_litert_notices_load_error">LiteRT-LM üçün üçüncü tərəf bildirişlərini yükləmək mümkün olmadı.</string>
     <string name="settings_model_source">Modelin mənbəyi</string>
     <string name="settings_model_license_format">%1$s lisenziyası</string>
-    <string name="settings_model_requires_8gb">8 GB RAM-a malik cihaz tələb olunur</string>
+    <string name="settings_model_requires_ram_format">%1$d GB RAM-a malik cihaz tələb olunur</string>
     <string name="settings_model_low_ram_unsupported">Az operativ yaddaşlı cihazlarda dəstəklənmir</string>
     <string name="settings_model_processor_unsupported">Bu cihazın prosessoru dəstəklənmir</string>
     <string name="action_download">Endir</string>

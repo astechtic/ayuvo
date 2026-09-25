@@ -83,7 +83,7 @@ extension SettingsPaneView {
                 } else {
                     Picker(selection: $selectedModel) {
                         ForEach(selectedProvider.models, id: \.self) { model in
-                            Text(model).tag(model)
+                            Text(selectedProvider.modelDisplayName(model)).tag(model)
                         }
                     } label: {
                         Label {
@@ -324,7 +324,7 @@ extension SettingsPaneView {
                 } else {
                     Picker(selection: $selectedTextModel) {
                         ForEach(selectedTextProvider.textModels, id: \.self) { model in
-                            Text(model).tag(model)
+                            Text(selectedTextProvider.modelDisplayName(model)).tag(model)
                         }
                     } label: {
                         SettingsLabel("Model", systemImage: "brain", tint: SettingsTint.ai)

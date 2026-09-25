@@ -20,7 +20,7 @@ class RecordsAiModeResolver(
 ) {
     /** Mirrors FoodAnalysisService.recordsCloudProvider, so options match what a real call would use. */
     suspend fun options(textOnly: Boolean = true): RecordsAiOptions = RecordsAiOptions(
-        localAvailable = localModels.isExecutable(LocalModelId.GEMMA_4_E2B),
+        localAvailable = localModels.isAnyChatModelExecutable(),
         cloudProvider = cloudProvider(textOnly)
     )
 

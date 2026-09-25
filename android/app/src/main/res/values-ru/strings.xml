@@ -963,7 +963,7 @@
     <string name="about_litert_notices_load_error">Не удалось загрузить уведомления о сторонних компонентах LiteRT-LM.</string>
     <string name="settings_model_source">Источник модели</string>
     <string name="settings_model_license_format">Лицензия %1$s</string>
-    <string name="settings_model_requires_8gb">Требуется устройство с 8 ГБ оперативной памяти</string>
+    <string name="settings_model_requires_ram_format">Требуется устройство с %1$d ГБ оперативной памяти</string>
     <string name="settings_model_low_ram_unsupported">Не поддерживается на устройствах с малым объёмом оперативной памяти</string>
     <string name="settings_model_processor_unsupported">Процессор этого устройства не поддерживается</string>
     <string name="action_download">Скачать</string>

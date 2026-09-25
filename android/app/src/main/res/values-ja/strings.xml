@@ -683,7 +683,7 @@
     <string name="about_litert_notices_load_error">LiteRT-LM のサードパーティに関する通知を読み込めませんでした。</string>
     <string name="settings_model_source">モデルの配布元</string>
     <string name="settings_model_license_format">%1$s ライセンス</string>
-    <string name="settings_model_requires_8gb">8 GB の RAM を搭載したデバイスが必要です</string>
+    <string name="settings_model_requires_ram_format">%1$d GB の RAM を搭載したデバイスが必要です</string>
     <string name="settings_model_low_ram_unsupported">RAM 容量の少ないデバイスには対応していません</string>
     <string name="settings_model_processor_unsupported">このデバイスのプロセッサには対応していません</string>
     <string name="action_download">ダウンロード</string>

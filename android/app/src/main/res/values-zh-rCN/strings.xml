@@ -683,7 +683,7 @@
     <string name="about_litert_notices_load_error">无法加载 LiteRT-LM 第三方声明。</string>
     <string name="settings_model_source">模型来源</string>
     <string name="settings_model_license_format">%1$s 许可证</string>
-    <string name="settings_model_requires_8gb">需要配备 8 GB 内存的设备</string>
+    <string name="settings_model_requires_ram_format">需要配备 %1$d GB 内存的设备</string>
     <string name="settings_model_low_ram_unsupported">不支持低内存设备</string>
     <string name="settings_model_processor_unsupported">不支持此设备的处理器</string>
     <string name="action_download">下载</string>

@@ -683,7 +683,7 @@
     <string name="about_litert_notices_load_error">LiteRT-LM 서드 파티 고지사항을 불러올 수 없습니다.</string>
     <string name="settings_model_source">모델 출처</string>
     <string name="settings_model_license_format">%1$s 라이선스</string>
-    <string name="settings_model_requires_8gb">RAM 8GB 기기가 필요합니다</string>
+    <string name="settings_model_requires_ram_format">RAM %1$dGB 기기가 필요합니다</string>
     <string name="settings_model_low_ram_unsupported">RAM이 적은 기기에서는 지원되지 않습니다</string>
     <string name="settings_model_processor_unsupported">이 기기의 프로세서는 지원되지 않습니다</string>
     <string name="action_download">다운로드</string>

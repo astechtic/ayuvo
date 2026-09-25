@@ -68,7 +68,8 @@ struct AILocalModelsSection: View {
     }
 }
 
-/// One catalogue model: its size, what it can do, and why it cannot be downloaded when it cannot.
+/// One catalogue model, laid out like Gemma's card: what it is, where it stands (not downloaded →
+/// downloaded → ready), Download / Prepare / Delete, and its licence and source pages.
 private struct AILocalModelRow: View {
     let descriptor: LocalModelDescriptor
     let revision: Int
@@ -86,49 +87,105 @@ private struct AILocalModelRow: View {
         return String(localized: "Needs \(gb) GB of RAM")
     }
 
+    private var modality: String {
+        descriptor.supportsVision
+            ? String(localized: "text and images") : String(localized: "text only")
+    }
+
     private var blockedReason: String? {
         guard let manager else { return nil }
         if !manager.isEligible { return gateText }
-        if descriptor.requiresAuth, Gemma4LocalModelManager.huggingFaceToken == nil {
+        if descriptor.requiresAuth, !manager.isDownloaded, Gemma4LocalModelManager.huggingFaceToken == nil {
             return String(localized: "Gated — needs a Hugging Face token and accepted terms")
         }
         return nil
     }
 
+    private var isDownloading: Bool {
+        if let manager, case .downloading = manager.state { return true }
+        return false
+    }
+
+    /// The message from a failed download or preparation, or nil.
+    private var failure: String? {
+        guard let manager, case .failed(let message) = manager.state else { return nil }
+        return message
+    }
+
+    private var statusLabel: (text: String, color: Color)? {
+        guard let manager, manager.isEligible else { return nil }
+        switch manager.state {
+        case .downloading(let progress): return ("\(Int(progress * 100))%", .secondary)
+        case .verifying: return (String(localized: "Verifying"), .secondary)
+        case .preparing: return (String(localized: "Preparing"), .secondary)
+        case .generating: return (String(localized: "In use"), .green)
+        case .failed: return (String(localized: "Needs attention"), .red)
+        case .ready: return (String(localized: "Ready"), .green)
+        case .downloaded:
+            return manager.isSelectable
+                ? (String(localized: "Ready"), .green) : (String(localized: "Downloaded"), .green)
+        case .notDownloaded: return nil
+        }
+    }
+
+    private var subtitle: String {
+        if let blockedReason { return "\(sizeText) · \(blockedReason)" }
+        guard let manager, manager.isDownloaded else { return "\(sizeText) · \(modality)" }
+        if manager.isSelectable {
+            return String(localized: "Ready for private, offline use. \(sizeText) · \(modality)")
+        }
+        return String(localized: "Verified and stored locally (\(sizeText)). Tap Prepare now, or it will load on first use.")
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
                 Label {
                     Text(descriptor.displayName)
                 } icon: {
                     SettingsIcon("cpu", tint: SettingsTint.ai)
                 }
+                .font(.body.weight(.medium))
                 Spacer()
-                trailing
+                if let statusLabel {
+                    Text(statusLabel.text)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(statusLabel.color)
+                }
             }
+
             Text(subtitle)
-                .font(.footnote)
+                .font(.caption)
                 .foregroundStyle(.secondary)
+
             // A failed download used to fall through to the Download button with nothing said,
             // which made a refusal from Hugging Face look like a button that did nothing at all.
             if let failure {
                 Text(failure)
-                    .font(.footnote)
+                    .font(.caption)
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            // A gated model needs its terms accepted on its own page, so the page is one tap away
-            // rather than something to go and find.
-            if descriptor.requiresAuth, let page = descriptor.repositoryURL {
-                Link(destination: page) {
-                    Label("Accept terms on Hugging Face", systemImage: "arrow.up.right.square")
-                        .font(.footnote)
-                }
-                .accessibilityIdentifier("settings.localModel.\(descriptor.id).terms")
+
+            if let manager, let progress = manager.downloadProgress {
+                ProgressView(value: progress).tint(AppColors.calorie)
+            } else if let manager, manager.state == .verifying || manager.state == .preparing {
+                ProgressView().tint(AppColors.calorie)
             }
+
+            actions
+
+            links
         }
-        .onAppear { manager = Gemma4LocalModelManager.manager(for: descriptor) }
+        .padding(.vertical, 4)
+        .onAppear {
+            manager = Gemma4LocalModelManager.manager(for: descriptor)
+            manager?.refresh()
+        }
         .onChange(of: revision) { _, _ in manager = Gemma4LocalModelManager.manager(for: descriptor) }
+        // Preparing writes the marker that makes the model selectable, so the provider and model
+        // pickers have to re-read as soon as it flips.
+        .onChange(of: manager?.isSelectable) { _, _ in onChange() }
         .confirmationDialog("Delete \(descriptor.displayName)?", isPresented: $confirmingDelete,
                             titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
@@ -142,42 +199,70 @@ private struct AILocalModelRow: View {
         }
     }
 
-    /// The message from a failed download, or nil.
-    private var failure: String? {
-        guard let manager, case .failed(let message) = manager.state else { return nil }
-        return message
-    }
-
     @ViewBuilder
-    private var trailing: some View {
-        if let manager, manager.isDownloaded {
-            Button(role: .destructive) { confirmingDelete = true } label: { Text("Delete") }
-                .buttonStyle(.plain)
-                .foregroundStyle(.red)
-        } else if let manager, case .downloading(let progress) = manager.state {
-            HStack(spacing: 8) {
-                Text("\(Int(progress * 100))%").foregroundStyle(.secondary)
-                Button { manager.cancelDownload() } label: { Text("Cancel") }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
+    private var actions: some View {
+        HStack {
+            if isDownloading {
+                Button("Cancel", role: .cancel) { manager?.cancelDownload() }
+                    .buttonStyle(.bordered)
+            } else if let manager, manager.isDownloaded {
+                Button(manager.state == .ready || manager.isSelectable ? "Ready" : "Prepare") {
+                    Task { await manager.prepare(); onChange() }
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(AppColors.calorie)
+                .disabled(!manager.isEligible || manager.state.isBusy
+                          || manager.state == .ready || manager.isSelectable)
+                .accessibilityIdentifier("settings.localModel.\(descriptor.id).prepare")
+            } else if blockedReason == nil {
+                Button(failure == nil ? "Download" : "Try again") {
+                    Task { await manager?.download(); onChange() }
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(AppColors.calorie)
+                .disabled(manager?.state.isBusy ?? true)
+                .accessibilityIdentifier("settings.localModel.\(descriptor.id).download")
             }
-        } else if let manager, manager.state == .verifying || manager.state == .preparing {
-            ProgressView().controlSize(.small)
-        } else if blockedReason == nil {
-            Button {
-                Task { await manager?.download(); onChange() }
-            } label: {
-                Text(failure == nil ? "Download" : "Try again")
+
+            if let manager, manager.hasStoredData, !isDownloading {
+                Button("Delete", role: .destructive) { confirmingDelete = true }
+                    .buttonStyle(.bordered)
+                    .disabled(manager.state.isBusy)
+                    .accessibilityIdentifier("settings.localModel.\(descriptor.id).delete")
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(AppColors.calorie)
         }
     }
 
-    private var subtitle: String {
-        if let blockedReason { return "\(sizeText) · \(blockedReason)" }
-        let modality = descriptor.supportsVision
-            ? String(localized: "text and images") : String(localized: "text only")
-        return "\(sizeText) · \(modality)"
+    /// Licence text, the model's own page, and — for a gated model — the page where its terms are
+    /// accepted, each one tap away rather than something to go and find.
+    @ViewBuilder
+    private var links: some View {
+        HStack(spacing: 12) {
+            if let licenseURL = descriptor.licenseURL {
+                Link(descriptor.licenseName.isEmpty ? String(localized: "License") : licenseTitle,
+                     destination: licenseURL)
+                    .font(.caption2)
+                    .accessibilityIdentifier("settings.localModel.\(descriptor.id).license")
+            }
+            if let page = descriptor.repositoryURL ?? descriptor.sourceURL {
+                Link(destination: page) {
+                    Label("Model source", systemImage: "arrow.up.right.square")
+                        .font(.caption2)
+                }
+                .accessibilityIdentifier("settings.localModel.\(descriptor.id).source")
+            }
+            if descriptor.requiresAuth, let page = descriptor.repositoryURL {
+                Link(destination: page) {
+                    Label("Accept terms", systemImage: "checkmark.seal")
+                        .font(.caption2)
+                }
+                .accessibilityIdentifier("settings.localModel.\(descriptor.id).terms")
+            }
+        }
+    }
+
+    /// "Apache-2.0" reads as itself; an SPDX `LicenseRef-…` id is not something to show a person.
+    private var licenseTitle: String {
+        descriptor.licenseName.hasPrefix("LicenseRef-") ? String(localized: "License terms") : descriptor.licenseName
     }
 }

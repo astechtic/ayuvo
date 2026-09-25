@@ -684,7 +684,7 @@
     <string name="about_litert_notices_load_error">LiteRT-LM के तृतीय-पक्ष नोटिस लोड नहीं किए जा सके।</string>
     <string name="settings_model_source">मॉडल का स्रोत</string>
     <string name="settings_model_license_format">%1$s लाइसेंस</string>
-    <string name="settings_model_requires_8gb">8 GB RAM वाले डिवाइस की आवश्यकता है</string>
+    <string name="settings_model_requires_ram_format">%1$d GB RAM वाले डिवाइस की आवश्यकता है</string>
     <string name="settings_model_low_ram_unsupported">कम RAM वाले डिवाइस पर समर्थित नहीं है</string>
     <string name="settings_model_processor_unsupported">इस डिवाइस का प्रोसेसर समर्थित नहीं है</string>
     <string name="action_download">डाउनलोड करें</string>

@@ -86,7 +86,7 @@ private fun InsetGroupScope.providerRows(
     row {
         GroupRow(
             title = stringResource(R.string.settings_ai_model),
-            value = model.ifEmpty { stringResource(R.string.settings_ai_model_unset) },
+            value = provider.modelDisplayName(model).ifEmpty { stringResource(R.string.settings_ai_model_unset) },
             icon = Icons.Filled.Tune, iconTint = tint,
             modifier = Modifier.settingsRow("${idPrefix}Model"),
             onClick = { state.sheet = modelSheet }

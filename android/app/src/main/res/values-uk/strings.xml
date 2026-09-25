@@ -569,7 +569,7 @@
     <string name="settings_view_model_license">Переглянути ліцензію моделі</string>
     <string name="settings_model_source">Джерело моделі</string>
     <string name="settings_model_license_format">Ліцензія %1$s</string>
-    <string name="settings_model_requires_8gb">Потрібен пристрій з 8 ГБ оперативної пам\'яті</string>
+    <string name="settings_model_requires_ram_format">Потрібен пристрій з %1$d ГБ оперативної пам\'яті</string>
     <string name="settings_model_low_ram_unsupported">Не підтримується на пристроях з малим обсягом оперативної пам\'яті</string>
     <string name="settings_model_processor_unsupported">Процесор цього пристрою не підтримується</string>
     <string name="settings_section_text_ai">Текстовий ШІ</string>

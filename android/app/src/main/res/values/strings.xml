@@ -725,7 +725,7 @@
     <string name="settings_view_model_license">View model license</string>
     <string name="settings_model_source">Model source</string>
     <string name="settings_model_license_format">%1$s license</string>
-    <string name="settings_model_requires_8gb">Requires an 8 GB RAM device</string>
+    <string name="settings_model_requires_ram_format">Requires an %1$d GB RAM device</string>
     <string name="settings_model_low_ram_unsupported">Not supported on low-RAM devices</string>
     <string name="settings_model_processor_unsupported">This device’s processor is not supported</string>
     <string name="settings_section_text_ai">Text AI</string>

@@ -692,7 +692,7 @@
     <string name="about_litert_notices_load_error">تعذّر تحميل إشعارات الجهات الخارجية لـ LiteRT-LM.</string>
     <string name="settings_model_source">مصدر النموذج</string>
     <string name="settings_model_license_format">ترخيص %1$s</string>
-    <string name="settings_model_requires_8gb">يتطلب جهازًا بذاكرة RAM سعتها 8 غيغابايت</string>
+    <string name="settings_model_requires_ram_format">يتطلب جهازًا بذاكرة RAM سعتها %1$d غيغابايت</string>
     <string name="settings_model_low_ram_unsupported">غير مدعوم على الأجهزة ذات ذاكرة RAM المنخفضة</string>
     <string name="settings_model_processor_unsupported">معالج هذا الجهاز غير مدعوم</string>
     <string name="action_download">تنزيل</string>

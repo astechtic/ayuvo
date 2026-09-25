@@ -8,6 +8,7 @@ import com.ayuvo.health.coach.data.CoachDatabase
 import com.ayuvo.health.coach.logic.CoachCatalogs
 import com.ayuvo.health.services.ai.AICatalogs
 import com.ayuvo.health.services.ondevice.InstalledLocalModels
+import com.ayuvo.health.services.ondevice.anyChatModelExecutable
 import com.ayuvo.health.medications.logic.MedicationsCoachContract
 import com.ayuvo.health.medications.logic.MedicationsCoachTools
 import com.ayuvo.health.coach.data.CoachFileStore
@@ -148,7 +149,7 @@ class AyuvoApp : Application() {
         // An on-device Gemma choice made before its download finished (onboarding) is applied
         // as soon as the verified model is executable — including on a cold start with it present.
         container.localModels.states
-            .map { it[LocalModelId.GEMMA_4_E2B]?.executable == true }
+            .map { it.anyChatModelExecutable() }
             .distinctUntilChanged()
             .filter { it }
             .onEach { container.prefs.applyPendingLocalGemmaSelection() }
@@ -251,7 +252,7 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val localModels = LocalModelManager(app, FoodAnalysisService.defaultClient) { keyStore.huggingFaceToken() }
     val prefs = PreferencesStore(
         app,
-        isLocalGemmaExecutable = { localModels.isExecutable(LocalModelId.GEMMA_4_E2B) },
+        isLocalGemmaExecutable = { localModels.isAnyChatModelExecutable() },
         isLocalWhisperExecutable = { localModels.isExecutable(LocalModelId.WHISPER_BASE) }
     )
     val keyStore = KeyStore(app)

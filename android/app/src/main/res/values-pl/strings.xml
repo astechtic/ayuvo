@@ -688,7 +688,7 @@
     <string name="about_litert_notices_load_error">Nie udało się wczytać informacji zewnętrznych LiteRT-LM.</string>
     <string name="settings_model_source">Źródło modelu</string>
     <string name="settings_model_license_format">Licencja %1$s</string>
-    <string name="settings_model_requires_8gb">Wymaga urządzenia z 8 GB RAM</string>
+    <string name="settings_model_requires_ram_format">Wymaga urządzenia z %1$d GB RAM</string>
     <string name="settings_model_low_ram_unsupported">Nieobsługiwane na urządzeniach z małą ilością RAM</string>
     <string name="settings_model_processor_unsupported">Procesor tego urządzenia nie jest obsługiwany</string>
     <string name="action_download">Pobierz</string>

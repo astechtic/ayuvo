@@ -64,6 +64,17 @@ enum LocalModelCatalog {
 
     static var gemma: LocalModelDescriptor? { chatModels.first { $0.id == gemmaCatalogID } }
 
+    /// iOS-only RAM floors that sit above the catalogue's derived gate, in GiB.
+    ///
+    /// The catalogue gate is `artifact x 2 + 2 GiB`, which puts MedGemma (3 GB file, fp32 vision
+    /// encoder on the CPU) at 8 GiB. On an 8 GB iPhone 17 it passed that gate and then died in
+    /// LiteRT-LM with an uncaught `std::bad_alloc` while loading — a C++ exception Swift cannot
+    /// catch — because iOS caps an app well below the phone's RAM. So it is offered on 12 GB
+    /// iPhones (17 Pro, Air) only. The shared catalogue and Android are left as they are.
+    static let iosMemoryFloorGB: [String: Int64] = [
+        "medgemma-1.5-4b-it-litertlm": 12,
+    ]
+
     static func parse(_ catalog: RJ) -> [LocalModelDescriptor] {
         (catalog["models"].array ?? []).compactMap { model in
             guard let id = model["id"].string,
@@ -79,7 +90,10 @@ enum LocalModelCatalog {
                 url: url,
                 sizeBytes: Int64(model["artifact"]["sizeBytes"].double ?? 0),
                 sha256: sha,
-                minimumMemoryBytes: Int64(model["memoryPolicy"]["minimumPhysicalMemoryBytes"].double ?? 0),
+                minimumMemoryBytes: max(
+                    Int64(model["memoryPolicy"]["minimumPhysicalMemoryBytes"].double ?? 0),
+                    (iosMemoryFloorGB[id] ?? 0) * 1_024 * 1_024 * 1_024
+                ),
                 supportsVision: capabilities.contains("image"),
                 contextTokens: Int(model["contextTokens"].double ?? 4096),
                 requiresAuth: model["artifact"]["access"]["gated"].bool ?? false,

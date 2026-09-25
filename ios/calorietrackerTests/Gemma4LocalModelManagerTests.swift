@@ -71,6 +71,31 @@ struct Gemma4LocalModelManagerTests {
         }
     }
 
+    /// MedGemma passes the catalogue's 8 GiB gate but crashed an 8 GB iPhone 17 with an uncatchable
+    /// `std::bad_alloc` while loading, so iOS holds it to 12 GB phones.
+    @Test func medGemmaIsOfferedOnTwelveGBIPhonesOnly() throws {
+        let gib: UInt64 = 1_024 * 1_024 * 1_024
+        let eightGBPhone: UInt64 = 7 * gib + 600_000_000
+        let twelveGBPhone: UInt64 = 11 * gib + 200_000_000
+        let medGemma = try #require(LocalModelCatalog.chatModels.first {
+            $0.id == "medgemma-1.5-4b-it-litertlm"
+        })
+        #expect(medGemma.minimumMemoryClassGB == 12)
+
+        let small = Gemma4LocalModelManager(
+            descriptor: medGemma, rootDirectory: makeTemporaryDirectory(), physicalMemoryBytes: eightGBPhone
+        )
+        let large = Gemma4LocalModelManager(
+            descriptor: medGemma, rootDirectory: makeTemporaryDirectory(), physicalMemoryBytes: twelveGBPhone
+        )
+        #expect(!small.isEligible)
+        #expect(large.isEligible)
+
+        // Gemma keeps its 8 GB gate: the floor is per model, not a re-gate of what is installed.
+        let gemma = try #require(LocalModelCatalog.gemma)
+        #expect(gemma.minimumMemoryClassGB == 8)
+    }
+
     @Test func aModelGatedAboveThisPhoneStaysBlocked() {
         let gib: UInt64 = 1_024 * 1_024 * 1_024
         let eightGBPhone: UInt64 = 7 * gib + 600_000_000
@@ -237,6 +262,35 @@ struct Gemma4LocalModelManagerTests {
             expectedSHA256: "approved",
             fileManager: .default
         ))
+    }
+
+    /// `ensureEngine` writes each model's own marker (`LiteRTLM-0.16.0-<its sha>`). The check used
+    /// to compare against Gemma's, so a prepared MedGemma or Qwen3 never became selectable and
+    /// never appeared in the model pickers.
+    @Test func everyCatalogueModelIsSelectableOnceItsOwnMarkerIsWritten() throws {
+        let gib: UInt64 = 1_024 * 1_024 * 1_024
+        let hugePhone = 32 * gib
+        for descriptor in LocalModelCatalog.chatModels {
+            let root = makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: root) }
+            let handle = try {
+                FileManager.default.createFile(atPath: root.appendingPathComponent(descriptor.filename).path,
+                                               contents: nil)
+                return try FileHandle(forWritingTo: root.appendingPathComponent(descriptor.filename))
+            }()
+            try handle.truncate(atOffset: UInt64(descriptor.sizeBytes))
+            try handle.close()
+            try Data(descriptor.sha256.utf8).write(to: root.appendingPathComponent("verified.sha256"))
+
+            let manager = Gemma4LocalModelManager(
+                descriptor: descriptor, rootDirectory: root, physicalMemoryBytes: hugePhone
+            )
+            #expect(!manager.isSelectable, "\(descriptor.displayName) selectable before it was prepared")
+
+            try Data(descriptor.preparedMarkerContents.utf8)
+                .write(to: root.appendingPathComponent("prepared.version"))
+            #expect(manager.isSelectable, "\(descriptor.displayName) not selectable after it was prepared")
+        }
     }
 
     @Test func deletionRemovesOnlyTheDedicatedModelRoot() throws {

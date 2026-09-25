@@ -89,6 +89,13 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
         models.first ?? ""
     }
 
+    /// What a model id is called on screen. The on-device provider stores catalogue ids
+    /// (`medgemma-1.5-4b-it-litertlm`), which are not something to show a person.
+    func modelDisplayName(_ model: String) -> String {
+        guard self == .gemma4Local else { return model }
+        return LocalModelCatalog.descriptor(id: model)?.displayName ?? model
+    }
+
     var defaultTextModel: String {
         textModels.first ?? defaultModel
     }

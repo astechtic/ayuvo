@@ -378,7 +378,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
         _ui.update {
             it.copy(modePrompt = CoachRecordsModePrompt(
                 providerName = container.appContext.getString(provider.displayNameRes),
-                onDeviceAvailable = container.localModels.isExecutable(LocalModelId.GEMMA_4_E2B)
+                onDeviceAvailable = container.localModels.isAnyChatModelExecutable()
             ))
         }
         val choice = deferred.await()

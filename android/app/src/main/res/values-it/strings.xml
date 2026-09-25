@@ -685,7 +685,7 @@
     <string name="about_litert_notices_load_error">Impossibile caricare gli avvisi di terze parti per LiteRT-LM.</string>
     <string name="settings_model_source">Fonte del modello</string>
     <string name="settings_model_license_format">Licenza %1$s</string>
-    <string name="settings_model_requires_8gb">Richiede un dispositivo con 8 GB di RAM</string>
+    <string name="settings_model_requires_ram_format">Richiede un dispositivo con %1$d GB di RAM</string>
     <string name="settings_model_low_ram_unsupported">Non supportato sui dispositivi con poca RAM</string>
     <string name="settings_model_processor_unsupported">Il processore di questo dispositivo non è supportato</string>
     <string name="action_download">Scarica</string>

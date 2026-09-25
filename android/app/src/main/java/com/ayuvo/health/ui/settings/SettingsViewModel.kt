@@ -28,6 +28,7 @@ import com.ayuvo.health.services.AndroidAppIconManager
 import com.ayuvo.health.services.health.HealthConnectManager
 import com.ayuvo.health.services.ondevice.LocalModelId
 import com.ayuvo.health.services.ondevice.LocalModelState
+import com.ayuvo.health.services.ondevice.anyChatModelExecutable
 import com.ayuvo.health.ui.theme.AppThemeColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -152,11 +153,11 @@ data class SettingsUiState(
         ) "mg/dL" else "mmol/L"
     val availableVisionProviders: List<AIProvider>
         get() = AIProvider.remoteVisionProviders + listOfNotNull(
-            AIProvider.LOCAL_GEMMA.takeIf { localModelStates[LocalModelId.GEMMA_4_E2B]?.executable == true }
+            AIProvider.LOCAL_GEMMA.takeIf { localModelStates.anyChatModelExecutable() }
         )
     val availableTextProviders: List<AIProvider>
         get() = AIProvider.remoteTextProviders + listOfNotNull(
-            AIProvider.LOCAL_GEMMA.takeIf { localModelStates[LocalModelId.GEMMA_4_E2B]?.executable == true }
+            AIProvider.LOCAL_GEMMA.takeIf { localModelStates.anyChatModelExecutable() }
         )
     val availableSpeechProviders: List<SpeechProvider>
         get() = SpeechProvider.values().filter { it != SpeechProvider.LOCAL_WHISPER } + listOfNotNull(

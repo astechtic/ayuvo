@@ -684,7 +684,7 @@
     <string name="about_litert_notices_load_error">Die Drittanbieterhinweise zu LiteRT-LM konnten nicht geladen werden.</string>
     <string name="settings_model_source">Modellquelle</string>
     <string name="settings_model_license_format">%1$s-Lizenz</string>
-    <string name="settings_model_requires_8gb">Erfordert ein Gerät mit 8 GB RAM</string>
+    <string name="settings_model_requires_ram_format">Erfordert ein Gerät mit %1$d GB RAM</string>
     <string name="settings_model_low_ram_unsupported">Auf Geräten mit wenig Arbeitsspeicher nicht unterstützt</string>
     <string name="settings_model_processor_unsupported">Der Prozessor dieses Geräts wird nicht unterstützt</string>
     <string name="action_download">Herunterladen</string>

@@ -169,6 +169,55 @@ class LocalModelEligibilityTest {
         )
     }
 
+    /** The on-device provider used to key on Gemma alone, so a phone with only MedGemma never got it. */
+    @Test
+    fun anyInstalledChatModelUnlocksTheOnDeviceProvider() {
+        val onlyMedGemma = SettingsUiState(
+            localModelStates = mapOf(
+                LocalModelId.GEMMA_4_E2B to LocalModelState(
+                    LocalModelCatalog.gemma4E2b, eligible = true,
+                    status = LocalModelInstallStatus.NotInstalled
+                ),
+                LocalModelId.MEDGEMMA_1_5_4B to LocalModelState(
+                    LocalModelCatalog.medgemma_1_5_4b, eligible = true,
+                    status = LocalModelInstallStatus.Installed
+                )
+            )
+        )
+        assertTrue(AIProvider.LOCAL_GEMMA in onlyMedGemma.availableVisionProviders)
+        assertTrue(AIProvider.LOCAL_GEMMA in onlyMedGemma.availableTextProviders)
+
+        val medGemmaIneligible = onlyMedGemma.copy(
+            localModelStates = onlyMedGemma.localModelStates.mapValues { (_, state) ->
+                state.copy(eligible = false, ineligibility = LocalModelIneligibility.INSUFFICIENT_MEMORY)
+            }
+        )
+        assertFalse(AIProvider.LOCAL_GEMMA in medGemmaIneligible.availableVisionProviders)
+    }
+
+    /** MedGemma passes the catalogue's derived 8 GiB gate but runs 8 GB phones out of memory. */
+    @Test
+    fun medGemmaIsOfferedOnTwelveGbPhonesOnly() {
+        val gib = 1_073_741_824L
+        val abis = listOf("arm64-v8a")
+        assertFalse(LocalModelEligibility.isEligible(LocalModelCatalog.medgemma_1_5_4b, 8L * gib, abis))
+        assertFalse(LocalModelEligibility.isEligible(LocalModelCatalog.medgemma_1_5_4b, 11L * gib, abis))
+        assertTrue(LocalModelEligibility.isEligible(LocalModelCatalog.medgemma_1_5_4b, 11L * gib + 1L, abis))
+        assertTrue(LocalModelEligibility.isEligible(LocalModelCatalog.medgemma_1_5_4b, 12L * gib, abis))
+        // Gemma keeps its 8 GB gate.
+        assertTrue(LocalModelEligibility.isEligible(LocalModelCatalog.gemma4E2b, 8L * gib, abis))
+    }
+
+    @Test
+    fun onDeviceModelIdsShowTheirCatalogueNames() {
+        assertEquals(
+            "MedGemma 1.5 4B",
+            AIProvider.LOCAL_GEMMA.modelDisplayName(LocalModelCatalog.medgemma_1_5_4b.catalogId)
+        )
+        assertEquals("unknown-id", AIProvider.LOCAL_GEMMA.modelDisplayName("unknown-id"))
+        assertEquals("gpt-5.4-mini", AIProvider.OPENAI.modelDisplayName("gpt-5.4-mini"))
+    }
+
     @Test
     fun localProvidersAreHiddenUntilTheVerifiedModelIsExecutable() {
         val missing = SettingsUiState(

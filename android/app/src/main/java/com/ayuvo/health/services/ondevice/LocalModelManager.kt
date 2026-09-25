@@ -42,6 +42,10 @@ data class LocalModelState(
     val executable: Boolean get() = eligible && status == LocalModelInstallStatus.Installed
 }
 
+/** Whether any catalogue chat model (Gemma, Qwen3, MedGemma) is installed and eligible. */
+fun Map<LocalModelId, LocalModelState>.anyChatModelExecutable(): Boolean =
+    LocalModelCatalog.chatModels.any { this[it.id]?.executable == true }
+
 /** Owns verified model artifacts in no-backup app storage. */
 class LocalModelManager(
     context: Context,
@@ -92,6 +96,12 @@ class LocalModelManager(
     fun state(id: LocalModelId): LocalModelState = checkNotNull(_states.value[id])
 
     fun isExecutable(id: LocalModelId): Boolean = state(id).executable
+
+    /**
+     * True when any catalogue chat model can run -- not only Gemma. The on-device provider is
+     * offered on this, so a phone with just MedGemma or Qwen3 installed still gets it.
+     */
+    fun isAnyChatModelExecutable(): Boolean = _states.value.anyChatModelExecutable()
 
     fun modelFile(id: LocalModelId): File = File(modelDir, LocalModelCatalog.descriptor(id).fileName)
 

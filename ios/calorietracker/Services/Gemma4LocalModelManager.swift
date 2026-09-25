@@ -123,16 +123,25 @@ final class Gemma4LocalModelManager {
         isEligible(physicalMemoryBytes: ProcessInfo.processInfo.physicalMemory)
     }
 
+    /// True when any catalogue chat model is installed, prepared and fits this phone — not only
+    /// Gemma, or a phone with just MedGemma downloaded would never offer the on-device provider.
     static var isCurrentDeviceSelectable: Bool {
-        guard isCurrentDeviceEligible else { return false }
+        let candidates = LocalModelCatalog.chatModels.isEmpty ? [gemmaDescriptor] : LocalModelCatalog.chatModels
+        return candidates.contains { isSelectable(descriptor: $0) }
+    }
+
+    static func isSelectable(descriptor: LocalModelDescriptor) -> Bool {
+        guard memoryClassGB(physicalMemoryBytes: ProcessInfo.processInfo.physicalMemory)
+                >= descriptor.minimumMemoryClassGB else { return false }
         let fileManager = FileManager.default
-        let root = defaultRootDirectory(fileManager: fileManager, descriptor: gemmaDescriptor)
+        let root = defaultRootDirectory(fileManager: fileManager, descriptor: descriptor)
         return hasPreparedInstall(
-            modelURL: root.appendingPathComponent(artifactFilename),
+            modelURL: root.appendingPathComponent(descriptor.filename),
             verificationMarkerURL: root.appendingPathComponent("verified.sha256"),
             preparedMarkerURL: root.appendingPathComponent("prepared.version"),
-            expectedByteCount: artifactByteCount,
-            expectedSHA256: artifactSHA256,
+            expectedByteCount: descriptor.sizeBytes,
+            expectedSHA256: descriptor.sha256,
+            expectedPreparedMarker: descriptor.preparedMarkerContents,
             fileManager: fileManager
         )
     }
@@ -235,6 +244,7 @@ final class Gemma4LocalModelManager {
             preparedMarkerURL: preparedMarkerURL,
             expectedByteCount: descriptor.sizeBytes,
             expectedSHA256: descriptor.sha256,
+            expectedPreparedMarker: descriptor.preparedMarkerContents,
             fileManager: fileManager
         )
     }
@@ -504,6 +514,9 @@ final class Gemma4LocalModelManager {
         preparedMarkerURL: URL,
         expectedByteCount: Int64,
         expectedSHA256: String,
+        // The marker `ensureEngine` writes is per model. It used to be compared against Gemma's
+        // constant, so no other catalogue model could ever read as prepared.
+        expectedPreparedMarker: String = preparedMarkerContents,
         fileManager: FileManager
     ) -> Bool {
         guard hasVerifiedInstall(
@@ -516,7 +529,7 @@ final class Gemma4LocalModelManager {
            let marker = String(data: markerData, encoding: .utf8) else {
             return false
         }
-        return marker.trimmingCharacters(in: .whitespacesAndNewlines) == preparedMarkerContents
+        return marker.trimmingCharacters(in: .whitespacesAndNewlines) == expectedPreparedMarker
     }
 
     nonisolated static func verifyArtifact(

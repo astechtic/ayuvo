@@ -319,7 +319,7 @@ internal fun SettingsSheets(
                     ListSheet(
                         title = stringResource(R.string.sheet_model),
                         items = provider?.models.orEmpty(),
-                        label = { it },
+                        label = { provider?.modelDisplayName(it) ?: it },
                         selected = { it == profile?.model },
                         onSelect = {
                             if (profile != null) vm.setModelProfileModel(profile.id, it)
@@ -366,7 +366,7 @@ internal fun SettingsSheets(
                 SettingsSheet.AI_MODEL -> ListSheet(
                     title = stringResource(R.string.sheet_model),
                     items = ui.selectedAI.models,
-                    label = { it },
+                    label = { ui.selectedAI.modelDisplayName(it) },
                     selected = { it == ui.selectedModel },
                     onSelect = { vm.selectModel(it); onDismiss() },
                     footer = if (ui.selectedAI.supportsCustomModelName) stringResource(R.string.sheet_model_footer) else null,
@@ -399,7 +399,7 @@ internal fun SettingsSheets(
                 SettingsSheet.TEXT_MODEL -> ListSheet(
                     title = stringResource(R.string.sheet_model),
                     items = ui.selectedTextAI.textModels,
-                    label = { it },
+                    label = { ui.selectedTextAI.modelDisplayName(it) },
                     selected = { it == ui.selectedTextModel },
                     onSelect = { vm.selectTextModel(it); onDismiss() },
                     footer = if (ui.selectedTextAI.supportsCustomModelName) stringResource(R.string.sheet_model_footer) else null,
@@ -455,7 +455,7 @@ internal fun SettingsSheets(
                     ListSheet(
                         title = stringResource(R.string.sheet_model),
                         items = options,
-                        label = { it },
+                        label = { ui.textFallbackProvider.modelDisplayName(it) },
                         selected = { it == ui.textFallbackModel },
                         onSelect = { vm.selectTextFallbackModel(it); onDismiss() },
                         footer = if (ui.textFallbackProvider.supportsCustomModelName) stringResource(R.string.sheet_model_footer) else null,
@@ -620,7 +620,7 @@ internal fun SettingsSheets(
                     ListSheet(
                         title = stringResource(R.string.sheet_model),
                         items = opts,
-                        label = { it },
+                        label = { ui.fallbackProvider.modelDisplayName(it) },
                         selected = { it == ui.fallbackModel },
                         onSelect = { vm.selectFallbackModel(it); onDismiss() },
                         footer = if (ui.fallbackProvider.supportsCustomModelName) stringResource(R.string.sheet_model_footer) else null,
