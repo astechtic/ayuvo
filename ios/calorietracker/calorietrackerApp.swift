@@ -34,6 +34,7 @@ struct calorietrackerApp: App {
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @Environment(\.scenePhase) private var scenePhase
     @State private var isAutoRefreshingAdaptiveGoals = false
+    @State private var restoredDuringOnboarding = false
     @State private var widgetDashboardWriter: WidgetDashboardWriter?
 
     private var colorScheme: ColorScheme? {
@@ -97,6 +98,9 @@ struct calorietrackerApp: App {
                         .environment(fastingStore)
                         .environment(healthDataStore)
                         .environment(medicationStore)
+                        // "Restore from a backup" on the welcome screen runs Import All Data.
+                        .environment(appBackupService)
+                        .environment(recordsStore)
                 }
             }
             .tint(AppThemeColor.color(for: appThemeColorRaw).color)
@@ -150,6 +154,9 @@ struct calorietrackerApp: App {
                 refreshWidgetSnapshot()
             }
             .onReceive(NotificationCenter.default.publisher(for: .appBackupDidRestore)) { _ in
+                // Restored from the onboarding welcome screen: the file's goals and adaptive/energy
+                // settings win over the new-install defaults applied when onboarding completes.
+                if !hasCompletedOnboarding { restoredDuringOnboarding = true }
                 foodStore.reloadFromDefaults()
                 weightStore.reloadFromDefaults()
                 bodyFatStore.reloadFromDefaults()
@@ -236,12 +243,14 @@ struct calorietrackerApp: App {
                 // Existing users are untouched — these keys are only written here
                 // and by the Settings toggles. Onboarding just calculated goals, so
                 // mark the weekly adaptive check as done; the first run lands next week.
-                UserDefaults.standard.set(
-                    !UserDefaults.standard.bool(forKey: "onboardingPlanEdited"),
-                    forKey: AdaptiveGoalSettings.enabledKey
-                )
-                UserDefaults.standard.set(true, forKey: EnergyBurnSettings.enabledKey)
-                AdaptiveGoalSettings.markCheckedToday()
+                if !restoredDuringOnboarding {
+                    UserDefaults.standard.set(
+                        !UserDefaults.standard.bool(forKey: "onboardingPlanEdited"),
+                        forKey: AdaptiveGoalSettings.enabledKey
+                    )
+                    UserDefaults.standard.set(true, forKey: EnergyBurnSettings.enabledKey)
+                    AdaptiveGoalSettings.markCheckedToday()
+                }
                 wireUpFoodStoreCallback()
                 wireUpHealthKit()
                 // Seed the user's first WeightEntry from their onboarding-entered profile

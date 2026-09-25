@@ -16,6 +16,10 @@ enum CloudBackupPolicy {
         "healthKitTypesVersion",
         "healthKitAuthVersion",
         "lastNotifiedAppUpdateVersion",
+        // Whether THIS install finished onboarding is device state. Restoring it during onboarding
+        // (Restore from a backup, first screen) would end onboarding before the notification, Health
+        // and AI steps had run.
+        "hasCompletedOnboarding",
         // Retired iCloud Backup state (AppBackupService.retiredKeys).
         "cloudBackupEnabled",
         "cloudBackupLastAt",

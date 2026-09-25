@@ -27,6 +27,12 @@ enum class OnboardingStep {
     BUILDING_PLAN, PLAN_READY
 }
 
+/** Steps that still run after "Restore from a backup" (docs/cloud-backup.md › Onboarding restore). */
+val RESTORED_STEPS = listOf(OnboardingStep.NOTIFICATIONS, OnboardingStep.HEALTH_CONNECT, OnboardingStep.PROVIDER)
+
+/** Why "Restore from a backup" on the Welcome step did not continue into the restored steps. */
+enum class RestoreError { SIGN_IN_FAILED, NO_DRIVE_BACKUP, NO_PROFILE, FAILED }
+
 /** Android onboarding AI step: choice, then key setup (BYOK) or the on-device model (LOCAL). */
 enum class OnboardingAiPhase {
     CHOICE,
@@ -74,7 +80,16 @@ data class OnboardingState(
     val customCarbs: Int? = null,
     val customFat: Int? = null,
     /** Health Records AI mode picked on the AI step; null = the preselection below (§16). */
-    val recordsAiModeChoice: com.ayuvo.health.records.model.RecordsAiMode? = null
+    val recordsAiModeChoice: com.ayuvo.health.records.model.RecordsAiMode? = null,
+    /**
+     * A backup was restored from the Welcome step: the profile, goals and settings came from it, so
+     * only [RESTORED_STEPS] (notifications, Health Connect, AI setup) run and the profile steps,
+     * Building Plan and Plan Ready are skipped.
+     */
+    val restored: Boolean = false,
+    val restoreBusy: Boolean = false,
+    val restoreError: RestoreError? = null,
+    val restoreErrorDetail: String? = null
 ) {
     /** Preselected Local for the on-device path, Ask otherwise (docs/health-records.md §16). */
     val recordsAiMode: com.ayuvo.health.records.model.RecordsAiMode
@@ -86,6 +101,19 @@ data class OnboardingState(
 
     /** PLAN_READY is the final step (the old Rate-app review step was removed). */
     val isLastStep: Boolean get() = step == OnboardingStep.PLAN_READY
+
+    /** After a restore the first remaining step has nothing behind it: the profile steps are skipped. */
+    val canGoBack: Boolean
+        get() = step != OnboardingStep.WELCOME && step != OnboardingStep.BUILDING_PLAN &&
+            !(restored && step == RESTORED_STEPS.first())
+
+    /** Progress bar fraction; a restored onboarding measures itself against [RESTORED_STEPS] only. */
+    val progress: Float
+        get() = if (restored) {
+            (RESTORED_STEPS.indexOf(step) + 1f) / (RESTORED_STEPS.size + 1f)
+        } else {
+            step.ordinal.toFloat() / (OnboardingStep.values().size - 1).toFloat()
+        }
 
     /** True once BYOK fields satisfy the same gate as pre-choice onboarding. */
     val byokSetupComplete: Boolean
@@ -295,7 +323,80 @@ class OnboardingViewModel(private val container: AppContainer) : ViewModel() {
         _ui.value = _ui.value.copy(step = nextStep)
     }
 
+    /** The Drive account picker or sign-in was cancelled or failed. */
+    fun restoreSignInFailed() {
+        _ui.value = _ui.value.copy(restoreBusy = false, restoreError = RestoreError.SIGN_IN_FAILED, restoreErrorDetail = null)
+    }
+
+    fun dismissRestoreError() {
+        _ui.value = _ui.value.copy(restoreError = null, restoreErrorDetail = null)
+    }
+
+    /**
+     * Welcome › Restore from a backup › Google Drive, after sign-in: downloads the Drive backup and
+     * applies it (the same restore as Settings › Backup & Export › Restore now).
+     */
+    fun restoreFromDrive() {
+        viewModelScope.launch {
+            _ui.value = _ui.value.copy(restoreBusy = true, restoreError = null, restoreErrorDetail = null)
+            container.cloudBackup.refresh()
+            if (!container.cloudBackup.ui.value.existingCloudBackup) {
+                // Nothing to restore: don't leave a Google session behind that was only for this.
+                runCatching { container.cloudBackup.signOut() }
+                _ui.value = _ui.value.copy(restoreBusy = false, restoreError = RestoreError.NO_DRIVE_BACKUP)
+                return@launch
+            }
+            container.cloudBackup.restoreNow()
+                .onSuccess { adoptRestoredBackup() }
+                .onFailure {
+                    _ui.value = _ui.value.copy(
+                        restoreBusy = false,
+                        restoreError = RestoreError.FAILED,
+                        restoreErrorDetail = it.localizedMessage
+                    )
+                }
+        }
+    }
+
+    /** Import All Data finished on the Welcome step; only a restored app backup skips the profile steps. */
+    fun onImportFinished(appBackupRestored: Boolean) {
+        if (!appBackupRestored) return
+        viewModelScope.launch { adoptRestoredBackup() }
+    }
+
+    /**
+     * The backup replaced the profile, goals and settings. Re-read what the remaining steps show and
+     * jump to them; OS grants, the on-device model and API keys never travel in a backup, so those
+     * steps still run. Without a profile in the backup the normal onboarding carries on.
+     */
+    private suspend fun adoptRestoredBackup() {
+        if (container.profileRepository.current() == null) {
+            _ui.value = _ui.value.copy(restoreBusy = false, restoreError = RestoreError.NO_PROFILE)
+            return
+        }
+        val prefs = container.prefs
+        val provider = prefs.selectedAIProvider.first()
+        _ui.value = _ui.value.copy(
+            restored = true,
+            restoreBusy = false,
+            restoreError = null,
+            restoreErrorDetail = null,
+            step = RESTORED_STEPS.first(),
+            aiPhase = OnboardingAiPhase.CHOICE,
+            heightMetric = prefs.heightUnit.first() == "cm",
+            weightMetric = prefs.weightUnit.first() == "kg",
+            aiProvider = provider,
+            aiModel = provider.supportedModelOrDefault(prefs.selectedAIModel.first()),
+            apiKey = container.keyStore.apiKey(provider) ?: "",
+            coachHealthDataEnabled = prefs.coachHealthDataEnabled.first(),
+            notificationsEnabled = false,
+            healthConnectEnabled = false,
+            healthHubEnabled = false
+        )
+    }
+
     fun back() {
+        if (!_ui.value.canGoBack) return
         if (_ui.value.step == OnboardingStep.PROVIDER && _ui.value.aiPhase != OnboardingAiPhase.CHOICE) {
             _ui.value = _ui.value.copy(aiPhase = OnboardingAiPhase.CHOICE)
             return
@@ -333,14 +434,17 @@ class OnboardingViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             _ui.value = _ui.value.copy(submitting = true)
             val state = _ui.value
-            val profile = state.buildProfile()
-            container.profileRepository.save(profile)
-            container.weightRepository.seedInitialWeightIfEmpty(profile.weightKg)
-            // Only seed body fat when the user actually entered one in onboarding
-            // (the "Yes I know my body fat %" branch); the "No" branch leaves
-            // bodyFatPercentage null and the store stays empty.
-            profile.bodyFatPercentage?.let {
-                container.bodyFatRepository.seedInitialBodyFatIfEmpty(it)
+            // A restored backup brought the real profile, weight history and goals: keep them.
+            if (!state.restored) {
+                val profile = state.buildProfile()
+                container.profileRepository.save(profile)
+                container.weightRepository.seedInitialWeightIfEmpty(profile.weightKg)
+                // Only seed body fat when the user actually entered one in onboarding
+                // (the "Yes I know my body fat %" branch); the "No" branch leaves
+                // bodyFatPercentage null and the store stays empty.
+                profile.bodyFatPercentage?.let {
+                    container.bodyFatRepository.seedInitialBodyFatIfEmpty(it)
+                }
             }
             container.prefs.setNotificationsEnabled(state.notificationsEnabled)
             container.prefs.setHealthConnectEnabled(state.healthConnectEnabled)
@@ -356,16 +460,18 @@ class OnboardingViewModel(private val container: AppContainer) : ViewModel() {
                     if (state.coachHealthDataEnabled) java.time.Instant.now().toString() else null
                 )
             }
+            // A restored backup already carries the speech provider choice; only new installs get
+            // the default that matches the AI provider.
             if (state.aiPhase == OnboardingAiPhase.LOCAL) {
                 container.prefs.selectLocalGemmaOrMarkPending()
-                container.prefs.setInitialSpeechProviderForAIProvider(AIProvider.LOCAL_GEMMA)
+                if (!state.restored) container.prefs.setInitialSpeechProviderForAIProvider(AIProvider.LOCAL_GEMMA)
             } else {
                 container.prefs.setSelectedAIProvider(state.aiProvider)
                 container.prefs.setSelectedAIModel(state.aiModel)
                 if (state.apiKey.isNotBlank()) {
                     container.keyStore.setApiKey(state.aiProvider, state.apiKey.trim())
                 }
-                container.prefs.setInitialSpeechProviderForAIProvider(state.aiProvider)
+                if (!state.restored) container.prefs.setInitialSpeechProviderForAIProvider(state.aiProvider)
             }
             // New installs start with Energy Burn on, and Adaptive Goals on unless the
             // user hand-tuned their plan (adaptive would overwrite it). Existing users are
@@ -374,9 +480,12 @@ class OnboardingViewModel(private val container: AppContainer) : ViewModel() {
             // the first auto-run lands next week.
             // Never overrides a mode chosen earlier (e.g. a re-run onboarding after restore).
             container.prefs.setHealthRecordsAiModeIfUnset(state.recordsAiMode.raw)
-            container.prefs.setAdaptiveGoalsEnabled(!planEdited)
-            container.prefs.setHealthEnergyGoalsEnabled(true)
-            container.prefs.setAdaptiveGoalsLastCheckDay(LocalDate.now().toString())
+            // A restored backup keeps its own Adaptive Goals / Energy Burn settings and check day.
+            if (!state.restored) {
+                container.prefs.setAdaptiveGoalsEnabled(!planEdited)
+                container.prefs.setHealthEnergyGoalsEnabled(true)
+                container.prefs.setAdaptiveGoalsLastCheckDay(LocalDate.now().toString())
+            }
             container.prefs.setOnboardingCompleted(true)
             if (state.healthHubEnabled) {
                 container.requestHealthSync(

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Restore from a backup</string>
+    <string name="onboarding_restore_title">Restore from a backup</string>
+    <string name="onboarding_restore_message">Bring back your profile, goals, food log and settings from an Ayuvo backup. You\'ll still set up notifications, Health Connect and AI on this phone. API keys are never in a backup.</string>
+    <string name="onboarding_restore_file">Choose a backup file</string>
+    <string name="onboarding_restore_drive">Restore from Google Drive</string>
+    <string name="onboarding_restore_busy">Restoring your backup…</string>
+    <string name="onboarding_restore_error_no_drive">No Ayuvo backup was found in that Google account\'s Drive.</string>
+    <string name="onboarding_restore_error_no_profile">That backup doesn\'t include a profile. Choose another backup, or continue setting up here.</string>
+    <string name="onboarding_restore_error_failed">Couldn\'t restore the backup: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Couldn\'t restore the backup.</string>
+</resources>

@@ -415,8 +415,9 @@ private fun AllDataGroup(ctx: SettingsPageContext) {
     AllDataImportDialogs(import, onConfirm = importer::confirm, onDismiss = importer::dismiss)
 }
 
+/** Preview / result dialogs of Import All Data; onboarding's "Restore from a backup" reuses them. */
 @Composable
-private fun AllDataImportDialogs(ui: AllDataImportUi, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+internal fun AllDataImportDialogs(ui: AllDataImportUi, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     val muted = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f)
     when (ui) {
         is AllDataImportUi.Invalid -> GlassDialog(onDismissRequest = onDismiss) {

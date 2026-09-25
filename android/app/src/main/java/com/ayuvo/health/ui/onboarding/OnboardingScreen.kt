@@ -74,6 +74,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -136,8 +137,17 @@ fun OnboardingScreen(container: AppContainer, onComplete: () -> Unit) {
 
     // Match the on-screen chevron: system back / gesture must use vm.back() so BYOK → choice
     // (and other nested steps) don't pop the whole onboarding destination.
-    val canNavigateBack = ui.step != OnboardingStep.WELCOME && ui.step != OnboardingStep.BUILDING_PLAN
+    // After "Restore from a backup" the first remaining step has no profile steps behind it.
+    val canNavigateBack = ui.canGoBack
     BackHandler(enabled = canNavigateBack) { vm.back() }
+    var showRestoreChooser by remember { mutableStateOf(false) }
+    OnboardingRestoreHost(
+        container = container,
+        vm = vm,
+        ui = ui,
+        showChooser = showRestoreChooser,
+        onChooserDismiss = { showRestoreChooser = false }
+    )
 
     Column(
         Modifier
@@ -159,16 +169,19 @@ fun OnboardingScreen(container: AppContainer, onComplete: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.ChevronLeft,
-                    contentDescription = stringResource(R.string.onboarding_back),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .size(28.dp)
-                        .clickable { vm.back() }
-                )
-                val totalSteps = OnboardingStep.values().size
-                val progress = ui.step.ordinal.toFloat() / (totalSteps - 1).toFloat()
+                if (ui.canGoBack) {
+                    Icon(
+                        imageVector = Icons.Outlined.ChevronLeft,
+                        contentDescription = stringResource(R.string.onboarding_back),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable { vm.back() }
+                    )
+                } else {
+                    Spacer(Modifier.size(28.dp))
+                }
+                val progress = ui.progress
                 Box(
                     Modifier
                         .weight(1f)
@@ -268,10 +281,10 @@ fun OnboardingScreen(container: AppContainer, onComplete: () -> Unit) {
         when (ui.step) {
             OnboardingStep.WELCOME -> {
                 // iOS Welcome: full-width pink-gradient "Get Started" capsule.
-                Box(
+                Column(
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 36.dp)
+                        .padding(start = 24.dp, end = 24.dp, top = 36.dp, bottom = 16.dp)
                 ) {
                     Box(
                         modifier = Modifier
@@ -290,6 +303,21 @@ fun OnboardingScreen(container: AppContainer, onComplete: () -> Unit) {
                             stringResource(R.string.action_get_started),
                             color = Color.White,
                             style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    // Restore a backup made by Ayuvo: a file (Files / Google Drive picker) or the
+                    // Drive backup (docs/cloud-backup.md).
+                    TextButton(
+                        onClick = { showRestoreChooser = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                            .testTag("onboarding.restoreBackup")
+                    ) {
+                        Text(
+                            stringResource(R.string.onboarding_restore_action),
+                            color = AppColors.Calorie,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -333,7 +361,10 @@ fun OnboardingScreen(container: AppContainer, onComplete: () -> Unit) {
                     ui.aiPhase != OnboardingAiPhase.CHOICE
                 if (showContinue) {
                     Button(
-                        onClick = { vm.next() },
+                        // A restored onboarding ends after AI setup: no Building Plan / Plan Ready.
+                        onClick = {
+                            if (ui.restored && ui.step == OnboardingStep.PROVIDER) vm.complete(onComplete) else vm.next()
+                        },
                         enabled = ui.canAdvance,
                         shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(

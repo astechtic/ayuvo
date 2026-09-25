@@ -15,6 +15,10 @@ struct ImportAllDataView: View {
     @Environment(CoachStore.self) private var chatStore
     @Environment(\.dismiss) private var dismiss
 
+    /// Called once when the sheet goes away. `true` when settings, profile & logs were restored
+    /// from the file (onboarding uses it to skip the profile steps).
+    var onFinish: ((_ restoredSettingsAndProfile: Bool) -> Void)?
+
     @State private var showPicker = false
     @State private var workDirectory: URL?
     @State private var archiveURL: URL?
@@ -71,8 +75,18 @@ struct ImportAllDataView: View {
             .fileImporter(isPresented: $showPicker, allowedContentTypes: [.zip]) { result in
                 load(result)
             }
-            .onDisappear(perform: cleanUp)
+            .onDisappear {
+                cleanUp()
+                onFinish?(restoredAppBackup)
+            }
         }
+    }
+
+    private var restoredAppBackup: Bool {
+        results?.contains { result in
+            if case .imported = result.outcome { return result.section == .appBackup }
+            return false
+        } ?? false
     }
 
     // MARK: - Sections

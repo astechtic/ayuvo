@@ -69,6 +69,20 @@ struct OnboardingView: View {
 
     private let totalSteps = 14 // 0-13
 
+    /// Restore from a backup (welcome screen): the profile, goals and settings come from the file,
+    /// so only the steps that need this phone run — notifications (9), Apple Health (10) and AI
+    /// setup (11, on-device model and API key). Building Plan / Plan Ready are skipped.
+    @State private var showRestoreSheet = false
+    @State private var restoredFromBackup = false
+    private static let firstRestoredStep = 9
+
+    private var progressFraction: CGFloat {
+        if restoredFromBackup {
+            return CGFloat(step - Self.firstRestoredStep + 1) / 4
+        }
+        return CGFloat(step) / CGFloat(totalSteps - 1)
+    }
+
     /// Step 11 chooser: a cloud provider with the user's own key, or the on-device model.
     private enum AISetupMode: String, CaseIterable, Identifiable {
         case cloud
@@ -141,14 +155,17 @@ struct OnboardingView: View {
         VStack(spacing: 0) {
                 if step > 0 && step < totalSteps - 1 {
                     HStack(spacing: 16) {
-                        Button {
-                            withAnimation(.snappy) {
-                                step -= 1
+                        // A restored backup has no profile steps to go back to.
+                        if !(restoredFromBackup && step == Self.firstRestoredStep) {
+                            Button {
+                                withAnimation(.snappy) {
+                                    step -= 1
+                                }
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(.primary)
                             }
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(.primary)
                         }
 
                         GeometryReader { geo in
@@ -157,7 +174,7 @@ struct OnboardingView: View {
                                     .fill(Color.primary.opacity(0.08))
                                 Capsule()
                                     .fill(Color.primary)
-                                    .frame(width: geo.size.width * CGFloat(step) / CGFloat(totalSteps - 1))
+                                    .frame(width: geo.size.width * progressFraction)
                                     .animation(.snappy, value: step)
                             }
                         }
@@ -194,6 +211,31 @@ struct OnboardingView: View {
                 ))
                 .animation(.snappy, value: step)
             }
+            .sheet(isPresented: $showRestoreSheet) {
+                ImportAllDataView { restoredSettingsAndProfile in
+                    if restoredSettingsAndProfile { adoptRestoredBackup() }
+                }
+            }
+    }
+
+    /// The backup replaced the profile, goals and settings (`AppBackupService.restore`). Re-read
+    /// what the later steps show, then jump to the steps that still need this phone.
+    private func adoptRestoredBackup() {
+        guard UserProfile.load() != nil else { return }
+        restoredFromBackup = true
+        aiSetupMode = OnboardingView.initialAISetupMode()
+        byokProvider = OnboardingView.initialCloudProvider()
+        byokModel = OnboardingView.initialCloudModel()
+        byokApiKey = AIProviderSettings.apiKey(for: byokProvider) ?? ""
+        byokBaseURL = AIProviderSettings.customBaseURL(for: byokProvider) ?? ""
+        coachHealthConsent = UserDefaults.standard.object(forKey: "coachHealthDataEnabled") as? Bool ?? true
+        withAnimation(.snappy) { step = Self.firstRestoredStep }
+    }
+
+    /// Last step of a restored onboarding: the profile, goals, speech choice and sort order came
+    /// from the backup, so this only opens the app (no `SpeechSettings.setInitialProvider`).
+    private func finishRestoredOnboarding() {
+        hasCompletedOnboarding = true
     }
 
     // MARK: - Continue Button
@@ -265,7 +307,20 @@ struct OnboardingView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 36)
+            .padding(.bottom, 12)
+
+            Button {
+                showRestoreSheet = true
+            } label: {
+                Label("Restore from a backup", systemImage: "square.and.arrow.down")
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    .foregroundStyle(AppColors.calorie)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 24)
+            .accessibilityIdentifier("onboarding.restoreBackup")
         }
     }
 
@@ -824,26 +879,33 @@ struct OnboardingView: View {
                             healthDataStore.setCoachAccess(coachHealthConsent)
                             healthDataStore.authorizationDidChange()
 
-                            // Write current profile data to Health
-                            let p = profile
-                            healthKitManager.writeWeight(kg: p.weightKg, date: .now)
-                            healthKitManager.writeHeight(cm: p.heightCm)
-                            if let bf = p.bodyFatPercentage {
-                                healthKitManager.writeBodyFat(fraction: bf)
-                            }
+                            // A restored profile is already complete and its weight history came
+                            // with the backup: don't write it to Health again or read it back.
+                            if !restoredFromBackup {
+                                // Write current profile data to Health
+                                let p = profile
+                                healthKitManager.writeWeight(kg: p.weightKg, date: .now)
+                                healthKitManager.writeHeight(cm: p.heightCm)
+                                if let bf = p.bodyFatPercentage {
+                                    healthKitManager.writeBodyFat(fraction: bf)
+                                }
 
-                            // Read Health data back into profile
-                            let measurements = await healthKitManager.fetchLatestBodyMeasurements()
-                            if let dob = measurements.dob {
-                                birthday = dob
-                            }
-                            if let sex = measurements.sex {
-                                switch sex {
-                                case .male: gender = .male
-                                case .female: gender = .female
-                                default: break
+                                // Read Health data back into profile
+                                let measurements = await healthKitManager.fetchLatestBodyMeasurements()
+                                if let dob = measurements.dob {
+                                    birthday = dob
+                                }
+                                if let sex = measurements.sex {
+                                    switch sex {
+                                    case .male: gender = .male
+                                    case .female: gender = .female
+                                    default: break
+                                    }
                                 }
                             }
+                        } else if restoredFromBackup {
+                            // The backup carried "Health on", but this phone hasn't granted access.
+                            UserDefaults.standard.set(false, forKey: "healthKitEnabled")
                         }
                         withAnimation(.snappy) { step += 1 }
                     }
@@ -883,8 +945,11 @@ struct OnboardingView: View {
                     .padding(.horizontal, 24)
                     .transition(.opacity)
 
-                    recordsAIModeCard
-                        .padding(.horizontal, 24)
+                    // A restored backup already carries the Health Records AI mode.
+                    if !restoredFromBackup || UserDefaults.standard.string(forKey: RecordsAIMode.storageKey) == nil {
+                        recordsAIModeCard
+                            .padding(.horizontal, 24)
+                    }
 
                     aiPrivacyNoticeCard
                         .padding(.horizontal, 24)
@@ -1346,7 +1411,15 @@ struct OnboardingView: View {
         }
         aiConsentGiven = true
         acceptedTermsAndPrivacy = true
-        withAnimation(.snappy) { step += 1 }
+        if restoredFromBackup {
+            // Records AI mode: only when the backup didn't carry one (§16).
+            if UserDefaults.standard.string(forKey: RecordsAIMode.storageKey) == nil {
+                UserDefaults.standard.set(effectiveRecordsAIMode.rawValue, forKey: RecordsAIMode.storageKey)
+            }
+            finishRestoredOnboarding()
+        } else {
+            withAnimation(.snappy) { step += 1 }
+        }
     }
 
     private func aiNoticeRow(icon: String, title: String, text: String) -> some View {

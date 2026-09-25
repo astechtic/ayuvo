@@ -32,6 +32,9 @@ object CloudBackupPolicy {
         // Today / My Metrics widget snapshot (docs/widgets.md): device-local.
         "widgetDashboardSnapshot",
         "lastNotifiedUpdateVersion",
+        // Whether THIS install finished onboarding is device state: restoring it from the welcome
+        // screen would end onboarding before the notification, Health Connect and AI steps ran.
+        "hasCompletedOnboarding",
         "cloudBackupFileId",
         // Health Data hub device-local cursors/throttles (the mirror itself lives in
         // ayuvo_health.db, which never enters any backup).

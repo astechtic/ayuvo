@@ -100,6 +100,18 @@ struct CloudBackupArchiveTests {
         #expect(CloudBackupPolicy.version == 1)
     }
 
+    @Test func onboardingCompletionStaysOnTheDeviceSoARestoreCannotEndOnboarding() throws {
+        let values: [String: CloudBackupValue] = [
+            "hasCompletedOnboarding": .bool(true),
+            "userProfile": .string("{}"),
+        ]
+        let zip = try CloudBackupArchive.pack(values: values, photos: [:], exportedAt: "2026-09-25T10:00:00Z", appVersion: "1.0")
+        let (document, _) = try CloudBackupArchive.unpack(zip)
+        #expect(document.payload.values["hasCompletedOnboarding"] == nil)
+        #expect(document.payload.values["userProfile"] != nil)
+        #expect(!CloudBackupPolicy.include("hasCompletedOnboarding"))
+    }
+
     @Test func healthDatabaseDirectoryIsOutsideEveryBackedUpKey() {
         // The mirror lives on disk, never in UserDefaults, so no cloud-backup key can carry it.
         let directory = HealthDatabaseLocation.directory()

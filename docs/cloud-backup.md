@@ -17,6 +17,24 @@ The settings/profile/logs part of that zip (`app-backup/ayuvo-backup.zip`) is th
 
 Settings → Data & Privacy → Backup & Export: the Google Drive backup section, then the same two rows (Export All Data, Import All Data; `AllDataImportPlan` + `AllDataImportCoordinator`). The per-type Export/Import Diary and Health Data rows, the Browse menu Export/Import Health Data items, the Meds menu Export/Import items and the local Health Records archive export/restore were removed on 2026-09-22; the Drive records backup stays. Import All Data validates `manifest.json` (app `Ayuvo`, format `ayuvo-all-data`, version ≤ 1, safe and present entries; unknown sections ignored), shows a preview, then runs app_backup → food_diary → health_data → medications → health_records → coach_chats on the app scope, reporting each section. The app backup is applied only from an Android export (`CloudBackupCoordinator.applyArchive(fromFile = true)`: keeps the Drive backup state and the device-only excluded keys) and then the food diary part is skipped; from an iPhone export the app backup is skipped and the food diary JSON is merged with `DiaryImportMode.MERGE` (matching entries updated, new ones added, nothing deleted; water deduplicated by id or same time and amount — same rule as iOS `.merge`). Health data (`MERGE`), medications (§14 merge) and Health Records (§35 Merge) never delete.
 
+## Restore from a backup during onboarding (both platforms)
+
+The Welcome step has a "Restore from a backup" button under Get Started.
+
+| Platform | Sources |
+|----------|---------|
+| iOS | An Export All Data zip picked in Files (iCloud Drive and other providers included): the whole `ImportAllDataView` (preview, then each section's importer). |
+| Android | The same Export All Data import through the system picker (`ACTION_OPEN_DOCUMENT` lists Google Drive), **or** the Google Drive backup (account picker → Drive authorization → download → the same `applyArchive` as Settings › Restore now). The Drive option needs `CLOUD_BACKUP_WEB_CLIENT_ID` and is hidden without it. |
+
+When the **app backup** part was restored (iPhone zip on iPhone, Android zip or Drive backup on Android) the profile, goals and settings are in place, so onboarding skips the profile steps, Building Plan and Plan Ready and runs only what needs this phone: notifications (permission), Apple Health / Health Connect (permission), AI setup (on-device model download or API key; API keys are never in a backup). The last of those completes onboarding. A restore that carries no app backup (an iPhone zip on Android, an Android zip on iPhone, or no profile in it) leaves the normal onboarding in place after its other sections were merged.
+
+Details that keep the restore honest:
+
+- `hasCompletedOnboarding` is in `CloudBackupPolicy.excludedKeys` on both platforms. It is device state; restoring it would end onboarding (iOS swaps to the main UI at once) before the permission and AI steps ran.
+- A restored onboarding does not run the new-install seeding: no profile overwrite, no first weight or body-fat entry, no default speech provider, and the backup's Adaptive Goals / Energy Burn settings and Records AI mode are kept (iOS: `restoredDuringOnboarding` in `calorietrackerApp`; Android: `OnboardingState.restored` in `complete()`).
+- iOS skips the Apple Health write-back / read-back of profile fields for a restored profile, and clears `healthKitEnabled` if this phone did not grant access.
+- The state is in memory: quitting mid-way returns to the Welcome step (the restored profile is still there and can be restored again or replaced by the normal steps).
+
 ### Drive setup
 
 1. Create a Google Cloud project and enable the Drive API.

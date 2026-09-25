@@ -106,6 +106,19 @@ class CloudBackupArchiveTest {
         assertTrue(kept.none { it.startsWith("health_") || it.contains("ayuvo_health") })
     }
 
+    /** A restore from the welcome screen must not mark this install's onboarding as finished. */
+    @Test
+    fun onboardingCompletionNeverEntersTheArchive() {
+        val values = mapOf(
+            "hasCompletedOnboarding" to CloudBackupValue.bool(true),
+            "userProfile" to CloudBackupValue.string("{}"),
+        )
+        val unpack = CloudBackupArchive.unpack(
+            CloudBackupArchive.pack(values = values, photos = emptyMap(), exportedAt = "2026-09-25T12:00:00Z", appVersion = "7.0")
+        )
+        assertEquals(setOf("userProfile"), unpack.document.payload.values.keys)
+    }
+
     @Test
     fun healthRecordsPreferencesNeverEnterTheArchive() {
         val values = mapOf(
