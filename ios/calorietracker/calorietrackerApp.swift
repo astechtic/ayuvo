@@ -117,6 +117,11 @@ struct calorietrackerApp: App {
                     Task { await recordsStore.importOpenIn(url: url) }
                     return
                 }
+                // Actions: ayuvo://action/<id>?… and ayuvo://open/<section> (docs/actions.md).
+                if url.scheme == "ayuvo", url.host == "action" || url.host == "open" {
+                    ActionRouteCoordinator.request(link: url.absoluteString)
+                    return
+                }
                 // Share extension "Save to Health Records" hand-off.
                 if url.scheme == "ayuvo", url.host == "records-inbox" {
                     Task { await recordsStore.drainInbox() }

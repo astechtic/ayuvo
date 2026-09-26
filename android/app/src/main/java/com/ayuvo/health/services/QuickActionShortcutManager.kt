@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import com.ayuvo.health.MainActivity
 import com.ayuvo.health.R
+import com.ayuvo.health.actions.ActionShortcutPublisher
 import com.ayuvo.health.models.QuickAction
 
 object QuickActionShortcutManager {
@@ -17,7 +18,9 @@ object QuickActionShortcutManager {
     fun update(context: Context, actions: List<QuickAction>) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) return
         val manager = context.getSystemService(ShortcutManager::class.java) ?: return
-        manager.dynamicShortcuts = actions.take(3).mapIndexed { index, action ->
+        // Recently used actions (ActionShortcutPublisher) stay; only the quick-action slots are replaced.
+        val pushed = manager.dynamicShortcuts.filter { it.id.startsWith(ActionShortcutPublisher.ID_PREFIX) }
+        val quick = actions.take(3).mapIndexed { index, action ->
             val intent = Intent(context, MainActivity::class.java).apply {
                 this.action = INTENT_ACTION
                 putExtra(EXTRA_ACTION, action.name)
@@ -30,7 +33,11 @@ object QuickActionShortcutManager {
                 .setIntent(intent)
                 .build()
         }
+        val room = (manager.maxShortcutCountPerActivity - quick.size - staticCount(manager)).coerceAtLeast(0)
+        runCatching { manager.dynamicShortcuts = quick + pushed.take(room) }
     }
+
+    private fun staticCount(manager: ShortcutManager): Int = runCatching { manager.manifestShortcuts.size }.getOrDefault(0)
 
     fun actionFrom(intent: Intent?): QuickAction? {
         if (intent?.action != INTENT_ACTION) return null

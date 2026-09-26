@@ -73,13 +73,20 @@ final class WaterStore {
     /// True while an unreadable blob is on disk without a backup copy.
     var isPersistenceBlocked: Bool { entriesBlob.isWriteBlocked }
 
-    init(defaults: UserDefaults = .standard, corruptBackupDirectory: URL? = nil) {
+    static let externalChangeNotification = Notification.Name("app.ayuvo.waterEntriesDidChange")
+
+    init(defaults: UserDefaults = .standard, corruptBackupDirectory: URL? = nil, observesExternalChanges: Bool = true) {
         self.entriesBlob = PersistedBlobGuard(
             defaults: defaults,
             key: WaterSettings.entriesKey,
             backupDirectory: corruptBackupDirectory
         )
         load(isInitialLoad: true)
+        if observesExternalChanges { startObservingExternalChanges() }
+    }
+
+    deinit {
+        if let externalChangeObserver { NotificationCenter.default.removeObserver(externalChangeObserver) }
     }
 
     private func load(isInitialLoad: Bool) {
@@ -150,5 +157,27 @@ final class WaterStore {
 
     private func save() {
         entriesBlob.save(entries)
+    }
+
+    // MARK: - External changes (Siri / Shortcuts / deep-link actions run in this process)
+
+    @ObservationIgnored private var externalChangeObserver: NSObjectProtocol?
+
+    private func startObservingExternalChanges() {
+        externalChangeObserver = NotificationCenter.default.addObserver(
+            forName: Self.externalChangeNotification, object: nil, queue: nil
+        ) { [weak self] _ in
+            if Thread.isMainThread {
+                MainActor.assumeIsolated { self?.reloadFromDefaults() }
+            } else {
+                DispatchQueue.main.async { self?.reloadFromDefaults() }
+            }
+        }
+    }
+
+    /// Tells the app's live store that an action wrote through a separate instance, so the next
+    /// save here cannot overwrite that write with a stale in-memory copy.
+    static func postExternalChangeNotification() {
+        NotificationCenter.default.post(name: externalChangeNotification, object: nil)
     }
 }

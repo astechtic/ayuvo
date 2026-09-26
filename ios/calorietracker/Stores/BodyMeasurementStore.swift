@@ -10,9 +10,17 @@ class BodyMeasurementStore {
     private(set) var entries: [BodyMeasurement] = []
 
     private let storageKey = "bodyMeasurementEntries"
+    private let defaults: UserDefaults
+    static let externalChangeNotification = Notification.Name("app.ayuvo.bodyMeasurementsDidChange")
 
-    init() {
+    init(defaults: UserDefaults = .standard, observesExternalChanges: Bool = true) {
+        self.defaults = defaults
         loadEntries()
+        if observesExternalChanges { startObservingExternalChanges() }
+    }
+
+    deinit {
+        if let externalChangeObserver { NotificationCenter.default.removeObserver(externalChangeObserver) }
     }
 
     var latestEntry: BodyMeasurement? {
@@ -71,14 +79,36 @@ class BodyMeasurementStore {
 
     private func saveEntries() {
         if let data = try? JSONEncoder().encode(entries) {
-            UserDefaults.standard.set(data, forKey: storageKey)
+            defaults.set(data, forKey: storageKey)
         }
     }
 
     private func loadEntries() {
-        guard let data = UserDefaults.standard.data(forKey: storageKey),
+        guard let data = defaults.data(forKey: storageKey),
               let decoded = try? JSONDecoder().decode([BodyMeasurement].self, from: data)
         else { return }
         entries = decoded
+    }
+
+    // MARK: - External changes (Siri / Shortcuts / deep-link actions run in this process)
+
+    @ObservationIgnored private var externalChangeObserver: NSObjectProtocol?
+
+    private func startObservingExternalChanges() {
+        externalChangeObserver = NotificationCenter.default.addObserver(
+            forName: Self.externalChangeNotification, object: nil, queue: nil
+        ) { [weak self] _ in
+            if Thread.isMainThread {
+                MainActor.assumeIsolated { self?.reloadFromDefaults() }
+            } else {
+                DispatchQueue.main.async { self?.reloadFromDefaults() }
+            }
+        }
+    }
+
+    /// Tells the app's live store that an action wrote through a separate instance, so the next
+    /// save here cannot overwrite that write with a stale in-memory copy.
+    static func postExternalChangeNotification() {
+        NotificationCenter.default.post(name: externalChangeNotification, object: nil)
     }
 }

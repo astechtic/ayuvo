@@ -55,6 +55,10 @@ struct ChatView: View {
     @State private var recordsSuggestions = CoachRecordsSuggestions()
     @State private var approvalBox = CoachRecordsApprovalBox()
     @State private var showPreSendApproval = false
+    /// Coach `propose_action` cards per assistant message (in memory; never stored in the transcript).
+    @State private var actionProposals: [String: [CoachActionProposal]] = [:]
+    @State private var proposalOutcomes: [UUID: String] = [:]
+    @State private var runningProposal: UUID?
     @ScaledMetric(relativeTo: .title2) private var coachHeroSize = 92.0
     @ScaledMetric(relativeTo: .title2) private var coachHeroIconSize = 38.0
     @ScaledMetric(relativeTo: .body) private var composerControlSize = 40.0
@@ -390,6 +394,18 @@ struct ChatView: View {
                                 )
                                 .padding(.leading, 52)
                                 .padding(.trailing, 48)
+                                ForEach(actionProposals[msg.id] ?? []) { proposal in
+                                    CoachActionProposalCard(
+                                        proposal: proposal,
+                                        outcome: proposalOutcomes[proposal.id],
+                                        isRunning: runningProposal == proposal.id,
+                                        onConfirm: { confirmProposal(proposal) },
+                                        onDismiss: { proposalOutcomes[proposal.id] = String(localized: "Not saved.") }
+                                    )
+                                    .padding(.leading, 52)
+                                    .padding(.trailing, 48)
+                                    .padding(.top, 6)
+                                }
                             }
                         }
                         .id(msg.id)
@@ -1033,8 +1049,12 @@ struct ChatView: View {
                 // Health Data hub: nil unless Health sync and the Coach consent are both on.
                 let health = await healthDataStore.coachContext()
                 let reply = try await sendWithRecords(history: historyForCall, text: textForAI, images: imagesForAI, health: health)
-                await chatStore.append(ChatMessage(role: .assistant, content: reply.text,
-                                                   recordRefs: reply.refs.isEmpty ? nil : reply.refs))
+                let assistant = ChatMessage(role: .assistant, content: reply.text,
+                                            recordRefs: reply.refs.isEmpty ? nil : reply.refs)
+                await chatStore.append(assistant)
+                if !reply.proposals.isEmpty {
+                    actionProposals[chatStore.messages.last(where: { $0.role == .assistant })?.id ?? assistant.id] = reply.proposals
+                }
             } catch {
                 errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             }
@@ -1238,7 +1258,7 @@ struct ChatView: View {
 
     /// Builds the records context, sends, and retries on the on-device Coach when the user picks it
     /// during a records tool call.
-    private func sendWithRecords(history: [ChatMessage], text: String, images: [Data], health: CoachHealthContext?) async throws -> (text: String, refs: [ChatRecordRef]) {
+    private func sendWithRecords(history: [ChatMessage], text: String, images: [Data], health: CoachHealthContext?) async throws -> (text: String, refs: [ChatRecordRef], proposals: [CoachActionProposal]) {
         for attempt in 0..<2 {
             let needsApproval = recordsNeedOnlineApproval()
             let box = approvalBox
@@ -1250,6 +1270,7 @@ struct ChatView: View {
                 requestApproval: { await box.ask(providerName: provider.name, offersOnDevice: offersOnDevice) }
             )
             var records: CoachRecordsContext? = await recordsStore.coachContext(selected: chatStore.selectedRecords, session: session)
+            let proposalSink = CoachActionProposalSink()
             if chatStore.recordsOnlineDecision == .cancel { records = nil }
             do {
                 let reply = try await ChatService.sendMessage(
@@ -1273,10 +1294,11 @@ struct ChatView: View {
                     medications: await medicationStore.coachContext(),
                     sources: chatStore.dataSwitches,
                     providerOverride: chatStore.providerOverride,
-                    profileOverride: chatStore.modelOverride.profileID
+                    profileOverride: chatStore.modelOverride.profileID,
+                    actionProposals: proposalSink
                 )
                 if needsApproval, let decision = await session.decision { applyOnlineDecision(decision) }
-                return (reply, await session.refs)
+                return (reply, await session.refs, proposalSink.proposals)
             } catch ChatService.ChatError.recordsSwitchToOnDevice where attempt == 0 {
                 applyOnlineDecision(.useOnDevice)
                 continue
@@ -1286,6 +1308,21 @@ struct ChatView: View {
             }
         }
         throw ChatService.ChatError.invalidResponse
+    }
+
+    /// The user's OK on a Coach proposal: the only way a Coach suggestion ever changes data.
+    private func confirmProposal(_ proposal: CoachActionProposal) {
+        guard runningProposal == nil else { return }
+        runningProposal = proposal.id
+        Task {
+            defer { runningProposal = nil }
+            do {
+                let result = try await ActionExecutor.shared.perform(proposal.validation, source: .app, confirmed: true)
+                proposalOutcomes[proposal.id] = result.dialog
+            } catch {
+                proposalOutcomes[proposal.id] = (error as? ActionError)?.message ?? error.localizedDescription
+            }
+        }
     }
 
     private func openCamera() {

@@ -48,35 +48,55 @@ enum AppMetricSampleExtractor {
     static func ms(_ date: Date) -> Int64 { Int64((date.timeIntervalSince1970 * 1000).rounded()) }
 
     static func entries(for metric: AppMetric, sources: MetricDataSources, now: Date = Date(), calendar: Calendar = .current) -> [MetricsReference.Entry] {
+        entries(
+            for: metric, food: sources.food, water: sources.water, fasting: sources.fasting, weight: sources.weight,
+            bodyFat: sources.bodyFat, workouts: sources.workouts, importedWorkouts: sources.importedWorkouts,
+            now: now, calendar: calendar
+        )
+    }
+
+    /// Store-level form for callers without a full `MetricDataSources` (Siri / Shortcuts actions).
+    static func entries(
+        for metric: AppMetric,
+        food: FoodStore,
+        water: WaterStore,
+        fasting: FastingStore,
+        weight: WeightStore,
+        bodyFat: BodyFatStore,
+        workouts: StrengthWorkoutStore,
+        importedWorkouts: ImportedHealthWorkoutStore,
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> [MetricsReference.Entry] {
         let zone = MetricsReference.Zone(calendar: calendar)
         switch metric {
         case .calories:
-            return sources.food.entries.map { .init(tMs: ms($0.timestamp), value: Double($0.calories)) }
+            return food.entries.map { .init(tMs: ms($0.timestamp), value: Double($0.calories)) }
         case .protein:
-            return sources.food.entries.map { .init(tMs: ms($0.timestamp), value: $0.protein) }
+            return food.entries.map { .init(tMs: ms($0.timestamp), value: $0.protein) }
         case .carbs:
-            return sources.food.entries.map { .init(tMs: ms($0.timestamp), value: $0.carbs) }
+            return food.entries.map { .init(tMs: ms($0.timestamp), value: $0.carbs) }
         case .fat:
-            return sources.food.entries.map { .init(tMs: ms($0.timestamp), value: $0.fat) }
+            return food.entries.map { .init(tMs: ms($0.timestamp), value: $0.fat) }
         case .fiber:
-            return sources.food.entries.map { .init(tMs: ms($0.timestamp), value: $0.fiber) }
+            return food.entries.map { .init(tMs: ms($0.timestamp), value: $0.fiber) }
         case .water:
-            return sources.water.entries.map { .init(tMs: ms($0.date), value: Double($0.milliliters)) }
+            return water.entries.map { .init(tMs: ms($0.date), value: Double($0.milliliters)) }
         case .weight:
-            return sources.weight.entries.map { .init(tMs: ms($0.date), value: $0.weightKg) }
+            return weight.entries.map { .init(tMs: ms($0.date), value: $0.weightKg) }
         case .bodyFat:
-            return sources.bodyFat.entries.map { .init(tMs: ms($0.date), value: $0.bodyFatFraction * 100) }
+            return bodyFat.entries.map { .init(tMs: ms($0.date), value: $0.bodyFatFraction * 100) }
         case .fasting:
-            let inputs = sources.fasting.sessions.map {
+            let inputs = fasting.sessions.map {
                 MetricsReference.FastingInput(startedAtMs: ms($0.startedAt), endedAtMs: $0.endedAt.map(ms))
             }
             return MetricsReference.fastingSecondsPerDay(sessions: inputs, nowMs: ms(now), zone: zone)
                 .map { .init(tMs: zone.midnight($0.day), value: Double($0.seconds)) }
         case .workouts, .workoutMinutes:
-            let strength = sources.workouts.completedSessions.map { session in
+            let strength = workouts.completedSessions.map { session in
                 (key: session.stableDiaryDateKey, started: session.startedAt, duration: session.durationSeconds)
             }
-            let imported = sources.importedWorkouts.workouts.map { workout in
+            let imported = importedWorkouts.workouts.map { workout in
                 (key: workout.diaryDateKey, started: workout.startedAt, duration: workout.durationSeconds)
             }
             return (strength + imported).map { item in
@@ -86,7 +106,7 @@ enum AppMetricSampleExtractor {
             }
         case .workoutBurn:
             return WorkoutBurnAggregation.daily(
-                sessions: sources.workouts.completedSessions,
+                sessions: workouts.completedSessions,
                 in: Date.distantPast...Date.distantFuture,
                 calendar: calendar
             ).map { .init(tMs: ms($0.date), value: Double($0.calories)) }

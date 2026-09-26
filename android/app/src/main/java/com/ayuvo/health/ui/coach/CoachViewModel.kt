@@ -1,5 +1,12 @@
 package com.ayuvo.health.ui.coach
 
+import com.ayuvo.health.actions.ActionException
+import com.ayuvo.health.actions.ActionProposal
+import com.ayuvo.health.actions.ActionRequest
+import com.ayuvo.health.actions.ActionResultText
+import com.ayuvo.health.actions.ActionSource
+import com.ayuvo.health.actions.CoachActionTools
+import com.ayuvo.health.actions.ValidationResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -128,7 +135,11 @@ data class CoachUiState(
     val modelOverrideProfileId: String? = null,
     val modelOverrideProvider: AIProvider? = null,
     /** The saved models the picker offers. */
-    val aiProfiles: List<CoachModelChoice> = emptyList()
+    val aiProfiles: List<CoachModelChoice> = emptyList(),
+    /** Writes Coach suggested (docs/actions.md); nothing runs until the user confirms a card. */
+    val actionProposals: List<ActionProposal> = emptyList(),
+    /** Result line shown on a confirmed card, by proposal id. */
+    val actionOutcomes: Map<String, String> = emptyMap()
 )
 
 @OptIn(FlowPreview::class)
@@ -214,6 +225,14 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                 container.recordsStore.revision.debounce(300).collect { refreshRecordChips() }
             }
         }
+
+        // "Ask Ayuvo Coach" action (docs/actions.md): the question is typed in, never sent for the user.
+        container.coachPromptRequests.filterNotNull()
+            .onEach { request ->
+                container.coachPromptRequests.compareAndSet(request, null)
+                _ui.update { it.copy(prefill = CoachPrefill(request.prompt)) }
+            }
+            .launchIn(viewModelScope)
 
         container.coachRecordsRequests.filterNotNull()
             .onEach { request ->
@@ -484,6 +503,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                         )
                     )
                 }
+                if (reply.proposals.isNotEmpty()) _ui.update { it.copy(actionProposals = it.actionProposals + reply.proposals) }
                 _ui.value = _ui.value.copy(sending = false)
             } catch (e: CoachNoProfile) {
                 _ui.value = _ui.value.copy(sending = false, errorRes = R.string.coach_no_profile_error)
@@ -567,7 +587,8 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                 medications = medicationsContext(),
                 sources = _ui.value.dataSwitches,
                 providerOverride = providerOverride,
-                profileOverride = modelOverride.profileId
+                profileOverride = modelOverride.profileId,
+                actions = CoachActionTools(container.actions)
             )
         }
 
@@ -881,7 +902,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             val conversation = Conversation(createdMs = System.currentTimeMillis())
             container.coachRepository.createConversation(conversation)
-            _ui.update { it.copy(messages = emptyList(), currentConversationId = conversation.id) }
+            _ui.update { it.copy(messages = emptyList(), actionProposals = emptyList(), actionOutcomes = emptyMap(), currentConversationId = conversation.id) }
             reloadConversations()
         }
     }
@@ -894,7 +915,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
             modelOverride = ConversationOverride.parse(conversation.providerOverride)
             modeDecision = null
             _ui.update {
-                it.copy(messages = messages, currentConversationId = conversation.id,
+                it.copy(messages = messages, currentConversationId = conversation.id, actionProposals = emptyList(), actionOutcomes = emptyMap(),
                         selectedRecords = emptyList(),
                         modelOverrideProfileId = modelOverride.profileId,
                         modelOverrideProvider = modelOverride.provider)
@@ -915,7 +936,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.coachRepository.deleteConversation(id, System.currentTimeMillis())
             if (_ui.value.currentConversationId == id) {
-                _ui.update { it.copy(messages = emptyList(), currentConversationId = null) }
+                _ui.update { it.copy(messages = emptyList(), actionProposals = emptyList(), actionOutcomes = emptyMap(), currentConversationId = null) }
             }
             reloadConversations()
             if (_ui.value.currentConversationId == null) {
@@ -928,7 +949,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
     fun duplicateConversation(id: String) {
         viewModelScope.launch {
             val copy = container.coachRepository.duplicateConversation(id, System.currentTimeMillis()) ?: return@launch
-            _ui.update { it.copy(messages = emptyList(), currentConversationId = copy.id) }
+            _ui.update { it.copy(messages = emptyList(), actionProposals = emptyList(), actionOutcomes = emptyMap(), currentConversationId = copy.id) }
             reloadConversations()
         }
     }
@@ -1015,6 +1036,32 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
             .mapNotNull { a -> files.bitmap(a.thumbnailPath ?: a.filePath)?.let { a.id to it } }
         if (loaded.isEmpty()) return
         _ui.update { it.copy(attachmentImages = it.attachmentImages + loaded) }
+    }
+
+    /** Runs a Coach proposal the user confirmed, through the same executor as every other surface. */
+    fun confirmProposal(id: String) {
+        val proposal = _ui.value.actionProposals.firstOrNull { it.id == id } ?: return
+        viewModelScope.launch {
+            val text = try {
+                when (val v = container.actions.validate(ActionRequest(proposal.actionId, proposal.params, ActionSource.APP))) {
+                    is ValidationResult.Failed -> container.appContext.getString(ActionResultText.errorRes(v.code))
+                    is ValidationResult.Ok -> {
+                        val result = container.actions.run(v.action)
+                        container.appContext.getString(
+                            R.string.coach_proposal_done,
+                            ActionResultText.describe(container.appContext, v.action.spec, result, container.actions.prefs())
+                        )
+                    }
+                }
+            } catch (e: ActionException) {
+                ActionResultText.error(container.appContext, e)
+            }
+            _ui.update { it.copy(actionOutcomes = it.actionOutcomes + (id to text)) }
+        }
+    }
+
+    fun dismissProposal(id: String) {
+        _ui.update { it.copy(actionProposals = it.actionProposals.filterNot { p -> p.id == id }, actionOutcomes = it.actionOutcomes - id) }
     }
 
     fun dismissError() { _ui.value = _ui.value.copy(error = null, errorRes = null) }

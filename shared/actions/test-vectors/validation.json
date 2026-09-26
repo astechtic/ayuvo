@@ -1,0 +1,2219 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "aggregation": "sum",
+          "metric": "steps",
+          "range": "this_week"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "health.metric.get",
+        "params": {
+          "aggregation": "sum",
+          "metric": "steps",
+          "range": "this_week"
+        }
+      },
+      "name": "ok health.metric.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "metric": "blood_glucose"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "health.metric.latest",
+        "params": {
+          "metric": "blood_glucose"
+        }
+      },
+      "name": "ok health.metric.latest"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "limit": 30,
+          "metric": "app:weight",
+          "range": "last_30_days"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "health.metric.samples",
+        "params": {
+          "limit": 30,
+          "metric": "app:weight",
+          "range": "last_30_days"
+        }
+      },
+      "name": "ok health.metric.samples"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "health.sleep.lastNight",
+        "params": {}
+      },
+      "name": "ok health.sleep.lastNight"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "range": "today"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "nutrition.summary.get",
+        "params": {}
+      },
+      "name": "ok nutrition.summary.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "aggregation": "sum",
+          "nutrient": "protein",
+          "range": "yesterday"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "nutrition.nutrient.get",
+        "params": {
+          "nutrient": "protein",
+          "range": "yesterday"
+        }
+      },
+      "name": "ok nutrition.nutrient.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "limit": 50,
+          "meal": "breakfast",
+          "range": "today"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "nutrition.meals.list",
+        "params": {
+          "meal": "breakfast"
+        }
+      },
+      "name": "ok nutrition.meals.list"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "nutrition.targets.get",
+        "params": {}
+      },
+      "name": "ok nutrition.targets.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "range": "today"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "water.get",
+        "params": {}
+      },
+      "name": "ok water.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "android"
+        },
+        "id": "fasting.status.get",
+        "params": {}
+      },
+      "name": "ok fasting.status.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "limit": 10,
+          "range": "this_month"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "deeplink"
+        },
+        "id": "fasting.history.list",
+        "params": {
+          "limit": "10",
+          "range": "this_month"
+        }
+      },
+      "name": "ok fasting.history.list"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.get",
+        "params": {}
+      },
+      "name": "ok weight.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "range": "last_30_days"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.history",
+        "params": {
+          "range": "last_30_days"
+        }
+      },
+      "name": "ok weight.history"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "body.composition.get",
+        "params": {}
+      },
+      "name": "ok body.composition.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "workout.today.get",
+        "params": {}
+      },
+      "name": "ok workout.today.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "limit": 50,
+          "range": "last_30_days"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "workout.history.list",
+        "params": {}
+      },
+      "name": "ok workout.history.list"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "exercise": "bench_press",
+          "range": "this_month"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "workout.exercise.stats",
+        "params": {
+          "exercise": "bench_press",
+          "range": "this_month"
+        }
+      },
+      "name": "ok workout.exercise.stats"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "limit": 20,
+          "query": "lipid panel"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "records.search",
+        "params": {
+          "query": "  lipid panel "
+        }
+      },
+      "name": "ok records.search"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "records.latest",
+        "params": {}
+      },
+      "name": "ok records.latest"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "analyte": "hba1c",
+          "limit": 10
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "records.labValue.get",
+        "params": {
+          "analyte": "hba1c"
+        }
+      },
+      "name": "ok records.labValue.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "medications.today.list",
+        "params": {}
+      },
+      "name": "ok medications.today.list"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "medications.next.get",
+        "params": {}
+      },
+      "name": "ok medications.next.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "limit": 100,
+          "medication": "med-1",
+          "range": "last_7_days"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "android"
+        },
+        "id": "medications.history.list",
+        "params": {
+          "medication": "med-1"
+        }
+      },
+      "name": "ok medications.history.list"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "range": "this_week"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "medications.adherence.get",
+        "params": {
+          "range": "this_week"
+        }
+      },
+      "name": "ok medications.adherence.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "goals.get",
+        "params": {}
+      },
+      "name": "ok goals.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "profile.summary.get",
+        "params": {}
+      },
+      "name": "ok profile.summary.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "domain": "records",
+          "limit": 20,
+          "query": "vitamin d"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "search.universal",
+        "params": {
+          "domain": "records",
+          "query": "vitamin d"
+        }
+      },
+      "name": "ok search.universal"
+    },
+    {
+      "expected": {
+        "ai": true,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "description": "two eggs and toast"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "nutrition.food.log",
+        "params": {
+          "description": "two eggs and toast"
+        }
+      },
+      "name": "ok nutrition.food.log"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "food": "food-42",
+          "meal": "lunch",
+          "servings": 1.5
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "nutrition.food.logSaved",
+        "params": {
+          "food": "food-42",
+          "meal": "lunch",
+          "servings": 1.5
+        }
+      },
+      "name": "ok nutrition.food.logSaved"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "amount": 500.0,
+          "unit": "ml"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": 500
+        }
+      },
+      "name": "ok water.log"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "unit": "kg",
+          "value": 70.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {
+          "unit": "kg",
+          "value": 70
+        }
+      },
+      "name": "ok weight.log"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "percent": 18.5
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "body.fat.log",
+        "params": {
+          "percent": 18.5
+        }
+      },
+      "name": "ok body.fat.log"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "site": "waist",
+          "unit": "in",
+          "value": 32.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "body.measurement.log",
+        "params": {
+          "site": "waist",
+          "unit": "in",
+          "value": 32
+        }
+      },
+      "name": "ok body.measurement.log"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "goal_hours": 16.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "fasting.start",
+        "params": {
+          "goal_hours": 16
+        }
+      },
+      "name": "ok fasting.start"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "fasting.stop",
+        "params": {}
+      },
+      "name": "ok fasting.stop"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "deeplink"
+        },
+        "id": "workout.start",
+        "params": {}
+      },
+      "name": "ok workout.start"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "workout.finish",
+        "params": {}
+      },
+      "name": "ok workout.finish"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "exercise": "bench_press",
+          "reps": 10,
+          "rpe": 8.0,
+          "unit": "kg",
+          "weight": 60.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "workout.set.log",
+        "params": {
+          "exercise": "bench_press",
+          "reps": 10,
+          "rpe": 8,
+          "unit": "kg",
+          "weight": 60
+        }
+      },
+      "name": "ok workout.set.log"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "action": "snoozed",
+          "dose": "dose-1",
+          "snooze_minutes": 30
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "medication.dose.mark",
+        "params": {
+          "action": "snoozed",
+          "dose": "dose-1",
+          "snooze_minutes": 30
+        }
+      },
+      "name": "ok medication.dose.mark"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "goal": "water",
+          "value": 3000.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "goals.update",
+        "params": {
+          "goal": "water",
+          "value": 3000
+        }
+      },
+      "name": "ok goals.update"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "section": "records"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "open.section",
+        "params": {
+          "section": "records"
+        }
+      },
+      "name": "ok open.section"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "metric": "resting_heart_rate"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "deeplink"
+        },
+        "id": "open.metric",
+        "params": {
+          "metric": "resting_heart_rate"
+        }
+      },
+      "name": "ok open.metric"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "record": "rec-9"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "open.record",
+        "params": {
+          "record": "rec-9"
+        }
+      },
+      "name": "ok open.record"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "prompt": "Plan my dinner"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "deeplink"
+        },
+        "id": "open.coach",
+        "params": {
+          "prompt": "Plan my dinner"
+        }
+      },
+      "name": "ok open.coach"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "calories": 105.0,
+          "meal": "snack",
+          "name": "Banana"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "nutrition.food.log",
+        "params": {
+          "calories": "105",
+          "meal": "snack",
+          "name": "Banana"
+        }
+      },
+      "name": "food log exact values no confirm"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "calories": 105.0,
+          "name": "Banana"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "nutrition.food.log",
+        "params": {
+          "calories": 105,
+          "name": "Banana"
+        }
+      },
+      "name": "food log from coach confirms"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "amount": 750.0,
+          "unit": "ml"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "deeplink"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": "750",
+          "unit": "ml"
+        }
+      },
+      "name": "water log from deeplink confirms"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "amount": 16.0,
+          "unit": "floz"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "volume_unit": "floz"
+          },
+          "source": "siri"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": 16
+        }
+      },
+      "name": "water default unit from prefs floz"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "amount": 250.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "volume_unit": "gallon"
+          },
+          "source": "siri"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": 250
+        }
+      },
+      "name": "water pref invalid falls to missing optional"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "amount": 0.75,
+          "unit": "l"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "android"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": "0.75",
+          "unit": "l"
+        }
+      },
+      "name": "water litres"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "amount"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": 21,
+          "unit": "cup"
+        }
+      },
+      "name": "water too much in cups"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "amount"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": 0
+        }
+      },
+      "name": "water zero"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "unit": "lb",
+          "value": 165.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "mass_unit": "lb"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {
+          "value": "165"
+        }
+      },
+      "name": "weight in pounds default pref"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "value"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {
+          "unit": "lb",
+          "value": 900
+        }
+      },
+      "name": "weight 900 lb out of range"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "missing_param",
+          "param": "value"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {}
+      },
+      "name": "weight missing"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_type",
+          "param": "value"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {
+          "value": "seventy"
+        }
+      },
+      "name": "weight bad type"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_type",
+          "param": "value"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {
+          "value": true
+        }
+      },
+      "name": "weight bool is bad type"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "missing_param",
+          "param": "value"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "weight.log",
+        "params": {
+          "value": "  "
+        }
+      },
+      "name": "weight empty string is missing"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "unknown_action",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "records.delete",
+        "params": {}
+      },
+      "name": "unknown action"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "unknown_param",
+          "param": "date"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "water.get",
+        "params": {
+          "date": "2026-09-01"
+        }
+      },
+      "name": "unknown param"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_enum",
+          "param": "range"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "water.get",
+        "params": {
+          "range": "forever"
+        }
+      },
+      "name": "bad enum range"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_enum",
+          "param": "section"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "open.section",
+        "params": {
+          "section": "Records"
+        }
+      },
+      "name": "enum is case sensitive"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_value",
+          "param": "metric"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "health.metric.get",
+        "params": {
+          "metric": "Heart Rate"
+        }
+      },
+      "name": "bad metric key"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "too_long",
+          "param": "query"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "records.search",
+        "params": {
+          "query": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "name": "query too long"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "too_long",
+          "param": "record"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "open.record",
+        "params": {
+          "record": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+        }
+      },
+      "name": "entity too long"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "not_allowed",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "health.metric.samples",
+        "params": {
+          "metric": "steps"
+        }
+      },
+      "name": "samples not on siri"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "not_allowed",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "medication.dose.mark",
+        "params": {
+          "action": "taken",
+          "dose": "d"
+        }
+      },
+      "name": "coach cannot mark dose"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "not_allowed",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "coach"
+        },
+        "id": "goals.update",
+        "params": {
+          "goal": "water",
+          "value": 3000
+        }
+      },
+      "name": "coach cannot update goals"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "not_allowed",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "deeplink"
+        },
+        "id": "medication.dose.mark",
+        "params": {
+          "action": "taken",
+          "dose": "d"
+        }
+      },
+      "name": "dose mark via deeplink not allowed"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "action": "taken",
+          "dose": "d",
+          "snooze_minutes": 10
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "app"
+        },
+        "id": "medication.dose.mark",
+        "params": {
+          "action": "taken",
+          "dose": "d"
+        }
+      },
+      "name": "app source bypasses surface list"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_enum",
+          "param": "snooze_minutes"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "medication.dose.mark",
+        "params": {
+          "action": "snoozed",
+          "dose": "d",
+          "snooze_minutes": 15
+        }
+      },
+      "name": "snooze 15 not allowed"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "action": "snoozed",
+          "dose": "d",
+          "snooze_minutes": 60
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "medication.dose.mark",
+        "params": {
+          "action": "snoozed",
+          "dose": "d",
+          "snooze_minutes": "60"
+        }
+      },
+      "name": "snooze integer string"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_type",
+          "param": "reps"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "workout.set.log",
+        "params": {
+          "exercise": "squat",
+          "reps": "8.5"
+        }
+      },
+      "name": "reps must be integer"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "exercise": "pull_up",
+          "reps": 8,
+          "unit": "lb",
+          "weight": 0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "mass_unit": "lb"
+          },
+          "source": "siri"
+        },
+        "id": "workout.set.log",
+        "params": {
+          "exercise": "pull_up",
+          "reps": 8.0
+        }
+      },
+      "name": "reps float integral ok bodyweight"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "weight"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "workout.set.log",
+        "params": {
+          "exercise": "squat",
+          "reps": 5,
+          "unit": "lb",
+          "weight": 2300
+        }
+      },
+      "name": "set weight lb out of range"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "rpe"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "workout.set.log",
+        "params": {
+          "exercise": "squat",
+          "reps": 5,
+          "rpe": 11
+        }
+      },
+      "name": "rpe out of range"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "value"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "goals.update",
+        "params": {
+          "goal": "steps",
+          "value": 100
+        }
+      },
+      "name": "goal range by kind steps low"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": true,
+        "ok": true,
+        "params": {
+          "goal": "calories",
+          "value": 2200.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "goals.update",
+        "params": {
+          "goal": "calories",
+          "value": "2200"
+        }
+      },
+      "name": "goal calories ok"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "requires_one_of",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "nutrition.food.log",
+        "params": {
+          "name": "Soup"
+        }
+      },
+      "name": "food log needs description or name+calories"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "requires_one_of",
+          "param": null
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "nutrition.food.log",
+        "params": {
+          "calories": 300
+        }
+      },
+      "name": "food log calories only still needs name"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "goal_hours": 16
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "fasting.start",
+        "params": {}
+      },
+      "name": "fasting goal default"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "goal_hours"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "fasting.start",
+        "params": {
+          "goal_hours": "0.5"
+        }
+      },
+      "name": "fasting goal 0.5 out of range"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "goal_hours"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "fasting.start",
+        "params": {
+          "goal_hours": 80
+        }
+      },
+      "name": "fasting goal 80 out of range"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_type",
+          "param": "percent"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "body.fat.log",
+        "params": {
+          "percent": "+.5e1"
+        }
+      },
+      "name": "number with leading dot"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "site": "hips",
+          "unit": "cm",
+          "value": 98.0
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "body.measurement.log",
+        "params": {
+          "site": "hips",
+          "value": 98
+        }
+      },
+      "name": "measurement cm default"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "limit"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "health.metric.samples",
+        "params": {
+          "limit": 501,
+          "metric": "steps"
+        }
+      },
+      "name": "limit over max"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "out_of_range",
+          "param": "limit"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "shortcuts"
+        },
+        "id": "search.universal",
+        "params": {
+          "limit": "-1",
+          "query": "egg"
+        }
+      },
+      "name": "limit negative"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "open.coach",
+        "params": {
+          "prompt": ""
+        }
+      },
+      "name": "open coach empty prompt dropped"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_type",
+          "param": "amount"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "water.log",
+        "params": {
+          "amount": [
+            500
+          ]
+        }
+      },
+      "name": "number param rejects list"
+    }
+  ],
+  "format": "ayuvo-actions-vectors",
+  "function": "validate",
+  "version": 1
+}

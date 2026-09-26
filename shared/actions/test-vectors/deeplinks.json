@@ -1,0 +1,683 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "water.log",
+            "params": {
+              "amount": "500",
+              "unit": "ml"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": true,
+          "ok": true,
+          "params": {
+            "amount": 500.0,
+            "unit": "ml"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/water.log?amount=500&unit=ml"
+      },
+      "name": "water log"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "water.log",
+            "params": {
+              "amount": "750"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": true,
+          "ok": true,
+          "params": {
+            "amount": 750.0,
+            "unit": "ml"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/water.log?amount=750"
+      },
+      "name": "water log default unit"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "open.section",
+            "params": {
+              "section": "fasting"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {
+            "section": "fasting"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://open/fasting"
+      },
+      "name": "open section"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "open.section",
+            "params": {
+              "section": "records"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {
+            "section": "records"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://open/records/"
+      },
+      "name": "open section trailing slash"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "open.section",
+            "params": {
+              "section": "labs"
+            }
+          }
+        },
+        "validate": {
+          "error": {
+            "code": "bad_enum",
+            "param": "section"
+          },
+          "ok": false
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://open/labs"
+      },
+      "name": "open bad section"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "health.metric.get",
+            "params": {
+              "metric": "steps",
+              "range": "today"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {
+            "metric": "steps",
+            "range": "today"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/health.metric.get?metric=steps&range=today"
+      },
+      "name": "metric get"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "search.universal",
+            "params": {
+              "domain": "all",
+              "query": "vitamin d k2"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {
+            "domain": "all",
+            "limit": 20,
+            "query": "vitamin d k2"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/search.universal?query=vitamin+d%20k2&domain=all"
+      },
+      "name": "search plus and percent"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "records.search",
+            "params": {
+              "query": "रक्त"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {
+            "limit": 20,
+            "query": "रक्त"
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/records.search?query=%E0%A4%B0%E0%A4%95%E0%A5%8D%E0%A4%A4"
+      },
+      "name": "utf8 query"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "weight.get",
+            "params": {}
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {}
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/weight.get#top"
+      },
+      "name": "fragment ignored"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "fasting.start",
+            "params": {
+              "goal_hours": "18"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": true,
+          "ok": true,
+          "params": {
+            "goal_hours": 18.0
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/fasting.start?&goal_hours=18&"
+      },
+      "name": "empty pieces skipped"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "open.coach",
+            "params": {
+              "prompt": ""
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {}
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/open.coach?prompt"
+      },
+      "name": "value without equals is empty"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "not_action_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://log/water"
+      },
+      "name": "widget link is not an action link"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "not_action_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://summary"
+      },
+      "name": "summary link is not an action link"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "not_action_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "https://ayuvo-health.web.app/action/water.log"
+      },
+      "name": "https is not an action link"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "bad_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/"
+      },
+      "name": "missing id"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "bad_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/water/log"
+      },
+      "name": "nested path"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "bad_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/records.search?query=%zz"
+      },
+      "name": "bad percent escape"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "bad_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/records.search?query=abc%2"
+      },
+      "name": "truncated percent escape"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "bad_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/records.search?query=%ff"
+      },
+      "name": "invalid utf8"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "bad_link"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/water.log?=5"
+      },
+      "name": "empty key"
+    },
+    {
+      "expected": {
+        "parse": {
+          "error": {
+            "code": "duplicate_param"
+          },
+          "ok": false
+        },
+        "validate": null
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/water.log?amount=5&amount=6"
+      },
+      "name": "duplicate param"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "records.purge",
+            "params": {}
+          }
+        },
+        "validate": {
+          "error": {
+            "code": "unknown_action",
+            "param": null
+          },
+          "ok": false
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/records.purge"
+      },
+      "name": "unknown action via link"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "medication.dose.mark",
+            "params": {
+              "action": "taken",
+              "dose": "d1"
+            }
+          }
+        },
+        "validate": {
+          "error": {
+            "code": "not_allowed",
+            "param": null
+          },
+          "ok": false
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/medication.dose.mark?dose=d1&action=taken"
+      },
+      "name": "dose mark not allowed by link"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "goals.update",
+            "params": {
+              "goal": "protein",
+              "value": "140"
+            }
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": true,
+          "ok": true,
+          "params": {
+            "goal": "protein",
+            "value": 140.0
+          }
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/goals.update?goal=protein&value=140"
+      },
+      "name": "goal update confirms"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "water.log",
+            "params": {
+              "amount": "9000"
+            }
+          }
+        },
+        "validate": {
+          "error": {
+            "code": "out_of_range",
+            "param": "amount"
+          },
+          "ok": false
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/water.log?amount=9000"
+      },
+      "name": "out of range via link"
+    },
+    {
+      "expected": {
+        "parse": {
+          "ok": true,
+          "request": {
+            "id": "workout.start",
+            "params": {}
+          }
+        },
+        "validate": {
+          "ai": false,
+          "confirm": false,
+          "ok": true,
+          "params": {}
+        }
+      },
+      "input": {
+        "prefs": {
+          "length_unit": "cm",
+          "mass_unit": "kg",
+          "volume_unit": "ml"
+        },
+        "url": "ayuvo://action/workout.start"
+      },
+      "name": "workout start opens app no confirm"
+    }
+  ],
+  "format": "ayuvo-actions-vectors",
+  "function": "deeplink",
+  "version": 1
+}

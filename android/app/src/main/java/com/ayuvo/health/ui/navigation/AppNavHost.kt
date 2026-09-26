@@ -86,6 +86,12 @@ import com.ayuvo.health.ui.medications.MedicationHistoryScreen
 import com.ayuvo.health.ui.settings.AddMenuSettingsScreen
 import com.ayuvo.health.ui.about.LicensesScreen
 import com.ayuvo.health.ui.settings.QuickActionsScreen
+import com.ayuvo.health.ui.actions.ActionHost
+import com.ayuvo.health.ui.actions.ActionNavigation
+import com.ayuvo.health.ui.actions.PendingAction
+import com.ayuvo.health.ui.summary.LogEntry
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 
 /**
  * Increments each time the app is opened: 1 on cold launch, then +1 on every
@@ -113,7 +119,9 @@ fun AppNavHost(
     medicationRequest: MedicationRequest? = null,
     onMedicationRequestHandled: (Long) -> Unit = {},
     widgetRequest: WidgetRequest? = null,
-    onWidgetRequestHandled: (Long) -> Unit = {}
+    onWidgetRequestHandled: (Long) -> Unit = {},
+    pendingAction: PendingAction? = null,
+    onActionHandled: (Long) -> Unit = {}
 ) {
     val nav = rememberNavController()
     // Warm the app-scoped Settings state while Summary is visible. By the time the user changes
@@ -364,6 +372,69 @@ fun AppNavHost(
         onMedicationRequestHandled(request.id)
     }
 
+    /** A catalog `screen` from an action result (docs/actions.md) → the existing destinations. */
+    fun openActionScreen(screen: String) {
+        val (kind, value) = screen.substringBefore(':') to screen.substringAfter(':')
+        fun section(id: String) {
+            when (id) {
+                "summary" -> openSummaryRoot()
+                "browse", "health" -> navigateToTab(AppRoutes.BROWSE)
+                "nutrition" -> openNutrition()
+                "water" -> openActionScreen("metric:app:water")
+                "fasting" -> openBrowsePlace(AppRoutes.BROWSE_FASTING)
+                "body" -> openBrowsePlace(AppRoutes.BROWSE_BODY)
+                "activity" -> openBrowsePlace(AppRoutes.BROWSE_ACTIVITY)
+                "workouts", "workout_log" -> openBrowsePlace(AppRoutes.WORKOUTS_LOG)
+                "medications" -> openMedications()
+                "records" -> { navigateToTab(AppRoutes.RECORDS); nav.popBackStack(AppRoutes.RECORDS, inclusive = false) }
+                "coach" -> navigateToTab(AppRoutes.COACH)
+                "settings" -> navigateToTab(AppRoutes.SETTINGS)
+            }
+        }
+        when (kind) {
+            "metric" -> MetricKey.parse(value)?.let { key ->
+                openSummaryRoot()
+                nav.navigate(AppRoutes.metric(key))
+            }
+            "screen", "section" -> section(value)
+            "tab" -> section(value)
+            "record" -> if (value.isNotEmpty()) {
+                section("records")
+                nav.navigate(AppRoutes.recordDetail(value))
+            }
+        }
+    }
+
+    /** A write that arrived without its value opens the matching in-app logger instead. */
+    fun openActionLogger(actionId: String): Boolean {
+        when (actionId) {
+            "water.log" -> { openSummaryRoot(); summaryLogRequest = SummaryLogRequest(LogEntry.WATER) }
+            "weight.log" -> { openSummaryRoot(); summaryLogRequest = SummaryLogRequest(LogEntry.WEIGHT) }
+            "body.fat.log" -> { openSummaryRoot(); summaryLogRequest = SummaryLogRequest(LogEntry.BODY_FAT) }
+            "body.measurement.log" -> openBrowsePlace(AppRoutes.BROWSE_MEASUREMENTS)
+            "nutrition.food.log", "nutrition.food.logSaved" -> openNutrition(FoodLogRequest(method = null))
+            "workout.set.log" -> openBrowsePlace(AppRoutes.WORKOUTS_LOG)
+            "medication.dose.mark" -> openMedications()
+            "goals.update" -> openSettingsPage(SettingsPage.GOALS_TARGETS)
+            else -> return false
+        }
+        return true
+    }
+
+    val snackbarHost = remember { SnackbarHostState() }
+    ActionHost(
+        container = container,
+        pending = pendingAction,
+        ready = currentRoute != null && currentRoute != AppRoutes.ONBOARDING,
+        onHandled = onActionHandled,
+        snackbar = snackbarHost,
+        navigation = ActionNavigation(
+            openScreen = ::openActionScreen,
+            openLogger = ::openActionLogger,
+            openHealthSync = { openSettingsPage(SettingsPage.HEALTH_SYNC) }
+        )
+    )
+
     CompositionLocalProvider(LocalLaunchFillEpoch provides launchFillEpoch) {
     Scaffold(
         // Resource ids for uiautomator walkthroughs (docs/ui-structure.md §9).
@@ -371,6 +442,7 @@ fun AppNavHost(
         // The docked tab bar owns the navigation-bar inset; content is padded by the
         // bar only, so screens keep handling the status bar themselves (TabInset).
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        snackbarHost = { SnackbarHost(snackbarHost) },
         bottomBar = {
             if (showTabs) {
                 AppBottomNavBar(

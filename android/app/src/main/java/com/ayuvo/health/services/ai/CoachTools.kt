@@ -55,7 +55,12 @@ class CoachTools(
      * The conversation's data switches (docs/coach.md §8). A switch can only ever narrow what the
      * source's own consent already permits; it never grants access.
      */
-    private val sources: CoachDataSwitches = CoachDataSwitches.ALL_ON
+    private val sources: CoachDataSwitches = CoachDataSwitches.ALL_ON,
+    /**
+     * Catalog actions (docs/actions.md): read tools plus `propose_action`. Null keeps the tool list
+     * exactly as the shared data-source contract resolves it.
+     */
+    val actions: com.ayuvo.health.actions.CoachActionTools? = null
 ) {
     private val healthData: CoachHealthData? = healthSnapshot?.let { CoachHealthData(it, clock) }
 
@@ -82,7 +87,10 @@ class CoachTools(
                 switches = sources.asJson(),
                 workoutsAvailable = true
             )
-            return MedicationJson.strings(resolved["tools"])
+            val base = MedicationJson.strings(resolved["tools"])
+            // Action tools read the food/workout diary, so they follow the Food switch.
+            val withActions = if (actions != null && sources.isOn(CoachSource.FOOD)) base + actions.names.filter { it !in base } else base
+            return withActions
         }
 
     /** Which sources ended up effective, for the prompt lines and the composer summary row. */
@@ -99,15 +107,21 @@ class CoachTools(
 
     /** Description advertised for [name]; records and medication tools use their contract strings exactly. */
     fun descriptionFor(name: String): String =
-        records?.contract?.tool(name)?.description
+        actions?.takeIf { it.handles(name) }?.description(name)
+            ?: records?.contract?.tool(name)?.description
             ?: MedicationsCoachTools.contract.tool(name)?.description
             ?: TOOL_DESCRIPTIONS[name]
             ?: ""
 
     /** Compact input schema exactly as written in the contract file, else null. */
     fun rawSchemaFor(name: String): String? =
-        records?.contract?.tool(name)?.schemaJson
+        actions?.takeIf { it.handles(name) }?.schemaJson(name)
+            ?: records?.contract?.tool(name)?.schemaJson
             ?: MedicationsCoachTools.contract.tool(name)?.schemaText
+
+    /** Runs a catalog action tool when [name] is one and the Food source is on; null otherwise. */
+    suspend fun executeActions(name: String, args: Map<String, Any?>): String? =
+        actions?.takeIf { it.handles(name) && sources.isOn(CoachSource.FOOD) }?.execute(name, args)
 
     /** Runs a records tool when [name] is one; null otherwise (the caller falls back to [execute]). */
     suspend fun executeRecords(name: String, args: Map<String, Any?>): String? =

@@ -1,0 +1,241 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "from_ms": 1789531200000,
+        "to_ms": 1789617600000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "today",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "today NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1789444800000,
+        "to_ms": 1789531200000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "yesterday",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "yesterday NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1789358400000,
+        "to_ms": 1789963200000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "this_week",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "this_week NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1788753600000,
+        "to_ms": 1789358400000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "last_week",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "last_week NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1789012800000,
+        "to_ms": 1789617600000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "last_7_days",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "last_7_days NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1787025600000,
+        "to_ms": 1789617600000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "last_30_days",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "last_30_days NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1788235200000,
+        "to_ms": 1790827200000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "this_month",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "this_month NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1785556800000,
+        "to_ms": 1788235200000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "last_month",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "last_month NY monday"
+    },
+    {
+      "expected": {
+        "from_ms": 1789257600000,
+        "to_ms": 1789862400000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "this_week",
+        "time_zone": "UTC",
+        "week_start": "sunday"
+      },
+      "name": "this_week sunday start UTC"
+    },
+    {
+      "expected": {
+        "from_ms": 1788633000000,
+        "to_ms": 1789237800000
+      },
+      "input": {
+        "now_ms": 1789574400000,
+        "preset": "last_week",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "sunday"
+      },
+      "name": "last_week sunday start Kolkata"
+    },
+    {
+      "expected": {
+        "from_ms": 1789583400000,
+        "to_ms": 1789669800000
+      },
+      "input": {
+        "now_ms": 1789590800000,
+        "preset": "today",
+        "time_zone": "Asia/Kolkata",
+        "week_start": "monday"
+      },
+      "name": "today Kolkata late evening UTC is next day"
+    },
+    {
+      "expected": {
+        "from_ms": 1772946000000,
+        "to_ms": 1773028800000
+      },
+      "input": {
+        "now_ms": 1772971200000,
+        "preset": "today",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "today NY spring forward day is 23h"
+    },
+    {
+      "expected": {
+        "from_ms": 1792882800000,
+        "to_ms": 1792972800000
+      },
+      "input": {
+        "now_ms": 1793016000000,
+        "preset": "yesterday",
+        "time_zone": "Europe/London",
+        "week_start": "monday"
+      },
+      "name": "yesterday London after fall back"
+    },
+    {
+      "expected": {
+        "from_ms": 1767225600000,
+        "to_ms": 1769904000000
+      },
+      "input": {
+        "now_ms": 1768478400000,
+        "preset": "this_month",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "this_month January wraps to February"
+    },
+    {
+      "expected": {
+        "from_ms": 1764547200000,
+        "to_ms": 1767225600000
+      },
+      "input": {
+        "now_ms": 1768478400000,
+        "preset": "last_month",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "last_month January is December"
+    },
+    {
+      "expected": {
+        "from_ms": 1771045200000,
+        "to_ms": 1773633600000
+      },
+      "input": {
+        "now_ms": 1773576000000,
+        "preset": "last_30_days",
+        "time_zone": "America/New_York",
+        "week_start": "monday"
+      },
+      "name": "last_30_days crosses DST NY"
+    },
+    {
+      "expected": {
+        "from_ms": 1789344000000,
+        "to_ms": 1789948800000
+      },
+      "input": {
+        "now_ms": 1789646400000,
+        "preset": "this_week",
+        "time_zone": "UTC",
+        "week_start": "monday"
+      },
+      "name": "this_week on a Sunday monday start"
+    },
+    {
+      "expected": {
+        "from_ms": 1789257600000,
+        "to_ms": 1789862400000
+      },
+      "input": {
+        "now_ms": 1789646400000,
+        "preset": "this_week",
+        "time_zone": "UTC",
+        "week_start": "sunday"
+      },
+      "name": "this_week on a Sunday sunday start"
+    }
+  ],
+  "format": "ayuvo-actions-vectors",
+  "function": "resolve_date_range",
+  "version": 1
+}

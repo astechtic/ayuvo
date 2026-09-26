@@ -45,6 +45,13 @@ final class WidgetDeepLinkUITests: XCTestCase {
         Case(name: "metric-next-dose", url: "ayuvo://metric/medications:next_dose", landing: .navigationBar("Medications")),
         Case(name: "metric-fasting", url: "ayuvo://metric/app:fasting", landing: .tab("Browse")),
         Case(name: "summary", url: "ayuvo://summary", landing: .tab("Summary")),
+        // Actions (docs/actions.md): OPEN links route, write links ask first.
+        Case(name: "open-records", url: "ayuvo://open/records", landing: .tab("Records")),
+        Case(name: "open-coach", url: "ayuvo://open/coach", landing: .tab("Coach")),
+        Case(name: "open-medications", url: "ayuvo://open/medications", landing: .navigationBar("Medications")),
+        Case(name: "open-metric", url: "ayuvo://action/open.metric?metric=app:protein", landing: .navigationBar("Protein")),
+        Case(name: "action-water-confirm", url: "ayuvo://action/water.log?amount=250&unit=ml", arguments: ["-waterTrackingEnabled", "YES"],
+             landing: .text("Confirm in Ayuvo")),
     ]
 
     override func setUpWithError() throws {

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher shortcuts and Google App Actions (docs/actions.md, Android).
+     Generated for each build type (main / debug / debug2 differ only in targetPackage);
+     ShortcutsContractTest keeps them in sync and checks every entry maps to a catalog action. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <capability android:name="actions.intent.OPEN_APP_FEATURE">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/open_app_feature"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="feature" android:key="feature" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.GET_HEALTH_OBSERVATION">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/get_health_observation"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="healthObservation.measuredProperty.name" android:key="name" />
+            <parameter android:name="healthObservation.startTime" android:key="startTime" />
+            <parameter android:name="healthObservation.endTime" android:key="endTime" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.RECORD_HEALTH_OBSERVATION">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/record_health_observation"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="healthObservation.measuredProperty.name" android:key="name" />
+            <parameter android:name="healthObservation.value.value" android:key="value" />
+            <parameter android:name="healthObservation.value.unitText" android:key="unitText" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.GET_FOOD_OBSERVATION">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/get_food_observation"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="foodObservation.aboutNutrient.name" android:key="aboutNutrientName" />
+            <parameter android:name="foodObservation.aboutFood.name" android:key="aboutFoodName" />
+            <parameter android:name="foodObservation.startTime" android:key="startTime" />
+            <parameter android:name="foodObservation.endTime" android:key="endTime" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.RECORD_FOOD_OBSERVATION">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/record_food_observation"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="foodObservation.aboutFood.name" android:key="aboutFoodName" />
+            <parameter android:name="foodObservation.aboutNutrient.name" android:key="aboutNutrientName" />
+            <parameter android:name="foodObservation.forMeal" android:key="forMeal" />
+            <parameter android:name="foodObservation.value.value" android:key="value" />
+            <parameter android:name="foodObservation.value.unitText" android:key="unitText" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.START_EXERCISE">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/start_exercise"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="exercise.name" android:key="exerciseName" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.STOP_EXERCISE">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/stop_exercise"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <parameter android:name="exercise.name" android:key="exerciseName" />
+        </intent>
+    </capability>
+    <capability android:name="actions.intent.GET_EXERCISE_OBSERVATION">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="ayuvo://assistant/get_exercise_observation"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug" />
+    </capability>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutDisabledMessage="@string/shortcut_disabled"
+        android:shortcutId="log_water"
+        android:shortcutLongLabel="@string/shortcut_log_water_long"
+        android:shortcutShortLabel="@string/shortcut_log_water_short">
+        <intent
+            android:action="com.ayuvo.health.ACTION"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <extra android:name="action_id" android:value="water.log" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutDisabledMessage="@string/shortcut_disabled"
+        android:shortcutId="start_fast"
+        android:shortcutLongLabel="@string/shortcut_start_fast_long"
+        android:shortcutShortLabel="@string/shortcut_start_fast_short">
+        <intent
+            android:action="com.ayuvo.health.ACTION"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <extra android:name="action_id" android:value="fasting.start" />
+            <extra android:name="goal_hours" android:value="16" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutDisabledMessage="@string/shortcut_disabled"
+        android:shortcutId="today_summary"
+        android:shortcutLongLabel="@string/shortcut_summary_long"
+        android:shortcutShortLabel="@string/shortcut_summary_short">
+        <intent
+            android:action="com.ayuvo.health.ACTION"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <extra android:name="action_id" android:value="open.section" />
+            <extra android:name="section" android:value="summary" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutDisabledMessage="@string/shortcut_disabled"
+        android:shortcutId="log_weight"
+        android:shortcutLongLabel="@string/shortcut_log_weight_long"
+        android:shortcutShortLabel="@string/shortcut_log_weight_short">
+        <intent
+            android:action="com.ayuvo.health.ACTION"
+            android:targetClass="com.ayuvo.health.MainActivity"
+            android:targetPackage="com.ayuvo.health.debug">
+            <extra android:name="action_id" android:value="weight.log" />
+        </intent>
+    </shortcut>
+    <!-- OPEN_APP_FEATURE inline inventory: one hidden shortcut per catalog section. -->
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_summary"
+        android:shortcutShortLabel="@string/feature_summary">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="summary" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_health"
+        android:shortcutShortLabel="@string/feature_health">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="health" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_nutrition"
+        android:shortcutShortLabel="@string/feature_nutrition">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="nutrition" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_water"
+        android:shortcutShortLabel="@string/feature_water">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="water" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_fasting"
+        android:shortcutShortLabel="@string/feature_fasting">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="fasting" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_body"
+        android:shortcutShortLabel="@string/feature_body">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="body" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_activity"
+        android:shortcutShortLabel="@string/feature_activity">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="activity" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_workouts"
+        android:shortcutShortLabel="@string/feature_workouts">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="workouts" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_records"
+        android:shortcutShortLabel="@string/feature_records">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="records" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_medications"
+        android:shortcutShortLabel="@string/feature_medications">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="medications" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_coach"
+        android:shortcutShortLabel="@string/feature_coach">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="coach" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="feature_settings"
+        android:shortcutShortLabel="@string/feature_settings">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="settings" />
+        </capability-binding>
+    </shortcut>
+</shortcuts>

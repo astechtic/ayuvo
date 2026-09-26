@@ -56,6 +56,8 @@ A tile tap opens the metric detail. `app:fasting` opens Fasting and `medications
 
 The older `ayuvo://log-food?method=` and `ayuvo://medications` links keep working.
 
+`ayuvo://action/<id>?…` and `ayuvo://open/<section>` belong to the Actions platform (Siri, Shortcuts, Android shortcuts, Coach) and are specified in [actions.md](actions.md). They are parsed first, and any link with another host continues to the widget router above.
+
 ## Dashboard snapshot
 The app writes `WidgetDashboardSnapshot` v1; widgets only read it. The older food/water `WidgetSnapshot` is untouched, because the Watch decodes its layout.
 

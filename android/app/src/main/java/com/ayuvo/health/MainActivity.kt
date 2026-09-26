@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import com.ayuvo.health.actions.ActionIntents
 import com.ayuvo.health.medications.model.MedicationIntents
 import com.ayuvo.health.medications.model.MedicationRequest
 import com.ayuvo.health.models.LogEntryIntents
@@ -30,6 +31,7 @@ import com.ayuvo.health.records.model.ImportMethod
 import com.ayuvo.health.records.model.RecordSource
 import com.ayuvo.health.services.QuickActionShortcutManager
 import com.ayuvo.health.services.ReviewPrompter
+import com.ayuvo.health.ui.actions.PendingAction
 import com.ayuvo.health.ui.navigation.AppNavHost
 import com.ayuvo.health.ui.theme.AppThemeColor
 import com.ayuvo.health.ui.theme.AyuvoTheme
@@ -52,6 +54,7 @@ class MainActivity : ComponentActivity() {
     private var pendingRecordsRequest by mutableStateOf<RecordsRequest?>(null)
     private var pendingMedicationRequest by mutableStateOf<MedicationRequest?>(null)
     private var pendingWidgetRequest by mutableStateOf<WidgetRequest?>(null)
+    private var pendingAction by mutableStateOf<PendingAction?>(null)
     private var startupPrefs by mutableStateOf<StartupPrefs?>(null)
     private var contentReady by mutableStateOf(false)
 
@@ -73,6 +76,17 @@ class MainActivity : ComponentActivity() {
         val request = LogEntryIntents.requestFrom(intent) ?: return
         pendingWidgetRequest = request
         intent?.action = null
+    }
+
+    /**
+     * `ayuvo://action` / `ayuvo://open` links, launcher shortcuts and App Actions (docs/actions.md).
+     * Runs before the records handler, which would otherwise treat an `ayuvo://` VIEW as a document.
+     */
+    private fun handleActionIntent(intent: Intent?) {
+        val parsed = ActionIntents.parse(intent) ?: return
+        pendingAction = PendingAction(parsed)
+        intent?.action = null
+        intent?.data = null
     }
 
     /**
@@ -121,6 +135,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        handleActionIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
         handleWidgetIntent(intent)
@@ -186,6 +201,7 @@ class MainActivity : ComponentActivity() {
             intent.removeExtra("reset_onboarding")
         }
 
+        if (savedInstanceState == null) handleActionIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
         if (savedInstanceState == null) handleWidgetIntent(intent)
@@ -254,6 +270,10 @@ class MainActivity : ComponentActivity() {
                         widgetRequest = pendingWidgetRequest,
                         onWidgetRequestHandled = { requestID ->
                             if (pendingWidgetRequest?.id == requestID) pendingWidgetRequest = null
+                        },
+                        pendingAction = pendingAction,
+                        onActionHandled = { requestID ->
+                            if (pendingAction?.id == requestID) pendingAction = null
                         }
                     )
                 }

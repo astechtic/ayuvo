@@ -95,7 +95,12 @@ class ChatService(
 ) {
 
     /** A Coach reply plus the health records it relied on (docs/health-records.md §26). */
-    data class CoachReply(val text: String, val recordRefs: List<CoachRecordRef> = emptyList())
+    data class CoachReply(
+        val text: String,
+        val recordRefs: List<CoachRecordRef> = emptyList(),
+        /** Writes Coach suggested this turn (docs/actions.md); shown as Confirm/Dismiss cards. */
+        val proposals: List<com.ayuvo.health.actions.ActionProposal> = emptyList()
+    )
 
     /**
      * Health Records context for one message (§26–§30), built by the Coach screen: the tools (cloud
@@ -169,7 +174,9 @@ class ChatService(
         /** §30 "Use on-device Coach": this conversation runs on the on-device model. */
         providerOverride: AIProvider? = null,
         /** The saved model this conversation is pinned to (docs/ai-models.md §8). */
-        profileOverride: String? = null
+        profileOverride: String? = null,
+        /** Catalog action tools (docs/actions.md); null keeps Coach's own tools only. */
+        actions: com.ayuvo.health.actions.CoachActionTools? = null
     ): CoachReply {
         // A switch that is off removes the source before the prompt or the tools see it, so nothing
         // downstream has to remember to check again.
@@ -230,7 +237,8 @@ class ChatService(
             workoutPreferences = workoutPreferences,
             workoutPlanWeightUnit = workoutPlanWeightUnit,
             healthSnapshot = healthSnapshot,
-            records = records?.tools
+            records = records?.tools,
+            actions = actions
         )
 
         // A conversation pinned to a saved model resolves through the resolver, so its guards apply
@@ -261,7 +269,8 @@ class ChatService(
 
         fun reply(text: String, used: AIProvider) = CoachReply(
             text,
-            if (used == AIProvider.LOCAL_GEMMA) records?.onDeviceRefs.orEmpty() else records?.tools?.readRefs.orEmpty()
+            if (used == AIProvider.LOCAL_GEMMA) records?.onDeviceRefs.orEmpty() else records?.tools?.readRefs.orEmpty(),
+            if (used == AIProvider.LOCAL_GEMMA) emptyList() else actions?.proposals?.toList().orEmpty()
         )
         return try {
             reply(
@@ -294,7 +303,8 @@ class ChatService(
 
     /** Records tools run through their suspend executor; every other tool through [CoachTools.execute]. */
     private suspend fun executeTool(tools: CoachTools, name: String, args: JSONObject): String =
-        tools.executeRecords(name, jsonToMap(args))
+        tools.executeActions(name, jsonToMap(args))
+            ?: tools.executeRecords(name, jsonToMap(args))
             ?: tools.executeMedications(name, jsonToMap(args))
             ?: tools.execute(name, args)
 

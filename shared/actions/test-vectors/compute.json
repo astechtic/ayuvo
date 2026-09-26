@@ -1,0 +1,540 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "value": 16.907
+      },
+      "input": {
+        "args": {
+          "family": "volume",
+          "from": "ml",
+          "to": "floz",
+          "value": 500
+        },
+        "op": "convert"
+      },
+      "name": "convert 500 ml to floz"
+    },
+    {
+      "expected": {
+        "value": 473.176
+      },
+      "input": {
+        "args": {
+          "family": "volume",
+          "from": "floz",
+          "to": "ml",
+          "value": 16
+        },
+        "op": "convert"
+      },
+      "name": "convert 16 floz to ml"
+    },
+    {
+      "expected": {
+        "value": 74.843
+      },
+      "input": {
+        "args": {
+          "family": "mass",
+          "from": "lb",
+          "to": "kg",
+          "value": 165
+        },
+        "op": "convert"
+      },
+      "name": "convert 165 lb to kg"
+    },
+    {
+      "expected": {
+        "value": 154.324
+      },
+      "input": {
+        "args": {
+          "family": "mass",
+          "from": "kg",
+          "to": "lb",
+          "value": 70
+        },
+        "op": "convert"
+      },
+      "name": "convert 70 kg to lb"
+    },
+    {
+      "expected": {
+        "value": 81.28
+      },
+      "input": {
+        "args": {
+          "family": "length",
+          "from": "in",
+          "to": "cm",
+          "value": 32
+        },
+        "op": "convert"
+      },
+      "name": "convert 32 in to cm"
+    },
+    {
+      "expected": {
+        "value": 0.48
+      },
+      "input": {
+        "args": {
+          "family": "volume",
+          "from": "cup",
+          "to": "l",
+          "value": 2
+        },
+        "op": "convert"
+      },
+      "name": "convert 2 cups to l"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "value": 2000.5
+      },
+      "input": {
+        "args": {
+          "aggregation": "sum",
+          "entries": [
+            {
+              "t_ms": 1,
+              "value": 1200
+            },
+            {
+              "t_ms": 2,
+              "value": null
+            },
+            {
+              "t_ms": 3,
+              "value": 800.5
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate sum ignores null"
+    },
+    {
+      "expected": {
+        "count": 3,
+        "value": 61.33
+      },
+      "input": {
+        "args": {
+          "aggregation": "average",
+          "entries": [
+            {
+              "t_ms": 1,
+              "value": 60
+            },
+            {
+              "t_ms": 2,
+              "value": 61
+            },
+            {
+              "t_ms": 3,
+              "value": 63
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate average rounds 2"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "value": 71.2
+      },
+      "input": {
+        "args": {
+          "aggregation": "latest",
+          "entries": [
+            {
+              "t_ms": 30,
+              "value": 71.2
+            },
+            {
+              "t_ms": 10,
+              "value": 72.0
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate latest by time not order"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "value": 2.0
+      },
+      "input": {
+        "args": {
+          "aggregation": "latest",
+          "entries": [
+            {
+              "t_ms": 30,
+              "value": 1
+            },
+            {
+              "t_ms": 30,
+              "value": 2
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate latest tie takes last"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "value": -1.0
+      },
+      "input": {
+        "args": {
+          "aggregation": "min",
+          "entries": [
+            {
+              "t_ms": 1,
+              "value": 5
+            },
+            {
+              "t_ms": 2,
+              "value": -1
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate min"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "value": 9.0
+      },
+      "input": {
+        "args": {
+          "aggregation": "max",
+          "entries": [
+            {
+              "t_ms": 1,
+              "value": 5
+            },
+            {
+              "t_ms": 2,
+              "value": 9
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate max"
+    },
+    {
+      "expected": {
+        "count": 1,
+        "value": 1
+      },
+      "input": {
+        "args": {
+          "aggregation": "count",
+          "entries": [
+            {
+              "t_ms": 1,
+              "value": 5
+            },
+            {
+              "t_ms": 2,
+              "value": null
+            }
+          ]
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate count"
+    },
+    {
+      "expected": {
+        "count": 0,
+        "value": null
+      },
+      "input": {
+        "args": {
+          "aggregation": "average",
+          "entries": []
+        },
+        "op": "aggregate"
+      },
+      "name": "aggregate empty"
+    },
+    {
+      "expected": {
+        "goal_ml": 2500,
+        "intake_ml": 1750,
+        "percent": 70,
+        "remaining_ml": 750
+      },
+      "input": {
+        "args": {
+          "goal_ml": 2500,
+          "intake_ml": 1750
+        },
+        "op": "water_status"
+      },
+      "name": "water status"
+    },
+    {
+      "expected": {
+        "goal_ml": 2500,
+        "intake_ml": 3100,
+        "percent": 124,
+        "remaining_ml": 0
+      },
+      "input": {
+        "args": {
+          "goal_ml": 2500,
+          "intake_ml": 3100
+        },
+        "op": "water_status"
+      },
+      "name": "water status over goal"
+    },
+    {
+      "expected": {
+        "goal_ml": null,
+        "intake_ml": 500,
+        "percent": null,
+        "remaining_ml": null
+      },
+      "input": {
+        "args": {
+          "goal_ml": 0,
+          "intake_ml": 500
+        },
+        "op": "water_status"
+      },
+      "name": "water status no goal"
+    },
+    {
+      "expected": {
+        "percent": 66,
+        "remaining": 47.6,
+        "target": 140.0,
+        "value": 92.4
+      },
+      "input": {
+        "args": {
+          "target": 140,
+          "value": 92.36
+        },
+        "op": "progress"
+      },
+      "name": "protein progress"
+    },
+    {
+      "expected": {
+        "percent": null,
+        "remaining": null,
+        "target": null,
+        "value": 92.4
+      },
+      "input": {
+        "args": {
+          "target": null,
+          "value": 92.36
+        },
+        "op": "progress"
+      },
+      "name": "progress no target"
+    },
+    {
+      "expected": {
+        "percent": 111,
+        "remaining": 0.0,
+        "target": 2200.0,
+        "value": 2450.0
+      },
+      "input": {
+        "args": {
+          "target": 2200,
+          "value": 2450
+        },
+        "op": "progress"
+      },
+      "name": "progress over target"
+    },
+    {
+      "expected": {
+        "bmi": 22.9
+      },
+      "input": {
+        "args": {
+          "height_cm": 175,
+          "weight_kg": 70
+        },
+        "op": "bmi"
+      },
+      "name": "bmi"
+    },
+    {
+      "expected": {
+        "bmi": null
+      },
+      "input": {
+        "args": {
+          "height_cm": null,
+          "weight_kg": 70
+        },
+        "op": "bmi"
+      },
+      "name": "bmi missing height"
+    },
+    {
+      "expected": {
+        "change_kg": -1.4,
+        "count": 3,
+        "first_kg": 73.3,
+        "last_kg": 71.8
+      },
+      "input": {
+        "args": {
+          "entries": [
+            {
+              "kg": 71.84,
+              "t_ms": 300
+            },
+            {
+              "kg": 73.26,
+              "t_ms": 100
+            },
+            {
+              "kg": 72.5,
+              "t_ms": 200
+            }
+          ]
+        },
+        "op": "weight_change"
+      },
+      "name": "weight change unordered"
+    },
+    {
+      "expected": {
+        "change_kg": null,
+        "count": 0,
+        "first_kg": null,
+        "last_kg": null
+      },
+      "input": {
+        "args": {
+          "entries": []
+        },
+        "op": "weight_change"
+      },
+      "name": "weight change empty"
+    },
+    {
+      "expected": {
+        "reps": 30,
+        "sets": 3,
+        "volume_kg": 1100.0
+      },
+      "input": {
+        "args": {
+          "sets": [
+            {
+              "reps": 10,
+              "weight_kg": 60
+            },
+            {
+              "reps": 8,
+              "weight_kg": 62.5
+            },
+            {
+              "reps": 12,
+              "weight_kg": 0
+            }
+          ]
+        },
+        "op": "set_volume"
+      },
+      "name": "set volume"
+    },
+    {
+      "expected": {
+        "reps": 0,
+        "sets": 0,
+        "volume_kg": 0.0
+      },
+      "input": {
+        "args": {
+          "sets": []
+        },
+        "op": "set_volume"
+      },
+      "name": "set volume empty"
+    },
+    {
+      "expected": {
+        "elapsed_s": 28800,
+        "goal_s": 57600,
+        "percent": 50,
+        "reached": false,
+        "remaining_s": 28800
+      },
+      "input": {
+        "args": {
+          "goal_minutes": 960,
+          "now_ms": 29800999,
+          "started_ms": 1000000
+        },
+        "op": "fasting_progress"
+      },
+      "name": "fasting halfway"
+    },
+    {
+      "expected": {
+        "elapsed_s": 61200,
+        "goal_s": 57600,
+        "percent": 106,
+        "reached": true,
+        "remaining_s": 0
+      },
+      "input": {
+        "args": {
+          "goal_minutes": 960,
+          "now_ms": 61200000,
+          "started_ms": 0
+        },
+        "op": "fasting_progress"
+      },
+      "name": "fasting reached"
+    },
+    {
+      "expected": {
+        "elapsed_s": 0,
+        "goal_s": 3600,
+        "percent": 0,
+        "reached": false,
+        "remaining_s": 3600
+      },
+      "input": {
+        "args": {
+          "goal_minutes": 60,
+          "now_ms": 1000,
+          "started_ms": 5000
+        },
+        "op": "fasting_progress"
+      },
+      "name": "fasting clock skew"
+    }
+  ],
+  "format": "ayuvo-actions-vectors",
+  "function": "compute",
+  "version": 1
+}

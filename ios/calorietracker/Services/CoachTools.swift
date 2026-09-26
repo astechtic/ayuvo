@@ -37,6 +37,8 @@ struct CoachTools {
     /// The conversation's data switches (docs/coach.md §8). A switch can only ever narrow what the
     /// source's own consent already permits; it never grants access.
     var sources: CoachDataSwitches = .allOn
+    /// Receives `propose_action` cards for this turn (docs/actions.md §Coach); nil hides the tool.
+    var actionProposals: CoachActionProposalSink? = nil
 
     static let nutritionToolNames: [String] = [
         "get_data_summary",
@@ -260,6 +262,9 @@ struct CoachTools {
     /// Async entry used by the provider loops. Only the health tools need it (they read the
     /// SQLite mirror); every other name delegates to the untouched synchronous `execute`.
     func executeAsync(name: String, arguments: [String: Any]) async -> String {
+        if Self.isActionTool(name), actionToolNames.contains(name) {
+            return await executeActionTool(name: name, arguments: arguments)
+        }
         if Self.recordsToolNames.contains(name) {
             return await RecordsCoachToolExecutor.execute(name: name, arguments: arguments, context: records?.toolsAvailable == true ? records : nil)
         }

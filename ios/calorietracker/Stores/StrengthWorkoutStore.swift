@@ -95,7 +95,8 @@ final class StrengthWorkoutStore {
     init(
         defaults: UserDefaults = .standard,
         storageKey: String = StrengthWorkoutStore.defaultStorageKey,
-        corruptBackupDirectory: URL? = nil
+        corruptBackupDirectory: URL? = nil,
+        observesExternalChanges: Bool = true
     ) {
         self.defaults = defaults
         self.storageKey = storageKey
@@ -104,7 +105,14 @@ final class StrengthWorkoutStore {
         }
         self.stateBlob = PersistedBlobGuard(defaults: defaults, key: storageKey, backupDirectory: corruptBackupDirectory)
         load()
+        if observesExternalChanges { startObservingExternalChanges() }
     }
+
+    deinit {
+        if let externalChangeObserver { NotificationCenter.default.removeObserver(externalChangeObserver) }
+    }
+
+    static let externalChangeNotification = Notification.Name("app.ayuvo.workoutDiaryDidChange")
 
     /// Fresh start for the exercises-dataset catalogue: drop the v1 diary and the
     /// filter selections that used the retired metadata vocabulary.
@@ -816,6 +824,28 @@ final class StrengthWorkoutStore {
 
     private func resetInMemoryState() {
         apply(PersistedState())
+    }
+
+    // MARK: - External changes (Siri / Shortcuts / deep-link actions run in this process)
+
+    @ObservationIgnored private var externalChangeObserver: NSObjectProtocol?
+
+    private func startObservingExternalChanges() {
+        externalChangeObserver = NotificationCenter.default.addObserver(
+            forName: Self.externalChangeNotification, object: nil, queue: nil
+        ) { [weak self] _ in
+            if Thread.isMainThread {
+                MainActor.assumeIsolated { self?.reloadFromDefaults() }
+            } else {
+                DispatchQueue.main.async { self?.reloadFromDefaults() }
+            }
+        }
+    }
+
+    /// Tells the app's live store that an action wrote through a separate instance, so the next
+    /// save here cannot overwrite that write with a stale in-memory copy.
+    static func postExternalChangeNotification() {
+        NotificationCenter.default.post(name: externalChangeNotification, object: nil)
     }
 
     static let persistenceBlockedMessage =

@@ -448,6 +448,10 @@ fun CoachScreen(container: AppContainer, onOpenRecord: (String) -> Unit = {}) {
                         onRegenerate = { vm.regenerate(it) },
                         onShareMessage = { CoachShare.text(ctx, it.content, shareChooserTitle) },
                         onShowVariant = { vm.showVariant(it) },
+                        proposals = ui.actionProposals,
+                        outcomes = ui.actionOutcomes,
+                        onConfirmProposal = vm::confirmProposal,
+                        onDismissProposal = vm::dismissProposal,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -781,6 +785,10 @@ private fun MessageList(
     onRegenerate: (CoachMessage) -> Unit = {},
     onShareMessage: (CoachMessage) -> Unit = {},
     onShowVariant: (CoachMessage) -> Unit = {},
+    proposals: List<com.ayuvo.health.actions.ActionProposal> = emptyList(),
+    outcomes: Map<String, String> = emptyMap(),
+    onConfirmProposal: (String) -> Unit = {},
+    onDismissProposal: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -808,6 +816,15 @@ private fun MessageList(
                     )
                 }
             }
+        }
+
+        items(proposals, key = { "proposal-" + it.id }) { proposal ->
+            CoachProposalCard(
+                proposal = proposal,
+                outcome = outcomes[proposal.id],
+                onConfirm = { onConfirmProposal(proposal.id) },
+                onDismiss = { onDismissProposal(proposal.id) }
+            )
         }
 
         if (sending) {
@@ -1394,3 +1411,56 @@ internal fun inlineMarkdown(text: String, linkColor: Color, codeBg: Color): Anno
     }
 }
 
+
+/**
+ * A write Coach suggested (docs/actions.md). Nothing has changed yet: Confirm runs it through the
+ * action executor, Dismiss drops it. After confirming, the card shows the result line.
+ */
+@Composable
+private fun CoachProposalCard(
+    proposal: com.ayuvo.health.actions.ActionProposal,
+    outcome: String?,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(0.6.dp, AppColors.Calorie.copy(alpha = 0.25f), RoundedCornerShape(16.dp))
+            .padding(14.dp)
+            .testTag("coach.proposal")
+    ) {
+        Text(
+            androidx.compose.ui.res.stringResource(com.ayuvo.health.R.string.coach_proposal_title),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = AppColors.Calorie
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(proposal.title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
+        proposal.lines.forEach { Text(it, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)) }
+        if (proposal.ai) {
+            Text(
+                androidx.compose.ui.res.stringResource(com.ayuvo.health.R.string.action_confirm_ai_note),
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        }
+        Spacer(Modifier.height(10.dp))
+        if (outcome != null) {
+            Text(outcome, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface)
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                androidx.compose.material3.OutlinedButton(onClick = onDismiss, modifier = Modifier.testTag("coach.proposal.dismiss")) {
+                    Text(androidx.compose.ui.res.stringResource(com.ayuvo.health.R.string.coach_proposal_dismiss))
+                }
+                androidx.compose.material3.Button(onClick = onConfirm, modifier = Modifier.testTag("coach.proposal.confirm")) {
+                    Text(androidx.compose.ui.res.stringResource(com.ayuvo.health.R.string.coach_proposal_confirm))
+                }
+            }
+        }
+    }
+}

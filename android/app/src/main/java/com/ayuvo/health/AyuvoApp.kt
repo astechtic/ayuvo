@@ -365,6 +365,9 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         ).also { com.ayuvo.health.records.coach.RecordsCoachContract.active = it }
     }
 
+    /** One-shot "open Coach with this question typed in" request from the `open.coach` action. */
+    val coachPromptRequests = kotlinx.coroutines.flow.MutableStateFlow<com.ayuvo.health.actions.CoachPromptRequest?>(null)
+
     /** One-shot "open Coach with these records and this prompt" request from the Records screens (§27). */
     val coachRecordsRequests = kotlinx.coroutines.flow.MutableStateFlow<com.ayuvo.health.records.coach.CoachRecordsRequest?>(null)
 
@@ -549,6 +552,16 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             scope = scope
         )
     }
+    // -- Actions (docs/actions.md): deep links, launcher shortcuts, App Actions and Coach ---------
+    val actionCatalog: com.ayuvo.health.actions.ActionCatalog by lazy {
+        com.ayuvo.health.actions.ActionCatalog.parse(
+            app.assets.open(com.ayuvo.health.actions.ActionCatalog.ASSET_PATH).bufferedReader().use { it.readText() }
+        ).also { com.ayuvo.health.actions.ActionCatalog.active = it }
+    }
+    val actions: com.ayuvo.health.actions.ActionExecutor by lazy {
+        com.ayuvo.health.actions.ActionExecutor(actionCatalog, com.ayuvo.health.actions.ContainerActionEnvironment(this))
+    }
+
     val cloudBackup = CloudBackupCoordinator(
         app, prefs, imageStore, keyStore,
         buildChatArchive = { coachChatArchiveBytes() },

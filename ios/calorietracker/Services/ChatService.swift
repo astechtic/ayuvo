@@ -81,7 +81,9 @@ struct ChatService {
         /// The conversation's data switches (docs/coach.md §8); they only ever narrow.
         sources: CoachDataSwitches = .allOn,
         providerOverride: AIProvider? = nil,
-        profileOverride: String? = nil
+        profileOverride: String? = nil,
+        /// Collects `propose_action` cards; the caller shows them under the reply.
+        actionProposals: CoachActionProposalSink? = nil
     ) async throws -> String {
         // A switch that is off removes the source before the prompt or the tools see it, so nothing
         // downstream has to remember to check again.
@@ -120,7 +122,8 @@ struct ChatService {
             healthAccessEnabled: health?.context.enabled ?? false,
             records: records,
             medications: medications,
-            sources: sources
+            sources: sources,
+            actionProposals: actionProposals
         )
 
         // Tool-less modes cannot call the health tools; give them a short 7-day digest instead,
@@ -514,13 +517,13 @@ struct ChatService {
 
     /// OpenAI-style tool schema: each tool is `{"type":"function","function":{name, description, parameters}}`.
     private static func openAIToolsArray(for tools: CoachTools) -> [[String: Any]] {
-        tools.availableToolNames.map { name -> [String: Any] in
+        tools.allToolNames.map { name -> [String: Any] in
             [
                 "type": "function",
                 "function": [
                     "name": name,
-                    "description": CoachTools.toolDescriptions[name] ?? "",
-                    "parameters": CoachTools.parameterSchema(for: name),
+                    "description": CoachTools.description(for: name),
+                    "parameters": CoachTools.schema(for: name),
                 ],
             ]
         }
@@ -637,11 +640,11 @@ struct ChatService {
     /// arrive as `tool_use` content blocks; results go back as `tool_result`
     /// blocks within a user message.
     private static func anthropicToolsArray(for tools: CoachTools) -> [[String: Any]] {
-        tools.availableToolNames.map { name -> [String: Any] in
+        tools.allToolNames.map { name -> [String: Any] in
             [
                 "name": name,
-                "description": CoachTools.toolDescriptions[name] ?? "",
-                "input_schema": CoachTools.parameterSchema(for: name),
+                "description": CoachTools.description(for: name),
+                "input_schema": CoachTools.schema(for: name),
             ]
         }
     }
@@ -781,11 +784,11 @@ struct ChatService {
     /// Gemini tool schema: `{"functionDeclarations": [{name, description, parameters}]}`
     /// where parameters use OpenAPI type names (object/string/integer).
     private static func geminiToolsObject(for tools: CoachTools) -> [String: Any] {
-        let declarations: [[String: Any]] = tools.availableToolNames.map { name in
+        let declarations: [[String: Any]] = tools.allToolNames.map { name in
             [
                 "name": name,
-                "description": CoachTools.toolDescriptions[name] ?? "",
-                "parameters": CoachTools.parameterSchema(for: name),
+                "description": CoachTools.description(for: name),
+                "parameters": CoachTools.schema(for: name),
             ]
         }
         return ["functionDeclarations": declarations]

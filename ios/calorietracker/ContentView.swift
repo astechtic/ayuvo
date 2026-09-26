@@ -11,14 +11,46 @@ struct ContentView: View {
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @State private var appUpdateState: AppUpdateState = .idle
     @State private var navigator = AppNavigator()
+    @State private var actionAlert: ActionAlert?
+
+    /// Deep-link confirmation or the outcome of an action (docs/actions.md §Deep links).
+    private enum ActionAlert: Identifiable {
+        case confirm(ActionPendingConfirmation)
+        case message(String)
+
+        var id: String {
+            switch self {
+            case .confirm(let pending): "confirm-\(pending.id)"
+            case .message(let text): "message-\(text)"
+            }
+        }
+    }
 
     var body: some View {
         tabs
             .environment(navigator)
             .tint(AppThemeColor.color(for: appThemeColorRaw).color)
             .task {
+                ActionLiveContext.shared.recordsStore = recordsStore
                 consumePendingLaunchRoutes()
                 await refreshAppUpdateState()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .actionRouteRequested)) { _ in
+                consumeActionRequests()
+            }
+            .alert(actionAlertTitle, isPresented: Binding(get: { actionAlert != nil }, set: { if !$0 { actionAlert = nil } }), presenting: actionAlert) { alert in
+                switch alert {
+                case .confirm(let pending):
+                    Button(String(localized: "Confirm")) { confirmAction(pending) }
+                    Button(String(localized: "Cancel"), role: .cancel) {}
+                case .message:
+                    Button(String(localized: "OK"), role: .cancel) {}
+                }
+            } message: { alert in
+                switch alert {
+                case .confirm(let pending): Text(pending.summary)
+                case .message(let text): Text(text)
+                }
             }
             .onChange(of: recordsStore.tabRequest) { _, _ in
                 // Share extension / "Open in Ayuvo" imports and Coach "Used records" chips land on Records.
@@ -110,6 +142,45 @@ struct ContentView: View {
         if let method = FoodLogMethodCoordinator.consumePending() {
             navigator.apply(.logMethod(method), medicationStore: medicationStore)
             return
+        }
+        consumeActionRequests()
+    }
+
+    private var actionAlertTitle: String {
+        if case .confirm = actionAlert { return String(localized: "Confirm in Ayuvo") }
+        return String(localized: "Ayuvo")
+    }
+
+    /// Siri / Shortcuts OPEN actions and `ayuvo://action` / `ayuvo://open` links.
+    private func consumeActionRequests() {
+        if let route = ActionRouteCoordinator.consumeRoute() {
+            navigator.apply(route, recordsStore: recordsStore, medicationStore: medicationStore, chatStore: chatStore)
+        }
+        guard let link = ActionRouteCoordinator.consumeLink() else { return }
+        Task {
+            switch await ActionRouteCoordinator.resolve(link: link, executor: .shared) {
+            case .route(let route):
+                navigator.apply(route, recordsStore: recordsStore, medicationStore: medicationStore, chatStore: chatStore)
+            case .confirm(let pending):
+                actionAlert = .confirm(pending)
+            case .invalid(let message):
+                actionAlert = .message(message)
+            }
+        }
+    }
+
+    /// A deep link asked to change data: runs only after the user tapped Confirm.
+    private func confirmAction(_ pending: ActionPendingConfirmation) {
+        Task {
+            do {
+                let result = try await ActionExecutor.shared.perform(pending.validation, source: .deeplink, confirmed: true)
+                if let route = result.route {
+                    navigator.apply(route, recordsStore: recordsStore, medicationStore: medicationStore, chatStore: chatStore)
+                }
+                actionAlert = .message(result.dialog)
+            } catch {
+                actionAlert = .message((error as? ActionError)?.message ?? error.localizedDescription)
+            }
         }
     }
 
