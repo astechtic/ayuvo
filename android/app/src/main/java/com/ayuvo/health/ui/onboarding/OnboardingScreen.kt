@@ -434,7 +434,9 @@ private fun WelcomeStep() {
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
+        com.ayuvo.health.ui.design.AyuvoPrivacyPill(showsOpenSource = true, opensPrivacyPage = true)
+        Spacer(Modifier.height(20.dp))
         // Quick feature tour — everything is free and already unlocked (iOS parity).
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             WelcomeFeatureRow(Icons.Outlined.PhotoCamera, stringResource(R.string.onboarding_feature_snap))

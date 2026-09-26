@@ -259,6 +259,15 @@ struct AboutSettingsSections: View {
                 }
                 .tint(.primary)
 
+                Link(destination: AppLinks.githubURL) {
+                    Label {
+                        Text("Source code on GitHub")
+                    } icon: {
+                        SettingsIcon("chevron.left.forwardslash.chevron.right", tint: SettingsTint.legal)
+                    }
+                }
+                .tint(.primary)
+
                 NavigationLink {
                     LicensesView()
                 } label: {

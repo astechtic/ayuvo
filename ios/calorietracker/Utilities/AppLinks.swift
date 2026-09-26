@@ -7,6 +7,11 @@ nonisolated enum AppLinks {
     static let privacyURL = URL(string: "https://ayuvo-health.web.app/privacy")!
     static let termsURL = URL(string: "https://ayuvo-health.web.app/terms")!
     static let supportURL = URL(string: "https://ayuvo-health.web.app/support")!
+    static let privacyFirstURL = URL(string: "https://ayuvo-health.web.app/privacy-first")!
+    static let openSourceURL = URL(string: "https://ayuvo-health.web.app/open-source")!
+
+    /// Public source repository (MIT). Opened only when the user taps a link.
+    static let githubURL = URL(string: "https://github.com/astechtic/ayuvo")!
 
     /// Support mailbox used by Help & Support.
     static let supportEmail = "yaaratech@gmail.com"

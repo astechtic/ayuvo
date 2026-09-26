@@ -26,6 +26,79 @@ extension View {
     }
 }
 
+// MARK: - Privacy & open source
+
+/// Small capsule: lock + "Private by design". Optionally links to the privacy-first page.
+struct AyuvoPrivacyPill: View {
+    var showsOpenSource = false
+    var opensPrivacyPage = false
+
+    private var label: Text {
+        showsOpenSource ? Text("Private · Open source") : Text("Private by design")
+    }
+
+    private var pill: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 11, weight: .bold))
+            label
+                .font(.system(.footnote, design: .rounded, weight: .semibold))
+        }
+        .foregroundStyle(AyuvoPalette.body)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(AyuvoPalette.body.opacity(0.14), in: Capsule())
+    }
+
+    var body: some View {
+        if opensPrivacyPage {
+            Link(destination: AppLinks.privacyFirstURL) { pill }
+                .accessibilityHint(Text("Opens the privacy page"))
+        } else {
+            pill.accessibilityElement(children: .combine)
+        }
+    }
+}
+
+/// Settings card: what "private" means in Ayuvo, and where to read the code.
+struct AyuvoPrivacyOpenSourceCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 40, height: 40)
+                    .background(AyuvoPalette.body.gradient, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Private by design")
+                        .font(.system(.headline, design: .rounded))
+                    Text("Open source · MIT")
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Text("Your health data is kept on this device. No account, no ads, no analytics. Ayuvo's code is open source, so anyone can check what it does.")
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 16) {
+                Link(destination: AppLinks.privacyFirstURL) {
+                    Label("How we protect it", systemImage: "hand.raised.fill")
+                }
+                Link(destination: AppLinks.githubURL) {
+                    Label("View source", systemImage: "chevron.left.forwardslash.chevron.right")
+                }
+            }
+            .font(.system(.footnote, design: .rounded, weight: .semibold))
+            .tint(AyuvoPalette.body)
+        }
+        .padding(.vertical, 6)
+        .accessibilityIdentifier("settings.privacyOpenSource")
+    }
+}
+
 // MARK: - Section header
 
 struct AyuvoSectionHeader<Trailing: View>: View {

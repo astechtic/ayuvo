@@ -10,6 +10,11 @@ object AppLinks {
     const val PRIVACY_URL = "$SITE_URL/privacy"
     const val TERMS_URL = "$SITE_URL/terms"
     const val SUPPORT_URL = "$SITE_URL/support"
+    const val PRIVACY_FIRST_URL = "$SITE_URL/privacy-first"
+    const val OPEN_SOURCE_URL = "$SITE_URL/open-source"
+
+    /** Public source repository (MIT). Opened only when the user taps a link. */
+    const val GITHUB_URL = "https://github.com/astechtic/ayuvo"
 
     /** Support / feedback address used by Help & Support. */
     const val SUPPORT_EMAIL = "yaaratech@gmail.com"

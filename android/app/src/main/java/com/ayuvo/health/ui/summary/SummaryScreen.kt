@@ -180,12 +180,19 @@ fun SummaryScreen(
             verticalArrangement = Arrangement.spacedBy(AyuvoSpacing.ItemGap)
         ) {
             item(key = "date") {
-                Text(
-                    ui.today.format(dateFormatter),
-                    fontSize = 15.sp,
-                    color = com.ayuvo.health.ui.design.AyuvoColors.secondaryLabel(),
-                    modifier = Modifier.padding(start = 4.dp, bottom = 4.dp).testTag("summary.date")
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                ) {
+                    Text(
+                        ui.today.format(dateFormatter),
+                        fontSize = 15.sp,
+                        color = com.ayuvo.health.ui.design.AyuvoColors.secondaryLabel(),
+                        modifier = Modifier.testTag("summary.date")
+                    )
+                    com.ayuvo.health.ui.design.AyuvoPrivacyPill(opensPrivacyPage = true)
+                }
             }
             item(key = "rings") {
                 SummaryRingsCard(

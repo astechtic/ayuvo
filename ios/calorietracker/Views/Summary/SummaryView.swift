@@ -15,10 +15,14 @@ struct SummaryView: View {
                 // Eager stack: the Summary is short, and keeping every card realized means
                 // scrolling never drops a card out of the accessibility tree.
                 VStack(alignment: .leading, spacing: 20) {
-                    Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 4)
+                    HStack {
+                        Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                            .font(.system(.subheadline, design: .rounded))
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        AyuvoPrivacyPill(opensPrivacyPage: true)
+                    }
+                    .padding(.horizontal, 4)
 
                     SummaryRingsCard()
                     SummaryTodaySection()

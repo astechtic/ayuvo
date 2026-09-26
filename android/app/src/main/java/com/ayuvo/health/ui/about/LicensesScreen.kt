@@ -1,6 +1,9 @@
 package com.ayuvo.health.ui.about
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.statusBars
+import com.ayuvo.health.AppLinks
 import androidx.compose.foundation.layout.WindowInsets
 import com.ayuvo.health.ui.design.SurfaceCard
 import com.ayuvo.health.ui.design.AyuvoTopBar
@@ -77,6 +80,25 @@ fun LicensesScreen(onBack: () -> Unit) {
             contentPadding = PaddingValues(top = 14.dp, bottom = BottomNavScrollPadding),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
+            item {
+                SurfaceCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    padding = PaddingValues(16.dp),
+                    onClick = { runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(AppLinks.GITHUB_URL))) } }
+                ) {
+                    Text(
+                        stringResource(R.string.about_source_github),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        stringResource(R.string.about_open_source_blurb),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.62f)
+                    )
+                }
+            }
             item {
                 Text(
                     stringResource(R.string.about_licenses_intro),

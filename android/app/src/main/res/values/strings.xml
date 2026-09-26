@@ -1014,6 +1014,15 @@
     <string name="about_third_party_notices">Third-party notices</string>
     <string name="about_open_source_licence">Open-source licence</string>
     <string name="about_licenses_intro">Ayuvo is built on an MIT-licensed open-source project. The original notice below is retained as required by the licence.</string>
+    <string name="about_source_github">Source code on GitHub</string>
+    <string name="about_open_source_blurb">Ayuvo is open source under the MIT licence. Read the code, report issues or contribute.</string>
+    <string name="privacy_pill">Private by design</string>
+    <string name="privacy_pill_open_source">Private · Open source</string>
+    <string name="privacy_card_title">Private by design</string>
+    <string name="privacy_card_subtitle">Open source · MIT</string>
+    <string name="privacy_card_body">Your health data is kept on this device. No account, no ads, no analytics. Ayuvo\'s code is open source, so anyone can check what it does.</string>
+    <string name="privacy_card_how">How we protect it</string>
+    <string name="privacy_card_source">View source</string>
     <string name="about_licence_load_error">Could not load the licence text.</string>
     <string name="about_no_email_app">No email app found. Address copied: %1$s</string>
     <string name="support_subject_contact">Ayuvo support</string>

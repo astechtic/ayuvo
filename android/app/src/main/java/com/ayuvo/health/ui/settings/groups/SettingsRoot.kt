@@ -36,6 +36,7 @@ import com.ayuvo.health.R
 import com.ayuvo.health.models.UserProfile
 import com.ayuvo.health.ui.design.AyuvoColors
 import com.ayuvo.health.ui.design.AyuvoPalette
+import com.ayuvo.health.ui.design.AyuvoPrivacyOpenSourceCard
 import com.ayuvo.health.ui.design.AyuvoShapes
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
@@ -52,6 +53,7 @@ internal fun SettingsRoot(ctx: SettingsPageContext) {
     SettingsProfileHeader(ctx.ui.profile, ctx.ui.heightMetric, ctx.ui.weightMetric) {
         ctx.actions.openPage(SettingsPage.PERSONAL_INFO)
     }
+    AyuvoPrivacyOpenSourceCard(modifier = Modifier.testTag("settings.privacyOpenSource"))
     SettingsGroup.entries.forEach { group ->
         InsetGroup(
             modifier = Modifier.testTag("settings.group.${group.tag}"),

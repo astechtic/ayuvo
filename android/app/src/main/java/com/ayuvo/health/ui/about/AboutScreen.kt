@@ -199,6 +199,10 @@ fun AboutSettingsRows(
                     open(AppLinks.TERMS_URL)
                 }
                 Hairline()
+                AboutRow(Icons.Filled.Code, stringResource(R.string.about_source_github), tint = AboutTint.Gray) {
+                    open(AppLinks.GITHUB_URL)
+                }
+                Hairline()
                 AboutRow(Icons.Filled.Code, stringResource(R.string.about_open_source_licence), tint = AboutTint.Gray, onClick = onOpenLicence)
                 Hairline()
                 AboutRow(Icons.Filled.Description, stringResource(R.string.about_third_party_notices), tint = AboutTint.Gray) {

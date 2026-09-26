@@ -19,6 +19,11 @@ struct SettingsView: View {
                 }
                 .listRowBackground(AppColors.appCard)
 
+                Section {
+                    AyuvoPrivacyOpenSourceCard()
+                }
+                .listRowBackground(AppColors.appCard)
+
                 ForEach(SettingsGroup.allCases) { group in
                     Section {
                         ForEach(group.panes) { pane in

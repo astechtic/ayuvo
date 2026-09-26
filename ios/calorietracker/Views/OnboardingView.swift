@@ -282,6 +282,8 @@ struct OnboardingView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
 
+                AyuvoPrivacyPill(showsOpenSource: true, opensPrivacyPage: true)
+
                 // Quick feature tour — everything is free and already unlocked.
                 VStack(alignment: .leading, spacing: 12) {
                     welcomeFeatureRow(icon: "camera.fill", text: "Snap a meal — AI logs it")
