@@ -1,0 +1,2901 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": -2.3,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 100,
+            "weight": 30
+          },
+          {
+            "detail": {
+              "goal_ml": 2500,
+              "water_ml": 2600
+            },
+            "id": "hydration",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal": 8000,
+              "steps": 10432
+            },
+            "id": "activity",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 50.0,
+              "previous_day_category": "none",
+              "sessions": 1
+            },
+            "id": "training",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "asleep_min": 460,
+              "baseline_min": 439.5
+            },
+            "id": "sleep",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "label": "good",
+              "score": 78
+            },
+            "id": "recovery",
+            "included": true,
+            "score": 78,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 98,
+        "improve": [
+          {
+            "params": {},
+            "rule_id": "lighter_tomorrow",
+            "text": "Today's training load was high; consider a lighter session tomorrow."
+          }
+        ],
+        "needs_attention": [],
+        "not_logged": [],
+        "reduce": [],
+        "went_well": [
+          {
+            "params": {
+              "calories": 2150,
+              "target": 2200
+            },
+            "rule_id": "calories_on_target",
+            "text": "Calories were on target: 2,150 of 2,200 kcal."
+          },
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          },
+          {
+            "params": {
+              "goal_ml": 2500,
+              "water_ml": 2600
+            },
+            "rule_id": "water_goal_met",
+            "text": "You drank 2,600 ml of water, meeting your 2,500 ml goal."
+          },
+          {
+            "params": {
+              "goal": 8000,
+              "steps": 10432
+            },
+            "rule_id": "steps_goal_met",
+            "text": "You walked 10,432 steps, above your 8,000 step goal."
+          },
+          {
+            "params": {
+              "minutes": 50
+            },
+            "rule_id": "workout_done",
+            "text": "You trained for 50 min."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2000,
+              "sugar_g": 40
+            }
+          },
+          "patterns": [],
+          "recovery": {
+            "label": "good",
+            "score": 78,
+            "status": "ok"
+          },
+          "series": {
+            "steps": {
+              "2026-09-20": 10432
+            }
+          },
+          "sleep": {
+            "nights": [
+              [
+                427,
+                1788212580000,
+                1788239400000
+              ],
+              [
+                424,
+                1788298680000,
+                1788325320000
+              ],
+              [
+                421,
+                1788384780000,
+                1788411240000
+              ],
+              [
+                458,
+                1788474480000,
+                1788503160000
+              ],
+              [
+                455,
+                1788560580000,
+                1788589080000
+              ],
+              [
+                452,
+                1788646740000,
+                1788675060000
+              ],
+              [
+                449,
+                1788732900000,
+                1788761040000
+              ],
+              [
+                447,
+                1788819060000,
+                1788847080000
+              ],
+              [
+                444,
+                1788905220000,
+                1788933060000
+              ],
+              [
+                442,
+                1788991380000,
+                1789019100000
+              ],
+              [
+                435,
+                1789077240000,
+                1789104540000
+              ],
+              [
+                433,
+                1789163460000,
+                1789190640000
+              ],
+              [
+                430,
+                1789249620000,
+                1789276620000
+              ],
+              [
+                428,
+                1789335840000,
+                1789362720000
+              ],
+              [
+                422,
+                1789421700000,
+                1789448220000
+              ],
+              [
+                420,
+                1789507920000,
+                1789534320000
+              ],
+              [
+                458,
+                1789597680000,
+                1789626360000
+              ],
+              [
+                456,
+                1789683900000,
+                1789712460000
+              ],
+              [
+                450,
+                1789769760000,
+                1789797960000
+              ],
+              [
+                460,
+                1789855200000,
+                1789884000000
+              ]
+            ],
+            "start": "2026-09-01"
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "Europe/London",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": true,
+            "workouts": true
+          },
+          "water_ml": {
+            "2026-09-20": 2600
+          },
+          "workouts": [
+            {
+              "effort": null,
+              "end_ms": 1789887000000,
+              "start_ms": 1789884000000
+            }
+          ]
+        }
+      },
+      "name": "good_day_everything_logged"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": null,
+            "id": "nutrition",
+            "included": false,
+            "score": null,
+            "weight": 30
+          },
+          {
+            "detail": {
+              "goal_ml": 2500,
+              "water_ml": 1100
+            },
+            "id": "hydration",
+            "included": true,
+            "score": 44,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal": 8000,
+              "steps": 5200
+            },
+            "id": "activity",
+            "included": true,
+            "score": 65,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 0.0,
+              "previous_day_category": "none",
+              "sessions": 0
+            },
+            "id": "training",
+            "included": true,
+            "score": 50,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "asleep_min": 400,
+              "baseline_min": 439.5
+            },
+            "id": "sleep",
+            "included": true,
+            "score": 95,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 69,
+        "improve": [
+          {
+            "params": {
+              "gap": 2800,
+              "walk_min": 30
+            },
+            "rule_id": "improve_steps",
+            "text": "Aim for 2,800 more steps tomorrow, about a 30-minute walk."
+          },
+          {
+            "params": {
+              "gap_ml": 1400
+            },
+            "rule_id": "improve_water",
+            "text": "Keep water nearby tomorrow; you were 1,400 ml short of your goal."
+          },
+          {
+            "params": {
+              "minutes": 30
+            },
+            "rule_id": "improve_sleep",
+            "text": "Try winding down 30 min earlier tonight."
+          }
+        ],
+        "needs_attention": [
+          {
+            "params": {
+              "goal_ml": 2500,
+              "water_ml": 1100
+            },
+            "rule_id": "water_low",
+            "text": "You drank 1,100 ml, under half of your 2,500 ml goal."
+          }
+        ],
+        "not_logged": [
+          {
+            "params": {
+              "area": "nutrition",
+              "area_label": "Nutrition"
+            },
+            "rule_id": "not_logged",
+            "text": "Nutrition: not logged today"
+          },
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          }
+        ],
+        "reduce": [],
+        "went_well": []
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {},
+          "recovery": null,
+          "series": {
+            "steps": {
+              "2026-09-20": 5200
+            }
+          },
+          "sleep": {
+            "nights": [
+              [
+                427,
+                1788230580000,
+                1788257400000
+              ],
+              [
+                424,
+                1788316680000,
+                1788343320000
+              ],
+              [
+                421,
+                1788402780000,
+                1788429240000
+              ],
+              [
+                458,
+                1788492480000,
+                1788521160000
+              ],
+              [
+                455,
+                1788578580000,
+                1788607080000
+              ],
+              [
+                452,
+                1788664740000,
+                1788693060000
+              ],
+              [
+                449,
+                1788750900000,
+                1788779040000
+              ],
+              [
+                447,
+                1788837060000,
+                1788865080000
+              ],
+              [
+                444,
+                1788923220000,
+                1788951060000
+              ],
+              [
+                442,
+                1789009380000,
+                1789037100000
+              ],
+              [
+                435,
+                1789095240000,
+                1789122540000
+              ],
+              [
+                433,
+                1789181460000,
+                1789208640000
+              ],
+              [
+                430,
+                1789267620000,
+                1789294620000
+              ],
+              [
+                428,
+                1789353840000,
+                1789380720000
+              ],
+              [
+                422,
+                1789439700000,
+                1789466220000
+              ],
+              [
+                420,
+                1789525920000,
+                1789552320000
+              ],
+              [
+                458,
+                1789615680000,
+                1789644360000
+              ],
+              [
+                456,
+                1789701900000,
+                1789730460000
+              ],
+              [
+                450,
+                1789787760000,
+                1789815960000
+              ],
+              [
+                400,
+                1789873200000,
+                1789898400000
+              ]
+            ],
+            "start": "2026-09-01"
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "America/New_York",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": true,
+            "workouts": true
+          },
+          "water_ml": {
+            "2026-09-20": 1100
+          },
+          "workouts": []
+        }
+      },
+      "name": "no_nutrition_no_workout",
+      "notes": "nutrition and recovery not logged; training is a plain rest day (50)"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": -2.3,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 100,
+            "weight": 30
+          },
+          {
+            "detail": {
+              "goal_ml": 2500,
+              "water_ml": 2500
+            },
+            "id": "hydration",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal": 8000,
+              "steps": 8000
+            },
+            "id": "activity",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 0.0,
+              "previous_day_category": "none",
+              "sessions": 0
+            },
+            "id": "training",
+            "included": true,
+            "score": 50,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "asleep_min": 460,
+              "baseline_min": 439.5
+            },
+            "id": "sleep",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 94,
+        "improve": [],
+        "needs_attention": [],
+        "not_logged": [
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          }
+        ],
+        "reduce": [
+          {
+            "params": {
+              "average": 40,
+              "goal": 50,
+              "nutrient": "Sugar",
+              "unit": "g",
+              "value": 62
+            },
+            "rule_id": "reduce_nutrient_vs_average",
+            "text": "Sugar was 62 g, above your 50 g limit and your 28-day average of 40 g."
+          },
+          {
+            "params": {
+              "average": 12,
+              "goal": 25,
+              "nutrient": "Added sugar",
+              "unit": "g",
+              "value": 30
+            },
+            "rule_id": "reduce_nutrient_vs_average",
+            "text": "Added sugar was 30 g, above your 25 g limit and your 28-day average of 12 g."
+          },
+          {
+            "params": {
+              "average": 1980,
+              "goal": 2300,
+              "nutrient": "Sodium",
+              "unit": "mg",
+              "value": 3100
+            },
+            "rule_id": "reduce_nutrient_vs_average",
+            "text": "Sodium was 3,100 mg, above your 2,300 mg limit and your 28-day average of 1,980 mg."
+          },
+          {
+            "params": {
+              "average": 15,
+              "goal": 20,
+              "nutrient": "Saturated fat",
+              "unit": "g",
+              "value": 24
+            },
+            "rule_id": "reduce_nutrient_vs_average",
+            "text": "Saturated fat was 24 g, above your 20 g limit and your 28-day average of 15 g."
+          }
+        ],
+        "went_well": [
+          {
+            "params": {
+              "calories": 2150,
+              "target": 2200
+            },
+            "rule_id": "calories_on_target",
+            "text": "Calories were on target: 2,150 of 2,200 kcal."
+          },
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          },
+          {
+            "params": {
+              "goal_ml": 2500,
+              "water_ml": 2500
+            },
+            "rule_id": "water_goal_met",
+            "text": "You drank 2,500 ml of water, meeting your 2,500 ml goal."
+          },
+          {
+            "params": {
+              "goal": 8000,
+              "steps": 8000
+            },
+            "rule_id": "steps_goal_met",
+            "text": "You walked 8,000 steps, above your 8,000 step goal."
+          },
+          {
+            "params": {
+              "duration": "7h 40m"
+            },
+            "rule_id": "sleep_good",
+            "text": "You slept 7h 40m last night."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-08-31": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1900,
+              "sugar_g": 35
+            },
+            "2026-09-01": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2060,
+              "sugar_g": 44
+            },
+            "2026-09-02": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2020,
+              "sugar_g": 41
+            },
+            "2026-09-03": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1980,
+              "sugar_g": 38
+            },
+            "2026-09-04": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1940,
+              "sugar_g": 35
+            },
+            "2026-09-05": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1900,
+              "sugar_g": 44
+            },
+            "2026-09-06": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2060,
+              "sugar_g": 41
+            },
+            "2026-09-07": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2020,
+              "sugar_g": 38
+            },
+            "2026-09-08": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1980,
+              "sugar_g": 35
+            },
+            "2026-09-09": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1940,
+              "sugar_g": 44
+            },
+            "2026-09-10": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1900,
+              "sugar_g": 41
+            },
+            "2026-09-11": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2060,
+              "sugar_g": 38
+            },
+            "2026-09-12": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2020,
+              "sugar_g": 35
+            },
+            "2026-09-13": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1980,
+              "sugar_g": 44
+            },
+            "2026-09-14": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1940,
+              "sugar_g": 41
+            },
+            "2026-09-15": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1900,
+              "sugar_g": 38
+            },
+            "2026-09-16": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2060,
+              "sugar_g": 35
+            },
+            "2026-09-17": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2020,
+              "sugar_g": 44
+            },
+            "2026-09-18": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1980,
+              "sugar_g": 41
+            },
+            "2026-09-19": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1940,
+              "sugar_g": 38
+            },
+            "2026-09-20": {
+              "added_sugar_g": 30,
+              "caffeine_mg": 380,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 24,
+              "sodium_mg": 3100,
+              "sugar_g": 62
+            }
+          },
+          "series": {
+            "steps": {
+              "2026-09-20": 8000
+            }
+          },
+          "sleep": {
+            "nights": [
+              [
+                427,
+                1788216180000,
+                1788243000000
+              ],
+              [
+                424,
+                1788302280000,
+                1788328920000
+              ],
+              [
+                421,
+                1788388380000,
+                1788414840000
+              ],
+              [
+                458,
+                1788478080000,
+                1788506760000
+              ],
+              [
+                455,
+                1788564180000,
+                1788592680000
+              ],
+              [
+                452,
+                1788650340000,
+                1788678660000
+              ],
+              [
+                449,
+                1788736500000,
+                1788764640000
+              ],
+              [
+                447,
+                1788822660000,
+                1788850680000
+              ],
+              [
+                444,
+                1788908820000,
+                1788936660000
+              ],
+              [
+                442,
+                1788994980000,
+                1789022700000
+              ],
+              [
+                435,
+                1789080840000,
+                1789108140000
+              ],
+              [
+                433,
+                1789167060000,
+                1789194240000
+              ],
+              [
+                430,
+                1789253220000,
+                1789280220000
+              ],
+              [
+                428,
+                1789339440000,
+                1789366320000
+              ],
+              [
+                422,
+                1789425300000,
+                1789451820000
+              ],
+              [
+                420,
+                1789511520000,
+                1789537920000
+              ],
+              [
+                458,
+                1789601280000,
+                1789629960000
+              ],
+              [
+                456,
+                1789687500000,
+                1789716060000
+              ],
+              [
+                450,
+                1789773360000,
+                1789801560000
+              ],
+              [
+                460,
+                1789858800000,
+                1789887600000
+              ]
+            ],
+            "start": "2026-09-01"
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "UTC",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": true,
+            "workouts": true
+          },
+          "water_ml": {
+            "2026-09-20": 2500
+          },
+          "workouts": []
+        }
+      },
+      "name": "reduce_vs_goal_and_average",
+      "notes": "sodium, sugar, added sugar and saturated fat above goal and above the 28-day average; caffeine under its limit"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": -2.3,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 100,
+            "weight": 30
+          },
+          {
+            "detail": null,
+            "id": "hydration",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "activity",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 0.0,
+              "previous_day_category": "none",
+              "sessions": 0
+            },
+            "id": "training",
+            "included": true,
+            "score": 50,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "sleep",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 88,
+        "improve": [],
+        "needs_attention": [],
+        "not_logged": [
+          {
+            "params": {
+              "area": "hydration",
+              "area_label": "Hydration"
+            },
+            "rule_id": "not_logged",
+            "text": "Hydration: not logged today"
+          },
+          {
+            "params": {
+              "area": "activity",
+              "area_label": "Activity"
+            },
+            "rule_id": "not_logged",
+            "text": "Activity: not logged today"
+          },
+          {
+            "params": {
+              "area": "sleep",
+              "area_label": "Sleep"
+            },
+            "rule_id": "not_logged",
+            "text": "Sleep: not logged today"
+          },
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          }
+        ],
+        "reduce": [
+          {
+            "params": {
+              "goal": 2300,
+              "nutrient": "Sodium",
+              "unit": "mg",
+              "value": 2500
+            },
+            "rule_id": "reduce_nutrient",
+            "text": "Sodium was 2,500 mg, above your 2,300 mg limit."
+          }
+        ],
+        "went_well": [
+          {
+            "params": {
+              "calories": 2150,
+              "target": 2200
+            },
+            "rule_id": "calories_on_target",
+            "text": "Calories were on target: 2,150 of 2,200 kcal."
+          },
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-09-15": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1900,
+              "sugar_g": 38
+            },
+            "2026-09-16": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2060,
+              "sugar_g": 35
+            },
+            "2026-09-17": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2020,
+              "sugar_g": 44
+            },
+            "2026-09-18": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1980,
+              "sugar_g": 41
+            },
+            "2026-09-19": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 1940,
+              "sugar_g": 38
+            },
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2500,
+              "sugar_g": 40
+            }
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "UTC",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": true,
+            "workouts": true
+          },
+          "workouts": []
+        }
+      },
+      "name": "reduce_goal_only_no_history",
+      "notes": "only 5 logged days before: no 28-day average"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": -31.8,
+              "calories": 1500,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 12,
+              "protein_g": 80
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 63,
+            "weight": 30
+          },
+          {
+            "detail": {
+              "goal_ml": 2500,
+              "water_ml": 900
+            },
+            "id": "hydration",
+            "included": true,
+            "score": 36,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal": 8000,
+              "steps": 3100
+            },
+            "id": "activity",
+            "included": true,
+            "score": 39,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 0.0,
+              "previous_day_category": "high",
+              "sessions": 0
+            },
+            "id": "training",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "asleep_min": 320,
+              "baseline_min": 439.5
+            },
+            "id": "sleep",
+            "included": true,
+            "score": 76,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "label": "low",
+              "score": 29
+            },
+            "id": "recovery",
+            "included": true,
+            "score": 29,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 58,
+        "improve": [
+          {
+            "params": {
+              "gap_g": 60
+            },
+            "rule_id": "improve_protein",
+            "text": "Add a protein-rich food to tomorrow's meals to close the 60 g gap."
+          },
+          {
+            "params": {
+              "gap_g": 18
+            },
+            "rule_id": "improve_fiber",
+            "text": "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber."
+          },
+          {
+            "params": {
+              "gap": 4900,
+              "walk_min": 50
+            },
+            "rule_id": "improve_steps",
+            "text": "Aim for 4,900 more steps tomorrow, about a 50-minute walk."
+          },
+          {
+            "params": {
+              "gap_ml": 1600
+            },
+            "rule_id": "improve_water",
+            "text": "Keep water nearby tomorrow; you were 1,600 ml short of your goal."
+          },
+          {
+            "params": {
+              "minutes": 60
+            },
+            "rule_id": "improve_sleep",
+            "text": "Try winding down 60 min earlier tonight."
+          },
+          {
+            "params": {},
+            "rule_id": "recovery_focus",
+            "text": "Tomorrow could be a lighter, recovery-focused day."
+          }
+        ],
+        "needs_attention": [
+          {
+            "params": {
+              "calories": 1500,
+              "target": 2200,
+              "under_pct": 32
+            },
+            "rule_id": "calories_under",
+            "text": "Calories were 32% below your target (1,500 of 2,200 kcal)."
+          },
+          {
+            "params": {
+              "pct": 57,
+              "protein_g": 80
+            },
+            "rule_id": "protein_low",
+            "text": "Protein was 80 g, 57% of your target."
+          },
+          {
+            "params": {
+              "duration": "5h 20m"
+            },
+            "rule_id": "sleep_short",
+            "text": "You slept 5h 20m, under 6 hours."
+          },
+          {
+            "params": {
+              "diff_min": 120,
+              "duration": "5h 20m"
+            },
+            "rule_id": "sleep_below_usual",
+            "text": "You slept 5h 20m, 120 min less than your usual."
+          },
+          {
+            "params": {
+              "score": 29
+            },
+            "rule_id": "recovery_low",
+            "text": "Your recovery was low (29)."
+          },
+          {
+            "params": {
+              "goal": 8000,
+              "steps": 3100
+            },
+            "rule_id": "steps_low",
+            "text": "You walked 3,100 steps, under half of your 8,000 step goal."
+          }
+        ],
+        "not_logged": [],
+        "reduce": [],
+        "went_well": [
+          {
+            "params": {},
+            "rule_id": "planned_rest",
+            "text": "You took a rest day after a hard training day."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 1500,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 12,
+              "protein_g": 80,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2000,
+              "sugar_g": 40
+            }
+          },
+          "recovery": {
+            "label": "low",
+            "score": 29,
+            "status": "ok"
+          },
+          "series": {
+            "steps": {
+              "2026-09-20": 3100
+            }
+          },
+          "sleep": {
+            "nights": [
+              [
+                427,
+                1788196380000,
+                1788223200000
+              ],
+              [
+                424,
+                1788282480000,
+                1788309120000
+              ],
+              [
+                421,
+                1788368580000,
+                1788395040000
+              ],
+              [
+                458,
+                1788458280000,
+                1788486960000
+              ],
+              [
+                455,
+                1788544380000,
+                1788572880000
+              ],
+              [
+                452,
+                1788630540000,
+                1788658860000
+              ],
+              [
+                449,
+                1788716700000,
+                1788744840000
+              ],
+              [
+                447,
+                1788802860000,
+                1788830880000
+              ],
+              [
+                444,
+                1788889020000,
+                1788916860000
+              ],
+              [
+                442,
+                1788975180000,
+                1789002900000
+              ],
+              [
+                435,
+                1789061040000,
+                1789088340000
+              ],
+              [
+                433,
+                1789147260000,
+                1789174440000
+              ],
+              [
+                430,
+                1789233420000,
+                1789260420000
+              ],
+              [
+                428,
+                1789319640000,
+                1789346520000
+              ],
+              [
+                422,
+                1789405500000,
+                1789432020000
+              ],
+              [
+                420,
+                1789491720000,
+                1789518120000
+              ],
+              [
+                458,
+                1789581480000,
+                1789610160000
+              ],
+              [
+                456,
+                1789667700000,
+                1789696260000
+              ],
+              [
+                450,
+                1789753560000,
+                1789781760000
+              ],
+              [
+                320,
+                1789839000000,
+                1789859400000
+              ]
+            ],
+            "start": "2026-09-01"
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "Asia/Kolkata",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": true,
+            "workouts": true
+          },
+          "water_ml": {
+            "2026-09-20": 900
+          },
+          "workouts": [
+            {
+              "effort": 9,
+              "end_ms": 1789826400000,
+              "start_ms": 1789821000000
+            }
+          ]
+        }
+      },
+      "name": "low_recovery_short_sleep_rest_after_high_load"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": 10.0,
+              "calories": 2420,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 100,
+            "weight": 30
+          },
+          {
+            "detail": null,
+            "id": "hydration",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "activity",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "training",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "sleep",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 100,
+        "improve": [],
+        "needs_attention": [],
+        "not_logged": [
+          {
+            "params": {
+              "area": "activity",
+              "area_label": "Activity"
+            },
+            "rule_id": "not_logged",
+            "text": "Activity: not logged today"
+          },
+          {
+            "params": {
+              "area": "sleep",
+              "area_label": "Sleep"
+            },
+            "rule_id": "not_logged",
+            "text": "Sleep: not logged today"
+          },
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          }
+        ],
+        "reduce": [],
+        "went_well": [
+          {
+            "params": {
+              "calories": 2420,
+              "target": 2200
+            },
+            "rule_id": "calories_on_target",
+            "text": "Calories were on target: 2,420 of 2,200 kcal."
+          },
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2420,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2000,
+              "sugar_g": 40
+            }
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "Europe/London",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": false,
+            "workouts": false
+          }
+        }
+      },
+      "name": "calories_exactly_plus_10_pct",
+      "notes": "2420 is exactly +10%: still on target; water and workouts not tracked"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": -2.3,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 100,
+            "weight": 30
+          },
+          {
+            "detail": null,
+            "id": "hydration",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal": 8000,
+              "steps": 12000
+            },
+            "id": "activity",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 45.0,
+              "previous_day_category": "moderate",
+              "sessions": 1
+            },
+            "id": "training",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "sleep",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal_hours": 16,
+              "hours": 16.5
+            },
+            "id": "fasting",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 100,
+        "improve": [],
+        "needs_attention": [],
+        "not_logged": [
+          {
+            "params": {
+              "area": "sleep",
+              "area_label": "Sleep"
+            },
+            "rule_id": "not_logged",
+            "text": "Sleep: not logged today"
+          },
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          }
+        ],
+        "reduce": [],
+        "went_well": [
+          {
+            "params": {
+              "calories": 2150,
+              "target": 2200
+            },
+            "rule_id": "calories_on_target",
+            "text": "Calories were on target: 2,150 of 2,200 kcal."
+          },
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          },
+          {
+            "params": {
+              "goal": 8000,
+              "steps": 12000
+            },
+            "rule_id": "steps_goal_met",
+            "text": "You walked 12,000 steps, above your 8,000 step goal."
+          },
+          {
+            "params": {
+              "minutes": 45
+            },
+            "rule_id": "workout_done",
+            "text": "You trained for 45 min."
+          },
+          {
+            "params": {
+              "goal_hours": 16.0,
+              "hours": 16.5
+            },
+            "rule_id": "fasting_goal_met",
+            "text": "You fasted 16.5 h, reaching your 16 h goal."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "fasting_hours": {
+            "2026-09-20": 16.5
+          },
+          "nutrition": {
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2000,
+              "sugar_g": 40
+            }
+          },
+          "series": {
+            "steps": {
+              "2026-09-20": 12000
+            }
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "UTC",
+          "tracking": {
+            "fasting": true,
+            "nutrition": true,
+            "water": false,
+            "workouts": true
+          },
+          "workouts": [
+            {
+              "effort": null,
+              "end_ms": 1789888500000,
+              "start_ms": 1789885800000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789802100000,
+              "start_ms": 1789799400000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789715700000,
+              "start_ms": 1789713000000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789629300000,
+              "start_ms": 1789626600000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789542900000,
+              "start_ms": 1789540200000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789456500000,
+              "start_ms": 1789453800000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789370100000,
+              "start_ms": 1789367400000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789283700000,
+              "start_ms": 1789281000000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789197300000,
+              "start_ms": 1789194600000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789110900000,
+              "start_ms": 1789108200000
+            },
+            {
+              "effort": null,
+              "end_ms": 1789024500000,
+              "start_ms": 1789021800000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788938100000,
+              "start_ms": 1788935400000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788851700000,
+              "start_ms": 1788849000000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788765300000,
+              "start_ms": 1788762600000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788678900000,
+              "start_ms": 1788676200000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788592500000,
+              "start_ms": 1788589800000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788506100000,
+              "start_ms": 1788503400000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788419700000,
+              "start_ms": 1788417000000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788333300000,
+              "start_ms": 1788330600000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788246900000,
+              "start_ms": 1788244200000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788160500000,
+              "start_ms": 1788157800000
+            },
+            {
+              "effort": null,
+              "end_ms": 1788074100000,
+              "start_ms": 1788071400000
+            },
+            {
+              "effort": null,
+              "end_ms": 1787987700000,
+              "start_ms": 1787985000000
+            },
+            {
+              "effort": null,
+              "end_ms": 1787901300000,
+              "start_ms": 1787898600000
+            },
+            {
+              "effort": null,
+              "end_ms": 1787814900000,
+              "start_ms": 1787812200000
+            },
+            {
+              "effort": null,
+              "end_ms": 1787728500000,
+              "start_ms": 1787725800000
+            },
+            {
+              "effort": null,
+              "end_ms": 1787642100000,
+              "start_ms": 1787639400000
+            },
+            {
+              "effort": null,
+              "end_ms": 1787555700000,
+              "start_ms": 1787553000000
+            }
+          ]
+        }
+      },
+      "name": "fasting_enabled_and_met"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": -2.3,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 100,
+            "weight": 30
+          },
+          {
+            "detail": {
+              "goal_ml": 2500,
+              "water_ml": 2500
+            },
+            "id": "hydration",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "goal": 8000,
+              "steps": 8500
+            },
+            "id": "activity",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "minutes": 60.0,
+              "previous_day_category": "none",
+              "sessions": 1
+            },
+            "id": "training",
+            "included": true,
+            "score": 100,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "sleep",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 100,
+        "improve": [
+          {
+            "params": {},
+            "rule_id": "lighter_tomorrow",
+            "text": "Today's training load was high; consider a lighter session tomorrow."
+          }
+        ],
+        "needs_attention": [],
+        "not_logged": [
+          {
+            "params": {
+              "area": "sleep",
+              "area_label": "Sleep"
+            },
+            "rule_id": "not_logged",
+            "text": "Sleep: not logged today"
+          },
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          }
+        ],
+        "reduce": [
+          {
+            "params": {
+              "pattern_text": "On days with late intense workouts, your sleep that night has been 38 min shorter on average (12 vs 96 days)."
+            },
+            "rule_id": "reduce_pattern",
+            "text": "On days with late intense workouts, your sleep that night has been 38 min shorter on average (12 vs 96 days)."
+          }
+        ],
+        "went_well": [
+          {
+            "params": {
+              "calories": 2150,
+              "target": 2200
+            },
+            "rule_id": "calories_on_target",
+            "text": "Calories were on target: 2,150 of 2,200 kcal."
+          },
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          },
+          {
+            "params": {
+              "goal_ml": 2500,
+              "water_ml": 2500
+            },
+            "rule_id": "water_goal_met",
+            "text": "You drank 2,500 ml of water, meeting your 2,500 ml goal."
+          },
+          {
+            "params": {
+              "goal": 8000,
+              "steps": 8500
+            },
+            "rule_id": "steps_goal_met",
+            "text": "You walked 8,500 steps, above your 8,000 step goal."
+          },
+          {
+            "params": {
+              "minutes": 60
+            },
+            "rule_id": "workout_done",
+            "text": "You trained for 60 min."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2150,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2000,
+              "sugar_g": 40
+            }
+          },
+          "patterns": [
+            {
+              "id": "late_workout_sleep",
+              "surfaced": true,
+              "text": "On days with late intense workouts, your sleep that night has been 38 min shorter on average (12 vs 96 days)."
+            },
+            {
+              "id": "high_load_recovery",
+              "surfaced": true,
+              "text": "After high training-load days, your next-day recovery has been 6 points lower on average (10 vs 98 days)."
+            }
+          ],
+          "series": {
+            "steps": {
+              "2026-09-20": 8500
+            }
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "America/New_York",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": true,
+            "workouts": true
+          },
+          "water_ml": {
+            "2026-09-20": 2500
+          },
+          "workouts": [
+            {
+              "effort": 8,
+              "end_ms": 1789952400000,
+              "start_ms": 1789948800000
+            }
+          ]
+        }
+      },
+      "name": "surfaced_pattern_in_reduce",
+      "notes": "only pairs with review_category reduce appear; the day's load is high vs a zero average"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": {
+              "calorie_dev_pct": 31.8,
+              "calories": 2900,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150
+            },
+            "id": "nutrition",
+            "included": true,
+            "score": 83,
+            "weight": 30
+          },
+          {
+            "detail": null,
+            "id": "hydration",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "activity",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "training",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": {
+              "asleep_min": 470,
+              "baseline_min": 439.5
+            },
+            "id": "sleep",
+            "included": true,
+            "score": 100,
+            "weight": 20
+          },
+          {
+            "detail": {
+              "label": "good",
+              "score": 78
+            },
+            "id": "recovery",
+            "included": true,
+            "score": 78,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": 88,
+        "improve": [],
+        "needs_attention": [
+          {
+            "params": {
+              "calories": 2900,
+              "over_pct": 32,
+              "target": 2200
+            },
+            "rule_id": "calories_over",
+            "text": "Calories were 32% above your target (2,900 of 2,200 kcal)."
+          }
+        ],
+        "not_logged": [
+          {
+            "params": {
+              "area": "activity",
+              "area_label": "Activity"
+            },
+            "rule_id": "not_logged",
+            "text": "Activity: not logged today"
+          }
+        ],
+        "reduce": [],
+        "went_well": [
+          {
+            "params": {
+              "pct": 107,
+              "protein_g": 150
+            },
+            "rule_id": "protein_met",
+            "text": "You reached 150 g of protein, 107% of your target."
+          },
+          {
+            "params": {
+              "fiber_g": 32,
+              "goal_g": 30
+            },
+            "rule_id": "fiber_met",
+            "text": "You had 32 g of fiber, meeting your 30 g goal."
+          },
+          {
+            "params": {
+              "duration": "7h 50m"
+            },
+            "rule_id": "sleep_good",
+            "text": "You slept 7h 50m last night."
+          },
+          {
+            "params": {
+              "score": 78
+            },
+            "rule_id": "recovery_good",
+            "text": "Your recovery was good (78)."
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "nutrition": {
+            "2026-09-20": {
+              "added_sugar_g": 12,
+              "caffeine_mg": 150,
+              "calories": 2900,
+              "carbs_g": 230,
+              "fat_g": 70,
+              "fiber_g": 32,
+              "protein_g": 150,
+              "saturated_fat_g": 15,
+              "sodium_mg": 2000,
+              "sugar_g": 40
+            }
+          },
+          "recovery": {
+            "label": "good",
+            "score": 78,
+            "status": "ok"
+          },
+          "sleep": {
+            "nights": [
+              [
+                427,
+                1788196380000,
+                1788223200000
+              ],
+              [
+                424,
+                1788282480000,
+                1788309120000
+              ],
+              [
+                421,
+                1788368580000,
+                1788395040000
+              ],
+              [
+                458,
+                1788458280000,
+                1788486960000
+              ],
+              [
+                455,
+                1788544380000,
+                1788572880000
+              ],
+              [
+                452,
+                1788630540000,
+                1788658860000
+              ],
+              [
+                449,
+                1788716700000,
+                1788744840000
+              ],
+              [
+                447,
+                1788802860000,
+                1788830880000
+              ],
+              [
+                444,
+                1788889020000,
+                1788916860000
+              ],
+              [
+                442,
+                1788975180000,
+                1789002900000
+              ],
+              [
+                435,
+                1789061040000,
+                1789088340000
+              ],
+              [
+                433,
+                1789147260000,
+                1789174440000
+              ],
+              [
+                430,
+                1789233420000,
+                1789260420000
+              ],
+              [
+                428,
+                1789319640000,
+                1789346520000
+              ],
+              [
+                422,
+                1789405500000,
+                1789432020000
+              ],
+              [
+                420,
+                1789491720000,
+                1789518120000
+              ],
+              [
+                458,
+                1789581480000,
+                1789610160000
+              ],
+              [
+                456,
+                1789667700000,
+                1789696260000
+              ],
+              [
+                450,
+                1789753560000,
+                1789781760000
+              ],
+              [
+                470,
+                1789839000000,
+                1789868400000
+              ]
+            ],
+            "start": "2026-09-01"
+          },
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "Asia/Kolkata",
+          "tracking": {
+            "fasting": false,
+            "nutrition": true,
+            "water": false,
+            "workouts": false
+          }
+        }
+      },
+      "name": "over_calories_good_recovery"
+    },
+    {
+      "expected": {
+        "areas": [
+          {
+            "detail": null,
+            "id": "nutrition",
+            "included": false,
+            "score": null,
+            "weight": 30
+          },
+          {
+            "detail": null,
+            "id": "hydration",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "activity",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "training",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "sleep",
+            "included": false,
+            "score": null,
+            "weight": 20
+          },
+          {
+            "detail": null,
+            "id": "recovery",
+            "included": false,
+            "score": null,
+            "weight": 10
+          },
+          {
+            "detail": null,
+            "id": "fasting",
+            "included": false,
+            "score": null,
+            "weight": 10
+          }
+        ],
+        "day": "2026-09-20",
+        "day_score": null,
+        "improve": [],
+        "needs_attention": [],
+        "not_logged": [
+          {
+            "params": {
+              "area": "nutrition",
+              "area_label": "Nutrition"
+            },
+            "rule_id": "not_logged",
+            "text": "Nutrition: not logged today"
+          },
+          {
+            "params": {
+              "area": "hydration",
+              "area_label": "Hydration"
+            },
+            "rule_id": "not_logged",
+            "text": "Hydration: not logged today"
+          },
+          {
+            "params": {
+              "area": "activity",
+              "area_label": "Activity"
+            },
+            "rule_id": "not_logged",
+            "text": "Activity: not logged today"
+          },
+          {
+            "params": {
+              "area": "sleep",
+              "area_label": "Sleep"
+            },
+            "rule_id": "not_logged",
+            "text": "Sleep: not logged today"
+          },
+          {
+            "params": {
+              "area": "recovery",
+              "area_label": "Recovery"
+            },
+            "rule_id": "not_logged",
+            "text": "Recovery: not logged today"
+          },
+          {
+            "params": {
+              "area": "fasting",
+              "area_label": "Fasting"
+            },
+            "rule_id": "not_logged",
+            "text": "Fasting: not logged today"
+          }
+        ],
+        "reduce": [],
+        "went_well": []
+      },
+      "input": {
+        "day": "2026-09-20",
+        "inputs": {
+          "targets": {
+            "added_sugar_max_g": 25,
+            "caffeine_max_mg": 400,
+            "calories": 2200,
+            "carbs_g": 240,
+            "fasting_hours": 16,
+            "fat_g": 75,
+            "fiber_g": 30,
+            "protein_g": 140,
+            "saturated_fat_max_g": 20,
+            "sodium_max_mg": 2300,
+            "steps": 8000,
+            "sugar_max_g": 50,
+            "water_ml": 2500
+          },
+          "time_zone": "UTC",
+          "tracking": {
+            "fasting": true,
+            "nutrition": true,
+            "water": true,
+            "workouts": false
+          }
+        }
+      },
+      "name": "nothing_logged",
+      "notes": "Day Score is null, every tracked area is not logged"
+    }
+  ],
+  "format": "ayuvo-insights-vectors",
+  "function": "daily_review",
+  "version": 1
+}

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Percent
@@ -327,6 +328,8 @@ internal fun domainHasData(domain: CatalogDomain, app: BrowseAppState, hub: Heal
         target == "screen:activity" -> s.workouts.isNotEmpty() || category(HealthCategory.ACTIVITY.id)
         target == "screen:medications" -> app.medicationsExist
         target == "tab:records" -> app.recordsCount > 0
+        // Insights are recomputed from everything else, so the domain is always open (its screens say what is missing).
+        target == "screen:insights" -> true
         target.startsWith("category:") -> category(target.removePrefix("category:"))
         else -> false
     }
@@ -480,6 +483,7 @@ private fun featureIcon(id: String): ImageVector = when (id) {
     "addMedication" -> Icons.Filled.AddCircle
     "records" -> Icons.Filled.Description
     "addRecord" -> Icons.AutoMirrored.Filled.NoteAdd
+    "insights", "recovery", "healthAge", "dailyReview" -> Icons.Filled.Insights
     "coach" -> Icons.AutoMirrored.Filled.Chat
     "settings" -> Icons.Filled.Settings
     else -> Icons.Filled.Search
@@ -493,6 +497,7 @@ private fun featureColor(domain: BrowseFeatureDomain): Color = when (domain) {
     BrowseFeatureDomain.BODY -> AyuvoPalette.Body
     BrowseFeatureDomain.MEDICATIONS -> AyuvoPalette.Medications
     BrowseFeatureDomain.RECORDS -> AyuvoPalette.Records
+    BrowseFeatureDomain.INSIGHTS -> com.ayuvo.health.ui.insights.InsightsFormat.Insights
     BrowseFeatureDomain.COACH -> AyuvoPalette.Mindfulness
     BrowseFeatureDomain.SETTINGS -> AyuvoPalette.Other
 }

@@ -167,6 +167,9 @@ class FakeActionEnvironment(
     override suspend fun medicationNames(): Map<String, String> = medNames
     override suspend fun adherence(medicationId: String?): AdherenceSummary? = null
 
+    var insightsSnapshot: com.ayuvo.health.insights.InsightsSnapshot? = null
+    override suspend fun insights(): com.ayuvo.health.insights.InsightsSnapshot? = insightsSnapshot
+
     override suspend fun afterWrite(actionId: String) { writes += actionId }
 
     fun food(name: String, kcal: Int, protein: Double, atMs: Long = now) =

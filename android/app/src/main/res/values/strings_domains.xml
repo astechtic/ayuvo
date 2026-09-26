@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Browse domain names (Apple-Health-style structure). English source strings; translations follow incrementally. -->
 <resources>
+    <string name="domain_insights">Insights</string>
     <string name="domain_nutrition">Nutrition</string>
     <string name="domain_hydration">Hydration</string>
     <string name="domain_fasting">Fasting</string>

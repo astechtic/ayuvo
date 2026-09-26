@@ -3,6 +3,8 @@ import SwiftUI
 /// Pushed "places" of the Browse stack (docs/ui-structure.md §2).
 enum BrowseRoute: Hashable {
     case nutrition, fasting, body, activity, workouts, exerciseLibrary, medications
+    /// Browse › Insights hub (Recovery, Health Age, Daily Review, Trends, Patterns).
+    case insights
     /// Body › Body Measurements (also reached from Browse search).
     case bodyMeasurements
 }
@@ -34,6 +36,8 @@ struct BrowseRouteDestination: View {
             ExerciseLibraryScreen()
         case .medications:
             MedicationsHomeView(path: $path)
+        case .insights:
+            InsightsHubView()
         case .bodyMeasurements:
             BodyMeasurementsDetailView(gender: profileStore.profile.gender, heightCm: profileStore.profile.heightCm)
         }
@@ -46,5 +50,6 @@ extension View {
         navigationDestination(for: BrowseRoute.self) { route in
             BrowseRouteDestination(route: route, path: path)
         }
+        .insightsRouteDestinations()
     }
 }

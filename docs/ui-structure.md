@@ -28,6 +28,7 @@ Tabs: Summary · Browse · Records · Coach · Settings
 
 Summary
  ├─ Rings card (Eat · Move · Drink) ─ ring tap → Metric detail
+ ├─ Insights cards: Recovery · Health Age · Daily Review (or one "Learning your baseline" card) → Insights screens (docs/insights.md)
  ├─ Today cards: Medications · Fasting (active only) · Workout (only if logged today)
  ├─ Favourites grid ─ tile → Metric detail · "Edit" → Favourites editor
  ├─ Highlights (≤ 3: record highlight · weight trend · latest workout)
@@ -36,6 +37,7 @@ Summary
 
 Browse (search over app metrics + health types)
  ├─ one row per domain (§3), in browse_order; target decides the destination:
+ │    screen:insights    → Insights hub (Recovery, Health Age, Daily Review, Trends, Patterns)
  │    screen:nutrition   → Nutrition (the former Food segment + "Trends" section)
  │    metric:app:water   → Metric detail app:water
  │    screen:fasting     → Fasting
@@ -61,6 +63,7 @@ Shared destinations (metric, workouts, medications) keep the tab that opened the
 
 | id | title | light | dark | Android icon | iOS symbol | target |
 |---|---|---|---|---|---|---|
+| insights | Insights | #E08A00 | #FFB340 | Filled.Insights | gauge.with.dots.needle.67percent | screen:insights |
 | nutrition | Nutrition | #34C759 | #30D158 | Filled.Restaurant | fork.knife | screen:nutrition |
 | hydration | Hydration | #007AFF | #0A84FF | Filled.WaterDrop | drop.fill | metric:app:water |
 | fasting | Fasting | #00C7BE | #63E6E2 | Filled.Timer | timer | screen:fasting |
@@ -252,7 +255,7 @@ Same strings on both platforms (`Modifier.testTag` with `testTagsAsResourceId`, 
 | Tabs | `tab.summary`, `tab.browse`, `tab.records`, `tab.coach`, `tab.settings` |
 | Summary rings | `summary.ring.eat`, `summary.ring.move`, `summary.ring.drink` |
 | Summary favourites | `summary.favourite.<key>`, `summary.favourites.edit` |
-| Summary cards | `summary.card.medications`, `summary.card.fasting`, `summary.card.workouts`, `summary.card.records` |
+| Summary cards | `summary.card.recovery`, `summary.card.healthAge`, `summary.card.review`, `summary.card.medications`, `summary.card.fasting`, `summary.card.workouts`, `summary.card.records` |
 | Summary add button | `summary.add` |
 | Log sheet | `log.sheet`, `log.entry.<id>` |
 | Browse | `browse.search`, `browse.row.<domain>`, `browse.metric.<key>`, `browse.link.foodDiary`, `browse.link.workouts`, `browse.link.exerciseLibrary`, `browse.link.bodyMeasurements` |

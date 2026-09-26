@@ -1,0 +1,1401 @@
+{
+  "ai": {
+    "allowed_numbers": [
+      100
+    ],
+    "blocked_terms": [
+      "stop taking",
+      "start taking",
+      "dosage",
+      "your dose",
+      "diagnosed with",
+      "you may have",
+      "you might have",
+      "prescribe"
+    ],
+    "bullet_max": 180,
+    "bullets_max": 5,
+    "headline_max": 100,
+    "max_output_tokens": {
+      "cloud": 600,
+      "local": 300
+    },
+    "status_labels": {
+      "cloud": "Explained using online AI · {provider}",
+      "local": "Explained on this device"
+    },
+    "tasks": {
+      "daily_review": "Explain today's Daily Review: what went well, what needs attention and what to try tomorrow.",
+      "health_age": "Explain the Ayuvo Health Age estimate and which markers moved it.",
+      "recovery": "Explain today's Recovery score and its main signals."
+    }
+  },
+  "config_version": 1,
+  "daily_review": {
+    "areas": [
+      {
+        "id": "nutrition",
+        "label": "Nutrition",
+        "weight": 30
+      },
+      {
+        "id": "hydration",
+        "label": "Hydration",
+        "weight": 10
+      },
+      {
+        "id": "activity",
+        "label": "Activity",
+        "weight": 20
+      },
+      {
+        "id": "training",
+        "label": "Training",
+        "weight": 10
+      },
+      {
+        "id": "sleep",
+        "label": "Sleep",
+        "weight": 20
+      },
+      {
+        "id": "recovery",
+        "label": "Recovery",
+        "weight": 10
+      },
+      {
+        "id": "fasting",
+        "label": "Fasting",
+        "weight": 10
+      }
+    ],
+    "average_min_days": 7,
+    "average_window_days": 28,
+    "max_items_per_category": 6,
+    "not_logged_template": "{area_label}: not logged today",
+    "nutrition": {
+      "calorie_tolerance_pct": 10,
+      "calorie_zero_at_pct": 35,
+      "macro_tolerance_pct": 20,
+      "macro_zero_at_pct": 60,
+      "protein_min_share": 0.9
+    },
+    "reduce_nutrients": [
+      {
+        "goal_key": "sugar_max_g",
+        "id": "sugar_g",
+        "label": "Sugar",
+        "unit": "g"
+      },
+      {
+        "goal_key": "added_sugar_max_g",
+        "id": "added_sugar_g",
+        "label": "Added sugar",
+        "unit": "g"
+      },
+      {
+        "goal_key": "sodium_max_mg",
+        "id": "sodium_mg",
+        "label": "Sodium",
+        "unit": "mg"
+      },
+      {
+        "goal_key": "saturated_fat_max_g",
+        "id": "saturated_fat_g",
+        "label": "Saturated fat",
+        "unit": "g"
+      },
+      {
+        "goal_key": "caffeine_max_mg",
+        "id": "caffeine_mg",
+        "label": "Caffeine",
+        "unit": "mg"
+      }
+    ],
+    "rules": [
+      {
+        "category": "went_well",
+        "id": "calories_on_target",
+        "params": [
+          "calories",
+          "target"
+        ],
+        "template": "Calories were on target: {calories} of {target} kcal."
+      },
+      {
+        "category": "went_well",
+        "id": "protein_met",
+        "min_share": 0.9,
+        "params": [
+          "protein_g",
+          "pct"
+        ],
+        "template": "You reached {protein_g} g of protein, {pct}% of your target."
+      },
+      {
+        "category": "went_well",
+        "id": "fiber_met",
+        "params": [
+          "fiber_g",
+          "goal_g"
+        ],
+        "template": "You had {fiber_g} g of fiber, meeting your {goal_g} g goal."
+      },
+      {
+        "category": "went_well",
+        "id": "water_goal_met",
+        "params": [
+          "water_ml",
+          "goal_ml"
+        ],
+        "template": "You drank {water_ml} ml of water, meeting your {goal_ml} ml goal."
+      },
+      {
+        "category": "went_well",
+        "id": "steps_goal_met",
+        "params": [
+          "steps",
+          "goal"
+        ],
+        "template": "You walked {steps} steps, above your {goal} step goal."
+      },
+      {
+        "category": "went_well",
+        "id": "workout_done",
+        "params": [
+          "minutes"
+        ],
+        "template": "You trained for {minutes} min."
+      },
+      {
+        "category": "went_well",
+        "id": "planned_rest",
+        "params": [],
+        "template": "You took a rest day after a hard training day."
+      },
+      {
+        "category": "went_well",
+        "id": "sleep_good",
+        "min_minutes": 420,
+        "params": [
+          "duration"
+        ],
+        "template": "You slept {duration} last night."
+      },
+      {
+        "category": "went_well",
+        "id": "recovery_good",
+        "params": [
+          "score"
+        ],
+        "template": "Your recovery was good ({score})."
+      },
+      {
+        "category": "went_well",
+        "id": "fasting_goal_met",
+        "params": [
+          "hours",
+          "goal_hours"
+        ],
+        "template": "You fasted {hours} h, reaching your {goal_hours} h goal."
+      },
+      {
+        "category": "needs_attention",
+        "id": "calories_over",
+        "params": [
+          "calories",
+          "target",
+          "over_pct"
+        ],
+        "template": "Calories were {over_pct}% above your target ({calories} of {target} kcal)."
+      },
+      {
+        "category": "needs_attention",
+        "id": "calories_under",
+        "params": [
+          "calories",
+          "target",
+          "under_pct"
+        ],
+        "template": "Calories were {under_pct}% below your target ({calories} of {target} kcal)."
+      },
+      {
+        "below_share": 0.7,
+        "category": "needs_attention",
+        "id": "protein_low",
+        "params": [
+          "protein_g",
+          "pct"
+        ],
+        "template": "Protein was {protein_g} g, {pct}% of your target."
+      },
+      {
+        "below_minutes": 360,
+        "category": "needs_attention",
+        "id": "sleep_short",
+        "params": [
+          "duration"
+        ],
+        "template": "You slept {duration}, under 6 hours."
+      },
+      {
+        "category": "needs_attention",
+        "id": "sleep_below_usual",
+        "margin_minutes": 45,
+        "params": [
+          "duration",
+          "diff_min"
+        ],
+        "template": "You slept {duration}, {diff_min} min less than your usual."
+      },
+      {
+        "category": "needs_attention",
+        "id": "recovery_low",
+        "params": [
+          "score"
+        ],
+        "template": "Your recovery was low ({score})."
+      },
+      {
+        "below_share": 0.5,
+        "category": "needs_attention",
+        "id": "steps_low",
+        "params": [
+          "steps",
+          "goal"
+        ],
+        "template": "You walked {steps} steps, under half of your {goal} step goal."
+      },
+      {
+        "below_share": 0.5,
+        "category": "needs_attention",
+        "id": "water_low",
+        "params": [
+          "water_ml",
+          "goal_ml"
+        ],
+        "template": "You drank {water_ml} ml, under half of your {goal_ml} ml goal."
+      },
+      {
+        "below_share": 0.9,
+        "category": "improve",
+        "id": "improve_protein",
+        "params": [
+          "gap_g"
+        ],
+        "template": "Add a protein-rich food to tomorrow's meals to close the {gap_g} g gap."
+      },
+      {
+        "category": "improve",
+        "id": "improve_fiber",
+        "params": [
+          "gap_g"
+        ],
+        "template": "Add vegetables, fruit, beans or whole grains tomorrow; you were {gap_g} g short on fiber."
+      },
+      {
+        "category": "improve",
+        "id": "improve_steps",
+        "params": [
+          "gap",
+          "walk_min"
+        ],
+        "steps_per_minute": 100,
+        "template": "Aim for {gap} more steps tomorrow, about a {walk_min}-minute walk.",
+        "walk_round_min": 5
+      },
+      {
+        "category": "improve",
+        "id": "improve_water",
+        "params": [
+          "gap_ml"
+        ],
+        "template": "Keep water nearby tomorrow; you were {gap_ml} ml short of your goal."
+      },
+      {
+        "category": "improve",
+        "id": "improve_sleep",
+        "max_minutes": 60,
+        "params": [
+          "minutes"
+        ],
+        "round_min": 15,
+        "template": "Try winding down {minutes} min earlier tonight."
+      },
+      {
+        "category": "improve",
+        "id": "recovery_focus",
+        "params": [],
+        "template": "Tomorrow could be a lighter, recovery-focused day."
+      },
+      {
+        "category": "improve",
+        "id": "lighter_tomorrow",
+        "params": [],
+        "template": "Today's training load was high; consider a lighter session tomorrow."
+      },
+      {
+        "category": "reduce",
+        "id": "reduce_nutrient_vs_average",
+        "params": [
+          "nutrient",
+          "value",
+          "goal",
+          "unit",
+          "average"
+        ],
+        "template": "{nutrient} was {value} {unit}, above your {goal} {unit} limit and your 28-day average of {average} {unit}."
+      },
+      {
+        "category": "reduce",
+        "id": "reduce_nutrient",
+        "params": [
+          "nutrient",
+          "value",
+          "goal",
+          "unit"
+        ],
+        "template": "{nutrient} was {value} {unit}, above your {goal} {unit} limit."
+      },
+      {
+        "category": "reduce",
+        "id": "reduce_pattern",
+        "params": [
+          "pattern_text"
+        ],
+        "template": "{pattern_text}"
+      }
+    ],
+    "sleep_target_min": 420,
+    "training_rest_score": 50
+  },
+  "disclaimers": {
+    "ai": "AI explanations describe these numbers. They are not medical advice.",
+    "background": "Your phone decides when background refresh runs, so a morning score can appear later than you expect.",
+    "general": "Wellness estimates from your own data, not a medical diagnosis or advice.",
+    "health_age": "Ayuvo Health Age is Ayuvo's own estimate from your data. It is not a clinical or biological age, and it is not WHOOP's or any other company's score.",
+    "patterns": "An association in your data, not proof of cause."
+  },
+  "format": "ayuvo-insights-config",
+  "health_age": {
+    "age_max": 80,
+    "age_min": 20,
+    "collecting_days": 30,
+    "confidence": {
+      "high_min_markers": 5,
+      "high_requires": "vo2_max",
+      "medium_min_markers": 4
+    },
+    "core_markers": [
+      "vo2_max",
+      "resting_heart_rate",
+      "hrv"
+    ],
+    "days_per_year": 365.25,
+    "markers": [
+      {
+        "cap_years": 6,
+        "id": "vo2_max",
+        "label": "VO2 max",
+        "method": "age_norm",
+        "min_days": 3,
+        "series": "vo2_max",
+        "source": "50th percentiles of treadmill VO2max by decade (20-29 ... 70-79, plotted at midpoints 25-75), FRIEND registry: Kaminsky LA, Arena R, Myers J. Reference standards for cardiorespiratory fitness measured with cardiopulmonary exercise testing. Mayo Clin Proc 2015;90(11):1515-1523. Watch values are estimates, so a few readings (3 days) are enough.",
+        "tables": {
+          "female": [
+            [
+              25,
+              37.6
+            ],
+            [
+              35,
+              30.2
+            ],
+            [
+              45,
+              26.7
+            ],
+            [
+              55,
+              23.4
+            ],
+            [
+              65,
+              20.0
+            ],
+            [
+              75,
+              18.3
+            ]
+          ],
+          "male": [
+            [
+              25,
+              48.0
+            ],
+            [
+              35,
+              42.4
+            ],
+            [
+              45,
+              37.8
+            ],
+            [
+              55,
+              32.6
+            ],
+            [
+              65,
+              28.2
+            ],
+            [
+              75,
+              24.4
+            ]
+          ]
+        },
+        "tables_by_kind": false,
+        "unit": "mL/kg/min",
+        "weight": 25
+      },
+      {
+        "cap_years": 6,
+        "id": "resting_heart_rate",
+        "label": "Resting heart rate",
+        "method": "dose_response",
+        "min_days": 30,
+        "points": [
+          [
+            45,
+            -2.0
+          ],
+          [
+            55,
+            -1.0
+          ],
+          [
+            65,
+            0.0
+          ],
+          [
+            75,
+            1.0
+          ],
+          [
+            85,
+            2.5
+          ],
+          [
+            95,
+            4.0
+          ]
+        ],
+        "series": "resting_heart_rate",
+        "source": "Ayuvo mapping (approximate) informed by Zhang D, Shen X, Qi X. Resting heart rate and all-cause and cardiovascular mortality in the general population: a meta-analysis. CMAJ 2016;188(3):E53-E63 (RR 1.09 per 10 bpm; RR 1.45 above 80 bpm). About +1 year per 10 bpm (a 9% risk step is roughly one year of age at an ~8-year mortality doubling time), steeper above 80 bpm. Resting heart rate changes little with age, so a dose-response table is used instead of an age curve.",
+        "unit": "bpm",
+        "weight": 15
+      },
+      {
+        "cap_years": 3,
+        "id": "hrv",
+        "label": "Heart rate variability",
+        "method": "age_norm",
+        "min_days": 30,
+        "series": "hrv",
+        "source": "Mean SDNN and RMSSD by age decade and sex from Voss A, Schroeder R, Heitmann A, Peters A, Perz S. Short-term heart rate variability: influence of gender and age in healthy subjects. PLoS One 2015;10(3):e0118308, Tables 5 and 7 (5-minute supine ECG, KORA S4; decade means plotted at decade midpoints 30-70). Resting-ECG norms, not wearable norms: kept as a small, capped marker.",
+        "tables": {
+          "rmssd": {
+            "female": [
+              [
+                30,
+                42.9
+              ],
+              [
+                40,
+                35.4
+              ],
+              [
+                50,
+                26.3
+              ],
+              [
+                60,
+                21.4
+              ],
+              [
+                70,
+                19.1
+              ]
+            ],
+            "male": [
+              [
+                30,
+                39.7
+              ],
+              [
+                40,
+                32.0
+              ],
+              [
+                50,
+                23.0
+              ],
+              [
+                60,
+                19.9
+              ],
+              [
+                70,
+                19.1
+              ]
+            ]
+          },
+          "sdnn": {
+            "female": [
+              [
+                30,
+                48.7
+              ],
+              [
+                40,
+                45.4
+              ],
+              [
+                50,
+                36.9
+              ],
+              [
+                60,
+                30.6
+              ],
+              [
+                70,
+                27.8
+              ]
+            ],
+            "male": [
+              [
+                30,
+                50.0
+              ],
+              [
+                40,
+                44.6
+              ],
+              [
+                50,
+                36.8
+              ],
+              [
+                60,
+                32.8
+              ],
+              [
+                70,
+                29.6
+              ]
+            ]
+          }
+        },
+        "tables_by_kind": true,
+        "unit": "ms",
+        "weight": 15
+      },
+      {
+        "cap_years": 6,
+        "id": "steps",
+        "label": "Daily steps",
+        "method": "dose_response",
+        "min_days": 30,
+        "points": [
+          [
+            3000,
+            4.0
+          ],
+          [
+            4500,
+            2.5
+          ],
+          [
+            6000,
+            1.0
+          ],
+          [
+            7500,
+            0.0
+          ],
+          [
+            9000,
+            -1.0
+          ],
+          [
+            11000,
+            -1.5
+          ],
+          [
+            13000,
+            -2.0
+          ]
+        ],
+        "series": "steps",
+        "source": "Ayuvo mapping (approximate, deliberately conservative) informed by Paluch AE et al. Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. Lancet Public Health 2022;7(3):e219-e228 (quartile medians about 3,500 / 5,800 / 7,800 / 10,900 steps; 40-53% lower risk above the lowest quartile; benefit levels off around 6,000-8,000 steps at 60+ and 8,000-10,000 below 60).",
+        "unit": "steps",
+        "weight": 15
+      },
+      {
+        "cap_years": 6,
+        "duration_points": [
+          [
+            5.0,
+            2.5
+          ],
+          [
+            6.0,
+            1.0
+          ],
+          [
+            7.0,
+            0.0
+          ],
+          [
+            9.0,
+            0.0
+          ],
+          [
+            10.0,
+            1.0
+          ],
+          [
+            11.0,
+            2.0
+          ]
+        ],
+        "id": "sleep",
+        "label": "Sleep",
+        "method": "sleep",
+        "min_days": 30,
+        "regularity_points": [
+          [
+            30,
+            -0.5
+          ],
+          [
+            60,
+            0.0
+          ],
+          [
+            90,
+            0.5
+          ],
+          [
+            120,
+            1.0
+          ]
+        ],
+        "source": "Duration: 7-9 h recommended for adults (Watson NF et al. Recommended amount of sleep for a healthy adult: AASM and SRS consensus statement. Sleep 2015;38(6):843-844; Hirshkowitz M et al. National Sleep Foundation recommendations. Sleep Health 2015;1(1):40-43). Regularity (SD of sleep midpoint): Ayuvo mapping (approximate) informed by Windred DP et al. Sleep regularity is a stronger predictor of mortality risk than sleep duration. Sleep 2024;47(1):zsad253.",
+        "unit": "h",
+        "weight": 15
+      },
+      {
+        "active_share_points": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.75,
+            0.0
+          ],
+          [
+            1.0,
+            -0.5
+          ]
+        ],
+        "cap_years": 6,
+        "id": "workouts",
+        "label": "Workout consistency",
+        "method": "workouts",
+        "min_days": 30,
+        "minutes_points": [
+          [
+            0,
+            3.0
+          ],
+          [
+            75,
+            1.0
+          ],
+          [
+            150,
+            0.0
+          ],
+          [
+            300,
+            -1.5
+          ],
+          [
+            450,
+            -2.0
+          ]
+        ],
+        "source": "150 min/week target from the WHO 2020 guidelines on physical activity and sedentary behaviour (Bull FC et al. Br J Sports Med 2020;54:1451-1462). Ayuvo mapping (approximate) informed by Arem H et al. Leisure time physical activity and mortality: a detailed pooled analysis of the dose-response relationship. JAMA Intern Med 2015;175(6):959-967 (most benefit by 1-3x the minimum, plateau at 3-5x). Needs 30 days of step data in the window as evidence the device was worn.",
+        "unit": "min/week",
+        "weeks": 12,
+        "weight": 10
+      },
+      {
+        "bmi_points": [
+          [
+            17.0,
+            2.0
+          ],
+          [
+            18.5,
+            0.0
+          ],
+          [
+            24.9,
+            0.0
+          ],
+          [
+            30.0,
+            1.5
+          ],
+          [
+            35.0,
+            3.0
+          ],
+          [
+            40.0,
+            4.0
+          ]
+        ],
+        "body_fat_points": {
+          "female": [
+            [
+              15,
+              1.0
+            ],
+            [
+              21,
+              0.0
+            ],
+            [
+              33,
+              0.0
+            ],
+            [
+              39,
+              1.5
+            ],
+            [
+              45,
+              3.0
+            ]
+          ],
+          "male": [
+            [
+              5,
+              1.0
+            ],
+            [
+              8,
+              0.0
+            ],
+            [
+              19,
+              0.0
+            ],
+            [
+              25,
+              1.5
+            ],
+            [
+              30,
+              3.0
+            ]
+          ]
+        },
+        "cap_years": 6,
+        "id": "body_composition",
+        "label": "Body composition",
+        "method": "body_composition",
+        "min_days": 1,
+        "source": "Body fat ranges (approximate, ages 20-39): Gallagher D et al. Healthy percentage body fat ranges: an approach for developing guidelines based on body mass index. Am J Clin Nutr 2000;72(3):694-701 (as used by ACSM). BMI 18.5-24.9 healthy range: WHO. Obesity: preventing and managing the global epidemic. WHO Technical Report Series 894, 2000. Year offsets are an Ayuvo mapping. Body fat is used when sex is known; otherwise BMI.",
+        "unit": "% or kg/m2",
+        "weight": 5
+      }
+    ],
+    "min_actual_age": 18,
+    "min_markers": 3,
+    "pace": {
+      "declining_above": 1.1,
+      "improving_below": 0.9,
+      "min_points": 8,
+      "weeks": 12
+    },
+    "source": "Ayuvo Health Age is Ayuvo's own estimate. It combines published population values with Ayuvo's own weighting; it does not reproduce WHOOP or any other company's method and is not a clinical or biological age.",
+    "total_cap_years": 10,
+    "window_days": 90
+  },
+  "methodology": {
+    "background": {
+      "sections": [
+        {
+          "body": "Scores are calculated from your synced health data each time you open them, so there is no separate score history to keep in sync.",
+          "heading": "Recomputed on demand"
+        },
+        {
+          "body": "Ayuvo asks your phone to refresh Recovery in the morning after sleep syncs. iOS and Android decide when background work actually runs, so it may appear later, or only when you open the app.",
+          "heading": "Morning refresh"
+        },
+        {
+          "body": "The optional Recovery and Daily Review notifications only say that something is ready. They never show your values.",
+          "heading": "Notifications"
+        }
+      ],
+      "title": "When scores update"
+    },
+    "baselines": {
+      "sections": [
+        {
+          "body": "Ayuvo compares each reading with your own recent history, not with other people. Your baseline for a metric is the average of the previous 60 days, not counting today.",
+          "heading": "What a baseline is"
+        },
+        {
+          "body": "A baseline needs at least 14 days with a reading. Until then you will see \"Learning your baseline\" with a count such as 9/14. Confidence is high when at least 70% of the 60 days have data and there are 30 or more readings, and medium otherwise.",
+          "heading": "How much data is needed"
+        },
+        {
+          "body": "Your normal range is your average plus or minus one standard deviation, the usual spread of your readings. A minimum spread is used for each metric, so a very steady history does not make tiny changes look dramatic.",
+          "heading": "Your normal range"
+        },
+        {
+          "body": "Ayuvo shows the difference from your average, the percentage change and how many spreads away today is. Trends use the slope of the last 28 days, shown as a percentage of your baseline per week.",
+          "heading": "Today compared with usual"
+        },
+        {
+          "body": "HRV, resting heart rate, blood oxygen and breathing rate use readings taken during last night's sleep. When no reading falls inside your sleep window, the daily value is used instead and marked as such.",
+          "heading": "Overnight readings"
+        },
+        {
+          "body": "Baselines depend on how often you wear your device and on its sensors. A missing reading is shown as missing, never as zero.",
+          "heading": "Limitations"
+        }
+      ],
+      "title": "Your personal baselines"
+    },
+    "daily_review": {
+      "sections": [
+        {
+          "body": "A look back at one day: a Day Score from 0 to 100, what went well, what needs attention, what to try tomorrow and what to consider reducing.",
+          "heading": "What it shows"
+        },
+        {
+          "body": "Nutrition 30%, activity 20%, sleep 20%, hydration 10%, training 10%, recovery 10% and fasting 10%. Only areas you track and have data for count, and the weights are scaled to what is included. An area you did not log shows as not logged and never lowers your score.",
+          "heading": "Areas and weights"
+        },
+        {
+          "body": "Nutrition: calories within 10% of your target, protein at 90% or more of your target, fiber at your goal and carbs and fat within 20% of target. Hydration and steps: progress toward your goals. Training: a workout, or a rest day after a hard day. Sleep: last night compared with 7 hours. Recovery: this morning's score.",
+          "heading": "How areas are scored"
+        },
+        {
+          "body": "Nutrients with an upper limit you set, such as sugar, sodium, saturated fat or caffeine, are compared with that limit and your 28-day average. Patterns from your own data can appear here too.",
+          "heading": "Consider reducing"
+        },
+        {
+          "body": "The review can only see what was logged or synced. It describes your day; it is not medical advice.",
+          "heading": "Limitations"
+        }
+      ],
+      "title": "How the Daily Review works"
+    },
+    "health_age": {
+      "sections": [
+        {
+          "body": "Ayuvo Health Age is Ayuvo's own estimate of how your recent habits and fitness markers compare with published population values. It is not a clinical or biological age, and it is not WHOOP's or any other company's score.",
+          "heading": "What it is"
+        },
+        {
+          "body": "VO2 max 25%, resting heart rate 15%, heart rate variability 15%, daily steps 15%, sleep 15%, workout consistency 10% and body composition 5%. Each marker uses your average over the last 90 days.",
+          "heading": "Markers and weights"
+        },
+        {
+          "body": "VO2 max and HRV are compared with population averages by age and sex: the age at which the average equals your value, minus your actual age. Resting heart rate, steps, sleep, workouts and body composition use tables that turn each range into a number of years. Each marker is limited to 6 years either way (3 for HRV), and the total to 10.",
+          "heading": "How a marker becomes years"
+        },
+        {
+          "body": "Your birthday in your profile, and at least 3 markers including VO2 max, resting heart rate or HRV. Most markers need 30 days of data in the last 90; VO2 max needs 3 readings and body composition 1.",
+          "heading": "What is needed"
+        },
+        {
+          "body": "Health Age is recalculated for each of the last 12 weeks. Pace is how fast it has been changing per calendar year: below 0.9 is improving, 0.9 to 1.1 is steady and above 1.1 is rising faster than time. Pace needs at least 8 weekly points.",
+          "heading": "Pace"
+        },
+        {
+          "body": "Population tables come from specific groups and lab methods, and watch readings are estimates. HRV norms come from resting ECG recordings, so that marker is kept small. Treat the number as a direction to watch, not a verdict.",
+          "heading": "Limitations"
+        }
+      ],
+      "title": "How Ayuvo Health Age is estimated"
+    },
+    "patterns": {
+      "sections": [
+        {
+          "body": "Ayuvo compares days with and without something, such as a late intense workout, and looks at what happened next, such as that night's sleep.",
+          "heading": "What a pattern is"
+        },
+        {
+          "body": "Over the last 120 days, each group needs at least 8 days. Ayuvo compares the two averages with Welch's t test and an effect size (Cohen's d). A pattern is shown only when the difference is both consistent (t of 2 or more) and large enough to matter (d of 0.3 or more).",
+          "heading": "The test"
+        },
+        {
+          "body": "Late intense workouts and that night's sleep; high training load and next-day recovery; meeting your water goal and next-day recovery; meeting your protein target and next-day strength volume; a short night and that day's steps.",
+          "heading": "Pairs checked"
+        },
+        {
+          "body": "An association in your data, not proof of cause. Other things that happen on the same days can explain a difference.",
+          "heading": "Limitations"
+        }
+      ],
+      "title": "How patterns are found"
+    },
+    "recovery": {
+      "sections": [
+        {
+          "body": "Recovery is a 0-100 morning score that compares last night's body signals with your own baselines. It is ready once last night's sleep has synced.",
+          "heading": "What it shows"
+        },
+        {
+          "body": "Heart rate variability counts for 35%, resting heart rate 25%, sleep 25%, breathing rate 7.5% and blood oxygen 7.5%. Sleep is 70% duration compared with your usual and 30% how close your sleep midpoint was to the previous 14 nights. Missing inputs are left out and the remaining weights are scaled up.",
+          "heading": "Inputs and weights"
+        },
+        {
+          "body": "Each input starts at 50 for a typical night and moves 20 points for each spread above or below your usual, in the healthy direction: higher HRV scores higher, a higher resting heart rate scores lower. Breathing rate only lowers the score when it is well outside your usual range, and blood oxygen only when it is well below your usual.",
+          "heading": "How each input is scored"
+        },
+        {
+          "body": "When yesterday's training load was high compared with your 28-day average, 3 points are taken off, or 6 when it was more than double the average.",
+          "heading": "Training load"
+        },
+        {
+          "body": "67 and above is Good Recovery (normal training), 34 to 66 is Moderate (consider lighter training) and below 34 is Low (a recovery-focused day).",
+          "heading": "Labels"
+        },
+        {
+          "body": "Recovery needs a sleep baseline and an HRV or resting heart rate baseline, each with at least 14 nights. Nights with less than 2 hours of recorded sleep are treated as incomplete.",
+          "heading": "When there is not enough data"
+        },
+        {
+          "body": "Illness, alcohol, travel, stress and device fit can all move these signals. Recovery is a wellness estimate from your own data, not a medical diagnosis or advice.",
+          "heading": "Limitations"
+        }
+      ],
+      "title": "How Recovery is calculated"
+    }
+  },
+  "metrics": {
+    "active_energy": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "active_energy",
+        "ios": "active_energy"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Active energy",
+      "min_points": 14,
+      "recent": "mean7",
+      "sd_floor": 50.0,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 2.0,
+      "unit": "kcal",
+      "window_days": 60
+    },
+    "blood_oxygen": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "blood_oxygen",
+        "ios": "blood_oxygen"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Blood oxygen",
+      "min_points": 14,
+      "notes": "Stored as 0-100 percent on both platforms.",
+      "recent": "day",
+      "sd_floor": 0.5,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 0.25,
+      "unit": "%",
+      "window_days": 60
+    },
+    "bmi": {
+      "direction": "band",
+      "health_type": {
+        "android": null,
+        "ios": "bmi"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "BMI",
+      "min_points": 14,
+      "recent": "mean7",
+      "sd_floor": 0.1,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 0.25,
+      "unit": "kg/m2",
+      "window_days": 60
+    },
+    "body_fat": {
+      "direction": "band",
+      "health_type": {
+        "android": "body_fat",
+        "ios": "body_fat"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Body fat",
+      "min_points": 14,
+      "recent": "mean7",
+      "sd_floor": 0.3,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 0.5,
+      "unit": "%",
+      "window_days": 60
+    },
+    "hrv": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "hrv_rmssd",
+        "ios": "hrv_sdnn"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Heart rate variability",
+      "min_points": 14,
+      "notes": "iOS reports SDNN and Android reports RMSSD. They are different measures and are never compared across platforms.",
+      "recent": "day",
+      "sd_floor": 3.0,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 1.5,
+      "unit": "ms",
+      "window_days": 60
+    },
+    "respiratory_rate": {
+      "direction": "band",
+      "health_type": {
+        "android": "respiratory_rate",
+        "ios": "respiratory_rate"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Respiratory rate",
+      "min_points": 14,
+      "recent": "day",
+      "sd_floor": 0.3,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 1.0,
+      "unit": "br/min",
+      "window_days": 60
+    },
+    "resting_heart_rate": {
+      "direction": "lower_better",
+      "health_type": {
+        "android": "resting_heart_rate",
+        "ios": "resting_heart_rate"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Resting heart rate",
+      "min_points": 14,
+      "recent": "day",
+      "sd_floor": 1.0,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 0.5,
+      "unit": "bpm",
+      "window_days": 60
+    },
+    "sleep": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "sleep",
+        "ios": "sleep"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Sleep duration",
+      "min_points": 14,
+      "recent": "day",
+      "sd_floor": 20.0,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 1.0,
+      "unit": "min",
+      "window_days": 60
+    },
+    "steps": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "steps",
+        "ios": "steps"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Steps",
+      "min_points": 14,
+      "recent": "mean7",
+      "sd_floor": 500.0,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 2.0,
+      "unit": "steps",
+      "window_days": 60
+    },
+    "vo2_max": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "vo2_max",
+        "ios": "vo2_max"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "VO2 max",
+      "min_points": 14,
+      "recent": "mean7",
+      "sd_floor": 0.5,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 0.5,
+      "unit": "mL/kg/min",
+      "window_days": 60
+    },
+    "weight": {
+      "direction": "band",
+      "health_type": {
+        "android": "weight",
+        "ios": "weight"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Weight",
+      "min_points": 14,
+      "recent": "mean7",
+      "sd_floor": 0.3,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 0.25,
+      "unit": "kg",
+      "window_days": 60
+    },
+    "workout": {
+      "direction": "higher_better",
+      "health_type": {
+        "android": "workout",
+        "ios": "workout"
+      },
+      "high_confidence_coverage": 0.7,
+      "high_confidence_min_n": 30,
+      "label": "Workout minutes",
+      "min_points": 14,
+      "notes": "Daily workout minutes after overlapping sessions are merged.",
+      "recent": "mean7",
+      "sd_floor": 10.0,
+      "trend_days": 28,
+      "trend_min_points": 10,
+      "trend_stable_pct_per_week": 5.0,
+      "unit": "min",
+      "window_days": 60
+    }
+  },
+  "patterns": {
+    "min_abs_d": 0.3,
+    "min_abs_t": 2.0,
+    "min_group": 8,
+    "pairs": [
+      {
+        "decimals": 0,
+        "exposure": "late_intense_workout",
+        "id": "late_workout_sleep",
+        "lag_days": 1,
+        "less_word": "shorter",
+        "more_word": "longer",
+        "outcome": "sleep_minutes",
+        "review_category": "reduce",
+        "template": "On days with late intense workouts, your sleep that night has been {abs_diff} {unit} {direction_word} on average ({n_exposed} vs {n_unexposed} days).",
+        "unit": "min"
+      },
+      {
+        "decimals": 0,
+        "exposure": "high_load",
+        "id": "high_load_recovery",
+        "lag_days": 1,
+        "less_word": "lower",
+        "more_word": "higher",
+        "outcome": "recovery_score",
+        "review_category": null,
+        "template": "After high training-load days, your next-day recovery has been {abs_diff} {unit} {direction_word} on average ({n_exposed} vs {n_unexposed} days).",
+        "unit": "points"
+      },
+      {
+        "decimals": 0,
+        "exposure": "water_goal_met",
+        "id": "water_goal_recovery",
+        "lag_days": 1,
+        "less_word": "lower",
+        "more_word": "higher",
+        "outcome": "recovery_score",
+        "review_category": null,
+        "template": "After days you met your water goal, your next-day recovery has been {abs_diff} {unit} {direction_word} on average ({n_exposed} vs {n_unexposed} days).",
+        "unit": "points"
+      },
+      {
+        "decimals": 0,
+        "exposure": "protein_target_met",
+        "id": "protein_strength_volume",
+        "lag_days": 1,
+        "less_word": "lower",
+        "more_word": "higher",
+        "outcome": "strength_volume",
+        "review_category": null,
+        "template": "After days you met your protein target, your next-day strength volume has been {abs_diff} {unit} {direction_word} on average ({n_exposed} vs {n_unexposed} days).",
+        "unit": "kg"
+      },
+      {
+        "decimals": 0,
+        "exposure": "short_sleep",
+        "id": "short_sleep_steps",
+        "lag_days": 0,
+        "less_word": "fewer",
+        "more_word": "more",
+        "outcome": "steps",
+        "review_category": null,
+        "template": "On days after a short night, you have taken {abs_diff} {direction_word} {unit} on average ({n_exposed} vs {n_unexposed} days).",
+        "unit": "steps"
+      }
+    ],
+    "partial_today_outcomes": [
+      "steps",
+      "strength_volume"
+    ],
+    "short_sleep_margin_min": 45,
+    "source": "Welch's unequal-variance t statistic and Cohen's d with pooled SD; thresholds |t| >= 2 and |d| >= 0.3 are Ayuvo choices (d 0.2/0.5 are Cohen's small/medium conventions: Cohen J. Statistical Power Analysis for the Behavioral Sciences, 2nd ed. 1988).",
+    "window_days": 120
+  },
+  "recovery": {
+    "bands": [
+      {
+        "id": "good",
+        "label": "Good Recovery",
+        "min": 67,
+        "recommendation": "Normal training"
+      },
+      {
+        "id": "moderate",
+        "label": "Moderate",
+        "min": 34,
+        "recommendation": "Consider lighter training"
+      },
+      {
+        "id": "low",
+        "label": "Low",
+        "min": 0,
+        "recommendation": "Recovery-focused day"
+      }
+    ],
+    "components": [
+      {
+        "id": "hrv",
+        "metric": "hrv",
+        "mode": "higher",
+        "weight": 35
+      },
+      {
+        "id": "resting_heart_rate",
+        "metric": "resting_heart_rate",
+        "mode": "lower",
+        "weight": 25
+      },
+      {
+        "consistency_share": 0.3,
+        "duration_share": 0.7,
+        "id": "sleep",
+        "metric": "sleep",
+        "mode": "sleep",
+        "weight": 25
+      },
+      {
+        "id": "respiratory_rate",
+        "metric": "respiratory_rate",
+        "mode": "band",
+        "tolerance_z": 1.0,
+        "weight": 7.5
+      },
+      {
+        "id": "blood_oxygen",
+        "metric": "blood_oxygen",
+        "mode": "drop_only",
+        "tolerance_z": 1.0,
+        "weight": 7.5
+      }
+    ],
+    "consistency_min_nights": 5,
+    "consistency_window_days": 14,
+    "consistency_zero_at_min": 120,
+    "contributors": {
+      "blood_oxygen": "Blood oxygen {value1}% ({delta1} vs baseline)",
+      "hrv": "HRV {pct}% vs baseline",
+      "respiratory_rate": "Respiratory rate {delta1} br/min vs baseline",
+      "resting_heart_rate": "Resting HR {delta0} bpm vs baseline",
+      "sleep": "Sleep {duration}",
+      "training_load": "Yesterday's training: {category}"
+    },
+    "heart_components": [
+      "hrv",
+      "resting_heart_rate"
+    ],
+    "load_modifier": {
+      "high": -3,
+      "very_high": -6,
+      "very_high_ratio": 2.0
+    },
+    "source": "Ayuvo design: personal-baseline z-scores (the approach used by consumer readiness scores; see Plews et al. 2013 Sports Med 43(9):773-781 on individual HRV baselines). Weights and bands are Ayuvo choices.",
+    "subscore_center": 50,
+    "subscore_slope": 20
+  },
+  "sleep": {
+    "min_night_minutes": 120,
+    "notes": "Nights with less than 2 h asleep are treated as incomplete recordings and ignored everywhere."
+  },
+  "training_load": {
+    "default_intensity": 1.0,
+    "effort_divisor": 5.0,
+    "high_above": 1.3,
+    "intense_min_intensity": 1.2,
+    "intense_min_minutes_without_effort": 45,
+    "intensity_max": 2.0,
+    "intensity_min": 0.5,
+    "labels": {
+      "high": "High",
+      "light": "Light",
+      "moderate": "Moderate",
+      "none": "Rest"
+    },
+    "late_hour": 19,
+    "light_below": 0.8,
+    "mean_window_days": 28,
+    "source": "Ayuvo design: session-minutes x intensity load (in the spirit of session-RPE load, Foster et al. 2001 J Strength Cond Res 15(1):109-115) compared with the 28-day average; thresholds are Ayuvo choices."
+  }
+}

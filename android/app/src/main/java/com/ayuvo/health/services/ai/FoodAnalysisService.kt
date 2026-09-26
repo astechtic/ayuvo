@@ -584,6 +584,30 @@ class FoodAnalysisService(
     }
 
     /**
+     * The text-role route "Explain with AI" would use (docs/insights.md §5), resolved like every
+     * other text feature. A blocked route is returned as is so the screen can say why.
+     */
+    suspend fun insightsRoute(): AIRoleResolver.Route? =
+        AIRoleResolver(prefs, keyStore) { id -> localGemma?.isInstalled(id) == true }.resolve(requiresVision = false, role = "text")
+
+    /**
+     * One Insights explanation on exactly [route]: no fallback of any kind, so an on-device request
+     * never moves to a cloud provider and a failed cloud call is reported instead of retried elsewhere.
+     */
+    suspend fun callInsightsAi(route: AIRoleResolver.Route, prompt: String, maxOutputTokens: Int): String {
+        route.blocked?.let { throw AiError.Api(AIRoleResolver.refusal(route, it)) }
+        val requestTimeoutSeconds = route.requestTimeoutSeconds ?: prefs.aiRequestTimeoutSeconds.first()
+        if (route.provider == AIProvider.LOCAL_GEMMA) {
+            val runtime = localGemma ?: throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
+            if (!runtime.isReady()) throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
+        }
+        return dispatch(
+            route.provider, route.model, route.baseUrl, route.apiKey, prompt, emptyList(),
+            maxOutputTokens, requestTimeoutSeconds, geminiMaxOutputTokens = maxOutputTokens
+        )
+    }
+
+    /**
      * The BYOK route a records cloud call would use, or null when none is usable (no key, or the
      * primary is on-device Gemma, which counts as local per §16).
      */

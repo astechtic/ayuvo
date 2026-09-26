@@ -2,23 +2,131 @@
   "format": "ayuvo-actions-catalog",
   "version": 1,
   "enums": {
-    "aggregation": ["latest", "sum", "average", "min", "max", "count"],
-    "body_site": ["neck", "waist", "hips", "chest", "upper_arm", "thigh", "calf", "wrist"],
-    "date_range": ["today", "yesterday", "this_week", "last_week", "last_7_days", "last_30_days", "this_month", "last_month"],
-    "dose_action": ["taken", "skipped", "snoozed"],
-    "goal_kind": ["calories", "protein", "carbs", "fat", "water", "steps"],
-    "length_unit": ["cm", "in"],
-    "mass_unit": ["kg", "lb"],
-    "meal_type": ["breakfast", "lunch", "dinner", "snack", "other"],
-    "nutrient": ["calories", "protein", "carbs", "fat", "fiber"],
-    "search_domain": ["all", "food", "exercises", "metrics", "records", "medications"],
-    "section": ["summary", "browse", "health", "nutrition", "water", "fasting", "body", "activity", "workouts", "records", "medications", "coach", "settings"],
-    "volume_unit": ["ml", "l", "floz", "cup"]
+    "aggregation": [
+      "latest",
+      "sum",
+      "average",
+      "min",
+      "max",
+      "count"
+    ],
+    "body_site": [
+      "neck",
+      "waist",
+      "hips",
+      "chest",
+      "upper_arm",
+      "thigh",
+      "calf",
+      "wrist"
+    ],
+    "date_range": [
+      "today",
+      "yesterday",
+      "this_week",
+      "last_week",
+      "last_7_days",
+      "last_30_days",
+      "this_month",
+      "last_month"
+    ],
+    "dose_action": [
+      "taken",
+      "skipped",
+      "snoozed"
+    ],
+    "goal_kind": [
+      "calories",
+      "protein",
+      "carbs",
+      "fat",
+      "water",
+      "steps"
+    ],
+    "length_unit": [
+      "cm",
+      "in"
+    ],
+    "mass_unit": [
+      "kg",
+      "lb"
+    ],
+    "meal_type": [
+      "breakfast",
+      "lunch",
+      "dinner",
+      "snack",
+      "other"
+    ],
+    "nutrient": [
+      "calories",
+      "protein",
+      "carbs",
+      "fat",
+      "fiber"
+    ],
+    "review_day": [
+      "today",
+      "yesterday"
+    ],
+    "search_domain": [
+      "all",
+      "food",
+      "exercises",
+      "metrics",
+      "records",
+      "medications"
+    ],
+    "section": [
+      "summary",
+      "browse",
+      "health",
+      "nutrition",
+      "water",
+      "fasting",
+      "body",
+      "activity",
+      "workouts",
+      "insights",
+      "records",
+      "medications",
+      "coach",
+      "settings"
+    ],
+    "volume_unit": [
+      "ml",
+      "l",
+      "floz",
+      "cup"
+    ]
   },
   "units": {
-    "length": {"canonical": "cm", "enum": "length_unit", "factors": {"cm": 1, "in": 2.54}},
-    "mass": {"canonical": "kg", "enum": "mass_unit", "factors": {"kg": 1, "lb": 0.45359237}},
-    "volume": {"canonical": "ml", "enum": "volume_unit", "factors": {"cup": 240, "floz": 29.5735295625, "l": 1000, "ml": 1}}
+    "length": {
+      "canonical": "cm",
+      "enum": "length_unit",
+      "factors": {
+        "cm": 1,
+        "in": 2.54
+      }
+    },
+    "mass": {
+      "canonical": "kg",
+      "enum": "mass_unit",
+      "factors": {
+        "kg": 1,
+        "lb": 0.45359237
+      }
+    },
+    "volume": {
+      "canonical": "ml",
+      "enum": "volume_unit",
+      "factors": {
+        "cup": 240,
+        "floz": 29.5735295625,
+        "l": 1000,
+        "ml": 1
+      }
+    }
   },
   "entities": {
     "dose": "A scheduled medication dose for today. Shows the medication name and time only, never the strength or amount.",
@@ -41,21 +149,61 @@
       "title": "Get Health Data",
       "summary": "A single value for any metric over a date range: total steps this week, average heart rate, latest weight.",
       "params": [
-        {"name": "metric", "type": "metric", "required": true, "summary": "Metric key, e.g. steps, heart_rate, app:water."},
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "today", "summary": "Date range."},
-        {"name": "aggregation", "type": "enum", "enum": "aggregation", "summary": "How to combine samples. Defaults to the metric's natural aggregation."}
+        {
+          "name": "metric",
+          "type": "metric",
+          "required": true,
+          "summary": "Metric key, e.g. steps, heart_rate, app:water."
+        },
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "today",
+          "summary": "Date range."
+        },
+        {
+          "name": "aggregation",
+          "type": "enum",
+          "enum": "aggregation",
+          "summary": "How to combine samples. Defaults to the metric's natural aggregation."
+        }
       ],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "aggregation", "sample_count", "from_ms", "to_ms"]},
-      "permissions": ["health_read"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "aggregation",
+          "sample_count",
+          "from_ms",
+          "to_ms"
+        ]
+      },
+      "permissions": [
+        "health_read"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "metric:{metric}",
       "examples": {
-        "siri": ["What was my average heart rate this week in Ayuvo?", "How many steps today in Ayuvo?"],
-        "shortcuts": ["Get Health Data (Heart Rate, This Week, Average) → If < 60 → Show Notification"],
-        "android": ["ayuvo://action/health.metric.get?metric=steps&range=today"]
+        "siri": [
+          "What was my average heart rate this week in Ayuvo?",
+          "How many steps today in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Health Data (Heart Rate, This Week, Average) → If < 60 → Show Notification"
+        ],
+        "android": [
+          "ayuvo://action/health.metric.get?metric=steps&range=today"
+        ]
       }
     },
     {
@@ -65,19 +213,44 @@
       "title": "Get Latest Value",
       "summary": "The most recent sample of a metric and when it was recorded.",
       "params": [
-        {"name": "metric", "type": "metric", "required": true, "summary": "Metric key."}
+        {
+          "name": "metric",
+          "type": "metric",
+          "required": true,
+          "summary": "Metric key."
+        }
       ],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "t_ms"]},
-      "permissions": ["health_read"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "health_read"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "metric:{metric}",
       "examples": {
-        "siri": ["What is my latest blood pressure in Ayuvo?"],
-        "shortcuts": ["Get Latest Value (Blood Glucose) → Show Result"],
-        "android": ["ayuvo://action/health.metric.latest?metric=blood_glucose"]
+        "siri": [
+          "What is my latest blood pressure in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Latest Value (Blood Glucose) → Show Result"
+        ],
+        "android": [
+          "ayuvo://action/health.metric.latest?metric=blood_glucose"
+        ]
       }
     },
     {
@@ -87,21 +260,55 @@
       "title": "Get Health Samples",
       "summary": "The samples of a metric in a date range, newest first, for filtering and calculating in Shortcuts.",
       "params": [
-        {"name": "metric", "type": "metric", "required": true, "summary": "Metric key."},
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_7_days", "summary": "Date range."},
-        {"name": "limit", "type": "integer", "default": 100, "min": 1, "max": 500, "summary": "Maximum samples."}
+        {
+          "name": "metric",
+          "type": "metric",
+          "required": true,
+          "summary": "Metric key."
+        },
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_7_days",
+          "summary": "Date range."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 100,
+          "min": 1,
+          "max": 500,
+          "summary": "Maximum samples."
+        }
       ],
-      "output": {"kind": "list", "fields": ["t_ms", "value", "unit"]},
-      "permissions": ["health_read"],
+      "output": {
+        "kind": "list",
+        "fields": [
+          "t_ms",
+          "value",
+          "unit"
+        ]
+      },
+      "permissions": [
+        "health_read"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["shortcuts", "android"],
+      "surfaces": [
+        "shortcuts",
+        "android"
+      ],
       "coach_mode": "none",
       "screen": "metric:{metric}",
       "examples": {
         "siri": [],
-        "shortcuts": ["Get Health Samples (Weight, Last 30 Days) → Calculate Statistics (Average)"],
-        "android": ["ayuvo://action/health.metric.samples?metric=weight&range=last_30_days"]
+        "shortcuts": [
+          "Get Health Samples (Weight, Last 30 Days) → Calculate Statistics (Average)"
+        ],
+        "android": [
+          "ayuvo://action/health.metric.samples?metric=weight&range=last_30_days"
+        ]
       }
     },
     {
@@ -111,17 +318,37 @@
       "title": "Get Last Night's Sleep",
       "summary": "Time asleep last night from Apple Health or Health Connect.",
       "params": [],
-      "output": {"kind": "record", "fields": ["asleep_s", "start_ms", "end_ms"]},
-      "permissions": ["health_read"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "asleep_s",
+          "start_ms",
+          "end_ms"
+        ]
+      },
+      "permissions": [
+        "health_read"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "metric:sleep",
       "examples": {
-        "siri": ["How long did I sleep last night in Ayuvo?"],
-        "shortcuts": ["Get Last Night's Sleep → If Hours < 7 → Show Notification"],
-        "android": ["ayuvo://action/health.sleep.lastNight"]
+        "siri": [
+          "How long did I sleep last night in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Last Night's Sleep → If Hours < 7 → Show Notification"
+        ],
+        "android": [
+          "ayuvo://action/health.sleep.lastNight"
+        ]
       }
     },
     {
@@ -131,19 +358,53 @@
       "title": "Get Nutrition",
       "summary": "Calories, protein, carbs, fat and fiber for a date range, with your targets and what's left today.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "today", "summary": "Date range."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "today",
+          "summary": "Date range."
+        }
       ],
-      "output": {"kind": "record", "fields": ["calories", "protein_g", "carbs_g", "fat_g", "fiber_g", "calorie_target", "protein_target_g", "calories_remaining", "entry_count"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "calories",
+          "protein_g",
+          "carbs_g",
+          "fat_g",
+          "fiber_g",
+          "calorie_target",
+          "protein_target_g",
+          "calories_remaining",
+          "entry_count"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:nutrition",
       "examples": {
-        "siri": ["How many calories have I eaten today in Ayuvo?", "Show my health summary for today in Ayuvo"],
-        "shortcuts": ["Get Nutrition (Today) → Get Calories Remaining → Show Result"],
-        "android": ["Hey Google, show today's calories in Ayuvo", "ayuvo://action/nutrition.summary.get?range=today"]
+        "siri": [
+          "How many calories have I eaten today in Ayuvo?",
+          "Show my health summary for today in Ayuvo"
+        ],
+        "shortcuts": [
+          "Get Nutrition (Today) → Get Calories Remaining → Show Result"
+        ],
+        "android": [
+          "Hey Google, show today's calories in Ayuvo",
+          "ayuvo://action/nutrition.summary.get?range=today"
+        ]
       }
     },
     {
@@ -153,21 +414,62 @@
       "title": "Get Nutrient",
       "summary": "One nutrient (calories, protein, carbs, fat or fiber) over a date range, with its daily target.",
       "params": [
-        {"name": "nutrient", "type": "enum", "enum": "nutrient", "required": true, "summary": "Nutrient."},
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "today", "summary": "Date range."},
-        {"name": "aggregation", "type": "enum", "enum": "aggregation", "default": "sum", "summary": "sum = total, average = per logged day."}
+        {
+          "name": "nutrient",
+          "type": "enum",
+          "enum": "nutrient",
+          "required": true,
+          "summary": "Nutrient."
+        },
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "today",
+          "summary": "Date range."
+        },
+        {
+          "name": "aggregation",
+          "type": "enum",
+          "enum": "aggregation",
+          "default": "sum",
+          "summary": "sum = total, average = per logged day."
+        }
       ],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "target", "remaining", "percent"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "target",
+          "remaining",
+          "percent"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:nutrition",
       "examples": {
-        "siri": ["How much protein did I eat yesterday in Ayuvo?", "How much protein today in Ayuvo?"],
-        "shortcuts": ["Get Nutrient (Protein, Today) → If < Target → Open Ayuvo Coach"],
-        "android": ["ayuvo://action/nutrition.nutrient.get?nutrient=protein&range=yesterday"]
+        "siri": [
+          "How much protein did I eat yesterday in Ayuvo?",
+          "How much protein today in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Nutrient (Protein, Today) → If < Target → Open Ayuvo Coach"
+        ],
+        "android": [
+          "ayuvo://action/nutrition.nutrient.get?nutrient=protein&range=yesterday"
+        ]
       }
     },
     {
@@ -177,21 +479,65 @@
       "title": "Get Logged Foods",
       "summary": "Foods you logged in a date range, optionally one meal.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "today", "summary": "Date range."},
-        {"name": "meal", "type": "enum", "enum": "meal_type", "summary": "Only this meal."},
-        {"name": "limit", "type": "integer", "default": 50, "min": 1, "max": 200, "summary": "Maximum foods."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "today",
+          "summary": "Date range."
+        },
+        {
+          "name": "meal",
+          "type": "enum",
+          "enum": "meal_type",
+          "summary": "Only this meal."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 50,
+          "min": 1,
+          "max": 200,
+          "summary": "Maximum foods."
+        }
       ],
-      "output": {"kind": "list", "entity": "food_entry", "fields": ["id", "name", "calories", "protein_g", "carbs_g", "fat_g", "meal", "t_ms"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "list",
+        "entity": "food_entry",
+        "fields": [
+          "id",
+          "name",
+          "calories",
+          "protein_g",
+          "carbs_g",
+          "fat_g",
+          "meal",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:nutrition",
       "examples": {
-        "siri": ["What did I eat for breakfast in Ayuvo?"],
-        "shortcuts": ["Get Logged Foods (Today, Breakfast) → Repeat with Each → Get Calories"],
-        "android": ["ayuvo://action/nutrition.meals.list?meal=breakfast"]
+        "siri": [
+          "What did I eat for breakfast in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Logged Foods (Today, Breakfast) → Repeat with Each → Get Calories"
+        ],
+        "android": [
+          "ayuvo://action/nutrition.meals.list?meal=breakfast"
+        ]
       }
     },
     {
@@ -201,18 +547,39 @@
       "title": "Get Nutrition Targets",
       "summary": "Your daily calorie and macro targets.",
       "params": [],
-      "output": {"kind": "record", "fields": ["calories", "protein_g", "carbs_g", "fat_g"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "calories",
+          "protein_g",
+          "carbs_g",
+          "fat_g"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "get_nutrition_targets",
       "screen": "screen:nutrition",
       "examples": {
-        "siri": ["What is my protein target in Ayuvo?"],
-        "shortcuts": ["Get Nutrition Targets → Get Protein"],
-        "android": ["ayuvo://action/nutrition.targets.get"]
+        "siri": [
+          "What is my protein target in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Nutrition Targets → Get Protein"
+        ],
+        "android": [
+          "ayuvo://action/nutrition.targets.get"
+        ]
       }
     },
     {
@@ -222,20 +589,48 @@
       "title": "Get Water",
       "summary": "Water logged, your daily goal and how much is left.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "today", "summary": "Date range."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "today",
+          "summary": "Date range."
+        }
       ],
-      "output": {"kind": "record", "fields": ["intake_ml", "goal_ml", "remaining_ml", "percent"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "intake_ml",
+          "goal_ml",
+          "remaining_ml",
+          "percent"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "get_water_intake",
       "screen": "metric:app:water",
       "examples": {
-        "siri": ["How much water have I had today in Ayuvo?"],
-        "shortcuts": ["Get Water → Get Remaining → If > 0 → Show Notification"],
-        "android": ["ayuvo://action/water.get"]
+        "siri": [
+          "How much water have I had today in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Water → Get Remaining → If > 0 → Show Notification"
+        ],
+        "android": [
+          "ayuvo://action/water.get"
+        ]
       }
     },
     {
@@ -245,18 +640,43 @@
       "title": "Get Fasting Status",
       "summary": "Whether a fast is running, how long it has run and time left to your goal.",
       "params": [],
-      "output": {"kind": "record", "fields": ["active", "started_ms", "elapsed_s", "goal_s", "remaining_s", "percent", "reached"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "active",
+          "started_ms",
+          "elapsed_s",
+          "goal_s",
+          "remaining_s",
+          "percent",
+          "reached"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "get_fasting_status",
       "screen": "screen:fasting",
       "examples": {
-        "siri": ["How long have I been fasting in Ayuvo?"],
-        "shortcuts": ["Get Fasting Status → If Reached → Show Notification"],
-        "android": ["ayuvo://action/fasting.status.get"]
+        "siri": [
+          "How long have I been fasting in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Fasting Status → If Reached → Show Notification"
+        ],
+        "android": [
+          "ayuvo://action/fasting.status.get"
+        ]
       }
     },
     {
@@ -266,20 +686,54 @@
       "title": "Get Fasting History",
       "summary": "Completed fasts in a date range.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_30_days", "summary": "Date range."},
-        {"name": "limit", "type": "integer", "default": 50, "min": 1, "max": 200, "summary": "Maximum fasts."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_30_days",
+          "summary": "Date range."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 50,
+          "min": 1,
+          "max": 200,
+          "summary": "Maximum fasts."
+        }
       ],
-      "output": {"kind": "list", "entity": "fasting_session", "fields": ["id", "started_ms", "ended_ms", "duration_s", "goal_s", "reached"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "list",
+        "entity": "fasting_session",
+        "fields": [
+          "id",
+          "started_ms",
+          "ended_ms",
+          "duration_s",
+          "goal_s",
+          "reached"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:fasting",
       "examples": {
         "siri": [],
-        "shortcuts": ["Get Fasting History (This Month) → Count"],
-        "android": ["ayuvo://action/fasting.history.list?range=this_month"]
+        "shortcuts": [
+          "Get Fasting History (This Month) → Count"
+        ],
+        "android": [
+          "ayuvo://action/fasting.history.list?range=this_month"
+        ]
       }
     },
     {
@@ -289,17 +743,38 @@
       "title": "Get Weight",
       "summary": "Your latest logged weight.",
       "params": [],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "t_ms"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "metric:app:weight",
       "examples": {
-        "siri": ["What is my current weight in Ayuvo?"],
-        "shortcuts": ["Get Weight → Get Body Composition → Show BMI"],
-        "android": ["Hey Google, show my weight in Ayuvo", "ayuvo://action/weight.get"]
+        "siri": [
+          "What is my current weight in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Weight → Get Body Composition → Show BMI"
+        ],
+        "android": [
+          "Hey Google, show my weight in Ayuvo",
+          "ayuvo://action/weight.get"
+        ]
       }
     },
     {
@@ -309,19 +784,48 @@
       "title": "Get Weight History",
       "summary": "Weights in a date range with the change from first to last.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_30_days", "summary": "Date range."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_30_days",
+          "summary": "Date range."
+        }
       ],
-      "output": {"kind": "record", "fields": ["first_kg", "last_kg", "change_kg", "count", "entries"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "first_kg",
+          "last_kg",
+          "change_kg",
+          "count",
+          "entries"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "metric:app:weight",
       "examples": {
-        "siri": ["Show my weight for the last 30 days in Ayuvo", "What was my weight trend this month in Ayuvo?"],
-        "shortcuts": ["Get Weight History (Last 30 Days) → Get Change"],
-        "android": ["ayuvo://action/weight.history?range=this_month"]
+        "siri": [
+          "Show my weight for the last 30 days in Ayuvo",
+          "What was my weight trend this month in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Weight History (Last 30 Days) → Get Change"
+        ],
+        "android": [
+          "ayuvo://action/weight.history?range=this_month"
+        ]
       }
     },
     {
@@ -331,18 +835,40 @@
       "title": "Get Body Composition",
       "summary": "Latest weight, body fat, height and the BMI calculated from them.",
       "params": [],
-      "output": {"kind": "record", "fields": ["weight_kg", "body_fat_percent", "height_cm", "bmi"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "weight_kg",
+          "body_fat_percent",
+          "height_cm",
+          "bmi"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "get_body_composition",
       "screen": "screen:body",
       "examples": {
-        "siri": ["What is my BMI in Ayuvo?"],
-        "shortcuts": ["Get Body Composition → Get BMI → Show Result"],
-        "android": ["ayuvo://action/body.composition.get"]
+        "siri": [
+          "What is my BMI in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Body Composition → Get BMI → Show Result"
+        ],
+        "android": [
+          "ayuvo://action/body.composition.get"
+        ]
       }
     },
     {
@@ -352,17 +878,39 @@
       "title": "Get Today's Workout",
       "summary": "Today's planned exercises, sets done and total volume.",
       "params": [],
-      "output": {"kind": "record", "fields": ["exercise_count", "sets_done", "reps_done", "volume_kg", "completed"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "exercise_count",
+          "sets_done",
+          "reps_done",
+          "volume_kg",
+          "completed"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:workouts",
       "examples": {
-        "siri": ["What's my workout today in Ayuvo?"],
-        "shortcuts": ["Get Today's Workout → Get Volume"],
-        "android": ["ayuvo://action/workout.today.get"]
+        "siri": [
+          "What's my workout today in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Today's Workout → Get Volume"
+        ],
+        "android": [
+          "ayuvo://action/workout.today.get"
+        ]
       }
     },
     {
@@ -372,20 +920,54 @@
       "title": "Get Workout History",
       "summary": "Completed workouts in a date range.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_30_days", "summary": "Date range."},
-        {"name": "limit", "type": "integer", "default": 50, "min": 1, "max": 200, "summary": "Maximum workouts."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_30_days",
+          "summary": "Date range."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 50,
+          "min": 1,
+          "max": 200,
+          "summary": "Maximum workouts."
+        }
       ],
-      "output": {"kind": "list", "entity": "workout", "fields": ["id", "date", "exercise_count", "sets", "volume_kg", "duration_s"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "list",
+        "entity": "workout",
+        "fields": [
+          "id",
+          "date",
+          "exercise_count",
+          "sets",
+          "volume_kg",
+          "duration_s"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:workouts",
       "examples": {
         "siri": [],
-        "shortcuts": ["Get Workout History (This Week) → Count"],
-        "android": ["ayuvo://action/workout.history.list?range=this_week"]
+        "shortcuts": [
+          "Get Workout History (This Week) → Count"
+        ],
+        "android": [
+          "ayuvo://action/workout.history.list?range=this_week"
+        ]
       }
     },
     {
@@ -395,21 +977,55 @@
       "title": "Get Exercise Stats",
       "summary": "Sessions, sets, reps, volume and best weight for one exercise.",
       "params": [
-        {"name": "exercise", "type": "entity", "entity": "exercise", "required": true, "summary": "Exercise."},
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_30_days", "summary": "Date range."}
+        {
+          "name": "exercise",
+          "type": "entity",
+          "entity": "exercise",
+          "required": true,
+          "summary": "Exercise."
+        },
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_30_days",
+          "summary": "Date range."
+        }
       ],
-      "output": {"kind": "record", "fields": ["sessions", "sets", "reps", "volume_kg", "best_weight_kg"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "sessions",
+          "sets",
+          "reps",
+          "volume_kg",
+          "best_weight_kg"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "get_exercise_stats",
       "screen": "screen:workouts",
       "examples": {
-        "siri": ["How much did I bench this month in Ayuvo?"],
-        "shortcuts": ["Get Exercise Stats (Bench Press, This Month) → Get Best Weight"],
-        "android": ["ayuvo://action/workout.exercise.stats?exercise=bench_press"]
+        "siri": [
+          "How much did I bench this month in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Exercise Stats (Bench Press, This Month) → Get Best Weight"
+        ],
+        "android": [
+          "ayuvo://action/workout.exercise.stats?exercise=bench_press"
+        ]
       }
     },
     {
@@ -419,20 +1035,55 @@
       "title": "Search Health Records",
       "summary": "Find documents in Health Records by text.",
       "params": [
-        {"name": "query", "type": "string", "required": true, "max_length": 200, "summary": "Search text."},
-        {"name": "limit", "type": "integer", "default": 20, "min": 1, "max": 100, "summary": "Maximum results."}
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "max_length": 200,
+          "summary": "Search text."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 20,
+          "min": 1,
+          "max": 100,
+          "summary": "Maximum results."
+        }
       ],
-      "output": {"kind": "list", "entity": "health_record", "fields": ["id", "title", "kind", "date"]},
-      "permissions": ["records"],
+      "output": {
+        "kind": "list",
+        "entity": "health_record",
+        "fields": [
+          "id",
+          "title",
+          "kind",
+          "date"
+        ]
+      },
+      "permissions": [
+        "records"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "tab:records",
       "examples": {
-        "siri": ["Search my health records in Ayuvo"],
-        "shortcuts": ["Search Health Records (\"lipid\") → Choose from List → Open Record"],
-        "android": ["ayuvo://action/records.search?query=lipid"]
+        "siri": [
+          "Search my health records in Ayuvo"
+        ],
+        "shortcuts": [
+          "Search Health Records (\"lipid\") → Choose from List → Open Record"
+        ],
+        "android": [
+          "ayuvo://action/records.search?query=lipid"
+        ]
       }
     },
     {
@@ -442,17 +1093,39 @@
       "title": "Get Latest Health Record",
       "summary": "Your most recent document in Health Records.",
       "params": [],
-      "output": {"kind": "entity", "entity": "health_record", "fields": ["id", "title", "kind", "date"]},
-      "permissions": ["records"],
+      "output": {
+        "kind": "entity",
+        "entity": "health_record",
+        "fields": [
+          "id",
+          "title",
+          "kind",
+          "date"
+        ]
+      },
+      "permissions": [
+        "records"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "tab:records",
       "examples": {
-        "siri": ["Show my latest blood test in Ayuvo"],
-        "shortcuts": ["Get Latest Health Record → Open Record"],
-        "android": ["ayuvo://action/records.latest"]
+        "siri": [
+          "Show my latest blood test in Ayuvo"
+        ],
+        "shortcuts": [
+          "Get Latest Health Record → Open Record"
+        ],
+        "android": [
+          "ayuvo://action/records.latest"
+        ]
       }
     },
     {
@@ -462,20 +1135,54 @@
       "title": "Get Lab Value",
       "summary": "The latest result for a lab test (e.g. HbA1c) and its earlier results.",
       "params": [
-        {"name": "analyte", "type": "entity", "entity": "lab_value", "required": true, "summary": "Lab test."},
-        {"name": "limit", "type": "integer", "default": 10, "min": 1, "max": 100, "summary": "How many past results."}
+        {
+          "name": "analyte",
+          "type": "entity",
+          "entity": "lab_value",
+          "required": true,
+          "summary": "Lab test."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 10,
+          "min": 1,
+          "max": 100,
+          "summary": "How many past results."
+        }
       ],
-      "output": {"kind": "record", "fields": ["value", "unit", "date", "flag", "history"]},
-      "permissions": ["records"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "value",
+          "unit",
+          "date",
+          "flag",
+          "history"
+        ]
+      },
+      "permissions": [
+        "records"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android"
+      ],
       "coach_mode": "none",
       "screen": "tab:records",
       "examples": {
-        "siri": ["What was my last HbA1c in Ayuvo?"],
-        "shortcuts": ["Get Lab Value (HbA1c) → Get Value → If > 6.5 → Open Ayuvo Coach"],
-        "android": ["ayuvo://action/records.labValue.get?analyte=hba1c"]
+        "siri": [
+          "What was my last HbA1c in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Lab Value (HbA1c) → Get Value → If > 6.5 → Open Ayuvo Coach"
+        ],
+        "android": [
+          "ayuvo://action/records.labValue.get?analyte=hba1c"
+        ]
       }
     },
     {
@@ -485,17 +1192,39 @@
       "title": "Get Today's Doses",
       "summary": "Today's scheduled doses and their status.",
       "params": [],
-      "output": {"kind": "list", "entity": "dose", "fields": ["id", "medication", "scheduled_ms", "status"]},
-      "permissions": ["medications"],
+      "output": {
+        "kind": "list",
+        "entity": "dose",
+        "fields": [
+          "id",
+          "medication",
+          "scheduled_ms",
+          "status"
+        ]
+      },
+      "permissions": [
+        "medications"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:medications",
       "examples": {
-        "siri": ["What medicines do I have today in Ayuvo?"],
-        "shortcuts": ["Get Today's Doses → Filter Status is due"],
-        "android": ["ayuvo://action/medications.today.list"]
+        "siri": [
+          "What medicines do I have today in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Today's Doses → Filter Status is due"
+        ],
+        "android": [
+          "ayuvo://action/medications.today.list"
+        ]
       }
     },
     {
@@ -505,17 +1234,39 @@
       "title": "Get Next Dose",
       "summary": "The next dose that is due or upcoming today.",
       "params": [],
-      "output": {"kind": "entity", "entity": "dose", "fields": ["id", "medication", "scheduled_ms", "status"]},
-      "permissions": ["medications"],
+      "output": {
+        "kind": "entity",
+        "entity": "dose",
+        "fields": [
+          "id",
+          "medication",
+          "scheduled_ms",
+          "status"
+        ]
+      },
+      "permissions": [
+        "medications"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:medications",
       "examples": {
-        "siri": ["When is my next medicine in Ayuvo?"],
-        "shortcuts": ["Get Next Dose → Mark Dose (Taken)"],
-        "android": ["ayuvo://action/medications.next.get"]
+        "siri": [
+          "When is my next medicine in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Next Dose → Mark Dose (Taken)"
+        ],
+        "android": [
+          "ayuvo://action/medications.next.get"
+        ]
       }
     },
     {
@@ -525,21 +1276,57 @@
       "title": "Get Dose History",
       "summary": "Taken, skipped and missed doses in a date range.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_7_days", "summary": "Date range."},
-        {"name": "medication", "type": "entity", "entity": "medication", "summary": "Only this medication."},
-        {"name": "limit", "type": "integer", "default": 100, "min": 1, "max": 500, "summary": "Maximum doses."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_7_days",
+          "summary": "Date range."
+        },
+        {
+          "name": "medication",
+          "type": "entity",
+          "entity": "medication",
+          "summary": "Only this medication."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 100,
+          "min": 1,
+          "max": 500,
+          "summary": "Maximum doses."
+        }
       ],
-      "output": {"kind": "list", "fields": ["medication", "scheduled_ms", "status", "taken_ms"]},
-      "permissions": ["medications"],
+      "output": {
+        "kind": "list",
+        "fields": [
+          "medication",
+          "scheduled_ms",
+          "status",
+          "taken_ms"
+        ]
+      },
+      "permissions": [
+        "medications"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:medications",
       "examples": {
         "siri": [],
-        "shortcuts": ["Get Dose History (Last 7 Days) → Filter Status is missed → Count"],
-        "android": ["ayuvo://action/medications.history.list"]
+        "shortcuts": [
+          "Get Dose History (Last 7 Days) → Filter Status is missed → Count"
+        ],
+        "android": [
+          "ayuvo://action/medications.history.list"
+        ]
       }
     },
     {
@@ -549,20 +1336,51 @@
       "title": "Get Adherence",
       "summary": "Share of scheduled doses taken in a date range.",
       "params": [
-        {"name": "range", "type": "enum", "enum": "date_range", "default": "last_7_days", "summary": "Date range."},
-        {"name": "medication", "type": "entity", "entity": "medication", "summary": "Only this medication."}
+        {
+          "name": "range",
+          "type": "enum",
+          "enum": "date_range",
+          "default": "last_7_days",
+          "summary": "Date range."
+        },
+        {
+          "name": "medication",
+          "type": "entity",
+          "entity": "medication",
+          "summary": "Only this medication."
+        }
       ],
-      "output": {"kind": "record", "fields": ["taken", "expected", "percent"]},
-      "permissions": ["medications"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "taken",
+          "expected",
+          "percent"
+        ]
+      },
+      "permissions": [
+        "medications"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:medications",
       "examples": {
-        "siri": ["How well did I take my medicines this week in Ayuvo?"],
-        "shortcuts": ["Get Adherence (This Week) → Get Percent"],
-        "android": ["ayuvo://action/medications.adherence.get?range=this_week"]
+        "siri": [
+          "How well did I take my medicines this week in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Adherence (This Week) → Get Percent"
+        ],
+        "android": [
+          "ayuvo://action/medications.adherence.get?range=this_week"
+        ]
       }
     },
     {
@@ -572,18 +1390,44 @@
       "title": "Get Goals",
       "summary": "Your daily goals and today's progress towards each.",
       "params": [],
-      "output": {"kind": "record", "fields": ["calories", "protein_g", "carbs_g", "fat_g", "water_ml", "steps", "goal_weight_kg", "progress"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "calories",
+          "protein_g",
+          "carbs_g",
+          "fat_g",
+          "water_ml",
+          "steps",
+          "goal_weight_kg",
+          "progress"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "get_goals",
       "screen": "tab:summary",
       "examples": {
-        "siri": ["How am I doing on my goals today in Ayuvo?"],
-        "shortcuts": ["Get Goals → Get Water"],
-        "android": ["ayuvo://action/goals.get"]
+        "siri": [
+          "How am I doing on my goals today in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Goals → Get Water"
+        ],
+        "android": [
+          "ayuvo://action/goals.get"
+        ]
       }
     },
     {
@@ -593,17 +1437,35 @@
       "title": "Get Profile",
       "summary": "Age, height, current weight and preferred units. No name or contact details.",
       "params": [],
-      "output": {"kind": "record", "fields": ["age", "height_cm", "weight_kg", "mass_unit", "volume_unit"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "age",
+          "height_cm",
+          "weight_kg",
+          "mass_unit",
+          "volume_unit"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["shortcuts", "android"],
+      "surfaces": [
+        "shortcuts",
+        "android"
+      ],
       "coach_mode": "none",
       "screen": "tab:settings",
       "examples": {
         "siri": [],
-        "shortcuts": ["Get Profile → Get Height"],
-        "android": ["ayuvo://action/profile.summary.get"]
+        "shortcuts": [
+          "Get Profile → Get Height"
+        ],
+        "android": [
+          "ayuvo://action/profile.summary.get"
+        ]
       }
     },
     {
@@ -613,22 +1475,64 @@
       "title": "Search Ayuvo",
       "summary": "Search foods, exercises, metrics, health records and medications at once.",
       "params": [
-        {"name": "query", "type": "string", "required": true, "max_length": 200, "summary": "Search text."},
-        {"name": "domain", "type": "enum", "enum": "search_domain", "default": "all", "summary": "Where to search."},
-        {"name": "limit", "type": "integer", "default": 20, "min": 1, "max": 100, "summary": "Maximum results."}
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "max_length": 200,
+          "summary": "Search text."
+        },
+        {
+          "name": "domain",
+          "type": "enum",
+          "enum": "search_domain",
+          "default": "all",
+          "summary": "Where to search."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "default": 20,
+          "min": 1,
+          "max": 100,
+          "summary": "Maximum results."
+        }
       ],
-      "output": {"kind": "list", "entity": "search_result", "fields": ["domain", "id", "title", "subtitle"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "list",
+        "entity": "search_result",
+        "fields": [
+          "domain",
+          "id",
+          "title",
+          "subtitle"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "read",
       "coach_tool": "search_ayuvo",
       "screen": "tab:browse",
       "examples": {
-        "siri": ["Search Ayuvo for cholesterol"],
-        "shortcuts": ["Search Ayuvo (\"vitamin d\", All) → Choose from List"],
-        "android": ["ayuvo://action/search.universal?query=vitamin%20d"]
+        "siri": [
+          "Search Ayuvo for cholesterol"
+        ],
+        "shortcuts": [
+          "Search Ayuvo (\"vitamin d\", All) → Choose from List"
+        ],
+        "android": [
+          "ayuvo://action/search.universal?query=vitamin%20d"
+        ]
       }
     },
     {
@@ -638,27 +1542,106 @@
       "title": "Log Food",
       "summary": "Log food by describing it (estimated by your AI provider) or with exact calories and macros.",
       "params": [
-        {"name": "description", "type": "string", "max_length": 500, "summary": "What you ate, e.g. two eggs and toast. Sent to your AI provider for an estimate."},
-        {"name": "name", "type": "string", "max_length": 120, "summary": "Food name when giving exact values."},
-        {"name": "calories", "type": "number", "min": 0, "max": 10000, "summary": "Calories (kcal)."},
-        {"name": "protein", "type": "number", "min": 0, "max": 1000, "summary": "Protein (g)."},
-        {"name": "carbs", "type": "number", "min": 0, "max": 1000, "summary": "Carbohydrates (g)."},
-        {"name": "fat", "type": "number", "min": 0, "max": 1000, "summary": "Fat (g)."},
-        {"name": "meal", "type": "enum", "enum": "meal_type", "summary": "Meal. Defaults to the current meal."}
+        {
+          "name": "description",
+          "type": "string",
+          "max_length": 500,
+          "summary": "What you ate, e.g. two eggs and toast. Sent to your AI provider for an estimate."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "max_length": 120,
+          "summary": "Food name when giving exact values."
+        },
+        {
+          "name": "calories",
+          "type": "number",
+          "min": 0,
+          "max": 10000,
+          "summary": "Calories (kcal)."
+        },
+        {
+          "name": "protein",
+          "type": "number",
+          "min": 0,
+          "max": 1000,
+          "summary": "Protein (g)."
+        },
+        {
+          "name": "carbs",
+          "type": "number",
+          "min": 0,
+          "max": 1000,
+          "summary": "Carbohydrates (g)."
+        },
+        {
+          "name": "fat",
+          "type": "number",
+          "min": 0,
+          "max": 1000,
+          "summary": "Fat (g)."
+        },
+        {
+          "name": "meal",
+          "type": "enum",
+          "enum": "meal_type",
+          "summary": "Meal. Defaults to the current meal."
+        }
       ],
-      "requires_one_of": [["description"], ["name", "calories"]],
-      "ai_unless": ["calories"],
-      "output": {"kind": "entity", "entity": "food_entry", "fields": ["id", "name", "calories", "protein_g", "carbs_g", "fat_g", "meal", "t_ms"]},
-      "permissions": ["local", "ai_provider"],
+      "requires_one_of": [
+        [
+          "description"
+        ],
+        [
+          "name",
+          "calories"
+        ]
+      ],
+      "ai_unless": [
+        "calories"
+      ],
+      "output": {
+        "kind": "entity",
+        "entity": "food_entry",
+        "fields": [
+          "id",
+          "name",
+          "calories",
+          "protein_g",
+          "carbs_g",
+          "fat_g",
+          "meal",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local",
+        "ai_provider"
+      ],
       "confirmation": "when_ai",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "screen:nutrition",
       "examples": {
-        "siri": ["Log food in Ayuvo", "Log two eggs and toast in Ayuvo"],
-        "shortcuts": ["Log Food (Name: Protein shake, Calories: 180, Protein: 30)"],
-        "android": ["Hey Google, log a banana in Ayuvo", "ayuvo://action/nutrition.food.log?name=Banana&calories=105"]
+        "siri": [
+          "Log food in Ayuvo",
+          "Log two eggs and toast in Ayuvo"
+        ],
+        "shortcuts": [
+          "Log Food (Name: Protein shake, Calories: 180, Protein: 30)"
+        ],
+        "android": [
+          "Hey Google, log a banana in Ayuvo",
+          "ayuvo://action/nutrition.food.log?name=Banana&calories=105"
+        ]
       }
     },
     {
@@ -668,21 +1651,65 @@
       "title": "Log Saved Food",
       "summary": "Log a favourite or recent food again.",
       "params": [
-        {"name": "food", "type": "entity", "entity": "food", "required": true, "summary": "Saved food."},
-        {"name": "servings", "type": "number", "default": 1, "min": 0.1, "max": 20, "summary": "Servings."},
-        {"name": "meal", "type": "enum", "enum": "meal_type", "summary": "Meal. Defaults to the current meal."}
+        {
+          "name": "food",
+          "type": "entity",
+          "entity": "food",
+          "required": true,
+          "summary": "Saved food."
+        },
+        {
+          "name": "servings",
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 20,
+          "summary": "Servings."
+        },
+        {
+          "name": "meal",
+          "type": "enum",
+          "enum": "meal_type",
+          "summary": "Meal. Defaults to the current meal."
+        }
       ],
-      "output": {"kind": "entity", "entity": "food_entry", "fields": ["id", "name", "calories", "protein_g", "carbs_g", "fat_g", "meal", "t_ms"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "entity",
+        "entity": "food_entry",
+        "fields": [
+          "id",
+          "name",
+          "calories",
+          "protein_g",
+          "carbs_g",
+          "fat_g",
+          "meal",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "screen:nutrition",
       "examples": {
-        "siri": ["Log my usual breakfast in Ayuvo"],
-        "shortcuts": ["Log Saved Food (Oatmeal, 1 serving, Breakfast)"],
-        "android": ["ayuvo://action/nutrition.food.logSaved?food=<id>"]
+        "siri": [
+          "Log my usual breakfast in Ayuvo"
+        ],
+        "shortcuts": [
+          "Log Saved Food (Oatmeal, 1 serving, Breakfast)"
+        ],
+        "android": [
+          "ayuvo://action/nutrition.food.logSaved?food=<id>"
+        ]
       }
     },
     {
@@ -692,20 +1719,60 @@
       "title": "Log Water",
       "summary": "Add water to today's intake.",
       "params": [
-        {"name": "amount", "type": "number", "required": true, "min": 1, "max": 5000, "unit_param": "unit", "unit_family": "volume", "summary": "Amount (range checked in ml)."},
-        {"name": "unit", "type": "enum", "enum": "volume_unit", "default_pref": "volume_unit", "summary": "Unit. Defaults to your water unit."}
+        {
+          "name": "amount",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5000,
+          "unit_param": "unit",
+          "unit_family": "volume",
+          "summary": "Amount (range checked in ml)."
+        },
+        {
+          "name": "unit",
+          "type": "enum",
+          "enum": "volume_unit",
+          "default_pref": "volume_unit",
+          "summary": "Unit. Defaults to your water unit."
+        }
       ],
-      "output": {"kind": "record", "fields": ["added_ml", "intake_ml", "goal_ml", "remaining_ml", "percent"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "added_ml",
+          "intake_ml",
+          "goal_ml",
+          "remaining_ml",
+          "percent"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "metric:app:water",
       "examples": {
-        "siri": ["Log water in Ayuvo", "Log 500 ml of water in Ayuvo"],
-        "shortcuts": ["Log Water (250 ml) → Get Remaining → Show Result"],
-        "android": ["Hey Google, log 750 ml water in Ayuvo", "ayuvo://action/water.log?amount=500&unit=ml"]
+        "siri": [
+          "Log water in Ayuvo",
+          "Log 500 ml of water in Ayuvo"
+        ],
+        "shortcuts": [
+          "Log Water (250 ml) → Get Remaining → Show Result"
+        ],
+        "android": [
+          "Hey Google, log 750 ml water in Ayuvo",
+          "ayuvo://action/water.log?amount=500&unit=ml"
+        ]
       }
     },
     {
@@ -715,20 +1782,57 @@
       "title": "Log Weight",
       "summary": "Log your weight now.",
       "params": [
-        {"name": "value", "type": "number", "required": true, "min": 20, "max": 400, "unit_param": "unit", "unit_family": "mass", "summary": "Weight (range checked in kg)."},
-        {"name": "unit", "type": "enum", "enum": "mass_unit", "default_pref": "mass_unit", "summary": "Unit. Defaults to your weight unit."}
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 400,
+          "unit_param": "unit",
+          "unit_family": "mass",
+          "summary": "Weight (range checked in kg)."
+        },
+        {
+          "name": "unit",
+          "type": "enum",
+          "enum": "mass_unit",
+          "default_pref": "mass_unit",
+          "summary": "Unit. Defaults to your weight unit."
+        }
       ],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "t_ms"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "metric:app:weight",
       "examples": {
-        "siri": ["Log my weight in Ayuvo", "Log 70 kg as my weight in Ayuvo"],
-        "shortcuts": ["Ask for Number → Log Weight (Provided Input, kg)"],
-        "android": ["ayuvo://action/weight.log?value=70&unit=kg"]
+        "siri": [
+          "Log my weight in Ayuvo",
+          "Log 70 kg as my weight in Ayuvo"
+        ],
+        "shortcuts": [
+          "Ask for Number → Log Weight (Provided Input, kg)"
+        ],
+        "android": [
+          "ayuvo://action/weight.log?value=70&unit=kg"
+        ]
       }
     },
     {
@@ -738,19 +1842,47 @@
       "title": "Log Body Fat",
       "summary": "Log your body fat percentage now.",
       "params": [
-        {"name": "percent", "type": "number", "required": true, "min": 2, "max": 75, "summary": "Body fat (%)."}
+        {
+          "name": "percent",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 75,
+          "summary": "Body fat (%)."
+        }
       ],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "t_ms"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "metric:app:body_fat",
       "examples": {
-        "siri": ["Log body fat in Ayuvo"],
-        "shortcuts": ["Log Body Fat (18.5)"],
-        "android": ["ayuvo://action/body.fat.log?percent=18.5"]
+        "siri": [
+          "Log body fat in Ayuvo"
+        ],
+        "shortcuts": [
+          "Log Body Fat (18.5)"
+        ],
+        "android": [
+          "ayuvo://action/body.fat.log?percent=18.5"
+        ]
       }
     },
     {
@@ -760,21 +1892,63 @@
       "title": "Log Body Measurement",
       "summary": "Log a tape measurement such as waist or hips.",
       "params": [
-        {"name": "site", "type": "enum", "enum": "body_site", "required": true, "summary": "Where you measured."},
-        {"name": "value", "type": "number", "required": true, "min": 10, "max": 300, "unit_param": "unit", "unit_family": "length", "summary": "Measurement (range checked in cm)."},
-        {"name": "unit", "type": "enum", "enum": "length_unit", "default_pref": "length_unit", "summary": "Unit."}
+        {
+          "name": "site",
+          "type": "enum",
+          "enum": "body_site",
+          "required": true,
+          "summary": "Where you measured."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 300,
+          "unit_param": "unit",
+          "unit_family": "length",
+          "summary": "Measurement (range checked in cm)."
+        },
+        {
+          "name": "unit",
+          "type": "enum",
+          "enum": "length_unit",
+          "default_pref": "length_unit",
+          "summary": "Unit."
+        }
       ],
-      "output": {"kind": "scalar", "fields": ["value", "unit", "t_ms"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "scalar",
+        "fields": [
+          "value",
+          "unit",
+          "t_ms"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "screen:body",
       "examples": {
-        "siri": ["Log my waist in Ayuvo"],
-        "shortcuts": ["Log Body Measurement (Waist, 82 cm)"],
-        "android": ["ayuvo://action/body.measurement.log?site=waist&value=82&unit=cm"]
+        "siri": [
+          "Log my waist in Ayuvo"
+        ],
+        "shortcuts": [
+          "Log Body Measurement (Waist, 82 cm)"
+        ],
+        "android": [
+          "ayuvo://action/body.measurement.log?site=waist&value=82&unit=cm"
+        ]
       }
     },
     {
@@ -784,19 +1958,53 @@
       "title": "Start Fast",
       "summary": "Start a fast with a goal length.",
       "params": [
-        {"name": "goal_hours", "type": "number", "default": 16, "min": 1, "max": 72, "summary": "Goal (hours)."}
+        {
+          "name": "goal_hours",
+          "type": "number",
+          "default": 16,
+          "min": 1,
+          "max": 72,
+          "summary": "Goal (hours)."
+        }
       ],
-      "output": {"kind": "record", "fields": ["active", "started_ms", "elapsed_s", "goal_s", "remaining_s", "percent", "reached"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "active",
+          "started_ms",
+          "elapsed_s",
+          "goal_s",
+          "remaining_s",
+          "percent",
+          "reached"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "screen:fasting",
       "examples": {
-        "siri": ["Start a fast in Ayuvo", "Start a 16 hour fast in Ayuvo"],
-        "shortcuts": ["Start Fast (18 hours)"],
-        "android": ["Hey Google, start a 16 hour fast in Ayuvo", "ayuvo://action/fasting.start?goal_hours=16"]
+        "siri": [
+          "Start a fast in Ayuvo",
+          "Start a 16 hour fast in Ayuvo"
+        ],
+        "shortcuts": [
+          "Start Fast (18 hours)"
+        ],
+        "android": [
+          "Hey Google, start a 16 hour fast in Ayuvo",
+          "ayuvo://action/fasting.start?goal_hours=16"
+        ]
       }
     },
     {
@@ -806,17 +2014,42 @@
       "title": "End Fast",
       "summary": "End the fast that is running.",
       "params": [],
-      "output": {"kind": "entity", "entity": "fasting_session", "fields": ["id", "started_ms", "ended_ms", "duration_s", "goal_s", "reached"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "entity",
+        "entity": "fasting_session",
+        "fields": [
+          "id",
+          "started_ms",
+          "ended_ms",
+          "duration_s",
+          "goal_s",
+          "reached"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "screen:fasting",
       "examples": {
-        "siri": ["End my fast in Ayuvo"],
-        "shortcuts": ["End Fast → Get Duration"],
-        "android": ["ayuvo://action/fasting.stop"]
+        "siri": [
+          "End my fast in Ayuvo"
+        ],
+        "shortcuts": [
+          "End Fast → Get Duration"
+        ],
+        "android": [
+          "ayuvo://action/fasting.stop"
+        ]
       }
     },
     {
@@ -826,18 +2059,35 @@
       "title": "Start Workout",
       "summary": "Open today's workout log, ready to add sets.",
       "params": [],
-      "output": {"kind": "none", "fields": []},
-      "permissions": ["local"],
+      "output": {
+        "kind": "none",
+        "fields": []
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": false,
       "opens_app": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:workout_log",
       "examples": {
-        "siri": ["Start my workout in Ayuvo"],
-        "shortcuts": ["Start Workout"],
-        "android": ["Hey Google, start my workout in Ayuvo", "ayuvo://action/workout.start"]
+        "siri": [
+          "Start my workout in Ayuvo"
+        ],
+        "shortcuts": [
+          "Start Workout"
+        ],
+        "android": [
+          "Hey Google, start my workout in Ayuvo",
+          "ayuvo://action/workout.start"
+        ]
       }
     },
     {
@@ -847,17 +2097,39 @@
       "title": "Finish Workout",
       "summary": "Mark today's logged sets as done and calculate the calories burned.",
       "params": [],
-      "output": {"kind": "record", "fields": ["exercise_count", "sets_done", "reps_done", "volume_kg", "completed"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "exercise_count",
+          "sets_done",
+          "reps_done",
+          "volume_kg",
+          "completed"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "screen:workouts",
       "examples": {
-        "siri": ["Finish my workout in Ayuvo"],
-        "shortcuts": ["Finish Workout → Get Volume"],
-        "android": ["ayuvo://action/workout.finish"]
+        "siri": [
+          "Finish my workout in Ayuvo"
+        ],
+        "shortcuts": [
+          "Finish Workout → Get Volume"
+        ],
+        "android": [
+          "ayuvo://action/workout.finish"
+        ]
       }
     },
     {
@@ -867,23 +2139,81 @@
       "title": "Log Workout Set",
       "summary": "Add a set to today's workout: exercise, weight, reps and optional RPE.",
       "params": [
-        {"name": "exercise", "type": "entity", "entity": "exercise", "required": true, "summary": "Exercise."},
-        {"name": "reps", "type": "integer", "required": true, "min": 1, "max": 200, "summary": "Reps."},
-        {"name": "weight", "type": "number", "default": 0, "min": 0, "max": 1000, "unit_param": "unit", "unit_family": "mass", "summary": "Weight (range checked in kg). 0 for bodyweight."},
-        {"name": "unit", "type": "enum", "enum": "mass_unit", "default_pref": "mass_unit", "summary": "Unit."},
-        {"name": "rpe", "type": "number", "min": 1, "max": 10, "summary": "Effort (RPE 1-10)."}
+        {
+          "name": "exercise",
+          "type": "entity",
+          "entity": "exercise",
+          "required": true,
+          "summary": "Exercise."
+        },
+        {
+          "name": "reps",
+          "type": "integer",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "summary": "Reps."
+        },
+        {
+          "name": "weight",
+          "type": "number",
+          "default": 0,
+          "min": 0,
+          "max": 1000,
+          "unit_param": "unit",
+          "unit_family": "mass",
+          "summary": "Weight (range checked in kg). 0 for bodyweight."
+        },
+        {
+          "name": "unit",
+          "type": "enum",
+          "enum": "mass_unit",
+          "default_pref": "mass_unit",
+          "summary": "Unit."
+        },
+        {
+          "name": "rpe",
+          "type": "number",
+          "min": 1,
+          "max": 10,
+          "summary": "Effort (RPE 1-10)."
+        }
       ],
-      "output": {"kind": "record", "fields": ["exercise", "set_number", "reps", "weight_kg", "sets_today", "volume_kg"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "exercise",
+          "set_number",
+          "reps",
+          "weight_kg",
+          "sets_today",
+          "volume_kg"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink", "coach"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
       "coach_mode": "propose",
       "screen": "screen:workouts",
       "examples": {
-        "siri": ["Add a workout set in Ayuvo"],
-        "shortcuts": ["Log Workout Set (Bench Press, 10 reps, 60 kg)"],
-        "android": ["ayuvo://action/workout.set.log?exercise=bench_press&weight=60&unit=kg&reps=10"]
+        "siri": [
+          "Add a workout set in Ayuvo"
+        ],
+        "shortcuts": [
+          "Log Workout Set (Bench Press, 10 reps, 60 kg)"
+        ],
+        "android": [
+          "ayuvo://action/workout.set.log?exercise=bench_press&weight=60&unit=kg&reps=10"
+        ]
       }
     },
     {
@@ -893,21 +2223,64 @@
       "title": "Mark Dose",
       "summary": "Mark one of today's scheduled doses as taken, skipped or snoozed. Never changes the medication or its dose.",
       "params": [
-        {"name": "dose", "type": "entity", "entity": "dose", "required": true, "summary": "Today's dose."},
-        {"name": "action", "type": "enum", "enum": "dose_action", "required": true, "summary": "Taken, skipped or snoozed."},
-        {"name": "snooze_minutes", "type": "integer", "default": 10, "allowed": [10, 30, 60], "summary": "Snooze length."}
+        {
+          "name": "dose",
+          "type": "entity",
+          "entity": "dose",
+          "required": true,
+          "summary": "Today's dose."
+        },
+        {
+          "name": "action",
+          "type": "enum",
+          "enum": "dose_action",
+          "required": true,
+          "summary": "Taken, skipped or snoozed."
+        },
+        {
+          "name": "snooze_minutes",
+          "type": "integer",
+          "default": 10,
+          "allowed": [
+            10,
+            30,
+            60
+          ],
+          "summary": "Snooze length."
+        }
       ],
-      "output": {"kind": "entity", "entity": "dose", "fields": ["id", "medication", "scheduled_ms", "status"]},
-      "permissions": ["medications"],
+      "output": {
+        "kind": "entity",
+        "entity": "dose",
+        "fields": [
+          "id",
+          "medication",
+          "scheduled_ms",
+          "status"
+        ]
+      },
+      "permissions": [
+        "medications"
+      ],
       "confirmation": "always",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android"
+      ],
       "coach_mode": "none",
       "screen": "screen:medications",
       "examples": {
-        "siri": ["Mark my morning medicine as taken in Ayuvo"],
-        "shortcuts": ["Get Next Dose → Mark Dose (Taken)"],
-        "android": ["com.ayuvo.health.ACTION extras: action_id=medication.dose.mark, dose=<id>, action=taken"]
+        "siri": [
+          "Mark my morning medicine as taken in Ayuvo"
+        ],
+        "shortcuts": [
+          "Get Next Dose → Mark Dose (Taken)"
+        ],
+        "android": [
+          "com.ayuvo.health.ACTION extras: action_id=medication.dose.mark, dose=<id>, action=taken"
+        ]
       }
     },
     {
@@ -917,20 +2290,80 @@
       "title": "Update Goal",
       "summary": "Change a daily goal: calories, protein, carbs, fat, water (ml) or steps.",
       "params": [
-        {"name": "goal", "type": "enum", "enum": "goal_kind", "required": true, "summary": "Which goal."},
-        {"name": "value", "type": "number", "required": true, "range_by": {"param": "goal", "ranges": {"calories": [800, 10000], "carbs": [10, 1000], "fat": [10, 500], "protein": [10, 500], "steps": [500, 100000], "water": [250, 10000]}}, "summary": "New daily goal."}
+        {
+          "name": "goal",
+          "type": "enum",
+          "enum": "goal_kind",
+          "required": true,
+          "summary": "Which goal."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "range_by": {
+            "param": "goal",
+            "ranges": {
+              "calories": [
+                800,
+                10000
+              ],
+              "carbs": [
+                10,
+                1000
+              ],
+              "fat": [
+                10,
+                500
+              ],
+              "protein": [
+                10,
+                500
+              ],
+              "steps": [
+                500,
+                100000
+              ],
+              "water": [
+                250,
+                10000
+              ]
+            }
+          },
+          "summary": "New daily goal."
+        }
       ],
-      "output": {"kind": "record", "fields": ["goal", "value", "previous"]},
-      "permissions": ["local"],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "goal",
+          "value",
+          "previous"
+        ]
+      },
+      "permissions": [
+        "local"
+      ],
       "confirmation": "always",
       "requires_unlock": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "tab:settings",
       "examples": {
-        "siri": ["Change my water goal in Ayuvo"],
-        "shortcuts": ["Update Goal (Water, 3000)"],
-        "android": ["ayuvo://action/goals.update?goal=water&value=3000"]
+        "siri": [
+          "Change my water goal in Ayuvo"
+        ],
+        "shortcuts": [
+          "Update Goal (Water, 3000)"
+        ],
+        "android": [
+          "ayuvo://action/goals.update?goal=water&value=3000"
+        ]
       }
     },
     {
@@ -940,20 +2373,42 @@
       "title": "Open Ayuvo",
       "summary": "Open a section of Ayuvo.",
       "params": [
-        {"name": "section", "type": "enum", "enum": "section", "required": true, "summary": "Section."}
+        {
+          "name": "section",
+          "type": "enum",
+          "enum": "section",
+          "required": true,
+          "summary": "Section."
+        }
       ],
-      "output": {"kind": "none", "fields": []},
+      "output": {
+        "kind": "none",
+        "fields": []
+      },
       "permissions": [],
       "confirmation": "never",
       "requires_unlock": false,
       "opens_app": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "section:{section}",
       "examples": {
-        "siri": ["Open my health records in Ayuvo", "Open Coach in Ayuvo"],
-        "shortcuts": ["Open Ayuvo (Medications)"],
-        "android": ["Hey Google, open fasting in Ayuvo", "ayuvo://open/records"]
+        "siri": [
+          "Open my health records in Ayuvo",
+          "Open Coach in Ayuvo"
+        ],
+        "shortcuts": [
+          "Open Ayuvo (Medications)"
+        ],
+        "android": [
+          "Hey Google, open fasting in Ayuvo",
+          "ayuvo://open/records"
+        ]
       }
     },
     {
@@ -963,20 +2418,36 @@
       "title": "Open Metric",
       "summary": "Open the chart for a metric.",
       "params": [
-        {"name": "metric", "type": "metric", "required": true, "summary": "Metric key."}
+        {
+          "name": "metric",
+          "type": "metric",
+          "required": true,
+          "summary": "Metric key."
+        }
       ],
-      "output": {"kind": "none", "fields": []},
+      "output": {
+        "kind": "none",
+        "fields": []
+      },
       "permissions": [],
       "confirmation": "never",
       "requires_unlock": false,
       "opens_app": true,
-      "surfaces": ["shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "metric:{metric}",
       "examples": {
         "siri": [],
-        "shortcuts": ["Open Metric (Resting Heart Rate)"],
-        "android": ["ayuvo://action/open.metric?metric=resting_heart_rate"]
+        "shortcuts": [
+          "Open Metric (Resting Heart Rate)"
+        ],
+        "android": [
+          "ayuvo://action/open.metric?metric=resting_heart_rate"
+        ]
       }
     },
     {
@@ -986,20 +2457,38 @@
       "title": "Open Health Record",
       "summary": "Open a document in Health Records.",
       "params": [
-        {"name": "record", "type": "entity", "entity": "health_record", "required": true, "summary": "Record."}
+        {
+          "name": "record",
+          "type": "entity",
+          "entity": "health_record",
+          "required": true,
+          "summary": "Record."
+        }
       ],
-      "output": {"kind": "none", "fields": []},
-      "permissions": ["records"],
+      "output": {
+        "kind": "none",
+        "fields": []
+      },
+      "permissions": [
+        "records"
+      ],
       "confirmation": "never",
       "requires_unlock": true,
       "opens_app": true,
-      "surfaces": ["shortcuts", "android"],
+      "surfaces": [
+        "shortcuts",
+        "android"
+      ],
       "coach_mode": "none",
       "screen": "record:{record}",
       "examples": {
         "siri": [],
-        "shortcuts": ["Search Health Records → Choose from List → Open Health Record"],
-        "android": ["ayuvo://action/open.record?record=<id>"]
+        "shortcuts": [
+          "Search Health Records → Choose from List → Open Health Record"
+        ],
+        "android": [
+          "ayuvo://action/open.record?record=<id>"
+        ]
       }
     },
     {
@@ -1009,20 +2498,191 @@
       "title": "Ask Ayuvo Coach",
       "summary": "Open Coach, optionally with a question typed in for you to send.",
       "params": [
-        {"name": "prompt", "type": "string", "max_length": 500, "summary": "Question to prefill. Not sent until you tap Send."}
+        {
+          "name": "prompt",
+          "type": "string",
+          "max_length": 500,
+          "summary": "Question to prefill. Not sent until you tap Send."
+        }
       ],
-      "output": {"kind": "none", "fields": []},
+      "output": {
+        "kind": "none",
+        "fields": []
+      },
       "permissions": [],
       "confirmation": "never",
       "requires_unlock": false,
       "opens_app": true,
-      "surfaces": ["siri", "shortcuts", "android", "deeplink"],
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink"
+      ],
       "coach_mode": "none",
       "screen": "tab:coach",
       "examples": {
-        "siri": ["Open Ayuvo Coach"],
-        "shortcuts": ["Get Nutrient (Protein) → If < Target → Ask Ayuvo Coach (\"How do I get more protein today?\")"],
-        "android": ["ayuvo://action/open.coach?prompt=Plan%20my%20dinner"]
+        "siri": [
+          "Open Ayuvo Coach"
+        ],
+        "shortcuts": [
+          "Get Nutrient (Protein) → If < Target → Ask Ayuvo Coach (\"How do I get more protein today?\")"
+        ],
+        "android": [
+          "ayuvo://action/open.coach?prompt=Plan%20my%20dinner"
+        ]
+      }
+    },
+    {
+      "id": "insights.recovery.get",
+      "kind": "get",
+      "domain": "insights",
+      "title": "Get Recovery",
+      "summary": "This morning's Recovery score (0–100) with its main positive and negative signals, compared with your own baseline. A wellness estimate, not a diagnosis.",
+      "params": [],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "status",
+          "score",
+          "label",
+          "recommendation",
+          "confidence",
+          "positives",
+          "negatives",
+          "training_load"
+        ]
+      },
+      "permissions": [
+        "local",
+        "health_read"
+      ],
+      "confirmation": "never",
+      "requires_unlock": true,
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
+      "coach_mode": "read",
+      "coach_tool": "get_recovery",
+      "screen": "screen:insights.recovery",
+      "examples": {
+        "siri": [
+          "What's my recovery in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Recovery → If Score < 34 → Show Notification"
+        ],
+        "android": [
+          "ayuvo://action/insights.recovery.get"
+        ]
+      }
+    },
+    {
+      "id": "insights.healthAge.get",
+      "kind": "get",
+      "domain": "insights",
+      "title": "Get Health Age",
+      "summary": "Your Ayuvo Health Age estimate next to your actual age, with its pace and the markers behind it. Ayuvo's own estimate, not a clinical age.",
+      "params": [],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "status",
+          "actual_age",
+          "health_age",
+          "difference",
+          "confidence",
+          "pace",
+          "direction",
+          "markers"
+        ]
+      },
+      "permissions": [
+        "local",
+        "health_read"
+      ],
+      "confirmation": "never",
+      "requires_unlock": true,
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
+      "coach_mode": "read",
+      "coach_tool": "get_health_age",
+      "screen": "screen:insights.health_age",
+      "examples": {
+        "siri": [
+          "What's my health age in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Health Age → Get Difference → Show Result"
+        ],
+        "android": [
+          "ayuvo://action/insights.healthAge.get"
+        ]
+      }
+    },
+    {
+      "id": "insights.dailyReview.get",
+      "kind": "get",
+      "domain": "insights",
+      "title": "Get Daily Review",
+      "summary": "The Daily Health Review for a day: Day Score, what went well, what needs attention, what to improve and what to consider reducing.",
+      "params": [
+        {
+          "name": "day",
+          "type": "enum",
+          "enum": "review_day",
+          "default": "today",
+          "summary": "Day to review."
+        }
+      ],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "status",
+          "day",
+          "day_score",
+          "went_well",
+          "needs_attention",
+          "improve",
+          "reduce",
+          "not_logged"
+        ]
+      },
+      "permissions": [
+        "local",
+        "health_read"
+      ],
+      "confirmation": "never",
+      "requires_unlock": true,
+      "surfaces": [
+        "siri",
+        "shortcuts",
+        "android",
+        "deeplink",
+        "coach"
+      ],
+      "coach_mode": "read",
+      "coach_tool": "get_daily_review",
+      "screen": "screen:insights.review",
+      "examples": {
+        "siri": [
+          "How did my day go in Ayuvo?"
+        ],
+        "shortcuts": [
+          "Get Daily Review → Get Day Score → Show Result"
+        ],
+        "android": [
+          "ayuvo://action/insights.dailyReview.get"
+        ]
       }
     }
   ]

@@ -13,6 +13,7 @@ struct BrowseView: View {
     @Environment(WeightStore.self) private var weightStore
     @Environment(BodyFatStore.self) private var bodyFatStore
     @Environment(ProfileStore.self) private var profileStore
+    @Environment(InsightsStore.self) private var insightsStore
     @AppStorage(WaterSettings.enabledKey) private var waterTrackingEnabled = false
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
 
@@ -114,6 +115,9 @@ struct BrowseView: View {
 
     private func subtitle(for category: BrowseCategory) -> String? {
         switch category {
+        case .insights:
+            guard let recovery = insightsStore.recovery, recovery.isReady, let score = recovery.score else { return nil }
+            return String(localized: "Recovery \(score) · \(recovery.labelText ?? "")")
         case .nutrition:
             let kcal = foodStore.calories(for: .now)
             return kcal > 0 ? String(localized: "\(kcal.formatted()) kcal today") : nil
@@ -194,6 +198,8 @@ struct BrowseView: View {
         switch feature.destination {
         case .browse(let routes):
             navigator.openBrowse(routes)
+        case .insights(let route):
+            navigator.openInsights(route)
         case .metric(let key):
             navigator.browsePath.append(MetricRoute.detail(key))
         case .logFood(let action):
@@ -273,6 +279,8 @@ struct BrowseCategoryRow: View {
         let row = MetricRow(systemImage: category.systemImage, tint: category.tint, title: category.title, subtitle: subtitle, dimmed: dimmed)
         Group {
             switch category.target {
+            case "screen:insights":
+                NavigationLink(value: BrowseRoute.insights) { row }
             case "screen:nutrition":
                 NavigationLink(value: BrowseRoute.nutrition) { row }
             case "screen:fasting":

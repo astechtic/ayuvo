@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Bedtime
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material.icons.outlined.Hearing
 import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Loop
@@ -51,6 +52,7 @@ object AyuvoPalette {
     val Symptoms = Color(0xFFAF52DE)
     val Medications = Color(0xFF32ADE6)
     val Records = Color(0xFF5856D6)
+    val Insights = Color(0xFFE08A00)
     val Other = Color(0xFF8E8E93)
 
     val Protein = Color(0xFF007AFF)
@@ -79,6 +81,7 @@ enum class AyuvoCategory(
     val icon: ImageVector,
     @param:StringRes val labelRes: Int
 ) {
+    INSIGHTS(AyuvoPalette.Insights, Icons.Outlined.Insights, R.string.domain_insights),
     NUTRITION(AyuvoPalette.Nutrition, Icons.Outlined.Restaurant, R.string.domain_nutrition),
     HYDRATION(AyuvoPalette.Hydration, Icons.Outlined.WaterDrop, R.string.domain_hydration),
     FASTING(AyuvoPalette.Fasting, Icons.Outlined.Timer, R.string.domain_fasting),

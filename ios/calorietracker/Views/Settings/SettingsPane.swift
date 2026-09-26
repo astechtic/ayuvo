@@ -26,7 +26,7 @@ enum SettingsGroup: CaseIterable, Identifiable {
 /// `speechToText`, `dataManagement`, `healthRecords`, `appUpdates`, `helpSupport`, `legal`) are kept.
 enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     case personalInfo, goalsNutrition, units
-    case nutritionTracking, hydration, fasting, activity, medications
+    case nutritionTracking, hydration, fasting, activity, medications, insights
     case notifications
     case healthData, healthRecords, dataManagement, deleteData
     case aiProviders, speechToText, customInstructions
@@ -38,7 +38,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     var group: SettingsGroup {
         switch self {
         case .personalInfo, .goalsNutrition, .units: .healthProfile
-        case .nutritionTracking, .hydration, .fasting, .activity, .medications: .tracking
+        case .nutritionTracking, .hydration, .fasting, .activity, .medications, .insights: .tracking
         case .notifications: .notifications
         case .healthData, .healthRecords, .dataManagement, .deleteData: .dataPrivacy
         case .aiProviders, .speechToText, .customInstructions: .aiSpeech
@@ -57,6 +57,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .fasting: "Fasting"
         case .activity: "Activity"
         case .medications: "Medications"
+        case .insights: "Insights"
         case .notifications: "Notifications"
         case .healthData: "Health Sync"
         case .healthRecords: "Health Records"
@@ -82,6 +83,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .fasting: "timer"
         case .activity: "figure.walk"
         case .medications: "pills.fill"
+        case .insights: "gauge.with.dots.needle.67percent"
         case .notifications: "bell.badge.fill"
         case .healthData: "heart.fill"
         case .healthRecords: "doc.text.fill"
@@ -109,6 +111,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .fasting: SettingsTint.fasting
         case .activity: SettingsTint.activity
         case .medications: SettingsTint.medications
+        case .insights: SettingsTint.insights
         case .notifications: SettingsTint.notifications
         case .healthData: SettingsTint.vitals
         case .healthRecords: SettingsTint.records

@@ -145,7 +145,7 @@ class ActionVectorsTest {
 
     @Test
     fun catalogParses() {
-        assertEquals(44, catalog.actions.size)
+        assertEquals(47, catalog.actions.size)
         assertTrue(catalog.coachReadActions.all { it.coachTool != null })
         assertTrue(catalog.coachProposeActions.all { it.kind == ActionKind.SET })
         assertTrue(catalog.coachProposeActions.none { it.domain == "medications" || it.domain == "goals" })

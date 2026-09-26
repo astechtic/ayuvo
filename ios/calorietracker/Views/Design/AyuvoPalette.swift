@@ -4,6 +4,7 @@ import UIKit
 /// Fixed domain colours of the Apple-flat design (docs/ui-structure.md §3, shared catalog `domains`).
 /// The theme accent (`AppColors.calorie`) is never used for a domain.
 nonisolated enum AyuvoPalette {
+    static let insights = dynamic(0xE08A00, 0xFFB340)
     static let nutrition = dynamic(0x34C759, 0x30D158)
     static let hydration = dynamic(0x007AFF, 0x0A84FF)
     static let fasting = dynamic(0x00C7BE, 0x63E6E2)
@@ -78,6 +79,7 @@ nonisolated enum AyuvoPalette {
     /// Domain colour by catalog domain id (`nutrition`, `hydration`, …); Other for unknown ids.
     static func domain(_ id: String) -> Color {
         switch id {
+        case "insights": insights
         case "nutrition": nutrition
         case "hydration": hydration
         case "fasting": fasting

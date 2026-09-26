@@ -266,6 +266,7 @@ fun SettingsScreen(
                 HealthConnectPermissionAction.SYNC -> vm.setHealthConnectEnabled(true)
                 HealthConnectPermissionAction.ENERGY_GOALS -> vm.setHealthEnergyGoalsEnabled(true)
                 HealthConnectPermissionAction.DAILY_SUMMARY -> vm.setDailySummaryEnabled(true)
+                HealthConnectPermissionAction.INSIGHTS_MORNING -> settingsScope.launch { container.prefs.setInsightsMorningNotification(true) }
             }
         } else {
             state.showHealthPermissionHelp = true
@@ -311,6 +312,16 @@ fun SettingsScreen(
             return
         }
         state.pendingHealthPermissionAction = HealthConnectPermissionAction.DAILY_SUMMARY
+        healthConnectLauncher.launch(container.health.dailySummaryPermissions)
+    }
+
+    fun onInsightsMorningToggle(enabled: Boolean) {
+        if (!enabled || !ui.healthConnectEnabled || !container.health.isAvailable()) {
+            settingsScope.launch { container.prefs.setInsightsMorningNotification(enabled) }
+            return
+        }
+        // The morning worker reads Health Connect in the background, so ask for that read here.
+        state.pendingHealthPermissionAction = HealthConnectPermissionAction.INSIGHTS_MORNING
         healthConnectLauncher.launch(container.health.dailySummaryPermissions)
     }
 
@@ -396,6 +407,7 @@ fun SettingsScreen(
         },
         onNotificationsToggle = ::onNotificationsToggle,
         onDailySummaryToggle = ::onDailySummaryToggle,
+        onInsightsMorningToggle = ::onInsightsMorningToggle,
         onHealthConnectToggle = ::onHealthConnectToggle,
         onHealthEnergyGoalsToggle = ::onHealthEnergyGoalsToggle,
         onSavePhotosToGalleryChanged = ::onSavePhotosToGalleryChanged,

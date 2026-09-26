@@ -76,7 +76,7 @@ internal fun NotificationsPage(ctx: SettingsPageContext) {
         }
         row {
             GroupRow(
-                title = stringResource(R.string.settings_notif_daily_summary),
+                title = stringResource(R.string.settings_notif_daily_review),
                 icon = Icons.Filled.Insights, iconTint = SettingsTint.Nutrition,
                 modifier = Modifier.settingsRow("dailySummary"),
                 trailing = RowTrailing.Toggle(ui.dailySummaryEnabled, ctx.actions.onDailySummaryToggle)

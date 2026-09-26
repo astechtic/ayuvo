@@ -15,6 +15,7 @@ nonisolated enum SettingsTint {
     static let sleep = AyuvoPalette.sleep
     static let vitals = AyuvoPalette.vitals
     static let medications = AyuvoPalette.medications
+    static let insights = AyuvoPalette.insights
     static let records = AyuvoPalette.records
     static let other = AyuvoPalette.other
 

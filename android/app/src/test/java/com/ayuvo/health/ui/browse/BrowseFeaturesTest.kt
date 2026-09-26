@@ -14,7 +14,8 @@ class BrowseFeaturesTest {
         assertEquals(
             listOf(
                 "workouts", "workoutLog", "exerciseLibrary", "nutrition", "logFood", "water", "fasting", "bodyMeasurements",
-                "logWeight", "logBodyFat", "medications", "addMedication", "records", "addRecord", "coach", "settings"
+                "logWeight", "logBodyFat", "medications", "addMedication", "records", "addRecord",
+                "insights", "recovery", "healthAge", "dailyReview", "coach", "settings"
             ),
             BrowseFeatures.all.map { it.id }
         )

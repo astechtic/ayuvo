@@ -83,7 +83,10 @@ data class SummaryDestinations(
     val addRecord: () -> Unit = {},
     val openSettings: () -> Unit = {},
     /** Settings › Tracking page for a widget action whose tracking is off (docs/widgets.md). */
-    val openSettingsPage: (SettingsPage) -> Unit = {}
+    val openSettingsPage: (SettingsPage) -> Unit = {},
+    val openRecovery: () -> Unit = {},
+    val openHealthAge: () -> Unit = {},
+    val openDailyReview: () -> Unit = {}
 )
 
 /** A Summary "+" entry requested from outside the screen (Quick Log widget), consumed once. */
@@ -209,6 +212,18 @@ fun SummaryScreen(
                         }
                     }
                 )
+            }
+
+            ui.insights?.let { insights ->
+                item(key = "insights-header") { SectionHeader(stringResource(com.ayuvo.health.R.string.insights_title)) }
+                item(key = "insights") {
+                    com.ayuvo.health.ui.insights.InsightsSummarySection(
+                        insights = insights,
+                        onRecovery = destinations.openRecovery,
+                        onHealthAge = destinations.openHealthAge,
+                        onReview = destinations.openDailyReview
+                    )
+                }
             }
 
             val medications = ui.medications.takeIf { ui.showMedications }

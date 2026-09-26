@@ -154,6 +154,7 @@ object AssistantIntents {
         "health", "health data" -> "health"
         "summary", "today", "home" -> "summary"
         "body", "body measurements", "weight" -> "body"
+        "insights", "recovery", "health age", "daily review", "review" -> "insights"
         else -> f.replace(' ', '_')
     }
 

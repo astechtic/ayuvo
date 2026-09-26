@@ -49,7 +49,7 @@ EXPECTED_FILES = {
 ALLOWED_ZONES = frozenset(["America/New_York", "Europe/London", "Asia/Kolkata", "UTC"])
 DOCUMENTED = {"FAV_MAX": 12, "DAILY_STEP_GOAL_DEFAULT": 10000, "HOUR_MS": 3_600_000,
               "RANGES": ("D", "W", "M", "6M", "Y"), "AGGREGATIONS": ("sum", "avg", "last", "count", "duration")}
-DOMAIN_IDS = ["nutrition", "hydration", "fasting", "body", "activity", "heart", "sleep", "vitals", "respiratory", "cycle",
+DOMAIN_IDS = ["insights", "nutrition", "hydration", "fasting", "body", "activity", "heart", "sleep", "vitals", "respiratory", "cycle",
               "mindfulness", "mobility", "hearing", "symptoms", "medications", "records", "other"]
 APP_KEYS = ["app:calories", "app:protein", "app:carbs", "app:fat", "app:fiber", "app:water", "app:fasting", "app:weight",
             "app:body_fat", "app:workouts", "app:workout_minutes", "app:workout_burn"]

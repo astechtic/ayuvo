@@ -57,6 +57,14 @@ import com.ayuvo.health.models.WidgetTarget
 import com.ayuvo.health.widget.WidgetMetric
 import com.ayuvo.health.ui.summary.SummaryScreen
 import com.ayuvo.health.ui.medications.MedicationsScreen
+import com.ayuvo.health.ui.insights.DailyReviewScreen
+import com.ayuvo.health.ui.insights.HealthAgeScreen
+import com.ayuvo.health.ui.insights.InsightsDestinations
+import com.ayuvo.health.ui.insights.InsightsHubScreen
+import com.ayuvo.health.ui.insights.InsightsTrendsScreen
+import com.ayuvo.health.ui.insights.InsightsViewModel
+import com.ayuvo.health.ui.insights.PatternsScreen
+import com.ayuvo.health.ui.insights.RecoveryScreen
 import com.ayuvo.health.ui.workouts.WorkoutsScreen
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.semantics.semantics
@@ -272,6 +280,12 @@ fun AppNavHost(
         medicationId?.let { nav.navigate(AppRoutes.medicationDetail(it)) }
     }
 
+    /** Browse › Insights with one of its screens on top (notification taps, action results). */
+    fun openInsights(route: String) {
+        openBrowsePlace(AppRoutes.INSIGHTS)
+        nav.navigate(route) { launchSingleTop = true }
+    }
+
     /** Records tab with its "Add record" sheet open. */
     fun openAddRecord() {
         recordsAddRequest = System.nanoTime()
@@ -389,6 +403,10 @@ fun AppNavHost(
                 "records" -> { navigateToTab(AppRoutes.RECORDS); nav.popBackStack(AppRoutes.RECORDS, inclusive = false) }
                 "coach" -> navigateToTab(AppRoutes.COACH)
                 "settings" -> navigateToTab(AppRoutes.SETTINGS)
+                "insights" -> openBrowsePlace(AppRoutes.INSIGHTS)
+                "insights.recovery" -> openInsights(AppRoutes.INSIGHTS_RECOVERY)
+                "insights.health_age" -> openInsights(AppRoutes.INSIGHTS_HEALTH_AGE)
+                "insights.review" -> openInsights(AppRoutes.insightsReview())
             }
         }
         when (kind) {
@@ -490,7 +508,10 @@ fun AppNavHost(
                                 openRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
                                 addRecord = { openAddRecord() },
                                 openSettings = { navigateToTab(AppRoutes.SETTINGS) },
-                                openSettingsPage = { page -> openSettingsPage(page) }
+                                openSettingsPage = { page -> openSettingsPage(page) },
+                                openRecovery = { nav.navigate(AppRoutes.INSIGHTS_RECOVERY) },
+                                openHealthAge = { nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE) },
+                                openDailyReview = { nav.navigate(AppRoutes.insightsReview()) }
                             ),
                             logRequest = summaryLogRequest,
                             onLogRequestHandled = { id -> if (summaryLogRequest?.id == id) summaryLogRequest = null }
@@ -508,6 +529,7 @@ fun AppNavHost(
                                     target == "screen:body" -> nav.navigate(AppRoutes.BROWSE_BODY)
                                     target == "screen:activity" -> nav.navigate(AppRoutes.BROWSE_ACTIVITY)
                                     target == "screen:medications" -> nav.navigate(AppRoutes.MEDICATIONS)
+                                    target == "screen:insights" -> nav.navigate(AppRoutes.INSIGHTS)
                                     target == "tab:records" -> navigateToTab(AppRoutes.RECORDS)
                                     target.startsWith("metric:") ->
                                         MetricKey.parse(target.removePrefix("metric:"))?.let { nav.navigate(AppRoutes.metric(it)) }
@@ -535,6 +557,10 @@ fun AppNavHost(
                                     "addRecord" -> openAddRecord()
                                     "coach" -> navigateToTab(AppRoutes.COACH)
                                     "settings" -> navigateToTab(AppRoutes.SETTINGS)
+                                    "insights" -> nav.navigate(AppRoutes.INSIGHTS)
+                                    "recovery" -> nav.navigate(AppRoutes.INSIGHTS_RECOVERY)
+                                    "healthAge" -> nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE)
+                                    "dailyReview" -> nav.navigate(AppRoutes.insightsReview())
                                 }
                             }
                         )
@@ -658,6 +684,42 @@ fun AppNavHost(
                             destinations = metricDestinations
                         )
                     }
+                }
+                composable(AppRoutes.INSIGHTS) {
+                    TabInset {
+                        InsightsHubScreen(
+                            vm = viewModel(factory = InsightsViewModel.Factory(container)),
+                            onBack = { nav.popBackStack() },
+                            destinations = InsightsDestinations(
+                                openRecovery = { nav.navigate(AppRoutes.INSIGHTS_RECOVERY) },
+                                openHealthAge = { nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE) },
+                                openReview = { nav.navigate(AppRoutes.insightsReview()) },
+                                openTrends = { nav.navigate(AppRoutes.INSIGHTS_TRENDS) },
+                                openPatterns = { nav.navigate(AppRoutes.INSIGHTS_PATTERNS) }
+                            )
+                        )
+                    }
+                }
+                composable(AppRoutes.INSIGHTS_RECOVERY) {
+                    TabInset { RecoveryScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.INSIGHTS_HEALTH_AGE) {
+                    TabInset { HealthAgeScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
+                }
+                composable(
+                    AppRoutes.INSIGHTS_REVIEW,
+                    arguments = listOf(navArgument(AppRoutes.INSIGHTS_DAY_ARG) { type = NavType.StringType; nullable = true; defaultValue = null })
+                ) { entry ->
+                    val day = entry.arguments?.getString(AppRoutes.INSIGHTS_DAY_ARG)?.let { runCatching { java.time.LocalDate.parse(it) }.getOrNull() }
+                    TabInset {
+                        DailyReviewScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }, initialDay = day)
+                    }
+                }
+                composable(AppRoutes.INSIGHTS_TRENDS) {
+                    TabInset { InsightsTrendsScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.INSIGHTS_PATTERNS) {
+                    TabInset { PatternsScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
                 }
                 composable(AppRoutes.MEDICATIONS) {
                     TabInset {

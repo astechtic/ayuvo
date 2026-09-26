@@ -236,9 +236,22 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
                 ))
             }
             "search.universal" -> ActionResult(id, items = search(a.string("query")!!, a.string("domain") ?: "all", a.int("limit") ?: 20, a.source))
+            "insights.recovery.get" -> {
+                if (!env.healthReadAllowed("sleep")) throw ActionException(ActionErrorCode.PERMISSION_REQUIRED, "sleep")
+                ActionResult(id, InsightsActionFields.recovery(insights().recovery))
+            }
+            "insights.healthAge.get" -> insights().let { s -> ActionResult(id, InsightsActionFields.healthAge(s.healthAge, s.pace)) }
+            "insights.dailyReview.get" -> {
+                val s = insights()
+                val day = if (a.string("day") == "yesterday") s.today.minusDays(1) else s.today
+                ActionResult(id, InsightsActionFields.review(s.review(day), day))
+            }
             else -> throw ActionException(ActionErrorCode.UNKNOWN_ACTION)
         }
     }
+
+    private suspend fun insights(): com.ayuvo.health.insights.InsightsSnapshot =
+        env.insights() ?: throw ActionException(ActionErrorCode.UNAVAILABLE, detail = "insights_off")
 
     private suspend fun metricGet(a: ValidatedAction): ActionResult {
         val range = range(a)

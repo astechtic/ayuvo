@@ -8,6 +8,15 @@ struct ContentView: View {
     @Environment(RecordsStore.self) private var recordsStore
     @Environment(CoachStore.self) private var chatStore
     @Environment(MedicationStore.self) private var medicationStore
+    @Environment(HealthDataStore.self) private var healthDataStore
+    @Environment(FoodStore.self) private var foodStore
+    @Environment(WaterStore.self) private var waterStore
+    @Environment(FastingStore.self) private var fastingStore
+    @Environment(WeightStore.self) private var weightStore
+    @Environment(BodyFatStore.self) private var bodyFatStore
+    @Environment(StrengthWorkoutStore.self) private var strengthWorkoutStore
+    @Environment(ImportedHealthWorkoutStore.self) private var importedHealthWorkoutStore
+    @Environment(ProfileStore.self) private var profileStore
     @AppStorage(AppThemeColor.storageKey) private var appThemeColorRaw = AppThemeColor.defaultColor.rawValue
     @State private var appUpdateState: AppUpdateState = .idle
     @State private var navigator = AppNavigator()
@@ -29,9 +38,11 @@ struct ContentView: View {
     var body: some View {
         tabs
             .environment(navigator)
+            .environment(InsightsStore.shared)
             .tint(AppThemeColor.color(for: appThemeColorRaw).color)
             .task {
                 ActionLiveContext.shared.recordsStore = recordsStore
+                attachInsights()
                 consumePendingLaunchRoutes()
                 await refreshAppUpdateState()
             }
@@ -85,6 +96,7 @@ struct ContentView: View {
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {
                     consumePendingLaunchRoutes()
+                    InsightsBackgroundRefresh.schedule()
                 }
             }
     }
@@ -144,6 +156,18 @@ struct ContentView: View {
             return
         }
         consumeActionRequests()
+    }
+
+    /// Insights reads the app's live stores; the background refresh joins this Health store's sync.
+    private func attachInsights() {
+        let profileStore = profileStore
+        let healthDataStore = healthDataStore
+        InsightsStore.shared.attach(
+            .live(food: foodStore, water: waterStore, fasting: fastingStore, weight: weightStore, bodyFat: bodyFatStore,
+                  workouts: strengthWorkoutStore, importedWorkouts: importedHealthWorkoutStore, profile: { profileStore.profile }),
+            healthRevision: { healthDataStore.snapshotRevision }
+        )
+        InsightsBackgroundRefresh.liveHealthStore = healthDataStore
     }
 
     private var actionAlertTitle: String {

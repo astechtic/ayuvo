@@ -28,7 +28,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -77,7 +79,9 @@ data class SummaryUiState(
     val checklistDismissed: Boolean = true,
     val addMenu: AddMenuConfig = AddMenuConfig.Default,
     val latestWeightKg: Double? = null,
-    val latestBodyFatFraction: Double? = null
+    val latestBodyFatFraction: Double? = null,
+    /** Recovery / Health Age / Daily Review cards (docs/insights.md §7); null hides the section. */
+    val insights: com.ayuvo.health.ui.insights.SummaryInsights? = null
 ) {
     val rings: List<SummaryRing>
         get() = SummaryRings.build(
@@ -226,6 +230,17 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
                 Triple(timeline, checklist, dismissed)
             }
             .onEach { (timeline, checklist, dismissed) -> update { it.copy(medications = timeline, checklist = checklist, checklistDismissed = dismissed) } }
+            .launchIn(viewModelScope)
+
+        // Insights: recomputed from the stores (never persisted), hidden while off or without Health sync.
+        prefs.insightsEnabled
+            .flatMapLatest { on ->
+                if (!on) kotlinx.coroutines.flow.flowOf(null)
+                else container.insightsRepository.snapshots(container.insightsTriggers() + refreshTick)
+                    .map { com.ayuvo.health.ui.insights.SummaryInsights.from(it, enabled = true) }
+            }
+            .catch { emit(null) }
+            .onEach { s -> update { it.copy(insights = s) } }
             .launchIn(viewModelScope)
 
         if (container.medicationsDatabaseExists()) {

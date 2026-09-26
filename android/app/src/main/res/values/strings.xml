@@ -1868,6 +1868,7 @@
     <string name="feature_body">Body measurements</string>
     <string name="feature_activity">Activity</string>
     <string name="feature_workouts">Workouts</string>
+    <string name="feature_insights">Insights</string>
     <string name="feature_records">Health records</string>
     <string name="feature_medications">Medications</string>
     <string name="feature_coach">Coach</string>

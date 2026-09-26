@@ -2211,6 +2211,120 @@
         }
       },
       "name": "number param rejects list"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "insights.recovery.get",
+        "params": {}
+      },
+      "name": "ok insights.recovery.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "insights.healthAge.get",
+        "params": {}
+      },
+      "name": "ok insights.healthAge.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "day": "today"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "insights.dailyReview.get",
+        "params": {}
+      },
+      "name": "ok insights.dailyReview.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {
+          "day": "yesterday"
+        }
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "insights.dailyReview.get",
+        "params": {
+          "day": "yesterday"
+        }
+      },
+      "name": "ok insights.dailyReview.get yesterday"
+    },
+    {
+      "expected": {
+        "error": {
+          "code": "bad_enum",
+          "param": "day"
+        },
+        "ok": false
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
+          "source": "siri"
+        },
+        "id": "insights.dailyReview.get",
+        "params": {
+          "day": "last_week"
+        }
+      },
+      "name": "bad enum insights.dailyReview.get"
     }
   ],
   "format": "ayuvo-actions-vectors",

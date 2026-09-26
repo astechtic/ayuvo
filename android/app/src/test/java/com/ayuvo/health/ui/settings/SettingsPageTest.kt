@@ -30,7 +30,7 @@ class SettingsPageTest {
             SettingsGroup.HEALTH_PROFILE.pages
         )
         assertEquals(
-            listOf(SettingsPage.NUTRITION, SettingsPage.HYDRATION, SettingsPage.FASTING, SettingsPage.ACTIVITY, SettingsPage.MEDICATIONS),
+            listOf(SettingsPage.NUTRITION, SettingsPage.HYDRATION, SettingsPage.FASTING, SettingsPage.ACTIVITY, SettingsPage.MEDICATIONS, SettingsPage.INSIGHTS),
             SettingsGroup.TRACKING.pages
         )
         assertEquals(listOf(SettingsPage.NOTIFICATIONS), SettingsGroup.NOTIFICATIONS.pages)
@@ -52,7 +52,7 @@ class SettingsPageTest {
         assertEquals(
             listOf(
                 "personalInfo", "goalsNutrition", "units", "nutritionTracking", "hydration", "fasting", "activity",
-                "medications", "notifications", "healthData", "healthRecords", "dataManagement", "deleteData",
+                "medications", "insights", "notifications", "healthData", "healthRecords", "dataManagement", "deleteData",
                 "aiProviders", "speechToText", "customInstructions", "appearance", "appUpdates", "helpSupport", "legal"
             ),
             SettingsPage.entries.map { it.rawValue }

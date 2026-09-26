@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FormatQuote
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Medication
@@ -61,6 +62,7 @@ enum class SettingsPage(
     FASTING("fasting", R.string.settings_page_fasting, SettingsGroup.TRACKING, Icons.Filled.Timer, SettingsTint.Fasting),
     ACTIVITY("activity", R.string.settings_page_activity, SettingsGroup.TRACKING, Icons.AutoMirrored.Filled.DirectionsWalk, SettingsTint.Activity),
     MEDICATIONS("medications", R.string.settings_page_medications, SettingsGroup.TRACKING, Icons.Filled.Medication, SettingsTint.Medications),
+    INSIGHTS("insights", R.string.settings_insights, SettingsGroup.TRACKING, Icons.Filled.Insights, SettingsTint.Insights),
     NOTIFICATIONS("notifications", R.string.settings_notifications, SettingsGroup.NOTIFICATIONS, Icons.Filled.Notifications, SettingsTint.Notifications),
     HEALTH_SYNC("healthData", R.string.settings_page_health_sync, SettingsGroup.DATA_PRIVACY, Icons.Filled.Favorite, SettingsTint.HealthSync),
     HEALTH_RECORDS("healthRecords", R.string.settings_section_health_records, SettingsGroup.DATA_PRIVACY, Icons.Filled.Description, SettingsTint.Records),

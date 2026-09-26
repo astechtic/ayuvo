@@ -153,11 +153,13 @@ class NotificationManager {
         center.add(request)
     }
 
-    // MARK: - Daily Summary (one-shot, rescheduled on foreground/log)
+    // MARK: - Daily Review (one-shot, rescheduled on foreground/log)
 
-    func scheduleDailySummary(enabled: Bool, hour: Int, minute: Int, todayCalories: Int, calorieGoal: Int) {
+    /// "Your daily review is ready" at the Daily Review time (the former Daily Summary: same
+    /// `dailySummary*` keys and identifier). It never carries a value; a tap opens the review.
+    func scheduleDailySummary(enabled: Bool, hour: Int, minute: Int) {
         let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: ["smart.summary"])
+        center.removePendingNotificationRequests(withIdentifiers: [InsightsNotifications.reviewIdentifier])
 
         guard enabled else { return }
 
@@ -167,18 +169,16 @@ class NotificationManager {
             bySettingHour: hour, minute: minute, second: 0, of: now
         ), fireDate > now else { return }
 
-        let remaining = max(0, calorieGoal - todayCalories)
-        let content = UNMutableNotificationContent()
-        content.title = "Daily Summary"
-        content.body = "You ate \(todayCalories) of \(calorieGoal) kcal today. \(remaining) remaining!"
-        content.sound = .default
-
         var dateComponents = DateComponents()
         dateComponents.hour = hour
         dateComponents.minute = minute
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: "smart.summary", content: content, trigger: trigger)
+        let request = UNNotificationRequest(
+            identifier: InsightsNotifications.reviewIdentifier,
+            content: InsightsNotifications.dailyReviewContent(),
+            trigger: trigger
+        )
         center.add(request)
     }
 
@@ -280,12 +280,7 @@ class NotificationManager {
             currentStreak: currentStreak
         )
 
-        scheduleDailySummary(
-            enabled: summaryEnabled,
-            hour: summaryHour, minute: summaryMinute,
-            todayCalories: foodStore.todayCalories,
-            calorieGoal: profile.effectiveCalories
-        )
+        scheduleDailySummary(enabled: summaryEnabled, hour: summaryHour, minute: summaryMinute)
 
         scheduleWeightLogReminder(
             enabled: weightLogEnabled,

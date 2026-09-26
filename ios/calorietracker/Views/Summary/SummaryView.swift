@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Summary tab (docs/ui-structure.md §2): Eat · Move · Drink rings, today's cards, Favourites,
+/// Summary tab (docs/ui-structure.md §2): Eat · Move · Drink rings, Insights, today's cards, Favourites,
 /// Highlights and the "Get More From Ayuvo" checklist. Every card is real data or hidden.
 struct SummaryView: View {
     @Environment(AppNavigator.self) private var navigator
@@ -25,6 +25,7 @@ struct SummaryView: View {
                     .padding(.horizontal, 4)
 
                     SummaryRingsCard()
+                    InsightsSummarySection()
                     SummaryTodaySection()
                     SummaryFavouritesSection()
                     SummaryHighlightsSection()
@@ -43,6 +44,7 @@ struct SummaryView: View {
             }
             .metricRouteDestinations()
             .healthRouteDestinations()
+            .insightsRouteDestinations()
             .task {
                 if !recordsStore.hasLoadedOnce { await recordsStore.reload() }
                 // The medications card needs counts, and the card itself is hidden until they load.

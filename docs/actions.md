@@ -107,6 +107,9 @@ Read tools: every `coach_mode: read` action, named by its `coach_tool`. Writes: 
 | [`open.metric`](#openmetric) | OPEN | Open Metric | never | none |
 | [`open.record`](#openrecord) | OPEN | Open Health Record | never | none |
 | [`open.coach`](#opencoach) | OPEN | Ask Ayuvo Coach | never | none |
+| [`insights.recovery.get`](#insightsrecoveryget) | GET | Get Recovery | never | read (`get_recovery`) |
+| [`insights.healthAge.get`](#insightshealthageget) | GET | Get Health Age | never | read (`get_health_age`) |
+| [`insights.dailyReview.get`](#insightsdailyreviewget) | GET | Get Daily Review | never | read (`get_daily_review`) |
 
 ### Domain: body
 
@@ -389,6 +392,51 @@ Read tools: every `coach_mode: read` action, named by its `coach_tool`. Writes: 
 - Shortcuts: Get Last Night's Sleep → If Hours < 7 → Show Notification
 - Android: `ayuvo://action/health.sleep.lastNight`
 
+### Domain: insights
+
+#### `insights.recovery.get`
+
+**Get Recovery** · GET. This morning's Recovery score (0–100) with its main positive and negative signals, compared with your own baseline. A wellness estimate, not a diagnosis.
+
+- Output: record — `status`, `score`, `label`, `recommendation`, `confidence`, `positives`, `negatives`, `training_load`
+- Permissions: local, health_read
+- Confirmation: none
+- Requires unlocked device: yes · Opens the app: no
+- Surfaces: siri, shortcuts, android, deeplink, coach · Screen: `screen:insights.recovery`
+- Siri: What's my recovery in Ayuvo?
+- Shortcuts: Get Recovery → If Score < 34 → Show Notification
+- Android: `ayuvo://action/insights.recovery.get`
+
+#### `insights.healthAge.get`
+
+**Get Health Age** · GET. Your Ayuvo Health Age estimate next to your actual age, with its pace and the markers behind it. Ayuvo's own estimate, not a clinical age.
+
+- Output: record — `status`, `actual_age`, `health_age`, `difference`, `confidence`, `pace`, `direction`, `markers`
+- Permissions: local, health_read
+- Confirmation: none
+- Requires unlocked device: yes · Opens the app: no
+- Surfaces: siri, shortcuts, android, deeplink, coach · Screen: `screen:insights.health_age`
+- Siri: What's my health age in Ayuvo?
+- Shortcuts: Get Health Age → Get Difference → Show Result
+- Android: `ayuvo://action/insights.healthAge.get`
+
+#### `insights.dailyReview.get`
+
+**Get Daily Review** · GET. The Daily Health Review for a day: Day Score, what went well, what needs attention, what to improve and what to consider reducing.
+
+| Parameter | Type | Meaning |
+|---|---|---|
+| `day` | review_day (today, yesterday); optional; default "today" | Day to review. |
+
+- Output: record — `status`, `day`, `day_score`, `went_well`, `needs_attention`, `improve`, `reduce`, `not_logged`
+- Permissions: local, health_read
+- Confirmation: none
+- Requires unlocked device: yes · Opens the app: no
+- Surfaces: siri, shortcuts, android, deeplink, coach · Screen: `screen:insights.review`
+- Siri: How did my day go in Ayuvo?
+- Shortcuts: Get Daily Review → Get Day Score → Show Result
+- Android: `ayuvo://action/insights.dailyReview.get`
+
 ### Domain: medications
 
 #### `medications.today.list`
@@ -480,7 +528,7 @@ Read tools: every `coach_mode: read` action, named by its `coach_tool`. Writes: 
 
 | Parameter | Type | Meaning |
 |---|---|---|
-| `section` | section (summary, browse, health, nutrition, water, fasting, body, activity, workouts, records, medications, coach, settings); required | Section. |
+| `section` | section (summary, browse, health, nutrition, water, fasting, body, activity, workouts, insights, records, medications, coach, settings); required | Section. |
 
 - Output: none — none
 - Permissions: none

@@ -1309,7 +1309,7 @@ struct NotificationSettingsView: View {
                     )
 
                     NotificationTimeRow(
-                        label: "Daily Summary",
+                        label: "Daily Review",
                         icon: "chart.bar.fill",
                         tint: SettingsTint.nutrition,
                         isEnabled: $summaryEnabled,

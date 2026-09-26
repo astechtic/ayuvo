@@ -14,7 +14,7 @@ struct BrowseFeatureCatalogTests {
         #expect(BrowseFeatureCatalog.all.map(\.id) == [
             "workouts", "workoutLog", "exerciseLibrary", "nutrition", "logFood", "water", "fasting",
             "bodyMeasurements", "logWeight", "logBodyFat", "medications", "addMedication", "records",
-            "addRecord", "coach", "settings",
+            "addRecord", "coach", "settings", "insights", "recovery", "healthAge", "dailyReview", "patterns",
         ])
         #expect(BrowseFeatureCatalog.all.first?.accessibilityID == "browse.feature.workouts")
     }

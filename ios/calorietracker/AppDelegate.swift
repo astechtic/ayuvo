@@ -19,6 +19,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         // reminder, the background task so iOS accepts later `BGAppRefreshTaskRequest`s.
         MedicationNotificationScheduler.registerCategory()
         MedicationBackgroundRefresh.register()
+        InsightsBackgroundRefresh.register()
+        InsightsBackgroundRefresh.schedule()
+        InsightsBackgroundRefresh.startSleepObserver()
         MedicationReminderRuntime.shared.start()
         QuickActionSettings.registerApplicationShortcuts()
         WatchSnapshotSync.shared.activate()
@@ -62,13 +65,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     }
 
     /// Medication actions first (Taken / Skip / Snooze are applied here, a plain tap routes to the
-    /// Meds segment); otherwise open the App Store listing when the update notification is tapped.
+    /// Meds segment); Insights notifications open Recovery or the Daily Review; otherwise open the App
+    /// Store listing when the update notification is tapped.
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
         if await MedicationActionHandler.handle(response) { return }
         let userInfo = response.notification.request.content.userInfo
+        if let route = InsightsNotifications.route(from: userInfo) {
+            await MainActor.run { ActionRouteCoordinator.request(route) }
+            return
+        }
         if let urlString = userInfo["updateURL"] as? String, let url = URL(string: urlString) {
             await UIApplication.shared.open(url)
         }

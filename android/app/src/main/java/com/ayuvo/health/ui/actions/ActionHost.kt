@@ -76,6 +76,7 @@ fun ActionHost(
     navigation: ActionNavigation
 ) {
     val context = LocalContext.current
+    val resources = androidx.compose.ui.platform.LocalResources.current
     val scope = rememberCoroutineScope()
     var confirming by remember { mutableStateOf<ValidatedAction?>(null) }
 
@@ -104,12 +105,12 @@ fun ActionHost(
 
     suspend fun handle(request: PendingAction) {
         when (val parsed = request.parsed) {
-            is ActionIntents.Parsed.BadLink -> show(context.getString(R.string.action_error_bad_link))
+            is ActionIntents.Parsed.BadLink -> show(resources.getString(R.string.action_error_bad_link))
             is ActionIntents.Parsed.Request -> when (val v = container.actions.validate(parsed.request)) {
                 is ValidationResult.Failed -> {
                     val missing = v.code == ActionErrorCode.MISSING_PARAM || v.code == ActionErrorCode.REQUIRES_ONE_OF
                     if (!(missing && navigation.openLogger(parsed.request.id))) {
-                        show(context.getString(ActionResultText.errorRes(v.code)))
+                        show(resources.getString(ActionResultText.errorRes(v.code)))
                     }
                 }
                 is ValidationResult.Ok ->

@@ -7,6 +7,7 @@
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.ayuvo.health.medications.refresh</string>
+		<string>com.ayuvo.health.insights.refresh</string>
 	</array>
 	<key>CFBundleDocumentTypes</key>
 	<array>

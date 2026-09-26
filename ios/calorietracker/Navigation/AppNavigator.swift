@@ -60,6 +60,15 @@ final class AppNavigator {
         openBrowse([.medications])
     }
 
+    /// Browse › Insights, optionally with one Insights screen on top (notification taps, actions, "See All").
+    func openInsights(_ route: InsightsRoute?) {
+        openBrowse([.insights])
+        if let route {
+            browsePath.append(route)
+            lastBrowseRoutes = []
+        }
+    }
+
     /// Selects Settings; with a pane, replaces the Settings path so that pane is on top.
     func openSettings(_ pane: SettingsPane? = nil) {
         selectedTab = .settings

@@ -221,6 +221,9 @@ class ContainerActionEnvironment(private val container: AppContainer) : ActionEn
     override suspend fun adherence(medicationId: String?): AdherenceSummary? =
         container.medicationsStore.adherence(medicationId, nowMs(), zone().id)
 
+    override suspend fun insights(): com.ayuvo.health.insights.InsightsSnapshot? =
+        if (prefsStore.insightsEnabled.first()) container.insightsRepository.current() else null
+
     override suspend fun afterWrite(actionId: String) {
         when (actionId) {
             "medication.dose.mark" -> runCatching { container.medicationReminders.replan() }

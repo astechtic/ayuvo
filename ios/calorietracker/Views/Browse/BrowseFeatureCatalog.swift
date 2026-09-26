@@ -8,6 +8,8 @@ enum BrowseFeatureDestination: Hashable {
     case browse([BrowseRoute])
     /// Push a metric detail (trend + log) on the Browse stack.
     case metric(MetricKey)
+    /// Browse › Insights, optionally with one Insights screen on top.
+    case insights(InsightsRoute?)
     /// Nutrition diary with a food logging action.
     case logFood(QuickAction)
     case logWeight
@@ -41,7 +43,7 @@ struct BrowseFeature: Identifiable, Hashable {
     /// Opens another tab (or a sheet over Browse) rather than pushing on the Browse stack.
     var leavesBrowse: Bool {
         switch destination {
-        case .browse, .metric, .logFood, .logWorkout, .addMedication: false
+        case .browse, .metric, .insights, .logFood, .logWorkout, .addMedication: false
         case .logWeight, .logBodyFat, .recordsTab, .addRecord, .coach, .settings: true
         }
     }
@@ -175,6 +177,43 @@ enum BrowseFeatureCatalog {
                 keywords: ["settings", "preferences", "profile", "goals", "units", "notifications", "ai provider", "api key",
                            "backup", "export", "import", "appearance", "theme", "privacy", "account"],
                 destination: .settings
+            ),
+            BrowseFeature(
+                id: "insights", title: String(localized: "Insights"),
+                subtitle: String(localized: "Recovery, Health Age, Daily Review and patterns"),
+                systemImage: "gauge.with.dots.needle.67percent", domain: "insights",
+                keywords: ["insights", "insight", "score", "scores", "baseline", "baselines", "trends", "readiness",
+                           "wellness", "analysis"],
+                destination: .insights(nil)
+            ),
+            BrowseFeature(
+                id: "recovery", title: String(localized: "Recovery"),
+                subtitle: String(localized: "This morning's score from sleep, HRV and resting heart rate"),
+                systemImage: "bolt.heart.fill", domain: "insights",
+                keywords: ["recovery", "readiness", "hrv", "resting heart rate", "rested", "strain", "morning score",
+                           "body battery"],
+                destination: .insights(.recovery)
+            ),
+            BrowseFeature(
+                id: "healthAge", title: String(localized: "Health Age"),
+                subtitle: String(localized: "Ayuvo's estimate from your fitness and habits"),
+                systemImage: "hourglass", domain: "insights",
+                keywords: ["health age", "age", "biological age", "fitness age", "vo2 max", "longevity", "pace"],
+                destination: .insights(.healthAge)
+            ),
+            BrowseFeature(
+                id: "dailyReview", title: String(localized: "Daily Review"),
+                subtitle: String(localized: "Day Score, what went well and what to try tomorrow"),
+                systemImage: "checklist", domain: "insights",
+                keywords: ["daily review", "review", "day score", "summary", "how did my day go", "went well", "improve"],
+                destination: .insights(.review(nil))
+            ),
+            BrowseFeature(
+                id: "patterns", title: String(localized: "Patterns"),
+                subtitle: String(localized: "Associations found in your own data"),
+                systemImage: "point.3.connected.trianglepath.dotted", domain: "insights",
+                keywords: ["patterns", "pattern", "correlation", "association", "trends", "habits"],
+                destination: .insights(.patterns)
             ),
         ]
     }

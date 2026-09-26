@@ -127,7 +127,9 @@ struct MetricCatalogTests {
         #expect(MetricCatalog.descriptor(for: .health("basal_metabolic_rate")).systemImage
             == MetricCatalogData.shared.domain(MetricCatalog.descriptor(for: .health("basal_metabolic_rate")).domainID)?.icon.ios)
         #expect(MetricCatalog.descriptor(for: .health("weight")).browseHidden)
-        #expect(BrowseCategory.ordered.first == .nutrition)
+        #expect(BrowseCategory.ordered.first == .insights)
+        #expect(BrowseCategory.ordered.dropFirst().first == .nutrition)
+        #expect(BrowseCategory.insights.target == "screen:insights")
         #expect(BrowseCategory.heart.healthCategory == .heart)
         #expect(BrowseCategory(healthCategory: .mentalWellbeing) == .mindfulness)
     }

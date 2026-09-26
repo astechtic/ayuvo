@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.LocalDining
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.NotificationsActive
@@ -16,6 +17,18 @@ import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import android.text.format.DateFormat
+import com.ayuvo.health.ui.home.SheetTimePickerDialog
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.time.LocalTime
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -220,5 +233,73 @@ internal fun MedicationsSettingsPage(ctx: SettingsPageContext) {
                 onClick = { ctx.actions.openPage(SettingsPage.NOTIFICATIONS) }
             )
         }
+    }
+}
+
+/**
+ * Tracking › Insights (docs/insights.md): show or hide Insights, the opt-in morning Recovery
+ * notification and the Daily Review time (the existing daily-summary hour and minute). Only
+ * switches are stored; scores are always recomputed.
+ */
+@Composable
+internal fun InsightsSettingsPage(ctx: SettingsPageContext) {
+    val prefs = ctx.container.prefs
+    val scope = rememberCoroutineScope()
+    val tint = SettingsPage.INSIGHTS.tint
+    val enabled by prefs.insightsEnabled.collectAsState(initial = true)
+    val morning by prefs.insightsMorningNotification.collectAsState(initial = false)
+    val hour by prefs.dailySummaryHour.collectAsState(initial = 21)
+    val minute by prefs.dailySummaryMinute.collectAsState(initial = 0)
+    var pickTime by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    InsetGroup(footer = stringResource(R.string.settings_insights_footer)) {
+        row {
+            GroupRow(
+                title = stringResource(R.string.settings_insights_enabled),
+                subtitle = stringResource(R.string.settings_insights_enabled_sub),
+                icon = Icons.Filled.Insights, iconTint = tint,
+                modifier = Modifier.settingsRow("insightsEnabled"),
+                trailing = RowTrailing.Toggle(enabled, { v -> scope.launch { prefs.setInsightsEnabled(v) } })
+            )
+        }
+        if (enabled) {
+            row {
+                GroupRow(
+                    title = stringResource(R.string.settings_insights_morning),
+                    subtitle = stringResource(R.string.settings_insights_morning_sub),
+                    icon = Icons.Filled.NotificationsActive, iconTint = tint,
+                    modifier = Modifier.settingsRow("insightsMorning"),
+                    trailing = RowTrailing.Toggle(morning, ctx.actions.onInsightsMorningToggle)
+                )
+            }
+            row {
+                GroupRow(
+                    title = stringResource(R.string.settings_insights_review_time),
+                    value = DateFormat.getTimeFormat(context).format(
+                        java.util.Date.from(LocalTime.of(hour, minute).atDate(java.time.LocalDate.now()).atZone(java.time.ZoneId.systemDefault()).toInstant())
+                    ),
+                    icon = Icons.Filled.Schedule, iconTint = tint,
+                    modifier = Modifier.settingsRow("insightsReviewTime"),
+                    onClick = { pickTime = true }
+                )
+            }
+        }
+    }
+    if (pickTime) {
+        SheetTimePickerDialog(
+            initialTime = LocalTime.of(hour, minute),
+            onConfirm = { time ->
+                pickTime = false
+                scope.launch {
+                    prefs.setDailySummaryHour(time.hour)
+                    prefs.setDailySummaryMinute(time.minute)
+                    val notifications = ctx.container.notifications
+                    if (prefs.notificationsEnabled.first() && prefs.dailySummaryEnabled.first() && notifications.canPostNotifications()) {
+                        notifications.scheduleDailySummary(time.hour, time.minute)
+                    }
+                }
+            },
+            onDismiss = { pickTime = false }
+        )
     }
 }

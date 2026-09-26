@@ -1,0 +1,2485 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "payload": {
+          "daily_review": {
+            "areas": [
+              {
+                "id": "nutrition",
+                "score": 63
+              },
+              {
+                "id": "hydration",
+                "score": 36
+              },
+              {
+                "id": "activity",
+                "score": 39
+              },
+              {
+                "id": "training",
+                "score": 100
+              },
+              {
+                "id": "sleep",
+                "score": 76
+              },
+              {
+                "id": "recovery",
+                "score": 29
+              }
+            ],
+            "day_score": 58,
+            "improve": [
+              "Add a protein-rich food to tomorrow's meals to close the 60 g gap.",
+              "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber.",
+              "Aim for 4,900 more steps tomorrow, about a 50-minute walk.",
+              "Keep water nearby tomorrow; you were 1,600 ml short of your goal.",
+              "Try winding down 60 min earlier tonight.",
+              "Tomorrow could be a lighter, recovery-focused day."
+            ],
+            "needs_attention": [
+              "Calories were 32% below your target (1,500 of 2,200 kcal).",
+              "Protein was 80 g, 57% of your target.",
+              "You slept 5h 20m, under 6 hours.",
+              "You slept 5h 20m, 120 min less than your usual.",
+              "Your recovery was low (29).",
+              "You walked 3,100 steps, under half of your 8,000 step goal."
+            ],
+            "not_logged": [],
+            "reduce": [],
+            "went_well": [
+              "You took a rest day after a hard training day."
+            ]
+          },
+          "health_age": {
+            "actual_age": 40.5,
+            "confidence": "high",
+            "difference": -2.1,
+            "health_age": 38.5,
+            "markers": [
+              {
+                "contribution_years": -1.5,
+                "id": "vo2_max",
+                "offset_years": -6.0
+              },
+              {
+                "contribution_years": -0.1,
+                "id": "resting_heart_rate",
+                "offset_years": -0.7
+              },
+              {
+                "contribution_years": -0.18,
+                "id": "hrv",
+                "offset_years": -1.19
+              },
+              {
+                "contribution_years": -0.14,
+                "id": "steps",
+                "offset_years": -0.96
+              },
+              {
+                "contribution_years": -0.07,
+                "id": "sleep",
+                "offset_years": -0.5
+              },
+              {
+                "contribution_years": -0.06,
+                "id": "workouts",
+                "offset_years": -0.57
+              },
+              {
+                "contribution_years": 0.0,
+                "id": "body_composition",
+                "offset_years": 0.0
+              }
+            ],
+            "pace": 0.74,
+            "pace_direction": "improving",
+            "status": "ok"
+          },
+          "patterns": [
+            {
+              "id": "late_workout_sleep",
+              "n_exposed": 13,
+              "n_unexposed": 107,
+              "text": "On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days)."
+            },
+            {
+              "id": "protein_strength_volume",
+              "n_exposed": 20,
+              "n_unexposed": 19,
+              "text": "After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days)."
+            },
+            {
+              "id": "short_sleep_steps",
+              "n_exposed": 17,
+              "n_unexposed": 103,
+              "text": "On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days)."
+            }
+          ],
+          "recovery": {
+            "confidence": "high",
+            "label": "Moderate",
+            "score": 56,
+            "signals": [
+              {
+                "impact": 5.6,
+                "text": "Resting HR −2 bpm vs baseline"
+              },
+              {
+                "impact": 2.1,
+                "text": "Sleep 7h 14m"
+              },
+              {
+                "impact": -0.7,
+                "text": "Respiratory rate +0.5 br/min vs baseline"
+              },
+              {
+                "impact": -0.6,
+                "text": "HRV −1% vs baseline"
+              }
+            ],
+            "status": "ok",
+            "training_load": "Rest"
+          }
+        },
+        "prompt": {
+          "system": "You explain wellness numbers from a person's own health app in plain, friendly English.\nReturn ONLY one JSON object, no markdown, no prose, exactly this shape:\n{\"headline\":\"\",\"bullets\":[]}\n\nRules:\n1. Explain only what the data in the message says. Do not add new facts, causes or numbers.\n2. Use only numbers that appear in the data. Do not calculate, convert or round new numbers.\n3. Never diagnose, name a medical condition or suggest one might be present.\n4. Never give medication advice or mention doses.\n5. Describe links between habits and results as associations (\"has been linked in your data with\", \"on days when\"), never as causes.\n6. Suggestions are gentle everyday habits (sleep, movement, food, water, rest) and only when the data supports them.\n7. headline: one sentence, at most 100 characters. bullets: 1 to 5 short sentences, each at most 180 characters.\n8. If a section has a status other than \"ok\", say briefly that more data is needed.",
+          "user": "Task: Explain today's Recovery score and its main signals.\n\nData:\n{\"recovery\":{\"confidence\":\"high\",\"label\":\"Moderate\",\"score\":56,\"signals\":[{\"impact\":5.6,\"text\":\"Resting HR −2 bpm vs baseline\"},{\"impact\":2.1,\"text\":\"Sleep 7h 14m\"},{\"impact\":-0.7,\"text\":\"Respiratory rate +0.5 br/min vs baseline\"},{\"impact\":-0.6,\"text\":\"HRV −1% vs baseline\"}],\"status\":\"ok\",\"training_load\":\"Rest\"}}\n\nReturn the JSON object."
+        },
+        "validations": [
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "Resting HR −2 bpm vs baseline, which lifted your score.",
+                "Recovery compares last night with your own usual range."
+              ],
+              "headline": "Your recovery is 56 today, a moderate morning."
+            }
+          },
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "Resting HR −2 bpm vs baseline, which lifted your score.",
+                "Recovery compares last night with your own usual range."
+              ],
+              "headline": "Your recovery is 56 today, a moderate morning."
+            }
+          },
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "Resting HR −2 bpm vs baseline, which lifted your score.",
+                "Recovery compares last night with your own usual range."
+              ],
+              "headline": "Your recovery is 56 today, a moderate morning."
+            }
+          },
+          {
+            "errors": [
+              "parse_error"
+            ],
+            "ok": false,
+            "output": null
+          },
+          {
+            "errors": [
+              "unknown_number"
+            ],
+            "ok": false,
+            "output": null
+          },
+          {
+            "errors": [
+              "bullet_count"
+            ],
+            "ok": false,
+            "output": null
+          },
+          {
+            "errors": [
+              "bad_shape"
+            ],
+            "ok": false,
+            "output": null
+          },
+          {
+            "errors": [
+              "blocked_term"
+            ],
+            "ok": false,
+            "output": null
+          },
+          {
+            "errors": [
+              "headline_length"
+            ],
+            "ok": false,
+            "output": null
+          },
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "{not json} is fine inside strings."
+              ],
+              "headline": "Recovery 56 out of 100."
+            }
+          }
+        ]
+      },
+      "input": {
+        "kind": "recovery",
+        "outputs": [
+          "{\"headline\": \"Your recovery is 56 today, a moderate morning.\", \"bullets\": [\"Resting HR \\u22122 bpm vs baseline, which lifted your score.\", \"Recovery compares last night with your own usual range.\"]}",
+          "```json\n{\"headline\": \"Your recovery is 56 today, a moderate morning.\", \"bullets\": [\"Resting HR \\u22122 bpm vs baseline, which lifted your score.\", \"Recovery compares last night with your own usual range.\"]}\n```",
+          "Here you go: {\"headline\": \"Your recovery is 56 today, a moderate morning.\", \"bullets\": [\"Resting HR \\u22122 bpm vs baseline, which lifted your score.\", \"Recovery compares last night with your own usual range.\"]} Hope that helps!",
+          "Sorry, I cannot help with that.",
+          "{\"headline\": \"Your recovery is 56, up 12 points.\", \"bullets\": [\"Nice work.\"]}",
+          "{\"headline\": \"Recovery 56.\", \"bullets\": [\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"]}",
+          "{\"headline\": \"Recovery 56.\", \"bullets\": \"one\"}",
+          "{\"headline\": \"Recovery 56. You may have an infection.\", \"bullets\": [\"Rest.\"]}",
+          "{\"headline\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"bullets\": [\"ok\"]}",
+          "{\"headline\": \"Recovery 56 out of 100.\", \"bullets\": [\"{not json} is fine inside strings.\"]}"
+        ],
+        "summary": {
+          "daily_review": {
+            "areas": [
+              {
+                "detail": {
+                  "calorie_dev_pct": -31.8,
+                  "calories": 1500,
+                  "carbs_g": 230,
+                  "fat_g": 70,
+                  "fiber_g": 12,
+                  "protein_g": 80
+                },
+                "id": "nutrition",
+                "included": true,
+                "score": 63,
+                "weight": 30
+              },
+              {
+                "detail": {
+                  "goal_ml": 2500,
+                  "water_ml": 900
+                },
+                "id": "hydration",
+                "included": true,
+                "score": 36,
+                "weight": 10
+              },
+              {
+                "detail": {
+                  "goal": 8000,
+                  "steps": 3100
+                },
+                "id": "activity",
+                "included": true,
+                "score": 39,
+                "weight": 20
+              },
+              {
+                "detail": {
+                  "minutes": 0.0,
+                  "previous_day_category": "high",
+                  "sessions": 0
+                },
+                "id": "training",
+                "included": true,
+                "score": 100,
+                "weight": 10
+              },
+              {
+                "detail": {
+                  "asleep_min": 320,
+                  "baseline_min": 439.5
+                },
+                "id": "sleep",
+                "included": true,
+                "score": 76,
+                "weight": 20
+              },
+              {
+                "detail": {
+                  "label": "low",
+                  "score": 29
+                },
+                "id": "recovery",
+                "included": true,
+                "score": 29,
+                "weight": 10
+              },
+              {
+                "detail": null,
+                "id": "fasting",
+                "included": false,
+                "score": null,
+                "weight": 10
+              }
+            ],
+            "day": "2026-09-20",
+            "day_score": 58,
+            "improve": [
+              {
+                "params": {
+                  "gap_g": 60
+                },
+                "rule_id": "improve_protein",
+                "text": "Add a protein-rich food to tomorrow's meals to close the 60 g gap."
+              },
+              {
+                "params": {
+                  "gap_g": 18
+                },
+                "rule_id": "improve_fiber",
+                "text": "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber."
+              },
+              {
+                "params": {
+                  "gap": 4900,
+                  "walk_min": 50
+                },
+                "rule_id": "improve_steps",
+                "text": "Aim for 4,900 more steps tomorrow, about a 50-minute walk."
+              },
+              {
+                "params": {
+                  "gap_ml": 1600
+                },
+                "rule_id": "improve_water",
+                "text": "Keep water nearby tomorrow; you were 1,600 ml short of your goal."
+              },
+              {
+                "params": {
+                  "minutes": 60
+                },
+                "rule_id": "improve_sleep",
+                "text": "Try winding down 60 min earlier tonight."
+              },
+              {
+                "params": {},
+                "rule_id": "recovery_focus",
+                "text": "Tomorrow could be a lighter, recovery-focused day."
+              }
+            ],
+            "needs_attention": [
+              {
+                "params": {
+                  "calories": 1500,
+                  "target": 2200,
+                  "under_pct": 32
+                },
+                "rule_id": "calories_under",
+                "text": "Calories were 32% below your target (1,500 of 2,200 kcal)."
+              },
+              {
+                "params": {
+                  "pct": 57,
+                  "protein_g": 80
+                },
+                "rule_id": "protein_low",
+                "text": "Protein was 80 g, 57% of your target."
+              },
+              {
+                "params": {
+                  "duration": "5h 20m"
+                },
+                "rule_id": "sleep_short",
+                "text": "You slept 5h 20m, under 6 hours."
+              },
+              {
+                "params": {
+                  "diff_min": 120,
+                  "duration": "5h 20m"
+                },
+                "rule_id": "sleep_below_usual",
+                "text": "You slept 5h 20m, 120 min less than your usual."
+              },
+              {
+                "params": {
+                  "score": 29
+                },
+                "rule_id": "recovery_low",
+                "text": "Your recovery was low (29)."
+              },
+              {
+                "params": {
+                  "goal": 8000,
+                  "steps": 3100
+                },
+                "rule_id": "steps_low",
+                "text": "You walked 3,100 steps, under half of your 8,000 step goal."
+              }
+            ],
+            "not_logged": [],
+            "reduce": [],
+            "went_well": [
+              {
+                "params": {},
+                "rule_id": "planned_rest",
+                "text": "You took a rest day after a hard training day."
+              }
+            ]
+          },
+          "health_age": {
+            "actual_age": 40.5,
+            "as_of": "2026-09-20",
+            "collecting": null,
+            "confidence": "high",
+            "difference": -2.1,
+            "health_age": 38.5,
+            "markers": [
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -1.5,
+                "days": 15,
+                "equivalent_age": 32.1,
+                "id": "vo2_max",
+                "method": "age_norm",
+                "needed_days": 3,
+                "offset_years": -6.0,
+                "secondary_value": null,
+                "value": 44.0,
+                "weight": 25
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.1,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "resting_heart_rate",
+                "method": "dose_response",
+                "needed_days": 30,
+                "offset_years": -0.7,
+                "secondary_value": null,
+                "value": 58.05,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.18,
+                "days": 90,
+                "equivalent_age": 39.3,
+                "id": "hrv",
+                "method": "age_norm",
+                "needed_days": 30,
+                "offset_years": -1.19,
+                "secondary_value": null,
+                "value": 44.96,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.14,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "steps",
+                "method": "dose_response",
+                "needed_days": 30,
+                "offset_years": -0.96,
+                "secondary_value": null,
+                "value": 8941.37,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.07,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "sleep",
+                "method": "sleep",
+                "needed_days": 30,
+                "offset_years": -0.5,
+                "secondary_value": 23.46,
+                "value": 7.52,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.06,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "workouts",
+                "method": "workouts",
+                "needed_days": 30,
+                "offset_years": -0.57,
+                "secondary_value": 1.0,
+                "value": 157.5,
+                "weight": 10
+              },
+              {
+                "available": true,
+                "basis": "body_fat",
+                "contribution_years": 0.0,
+                "days": 13,
+                "equivalent_age": null,
+                "id": "body_composition",
+                "method": "body_composition",
+                "needed_days": 1,
+                "offset_years": 0.0,
+                "secondary_value": null,
+                "value": 17.5,
+                "weight": 5
+              }
+            ],
+            "markers_available": 7,
+            "markers_needed": 3,
+            "status": "ok"
+          },
+          "health_age_pace": {
+            "direction": "improving",
+            "have": 13,
+            "needed": 8,
+            "pace": 0.74,
+            "points": [
+              {
+                "day": "2026-06-28",
+                "difference": -2.4,
+                "health_age": 37.9
+              },
+              {
+                "day": "2026-07-05",
+                "difference": -2.4,
+                "health_age": 37.9
+              },
+              {
+                "day": "2026-07-12",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-07-19",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-07-26",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-02",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-09",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-16",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-23",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-30",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-06",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-13",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-20",
+                "difference": -2.4,
+                "health_age": 38.1
+              }
+            ],
+            "status": "ok"
+          },
+          "patterns": [
+            {
+              "d": -1.25,
+              "diff": -44.1,
+              "id": "late_workout_sleep",
+              "mean_exposed": 388.1,
+              "mean_unexposed": 432.1,
+              "n_exposed": 13,
+              "n_unexposed": 107,
+              "needed": 8,
+              "review_category": "reduce",
+              "status": "ok",
+              "surfaced": true,
+              "t": -3.63,
+              "text": "On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days)."
+            },
+            {
+              "d": -0.01,
+              "diff": -0.1,
+              "id": "high_load_recovery",
+              "mean_exposed": 60.2,
+              "mean_unexposed": 60.3,
+              "n_exposed": 61,
+              "n_unexposed": 59,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": false,
+              "t": -0.05,
+              "text": "After high training-load days, your next-day recovery has been 0 points lower on average (61 vs 59 days)."
+            },
+            {
+              "d": 0.22,
+              "diff": 1.3,
+              "id": "water_goal_recovery",
+              "mean_exposed": 60.8,
+              "mean_unexposed": 59.6,
+              "n_exposed": 40,
+              "n_unexposed": 40,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": false,
+              "t": 0.97,
+              "text": "After days you met your water goal, your next-day recovery has been 1 points higher on average (40 vs 40 days)."
+            },
+            {
+              "d": 3.69,
+              "diff": 1622.7,
+              "id": "protein_strength_volume",
+              "mean_exposed": 6587.5,
+              "mean_unexposed": 4964.7,
+              "n_exposed": 20,
+              "n_unexposed": 19,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": true,
+              "t": 11.56,
+              "text": "After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days)."
+            },
+            {
+              "d": -2.94,
+              "diff": -2505.4,
+              "id": "short_sleep_steps",
+              "mean_exposed": 5987.8,
+              "mean_unexposed": 8493.2,
+              "n_exposed": 17,
+              "n_unexposed": 103,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": true,
+              "t": -10.88,
+              "text": "On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days)."
+            }
+          ],
+          "recovery": {
+            "collecting": null,
+            "components": [
+              {
+                "available": true,
+                "baseline": 47.77,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": -0.37,
+                "fallback": false,
+                "id": "hrv",
+                "impact": -0.6,
+                "pct": -0.8,
+                "subscore": 48.4,
+                "value": 47.4,
+                "weight": 35,
+                "z": -0.08
+              },
+              {
+                "available": true,
+                "baseline": 55.99,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": -1.59,
+                "fallback": false,
+                "id": "resting_heart_rate",
+                "impact": 5.6,
+                "pct": -2.8,
+                "subscore": 72.4,
+                "value": 54.4,
+                "weight": 25,
+                "z": -1.12
+              },
+              {
+                "available": true,
+                "baseline": 440.5,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": 7.5,
+                "consistency_subscore": 93.8,
+                "delta": -6.5,
+                "fallback": false,
+                "id": "sleep",
+                "impact": 2.1,
+                "pct": -1.5,
+                "subscore": 58.6,
+                "value": 434.0,
+                "weight": 25,
+                "z": -0.32
+              },
+              {
+                "available": true,
+                "baseline": 14.49,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": 0.51,
+                "fallback": false,
+                "id": "respiratory_rate",
+                "impact": -0.7,
+                "pct": 3.5,
+                "subscore": 40.2,
+                "value": 15.0,
+                "weight": 7.5,
+                "z": 1.49
+              },
+              {
+                "available": true,
+                "baseline": 96.48,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": 0.22,
+                "fallback": false,
+                "id": "blood_oxygen",
+                "impact": 0.0,
+                "pct": 0.2,
+                "subscore": 50.0,
+                "value": 96.7,
+                "weight": 7.5,
+                "z": 0.43
+              }
+            ],
+            "confidence": "high",
+            "day": "2026-09-20",
+            "label": "moderate",
+            "label_text": "Moderate",
+            "load": {
+              "category": "none",
+              "day": "2026-09-19",
+              "label": "Rest",
+              "load": 0.0,
+              "mean_28d": 20.0,
+              "modifier": 0,
+              "ratio": 0.0
+            },
+            "negatives": [
+              {
+                "id": "respiratory_rate",
+                "impact": -0.7,
+                "text": "Respiratory rate +0.5 br/min vs baseline"
+              },
+              {
+                "id": "hrv",
+                "impact": -0.6,
+                "text": "HRV −1% vs baseline"
+              }
+            ],
+            "positives": [
+              {
+                "id": "resting_heart_rate",
+                "impact": 5.6,
+                "text": "Resting HR −2 bpm vs baseline"
+              },
+              {
+                "id": "sleep",
+                "impact": 2.1,
+                "text": "Sleep 7h 14m"
+              }
+            ],
+            "recommendation": "Consider lighter training",
+            "score": 56,
+            "status": "ok"
+          }
+        },
+        "variant": "cloud"
+      },
+      "name": "recovery_cloud"
+    },
+    {
+      "expected": {
+        "payload": {
+          "daily_review": {
+            "areas": [
+              {
+                "id": "nutrition",
+                "score": 63
+              },
+              {
+                "id": "hydration",
+                "score": 36
+              },
+              {
+                "id": "activity",
+                "score": 39
+              },
+              {
+                "id": "training",
+                "score": 100
+              },
+              {
+                "id": "sleep",
+                "score": 76
+              },
+              {
+                "id": "recovery",
+                "score": 29
+              }
+            ],
+            "day_score": 58,
+            "improve": [
+              "Add a protein-rich food to tomorrow's meals to close the 60 g gap.",
+              "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber.",
+              "Aim for 4,900 more steps tomorrow, about a 50-minute walk.",
+              "Keep water nearby tomorrow; you were 1,600 ml short of your goal.",
+              "Try winding down 60 min earlier tonight.",
+              "Tomorrow could be a lighter, recovery-focused day."
+            ],
+            "needs_attention": [
+              "Calories were 32% below your target (1,500 of 2,200 kcal).",
+              "Protein was 80 g, 57% of your target.",
+              "You slept 5h 20m, under 6 hours.",
+              "You slept 5h 20m, 120 min less than your usual.",
+              "Your recovery was low (29).",
+              "You walked 3,100 steps, under half of your 8,000 step goal."
+            ],
+            "not_logged": [],
+            "reduce": [],
+            "went_well": [
+              "You took a rest day after a hard training day."
+            ]
+          },
+          "health_age": {
+            "actual_age": 40.5,
+            "confidence": "high",
+            "difference": -2.1,
+            "health_age": 38.5,
+            "markers": [
+              {
+                "contribution_years": -1.5,
+                "id": "vo2_max",
+                "offset_years": -6.0
+              },
+              {
+                "contribution_years": -0.1,
+                "id": "resting_heart_rate",
+                "offset_years": -0.7
+              },
+              {
+                "contribution_years": -0.18,
+                "id": "hrv",
+                "offset_years": -1.19
+              },
+              {
+                "contribution_years": -0.14,
+                "id": "steps",
+                "offset_years": -0.96
+              },
+              {
+                "contribution_years": -0.07,
+                "id": "sleep",
+                "offset_years": -0.5
+              },
+              {
+                "contribution_years": -0.06,
+                "id": "workouts",
+                "offset_years": -0.57
+              },
+              {
+                "contribution_years": 0.0,
+                "id": "body_composition",
+                "offset_years": 0.0
+              }
+            ],
+            "pace": 0.74,
+            "pace_direction": "improving",
+            "status": "ok"
+          },
+          "patterns": [
+            {
+              "id": "late_workout_sleep",
+              "n_exposed": 13,
+              "n_unexposed": 107,
+              "text": "On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days)."
+            },
+            {
+              "id": "protein_strength_volume",
+              "n_exposed": 20,
+              "n_unexposed": 19,
+              "text": "After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days)."
+            },
+            {
+              "id": "short_sleep_steps",
+              "n_exposed": 17,
+              "n_unexposed": 103,
+              "text": "On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days)."
+            }
+          ],
+          "recovery": {
+            "confidence": "high",
+            "label": "Moderate",
+            "score": 56,
+            "signals": [
+              {
+                "impact": 5.6,
+                "text": "Resting HR −2 bpm vs baseline"
+              },
+              {
+                "impact": 2.1,
+                "text": "Sleep 7h 14m"
+              },
+              {
+                "impact": -0.7,
+                "text": "Respiratory rate +0.5 br/min vs baseline"
+              },
+              {
+                "impact": -0.6,
+                "text": "HRV −1% vs baseline"
+              }
+            ],
+            "status": "ok",
+            "training_load": "Rest"
+          }
+        },
+        "prompt": {
+          "system": "Explain these wellness numbers in plain English. Output only JSON: {\"headline\":\"\",\"bullets\":[]}\nheadline: 1 sentence, max 100 characters. bullets: 1-5 short sentences, max 180 characters each.\nUse only numbers from the data. No diagnosis, no medical conditions, no medication or dose advice. Say \"linked with\" or \"on days when\", never \"caused\". If status is not \"ok\", say more data is needed.",
+          "user": "Task: Explain the Ayuvo Health Age estimate and which markers moved it.\n\nData:\n{\"health_age\":{\"actual_age\":40.5,\"confidence\":\"high\",\"difference\":-2.1,\"health_age\":38.5,\"markers\":[{\"contribution_years\":-1.5,\"id\":\"vo2_max\",\"offset_years\":-6},{\"contribution_years\":-0.1,\"id\":\"resting_heart_rate\",\"offset_years\":-0.7},{\"contribution_years\":-0.18,\"id\":\"hrv\",\"offset_years\":-1.19},{\"contribution_years\":-0.14,\"id\":\"steps\",\"offset_years\":-0.96},{\"contribution_years\":-0.07,\"id\":\"sleep\",\"offset_years\":-0.5},{\"contribution_years\":-0.06,\"id\":\"workouts\",\"offset_years\":-0.57},{\"contribution_years\":0,\"id\":\"body_composition\",\"offset_years\":0}],\"pace\":0.74,\"pace_direction\":\"improving\",\"status\":\"ok\"}}\n\nReturn the JSON object."
+        },
+        "validations": [
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "VO2 max moved the estimate the most."
+              ],
+              "headline": "Your Ayuvo Health Age is 38.5, 2.1 years from your actual age."
+            }
+          },
+          {
+            "errors": [
+              "bullet_length"
+            ],
+            "ok": false,
+            "output": null
+          }
+        ]
+      },
+      "input": {
+        "kind": "health_age",
+        "outputs": [
+          "{\"headline\": \"Your Ayuvo Health Age is 38.5, 2.1 years from your actual age.\", \"bullets\": [\"VO2 max moved the estimate the most.\"]}",
+          "{\"headline\": \"Health Age 38.5.\", \"bullets\": [\"\"]}"
+        ],
+        "summary": {
+          "daily_review": {
+            "areas": [
+              {
+                "detail": {
+                  "calorie_dev_pct": -31.8,
+                  "calories": 1500,
+                  "carbs_g": 230,
+                  "fat_g": 70,
+                  "fiber_g": 12,
+                  "protein_g": 80
+                },
+                "id": "nutrition",
+                "included": true,
+                "score": 63,
+                "weight": 30
+              },
+              {
+                "detail": {
+                  "goal_ml": 2500,
+                  "water_ml": 900
+                },
+                "id": "hydration",
+                "included": true,
+                "score": 36,
+                "weight": 10
+              },
+              {
+                "detail": {
+                  "goal": 8000,
+                  "steps": 3100
+                },
+                "id": "activity",
+                "included": true,
+                "score": 39,
+                "weight": 20
+              },
+              {
+                "detail": {
+                  "minutes": 0.0,
+                  "previous_day_category": "high",
+                  "sessions": 0
+                },
+                "id": "training",
+                "included": true,
+                "score": 100,
+                "weight": 10
+              },
+              {
+                "detail": {
+                  "asleep_min": 320,
+                  "baseline_min": 439.5
+                },
+                "id": "sleep",
+                "included": true,
+                "score": 76,
+                "weight": 20
+              },
+              {
+                "detail": {
+                  "label": "low",
+                  "score": 29
+                },
+                "id": "recovery",
+                "included": true,
+                "score": 29,
+                "weight": 10
+              },
+              {
+                "detail": null,
+                "id": "fasting",
+                "included": false,
+                "score": null,
+                "weight": 10
+              }
+            ],
+            "day": "2026-09-20",
+            "day_score": 58,
+            "improve": [
+              {
+                "params": {
+                  "gap_g": 60
+                },
+                "rule_id": "improve_protein",
+                "text": "Add a protein-rich food to tomorrow's meals to close the 60 g gap."
+              },
+              {
+                "params": {
+                  "gap_g": 18
+                },
+                "rule_id": "improve_fiber",
+                "text": "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber."
+              },
+              {
+                "params": {
+                  "gap": 4900,
+                  "walk_min": 50
+                },
+                "rule_id": "improve_steps",
+                "text": "Aim for 4,900 more steps tomorrow, about a 50-minute walk."
+              },
+              {
+                "params": {
+                  "gap_ml": 1600
+                },
+                "rule_id": "improve_water",
+                "text": "Keep water nearby tomorrow; you were 1,600 ml short of your goal."
+              },
+              {
+                "params": {
+                  "minutes": 60
+                },
+                "rule_id": "improve_sleep",
+                "text": "Try winding down 60 min earlier tonight."
+              },
+              {
+                "params": {},
+                "rule_id": "recovery_focus",
+                "text": "Tomorrow could be a lighter, recovery-focused day."
+              }
+            ],
+            "needs_attention": [
+              {
+                "params": {
+                  "calories": 1500,
+                  "target": 2200,
+                  "under_pct": 32
+                },
+                "rule_id": "calories_under",
+                "text": "Calories were 32% below your target (1,500 of 2,200 kcal)."
+              },
+              {
+                "params": {
+                  "pct": 57,
+                  "protein_g": 80
+                },
+                "rule_id": "protein_low",
+                "text": "Protein was 80 g, 57% of your target."
+              },
+              {
+                "params": {
+                  "duration": "5h 20m"
+                },
+                "rule_id": "sleep_short",
+                "text": "You slept 5h 20m, under 6 hours."
+              },
+              {
+                "params": {
+                  "diff_min": 120,
+                  "duration": "5h 20m"
+                },
+                "rule_id": "sleep_below_usual",
+                "text": "You slept 5h 20m, 120 min less than your usual."
+              },
+              {
+                "params": {
+                  "score": 29
+                },
+                "rule_id": "recovery_low",
+                "text": "Your recovery was low (29)."
+              },
+              {
+                "params": {
+                  "goal": 8000,
+                  "steps": 3100
+                },
+                "rule_id": "steps_low",
+                "text": "You walked 3,100 steps, under half of your 8,000 step goal."
+              }
+            ],
+            "not_logged": [],
+            "reduce": [],
+            "went_well": [
+              {
+                "params": {},
+                "rule_id": "planned_rest",
+                "text": "You took a rest day after a hard training day."
+              }
+            ]
+          },
+          "health_age": {
+            "actual_age": 40.5,
+            "as_of": "2026-09-20",
+            "collecting": null,
+            "confidence": "high",
+            "difference": -2.1,
+            "health_age": 38.5,
+            "markers": [
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -1.5,
+                "days": 15,
+                "equivalent_age": 32.1,
+                "id": "vo2_max",
+                "method": "age_norm",
+                "needed_days": 3,
+                "offset_years": -6.0,
+                "secondary_value": null,
+                "value": 44.0,
+                "weight": 25
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.1,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "resting_heart_rate",
+                "method": "dose_response",
+                "needed_days": 30,
+                "offset_years": -0.7,
+                "secondary_value": null,
+                "value": 58.05,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.18,
+                "days": 90,
+                "equivalent_age": 39.3,
+                "id": "hrv",
+                "method": "age_norm",
+                "needed_days": 30,
+                "offset_years": -1.19,
+                "secondary_value": null,
+                "value": 44.96,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.14,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "steps",
+                "method": "dose_response",
+                "needed_days": 30,
+                "offset_years": -0.96,
+                "secondary_value": null,
+                "value": 8941.37,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.07,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "sleep",
+                "method": "sleep",
+                "needed_days": 30,
+                "offset_years": -0.5,
+                "secondary_value": 23.46,
+                "value": 7.52,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.06,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "workouts",
+                "method": "workouts",
+                "needed_days": 30,
+                "offset_years": -0.57,
+                "secondary_value": 1.0,
+                "value": 157.5,
+                "weight": 10
+              },
+              {
+                "available": true,
+                "basis": "body_fat",
+                "contribution_years": 0.0,
+                "days": 13,
+                "equivalent_age": null,
+                "id": "body_composition",
+                "method": "body_composition",
+                "needed_days": 1,
+                "offset_years": 0.0,
+                "secondary_value": null,
+                "value": 17.5,
+                "weight": 5
+              }
+            ],
+            "markers_available": 7,
+            "markers_needed": 3,
+            "status": "ok"
+          },
+          "health_age_pace": {
+            "direction": "improving",
+            "have": 13,
+            "needed": 8,
+            "pace": 0.74,
+            "points": [
+              {
+                "day": "2026-06-28",
+                "difference": -2.4,
+                "health_age": 37.9
+              },
+              {
+                "day": "2026-07-05",
+                "difference": -2.4,
+                "health_age": 37.9
+              },
+              {
+                "day": "2026-07-12",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-07-19",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-07-26",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-02",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-09",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-16",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-23",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-30",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-06",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-13",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-20",
+                "difference": -2.4,
+                "health_age": 38.1
+              }
+            ],
+            "status": "ok"
+          },
+          "patterns": [
+            {
+              "d": -1.25,
+              "diff": -44.1,
+              "id": "late_workout_sleep",
+              "mean_exposed": 388.1,
+              "mean_unexposed": 432.1,
+              "n_exposed": 13,
+              "n_unexposed": 107,
+              "needed": 8,
+              "review_category": "reduce",
+              "status": "ok",
+              "surfaced": true,
+              "t": -3.63,
+              "text": "On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days)."
+            },
+            {
+              "d": -0.01,
+              "diff": -0.1,
+              "id": "high_load_recovery",
+              "mean_exposed": 60.2,
+              "mean_unexposed": 60.3,
+              "n_exposed": 61,
+              "n_unexposed": 59,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": false,
+              "t": -0.05,
+              "text": "After high training-load days, your next-day recovery has been 0 points lower on average (61 vs 59 days)."
+            },
+            {
+              "d": 0.22,
+              "diff": 1.3,
+              "id": "water_goal_recovery",
+              "mean_exposed": 60.8,
+              "mean_unexposed": 59.6,
+              "n_exposed": 40,
+              "n_unexposed": 40,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": false,
+              "t": 0.97,
+              "text": "After days you met your water goal, your next-day recovery has been 1 points higher on average (40 vs 40 days)."
+            },
+            {
+              "d": 3.69,
+              "diff": 1622.7,
+              "id": "protein_strength_volume",
+              "mean_exposed": 6587.5,
+              "mean_unexposed": 4964.7,
+              "n_exposed": 20,
+              "n_unexposed": 19,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": true,
+              "t": 11.56,
+              "text": "After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days)."
+            },
+            {
+              "d": -2.94,
+              "diff": -2505.4,
+              "id": "short_sleep_steps",
+              "mean_exposed": 5987.8,
+              "mean_unexposed": 8493.2,
+              "n_exposed": 17,
+              "n_unexposed": 103,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": true,
+              "t": -10.88,
+              "text": "On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days)."
+            }
+          ],
+          "recovery": {
+            "collecting": null,
+            "components": [
+              {
+                "available": true,
+                "baseline": 47.77,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": -0.37,
+                "fallback": false,
+                "id": "hrv",
+                "impact": -0.6,
+                "pct": -0.8,
+                "subscore": 48.4,
+                "value": 47.4,
+                "weight": 35,
+                "z": -0.08
+              },
+              {
+                "available": true,
+                "baseline": 55.99,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": -1.59,
+                "fallback": false,
+                "id": "resting_heart_rate",
+                "impact": 5.6,
+                "pct": -2.8,
+                "subscore": 72.4,
+                "value": 54.4,
+                "weight": 25,
+                "z": -1.12
+              },
+              {
+                "available": true,
+                "baseline": 440.5,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": 7.5,
+                "consistency_subscore": 93.8,
+                "delta": -6.5,
+                "fallback": false,
+                "id": "sleep",
+                "impact": 2.1,
+                "pct": -1.5,
+                "subscore": 58.6,
+                "value": 434.0,
+                "weight": 25,
+                "z": -0.32
+              },
+              {
+                "available": true,
+                "baseline": 14.49,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": 0.51,
+                "fallback": false,
+                "id": "respiratory_rate",
+                "impact": -0.7,
+                "pct": 3.5,
+                "subscore": 40.2,
+                "value": 15.0,
+                "weight": 7.5,
+                "z": 1.49
+              },
+              {
+                "available": true,
+                "baseline": 96.48,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": 0.22,
+                "fallback": false,
+                "id": "blood_oxygen",
+                "impact": 0.0,
+                "pct": 0.2,
+                "subscore": 50.0,
+                "value": 96.7,
+                "weight": 7.5,
+                "z": 0.43
+              }
+            ],
+            "confidence": "high",
+            "day": "2026-09-20",
+            "label": "moderate",
+            "label_text": "Moderate",
+            "load": {
+              "category": "none",
+              "day": "2026-09-19",
+              "label": "Rest",
+              "load": 0.0,
+              "mean_28d": 20.0,
+              "modifier": 0,
+              "ratio": 0.0
+            },
+            "negatives": [
+              {
+                "id": "respiratory_rate",
+                "impact": -0.7,
+                "text": "Respiratory rate +0.5 br/min vs baseline"
+              },
+              {
+                "id": "hrv",
+                "impact": -0.6,
+                "text": "HRV −1% vs baseline"
+              }
+            ],
+            "positives": [
+              {
+                "id": "resting_heart_rate",
+                "impact": 5.6,
+                "text": "Resting HR −2 bpm vs baseline"
+              },
+              {
+                "id": "sleep",
+                "impact": 2.1,
+                "text": "Sleep 7h 14m"
+              }
+            ],
+            "recommendation": "Consider lighter training",
+            "score": 56,
+            "status": "ok"
+          }
+        },
+        "variant": "local"
+      },
+      "name": "health_age_local"
+    },
+    {
+      "expected": {
+        "payload": {
+          "daily_review": {
+            "areas": [
+              {
+                "id": "nutrition",
+                "score": 63
+              },
+              {
+                "id": "hydration",
+                "score": 36
+              },
+              {
+                "id": "activity",
+                "score": 39
+              },
+              {
+                "id": "training",
+                "score": 100
+              },
+              {
+                "id": "sleep",
+                "score": 76
+              },
+              {
+                "id": "recovery",
+                "score": 29
+              }
+            ],
+            "day_score": 58,
+            "improve": [
+              "Add a protein-rich food to tomorrow's meals to close the 60 g gap.",
+              "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber.",
+              "Aim for 4,900 more steps tomorrow, about a 50-minute walk.",
+              "Keep water nearby tomorrow; you were 1,600 ml short of your goal.",
+              "Try winding down 60 min earlier tonight.",
+              "Tomorrow could be a lighter, recovery-focused day."
+            ],
+            "needs_attention": [
+              "Calories were 32% below your target (1,500 of 2,200 kcal).",
+              "Protein was 80 g, 57% of your target.",
+              "You slept 5h 20m, under 6 hours.",
+              "You slept 5h 20m, 120 min less than your usual.",
+              "Your recovery was low (29).",
+              "You walked 3,100 steps, under half of your 8,000 step goal."
+            ],
+            "not_logged": [],
+            "reduce": [],
+            "went_well": [
+              "You took a rest day after a hard training day."
+            ]
+          },
+          "health_age": {
+            "actual_age": 40.5,
+            "confidence": "high",
+            "difference": -2.1,
+            "health_age": 38.5,
+            "markers": [
+              {
+                "contribution_years": -1.5,
+                "id": "vo2_max",
+                "offset_years": -6.0
+              },
+              {
+                "contribution_years": -0.1,
+                "id": "resting_heart_rate",
+                "offset_years": -0.7
+              },
+              {
+                "contribution_years": -0.18,
+                "id": "hrv",
+                "offset_years": -1.19
+              },
+              {
+                "contribution_years": -0.14,
+                "id": "steps",
+                "offset_years": -0.96
+              },
+              {
+                "contribution_years": -0.07,
+                "id": "sleep",
+                "offset_years": -0.5
+              },
+              {
+                "contribution_years": -0.06,
+                "id": "workouts",
+                "offset_years": -0.57
+              },
+              {
+                "contribution_years": 0.0,
+                "id": "body_composition",
+                "offset_years": 0.0
+              }
+            ],
+            "pace": 0.74,
+            "pace_direction": "improving",
+            "status": "ok"
+          },
+          "patterns": [
+            {
+              "id": "late_workout_sleep",
+              "n_exposed": 13,
+              "n_unexposed": 107,
+              "text": "On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days)."
+            },
+            {
+              "id": "protein_strength_volume",
+              "n_exposed": 20,
+              "n_unexposed": 19,
+              "text": "After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days)."
+            },
+            {
+              "id": "short_sleep_steps",
+              "n_exposed": 17,
+              "n_unexposed": 103,
+              "text": "On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days)."
+            }
+          ],
+          "recovery": {
+            "confidence": "high",
+            "label": "Moderate",
+            "score": 56,
+            "signals": [
+              {
+                "impact": 5.6,
+                "text": "Resting HR −2 bpm vs baseline"
+              },
+              {
+                "impact": 2.1,
+                "text": "Sleep 7h 14m"
+              },
+              {
+                "impact": -0.7,
+                "text": "Respiratory rate +0.5 br/min vs baseline"
+              },
+              {
+                "impact": -0.6,
+                "text": "HRV −1% vs baseline"
+              }
+            ],
+            "status": "ok",
+            "training_load": "Rest"
+          }
+        },
+        "prompt": {
+          "system": "You explain wellness numbers from a person's own health app in plain, friendly English.\nReturn ONLY one JSON object, no markdown, no prose, exactly this shape:\n{\"headline\":\"\",\"bullets\":[]}\n\nRules:\n1. Explain only what the data in the message says. Do not add new facts, causes or numbers.\n2. Use only numbers that appear in the data. Do not calculate, convert or round new numbers.\n3. Never diagnose, name a medical condition or suggest one might be present.\n4. Never give medication advice or mention doses.\n5. Describe links between habits and results as associations (\"has been linked in your data with\", \"on days when\"), never as causes.\n6. Suggestions are gentle everyday habits (sleep, movement, food, water, rest) and only when the data supports them.\n7. headline: one sentence, at most 100 characters. bullets: 1 to 5 short sentences, each at most 180 characters.\n8. If a section has a status other than \"ok\", say briefly that more data is needed.",
+          "user": "Task: Explain today's Daily Review: what went well, what needs attention and what to try tomorrow.\n\nData:\n{\"daily_review\":{\"areas\":[{\"id\":\"nutrition\",\"score\":63},{\"id\":\"hydration\",\"score\":36},{\"id\":\"activity\",\"score\":39},{\"id\":\"training\",\"score\":100},{\"id\":\"sleep\",\"score\":76},{\"id\":\"recovery\",\"score\":29}],\"day_score\":58,\"improve\":[\"Add a protein-rich food to tomorrow's meals to close the 60 g gap.\",\"Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber.\",\"Aim for 4,900 more steps tomorrow, about a 50-minute walk.\",\"Keep water nearby tomorrow; you were 1,600 ml short of your goal.\",\"Try winding down 60 min earlier tonight.\",\"Tomorrow could be a lighter, recovery-focused day.\"],\"needs_attention\":[\"Calories were 32% below your target (1,500 of 2,200 kcal).\",\"Protein was 80 g, 57% of your target.\",\"You slept 5h 20m, under 6 hours.\",\"You slept 5h 20m, 120 min less than your usual.\",\"Your recovery was low (29).\",\"You walked 3,100 steps, under half of your 8,000 step goal.\"],\"not_logged\":[],\"reduce\":[],\"went_well\":[\"You took a rest day after a hard training day.\"]},\"patterns\":[{\"id\":\"late_workout_sleep\",\"n_exposed\":13,\"n_unexposed\":107,\"text\":\"On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days).\"},{\"id\":\"protein_strength_volume\",\"n_exposed\":20,\"n_unexposed\":19,\"text\":\"After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days).\"},{\"id\":\"short_sleep_steps\",\"n_exposed\":17,\"n_unexposed\":103,\"text\":\"On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days).\"}]}\n\nReturn the JSON object."
+        },
+        "validations": [
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "Calories were 32% below your target (1,500 of 2,200 kcal).",
+                "Protein was 80 g, 57% of your target.",
+                "You walked 3,100 steps."
+              ],
+              "headline": "A lighter day with a Day Score of 58."
+            }
+          },
+          {
+            "errors": [
+              "unknown_number"
+            ],
+            "ok": false,
+            "output": null
+          }
+        ]
+      },
+      "input": {
+        "kind": "daily_review",
+        "outputs": [
+          "{\"headline\": \"A lighter day with a Day Score of 58.\", \"bullets\": [\"Calories were 32% below your target (1,500 of 2,200 kcal).\", \"Protein was 80 g, 57% of your target.\", \"You walked 3,100 steps.\"]}",
+          "{\"headline\": \"Day Score 58.\", \"bullets\": [\"You walked 3,150 steps.\"]}"
+        ],
+        "summary": {
+          "daily_review": {
+            "areas": [
+              {
+                "detail": {
+                  "calorie_dev_pct": -31.8,
+                  "calories": 1500,
+                  "carbs_g": 230,
+                  "fat_g": 70,
+                  "fiber_g": 12,
+                  "protein_g": 80
+                },
+                "id": "nutrition",
+                "included": true,
+                "score": 63,
+                "weight": 30
+              },
+              {
+                "detail": {
+                  "goal_ml": 2500,
+                  "water_ml": 900
+                },
+                "id": "hydration",
+                "included": true,
+                "score": 36,
+                "weight": 10
+              },
+              {
+                "detail": {
+                  "goal": 8000,
+                  "steps": 3100
+                },
+                "id": "activity",
+                "included": true,
+                "score": 39,
+                "weight": 20
+              },
+              {
+                "detail": {
+                  "minutes": 0.0,
+                  "previous_day_category": "high",
+                  "sessions": 0
+                },
+                "id": "training",
+                "included": true,
+                "score": 100,
+                "weight": 10
+              },
+              {
+                "detail": {
+                  "asleep_min": 320,
+                  "baseline_min": 439.5
+                },
+                "id": "sleep",
+                "included": true,
+                "score": 76,
+                "weight": 20
+              },
+              {
+                "detail": {
+                  "label": "low",
+                  "score": 29
+                },
+                "id": "recovery",
+                "included": true,
+                "score": 29,
+                "weight": 10
+              },
+              {
+                "detail": null,
+                "id": "fasting",
+                "included": false,
+                "score": null,
+                "weight": 10
+              }
+            ],
+            "day": "2026-09-20",
+            "day_score": 58,
+            "improve": [
+              {
+                "params": {
+                  "gap_g": 60
+                },
+                "rule_id": "improve_protein",
+                "text": "Add a protein-rich food to tomorrow's meals to close the 60 g gap."
+              },
+              {
+                "params": {
+                  "gap_g": 18
+                },
+                "rule_id": "improve_fiber",
+                "text": "Add vegetables, fruit, beans or whole grains tomorrow; you were 18 g short on fiber."
+              },
+              {
+                "params": {
+                  "gap": 4900,
+                  "walk_min": 50
+                },
+                "rule_id": "improve_steps",
+                "text": "Aim for 4,900 more steps tomorrow, about a 50-minute walk."
+              },
+              {
+                "params": {
+                  "gap_ml": 1600
+                },
+                "rule_id": "improve_water",
+                "text": "Keep water nearby tomorrow; you were 1,600 ml short of your goal."
+              },
+              {
+                "params": {
+                  "minutes": 60
+                },
+                "rule_id": "improve_sleep",
+                "text": "Try winding down 60 min earlier tonight."
+              },
+              {
+                "params": {},
+                "rule_id": "recovery_focus",
+                "text": "Tomorrow could be a lighter, recovery-focused day."
+              }
+            ],
+            "needs_attention": [
+              {
+                "params": {
+                  "calories": 1500,
+                  "target": 2200,
+                  "under_pct": 32
+                },
+                "rule_id": "calories_under",
+                "text": "Calories were 32% below your target (1,500 of 2,200 kcal)."
+              },
+              {
+                "params": {
+                  "pct": 57,
+                  "protein_g": 80
+                },
+                "rule_id": "protein_low",
+                "text": "Protein was 80 g, 57% of your target."
+              },
+              {
+                "params": {
+                  "duration": "5h 20m"
+                },
+                "rule_id": "sleep_short",
+                "text": "You slept 5h 20m, under 6 hours."
+              },
+              {
+                "params": {
+                  "diff_min": 120,
+                  "duration": "5h 20m"
+                },
+                "rule_id": "sleep_below_usual",
+                "text": "You slept 5h 20m, 120 min less than your usual."
+              },
+              {
+                "params": {
+                  "score": 29
+                },
+                "rule_id": "recovery_low",
+                "text": "Your recovery was low (29)."
+              },
+              {
+                "params": {
+                  "goal": 8000,
+                  "steps": 3100
+                },
+                "rule_id": "steps_low",
+                "text": "You walked 3,100 steps, under half of your 8,000 step goal."
+              }
+            ],
+            "not_logged": [],
+            "reduce": [],
+            "went_well": [
+              {
+                "params": {},
+                "rule_id": "planned_rest",
+                "text": "You took a rest day after a hard training day."
+              }
+            ]
+          },
+          "health_age": {
+            "actual_age": 40.5,
+            "as_of": "2026-09-20",
+            "collecting": null,
+            "confidence": "high",
+            "difference": -2.1,
+            "health_age": 38.5,
+            "markers": [
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -1.5,
+                "days": 15,
+                "equivalent_age": 32.1,
+                "id": "vo2_max",
+                "method": "age_norm",
+                "needed_days": 3,
+                "offset_years": -6.0,
+                "secondary_value": null,
+                "value": 44.0,
+                "weight": 25
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.1,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "resting_heart_rate",
+                "method": "dose_response",
+                "needed_days": 30,
+                "offset_years": -0.7,
+                "secondary_value": null,
+                "value": 58.05,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.18,
+                "days": 90,
+                "equivalent_age": 39.3,
+                "id": "hrv",
+                "method": "age_norm",
+                "needed_days": 30,
+                "offset_years": -1.19,
+                "secondary_value": null,
+                "value": 44.96,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.14,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "steps",
+                "method": "dose_response",
+                "needed_days": 30,
+                "offset_years": -0.96,
+                "secondary_value": null,
+                "value": 8941.37,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.07,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "sleep",
+                "method": "sleep",
+                "needed_days": 30,
+                "offset_years": -0.5,
+                "secondary_value": 23.46,
+                "value": 7.52,
+                "weight": 15
+              },
+              {
+                "available": true,
+                "basis": null,
+                "contribution_years": -0.06,
+                "days": 90,
+                "equivalent_age": null,
+                "id": "workouts",
+                "method": "workouts",
+                "needed_days": 30,
+                "offset_years": -0.57,
+                "secondary_value": 1.0,
+                "value": 157.5,
+                "weight": 10
+              },
+              {
+                "available": true,
+                "basis": "body_fat",
+                "contribution_years": 0.0,
+                "days": 13,
+                "equivalent_age": null,
+                "id": "body_composition",
+                "method": "body_composition",
+                "needed_days": 1,
+                "offset_years": 0.0,
+                "secondary_value": null,
+                "value": 17.5,
+                "weight": 5
+              }
+            ],
+            "markers_available": 7,
+            "markers_needed": 3,
+            "status": "ok"
+          },
+          "health_age_pace": {
+            "direction": "improving",
+            "have": 13,
+            "needed": 8,
+            "pace": 0.74,
+            "points": [
+              {
+                "day": "2026-06-28",
+                "difference": -2.4,
+                "health_age": 37.9
+              },
+              {
+                "day": "2026-07-05",
+                "difference": -2.4,
+                "health_age": 37.9
+              },
+              {
+                "day": "2026-07-12",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-07-19",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-07-26",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-02",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-09",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-16",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-23",
+                "difference": -2.4,
+                "health_age": 38.0
+              },
+              {
+                "day": "2026-08-30",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-06",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-13",
+                "difference": -2.4,
+                "health_age": 38.1
+              },
+              {
+                "day": "2026-09-20",
+                "difference": -2.4,
+                "health_age": 38.1
+              }
+            ],
+            "status": "ok"
+          },
+          "patterns": [
+            {
+              "d": -1.25,
+              "diff": -44.1,
+              "id": "late_workout_sleep",
+              "mean_exposed": 388.1,
+              "mean_unexposed": 432.1,
+              "n_exposed": 13,
+              "n_unexposed": 107,
+              "needed": 8,
+              "review_category": "reduce",
+              "status": "ok",
+              "surfaced": true,
+              "t": -3.63,
+              "text": "On days with late intense workouts, your sleep that night has been 44 min shorter on average (13 vs 107 days)."
+            },
+            {
+              "d": -0.01,
+              "diff": -0.1,
+              "id": "high_load_recovery",
+              "mean_exposed": 60.2,
+              "mean_unexposed": 60.3,
+              "n_exposed": 61,
+              "n_unexposed": 59,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": false,
+              "t": -0.05,
+              "text": "After high training-load days, your next-day recovery has been 0 points lower on average (61 vs 59 days)."
+            },
+            {
+              "d": 0.22,
+              "diff": 1.3,
+              "id": "water_goal_recovery",
+              "mean_exposed": 60.8,
+              "mean_unexposed": 59.6,
+              "n_exposed": 40,
+              "n_unexposed": 40,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": false,
+              "t": 0.97,
+              "text": "After days you met your water goal, your next-day recovery has been 1 points higher on average (40 vs 40 days)."
+            },
+            {
+              "d": 3.69,
+              "diff": 1622.7,
+              "id": "protein_strength_volume",
+              "mean_exposed": 6587.5,
+              "mean_unexposed": 4964.7,
+              "n_exposed": 20,
+              "n_unexposed": 19,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": true,
+              "t": 11.56,
+              "text": "After days you met your protein target, your next-day strength volume has been 1,623 kg higher on average (20 vs 19 days)."
+            },
+            {
+              "d": -2.94,
+              "diff": -2505.4,
+              "id": "short_sleep_steps",
+              "mean_exposed": 5987.8,
+              "mean_unexposed": 8493.2,
+              "n_exposed": 17,
+              "n_unexposed": 103,
+              "needed": 8,
+              "review_category": null,
+              "status": "ok",
+              "surfaced": true,
+              "t": -10.88,
+              "text": "On days after a short night, you have taken 2,505 fewer steps on average (17 vs 103 days)."
+            }
+          ],
+          "recovery": {
+            "collecting": null,
+            "components": [
+              {
+                "available": true,
+                "baseline": 47.77,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": -0.37,
+                "fallback": false,
+                "id": "hrv",
+                "impact": -0.6,
+                "pct": -0.8,
+                "subscore": 48.4,
+                "value": 47.4,
+                "weight": 35,
+                "z": -0.08
+              },
+              {
+                "available": true,
+                "baseline": 55.99,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": -1.59,
+                "fallback": false,
+                "id": "resting_heart_rate",
+                "impact": 5.6,
+                "pct": -2.8,
+                "subscore": 72.4,
+                "value": 54.4,
+                "weight": 25,
+                "z": -1.12
+              },
+              {
+                "available": true,
+                "baseline": 440.5,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": 7.5,
+                "consistency_subscore": 93.8,
+                "delta": -6.5,
+                "fallback": false,
+                "id": "sleep",
+                "impact": 2.1,
+                "pct": -1.5,
+                "subscore": 58.6,
+                "value": 434.0,
+                "weight": 25,
+                "z": -0.32
+              },
+              {
+                "available": true,
+                "baseline": 14.49,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": 0.51,
+                "fallback": false,
+                "id": "respiratory_rate",
+                "impact": -0.7,
+                "pct": 3.5,
+                "subscore": 40.2,
+                "value": 15.0,
+                "weight": 7.5,
+                "z": 1.49
+              },
+              {
+                "available": true,
+                "baseline": 96.48,
+                "baseline_confidence": "high",
+                "baseline_n": 60,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": 0.22,
+                "fallback": false,
+                "id": "blood_oxygen",
+                "impact": 0.0,
+                "pct": 0.2,
+                "subscore": 50.0,
+                "value": 96.7,
+                "weight": 7.5,
+                "z": 0.43
+              }
+            ],
+            "confidence": "high",
+            "day": "2026-09-20",
+            "label": "moderate",
+            "label_text": "Moderate",
+            "load": {
+              "category": "none",
+              "day": "2026-09-19",
+              "label": "Rest",
+              "load": 0.0,
+              "mean_28d": 20.0,
+              "modifier": 0,
+              "ratio": 0.0
+            },
+            "negatives": [
+              {
+                "id": "respiratory_rate",
+                "impact": -0.7,
+                "text": "Respiratory rate +0.5 br/min vs baseline"
+              },
+              {
+                "id": "hrv",
+                "impact": -0.6,
+                "text": "HRV −1% vs baseline"
+              }
+            ],
+            "positives": [
+              {
+                "id": "resting_heart_rate",
+                "impact": 5.6,
+                "text": "Resting HR −2 bpm vs baseline"
+              },
+              {
+                "id": "sleep",
+                "impact": 2.1,
+                "text": "Sleep 7h 14m"
+              }
+            ],
+            "recommendation": "Consider lighter training",
+            "score": 56,
+            "status": "ok"
+          }
+        },
+        "variant": "cloud"
+      },
+      "name": "daily_review_cloud_with_grouped_numbers"
+    },
+    {
+      "expected": {
+        "payload": {
+          "patterns": [],
+          "recovery": {
+            "collecting": {
+              "have": 13,
+              "need": 14
+            },
+            "status": "collecting"
+          }
+        },
+        "prompt": {
+          "system": "Explain these wellness numbers in plain English. Output only JSON: {\"headline\":\"\",\"bullets\":[]}\nheadline: 1 sentence, max 100 characters. bullets: 1-5 short sentences, max 180 characters each.\nUse only numbers from the data. No diagnosis, no medical conditions, no medication or dose advice. Say \"linked with\" or \"on days when\", never \"caused\". If status is not \"ok\", say more data is needed.",
+          "user": "Task: Explain today's Recovery score and its main signals.\n\nData:\n{\"recovery\":{\"collecting\":{\"have\":13,\"need\":14},\"status\":\"collecting\"}}\n\nReturn the JSON object."
+        },
+        "validations": [
+          {
+            "errors": [],
+            "ok": true,
+            "output": {
+              "bullets": [
+                "Keep wearing your watch to bed."
+              ],
+              "headline": "Recovery needs a few more nights of data."
+            }
+          }
+        ]
+      },
+      "input": {
+        "kind": "recovery",
+        "outputs": [
+          "{\"headline\": \"Recovery needs a few more nights of data.\", \"bullets\": [\"Keep wearing your watch to bed.\"]}"
+        ],
+        "summary": {
+          "patterns": [],
+          "recovery": {
+            "collecting": {
+              "have": 13,
+              "need": 14
+            },
+            "components": [
+              {
+                "available": false,
+                "baseline": null,
+                "baseline_confidence": "low",
+                "baseline_n": 13,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": null,
+                "fallback": false,
+                "id": "hrv",
+                "impact": null,
+                "pct": null,
+                "subscore": null,
+                "value": 45.2,
+                "weight": 35,
+                "z": null
+              },
+              {
+                "available": false,
+                "baseline": null,
+                "baseline_confidence": "low",
+                "baseline_n": 13,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": null,
+                "fallback": false,
+                "id": "resting_heart_rate",
+                "impact": null,
+                "pct": null,
+                "subscore": null,
+                "value": 53.8,
+                "weight": 25,
+                "z": null
+              },
+              {
+                "available": false,
+                "baseline": null,
+                "baseline_confidence": "low",
+                "baseline_n": 13,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": null,
+                "fallback": false,
+                "id": "sleep",
+                "impact": null,
+                "pct": null,
+                "subscore": null,
+                "value": 428.0,
+                "weight": 25,
+                "z": null
+              },
+              {
+                "available": false,
+                "baseline": null,
+                "baseline_confidence": "low",
+                "baseline_n": 13,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": null,
+                "fallback": false,
+                "id": "respiratory_rate",
+                "impact": null,
+                "pct": null,
+                "subscore": null,
+                "value": 14.8,
+                "weight": 7.5,
+                "z": null
+              },
+              {
+                "available": false,
+                "baseline": null,
+                "baseline_confidence": "low",
+                "baseline_n": 13,
+                "consistency_deviation_min": null,
+                "consistency_subscore": null,
+                "delta": null,
+                "fallback": false,
+                "id": "blood_oxygen",
+                "impact": null,
+                "pct": null,
+                "subscore": null,
+                "value": 96.5,
+                "weight": 7.5,
+                "z": null
+              }
+            ],
+            "confidence": null,
+            "day": "2026-09-20",
+            "label": null,
+            "label_text": null,
+            "load": null,
+            "negatives": [],
+            "positives": [],
+            "recommendation": null,
+            "score": null,
+            "status": "collecting"
+          }
+        },
+        "variant": "local"
+      },
+      "name": "recovery_collecting_local"
+    }
+  ],
+  "format": "ayuvo-insights-vectors",
+  "function": "ai_summary",
+  "version": 1
+}

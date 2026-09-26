@@ -64,6 +64,19 @@ object AppRoutes {
     /** "Add from prescription": candidates extracted from one Health Record (§13). */
     const val MEDICATION_IMPORT = "medications/import/{$RECORD_ID_ARG}"
 
+    // Insights (docs/insights.md §7): shared destinations opened from Summary cards and Browse.
+    const val INSIGHTS = "insights"
+    const val INSIGHTS_RECOVERY = "insights/recovery"
+    const val INSIGHTS_HEALTH_AGE = "insights/health-age"
+    const val INSIGHTS_DAY_ARG = "day"
+    /** Daily Review, optionally on a given day (`yyyy-MM-dd`, one of the last 7). */
+    const val INSIGHTS_REVIEW = "insights/review?$INSIGHTS_DAY_ARG={$INSIGHTS_DAY_ARG}"
+    const val INSIGHTS_TRENDS = "insights/trends"
+    const val INSIGHTS_PATTERNS = "insights/patterns"
+
+    fun insightsReview(day: java.time.LocalDate? = null): String =
+        if (day == null) "insights/review" else "insights/review?$INSIGHTS_DAY_ARG=$day"
+
     fun browseCategory(categoryId: String): String = "browse/category/$categoryId"
     fun healthType(typeKey: String): String = "health/type/$typeKey"
     fun metric(key: MetricKey): String = "metric/" + URLEncoder.encode(key.storageId, "UTF-8").replace("+", "%20")
@@ -92,6 +105,7 @@ object AppRoutes {
     fun isSharedRoute(route: String?): Boolean = route != null && (
         route.startsWith("metric/") || route.startsWith("health/") ||
             route == MEDICATIONS || route.startsWith("medications/") ||
+            route == INSIGHTS || route.startsWith("insights/") ||
             route.startsWith("workouts/")
         )
 

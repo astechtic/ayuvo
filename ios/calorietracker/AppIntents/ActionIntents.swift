@@ -332,6 +332,51 @@ struct GetExerciseStatsIntent: AppIntent {
     }
 }
 
+// MARK: - Insights
+
+struct GetRecoveryIntent: AppIntent {
+    static let title: LocalizedStringResource = "Get Recovery"
+    static let description = IntentDescription("This morning's Recovery score (0–100) compared with your own baseline. A wellness estimate, not a diagnosis.", categoryName: "Insights")
+    static let authenticationPolicy: IntentAuthenticationPolicy = .requiresLocalDeviceAuthentication
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Int> & ProvidesDialog {
+        let result = try await runAction("insights.recovery.get")
+        guard let score = result.value else { throw ActionError.notFound(result.dialog) }
+        return .result(value: Int(score), dialog: result.intentDialog)
+    }
+}
+
+struct GetHealthAgeIntent: AppIntent {
+    static let title: LocalizedStringResource = "Get Health Age"
+    static let description = IntentDescription("Your Ayuvo Health Age next to your actual age. Ayuvo's own estimate, not a clinical age.", categoryName: "Insights")
+    static let authenticationPolicy: IntentAuthenticationPolicy = .requiresLocalDeviceAuthentication
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Double> & ProvidesDialog {
+        let result = try await runAction("insights.healthAge.get")
+        guard let age = result.value else { throw ActionError.notFound(result.dialog) }
+        return .result(value: age, dialog: result.intentDialog)
+    }
+}
+
+struct GetDailyReviewIntent: AppIntent {
+    static let title: LocalizedStringResource = "Get Daily Review"
+    static let description = IntentDescription("The Day Score for today or yesterday, with what went well and what needs attention.", categoryName: "Insights")
+    static let authenticationPolicy: IntentAuthenticationPolicy = .requiresLocalDeviceAuthentication
+
+    @Parameter(title: "Day", default: .today) var day: ActionReviewDayOption
+
+    static var parameterSummary: some ParameterSummary { Summary("Get the Daily Review for \(\.$day)") }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Int> & ProvidesDialog {
+        let result = try await runAction("insights.dailyReview.get", ["day": raw(day.rawValue)])
+        guard let score = result.value else { throw ActionError.notFound(result.dialog) }
+        return .result(value: Int(score), dialog: result.intentDialog)
+    }
+}
+
 // MARK: - Records & medications
 
 struct SearchHealthRecordsIntent: AppIntent {

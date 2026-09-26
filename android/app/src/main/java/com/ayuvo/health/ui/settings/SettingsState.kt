@@ -14,7 +14,7 @@ import com.ayuvo.health.services.health.HealthConnectAvailability
 import com.ayuvo.health.services.health.HealthSyncStatus
 
 internal enum class HealthConnectPermissionAction {
-    SYNC, ENERGY_GOALS, DAILY_SUMMARY
+    SYNC, ENERGY_GOALS, DAILY_SUMMARY, INSIGHTS_MORNING
 }
 
 internal data class PermissionDialogState(
@@ -65,6 +65,8 @@ internal class SettingsActions(
     val openFavourites: () -> Unit,
     val onNotificationsToggle: (Boolean) -> Unit,
     val onDailySummaryToggle: (Boolean) -> Unit,
+    /** Insights › Morning Recovery notification; asks for background Health reads when turning on. */
+    val onInsightsMorningToggle: (Boolean) -> Unit,
     val onHealthConnectToggle: (Boolean) -> Unit,
     val onHealthEnergyGoalsToggle: (Boolean) -> Unit,
     val onSavePhotosToGalleryChanged: (Boolean) -> Unit,

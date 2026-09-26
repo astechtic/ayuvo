@@ -27,8 +27,10 @@ struct BrowseRouteTests {
     }
 
     @Test func routesAreDistinctHashableValues() {
-        let routes: Set<BrowseRoute> = [.nutrition, .fasting, .body, .activity, .workouts, .exerciseLibrary, .medications, .bodyMeasurements]
-        #expect(routes.count == 8)
+        let routes: Set<BrowseRoute> = [.nutrition, .fasting, .body, .activity, .workouts, .exerciseLibrary, .medications, .bodyMeasurements, .insights]
+        #expect(routes.count == 9)
+        let insights: Set<InsightsRoute> = [.recovery, .healthAge, .trends, .patterns, .review(nil), .review("2026-09-20")]
+        #expect(insights.count == 6)
         #expect(MetricRoute.detail(.app(.calories)) != MetricRoute.detail(.app(.protein)))
         #expect(MetricRoute.detail(.health("steps")) != MetricRoute.favourites)
     }
@@ -61,6 +63,17 @@ struct BrowseRouteTests {
         #expect(navigator.browsePath.count == 1)
         navigator.resetBrowse()
         #expect(navigator.browsePath.isEmpty)
+    }
+
+    @Test func openInsightsLandsOnTheHubOrAScreen() {
+        let navigator = AppNavigator()
+        navigator.openInsights(nil)
+        #expect(navigator.selectedTab == .browse)
+        #expect(navigator.browsePath.count == 1)
+        navigator.openInsights(.recovery)
+        #expect(navigator.browsePath.count == 2)
+        navigator.openInsights(.recovery)
+        #expect(navigator.browsePath.count == 2)
     }
 
     @Test func openNutritionCarriesTheRequest() {

@@ -56,11 +56,12 @@ class NotificationService(private val context: Context) {
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply { description = context.getString(R.string.notif_channel_streak_desc) }
 
+        // The Daily Summary channel now carries the value-free Daily Review notification (docs/insights.md).
         val daily = NotificationChannel(
             CHANNEL_DAILY,
-            context.getString(R.string.notif_channel_daily),
+            context.getString(R.string.notif_channel_daily_review),
             NotificationManager.IMPORTANCE_LOW
-        ).apply { description = context.getString(R.string.notif_channel_daily_desc) }
+        ).apply { description = context.getString(R.string.notif_channel_daily_review_desc) }
 
         val goal = NotificationChannel(
             CHANNEL_WEIGHT_GOAL,
@@ -92,7 +93,13 @@ class NotificationService(private val context: Context) {
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply { description = context.getString(R.string.notif_channel_water_desc) }
 
-        mgr.createNotificationChannels(listOf(streak, daily, goal, weight, bodyFat, appUpdate, water))
+        val insights = NotificationChannel(
+            com.ayuvo.health.insights.InsightsNotifications.CHANNEL_INSIGHTS,
+            context.getString(R.string.notif_channel_insights),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply { description = context.getString(R.string.notif_channel_insights_desc) }
+
+        mgr.createNotificationChannels(listOf(streak, daily, goal, weight, bodyFat, appUpdate, water, insights))
     }
 
     fun canPostNotifications(): Boolean {
@@ -211,10 +218,11 @@ class NotificationService(private val context: Context) {
         text = context.getString(R.string.notif_streak_text)
     )
 
+    /** The Daily Review notification ("Your daily review is ready"); it never carries values. */
     fun scheduleDailySummary(hour: Int, minute: Int) = schedule(
         REQUEST_DAILY, hour, minute, CHANNEL_DAILY,
-        title = context.getString(R.string.notif_summary_title),
-        text = context.getString(R.string.notif_summary_text)
+        title = context.getString(R.string.notif_review_ready_title),
+        text = context.getString(R.string.notif_review_ready_text)
     )
 
     fun scheduleWeightReminder(hour: Int = 8, minute: Int = 0) = schedule(
@@ -373,7 +381,7 @@ class ReminderReceiver : BroadcastReceiver() {
         rearm(context, intent, request)
 
         if (channel == NotificationService.CHANNEL_DAILY) {
-            postDailySummary(context, title, text, request)
+            postDailySummary(context, request)
             return
         }
 
@@ -411,66 +419,23 @@ class ReminderReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun postDailySummary(
-        context: Context,
-        title: String,
-        fallbackText: String,
-        request: Int
-    ) {
+    /**
+     * Daily Review (docs/insights.md §4): "Your daily review is ready", no values, whatever the
+     * alarm's stored extras say (alarms armed by older versions carried the calorie summary text).
+     * The tap opens the review through `ayuvo://action/insights.dailyReview.get`.
+     */
+    private fun postDailySummary(context: Context, request: Int) {
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val dynamicText = runCatching { dailySummaryText(context) }
-                    .onFailure { Log.w(TAG, "Unable to build measured daily summary", it) }
-                    .getOrNull()
-                postNotification(
-                    context = context,
-                    channel = NotificationService.CHANNEL_DAILY,
-                    title = title,
-                    text = dynamicText ?: fallbackText,
-                    request = request
-                )
+                val insightsOn = runCatching {
+                    (context.applicationContext as AyuvoApp).container.prefs.insightsEnabled.first()
+                }.getOrDefault(false)
+                val notif = com.ayuvo.health.insights.InsightsNotifications.dailyReview(context, NotificationService.CHANNEL_DAILY, insightsOn)
+                NotificationManagerCompat.from(context).notifySafely(context, request, notif)
             } finally {
                 pendingResult.finish()
             }
-        }
-    }
-
-    private suspend fun dailySummaryText(context: Context): String? {
-        val app = context.applicationContext as? AyuvoApp ?: return null
-        val container = app.container
-        if (!container.prefs.healthConnectEnabled.first()) return null
-        if (!container.health.hasEnergyRead() || !container.health.hasBackgroundRead()) return null
-
-        val today = LocalDate.now()
-        val energy = container.health.readEnergyForDay(today) ?: return null
-        val profileBmr = container.profileRepository.current()?.bmr?.roundToInt()
-        val burned = DailySummaryPolicy.resolveBurnedCalories(
-            measuredTotalCalories = energy.totalCalories,
-            externalActiveCalories = energy.activeCalories,
-            profileBmrCalories = profileBmr
-        ) ?: return null
-        val eaten = container.foodRepository.entriesForDate(today).first().sumOf { it.calories }
-        val balance = DailySummaryPolicy.balance(eatenCalories = eaten, burnedCalories = burned)
-
-        return when (balance.direction) {
-            CalorieBalanceDirection.DEFICIT -> context.getString(
-                R.string.notif_summary_deficit,
-                balance.eatenCalories,
-                balance.burnedCalories,
-                balance.differenceCalories
-            )
-            CalorieBalanceDirection.SURPLUS -> context.getString(
-                R.string.notif_summary_surplus,
-                balance.eatenCalories,
-                balance.burnedCalories,
-                balance.differenceCalories
-            )
-            CalorieBalanceDirection.BALANCED -> context.getString(
-                R.string.notif_summary_balanced,
-                balance.eatenCalories,
-                balance.burnedCalories
-            )
         }
     }
 

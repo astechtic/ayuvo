@@ -1,0 +1,966 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "category": "none",
+        "day": "2026-09-20",
+        "label": "Rest",
+        "load": 0.0,
+        "mean_28d": 0.0,
+        "minutes": 0.0,
+        "ratio": null,
+        "sessions": 0
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "UTC",
+        "workouts": []
+      },
+      "name": "no_workouts"
+    },
+    {
+      "expected": {
+        "category": "moderate",
+        "day": "2026-09-20",
+        "label": "Moderate",
+        "load": 39.0,
+        "mean_28d": 30.0,
+        "minutes": 39.0,
+        "ratio": 1.3,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "UTC",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1787470200000,
+            "start_ms": 1787468400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787556600000,
+            "start_ms": 1787554800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787643000000,
+            "start_ms": 1787641200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787729400000,
+            "start_ms": 1787727600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787815800000,
+            "start_ms": 1787814000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787902200000,
+            "start_ms": 1787900400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787988600000,
+            "start_ms": 1787986800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788075000000,
+            "start_ms": 1788073200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788161400000,
+            "start_ms": 1788159600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788247800000,
+            "start_ms": 1788246000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788334200000,
+            "start_ms": 1788332400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788420600000,
+            "start_ms": 1788418800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788507000000,
+            "start_ms": 1788505200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788593400000,
+            "start_ms": 1788591600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788679800000,
+            "start_ms": 1788678000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788766200000,
+            "start_ms": 1788764400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788852600000,
+            "start_ms": 1788850800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788939000000,
+            "start_ms": 1788937200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789025400000,
+            "start_ms": 1789023600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789111800000,
+            "start_ms": 1789110000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789198200000,
+            "start_ms": 1789196400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789284600000,
+            "start_ms": 1789282800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789371000000,
+            "start_ms": 1789369200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789457400000,
+            "start_ms": 1789455600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789543800000,
+            "start_ms": 1789542000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789630200000,
+            "start_ms": 1789628400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789716600000,
+            "start_ms": 1789714800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789803000000,
+            "start_ms": 1789801200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789929540000,
+            "start_ms": 1789927200000
+          }
+        ]
+      },
+      "name": "ratio_exactly_1_3_is_moderate"
+    },
+    {
+      "expected": {
+        "category": "moderate",
+        "day": "2026-09-20",
+        "label": "Moderate",
+        "load": 24.0,
+        "mean_28d": 30.0,
+        "minutes": 24.0,
+        "ratio": 0.8,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "UTC",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1787470200000,
+            "start_ms": 1787468400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787556600000,
+            "start_ms": 1787554800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787643000000,
+            "start_ms": 1787641200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787729400000,
+            "start_ms": 1787727600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787815800000,
+            "start_ms": 1787814000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787902200000,
+            "start_ms": 1787900400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787988600000,
+            "start_ms": 1787986800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788075000000,
+            "start_ms": 1788073200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788161400000,
+            "start_ms": 1788159600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788247800000,
+            "start_ms": 1788246000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788334200000,
+            "start_ms": 1788332400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788420600000,
+            "start_ms": 1788418800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788507000000,
+            "start_ms": 1788505200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788593400000,
+            "start_ms": 1788591600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788679800000,
+            "start_ms": 1788678000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788766200000,
+            "start_ms": 1788764400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788852600000,
+            "start_ms": 1788850800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788939000000,
+            "start_ms": 1788937200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789025400000,
+            "start_ms": 1789023600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789111800000,
+            "start_ms": 1789110000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789198200000,
+            "start_ms": 1789196400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789284600000,
+            "start_ms": 1789282800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789371000000,
+            "start_ms": 1789369200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789457400000,
+            "start_ms": 1789455600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789543800000,
+            "start_ms": 1789542000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789630200000,
+            "start_ms": 1789628400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789716600000,
+            "start_ms": 1789714800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789803000000,
+            "start_ms": 1789801200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789928640000,
+            "start_ms": 1789927200000
+          }
+        ]
+      },
+      "name": "ratio_exactly_0_8_is_moderate"
+    },
+    {
+      "expected": {
+        "category": "light",
+        "day": "2026-09-20",
+        "label": "Light",
+        "load": 15.0,
+        "mean_28d": 30.0,
+        "minutes": 15.0,
+        "ratio": 0.5,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "UTC",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1787470200000,
+            "start_ms": 1787468400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787556600000,
+            "start_ms": 1787554800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787643000000,
+            "start_ms": 1787641200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787729400000,
+            "start_ms": 1787727600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787815800000,
+            "start_ms": 1787814000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787902200000,
+            "start_ms": 1787900400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787988600000,
+            "start_ms": 1787986800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788075000000,
+            "start_ms": 1788073200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788161400000,
+            "start_ms": 1788159600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788247800000,
+            "start_ms": 1788246000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788334200000,
+            "start_ms": 1788332400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788420600000,
+            "start_ms": 1788418800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788507000000,
+            "start_ms": 1788505200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788593400000,
+            "start_ms": 1788591600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788679800000,
+            "start_ms": 1788678000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788766200000,
+            "start_ms": 1788764400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788852600000,
+            "start_ms": 1788850800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788939000000,
+            "start_ms": 1788937200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789025400000,
+            "start_ms": 1789023600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789111800000,
+            "start_ms": 1789110000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789198200000,
+            "start_ms": 1789196400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789284600000,
+            "start_ms": 1789282800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789371000000,
+            "start_ms": 1789369200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789457400000,
+            "start_ms": 1789455600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789543800000,
+            "start_ms": 1789542000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789630200000,
+            "start_ms": 1789628400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789716600000,
+            "start_ms": 1789714800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789803000000,
+            "start_ms": 1789801200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789928100000,
+            "start_ms": 1789927200000
+          }
+        ]
+      },
+      "name": "light"
+    },
+    {
+      "expected": {
+        "category": "high",
+        "day": "2026-09-20",
+        "label": "High",
+        "load": 72.0,
+        "mean_28d": 30.0,
+        "minutes": 45.0,
+        "ratio": 2.4,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "UTC",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1787470200000,
+            "start_ms": 1787468400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787556600000,
+            "start_ms": 1787554800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787643000000,
+            "start_ms": 1787641200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787729400000,
+            "start_ms": 1787727600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787815800000,
+            "start_ms": 1787814000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787902200000,
+            "start_ms": 1787900400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787988600000,
+            "start_ms": 1787986800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788075000000,
+            "start_ms": 1788073200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788161400000,
+            "start_ms": 1788159600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788247800000,
+            "start_ms": 1788246000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788334200000,
+            "start_ms": 1788332400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788420600000,
+            "start_ms": 1788418800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788507000000,
+            "start_ms": 1788505200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788593400000,
+            "start_ms": 1788591600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788679800000,
+            "start_ms": 1788678000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788766200000,
+            "start_ms": 1788764400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788852600000,
+            "start_ms": 1788850800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788939000000,
+            "start_ms": 1788937200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789025400000,
+            "start_ms": 1789023600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789111800000,
+            "start_ms": 1789110000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789198200000,
+            "start_ms": 1789196400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789284600000,
+            "start_ms": 1789282800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789371000000,
+            "start_ms": 1789369200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789457400000,
+            "start_ms": 1789455600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789543800000,
+            "start_ms": 1789542000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789630200000,
+            "start_ms": 1789628400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789716600000,
+            "start_ms": 1789714800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789803000000,
+            "start_ms": 1789801200000
+          },
+          {
+            "effort": 8,
+            "end_ms": 1789929900000,
+            "start_ms": 1789927200000
+          }
+        ]
+      },
+      "name": "high_ratio_above_2"
+    },
+    {
+      "expected": {
+        "category": "high",
+        "day": "2026-09-20",
+        "label": "High",
+        "load": 20.0,
+        "mean_28d": 0.0,
+        "minutes": 20.0,
+        "ratio": null,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "Europe/London",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1789892400000,
+            "start_ms": 1789891200000
+          }
+        ]
+      },
+      "name": "first_workout_after_rest_month",
+      "notes": "28-day mean is 0: ratio null, category high"
+    },
+    {
+      "expected": {
+        "category": "high",
+        "day": "2026-09-20",
+        "label": "High",
+        "load": 157.5,
+        "mean_28d": 10.7,
+        "minutes": 135.0,
+        "ratio": 14.7,
+        "sessions": 3
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "Europe/London",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1787470200000,
+            "start_ms": 1787468400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787556600000,
+            "start_ms": 1787554800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787643000000,
+            "start_ms": 1787641200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787729400000,
+            "start_ms": 1787727600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787815800000,
+            "start_ms": 1787814000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787902200000,
+            "start_ms": 1787900400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787988600000,
+            "start_ms": 1787986800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788075000000,
+            "start_ms": 1788073200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788161400000,
+            "start_ms": 1788159600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788247800000,
+            "start_ms": 1788246000000
+          },
+          {
+            "effort": 10,
+            "end_ms": 1789923600000,
+            "start_ms": 1789920000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789923000000,
+            "start_ms": 1789920600000
+          },
+          {
+            "effort": 1,
+            "end_ms": 1789928100000,
+            "start_ms": 1789925400000
+          },
+          {
+            "effort": 1,
+            "end_ms": 1789932600000,
+            "start_ms": 1789930800000
+          }
+        ]
+      },
+      "name": "overlap_merged_effort_clamped",
+      "notes": "watch workout and Ayuvo strength session overlap: one 60 min session at intensity 2; a separate effort-1 session clamps to 0.5"
+    },
+    {
+      "expected": {
+        "category": "high",
+        "day": "2026-09-20",
+        "label": "High",
+        "load": 30.0,
+        "mean_28d": 8.6,
+        "minutes": 30.0,
+        "ratio": 3.5,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-09-20",
+        "time_zone": "Asia/Kolkata",
+        "workouts": [
+          {
+            "effort": null,
+            "end_ms": 1789844400000,
+            "start_ms": 1789840800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789866000000,
+            "start_ms": 1789864200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787449800000,
+            "start_ms": 1787448600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787709000000,
+            "start_ms": 1787707800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1787968200000,
+            "start_ms": 1787967000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788227400000,
+            "start_ms": 1788226200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788486600000,
+            "start_ms": 1788485400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1788745800000,
+            "start_ms": 1788744600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789005000000,
+            "start_ms": 1789003800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789264200000,
+            "start_ms": 1789263000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1789523400000,
+            "start_ms": 1789522200000
+          }
+        ]
+      },
+      "name": "kolkata_late_session_counts_on_start_day",
+      "notes": "the session crossing midnight belongs to the previous day"
+    },
+    {
+      "expected": {
+        "category": "high",
+        "day": "2026-03-08",
+        "label": "High",
+        "load": 90.0,
+        "mean_28d": 22.5,
+        "minutes": 90.0,
+        "ratio": 4.0,
+        "sessions": 1
+      },
+      "input": {
+        "day": "2026-03-08",
+        "time_zone": "America/New_York",
+        "workouts": [
+          {
+            "effort": 5,
+            "end_ms": 1772956800000,
+            "start_ms": 1772951400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1770572700000,
+            "start_ms": 1770570000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1770745500000,
+            "start_ms": 1770742800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1770918300000,
+            "start_ms": 1770915600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1771091100000,
+            "start_ms": 1771088400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1771263900000,
+            "start_ms": 1771261200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1771436700000,
+            "start_ms": 1771434000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1771609500000,
+            "start_ms": 1771606800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1771782300000,
+            "start_ms": 1771779600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1771955100000,
+            "start_ms": 1771952400000
+          },
+          {
+            "effort": null,
+            "end_ms": 1772127900000,
+            "start_ms": 1772125200000
+          },
+          {
+            "effort": null,
+            "end_ms": 1772300700000,
+            "start_ms": 1772298000000
+          },
+          {
+            "effort": null,
+            "end_ms": 1772473500000,
+            "start_ms": 1772470800000
+          },
+          {
+            "effort": null,
+            "end_ms": 1772646300000,
+            "start_ms": 1772643600000
+          },
+          {
+            "effort": null,
+            "end_ms": 1772819100000,
+            "start_ms": 1772816400000
+          }
+        ]
+      },
+      "name": "new_york_dst_start",
+      "notes": "spring-forward night: minutes come from instants, not wall clock"
+    }
+  ],
+  "format": "ayuvo-insights-vectors",
+  "function": "training_load",
+  "version": 1
+}

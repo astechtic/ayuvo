@@ -128,6 +128,9 @@ interface ActionEnvironment {
     suspend fun medicationNames(): Map<String, String>
     suspend fun adherence(medicationId: String?): AdherenceSummary?
 
+    // Insights (docs/insights.md): recomputed from the stores; null when Insights is switched off
+    suspend fun insights(): com.ayuvo.health.insights.InsightsSnapshot?
+
     /** Called after a successful write so widgets, reminders and shortcuts refresh. */
     suspend fun afterWrite(actionId: String) {}
 }

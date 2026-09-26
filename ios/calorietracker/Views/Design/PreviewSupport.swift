@@ -39,6 +39,7 @@ private struct AyuvoPreviewEnvironment: ViewModifier {
             .environment(healthDataStore)
             .environment(recordsStore)
             .environment(medicationStore)
+            .environment(InsightsStore.shared)
     }
 }
 

@@ -44,6 +44,12 @@ object ActionResultText {
             "workout.today.get", "workout.finish" -> context.getString(R.string.action_result_workout, long("sets_done") ?: 0L, n(num("volume_kg"), 0))
             "medication.dose.mark", "medications.next.get" -> context.getString(R.string.action_result_dose, f["medication"].toString(), f["status"].toString())
             "goals.update" -> context.getString(R.string.action_result_goal, f["goal"].toString(), long("value") ?: 0L)
+            "insights.recovery.get" -> long("score")?.let { context.getString(R.string.action_result_recovery, it.toInt(), f["label"].toString()) }
+                ?: context.getString(R.string.action_result_recovery_pending)
+            "insights.healthAge.get" -> num("health_age")?.let { context.getString(R.string.action_result_health_age, n(it)) }
+                ?: context.getString(R.string.action_result_health_age_pending)
+            "insights.dailyReview.get" -> long("day_score")?.let { context.getString(R.string.action_result_review, it.toInt()) }
+                ?: context.getString(R.string.action_result_review_pending)
             else -> when {
                 result.items.isNotEmpty() || spec.outputKind == "list" -> context.getString(R.string.action_result_items, spec.title, result.items.size)
                 else -> context.getString(R.string.action_result_done, spec.title)

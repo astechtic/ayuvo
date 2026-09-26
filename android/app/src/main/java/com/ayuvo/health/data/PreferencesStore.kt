@@ -233,6 +233,21 @@ class PreferencesStore(
     val dailySummaryMinute: Flow<Int> = ds.data.map { it[Keys.DAILY_MINUTE] ?: 0 }
     suspend fun setDailySummaryMinute(v: Int) { ds.edit { it[Keys.DAILY_MINUTE] = v } }
 
+    // -- Insights (docs/insights.md) -------------------------------------------------------------
+    // Switches only: scores are recomputed from the stores and never written here.
+
+    /** Recovery, Health Age and Daily Review cards and screens. */
+    val insightsEnabled: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_ENABLED] ?: true }
+    suspend fun setInsightsEnabled(v: Boolean) { ds.edit { it[Keys.INSIGHTS_ENABLED] = v } }
+
+    /** Opt-in "Your recovery is ready" morning notification (no values). */
+    val insightsMorningNotification: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_MORNING_NOTIFICATION] ?: false }
+    suspend fun setInsightsMorningNotification(v: Boolean) { ds.edit { it[Keys.INSIGHTS_MORNING_NOTIFICATION] = v } }
+
+    /** Local day (yyyy-MM-dd) the morning notification was last posted, so it posts once per day. */
+    val insightsMorningNotifiedDay: Flow<String?> = ds.data.map { it[Keys.INSIGHTS_MORNING_NOTIFIED_DAY] }
+    suspend fun setInsightsMorningNotifiedDay(v: String) { ds.edit { it[Keys.INSIGHTS_MORNING_NOTIFIED_DAY] = v } }
+
     val weightReminderEnabled: Flow<Boolean> = ds.data.map { it[Keys.WEIGHT_REMINDER_ENABLED] ?: true }
     suspend fun setWeightReminderEnabled(v: Boolean) { ds.edit { it[Keys.WEIGHT_REMINDER_ENABLED] = v } }
 
@@ -2097,6 +2112,9 @@ class PreferencesStore(
         val DAILY_ENABLED = booleanPreferencesKey("dailySummaryEnabled")
         val DAILY_HOUR = intPreferencesKey("dailySummaryHour")
         val DAILY_MINUTE = intPreferencesKey("dailySummaryMinute")
+        val INSIGHTS_ENABLED = booleanPreferencesKey("insightsEnabled")
+        val INSIGHTS_MORNING_NOTIFICATION = booleanPreferencesKey("insightsMorningNotification")
+        val INSIGHTS_MORNING_NOTIFIED_DAY = stringPreferencesKey("insightsMorningNotifiedDay")
         val WEIGHT_REMINDER_ENABLED = booleanPreferencesKey("weightReminderEnabled")
         val BODY_FAT_REMINDER_ENABLED = booleanPreferencesKey("bodyFatReminderEnabled")
         val GOAL_REACHED_NOTIFICATIONS_ENABLED = booleanPreferencesKey("goalReachedNotificationsEnabled")

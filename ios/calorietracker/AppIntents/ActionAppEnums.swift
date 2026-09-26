@@ -43,7 +43,7 @@ enum ActionNutrientOption: String, AppEnum {
 }
 
 enum ActionSectionOption: String, AppEnum {
-    case summary, browse, health, nutrition, water, fasting, body, activity, workouts, records, medications, coach, settings
+    case summary, browse, health, nutrition, water, fasting, body, activity, workouts, insights, records, medications, coach, settings
 
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "Section"
     static let caseDisplayRepresentations: [ActionSectionOption: DisplayRepresentation] = [
@@ -56,11 +56,19 @@ enum ActionSectionOption: String, AppEnum {
         .body: DisplayRepresentation(title: "Body Measurements", image: .init(systemName: "figure")),
         .activity: DisplayRepresentation(title: "Activity", image: .init(systemName: "flame.fill")),
         .workouts: DisplayRepresentation(title: "Workouts", image: .init(systemName: "dumbbell.fill")),
+        .insights: DisplayRepresentation(title: "Insights", image: .init(systemName: "gauge.with.dots.needle.67percent")),
         .records: DisplayRepresentation(title: "Health Records", image: .init(systemName: "doc.text.fill")),
         .medications: DisplayRepresentation(title: "Medications", image: .init(systemName: "pills.fill")),
         .coach: DisplayRepresentation(title: "Coach", image: .init(systemName: "sparkles")),
         .settings: DisplayRepresentation(title: "Settings", image: .init(systemName: "gearshape.fill")),
     ]
+}
+
+enum ActionReviewDayOption: String, AppEnum {
+    case today, yesterday
+
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Day"
+    static let caseDisplayRepresentations: [ActionReviewDayOption: DisplayRepresentation] = [.today: "Today", .yesterday: "Yesterday"]
 }
 
 enum ActionVolumeUnitOption: String, AppEnum {

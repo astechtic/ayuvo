@@ -125,6 +125,10 @@ extension AppNavigator {
         case "workouts": openWorkouts()
         case "workout_log": openWorkoutLogging()
         case "medications": openMedications()
+        case "insights": openInsights(nil)
+        case "insights.recovery": openInsights(.recovery)
+        case "insights.health_age": openInsights(.healthAge)
+        case "insights.review": openInsights(.review(nil))
         case "records": selectedTab = .records
         case "coach": selectedTab = .coach
         case "settings": openSettings()

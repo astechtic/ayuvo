@@ -35,10 +35,17 @@ extension CoachTools {
         ActionCatalog.shared.actions.filter { $0.coachMode == "propose" }.map(\.id)
     }
 
-    /// Local diary tools follow the food source (no extra consent); proposals also need a UI to confirm.
+    /// Local diary tools follow the food source (no extra consent); tools that read Health data (Insights) also
+    /// need Coach's Health access; proposals also need a UI to confirm.
     var actionToolNames: [String] {
         guard availableToolNames.contains("get_data_summary") else { return [] }
-        return Self.actionReadToolNames + (actionProposals == nil ? [] : [Self.proposeToolName])
+        let reads = Self.actionReadToolNames.filter(canUseReadTool)
+        return reads + (actionProposals == nil ? [] : [Self.proposeToolName])
+    }
+
+    func canUseReadTool(_ name: String) -> Bool {
+        guard Self.actionFor(tool: name)?.permissions.contains("health_read") == true else { return true }
+        return healthAccessEnabled && health != nil
     }
 
     /// Everything advertised to the provider this turn.
@@ -139,6 +146,9 @@ extension CoachTools {
             }
         }
         guard let action = Self.actionFor(tool: name) else { return ActionJSON.error(.invalid(code: "unknown_action", param: nil)) }
+        guard canUseReadTool(name) else {
+            return ActionJSON.error(.permissionRequired("Health data access is disabled."), actionID: action.id)
+        }
         do {
             return try await executor.run(action.id, ActionRawValue.params(arguments), source: .coach).jsonText
         } catch let error as ActionError {

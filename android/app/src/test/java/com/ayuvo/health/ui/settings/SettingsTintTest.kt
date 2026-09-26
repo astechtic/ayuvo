@@ -20,6 +20,7 @@ class SettingsTintTest {
             SettingsPage.FASTING to "#00C7BE",
             SettingsPage.ACTIVITY to "#FF9500",
             SettingsPage.MEDICATIONS to "#32ADE6",
+            SettingsPage.INSIGHTS to "#E08A00",
             SettingsPage.NOTIFICATIONS to "#FF3B30",
             SettingsPage.HEALTH_SYNC to "#FF2D55",
             SettingsPage.HEALTH_RECORDS to "#5856D6",

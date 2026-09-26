@@ -6,10 +6,10 @@ import UIKit
 @Suite(.serialized)
 struct AIRequestConfigurationTests {
     @Test func settingsPanesFollowThePlanGroups() {
-        #expect(SettingsPane.allCases.count == 20)
-        #expect(Set(SettingsPane.allCases.map(\.rawValue)).count == 20)
+        #expect(SettingsPane.allCases.count == 21)
+        #expect(Set(SettingsPane.allCases.map(\.rawValue)).count == 21)
         #expect(SettingsGroup.healthProfile.panes == [.personalInfo, .goalsNutrition, .units])
-        #expect(SettingsGroup.tracking.panes == [.nutritionTracking, .hydration, .fasting, .activity, .medications])
+        #expect(SettingsGroup.tracking.panes == [.nutritionTracking, .hydration, .fasting, .activity, .medications, .insights])
         #expect(SettingsGroup.notifications.panes == [.notifications])
         #expect(SettingsGroup.dataPrivacy.panes == [.healthData, .healthRecords, .dataManagement, .deleteData])
         #expect(SettingsGroup.aiSpeech.panes == [.aiProviders, .speechToText, .customInstructions])

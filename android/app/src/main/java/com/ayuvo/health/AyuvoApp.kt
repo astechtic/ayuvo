@@ -96,6 +96,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -130,6 +131,8 @@ class AyuvoApp : Application() {
         MedicationNotifications.createChannel(this)
         container.resumeRecordsProcessing()
         WidgetRefreshScheduler.onAppStarted(this)
+        // Morning Recovery refresh (docs/insights.md §6): acts only 05:00–12:00 with background reads.
+        runCatching { com.ayuvo.health.insights.InsightsWorker.onAppStarted(this) }
         container.widgetSnapshotWriter.observe().launchIn(appScope)
         container.widgetDashboardWriter.observe().launchIn(appScope)
         // Warm exercise catalog off the main thread before the first Workouts tab open.
@@ -552,6 +555,62 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             scope = scope
         )
     }
+    // -- Insights (docs/insights.md): Recovery, Health Age, Daily Review, Patterns ----------------
+    // Recomputed from the stores on demand; nothing is persisted and no health value reaches prefs.
+    val insightsConfig: com.ayuvo.health.insights.InsightsConfig by lazy {
+        com.ayuvo.health.insights.InsightsConfig.parse(
+            app.assets.open(com.ayuvo.health.insights.InsightsConfig.ASSET_PATH).bufferedReader().use { it.readText() }
+        ).also { com.ayuvo.health.insights.InsightsConfig.active = it }
+    }
+    val insightsPrompts: com.ayuvo.health.insights.InsightsAi.Prompts by lazy {
+        com.ayuvo.health.insights.InsightsAi.parsePrompts(
+            app.assets.open(com.ayuvo.health.insights.InsightsConfig.PROMPT_ASSET_PATH).bufferedReader().use { it.readText() }
+        )
+    }
+
+    /** The goals and switches Insights reads, as one flow (also a recompute trigger). */
+    val insightsSettings: kotlinx.coroutines.flow.Flow<com.ayuvo.health.insights.InsightsSettings> by lazy {
+        kotlinx.coroutines.flow.combine(
+            kotlinx.coroutines.flow.combine(prefs.dailyStepGoal, prefs.waterDailyGoalMl, prefs.waterTrackingEnabled) { a, b, c -> Triple(a, b, c) },
+            kotlinx.coroutines.flow.combine(prefs.fastingTrackingEnabled, prefs.fastingDefaultGoalMinutes, prefs.optionalNutrientGoals) { a, b, c -> Triple(a, b, c) }
+        ) { a, b -> com.ayuvo.health.insights.InsightsSettings(a.first, a.second, a.third, b.first, b.second, b.third) }
+    }
+
+    val insightsRepository: com.ayuvo.health.insights.InsightsRepository by lazy {
+        com.ayuvo.health.insights.InsightsRepository(
+            config = { insightsConfig },
+            source = com.ayuvo.health.insights.InsightsDataSource { healthRepository },
+            healthRevision = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.revision.value else -1L },
+            hubEnabled = { prefs.healthHubEnabled.first() && appContext.getDatabasePath(HealthDatabase.NAME).exists() },
+            appSnapshot = { appMetrics.snapshot() },
+            profile = { profileRepository.current() },
+            settings = { insightsSettings.first() }
+        )
+    }
+
+    /** Store revisions and inputs that change the Insights result (for [InsightsRepository.snapshots]). */
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun insightsTriggers(): List<kotlinx.coroutines.flow.Flow<Any?>> = listOf(
+        // Never opens the mirror just to watch it: the revision is only observed once the hub is on.
+        prefs.healthHubEnabled.flatMapLatest { on ->
+            if (on && appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.revision else kotlinx.coroutines.flow.flowOf(-1L)
+        },
+        appMetrics.revision,
+        profileRepository.profile,
+        insightsSettings,
+        prefs.healthHubEnabled
+    )
+
+    val insightsExplainer: com.ayuvo.health.insights.InsightsExplainer by lazy {
+        com.ayuvo.health.insights.InsightsExplainer(
+            route = { foodAnalysis.insightsRoute() },
+            call = { route, prompt, tokens -> foodAnalysis.callInsightsAi(route, prompt, tokens) },
+            config = { insightsConfig },
+            prompts = { insightsPrompts },
+            providerName = { appContext.getString(it.displayNameRes) }
+        )
+    }
+
     // -- Actions (docs/actions.md): deep links, launcher shortcuts, App Actions and Coach ---------
     val actionCatalog: com.ayuvo.health.actions.ActionCatalog by lazy {
         com.ayuvo.health.actions.ActionCatalog.parse(

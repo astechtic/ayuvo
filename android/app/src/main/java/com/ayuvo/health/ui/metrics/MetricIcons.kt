@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Grass
 import androidx.compose.material.icons.filled.HealthAndSafety
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Hearing
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Loop
@@ -51,6 +52,7 @@ object MetricIcons {
             "Filled.FitnessCenter" to Icons.Filled.FitnessCenter,
             "Filled.Grass" to Icons.Filled.Grass,
             "Filled.HealthAndSafety" to Icons.Filled.HealthAndSafety,
+            "Filled.Insights" to Icons.Filled.Insights,
             "Filled.Hearing" to Icons.Filled.Hearing,
             "Filled.LocalFireDepartment" to Icons.Filled.LocalFireDepartment,
             "Filled.Loop" to Icons.Filled.Loop,

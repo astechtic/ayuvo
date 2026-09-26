@@ -1,0 +1,104 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "fallback": false,
+        "n": 2,
+        "value": 58.0
+      },
+      "input": {
+        "fallback_value": 52.0,
+        "night": {
+          "end_ms": 1789884000000,
+          "start_ms": 1789855200000
+        },
+        "samples": [
+          {
+            "t_ms": 1789851600000,
+            "value": 30.0
+          },
+          {
+            "t_ms": 1789858800000,
+            "value": 55.0
+          },
+          {
+            "t_ms": 1789862400000,
+            "value": 61.0
+          },
+          {
+            "t_ms": 1789884060000,
+            "value": 20.0
+          }
+        ]
+      },
+      "name": "samples_inside_night"
+    },
+    {
+      "expected": {
+        "fallback": false,
+        "n": 2,
+        "value": 53.5
+      },
+      "input": {
+        "fallback_value": null,
+        "night": {
+          "end_ms": 1789884000000,
+          "start_ms": 1789855200000
+        },
+        "samples": [
+          {
+            "t_ms": 1789855200000,
+            "value": 50.0
+          },
+          {
+            "t_ms": 1789884000000,
+            "value": 57.0
+          }
+        ]
+      },
+      "name": "boundaries_inclusive"
+    },
+    {
+      "expected": {
+        "fallback": true,
+        "n": 0,
+        "value": 48.26
+      },
+      "input": {
+        "fallback_value": 48.26,
+        "night": {
+          "end_ms": 1789884000000,
+          "start_ms": 1789855200000
+        },
+        "samples": [
+          {
+            "t_ms": 1789887600000,
+            "value": 70.0
+          }
+        ]
+      },
+      "name": "no_sample_inside_uses_fallback"
+    },
+    {
+      "expected": {
+        "fallback": true,
+        "n": 0,
+        "value": null
+      },
+      "input": {
+        "fallback_value": null,
+        "night": null,
+        "samples": [
+          {
+            "t_ms": 1789855200000,
+            "value": 50.0
+          }
+        ]
+      },
+      "name": "no_night_no_fallback"
+    }
+  ],
+  "format": "ayuvo-insights-vectors",
+  "function": "overnight_value",
+  "version": 1
+}

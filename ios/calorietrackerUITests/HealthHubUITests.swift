@@ -121,8 +121,17 @@ final class HealthHubUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["Favourites"].firstMatch.waitForExistence(timeout: 10))
         // The fixture import (33k rows) runs at launch; the Steps tile appears once it lands.
+        // The Insights cards sit above Favourites, so the Steps tile can start below the fold.
         let stepsTile = app.staticTexts["Steps"].firstMatch
-        XCTAssertTrue(stepsTile.waitForExistence(timeout: 120), "Summary should show the Steps favourite after the fixture import")
+        let deadline = Date().addingTimeInterval(120)
+        var swipes = 0
+        while !stepsTile.waitForExistence(timeout: 5), Date() < deadline {
+            if swipes < 2 {
+                app.swipeUp()
+                swipes += 1
+            }
+        }
+        XCTAssertTrue(stepsTile.exists, "Summary should show the Steps favourite after the fixture import")
         attach(app, "10 Summary favourites")
 
         app.tabBars.buttons["Browse"].tap()

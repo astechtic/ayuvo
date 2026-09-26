@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// The 17 Browse domains, in catalog order (docs/ui-structure.md §3). Raw values are catalog ids.
+/// The 18 Browse domains, in catalog order (docs/ui-structure.md §3). Raw values are catalog ids.
 enum BrowseCategory: String, CaseIterable, Identifiable, Hashable {
-    case nutrition, hydration, fasting, body, activity, heart, sleep, vitals, respiratory,
+    case insights, nutrition, hydration, fasting, body, activity, heart, sleep, vitals, respiratory,
          cycle, mindfulness, mobility, hearing, symptoms, medications, records, other
 
     var id: String { rawValue }

@@ -481,6 +481,7 @@ struct SettingsPaneView: View {
         case .fasting: fastingPane
         case .activity: activityPane
         case .medications: medicationsPane
+        case .insights: insightsPane
         case .notifications: EmptyView() // the hub pushes NotificationSettingsView
         case .healthData: healthSyncPane
         case .healthRecords: healthRecordsPane

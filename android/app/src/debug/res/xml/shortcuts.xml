@@ -209,6 +209,14 @@
     </shortcut>
     <shortcut
         android:enabled="false"
+        android:shortcutId="feature_insights"
+        android:shortcutShortLabel="@string/feature_insights">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding android:key="feature" android:value="insights" />
+        </capability-binding>
+    </shortcut>
+    <shortcut
+        android:enabled="false"
         android:shortcutId="feature_records"
         android:shortcutShortLabel="@string/feature_records">
         <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">

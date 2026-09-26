@@ -173,6 +173,7 @@ internal fun SettingsPageContent(ctx: SettingsPageContext, page: SettingsPage) {
         SettingsPage.HYDRATION -> HydrationPage(ctx)
         SettingsPage.FASTING -> FastingTrackingPage(ctx)
         SettingsPage.ACTIVITY -> ActivityPage(ctx)
+        SettingsPage.INSIGHTS -> InsightsSettingsPage(ctx)
         SettingsPage.MEDICATIONS -> MedicationsSettingsPage(ctx)
         SettingsPage.NOTIFICATIONS -> NotificationsPage(ctx)
         SettingsPage.HEALTH_SYNC -> HealthSyncPage(ctx)
