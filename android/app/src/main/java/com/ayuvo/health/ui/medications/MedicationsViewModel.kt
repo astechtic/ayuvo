@@ -44,7 +44,9 @@ data class MedicationsUiState(
     /** The "All medicines" list for the current chip + search. */
     val medications: List<Medication> = emptyList(),
     val filter: MedicationFilter = MedicationFilter(status = MedicationStatus.ACTIVE),
-    val counts: Map<MedicationStatus, Int> = emptyMap()
+    val counts: Map<MedicationStatus, Int> = emptyMap(),
+    /** Medications that carry supplement nutrients (the "Supplement" badge, §21). */
+    val supplementIds: Set<String> = emptySet()
 ) {
     val totalMedications: Int get() = counts.values.sum()
     /** Reminder banners only matter while something is scheduled. */
@@ -92,7 +94,8 @@ class MedicationsViewModel(private val container: AppContainer) : ViewModel() {
         val timeline = runCatching { store.today(now, zone) }.getOrNull()
         val list = runCatching { store.list(f) }.getOrDefault(emptyList())
         val counts = runCatching { store.countByStatus() }.getOrDefault(emptyMap())
-        _ui.update { it.copy(loading = false, timeline = timeline, medications = list, filter = f, counts = counts) }
+        val supplements = runCatching { store.allNutrients().mapTo(HashSet()) { it.medicationId } }.getOrDefault(emptySet())
+        _ui.update { it.copy(loading = false, timeline = timeline, medications = list, filter = f, counts = counts, supplementIds = supplements) }
     }
 
     fun setStatusFilter(status: MedicationStatus?) {

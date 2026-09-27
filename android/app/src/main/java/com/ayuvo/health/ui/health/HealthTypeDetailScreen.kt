@@ -79,6 +79,13 @@ import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
 import com.ayuvo.health.ui.metrics.MetricChartSupport
+import com.ayuvo.health.ui.metrics.AppMetricDestinations
+import com.ayuvo.health.ui.metrics.NutrientAboutGroup
+import com.ayuvo.health.ui.metrics.NutrientDayTargetLine
+import com.ayuvo.health.ui.metrics.NutrientLearnMoreGroup
+import com.ayuvo.health.ui.metrics.NutrientReferenceSections
+import com.ayuvo.health.ui.metrics.nutrientChartReferenceLines
+import com.ayuvo.health.ui.charts.ChartReferenceLine
 import com.ayuvo.health.ui.metrics.MetricDetailScaffold
 import com.ayuvo.health.ui.metrics.MetricHeadlineUi
 import androidx.compose.ui.platform.testTag
@@ -97,9 +104,15 @@ import java.util.Locale
  * (keyset pages) and Data Sources & Access.
  */
 @Composable
-fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () -> Unit) {
+fun HealthTypeDetailScreen(
+    container: AppContainer,
+    typeKey: String,
+    onBack: () -> Unit,
+    destinations: AppMetricDestinations = AppMetricDestinations()
+) {
     val vm: HealthTypeDetailViewModel = viewModel(key = "health-detail-$typeKey", factory = HealthTypeDetailViewModel.Factory(container, typeKey))
     val ui by vm.ui.collectAsState()
+    val goal by vm.goal.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val name = HealthCategoryStyle.typeName(context, typeKey, ui.displayNameHint)
@@ -137,6 +150,13 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
     // Selection is cleared by a new range, anchor or data set (docs/charts.md "Selection").
     var selected by remember(ui.range, ui.anchor, ui.points, ui.sleepRange) { mutableStateOf<Int?>(null) }
     val selectedHeadline = selected?.let { selectedHeadline(ui, it, zone, is24) }
+    // Health nutrition types (docs/nutrients.md §5a): the nutrient chart's rules, Day line, About and guide.
+    val nutrientKey = goal.nutrientKey
+    val numberOf: (Double?) -> String = { v -> HealthValueFormatter.format(typeKey, v, ui.unitPrefs).number }
+    val displayUnit = HealthValueFormatter.format(typeKey, 1.0, ui.unitPrefs).unit.ifEmpty { ui.descriptor.unit }
+    val referenceLines = nutrientChartReferenceLines(goal.lines, ui.range.metricRange, tint) { numberOf(it) }
+    val nutrientName = nutrientKey?.let { NutrientReferenceSections.name(context, it) }
+    val dayTotal = ui.points.filter { !it.isEmpty }.takeIf { it.isNotEmpty() }?.sumOf { it.sum ?: 0.0 }
     MetricDetailScaffold(
         title = name,
         onBack = onBack,
@@ -155,17 +175,22 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
         stats = ui.highlights.map { (res, value) -> stringResource(res) to value },
         showEmpty = !ui.loading && !ui.hasChartData,
         chart = {
-            DetailChart(ui, tint, name, zone, is24, selected, { selected = it }) { day -> vm.drillTo(day) }
+            DetailChart(ui, tint, name, zone, is24, selected, { selected = it }, referenceLines, goal.goal) { day -> vm.drillTo(day) }
         },
-        chartFooter = ui.historyLimitedBeforeMs?.let { floor ->
+        chartFooter = if (ui.historyLimitedBeforeMs != null || (nutrientKey != null && ui.range == HealthChartRange.DAY)) {
             {
-                Text(
-                    stringResource(R.string.health_hub_subtitle_limited, formatDate(floor)),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AyuvoColors.secondaryLabel()
-                )
+                if (nutrientKey != null && ui.range == HealthChartRange.DAY) {
+                    NutrientDayTargetLine(dayTotal, goal.lines, ui.anchor, displayUnit) { numberOf(it) }
+                }
+                ui.historyLimitedBeforeMs?.let { floor ->
+                    Text(
+                        stringResource(R.string.health_hub_subtitle_limited, formatDate(floor)),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AyuvoColors.secondaryLabel()
+                    )
+                }
             }
-        },
+        } else null,
         options = {
             if (ui.type != null) {
                 row {
@@ -186,6 +211,36 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
         },
         about = null,
         extraSections = {
+            if (nutrientKey != null && nutrientName != null) {
+                // Health Connect values carry no Ayuvo supplement doses (docs/nutrients.md §6), so there is
+                // no Food vs Supplements split; the app's own chart (food + supplements) is one tap away.
+                item(key = "nutrient-source") {
+                    val appChart = goal.nutrientMetric
+                    if (appChart != null) {
+                        InsetGroup(
+                            modifier = Modifier.padding(top = 12.dp).testTag("nutrient.healthSource"),
+                            footer = stringResource(R.string.nutrients_health_source_note),
+                            dividerInset = 16.dp
+                        ) {
+                            row {
+                                GroupRow(
+                                    title = stringResource(R.string.nutrients_open_app_chart, nutrientName),
+                                    subtitle = stringResource(R.string.nutrients_open_app_chart_subtitle),
+                                    modifier = Modifier.testTag("nutrient.openAppChart"),
+                                    onClick = { destinations.openMetric(appChart) }
+                                )
+                            }
+                        }
+                    } else {
+                        Text(
+                            stringResource(R.string.nutrients_health_source_note),
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp).testTag("nutrient.healthSource"),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AyuvoColors.secondaryLabel()
+                        )
+                    }
+                }
+            }
             // Show All Data — 5 newest records up front, 5 more per "Load more" (keyset paged).
             item(key = "all-data") {
                 Column(Modifier.padding(top = 12.dp).testTag("metric.allData")) {
@@ -233,6 +288,15 @@ fun HealthTypeDetailScreen(container: AppContainer, typeKey: String, onBack: () 
                             )
                         }
                     }
+                }
+            }
+            if (nutrientKey != null) {
+                item(key = "about") {
+                    NutrientAboutGroup(nutrientKey, goal.lines, goal.customGoal, displayUnit, Modifier.padding(top = 12.dp)) { numberOf(it) }
+                }
+                val slug = goal.learnSlug
+                if (slug != null && nutrientName != null) {
+                    item(key = "learn-more") { NutrientLearnMoreGroup(nutrientName, slug, Modifier.padding(top = 12.dp)) }
                 }
             }
             item(key = "footer") { HealthReadOnlyFooter() }
@@ -318,6 +382,8 @@ private fun DetailChart(
     is24: Boolean,
     selected: Int?,
     onSelect: (Int?) -> Unit,
+    referenceLines: List<ChartReferenceLine>,
+    goalValue: Double?,
     onDrill: (LocalDate) -> Unit
 ) {
     val window = ui.window
@@ -361,7 +427,7 @@ private fun DetailChart(
         HealthChartKind.PERIOD_BAND -> PeriodBandChart(days, ui.periodDays, tint, spreadLabels(days.map { monthDay.format(it) }, 5))
         HealthChartKind.BAR -> HealthBucketChart(
             ui.points, HealthChartStyle.BAR, tint, xLabels, fmt, selected, onSelect, summary = summary,
-            valueSelector = barValueSelector(ui), onBucketTap = drill
+            valueSelector = barValueSelector(ui), goalValue = goalValue, onBucketTap = drill, referenceLines = referenceLines
         )
         HealthChartKind.LINE -> HealthBucketChart(ui.points, HealthChartStyle.LINE, tint, xLabels, fmt, selected, onSelect, summary = summary, onBucketTap = drill)
         HealthChartKind.RANGE -> HealthBucketChart(ui.points, HealthChartStyle.RANGE, tint, xLabels, fmt, selected, onSelect, summary = summary, onBucketTap = drill)

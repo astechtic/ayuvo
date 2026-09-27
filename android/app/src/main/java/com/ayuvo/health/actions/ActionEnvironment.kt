@@ -18,6 +18,7 @@ import com.ayuvo.health.models.WeightEntry
 import com.ayuvo.health.models.WorkoutDayPlan
 import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.models.WorkoutWeightUnit
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import java.time.ZoneId
 
 /** User preferences actions need (units, goals, week start); unit names are catalog enum values. */
@@ -69,6 +70,8 @@ interface ActionEnvironment {
 
     // Nutrition
     suspend fun foods(): List<FoodEntry>
+    /** Supplement nutrients and taken doses (docs/nutrients.md §6); empty without a medications database. */
+    suspend fun supplements(): SupplementSnapshot = SupplementSnapshot.EMPTY
     /** Favourites then recent foods, newest first, one per favourite key. */
     suspend fun savedFoods(): List<FoodEntry>
     /** False when an active fast blocks logging (FoodRepository rule). */

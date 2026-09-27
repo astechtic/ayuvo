@@ -147,6 +147,15 @@ fun MedicationEditorScreen(
                 relatedRecord = relatedRecord,
                 container = container
             )
+            MedicationNutrientsSection(
+                draft = ui.draft,
+                nutrientError = validationText(ui.error("nutrients")),
+                onChange = vm::update,
+                aiBusy = ui.aiBusy,
+                aiError = ui.aiError,
+                onAiFromText = { vm.extractNutrients(null) },
+                onAiFromPhoto = { bytes -> vm.extractNutrients(bytes) }
+            )
             if (ui.isEditing) {
                 Text(
                     stringResource(R.string.medications_edit_schedule_note),
@@ -170,6 +179,14 @@ fun MedicationEditorScreen(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
+    }
+    ui.aiReview?.let { review ->
+        NutrientReviewDialog(
+            result = review,
+            doseUnit = stringResource(ui.draft.doseUnit.labelRes()),
+            onConfirm = vm::confirmAiItems,
+            onDismiss = vm::dismissAi
+        )
     }
 }
 
@@ -234,6 +251,9 @@ internal fun validationText(code: String?): String? = when (code) {
     "interval_invalid", "anchor_required", "anchor_invalid" -> stringResource(R.string.medications_error_interval)
     "instructions_too_long" -> stringResource(R.string.medications_error_instructions)
     "frequency_required" -> stringResource(R.string.medications_error_frequency)
+    "nutrient_unknown" -> stringResource(R.string.nutrients_error_pick_nutrient)
+    "nutrient_amount_invalid" -> stringResource(R.string.nutrients_error_amount)
+    "nutrient_duplicate" -> stringResource(R.string.nutrients_error_duplicate)
     else -> stringResource(R.string.medications_error_generic)
 }
 

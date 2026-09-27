@@ -12,6 +12,9 @@
         "goal_source": "profile.calories",
         "icon_android": "Filled.LocalFireDepartment",
         "icon_ios": "flame.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "kcal"
       },
@@ -32,6 +35,9 @@
         "goal_source": "profile.protein",
         "icon_android": "Filled.Egg",
         "icon_ios": "fish.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "g"
       },
@@ -52,6 +58,9 @@
         "goal_source": "profile.carbs",
         "icon_android": "Filled.BakeryDining",
         "icon_ios": "carrot.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "g"
       },
@@ -72,6 +81,9 @@
         "goal_source": "profile.fat",
         "icon_android": "Filled.Opacity",
         "icon_ios": "drop.triangle.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "g"
       },
@@ -92,6 +104,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Grass",
         "icon_ios": "leaf.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "g"
       },
@@ -112,6 +127,9 @@
         "goal_source": "prefs.waterDailyGoalMl",
         "icon_android": "Filled.WaterDrop",
         "icon_ios": "drop.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "mL"
       },
@@ -132,6 +150,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Timer",
         "icon_ios": "timer",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "s"
       },
@@ -152,6 +173,9 @@
         "goal_source": "profile.goalWeight",
         "icon_android": "Filled.MonitorWeight",
         "icon_ios": "scalemass.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "kg"
       },
@@ -172,6 +196,9 @@
         "goal_source": "profile.goalBodyFat",
         "icon_android": "Filled.Percent",
         "icon_ios": "percent",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "%"
       },
@@ -192,6 +219,9 @@
         "goal_source": "none",
         "icon_android": "Filled.FitnessCenter",
         "icon_ios": "figure.strengthtraining.traditional",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "count"
       },
@@ -212,6 +242,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Schedule",
         "icon_ios": "clock.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "s"
       },
@@ -232,6 +265,9 @@
         "goal_source": "none",
         "icon_android": "Filled.LocalFireDepartment",
         "icon_ios": "flame.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "app",
         "unit": "kcal"
       },
@@ -252,6 +288,9 @@
         "goal_source": "prefs.dailyStepGoal",
         "icon_android": "AutoMirrored.Filled.DirectionsWalk",
         "icon_ios": "figure.walk",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -272,6 +311,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MonitorWeight",
         "icon_ios": "scalemass.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "kg"
       },
@@ -292,6 +334,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Loop",
         "icon_ios": "arrow.triangle.2.circlepath",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -312,6 +357,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Hearing",
         "icon_ios": "ear.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "dBASPL"
       },
@@ -332,6 +380,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Favorite",
         "icon_ios": "heart.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count/min"
       },
@@ -352,6 +403,9 @@
         "goal_source": "none",
         "icon_android": "Filled.SelfImprovement",
         "icon_ios": "brain.head.profile",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "s"
       },
@@ -372,6 +426,9 @@
         "goal_source": "none",
         "icon_android": "AutoMirrored.Filled.DirectionsWalk",
         "icon_ios": "figure.walk.motion",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "m/s"
       },
@@ -392,6 +449,9 @@
         "goal_source": "none",
         "icon_android": "Filled.WaterDrop",
         "icon_ios": "drop.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "mL"
       },
@@ -412,6 +472,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Air",
         "icon_ios": "wind",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count/min"
       },
@@ -432,6 +495,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Bedtime",
         "icon_ios": "bed.double.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "s"
       },
@@ -452,6 +518,9 @@
         "goal_source": "none",
         "icon_android": "Filled.HealthAndSafety",
         "icon_ios": "stethoscope",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -472,6 +541,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Bloodtype",
         "icon_ios": "drop.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "mmol/L"
       },
@@ -492,6 +564,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MoreHoriz",
         "icon_ios": "ellipsis.circle",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -512,6 +587,9 @@
         "goal_source": "none",
         "icon_android": "Filled.LocalFireDepartment",
         "icon_ios": "flame.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "kcal"
       },
@@ -532,6 +610,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Percent",
         "icon_ios": "percent",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "%"
       },
@@ -552,6 +633,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MonitorHeart",
         "icon_ios": "heart.text.square.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "mmHg"
       },
@@ -572,6 +656,9 @@
         "goal_source": "none",
         "icon_android": "Filled.LocalFireDepartment",
         "icon_ios": "flame.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "m/s"
       },
@@ -592,6 +679,9 @@
         "goal_source": "none",
         "icon_android": "Filled.LocalFireDepartment",
         "icon_ios": "flame.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -612,6 +702,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Timer",
         "icon_ios": "timer",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "s"
       },
@@ -632,6 +725,9 @@
         "goal_source": "none",
         "icon_android": "Filled.LocalFireDepartment",
         "icon_ios": "flame.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "W"
       },
@@ -652,6 +748,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MoreHoriz",
         "icon_ios": "ellipsis.circle",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "unknown",
         "unit": "none"
       },
@@ -672,6 +771,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MoreHoriz",
         "icon_ios": "ellipsis.circle",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "unknown",
         "unit": "none"
       },
@@ -692,6 +794,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MoreHoriz",
         "icon_ios": "ellipsis.circle",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "unknown",
         "unit": "none"
       },
@@ -712,6 +817,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Straighten",
         "icon_ios": "ruler.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "m"
       },
@@ -733,6 +841,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Stairs",
         "icon_ios": "figure.stairs",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -754,6 +865,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Bolt",
         "icon_ios": "bolt.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "kcal"
       },
@@ -775,6 +889,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MonitorHeart",
         "icon_ios": "heart.circle.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count/min"
       },
@@ -796,6 +913,9 @@
         "goal_source": "none",
         "icon_android": "Filled.MonitorHeart",
         "icon_ios": "waveform.path.ecg",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "ms"
       },
@@ -817,6 +937,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Air",
         "icon_ios": "lungs.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "%"
       },
@@ -838,6 +961,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Thermostat",
         "icon_ios": "thermometer",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "degC"
       },
@@ -859,6 +985,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Speed",
         "icon_ios": "speedometer",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "mL/min·kg"
       },
@@ -880,6 +1009,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Height",
         "icon_ios": "figure.stand",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "m"
       },
@@ -901,6 +1033,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Calculate",
         "icon_ios": "function",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "count"
       },
@@ -922,6 +1057,9 @@
         "goal_source": "none",
         "icon_android": "Filled.Accessibility",
         "icon_ios": "figure",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
         "source": "health",
         "unit": "kcal/d"
       },
@@ -930,6 +1068,359 @@
       },
       "name": "basal_metabolic_rate icon (falls back to the domain icon)",
       "notes": "falls back to the domain icon"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "vitamin-d",
+        "nutrient_key": "vitamin_d",
+        "nutrient_metric": null,
+        "source": "nutrient",
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "nutrient:vitamin_d"
+      },
+      "name": "nutrient:vitamin_d"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "sodium",
+        "nutrient_key": "sodium",
+        "nutrient_metric": null,
+        "source": "nutrient",
+        "unit": "mg"
+      },
+      "input": {
+        "key": "nutrient:sodium"
+      },
+      "name": "nutrient:sodium"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "trans-fat",
+        "nutrient_key": "trans_fat",
+        "nutrient_metric": null,
+        "source": "nutrient",
+        "unit": "g"
+      },
+      "input": {
+        "key": "nutrient:trans_fat"
+      },
+      "name": "nutrient:trans_fat"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": true,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "fiber",
+        "nutrient_key": "fiber",
+        "nutrient_metric": null,
+        "source": "nutrient",
+        "unit": "g"
+      },
+      "input": {
+        "key": "nutrient:fiber"
+      },
+      "name": "nutrient:fiber"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "none",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": null,
+        "nutrient_key": "creatine",
+        "nutrient_metric": null,
+        "source": "nutrient",
+        "unit": "g"
+      },
+      "input": {
+        "key": "nutrient:creatine"
+      },
+      "name": "nutrient:creatine"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#8E8E93",
+        "colour_hex_dark": "#98989D",
+        "default_favourite_order": null,
+        "domain": "other",
+        "goal_source": "none",
+        "icon_android": "Filled.MoreHoriz",
+        "icon_ios": "ellipsis.circle",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
+        "source": "unknown",
+        "unit": "none"
+      },
+      "input": {
+        "key": "nutrient:niacin"
+      },
+      "name": "nutrient:niacin"
+    },
+    {
+      "expected": {
+        "aggregation": "last",
+        "browse_hidden": false,
+        "chart_kind": "line",
+        "colour_hex": "#8E8E93",
+        "colour_hex_dark": "#98989D",
+        "default_favourite_order": null,
+        "domain": "other",
+        "goal_source": "none",
+        "icon_android": "Filled.MoreHoriz",
+        "icon_ios": "ellipsis.circle",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
+        "source": "unknown",
+        "unit": "none"
+      },
+      "input": {
+        "key": "nutrient:"
+      },
+      "name": "nutrient: (empty key)"
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "vitamin-d",
+        "nutrient_key": "vitamin_d",
+        "nutrient_metric": "nutrient:vitamin_d",
+        "source": "health",
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "dietary_vitamin_d"
+      },
+      "name": "dietary_vitamin_d",
+      "notes": "Health nutrition type -> vitamin_d reference lines, learn slug vitamin-d, link to the app chart nutrient:vitamin_d (app_tracked)."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "copper",
+        "nutrient_key": "copper",
+        "nutrient_metric": null,
+        "source": "health",
+        "unit": "mg"
+      },
+      "input": {
+        "key": "dietary_copper"
+      },
+      "name": "dietary_copper",
+      "notes": "app_tracked: false nutrient: reference lines and learn slug, no app chart link."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "saturated-fat",
+        "nutrient_key": "saturated_fat",
+        "nutrient_metric": "nutrient:saturated_fat",
+        "source": "health",
+        "unit": "g"
+      },
+      "input": {
+        "key": "dietary_fat_saturated"
+      },
+      "name": "dietary_fat_saturated",
+      "notes": "Registry id differs from the nutrient key (saturated_fat)."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "nutrient.reference",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": "niacin",
+        "nutrient_key": "niacin",
+        "nutrient_metric": null,
+        "source": "health",
+        "unit": "mg"
+      },
+      "input": {
+        "key": "dietary_niacin"
+      },
+      "name": "dietary_niacin",
+      "notes": "app_tracked: false; niacin has a supplements-only UL."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "profile.calories",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
+        "source": "health",
+        "unit": "kcal"
+      },
+      "input": {
+        "key": "dietary_energy"
+      },
+      "name": "dietary_energy",
+      "notes": "Macro type -> the profile calorie goal, no nutrient reference."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "profile.protein",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
+        "source": "health",
+        "unit": "g"
+      },
+      "input": {
+        "key": "dietary_protein"
+      },
+      "name": "dietary_protein",
+      "notes": "Macro type -> profile.protein."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#34C759",
+        "colour_hex_dark": "#30D158",
+        "default_favourite_order": null,
+        "domain": "nutrition",
+        "goal_source": "none",
+        "icon_android": "Filled.Restaurant",
+        "icon_ios": "fork.knife",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
+        "source": "health",
+        "unit": "kcal"
+      },
+      "input": {
+        "key": "nutrition"
+      },
+      "name": "nutrition (no reference)",
+      "notes": "Nutrition-category type with no override: no goal, no nutrient_key. Every dietary_* type now maps to a nutrient or a macro goal."
+    },
+    {
+      "expected": {
+        "aggregation": "sum",
+        "browse_hidden": false,
+        "chart_kind": "bar",
+        "colour_hex": "#007AFF",
+        "colour_hex_dark": "#0A84FF",
+        "default_favourite_order": null,
+        "domain": "hydration",
+        "goal_source": "none",
+        "icon_android": "Filled.WaterDrop",
+        "icon_ios": "drop.fill",
+        "learn_slug": null,
+        "nutrient_key": null,
+        "nutrient_metric": null,
+        "source": "health",
+        "unit": "mL"
+      },
+      "input": {
+        "key": "hydration"
+      },
+      "name": "hydration (no reference)",
+      "notes": "Nutrition category, hydration domain override, no nutrient facts."
     }
   ],
   "format": "ayuvo-metrics-vectors",

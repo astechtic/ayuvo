@@ -14,7 +14,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.doubleOrNull
 
 /**
- * `validate_draft` / `_validate_schedule` (docs/medications.md §15) on the raw form JSON, so a
+ * `validate_draft` / `_validate_schedule` (docs/medications.md §15, nutrients §21) on the raw form JSON, so a
  * wrongly typed value fails exactly as in the reference. Codes are the contract's.
  */
 object DraftValidation {
@@ -122,6 +122,25 @@ object DraftValidation {
             val note = d.str("note")
             if (note == null || MedicationLocalTime.codePoints(note) > MedicationConstants.NOTE_MAX) {
                 errs += ValidationError("note", "note_too_long")
+            }
+        }
+        if (present(d, "nutrients")) {
+            val list = d["nutrients"] as? JsonArray
+            if (list == null) {
+                errs += ValidationError("nutrients", "nutrient_unknown")
+            } else {
+                val seen = HashSet<String>()
+                for (item in list) {
+                    val o = item as? JsonObject
+                    val key = (o?.get("key") as? JsonPrimitive)?.takeIf { it.isString && it !is JsonNull }?.content
+                    val amountEl = o?.get("amount_per_unit")
+                    val amount = if (MedicationJson.isNumber(amountEl)) (amountEl as JsonPrimitive).doubleOrNull else null
+                    when (ArchiveCodec.nutrientProblem(key, amount)) {
+                        "unknown_nutrient" -> errs += ValidationError("nutrients", "nutrient_unknown")
+                        "invalid_amount" -> errs += ValidationError("nutrients", "nutrient_amount_invalid")
+                        else -> if (!seen.add(key!!)) errs += ValidationError("nutrients", "nutrient_duplicate")
+                    }
+                }
             }
         }
         return errs

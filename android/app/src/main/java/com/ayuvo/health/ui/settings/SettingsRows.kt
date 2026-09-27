@@ -493,9 +493,12 @@ internal fun feetInchesLabel(cm: Int): String {
 }
 
 @Composable
-internal fun optionalNutrientSummary(goals: OptionalNutrientGoals): String =
-    stringResource(R.string.nutrient_fiber_format, goals.fiber.toString()) + ", " +
-        stringResource(R.string.nutrient_sodium_format, goals.sodium.toString())
+internal fun optionalNutrientSummary(goals: OptionalNutrientGoals, profile: UserProfile? = null): String {
+    val np = com.ayuvo.health.nutrients.NutrientFields.profile(profile)
+    val fiber = goals.effectiveGoal(com.ayuvo.health.models.OptionalNutrient.FIBER, np)?.toString() ?: "—"
+    val sodium = goals.effectiveGoal(com.ayuvo.health.models.OptionalNutrient.SODIUM, np)?.toString() ?: "—"
+    return stringResource(R.string.nutrient_fiber_format, fiber) + ", " + stringResource(R.string.nutrient_sodium_format, sodium)
+}
 
 @Composable
 internal fun birthdayDisplay(profile: UserProfile): String {

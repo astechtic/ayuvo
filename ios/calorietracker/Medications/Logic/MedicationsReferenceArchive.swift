@@ -1,12 +1,67 @@
 import Foundation
 
-// §14 Archive `ayuvo-medications` v1 (port of the reference; see MedicationsReferenceCore.swift).
+// §14 Archive `ayuvo-medications` v1 plus the §21 supplement nutrients (port of the reference; see
+// MedicationsReferenceCore.swift).
 
 nonisolated extension MR {
-    /// The portable archive: every row of the three tables, arrays ordered by id, `photo_path` null.
+    // MARK: §21 Supplement nutrients (schema v2)
+
+    static let nutrientSkipReasons = ["unknown_nutrient", "invalid_amount", "duplicate_nutrient"]
+
+    /// nil when (key, amount_per_unit) may be stored, else `unknown_nutrient` | `invalid_amount`. The key must be
+    /// a nutrient_reference.json key or a sports supplement key; the amount a finite number with
+    /// 0 < amount <= amount_per_unit_max[canonical unit].
+    static func nutrientProblem(key: RJ, amount: RJ) -> String? {
+        guard let key = key.string, let unit = NutrientsReference.nutrientUnit(key) else { return "unknown_nutrient" }
+        guard isNumber(amount), let value = amount.double, value.isFinite, value > 0,
+              value <= (NutrientsReference.data.amountPerUnitMax[unit] ?? 0) else { return "invalid_amount" }
+        return nil
+    }
+
+    /// {medication_id: [{key, amount_per_unit}] sorted by key} from snapshot["medication_nutrients"] rows.
+    static func snapshotNutrients(_ snapshot: RJ) -> [String: [RJ]] {
+        var out: [String: [RJ]] = [:]
+        for r in snapshot["medication_nutrients"].array ?? [] {
+            out[r["medication_id"].string ?? "", default: []].append(.obj(["key": r["nutrient_key"], "amount_per_unit": r["amount_per_unit"]]))
+        }
+        for (id, rows) in out {
+            out[id] = rows.stableSorted { ($0["key"].string ?? "") < ($1["key"].string ?? "") }
+        }
+        return out
+    }
+
+    /// (nutrients | nil, skip ops) for one archive medication. nil = no "nutrients" list (an older export): the
+    /// platform keeps the local rows. Otherwise the valid rows sorted by key and one skip op per bad row.
+    static func archiveNutrients(_ m: RJ) -> (nutrients: [RJ]?, skips: [RJ]) {
+        guard let raw = m["nutrients"].array else { return (nil, []) }
+        var good: [RJ] = []
+        var skips: [RJ] = []
+        var seen = Set<String>()
+        for item in raw {
+            let key: RJ = item.object != nil ? item["key"] : .null
+            let amount: RJ = item.object != nil ? item["amount_per_unit"] : .null
+            var reason = nutrientProblem(key: key, amount: amount)
+            if reason == nil, let k = key.string, seen.contains(k) { reason = "duplicate_nutrient" }
+            if let reason {
+                skips.append(.obj(["table": .str("medication_nutrients"), "op": .str("skip"), "id": m["id"],
+                                   "nutrient_key": key.string.map(RJ.str) ?? .null, "reason": .str(reason)]))
+                continue
+            }
+            seen.insert(key.string ?? "")
+            good.append(.obj(["key": key, "amount_per_unit": amount]))
+        }
+        return (good.stableSorted { ($0["key"].string ?? "") < ($1["key"].string ?? "") }, skips)
+    }
+
+    /// The portable archive: every row of the three tables, arrays ordered by id, `photo_path` null. Each
+    /// medication also carries "nutrients": [{key, amount_per_unit}] sorted by key ([] when it has none).
     static func exportArchive(snapshot: RJ, exportedMs: RJ, timeZone: RJ, platform: RJ, appVersion: RJ) -> RJ {
         func byID(_ a: [String: RJ], _ b: [String: RJ]) -> Bool { (a["id"]?.string ?? "") < (b["id"]?.string ?? "") }
-        let meds = (snapshot["medications"].array ?? []).map { row(medicationColumns, $0, ["photo_path": .null]) }.stableSorted(by: byID)
+        let byMed = snapshotNutrients(snapshot)
+        var meds = (snapshot["medications"].array ?? []).map { row(medicationColumns, $0, ["photo_path": .null]) }.stableSorted(by: byID)
+        for i in meds.indices {
+            meds[i]["nutrients"] = .arr(byMed[meds[i]["id"]?.string ?? ""] ?? [])
+        }
         var scheds = (snapshot["schedules"].array ?? []).map { row(scheduleColumns, $0) }.stableSorted(by: byID)
         let logs = (snapshot["dose_logs"].array ?? []).map { row(doseLogColumns, $0) }.stableSorted(by: byID)
         for i in scheds.indices {
@@ -106,7 +161,14 @@ nonisolated extension MR {
             let id = m["id"].string ?? ""
             var copy = m.object ?? [:]
             copy["photo_path"] = localMeds[id].map { $0["photo_path"] } ?? .null
-            _ = decide("medications", .obj(copy), localMeds[id], medicationColumns)
+            let (nutrients, nutrientSkips) = archiveNutrients(m)
+            if decide("medications", .obj(copy), localMeds[id], medicationColumns),
+               case .obj(var op) = ops[ops.count - 1], case .obj(var row)? = op["row"] {
+                row["nutrients"] = nutrients.map(RJ.arr) ?? .null
+                op["row"] = .obj(row)
+                ops[ops.count - 1] = .obj(op)
+                ops.append(contentsOf: nutrientSkips)
+            }
             knownMeds.insert(id)
         }
         for s in archive["schedules"].array ?? [] {

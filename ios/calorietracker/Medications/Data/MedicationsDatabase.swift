@@ -2,7 +2,7 @@ import Foundation
 import SQLite3
 
 /// Single-connection SQLite actor for Medications (`medications.sqlite`, schema v1 from
-/// `shared/medications/schema.sql`). Same shape as `RecordsDatabase`: WAL, `synchronous=NORMAL`,
+/// `shared/medications/schema.sql` plus its migrations). Same shape as `RecordsDatabase`: WAL, `synchronous=NORMAL`,
 /// `foreign_keys=ON`, `busy_timeout=5000`, `PRAGMA user_version` + `medications_meta.schema_version`.
 /// A separate database from the health mirror and records so their parity tests are untouched.
 actor MedicationsDatabase {
@@ -189,6 +189,7 @@ actor MedicationsDatabase {
         try connection.inTransaction {
             try connection.exec("""
             DELETE FROM dose_logs;
+            DELETE FROM medication_nutrients;
             DELETE FROM medication_schedules;
             DELETE FROM medications;
             DELETE FROM medications_meta WHERE key <> 'schema_version';

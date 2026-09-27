@@ -61,6 +61,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.material.icons.filled.Spa
 import com.ayuvo.health.R
 import com.ayuvo.health.medications.model.DoseAction
 import com.ayuvo.health.medications.model.DoseStatus
@@ -267,7 +268,7 @@ internal fun PrnRowCard(
 
 /** A row of the "All medicines" list: name · strength, form + dose, status badge. */
 @Composable
-internal fun MedicationRow(medication: Medication, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+internal fun MedicationRow(medication: Medication, onOpen: () -> Unit, modifier: Modifier = Modifier, isSupplement: Boolean = false) {
     val subtitle = listOf(
         stringResource(medication.form.labelRes()),
         doseText(medication.doseQuantity, medication.doseUnit),
@@ -286,10 +287,17 @@ internal fun MedicationRow(medication: Medication, onOpen: () -> Unit, modifier:
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(MedicationFormat.nameWithStrength(medication), fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(subtitle, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (isSupplement) SupplementBadge(Modifier.padding(top = 2.dp))
         }
         Spacer(Modifier.width(8.dp))
         MedicationStatusBadge(medication.status)
     }
+}
+
+/** "Supplement": the medication carries nutrients that count toward nutrition totals (§21). */
+@Composable
+internal fun SupplementBadge(modifier: Modifier = Modifier) {
+    BadgeCapsule(icon = Icons.Filled.Spa, label = stringResource(R.string.nutrients_supplement_badge), modifier = modifier.testTag("medications.badge.supplement"))
 }
 
 /** The fixed disclaimer of docs §17. */

@@ -55,11 +55,14 @@ extension MedicationsDatabase {
 
     // MARK: - Composite writes
 
-    /// New medication plus its open schedule row (none for PRN), atomically.
-    func createMedication(_ medication: Medication, schedule: MedicationSchedule?) throws {
+    /// New medication plus its open schedule row (none for PRN) and its supplement nutrients, atomically.
+    func createMedication(_ medication: Medication, schedule: MedicationSchedule?, nutrients: [MedicationNutrient] = []) throws {
         try connection.inTransaction {
             try insertMedication(medication)
             if let schedule { try insertSchedule(schedule) }
+            if !nutrients.isEmpty {
+                try replaceNutrientsNoTransaction(medicationID: medication.id, with: nutrients, updatedMs: nil)
+            }
         }
     }
 
@@ -88,13 +91,18 @@ extension MedicationsDatabase {
     nonisolated enum MergeOp: Sendable { case insert, update }
 
     /// Archive merge (docs §14): medications first, then schedules, then logs, in one transaction.
-    func applyMerge(medications: [(MergeOp, Medication)], schedules: [(MergeOp, MedicationSchedule)], logs: [(MergeOp, DoseLog)]) throws {
+    /// `nutrients` replaces each listed medication's supplement nutrients (schema v2) after the medications.
+    func applyMerge(medications: [(MergeOp, Medication)], nutrients: [(medicationID: String, rows: [MedicationNutrient])] = [],
+                    schedules: [(MergeOp, MedicationSchedule)], logs: [(MergeOp, DoseLog)]) throws {
         try connection.inTransaction {
             for (op, m) in medications {
                 switch op {
                 case .insert: try insertMedication(m)
                 case .update: try updateMedication(m)
                 }
+            }
+            for replacement in nutrients {
+                try replaceNutrientsNoTransaction(medicationID: replacement.medicationID, with: replacement.rows, updatedMs: nil)
             }
             for (op, s) in schedules {
                 switch op {

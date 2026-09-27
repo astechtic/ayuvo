@@ -23,26 +23,36 @@ nonisolated enum AppMetric: String, CaseIterable, Hashable, Sendable {
     }
 }
 
-/// Any metric the UI can chart: an app metric or a health registry id (unprefixed, e.g. `steps`).
+/// Any metric the UI can chart: an app metric, a nutrient metric (`nutrient:<key>`, the catalog's
+/// `nutrient_metrics`, docs/ui-structure.md §4) or a health registry id (unprefixed, e.g. `steps`).
 nonisolated enum MetricKey: Hashable, Sendable, Identifiable {
     case app(AppMetric)
+    /// A `nutrient_reference.json` key or a sports supplement key, e.g. `vitamin_d`.
+    case nutrient(String)
     case health(String)
 
-    /// Storage / pin id: `app:calories` or `steps`.
+    static let nutrientPrefix = "nutrient:"
+
+    /// Storage / pin id: `app:calories`, `nutrient:vitamin_d` or `steps`.
     var id: String {
         switch self {
         case .app(let metric): metric.key
+        case .nutrient(let key): Self.nutrientPrefix + key
         case .health(let typeID): typeID
         }
     }
 
-    /// Nil for blank strings and unknown `app:` keys.
+    /// Nil for blank strings and unknown `app:` / `nutrient:` keys.
     init?(pinID: String) {
         let trimmed = pinID.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         if trimmed.hasPrefix("app:") {
             guard let metric = AppMetric(key: trimmed) else { return nil }
             self = .app(metric)
+        } else if trimmed.hasPrefix(Self.nutrientPrefix) {
+            let key = String(trimmed.dropFirst(Self.nutrientPrefix.count))
+            guard MetricCatalogData.shared.nutrientMetricsByKey[key] != nil else { return nil }
+            self = .nutrient(key)
         } else {
             self = .health(trimmed)
         }

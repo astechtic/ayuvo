@@ -104,8 +104,37 @@ nonisolated struct MedicationsRepository: Sendable {
             adherence: adherence,
             recentLogs: recent,
             relatedRecord: nil,
-            relatedRecordMissing: false
+            relatedRecordMissing: false,
+            nutrients: try await nutrients(medicationID: id)
         )
+    }
+
+    // MARK: - Supplement nutrients (docs §21, docs/nutrients.md §6)
+
+    /// One medication's known nutrient rows (unknown keys are ignored by readers), by key.
+    func nutrients(medicationID: String) async throws -> [MedicationNutrient] {
+        try await database.nutrients(medicationID: medicationID).filter { NutrientsReference.nutrientUnit($0.nutrientKey) != nil }
+    }
+
+    func allNutrients() async throws -> [MedicationNutrient] {
+        try await database.allNutrients().filter { NutrientsReference.nutrientUnit($0.nutrientKey) != nil }
+    }
+
+    /// Supplement contributions of every taken dose in `[fromMs, toMs)` (reference `supplement_entries`),
+    /// plus the instants of every taken dose (any medicine) for "logged day" counting.
+    func supplementData(from fromMs: Int64 = 0, to toMs: Int64 = Int64.max) async throws -> (entries: [NutrientsReference.SupplementEntry], takenMs: [Int64]) {
+        let rows = try await allNutrients()
+        let logs = try await database.takenDoseLogs(from: fromMs, to: toMs)
+        let entries = NutrientsReference.supplementEntries(
+            nutrients: rows.map(\.referenceInput),
+            doseLogs: logs.map { NutrientsReference.DoseInput(medicationID: $0.medicationID, status: $0.status.rawValue, takenAtMs: $0.takenAtMs, doseQuantity: $0.doseQuantity) }
+        )
+        return (entries, logs.compactMap(\.takenAtMs))
+    }
+
+    /// Replaces the medication's nutrients and bumps its `updated_ms` (edits change past contributions too).
+    func setNutrients(medicationID: String, rows: [MedicationNutrient], nowMs: Int64) async throws {
+        try await database.replaceNutrients(medicationID: medicationID, with: rows, updatedMs: nowMs)
     }
 
     func storageBytes() -> Int64 {
@@ -120,7 +149,7 @@ nonisolated struct MedicationsRepository: Sendable {
         guard errors.isEmpty else { throw MedicationStoreError.validation(errors) }
         let medication = draft.medication(existing: nil, nowMs: nowMs)
         let schedule = draft.schedule(medicationID: medication.id, nowMs: nowMs, zone: zone)
-        try await database.createMedication(medication, schedule: schedule)
+        try await database.createMedication(medication, schedule: schedule, nutrients: draft.nutrientRows(medicationID: medication.id))
         return medication
     }
 
@@ -128,6 +157,18 @@ nonisolated struct MedicationsRepository: Sendable {
     /// `edit_schedule` (active medicines only), a reminder toggle updates the open row in place,
     /// switching to PRN closes the open row.
     func update(draft: MedicationDraft, existing: Medication, nowMs: Int64) async throws -> Medication {
+        let saved = try await updateMedicationAndSchedule(draft: draft, existing: existing, nowMs: nowMs)
+        // Nutrients change as a set once the row itself is saved (docs §21: bumps updated_ms).
+        if draft.nutrients != nil {
+            let rows = draft.nutrientRows(medicationID: existing.id)
+            if rows != (try await nutrients(medicationID: existing.id)) {
+                try await setNutrients(medicationID: existing.id, rows: rows, nowMs: max(nowMs, saved.updatedMs))
+            }
+        }
+        return saved
+    }
+
+    private func updateMedicationAndSchedule(draft: MedicationDraft, existing: Medication, nowMs: Int64) async throws -> Medication {
         let errors = draft.validationErrors
         guard errors.isEmpty else { throw MedicationStoreError.validation(errors) }
         let updated = draft.medication(existing: existing, nowMs: nowMs)
@@ -301,7 +342,9 @@ nonisolated struct MedicationsRepository: Sendable {
         let medications = try await database.allMedications()
         let schedules = try await database.allSchedules()
         let logs = try await database.allDoseLogs()
-        return .obj(["medications": .arr(medications.map(\.rj)), "schedules": .arr(schedules.map(\.rj)), "dose_logs": .arr(logs.map(\.rj))])
+        let nutrients = try await database.allNutrients()
+        return .obj(["medications": .arr(medications.map(\.rj)), "schedules": .arr(schedules.map(\.rj)), "dose_logs": .arr(logs.map(\.rj)),
+                     "medication_nutrients": .arr(nutrients.map(\.rj))])
     }
 
     func exportArchive(nowMs: Int64, zone: String, platform: String, appVersion: String) async throws -> MedicationArchive {
@@ -315,6 +358,7 @@ nonisolated struct MedicationsRepository: Sendable {
         guard result["ok"].bool == true else { throw MedicationStoreError.archive(result["error"].string ?? "bad_format") }
         var summary = MedicationImportResult()
         var medications: [(MedicationsDatabase.MergeOp, Medication)] = []
+        var nutrients: [(medicationID: String, rows: [MedicationNutrient])] = []
         var schedules: [(MedicationsDatabase.MergeOp, MedicationSchedule)] = []
         var logs: [(MedicationsDatabase.MergeOp, DoseLog)] = []
         for op in result["ops"].array ?? [] {
@@ -330,6 +374,12 @@ nonisolated struct MedicationsRepository: Sendable {
             case "medications":
                 guard let row = Medication(rj: op["row"]) else { summary.skipped += 1; continue }
                 medications.append((kind, row))
+                if let list = op["row"]["nutrients"].array {
+                    nutrients.append((row.id, list.compactMap { item in
+                        guard let key = item["key"].string, let amount = item["amount_per_unit"].double else { return nil }
+                        return MedicationNutrient(medicationID: row.id, nutrientKey: key, amountPerUnit: amount)
+                    }))
+                }
                 if kind == .insert { summary.insertedMedications += 1 } else { summary.updatedMedications += 1 }
             case "medication_schedules":
                 guard let row = MedicationSchedule(rj: op["row"]) else { summary.skipped += 1; continue }
@@ -343,7 +393,7 @@ nonisolated struct MedicationsRepository: Sendable {
                 summary.skipped += 1
             }
         }
-        try await database.applyMerge(medications: medications, schedules: schedules, logs: logs)
+        try await database.applyMerge(medications: medications, nutrients: nutrients, schedules: schedules, logs: logs)
         return summary
     }
 }

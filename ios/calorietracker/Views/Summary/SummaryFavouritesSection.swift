@@ -12,13 +12,15 @@ struct SummaryFavouritesSection: View {
     @Environment(StrengthWorkoutStore.self) private var workoutStore
     @Environment(ImportedHealthWorkoutStore.self) private var importedWorkoutStore
     @Environment(ProfileStore.self) private var profileStore
+    @Environment(MedicationStore.self) private var medicationStore
 
     private let columns = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
 
     private var sources: MetricDataSources {
         MetricDataSources(
             food: foodStore, water: waterStore, fasting: fastingStore, weight: weightStore, bodyFat: bodyFatStore,
-            workouts: workoutStore, importedWorkouts: importedWorkoutStore, health: healthStore, profile: profileStore
+            workouts: workoutStore, importedWorkouts: importedWorkoutStore, health: healthStore, profile: profileStore,
+            medications: medicationStore
         )
     }
 

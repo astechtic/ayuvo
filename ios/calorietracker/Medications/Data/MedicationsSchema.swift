@@ -6,7 +6,7 @@ import Foundation
 /// statement-for-statement and column-for-column. A fresh install runs v1 then each migration.
 nonisolated enum MedicationsSchema {
     /// Latest `PRAGMA user_version` / `medications_meta.schema_version`.
-    static let schemaVersion = 1
+    static let schemaVersion = 2
     static let baseVersion = 1
 
     nonisolated struct Migration: Sendable {
@@ -17,7 +17,7 @@ nonisolated enum MedicationsSchema {
     }
 
     static let tableNames: [String] = [
-        "medications", "medication_schedules", "dose_logs", "medications_meta",
+        "medications", "medication_schedules", "dose_logs", "medications_meta", "medication_nutrients",
     ]
 
     static let indexNames: [String] = [
@@ -26,8 +26,18 @@ nonisolated enum MedicationsSchema {
         "idx_dose_logs_occurrence", "idx_dose_logs_medication", "idx_dose_logs_scheduled", "idx_dose_logs_status",
     ]
 
-    /// None yet; v2+ will list `Migration(version:fileName:statements:)` entries in order.
-    static let migrations: [Migration] = []
+    /// Every `shared/medications/migrations/NNN_*.sql`, in order (v2 = supplement nutrients).
+    static let migrations: [Migration] = [
+        Migration(version: 2, fileName: "001_medication_nutrients.sql", statements: [
+            """
+            CREATE TABLE medication_nutrients (
+              medication_id TEXT NOT NULL REFERENCES medications(id) ON DELETE CASCADE,
+              nutrient_key TEXT NOT NULL,
+              amount_per_unit REAL NOT NULL CHECK (amount_per_unit > 0),
+              PRIMARY KEY (medication_id, nutrient_key))
+            """,
+        ]),
+    ]
 
     static let statements: [String] = [
         """

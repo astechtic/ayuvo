@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.ayuvo.health.R
 import com.ayuvo.health.models.HealthCategory
 import com.ayuvo.health.models.HealthDataType
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.ui.metrics.NutrientReferenceSections
 import com.ayuvo.health.ui.design.AyuvoColors
 
 /** Icons, tints and display names per category / type — Compose-side only, so the registry stays pure. */
@@ -115,9 +117,28 @@ object HealthCategoryStyle {
     /** Display name for a registry slug or raw id; imported/iOS-only ids fall back to a humanised slug. */
     fun typeName(context: Context, typeId: String, displayNameHint: String? = null): String {
         typeNames[typeId]?.let { return context.getString(it) }
+        dietaryName(context, typeId)?.let { return it }
         displayNameHint?.takeIf { it.isNotBlank() }?.let { return it }
         return HealthDataType.byId(typeId)?.displayFallback() ?: HealthDataType.humanise(typeId.substringAfterLast('.'))
     }
+
+    /**
+     * Health nutrition types (`dietary_*`) read like the app's nutrients: the macro label for the four
+     * macro types, else the reference nutrient's name (`dietary_vitamin_d` → "Vitamin D").
+     */
+    private fun dietaryName(context: Context, typeId: String): String? {
+        if (!typeId.startsWith("dietary_")) return null
+        dietaryMacroNames[typeId]?.let { return context.getString(it) }
+        val key = NutrientReference.active?.byHealthType?.get(typeId)?.key ?: return null
+        return NutrientReferenceSections.name(context, key)
+    }
+
+    private val dietaryMacroNames = mapOf(
+        "dietary_energy" to R.string.browse_section_nutrition_energy,
+        "dietary_protein" to R.string.nutrition_label_protein,
+        "dietary_carbohydrates" to R.string.nutrition_label_carbs,
+        "dietary_fat_total" to R.string.nutrition_label_fat
+    )
 
     fun tintFor(typeId: String): Color =
         HealthDataType.byId(typeId)?.let { tint(it.category) } ?: tint(HealthCategory.OTHER)

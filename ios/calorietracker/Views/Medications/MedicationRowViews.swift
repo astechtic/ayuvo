@@ -62,6 +62,23 @@ struct MedicationStatusBadge: View {
     }
 }
 
+/// "Supplement" capsule for a medication that lists nutrients (docs/medications.md §21; no new enum).
+struct SupplementBadge: View {
+    var body: some View {
+        Label("Supplement", systemImage: "leaf.fill")
+            .labelStyle(.titleAndIcon)
+            .font(.system(.caption2, design: .rounded, weight: .semibold))
+            .foregroundStyle(AyuvoPalette.nutrition)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(AyuvoPalette.nutrition.opacity(0.12), in: Capsule())
+            .lineLimit(1)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Supplement"))
+            .accessibilityIdentifier("medications.badge.supplement")
+    }
+}
+
 /// Rounded icon tile for a medicine's form (or its photo thumbnail when one is stored).
 struct MedicationIconBubble: View {
     let medication: Medication
@@ -100,6 +117,7 @@ struct MedicationRow: View {
     let medication: Medication
     var subtitle: String
     var showsStatus = true
+    @Environment(MedicationStore.self) private var store
 
     var body: some View {
         HStack(spacing: 12) {
@@ -113,6 +131,7 @@ struct MedicationRow: View {
                     .font(.system(.caption, design: .rounded))
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
+                if store.isSupplement(medication.id) { SupplementBadge() }
             }
             Spacer(minLength: 4)
             if showsStatus {

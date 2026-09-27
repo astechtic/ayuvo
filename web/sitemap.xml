@@ -161,6 +161,310 @@
     </image:image>
   </url>
   <url>
+    <loc>https://ayuvo-health.web.app/nutrients</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients.jpg</image:loc>
+      <image:title>Ayuvo nutrient guides: vitamins, minerals, fats and sugar</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-a</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-a.jpg</image:loc>
+      <image:title>Vitamin A: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-c</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-c.jpg</image:loc>
+      <image:title>Vitamin C: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-d</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-d.jpg</image:loc>
+      <image:title>Vitamin D: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-e</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-e.jpg</image:loc>
+      <image:title>Vitamin E: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-k</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-k.jpg</image:loc>
+      <image:title>Vitamin K: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-b12</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-b12.jpg</image:loc>
+      <image:title>Vitamin B12: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/folate</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-folate.jpg</image:loc>
+      <image:title>Folate: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/vitamin-b6</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-b6.jpg</image:loc>
+      <image:title>Vitamin B6: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/thiamin</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-thiamin.jpg</image:loc>
+      <image:title>Thiamin: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/riboflavin</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-riboflavin.jpg</image:loc>
+      <image:title>Riboflavin: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/niacin</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-niacin.jpg</image:loc>
+      <image:title>Niacin: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/biotin</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-biotin.jpg</image:loc>
+      <image:title>Biotin: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/pantothenic-acid</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-pantothenic-acid.jpg</image:loc>
+      <image:title>Pantothenic acid: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/calcium</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-calcium.jpg</image:loc>
+      <image:title>Calcium: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/iron</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-iron.jpg</image:loc>
+      <image:title>Iron: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/magnesium</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-magnesium.jpg</image:loc>
+      <image:title>Magnesium: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/potassium</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-potassium.jpg</image:loc>
+      <image:title>Potassium: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/sodium</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-sodium.jpg</image:loc>
+      <image:title>Sodium: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/zinc</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-zinc.jpg</image:loc>
+      <image:title>Zinc: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/phosphorus</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-phosphorus.jpg</image:loc>
+      <image:title>Phosphorus: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/chloride</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-chloride.jpg</image:loc>
+      <image:title>Chloride: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/copper</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-copper.jpg</image:loc>
+      <image:title>Copper: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/manganese</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-manganese.jpg</image:loc>
+      <image:title>Manganese: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/selenium</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-selenium.jpg</image:loc>
+      <image:title>Selenium: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/chromium</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-chromium.jpg</image:loc>
+      <image:title>Chromium: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/molybdenum</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-molybdenum.jpg</image:loc>
+      <image:title>Molybdenum: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/iodine</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-iodine.jpg</image:loc>
+      <image:title>Iodine: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/saturated-fat</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-saturated-fat.jpg</image:loc>
+      <image:title>Saturated fat: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/monounsaturated-fat</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-monounsaturated-fat.jpg</image:loc>
+      <image:title>Monounsaturated fat: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/polyunsaturated-fat</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-polyunsaturated-fat.jpg</image:loc>
+      <image:title>Polyunsaturated fat: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/trans-fat</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-trans-fat.jpg</image:loc>
+      <image:title>Trans fat: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/cholesterol</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-cholesterol.jpg</image:loc>
+      <image:title>Cholesterol: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/omega-3</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-omega-3.jpg</image:loc>
+      <image:title>Omega-3: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/fiber</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-fiber.jpg</image:loc>
+      <image:title>Fiber: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/sugar</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-sugar.jpg</image:loc>
+      <image:title>Sugar: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/added-sugar</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-added-sugar.jpg</image:loc>
+      <image:title>Added sugar: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/nutrients/caffeine</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-caffeine.jpg</image:loc>
+      <image:title>Caffeine: what it does, food sources and how much you need</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://ayuvo-health.web.app/about</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>

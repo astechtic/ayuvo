@@ -9,6 +9,9 @@ import com.ayuvo.health.medications.model.DoseLog
 import com.ayuvo.health.medications.model.LifecycleAction
 import com.ayuvo.health.medications.model.Medication
 import com.ayuvo.health.medications.model.MedicationSchedule
+import com.ayuvo.health.nutrients.MedicationNutrientRow
+import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import com.ayuvo.health.records.model.HealthRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +32,11 @@ data class MedicationDetailUiState(
     /** True when the medication links a record that no longer exists. */
     val relatedRecordMissing: Boolean = false,
     val deleted: Boolean = false,
-    val actionError: String? = null
+    val actionError: String? = null,
+    /** Supplement nutrients per dose unit (schema v2, §21), sorted by key. */
+    val nutrients: List<MedicationNutrientRow> = emptyList(),
+    /** Today's contribution per nutrient key from this medication's taken doses. */
+    val todayNutrients: Map<String, Double> = emptyMap()
 )
 
 /** Medication detail (docs/medications.md): info, schedule, adherence, recent history, lifecycle. */
@@ -61,10 +68,19 @@ class MedicationDetailViewModel(private val container: AppContainer, private val
             record = if (container.recordsDatabaseExists()) runCatching { container.recordsStore.record(recordId) }.getOrNull() else null
             missing = record == null
         }
+        val nutrients = store.nutrients(med.id)
+        val today = if (nutrients.isEmpty()) emptyMap() else {
+            val z = ZoneId.systemDefault()
+            val day = java.time.LocalDate.now(z)
+            val doses = store.supplementDoses().filter { it.medicationId == med.id }
+            NutrientTotals(emptyList(), SupplementSnapshot(nutrients, doses), z).supplementEntries(day)
+                .groupBy { it.nutrientKey }.mapValues { (_, list) -> list.sumOf { e -> e.value } }
+        }
         _ui.update {
             it.copy(
                 loading = false, medication = med, schedule = schedule, recentLogs = logs,
-                adherence = adherence, relatedRecord = record, relatedRecordMissing = missing
+                adherence = adherence, relatedRecord = record, relatedRecordMissing = missing,
+                nutrients = nutrients, todayNutrients = today
             )
         }
     }

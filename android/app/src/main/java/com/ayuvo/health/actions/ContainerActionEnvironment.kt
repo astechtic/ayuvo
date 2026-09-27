@@ -62,6 +62,7 @@ class ContainerActionEnvironment(private val container: AppContainer) : ActionEn
     override suspend fun setStepGoal(steps: Int) = prefsStore.setDailyStepGoal(steps)
 
     override suspend fun foods(): List<FoodEntry> = container.foodRepository.entries.first()
+    override suspend fun supplements(): com.ayuvo.health.nutrients.SupplementSnapshot = container.supplementIntake.current()
     override suspend fun savedFoods(): List<FoodEntry> =
         (container.foodRepository.favorites.first() + container.foodRepository.recent().sortedByDescending { it.timestamp })
             .distinctBy { it.favoriteKey }

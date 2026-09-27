@@ -284,7 +284,7 @@ struct calorietrackerApp: App {
                 sources: MetricDataSources(
                     food: foodStore, water: waterStore, fasting: fastingStore, weight: weightStore,
                     bodyFat: bodyFatStore, workouts: strengthWorkoutStore, importedWorkouts: importedHealthWorkoutStore,
-                    health: healthDataStore, profile: profileStore
+                    health: healthDataStore, profile: profileStore, medications: medicationStore
                 ),
                 medicationStore: medicationStore,
                 healthKitManager: healthKitManager

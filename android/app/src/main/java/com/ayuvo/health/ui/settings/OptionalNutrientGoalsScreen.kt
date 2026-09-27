@@ -182,6 +182,7 @@ import com.ayuvo.health.models.Gender
 import com.ayuvo.health.models.MealSchedule
 import com.ayuvo.health.models.OptionalNutrient
 import com.ayuvo.health.models.OptionalNutrientGoals
+import com.ayuvo.health.nutrients.NutrientFields
 import com.ayuvo.health.models.QuickAction
 import com.ayuvo.health.models.SpeechLanguage
 import com.ayuvo.health.models.SpeechProvider
@@ -245,6 +246,7 @@ fun OptionalNutrientGoalsScreen(
     val vm: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory(container))
     val ui by vm.ui.collectAsState()
     var editing by remember { mutableStateOf<OptionalNutrient?>(null) }
+    val nutrientProfile = NutrientFields.profile(ui.profile)
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
         LazyColumn(
@@ -304,7 +306,7 @@ fun OptionalNutrientGoalsScreen(
                         OptionalNutrient.values().forEachIndexed { index, nutrient ->
                             OptionalNutrientGoalRow(
                                 nutrient = nutrient,
-                                value = ui.optionalNutrientGoals.valueFor(nutrient),
+                                value = ui.optionalNutrientGoals.effectiveGoal(nutrient, nutrientProfile),
                                 onClick = { editing = nutrient }
                             )
                             if (index != OptionalNutrient.values().lastIndex) {
@@ -331,11 +333,11 @@ fun OptionalNutrientGoalsScreen(
             NutritionPickerSheet(
                 label = stringResource(nutrient.displayNameRes),
                 unit = stringResource(nutrient.unitRes),
-                currentValue = ui.optionalNutrientGoals.valueFor(nutrient),
+                currentValue = ui.optionalNutrientGoals.effectiveGoal(nutrient, nutrientProfile) ?: ui.optionalNutrientGoals.valueFor(nutrient),
                 range = nutrient.pickerRange(),
                 step = nutrient.pickerStep(),
                 allowCustomValue = true,
-                guidanceUpperLimit = nutrient.generalAdultUpperLimit(),
+                guidanceUpperLimit = nutrient.referenceUpperLimit(nutrientProfile),
                 customValueDetail = nutrient::customValueDetail,
                 onSave = { value ->
                     vm.setOptionalNutrientGoals(ui.optionalNutrientGoals.withValue(nutrient, value))

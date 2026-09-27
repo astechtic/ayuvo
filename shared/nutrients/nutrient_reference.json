@@ -1,0 +1,1857 @@
+{
+  "age_bands": [
+    {
+      "id": "19-30",
+      "max": 30,
+      "min": 19
+    },
+    {
+      "id": "31-50",
+      "max": 50,
+      "min": 31
+    },
+    {
+      "id": "51-70",
+      "max": 70,
+      "min": 51
+    },
+    {
+      "id": "71+",
+      "max": null,
+      "min": 71
+    }
+  ],
+  "amount_per_unit_max": {
+    "g": 100,
+    "mcg": 100000,
+    "mg": 10000
+  },
+  "checked": "2026-09-27",
+  "default_band": "31-50",
+  "format": "ayuvo-nutrient-reference",
+  "nutrients": [
+    {
+      "app_tracked": true,
+      "category": "carbs",
+      "health_type": "dietary_fiber",
+      "iu": null,
+      "key": "fiber",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Fiber",
+      "notes": [
+        "The AI is based on 14 g of fiber per 1,000 kcal."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 25,
+          "31-50": 25,
+          "51-70": 21,
+          "71+": 21
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 38,
+          "31-50": 38,
+          "51-70": 30,
+          "71+": 30
+        }
+      },
+      "slug": "fiber",
+      "source_ids": [
+        "nasem_macronutrients_2005",
+        "hc_dri_macronutrients"
+      ],
+      "style": "target",
+      "summary": "The part of plant foods your body cannot digest; it supports regular digestion.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "carbs",
+      "health_type": "dietary_sugar",
+      "iu": null,
+      "key": "sugar",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Sugar",
+      "notes": [
+        "No authoritative daily amount exists for total sugars; the limit applies to added sugars."
+      ],
+      "recommended": null,
+      "slug": "sugar",
+      "source_ids": [
+        "dga_2020_2025"
+      ],
+      "style": "info",
+      "summary": "All sugars in food and drinks, both naturally present and added.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "carbs",
+      "health_type": null,
+      "iu": null,
+      "key": "added_sugar",
+      "limit": {
+        "basis": "DGA 2020-2025",
+        "kcal_per_unit": 4,
+        "kind": "pct_energy",
+        "pct": 10
+      },
+      "mass_forms": null,
+      "name": "Added Sugar",
+      "notes": [
+        "Less than 10% of daily calories (Dietary Guidelines 2020-2025).",
+        "The Dietary Guidelines 2025-2030 say no amount of added sugars is recommended and that one meal should contain no more than 10 g."
+      ],
+      "recommended": null,
+      "slug": "added-sugar",
+      "source_ids": [
+        "dga_2020_2025",
+        "dga_2025_2030"
+      ],
+      "style": "limit",
+      "summary": "Sugars and syrups added to foods and drinks when they are processed or prepared.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "fats",
+      "health_type": "dietary_fat_saturated",
+      "iu": null,
+      "key": "saturated_fat",
+      "limit": {
+        "basis": "DGA 2020-2025 and 2025-2030",
+        "kcal_per_unit": 9,
+        "kind": "pct_energy",
+        "pct": 10
+      },
+      "mass_forms": null,
+      "name": "Saturated Fat",
+      "notes": [
+        "Less than 10% of daily calories (both the 2020-2025 and 2025-2030 Dietary Guidelines)."
+      ],
+      "recommended": null,
+      "slug": "saturated-fat",
+      "source_ids": [
+        "dga_2020_2025",
+        "dga_2025_2030"
+      ],
+      "style": "limit",
+      "summary": "A type of fat found mostly in meat, full-fat dairy, butter and tropical oils.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "fats",
+      "health_type": null,
+      "iu": null,
+      "key": "trans_fat",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Trans Fat",
+      "notes": [
+        "Keep as low as possible while eating a nutritionally adequate diet; no numeric limit is set."
+      ],
+      "recommended": null,
+      "slug": "trans-fat",
+      "source_ids": [
+        "nasem_macronutrients_2005",
+        "hc_dri_macronutrients"
+      ],
+      "style": "info",
+      "summary": "A type of fat found in some processed and fried foods.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "fats",
+      "health_type": "dietary_fat_monounsaturated",
+      "iu": null,
+      "key": "monounsaturated_fat",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Monounsaturated Fat",
+      "notes": [
+        "No recommended daily amount is set for this fat."
+      ],
+      "recommended": null,
+      "slug": "monounsaturated-fat",
+      "source_ids": [
+        "nasem_macronutrients_2005"
+      ],
+      "style": "info",
+      "summary": "A type of fat found in olive oil, avocados and many nuts.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "fats",
+      "health_type": "dietary_fat_polyunsaturated",
+      "iu": null,
+      "key": "polyunsaturated_fat",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Polyunsaturated Fat",
+      "notes": [
+        "No recommended daily amount is set for total polyunsaturated fat."
+      ],
+      "recommended": null,
+      "slug": "polyunsaturated-fat",
+      "source_ids": [
+        "nasem_macronutrients_2005"
+      ],
+      "style": "info",
+      "summary": "A type of fat found in vegetable oils, nuts, seeds and fish; it includes omega-3 and omega-6 fats.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "fats",
+      "health_type": null,
+      "iu": null,
+      "key": "omega_3",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Omega-3",
+      "notes": [
+        "The AI applies to alpha-linolenic acid (ALA) only; EPA and DHA have no separate recommended amount."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 1.1,
+          "31-50": 1.1,
+          "51-70": 1.1,
+          "71+": 1.1
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 1.6,
+          "31-50": 1.6,
+          "51-70": 1.6,
+          "71+": 1.6
+        }
+      },
+      "slug": "omega-3",
+      "source_ids": [
+        "ods_omega3_hp",
+        "nasem_macronutrients_2005"
+      ],
+      "style": "target",
+      "summary": "Essential fats found in foods such as flaxseed, walnuts and fish.",
+      "unit": "g",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "fats",
+      "health_type": "dietary_cholesterol",
+      "iu": null,
+      "key": "cholesterol",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Cholesterol",
+      "notes": [
+        "Keep as low as possible while eating a nutritionally adequate diet; no numeric limit is set."
+      ],
+      "recommended": null,
+      "slug": "cholesterol",
+      "source_ids": [
+        "nasem_macronutrients_2005",
+        "hc_dri_macronutrients"
+      ],
+      "style": "info",
+      "summary": "A fat-like substance found in animal foods such as eggs, meat and dairy.",
+      "unit": "mg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "minerals",
+      "health_type": "dietary_sodium",
+      "iu": null,
+      "key": "sodium",
+      "limit": {
+        "basis": "CDRR",
+        "kind": "fixed",
+        "value": 2300
+      },
+      "mass_forms": null,
+      "name": "Sodium",
+      "notes": [
+        "2,300 mg is the Chronic Disease Risk Reduction Intake (CDRR): cutting intake above it is expected to lower chronic disease risk.",
+        "The Adequate Intake (AI) for adults is 1,500 mg."
+      ],
+      "recommended": null,
+      "slug": "sodium",
+      "source_ids": [
+        "nasem_sodium_potassium_2019",
+        "dga_2025_2030"
+      ],
+      "style": "limit",
+      "summary": "A mineral eaten mostly as salt; it helps control the body's fluid balance.",
+      "unit": "mg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "minerals",
+      "health_type": "dietary_potassium",
+      "iu": null,
+      "key": "potassium",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Potassium",
+      "notes": [
+        "No upper limit is set for potassium from food; people with kidney problems should follow their clinician's advice."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 2600,
+          "31-50": 2600,
+          "51-70": 2600,
+          "71+": 2600
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 3400,
+          "31-50": 3400,
+          "51-70": 3400,
+          "71+": 3400
+        }
+      },
+      "slug": "potassium",
+      "source_ids": [
+        "ods_potassium_hp",
+        "nasem_sodium_potassium_2019"
+      ],
+      "style": "target",
+      "summary": "A mineral that helps nerves and muscles work and keeps fluid levels normal.",
+      "unit": "mg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "minerals",
+      "health_type": "dietary_calcium",
+      "iu": null,
+      "key": "calcium",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Calcium",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 1000,
+          "31-50": 1000,
+          "51-70": 1200,
+          "71+": 1200
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 1000,
+          "31-50": 1000,
+          "51-70": 1000,
+          "71+": 1200
+        }
+      },
+      "slug": "calcium",
+      "source_ids": [
+        "ods_calcium_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral your body needs to build and keep strong bones and teeth.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 2500,
+          "31-50": 2500,
+          "51-70": 2000,
+          "71+": 2000
+        },
+        "male": {
+          "19-30": 2500,
+          "31-50": 2500,
+          "51-70": 2000,
+          "71+": 2000
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "minerals",
+      "health_type": "dietary_iron",
+      "iu": null,
+      "key": "iron",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Iron",
+      "notes": [
+        "People who eat a vegetarian diet need about 1.8 times more iron."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 18,
+          "31-50": 18,
+          "51-70": 8,
+          "71+": 8
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 8,
+          "31-50": 8,
+          "51-70": 8,
+          "71+": 8
+        }
+      },
+      "slug": "iron",
+      "source_ids": [
+        "ods_iron_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral your body uses to make hemoglobin, which carries oxygen in the blood.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 45,
+          "31-50": 45,
+          "51-70": 45,
+          "71+": 45
+        },
+        "male": {
+          "19-30": 45,
+          "31-50": 45,
+          "51-70": 45,
+          "71+": 45
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "minerals",
+      "health_type": "dietary_magnesium",
+      "iu": null,
+      "key": "magnesium",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Magnesium",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 310,
+          "31-50": 320,
+          "51-70": 320,
+          "71+": 320
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 400,
+          "31-50": 420,
+          "51-70": 420,
+          "71+": 420
+        }
+      },
+      "slug": "magnesium",
+      "source_ids": [
+        "ods_magnesium_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral involved in muscle and nerve function and in making protein and bone.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 350,
+          "31-50": 350,
+          "51-70": 350,
+          "71+": 350
+        },
+        "male": {
+          "19-30": 350,
+          "31-50": 350,
+          "51-70": 350,
+          "71+": 350
+        },
+        "note": "Applies only to magnesium from supplements and medications, not magnesium in food and drinks.",
+        "scope": "supplements_only"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "minerals",
+      "health_type": "dietary_zinc",
+      "iu": null,
+      "key": "zinc",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Zinc",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 8,
+          "31-50": 8,
+          "51-70": 8,
+          "71+": 8
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 11,
+          "31-50": 11,
+          "51-70": 11,
+          "71+": 11
+        }
+      },
+      "slug": "zinc",
+      "source_ids": [
+        "ods_zinc_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral that helps the immune system and wound healing and is needed to make proteins and DNA.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 40,
+          "31-50": 40,
+          "51-70": 40,
+          "71+": 40
+        },
+        "male": {
+          "19-30": 40,
+          "31-50": 40,
+          "51-70": 40,
+          "71+": 40
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_phosphorus",
+      "iu": null,
+      "key": "phosphorus",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Phosphorus",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 700,
+          "31-50": 700,
+          "51-70": 700,
+          "71+": 700
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 700,
+          "31-50": 700,
+          "51-70": 700,
+          "71+": 700
+        }
+      },
+      "slug": "phosphorus",
+      "source_ids": [
+        "ods_phosphorus_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral that is part of bones, teeth and DNA and of ATP, the molecule cells use to store energy.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 4000,
+          "31-50": 4000,
+          "51-70": 4000,
+          "71+": 3000
+        },
+        "male": {
+          "19-30": 4000,
+          "31-50": 4000,
+          "51-70": 4000,
+          "71+": 3000
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_chloride",
+      "iu": null,
+      "key": "chloride",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Chloride",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 2300,
+          "31-50": 2300,
+          "51-70": 2000,
+          "71+": 1800
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 2300,
+          "31-50": 2300,
+          "51-70": 2000,
+          "71+": 1800
+        }
+      },
+      "slug": "chloride",
+      "source_ids": [
+        "hc_dri_elements"
+      ],
+      "style": "target",
+      "summary": "An electrolyte, eaten mostly as salt (sodium chloride), that helps keep the body's fluid balance.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 3600,
+          "31-50": 3600,
+          "51-70": 3600,
+          "71+": 3600
+        },
+        "male": {
+          "19-30": 3600,
+          "31-50": 3600,
+          "51-70": 3600,
+          "71+": 3600
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_copper",
+      "iu": null,
+      "key": "copper",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Copper",
+      "notes": [
+        "Amounts are in mg; the RDA of 0.9 mg equals 900 mcg."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 0.9,
+          "31-50": 0.9,
+          "51-70": 0.9,
+          "71+": 0.9
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 0.9,
+          "31-50": 0.9,
+          "51-70": 0.9,
+          "71+": 0.9
+        }
+      },
+      "slug": "copper",
+      "source_ids": [
+        "ods_copper_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral that enzymes need for energy production, iron metabolism and making connective tissue.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 10,
+          "31-50": 10,
+          "51-70": 10,
+          "71+": 10
+        },
+        "male": {
+          "19-30": 10,
+          "31-50": 10,
+          "51-70": 10,
+          "71+": 10
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_manganese",
+      "iu": null,
+      "key": "manganese",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Manganese",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 1.8,
+          "31-50": 1.8,
+          "51-70": 1.8,
+          "71+": 1.8
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 2.3,
+          "31-50": 2.3,
+          "51-70": 2.3,
+          "71+": 2.3
+        }
+      },
+      "slug": "manganese",
+      "source_ids": [
+        "ods_manganese_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral that enzymes need for metabolism, bone formation and protecting cells from damage.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 11,
+          "31-50": 11,
+          "51-70": 11,
+          "71+": 11
+        },
+        "male": {
+          "19-30": 11,
+          "31-50": 11,
+          "51-70": 11,
+          "71+": 11
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_selenium",
+      "iu": null,
+      "key": "selenium",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Selenium",
+      "notes": [
+        "In 2023 the European Food Safety Authority set a lower upper limit of 255 mcg a day for adults."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 55,
+          "31-50": 55,
+          "51-70": 55,
+          "71+": 55
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 55,
+          "31-50": 55,
+          "51-70": 55,
+          "71+": 55
+        }
+      },
+      "slug": "selenium",
+      "source_ids": [
+        "ods_selenium_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral in proteins that support thyroid hormone metabolism, DNA synthesis, reproduction and protection from cell damage.",
+      "unit": "mcg",
+      "upper_limit": {
+        "female": {
+          "19-30": 400,
+          "31-50": 400,
+          "51-70": 400,
+          "71+": 400
+        },
+        "male": {
+          "19-30": 400,
+          "31-50": 400,
+          "51-70": 400,
+          "71+": 400
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_chromium",
+      "iu": null,
+      "key": "chromium",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Chromium",
+      "notes": [
+        "No upper limit is set because no adverse effects have been linked to high intakes from food or supplements."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 25,
+          "31-50": 25,
+          "51-70": 20,
+          "71+": 20
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 35,
+          "31-50": 35,
+          "51-70": 30,
+          "71+": 30
+        }
+      },
+      "slug": "chromium",
+      "source_ids": [
+        "ods_chromium_hp"
+      ],
+      "style": "target",
+      "summary": "A trace mineral that might help insulin work; how it does so is not yet known.",
+      "unit": "mcg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_molybdenum",
+      "iu": null,
+      "key": "molybdenum",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Molybdenum",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 45,
+          "31-50": 45,
+          "51-70": 45,
+          "71+": 45
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 45,
+          "31-50": 45,
+          "51-70": 45,
+          "71+": 45
+        }
+      },
+      "slug": "molybdenum",
+      "source_ids": [
+        "ods_molybdenum_hp"
+      ],
+      "style": "target",
+      "summary": "A trace mineral that enzymes need to break down sulfur-containing amino acids and other compounds.",
+      "unit": "mcg",
+      "upper_limit": {
+        "female": {
+          "19-30": 2000,
+          "31-50": 2000,
+          "51-70": 2000,
+          "71+": 2000
+        },
+        "male": {
+          "19-30": 2000,
+          "31-50": 2000,
+          "51-70": 2000,
+          "71+": 2000
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "minerals",
+      "health_type": "dietary_iodine",
+      "iu": null,
+      "key": "iodine",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Iodine",
+      "notes": [],
+      "recommended": {
+        "female": {
+          "19-30": 150,
+          "31-50": 150,
+          "51-70": 150,
+          "71+": 150
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 150,
+          "31-50": 150,
+          "51-70": 150,
+          "71+": 150
+        }
+      },
+      "slug": "iodine",
+      "source_ids": [
+        "ods_iodine_hp"
+      ],
+      "style": "target",
+      "summary": "A mineral your thyroid needs to make thyroid hormones.",
+      "unit": "mcg",
+      "upper_limit": {
+        "female": {
+          "19-30": 1100,
+          "31-50": 1100,
+          "51-70": 1100,
+          "71+": 1100
+        },
+        "male": {
+          "19-30": 1100,
+          "31-50": 1100,
+          "51-70": 1100,
+          "71+": 1100
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_a",
+      "iu": {
+        "forms": {
+          "food_alpha_carotene_beta_cryptoxanthin": 0.025,
+          "food_beta_carotene": 0.05,
+          "retinol": 0.3,
+          "supplement_beta_carotene": 0.3
+        },
+        "unit": "mcg"
+      },
+      "key": "vitamin_a",
+      "limit": null,
+      "mass_forms": {
+        "food_alpha_carotene_beta_cryptoxanthin": 24,
+        "food_beta_carotene": 12,
+        "supplement_beta_carotene": 2
+      },
+      "name": "Vitamin A",
+      "notes": [
+        "Amounts are in mcg retinol activity equivalents (RAE)."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 700,
+          "31-50": 700,
+          "51-70": 700,
+          "71+": 700
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 900,
+          "31-50": 900,
+          "51-70": 900,
+          "71+": 900
+        }
+      },
+      "slug": "vitamin-a",
+      "source_ids": [
+        "ods_vitamin_a_hp"
+      ],
+      "style": "target",
+      "summary": "A vitamin that supports vision, the immune system and reproduction.",
+      "unit": "mcg",
+      "upper_limit": {
+        "female": {
+          "19-30": 3000,
+          "31-50": 3000,
+          "51-70": 3000,
+          "71+": 3000
+        },
+        "male": {
+          "19-30": 3000,
+          "31-50": 3000,
+          "51-70": 3000,
+          "71+": 3000
+        },
+        "note": "Applies to preformed vitamin A (retinol and retinyl esters) only; beta-carotene does not count toward it. Ayuvo tracks total vitamin A in mcg RAE, so the line is a guide.",
+        "scope": "preformed_only"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_c",
+      "iu": null,
+      "key": "vitamin_c",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Vitamin C",
+      "notes": [
+        "People who smoke need 35 mg more vitamin C per day."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 75,
+          "31-50": 75,
+          "51-70": 75,
+          "71+": 75
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 90,
+          "31-50": 90,
+          "51-70": 90,
+          "71+": 90
+        }
+      },
+      "slug": "vitamin-c",
+      "source_ids": [
+        "ods_vitamin_c_hp"
+      ],
+      "style": "target",
+      "summary": "A vitamin that acts as an antioxidant, helps make collagen and helps absorb iron from plant foods.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 2000,
+          "31-50": 2000,
+          "51-70": 2000,
+          "71+": 2000
+        },
+        "male": {
+          "19-30": 2000,
+          "31-50": 2000,
+          "51-70": 2000,
+          "71+": 2000
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_d",
+      "iu": {
+        "mcg_per_iu": 0.025,
+        "unit": "mcg"
+      },
+      "key": "vitamin_d",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Vitamin D",
+      "notes": [
+        "1 mcg of vitamin D equals 40 IU."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 15,
+          "31-50": 15,
+          "51-70": 15,
+          "71+": 20
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 15,
+          "31-50": 15,
+          "51-70": 15,
+          "71+": 20
+        }
+      },
+      "slug": "vitamin-d",
+      "source_ids": [
+        "ods_vitamin_d_hp"
+      ],
+      "style": "target",
+      "summary": "A vitamin that helps your body absorb calcium to build and maintain bones.",
+      "unit": "mcg",
+      "upper_limit": {
+        "female": {
+          "19-30": 100,
+          "31-50": 100,
+          "51-70": 100,
+          "71+": 100
+        },
+        "male": {
+          "19-30": 100,
+          "31-50": 100,
+          "51-70": 100,
+          "71+": 100
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_e",
+      "iu": {
+        "forms": {
+          "natural": 0.67,
+          "synthetic": 0.45
+        },
+        "unit": "mg"
+      },
+      "key": "vitamin_e",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Vitamin E",
+      "notes": [
+        "Amounts are in mg alpha-tocopherol. 1 IU natural (d-alpha) = 0.67 mg; 1 IU synthetic (dl-alpha) = 0.45 mg."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 15,
+          "31-50": 15,
+          "51-70": 15,
+          "71+": 15
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 15,
+          "31-50": 15,
+          "51-70": 15,
+          "71+": 15
+        }
+      },
+      "slug": "vitamin-e",
+      "source_ids": [
+        "ods_vitamin_e_hp"
+      ],
+      "style": "target",
+      "summary": "A fat-soluble antioxidant that helps protect cells from damage.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 1000,
+          "31-50": 1000,
+          "51-70": 1000,
+          "71+": 1000
+        },
+        "male": {
+          "19-30": 1000,
+          "31-50": 1000,
+          "51-70": 1000,
+          "71+": 1000
+        },
+        "note": "Applies to supplemental alpha-tocopherol (supplements and fortified foods), not vitamin E naturally in food.",
+        "scope": "supplements_only"
+      }
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_k",
+      "iu": null,
+      "key": "vitamin_k",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Vitamin K",
+      "notes": [
+        "No upper limit is set. People taking blood thinners such as warfarin should keep vitamin K intake steady and follow their clinician's advice."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 90,
+          "31-50": 90,
+          "51-70": 90,
+          "71+": 90
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 120,
+          "31-50": 120,
+          "51-70": 120,
+          "71+": 120
+        }
+      },
+      "slug": "vitamin-k",
+      "source_ids": [
+        "ods_vitamin_k_hp"
+      ],
+      "style": "target",
+      "summary": "A vitamin needed for normal blood clotting and for bones.",
+      "unit": "mcg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_b12",
+      "iu": null,
+      "key": "vitamin_b12",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Vitamin B12",
+      "notes": [
+        "No upper limit is set because of its low potential for toxicity."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 2.4,
+          "31-50": 2.4,
+          "51-70": 2.4,
+          "71+": 2.4
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 2.4,
+          "31-50": 2.4,
+          "51-70": 2.4,
+          "71+": 2.4
+        }
+      },
+      "slug": "vitamin-b12",
+      "source_ids": [
+        "ods_vitamin_b12_hp"
+      ],
+      "style": "target",
+      "summary": "A vitamin that helps keep nerve and blood cells healthy and helps make DNA.",
+      "unit": "mcg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "vitamins",
+      "health_type": "dietary_folate",
+      "iu": null,
+      "key": "folate",
+      "limit": null,
+      "mass_forms": {
+        "folic_acid": 0.6
+      },
+      "name": "Folate",
+      "notes": [
+        "Amounts are in mcg dietary folate equivalents (DFE); 1 mcg DFE = 0.6 mcg folic acid taken with food."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 400,
+          "31-50": 400,
+          "51-70": 400,
+          "71+": 400
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 400,
+          "31-50": 400,
+          "51-70": 400,
+          "71+": 400
+        }
+      },
+      "slug": "folate",
+      "source_ids": [
+        "ods_folate_hp"
+      ],
+      "style": "target",
+      "summary": "A B vitamin needed to make DNA and for cell division.",
+      "unit": "mcg",
+      "upper_limit": {
+        "female": {
+          "19-30": 1000,
+          "31-50": 1000,
+          "51-70": 1000,
+          "71+": 1000
+        },
+        "male": {
+          "19-30": 1000,
+          "31-50": 1000,
+          "51-70": 1000,
+          "71+": 1000
+        },
+        "note": "Applies to folic acid from supplements and fortified foods (mcg, not mcg DFE), not folate naturally in food.",
+        "scope": "folic_acid_only"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "vitamins",
+      "health_type": "dietary_vitamin_b6",
+      "iu": null,
+      "key": "vitamin_b6",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Vitamin B6",
+      "notes": [
+        "In 2023 the European Food Safety Authority set a lower upper limit of 12 mg a day for adults."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 1.3,
+          "31-50": 1.3,
+          "51-70": 1.5,
+          "71+": 1.5
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 1.3,
+          "31-50": 1.3,
+          "51-70": 1.7,
+          "71+": 1.7
+        }
+      },
+      "slug": "vitamin-b6",
+      "source_ids": [
+        "ods_vitamin_b6_hp"
+      ],
+      "style": "target",
+      "summary": "A B vitamin that enzymes need for protein, carbohydrate and fat metabolism.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 100,
+          "31-50": 100,
+          "51-70": 100,
+          "71+": 100
+        },
+        "male": {
+          "19-30": 100,
+          "31-50": 100,
+          "51-70": 100,
+          "71+": 100
+        },
+        "note": "Applies to food, drinks and supplements combined.",
+        "scope": "all_sources"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "vitamins",
+      "health_type": "dietary_thiamin",
+      "iu": null,
+      "key": "thiamin",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Thiamin",
+      "notes": [
+        "No upper limit is set because no adverse effects from high intakes from food or supplements have been reported."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 1.1,
+          "31-50": 1.1,
+          "51-70": 1.1,
+          "71+": 1.1
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 1.2,
+          "31-50": 1.2,
+          "51-70": 1.2,
+          "71+": 1.2
+        }
+      },
+      "slug": "thiamin",
+      "source_ids": [
+        "ods_thiamin_hp"
+      ],
+      "style": "target",
+      "summary": "A B vitamin (vitamin B1) that plays a critical role in turning food into energy.",
+      "unit": "mg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": false,
+      "category": "vitamins",
+      "health_type": "dietary_riboflavin",
+      "iu": null,
+      "key": "riboflavin",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Riboflavin",
+      "notes": [
+        "No upper limit is set because no adverse effects from high intakes from food or supplements have been reported."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 1.1,
+          "31-50": 1.1,
+          "51-70": 1.1,
+          "71+": 1.1
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 1.3,
+          "31-50": 1.3,
+          "51-70": 1.3,
+          "71+": 1.3
+        }
+      },
+      "slug": "riboflavin",
+      "source_ids": [
+        "ods_riboflavin_hp"
+      ],
+      "style": "target",
+      "summary": "A B vitamin (vitamin B2) that helps produce energy and supports cell growth and function.",
+      "unit": "mg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": false,
+      "category": "vitamins",
+      "health_type": "dietary_niacin",
+      "iu": null,
+      "key": "niacin",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Niacin",
+      "notes": [
+        "Amounts are in mg niacin equivalents (NE); 1 mg NE equals 1 mg niacin or 60 mg of the amino acid tryptophan."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 14,
+          "31-50": 14,
+          "51-70": 14,
+          "71+": 14
+        },
+        "kind": "RDA",
+        "male": {
+          "19-30": 16,
+          "31-50": 16,
+          "51-70": 16,
+          "71+": 16
+        }
+      },
+      "slug": "niacin",
+      "source_ids": [
+        "ods_niacin_hp",
+        "hc_dri_vitamins"
+      ],
+      "style": "target",
+      "summary": "A B vitamin (vitamin B3) that the body uses to turn food into energy.",
+      "unit": "mg",
+      "upper_limit": {
+        "female": {
+          "19-30": 35,
+          "31-50": 35,
+          "51-70": 35,
+          "71+": 35
+        },
+        "male": {
+          "19-30": 35,
+          "31-50": 35,
+          "51-70": 35,
+          "71+": 35
+        },
+        "note": "Applies only to niacin from supplements and fortified foods (nicotinic acid and nicotinamide), not niacin naturally in food.",
+        "scope": "supplements_only"
+      }
+    },
+    {
+      "app_tracked": false,
+      "category": "vitamins",
+      "health_type": "dietary_biotin",
+      "iu": null,
+      "key": "biotin",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Biotin",
+      "notes": [
+        "No upper limit is set because there is no evidence that biotin is toxic at high intakes."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 30,
+          "31-50": 30,
+          "51-70": 30,
+          "71+": 30
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 30,
+          "31-50": 30,
+          "51-70": 30,
+          "71+": 30
+        }
+      },
+      "slug": "biotin",
+      "source_ids": [
+        "ods_biotin_hp"
+      ],
+      "style": "target",
+      "summary": "A B vitamin that enzymes need to break down fats, carbohydrates and protein.",
+      "unit": "mcg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": false,
+      "category": "vitamins",
+      "health_type": "dietary_pantothenic_acid",
+      "iu": null,
+      "key": "pantothenic_acid",
+      "limit": null,
+      "mass_forms": null,
+      "name": "Pantothenic Acid",
+      "notes": [
+        "No upper limit is set because no toxicity from high intakes has been reported."
+      ],
+      "recommended": {
+        "female": {
+          "19-30": 5,
+          "31-50": 5,
+          "51-70": 5,
+          "71+": 5
+        },
+        "kind": "AI",
+        "male": {
+          "19-30": 5,
+          "31-50": 5,
+          "51-70": 5,
+          "71+": 5
+        }
+      },
+      "slug": "pantothenic-acid",
+      "source_ids": [
+        "ods_pantothenic_acid_hp"
+      ],
+      "style": "target",
+      "summary": "A B vitamin (vitamin B5) that the body uses to make coenzyme A, which it needs to build and break down fats.",
+      "unit": "mg",
+      "upper_limit": null
+    },
+    {
+      "app_tracked": true,
+      "category": "other",
+      "health_type": "dietary_caffeine",
+      "iu": null,
+      "key": "caffeine",
+      "limit": {
+        "basis": "FDA",
+        "kind": "fixed",
+        "value": 400
+      },
+      "mass_forms": null,
+      "name": "Caffeine",
+      "notes": [
+        "The FDA cites 400 mg a day for most healthy adults as an amount not generally associated with negative effects; sensitivity varies."
+      ],
+      "recommended": null,
+      "slug": "caffeine",
+      "source_ids": [
+        "fda_caffeine"
+      ],
+      "style": "limit",
+      "summary": "A stimulant found in coffee, tea, energy drinks and some supplements.",
+      "unit": "mg",
+      "upper_limit": null
+    }
+  ],
+  "population": "adults 19+, not pregnant or lactating",
+  "population_note": "Values are for adults who are not pregnant or breastfeeding. Under 19, and with no birthday set, Ayuvo uses the 31-50 adult values. Pregnancy and breastfeeding values are not modelled.",
+  "sources": {
+    "dga_2020_2025": {
+      "checked": "2026-09-27",
+      "publisher": "U.S. Department of Agriculture and U.S. Department of Health and Human Services",
+      "title": "Dietary Guidelines for Americans, 2020-2025",
+      "url": "https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf"
+    },
+    "dga_2025_2030": {
+      "checked": "2026-09-27",
+      "publisher": "U.S. Department of Agriculture and U.S. Department of Health and Human Services",
+      "title": "Dietary Guidelines for Americans, 2025-2030",
+      "url": "https://cdn.realfood.gov/DGA.pdf"
+    },
+    "fda_caffeine": {
+      "checked": "2026-09-27",
+      "page_updated": "2024-08-28",
+      "publisher": "U.S. Food and Drug Administration",
+      "title": "Spilling the Beans: How Much Caffeine Is Too Much?",
+      "url": "https://www.fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much"
+    },
+    "hc_dri_elements": {
+      "checked": "2026-09-27",
+      "note": "Chloride AI 2,300 mg (19-50), 2,000 mg (51-70), 1,800 mg (over 70) and UL 3,600 mg for adults of both sexes.",
+      "page_updated": "2025-11-19",
+      "publisher": "Health Canada",
+      "title": "Dietary Reference Intakes tables: Reference values for elements",
+      "url": "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/reference-values-elements.html"
+    },
+    "hc_dri_macronutrients": {
+      "checked": "2026-09-27",
+      "note": "Reproduces the NASEM macronutrient DRIs (total fiber AI, alpha-linolenic acid AI, 'as low as possible' for trans fat and cholesterol).",
+      "publisher": "Health Canada",
+      "title": "Dietary Reference Intakes tables: Reference values for macronutrients",
+      "url": "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/reference-values-macronutrients.html"
+    },
+    "hc_dri_vitamins": {
+      "checked": "2026-09-27",
+      "note": "Footnote: the UL for niacin applies only to synthetic forms obtained from supplements, fortified foods, or a combination of the two.",
+      "page_updated": "2025-11-19",
+      "publisher": "Health Canada",
+      "title": "Dietary Reference Intakes tables: Reference values for vitamins",
+      "url": "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/reference-values-vitamins.html"
+    },
+    "nasem_macronutrients_2005": {
+      "checked": "2026-09-27",
+      "publisher": "National Academies of Sciences, Engineering, and Medicine",
+      "title": "Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids (2005)",
+      "url": "https://nap.nationalacademies.org/catalog/10490"
+    },
+    "nasem_sodium_potassium_2019": {
+      "checked": "2026-09-27",
+      "publisher": "National Academies of Sciences, Engineering, and Medicine",
+      "title": "Dietary Reference Intakes for Sodium and Potassium (2019)",
+      "url": "https://nap.nationalacademies.org/catalog/25353/dietary-reference-intakes-for-sodium-and-potassium"
+    },
+    "ods_biotin_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-01-10",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Biotin - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Biotin-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_calcium_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2026-06-22",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Calcium - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Calcium-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_chromium_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-06-02",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Chromium - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Chromium-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_copper_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-10-18",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Copper - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Copper-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_folate_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-11-30",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Folate - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Folate-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_iodine_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2024-11-05",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Iodine - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_iron_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-09-04",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Iron - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_magnesium_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2026-01-06",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Magnesium - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_manganese_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2021-03-29",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Manganese - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Manganese-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_molybdenum_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2021-03-30",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Molybdenum - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Molybdenum-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_niacin_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-11-18",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Niacin - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Niacin-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_omega3_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-08-22",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Omega-3 Fatty Acids - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Omega3FattyAcids-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_pantothenic_acid_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2026-05-01",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Pantothenic Acid - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/PantothenicAcid-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_phosphorus_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2023-05-04",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Phosphorus - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Phosphorus-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_potassium_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-06-02",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Potassium - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Potassium-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_riboflavin_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2022-05-11",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Riboflavin - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Riboflavin-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_selenium_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-09-04",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Selenium - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Selenium-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_thiamin_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2023-02-09",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Thiamin - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Thiamin-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_a_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-03-10",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin A and Carotenoids - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminA-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_b12_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-07-02",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin B12 - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminB12-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_b6_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2023-06-16",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin B6 - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminB6-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_c_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-07-31",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin C - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_d_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2025-06-27",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin D - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_e_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2021-03-26",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin E - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminE-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_vitamin_k_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2021-03-29",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Vitamin K - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/VitaminK-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    },
+    "ods_zinc_hp": {
+      "checked": "2026-09-27",
+      "page_updated": "2026-01-06",
+      "publisher": "NIH Office of Dietary Supplements",
+      "title": "Zinc - Health Professional Fact Sheet",
+      "url": "https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/",
+      "verified_via": "Read from the Internet Archive capture of this page taken in September 2026 (ods.od.nih.gov blocks automated requests)."
+    }
+  },
+  "sports_supplements": [
+    {
+      "key": "creatine",
+      "unit": "g"
+    },
+    {
+      "key": "beta_alanine",
+      "unit": "g"
+    },
+    {
+      "key": "l_citrulline",
+      "unit": "g"
+    },
+    {
+      "key": "l_carnitine",
+      "unit": "g"
+    },
+    {
+      "key": "l_arginine",
+      "unit": "g"
+    },
+    {
+      "key": "taurine",
+      "unit": "g"
+    },
+    {
+      "key": "betaine",
+      "unit": "g"
+    },
+    {
+      "key": "hmb",
+      "unit": "g"
+    }
+  ],
+  "unit_aliases": {
+    "ug": "mcg",
+    "µg": "mcg",
+    "μg": "mcg"
+  },
+  "units": [
+    "g",
+    "mg",
+    "mcg"
+  ],
+  "version": 1
+}

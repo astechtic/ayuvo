@@ -1,4 +1,6 @@
--- Ayuvo Medications — SQLite schema v1 (contract: docs/medications.md).
+-- Ayuvo Medications — SQLite schema v1 base (contract: docs/medications.md).
+-- Current version: 2 = this file + migrations/001_medication_nutrients.sql (supplement nutrients).
+-- This file stays the v1 base and is never edited for later versions: a fresh install runs it, then every migration.
 --
 -- A separate database from Health Data (shared/health/schema.sql) and Health Records (shared/records/schema.sql):
 --   Android: medications/data/MedicationsSchema.kt   (SQLiteOpenHelper, ayuvo_medications.db)

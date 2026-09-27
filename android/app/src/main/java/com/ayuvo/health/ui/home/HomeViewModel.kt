@@ -42,6 +42,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.ayuvo.health.nutrients.NutrientAmount
+import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -106,8 +109,15 @@ data class HomeUiState(
 /** Daily step total from Health Connect for [date]; null when health is off, unreadable, or loading. */
     val dailySteps: Int? = null,
     val homeBurnSummary: HomeBurnSummary? = null,
-    val addMenuConfig: AddMenuConfig = AddMenuConfig.Default
+    val addMenuConfig: AddMenuConfig = AddMenuConfig.Default,
+    /** Supplement nutrients and taken doses (docs/nutrients.md §6). */
+    val supplements: SupplementSnapshot = SupplementSnapshot.EMPTY
 ) {
+    /** Food + supplement totals of the selected day (the one totals path, docs/nutrients.md §6). */
+    val nutrientTotals: NutrientTotals by lazy { NutrientTotals(todayEntries, supplements, ZoneId.systemDefault()) }
+
+    fun nutrientTotal(key: String): NutrientAmount = nutrientTotals.total(key, date)
+
     val caloriesToday: Int get() = todayEntries.sumOf { it.calories }
     val proteinToday: Double get() = todayEntries.sumOf { it.protein }
     val carbsToday: Double get() = todayEntries.sumOf { it.carbs }
@@ -193,6 +203,10 @@ private val _stepsRefreshEpoch = MutableStateFlow(0)
                     container.imageStore.warmThumbnails(filenames)
                 }
             }
+            .launchIn(viewModelScope)
+
+        container.supplementIntake.snapshots
+            .onEach { s -> _ui.value = _ui.value.copy(supplements = s) }
             .launchIn(viewModelScope)
 
         container.prefs.homeTopNutrients

@@ -56,6 +56,12 @@ import kotlin.math.roundToInt
 enum class HealthChartStyle { BAR, LINE, RANGE }
 
 /**
+ * A labelled dashed rule across the plot (nutrient "Recommended" / "Your goal" / "Upper limit" /
+ * "Limit", docs/nutrients.md §5). The y range always grows to include it.
+ */
+data class ChartReferenceLine(val value: Double, val label: String, val color: Color)
+
+/**
  * Bucketed metric chart (docs/charts.md): bars (SUM/DURATION/COUNT), monotone line + area
  * (AVERAGE/LATEST) or min–max capsules with an average dot (MIN_MAX, blood pressure as two series).
  * Y gridlines come from `nice_ticks` with labels on the lines; x labels sit under their bucket.
@@ -81,7 +87,9 @@ fun HealthBucketChart(
     /** Called for a tap on a bucket with data; true when the tap was handled (drill-down). */
     onBucketTap: ((Int) -> Boolean)? = null,
     /** Selection rule / marker colour; the theme accent by default. */
-    scrubColor: Color = AppColors.Calorie
+    scrubColor: Color = AppColors.Calorie,
+    /** Extra dashed rules, each in its own colour with its own label. */
+    referenceLines: List<ChartReferenceLine> = emptyList()
 ) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         val valuesOf: (HealthChartPoint) -> Double? = chartValueOf(style, valueSelector)
@@ -91,7 +99,7 @@ fun HealthBucketChart(
                 HealthChartStyle.BAR, HealthChartStyle.LINE -> listOfNotNull(valuesOf(p))
                 HealthChartStyle.RANGE -> listOfNotNull(p.min, p.max, p.v2Min, p.v2Max)
             }
-        } + listOfNotNull(goalValue)
+        } + listOfNotNull(goalValue) + referenceLines.map { it.value }
         val ticks = remember(allValues, style) {
             MetricsReference.niceTicks(allValues.minOrNull() ?: 0.0, allValues.maxOrNull() ?: 0.0, 4, style == HealthChartStyle.BAR)
         }
@@ -195,6 +203,10 @@ fun HealthBucketChart(
                             val gy = yOf(goal)
                             drawLine(secondary, Offset(0f, gy), Offset(w, gy), strokeWidth = 1.5f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 6f)))
                         }
+                        referenceLines.forEach { line ->
+                            val ly = yOf(line.value)
+                            drawLine(line.color, Offset(0f, ly), Offset(w, ly), strokeWidth = 2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 7f)))
+                        }
                         selected?.takeIf { it in points.indices }?.let { idx ->
                             val x = idx * slot + slot / 2f
                             drawLine(scrubColor.copy(alpha = 0.6f), Offset(x, 0f), Offset(x, h), strokeWidth = 1.5f)
@@ -203,6 +215,29 @@ fun HealthBucketChart(
                                 drawCircle(scrubColor, radius = dotPx * 1.6f, center = Offset(x, yOf(it)))
                             }
                         }
+                    }
+                    // Rule labels sit just above their line at the left edge (the newest bars are on the
+                    // right); a label that would overlap the one below it stacks above it instead.
+                    val labelHeightPx = with(density) { 18.dp.toPx() }
+                    var belowTop = Float.POSITIVE_INFINITY
+                    referenceLines.sortedBy { it.value }.forEach { line ->
+                        val ly = yFraction(line.value, heightPx) * heightPx
+                        var top = ly - labelHeightPx
+                        if (top + labelHeightPx > belowTop) top = belowTop - labelHeightPx
+                        top = top.coerceAtLeast(0f)
+                        belowTop = top
+                        Text(
+                            line.label,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = line.color,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .offset { IntOffset(0, top.roundToInt()) }
+                                .background(surface.copy(alpha = 0.85f), RoundedCornerShape(4.dp))
+                                .padding(horizontal = 4.dp)
+                        )
                     }
                     goalValue?.let { goal ->
                         val gy = yFraction(goal, heightPx) * heightPx

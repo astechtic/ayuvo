@@ -1,0 +1,335 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "totals": {
+          "calcium": {
+            "food": 550.5,
+            "supplements": null,
+            "total": 550.5
+          },
+          "iron": {
+            "food": null,
+            "supplements": null,
+            "total": null
+          },
+          "vitamin_d": {
+            "food": 3.7,
+            "supplements": 1500.0,
+            "total": 1503.7
+          },
+          "zinc": {
+            "food": null,
+            "supplements": 10.0,
+            "total": 10.0
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-22",
+        "food_entries": [
+          {
+            "nutrients": {
+              "calcium": 300,
+              "iron": null,
+              "vitamin_d": 2.5
+            },
+            "t_ms": 1790078400000
+          },
+          {
+            "nutrients": {
+              "calcium": 250.5,
+              "vitamin_d": 1.2
+            },
+            "t_ms": 1790118000000
+          }
+        ],
+        "supplement_entries": [
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790082000000,
+            "value": 1500
+          },
+          {
+            "medication_id": "med-multi",
+            "nutrient_key": "zinc",
+            "t_ms": 1790082000000,
+            "value": 10
+          }
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "new_york_food_and_supplements",
+      "notes": "iron is named with null only: all parts null. zinc comes only from supplements."
+    },
+    {
+      "expected": {
+        "totals": {
+          "sodium": {
+            "food": 1000.0,
+            "supplements": null,
+            "total": 1000.0
+          }
+        }
+      },
+      "input": {
+        "day": "2026-03-08",
+        "food_entries": [
+          {
+            "nutrients": {
+              "sodium": 900
+            },
+            "t_ms": 1772945940000
+          },
+          {
+            "nutrients": {
+              "sodium": 400
+            },
+            "t_ms": 1772947800000
+          },
+          {
+            "nutrients": {
+              "sodium": 600
+            },
+            "t_ms": 1773027000000
+          },
+          {
+            "nutrients": {
+              "sodium": 700
+            },
+            "t_ms": 1773029400000
+          }
+        ],
+        "supplement_entries": [],
+        "time_zone": "America/New_York"
+      },
+      "name": "new_york_spring_forward_day",
+      "notes": "23-hour day: only the 00:30 and 23:30 entries count."
+    },
+    {
+      "expected": {
+        "totals": {
+          "caffeine": {
+            "food": 175.0,
+            "supplements": null,
+            "total": 175.0
+          }
+        }
+      },
+      "input": {
+        "day": "2026-10-25",
+        "food_entries": [
+          {
+            "nutrients": {
+              "caffeine": 95
+            },
+            "t_ms": 1792888200000
+          },
+          {
+            "nutrients": {
+              "caffeine": 80
+            },
+            "t_ms": 1792891800000
+          },
+          {
+            "nutrients": {
+              "caffeine": 120
+            },
+            "t_ms": 1792972800000
+          }
+        ],
+        "supplement_entries": [
+          {
+            "medication_id": "m",
+            "nutrient_key": "caffeine",
+            "t_ms": 1792882740000,
+            "value": 200
+          }
+        ],
+        "time_zone": "Europe/London"
+      },
+      "name": "london_fall_back_day",
+      "notes": "25-hour day: both 01:30 entries count; the next midnight and the day before do not."
+    },
+    {
+      "expected": {
+        "totals": {
+          "fiber": {
+            "food": 10.5,
+            "supplements": null,
+            "total": 10.5
+          },
+          "vitamin_d": {
+            "food": null,
+            "supplements": 1500.0,
+            "total": 1500.0
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-21",
+        "food_entries": [
+          {
+            "nutrients": {
+              "fiber": 4
+            },
+            "t_ms": 1789929000000
+          },
+          {
+            "nutrients": {
+              "fiber": 6.5
+            },
+            "t_ms": 1790015340000
+          },
+          {
+            "nutrients": {
+              "fiber": 10
+            },
+            "t_ms": 1790015400000
+          }
+        ],
+        "supplement_entries": [
+          {
+            "medication_id": "m",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1789957800000,
+            "value": 1500
+          },
+          {
+            "medication_id": "m",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790044200000,
+            "value": 1500
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "kolkata_midnight_edges"
+    },
+    {
+      "expected": {
+        "totals": {
+          "omega_3": {
+            "food": 0.3,
+            "supplements": 0.3,
+            "total": 0.6
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-01",
+        "food_entries": [
+          {
+            "nutrients": {
+              "omega_3": 0.1
+            },
+            "t_ms": 1788246000000
+          },
+          {
+            "nutrients": {
+              "omega_3": 0.2
+            },
+            "t_ms": 1788264000000
+          }
+        ],
+        "supplement_entries": [
+          {
+            "medication_id": "m",
+            "nutrient_key": "omega_3",
+            "t_ms": 1788249600000,
+            "value": 0.3
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "utc_float_sum_rounding",
+      "notes": "0.1 + 0.2 + 0.3 = 0.6 after rounding."
+    },
+    {
+      "expected": {
+        "totals": {
+          "magnesium": {
+            "food": null,
+            "supplements": null,
+            "total": null
+          },
+          "vitamin_k": {
+            "food": null,
+            "supplements": null,
+            "total": null
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-01",
+        "food_entries": [
+          {
+            "nutrients": {
+              "magnesium": null,
+              "vitamin_k": null
+            },
+            "t_ms": 1788246000000
+          }
+        ],
+        "supplement_entries": [],
+        "time_zone": "UTC"
+      },
+      "name": "utc_null_food_only",
+      "notes": "Named but unknown: food, supplements and total all null, never 0."
+    },
+    {
+      "expected": {
+        "totals": {
+          "calcium": {
+            "food": null,
+            "supplements": 1200.0,
+            "total": 1200.0
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-02",
+        "food_entries": [],
+        "supplement_entries": [
+          {
+            "medication_id": "m",
+            "nutrient_key": "calcium",
+            "t_ms": 1788336000000,
+            "value": 600
+          },
+          {
+            "medication_id": "m",
+            "nutrient_key": "calcium",
+            "t_ms": 1788379200000,
+            "value": 600
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "utc_supplement_only_day"
+    },
+    {
+      "expected": {
+        "totals": {}
+      },
+      "input": {
+        "day": "2026-09-03",
+        "food_entries": [
+          {
+            "nutrients": {
+              "iron": 5
+            },
+            "t_ms": 1788336000000
+          }
+        ],
+        "supplement_entries": [],
+        "time_zone": "UTC"
+      },
+      "name": "empty_day"
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "day_totals",
+  "version": 1
+}

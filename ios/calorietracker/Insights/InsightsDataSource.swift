@@ -48,6 +48,8 @@ struct InsightsDataSource {
     /// De-duplicated daily totals for `steps` / `active_energy` (the HealthKit statistics path the Summary Move
     /// ring uses). The mirror sums every source's rows, so it would count a phone and a watch twice.
     var dailyTotals: (_ typeID: String, _ from: Date, _ to: Date) async -> [String: Double]?
+    /// Contributions of taken supplement doses (docs/nutrients.md §6); empty without a medications database.
+    var supplementEntries: () async -> [NutrientsReference.SupplementEntry] = { [] }
 
     // MARK: Live
 
@@ -66,6 +68,11 @@ struct InsightsDataSource {
             },
             dailyTotals: { typeID, from, to in
                 await InsightsHealthKitTotals.daily(typeID: typeID, from: from, to: to, calendar: calendar, defaults: defaults)
+            },
+            supplementEntries: {
+                let runtime = MedicationsRuntime.shared
+                guard runtime.databaseExists || runtime.isOpen, await runtime.openIfNeeded(), let repository = runtime.repository else { return [] }
+                return (try? await repository.supplementData().entries) ?? []
             }
         )
     }
@@ -125,7 +132,7 @@ struct InsightsDataSource {
         inputs.timeZone = calendar.timeZone.identifier
         inputs.hrvKind = "sdnn"
         let from = InsightsDay.add(today, -Self.historyDays)
-        appInputs(into: &inputs, from: from, through: today)
+        appInputs(into: &inputs, from: from, through: today, supplements: await supplementEntries())
         if healthSyncEnabled, let database = await healthDatabase() {
             await Self.healthInputs(into: &inputs, database: database, from: from, through: today, calendar: calendar)
         }
@@ -140,7 +147,8 @@ struct InsightsDataSource {
     }
 
     /// Diary stores → nutrition, water, fasting, weight, body fat, strength volume and workouts.
-    func appInputs(into inputs: inout InsightsInputs, from: String, through today: String) {
+    func appInputs(into inputs: inout InsightsInputs, from: String, through today: String,
+                   supplements: [NutrientsReference.SupplementEntry] = []) {
         func key(_ date: Date) -> String { InsightsDay.key(for: date, calendar: calendar) }
         func inWindow(_ day: String) -> Bool { day >= from && day <= today }
 
@@ -164,6 +172,18 @@ struct InsightsDataSource {
             add(entry.sodium, \.sodiumMg)
             add(entry.saturatedFat, \.saturatedFatG)
             add(entry.caffeine, \.caffeineMg)
+            nutrition[day] = totals
+        }
+        // Taken supplement doses add to the "consider reducing" nutrients (never to calories), on logged days.
+        let supplementPaths: [String: WritableKeyPath<InsightsNutritionDay, Double?>] = [
+            "fiber": \.fiberG, "sugar": \.sugarG, "added_sugar": \.addedSugarG, "sodium": \.sodiumMg,
+            "saturated_fat": \.saturatedFatG, "caffeine": \.caffeineMg,
+        ]
+        for entry in supplements {
+            guard let path = supplementPaths[entry.nutrientKey] else { continue }
+            let day = key(Date(timeIntervalSince1970: Double(entry.tMs) / 1000))
+            guard inWindow(day), var totals = nutrition[day] else { continue }
+            totals[keyPath: path] = (totals[keyPath: path] ?? 0) + entry.value
             nutrition[day] = totals
         }
         inputs.nutrition = nutrition
@@ -230,23 +250,24 @@ struct InsightsDataSource {
     func targets() -> InsightsTargets {
         let p = profile()
         let goals = defaults.data(forKey: OptionalNutrientGoals.storageKey).map(OptionalNutrientGoals.decoded(from:)) ?? .defaults
+        let reference = NutrientCatalog.profile(p)
         func positive(_ value: Int) -> Double? { value > 0 ? Double(value) : nil }
         var t = InsightsTargets()
         t.calories = positive(p.effectiveCalories)
         t.proteinG = positive(p.effectiveProtein)
         t.carbsG = positive(p.effectiveCarbs)
         t.fatG = positive(p.effectiveFat)
-        t.fiberG = positive(goals.goal(for: .fiber))
+        t.fiberG = positive(goals.goal(for: .fiber, profile: reference))
         let waterGoal = defaults.integer(forKey: WaterSettings.dailyGoalKey)
         t.waterMl = Double(waterGoal > 0 ? waterGoal : WaterSettings.defaultDailyGoalMl)
         t.steps = Double(ActivitySettings.dailyStepGoal(defaults: defaults))
         let fastGoal = defaults.integer(forKey: FastingSettings.defaultGoalMinutesKey)
         t.fastingHours = Double(fastGoal > 0 ? fastGoal : FastingSettings.defaultGoalMinutes) / 60
-        t.sugarMaxG = positive(goals.goal(for: .sugar))
-        t.addedSugarMaxG = positive(goals.goal(for: .addedSugar))
-        t.sodiumMaxMg = positive(goals.goal(for: .sodium))
-        t.saturatedFatMaxG = positive(goals.goal(for: .saturatedFat))
-        t.caffeineMaxMg = positive(goals.goal(for: .caffeine))
+        t.sugarMaxG = positive(goals.goal(for: .sugar, profile: reference))
+        t.addedSugarMaxG = positive(goals.goal(for: .addedSugar, profile: reference))
+        t.sodiumMaxMg = positive(goals.goal(for: .sodium, profile: reference))
+        t.saturatedFatMaxG = positive(goals.goal(for: .saturatedFat, profile: reference))
+        t.caffeineMaxMg = positive(goals.goal(for: .caffeine, profile: reference))
         return t
     }
 

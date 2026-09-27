@@ -10,6 +10,11 @@ nonisolated enum AppLinks {
     static let privacyFirstURL = URL(string: "https://ayuvo-health.web.app/privacy-first")!
     static let openSourceURL = URL(string: "https://ayuvo-health.web.app/open-source")!
 
+    /// Nutrient guide page on the website (docs/nutrients.md §5), e.g. `/nutrients/vitamin-d`.
+    static func nutrientURL(_ slug: String) -> URL {
+        siteURL.appendingPathComponent("nutrients").appendingPathComponent(slug)
+    }
+
     /// Public source repository (MIT). Opened only when the user taps a link.
     static let githubURL = URL(string: "https://github.com/astechtic/ayuvo")!
 

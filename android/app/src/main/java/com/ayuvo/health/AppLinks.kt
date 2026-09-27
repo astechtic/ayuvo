@@ -12,6 +12,10 @@ object AppLinks {
     const val SUPPORT_URL = "$SITE_URL/support"
     const val PRIVACY_FIRST_URL = "$SITE_URL/privacy-first"
     const val OPEN_SOURCE_URL = "$SITE_URL/open-source"
+    const val NUTRIENTS_URL = "$SITE_URL/nutrients"
+
+    /** The website's guide for one nutrient (`learn_slug` of the metric catalog, docs/nutrients.md §5). */
+    fun nutrientUrl(slug: String): String = "$NUTRIENTS_URL/$slug"
 
     /** Public source repository (MIT). Opened only when the user taps a link. */
     const val GITHUB_URL = "https://github.com/astechtic/ayuvo"

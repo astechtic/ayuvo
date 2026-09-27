@@ -12,7 +12,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts" / "brand"))
@@ -68,6 +68,9 @@ def card(page) -> Image.Image:
     for line in lines:
         draw.text((64, y), line, font=font, fill=TEXT)
         y += 78
+    if getattr(page, "og_photo", ""):
+        draw.text((64, 552), "NUTRIENT GUIDE · SOURCED · CHECKED", font=cm.mono_font(17, 600), fill=(11, 87, 194))
+        return photo_card(img, ROOT / "web" / page.og_photo.lstrip("/"))
     draw.text((64, 552), "PRIVATE BY DESIGN · NO ACCOUNT · OPEN SOURCE", font=cm.mono_font(17, 600), fill=(11, 87, 194))
     shots = [Image.open(RAW / f"{s}.png").convert("RGB") for s in page.og_screens[:2] if (RAW / f"{s}.png").exists()]
     if not shots:
@@ -83,11 +86,34 @@ def card(page) -> Image.Image:
     return img
 
 
-def main() -> int:
+def photo_card(img: Image.Image, photo: Path) -> Image.Image:
+    """Nutrient guides: the page's food photo (Unsplash/Pexels, credited on the page) in a rounded frame on the right."""
+    pw, ph, x, y = 470, 500, 668, 65
+    shot = Image.open(photo).convert("RGB")
+    shot = ImageOps.fit(shot, (pw, ph), Image.Resampling.LANCZOS)
+    mask = Image.new("L", (pw, ph), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, pw - 1, ph - 1], radius=36, fill=255)
+    shadow = Image.new("RGBA", (pw + 120, ph + 120), (0, 0, 0, 0))
+    sm = Image.new("L", shadow.size, 0)
+    ImageDraw.Draw(sm).rounded_rectangle([60, 72, 60 + pw, 72 + ph], radius=36, fill=90)
+    shadow.putalpha(sm.filter(ImageFilter.GaussianBlur(26)))
+    img.paste(shadow, (x - 60, y - 60), shadow)
+    img.paste(shot, (x, y), mask)
+    return img
+
+
+def main(argv: list[str] | None = None) -> int:
+    """`--only nutrients` renders just the /nutrients cards (the others are unchanged by nutrient edits)."""
+    argv = sys.argv[1:] if argv is None else argv
+    prefix = None
+    if "--only" in argv:
+        prefix = "/" + argv[argv.index("--only") + 1].strip("/")
     OUT.mkdir(parents=True, exist_ok=True)
     made = 0
     for page in pages_mod.all_pages():
         if not page.in_sitemap:
+            continue
+        if prefix and not page.path.startswith(prefix):
             continue
         card(page).save(OUT / f"{page.slug}.jpg", quality=88, optimize=True, progressive=True)
         made += 1

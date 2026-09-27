@@ -29,9 +29,20 @@ nonisolated struct DraftError: Hashable, Sendable, Identifiable {
         case "anchor_required", "anchor_invalid": String(localized: "Choose the first dose time.")
         case "instructions_too_long": String(localized: "Instructions are too long (up to 200 characters).")
         case "note_too_long": String(localized: "The note is too long (up to 200 characters).")
+        case "nutrient_unknown": String(localized: "Choose a nutrient from the list.")
+        case "nutrient_amount_invalid": String(localized: "Enter an amount greater than 0 that fits one dose unit.")
+        case "nutrient_duplicate": String(localized: "Each nutrient can be listed once.")
         default: String(localized: "Check this field.")
         }
     }
+}
+
+/// One supplement nutrient row of the form: amount per ONE dose unit, already in the canonical unit.
+nonisolated struct DraftNutrient: Hashable, Sendable, Identifiable {
+    var key: String
+    var amountPerUnit: Double
+
+    var id: String { key }
 }
 
 /// Editable form model for Add / Edit / Import (docs §13, §15). Validation and the row shapes come
@@ -68,6 +79,8 @@ nonisolated struct MedicationDraft: Hashable, Sendable {
     var hintConfidence: Double?
     var hintNotes: [String] = []
     var durationDays: Int?
+    /// Supplement nutrients per ONE dose unit in canonical units (docs §21); `nil` = leave the stored rows alone.
+    var nutrients: [DraftNutrient]?
 
     init(startDate: String) {
         self.startDate = startDate
@@ -163,6 +176,9 @@ nonisolated struct MedicationDraft: Hashable, Sendable {
             "instructions": Self.optional(instructions),
             "note": .null,
         ]
+        if let nutrients {
+            obj["nutrients"] = .arr(nutrients.map { .obj(["key": .str($0.key), "amount_per_unit": RJ.number($0.amountPerUnit)]) })
+        }
         if isPRN {
             obj["frequency_kind"] = .null
             obj["times"] = .arr([])
@@ -190,6 +206,20 @@ nonisolated struct MedicationDraft: Hashable, Sendable {
     var isValid: Bool { validationErrors.isEmpty }
 
     // MARK: Rows
+
+    /// A copy carrying `rows` as its supplement nutrients (edit / add again).
+    func withNutrients(_ rows: [MedicationNutrient]) -> MedicationDraft {
+        var copy = self
+        copy.nutrients = rows.map { DraftNutrient(key: $0.nutrientKey, amountPerUnit: $0.amountPerUnit) }
+        return copy
+    }
+
+    /// The `medication_nutrients` rows to store, by key (empty when the draft leaves them alone).
+    func nutrientRows(medicationID: String) -> [MedicationNutrient] {
+        (nutrients ?? [])
+            .map { MedicationNutrient(medicationID: medicationID, nutrientKey: $0.key, amountPerUnit: $0.amountPerUnit) }
+            .sorted { $0.nutrientKey < $1.nutrientKey }
+    }
 
     /// A new or updated `medications` row. `existing` keeps id, created_ms, status and photo.
     func medication(existing: Medication?, nowMs: Int64) -> Medication {

@@ -57,10 +57,32 @@ data class CatalogOverride(
     val browseHidden: Boolean,
     /** Optional per-metric icon; null falls back to the domain icon (docs/ui-structure.md §4). */
     val iconAndroid: String? = null,
-    val iconIos: String? = null
+    val iconIos: String? = null,
+    /**
+     * Health nutrition types (`goal_source: nutrient.reference`): the `nutrient_reference.json` key
+     * whose lines, About and Learn more the detail shows (docs/ui-structure.md §4).
+     */
+    val nutrientKey: String? = null
 )
 
 data class CatalogBrowseSection(val id: String, val domain: String, val title: String, val order: Int)
+
+/** One `nutrient_metrics` entry (docs/ui-structure.md §4); its metric key is `nutrient:<key>`. */
+data class CatalogNutrientMetric(
+    val key: String,
+    val unit: String,
+    val browseSection: String,
+    val browseOrder: Int,
+    val browseHidden: Boolean,
+    val aggregation: String,
+    val chartKind: String,
+    val dayBucket: String,
+    val ranges: List<String>,
+    val goalSource: String,
+    val learnSlug: String?
+) {
+    val metricKey: String get() = MetricKey.NUTRIENT_PREFIX + key
+}
 
 data class MetricCatalogData(
     val domains: List<CatalogDomain>,
@@ -71,6 +93,7 @@ data class MetricCatalogData(
     val chartKindMap: Map<String, String>,
     val overrides: List<CatalogOverride>,
     val macroColours: Map<String, String>,
+    val nutrientMetrics: List<CatalogNutrientMetric>,
     val favouritesMax: Int,
     val favouritesPrefKey: String,
     val favouritesLegacyPrefKey: String,
@@ -81,6 +104,8 @@ data class MetricCatalogData(
     val domainById: Map<String, CatalogDomain> = domains.associateBy { it.id }
     val metricByKey: Map<String, CatalogMetric> = metrics.associateBy { it.key }
     val overrideById: Map<String, CatalogOverride> = overrides.associateBy { it.id }
+    /** By metric key string (`nutrient:vitamin_d`). */
+    val nutrientByKey: Map<String, CatalogNutrientMetric> = nutrientMetrics.associateBy { it.metricKey }
 
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
@@ -132,10 +157,21 @@ data class MetricCatalogData(
                         defaultFavouriteOrder = fav?.let { if (it.b("enabled")) it.i("order") else null },
                         browseHidden = o.b("browse_hidden"),
                         iconAndroid = (o["icon"] as? JsonObject)?.sOrNull("android"),
-                        iconIos = (o["icon"] as? JsonObject)?.sOrNull("ios")
+                        iconIos = (o["icon"] as? JsonObject)?.sOrNull("ios"),
+                        nutrientKey = o.sOrNull("nutrient_key")
                     )
                 },
                 macroColours = root.o("macro_colours").strings(),
+                nutrientMetrics = (root["nutrient_metrics"] as? JsonArray).orEmpty().map { n ->
+                    n as JsonObject
+                    CatalogNutrientMetric(
+                        key = n.s("key"), unit = n.s("unit"), browseSection = n.s("browse_section"),
+                        browseOrder = n.i("browse_order") ?: 0, browseHidden = n.b("browse_hidden"),
+                        aggregation = n.s("aggregation"), chartKind = n.s("chart_kind"), dayBucket = n.s("day_bucket"),
+                        ranges = (n["ranges"] as JsonArray).map { (it as JsonPrimitive).content },
+                        goalSource = n.s("goal_source"), learnSlug = n.sOrNull("learn_slug")
+                    )
+                },
                 favouritesMax = favourites.i("max") ?: 12,
                 favouritesPrefKey = favourites.s("pref_key"),
                 favouritesLegacyPrefKey = favourites.s("legacy_pref_key"),

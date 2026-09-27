@@ -278,7 +278,7 @@ internal fun GoalsTargetsPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_other_nutrient_goals),
-                subtitle = optionalNutrientSummary(ui.optionalNutrientGoals),
+                subtitle = optionalNutrientSummary(ui.optionalNutrientGoals, ui.profile),
                 icon = Icons.Filled.DataUsage, iconTint = SettingsTint.Fiber,
                 modifier = Modifier.settingsRow("otherNutrients"),
                 onClick = { ctx.actions.navigate(AppRoutes.OPTIONAL_NUTRIENT_GOALS) }

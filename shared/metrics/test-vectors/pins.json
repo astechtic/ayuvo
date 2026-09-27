@@ -357,6 +357,34 @@
         "new_raw": null
       },
       "name": "max 4"
+    },
+    {
+      "expected": {
+        "favourites": [
+          "app:calories",
+          "nutrient:vitamin_d",
+          "nutrient:creatine",
+          "steps"
+        ],
+        "source": "new"
+      },
+      "input": {
+        "known_health_ids": [
+          "active_energy",
+          "blood_pressure",
+          "distance",
+          "heart_rate",
+          "hydration",
+          "sleep",
+          "steps",
+          "weight"
+        ],
+        "legacy_raw": null,
+        "max": 12,
+        "new_raw": "app:calories,nutrient:vitamin_d,nutrient:niacin,nutrient:vitamin_d,nutrient:creatine,steps"
+      },
+      "name": "new pins keep known nutrient keys",
+      "notes": "nutrient: keys are valid when the catalog lists them; unknown nutrient keys and duplicates are dropped."
     }
   ],
   "format": "ayuvo-metrics-vectors",

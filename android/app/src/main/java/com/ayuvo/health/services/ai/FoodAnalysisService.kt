@@ -608,6 +608,33 @@ class FoodAnalysisService(
     }
 
     /**
+     * The route "Get nutrients with AI" uses (docs/nutrients.md §7): the image role for a label
+     * photo, the text role for name and strength. Null when no AI is set up.
+     */
+    suspend fun supplementLabelRoute(photo: Boolean): AIRoleResolver.Route? =
+        AIRoleResolver(prefs, keyStore) { id -> localGemma?.isInstalled(id) == true }
+            .resolve(requiresVision = photo, role = if (photo) "image" else "text")
+
+    /**
+     * One supplement-label read on exactly [route]: no fallback of any kind, so an on-device request
+     * never moves to the cloud and a photo request never becomes a text one. The user's food context
+     * is not prepended.
+     */
+    suspend fun callSupplementLabelAi(route: AIRoleResolver.Route, prompt: String, image: ByteArray?, maxOutputTokens: Int): String {
+        route.blocked?.let { throw AiError.Api(AIRoleResolver.refusal(route, it)) }
+        val requestTimeoutSeconds = route.requestTimeoutSeconds ?: prefs.aiRequestTimeoutSeconds.first()
+        if (route.provider == AIProvider.LOCAL_GEMMA) {
+            val runtime = localGemma ?: throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
+            if (!runtime.isReady()) throw AiError.Failure(AiErrorKind.LOCAL_UNAVAILABLE)
+        }
+        val uploads = withContext(Dispatchers.IO) { listOfNotNull(image).map(FoodImagePreprocessor::prepareForUpload) }
+        return dispatch(
+            route.provider, route.model, route.baseUrl, route.apiKey, prompt, uploads,
+            maxOutputTokens, requestTimeoutSeconds, geminiMaxOutputTokens = maxOutputTokens
+        )
+    }
+
+    /**
      * The BYOK route a records cloud call would use, or null when none is usable (no key, or the
      * primary is on-device Gemma, which counts as local per §16).
      */

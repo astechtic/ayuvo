@@ -13,6 +13,42 @@
       "title": "Macronutrients"
     },
     {
+      "domain": "nutrition",
+      "id": "nutrition.carbs",
+      "order": 3,
+      "title": "Carbohydrates"
+    },
+    {
+      "domain": "nutrition",
+      "id": "nutrition.fats",
+      "order": 4,
+      "title": "Fats"
+    },
+    {
+      "domain": "nutrition",
+      "id": "nutrition.minerals",
+      "order": 5,
+      "title": "Minerals"
+    },
+    {
+      "domain": "nutrition",
+      "id": "nutrition.vitamins",
+      "order": 6,
+      "title": "Vitamins"
+    },
+    {
+      "domain": "nutrition",
+      "id": "nutrition.other",
+      "order": 7,
+      "title": "Other Nutrients"
+    },
+    {
+      "domain": "nutrition",
+      "id": "nutrition.supplements",
+      "order": 8,
+      "title": "Sports Supplements"
+    },
+    {
       "domain": "hydration",
       "id": "hydration.water",
       "order": 1,
@@ -483,6 +519,192 @@
       {
         "domain": "hydration",
         "id": "hydration"
+      },
+      {
+        "goal_source": "profile.calories",
+        "id": "dietary_energy"
+      },
+      {
+        "goal_source": "profile.protein",
+        "id": "dietary_protein"
+      },
+      {
+        "goal_source": "profile.carbs",
+        "id": "dietary_carbohydrates"
+      },
+      {
+        "goal_source": "profile.fat",
+        "id": "dietary_fat_total"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_fat_saturated",
+        "nutrient_key": "saturated_fat"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_fat_monounsaturated",
+        "nutrient_key": "monounsaturated_fat"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_fat_polyunsaturated",
+        "nutrient_key": "polyunsaturated_fat"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_cholesterol",
+        "nutrient_key": "cholesterol"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_fiber",
+        "nutrient_key": "fiber"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_sugar",
+        "nutrient_key": "sugar"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_sodium",
+        "nutrient_key": "sodium"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_potassium",
+        "nutrient_key": "potassium"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_calcium",
+        "nutrient_key": "calcium"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_iron",
+        "nutrient_key": "iron"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_magnesium",
+        "nutrient_key": "magnesium"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_zinc",
+        "nutrient_key": "zinc"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_phosphorus",
+        "nutrient_key": "phosphorus"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_chloride",
+        "nutrient_key": "chloride"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_copper",
+        "nutrient_key": "copper"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_manganese",
+        "nutrient_key": "manganese"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_selenium",
+        "nutrient_key": "selenium"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_chromium",
+        "nutrient_key": "chromium"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_molybdenum",
+        "nutrient_key": "molybdenum"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_iodine",
+        "nutrient_key": "iodine"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_caffeine",
+        "nutrient_key": "caffeine"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_a",
+        "nutrient_key": "vitamin_a"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_b6",
+        "nutrient_key": "vitamin_b6"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_b12",
+        "nutrient_key": "vitamin_b12"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_c",
+        "nutrient_key": "vitamin_c"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_d",
+        "nutrient_key": "vitamin_d"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_e",
+        "nutrient_key": "vitamin_e"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_vitamin_k",
+        "nutrient_key": "vitamin_k"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_thiamin",
+        "nutrient_key": "thiamin"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_riboflavin",
+        "nutrient_key": "riboflavin"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_niacin",
+        "nutrient_key": "niacin"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_folate",
+        "nutrient_key": "folate"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_biotin",
+        "nutrient_key": "biotin"
+      },
+      {
+        "goal_source": "nutrient.reference",
+        "id": "dietary_pantothenic_acid",
+        "nutrient_key": "pantothenic_acid"
       }
     ],
     "registry": "shared/health/metric_registry.json"
@@ -931,6 +1153,597 @@
         "decimals": 0,
         "pref": null
       }
+    }
+  ],
+  "nutrient_metrics": [
+    {
+      "aggregation": "sum",
+      "browse_hidden": true,
+      "browse_order": 1,
+      "browse_section": "nutrition.carbs",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "fiber",
+      "learn_slug": "fiber",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 2,
+      "browse_section": "nutrition.carbs",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "sugar",
+      "learn_slug": "sugar",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 3,
+      "browse_section": "nutrition.carbs",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "added_sugar",
+      "learn_slug": "added-sugar",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 1,
+      "browse_section": "nutrition.fats",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "saturated_fat",
+      "learn_slug": "saturated-fat",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 2,
+      "browse_section": "nutrition.fats",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "trans_fat",
+      "learn_slug": "trans-fat",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 3,
+      "browse_section": "nutrition.fats",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "monounsaturated_fat",
+      "learn_slug": "monounsaturated-fat",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 4,
+      "browse_section": "nutrition.fats",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "polyunsaturated_fat",
+      "learn_slug": "polyunsaturated-fat",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 5,
+      "browse_section": "nutrition.fats",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "omega_3",
+      "learn_slug": "omega-3",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 6,
+      "browse_section": "nutrition.fats",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "cholesterol",
+      "learn_slug": "cholesterol",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 1,
+      "browse_section": "nutrition.minerals",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "sodium",
+      "learn_slug": "sodium",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 2,
+      "browse_section": "nutrition.minerals",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "potassium",
+      "learn_slug": "potassium",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 3,
+      "browse_section": "nutrition.minerals",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "calcium",
+      "learn_slug": "calcium",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 4,
+      "browse_section": "nutrition.minerals",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "iron",
+      "learn_slug": "iron",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 5,
+      "browse_section": "nutrition.minerals",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "magnesium",
+      "learn_slug": "magnesium",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 6,
+      "browse_section": "nutrition.minerals",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "zinc",
+      "learn_slug": "zinc",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 1,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "vitamin_a",
+      "learn_slug": "vitamin-a",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mcg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 2,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "vitamin_c",
+      "learn_slug": "vitamin-c",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 3,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "vitamin_d",
+      "learn_slug": "vitamin-d",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mcg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 4,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "vitamin_e",
+      "learn_slug": "vitamin-e",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 5,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "vitamin_k",
+      "learn_slug": "vitamin-k",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mcg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 6,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "vitamin_b12",
+      "learn_slug": "vitamin-b12",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mcg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 7,
+      "browse_section": "nutrition.vitamins",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "folate",
+      "learn_slug": "folate",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mcg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 1,
+      "browse_section": "nutrition.other",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "nutrient.reference",
+      "key": "caffeine",
+      "learn_slug": "caffeine",
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "mg"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 1,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "creatine",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 2,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "beta_alanine",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 3,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "l_citrulline",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 4,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "l_carnitine",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 5,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "l_arginine",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 6,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "taurine",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 7,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "betaine",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
+    },
+    {
+      "aggregation": "sum",
+      "browse_hidden": false,
+      "browse_order": 8,
+      "browse_section": "nutrition.supplements",
+      "chart_kind": "bar",
+      "day_bucket": "hour",
+      "goal_source": "none",
+      "key": "hmb",
+      "learn_slug": null,
+      "ranges": [
+        "D",
+        "W",
+        "M",
+        "6M",
+        "Y"
+      ],
+      "unit": "g"
     }
   ],
   "prefs": {

@@ -57,7 +57,7 @@ enum PortableDataExport {
         if let data = defaults.data(forKey: OptionalNutrientGoals.storageKey) {
             let goals = OptionalNutrientGoals.decoded(from: data)
             preferences["optional_nutrient_goals"] = Dictionary(
-                uniqueKeysWithValues: OptionalNutrient.allCases.map { ($0.rawValue, goals.goal(for: $0)) }
+                uniqueKeysWithValues: OptionalNutrient.allCases.map { ($0.rawValue, goals.storedGoal(for: $0)) }
             )
             settingCount += 1
         }

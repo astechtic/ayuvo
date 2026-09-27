@@ -70,6 +70,24 @@ WEEKLY_DEFAULT_DAYS = [1]
 ARCHIVE_FORMAT = "ayuvo-medications"
 ARCHIVE_VERSION = 1
 
+# §4 Schema versions: schema.sql is the v1 base; each migrations/NNN_*.sql adds one version.
+BASE_SCHEMA_VERSION = 1
+MIGRATION_FILES = ["001_medication_nutrients.sql"]
+SCHEMA_VERSION = BASE_SCHEMA_VERSION + len(MIGRATION_FILES)
+
+# §21 Supplement nutrients (schema v2). Keys, canonical units and the per-unit sanity cap come from
+# shared/nutrients/nutrient_reference.json (docs/nutrients.md); amounts are stored in the canonical unit.
+_NUTRIENT_REFERENCE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                        "shared", "nutrients", "nutrient_reference.json")
+with open(_NUTRIENT_REFERENCE_PATH, encoding="utf-8") as _fh:
+    _NUTRIENT_REFERENCE = json.load(_fh)
+# Only app-tracked nutrients (app_tracked: true) can be supplement nutrients; app_tracked: false entries exist for the
+# health nutrition types only (docs/nutrients.md §3).
+NUTRIENT_UNITS = dict([(n["key"], n["unit"]) for n in _NUTRIENT_REFERENCE["nutrients"] if n["app_tracked"]]
+                      + [(s["key"], s["unit"]) for s in _NUTRIENT_REFERENCE["sports_supplements"]])
+NUTRIENT_AMOUNT_MAX = dict(_NUTRIENT_REFERENCE["amount_per_unit_max"])
+NUTRIENT_SKIP_REASONS = ("unknown_nutrient", "invalid_amount", "duplicate_nutrient")
+
 MEDICATION_COLUMNS = ["id", "name", "generic_name", "brand_name", "strength", "form", "dose_quantity", "dose_unit",
                       "food_relation", "instructions", "start_date", "end_date", "status", "is_prn", "photo_path",
                       "related_record_id", "created_ms", "updated_ms"]
@@ -1018,10 +1036,61 @@ def frequency_hint(value_json):
 # §14 Archive (ayuvo-medications v1)
 # ---------------------------------------------------------------------------------------------
 
+def nutrient_problem(key, amount):
+    """None when (key, amount_per_unit) may be stored, else unknown_nutrient | invalid_amount. The key must be an
+    app_tracked nutrient_reference.json key or a sports supplement key (app_tracked: false keys such as copper are
+    unknown_nutrient); the amount a finite number with
+    0 < amount <= amount_per_unit_max[canonical unit] (g 100, mg 10000, mcg 100000)."""
+    if not isinstance(key, str) or key not in NUTRIENT_UNITS:
+        return "unknown_nutrient"
+    if not _is_number(amount) or not math.isfinite(amount) or amount <= 0 or amount > NUTRIENT_AMOUNT_MAX[NUTRIENT_UNITS[key]]:
+        return "invalid_amount"
+    return None
+
+
+def _snapshot_nutrients(snapshot):
+    """{medication_id: [{key, amount_per_unit}] sorted by key} from snapshot["medication_nutrients"] table rows."""
+    out = {}
+    for r in snapshot.get("medication_nutrients") or []:
+        out.setdefault(r["medication_id"], []).append({"key": r["nutrient_key"], "amount_per_unit": r["amount_per_unit"]})
+    for rows in out.values():
+        rows.sort(key=lambda x: x["key"])
+    return out
+
+
+def _archive_nutrients(m):
+    """(nutrients | None, skip ops) for one archive medication. None = the archive has no "nutrients" list (an older
+    export): the platform keeps the local rows. Otherwise the valid rows sorted by key (the platform replaces the
+    medication's rows with them) and one skip op per bad row, in archive order."""
+    raw = m.get("nutrients")
+    if not isinstance(raw, list):
+        return None, []
+    good, skips, seen = [], [], set()
+    for item in raw:
+        key = item.get("key") if isinstance(item, dict) else None
+        amount = item.get("amount_per_unit") if isinstance(item, dict) else None
+        reason = nutrient_problem(key, amount)
+        if reason is None and key in seen:
+            reason = "duplicate_nutrient"
+        if reason is not None:
+            skips.append({"table": "medication_nutrients", "op": "skip", "id": m["id"],
+                          "nutrient_key": key if isinstance(key, str) else None, "reason": reason})
+            continue
+        seen.add(key)
+        good.append({"key": key, "amount_per_unit": amount})
+    good.sort(key=lambda x: x["key"])
+    return good, skips
+
+
 def export_archive(snapshot, exported_ms, time_zone, platform, app_version):
-    """The portable archive: every row of the three tables, arrays ordered by id, photo_path null."""
+    """The portable archive: every row of the three tables, arrays ordered by id, photo_path null. Each medication
+    also carries "nutrients": [{key, amount_per_unit}] sorted by key (schema v2; [] when it has none), built from
+    snapshot["medication_nutrients"] rows."""
+    by_med = _snapshot_nutrients(snapshot)
     meds = sorted((_row(MEDICATION_COLUMNS, m, photo_path=None) for m in snapshot.get("medications") or []),
                   key=lambda r: r["id"])
+    for m in meds:
+        m["nutrients"] = [dict(x) for x in by_med.get(m["id"], [])]
     scheds = sorted((_row(SCHEDULE_COLUMNS, s) for s in snapshot.get("schedules") or []), key=lambda r: r["id"])
     logs = sorted((_row(DOSE_LOG_COLUMNS, l) for l in snapshot.get("dose_logs") or []), key=lambda r: r["id"])
     for s in scheds:
@@ -1116,9 +1185,12 @@ def merge_archive(snapshot, archive, now_ms):
             ops.append({"table": "medications", "op": "skip", "id": m.get("id") if isinstance(m, dict) else None,
                         "reason": "invalid"})
             continue
-        decide("medications", dict(m, photo_path=None if m["id"] not in local_meds
-                                   else local_meds[m["id"]].get("photo_path")), local_meds.get(m["id"]),
-               MEDICATION_COLUMNS)
+        nutrients, nutrient_skips = _archive_nutrients(m)
+        if decide("medications", dict(m, photo_path=None if m["id"] not in local_meds
+                                      else local_meds[m["id"]].get("photo_path")), local_meds.get(m["id"]),
+                  MEDICATION_COLUMNS):
+            ops[-1]["row"]["nutrients"] = nutrients
+            ops.extend(nutrient_skips)
         known_meds.add(m["id"])
     for s in archive.get("schedules") or []:
         if not _valid_schedule_row(s):
@@ -1197,6 +1269,23 @@ def validate_draft(draft):
     note = d.get("note")
     if note is not None and (not isinstance(note, str) or len(note) > NOTE_MAX):
         errs.append({"field": "note", "code": "note_too_long"})
+    nutrients = d.get("nutrients")
+    if nutrients is not None:
+        if not isinstance(nutrients, list):
+            errs.append({"field": "nutrients", "code": "nutrient_unknown"})
+        else:
+            seen = set()
+            for item in nutrients:
+                key = item.get("key") if isinstance(item, dict) else None
+                problem = nutrient_problem(key, item.get("amount_per_unit") if isinstance(item, dict) else None)
+                if problem == "unknown_nutrient":
+                    errs.append({"field": "nutrients", "code": "nutrient_unknown"})
+                elif problem == "invalid_amount":
+                    errs.append({"field": "nutrients", "code": "nutrient_amount_invalid"})
+                elif key in seen:
+                    errs.append({"field": "nutrients", "code": "nutrient_duplicate"})
+                else:
+                    seen.add(key)
     return errs
 
 

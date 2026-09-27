@@ -59,7 +59,11 @@ import java.util.Locale
 data class AppMetricDestinations(
     val openFoodDiary: () -> Unit = {},
     val openFasting: () -> Unit = {},
-    val openWorkouts: () -> Unit = {}
+    val openWorkouts: () -> Unit = {},
+    /** Settings › Nutrient goals (nutrient metric details). */
+    val openNutrientGoals: () -> Unit = {},
+    /** Another metric's detail (a health nutrition type links to its `nutrient:<key>` chart). */
+    val openMetric: (MetricKey) -> Unit = {}
 )
 
 private val FOOD_METRICS = setOf(AppMetricId.CALORIES, AppMetricId.PROTEIN, AppMetricId.CARBS, AppMetricId.FAT, AppMetricId.FIBER)

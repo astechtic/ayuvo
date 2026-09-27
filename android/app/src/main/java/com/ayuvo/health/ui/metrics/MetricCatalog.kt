@@ -8,8 +8,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.graphics.toColorInt
 import com.ayuvo.health.R
 import com.ayuvo.health.data.metrics.AppMetricId
+import com.ayuvo.health.data.metrics.CatalogBrowseSection
 import com.ayuvo.health.data.metrics.CatalogDomain
 import com.ayuvo.health.data.metrics.CatalogMetric
+import com.ayuvo.health.data.metrics.CatalogNutrientMetric
 import com.ayuvo.health.data.metrics.MetricCatalogData
 import com.ayuvo.health.data.metrics.MetricKey
 import com.ayuvo.health.data.metrics.MetricRange
@@ -20,6 +22,7 @@ import com.ayuvo.health.models.HealthCategory
 import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.models.UserProfile
 import com.ayuvo.health.models.WaterUnit
+import com.ayuvo.health.nutrients.NutrientFields
 import com.ayuvo.health.ui.design.AyuvoColors
 import com.ayuvo.health.ui.health.HealthCategoryStyle
 import com.ayuvo.health.ui.health.HealthChartRange
@@ -84,8 +87,40 @@ object MetricCatalog {
 
     fun title(context: Context, key: MetricKey): String = when (key) {
         is MetricKey.App -> context.getString(titleRes(key.id))
+        is MetricKey.Nutrient -> context.getString(NutrientFields.nameRes(key.key))
         is MetricKey.Health -> HealthCategoryStyle.typeName(context, key.typeId)
     }
+
+    /** The catalog's `nutrient_metrics` entry of [key]; null for a key the catalog does not list. */
+    fun nutrientSpec(catalog: MetricCatalogData, key: MetricKey.Nutrient): CatalogNutrientMetric? = catalog.nutrientByKey[key.storageId]
+
+    /**
+     * Browse › Nutrition nutrient sections (docs/ui-structure.md §4): the nutrition browse sections
+     * that hold nutrient metrics, in section order, each with its visible entries (`browse_hidden`
+     * dropped) in `browse_order`.
+     */
+    fun nutrientBrowseSections(catalog: MetricCatalogData): List<Pair<CatalogBrowseSection, List<CatalogNutrientMetric>>> =
+        catalog.browseSections.filter { it.domain == "nutrition" }.sortedBy { it.order }.mapNotNull { s ->
+            val rows = catalog.nutrientMetrics.filter { it.browseSection == s.id && !it.browseHidden }.sortedBy { it.browseOrder }
+            if (rows.isEmpty()) null else s to rows
+        }
+
+    /** Title resource of a nutrition browse section; null for a section this build does not know. */
+    @StringRes
+    fun browseSectionTitleRes(sectionId: String): Int? = when (sectionId) {
+        "nutrition.energy" -> R.string.browse_section_nutrition_energy
+        "nutrition.macros" -> R.string.browse_section_nutrition_macros
+        "nutrition.carbs" -> R.string.browse_section_nutrition_carbs
+        "nutrition.fats" -> R.string.browse_section_nutrition_fats
+        "nutrition.minerals" -> R.string.browse_section_nutrition_minerals
+        "nutrition.vitamins" -> R.string.browse_section_nutrition_vitamins
+        "nutrition.other" -> R.string.browse_section_nutrition_other
+        "nutrition.supplements" -> R.string.browse_section_nutrition_supplements
+        else -> null
+    }
+
+    fun ranges(catalog: MetricCatalogData, key: MetricKey.Nutrient): List<HealthChartRange> =
+        (nutrientSpec(catalog, key)?.ranges ?: listOf("D", "W", "M", "6M", "Y")).map { HealthChartRange.of(MetricRange.fromRaw(it)) }
 
     /** Metric icon, then override icon, then domain icon, then the Other domain icon (docs/ui-structure.md §4). */
     fun icon(catalog: MetricCatalogData, key: MetricKey): ImageVector =
@@ -142,9 +177,16 @@ object MetricCatalog {
         formatDisplay(id, display(id, canonical, units), locale)
 
     /** Goal in canonical units from the catalog's `goal_source`; null when unset. */
-    fun goal(catalog: MetricCatalogData, id: AppMetricId, inputs: MetricGoalInputs): Double? {
+    fun goal(catalog: MetricCatalogData, id: AppMetricId, inputs: MetricGoalInputs): Double? = goal(spec(catalog, id).goalSource, inputs)
+
+    /**
+     * Goal of a resolved `goal_source` (app metrics and health overrides, e.g. `dietary_energy` →
+     * `profile.calories`); null when unset or when the source is not a single value
+     * (`none`, `nutrient.reference`).
+     */
+    fun goal(goalSource: String, inputs: MetricGoalInputs): Double? {
         val p = inputs.profile
-        return when (spec(catalog, id).goalSource) {
+        return when (goalSource) {
             "profile.calories" -> p?.effectiveCalories?.toDouble()
             "profile.protein" -> p?.effectiveProtein?.toDouble()
             "profile.carbs" -> p?.effectiveCarbs?.toDouble()

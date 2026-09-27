@@ -12,6 +12,8 @@ import com.ayuvo.health.models.BodyFatEntry
 import com.ayuvo.health.models.BodyMeasurement
 import com.ayuvo.health.models.FastingSession
 import com.ayuvo.health.models.FoodEntry
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.NutrientTotals
 import com.ayuvo.health.models.FoodSource
 import com.ayuvo.health.models.MealType
 import com.ayuvo.health.models.PlannedExercise
@@ -283,6 +285,11 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
                 sample = env.healthLatest(key.typeId)
                 unit = facts.unit
             }
+            is MetricKey.Nutrient -> {
+                val (samples, facts) = nutrientData(key.key)
+                sample = samples.maxByOrNull { it.tMs }
+                unit = facts.unit
+            }
         }
         val s = sample ?: throw ActionException(ActionErrorCode.NOT_FOUND)
         return ActionResult(a.spec.id, linkedMapOf("value" to s.value, "unit" to unit, "t_ms" to s.tMs))
@@ -306,7 +313,15 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
                 if (!env.healthReadAllowed(key.typeId)) throw ActionException(ActionErrorCode.PERMISSION_REQUIRED, "metric")
                 env.healthSamples(key.typeId, fromMs, toMs) to facts
             }
+            is MetricKey.Nutrient -> nutrientData(key.key)
         }
+
+    /** `nutrient:<key>`: food values plus taken supplement amounts (docs/nutrients.md §5), summed. */
+    private suspend fun nutrientData(key: String): Pair<List<ActionMath.Sample>, MetricFacts> {
+        val unit = NutrientReference.active?.unitOf(key) ?: throw ActionException(ActionErrorCode.NOT_FOUND, "metric")
+        val samples = NutrientTotals.seriesEntries(key, env.foods(), env.supplements()).map { ActionMath.Sample(it.tMs, it.value) }
+        return samples to MetricFacts("sum", unit)
+    }
 
     private fun parseMetric(metric: String): MetricKey =
         MetricKey.parse(metric) ?: throw ActionException(ActionErrorCode.NOT_FOUND, "metric")
@@ -315,7 +330,9 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
         val range = range(a)
         val foods = env.foods().filter { it.timestamp.toEpochMilli() in range }
         val p = env.profile()
+        // Calories and macros are food only; fiber adds taken supplement doses (docs/nutrients.md §6).
         val calories = foods.sumOf { it.calories }.toLong()
+        val fiberSupplements = env.supplements().entriesFor("fiber").filter { it.tMs in range }.sumOf { it.value }
         val singleDay = a.string("range") in SINGLE_DAY
         val target = p?.effectiveCalories?.toLong()
         return ActionResult(a.spec.id, linkedMapOf(
@@ -323,7 +340,7 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
             "protein_g" to ActionMath.roundTo(foods.sumOf { it.protein }, 1),
             "carbs_g" to ActionMath.roundTo(foods.sumOf { it.carbs }, 1),
             "fat_g" to ActionMath.roundTo(foods.sumOf { it.fat }, 1),
-            "fiber_g" to ActionMath.roundTo(foods.sumOf { it.fiber ?: 0.0 }, 1),
+            "fiber_g" to ActionMath.roundTo(foods.sumOf { it.fiber ?: 0.0 } + fiberSupplements, 1),
             "calorie_target" to target,
             "protein_target_g" to p?.effectiveProtein?.toLong(),
             "calories_remaining" to if (singleDay && target != null && target > 0) maxOf(0L, target - calories) else null,
@@ -335,9 +352,15 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
         val range = range(a)
         val nutrient = a.string("nutrient")!!
         val zone = env.zone()
-        val daily = env.foods().filter { it.timestamp.toEpochMilli() in range }
+        val food = env.foods().filter { it.timestamp.toEpochMilli() in range }
             .groupBy { it.timestamp.atZone(zone).toLocalDate() }
-            .map { (day, list) -> ActionMath.Sample(day.atStartOfDay(zone).toInstant().toEpochMilli(), list.sumOf { nutrientValue(it, nutrient) }) }
+            .mapValues { (_, list) -> list.sumOf { nutrientValue(it, nutrient) } }
+        // Supplement amounts of the nutrient on each day (never calories or macros, docs/nutrients.md §6).
+        val supplements = env.supplements().entriesFor(nutrient).filter { it.tMs in range }
+            .groupBy { java.time.Instant.ofEpochMilli(it.tMs).atZone(zone).toLocalDate() }
+            .mapValues { (_, list) -> list.sumOf { it.value } }
+        val daily = (food.keys + supplements.keys).sorted()
+            .map { day -> ActionMath.Sample(day.atStartOfDay(zone).toInstant().toEpochMilli(), (food[day] ?: 0.0) + (supplements[day] ?: 0.0)) }
         val aggregation = a.string("aggregation") ?: "sum"
         val value = (ActionMath.aggregate(daily, aggregation)["value"] as? Number)?.toDouble() ?: 0.0
         val p = env.profile()

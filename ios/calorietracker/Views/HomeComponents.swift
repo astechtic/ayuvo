@@ -270,8 +270,15 @@ enum HomeTopNutrient: String, CaseIterable, Identifiable {
         }
     }
 
-    func value(from foodStore: FoodStore, on date: Date) -> Double {
-        total(in: foodStore.entries(for: date))
+    /// Today's value: macros from food; every other nutrient food + taken supplements (`NutrientTotals`).
+    func value(from totals: NutrientTotals, on date: Date) -> Double {
+        switch self {
+        case .protein, .carbs, .fat:
+            return total(in: totals.foods.filter { totals.calendar.isDate($0.timestamp, inSameDayAs: date) })
+        default:
+            guard let optionalNutrient else { return 0 }
+            return totals.total(optionalNutrient.jsonKey, on: date).total ?? 0
+        }
     }
 
     /// Sum this nutrient across an already-fetched day (or range) of entries.
@@ -323,7 +330,7 @@ enum HomeTopNutrient: String, CaseIterable, Identifiable {
              .vitaminB12, .vitaminE, .vitaminK, .folate, .omega3, .creatine, .betaAlanine,
              .lCitrulline, .lCarnitine, .lArginine, .taurine, .betaine, .hmb:
             guard let optionalNutrient else { return 0 }
-            return Double(optionalGoals.goal(for: optionalNutrient))
+            return Double(optionalGoals.goal(for: optionalNutrient, profile: NutrientCatalog.profile(profile)))
         }
     }
 

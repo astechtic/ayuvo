@@ -199,6 +199,10 @@ def llms_txt(pages: list[site_lib.Page]) -> str:
     lines += ["", "## About the comparisons", "",
               "The /compare pages are written by the Ayuvo team, so they are not neutral. Each fact about another product cites that product's own",
               "public page with the date it was checked, and every page states where Ayuvo is limited. Corrections: " + EMAIL, ""]
+    lines += ["## About the nutrient guides", "",
+              "The /nutrients pages are general information for healthy adults, not medical advice. Recommended amounts and upper limits",
+              "are rendered from shared/nutrients/nutrient_reference.json, the table the apps use for their chart lines; other facts cite",
+              "the NIH Office of Dietary Supplements and other public-health sources, with the date each was checked.", ""]
     lines += ["", "## Source", "", f"- [GitHub repository]({GITHUB}): MIT-licensed source for the iPhone and Android apps", f"- Support: {EMAIL}", ""]
     return "\n".join(lines)
 

@@ -52,6 +52,7 @@
             "instructions": null,
             "is_prn": 0,
             "name": "Metformin",
+            "nutrients": [],
             "photo_path": null,
             "related_record_id": null,
             "start_date": "2026-09-01",
@@ -72,6 +73,7 @@
             "instructions": null,
             "is_prn": 0,
             "name": "Amoxicillin",
+            "nutrients": [],
             "photo_path": null,
             "related_record_id": null,
             "start_date": "2026-09-01",
@@ -262,6 +264,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Metformin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -287,6 +290,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Amoxicillin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -539,6 +543,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Amoxicillin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -923,6 +928,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Amoxicillin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -1100,6 +1106,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Metformin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -1345,6 +1352,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Amoxicillin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -1487,6 +1495,7 @@
               "instructions": null,
               "is_prn": 0,
               "name": "Metformin",
+              "nutrients": null,
               "photo_path": null,
               "related_record_id": null,
               "start_date": "2026-09-01",
@@ -1852,6 +1861,721 @@
       },
       "name": "export_empty",
       "notes": "Empty arrays."
+    },
+    {
+      "expected": {
+        "app": {
+          "platform": "ios",
+          "version": "1.1"
+        },
+        "dose_logs": [],
+        "exported_ms": 1789097400000,
+        "format": "ayuvo-medications",
+        "medications": [
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "capsule",
+            "generic_name": null,
+            "id": "med-d3",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Vitamin D3 60,000 IU",
+            "nutrients": [
+              {
+                "amount_per_unit": 1500,
+                "key": "vitamin_d"
+              }
+            ],
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": null,
+            "updated_ms": 1788582600000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-metformin",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Metformin",
+            "nutrients": [],
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": null,
+            "updated_ms": 1788582600000
+          },
+          {
+            "brand_name": null,
+            "created_ms": 1788229800000,
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "end_date": null,
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": null,
+            "id": "med-multi",
+            "instructions": null,
+            "is_prn": 0,
+            "name": "Multivitamin",
+            "nutrients": [
+              {
+                "amount_per_unit": 400,
+                "key": "folate"
+              },
+              {
+                "amount_per_unit": 18,
+                "key": "iron"
+              },
+              {
+                "amount_per_unit": 80,
+                "key": "vitamin_c"
+              },
+              {
+                "amount_per_unit": 10,
+                "key": "zinc"
+              }
+            ],
+            "photo_path": null,
+            "related_record_id": null,
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": null,
+            "updated_ms": 1788582600000
+          }
+        ],
+        "schedules": [],
+        "time_zone": "America/New_York",
+        "version": 1
+      },
+      "input": {
+        "app_version": "1.1",
+        "exported_ms": 1789097400000,
+        "op": "export",
+        "platform": "ios",
+        "snapshot": {
+          "dose_logs": [],
+          "medication_nutrients": [
+            {
+              "amount_per_unit": 10,
+              "medication_id": "med-multi",
+              "nutrient_key": "zinc"
+            },
+            {
+              "amount_per_unit": 1500,
+              "medication_id": "med-d3",
+              "nutrient_key": "vitamin_d"
+            },
+            {
+              "amount_per_unit": 80,
+              "medication_id": "med-multi",
+              "nutrient_key": "vitamin_c"
+            },
+            {
+              "amount_per_unit": 400,
+              "medication_id": "med-multi",
+              "nutrient_key": "folate"
+            },
+            {
+              "amount_per_unit": 18,
+              "medication_id": "med-multi",
+              "nutrient_key": "iron"
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-multi",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Multivitamin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-metformin",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Metformin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            }
+          ],
+          "schedules": []
+        },
+        "time_zone": "America/New_York"
+      },
+      "name": "export_supplement_nutrients",
+      "notes": "Each medication carries nutrients sorted by key; a medicine without nutrients exports []."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-d3",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "nutrients": [
+                {
+                  "amount_per_unit": 1500,
+                  "key": "vitamin_d"
+                }
+              ],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "med-multi",
+            "op": "insert",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-multi",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Multivitamin",
+              "nutrients": [
+                {
+                  "amount_per_unit": 1.5,
+                  "key": "creatine"
+                },
+                {
+                  "amount_per_unit": 10,
+                  "key": "zinc"
+                }
+              ],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            },
+            "table": "medications"
+          },
+          {
+            "id": "med-multi",
+            "nutrient_key": "niacin",
+            "op": "skip",
+            "reason": "unknown_nutrient",
+            "table": "medication_nutrients"
+          },
+          {
+            "id": "med-multi",
+            "nutrient_key": "iron",
+            "op": "skip",
+            "reason": "invalid_amount",
+            "table": "medication_nutrients"
+          },
+          {
+            "id": "med-multi",
+            "nutrient_key": "vitamin_d",
+            "op": "skip",
+            "reason": "invalid_amount",
+            "table": "medication_nutrients"
+          },
+          {
+            "id": "med-multi",
+            "nutrient_key": "zinc",
+            "op": "skip",
+            "reason": "duplicate_nutrient",
+            "table": "medication_nutrients"
+          },
+          {
+            "id": "med-multi",
+            "nutrient_key": null,
+            "op": "skip",
+            "reason": "unknown_nutrient",
+            "table": "medication_nutrients"
+          },
+          {
+            "id": "med-multi",
+            "nutrient_key": "vitamin_c",
+            "op": "skip",
+            "reason": "invalid_amount",
+            "table": "medication_nutrients"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.1"
+          },
+          "dose_logs": [],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "nutrients": [
+                {
+                  "amount_per_unit": 1500,
+                  "key": "vitamin_d"
+                }
+              ],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            },
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-multi",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Multivitamin",
+              "nutrients": [
+                {
+                  "amount_per_unit": 10,
+                  "key": "zinc"
+                },
+                {
+                  "amount_per_unit": 16,
+                  "key": "niacin"
+                },
+                {
+                  "amount_per_unit": 0,
+                  "key": "iron"
+                },
+                {
+                  "amount_per_unit": 250000,
+                  "key": "vitamin_d"
+                },
+                {
+                  "amount_per_unit": 5,
+                  "key": "zinc"
+                },
+                "bad",
+                {
+                  "amount_per_unit": "80",
+                  "key": "vitamin_c"
+                },
+                {
+                  "amount_per_unit": 1.5,
+                  "key": "creatine"
+                }
+              ],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            }
+          ],
+          "schedules": [],
+          "time_zone": "UTC",
+          "version": 1
+        },
+        "now_ms": 1789097400000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [],
+          "schedules": []
+        }
+      },
+      "name": "merge_supplement_nutrients_validated",
+      "notes": "Bad nutrient rows are skipped with a reason; the medication and its valid rows are kept."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-d3",
+            "op": "update",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "nutrients": null,
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788900000000
+            },
+            "table": "medications"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "android",
+            "version": "1.0"
+          },
+          "dose_logs": [],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788900000000
+            }
+          ],
+          "schedules": [],
+          "time_zone": "UTC",
+          "version": 1
+        },
+        "now_ms": 1789097400000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medication_nutrients": [
+            {
+              "amount_per_unit": 1500,
+              "medication_id": "med-d3",
+              "nutrient_key": "vitamin_d"
+            }
+          ],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            }
+          ],
+          "schedules": []
+        }
+      },
+      "name": "merge_old_archive_without_nutrients",
+      "notes": "An archive from an app without supplement nutrients has no nutrients key: nutrients null = keep the local rows."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-multi",
+            "op": "skip",
+            "reason": "older",
+            "table": "medications"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "ios",
+            "version": "1.1"
+          },
+          "dose_logs": [],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-multi",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Multivitamin",
+              "nutrients": [
+                {
+                  "amount_per_unit": 16,
+                  "key": "niacin"
+                }
+              ],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            }
+          ],
+          "schedules": [],
+          "time_zone": "UTC",
+          "version": 1
+        },
+        "now_ms": 1789097400000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "tablet",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "tablet",
+              "generic_name": null,
+              "id": "med-multi",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Multivitamin",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1789000000000
+            }
+          ],
+          "schedules": []
+        }
+      },
+      "name": "merge_older_medication_ignores_nutrients",
+      "notes": "The local medication is newer: skip:older and its nutrients are not looked at."
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "ops": [
+          {
+            "id": "med-d3",
+            "op": "update",
+            "row": {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "nutrients": [],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            },
+            "table": "medications"
+          }
+        ]
+      },
+      "input": {
+        "archive": {
+          "app": {
+            "platform": "ios",
+            "version": "1.1"
+          },
+          "dose_logs": [],
+          "exported_ms": 1789097400000,
+          "format": "ayuvo-medications",
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "nutrients": [],
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788582600000
+            }
+          ],
+          "schedules": [],
+          "time_zone": "UTC",
+          "version": 1
+        },
+        "now_ms": 1789097400000,
+        "op": "merge",
+        "snapshot": {
+          "dose_logs": [],
+          "medications": [
+            {
+              "brand_name": null,
+              "created_ms": 1788229800000,
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "end_date": null,
+              "food_relation": "with",
+              "form": "capsule",
+              "generic_name": null,
+              "id": "med-d3",
+              "instructions": null,
+              "is_prn": 0,
+              "name": "Vitamin D3 60,000 IU",
+              "photo_path": null,
+              "related_record_id": null,
+              "start_date": "2026-09-01",
+              "status": "active",
+              "strength": null,
+              "updated_ms": 1788000000000
+            }
+          ],
+          "schedules": []
+        }
+      },
+      "name": "merge_empty_nutrients_clears",
+      "notes": "A newer medication with nutrients [] replaces the local rows with none."
     }
   ],
   "format": "ayuvo-medications-vectors",

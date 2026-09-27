@@ -51,6 +51,9 @@ import com.ayuvo.health.medications.reminders.MedicationAlarms
 import com.ayuvo.health.medications.reminders.MedicationMaintenanceWorker
 import com.ayuvo.health.medications.reminders.MedicationNotifications
 import com.ayuvo.health.medications.reminders.MedicationReminderCoordinator
+import com.ayuvo.health.nutrients.NutrientLabel
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.SupplementIntakeSource
 import com.ayuvo.health.records.data.RecordFileStore
 import com.ayuvo.health.records.data.RecordsDatabase
 import com.ayuvo.health.records.data.RecordsStore
@@ -344,6 +347,16 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
                 app.assets.open(MedicationsCoachContract.ASSET_PATH).bufferedReader().use { it.readText() }
             ) ?: MedicationsCoachContract.empty
         }
+        // The shared nutrient reference and supplement-label prompt (docs/nutrients.md), bundled verbatim.
+        // Medication archive validation, goals and charts read it, so it is installed before any of them.
+        NutrientReference.active = NutrientReference.parse(
+            app.assets.open(NutrientReference.ASSET_PATH).bufferedReader().use { it.readText() }
+        )
+        runCatching {
+            NutrientLabel.prompts = NutrientLabel.parsePrompts(
+                app.assets.open(NutrientReference.PROMPT_ASSET_PATH).bufferedReader().use { it.readText() }
+            )
+        }
     }
     val recordsPipeline: RecordPipeline by lazy {
         RecordPipeline(
@@ -413,7 +426,22 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val medicationPhotos: MedicationPhotoStore by lazy { MedicationPhotoStore(app) }
     private val medicationsDatabaseLazy = lazy { MedicationsDatabase(app) }
     val medicationsDatabase: MedicationsDatabase by medicationsDatabaseLazy
-    val medicationsStore: MedicationsStore by lazy { SqliteMedicationsStore(medicationsDatabase, medicationPhotos) }
+
+    /** True once [medicationsStore] exists in this process (supplement totals start watching it). */
+    private val medicationsOpened = MutableStateFlow(false)
+    val medicationsStore: MedicationsStore by lazy {
+        SqliteMedicationsStore(medicationsDatabase, medicationPhotos).also { medicationsOpened.value = true }
+    }
+
+    /** Supplement nutrients and taken doses for nutrient totals and charts (docs/nutrients.md §6). */
+    val supplementIntake: SupplementIntakeSource by lazy {
+        SupplementIntakeSource(
+            databaseExists = ::medicationsDatabaseExists,
+            store = { medicationsStore },
+            opened = medicationsOpened,
+            scope = scope
+        )
+    }
 
     /** Whether a medications database exists (planners never create one just to look for doses). */
     fun medicationsDatabaseExists(): Boolean = medicationsDatabaseLazy.isInitialized() || MedicationsDatabase.exists(appContext)
@@ -550,7 +578,8 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
                 fasting = fastingRepository.sessions,
                 weight = weightRepository.entries,
                 bodyFat = bodyFatRepository.entries,
-                workouts = workoutRepository.completedSessions
+                workouts = workoutRepository.completedSessions,
+                supplements = supplementIntake.snapshots
             ),
             scope = scope
         )
@@ -673,7 +702,7 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val chatService = ChatService(prefs, keyStore, localGemma = localGemma)
     val speechService = SpeechService(prefs, keyStore, localWhisper = localWhisper)
 
-    val widgetSnapshotWriter = WidgetSnapshotWriter(app, prefs, foodRepository, profileRepository)
+    val widgetSnapshotWriter = WidgetSnapshotWriter(app, prefs, foodRepository, profileRepository, supplementIntake.snapshots)
     /** Today / My Metrics / Quick Log snapshot (docs/widgets.md). */
     val widgetDashboardWriter by lazy { com.ayuvo.health.widget.dashboard.WidgetDashboardWriter(app, this) }
     /**

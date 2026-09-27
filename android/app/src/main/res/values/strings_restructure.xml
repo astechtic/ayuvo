@@ -43,6 +43,7 @@
     <!-- Nutrition -->
     <string name="nutrition_trends">Trends</string>
     <string name="nutrition_all_nutrients">All Nutrients</string>
+    <string name="nutrition_all_health_connect">All Health Connect Nutrition</string>
     <string name="nutrition_today_header">Today</string>
     <string name="nutrition_nothing_logged">No food logged today.</string>
     <string name="nutrition_not_logged_header">Not Logged Today</string>

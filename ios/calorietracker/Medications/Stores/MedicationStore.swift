@@ -21,6 +21,14 @@ import Observation
     private(set) var activeCount = 0
     private(set) var pausedCount = 0
     private(set) var totalCount = 0
+    /// Supplement nutrients of every medication, by medication id (docs §21).
+    private(set) var nutrientsByMedication: [String: [MedicationNutrient]] = [:]
+    /// Contributions of every taken dose of a medication with nutrients (docs/nutrients.md §4.5), by time.
+    private(set) var supplementEntries: [NutrientsReference.SupplementEntry] = []
+    /// Instants of every taken dose (any medicine): a local day with one counts as a "logged day".
+    private(set) var takenDoseMs: [Int64] = []
+    /// Incremented when `supplementEntries` / `takenDoseMs` / `nutrientsByMedication` change (chart caches).
+    private(set) var nutritionRevision = 0
     var filter: MedicationFilter = .active {
         didSet { if filter != oldValue { Task { await reload() } } }
     }
@@ -135,12 +143,21 @@ import Observation
             let timeline = try await repository.today(nowMs: now, zone: zone)
             let rows = try await repository.medications(status: filter.status, search: searchText)
             let counts = try await repository.countsByStatus()
+            let nutrientRows = try await repository.allNutrients()
+            let supplement = try await repository.supplementData()
             guard generation == loadGeneration else { return }
             today = timeline
             medications = rows
             activeCount = counts[.active] ?? 0
             pausedCount = counts[.paused] ?? 0
             totalCount = counts.values.reduce(0, +)
+            let byMedication = Dictionary(grouping: nutrientRows, by: \.medicationID)
+            if byMedication != nutrientsByMedication || supplement.entries != supplementEntries || supplement.takenMs != takenDoseMs {
+                nutrientsByMedication = byMedication
+                supplementEntries = supplement.entries
+                takenDoseMs = supplement.takenMs
+                nutritionRevision += 1
+            }
             openError = nil
         } catch {
             guard generation == loadGeneration else { return }
@@ -260,6 +277,30 @@ import Observation
         }
     }
 
+    // MARK: - Supplement nutrients (docs §21)
+
+    /// The medication's nutrients per ONE dose unit, by key (empty for a medicine without any).
+    func nutrients(for id: String) -> [MedicationNutrient] {
+        nutrientsByMedication[id] ?? []
+    }
+
+    /// A medication with at least one nutrient shows the "Supplement" badge.
+    func isSupplement(_ id: String) -> Bool { !(nutrientsByMedication[id] ?? []).isEmpty }
+
+    /// Replaces the medication's nutrients (validated like the form) and bumps its `updated_ms`. Totals are
+    /// recomputed on read, so past doses change too.
+    func setNutrients(_ rows: [DraftNutrient], for id: String) async throws {
+        var probe = MedicationDraft(startDate: todayLocalDate)
+        probe.name = "x"
+        probe.isPRN = true
+        probe.nutrients = rows
+        let errors = probe.validationErrors.filter { $0.field == "nutrients" }
+        guard errors.isEmpty else { throw MedicationStoreError.validation(errors) }
+        guard let repository = await openIfNeeded() else { throw MedicationStoreError.notOpen }
+        try await repository.setNutrients(medicationID: id, rows: probe.nutrientRows(medicationID: id), nowMs: nowMs)
+        await didChange()
+    }
+
     func setReminderEnabled(_ id: String, enabled: Bool) async {
         guard let repository = await openIfNeeded() else { return }
         _ = try? await repository.setReminderEnabled(id: id, enabled: enabled, nowMs: nowMs)
@@ -373,6 +414,10 @@ import Observation
         defaults.removeObject(forKey: MedicationSettings.pendingRouteKey)
         today = .empty
         medications = []
+        nutrientsByMedication = [:]
+        supplementEntries = []
+        takenDoseMs = []
+        nutritionRevision += 1
         activeCount = 0
         pausedCount = 0
         totalCount = 0

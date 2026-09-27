@@ -160,11 +160,13 @@ data class FrequencyDraft(
     val notes: List<String>
 )
 
-/** Every row of the three tables; the archive export input and the merge's local side (§14). */
+/** Every row of the tables; the archive export input and the merge's local side (§14). */
 data class MedicationsSnapshot(
     val medications: List<Medication> = emptyList(),
     val schedules: List<MedicationSchedule> = emptyList(),
-    val doseLogs: List<DoseLog> = emptyList()
+    val doseLogs: List<DoseLog> = emptyList(),
+    /** `medication_nutrients` rows (schema v2, §21). */
+    val nutrients: List<com.ayuvo.health.nutrients.MedicationNutrientRow> = emptyList()
 )
 
 /** Outcome of importing an `ayuvo-medications` archive (§14). */

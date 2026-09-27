@@ -42,6 +42,14 @@ REQUIRED = [
     "privacy-first.html", "ai-providers.html", "open-source.html", "download.html",
     "compare/index.html", "compare/guava-health.html", "compare/picnichealth.html", "compare/apple-health.html",
     "compare/mychart.html", "compare/health-connect.html", "about.html",
+    "nutrients/index.html",
+    *[f"nutrients/{s}.html" for s in (
+        "fiber", "sugar", "added-sugar", "saturated-fat", "monounsaturated-fat", "polyunsaturated-fat", "trans-fat",
+        "cholesterol", "caffeine", "sodium", "potassium", "calcium", "iron", "magnesium", "zinc", "vitamin-a",
+        "vitamin-c", "vitamin-d", "vitamin-b12", "vitamin-e", "vitamin-k", "folate", "omega-3",
+        # charted from Apple Health / Health Connect (app_tracked: false); the apps link to these slugs
+        "phosphorus", "chloride", "copper", "manganese", "selenium", "chromium", "molybdenum", "iodine",
+        "vitamin-b6", "thiamin", "riboflavin", "niacin", "biotin", "pantothenic-acid")],
     "robots.txt", "sitemap.xml", "llms.txt", "manifest.webmanifest", "styles.css", "site.js", "firebase.json", ".firebaserc",
     "assets/opengraph.jpg", "assets/brand/ayuvo-mark.svg", "assets/brand/favicon.svg",
     "assets/brand/favicon.ico", "assets/brand/apple-touch-icon.png",

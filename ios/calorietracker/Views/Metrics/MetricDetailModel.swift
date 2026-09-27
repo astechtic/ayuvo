@@ -10,6 +10,8 @@ final class MetricDetailModel {
     var anchor = Date()
     var selected: HealthChartPoint?
     private(set) var series: HealthChartSeries?
+    /// Nutrient metrics: average per logged day and the food / supplement split of the shown interval.
+    private(set) var nutrientExtras: NutrientSeriesExtras?
     private(set) var isLoading = false
 
     init(key: MetricKey, range: HealthDetailRange) {
@@ -30,6 +32,7 @@ final class MetricDetailModel {
         let revision: Int
         switch key {
         case .app(let metric): revision = sources.revision(for: metric)
+        case .nutrient: revision = sources.nutrientRevision
         case .health: revision = sources.health.snapshotRevision
         }
         let day = Int(calendar.startOfDay(for: anchor).timeIntervalSince1970)
@@ -41,6 +44,10 @@ final class MetricDetailModel {
         switch key {
         case .app(let metric):
             series = await MetricSeriesCache.shared.series(for: metric, range: range, anchor: anchor, sources: sources, calendar: calendar)
+        case .nutrient(let nutrientKey):
+            let result = await MetricSeriesCache.shared.nutrientSeries(for: nutrientKey, range: range, anchor: anchor, sources: sources, calendar: calendar)
+            series = result.series
+            nutrientExtras = result.extras
         case .health(let typeID):
             series = await sources.health.series(typeID: typeID, range: range, anchor: anchor)
         }

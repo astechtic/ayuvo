@@ -1,0 +1,203 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "average": 300.8,
+        "logged_days": 5
+      },
+      "input": {
+        "entries": [
+          {
+            "t_ms": 1789995600000,
+            "value": 1500
+          },
+          {
+            "t_ms": 1790010000000,
+            "value": 2.5
+          },
+          {
+            "t_ms": 1790182800000,
+            "value": 1.5
+          }
+        ],
+        "interval": {
+          "end_ms": 1790568000000,
+          "start_ms": 1789963200000
+        },
+        "logged_days": [
+          "2026-09-21",
+          "2026-09-22",
+          "2026-09-23",
+          "2026-09-24",
+          "2026-09-26"
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "new_york_week_weekly_d3",
+      "notes": "Weekly 60,000 IU plus a little food vitamin D over 5 logged days: 1504 / 5."
+    },
+    {
+      "expected": {
+        "average": 200.0,
+        "logged_days": 2
+      },
+      "input": {
+        "entries": [
+          {
+            "t_ms": 1792891800000,
+            "value": 300
+          },
+          {
+            "t_ms": 1792364400000,
+            "value": 100
+          },
+          {
+            "t_ms": 1792972800000,
+            "value": 999
+          }
+        ],
+        "interval": {
+          "end_ms": 1792972800000,
+          "start_ms": 1792364400000
+        },
+        "logged_days": [
+          "2026-10-19",
+          "2026-10-26",
+          "2026-10-18"
+        ],
+        "time_zone": "Europe/London"
+      },
+      "name": "london_dst_week",
+      "notes": "Fall-back Sunday counts; days and entries outside the interval are ignored; the entry day 10-25 is added."
+    },
+    {
+      "expected": {
+        "average": null,
+        "logged_days": 2
+      },
+      "input": {
+        "entries": [
+          {
+            "t_ms": 1788406200000,
+            "value": null
+          }
+        ],
+        "interval": {
+          "end_ms": 1790793000000,
+          "start_ms": 1788201000000
+        },
+        "logged_days": [
+          "2026-09-03",
+          "2026-09-10"
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "kolkata_month_no_values",
+      "notes": "No value in the range: average null, never 0."
+    },
+    {
+      "expected": {
+        "average": null,
+        "logged_days": 0
+      },
+      "input": {
+        "entries": [],
+        "interval": {
+          "end_ms": 1790812800000,
+          "start_ms": 1788220800000
+        },
+        "logged_days": [],
+        "time_zone": "UTC"
+      },
+      "name": "utc_no_logged_days"
+    },
+    {
+      "expected": {
+        "average": 10.0,
+        "logged_days": 3
+      },
+      "input": {
+        "entries": [
+          {
+            "t_ms": 1788343200000,
+            "value": 10
+          },
+          {
+            "t_ms": 1788602400000,
+            "value": 20
+          }
+        ],
+        "interval": {
+          "end_ms": 1788825600000,
+          "start_ms": 1788220800000
+        },
+        "logged_days": [
+          "2026-09-02",
+          "2026-09-03"
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "utc_entry_day_not_in_logged_days",
+      "notes": "2026-09-05 has an entry but was not passed: it still counts (30 / 3)."
+    },
+    {
+      "expected": {
+        "average": 4.666667,
+        "logged_days": 3
+      },
+      "input": {
+        "entries": [
+          {
+            "t_ms": 1773027000000,
+            "value": 7
+          },
+          {
+            "t_ms": 1772427600000,
+            "value": 7
+          }
+        ],
+        "interval": {
+          "end_ms": 1773028800000,
+          "start_ms": 1772427600000
+        },
+        "logged_days": [
+          "2026-03-08",
+          "2026-03-02",
+          "2026-03-04",
+          "2026-03-09"
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "new_york_spring_forward_week"
+    },
+    {
+      "expected": {
+        "average": 3.333333,
+        "logged_days": 3
+      },
+      "input": {
+        "entries": [
+          {
+            "t_ms": 1769932800000,
+            "value": 10
+          }
+        ],
+        "interval": {
+          "end_ms": 1798761600000,
+          "start_ms": 1767225600000
+        },
+        "logged_days": [
+          "2026-02-01",
+          "2026-02-02",
+          "2026-02-03"
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "utc_year_repeating_decimal",
+      "notes": "10 / 3 rounded to 6 decimals."
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "logged_day_average",
+  "version": 1
+}

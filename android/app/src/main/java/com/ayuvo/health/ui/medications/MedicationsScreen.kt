@@ -238,7 +238,7 @@ fun MedicationsScreen(
                         Column {
                             ui.medications.forEachIndexed { index, medication ->
                                 if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
-                                MedicationRow(medication = medication, onOpen = { onOpenMedication(medication.id) })
+                                MedicationRow(medication = medication, onOpen = { onOpenMedication(medication.id) }, isSupplement = medication.id in ui.supplementIds)
                             }
                         }
                     }

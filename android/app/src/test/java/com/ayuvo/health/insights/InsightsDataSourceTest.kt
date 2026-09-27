@@ -31,6 +31,10 @@ class InsightsDataSourceTest {
 
     private fun ms(iso: String) = AppMetricFixtures.ms(iso)
 
+    init {
+        com.ayuvo.health.nutrients.NutrientsTestFiles.install()
+    }
+
     private fun row(id: String, type: String, start: String, end: String, day: String, value: Double? = null, category: Int? = null) = HealthSampleRow(
         id = id, typeId = type, startMs = ms(start), endMs = ms(end), localDay = day, value = value, unit = "",
         categoryValue = category, sourceId = "watch", updatedMs = 1L
@@ -116,10 +120,25 @@ class InsightsDataSourceTest {
         assertEquals(25.0, b.inputs.series("body_fat")[today]!!, 1e-9)
         assertEquals(2000.0, b.inputs.targets["calories"]!!, 0.0)
         assertEquals(9000.0, b.inputs.targets["steps"]!!, 0.0)
-        assertEquals(50.0, b.inputs.targets["sugar_max_g"]!!, 0.0)
+        // Personalised limits from the nutrient reference (docs/nutrients.md §4.3): sugar has no default limit,
+        // added sugar is 10% of 2,000 kcal ÷ 4 kcal/g, sodium 2,300 mg; the old fixed defaults are not custom goals.
+        assertNull(b.inputs.targets["sugar_max_g"])
+        assertEquals(50.0, b.inputs.targets["added_sugar_max_g"]!!, 0.0)
+        assertEquals(2300.0, b.inputs.targets["sodium_max_mg"]!!, 0.0)
+        assertEquals(25.0, b.inputs.targets["fiber_g"]!!, 0.0)
         assertTrue(b.inputs.tracking.water)
         assertFalse(b.inputs.tracking.fasting)
         assertEquals("female", b.profile.sex)
+    }
+
+    /** Taken supplement doses add to the day's optional nutrients, never to calories (docs/nutrients.md §6). */
+    @Test
+    fun supplementsJoinOptionalNutrientsOnly() {
+        val rows = listOf(com.ayuvo.health.nutrients.MedicationNutrientRow("fibre-caps", "fiber", 3.0))
+        val doses = listOf(com.ayuvo.health.nutrients.SupplementDose("fibre-caps", "taken", ms("2026-09-20T09:00"), 2.0))
+        val n = InsightsDataSource.nutritionByDay(snapshot.food, zone, today.minusDays(3), com.ayuvo.health.nutrients.SupplementSnapshot(rows, doses))
+        assertEquals(12.0, n[today]!!["fiber_g"]!!, 0.0)
+        assertEquals(1200.0, n[today]!!["calories"]!!, 0.0)
     }
 
     @Test

@@ -15,6 +15,8 @@ import com.ayuvo.health.medications.model.MedicationsSnapshot
 import com.ayuvo.health.medications.model.PrnLogResult
 import com.ayuvo.health.medications.model.ReminderPlan
 import com.ayuvo.health.medications.model.TodayTimeline
+import com.ayuvo.health.nutrients.MedicationNutrientRow
+import com.ayuvo.health.nutrients.SupplementDose
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonObject
 
@@ -88,6 +90,26 @@ interface MedicationsStore {
 
     /** `plan_reminders` over the whole database (docs §10). */
     suspend fun planReminders(nowMs: Long, horizonMs: Long, zoneId: String, budget: Int? = null): ReminderPlan
+
+    // -- supplement nutrients (schema v2, docs/medications.md §21) ---------------------------------
+
+    /** What ONE dose unit of [medicationId] contains, canonical units, sorted by key. */
+    suspend fun nutrients(medicationId: String): List<MedicationNutrientRow>
+
+    /** Every `medication_nutrients` row (medication id, then key). */
+    suspend fun allNutrients(): List<MedicationNutrientRow>
+
+    /**
+     * Replaces the medication's rows with [rows] (unknown keys and amounts outside the reference
+     * cap are dropped) and bumps `medications.updated_ms`, in one transaction.
+     */
+    suspend fun setNutrients(medicationId: String, rows: List<MedicationNutrientRow>, nowMs: Long)
+
+    /** Taken doses of medications that have nutrients (the `supplement_entries` input). */
+    suspend fun supplementDoses(): List<SupplementDose>
+
+    /** `taken_at_ms` of every taken dose of any medication (logged days, docs/nutrients.md §4.7). */
+    suspend fun takenDoseTimes(): List<Long>
 
     // -- archive ----------------------------------------------------------------------------------
     suspend fun exportSnapshot(): MedicationsSnapshot

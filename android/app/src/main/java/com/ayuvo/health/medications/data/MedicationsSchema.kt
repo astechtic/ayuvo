@@ -11,7 +11,7 @@ object MedicationsSchema {
     const val BASE_VERSION = 1
 
     /** Latest `user_version`: [BASE_VERSION] plus every entry of [MIGRATIONS]. */
-    const val VERSION = 1
+    const val VERSION = 2
 
     val STATEMENTS: List<String> = listOf(
         """CREATE TABLE medications (
@@ -72,11 +72,20 @@ object MedicationsSchema {
   value TEXT NOT NULL)"""
     )
 
-    /** Migration statements keyed by the `user_version` they produce, applied in order (none at v1). */
-    val MIGRATIONS: Map<Int, List<String>> = linkedMapOf()
+    /** Migration statements keyed by the `user_version` they produce, applied in order. */
+    val MIGRATIONS: Map<Int, List<String>> = linkedMapOf(
+        // 001: supplement nutrients per dose unit (docs/medications.md §21, docs/nutrients.md §6).
+        2 to listOf(
+            """CREATE TABLE medication_nutrients (
+  medication_id TEXT NOT NULL REFERENCES medications(id) ON DELETE CASCADE,
+  nutrient_key TEXT NOT NULL,
+  amount_per_unit REAL NOT NULL CHECK (amount_per_unit > 0),
+  PRIMARY KEY (medication_id, nutrient_key))"""
+        )
+    )
 
     /** Shared file name of each migration (contract test). */
-    val MIGRATION_FILES: Map<Int, String> = linkedMapOf()
+    val MIGRATION_FILES: Map<Int, String> = linkedMapOf(2 to "001_medication_nutrients.sql")
 
     val SQL: String get() = STATEMENTS.joinToString(";\n", postfix = ";\n")
 
@@ -84,6 +93,9 @@ object MedicationsSchema {
         MIGRATIONS.getValue(version).joinToString(";\n", postfix = ";\n")
 
     val TABLES: List<String> = listOf("medications", "medication_schedules", "dose_logs", "medications_meta")
+
+    /** Tables added by [MIGRATIONS] (present from their version on). */
+    val MIGRATION_TABLES: List<String> = listOf("medication_nutrients")
 
     val INDEXES: List<String> = listOf(
         "idx_medications_status", "idx_medications_record",

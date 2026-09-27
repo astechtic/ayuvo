@@ -969,7 +969,7 @@ struct NutritionPickerSheet: View {
                         }
 
                         if let customValue, let upperLimit = guidanceUpperLimit, customValue > upperLimit {
-                            Text("Above the general adult upper intake level. Use only if recommended by a healthcare professional.")
+                            Text("Above the upper intake level for adults of your age and sex (\(upperLimit.formatted()) \(unit)). Use only if recommended by a healthcare professional.")
                                 .font(.system(.caption, design: .rounded, weight: .medium))
                                 .foregroundStyle(.orange)
                                 .multilineTextAlignment(.center)

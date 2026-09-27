@@ -2,6 +2,10 @@ package com.ayuvo.health.medications.model
 
 import com.ayuvo.health.medications.logic.MedicationConstants
 import com.ayuvo.health.medications.logic.MedicationJson
+import com.ayuvo.health.nutrients.ConvertedAmount
+import com.ayuvo.health.nutrients.MedicationNutrientRow
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.Nutrients
 import kotlinx.serialization.json.JsonObject
 
 /**
@@ -61,6 +65,35 @@ data class ScheduleDraft(
     }
 }
 
+/**
+ * One "Nutrients (for supplements)" row of the form (docs/medications.md §21): what ONE dose unit
+ * contains, as typed. [unit] is `g` / `mg` / `mcg` / `iu`; vitamin A / E in IU need a [form].
+ * Saved in the nutrient's canonical unit through [Nutrients.convertAmount].
+ */
+data class NutrientInputRow(
+    val id: String = java.util.UUID.randomUUID().toString(),
+    val key: String? = null,
+    val amount: String = "",
+    val unit: String = "mg",
+    val form: String? = null
+) {
+    val amountValue: Double? get() = amount.trim().replace(',', '.').toDoubleOrNull()
+
+    fun convert(): ConvertedAmount =
+        if (key == null) ConvertedAmount(false, null, null, "unknown_nutrient") else Nutrients.convertAmount(amountValue, unit, key, form)
+
+    companion object {
+        /** A stored row shown in its canonical unit. */
+        fun fromStored(row: MedicationNutrientRow): NutrientInputRow = NutrientInputRow(
+            key = row.nutrientKey,
+            amount = plain(row.amountPerUnit),
+            unit = NutrientReference.active?.unitOf(row.nutrientKey) ?: "mg"
+        )
+
+        fun plain(v: Double): String = java.math.BigDecimal.valueOf(v).stripTrailingZeros().toPlainString()
+    }
+}
+
 /** The Add / Edit form state (docs §15). `validate_draft` runs on [toValidationJson]. */
 data class MedicationDraft(
     val name: String = "",
@@ -78,8 +111,17 @@ data class MedicationDraft(
     val isPrn: Boolean = false,
     val photoPath: String? = null,
     val relatedRecordId: String? = null,
-    val schedule: ScheduleDraft = ScheduleDraft()
+    val schedule: ScheduleDraft = ScheduleDraft(),
+    /** Supplement nutrients per dose unit (schema v2, §21). */
+    val nutrients: List<NutrientInputRow> = emptyList()
 ) {
+    /** The rows to store, in canonical units; null amounts for rows that do not convert. */
+    fun nutrientRows(medicationId: String): List<MedicationNutrientRow> = nutrients.mapNotNull { r ->
+        val key = r.key ?: return@mapNotNull null
+        val c = r.convert()
+        if (c.ok) MedicationNutrientRow(medicationId, key, c.amount!!) else null
+    }
+
     /** The `draft` object of `validate_draft`. */
     fun toValidationJson(): JsonObject = MedicationJson.obj(
         "name" to name,
@@ -96,7 +138,10 @@ data class MedicationDraft(
         "days" to if (isPrn) emptyList() else schedule.days,
         "interval_hours" to if (isPrn) null else schedule.intervalHours,
         "anchor_time" to if (isPrn) null else schedule.anchorTime,
-        "instructions" to instructions
+        "instructions" to instructions,
+        "nutrients" to if (nutrients.isEmpty()) null else nutrients.map { r ->
+            MedicationJson.obj("key" to r.key, "amount_per_unit" to r.convert().amount)
+        }
     )
 
     fun toMedication(id: String, nowMs: Long, status: MedicationStatus = MedicationStatus.ACTIVE, createdMs: Long = nowMs): Medication =

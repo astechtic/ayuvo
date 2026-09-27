@@ -5,6 +5,8 @@ enum MetricRoute: Hashable {
     case detail(MetricKey)
     case allData(AppMetric)
     case favourites
+    /// Browse › Nutrition › All Nutrients (every `nutrient:` metric, grouped by browse section).
+    case allNutrients
 }
 
 extension View {
@@ -18,6 +20,8 @@ extension View {
                 AppMetricAllDataView(metric: metric)
             case .favourites:
                 FavouritesEditorView()
+            case .allNutrients:
+                NutrientListView()
             }
         }
     }

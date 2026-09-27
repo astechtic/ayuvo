@@ -34,7 +34,7 @@ struct HealthMetricEntity: AppEntity {
     static func make(_ id: String) -> HealthMetricEntity? {
         guard let key = MetricKey(pinID: id) else { return nil }
         switch key {
-        case .app: return HealthMetricEntity(id: id, name: MetricCatalog.descriptor(for: key).title)
+        case .app, .nutrient: return HealthMetricEntity(id: id, name: MetricCatalog.descriptor(for: key).title)
         case .health(let typeID):
             guard let type = HealthMetricRegistry.type(id: typeID), !type.isAndroidOnly else { return nil }
             return HealthMetricEntity(id: id, name: type.displayName)

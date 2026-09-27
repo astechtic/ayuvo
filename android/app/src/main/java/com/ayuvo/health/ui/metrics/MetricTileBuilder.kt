@@ -6,6 +6,9 @@ import com.ayuvo.health.data.metrics.AppMetricId
 import com.ayuvo.health.data.metrics.AppMetricSnapshot
 import com.ayuvo.health.data.metrics.MetricAggregation
 import com.ayuvo.health.data.metrics.MetricKey
+import com.ayuvo.health.data.metrics.MetricsReference
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientFormat
 import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.ui.health.HealthHomeTileBuilder
 import com.ayuvo.health.ui.health.HealthTileUi
@@ -48,12 +51,30 @@ object MetricTileBuilder {
         return visible.map { key ->
             when (key) {
                 is MetricKey.App -> MetricTileUi(key, appTile(key.id, snapshot, nowMs, zone, units, locale))
+                is MetricKey.Nutrient -> MetricTileUi(key, nutrientTile(key, snapshot, nowMs, zone, locale))
                 is MetricKey.Health -> MetricTileUi(key, healthTiles[key.typeId] ?: emptyTile(key.typeId))
             }
         }
     }
 
     fun emptyTile(id: String) = HealthTileUi(id, "—", "", HealthTileUi.CaptionKind.NONE, hasData = false)
+
+    /** `nutrient:<key>` tile: today's food + supplement total and the 7-day sparkline (summed). */
+    fun nutrientTile(key: MetricKey.Nutrient, snapshot: AppMetricSnapshot, nowMs: Long, zone: ZoneId, locale: Locale = Locale.getDefault()): HealthTileUi {
+        val spark = MetricsReference.sparkline7d(AppMetricAggregator.nutrientEntries(key.key, snapshot), nowMs, zone, MetricAggregation.SUM)
+        val sparkFloats = spark.values.map { v -> v?.toFloat() ?: Float.NaN }
+        val value = spark.values.last() ?: return emptyTile(key.storageId).copy(spark = sparkFloats)
+        return HealthTileUi(
+            typeId = key.storageId,
+            number = NutrientFormat.amount(value, locale),
+            unit = NutrientFields.unit(key.key),
+            captionKind = HealthTileUi.CaptionKind.TODAY,
+            captionMs = null,
+            numeric = value,
+            spark = sparkFloats,
+            hasData = true
+        )
+    }
 
     /** Pure app-metric tile; spark values are oldest → newest, missing days NaN. */
     fun appTile(id: AppMetricId, snapshot: AppMetricSnapshot, nowMs: Long, zone: ZoneId, units: MetricUnits, locale: Locale = Locale.getDefault()): HealthTileUi {

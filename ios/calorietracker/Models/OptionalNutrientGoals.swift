@@ -198,6 +198,8 @@ enum OptionalNutrient: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// The fixed default goal every build stored before goals were personalised (docs/nutrients.md §4.3).
+    /// A stored value equal to it counts as "not customised" and follows `personalizedDefaultGoal(for:)`.
     var defaultGoal: Int {
         switch self {
         case .fiber: 30
@@ -273,21 +275,19 @@ enum OptionalNutrient: String, CaseIterable, Identifiable, Codable {
         }
     }
 
-    /// A general adult upper intake level used only to provide non-blocking
-    /// guidance for custom goals. Nutrients without a clear food-inclusive
-    /// upper level intentionally return nil.
-    var generalAdultUpperLimit: Int? {
-        switch self {
-        case .calcium: 2_500
-        case .iron: 45
-        case .zinc: 40
-        case .vitaminA: 3_000
-        case .vitaminC: 2_000
-        case .vitaminD: 100
-        case .vitaminE: 1_000
-        case .folate: 1_000
-        default: nil
-        }
+    /// Reference style: `target`, `limit` or `info` (sports supplements are `target` without a reference).
+    var referenceStyle: String { NutrientsReference.byKey[jsonKey]?.style ?? "target" }
+
+    /// The default goal for this profile (reference `default_goal_int`); nil for info-style nutrients and
+    /// sports supplements, which have no default goal line.
+    func personalizedDefaultGoal(for profile: NutrientsReference.Profile) -> Int? {
+        NutrientsReference.defaultGoalInt(NutrientsReference.defaultGoal(key: jsonKey, profile: profile))
+    }
+
+    /// The reference upper intake level for this profile (non-blocking guidance for custom goals); nil when the
+    /// reference sets none. Its scope note says what it applies to.
+    func referenceUpperLimit(for profile: NutrientsReference.Profile) -> Int? {
+        NutrientsReference.referenceLines(key: jsonKey, profile: profile).upperLimit.map { Int($0.rounded()) }
     }
 
     func customValueDetail(for value: Int) -> String? {
@@ -330,8 +330,39 @@ struct OptionalNutrientGoals: Codable, Equatable {
         (try? JSONEncoder().encode(mergedWithDefaults())) ?? Data()
     }
 
-    func goal(for nutrient: OptionalNutrient) -> Int {
+    /// The goal in effect: the user's own value, else the personalised default for `profile`, else 0 (no goal).
+    func goal(for nutrient: OptionalNutrient, profile: NutrientsReference.Profile = .unknown) -> Int {
+        customGoal(for: nutrient) ?? nutrient.personalizedDefaultGoal(for: profile) ?? 0
+    }
+
+    /// The user's own goal, or nil when the stored value is missing or equals the old fixed default.
+    func customGoal(for nutrient: OptionalNutrient, profile: NutrientsReference.Profile = .unknown) -> Int? {
+        guard let value = values[nutrient.rawValue], value != nutrient.defaultGoal else { return nil }
+        return value
+    }
+
+    func isCustomized(_ nutrient: OptionalNutrient) -> Bool { customGoal(for: nutrient) != nil }
+
+    /// The raw stored value (the old fixed default when never customised), for portable exports: importing it
+    /// elsewhere keeps "not customised" meaning the same.
+    func storedGoal(for nutrient: OptionalNutrient) -> Int {
         values[nutrient.rawValue] ?? nutrient.defaultGoal
+    }
+
+    /// Stores `value`; a value equal to the personalised default is stored as "not customised" so it keeps
+    /// following the profile.
+    func settingGoal(_ value: Int, for nutrient: OptionalNutrient, profile: NutrientsReference.Profile) -> OptionalNutrientGoals {
+        if let personal = nutrient.personalizedDefaultGoal(for: profile), personal == value {
+            return resettingGoal(for: nutrient)
+        }
+        return settingGoal(value, for: nutrient)
+    }
+
+    /// Back to the personalised default.
+    func resettingGoal(for nutrient: OptionalNutrient) -> OptionalNutrientGoals {
+        var copy = self
+        copy.values[nutrient.rawValue] = nutrient.defaultGoal
+        return copy
     }
 
     mutating func setGoal(_ value: Int, for nutrient: OptionalNutrient) {

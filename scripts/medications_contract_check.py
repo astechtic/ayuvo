@@ -43,14 +43,16 @@ EXPECTED_FILES = {
     "auto_complete.json": "auto_complete", "frequency_hint.json": "frequency_hint", "archive.json": "archive",
     "validation.json": "validate_draft", "coach_tools_payloads.json": "coach_tools",
 }
-TABLES = ["medications", "medication_schedules", "dose_logs", "medications_meta"]
+TABLES = ["medications", "medication_schedules", "dose_logs", "medications_meta", "medication_nutrients"]
 INDEXES = ["idx_medications_status", "idx_medications_record", "idx_schedules_medication", "idx_schedules_open",
            "idx_dose_logs_occurrence", "idx_dose_logs_medication", "idx_dose_logs_scheduled", "idx_dose_logs_status"]
 ALLOWED_ZONES = frozenset(["America/New_York", "Europe/London", "Asia/Kolkata", "UTC"])
 DOCUMENTED = {"GRACE_MS": 7_200_000, "LATE_FIRE_MS": 300_000, "ADHERENCE_WINDOW_MS": 7 * 86_400_000, "IOS_BUDGET": 52,
               "SNOOZE_MINUTES": (10, 30, 60), "SLOTS_1": ["08:00"], "SLOTS_2": ["08:00", "20:00"],
               "SLOTS_3": ["08:00", "14:00", "20:00"], "SLOTS_4": ["08:00", "13:00", "18:00", "22:00"],
-              "SLOT_NIGHT": ["22:00"], "INTERVAL_HOURS": (1, 2, 3, 4, 6, 8, 12, 24), "MAX_TIMES": 12}
+              "SLOT_NIGHT": ["22:00"], "INTERVAL_HOURS": (1, 2, 3, 4, 6, 8, 12, 24), "MAX_TIMES": 12,
+              "SCHEMA_VERSION": 2, "MIGRATION_FILES": ["001_medication_nutrients.sql"],
+              "NUTRIENT_AMOUNT_MAX": {"g": 100, "mg": 10000, "mcg": 100000}}
 
 
 def dumps(obj):
@@ -208,12 +210,27 @@ def check_shape(function, got, where, problems, inp):
                     problems.append("%s: %s not ordered by id" % (where, key))
             if any(m["photo_path"] is not None for m in got["medications"]):
                 problems.append("%s: photo_path exported" % where)
+            for m in got["medications"]:
+                keys = [n["key"] for n in m.get("nutrients", [None])]
+                if "nutrients" not in m or keys != sorted(keys):
+                    problems.append("%s: exported medication needs nutrients sorted by key" % where)
         else:
             for op in got["ops"]:
                 if op["op"] not in ("insert", "update", "skip"):
                     problems.append("%s: bad merge op" % where)
-                if op["op"] == "skip" and op.get("reason") not in ("older", "invalid", "orphan", "occurrence_conflict"):
+                if op["op"] == "skip" and op.get("reason") not in ("older", "invalid", "orphan", "occurrence_conflict") \
+                        + M.NUTRIENT_SKIP_REASONS:
                     problems.append("%s: bad skip reason" % where)
+                if op["table"] == "medication_nutrients" and (op["op"] != "skip" or op["reason"] not in M.NUTRIENT_SKIP_REASONS):
+                    problems.append("%s: medication_nutrients ops are nutrient skips only" % where)
+                if op["table"] == "medications" and op["op"] in ("insert", "update"):
+                    ns = op["row"].get("nutrients", "missing")
+                    if ns != "missing" and ns is not None:
+                        keys = [n["key"] for n in ns]
+                        if keys != sorted(set(keys)) or any(M.nutrient_problem(n["key"], n["amount_per_unit"]) for n in ns):
+                            problems.append("%s: merged nutrients must be valid and sorted by key" % where)
+                    elif ns == "missing":
+                        problems.append("%s: merged medication row must carry nutrients (list or null)" % where)
     elif function == "validate_draft":
         for e in got["errors"]:
             if set(e) != {"field", "code"}:
@@ -365,6 +382,14 @@ def check_sql(problems):
         problems.append("schema tables %s != documented %s" % (tables, TABLES))
     if indexes != INDEXES:
         problems.append("schema indexes %s != documented %s" % (indexes, INDEXES))
+    migrations = [os.path.basename(p) for p in files[1:]]
+    if migrations != M.MIGRATION_FILES:
+        problems.append("migrations %s != reference MIGRATION_FILES %s" % (migrations, M.MIGRATION_FILES))
+    for i, name in enumerate(migrations, 1):
+        if not re.match("^%03d_[a-z_]+[.]sql$" % i, name):
+            problems.append("migration %s must be named %03d_<name>.sql" % (name, i))
+    if M.SCHEMA_VERSION != M.BASE_SCHEMA_VERSION + len(migrations):
+        problems.append("SCHEMA_VERSION must be 1 + number of migrations")
     return counts
 
 
@@ -390,13 +415,17 @@ def check_archive_round_trip(problems):
             continue
         first = M.export_archive(inp["snapshot"], inp["exported_ms"], inp["time_zone"], inp["platform"], inp["app_version"])
         merged = M.merge_archive({"medications": [], "schedules": [], "dose_logs": []}, first, inp["exported_ms"])
-        snap = {"medications": [], "schedules": [], "dose_logs": []}
+        snap = {"medications": [], "schedules": [], "dose_logs": [], "medication_nutrients": []}
         table_key = {"medications": "medications", "medication_schedules": "schedules", "dose_logs": "dose_logs"}
         for op in merged["ops"]:
             if op["op"] != "insert":
                 problems.append("archive.json/%s: round trip merge produced %s" % (c["name"], op["op"]))
                 continue
             snap[table_key[op["table"]]].append(op["row"])
+            if op["table"] == "medications":
+                for n in op["row"]["nutrients"] or []:
+                    snap["medication_nutrients"].append({"medication_id": op["id"], "nutrient_key": n["key"],
+                                                         "amount_per_unit": n["amount_per_unit"]})
         second = M.export_archive(snap, inp["exported_ms"], inp["time_zone"], inp["platform"], inp["app_version"])
         if dumps(first) != dumps(second):
             problems.append("archive.json/%s: export -> merge -> export is not byte-identical at %s"
@@ -469,6 +498,20 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual(M.resolve_dose_status(occ, None, t + M.GRACE_MS)["status"], "missed")
         rows = M.materialize_missed([occ], [], {"m": {"dose_quantity": 1, "dose_unit": "tablet"}}, t + M.GRACE_MS)["ops"]
         self.assertEqual([r["row"]["status"] for r in rows], ["missed"])
+
+    def test_nutrient_rows(self):
+        self.assertIsNone(M.nutrient_problem("vitamin_d", 1500))
+        self.assertIsNone(M.nutrient_problem("creatine", 5))
+        self.assertEqual(M.nutrient_problem("niacin", 16), "unknown_nutrient")
+        self.assertEqual(M.nutrient_problem("vitamin_d", 0), "invalid_amount")
+        self.assertEqual(M.nutrient_problem("vitamin_d", 100001), "invalid_amount")
+        self.assertEqual(M.nutrient_problem("creatine", 101), "invalid_amount")
+        good, skips = M._archive_nutrients({"id": "m", "nutrients": [{"key": "zinc", "amount_per_unit": 10},
+                                                                       {"key": "calcium", "amount_per_unit": 500},
+                                                                       {"key": "zinc", "amount_per_unit": 5}]})
+        self.assertEqual([g["key"] for g in good], ["calcium", "zinc"])
+        self.assertEqual([s["reason"] for s in skips], ["duplicate_nutrient"])
+        self.assertEqual(M._archive_nutrients({"id": "m"}), (None, []))
 
     def test_never_taken_without_action(self):
         med = {"id": "m", "status": "active", "is_prn": 0, "dose_quantity": 1, "dose_unit": "tablet"}

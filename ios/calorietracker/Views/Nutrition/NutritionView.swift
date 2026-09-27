@@ -184,6 +184,7 @@ struct NutritionView: View {
     @AppStorage(FastingSettings.notificationEnabledKey) private var fastingGoalNotificationEnabled = true
     @AppStorage("notificationsEnabled") private var notificationsEnabled = false
     @Environment(ProfileStore.self) private var profileStore
+    @Environment(MedicationStore.self) private var medicationStore
     @State private var homeBurnLine: String?
     @State private var homeBurnRefreshGeneration = 0
 
@@ -443,9 +444,14 @@ private var dailyStepsTaskKey: String {
                 }
                 .accessibilityIdentifier("browse.metric.\(metric.key)")
             }
+            NavigationLink(value: MetricRoute.allNutrients) {
+                MetricRow(systemImage: "list.bullet.rectangle", tint: AyuvoPalette.nutrition, title: String(localized: "All Nutrients"))
+            }
+            .accessibilityIdentifier("browse.nutrition.allNutrients")
             NavigationLink(value: HealthRoute.category(.nutrition)) {
                 MetricRow(systemImage: "heart.text.square", tint: AyuvoPalette.nutrition, title: String(localized: "All Apple Health Nutrition"))
             }
+            .accessibilityIdentifier("browse.nutrition.allHealth")
         }
         .listRowBackground(AppColors.appCard)
     }
@@ -540,7 +546,7 @@ private var dailyStepsTaskKey: String {
                         ForEach(displayedHomeNutrients) { nutrient in
                             MacroVerticalBar(
                                 label: nutrient.displayName,
-                                current: nutrient.value(from: foodStore, on: selectedDate),
+                                current: nutrient.value(from: NutrientTotals(foodStore: foodStore, medicationStore: medicationStore), on: selectedDate),
                                 goal: nutrient.goal(for: userProfile, optionalGoals: optionalNutrientGoals),
                                 unit: nutrient.unit,
                                 gradient: nutrient.gradientColors,

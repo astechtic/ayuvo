@@ -67,6 +67,10 @@ import com.ayuvo.health.ui.records.RecordFormat
 import com.ayuvo.health.ui.records.RecordThumbnail
 import com.ayuvo.health.ui.theme.AppColors
 import androidx.compose.material.icons.filled.Medication
+import androidx.compose.material.icons.filled.ChevronRight
+import com.ayuvo.health.data.metrics.MetricKey
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientFormat
 
 private enum class DetailConfirm { STOP, DELETE }
 
@@ -78,7 +82,9 @@ fun MedicationDetailScreen(
     onBack: () -> Unit,
     onEdit: (String) -> Unit,
     onOpenHistory: (String) -> Unit,
-    onOpenRecord: (String) -> Unit
+    onOpenRecord: (String) -> Unit,
+    /** Opens a nutrient chart from the Nutrition card. */
+    onOpenMetric: (MetricKey) -> Unit = {}
 ) {
     val vm: MedicationDetailViewModel = viewModel(key = "med-detail-$medicationId", factory = MedicationDetailViewModel.Factory(container, medicationId))
     val ui by vm.ui.collectAsState()
@@ -154,7 +160,10 @@ fun MedicationDetailScreen(
                             Text(medication.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
                             val subtitle = listOfNotNull(medication.strength, stringResource(medication.form.labelRes())).joinToString(" · ")
                             Text(subtitle, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f))
-                            MedicationStatusBadge(medication.status)
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                MedicationStatusBadge(medication.status)
+                                if (ui.nutrients.isNotEmpty()) SupplementBadge()
+                            }
                         }
                     }
                 }
@@ -181,6 +190,42 @@ fun MedicationDetailScreen(
                                 modifier = Modifier.testTag("medications.detail.reminders")
                             )
                         }
+                    }
+                }
+
+                // Nutrition (supplement nutrients, docs/medications.md §21)
+                if (ui.nutrients.isNotEmpty()) {
+                    DetailCard(stringResource(R.string.nutrients_card_title), tag = "nutrition") {
+                        val doseLabel = doseText(medication.doseQuantity, medication.doseUnit)
+                        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp)) {
+                            Spacer(Modifier.weight(1f))
+                            Text(stringResource(R.string.nutrients_card_per_dose, doseLabel), fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f), modifier = Modifier.width(110.dp), textAlign = TextAlign.End)
+                            Text(stringResource(R.string.nutrients_card_today), fontSize = 11.sp, lineHeight = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f), modifier = Modifier.width(96.dp), textAlign = TextAlign.End)
+                            Spacer(Modifier.width(22.dp))
+                        }
+                        ui.nutrients.forEachIndexed { index, row ->
+                            if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
+                            val unit = NutrientFields.unit(row.nutrientKey)
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onOpenMetric(MetricKey.Nutrient(row.nutrientKey)) }
+                                    .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp)
+                                    .testTag("medications.detail.nutrient.${row.nutrientKey}"),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(stringResource(NutrientFields.nameRes(row.nutrientKey)), fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(NutrientFormat.withUnit(row.amountPerUnit * medication.doseQuantity, unit), fontSize = 14.sp, modifier = Modifier.width(110.dp), textAlign = TextAlign.End)
+                                Text(NutrientFormat.withUnit(ui.todayNutrients[row.nutrientKey], unit), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f), modifier = Modifier.width(96.dp), textAlign = TextAlign.End)
+                                Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f), modifier = Modifier.size(22.dp))
+                            }
+                        }
+                        Text(
+                            stringResource(R.string.nutrients_card_note),
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
                     }
                 }
 

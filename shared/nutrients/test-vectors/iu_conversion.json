@@ -1,0 +1,566 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "amount": 1500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "unit": "IU",
+        "value": 60000
+      },
+      "name": "vitamin_d_60000_iu_weekly",
+      "notes": "60,000 IU = 1,500 mcg."
+    },
+    {
+      "expected": {
+        "amount": 25.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "unit": " iu ",
+        "value": 1000
+      },
+      "name": "vitamin_d_1000_iu_lowercase_spaces"
+    },
+    {
+      "expected": {
+        "amount": 50.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "d3",
+        "key": "vitamin_d",
+        "unit": "IU",
+        "value": 2000
+      },
+      "name": "vitamin_d_iu_form_ignored"
+    },
+    {
+      "expected": {
+        "amount": 100.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "unit": "mg",
+        "value": 0.1
+      },
+      "name": "vitamin_d_0_1_mg"
+    },
+    {
+      "expected": {
+        "amount": 268.0,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
+        "form": "natural",
+        "key": "vitamin_e",
+        "unit": "IU",
+        "value": 400
+      },
+      "name": "vitamin_e_400_iu_natural"
+    },
+    {
+      "expected": {
+        "amount": 180.0,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
+        "form": "synthetic",
+        "key": "vitamin_e",
+        "unit": "IU",
+        "value": 400
+      },
+      "name": "vitamin_e_400_iu_synthetic"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "form_required",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "vitamin_e",
+        "unit": "IU",
+        "value": 400
+      },
+      "name": "vitamin_e_iu_without_form"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "unknown_form",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "form": "mixed",
+        "key": "vitamin_e",
+        "unit": "IU",
+        "value": 400
+      },
+      "name": "vitamin_e_iu_unknown_form"
+    },
+    {
+      "expected": {
+        "amount": 15.0,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
+        "key": "vitamin_e",
+        "unit": "mg",
+        "value": 15
+      },
+      "name": "vitamin_e_mg"
+    },
+    {
+      "expected": {
+        "amount": 1500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "retinol",
+        "key": "vitamin_a",
+        "unit": "IU",
+        "value": 5000
+      },
+      "name": "vitamin_a_5000_iu_retinol"
+    },
+    {
+      "expected": {
+        "amount": 1500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "supplement_beta_carotene",
+        "key": "vitamin_a",
+        "unit": "IU",
+        "value": 5000
+      },
+      "name": "vitamin_a_5000_iu_supplement_beta_carotene"
+    },
+    {
+      "expected": {
+        "amount": 50.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "food_beta_carotene",
+        "key": "vitamin_a",
+        "unit": "IU",
+        "value": 1000
+      },
+      "name": "vitamin_a_1000_iu_food_beta_carotene"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "form_required",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "form": "",
+        "key": "vitamin_a",
+        "unit": "IU",
+        "value": 1000
+      },
+      "name": "vitamin_a_iu_empty_form"
+    },
+    {
+      "expected": {
+        "amount": 1500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "supplement_beta_carotene",
+        "key": "vitamin_a",
+        "unit": "mcg",
+        "value": 3000
+      },
+      "name": "vitamin_a_3000_mcg_beta_carotene_mass",
+      "notes": "2 mcg supplemental beta-carotene = 1 mcg RAE."
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "iu_not_supported",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "vitamin_c",
+        "unit": "IU",
+        "value": 500
+      },
+      "name": "vitamin_c_iu_not_supported"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "iu_not_supported",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "calcium",
+        "unit": "IU",
+        "value": 500
+      },
+      "name": "calcium_iu_not_supported"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "iu_not_supported",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "creatine",
+        "unit": "IU",
+        "value": 5
+      },
+      "name": "creatine_iu_not_supported"
+    },
+    {
+      "expected": {
+        "amount": 1000.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "unit": "mg",
+        "value": 1
+      },
+      "name": "vitamin_b12_1_mg"
+    },
+    {
+      "expected": {
+        "amount": 500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "unit": "µg",
+        "value": 500
+      },
+      "name": "vitamin_b12_micro_sign"
+    },
+    {
+      "expected": {
+        "amount": 500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "unit": "μg",
+        "value": 500
+      },
+      "name": "vitamin_b12_greek_mu"
+    },
+    {
+      "expected": {
+        "amount": 500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "unit": "ug",
+        "value": 500
+      },
+      "name": "vitamin_b12_ug"
+    },
+    {
+      "expected": {
+        "amount": 500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "unit": "MCG",
+        "value": 500
+      },
+      "name": "vitamin_b12_MCG_uppercase"
+    },
+    {
+      "expected": {
+        "amount": 1.0,
+        "error": null,
+        "ok": true,
+        "unit": "g"
+      },
+      "input": {
+        "key": "omega_3",
+        "unit": "mg",
+        "value": 1000
+      },
+      "name": "omega_3_1000_mg"
+    },
+    {
+      "expected": {
+        "amount": 0.3,
+        "error": null,
+        "ok": true,
+        "unit": "g"
+      },
+      "input": {
+        "key": "omega_3",
+        "unit": "mg",
+        "value": 300
+      },
+      "name": "omega_3_300_mg"
+    },
+    {
+      "expected": {
+        "amount": 1200.0,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
+        "key": "calcium",
+        "unit": "g",
+        "value": 1.2
+      },
+      "name": "calcium_1_2_g"
+    },
+    {
+      "expected": {
+        "amount": 500.0,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
+        "key": "sodium",
+        "unit": "g",
+        "value": 0.5
+      },
+      "name": "sodium_0_5_g"
+    },
+    {
+      "expected": {
+        "amount": 8333.333333,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "folic_acid",
+        "key": "folate",
+        "unit": "mg",
+        "value": 5
+      },
+      "name": "folate_folic_acid_5_mg",
+      "notes": "0.6 mcg folic acid = 1 mcg DFE."
+    },
+    {
+      "expected": {
+        "amount": 400.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "folate",
+        "unit": "mcg",
+        "value": 400
+      },
+      "name": "folate_400_mcg_dfe"
+    },
+    {
+      "expected": {
+        "amount": 5.0,
+        "error": null,
+        "ok": true,
+        "unit": "g"
+      },
+      "input": {
+        "key": "creatine",
+        "unit": "mg",
+        "value": 5000
+      },
+      "name": "creatine_5000_mg"
+    },
+    {
+      "expected": {
+        "amount": 90.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "vitamin_k",
+        "unit": "mcg",
+        "value": 90
+      },
+      "name": "vitamin_k_90_mcg"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "invalid_amount",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "mg",
+        "value": 0
+      },
+      "name": "zero_amount"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "invalid_amount",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "mg",
+        "value": -5
+      },
+      "name": "negative_amount"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "invalid_amount",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "mg",
+        "value": "10"
+      },
+      "name": "string_amount"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "invalid_amount",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "mg",
+        "value": null
+      },
+      "name": "null_amount"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "invalid_amount",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "mg",
+        "value": true
+      },
+      "name": "bool_amount"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "unsupported_unit",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "tablet",
+        "value": 10
+      },
+      "name": "unit_tablet_unsupported"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "unsupported_unit",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": null,
+        "value": 10
+      },
+      "name": "unit_null_unsupported"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "unsupported_unit",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "zinc",
+        "unit": "kg",
+        "value": 10
+      },
+      "name": "unit_kg_unsupported"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "unknown_nutrient",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "niacin",
+        "unit": "mg",
+        "value": 16
+      },
+      "name": "unknown_key"
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "convert_amount",
+  "version": 1
+}

@@ -66,6 +66,13 @@ nonisolated extension MR {
 
 // MARK: - Typed ⇄ JSON conversions (column names, `is_prn`/`reminder_enabled` as 0/1, `times`/`days` as arrays)
 
+nonisolated extension MedicationNutrient {
+    /// A `medication_nutrients` table row (snapshot shape of the reference).
+    var rj: RJ {
+        .obj(["medication_id": .str(medicationID), "nutrient_key": .str(nutrientKey), "amount_per_unit": RJ.number(amountPerUnit)])
+    }
+}
+
 nonisolated extension Medication {
     var rj: RJ {
         .obj([

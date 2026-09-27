@@ -12,7 +12,7 @@ DISCLAIMER_MARK = "is not affiliated with or endorsed by"
 
 def _refs(text: str) -> str:
     """`[1]` markers become superscript links to the sources list."""
-    return re.sub(r"\s?\[(\d)\]", lambda m: f'<sup><a href="#src-{m[1]}" aria-label="Source {m[1]}">{m[1]}</a></sup>', text)
+    return re.sub(r"\s?\[(\d+)\]", lambda m: f'<sup><a href="#src-{m[1]}" aria-label="Source {m[1]}">{m[1]}</a></sup>', text)
 
 
 def _band(cls: str, inner: str, sid: str = "") -> str:

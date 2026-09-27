@@ -79,7 +79,13 @@ object MedicationsVectors {
     )
     private fun double(o: JsonObject, key: String): Double? = (o[key] as? JsonPrimitive)?.takeIf { it !is JsonNull && !it.isString }?.doubleOrNull
 
-    fun runCase(function: String, input: JsonObject): JsonElement = when (function) {
+    fun runCase(function: String, input: JsonObject): JsonElement {
+        // Archive and draft validation read the nutrient keys and caps (schema v2, §21).
+        com.ayuvo.health.nutrients.NutrientsTestFiles.install()
+        return dispatch(function, input)
+    }
+
+    private fun dispatch(function: String, input: JsonObject): JsonElement = when (function) {
         "expand_occurrences" -> MedicationJson.obj(
             "occurrences" to Occurrences.expand(
                 MedicationJson.schedule(input["schedule"] as JsonObject), MedicationJson.medication(input["medication"] as JsonObject),

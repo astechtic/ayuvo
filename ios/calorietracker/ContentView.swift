@@ -162,10 +162,12 @@ struct ContentView: View {
     private func attachInsights() {
         let profileStore = profileStore
         let healthDataStore = healthDataStore
+        let medicationStore = medicationStore
         InsightsStore.shared.attach(
             .live(food: foodStore, water: waterStore, fasting: fastingStore, weight: weightStore, bodyFat: bodyFatStore,
                   workouts: strengthWorkoutStore, importedWorkouts: importedHealthWorkoutStore, profile: { profileStore.profile }),
-            healthRevision: { healthDataStore.snapshotRevision }
+            // Taken supplement doses feed the Daily Review nutrients, so a dose change refreshes the cache too.
+            healthRevision: { healthDataStore.snapshotRevision &* 31 &+ medicationStore.nutritionRevision }
         )
         InsightsBackgroundRefresh.liveHealthStore = healthDataStore
     }

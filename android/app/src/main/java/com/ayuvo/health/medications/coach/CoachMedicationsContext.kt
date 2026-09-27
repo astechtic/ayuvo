@@ -23,6 +23,23 @@ data class CoachMedicationsContext(
 ) {
     val toolsAvailable: Boolean get() = count > 0
 
+    /**
+     * Supplement nutrients and taken doses from the same snapshot (docs/nutrients.md §6), so Coach
+     * nutrition answers include supplements only when the Medications source is on.
+     */
+    fun supplements(): com.ayuvo.health.nutrients.SupplementSnapshot {
+        val rows = snapshot.arr("medication_nutrients").orEmpty().filterIsInstance<JsonObject>().mapNotNull { r ->
+            val id = r.str("medication_id") ?: return@mapNotNull null
+            val key = r.str("nutrient_key") ?: return@mapNotNull null
+            val amount = (r["amount_per_unit"] as? kotlinx.serialization.json.JsonPrimitive)?.content?.toDoubleOrNull() ?: return@mapNotNull null
+            com.ayuvo.health.nutrients.MedicationNutrientRow(id, key, amount)
+        }
+        if (rows.isEmpty()) return com.ayuvo.health.nutrients.SupplementSnapshot.EMPTY
+        val logs = snapshot.arr("dose_logs").orEmpty().filterIsInstance<JsonObject>().map(MedicationJson::doseLog)
+        val doses = logs.map { com.ayuvo.health.nutrients.SupplementDose(it.medicationId, it.status.raw, it.takenAtMs, it.doseQuantity) }
+        return com.ayuvo.health.nutrients.SupplementSnapshot(rows, doses, doses.filter { it.status == "taken" }.mapNotNull { it.takenAtMs })
+    }
+
     /** `## Data available` lines when the tools are advertised. */
     fun promptLines(): List<String> {
         val lines = MedicationsCoachTools.promptLines(snapshot, accessEnabled = true)

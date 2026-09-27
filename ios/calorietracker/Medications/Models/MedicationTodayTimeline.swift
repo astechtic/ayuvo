@@ -173,6 +173,8 @@ nonisolated struct MedicationDetail: Hashable, Sendable {
     var relatedRecord: HealthRecord?
     /// `true` when `medication.relatedRecordID` is set but the record could not be found.
     var relatedRecordMissing: Bool
+    /// Supplement nutrients per ONE dose unit (schema v2), by key.
+    var nutrients: [MedicationNutrient] = []
 }
 
 /// Result of `importArchive` / `merge_archive` (docs §14).

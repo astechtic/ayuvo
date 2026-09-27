@@ -182,6 +182,10 @@ import com.ayuvo.health.models.Gender
 import com.ayuvo.health.models.MealSchedule
 import com.ayuvo.health.models.OptionalNutrient
 import com.ayuvo.health.models.OptionalNutrientGoals
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientProfile
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.Nutrients
 import com.ayuvo.health.models.QuickAction
 import com.ayuvo.health.models.SpeechLanguage
 import com.ayuvo.health.models.SpeechProvider
@@ -925,7 +929,8 @@ internal fun SettingsSheets(
                 SettingsSheet.OPTIONAL_NUTRIENTS -> OptionalNutrientGoalsSheet(
                     goals = ui.optionalNutrientGoals,
                     onChange = vm::setOptionalNutrientGoals,
-                    onDismiss = onDismiss
+                    onDismiss = onDismiss,
+                    profile = NutrientFields.profile(ui.profile)
                 )
             }
             Spacer(Modifier.height(14.dp))
@@ -938,7 +943,8 @@ internal fun SettingsSheets(
 internal fun OptionalNutrientGoalsSheet(
     goals: OptionalNutrientGoals,
     onChange: (OptionalNutrientGoals) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    profile: NutrientProfile = NutrientProfile()
 ) {
     var editing by remember { mutableStateOf<OptionalNutrient?>(null) }
     val nutrient = editing
@@ -951,11 +957,11 @@ internal fun OptionalNutrientGoalsSheet(
         NutritionPickerSheet(
             label = stringResource(nutrient.displayNameRes),
             unit = stringResource(nutrient.unitRes),
-            currentValue = goals.valueFor(nutrient),
+            currentValue = goals.effectiveGoal(nutrient, profile) ?: goals.valueFor(nutrient),
             range = nutrient.pickerRange(),
             step = nutrient.pickerStep(),
             allowCustomValue = true,
-            guidanceUpperLimit = nutrient.generalAdultUpperLimit(),
+            guidanceUpperLimit = nutrient.referenceUpperLimit(profile),
             customValueDetail = nutrient::customValueDetail,
             onSave = { value ->
                 onChange(goals.withValue(nutrient, value))
@@ -983,7 +989,7 @@ internal fun OptionalNutrientGoalsSheet(
         items(OptionalNutrient.values().toList()) { item ->
             OptionalNutrientGoalRow(
                 nutrient = item,
-                value = goals.valueFor(item),
+                value = goals.effectiveGoal(item, profile),
                 onClick = { editing = item }
             )
         }
@@ -999,7 +1005,8 @@ internal fun OptionalNutrientGoalsSheet(
 @Composable
 internal fun OptionalNutrientGoalRow(
     nutrient: OptionalNutrient,
-    value: Int,
+    /** The goal in effect (custom or personalised default); null = no goal ("—"). */
+    value: Int?,
     onClick: () -> Unit
 ) {
     Row(
@@ -1028,7 +1035,7 @@ internal fun OptionalNutrientGoalRow(
             )
         }
         Text(
-            "$value${nutrient.unit}",
+            value?.let { "$it${nutrient.unit}" } ?: "—",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
@@ -1821,19 +1828,12 @@ internal fun OptionalNutrient.pickerStep(): Int = when (this) {
 }
 
 /**
- * General adult upper intake levels used as non-blocking custom-goal guidance.
- * Nutrients without a clear food-inclusive upper level intentionally return null.
+ * The reference Upper limit (UL) for the user's age band and sex (shared/nutrients, docs/nutrients.md
+ * §4.2), used as non-blocking custom-goal guidance. Null where the reference has no UL.
  */
-internal fun OptionalNutrient.generalAdultUpperLimit(): Int? = when (this) {
-    OptionalNutrient.CALCIUM -> 2_500
-    OptionalNutrient.IRON -> 45
-    OptionalNutrient.ZINC -> 40
-    OptionalNutrient.VITAMIN_A -> 3_000
-    OptionalNutrient.VITAMIN_C -> 2_000
-    OptionalNutrient.VITAMIN_D -> 100
-    OptionalNutrient.VITAMIN_E -> 1_000
-    OptionalNutrient.FOLATE -> 1_000
-    else -> null
+internal fun OptionalNutrient.referenceUpperLimit(profile: NutrientProfile): Int? {
+    if (NutrientReference.active == null) return null
+    return Nutrients.referenceLines(referenceKey, profile).upperLimit?.let { kotlin.math.floor(it).toInt() }
 }
 
 internal fun OptionalNutrient.customValueDetail(value: Int): String? =

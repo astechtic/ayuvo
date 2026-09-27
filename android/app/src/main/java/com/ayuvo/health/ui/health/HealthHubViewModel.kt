@@ -217,6 +217,32 @@ class HealthHubViewModel(private val container: AppContainer) : ViewModel() {
                     dayIsToday = dayTotal?.first == today.toString()
                 )
             }
+            // Android derives the per-nutrient `dietary_*` types from NutritionRecord rows as day rollups
+            // (HealthRollupMath.virtualDietary): list the ones with data so their charts, reference lines
+            // and guides are reachable from Browse › Nutrition (docs/nutrients.md §5a).
+            if (category == HealthCategory.NUTRITION && hubEnabled && (summaries[HealthDataType.NUTRITION_RECORD.id]?.count ?: 0L) > 0L) {
+                val firstDay = summaries[HealthDataType.NUTRITION_RECORD.id]?.firstMs
+                    ?.let { java.time.Instant.ofEpochMilli(it).atZone(java.time.ZoneId.systemDefault()).toLocalDate().minusDays(1) }
+                    ?: today.minusYears(DIETARY_LOOKBACK_YEARS)
+                for (type in registryTypes.filter { it.isVirtualDietary }) {
+                    val days = repo.daily(type.id, firstDay, today).filter { it.count > 0 && it.sum != null }
+                    if (days.isEmpty()) continue
+                    val chosen = days.firstOrNull { it.day == today.toString() } ?: days.last()
+                    rows += HealthTypeRowUi(
+                        typeId = type.id,
+                        type = type,
+                        displayNameHint = null,
+                        latest = null,
+                        count = days.size.toLong(),
+                        granted = true,
+                        featureGated = false,
+                        sinceMs = null,
+                        dayValue = chosen.sum,
+                        dayKey = chosen.day,
+                        dayIsToday = chosen.day == today.toString()
+                    )
+                }
+            }
             // Unknown/imported ids registered at runtime.
             for (m in meta.values) {
                 if (HealthDataType.byId(m.typeId) != null) continue
@@ -347,5 +373,6 @@ class HealthHubViewModel(private val container: AppContainer) : ViewModel() {
 
     private companion object {
         const val REVISION_DEBOUNCE_MS = 500L
+        const val DIETARY_LOOKBACK_YEARS = 10L
     }
 }

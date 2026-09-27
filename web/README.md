@@ -19,6 +19,7 @@ third-party requests (fonts and icons are self-hosted; `scripts/web_check.py` as
 | `/ai-providers` | 15 bring-your-own-key providers |
 | `/open-source` | MIT licence, repo layout, how to contribute, credits |
 | `/compare`, `/compare/guava-health`, `/picnichealth`, `/apple-health`, `/mychart`, `/health-connect` | Honest side-by-sides with each product. Facts, sources and the check date live in `scripts/web/compare_facts.py` |
+| `/nutrients`, `/nutrients/<slug>` (37) | Sourced, visual nutrient guides: 23 food-log nutrients plus 14 charted from Apple Health / Health Connect. Numbers from `shared/nutrients/nutrient_reference.json`, facts in `scripts/web/nutrient_facts.py` (and `nutrient_facts_health.py`) |
 | `/about` | Who publishes Ayuvo, principles, trademarks, contact |
 | `/download` | Store badges (or "coming soon"), requirements, build from source |
 | `/privacy`, `/terms`, `/support` | Legal and support (linked from both apps and the store listings; keep these URLs stable) |
@@ -36,6 +37,15 @@ disclaimer; a vendor's own compliance wording is allowed only inside `<span clas
 
 `scripts/web/lastmod.json` records a content hash and date per page. `web_build.py` bumps a page's date (sitemap `lastmod`
 and JSON-LD `dateModified`) only when its title, description or body changes, so commit that file with the pages.
+
+## Nutrient guides
+
+Layout and SVG diagrams are in `scripts/web/nutrient_pages.py`, content in `scripts/web/nutrient_facts.py` (every claim has a `[n]`
+marker, the page shows `CHECKED`). The 14 `app_tracked: false` nutrients (phosphorus to pantothenic acid) live in
+`scripts/web/nutrient_facts_health.py`; their pages and hub cards say they are charted from Apple Health / Health Connect, not the food log. Recommended amounts, upper limits and reference limits are never written in copy: they are
+rendered at build time from `shared/nutrients/nutrient_reference.json`, the table the apps use for chart lines, and the build fails
+if it is missing. Photos (Unsplash/Pexels only) live in `web/assets/nutrients/` and are credited on the page and in `ASSET_CREDITS.md`.
+Social cards: `python3 scripts/web/social_cards.py --only nutrients`.
 
 ## Store listings
 

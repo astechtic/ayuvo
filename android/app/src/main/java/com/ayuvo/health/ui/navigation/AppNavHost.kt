@@ -323,7 +323,9 @@ fun AppNavHost(
     val metricDestinations = AppMetricDestinations(
         openFoodDiary = { openNutrition() },
         openFasting = { openBrowsePlace(AppRoutes.BROWSE_FASTING) },
-        openWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) }
+        openWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) },
+        openNutrientGoals = { nav.navigate(AppRoutes.OPTIONAL_NUTRIENT_GOALS) },
+        openMetric = { key -> nav.navigate(AppRoutes.metric(key)) }
     )
 
     // Food quick actions (widget taps, app shortcuts, notification actions) land on
@@ -573,6 +575,7 @@ fun AppNavHost(
                             onBack = { nav.popBackStack() },
                             onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
                             onOpenNutrients = { nav.navigate(AppRoutes.BROWSE_NUTRIENTS) },
+                            onOpenHealthNutrition = { nav.navigate(AppRoutes.browseCategory(com.ayuvo.health.models.HealthCategory.NUTRITION.id)) },
                             quickActionRequest = quickActionRequest,
                             onQuickActionHandled = onQuickActionHandled,
                             logRequest = foodLogRequest,
@@ -667,7 +670,8 @@ fun AppNavHost(
                         MetricDetailScreen(
                             container = container,
                             key = MetricKey.Health(typeKey),
-                            onBack = { nav.popBackStack() }
+                            onBack = { nav.popBackStack() },
+                            destinations = metricDestinations
                         )
                     }
                 }
@@ -775,7 +779,8 @@ fun AppNavHost(
                             onBack = { nav.popBackStack() },
                             onEdit = { id -> nav.navigate(AppRoutes.medicationEdit(id)) },
                             onOpenHistory = { id -> nav.navigate(AppRoutes.medicationHistory(id)) },
-                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) }
+                            onOpenRecord = { id -> nav.navigate(AppRoutes.recordDetail(id)) },
+                            onOpenMetric = { key -> nav.navigate(AppRoutes.metric(key)) }
                         )
                     }
                 }

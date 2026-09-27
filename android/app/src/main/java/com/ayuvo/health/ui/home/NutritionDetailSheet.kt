@@ -58,6 +58,14 @@ import com.ayuvo.health.models.OptionalNutrientGoals
 import com.ayuvo.health.models.SupplementalNutrient
 import com.ayuvo.health.models.UserProfile
 import com.ayuvo.health.models.WaterUnit
+import com.ayuvo.health.data.metrics.AppMetricId
+import com.ayuvo.health.data.metrics.MetricKey
+import com.ayuvo.health.nutrients.NutrientAmount
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientFormat
+import com.ayuvo.health.nutrients.NutrientTotals
+import java.time.LocalDate
+import kotlin.math.roundToInt
 import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.components.GlassSurface
@@ -74,7 +82,8 @@ import com.ayuvo.health.ui.theme.AppColors
  *     Mono Unsat. Fat / Poly Unsat. Fat / Cholesterol / Sodium /
  *     Potassium — same icon+label+value+unit pattern, no goal column.
  *
- * Computes the per-day sum from the entries list passed in.
+ * Totals come from [NutrientTotals] (food + taken supplement doses, docs/nutrients.md §6); a
+ * nutrient with supplements shows "incl. X from supplements". Every row opens its chart.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,44 +97,28 @@ fun NutritionDetailSheet(
     waterGoalMl: Int,
     waterUnit: WaterUnit,
     onHomeTopNutrientsChange: (List<HomeTopNutrient>) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    /** Food + supplement totals of the shown day (docs/nutrients.md §6). */
+    totals: NutrientTotals = NutrientTotals(entries),
+    day: LocalDate = LocalDate.now(),
+    /** Opens a nutrient's chart; the sheet dismisses first. */
+    onOpenMetric: ((MetricKey) -> Unit)? = null
 ) {
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showHomeCardsPicker by remember { mutableStateOf(false) }
-    val calories = entries.sumOf { it.calories }
-    val protein = entries.sumOf { it.protein }
-    val carbs = entries.sumOf { it.carbs }
-    val fat = entries.sumOf { it.fat }
-    val sugar = entries.sumOf { it.sugar ?: 0.0 }
-    val addedSugar = entries.sumOf { it.addedSugar ?: 0.0 }
-    val fiber = entries.sumOf { it.fiber ?: 0.0 }
-    val satFat = entries.sumOf { it.saturatedFat ?: 0.0 }
-    val monoFat = entries.sumOf { it.monounsaturatedFat ?: 0.0 }
-    val polyFat = entries.sumOf { it.polyunsaturatedFat ?: 0.0 }
-    val cholesterol = entries.sumOf { it.cholesterol ?: 0.0 }
-    val caffeine = entries.sumOf { it.caffeine ?: 0.0 }
-    val supplementalNutrients = SupplementalNutrient.values().associateWith { nutrient ->
-        entries.sumOf { it.supplementalNutrients[nutrient.storageKey] ?: 0.0 }
-    }
-    val sodium = entries.sumOf { it.sodium ?: 0.0 }
-    val potassium = entries.sumOf { it.potassium ?: 0.0 }
-    val transFat = entries.sumOf { it.transFat ?: 0.0 }
-    val calcium = entries.sumOf { it.calcium ?: 0.0 }
-    val iron = entries.sumOf { it.iron ?: 0.0 }
-    val magnesium = entries.sumOf { it.magnesium ?: 0.0 }
-    val zinc = entries.sumOf { it.zinc ?: 0.0 }
-    val vitaminA = entries.sumOf { it.vitaminA ?: 0.0 }
-    val vitaminC = entries.sumOf { it.vitaminC ?: 0.0 }
-    val vitaminD = entries.sumOf { it.vitaminD ?: 0.0 }
-    val vitaminB12 = entries.sumOf { it.vitaminB12 ?: 0.0 }
-    val vitaminE = entries.sumOf { it.vitaminE ?: 0.0 }
-    val vitaminK = entries.sumOf { it.vitaminK ?: 0.0 }
-    val folate = entries.sumOf { it.folate ?: 0.0 }
-    val omega3 = entries.sumOf { it.omega3 ?: 0.0 }
+    val dayTotals = remember(totals, day) { totals.day(day) }
+    fun amount(key: String): NutrientAmount = dayTotals[key] ?: NutrientAmount.NONE
+    // Calories and macros are food only; supplements never add calories.
+    val calories = amount(NutrientFields.CALORIES).food?.roundToInt() ?: 0
+    val protein = amount(NutrientFields.PROTEIN).food ?: 0.0
+    val carbs = amount(NutrientFields.CARBS).food ?: 0.0
+    val fat = amount(NutrientFields.FAT).food ?: 0.0
+    val nutrientProfile = NutrientFields.profile(profile)
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val sheetSurface = AyuvoColors.sheetBackground()
+    val open: (MetricKey) -> Unit = { key -> onDismiss(); onOpenMetric?.invoke(key) }
 
-    fun fmt(v: Double): String = if (v == 0.0) "—" else String.format("%.1f", v)
+    fun fmt(v: Double?): String = if (v == null) "—" else String.format("%.1f", v)
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -165,7 +158,8 @@ fun NutritionDetailSheet(
                             stringResource(R.string.water),
                             waterUnit.displayValue(waterCurrentMl),
                             waterUnit.symbol,
-                            goal = waterUnit.displayValue(waterGoalMl)
+                            goal = waterUnit.displayValue(waterGoalMl),
+                            onClick = onOpenMetric?.let { { open(MetricKey.App(AppMetricId.WATER)) } }
                         )
                     }
                 }
@@ -182,72 +176,40 @@ fun NutritionDetailSheet(
             item { SectionHeader(stringResource(R.string.nutrition_section_macros)) }
             item {
                 Card {
-                    DetailRow(Icons.Filled.LocalFireDepartment, stringResource(R.string.nutrition_label_calories), "$calories", stringResource(R.string.unit_kcal), goal = "${profile?.effectiveCalories ?: 2000}")
+                    DetailRow(Icons.Filled.LocalFireDepartment, stringResource(R.string.nutrition_label_calories), "$calories", stringResource(R.string.unit_kcal), goal = "${profile?.effectiveCalories ?: 2000}", onClick = onOpenMetric?.let { { open(MetricKey.App(AppMetricId.CALORIES)) } })
                     Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_protein), MacroValueFormatter.string(protein), stringResource(R.string.unit_g), goal = "${profile?.effectiveProtein ?: 150}", labelGlyph = "P")
+                    DetailRow(null, stringResource(R.string.nutrition_label_protein), MacroValueFormatter.string(protein), stringResource(R.string.unit_g), goal = "${profile?.effectiveProtein ?: 150}", labelGlyph = "P", onClick = onOpenMetric?.let { { open(MetricKey.App(AppMetricId.PROTEIN)) } })
                     Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_carbs), MacroValueFormatter.string(carbs), stringResource(R.string.unit_g), goal = "${profile?.effectiveCarbs ?: 220}", labelGlyph = "C")
+                    DetailRow(null, stringResource(R.string.nutrition_label_carbs), MacroValueFormatter.string(carbs), stringResource(R.string.unit_g), goal = "${profile?.effectiveCarbs ?: 220}", labelGlyph = "C", onClick = onOpenMetric?.let { { open(MetricKey.App(AppMetricId.CARBS)) } })
                     Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_fat), MacroValueFormatter.string(fat), stringResource(R.string.unit_g), goal = "${profile?.effectiveFat ?: 70}", labelGlyph = "F")
+                    DetailRow(null, stringResource(R.string.nutrition_label_fat), MacroValueFormatter.string(fat), stringResource(R.string.unit_g), goal = "${profile?.effectiveFat ?: 70}", labelGlyph = "F", onClick = onOpenMetric?.let { { open(MetricKey.App(AppMetricId.FAT)) } })
                 }
             }
 
             item { SectionHeader(stringResource(R.string.nutrition_section_detailed)) }
             item {
                 Card {
-                    DetailRow(null, stringResource(R.string.nutrition_label_sugar), fmt(sugar), stringResource(R.string.unit_g), goal = "${optionalGoals.sugar}", labelGlyph = "S")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_added_sugar), fmt(addedSugar), stringResource(R.string.unit_g), goal = "${optionalGoals.addedSugar}", labelGlyph = "+")
-                    Hairline()
-                    DetailRow(Icons.Filled.Spa, stringResource(R.string.nutrition_label_fiber), fmt(fiber), stringResource(R.string.unit_g), goal = "${optionalGoals.fiber}")
-                    Hairline()
-                    DetailRow(Icons.Filled.WaterDrop, stringResource(R.string.nutrition_label_saturated_fat), fmt(satFat), stringResource(R.string.unit_g), goal = "${optionalGoals.saturatedFat}")
-                    Hairline()
-                    DetailRow(Icons.Filled.WaterDrop, stringResource(R.string.nutrition_label_mono_fat), fmt(monoFat), stringResource(R.string.unit_g))
-                    Hairline()
-                    DetailRow(Icons.Filled.WaterDrop, stringResource(R.string.nutrition_label_poly_fat), fmt(polyFat), stringResource(R.string.unit_g))
-                    Hairline()
-                    DetailRow(Icons.Filled.Favorite, stringResource(R.string.nutrition_label_cholesterol), fmt(cholesterol), stringResource(R.string.unit_mg), goal = "${optionalGoals.cholesterol}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_caffeine), fmt(caffeine), stringResource(R.string.unit_mg), goal = "${optionalGoals.caffeine}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_sodium), fmt(sodium), stringResource(R.string.unit_mg), goal = "${optionalGoals.sodium}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_potassium), fmt(potassium), stringResource(R.string.unit_mg), goal = "${optionalGoals.potassium}")
-                    Hairline()
-                    DetailRow(Icons.Filled.WaterDrop, stringResource(R.string.nutrition_label_trans_fat), fmt(transFat), stringResource(R.string.unit_g), goal = "${optionalGoals.transFat}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_calcium), fmt(calcium), stringResource(R.string.unit_mg), goal = "${optionalGoals.calcium}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_iron), fmt(iron), stringResource(R.string.unit_mg), goal = "${optionalGoals.iron}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_magnesium), fmt(magnesium), stringResource(R.string.unit_mg), goal = "${optionalGoals.magnesium}")
-                    Hairline()
-                    DetailRow(Icons.Filled.Bolt, stringResource(R.string.nutrition_label_zinc), fmt(zinc), stringResource(R.string.unit_mg), goal = "${optionalGoals.zinc}")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_vitamin_a), fmt(vitaminA), stringResource(R.string.unit_mcg), goal = "${optionalGoals.vitaminA}", labelGlyph = "A")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_vitamin_c), fmt(vitaminC), stringResource(R.string.unit_mg), goal = "${optionalGoals.vitaminC}", labelGlyph = "C")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_vitamin_d), fmt(vitaminD), stringResource(R.string.unit_mcg), goal = "${optionalGoals.vitaminD}", labelGlyph = "D")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_vitamin_b12), fmt(vitaminB12), stringResource(R.string.unit_mcg), goal = "${optionalGoals.vitaminB12}", labelGlyph = "B")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_vitamin_e), fmt(vitaminE), stringResource(R.string.unit_mg), goal = "${optionalGoals.vitaminE}", labelGlyph = "E")
-                    Hairline()
-                    DetailRow(null, stringResource(R.string.nutrition_label_vitamin_k), fmt(vitaminK), stringResource(R.string.unit_mcg), goal = "${optionalGoals.vitaminK}", labelGlyph = "K")
-                    Hairline()
-                    DetailRow(Icons.Filled.Spa, stringResource(R.string.nutrition_label_folate), fmt(folate), stringResource(R.string.unit_mcg), goal = "${optionalGoals.folate}")
-                    Hairline()
-                    DetailRow(Icons.Filled.WaterDrop, stringResource(R.string.nutrition_label_omega3), fmt(omega3), stringResource(R.string.unit_g), goal = "${optionalGoals.omega3}")
-                    SupplementalNutrient.values().forEach { nutrient ->
-                        Hairline()
+                    DETAILED_ROWS.forEachIndexed { index, row ->
+                        if (index > 0) Hairline()
+                        val a = amount(row.key)
+                        val goal = NutrientFields.optionalNutrient(row.key)?.let { optionalGoals.effectiveGoal(it, nutrientProfile) }
+                        val unitRes = when (NutrientFields.unit(row.key)) {
+                            "mg" -> R.string.unit_mg
+                            "mcg" -> R.string.unit_mcg
+                            else -> R.string.unit_g
+                        }
+                        val unitText = stringResource(unitRes)
                         DetailRow(
-                            Icons.Filled.Bolt,
-                            stringResource(nutrient.displayNameRes),
-                            fmt(supplementalNutrients[nutrient] ?: 0.0),
-                            stringResource(R.string.unit_g),
-                            goal = "${optionalGoals.valueFor(nutrient.optionalNutrient)}"
+                            row.icon,
+                            stringResource(NutrientFields.nameRes(row.key)),
+                            fmt(a.total),
+                            unitText,
+                            goal = goal?.toString(),
+                            labelGlyph = row.glyph,
+                            subline = a.supplements?.takeIf { it > 0 }?.let {
+                                stringResource(R.string.nutrients_incl_supplements, "${NutrientFormat.amount(it)} $unitText")
+                            },
+                            onClick = onOpenMetric?.let { { open(MetricKey.Nutrient(row.key)) } }
                         )
                     }
                 }
@@ -514,10 +476,17 @@ private fun DetailRow(
     value: String,
     unit: String,
     goal: String? = null,
-    labelGlyph: String? = null
+    labelGlyph: String? = null,
+    /** Small line under the label ("incl. 1,500 mcg from supplements"). */
+    subline: String? = null,
+    /** Opens the nutrient's chart; adds a chevron. */
+    onClick: (() -> Unit)? = null
 ) {
     Row(
-        Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 14.dp),
+        Modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClickLabel = label, onClick = onClick) else Modifier)
+            .padding(horizontal = 14.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -536,7 +505,12 @@ private fun DetailRow(
         } else {
             Spacer(Modifier.width(20.dp))
         }
-        Text(label, fontSize = 17.sp, modifier = Modifier.weight(1f))
+        Column(Modifier.weight(1f)) {
+            Text(label, fontSize = 17.sp)
+            subline?.let {
+                Text(it, fontSize = 12.sp, lineHeight = 15.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
+            }
+        }
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(value, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = AppColors.Calorie)
             Text(unit, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
@@ -549,8 +523,46 @@ private fun DetailRow(
                 modifier = Modifier.padding(start = 6.dp)
             )
         }
+        if (onClick != null) {
+            Icon(
+                Icons.Filled.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f),
+                modifier = Modifier.size(18.dp)
+            )
+        }
     }
 }
+
+/** One Detailed Nutrition row: the nutrient key and its icon or letter glyph. */
+private data class DetailedRow(val key: String, val icon: ImageVector? = null, val glyph: String? = null)
+
+/** Detailed Nutrition in display order: every reference nutrient, mono/poly fat and the 8 sports keys. */
+private val DETAILED_ROWS: List<DetailedRow> = listOf(
+    DetailedRow("sugar", glyph = "S"),
+    DetailedRow("added_sugar", glyph = "+"),
+    DetailedRow("fiber", Icons.Filled.Spa),
+    DetailedRow("saturated_fat", Icons.Filled.WaterDrop),
+    DetailedRow("monounsaturated_fat", Icons.Filled.WaterDrop),
+    DetailedRow("polyunsaturated_fat", Icons.Filled.WaterDrop),
+    DetailedRow("cholesterol", Icons.Filled.Favorite),
+    DetailedRow("caffeine", Icons.Filled.Bolt),
+    DetailedRow("sodium", Icons.Filled.Bolt),
+    DetailedRow("potassium", Icons.Filled.Bolt),
+    DetailedRow("trans_fat", Icons.Filled.WaterDrop),
+    DetailedRow("calcium", Icons.Filled.Bolt),
+    DetailedRow("iron", Icons.Filled.Bolt),
+    DetailedRow("magnesium", Icons.Filled.Bolt),
+    DetailedRow("zinc", Icons.Filled.Bolt),
+    DetailedRow("vitamin_a", glyph = "A"),
+    DetailedRow("vitamin_c", glyph = "C"),
+    DetailedRow("vitamin_d", glyph = "D"),
+    DetailedRow("vitamin_b12", glyph = "B"),
+    DetailedRow("vitamin_e", glyph = "E"),
+    DetailedRow("vitamin_k", glyph = "K"),
+    DetailedRow("folate", Icons.Filled.Spa),
+    DetailedRow("omega_3", Icons.Filled.WaterDrop)
+) + SupplementalNutrient.entries.map { DetailedRow(it.apiKey, Icons.Filled.Bolt) }
 
 @Composable
 private fun Hairline() {

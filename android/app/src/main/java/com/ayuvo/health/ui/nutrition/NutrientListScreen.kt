@@ -12,15 +12,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
 import com.ayuvo.health.data.metrics.AppMetricId
 import com.ayuvo.health.data.metrics.MetricKey
-import com.ayuvo.health.models.HomeTopNutrient
-import com.ayuvo.health.models.MacroValueFormatter
 import com.ayuvo.health.models.OptionalNutrientGoals
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientFormat
+import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import com.ayuvo.health.ui.design.AyuvoSpacing
 import com.ayuvo.health.ui.design.AyuvoTopBar
 import com.ayuvo.health.ui.design.GroupRow
@@ -30,18 +33,20 @@ import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import java.time.LocalDate
 import java.time.ZoneId
 
-/** Nutrients that have their own metric detail (docs/ui-structure.md §4). */
-private fun HomeTopNutrient.metricId(): AppMetricId? = when (this) {
-    HomeTopNutrient.PROTEIN -> AppMetricId.PROTEIN
-    HomeTopNutrient.CARBS -> AppMetricId.CARBS
-    HomeTopNutrient.FAT -> AppMetricId.FAT
-    HomeTopNutrient.FIBER -> AppMetricId.FIBER
-    else -> null
+/** Macros open their app metric; every other nutrient its `nutrient:<key>` chart (docs/nutrients.md §5). */
+private fun metricKeyFor(key: String): MetricKey = when (key) {
+    NutrientFields.PROTEIN -> MetricKey.App(AppMetricId.PROTEIN)
+    NutrientFields.CARBS -> MetricKey.App(AppMetricId.CARBS)
+    NutrientFields.FAT -> MetricKey.App(AppMetricId.FAT)
+    else -> MetricKey.Nutrient(key)
 }
 
+private data class NutrientListRow(val key: String, val total: Double?, val goal: Int?, val unit: String)
+
 /**
- * Browse › Nutrition › All Nutrients: today's intake per nutrient against its goal. Nutrients
- * nobody logged today and without a goal are listed under "Not Logged Today" without a number.
+ * Browse › Nutrition › All Nutrients: today's food + supplement intake per nutrient against its
+ * goal. Nutrients nobody recorded today are listed under "Not Logged Today" without a number.
+ * Every row opens its chart.
  */
 @Composable
 fun NutrientListScreen(
@@ -50,16 +55,21 @@ fun NutrientListScreen(
     onOpenMetric: (MetricKey) -> Unit
 ) {
     val entries by container.foodRepository.entries.collectAsState(initial = emptyList())
+    val supplements by container.supplementIntake.snapshots.collectAsState(initial = SupplementSnapshot.EMPTY)
     val profile by container.profileRepository.profile.collectAsState(initial = null)
     val goals by container.prefs.optionalNutrientGoals.collectAsState(initial = OptionalNutrientGoals.Default)
     val today = remember { LocalDate.now() }
     val zone = remember { ZoneId.systemDefault() }
-    val todayEntries = remember(entries) { entries.filter { it.timestamp.atZone(zone).toLocalDate() == today } }
-    val rows = remember(todayEntries, profile, goals) {
-        HomeTopNutrient.entries.map { n -> Triple(n, n.current(todayEntries), n.goal(profile, goals)) }
+    val rows = remember(entries, supplements, profile, goals) {
+        val totals = NutrientTotals(entries, supplements, zone)
+        val keys = listOf(NutrientFields.PROTEIN, NutrientFields.CARBS, NutrientFields.FAT) + NutrientFields.REFERENCE_KEYS
+        keys.map { k ->
+            val goal = NutrientFields.homeTopNutrient(k)?.goal(profile, goals)
+            NutrientListRow(k, totals.total(k, today).total, goal, NutrientFields.unit(k))
+        }
     }
-    val logged = rows.filter { (_, current, _) -> current > 0.0 }
-    val notLogged = rows.filter { (_, current, _) -> current <= 0.0 }
+    val logged = rows.filter { it.total != null }
+    val notLogged = rows.filter { it.total == null }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -76,18 +86,16 @@ fun NutrientListScreen(
                     footer = if (logged.isEmpty()) stringResource(R.string.nutrition_nothing_logged) else null,
                     dividerInset = AyuvoSpacing.RowH
                 ) {
-                    logged.forEach { (nutrient, current, goal) ->
-                        row { NutrientRow(nutrient, valueText(nutrient, current, goal), onOpenMetric) }
-                    }
+                    logged.forEach { r -> row { NutrientRow(r.key, valueText(r), onOpenMetric) } }
                 }
             }
             if (notLogged.isNotEmpty()) {
                 item(key = "not-logged") {
                     InsetGroup(header = stringResource(R.string.nutrition_not_logged_header), dividerInset = AyuvoSpacing.RowH) {
-                        notLogged.forEach { (nutrient, _, goal) ->
+                        notLogged.forEach { r ->
                             row {
-                                val goalText = if (goal > 0) stringResource(R.string.metric_goal_label, "$goal ${nutrient.unit}") else null
-                                NutrientRow(nutrient, goalText, onOpenMetric)
+                                val goalText = r.goal?.takeIf { it > 0 }?.let { stringResource(R.string.metric_goal_label, "$it ${r.unit}") }
+                                NutrientRow(r.key, goalText, onOpenMetric)
                             }
                         }
                     }
@@ -98,17 +106,18 @@ fun NutrientListScreen(
 }
 
 @Composable
-private fun NutrientRow(nutrient: HomeTopNutrient, value: String?, onOpenMetric: (MetricKey) -> Unit) {
-    val metric = nutrient.metricId()
+private fun NutrientRow(key: String, value: String?, onOpenMetric: (MetricKey) -> Unit) {
+    val metric = metricKeyFor(key)
     GroupRow(
-        title = stringResource(nutrient.displayNameRes),
+        title = stringResource(NutrientFields.nameRes(key)),
         value = value,
-        trailing = if (metric != null) RowTrailing.Chevron else RowTrailing.None,
-        onClick = metric?.let { id -> { onOpenMetric(MetricKey.App(id)) } }
+        modifier = Modifier.testTag("nutrients.row.$key"),
+        trailing = RowTrailing.Chevron,
+        onClick = { onOpenMetric(metric) }
     )
 }
 
-private fun valueText(nutrient: HomeTopNutrient, current: Double, goal: Int): String {
-    val amount = "${MacroValueFormatter.string(current)} ${nutrient.unit}"
-    return if (goal > 0) "$amount / $goal ${nutrient.unit}" else amount
+private fun valueText(r: NutrientListRow): String {
+    val amount = NutrientFormat.withUnit(r.total, r.unit)
+    return if (r.goal != null && r.goal > 0) "$amount / ${r.goal} ${r.unit}" else amount
 }

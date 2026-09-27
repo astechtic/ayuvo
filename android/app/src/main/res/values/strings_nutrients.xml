@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nutrient charts, reference lines and supplement nutrients (docs/nutrients.md). -->
+<resources>
+    <string name="nutrients_unknown_name">Nutrient</string>
+
+    <!-- Chart rules (docs/nutrients.md §5) -->
+    <string name="nutrients_line_recommended">Recommended</string>
+    <string name="nutrients_line_goal">Your goal</string>
+    <string name="nutrients_line_upper_limit">Upper limit</string>
+    <string name="nutrients_line_limit">Limit</string>
+    <string name="nutrients_today">Today</string>
+    <string name="nutrients_this_day">This day</string>
+    <!-- "Today 12 of 15 mcg" -->
+    <string name="nutrients_day_of_target">%1$s %2$s of %3$s %4$s</string>
+    <string name="nutrients_day_total">%1$s %2$s</string>
+
+    <!-- Detail screen -->
+    <string name="nutrients_average_per_logged_day">Average per logged day</string>
+    <string name="nutrients_total">Total</string>
+    <string name="nutrients_logged_days">Logged days</string>
+    <string name="nutrients_food_vs_supplements">Food vs Supplements</string>
+    <string name="nutrients_split_footer">%1$s. Supplements count only doses marked as taken, and never add calories.</string>
+    <string name="nutrients_from_food">Food</string>
+    <string name="nutrients_from_supplements">Supplements</string>
+    <string name="nutrients_edit_goal">Nutrient Goal</string>
+    <string name="nutrients_goal_default">Default</string>
+    <string name="nutrients_learn_more">Learn more about %1$s</string>
+    <string name="nutrients_recommended_rda">Recommended (RDA)</string>
+    <string name="nutrients_adequate_intake">Adequate intake (AI)</string>
+    <string name="nutrients_upper_limit_title">Upper limit (UL)</string>
+    <string name="nutrients_limit_title">Daily limit</string>
+    <string name="nutrients_limit_needs_calories" formatted="false">This limit is 10% of your daily calorie goal. Set a calorie goal to see it.</string>
+    <!-- "Ages 31-50 · Female" -->
+    <string name="nutrients_for_you">Ages %1$s · %2$s</string>
+    <string name="nutrients_sex_male">Male</string>
+    <string name="nutrients_sex_female">Female</string>
+    <string name="nutrients_sex_unknown">Sex not set</string>
+    <string name="nutrients_sources">Sources</string>
+    <!-- Health nutrition types (Browse › Nutrition › Health Connect nutrition, docs/nutrients.md §5a) -->
+    <string name="nutrients_health_source_note">These values come from Health Connect. Supplements you log in Ayuvo Medications are not included.</string>
+    <!-- "Open Ayuvo Vitamin D chart" -->
+    <string name="nutrients_open_app_chart">Open Ayuvo %1$s chart</string>
+    <string name="nutrients_open_app_chart_subtitle">Logged in Ayuvo, food and supplements</string>
+    <string name="nutrients_reference_disclaimer">%1$s These are general reference values, not personal medical advice.</string>
+
+    <!-- Browse › Nutrition sections (metric_catalog.json browse_sections) -->
+    <string name="browse_section_nutrition_energy">Energy</string>
+    <string name="browse_section_nutrition_macros">Macronutrients</string>
+    <string name="browse_section_nutrition_carbs">Carbohydrates</string>
+    <string name="browse_section_nutrition_fats">Fats</string>
+    <string name="browse_section_nutrition_minerals">Minerals</string>
+    <string name="browse_section_nutrition_vitamins">Vitamins</string>
+    <string name="browse_section_nutrition_other">Other Nutrients</string>
+    <string name="browse_section_nutrition_supplements">Sports Supplements</string>
+
+    <!-- Medication editor: supplement nutrients (docs/medications.md §21) -->
+    <string name="nutrients_section_title">Nutrients (for supplements)</string>
+    <string name="nutrients_section_hint">What one %1$s contains, as printed on the label. Only doses you mark as taken count toward your nutrient totals.</string>
+    <string name="nutrients_section_retroactive">Totals are recalculated from your dose history, so changing these amounts also changes past doses.</string>
+    <string name="nutrients_choose_nutrient">Choose nutrient</string>
+    <string name="nutrients_choose_unit">Unit</string>
+    <string name="nutrients_choose_form">Choose form</string>
+    <string name="nutrients_amount_hint">Amount</string>
+    <string name="nutrients_per_unit">per 1 %1$s</string>
+    <string name="nutrients_saved_as">Saved as %1$s</string>
+    <string name="nutrients_add_row">Add nutrient</string>
+    <string name="nutrients_remove_row">Remove nutrient</string>
+    <string name="nutrients_unit_iu">IU</string>
+    <string name="nutrients_form_natural">Natural (d-alpha-tocopherol)</string>
+    <string name="nutrients_form_synthetic">Synthetic (dl-alpha-tocopherol)</string>
+    <string name="nutrients_form_retinol">Retinol (retinyl palmitate or acetate)</string>
+    <string name="nutrients_form_supplement_beta_carotene">Beta-carotene (supplement)</string>
+    <string name="nutrients_form_food_beta_carotene">Beta-carotene (food)</string>
+    <string name="nutrients_form_food_alpha_carotene">Alpha-carotene or beta-cryptoxanthin (food)</string>
+    <string name="nutrients_form_unknown">Other form</string>
+    <string name="nutrients_error_pick_nutrient">Choose a nutrient.</string>
+    <string name="nutrients_error_amount">Enter an amount above 0 that is not larger than a single dose could hold.</string>
+    <string name="nutrients_error_unit">This nutrient can\'t be entered in that unit.</string>
+    <string name="nutrients_error_form">Choose the form printed on the label to convert IU.</string>
+    <string name="nutrients_error_duplicate">Each nutrient can be listed once.</string>
+    <string name="nutrients_ai_button">Get nutrients with AI</string>
+    <string name="nutrients_ai_reading">Reading…</string>
+    <string name="nutrients_ai_from_camera">Take a photo of the label</string>
+    <string name="nutrients_ai_from_gallery">Choose a label photo</string>
+    <string name="nutrients_ai_from_text">Use the name and strength</string>
+    <string name="nutrients_ai_setup">Set up AI in Settings to read supplement labels. You can always add nutrients by hand.</string>
+    <string name="nutrients_ai_empty">No nutrient amounts were recognised. Add them by hand from the label.</string>
+    <string name="nutrients_ai_failed">The label could not be read. Try again or add the nutrients by hand.</string>
+    <string name="nutrients_review_title">Check the nutrients</string>
+    <string name="nutrients_review_hint">Amounts per 1 %1$s. Edit or remove anything that does not match the label.</string>
+    <plurals name="nutrients_review_rejected">
+        <item quantity="one">Not recognised: %1$d item. Add it by hand if needed.</item>
+        <item quantity="other">Not recognised: %1$d items. Add them by hand if needed.</item>
+    </plurals>
+    <string name="nutrients_review_confirm">Add to medication</string>
+
+    <!-- Medication detail -->
+    <string name="nutrients_card_title">Nutrition</string>
+    <string name="nutrients_card_per_dose">Per dose (%1$s)</string>
+    <string name="nutrients_card_today">Today</string>
+    <string name="nutrients_card_note">Counts only doses marked as taken. Editing the amounts also changes past doses.</string>
+    <string name="nutrients_supplement_badge">Supplement</string>
+
+    <!-- Nutrition Details -->
+    <string name="nutrients_incl_supplements">incl. %1$s from supplements</string>
+</resources>

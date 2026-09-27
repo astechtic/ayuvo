@@ -302,6 +302,14 @@ final class WidgetDashboardWriter {
                     dayScoped: descriptor.aggregation != .last && descriptor.aggregation != .avg,
                     at: off ? nil : tile.at, caption: off ? String(localized: "Off") : nil
                 )
+            case .nutrient(let nutrientKey):
+                let parts = sources.nutrientTotals.entries(nutrientKey)
+                let tile = MetricTileMath.appTile(entries: parts.food + parts.supplements, aggregation: .sum, now: now, calendar: calendar)
+                return WidgetDashboardSnapshot.Metric(
+                    key: option.rawValue, title: descriptor.title, systemImage: descriptor.systemImage, tintHex: tint,
+                    valueText: NutrientCatalog.number(tile.value), unitText: NutrientCatalog.unit(nutrientKey), progress: nil,
+                    dayScoped: true, at: tile.at, caption: nil
+                )
             case .health(let typeID):
                 let tile = healthTiles.first { $0.typeID == typeID }
                 let type = sources.health.metricType(for: typeID)

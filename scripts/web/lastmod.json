@@ -79,6 +79,158 @@
   "date": "2026-09-25",
   "hash": "3526ace65c6a"
  },
+ "/nutrients": {
+  "date": "2026-09-27",
+  "hash": "ebad6576975d"
+ },
+ "/nutrients/added-sugar": {
+  "date": "2026-09-27",
+  "hash": "b3036931ae5c"
+ },
+ "/nutrients/biotin": {
+  "date": "2026-09-27",
+  "hash": "9f638257198d"
+ },
+ "/nutrients/caffeine": {
+  "date": "2026-09-27",
+  "hash": "d42e7cd92d5f"
+ },
+ "/nutrients/calcium": {
+  "date": "2026-09-27",
+  "hash": "453ced12fe81"
+ },
+ "/nutrients/chloride": {
+  "date": "2026-09-27",
+  "hash": "bdb7b5a4b12a"
+ },
+ "/nutrients/cholesterol": {
+  "date": "2026-09-27",
+  "hash": "583b7e91bfd3"
+ },
+ "/nutrients/chromium": {
+  "date": "2026-09-27",
+  "hash": "aa25c8542f5c"
+ },
+ "/nutrients/copper": {
+  "date": "2026-09-27",
+  "hash": "81db0e572ec4"
+ },
+ "/nutrients/fiber": {
+  "date": "2026-09-27",
+  "hash": "c4f474cc434e"
+ },
+ "/nutrients/folate": {
+  "date": "2026-09-27",
+  "hash": "5642842a2327"
+ },
+ "/nutrients/iodine": {
+  "date": "2026-09-27",
+  "hash": "e7f858deddd4"
+ },
+ "/nutrients/iron": {
+  "date": "2026-09-27",
+  "hash": "21ad3f9ca5e0"
+ },
+ "/nutrients/magnesium": {
+  "date": "2026-09-27",
+  "hash": "f12581f7c7ea"
+ },
+ "/nutrients/manganese": {
+  "date": "2026-09-27",
+  "hash": "2cc5f3a2f19f"
+ },
+ "/nutrients/molybdenum": {
+  "date": "2026-09-27",
+  "hash": "e1715949a306"
+ },
+ "/nutrients/monounsaturated-fat": {
+  "date": "2026-09-27",
+  "hash": "4e591582735b"
+ },
+ "/nutrients/niacin": {
+  "date": "2026-09-27",
+  "hash": "663007201466"
+ },
+ "/nutrients/omega-3": {
+  "date": "2026-09-27",
+  "hash": "12bf18bcae64"
+ },
+ "/nutrients/pantothenic-acid": {
+  "date": "2026-09-27",
+  "hash": "fd5abb1e584c"
+ },
+ "/nutrients/phosphorus": {
+  "date": "2026-09-27",
+  "hash": "d7c7aa751023"
+ },
+ "/nutrients/polyunsaturated-fat": {
+  "date": "2026-09-27",
+  "hash": "e2c3fd7cfc1d"
+ },
+ "/nutrients/potassium": {
+  "date": "2026-09-27",
+  "hash": "c3ed9d6f82f2"
+ },
+ "/nutrients/riboflavin": {
+  "date": "2026-09-27",
+  "hash": "7cbd2b3415c4"
+ },
+ "/nutrients/saturated-fat": {
+  "date": "2026-09-27",
+  "hash": "5523b05b5347"
+ },
+ "/nutrients/selenium": {
+  "date": "2026-09-27",
+  "hash": "0ee01710d2af"
+ },
+ "/nutrients/sodium": {
+  "date": "2026-09-27",
+  "hash": "639f128bd641"
+ },
+ "/nutrients/sugar": {
+  "date": "2026-09-27",
+  "hash": "aba386652864"
+ },
+ "/nutrients/thiamin": {
+  "date": "2026-09-27",
+  "hash": "4be19fff8503"
+ },
+ "/nutrients/trans-fat": {
+  "date": "2026-09-27",
+  "hash": "fe4446933904"
+ },
+ "/nutrients/vitamin-a": {
+  "date": "2026-09-27",
+  "hash": "17762323d59b"
+ },
+ "/nutrients/vitamin-b12": {
+  "date": "2026-09-27",
+  "hash": "a943bc6b1768"
+ },
+ "/nutrients/vitamin-b6": {
+  "date": "2026-09-27",
+  "hash": "c7edeb9de66c"
+ },
+ "/nutrients/vitamin-c": {
+  "date": "2026-09-27",
+  "hash": "325c29887eac"
+ },
+ "/nutrients/vitamin-d": {
+  "date": "2026-09-27",
+  "hash": "19ebb0d5ab1d"
+ },
+ "/nutrients/vitamin-e": {
+  "date": "2026-09-27",
+  "hash": "39b5a370fe49"
+ },
+ "/nutrients/vitamin-k": {
+  "date": "2026-09-27",
+  "hash": "566608ef25b1"
+ },
+ "/nutrients/zinc": {
+  "date": "2026-09-27",
+  "hash": "d17cc831038c"
+ },
  "/open-source": {
   "date": "2026-09-25",
   "hash": "fcc0cdb823b4"

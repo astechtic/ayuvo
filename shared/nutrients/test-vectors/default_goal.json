@@ -1,0 +1,260 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "value": 15.0,
+        "value_int": 15
+      },
+      "input": {
+        "key": "vitamin_d",
+        "profile": {}
+      },
+      "name": "vitamin_d_unknown"
+    },
+    {
+      "expected": {
+        "value": 20.0,
+        "value_int": 20
+      },
+      "input": {
+        "key": "vitamin_d",
+        "profile": {
+          "age": 80
+        }
+      },
+      "name": "vitamin_d_80"
+    },
+    {
+      "expected": {
+        "value": 1.1,
+        "value_int": 1
+      },
+      "input": {
+        "key": "omega_3",
+        "profile": {
+          "sex": "female"
+        }
+      },
+      "name": "omega_3_female_rounds_to_1"
+    },
+    {
+      "expected": {
+        "value": 1.6,
+        "value_int": 2
+      },
+      "input": {
+        "key": "omega_3",
+        "profile": {
+          "sex": "male"
+        }
+      },
+      "name": "omega_3_male_rounds_to_2"
+    },
+    {
+      "expected": {
+        "value": 2.4,
+        "value_int": 2
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "profile": {}
+      },
+      "name": "vitamin_b12_2_4"
+    },
+    {
+      "expected": {
+        "value": 22.2,
+        "value_int": 22
+      },
+      "input": {
+        "key": "saturated_fat",
+        "profile": {
+          "calorie_goal": 2000
+        }
+      },
+      "name": "saturated_fat_2000"
+    },
+    {
+      "expected": {
+        "value": null,
+        "value_int": null
+      },
+      "input": {
+        "key": "saturated_fat",
+        "profile": {}
+      },
+      "name": "saturated_fat_no_calories"
+    },
+    {
+      "expected": {
+        "value": 0.3,
+        "value_int": 1
+      },
+      "input": {
+        "key": "saturated_fat",
+        "profile": {
+          "calorie_goal": 30
+        }
+      },
+      "name": "saturated_fat_tiny_goal_min_1",
+      "notes": "0.3 g rounds to 0; a positive value never becomes 0."
+    },
+    {
+      "expected": {
+        "value": 53.8,
+        "value_int": 54
+      },
+      "input": {
+        "key": "added_sugar",
+        "profile": {
+          "calorie_goal": 2150
+        }
+      },
+      "name": "added_sugar_2150"
+    },
+    {
+      "expected": {
+        "value": null,
+        "value_int": null
+      },
+      "input": {
+        "key": "sugar",
+        "profile": {
+          "calorie_goal": 2000
+        }
+      },
+      "name": "sugar_info_null"
+    },
+    {
+      "expected": {
+        "value": null,
+        "value_int": null
+      },
+      "input": {
+        "key": "creatine",
+        "profile": {}
+      },
+      "name": "creatine_null"
+    },
+    {
+      "expected": {
+        "value": 2300.0,
+        "value_int": 2300
+      },
+      "input": {
+        "key": "sodium",
+        "profile": {}
+      },
+      "name": "sodium_2300"
+    },
+    {
+      "expected": {
+        "value": 400.0,
+        "value_int": 400
+      },
+      "input": {
+        "key": "caffeine",
+        "profile": {}
+      },
+      "name": "caffeine_400"
+    },
+    {
+      "expected": {
+        "value": 18.0,
+        "value_int": 18
+      },
+      "input": {
+        "key": "iron",
+        "profile": {
+          "age": 45,
+          "sex": "female"
+        }
+      },
+      "name": "iron_female_45"
+    },
+    {
+      "expected": {
+        "value": 30.0,
+        "value_int": 30
+      },
+      "input": {
+        "key": "fiber",
+        "profile": {
+          "age": 60,
+          "sex": "male"
+        }
+      },
+      "name": "fiber_male_60"
+    },
+    {
+      "expected": {
+        "value": 1200.0,
+        "value_int": 1200
+      },
+      "input": {
+        "key": "calcium",
+        "profile": {
+          "age": 75
+        }
+      },
+      "name": "calcium_unknown_75"
+    },
+    {
+      "expected": {
+        "value": 2600.0,
+        "value_int": 2600
+      },
+      "input": {
+        "key": "potassium",
+        "profile": {
+          "sex": "female"
+        }
+      },
+      "name": "potassium_female"
+    },
+    {
+      "expected": {
+        "value": null,
+        "value_int": null
+      },
+      "input": {
+        "key": "choline",
+        "profile": {}
+      },
+      "name": "unknown_key_null",
+      "notes": "choline has no reference entry."
+    },
+    {
+      "expected": {
+        "value": 0.9,
+        "value_int": 1
+      },
+      "input": {
+        "key": "copper",
+        "profile": {
+          "age": 40,
+          "sex": "female"
+        }
+      },
+      "name": "untracked_copper_female",
+      "notes": "app_tracked: false nutrients still have a default goal (health nutrition charts); 0.9 mg -> value_int 1."
+    },
+    {
+      "expected": {
+        "value": 1.7,
+        "value_int": 2
+      },
+      "input": {
+        "key": "vitamin_b6",
+        "profile": {
+          "age": 60,
+          "sex": "male"
+        }
+      },
+      "name": "untracked_vitamin_b6_male_60"
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "default_goal",
+  "version": 1
+}

@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 
 from compare_pages import compare_pages, compare_strip
+from nutrient_pages import nutrient_pages
 from site_lib import (
     BASE, EMAIL, FUD_AI, GITHUB, MEDGEMMA_DISCLAIMER, STORES, WEB, Page, catalog_card, catalog_table, cta_section,
     asset, eyebrow, faq_section, gib, icon, medgemma, phone, phones, privacy_band, section_head, store_buttons,
@@ -815,6 +816,7 @@ def all_pages() -> list[Page]:
     pages = [build_home(), build_features(), build_nutrition(), build_workouts(), build_health(), build_records(), build_coach(),
              build_fasting(), build_switch(), build_ondevice(), build_privacy_first(), build_providers(), build_open_source(), build_download()]
     pages += compare_pages()
+    pages += nutrient_pages()
     pages.append(build_about())
     pages += legal_pages()
     pages.append(build_404())

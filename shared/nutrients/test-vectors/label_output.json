@@ -1,0 +1,243 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 1500.0,
+            "form": null,
+            "key": "vitamin_d",
+            "unit": "mcg"
+          }
+        ],
+        "ok": true,
+        "rejected": [],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "{\"serving_units\": 1, \"items\": [{\"key\": \"vitamin_d\", \"amount\": 60000, \"unit\": \"IU\", \"form\": null}]}"
+      },
+      "name": "vitamin_d3_60000_iu_capsule"
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 80.0,
+            "form": null,
+            "key": "vitamin_c",
+            "unit": "mg"
+          },
+          {
+            "amount": 10.0,
+            "form": null,
+            "key": "zinc",
+            "unit": "mg"
+          },
+          {
+            "amount": 400.0,
+            "form": null,
+            "key": "folate",
+            "unit": "mcg"
+          },
+          {
+            "amount": 2.5,
+            "form": null,
+            "key": "vitamin_b12",
+            "unit": "mcg"
+          }
+        ],
+        "ok": true,
+        "rejected": [],
+        "serving_units": 2
+      },
+      "input": {
+        "text": "```json\n{\"serving_units\": 2, \"items\": [{\"key\": \"vitamin_c\", \"amount\": 160, \"unit\": \"mg\", \"form\": null}, {\"key\": \"zinc\", \"amount\": 20, \"unit\": \"mg\", \"form\": null}, {\"key\": \"folate\", \"amount\": 800, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"vitamin_b12\", \"amount\": 5, \"unit\": \"\\u00b5g\", \"form\": null}]}\n```"
+      },
+      "name": "multivitamin_two_tablet_serving_fenced",
+      "notes": "Amounts are per 2 tablets: each is halved."
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 500.0,
+            "form": null,
+            "key": "vitamin_c",
+            "unit": "mg"
+          }
+        ],
+        "ok": true,
+        "rejected": [
+          {
+            "code": "form_required",
+            "index": 0
+          },
+          {
+            "code": "unknown_nutrient",
+            "index": 1
+          },
+          {
+            "code": "duplicate_nutrient",
+            "index": 3
+          }
+        ],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "{\"items\": [{\"key\": \"vitamin_e\", \"amount\": 400, \"unit\": \"IU\"}, {\"key\": \"selenium\", \"amount\": 55, \"unit\": \"mcg\"}, {\"key\": \"vitamin_c\", \"amount\": 500, \"unit\": \"mg\"}, {\"key\": \"vitamin_c\", \"amount\": 250, \"unit\": \"mg\"}]}"
+      },
+      "name": "vitamin_e_iu_without_form_rejected",
+      "notes": "Missing form, unknown key and duplicate key are rejected; serving_units defaults to 1."
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 8333.333333,
+            "form": "folic_acid",
+            "key": "folate",
+            "unit": "mcg"
+          }
+        ],
+        "ok": true,
+        "rejected": [
+          {
+            "code": "iu_not_supported",
+            "index": 1
+          },
+          {
+            "code": "unsupported_unit",
+            "index": 2
+          },
+          {
+            "code": "bad_item",
+            "index": 3
+          },
+          {
+            "code": "invalid_amount",
+            "index": 4
+          },
+          {
+            "code": "bad_item",
+            "index": 5
+          }
+        ],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "{\"serving_units\": null, \"items\": [{\"key\": \"folate\", \"amount\": 5, \"unit\": \"mg\", \"form\": \"folic_acid\"}, {\"key\": \"calcium\", \"amount\": 500, \"unit\": \"IU\", \"form\": null}, {\"key\": \"iron\", \"amount\": 60, \"unit\": \"tablet\", \"form\": null}, \"x\", {\"key\": \"zinc\", \"amount\": 0, \"unit\": \"mg\"}, {\"key\": \"magnesium\", \"amount\": 250, \"unit\": \"mg\", \"form\": 3}]}"
+      },
+      "name": "folic_acid_form_and_iu_errors"
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 5.0,
+            "form": null,
+            "key": "creatine",
+            "unit": "g"
+          }
+        ],
+        "ok": true,
+        "rejected": [
+          {
+            "code": "amount_too_large",
+            "index": 0
+          }
+        ],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "{\"items\": [{\"key\": \"vitamin_d\", \"amount\": 1000000, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"creatine\", \"amount\": 5, \"unit\": \"g\", \"form\": null}]}"
+      },
+      "name": "amount_too_large"
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [],
+        "ok": true,
+        "rejected": [
+          {
+            "code": "bad_serving",
+            "index": 0
+          }
+        ],
+        "serving_units": null
+      },
+      "input": {
+        "text": "{\"serving_units\": 0, \"items\": [{\"key\": \"iron\", \"amount\": 18, \"unit\": \"mg\"}]}"
+      },
+      "name": "bad_serving"
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [],
+        "ok": true,
+        "rejected": [],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "{\"serving_units\":1,\"items\":[]}"
+      },
+      "name": "empty_items_unsure"
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 1.0,
+            "form": null,
+            "key": "omega_3",
+            "unit": "g"
+          }
+        ],
+        "ok": true,
+        "rejected": [],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "Here is the label data: {\"items\":[{\"key\":\"omega_3\",\"amount\":1000,\"unit\":\"mg\",\"form\":null,\"note\":\"has \\\"}\\\" inside\"}]} Thanks"
+      },
+      "name": "prose_then_json"
+    },
+    {
+      "expected": {
+        "error": "parse_error",
+        "items": [],
+        "ok": false,
+        "rejected": [],
+        "serving_units": null
+      },
+      "input": {
+        "text": "I could not read the label."
+      },
+      "name": "parse_error"
+    },
+    {
+      "expected": {
+        "error": "bad_shape",
+        "items": [],
+        "ok": false,
+        "rejected": [],
+        "serving_units": null
+      },
+      "input": {
+        "text": "{\"items\":{\"key\":\"iron\"}}"
+      },
+      "name": "bad_shape"
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "parse_label_output",
+  "version": 1
+}

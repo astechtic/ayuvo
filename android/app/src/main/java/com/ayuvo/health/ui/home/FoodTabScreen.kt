@@ -122,7 +122,9 @@ fun FoodTabScreen(
     onLogRequestHandled: (Long) -> Unit = {},
     viewModelOwner: ViewModelStoreOwner? = null,
     topBar: @Composable () -> Unit = {},
-    footer: LazyListScope.() -> Unit = {}
+    footer: LazyListScope.() -> Unit = {},
+    /** Opens a metric chart (Nutrition Details rows). */
+    onOpenMetric: ((com.ayuvo.health.data.metrics.MetricKey) -> Unit)? = null
 ) {
     val vm: HomeViewModel = if (viewModelOwner != null) {
         viewModel(viewModelStoreOwner = viewModelOwner, factory = HomeViewModel.Factory(container))
@@ -479,12 +481,15 @@ fun FoodTabScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             ui.homeTopNutrients.take(if (ui.waterTrackingEnabled) 3 else 4).forEach { nutrient ->
+                                val total = ui.nutrientTotal(nutrient.referenceKey).total
                                 MacroCard(
                                     label = stringResource(nutrient.displayNameRes),
-                                    current = nutrient.current(ui.todayEntries),
-                                    goal = nutrient.goal(ui.profile, ui.optionalNutrientGoals).toDouble(),
+                                    current = total ?: 0.0,
+                                    goal = nutrient.goal(ui.profile, ui.optionalNutrientGoals)?.toDouble() ?: 0.0,
                                     unit = nutrient.unit,
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
+                                    // Macros read 0 on an empty day; a detailed nutrient nobody recorded reads "—".
+                                    valueText = if (total == null && !nutrient.isMacro) "—" else null
                                 )
                             }
                             if (ui.waterTrackingEnabled) {
@@ -905,7 +910,10 @@ fun FoodTabScreen(
                     waterGoalMl = ui.waterDailyGoalMl,
                     waterUnit = ui.waterUnit,
                     onHomeTopNutrientsChange = vm::setHomeTopNutrients,
-                    onDismiss = { showNutritionDetail = false }
+                    onDismiss = { showNutritionDetail = false },
+                    totals = ui.nutrientTotals,
+                    day = ui.date,
+                    onOpenMetric = onOpenMetric
                 )
             }
 

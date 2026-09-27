@@ -50,6 +50,18 @@ extension ActionExecutor {
 
     private func dayKey(_ ms: Int64) -> String { env.zone.day(of: ms).text }
 
+    /// Food diary plus the supplement contributions of taken doses (none when there is no medications database).
+    func nutrientTotals() async -> NutrientTotals {
+        var supplements: [NutrientsReference.SupplementEntry] = []
+        var taken: [Int64] = []
+        if let runtime = env.medicationsRuntime, runtime.databaseExists || runtime.isOpen, await runtime.openIfNeeded(),
+           let repository = runtime.repository, let data = try? await repository.supplementData() {
+            supplements = data.entries
+            taken = data.takenMs
+        }
+        return NutrientTotals(foods: env.foodStore().entries, supplements: supplements, takenDoseMs: taken, calendar: env.calendar)
+    }
+
     /// Samples for `id` inside `range` (all history when `range` is nil).
     func metricSamples(_ id: String, range: ActionMath.DateRange?) async throws -> MetricSamples {
         let key = try metricKey(id)
@@ -74,6 +86,14 @@ extension ActionExecutor {
             }
             return MetricSamples(key: key, title: MetricCatalog.descriptor(for: key).title, unit: Self.appUnit(metric),
                                  natural: natural, dailyTotals: summed, samples: samples, healthType: nil)
+        case .nutrient(let nutrientKey):
+            // Food + taken supplement doses, one total per local day (docs/nutrients.md §5).
+            let totals = await nutrientTotals()
+            let parts = totals.entries(nutrientKey)
+            var samples = (parts.food + parts.supplements).map { ActionMath.Sample(tMs: $0.tMs, value: $0.value) }
+            if let range { samples = samples.filter { range.contains(ms: $0.tMs) } }
+            return MetricSamples(key: key, title: MetricCatalog.descriptor(for: key).title, unit: NutrientCatalog.unit(nutrientKey),
+                                 natural: "sum", dailyTotals: true, samples: dailyTotals(samples), healthType: nil)
         case .health(let typeID):
             let reader = try await healthReader()
             let type = HealthMetricRegistry.type(id: typeID) ?? HealthMetricRegistry.resolve(typeID: typeID)
@@ -116,6 +136,7 @@ extension ActionExecutor {
     func metricText(_ value: Double, series: MetricSamples) -> String {
         switch series.key {
         case .app(let metric): return AppMetricFormat.text(value, metric: metric)
+        case .nutrient(let nutrientKey): return NutrientCatalog.text(value, key: nutrientKey)
         case .health:
             guard let type = series.healthType else { return Self.number(value, digits: 1) }
             return HealthUnitFormatting.text(value, type: type)

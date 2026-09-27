@@ -14,7 +14,9 @@ struct MetricDetailView: View {
     @Environment(StrengthWorkoutStore.self) private var workoutStore
     @Environment(ImportedHealthWorkoutStore.self) private var importedWorkoutStore
     @Environment(ProfileStore.self) private var profileStore
+    @Environment(MedicationStore.self) private var medicationStore
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @AppStorage(OptionalNutrientGoals.storageKey) private var optionalNutrientGoalsData = Data()
     @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.lbs.rawValue
     @AppStorage(WaterSettings.unitKey) private var waterUnitRaw = WaterUnit.defaultUnit.rawValue
     @AppStorage(ActivitySettings.weekStartsOnMondayKey) private var weekStartsOnMonday = true
@@ -41,8 +43,30 @@ struct MetricDetailView: View {
     private var sources: MetricDataSources {
         MetricDataSources(
             food: foodStore, water: waterStore, fasting: fastingStore, weight: weightStore, bodyFat: bodyFatStore,
-            workouts: workoutStore, importedWorkouts: importedWorkoutStore, health: healthStore, profile: profileStore
+            workouts: workoutStore, importedWorkouts: importedWorkoutStore, health: healthStore, profile: profileStore,
+            medications: medicationStore
         )
+    }
+
+    private var nutrientKey: String? {
+        if case .nutrient(let key) = key { return key }
+        return nil
+    }
+
+    /// The reference nutrient behind the chart: `nutrient:<key>` metrics and the health nutrition types
+    /// (`dietary_vitamin_d` → `vitamin_d`, from `resolve_metric`, docs/nutrients.md §5a).
+    private var referenceNutrientKey: String? { descriptor.nutrientKey }
+
+    /// Reference lines for the nutrient, personalised from the profile's age, sex and calorie goal, with the
+    /// user's own goal when the nutrient is app-tracked and has one (docs/nutrients.md §4.2).
+    private var nutrientLines: NutrientsReference.Lines? {
+        referenceNutrientKey.map { NutrientCatalog.lines($0, profile: profileStore.profile, goals: OptionalNutrientGoals.decoded(from: optionalNutrientGoalsData)) }
+    }
+
+    /// Dashed rules of the chart: nutrient reference lines, else the single goal of the metric's goal source.
+    private var chartReferenceLines: [ChartReferenceLine] {
+        if let lines = nutrientLines { return NutrientCatalog.chartLines(lines) }
+        return ChartReferenceLine.goal(sources.goal(for: descriptor.goalSource))
     }
 
     private var loadKey: String {
@@ -70,13 +94,24 @@ struct MetricDetailView: View {
                 .padding(.vertical, 4)
             }
 
+            if let referenceNutrientKey, let lines = nutrientLines {
+                NutrientDetailSections(
+                    nutrientKey: referenceNutrientKey, lines: lines, learnSlug: descriptor.learnSlug,
+                    context: nutrientKey != nil
+                        ? .app(extras: model.nutrientExtras, periodTitle: model.rangeTitle(calendar: calendar))
+                        : .health(appChart: descriptor.nutrientMetric)
+                )
+            }
+
             optionsSection
 
-            Section("About") {
-                Text(descriptor.about)
-                    .font(.system(.subheadline, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("metric.about")
+            if referenceNutrientKey == nil {
+                Section("About") {
+                    Text(descriptor.about)
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("metric.about")
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -131,9 +166,24 @@ struct MetricDetailView: View {
                 .accessibilityIdentifier("metric.headline")
         } else if let headline = model.series?.headline {
             let parts = headlineParts(headline)
-            HeadlineStat(label: parts.label, value: parts.value, unit: parts.unit, caption: parts.caption)
+            HeadlineStat(label: parts.label, value: parts.value, unit: parts.unit, caption: nutrientDayCaption(headline) ?? parts.caption)
                 .accessibilityIdentifier("metric.headline")
         }
+    }
+
+    /// Nutrient D (app and health nutrition types): the lines are hidden on hourly bars, so the header says
+    /// "Today X of Y" (docs/nutrients.md §5, §5a).
+    private func nutrientDayCaption(_ headline: MetricsReference.Headline) -> String? {
+        guard let nutrientKey = referenceNutrientKey, let lines = nutrientLines, model.series?.range == .day else { return nil }
+        let day = calendar.isDateInToday(model.anchor) ? String(localized: "Today") : model.rangeTitle(calendar: calendar)
+        let value = NutrientCatalog.number(headline.value)
+        if let recommended = lines.recommended {
+            return String(localized: "\(day): \(value) of \(NutrientCatalog.text(recommended, key: nutrientKey)) \(NutrientCatalog.localizedLabel(lines.recommendedLabel).lowercased())")
+        }
+        if let limit = lines.limit {
+            return String(localized: "\(day): \(value) of \(NutrientCatalog.text(limit, key: nutrientKey)) \(NutrientCatalog.localizedLabel(lines.limitLabel).lowercased())")
+        }
+        return day
     }
 
     /// Headline while a bucket is selected: its value and date (docs/charts.md › Selection).
@@ -216,6 +266,8 @@ struct MetricDetailView: View {
         switch key {
         case .app(let metric):
             return AppMetricFormat.display(value, metric: metric)
+        case .nutrient(let nutrientKey):
+            return (NutrientCatalog.number(value), NutrientCatalog.unit(nutrientKey))
         case .health:
             guard let type = healthType else { return ("—", "") }
             guard let value else { return ("—", HealthUnitFormatting.unitLabel(for: type)) }
@@ -280,6 +332,17 @@ struct MetricDetailView: View {
                     calendar: calendar,
                     onTap: tapBucket
                 )
+            case .nutrient(let nutrientKey):
+                MetricChart(
+                    format: .nutrient(nutrientKey),
+                    chartKind: descriptor.chartKind,
+                    tint: descriptor.tint,
+                    series: series,
+                    selected: $model.selected,
+                    referenceLines: chartReferenceLines,
+                    calendar: calendar,
+                    onTap: tapBucket
+                )
             case .health:
                 if let type = healthType {
                     if type.isSleep {
@@ -287,7 +350,7 @@ struct MetricDetailView: View {
                             .accessibilityIdentifier("metric.chart")
                     } else {
                         HealthMetricChart(type: type, series: series, selected: $model.selected, calendar: calendar,
-                                          goal: sources.goal(for: descriptor.goalSource), onTap: tapBucket)
+                                          referenceLines: chartReferenceLines, onTap: tapBucket)
                             .accessibilityIdentifier("metric.chart")
                     }
                 }
@@ -311,6 +374,7 @@ struct MetricDetailView: View {
     private var emptyDescription: LocalizedStringKey {
         switch key {
         case .app: return "Log an entry to see your trend here."
+        case .nutrient: return "Log food with this nutrient, or mark a supplement dose as taken, to see your trend here."
         case .health: return healthStore.isEnabled ? "Try another range, or pull to refresh on the Health Data screen." : "Health sync is off. Existing data stays here read-only."
         }
     }
@@ -336,7 +400,14 @@ struct MetricDetailView: View {
             switch type.kind {
             case .cumulative, .duration, .session:
                 StatBadge(label: "Total", value: valueText(highlights.total))
-                StatBadge(label: "Average", value: valueText(highlights.average))
+                // Past D the health average is the total over days with a value: for a nutrient that is the
+                // same "Average per logged day" the nutrient charts show (docs/nutrients.md §5a).
+                if referenceNutrientKey != nil, model.range != .day {
+                    StatBadge(label: "Average per logged day", value: valueText(highlights.average))
+                        .accessibilityIdentifier("metric.nutrient.loggedDayAverage")
+                } else {
+                    StatBadge(label: "Average", value: valueText(highlights.average))
+                }
                 StatBadge(label: "Latest", value: valueText(highlights.latest))
             case .discrete, .series:
                 StatBadge(label: "Average", value: valueText(highlights.average))
@@ -346,6 +417,11 @@ struct MetricDetailView: View {
                 StatBadge(label: "Entries", value: "\(highlights.count)")
                 StatBadge(label: "Latest", value: healthStore.summary(for: type.id)?.latest.map { HealthUnitFormatting.relativeText($0.endDate) } ?? "—")
             }
+        } else if nutrientKey != nil {
+            StatBadge(label: "Total", value: valueText(highlights.total))
+            StatBadge(label: "Average per logged day", value: valueText(model.nutrientExtras?.average.average))
+                .accessibilityIdentifier("metric.nutrient.loggedDayAverage")
+            StatBadge(label: "Latest", value: valueText(highlights.latest))
         } else if isSummed {
             StatBadge(label: "Total", value: valueText(highlights.total))
             StatBadge(label: "Average", value: valueText(highlights.average))
@@ -443,6 +519,8 @@ struct MetricDetailView: View {
                 Label("Show All Data", systemImage: "list.bullet.rectangle")
             }
             .accessibilityIdentifier("metric.allData")
+        case .nutrient:
+            EmptyView()
         }
     }
 

@@ -17,6 +17,7 @@ struct NutritionDetailView: View {
     @Environment(FoodStore.self) private var foodStore
     @Environment(ProfileStore.self) private var profileStore
     @Environment(WaterStore.self) private var waterStore
+    @Environment(MedicationStore.self) private var medicationStore
     @Environment(\.dismiss) private var dismiss
     @AppStorage(OptionalNutrientGoals.storageKey) private var optionalNutrientGoalsData = Data()
     @AppStorage(WaterSettings.enabledKey) private var waterTrackingEnabled = false
@@ -85,36 +86,18 @@ struct NutritionDetailView: View {
                 }
                 .listRowBackground(AppColors.appCard)
 
-                Section("Detailed Nutrition") {
-                    optionalNutritionRow(.sugar, value: foodStore.sugar(for: date))
-                    optionalNutritionRow(.addedSugar, value: foodStore.addedSugar(for: date))
-                    optionalNutritionRow(.fiber, value: foodStore.fiber(for: date))
-                    optionalNutritionRow(.saturatedFat, value: foodStore.saturatedFat(for: date))
-                    NutritionDetailRow(icon: "drop", label: "Mono Unsat. Fat", value: formatMicro(foodStore.monounsaturatedFat(for: date)), unit: "g")
-                    NutritionDetailRow(icon: "drop.halffull", label: "Poly Unsat. Fat", value: formatMicro(foodStore.polyunsaturatedFat(for: date)), unit: "g")
-                    optionalNutritionRow(.cholesterol, value: foodStore.cholesterol(for: date))
-                    optionalNutritionRow(.caffeine, value: foodStore.caffeine(for: date))
-                    optionalNutritionRow(.sodium, value: foodStore.sodium(for: date))
-                    optionalNutritionRow(.potassium, value: foodStore.potassium(for: date))
-                    optionalNutritionRow(.transFat, value: foodStore.transFat(for: date))
-                    optionalNutritionRow(.calcium, value: foodStore.calcium(for: date))
-                    optionalNutritionRow(.iron, value: foodStore.iron(for: date))
-                    optionalNutritionRow(.magnesium, value: foodStore.magnesium(for: date))
-                    optionalNutritionRow(.zinc, value: foodStore.zinc(for: date))
-                    optionalNutritionRow(.vitaminA, value: foodStore.vitaminA(for: date))
-                    optionalNutritionRow(.vitaminC, value: foodStore.vitaminC(for: date))
-                    optionalNutritionRow(.vitaminD, value: foodStore.vitaminD(for: date))
-                    optionalNutritionRow(.vitaminB12, value: foodStore.vitaminB12(for: date))
-                    optionalNutritionRow(.vitaminE, value: foodStore.vitaminE(for: date))
-                    optionalNutritionRow(.vitaminK, value: foodStore.vitaminK(for: date))
-                    optionalNutritionRow(.folate, value: foodStore.folate(for: date))
-                    optionalNutritionRow(.omega3, value: foodStore.omega3(for: date))
-                    ForEach(SupplementalNutrient.allCases) { nutrient in
-                        optionalNutritionRow(
-                            nutrient.optionalNutrient,
-                            value: foodStore.supplementalNutrient(nutrient, for: date)
-                        )
+                Section {
+                    let totals = NutrientTotals(foodStore: foodStore, medicationStore: medicationStore).totals(NutrientCatalog.detailKeys, on: date)
+                    ForEach(NutrientCatalog.detailKeys, id: \.self) { key in
+                        NavigationLink(value: MetricRoute.detail(.nutrient(key))) {
+                            nutrientRow(key, total: totals[key] ?? .empty)
+                        }
+                        .accessibilityIdentifier("nutritionDetail.row.\(key)")
                     }
+                } header: {
+                    Text("Detailed Nutrition")
+                } footer: {
+                    Text("Includes supplement doses you marked as taken. Tap a nutrient for its chart.")
                 }
                 .listRowBackground(AppColors.appCard)
             }
@@ -122,6 +105,7 @@ struct NutritionDetailView: View {
             .background(AppColors.appBackground)
             .navigationTitle("Nutrition Details")
             .navigationBarTitleDisplayMode(.inline)
+            .metricRouteDestinations()
             .sheet(isPresented: $showHomeNutrientPicker) {
                 HomeNutrientPickerSheet(
                     selectionRawValue: $homeTopNutrientsRaw,
@@ -147,17 +131,19 @@ struct NutritionDetailView: View {
         WidgetSnapshotWriter.publish(foods: foodStore.entries, profile: userProfile)
     }
 
-    private func formatMicro(_ value: Double) -> String {
-        value == 0 ? "—" : String(format: "%.1f", value)
-    }
-
-    private func optionalNutritionRow(_ nutrient: OptionalNutrient, value: Double) -> some View {
-        NutritionDetailRow(
-            icon: nutrient.iconName,
-            label: nutrient.displayName,
-            value: formatMicro(value),
-            unit: nutrient.unit,
-            goal: "\(optionalNutrientGoals.goal(for: nutrient))"
+    /// Food + supplements for the day; "—" when nothing recorded it (never 0 for missing data).
+    private func nutrientRow(_ key: String, total: NutrientsReference.DayTotal) -> some View {
+        let goal = NutrientCatalog.optionalNutrient(key)
+            .map { optionalNutrientGoals.goal(for: $0, profile: NutrientCatalog.profile(userProfile)) }
+            .flatMap { $0 > 0 ? "\($0)" : nil }
+        let subline = total.supplements.flatMap { $0 > 0 ? String(localized: "incl. \(NutrientCatalog.text($0, key: key)) from supplements") : nil }
+        return NutritionDetailRow(
+            icon: NutrientCatalog.iconName(key),
+            label: NutrientCatalog.rowTitle(key),
+            value: NutrientCatalog.number(total.total),
+            unit: NutrientCatalog.unit(key),
+            goal: goal,
+            subline: subline
         )
     }
 }
@@ -168,6 +154,8 @@ struct NutritionDetailRow: View {
     let value: String
     let unit: String
     var goal: String? = nil
+    /// Secondary line under the label, e.g. "incl. 1,500 mcg from supplements".
+    var subline: String? = nil
 
     var body: some View {
         HStack(spacing: 12) {
@@ -179,8 +167,15 @@ struct NutritionDetailRow: View {
                     )
                     .frame(width: 24)
             }
-            Text(LocalizedDisplayText.text(label))
-                .font(.system(.body, design: .rounded))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(LocalizedDisplayText.text(label))
+                    .font(.system(.body, design: .rounded))
+                if let subline {
+                    Text(subline)
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
+            }
             Spacer()
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(value)

@@ -229,6 +229,11 @@ struct BrowseView: View {
         switch descriptor.key {
         case .app(let metric):
             AppMetricLinkRow(metric: metric)
+        case .nutrient:
+            NavigationLink(value: MetricRoute.detail(descriptor.key)) {
+                MetricRow(systemImage: NutrientCatalog.iconName(String(descriptor.key.id.dropFirst(MetricKey.nutrientPrefix.count))),
+                          tint: descriptor.tint, title: descriptor.title)
+            }
         case .health(let id):
             let type = store.metricType(for: id)
             HealthMetricRow(type: type, summary: store.summary(for: id))

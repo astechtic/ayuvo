@@ -12,6 +12,14 @@ struct MetricDataSources {
     let importedWorkouts: ImportedHealthWorkoutStore
     let health: HealthDataStore
     let profile: ProfileStore
+    /// Supplement contributions for nutrient metrics (docs/nutrients.md §5); nil = food only.
+    var medications: MedicationStore? = nil
+
+    /// Food + supplement totals for nutrient metrics.
+    var nutrientTotals: NutrientTotals { NutrientTotals(foodStore: food, medicationStore: medications) }
+
+    /// Nutrient series change with the diary and with taken doses / supplement nutrients.
+    var nutrientRevision: Int { food.revision &* 31 &+ (medications?.nutritionRevision ?? 0) }
 
     func revision(for metric: AppMetric) -> Int {
         switch metric {
@@ -168,14 +176,75 @@ nonisolated enum AppMetricSeriesProvider {
     private static func date(_ ms: Int64) -> Date { Date(timeIntervalSince1970: Double(ms) / 1000) }
 }
 
+/// A nutrient metric's chart series plus the extras its detail screen shows (docs/nutrients.md §5).
+nonisolated struct NutrientSeriesExtras: Sendable, Equatable {
+    /// Average per logged day over the shown interval (`logged_day_average`).
+    var average: NutrientsReference.LoggedDayAverage
+    /// Food and supplement parts over the shown interval; nil when that part has no value.
+    var food: Double?
+    var supplements: Double?
+
+    static let empty = NutrientSeriesExtras(average: .init(average: nil, loggedDays: 0), food: nil, supplements: nil)
+}
+
+nonisolated enum NutrientSeriesProvider {
+    /// Food entries of the field then supplement entries, bucketed with the shared `bucket_series` (sum), plus the
+    /// average per logged day and the food / supplement split for the bucket interval.
+    static func build(food: [MetricsReference.Entry], supplements: [MetricsReference.Entry], loggedDays: [String],
+                      range: HealthDetailRange, anchor: Date, calendar: Calendar,
+                      weekStart: MetricsReference.WeekStart) -> (series: HealthChartSeries, extras: NutrientSeriesExtras) {
+        let series = AppMetricSeriesProvider.build(entries: food + supplements, aggregation: .sum, range: range, anchor: anchor,
+                                                   calendar: calendar, weekStart: weekStart)
+        let zone = MetricsReference.Zone(calendar: calendar)
+        let anchorMs = Int64((anchor.timeIntervalSince1970 * 1000).rounded())
+        let bounds = MetricsReference.bucketBounds(range: range, anchorMs: anchorMs, zone: zone, weekStart: weekStart, nowMs: anchorMs)
+        let average = NutrientsReference.loggedDayAverage(entries: food + supplements, loggedDays: loggedDays,
+                                                          startMs: bounds.startMs, endMs: bounds.endMs, zone: zone)
+        func part(_ entries: [MetricsReference.Entry]) -> Double? {
+            let inside = entries.compactMap { $0.tMs >= bounds.startMs && $0.tMs < bounds.endMs ? $0.value : nil }
+            guard !inside.isEmpty else { return nil }
+            return NutrientsReference.roundTo(inside.reduce(0, +), NutrientsReference.amountDecimals)
+        }
+        return (series, NutrientSeriesExtras(average: average, food: part(food), supplements: part(supplements)))
+    }
+}
+
 /// Small LRU of computed app series, keyed by metric, range, anchor day and store revision.
 @MainActor
 final class MetricSeriesCache {
     static let shared = MetricSeriesCache()
 
     private var storage: [String: HealthChartSeries] = [:]
+    private var nutrientStorage: [String: (HealthChartSeries, NutrientSeriesExtras)] = [:]
     private var order: [String] = []
     private let capacity = 32
+
+    /// A nutrient metric (`nutrient:<key>`): food + supplement entries; the key includes the medications revision.
+    func nutrientSeries(for nutrientKey: String, range: HealthDetailRange, anchor: Date, sources: MetricDataSources,
+                        calendar: Calendar = .current) async -> (series: HealthChartSeries, extras: NutrientSeriesExtras) {
+        let weekStart = ActivitySettings.weekStart()
+        let dayKey = Int(calendar.startOfDay(for: anchor).timeIntervalSince1970)
+        let key = "nutrient:\(nutrientKey)|\(range.rawValue)|\(dayKey)|\(sources.nutrientRevision)|\(weekStart.rawValue)|\(calendar.timeZone.identifier)"
+        if let cached = nutrientStorage[key] {
+            touch(key)
+            return cached
+        }
+        let totals = NutrientTotals(foodStore: sources.food, medicationStore: sources.medications, calendar: calendar)
+        let parts = totals.entries(nutrientKey)
+        let loggedDays = totals.loggedDays
+        let result = await Task.detached(priority: .userInitiated) {
+            NutrientSeriesProvider.build(food: parts.food, supplements: parts.supplements, loggedDays: loggedDays, range: range,
+                                         anchor: anchor, calendar: calendar, weekStart: weekStart)
+        }.value
+        nutrientStorage[key] = result
+        touch(key)
+        while order.count > capacity {
+            let removed = order.removeFirst()
+            storage.removeValue(forKey: removed)
+            nutrientStorage.removeValue(forKey: removed)
+        }
+        return result
+    }
 
     func series(for metric: AppMetric, range: HealthDetailRange, anchor: Date, sources: MetricDataSources, calendar: Calendar = .current) async -> HealthChartSeries {
         let weekStart = ActivitySettings.weekStart()
@@ -193,7 +262,9 @@ final class MetricSeriesCache {
         storage[key] = series
         touch(key)
         while order.count > capacity {
-            storage.removeValue(forKey: order.removeFirst())
+            let removed = order.removeFirst()
+            storage.removeValue(forKey: removed)
+            nutrientStorage.removeValue(forKey: removed)
         }
         return series
     }
@@ -300,6 +371,15 @@ enum MetricTileBuilder {
                     key: pin, title: descriptor.title, systemImage: descriptor.systemImage, tint: descriptor.tint,
                     valueText: display.value, unitText: display.unit, at: tile.at,
                     sparkline: tile.sparkline.map { AppMetricFormat.chartValue($0, metric: metric) ?? $0 },
+                    caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today")
+                ))
+            case .nutrient(let nutrientKey):
+                let parts = sources.nutrientTotals.entries(nutrientKey)
+                let tile = MetricTileMath.appTile(entries: parts.food + parts.supplements, aggregation: .sum, now: now, calendar: calendar)
+                tiles.append(MetricTileModel(
+                    key: pin, title: descriptor.title, systemImage: descriptor.systemImage, tint: descriptor.tint,
+                    valueText: NutrientCatalog.number(tile.value), unitText: NutrientCatalog.unit(nutrientKey), at: tile.at,
+                    sparkline: tile.sparkline,
                     caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today")
                 ))
             case .health(let typeID):

@@ -42,6 +42,8 @@ import com.ayuvo.health.medications.model.ScheduleDraft
 import com.ayuvo.health.medications.model.ScheduleFrequency
 import com.ayuvo.health.medications.model.ScheduleJson
 import com.ayuvo.health.medications.model.TodayTimeline
+import com.ayuvo.health.nutrients.MedicationNutrientRow
+import com.ayuvo.health.nutrients.SupplementDose
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -338,6 +340,70 @@ class SqliteMedicationsStore(
         ReminderPlanner.plan(meds, schedules, logs.values.toList(), nowMs, horizonMs, zoneId, budget)
     }
 
+    // -- supplement nutrients ---------------------------------------------------------------------
+
+    override suspend fun nutrients(medicationId: String): List<MedicationNutrientRow> = withContext(Dispatchers.IO) {
+        nutrientsOf(db, medicationId)
+    }
+
+    override suspend fun allNutrients(): List<MedicationNutrientRow> = withContext(Dispatchers.IO) { allNutrientRows(db) }
+
+    override suspend fun setNutrients(medicationId: String, rows: List<MedicationNutrientRow>, nowMs: Long) = withContext(Dispatchers.IO) {
+        write { d ->
+            if (medicationRow(d, medicationId) == null) return@write
+            replaceNutrients(d, medicationId, rows.map { it.nutrientKey to it.amountPerUnit })
+            d.update("medications", ContentValues().apply { put("updated_ms", nowMs) }, "id = ?", arrayOf(medicationId))
+        }
+    }
+
+    override suspend fun supplementDoses(): List<SupplementDose> = withContext(Dispatchers.IO) {
+        db.rawQuery(
+            "SELECT medication_id, status, taken_at_ms, dose_quantity FROM dose_logs WHERE status = 'taken' AND taken_at_ms IS NOT NULL " +
+                "AND medication_id IN (SELECT DISTINCT medication_id FROM medication_nutrients) ORDER BY taken_at_ms, id",
+            null
+        ).use { c ->
+            val out = mutableListOf<SupplementDose>()
+            while (c.moveToNext()) out += SupplementDose(c.getString(0), c.getString(1), c.getLongOrNull(2), if (c.isNull(3)) null else c.getDouble(3))
+            out
+        }
+    }
+
+    override suspend fun takenDoseTimes(): List<Long> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT taken_at_ms FROM dose_logs WHERE status = 'taken' AND taken_at_ms IS NOT NULL ORDER BY taken_at_ms", null).use { c ->
+            val out = mutableListOf<Long>()
+            while (c.moveToNext()) out += c.getLong(0)
+            out
+        }
+    }
+
+    /** Deletes the medication's rows and inserts the valid ones (§21: known key, 0 < amount ≤ cap). */
+    private fun replaceNutrients(d: SQLiteDatabase, medicationId: String, rows: List<Pair<String, Double>>) {
+        d.delete("medication_nutrients", "medication_id = ?", arrayOf(medicationId))
+        val seen = HashSet<String>()
+        for ((key, amount) in rows) {
+            if (ArchiveCodec.nutrientProblem(key, amount) != null || !seen.add(key)) continue
+            d.insertOrThrow("medication_nutrients", null, ContentValues().apply {
+                put("medication_id", medicationId); put("nutrient_key", key); put("amount_per_unit", amount)
+            })
+        }
+    }
+
+    private fun nutrientsOf(d: SQLiteDatabase, medicationId: String): List<MedicationNutrientRow> =
+        d.rawQuery(
+            "SELECT medication_id, nutrient_key, amount_per_unit FROM medication_nutrients WHERE medication_id = ? ORDER BY nutrient_key",
+            arrayOf(medicationId)
+        ).use { it.readNutrients() }
+
+    private fun allNutrientRows(d: SQLiteDatabase): List<MedicationNutrientRow> =
+        d.rawQuery("SELECT medication_id, nutrient_key, amount_per_unit FROM medication_nutrients ORDER BY medication_id, nutrient_key", null)
+            .use { it.readNutrients() }
+
+    private fun Cursor.readNutrients(): List<MedicationNutrientRow> {
+        val out = mutableListOf<MedicationNutrientRow>()
+        while (moveToNext()) out += MedicationNutrientRow(getString(0), getString(1), getDouble(2))
+        return out
+    }
+
     // -- archive ----------------------------------------------------------------------------------
 
     override suspend fun exportSnapshot(): MedicationsSnapshot = withContext(Dispatchers.IO) { snapshot(db) }
@@ -358,6 +424,8 @@ class SqliteMedicationsStore(
                         val m = MedicationJson.medication(row)
                         if (op.op == "insert") d.insertOrThrow("medications", null, medicationValues(m))
                         else d.update("medications", medicationValues(m), "id = ?", arrayOf(m.id))
+                        // "nutrients": null = an older archive, keep the local rows; a list replaces them (§21).
+                        ArchiveCodec.nutrientRows(row)?.let { replaceNutrients(d, m.id, it) }
                     }
                     ArchiveCodec.TABLE_SCHEDULES -> {
                         val s = MedicationJson.schedule(row)
@@ -450,7 +518,8 @@ class SqliteMedicationsStore(
     private fun snapshot(d: SQLiteDatabase): MedicationsSnapshot = MedicationsSnapshot(
         medications = d.rawQuery("SELECT $MED_COLUMNS FROM medications ORDER BY id", null).use { it.readMedications() },
         schedules = d.rawQuery("SELECT $SCH_COLUMNS FROM medication_schedules ORDER BY id", null).use { it.readSchedules() },
-        doseLogs = d.rawQuery("SELECT $LOG_COLUMNS FROM dose_logs ORDER BY id", null).use { it.readLogs() }
+        doseLogs = d.rawQuery("SELECT $LOG_COLUMNS FROM dose_logs ORDER BY id", null).use { it.readLogs() },
+        nutrients = allNutrientRows(d)
     )
 
     private fun medicationRow(d: SQLiteDatabase, id: String): Medication? =

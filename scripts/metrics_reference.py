@@ -8,7 +8,8 @@ and run shared/metrics/test-vectors/*.json in their unit tests.
 Portability rules (same as scripts/medications_reference.py):
   * Python 3 stdlib only. Every function is pure: no clock, locale or randomness. "Now" and the time
     zone are always explicit inputs (`now_ms`, `time_zone` = IANA id). The only I/O is reading the two
-    catalogs once at import (shared/metrics/metric_catalog.json, shared/health/metric_registry.json);
+    catalogs once at import (shared/metrics/metric_catalog.json, shared/health/metric_registry.json,
+    shared/nutrients/nutrient_reference.json for learn slugs and app_tracked);
     ports load the same data from their bundled copies.
   * Regexes use only literals, explicit ASCII classes, (?:...), numbered groups, ? * + {n,m},
     alternation and ^/$ on single-line strings.
@@ -32,6 +33,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 CATALOG_PATH = os.path.join(ROOT, "shared", "metrics", "metric_catalog.json")
 REGISTRY_PATH = os.path.join(ROOT, "shared", "health", "metric_registry.json")
+NUTRIENT_REFERENCE_PATH = os.path.join(ROOT, "shared", "nutrients", "nutrient_reference.json")
 
 # ---------------------------------------------------------------------------------------------
 # Constants
@@ -46,7 +48,7 @@ HEADLINE_KINDS = ("TOTAL", "AVERAGE", "LATEST")
 RING_STATES = ("value", "no_goal", "no_data")
 PIN_SOURCES = ("new", "migrated", "default")
 GOAL_SOURCES = ("profile.calories", "profile.protein", "profile.carbs", "profile.fat", "prefs.waterDailyGoalMl",
-                "prefs.dailyStepGoal", "profile.goalWeight", "profile.goalBodyFat", "none")
+                "prefs.dailyStepGoal", "profile.goalWeight", "profile.goalBodyFat", "nutrient.reference", "none")
 FAV_MAX = 12
 DAILY_STEP_GOAL_DEFAULT = 10000
 HOUR_MS = 3_600_000
@@ -54,6 +56,8 @@ DAY_MS = 86_400_000
 SUMMED = ("sum", "duration", "count")
 
 APP_KEY_RE = re.compile("^app:[a-z][a-z_]*$")
+NUTRIENT_KEY_RE = re.compile("^nutrient:[a-z][a-z0-9_]*$")
+NUTRIENT_PREFIX = "nutrient:"
 HEALTH_ID_RE = re.compile("^[A-Za-z][A-Za-z0-9_.]*$")
 
 
@@ -66,8 +70,11 @@ CATALOG = _load(CATALOG_PATH)
 REGISTRY = _load(REGISTRY_PATH)
 REGISTRY_BY_ID = dict((m["id"], m) for m in REGISTRY["metrics"])
 APP_METRICS = dict((m["key"], m) for m in CATALOG["metrics"])
+# nutrient_metrics entries by their metric key string "nutrient:<nutrient key>" (docs/ui-structure.md §4).
+NUTRIENT_METRICS = dict((NUTRIENT_PREFIX + m["key"], m) for m in CATALOG.get("nutrient_metrics") or [])
 DOMAINS = dict((d["id"], d) for d in CATALOG["domains"])
 OVERRIDES = dict((o["id"], o) for o in CATALOG["health"]["overrides"])
+NUTRIENT_REFERENCE = dict((n["key"], n) for n in _load(NUTRIENT_REFERENCE_PATH)["nutrients"])
 
 # ---------------------------------------------------------------------------------------------
 # Time helpers
@@ -448,6 +455,8 @@ def default_favourites():
 def _valid_pin(key, known_health_ids):
     if key.startswith("app:"):
         return key in APP_METRICS
+    if key.startswith(NUTRIENT_PREFIX):
+        return key in NUTRIENT_METRICS
     return key in known_health_ids
 
 
@@ -467,7 +476,7 @@ def favourite_pins_migrate(new_raw, legacy_raw, known_health_ids, max_):
     2. legacy_raw not null and blank -> [] (the user had switched the tiles off).        source migrated
     3. legacy_raw not null -> its valid ids, then app: defaults in catalog order until the cap.  migrated
     4. otherwise -> catalog defaults (health ids not in known_health_ids dropped).         source default
-    Unknown = an app: key not in the catalog or a health id not in known_health_ids."""
+    Unknown = an app: or nutrient: key not in the catalog or a health id not in known_health_ids."""
     known = set(known_health_ids)
     if new_raw is not None:
         return {"favourites": _parse_pins(new_raw, known, max_), "source": "new"}
@@ -493,9 +502,19 @@ def favourite_pins_migrate(new_raw, legacy_raw, known_health_ids, max_):
 def resolve_metric(key):
     """Presentation facts for any metric key.
     app:*        -> the catalog metric.
+    nutrient:<k> -> the catalog nutrient_metrics entry: source "nutrient", domain nutrition, its aggregation /
+                    chart / unit / goal_source / browse_hidden, the nutrition domain icon.
     registry id  -> domain from overrides or category_domains, aggregation/chart from the maps, unit from
                     the registry, goal_source from overrides (else "none").
     anything else-> source "unknown", domain "other", aggregation "last", chart "line", unit "none".
+    Nutrient facts (every output carries them, null when they do not apply):
+      nutrient_key    the nutrient_reference.json key whose reference lines / About / Learn more the chart shows:
+                      nutrient:<k> -> k (sports supplements too); a health id whose override has goal_source
+                      "nutrient.reference" -> the override's nutrient_key (dietary_vitamin_d -> vitamin_d).
+      learn_slug      the website guide slug (/nutrients/<slug>): the nutrient_metrics learn_slug (null for sports),
+                      or the reference slug for health nutrition types.
+      nutrient_metric for a health nutrition type whose nutrient is app_tracked, the app's own chart key
+                      "nutrient:<k>" (link "Logged in Ayuvo"); null otherwise.
     default_favourite_order is the order when enabled, else null.
     Icons (icon_android / icon_ios) fall back in this order: the metric's own icon (app metrics), else the
     override icon (health ids), else the domain icon; unknown keys get the Other domain icon."""
@@ -509,7 +528,18 @@ def resolve_metric(key):
                 "colour_hex_dark": d["colour_hex_dark"], "aggregation": m["aggregation"],
                 "chart_kind": m["chart_kind"], "unit": m["unit"]["canonical"], "goal_source": m["goal_source"],
                 "default_favourite_order": fav.get("order") if fav.get("enabled") else None,
-                "browse_hidden": False, "icon_android": m["icon"]["android"], "icon_ios": m["icon"]["ios"]}
+                "browse_hidden": False, "icon_android": m["icon"]["android"], "icon_ios": m["icon"]["ios"],
+                "nutrient_key": None, "learn_slug": None, "nutrient_metric": None}
+    if key.startswith(NUTRIENT_PREFIX):
+        m = NUTRIENT_METRICS.get(key)
+        if m is None:
+            return _unknown()
+        d = DOMAINS["nutrition"]
+        return {"source": "nutrient", "domain": "nutrition", "colour_hex": d["colour_hex"],
+                "colour_hex_dark": d["colour_hex_dark"], "aggregation": m["aggregation"], "chart_kind": m["chart_kind"],
+                "unit": m["unit"], "goal_source": m["goal_source"], "default_favourite_order": None,
+                "browse_hidden": bool(m["browse_hidden"]), "icon_android": d["icon"]["android"], "icon_ios": d["icon"]["ios"],
+                "nutrient_key": m["key"], "learn_slug": m["learn_slug"], "nutrient_metric": None}
     r = REGISTRY_BY_ID.get(key)
     if r is None:
         return _unknown()
@@ -519,12 +549,16 @@ def resolve_metric(key):
     d = DOMAINS[domain]
     fav = o.get("default_favourite") or {}
     icon = o.get("icon") or d["icon"]
+    nk = o.get("nutrient_key")
+    n = NUTRIENT_REFERENCE.get(nk) if nk else None
     return {"source": "health", "domain": domain, "colour_hex": d["colour_hex"], "colour_hex_dark": d["colour_hex_dark"],
             "aggregation": h["aggregation_map"][r["aggregation"]], "chart_kind": h["chart_kind_map"][r["aggregation"]],
             "unit": r["unit"], "goal_source": o.get("goal_source", "none"),
             "default_favourite_order": fav.get("order") if fav.get("enabled") else None,
             "browse_hidden": bool(o.get("browse_hidden", False)),
-            "icon_android": icon["android"], "icon_ios": icon["ios"]}
+            "icon_android": icon["android"], "icon_ios": icon["ios"],
+            "nutrient_key": nk if n else None, "learn_slug": n["slug"] if n else None,
+            "nutrient_metric": NUTRIENT_PREFIX + nk if n and n["app_tracked"] else None}
 
 
 def _unknown():
@@ -532,7 +566,8 @@ def _unknown():
     return {"source": "unknown", "domain": "other", "colour_hex": d["colour_hex"], "colour_hex_dark": d["colour_hex_dark"],
             "aggregation": "last", "chart_kind": "line", "unit": "none", "goal_source": "none",
             "default_favourite_order": None, "browse_hidden": False,
-            "icon_android": d["icon"]["android"], "icon_ios": d["icon"]["ios"]}
+            "icon_android": d["icon"]["android"], "icon_ios": d["icon"]["ios"],
+            "nutrient_key": None, "learn_slug": None, "nutrient_metric": None}
 
 
 # ---------------------------------------------------------------------------------------------

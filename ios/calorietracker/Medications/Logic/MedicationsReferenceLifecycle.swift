@@ -284,6 +284,27 @@ nonisolated extension MR {
         if !note.isNull, note.string == nil || length(note.string!) > noteMax {
             errs.append(err("note", "note_too_long"))
         }
+        let nutrients = d["nutrients"]
+        if !nutrients.isNull {
+            if let items = nutrients.array {
+                var seen = Set<String>()
+                for item in items {
+                    let key: RJ = item.object != nil ? item["key"] : .null
+                    let problem = nutrientProblem(key: key, amount: item.object != nil ? item["amount_per_unit"] : .null)
+                    if problem == "unknown_nutrient" {
+                        errs.append(err("nutrients", "nutrient_unknown"))
+                    } else if problem == "invalid_amount" {
+                        errs.append(err("nutrients", "nutrient_amount_invalid"))
+                    } else if let k = key.string, seen.contains(k) {
+                        errs.append(err("nutrients", "nutrient_duplicate"))
+                    } else if let k = key.string {
+                        seen.insert(k)
+                    }
+                }
+            } else {
+                errs.append(err("nutrients", "nutrient_unknown"))
+            }
+        }
         return errs
     }
 }

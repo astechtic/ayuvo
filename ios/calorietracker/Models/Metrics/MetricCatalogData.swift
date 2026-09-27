@@ -54,6 +54,21 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
         let about: String
     }
 
+    /// `nutrient_metrics[]` (docs/ui-structure.md §4): parametric `nutrient:<key>` metrics.
+    struct NutrientMetric: Decodable, Sendable {
+        let key: String
+        let unit: String
+        let browseSection: String
+        let browseOrder: Int
+        let browseHidden: Bool
+        let aggregation: String
+        let chartKind: String
+        let dayBucket: String
+        let ranges: [String]
+        let goalSource: String
+        let learnSlug: String?
+    }
+
     struct Override: Decodable, Sendable {
         let id: String
         let domain: String?
@@ -62,6 +77,9 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
         let browseHidden: Bool?
         /// Optional per-metric glyph (docs/ui-structure.md §4 "Icons"); falls back to the domain icon.
         let icon: Icon?
+        /// Health nutrition types (`goal_source: nutrient.reference`): the `nutrient_reference.json` key whose
+        /// reference lines, About and Learn more the detail screen shows (docs/ui-structure.md §4, §7.10).
+        let nutrientKey: String?
     }
 
     struct Health: Decodable, Sendable {
@@ -107,6 +125,7 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
     let catalogVersion: Int
     let domains: [Domain]
     let metrics: [AppMetric]
+    let nutrientMetrics: [NutrientMetric]
     let browseSections: [BrowseSection]
     let health: Health
     let macroColours: [String: String]
@@ -140,7 +159,7 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
     private final class BundleMarker {}
 
     static let empty = MetricCatalogData(
-        catalogVersion: 0, domains: [], metrics: [], browseSections: [],
+        catalogVersion: 0, domains: [], metrics: [], nutrientMetrics: [], browseSections: [],
         health: Health(categoryDomains: [:], aggregationMap: [:], chartKindMap: [:], overrides: []),
         macroColours: [:], summaryRings: [],
         favourites: Favourites(prefKey: "summaryFavourites", legacyPrefKey: "healthHomeTiles", max: 12),
@@ -151,6 +170,11 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
 
     var appMetricsByKey: [String: AppMetric] {
         Dictionary(metrics.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
+    }
+
+    /// Nutrient metrics by nutrient key (without the `nutrient:` prefix).
+    var nutrientMetricsByKey: [String: NutrientMetric] {
+        Dictionary(nutrientMetrics.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
     }
 
     func domain(_ id: String) -> Domain? { domains.first { $0.id == id } }

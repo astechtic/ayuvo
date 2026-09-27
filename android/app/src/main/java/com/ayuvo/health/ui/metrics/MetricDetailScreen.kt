@@ -5,7 +5,7 @@ import com.ayuvo.health.AppContainer
 import com.ayuvo.health.data.metrics.MetricKey
 import com.ayuvo.health.ui.health.HealthTypeDetailScreen
 
-/** `metric/{key}` (and the `health/type/{id}` alias): app metrics and health types share one layout. */
+/** `metric/{key}` (and the `health/type/{id}` alias): app, nutrient and health metrics share one layout. */
 @Composable
 fun MetricDetailScreen(
     container: AppContainer,
@@ -15,6 +15,7 @@ fun MetricDetailScreen(
 ) {
     when (key) {
         is MetricKey.App -> AppMetricDetailScreen(container, key.id, onBack, destinations)
-        is MetricKey.Health -> HealthTypeDetailScreen(container, key.typeId, onBack)
+        is MetricKey.Nutrient -> NutrientMetricDetailScreen(container, key, onBack, destinations)
+        is MetricKey.Health -> HealthTypeDetailScreen(container, key.typeId, onBack, destinations)
     }
 }

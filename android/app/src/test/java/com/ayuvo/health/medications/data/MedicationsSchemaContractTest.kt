@@ -49,10 +49,11 @@ class MedicationsSchemaContractTest {
             assertTrue("shared/medications/migrations/$name not found", file != null)
             assertEquals("$name (exact §8 split)", RecordsSchemaContractTest.splitStatements(file!!.readText()), MedicationsSchema.MIGRATIONS.getValue(version))
         }
-        // Versions are contiguous from the base schema to VERSION (an empty range at v1).
+        // Versions are contiguous from the base schema to VERSION (v2 = 001_medication_nutrients.sql).
         assertEquals((MedicationsSchema.BASE_VERSION + 1..MedicationsSchema.VERSION).toList(), MedicationsSchema.MIGRATIONS.keys.toList())
         assertEquals(MedicationsSchema.MIGRATIONS.keys, MedicationsSchema.MIGRATION_FILES.keys)
-        assertEquals(1, MedicationsSchema.VERSION)
+        assertEquals(2, MedicationsSchema.VERSION)
+        assertEquals("001_medication_nutrients.sql", MedicationsSchema.MIGRATION_FILES[2])
     }
 
     @Test
@@ -66,6 +67,18 @@ class MedicationsSchemaContractTest {
         assertTrue(ddl.contains("REFERENCES medications(id) ON DELETE CASCADE"))
         assertTrue(ddl.contains("REFERENCES medication_schedules(id) ON DELETE SET NULL"))
         assertEquals(MedicationsSchema.TABLES.size, ddl.split("CREATE TABLE ").size - 1)
+    }
+
+    /** v2 adds exactly `medication_nutrients`, keyed per medication and nutrient, cascading with the medication. */
+    @Test
+    fun migrationTwoAddsMedicationNutrients() {
+        val sql = MedicationsSchema.migrationSql(2)
+        assertTrue(sql.contains("CREATE TABLE medication_nutrients ("))
+        assertTrue(sql.contains("medication_id TEXT NOT NULL REFERENCES medications(id) ON DELETE CASCADE"))
+        assertTrue(sql.contains("CHECK (amount_per_unit > 0)"))
+        assertTrue(sql.contains("PRIMARY KEY (medication_id, nutrient_key)"))
+        assertEquals(listOf("medication_nutrients"), MedicationsSchema.MIGRATION_TABLES)
+        assertEquals(MedicationsDatabase.VERSION, MedicationsSchema.VERSION)
     }
 
     /** No shared migration file exists that the embedded map does not know about. */

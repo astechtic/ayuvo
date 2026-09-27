@@ -539,12 +539,45 @@ struct CoachTools {
             add("omega_3_g", entry.omega3)
             return payload
         }
-        return jsonString([
+        var result: [String: Any] = [
             "from": Self.iso(from),
             "to": Self.iso(to),
             "count": entries.count,
             "foods": entries,
-        ])
+        ]
+        // Supplement doses taken in the range add to nutrient totals (docs/nutrients.md §6). Only with the
+        // Medications source available, because they come from the medicines' nutrient lists.
+        let supplements = supplementTotals(from: from, to: to)
+        if !supplements.isEmpty { result["supplement_nutrients"] = supplements }
+        return jsonString(result)
+    }
+
+    /// Per local day and nutrient: amounts from supplement doses marked taken, in each nutrient's unit.
+    private func supplementTotals(from: Date, to: Date) -> [[String: Any]] {
+        guard let snapshot = medications?.snapshot else { return [] }
+        let rows = (snapshot["medication_nutrients"].array ?? []).compactMap { row -> NutrientsReference.MedicationNutrientInput? in
+            guard let id = row["medication_id"].string, let key = row["nutrient_key"].string, NutrientsReference.nutrientUnit(key) != nil,
+                  let amount = row["amount_per_unit"].double else { return nil }
+            return NutrientsReference.MedicationNutrientInput(medicationID: id, nutrientKey: key, amountPerUnit: amount)
+        }
+        guard !rows.isEmpty else { return [] }
+        let logs = (snapshot["dose_logs"].array ?? []).map {
+            NutrientsReference.DoseInput(medicationID: $0["medication_id"].string ?? "", status: $0["status"].string ?? "",
+                                         takenAtMs: MR.int($0["taken_at_ms"]).map(Int64.init), doseQuantity: $0["dose_quantity"].double)
+        }
+        let lo = Int64(from.timeIntervalSince1970 * 1000)
+        let hi = Int64(to.timeIntervalSince1970 * 1000)
+        var totals: [String: [String: Double]] = [:]
+        for entry in NutrientsReference.supplementEntries(nutrients: rows, doseLogs: logs) where entry.tMs >= lo && entry.tMs <= hi {
+            let day = Self.iso(Calendar.current.startOfDay(for: Date(timeIntervalSince1970: Double(entry.tMs) / 1000)))
+            totals[day, default: [:]][entry.nutrientKey, default: 0] += entry.value
+        }
+        return totals.keys.sorted().flatMap { day in
+            (totals[day] ?? [:]).keys.sorted().map { key -> [String: Any] in
+                ["date": day, "nutrient": key, "amount": NutrientsReference.roundTo(totals[day]?[key] ?? 0, 3),
+                 "unit": NutrientsReference.nutrientUnit(key) ?? ""]
+            }
+        }
     }
 
     private func getFastingHistory(arguments: [String: Any]) -> String {

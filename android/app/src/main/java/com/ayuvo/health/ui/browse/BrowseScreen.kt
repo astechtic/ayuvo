@@ -383,7 +383,8 @@ private fun BrowseSearchResults(
     val appMatches = AppMetricId.entries.filter { res.getString(MetricCatalog.titleRes(it)).contains(query, ignoreCase = true) }
     val withData = hub.categories.flatMap { it.rows }.filter { it.count > 0 }.map { it.typeId }.toSet()
     val healthMatches = HealthDataType.entries
-        .filter { !it.reserved && !it.isVirtualDietary && (it.sdkAvailable || it.id in withData) }
+        // Virtual `dietary_*` types are searchable once the Nutrition page lists them (they have data).
+        .filter { !it.reserved && (if (it.isVirtualDietary) it.id in withData else it.sdkAvailable || it.id in withData) }
         .filter { HealthCategoryStyle.typeName(context, it.id).contains(query, ignoreCase = true) }
         .sortedByDescending { it.id in withData }
     if (features.isEmpty() && matchedDomains.isEmpty() && appMatches.isEmpty() && healthMatches.isEmpty()) {

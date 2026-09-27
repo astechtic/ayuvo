@@ -60,8 +60,9 @@ object HealthValueFormatter {
             "L" -> FormattedHealthValue(decimal(value, 2, locale), "L")
             "L/min" -> FormattedHealthValue(integer(value, locale), "L/min")
             "g" -> FormattedHealthValue(decimal(value, 1, locale), "g")
-            "mg" -> FormattedHealthValue(integer(value, locale), "mg")
-            "mcg" -> FormattedHealthValue(integer(value, locale), "µg")
+            // Trace nutrients (copper 0.9 mg, vitamin B12 2.4 µg) need decimals; large amounts stay whole.
+            "mg" -> FormattedHealthValue(amount(value, locale), "mg")
+            "mcg" -> FormattedHealthValue(amount(value, locale), "µg")
             "m/s" -> FormattedHealthValue(decimal(value, 1, locale), "m/s")
             "W" -> FormattedHealthValue(integer(value, locale), "W")
             "dBASPL" -> FormattedHealthValue(integer(value, locale), "dB")
@@ -127,6 +128,12 @@ object HealthValueFormatter {
     }
 
     fun integer(value: Double, locale: Locale = Locale.US): String = String.format(locale, "%,d", value.roundToLong())
+
+    /** ≥ 100 → whole, ≥ 10 → 1 decimal, else up to 2 decimals (trailing zeros trimmed). */
+    fun amount(value: Double, locale: Locale = Locale.US): String {
+        val a = abs(value)
+        return decimal(value, if (a >= 100) 0 else if (a >= 10) 1 else 2, locale)
+    }
 
     fun decimal(value: Double, digits: Int, locale: Locale = Locale.US): String {
         if (digits <= 0) return integer(value, locale)

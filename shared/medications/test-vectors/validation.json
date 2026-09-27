@@ -629,6 +629,121 @@
       },
       "name": "frequency_missing",
       "notes": "frequency_required."
+    },
+    {
+      "expected": {
+        "errors": []
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Multivitamin",
+          "nutrients": [
+            {
+              "amount_per_unit": 10,
+              "key": "vitamin_d"
+            },
+            {
+              "amount_per_unit": 10,
+              "key": "zinc"
+            },
+            {
+              "amount_per_unit": 1,
+              "key": "creatine"
+            }
+          ],
+          "start_date": "2026-09-01",
+          "strength": null,
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "supplement_nutrients_valid"
+    },
+    {
+      "expected": {
+        "errors": [
+          {
+            "code": "nutrient_unknown",
+            "field": "nutrients"
+          },
+          {
+            "code": "nutrient_amount_invalid",
+            "field": "nutrients"
+          },
+          {
+            "code": "nutrient_duplicate",
+            "field": "nutrients"
+          },
+          {
+            "code": "nutrient_amount_invalid",
+            "field": "nutrients"
+          },
+          {
+            "code": "nutrient_unknown",
+            "field": "nutrients"
+          }
+        ]
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Multivitamin",
+          "nutrients": [
+            {
+              "amount_per_unit": 16,
+              "key": "niacin"
+            },
+            {
+              "amount_per_unit": 0,
+              "key": "iron"
+            },
+            {
+              "amount_per_unit": 18,
+              "key": "iron"
+            },
+            {
+              "amount_per_unit": 9,
+              "key": "iron"
+            },
+            {
+              "amount_per_unit": 1000,
+              "key": "omega_3"
+            },
+            "x"
+          ],
+          "start_date": "2026-09-01",
+          "strength": null,
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "supplement_nutrients_invalid",
+      "notes": "Unknown key (niacin is a reference nutrient with app_tracked: false, so it cannot be a supplement nutrient), zero amount, duplicate, a g nutrient above the 100 g cap (1000 typed as mg), a non-object row."
     }
   ],
   "format": "ayuvo-medications-vectors",

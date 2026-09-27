@@ -15,7 +15,11 @@ import com.ayuvo.health.models.WaterUnit
 import com.ayuvo.health.ui.theme.AppThemeColor
 import com.ayuvo.health.widget.WidgetRefreshScheduler
 import com.ayuvo.health.widget.WidgetUpdateCoordinator
+import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.nutrients.SupplementSnapshot
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -35,7 +39,9 @@ class WidgetSnapshotWriter(
     private val context: Context,
     private val prefs: PreferencesStore,
     private val foodRepository: FoodRepository,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    /** Supplement nutrients and taken doses, so home nutrients match the app (docs/nutrients.md §6). */
+    private val supplements: Flow<SupplementSnapshot> = flowOf(SupplementSnapshot.EMPTY)
 ) {
     fun observe() = combine(
         combine(
@@ -48,7 +54,7 @@ class WidgetSnapshotWriter(
             // Selection / theme / goals are re-read inside publish; they're combined
             // here only so their changes re-trigger a snapshot write.
             CoreWidgetState(entries, profile)
-        },
+        }.combine(supplements) { core, s -> core.copy(supplements = s) },
         combine(
             prefs.waterTrackingEnabled,
             prefs.waterDailyGoalMl,
@@ -59,10 +65,10 @@ class WidgetSnapshotWriter(
         }
     ) { core, water -> WidgetInputs(core, water) }
         .distinctUntilChanged()
-        .onEach { inputs -> publish(inputs.core.entries, inputs.core.profile, inputs.water) }
+        .onEach { inputs -> publish(inputs.core.entries, inputs.core.profile, inputs.water, inputs.core.supplements) }
         .map { Unit }
 
-    private suspend fun publish(entries: List<FoodEntry>, profile: UserProfile?, water: WaterWidgetState) {
+    private suspend fun publish(entries: List<FoodEntry>, profile: UserProfile?, water: WaterWidgetState, supplements: SupplementSnapshot) {
         val todaysEntries = entries.filter {
             it.timestamp.atZone(ZoneId.systemDefault()).toLocalDate() == LocalDate.now()
         }
@@ -72,6 +78,7 @@ class WidgetSnapshotWriter(
             val selection = HomeTopNutrient.fromStorage(prefs.homeTopNutrients.first())
             val optionalGoals = prefs.optionalNutrientGoals.first()
             val theme = AppThemeColor.fromKey(prefs.appThemeColor.first())
+            val totals = NutrientTotals(todaysEntries, supplements, ZoneId.systemDefault())
             val waterTodayMl = water.entries
                 .filter { it.date.atZone(ZoneId.systemDefault()).toLocalDate() == LocalDate.now() }
                 .sumOf { it.milliliters }
@@ -91,8 +98,8 @@ class WidgetSnapshotWriter(
                         id = nutrient.storageKey,
                         label = context.getString(nutrient.displayNameRes),
                         unit = context.getString(nutrient.unitRes),
-                        value = nutrient.current(todaysEntries),
-                        goal = nutrient.goal(profile, optionalGoals).toDouble()
+                        value = totals.total(nutrient.referenceKey, LocalDate.now()).total ?: 0.0,
+                        goal = nutrient.goal(profile, optionalGoals)?.toDouble() ?: 0.0
                     )
                 },
                 themeStartHex = theme.start.toArgb() and 0xFFFFFF,
@@ -112,7 +119,8 @@ class WidgetSnapshotWriter(
 
 private data class CoreWidgetState(
     val entries: List<FoodEntry>,
-    val profile: UserProfile?
+    val profile: UserProfile?,
+    val supplements: SupplementSnapshot = SupplementSnapshot.EMPTY
 )
 
 private data class WaterWidgetState(

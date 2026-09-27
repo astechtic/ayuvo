@@ -91,7 +91,7 @@ class MedicationsDatabaseTest {
         try {
             val db = helper.writableDatabase
             assertEquals(MedicationsSchema.VERSION, db.version)
-            assertTrue(namesOf(db, "table").containsAll(MedicationsSchema.TABLES))
+            assertTrue(namesOf(db, "table").containsAll(MedicationsSchema.TABLES + MedicationsSchema.MIGRATION_TABLES))
             assertTrue(namesOf(db, "index").containsAll(MedicationsSchema.INDEXES))
             db.rawQuery("SELECT value FROM medications_meta WHERE key = 'schema_version'", null).use { c ->
                 assertTrue(c.moveToFirst())
@@ -106,6 +106,43 @@ class MedicationsDatabaseTest {
                 assertEquals("wal", c.getString(0).lowercase())
             }
             assertTrue(MedicationsDatabase.exists(context, DB))
+        } finally {
+            helper.close()
+        }
+    }
+
+    /** A v1 file (schema.sql only) upgrades to v2: medication_nutrients appears, rows survive, cascade holds. */
+    @Test
+    fun upgradeFromV1AddsMedicationNutrients() {
+        val file = context.getDatabasePath(DB).apply { parentFile?.mkdirs() }
+        SQLiteDatabase.openOrCreateDatabase(file, null).use { v1 ->
+            MedicationsSchema.STATEMENTS.forEach(v1::execSQL)
+            v1.execSQL("INSERT INTO medications_meta(key, value) VALUES ('schema_version', '1')")
+            insertMedication(v1, "med-d3")
+            v1.version = 1
+        }
+        val helper = MedicationsDatabase(context, DB)
+        try {
+            val db = helper.writableDatabase
+            assertEquals(2, db.version)
+            assertTrue("medication_nutrients" in namesOf(db, "table"))
+            db.rawQuery("SELECT value FROM medications_meta WHERE key = 'schema_version'", null).use { c ->
+                assertTrue(c.moveToFirst())
+                assertEquals("2", c.getString(0))
+            }
+            db.rawQuery("SELECT COUNT(*) FROM medications", null).use { c -> c.moveToFirst(); assertEquals(1, c.getInt(0)) }
+            db.insertOrThrow("medication_nutrients", null, ContentValues().apply {
+                put("medication_id", "med-d3"); put("nutrient_key", "vitamin_d"); put("amount_per_unit", 1500.0)
+            })
+            try {
+                db.insertOrThrow("medication_nutrients", null, ContentValues().apply {
+                    put("medication_id", "med-d3"); put("nutrient_key", "zinc"); put("amount_per_unit", 0.0)
+                })
+                fail("amount_per_unit must be > 0")
+            } catch (_: SQLiteConstraintException) {
+            }
+            db.delete("medications", "id = ?", arrayOf("med-d3"))
+            db.rawQuery("SELECT COUNT(*) FROM medication_nutrients", null).use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
         } finally {
             helper.close()
         }

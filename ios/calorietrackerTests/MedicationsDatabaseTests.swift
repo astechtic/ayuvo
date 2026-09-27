@@ -149,7 +149,7 @@ struct MedicationsSchemaTests {
         #expect(try await db.meta("schema_version") == "\(MedicationsSchema.schemaVersion)")
         #expect(try await db.pragmaInt("foreign_keys") == 1)
         #expect(try await db.pragmaInt("busy_timeout") == 5000)
-        #expect(MedicationsSchema.migrations.isEmpty)
+        #expect(MedicationsSchema.migrations.map(\.version) == [2])
     }
 
     @Test func onDiskDatabaseUsesWALInBackupExcludedDirectoryAndReopens() async throws {
@@ -195,7 +195,7 @@ struct MedicationsSchemaTests {
         #expect(try await db.meta("last_planned_ms") == "456")
         try await db.removeMeta("last_planned_ms")
         #expect(try await db.meta("last_planned_ms") == nil)
-        #expect(try await db.meta("schema_version") == "1")
+        #expect(try await db.meta("schema_version") == "\(MedicationsSchema.schemaVersion)")
     }
 }
 
@@ -380,7 +380,7 @@ struct MedicationsDatabaseTests {
         #expect(try await db.medicationCount() == 0)
         #expect(try await db.doseLogCount() == 0)
         #expect(try await db.openSchedules().isEmpty)
-        #expect(try await db.meta("schema_version") == "1")
+        #expect(try await db.meta("schema_version") == "\(MedicationsSchema.schemaVersion)")
     }
 
     @Test func transactionRollsBackOnError() async throws {

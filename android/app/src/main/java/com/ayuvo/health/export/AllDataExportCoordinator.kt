@@ -183,11 +183,12 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                 id = SECTION_MEDICATIONS,
                 format = MedicationConstants.ARCHIVE_FORMAT,
                 path = "medications/${MedicationsArchive.FILE_NAME}",
-                description = "Medications, schedules and dose history (ayuvo-medications JSON). Import with Settings › Backup & Export › Import All Data.",
+                description = "Medications, schedules, dose history and supplement nutrients (ayuvo-medications JSON). Import with Settings › Backup & Export › Import All Data.",
                 counts = mapOf(
                     "medications" to snapshot.medications.size.toLong(),
                     "schedules" to snapshot.schedules.size.toLong(),
-                    "dose_logs" to snapshot.doseLogs.size.toLong()
+                    "dose_logs" to snapshot.doseLogs.size.toLong(),
+                    "medication_nutrients" to snapshot.nutrients.size.toLong()
                 ),
                 source = file
             )

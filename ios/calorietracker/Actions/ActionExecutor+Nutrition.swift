@@ -108,8 +108,10 @@ extension ActionExecutor {
 
     /// Everything Nutrition Details shows: calories and macros with targets, water (when tracked) and
     /// every detailed nutrient with its goal. Siri reads the logged values; Shortcuts gets every field.
-    func nutritionSummary(_ v: ActionValidation) throws -> ActionResult {
+    /// Detailed nutrients are food + taken supplement doses (`NutrientTotals`); calories and macros stay food only.
+    func nutritionSummary(_ v: ActionValidation) async throws -> ActionResult {
         let r = try range(v)
+        let totals = await nutrientTotals()
         let entries = foods(in: r, store: env.foodStore())
         let calories = entries.reduce(0) { $0 + $1.calories }
         let protein = entries.reduce(0) { $0 + $1.protein }
@@ -159,10 +161,12 @@ extension ActionExecutor {
 
         var nutrients: [ActionField] = []
         var logged: [String] = []
+        let referenceProfile = NutrientCatalog.profile(profile)
         for nutrient in Self.detailNutrients {
-            let total = entries.reduce(0) { $0 + (nutrient.value($1) ?? 0) }
+            let total = totals.total(nutrient.key, from: Date(timeIntervalSince1970: Double(r.fromMs) / 1000),
+                                     to: Date(timeIntervalSince1970: Double(r.toMs) / 1000)).total ?? 0
             let rounded = ActionMath.roundTo(total, 1)
-            let goal = nutrient.goal.map { Double(goals.goal(for: $0)) }
+            let goal = nutrient.goal.map { Double(goals.goal(for: $0, profile: referenceProfile)) }.flatMap { $0 > 0 ? $0 : nil }
             fields[nutrient.field] = .number(rounded)
             nutrients.append(.object([
                 "key": .string(nutrient.key), "name": .string(nutrient.name), "value": .number(rounded),
@@ -192,12 +196,18 @@ extension ActionExecutor {
         return ActionResult(actionID: v.actionID, fields: fields, dialog: dialog)
     }
 
-    func nutrientGet(_ v: ActionValidation) throws -> ActionResult {
+    func nutrientGet(_ v: ActionValidation) async throws -> ActionResult {
         let r = try range(v)
         let nutrient = v.string("nutrient") ?? "calories"
         let aggregation = v.string("aggregation") ?? "sum"
         let entries = foods(in: r, store: env.foodStore())
         var samples = entries.map { ActionMath.Sample(tMs: ActionEnvironment.ms($0.timestamp), value: Self.nutrientValue(nutrient, $0)) }
+        if nutrient == "fiber" {
+            // Fiber is a detailed nutrient: taken supplement doses count too (docs/nutrients.md §6).
+            samples += await nutrientTotals().entries("fiber").supplements
+                .filter { r.contains(ms: $0.tMs) }
+                .map { ActionMath.Sample(tMs: $0.tMs, value: $0.value) }
+        }
         if aggregation == "average" {
             // "average" is per logged day: the mean of the daily totals.
             var totals: [MetricsReference.LocalDay: Double] = [:]

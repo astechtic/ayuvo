@@ -242,6 +242,7 @@ def nav(current: str) -> str:
         '<div class="nav-links" id="nav-links">'
         f'<div class="has-menu"><a href="/features"{cur("/features")}>Features</a><div class="menu">{menu}</div></div>'
         f'<a href="/privacy-first"{cur("/privacy-first")}>Privacy</a>'
+        f'<a href="/nutrients"{cur("/nutrients")}>Nutrients</a>'
         f'<a href="/features/on-device-ai"{cur("/features/on-device-ai")}>On-device AI</a>'
         f'<a href="/open-source"{cur("/open-source")}>Open source</a>'
         f'<a href="/support"{cur("/support")}>Support</a>'
@@ -252,7 +253,7 @@ def nav(current: str) -> str:
 
 def footer() -> str:
     MARK = asset("/assets/brand/ayuvo-mark.svg")
-    feat = "".join(f'<li><a href="{u}">{t}</a></li>' for u, t, _ in FEATURE_LINKS[:6]) + '<li><a href="/compare">Compare apps</a></li>'
+    feat = "".join(f'<li><a href="{u}">{t}</a></li>' for u, t, _ in FEATURE_LINKS[:6]) + '<li><a href="/compare">Compare apps</a></li><li><a href="/nutrients">Nutrient guides</a></li>'
     return f"""<footer class="footer"><div class="container">
 <div class="footer-grid">
 <div class="footer-brand"><a href="/" class="footer-brand-mark"><img src="{MARK}" alt="" width="30" height="30"><span>Ayuvo</span></a>
@@ -291,6 +292,7 @@ class Page:
     crumb: str = ""
     mentions: list[dict] = field(default_factory=list)   # other products the page discusses (name + url only)
     main_entity: str | None = None                         # @id of the node this page is mainly about
+    og_photo: str = ""                                     # a photo for the social card instead of app screens
 
     @property
     def noindex(self) -> bool:
@@ -308,7 +310,7 @@ class Page:
     def out_file(self) -> Path:
         if self.path == "/":
             return WEB / "index.html"
-        if self.path in ("/features", "/compare"):
+        if self.path in ("/features", "/compare", "/nutrients"):
             return WEB / self.path.strip("/") / "index.html"
         return WEB / (self.path.strip("/") + ".html")
 
@@ -505,7 +507,11 @@ def render(page: Page, css_v: str, js_v: str) -> str:
             wp["mainEntity"] = {"@id": page.main_entity}
         blocks.append(wp)
     if not page.noindex:
-        blocks += [{"@context": "https://schema.org", **b} if "@context" not in b else b for b in page.ld]
+        for b in page.ld:
+            b = b if "@context" in b else {"@context": "https://schema.org", **b}
+            if b.get("@type") == "Article":
+                b = {**b, "dateModified": page.modified}   # the build sets page.modified after the pages are built
+            blocks.append(b)
     if page.faqs and not page.noindex:
         blocks.append({
             "@context": "https://schema.org",

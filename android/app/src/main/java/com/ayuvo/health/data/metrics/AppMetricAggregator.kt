@@ -6,6 +6,8 @@ import com.ayuvo.health.models.FoodEntry
 import com.ayuvo.health.models.WaterEntry
 import com.ayuvo.health.models.WeightEntry
 import com.ayuvo.health.models.WorkoutSession
+import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -16,7 +18,9 @@ data class AppMetricSnapshot(
     val fasting: List<FastingSession> = emptyList(),
     val weight: List<WeightEntry> = emptyList(),
     val bodyFat: List<BodyFatEntry> = emptyList(),
-    val workouts: List<WorkoutSession> = emptyList()
+    val workouts: List<WorkoutSession> = emptyList(),
+    /** Supplement nutrients and taken doses (nutrient metrics, docs/nutrients.md §5). */
+    val supplements: SupplementSnapshot = SupplementSnapshot.EMPTY
 ) {
     companion object {
         val EMPTY = AppMetricSnapshot()
@@ -64,6 +68,13 @@ object AppMetricAggregator {
 
     fun sparkline(id: AppMetricId, snapshot: AppMetricSnapshot, nowMs: Long, zone: ZoneId): MetricSparkline =
         MetricsReference.sparkline7d(entries(id, snapshot, nowMs, zone), nowMs, zone, aggregation(id))
+
+    /**
+     * `nutrient:<key>` entries (docs/nutrients.md §5): the food entries' value of that field (null
+     * skipped) plus the supplement entries of that key; summed like every other SUM metric.
+     */
+    fun nutrientEntries(key: String, snapshot: AppMetricSnapshot): List<MetricEntry> =
+        NutrientTotals.seriesEntries(key, snapshot.food, snapshot.supplements).map { MetricEntry(it.tMs, it.value) }
 
     private fun workoutMidnight(session: WorkoutSession, zone: ZoneId): Long =
         MetricsReference.localMidnight(MetricsReference.workoutDay(session.diaryDateKey, session.startedAt.toEpochMilli(), zone), zone)

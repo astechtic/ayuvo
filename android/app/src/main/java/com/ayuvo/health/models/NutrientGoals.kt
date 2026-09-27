@@ -1,6 +1,10 @@
 package com.ayuvo.health.models
 
 import com.ayuvo.health.R
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientProfile
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.Nutrients
 
 import kotlinx.serialization.Serializable
 
@@ -44,74 +48,25 @@ enum class HomeTopNutrient(
     BETAINE("betaine", "Betaine", "g", R.string.nutrition_label_betaine, R.string.unit_g),
     HMB("hmb", "HMB", "g", R.string.nutrition_label_hmb, R.string.unit_g);
 
-    fun current(entries: List<FoodEntry>): Double = when (this) {
-        PROTEIN -> entries.sumOf { it.protein }
-        CARBS -> entries.sumOf { it.carbs }
-        FAT -> entries.sumOf { it.fat }
-        FIBER -> entries.sumOf { it.fiber ?: 0.0 }
-        SUGAR -> entries.sumOf { it.sugar ?: 0.0 }
-        ADDED_SUGAR -> entries.sumOf { it.addedSugar ?: 0.0 }
-        SATURATED_FAT -> entries.sumOf { it.saturatedFat ?: 0.0 }
-        CHOLESTEROL -> entries.sumOf { it.cholesterol ?: 0.0 }
-        CAFFEINE -> entries.sumOf { it.caffeine ?: 0.0 }
-        CREATINE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.CREATINE.storageKey] ?: 0.0 }
-        BETA_ALANINE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.BETA_ALANINE.storageKey] ?: 0.0 }
-        L_CITRULLINE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.L_CITRULLINE.storageKey] ?: 0.0 }
-        L_CARNITINE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.L_CARNITINE.storageKey] ?: 0.0 }
-        L_ARGININE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.L_ARGININE.storageKey] ?: 0.0 }
-        TAURINE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.TAURINE.storageKey] ?: 0.0 }
-        BETAINE -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.BETAINE.storageKey] ?: 0.0 }
-        HMB -> entries.sumOf { it.supplementalNutrients[SupplementalNutrient.HMB.storageKey] ?: 0.0 }
-        SODIUM -> entries.sumOf { it.sodium ?: 0.0 }
-        POTASSIUM -> entries.sumOf { it.potassium ?: 0.0 }
-        TRANS_FAT -> entries.sumOf { it.transFat ?: 0.0 }
-        CALCIUM -> entries.sumOf { it.calcium ?: 0.0 }
-        IRON -> entries.sumOf { it.iron ?: 0.0 }
-        MAGNESIUM -> entries.sumOf { it.magnesium ?: 0.0 }
-        ZINC -> entries.sumOf { it.zinc ?: 0.0 }
-        VITAMIN_A -> entries.sumOf { it.vitaminA ?: 0.0 }
-        VITAMIN_C -> entries.sumOf { it.vitaminC ?: 0.0 }
-        VITAMIN_D -> entries.sumOf { it.vitaminD ?: 0.0 }
-        VITAMIN_B12 -> entries.sumOf { it.vitaminB12 ?: 0.0 }
-        VITAMIN_E -> entries.sumOf { it.vitaminE ?: 0.0 }
-        VITAMIN_K -> entries.sumOf { it.vitaminK ?: 0.0 }
-        FOLATE -> entries.sumOf { it.folate ?: 0.0 }
-        OMEGA3 -> entries.sumOf { it.omega3 ?: 0.0 }
+    val isMacro: Boolean get() = this == PROTEIN || this == CARBS || this == FAT
+
+    /** Shared nutrient key (docs/nutrients.md); the macros use `protein` / `carbs` / `fat`. */
+    val referenceKey: String get() = when (this) {
+        PROTEIN -> "protein"
+        CARBS -> "carbs"
+        FAT -> "fat"
+        else -> OptionalNutrient.valueOf(name).referenceKey
     }
 
-    fun goal(profile: UserProfile?, optionalGoals: OptionalNutrientGoals): Int = when (this) {
+    /**
+     * Today's goal: the profile's macro targets, else the user's custom goal, else the personalised
+     * default (`default_goal_int`); null when the nutrient has none (info style, sports without a goal).
+     */
+    fun goal(profile: UserProfile?, optionalGoals: OptionalNutrientGoals): Int? = when (this) {
         PROTEIN -> profile?.effectiveProtein ?: 150
         CARBS -> profile?.effectiveCarbs ?: 220
         FAT -> profile?.effectiveFat ?: 70
-        FIBER -> optionalGoals.fiber
-        SUGAR -> optionalGoals.sugar
-        ADDED_SUGAR -> optionalGoals.addedSugar
-        SATURATED_FAT -> optionalGoals.saturatedFat
-        CHOLESTEROL -> optionalGoals.cholesterol
-        CAFFEINE -> optionalGoals.caffeine
-        CREATINE -> optionalGoals.valueFor(OptionalNutrient.CREATINE)
-        BETA_ALANINE -> optionalGoals.valueFor(OptionalNutrient.BETA_ALANINE)
-        L_CITRULLINE -> optionalGoals.valueFor(OptionalNutrient.L_CITRULLINE)
-        L_CARNITINE -> optionalGoals.valueFor(OptionalNutrient.L_CARNITINE)
-        L_ARGININE -> optionalGoals.valueFor(OptionalNutrient.L_ARGININE)
-        TAURINE -> optionalGoals.valueFor(OptionalNutrient.TAURINE)
-        BETAINE -> optionalGoals.valueFor(OptionalNutrient.BETAINE)
-        HMB -> optionalGoals.valueFor(OptionalNutrient.HMB)
-        SODIUM -> optionalGoals.sodium
-        POTASSIUM -> optionalGoals.potassium
-        TRANS_FAT -> optionalGoals.transFat
-        CALCIUM -> optionalGoals.calcium
-        IRON -> optionalGoals.iron
-        MAGNESIUM -> optionalGoals.magnesium
-        ZINC -> optionalGoals.zinc
-        VITAMIN_A -> optionalGoals.vitaminA
-        VITAMIN_C -> optionalGoals.vitaminC
-        VITAMIN_D -> optionalGoals.vitaminD
-        VITAMIN_B12 -> optionalGoals.vitaminB12
-        VITAMIN_E -> optionalGoals.vitaminE
-        VITAMIN_K -> optionalGoals.vitaminK
-        FOLATE -> optionalGoals.folate
-        OMEGA3 -> optionalGoals.omega3
+        else -> optionalGoals.effectiveGoal(OptionalNutrient.valueOf(name), NutrientFields.profile(profile))
     }
 
     companion object {
@@ -172,7 +127,16 @@ enum class OptionalNutrient(
     L_ARGININE("L-Arginine", "g", 0, R.string.nutrition_label_l_arginine, R.string.unit_g),
     TAURINE("Taurine", "g", 0, R.string.nutrition_label_taurine, R.string.unit_g),
     BETAINE("Betaine", "g", 0, R.string.nutrition_label_betaine, R.string.unit_g),
-    HMB("HMB", "g", 0, R.string.nutrition_label_hmb, R.string.unit_g)
+    HMB("HMB", "g", 0, R.string.nutrition_label_hmb, R.string.unit_g);
+
+    /**
+     * Shared nutrient key (`nutrient_reference.json` / sports keys). [defaultGoal] is the legacy fixed
+     * default: a stored goal equal to it counts as "not customised" (docs/nutrients.md §4.3).
+     */
+    val referenceKey: String get() = when (this) {
+        OMEGA3 -> "omega_3"
+        else -> name.lowercase()
+    }
 }
 
 @Serializable
@@ -265,6 +229,20 @@ data class OptionalNutrientGoals(
             OptionalNutrient.FOLATE -> copy(folate = safe)
             OptionalNutrient.OMEGA3 -> copy(omega3 = safe)
         }
+    }
+
+    /** The user's own goal: a stored value > 0 that differs from the legacy fixed default; else null. */
+    fun customGoal(nutrient: OptionalNutrient): Int? = valueFor(nutrient).takeIf { it > 0 && it != nutrient.defaultGoal }
+
+    /**
+     * The goal in effect: [customGoal], else the personalised default `default_goal_int(default_goal(key,
+     * profile))` from the nutrient reference; null for info-style nutrients and sports supplements
+     * without a custom goal (and when the reference is not installed).
+     */
+    fun effectiveGoal(nutrient: OptionalNutrient, profile: NutrientProfile): Int? {
+        customGoal(nutrient)?.let { return it }
+        if (NutrientReference.active == null) return null
+        return Nutrients.defaultGoalInt(Nutrients.defaultGoal(nutrient.referenceKey, profile))
     }
 
     companion object {

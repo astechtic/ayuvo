@@ -15,6 +15,9 @@ import com.ayuvo.health.medications.model.MedicationForm
 import com.ayuvo.health.medications.model.MedicationSchedule
 import com.ayuvo.health.medications.model.MedicationStatus
 import com.ayuvo.health.medications.model.ScheduleFrequency
+import com.ayuvo.health.nutrients.MedicationNutrientRow
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.Nutrients
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -41,6 +44,9 @@ class SqliteMedicationsStoreTest {
 
     @Before
     fun setUp() {
+        NutrientReference.active = NutrientReference.parse(
+            context.assets.open(NutrientReference.ASSET_PATH).bufferedReader().use { it.readText() }
+        )
         context.deleteDatabase(DB)
         tempRoot = File(context.cacheDir, "meds-store-${UUID.randomUUID()}").apply { mkdirs() }
         helper = MedicationsDatabase(context, DB)
@@ -252,6 +258,33 @@ class SqliteMedicationsStoreTest {
         val again = store.importArchive(MedicationsArchive.read(bytes), at("2026-09-10", "09:40"))
         assertEquals(0, again.inserted)
         assertEquals(3, again.skipped)
+    }
+
+    /** Supplement nutrients (§21): replace as a set, invalid rows dropped, taken doses listed, archive round trip. */
+    @Test
+    fun supplementNutrientsRoundTrip() = runBlocking {
+        store.create(med("d3", "Vitamin D3 60,000 IU"), daily("s1", "d3", "08:00"))
+        store.setNutrients("d3", listOf(
+            MedicationNutrientRow("d3", "vitamin_d", 1500.0),
+            MedicationNutrientRow("d3", "niacin", 16.0),
+            MedicationNutrientRow("d3", "zinc", 0.0)
+        ), at("2026-09-10", "07:00"))
+        assertEquals(listOf(MedicationNutrientRow("d3", "vitamin_d", 1500.0)), store.nutrients("d3"))
+        assertEquals(at("2026-09-10", "07:00"), store.medication("d3")!!.updatedMs)
+        assertTrue(store.act("d3", "s1", at("2026-09-10", "08:00"), DoseAction.TAKEN, at("2026-09-10", "08:05"), 10).ok)
+        assertTrue(store.act("d3", "s1", at("2026-09-11", "08:00"), DoseAction.SKIPPED, at("2026-09-11", "08:05"), 10).ok)
+        val doses = store.supplementDoses()
+        assertEquals(1, doses.size)
+        val entries = Nutrients.supplementEntries(store.allNutrients(), doses)
+        assertEquals(1500.0, entries.single().value, 0.0)
+
+        val bytes = MedicationsArchive.write(store.exportSnapshot(), at("2026-09-11", "09:00"), zone, "1.0")
+        store.delete("d3")
+        assertTrue(store.allNutrients().isEmpty())
+        assertTrue(store.importArchive(MedicationsArchive.read(bytes), at("2026-09-11", "09:30")).ok)
+        assertEquals(listOf(MedicationNutrientRow("d3", "vitamin_d", 1500.0)), store.nutrients("d3"))
+        store.setNutrients("d3", emptyList(), at("2026-09-11", "10:00"))
+        assertTrue(store.nutrients("d3").isEmpty())
     }
 
     @Test

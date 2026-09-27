@@ -9,11 +9,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import com.ayuvo.health.nutrients.LoggedDayAverage
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.nutrients.NutrientValueEntry
+import com.ayuvo.health.nutrients.Nutrients
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import java.time.ZoneId
 import java.util.concurrent.atomic.AtomicLong
 
@@ -29,12 +36,32 @@ class RepositoryMetricSources(
     private val fasting: Flow<List<com.ayuvo.health.models.FastingSession>>,
     private val weight: Flow<List<com.ayuvo.health.models.WeightEntry>>,
     private val bodyFat: Flow<List<com.ayuvo.health.models.BodyFatEntry>>,
-    private val workouts: Flow<List<com.ayuvo.health.models.WorkoutSession>>
+    private val workouts: Flow<List<com.ayuvo.health.models.WorkoutSession>>,
+    /** Supplement rows and taken doses; re-emits on every medications store write. */
+    private val supplements: Flow<SupplementSnapshot> = flowOf(SupplementSnapshot.EMPTY)
 ) : AppMetricSources {
     override fun snapshots(): Flow<AppMetricSnapshot> = combine(
         combine(food, water, fasting) { f, w, fa -> Triple(f, w, fa) },
-        combine(weight, bodyFat, workouts) { we, b, wo -> Triple(we, b, wo) }
-    ) { a, b -> AppMetricSnapshot(a.first, a.second, a.third, b.first, b.second, b.third) }
+        combine(weight, bodyFat, workouts) { we, b, wo -> Triple(we, b, wo) },
+        supplements
+    ) { a, b, s -> AppMetricSnapshot(a.first, a.second, a.third, b.first, b.second, b.third, s) }
+}
+
+/** One `nutrient:<key>` series (docs/nutrients.md §5) with the Food vs Supplements split of the interval. */
+data class NutrientMetricSeries(
+    val key: String,
+    val range: MetricRange,
+    val anchorMs: Long,
+    val bounds: MetricBucketBounds,
+    val buckets: List<MetricSeriesBucket>,
+    val headline: MetricHeadline,
+    /** Food / supplement totals inside the interval; null when that part has no value. */
+    val foodTotal: Double?,
+    val supplementTotal: Double?,
+    /** "Average per logged day" (`logged_day_average`). */
+    val loggedDayAverage: LoggedDayAverage
+) {
+    val hasData: Boolean get() = buckets.any { it.value != null }
 }
 
 data class AppMetricSeries(
@@ -102,6 +129,45 @@ class AppMetricSeriesProvider(
             )
         }
         mutex.withLock { cache[key] = computed }
+        return computed
+    }
+
+    private data class NutrientCacheKey(val key: String, val range: MetricRange, val anchorMs: Long, val weekStart: WeekStart, val revision: Long, val zone: String)
+
+    private val nutrientCache = object : LinkedHashMap<NutrientCacheKey, NutrientMetricSeries>(16, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<NutrientCacheKey, NutrientMetricSeries>?): Boolean = size > CACHE_SIZE
+    }
+
+    /** `nutrient:<key>` series bucketed by the shared `bucket_series` (sum); cached like app metrics. */
+    suspend fun nutrientSeries(key: String, range: MetricRange, anchorMs: Long, weekStart: WeekStart): NutrientMetricSeries {
+        val (rev, snap) = current()
+        val z = zone()
+        val cacheKey = NutrientCacheKey(key, range, anchorMs, weekStart, rev, z.id)
+        mutex.withLock { nutrientCache[cacheKey] }?.let { return it }
+        val nowMs = now()
+        val computed = withContext(dispatcher) {
+            val entries = AppMetricAggregator.nutrientEntries(key, snap)
+            val agg = MetricAggregation.SUM
+            val bounds = MetricsReference.bucketBounds(range, anchorMs, z, weekStart, nowMs)
+            fun inWindow(t: Long) = t >= bounds.startMs && t < bounds.endMs
+            val food = snap.food.mapNotNull { e ->
+                NutrientFields.foodValue(e, key)?.takeIf { inWindow(e.timestamp.toEpochMilli()) }
+            }
+            val supp = snap.supplements.entriesFor(key).filter { inWindow(it.tMs) }.map { it.value }
+            NutrientMetricSeries(
+                key = key, range = range, anchorMs = anchorMs, bounds = bounds,
+                buckets = MetricsReference.bucketSeries(entries, range, anchorMs, z, weekStart, agg),
+                headline = MetricsReference.headline(entries, range, anchorMs, z, weekStart, agg),
+                foodTotal = food.takeIf { it.isNotEmpty() }?.sum()?.let { Nutrients.roundTo(it, Nutrients.AMOUNT_DECIMALS) },
+                supplementTotal = supp.takeIf { it.isNotEmpty() }?.sum()?.let { Nutrients.roundTo(it, Nutrients.AMOUNT_DECIMALS) },
+                loggedDayAverage = Nutrients.loggedDayAverage(
+                    entries.map { NutrientValueEntry(it.tMs, it.value) },
+                    NutrientTotals.loggedDays(snap.food, snap.supplements, z),
+                    bounds.startMs, bounds.endMs, z
+                )
+            )
+        }
+        mutex.withLock { nutrientCache[cacheKey] = computed }
         return computed
     }
 

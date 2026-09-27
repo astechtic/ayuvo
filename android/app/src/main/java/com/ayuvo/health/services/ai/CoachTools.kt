@@ -334,14 +334,29 @@ class CoachTools(
                 putIfPresent("omega_3_g", food.omega3)
             }
         }
-        return json(
-            linkedMapOf(
-                "from" to range.fromDate.toString(),
-                "to" to range.toDate.toString(),
-                "count" to entries.size,
-                "foods" to entries
-            )
+        val payload = linkedMapOf<String, Any?>(
+            "from" to range.fromDate.toString(),
+            "to" to range.toDate.toString(),
+            "count" to entries.size,
+            "foods" to entries
         )
+        // Taken supplement doses per day and nutrient (docs/nutrients.md §6); only with the
+        // Medications source on, and only when there are any, so food-only answers are unchanged.
+        val supplements = medications?.supplements()?.entries.orEmpty()
+            .filter { Instant.ofEpochMilli(it.tMs) in range.fromInstant..range.toInstant }
+        if (supplements.isNotEmpty()) {
+            payload["supplement_nutrients"] = supplements
+                .groupBy { isoDate(Instant.ofEpochMilli(it.tMs)) to it.nutrientKey }
+                .map { (k, list) ->
+                    linkedMapOf(
+                        "date" to k.first,
+                        "nutrient" to k.second,
+                        "amount" to com.ayuvo.health.nutrients.Nutrients.roundTo(list.sumOf { it.value }, 3),
+                        "unit" to com.ayuvo.health.nutrients.NutrientFields.unit(k.second)
+                    )
+                }
+        }
+        return json(payload)
     }
 
     private fun getFastingHistory(args: ToolArguments): String {

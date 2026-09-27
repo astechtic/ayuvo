@@ -87,6 +87,8 @@ struct MedicationFormView: View {
     @State private var showRecordPicker = false
     @State private var relatedRecord: HealthRecord?
     @State private var showDiscardConfirmation = false
+    @State private var nutrientRows: [NutrientFormRow]
+    @State private var nutrientErrors: [String: String] = [:]
     @FocusState private var focusedField: Field?
 
     private enum Field: Hashable {
@@ -107,7 +109,7 @@ struct MedicationFormView: View {
             existingMedicationID = nil
             existingSchedule = nil
         case .edit(let detail):
-            initial = MedicationDraft(from: detail.medication, schedule: detail.schedule)
+            initial = MedicationDraft(from: detail.medication, schedule: detail.schedule).withNutrients(detail.nutrients)
             existingMedicationID = detail.medication.id
             existingSchedule = detail.schedule
         case .candidate(let candidate, _):
@@ -119,6 +121,7 @@ struct MedicationFormView: View {
         _preset = State(initialValue: MedicationFrequencyPreset.current(for: initial))
         _quantityText = State(initialValue: initial.doseQuantity.map(MedicationFormatting.quantityText) ?? "")
         _hasEndDate = State(initialValue: initial.endDate != nil)
+        _nutrientRows = State(initialValue: (initial.nutrients ?? []).map(NutrientFormRow.init))
     }
 
     private var isEditing: Bool { existingMedicationID != nil }
@@ -157,6 +160,8 @@ struct MedicationFormView: View {
             Form {
                 medicineSection
                 doseSection
+                MedicationNutrientsSection(rows: $nutrientRows, doseUnit: draft.doseUnit, name: draft.name,
+                                           strength: draft.strength, errors: nutrientErrors)
                 scheduleSection
                 durationSection
                 detailsSection
@@ -547,9 +552,25 @@ struct MedicationFormView: View {
     private func save() async {
         draft.doseQuantity = Self.parseQuantity(quantityText) ?? (quantityText.isEmpty ? draft.doseQuantity : nil)
         if !hasEndDate { draft.endDate = nil }
+        // Nutrient rows → canonical amounts per dose unit (convert_amount); a row that doesn't convert blocks saving.
+        var converted: [DraftNutrient] = []
+        nutrientErrors = [:]
+        for row in nutrientRows {
+            let result = row.converted()
+            if result.ok, let amount = result.amount {
+                converted.append(DraftNutrient(key: row.key, amountPerUnit: amount))
+            } else {
+                nutrientErrors[row.key] = result.message
+            }
+        }
+        guard nutrientErrors.isEmpty else {
+            saveError = String(localized: "Check the nutrient amounts.")
+            return
+        }
+        draft.nutrients = converted
         errors = draft.validationErrors
         guard errors.isEmpty else {
-            saveError = String(localized: "Check the highlighted fields.")
+            saveError = errors.first { $0.field == "nutrients" }?.message ?? String(localized: "Check the highlighted fields.")
             return
         }
         if case .candidate(_, let onSave) = mode {

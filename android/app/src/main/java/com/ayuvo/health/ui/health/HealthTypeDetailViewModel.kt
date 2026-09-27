@@ -8,6 +8,9 @@ import com.ayuvo.health.R
 import com.ayuvo.health.data.health.HealthChartPoint
 import com.ayuvo.health.data.health.HealthDayKeys
 import com.ayuvo.health.data.health.HealthHourlyRollup
+import com.ayuvo.health.data.health.HealthRollupMath
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.doubleOrNull
 import com.ayuvo.health.data.health.HealthSampleRow
 import com.ayuvo.health.data.health.HealthSeriesAggregator
 import com.ayuvo.health.data.health.HealthSleepCodes
@@ -26,6 +29,15 @@ import com.ayuvo.health.models.HealthAggregation
 import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.models.HealthKind
 import com.ayuvo.health.ui.util.AppLabels
+import com.ayuvo.health.data.metrics.ResolvedMetric
+import com.ayuvo.health.models.OptionalNutrientGoals
+import com.ayuvo.health.models.UserProfile
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.Nutrients
+import com.ayuvo.health.nutrients.ReferenceLines
+import com.ayuvo.health.ui.metrics.MetricCatalog
+import com.ayuvo.health.ui.metrics.MetricGoalInputs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +68,48 @@ data class HealthRecordUi(
     val timeRangeText: String,
     val sourceLabel: String
 )
+
+/**
+ * Goal facts of a health type from its catalog override (docs/ui-structure.md §4 "Health nutrition
+ * types"): the reference lines of a nutrition type (`goal_source: nutrient.reference`), or the
+ * profile goal of the macro types (`dietary_energy` → calorie goal).
+ */
+data class HealthGoalUi(
+    /** Reference key whose lines, About and Learn more the chart shows; null for non-nutrient types. */
+    val nutrientKey: String? = null,
+    val learnSlug: String? = null,
+    /** The app's own `nutrient:<key>` chart (food + supplements) when the food log tracks the nutrient. */
+    val nutrientMetric: MetricKey.Nutrient? = null,
+    /** `reference_lines` for the user's age, sex, calorie goal and (app-tracked only) custom goal. */
+    val lines: ReferenceLines? = null,
+    val customGoal: Int? = null,
+    /** Single goal rule of a profile goal source (the macro types), canonical unit. */
+    val goal: Double? = null
+) {
+    val isNutrient: Boolean get() = nutrientKey != null
+
+    companion object {
+        /**
+         * Pure resolution from the catalog facts and the profile inputs. The custom goal applies
+         * only to `app_tracked` nutrients (the apps store no goals for the others, docs/nutrients.md §5a).
+         */
+        fun resolve(resolved: ResolvedMetric, profile: UserProfile?, goals: OptionalNutrientGoals): HealthGoalUi {
+            val nk = resolved.nutrientKey
+            if (nk == null || NutrientReference.active?.byKey?.get(nk) == null) {
+                return HealthGoalUi(goal = MetricCatalog.goal(resolved.goalSource, MetricGoalInputs(profile)))
+            }
+            val tracked = resolved.nutrientMetric != null
+            val custom = if (tracked) NutrientFields.optionalNutrient(nk)?.let { goals.customGoal(it) } else null
+            return HealthGoalUi(
+                nutrientKey = nk,
+                learnSlug = resolved.learnSlug,
+                nutrientMetric = resolved.nutrientMetric?.let { MetricKey.parse(it) as? MetricKey.Nutrient },
+                lines = Nutrients.referenceLines(nk, NutrientFields.profile(profile), custom?.toDouble()),
+                customGoal = custom
+            )
+        }
+    }
+}
 
 /** One "Data Sources & Access" row. */
 data class HealthSourceUi(val packageName: String, val label: String, val count: Int)
@@ -104,6 +158,27 @@ data class HealthDetailUiState(
 @OptIn(FlowPreview::class)
 class HealthTypeDetailViewModel(private val container: AppContainer, private val typeId: String) : ViewModel() {
     private val type = HealthDataType.byId(typeId)
+    private val resolved = MetricCatalog.resolve(container.metricCatalog, MetricKey.Health(typeId))
+
+    /**
+     * Android keeps `dietary_*` as virtual rollups of NutritionRecord rows, so the record list,
+     * the CSV and the sources read the nutrition rows and show this nutrient's field.
+     */
+    private val dietaryKey: String? = type?.let { HealthDataType.dietaryExtraKeys[it] }
+    private val listTypeId: String = if (dietaryKey != null) HealthDataType.NUTRITION_RECORD.id else typeId
+    private var rawCursor: Pair<Long, String>? = null
+
+    private fun asListRows(rows: List<HealthSampleRow>): List<HealthSampleRow> {
+        val key = dietaryKey ?: return rows
+        return rows.mapNotNull { r ->
+            val v = (HealthRollupMath.parseExtra(r.extraJson)?.get(key) as? JsonPrimitive)?.doubleOrNull ?: return@mapNotNull null
+            r.copy(typeId = typeId, value = v, value2 = null, value3 = null, count = 1, unit = type?.unit ?: r.unit)
+        }
+    }
+    private val _goal = MutableStateFlow(HealthGoalUi())
+
+    /** Reference lines / profile goal of this type; empty for types without a goal source. */
+    val goal: StateFlow<HealthGoalUi> = _goal.asStateFlow()
     private val _ui = MutableStateFlow(
         HealthDetailUiState(typeId = typeId, type = type, descriptor = type?.let { HealthTypeDescriptor.of(it) } ?: HealthTypeDescriptor.resolve(typeId))
     )
@@ -130,6 +205,13 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
                 recompute(i.range, i.anchor, i.units, i.pinned)
             }
             .launchIn(viewModelScope)
+        if (resolved.nutrientKey != null || resolved.goalSource != "none") {
+            combine(container.profileRepository.profile, container.prefs.optionalNutrientGoals) { profile, goals ->
+                HealthGoalUi.resolve(resolved, profile, goals)
+            }
+                .onEach { _goal.value = it }
+                .launchIn(viewModelScope)
+        }
     }
 
     fun setRange(range: HealthChartRange) {
@@ -152,10 +234,11 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         if (state.loadingMore || state.allDataEnd) return
         _ui.value = state.copy(loadingMore = true)
         viewModelScope.launch {
-            val last = state.allData.lastOrNull()?.row
-            val page = container.healthRepository.samplesPage(typeId, last?.endMs, last?.id, PAGE)
+            val last = rawCursor ?: state.allData.lastOrNull()?.row?.let { it.endMs to it.id }
+            val page = container.healthRepository.samplesPage(listTypeId, last?.first, last?.second, PAGE)
+            page.lastOrNull()?.let { rawCursor = it.endMs to it.id }
             val current = _ui.value
-            val rows = withContext(Dispatchers.Default) { page.map { toRecordUi(it, current.descriptor, current.unitPrefs) } }
+            val rows = withContext(Dispatchers.Default) { asListRows(page).map { toRecordUi(it, current.descriptor, current.unitPrefs) } }
             _ui.value = current.copy(allData = current.allData + rows, allDataEnd = page.size < PAGE, loadingMore = false)
         }
     }
@@ -178,9 +261,9 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         var beforeId: String? = null
         var total = 0
         while (total < CSV_MAX_ROWS) {
-            val page = container.healthRepository.samplesPage(typeId, beforeEnd, beforeId, 500)
+            val page = container.healthRepository.samplesPage(listTypeId, beforeEnd, beforeId, 500)
             if (page.isEmpty()) break
-            for (r in page) {
+            for (r in asListRows(page)) {
                 sb.append(listOf(r.id, r.typeId, iso(r.startMs, r.startOffsetS), iso(r.endMs, r.endOffsetS), r.value, r.value2, r.value3, r.valueText, r.unit, r.categoryValue, r.title, r.sourceId, r.device, r.origin)
                     .joinToString(",") { csv(it?.toString() ?: "") }).append('\n')
             }
@@ -209,10 +292,11 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         val computed = withContext(Dispatchers.Default) { compute(range, anchor, units, descriptor) }
         val previous = _ui.value
         // The record list survives range changes and unit changes re-format it in place.
-        val firstPage = if (previous.allData.isEmpty() || previous.loading) repo.samplesPage(typeId, null, null, PAGE) else null
-        val counts = repo.sourceCounts(typeId)
+        val firstPage = if (previous.allData.isEmpty() || previous.loading) repo.samplesPage(listTypeId, null, null, PAGE) else null
+        firstPage?.lastOrNull()?.let { rawCursor = it.endMs to it.id }
+        val counts = repo.sourceCounts(listTypeId)
         val listRows = withContext(Dispatchers.Default) {
-            (firstPage ?: previous.allData.map { it.row }).map { toRecordUi(it, descriptor, units) }
+            (firstPage?.let(::asListRows) ?: previous.allData.map { it.row }).map { toRecordUi(it, descriptor, units) }
         }
         val sources = counts.entries.map { (pkg, count) -> HealthSourceUi(pkg, sourceLabel(pkg), count) }
         val typeMeta = meta[typeId]
@@ -266,6 +350,15 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
                 nonEmpty.takeIf { it.isNotEmpty() }?.let { pts -> R.string.health_detail_average to HealthValueFormatter.formatBloodPressure(pts.mapNotNull { it.avg }.average(), pts.mapNotNull { it.v2Avg }.takeIf { v -> v.isNotEmpty() }?.average()).text },
                 nonEmpty.takeIf { it.isNotEmpty() }?.let { pts -> R.string.health_detail_range to "${pts.mapNotNull { it.min }.minOrNull()?.toInt() ?: 0}–${pts.mapNotNull { it.max }.maxOrNull()?.toInt() ?: 0} mmHg" },
                 latest?.let { R.string.health_detail_latest to HealthValueFormatter.formatBloodPressure(it.value, it.value2).text }
+            )
+            // Health nutrition types (docs/nutrients.md §5a): the average over days with a value leads,
+            // labelled like the nutrient charts; no Food vs Supplements split (Health Connect has no supplements).
+            // Like the nutrient charts: no badges on D, where "Today X of Y" sits under the chart.
+            resolved.nutrientKey != null && range == HealthChartRange.DAY -> emptyList()
+            resolved.nutrientKey != null -> listOfNotNull(
+                dailyAverage(range, nonEmpty, dailyRows, descriptor)?.let { R.string.nutrients_average_per_logged_day to fmt(it) },
+                nonEmpty.takeIf { it.isNotEmpty() }?.let { R.string.nutrients_total to fmt(it.sumOf { p -> p.sum ?: 0.0 }) },
+                dailyRows.count { it.count > 0 }.takeIf { it > 0 }?.let { R.string.nutrients_logged_days to "$it" }
             )
             descriptor.aggregation == HealthAggregation.SUM || descriptor.isDurationLike -> listOfNotNull(
                 // Never show a fabricated 0 for an empty interval (docs/ui-structure.md §1).
@@ -381,6 +474,17 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
                     if (r == null || r.count == 0) HealthChartPoint(s, e) else HealthChartPoint(s, e, sum = r.sum, avg = r.avg, min = r.min, max = r.max, count = r.count)
                 }
             }
+        }
+        // Android keeps `dietary_*` as virtual rollups of NutritionRecord rows (HealthRollupMath.virtualDietary),
+        // so the Day chart buckets the day's nutrition records by that nutrient's field.
+        val dietaryKey = t?.let { HealthDataType.dietaryExtraKeys[it] }
+        if (dietaryKey != null) {
+            val rows = repo.samples(HealthDataType.NUTRITION_RECORD.id, day, day).mapNotNull { r ->
+                if (r.deleted) return@mapNotNull null
+                val v = (HealthRollupMath.parseExtra(r.extraJson)?.get(dietaryKey) as? JsonPrimitive)?.doubleOrNull ?: return@mapNotNull null
+                r.copy(typeId = typeId, value = v, value2 = null, value3 = null, count = 1, unit = t.unit)
+            }
+            return HealthSeriesAggregator.bucketRows(descriptor, rows, bounds)
         }
         if (t != null && t.isSeriesType) {
             val points = repo.seriesPoints(typeId, bounds.first().first, bounds.last().second)

@@ -47,7 +47,9 @@ fun MacroCard(
     goal: Double,
     unit: String = "g",
     modifier: Modifier = Modifier,
-    gradientColors: List<Color> = listOf(AppColors.CalorieStart, AppColors.CalorieEnd)
+    gradientColors: List<Color> = listOf(AppColors.CalorieStart, AppColors.CalorieEnd),
+    /** Shown instead of [current] (e.g. "—" when nothing was recorded, never a made-up 0). */
+    valueText: String? = null
 ) {
     val progress = if (goal > 0) (current / goal).toFloat().coerceIn(0f, 1f) else 0f
     // Fill-from-zero on app open (see CalorieHero). Saveable lastEpoch survives tab
@@ -82,7 +84,7 @@ fun MacroCard(
     ) {
         // Value (gradient), above the bar
         Text(
-            MacroValueFormatter.string(current),
+            valueText ?: MacroValueFormatter.string(current),
             style = TextStyle(
                 brush = Brush.verticalGradient(gradientColors),
                 fontSize = 20.sp,

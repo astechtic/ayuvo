@@ -9,7 +9,10 @@ import com.ayuvo.health.data.metrics.MetricsReference
 import com.ayuvo.health.models.FoodEntry
 import com.ayuvo.health.models.Gender
 import com.ayuvo.health.models.HealthDataType
+import com.ayuvo.health.models.OptionalNutrient
 import com.ayuvo.health.models.OptionalNutrientGoals
+import com.ayuvo.health.nutrients.NutrientFields
+import com.ayuvo.health.nutrients.SupplementSnapshot
 import com.ayuvo.health.models.UserProfile
 import java.time.LocalDate
 import java.time.ZoneId
@@ -118,7 +121,7 @@ class InsightsDataSource(private val healthRepository: () -> HealthDataRepositor
             if (hours > (fasting[day] ?: 0.0)) fasting[day] = hours
         }
 
-        val nutrition = nutritionByDay(snap.food, zone, from)
+        val nutrition = nutritionByDay(snap.food, zone, from, snap.supplements)
         val recentWorkouts = workouts.any { !MetricsReference.localDateOf(it.startMs, zone).isBefore(today.minusDays(WORKOUT_TRACKING_DAYS)) }
         val inputs = InsightsInputs(
             timeZone = zone,
@@ -159,48 +162,66 @@ class InsightsDataSource(private val healthRepository: () -> HealthDataRepositor
             heightCm = p?.heightCm?.takeIf { it > 0 }
         )
 
+        /**
+         * Daily targets; optional nutrients use the goal in effect (custom, else the personalised
+         * reference default, docs/nutrients.md §4.3). Sugar has no default limit, only a custom one.
+         */
         fun targets(p: UserProfile?, s: InsightsSettings): Map<String, Double> {
             val g = s.optionalGoals
+            val np = NutrientFields.profile(p)
+            fun goal(n: OptionalNutrient): Double? = g.effectiveGoal(n, np)?.toDouble()
             val raw = linkedMapOf(
                 "calories" to p?.effectiveCalories?.toDouble(),
                 "protein_g" to p?.effectiveProtein?.toDouble(),
                 "carbs_g" to p?.effectiveCarbs?.toDouble(),
                 "fat_g" to p?.effectiveFat?.toDouble(),
-                "fiber_g" to g.fiber.toDouble(),
+                "fiber_g" to goal(OptionalNutrient.FIBER),
                 "water_ml" to s.waterGoalMl.toDouble(),
                 "steps" to s.stepGoal.toDouble(),
                 "fasting_hours" to s.fastingGoalMinutes / 60.0,
-                "sugar_max_g" to g.sugar.toDouble(),
-                "added_sugar_max_g" to g.addedSugar.toDouble(),
-                "sodium_max_mg" to g.sodium.toDouble(),
-                "saturated_fat_max_g" to g.saturatedFat.toDouble(),
-                "caffeine_max_mg" to g.caffeine.toDouble()
+                "sugar_max_g" to goal(OptionalNutrient.SUGAR),
+                "added_sugar_max_g" to goal(OptionalNutrient.ADDED_SUGAR),
+                "sodium_max_mg" to goal(OptionalNutrient.SODIUM),
+                "saturated_fat_max_g" to goal(OptionalNutrient.SATURATED_FAT),
+                "caffeine_max_mg" to goal(OptionalNutrient.CAFFEINE)
             )
             return raw.filterValues { it != null && it > 0 }.mapValues { it.value!! }
         }
 
-        /** Per local day: calorie and macro totals, and each optional nutrient only when some entry has it. */
-        fun nutritionByDay(foods: List<FoodEntry>, zone: ZoneId, from: LocalDate): Map<LocalDate, Map<String, Double>> =
-            foods.groupBy { MetricsReference.localDateOf(it.timestamp.toEpochMilli(), zone) }
+        /**
+         * Per local day with food: calorie and macro totals (food only), and each optional nutrient
+         * only when some entry or taken supplement dose of that day has it (docs/nutrients.md §6).
+         */
+        fun nutritionByDay(
+            foods: List<FoodEntry>,
+            zone: ZoneId,
+            from: LocalDate,
+            supplements: SupplementSnapshot = SupplementSnapshot.EMPTY
+        ): Map<LocalDate, Map<String, Double>> {
+            val suppByDay = supplements.entries.groupBy { MetricsReference.localDateOf(it.tMs, zone) }
+            return foods.groupBy { MetricsReference.localDateOf(it.timestamp.toEpochMilli(), zone) }
                 .filterKeys { !it.isBefore(from) }
-                .mapValues { (_, list) ->
+                .mapValues { (day, list) ->
                     val m = LinkedHashMap<String, Double>()
                     m["calories"] = list.sumOf { it.calories }.toDouble()
                     m["protein_g"] = list.sumOf { it.protein }
                     m["carbs_g"] = list.sumOf { it.carbs }
                     m["fat_g"] = list.sumOf { it.fat }
-                    fun optional(key: String, f: (FoodEntry) -> Double?) {
-                        val present = list.mapNotNull(f)
+                    val supp = suppByDay[day].orEmpty()
+                    fun optional(key: String, nutrient: String) {
+                        val present = list.mapNotNull { NutrientFields.foodValue(it, nutrient) } +
+                            supp.filter { it.nutrientKey == nutrient }.map { it.value }
                         if (present.isNotEmpty()) m[key] = present.sum()
                     }
-                    optional("fiber_g") { it.fiber }
-                    optional("sugar_g") { it.sugar }
-                    optional("added_sugar_g") { it.addedSugar }
-                    optional("sodium_mg") { it.sodium }
-                    optional("saturated_fat_g") { it.saturatedFat }
-                    optional("caffeine_mg") { it.caffeine }
+                    optional("fiber_g", "fiber")
+                    optional("sugar_g", "sugar")
+                    optional("added_sugar_g", "added_sugar")
+                    optional("sodium_mg", "sodium")
+                    optional("saturated_fat_g", "saturated_fat")
+                    optional("caffeine_mg", "caffeine")
                     m
                 }
+        }
 
         /**
          * [OVERNIGHT] values per wake day: samples inside that night's window, else the day's rollup

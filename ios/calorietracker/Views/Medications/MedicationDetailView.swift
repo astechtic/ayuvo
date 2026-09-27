@@ -67,7 +67,7 @@ struct MedicationDetailView: View {
         }
         .sheet(isPresented: $showAddAgain) {
             if let detail {
-                MedicationFormView(mode: .candidate(MedicationDraft(from: detail.medication, schedule: detail.scheduleHistory.last).restarted(), onSave: { draft in
+                MedicationFormView(mode: .candidate(MedicationDraft(from: detail.medication, schedule: detail.scheduleHistory.last).withNutrients(detail.nutrients).restarted(), onSave: { draft in
                     Task {
                         _ = try? await store.save(draft: draft)
                     }
@@ -106,6 +106,7 @@ struct MedicationDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 headerCard(detail)
+                nutritionCard(detail)
                 scheduleCard(detail)
                 datesCard(detail)
                 adherenceCard(detail)
@@ -139,7 +140,10 @@ struct MedicationDetailView: View {
                     Text(subtitleLine(medication))
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
-                    MedicationStatusBadge(status: medication.status)
+                    HStack(spacing: 6) {
+                        MedicationStatusBadge(status: medication.status)
+                        if !detail.nutrients.isEmpty { SupplementBadge() }
+                    }
                 }
                 Spacer(minLength: 0)
             }
@@ -170,6 +174,66 @@ struct MedicationDetailView: View {
         if let generic = medication.genericName, !generic.isEmpty { parts.append(generic) }
         if let brand = medication.brandName, !brand.isEmpty { parts.append(brand) }
         return parts.joined(separator: " · ")
+    }
+
+    /// Supplement nutrients per dose unit, today's contribution and a link to each nutrient's chart (docs §21).
+    @ViewBuilder
+    private func nutritionCard(_ detail: MedicationDetail) -> some View {
+        RecordsCard {
+            RecordsSectionTitle(title: "Nutrition", systemImage: "leaf")
+            if detail.nutrients.isEmpty {
+                Text("No nutrients listed. For a vitamin or other supplement, add what one dose unit contains with Edit so taken doses count in your nutrition.")
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else {
+                let totals = NutrientTotals(foods: [], supplements: store.supplementEntries)
+                let perUnit = MedicationFormatting.doseText(quantity: 1, unit: detail.medication.doseUnit)
+                ForEach(detail.nutrients) { row in
+                    NavigationLink(value: MetricRoute.detail(.nutrient(row.nutrientKey))) {
+                        HStack(spacing: 10) {
+                            Image(systemName: NutrientCatalog.iconName(row.nutrientKey))
+                                .foregroundStyle(AyuvoPalette.nutrition)
+                                .frame(width: 22)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(NutrientCatalog.title(row.nutrientKey))
+                                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                    .foregroundStyle(.primary)
+                                Text(perUnitText(row, perUnit: perUnit))
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer(minLength: 6)
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text(NutrientCatalog.text(totals.supplementTotal(row.nutrientKey, medicationID: detail.medication.id, on: Date()), key: row.nutrientKey))
+                                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                    .foregroundStyle(.primary)
+                                Text("today")
+                                    .font(.system(.caption2, design: .rounded))
+                                    .foregroundStyle(.secondary)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("medications.detail.nutrient.\(row.nutrientKey)")
+                }
+                Text("Counted in your nutrition when you mark a dose as taken; never added to calories. Editing these amounts changes past doses too, because totals are recalculated from your dose history.")
+                    .font(.system(.caption2, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .accessibilityIdentifier("medications.detail.nutrition")
+    }
+
+    private func perUnitText(_ row: MedicationNutrient, perUnit: String) -> String {
+        var text = String(localized: "\(NutrientCatalog.text(row.amountPerUnit, key: row.nutrientKey)) per \(perUnit)")
+        if let iu = NutrientCatalog.iuText(row.amountPerUnit, key: row.nutrientKey) { text += " (\(iu))" }
+        return text
     }
 
     private func scheduleCard(_ detail: MedicationDetail) -> some View {

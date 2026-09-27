@@ -14,6 +14,9 @@ Checks:
      (inputs are the source of truth; --write only replaces "expected").
   4. Output shapes: buckets ascending, contiguous and covering the interval; D has 23-25 buckets, W 7,
      Y 12; ring progress within [0, 1]; favourites unique and capped.
+     nutrient_metrics: app_tracked reference order + sports, units, sections, goal sources and learn slugs.
+     Health nutrition overrides: every nutrient_reference.json health_type has an override with goal_source
+     nutrient.reference and nutrient_key = that nutrient; the macro types map to profile.* goals.
   5. Regex portability lint of every pattern owned by the reference (records rule).
   6. A small unittest suite with hand-computed expectations.
 """
@@ -31,6 +34,7 @@ ROOT = os.path.dirname(HERE)
 SHARED = os.path.join(ROOT, "shared", "metrics")
 VECTORS = os.path.join(SHARED, "test-vectors")
 CATALOG = os.path.join(SHARED, "metric_catalog.json")
+NUTRIENT_REFERENCE = os.path.join(ROOT, "shared", "nutrients", "nutrient_reference.json")
 COPIES = [os.path.join(ROOT, "android", "app", "src", "main", "assets", "metrics", "metric_catalog.json"),
           os.path.join(ROOT, "ios", "calorietracker", "Metrics", "Resources", "metric_catalog.json")]
 sys.path.insert(0, HERE)
@@ -53,6 +57,8 @@ DOMAIN_IDS = ["insights", "nutrition", "hydration", "fasting", "body", "activity
               "mindfulness", "mobility", "hearing", "symptoms", "medications", "records", "other"]
 APP_KEYS = ["app:calories", "app:protein", "app:carbs", "app:fat", "app:fiber", "app:water", "app:fasting", "app:weight",
             "app:body_fat", "app:workouts", "app:workout_minutes", "app:workout_burn"]
+MACRO_GOALS = {"dietary_energy": "profile.calories", "dietary_protein": "profile.protein",
+               "dietary_carbohydrates": "profile.carbs", "dietary_fat_total": "profile.fat"}
 DEFAULT_FAVOURITES = ["app:calories", "app:protein", "steps", "app:water", "app:weight", "sleep", "heart_rate",
                       "active_energy"]
 HEX_RE = re.compile("^#[0-9A-F]{6}$")
@@ -210,7 +216,7 @@ def check_catalog(problems):
         if o["id"] in seen:
             problems.append("duplicate override %s" % o["id"])
         seen.add(o["id"])
-        if set(o) - {"id", "domain", "goal_source", "default_favourite", "browse_hidden", "icon"}:
+        if set(o) - {"id", "domain", "goal_source", "default_favourite", "browse_hidden", "icon", "nutrient_key"}:
             problems.append("override %s: unknown keys" % o["id"])
         if "domain" in o and o["domain"] not in DOMAIN_IDS:
             problems.append("override %s: unknown domain" % o["id"])
@@ -221,6 +227,7 @@ def check_catalog(problems):
         f = o.get("default_favourite") or {}
         if f.get("enabled"):
             fav_orders.append(f["order"])
+    check_health_nutrition_overrides(h["overrides"], problems)
     if sorted(fav_orders) != list(range(1, len(fav_orders) + 1)):
         problems.append("default_favourite orders must be unique 1..n, got %s" % sorted(fav_orders))
     if R.default_favourites() != DEFAULT_FAVOURITES:
@@ -247,7 +254,89 @@ def check_catalog(problems):
     for k in ("protein", "carbs", "fat", "fiber"):
         if not HEX_RE.match(cat["macro_colours"].get(k, "")):
             problems.append("macro_colours.%s bad" % k)
-    return len(domains), len(metrics)
+    n_nutrients = check_nutrient_metrics(cat, sections, sec_orders, problems)
+    for sid in sections:
+        if sid not in sec_orders:
+            problems.append("browse_section %s is used by no metric" % sid)
+    return len(domains), len(metrics), n_nutrients
+
+
+def check_health_nutrition_overrides(overrides, problems):
+    """Health nutrition types resolve to the nutrient reference (docs/nutrients.md "Health nutrition types"):
+    an override has nutrient_key exactly when its goal_source is nutrient.reference; the key exists in
+    nutrient_reference.json, its health_type is the override id, the registry type is category nutrition with the
+    nutrient's unit; every reference health_type has such an override; MACRO_GOALS map to the profile goals."""
+    ref = json.load(open(NUTRIENT_REFERENCE, encoding="utf-8"))
+    by_key = dict((n["key"], n) for n in ref["nutrients"])
+    by_id = dict((o["id"], o) for o in overrides)
+    for o in overrides:
+        w = "override %s" % o["id"]
+        nk = o.get("nutrient_key")
+        if (nk is not None) != (o.get("goal_source") == "nutrient.reference"):
+            problems.append("%s: nutrient_key is required with goal_source nutrient.reference and only then" % w)
+        if nk is None:
+            continue
+        n = by_key.get(nk)
+        r = R.REGISTRY_BY_ID.get(o["id"])
+        if n is None:
+            problems.append("%s: nutrient_key %s not in nutrient_reference.json" % (w, nk))
+        elif n["health_type"] != o["id"]:
+            problems.append("%s: nutrient %s has health_type %s" % (w, nk, n["health_type"]))
+        elif r is None or r["category"] != "nutrition" or r["unit"] != n["unit"]:
+            problems.append("%s: registry type must be nutrition with unit %s" % (w, n["unit"]))
+        if "icon" in o or "domain" in o:
+            problems.append("%s: nutrition overrides keep the nutrition domain and its icon" % w)
+    for n in ref["nutrients"]:
+        ht = n["health_type"]
+        if ht is not None and (by_id.get(ht) or {}).get("nutrient_key") != n["key"]:
+            problems.append("nutrient %s: health type %s needs an override with nutrient_key %s" % (n["key"], ht, n["key"]))
+    for ht, goal in MACRO_GOALS.items():
+        o = by_id.get(ht) or {}
+        if o.get("goal_source") != goal or "nutrient_key" in o:
+            problems.append("override %s: goal_source must be %s" % (ht, goal))
+
+
+def check_nutrient_metrics(cat, sections, sec_orders, problems):
+    """nutrient_metrics: the 23 app_tracked nutrient_reference.json nutrients in reference order, then the 8 sports
+    supplements, each summed hourly into bars on D-Y; browse_section = nutrition.<category> (sports:
+    nutrition.supplements); goal_source nutrient.reference with learn_slug = slug (sports: none / null); unit =
+    the reference unit; only fiber is browse_hidden (app:fiber already sits in Macronutrients)."""
+    ref = json.load(open(NUTRIENT_REFERENCE, encoding="utf-8"))
+    want = [(n["key"], n["unit"], "nutrition." + n["category"], "nutrient.reference", n["slug"]) for n in ref["nutrients"]
+            if n["app_tracked"]]
+    want += [(x["key"], x["unit"], "nutrition.supplements", "none", None) for x in ref["sports_supplements"]]
+    rows = cat.get("nutrient_metrics")
+    if not isinstance(rows, list):
+        problems.append("catalog: nutrient_metrics missing")
+        return 0
+    if [r.get("key") for r in rows] != [w[0] for w in want]:
+        problems.append("nutrient_metrics keys %s != reference + sports order %s" % ([r.get("key") for r in rows], [w[0] for w in want]))
+        return len(rows)
+    fields = {"key", "unit", "browse_section", "browse_order", "browse_hidden", "aggregation", "chart_kind", "day_bucket",
+              "ranges", "goal_source", "learn_slug"}
+    for r, (key, unit, section, goal, slug) in zip(rows, want):
+        w = "nutrient_metric %s" % key
+        if set(r) != fields:
+            problems.append("%s: keys %s" % (w, sorted(r)))
+            continue
+        if not R.NUTRIENT_KEY_RE.match(R.NUTRIENT_PREFIX + key):
+            problems.append("%s: bad key grammar" % w)
+        if r["unit"] != unit or r["browse_section"] != section or r["goal_source"] != goal or r["learn_slug"] != slug:
+            problems.append("%s: unit/browse_section/goal_source/learn_slug must be %s/%s/%s/%s" % (w, unit, section, goal, slug))
+        if (r["aggregation"], r["chart_kind"], r["day_bucket"], r["ranges"]) != ("sum", "bar", "hour", ["D", "W", "M", "6M", "Y"]):
+            problems.append("%s: must be sum / bar / hour / D-Y" % w)
+        if r["goal_source"] not in R.GOAL_SOURCES:
+            problems.append("%s: bad goal_source" % w)
+        if r["browse_hidden"] is not (key == "fiber"):
+            problems.append("%s: only fiber is browse_hidden (app:fiber is listed under Macronutrients)" % w)
+        s = sections.get(r["browse_section"])
+        if s is None or s["domain"] != "nutrition":
+            problems.append("%s: browse_section missing or not a nutrition section" % w)
+        so = sec_orders.setdefault(r["browse_section"], [])
+        if r["browse_order"] in so:
+            problems.append("%s: duplicate browse_order in its section" % w)
+        so.append(r["browse_order"])
+    return len(rows)
 
 
 def _check_icon(icon, where, problems):
@@ -351,6 +440,13 @@ def check_shape(function, got, where, problems, inp):
             problems.append("%s: bad resolved metric" % where)
         if not ANDROID_ICON_RE.match(got["icon_android"]) or not IOS_ICON_RE.match(got["icon_ios"]):
             problems.append("%s: bad resolved icon %r / %r" % (where, got["icon_android"], got["icon_ios"]))
+        nk, nm = got["nutrient_key"], got["nutrient_metric"]
+        if nk is None and (got["learn_slug"] is not None or nm is not None):
+            problems.append("%s: learn_slug / nutrient_metric need a nutrient_key" % where)
+        if (nk is not None) and got["source"] == "health" and got["goal_source"] != "nutrient.reference":
+            problems.append("%s: a health nutrient_key needs goal_source nutrient.reference" % where)
+        if nm is not None and (nm != R.NUTRIENT_PREFIX + nk or nm not in R.NUTRIENT_METRICS):
+            problems.append("%s: nutrient_metric must be the app chart of nutrient_key" % where)
 
 
 def _zones(obj, out):
@@ -525,6 +621,25 @@ class ReferenceTests(unittest.TestCase):
     def test_nice_ticks_calories(self):
         self.assertEqual(R.nice_ticks(0, 2350, 4, True)["ticks"], [0, 1000, 2000, 3000])
 
+    def test_nutrient_keys(self):
+        r = R.resolve_metric("nutrient:vitamin_d")
+        self.assertEqual((r["source"], r["domain"], r["unit"], r["goal_source"]), ("nutrient", "nutrition", "mcg", "nutrient.reference"))
+        self.assertEqual(R.resolve_metric("nutrient:creatine")["goal_source"], "none")
+        self.assertEqual(R.resolve_metric("nutrient:niacin")["source"], "unknown")
+        self.assertEqual(R.favourite_pins_migrate("nutrient:zinc,nutrient:x", None, [], 12)["favourites"], ["nutrient:zinc"])
+
+    def test_health_nutrition_types(self):
+        r = R.resolve_metric("dietary_vitamin_d")
+        self.assertEqual((r["source"], r["goal_source"], r["nutrient_key"], r["learn_slug"], r["nutrient_metric"]),
+                         ("health", "nutrient.reference", "vitamin_d", "vitamin-d", "nutrient:vitamin_d"))
+        r = R.resolve_metric("dietary_copper")
+        self.assertEqual((r["nutrient_key"], r["learn_slug"], r["nutrient_metric"], r["unit"]), ("copper", "copper", None, "mg"))
+        self.assertEqual(R.resolve_metric("dietary_fat_saturated")["nutrient_key"], "saturated_fat")
+        r = R.resolve_metric("dietary_energy")
+        self.assertEqual((r["goal_source"], r["nutrient_key"]), ("profile.calories", None))
+        self.assertIsNone(R.resolve_metric("steps")["nutrient_key"])
+        self.assertEqual(R.resolve_metric("nutrient:creatine")["learn_slug"], None)
+
     def test_round3(self):
         self.assertEqual(R.round3(1.0005), 1.001)
         self.assertEqual(R.round3(-0.0005), -0.001)
@@ -534,14 +649,14 @@ class ReferenceTests(unittest.TestCase):
 def main(argv):
     write = "--write" in argv
     problems = []
-    n_domains, n_metrics = check_catalog(problems)
+    n_domains, n_metrics, n_nutrients = check_catalog(problems)
     check_constants(problems)
     counts = check_vectors(write, problems)
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(ReferenceTests)
     result = unittest.TextTestRunner(stream=open(os.devnull, "w"), verbosity=0).run(suite)
     for failed, trace in result.failures + result.errors:
         problems.append("unittest %s failed:\n%s" % (failed.id(), trace.strip().splitlines()[-1]))
-    print("%-45s %3d domains, %d app metrics" % ("metric_catalog.json", n_domains, n_metrics))
+    print("%-45s %3d domains, %d app metrics, %d nutrient metrics" % ("metric_catalog.json", n_domains, n_metrics, n_nutrients))
     for name, n in sorted(counts.items()):
         print("%-45s %3d cases" % ("test-vectors/" + name, n))
     print("%d unit tests" % result.testsRun)

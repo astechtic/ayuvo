@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +42,8 @@ fun NutritionScreen(
     onBack: () -> Unit,
     onOpenMetric: (MetricKey) -> Unit,
     onOpenNutrients: () -> Unit,
+    /** Browse › Nutrition › All Health Connect Nutrition: the registry nutrition types (docs/nutrients.md §5a). */
+    onOpenHealthNutrition: () -> Unit = {},
     quickActionRequest: QuickActionRequest? = null,
     onQuickActionHandled: (Long) -> Unit = {},
     logRequest: FoodLogRequest? = null,
@@ -57,6 +60,7 @@ fun NutritionScreen(
         onLogRequestHandled = onLogRequestHandled,
         viewModelOwner = owner,
         topBar = { AyuvoTopBar(title = stringResource(R.string.domain_nutrition), onBack = onBack) },
+        onOpenMetric = onOpenMetric,
         footer = {
             item(key = "nutrition-trends") {
                 Box(Modifier.padding(start = AyuvoSpacing.ScreenH, end = AyuvoSpacing.ScreenH, top = AyuvoSpacing.SectionGap)) {
@@ -80,6 +84,34 @@ fun NutritionScreen(
                                 iconTint = AyuvoPalette.Nutrition,
                                 onClick = onOpenNutrients
                             )
+                        }
+                        row {
+                            GroupRow(
+                                title = stringResource(R.string.nutrition_all_health_connect),
+                                icon = Icons.Filled.MonitorHeart,
+                                iconTint = AyuvoPalette.Nutrition,
+                                modifier = Modifier.testTag("browse.nutrition.allHealth"),
+                                onClick = onOpenHealthNutrition
+                            )
+                        }
+                    }
+                }
+            }
+            // Nutrient charts by catalog section (Carbohydrates, Fats, Minerals, Vitamins, …).
+            MetricCatalog.nutrientBrowseSections(catalog).forEach { (section, metrics) ->
+                item(key = "nutrition-section-${section.id}") {
+                    Box(Modifier.padding(start = AyuvoSpacing.ScreenH, end = AyuvoSpacing.ScreenH, top = AyuvoSpacing.SectionGap)) {
+                        InsetGroup(header = MetricCatalog.browseSectionTitleRes(section.id)?.let { stringResource(it) } ?: section.title) {
+                            metrics.forEach { m ->
+                                row {
+                                    val key = MetricKey.Nutrient(m.key)
+                                    GroupRow(
+                                        title = MetricCatalog.title(context, key),
+                                        modifier = Modifier.testTag("browse.metric.${key.storageId}"),
+                                        onClick = { onOpenMetric(key) }
+                                    )
+                                }
+                            }
                         }
                     }
                 }

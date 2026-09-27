@@ -1,5 +1,6 @@
 package com.ayuvo.health.data.metrics
 
+import com.ayuvo.health.nutrients.NutrientReference
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -111,8 +112,17 @@ data class ResolvedMetric(
     val defaultFavouriteOrder: Int?,
     val browseHidden: Boolean,
     val iconAndroid: String,
-    val iconIos: String
+    val iconIos: String,
+    /** Reference key whose lines, About and Learn more the chart shows (docs/ui-structure.md §7.10). */
+    val nutrientKey: String? = null,
+    /** Website guide slug (`/nutrients/<slug>`); null for sports supplements and non-nutrient metrics. */
+    val learnSlug: String? = null,
+    /** `nutrient:<key>` of a health nutrition type whose nutrient the food log tracks; else null. */
+    val nutrientMetric: String? = null
 )
+
+/** Reference facts `resolve_metric` needs for health nutrition types (docs/nutrients.md §5a). */
+data class NutrientFacts(val slug: String, val appTracked: Boolean)
 
 /** Y-axis ticks (`nice_ticks`). */
 data class NiceTicks(val min: Double, val max: Double, val step: Double, val ticks: List<Double>)
@@ -412,8 +422,11 @@ object MetricsReference {
         return rows.sortedWith(compareBy<Pair<Int, String>> { it.first }.thenBy { it.second }).map { it.second }
     }
 
-    private fun validPin(catalog: MetricCatalogData, key: String, known: Set<String>): Boolean =
-        if (key.startsWith("app:")) key in catalog.metricByKey else key in known
+    private fun validPin(catalog: MetricCatalogData, key: String, known: Set<String>): Boolean = when {
+        key.startsWith("app:") -> key in catalog.metricByKey
+        key.startsWith(MetricKey.NUTRIENT_PREFIX) -> key in catalog.nutrientByKey
+        else -> key in known
+    }
 
     private fun parsePins(catalog: MetricCatalogData, raw: String, known: Set<String>, max: Int): MutableList<String> {
         val out = ArrayList<String>()
@@ -446,7 +459,16 @@ object MetricsReference {
         return PinsResult(pins, PinSource.DEFAULT)
     }
 
-    fun resolveMetric(catalog: MetricCatalogData, key: String, registry: (String) -> RegistryFacts?): ResolvedMetric {
+    /** Nutrient facts from the installed `nutrient_reference.json` (null before it is installed). */
+    fun installedNutrientFacts(key: String): NutrientFacts? =
+        NutrientReference.active?.byKey?.get(key)?.let { NutrientFacts(it.slug, it.appTracked) }
+
+    fun resolveMetric(
+        catalog: MetricCatalogData,
+        key: String,
+        registry: (String) -> RegistryFacts?,
+        nutrients: (String) -> NutrientFacts? = ::installedNutrientFacts
+    ): ResolvedMetric {
         if (key.startsWith("app:")) {
             val m = catalog.metricByKey[key] ?: return unknown(catalog)
             val d = catalog.domainById.getValue(m.domain)
@@ -455,15 +477,29 @@ object MetricsReference {
                 m.goalSource, m.defaultFavouriteOrder, false, m.iconAndroid, m.iconIos
             )
         }
+        if (key.startsWith(MetricKey.NUTRIENT_PREFIX)) {
+            val m = catalog.nutrientByKey[key] ?: return unknown(catalog)
+            val d = catalog.domainById.getValue("nutrition")
+            return ResolvedMetric(
+                "nutrient", "nutrition", d.colourHex, d.colourHexDark, m.aggregation, m.chartKind, m.unit,
+                m.goalSource, null, m.browseHidden, d.iconAndroid, d.iconIos,
+                nutrientKey = m.key, learnSlug = m.learnSlug, nutrientMetric = null
+            )
+        }
         val r = registry(key) ?: return unknown(catalog)
         val o = catalog.overrideById[key]
         val domain = o?.domain ?: catalog.categoryDomains.getValue(r.category)
         val d = catalog.domainById.getValue(domain)
+        val nk = o?.nutrientKey
+        val n = nk?.let(nutrients)
         return ResolvedMetric(
             "health", domain, d.colourHex, d.colourHexDark,
             catalog.aggregationMap.getValue(r.aggregation), catalog.chartKindMap.getValue(r.aggregation),
             r.unit, o?.goalSource ?: "none", o?.defaultFavouriteOrder, o?.browseHidden ?: false,
-            o?.iconAndroid ?: d.iconAndroid, o?.iconIos ?: d.iconIos
+            o?.iconAndroid ?: d.iconAndroid, o?.iconIos ?: d.iconIos,
+            nutrientKey = if (n != null) nk else null,
+            learnSlug = n?.slug,
+            nutrientMetric = if (n != null && n.appTracked) MetricKey.NUTRIENT_PREFIX + nk else null
         )
     }
 

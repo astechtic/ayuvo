@@ -1,0 +1,1426 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_d",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 15.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 15.0,
+        "sex": null,
+        "source_ids": [
+          "ods_vitamin_d_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 100.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "profile": {}
+      },
+      "name": "vitamin_d_no_profile",
+      "notes": "No age or sex: 31-50 band, higher of the two sexes."
+    },
+    {
+      "expected": {
+        "band": "71+",
+        "error": null,
+        "key": "vitamin_d",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 20.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 20.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_vitamin_d_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 100.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "profile": {
+          "age": 75,
+          "sex": "male"
+        }
+      },
+      "name": "vitamin_d_male_75",
+      "notes": "71+ band: 20 mcg."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_d",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 15.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 15.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_vitamin_d_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 100.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "profile": {
+          "age": 45,
+          "sex": "female"
+        }
+      },
+      "name": "vitamin_d_female_45"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "calcium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1200.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1200.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_calcium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 2000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "calcium",
+        "profile": {
+          "age": 55,
+          "sex": "female"
+        }
+      },
+      "name": "calcium_female_55"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "calcium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1000.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1000.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_calcium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 2000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "calcium",
+        "profile": {
+          "age": 55,
+          "sex": "male"
+        }
+      },
+      "name": "calcium_male_55"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "calcium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1200.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1200.0,
+        "sex": null,
+        "source_ids": [
+          "ods_calcium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 2000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "calcium",
+        "profile": {
+          "age": 55,
+          "sex": null
+        }
+      },
+      "name": "calcium_unknown_sex_55",
+      "notes": "Unknown sex: higher recommended (1200), lower upper limit."
+    },
+    {
+      "expected": {
+        "band": "71+",
+        "error": null,
+        "key": "calcium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1200.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1200.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_calcium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 2000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "calcium",
+        "profile": {
+          "age": 71,
+          "sex": "male"
+        }
+      },
+      "name": "calcium_male_71"
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "error": null,
+        "key": "iron",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 18.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 18.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_iron_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 45.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "iron",
+        "profile": {
+          "age": 30,
+          "sex": "female"
+        }
+      },
+      "name": "iron_female_30"
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "error": null,
+        "key": "iron",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 18.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 18.0,
+        "sex": null,
+        "source_ids": [
+          "ods_iron_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 45.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "iron",
+        "profile": {
+          "age": 30
+        }
+      },
+      "name": "iron_unknown_sex_30"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "iron",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 8.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 8.0,
+        "sex": null,
+        "source_ids": [
+          "ods_iron_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 45.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "iron",
+        "profile": {
+          "age": 60
+        }
+      },
+      "name": "iron_unknown_sex_60"
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "error": null,
+        "key": "magnesium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 400.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 400.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_magnesium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 350.0,
+        "upper_limit_scope": "supplements_only"
+      },
+      "input": {
+        "key": "magnesium",
+        "profile": {
+          "age": 25,
+          "sex": "male"
+        }
+      },
+      "name": "magnesium_male_25",
+      "notes": "UL applies to supplements only."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "magnesium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 420.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 420.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_magnesium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 350.0,
+        "upper_limit_scope": "supplements_only"
+      },
+      "input": {
+        "key": "magnesium",
+        "profile": {
+          "sex": "male"
+        }
+      },
+      "name": "magnesium_male_no_age"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "magnesium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 320.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 320.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_magnesium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 350.0,
+        "upper_limit_scope": "supplements_only"
+      },
+      "input": {
+        "key": "magnesium",
+        "profile": {
+          "age": 16,
+          "sex": "female"
+        }
+      },
+      "name": "magnesium_female_16_uses_default_band",
+      "notes": "Under 19: the 31-50 adult values are used."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_a",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 900.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 900.0,
+        "sex": null,
+        "source_ids": [
+          "ods_vitamin_a_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 3000.0,
+        "upper_limit_scope": "preformed_only"
+      },
+      "input": {
+        "key": "vitamin_a",
+        "profile": {}
+      },
+      "name": "vitamin_a_unknown"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "folate",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 400.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 400.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_folate_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 1000.0,
+        "upper_limit_scope": "folic_acid_only"
+      },
+      "input": {
+        "key": "folate",
+        "profile": {
+          "age": 40,
+          "sex": "male"
+        }
+      },
+      "name": "folate_male_40"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_e",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 15.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 15.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_vitamin_e_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 1000.0,
+        "upper_limit_scope": "supplements_only"
+      },
+      "input": {
+        "key": "vitamin_e",
+        "profile": {
+          "age": 33,
+          "sex": "female"
+        }
+      },
+      "name": "vitamin_e_female"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_b12",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 2.4,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 2.4,
+        "sex": null,
+        "source_ids": [
+          "ods_vitamin_b12_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "vitamin_b12",
+        "profile": {}
+      },
+      "name": "vitamin_b12_unknown"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_k",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 120.0,
+        "recommended_kind": "AI",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 120.0,
+        "sex": null,
+        "source_ids": [
+          "ods_vitamin_k_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "vitamin_k",
+        "profile": {
+          "age": 50
+        }
+      },
+      "name": "vitamin_k_unknown_sex"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "omega_3",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1.6,
+        "recommended_kind": "AI",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1.6,
+        "sex": null,
+        "source_ids": [
+          "ods_omega3_hp",
+          "nasem_macronutrients_2005"
+        ],
+        "style": "target",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "omega_3",
+        "profile": {}
+      },
+      "name": "omega_3_unknown"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "fiber",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 21.0,
+        "recommended_kind": "AI",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 21.0,
+        "sex": "female",
+        "source_ids": [
+          "nasem_macronutrients_2005",
+          "hc_dri_macronutrients"
+        ],
+        "style": "target",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "fiber",
+        "profile": {
+          "age": 60,
+          "sex": "female"
+        }
+      },
+      "name": "fiber_female_60"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "potassium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 3400.0,
+        "recommended_kind": "AI",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 3400.0,
+        "sex": null,
+        "source_ids": [
+          "ods_potassium_hp",
+          "nasem_sodium_potassium_2019"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "potassium",
+        "profile": {}
+      },
+      "name": "potassium_unknown"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "saturated_fat",
+        "limit": 22.2,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": 22.2,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "dga_2020_2025",
+          "dga_2025_2030"
+        ],
+        "style": "limit",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "saturated_fat",
+        "profile": {
+          "calorie_goal": 2000
+        }
+      },
+      "name": "saturated_fat_2000_kcal",
+      "notes": "10% of 2000 kcal / 9 kcal per g = 22.2 g."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "saturated_fat",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "dga_2020_2025",
+          "dga_2025_2030"
+        ],
+        "style": "limit",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "saturated_fat",
+        "profile": {
+          "age": 40
+        }
+      },
+      "name": "saturated_fat_no_calorie_goal"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "saturated_fat",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "dga_2020_2025",
+          "dga_2025_2030"
+        ],
+        "style": "limit",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "saturated_fat",
+        "profile": {
+          "calorie_goal": 0
+        }
+      },
+      "name": "saturated_fat_zero_calorie_goal"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "added_sugar",
+        "limit": 45.0,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": 45.0,
+        "reference_recommended": null,
+        "sex": "female",
+        "source_ids": [
+          "dga_2020_2025",
+          "dga_2025_2030"
+        ],
+        "style": "limit",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "added_sugar",
+        "profile": {
+          "calorie_goal": 1800,
+          "sex": "female"
+        }
+      },
+      "name": "added_sugar_1800_kcal"
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "error": null,
+        "key": "sodium",
+        "limit": 2300.0,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": 2300.0,
+        "reference_recommended": null,
+        "sex": "male",
+        "source_ids": [
+          "nasem_sodium_potassium_2019",
+          "dga_2025_2030"
+        ],
+        "style": "limit",
+        "unit": "mg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "sodium",
+        "profile": {
+          "age": 30,
+          "sex": "male"
+        }
+      },
+      "name": "sodium"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "sodium",
+        "limit": 1500.0,
+        "limit_label": "Your goal",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": 2300.0,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "nasem_sodium_potassium_2019",
+          "dga_2025_2030"
+        ],
+        "style": "limit",
+        "unit": "mg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "custom_goal": 1500,
+        "key": "sodium",
+        "profile": {}
+      },
+      "name": "sodium_custom_goal",
+      "notes": "Custom goal replaces the Limit line."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_d",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 50.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Your goal",
+        "reference_limit": null,
+        "reference_recommended": 15.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_vitamin_d_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 100.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "custom_goal": 50,
+        "key": "vitamin_d",
+        "profile": {
+          "age": 40,
+          "sex": "female"
+        }
+      },
+      "name": "vitamin_d_custom_goal",
+      "notes": "Custom goal replaces the Recommended line."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "vitamin_c",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 75.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 75.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_vitamin_c_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 2000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "custom_goal": 0,
+        "key": "vitamin_c",
+        "profile": {
+          "sex": "female"
+        }
+      },
+      "name": "vitamin_c_zero_goal_ignored"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "caffeine",
+        "limit": 400.0,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": 400.0,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "fda_caffeine"
+        ],
+        "style": "limit",
+        "unit": "mg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "caffeine",
+        "profile": {}
+      },
+      "name": "caffeine"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "trans_fat",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "nasem_macronutrients_2005",
+          "hc_dri_macronutrients"
+        ],
+        "style": "info",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "trans_fat",
+        "profile": {}
+      },
+      "name": "trans_fat_info"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "trans_fat",
+        "limit": 2.0,
+        "limit_label": "Your goal",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "nasem_macronutrients_2005",
+          "hc_dri_macronutrients"
+        ],
+        "style": "info",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "custom_goal": 2,
+        "key": "trans_fat",
+        "profile": {}
+      },
+      "name": "trans_fat_custom_goal",
+      "notes": "Info style: a custom goal becomes a Limit line labelled Your goal."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "monounsaturated_fat",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": "male",
+        "source_ids": [
+          "nasem_macronutrients_2005"
+        ],
+        "style": "info",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "monounsaturated_fat",
+        "profile": {
+          "age": 40,
+          "sex": "male"
+        }
+      },
+      "name": "monounsaturated_fat_info"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "sugar",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "dga_2020_2025"
+        ],
+        "style": "info",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "sugar",
+        "profile": {
+          "calorie_goal": 2000
+        }
+      },
+      "name": "sugar_info"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "cholesterol",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [
+          "nasem_macronutrients_2005",
+          "hc_dri_macronutrients"
+        ],
+        "style": "info",
+        "unit": "mg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "cholesterol",
+        "profile": {}
+      },
+      "name": "cholesterol_info"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "creatine",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 5.0,
+        "recommended_kind": null,
+        "recommended_label": "Your goal",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [],
+        "style": "target",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "custom_goal": 5,
+        "key": "creatine",
+        "profile": {}
+      },
+      "name": "creatine_custom_goal"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "creatine",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [],
+        "style": "target",
+        "unit": "g",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "creatine",
+        "profile": {}
+      },
+      "name": "creatine_no_goal"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": "unknown_nutrient",
+        "key": "choline",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": null,
+        "recommended_kind": null,
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": null,
+        "sex": null,
+        "source_ids": [],
+        "style": null,
+        "unit": null,
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "choline",
+        "profile": {}
+      },
+      "name": "unknown_key",
+      "notes": "choline has no reference entry."
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "zinc",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 11.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 11.0,
+        "sex": null,
+        "source_ids": [
+          "ods_zinc_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 40.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "zinc",
+        "profile": {
+          "age": 40,
+          "sex": "other"
+        }
+      },
+      "name": "sex_other_string_is_unknown"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "vitamin_d",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 15.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 15.0,
+        "sex": "male",
+        "source_ids": [
+          "ods_vitamin_d_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": 100.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "vitamin_d",
+        "profile": {
+          "age": 70,
+          "sex": "male"
+        }
+      },
+      "name": "age_70_is_51_70"
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "error": null,
+        "key": "magnesium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 310.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 310.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_magnesium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 350.0,
+        "upper_limit_scope": "supplements_only"
+      },
+      "input": {
+        "key": "magnesium",
+        "profile": {
+          "age": 30.9,
+          "sex": "female"
+        }
+      },
+      "name": "age_30_9_is_19_30"
+    },
+    {
+      "expected": {
+        "band": "71+",
+        "error": null,
+        "key": "calcium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1200.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1200.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_calcium_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 2000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "calcium",
+        "profile": {
+          "age": 120,
+          "sex": "female"
+        }
+      },
+      "name": "age_120"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "error": null,
+        "key": "copper",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 0.9,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 0.9,
+        "sex": "female",
+        "source_ids": [
+          "ods_copper_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 10.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "copper",
+        "profile": {
+          "age": 40,
+          "sex": "female"
+        }
+      },
+      "name": "untracked_copper_female_40",
+      "notes": "Health nutrition type dietary_copper (app_tracked: false): RDA 0.9 mg, UL 10 mg."
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "vitamin_b6",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 1.7,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 1.7,
+        "sex": "male",
+        "source_ids": [
+          "ods_vitamin_b6_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 100.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "vitamin_b6",
+        "profile": {
+          "age": 60,
+          "sex": "male"
+        }
+      },
+      "name": "untracked_vitamin_b6_male_60",
+      "notes": "RDA 1.7 mg from 51."
+    },
+    {
+      "expected": {
+        "band": "71+",
+        "error": null,
+        "key": "chromium",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 30.0,
+        "recommended_kind": "AI",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 30.0,
+        "sex": null,
+        "source_ids": [
+          "ods_chromium_hp"
+        ],
+        "style": "target",
+        "unit": "mcg",
+        "upper_limit": null,
+        "upper_limit_scope": null
+      },
+      "input": {
+        "key": "chromium",
+        "profile": {
+          "age": 75
+        }
+      },
+      "name": "untracked_chromium_75_unknown_sex",
+      "notes": "AI only (no UL); unknown sex -> higher AI (male 30 mcg)."
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "error": null,
+        "key": "niacin",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 14.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 14.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_niacin_hp",
+          "hc_dri_vitamins"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 35.0,
+        "upper_limit_scope": "supplements_only"
+      },
+      "input": {
+        "key": "niacin",
+        "profile": {
+          "age": 30,
+          "sex": "female"
+        }
+      },
+      "name": "untracked_niacin_supplements_only_ul",
+      "notes": "UL 35 mg applies to supplemental niacin only."
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "error": null,
+        "key": "chloride",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 2000.0,
+        "recommended_kind": "AI",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 2000.0,
+        "sex": "male",
+        "source_ids": [
+          "hc_dri_elements"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 3600.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "chloride",
+        "profile": {
+          "age": 65,
+          "sex": "male"
+        }
+      },
+      "name": "untracked_chloride_51_70",
+      "notes": "AI 2,000 mg (51-70), UL 3,600 mg."
+    },
+    {
+      "expected": {
+        "band": "71+",
+        "error": null,
+        "key": "phosphorus",
+        "limit": null,
+        "limit_label": "Limit",
+        "recommended": 700.0,
+        "recommended_kind": "RDA",
+        "recommended_label": "Recommended",
+        "reference_limit": null,
+        "reference_recommended": 700.0,
+        "sex": "female",
+        "source_ids": [
+          "ods_phosphorus_hp"
+        ],
+        "style": "target",
+        "unit": "mg",
+        "upper_limit": 3000.0,
+        "upper_limit_scope": "all_sources"
+      },
+      "input": {
+        "key": "phosphorus",
+        "profile": {
+          "age": 80,
+          "sex": "female"
+        }
+      },
+      "name": "untracked_phosphorus_71",
+      "notes": "UL drops to 3,000 mg from 71."
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "reference_lines",
+  "version": 1
+}

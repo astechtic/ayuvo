@@ -10,6 +10,12 @@ import com.ayuvo.health.medications.logic.MedicationLocalTime
 import com.ayuvo.health.medications.model.Medication
 import com.ayuvo.health.medications.model.MedicationDraft
 import com.ayuvo.health.medications.model.MedicationSchedule
+import com.ayuvo.health.medications.model.NutrientInputRow
+import com.ayuvo.health.models.AIProvider
+import com.ayuvo.health.nutrients.LabelItem
+import com.ayuvo.health.nutrients.LabelParseResult
+import com.ayuvo.health.nutrients.NutrientLabel
+import com.ayuvo.health.nutrients.SupplementLabelAi
 import com.ayuvo.health.medications.model.ValidationError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +35,13 @@ data class MedicationEditorUiState(
     val saving: Boolean = false,
     /** Reference error code from the store (`invalid_transition`, …) when a save is refused. */
     val saveError: String? = null,
-    val photoBusy: Boolean = false
+    val photoBusy: Boolean = false,
+    /** "Get nutrients with AI" (docs/nutrients.md §7). */
+    val aiBusy: Boolean = false,
+    /** Validated AI items awaiting review; nothing is saved until the user confirms. */
+    val aiReview: LabelParseResult? = null,
+    /** `setup` (no AI configured), `empty` (nothing recognised), or a provider message. */
+    val aiError: String? = null
 ) {
     val isEditing: Boolean get() = existing != null
     fun error(field: String): String? = errors.firstOrNull { it.field == field }?.code
@@ -69,9 +81,10 @@ class MedicationEditorViewModel(
                 val schedule = med?.let { store.schedules(it.id, openOnly = true).firstOrNull() }
                     // A paused medication keeps its rule as the latest closed generation (§12).
                     ?: med?.let { store.schedules(it.id, openOnly = false).maxByOrNull { s -> s.activeUntilMs ?: Long.MAX_VALUE } }
+                val nutrients = med?.let { store.nutrients(it.id) }.orEmpty().map(NutrientInputRow::fromStored)
                 _ui.update {
                     if (med == null) it.copy(loading = false)
-                    else it.copy(loading = false, draft = MedicationDraft.from(med, schedule), existing = med, existingSchedule = schedule)
+                    else it.copy(loading = false, draft = MedicationDraft.from(med, schedule).copy(nutrients = nutrients), existing = med, existingSchedule = schedule)
                 }
             }
         }
@@ -131,9 +144,63 @@ class MedicationEditorViewModel(
             val schedule = draft.toSchedule(UUID.randomUUID().toString().lowercase(), existing.id, now)
             runCatching { store.update(medication, schedule, now) }.getOrElse { "store_error" }
         }
+        if (result == null && (existing != null || draft.nutrients.isNotEmpty())) {
+            // Rows are replaced as a set; totals are recomputed, so past doses follow the edit (§21).
+            runCatching { store.setNutrients(targetId, draft.nutrientRows(targetId), now) }
+        }
         _ui.update { it.copy(saving = false, saveError = result) }
         if (result == null) photoStoredForNew = false
         return if (result == null) targetId else null
+    }
+
+    /**
+     * "Get nutrients with AI" from a label photo (image role) or the name and strength (text role),
+     * on exactly the resolved route (no fallback). The validated items open a review sheet.
+     */
+    fun extractNutrients(photo: ByteArray?) {
+        val draft = _ui.value.draft
+        viewModelScope.launch {
+            _ui.update { it.copy(aiBusy = true, aiError = null, aiReview = null) }
+            val prompts = NutrientLabel.prompts
+            val route = runCatching { container.foodAnalysis.supplementLabelRoute(photo = photo != null) }.getOrNull()
+            if (route == null || prompts == null) {
+                _ui.update { it.copy(aiBusy = false, aiError = AI_SETUP) }
+                return@launch
+            }
+            val local = route.provider == AIProvider.LOCAL_GEMMA
+            val prompt = SupplementLabelAi.prompt(prompts, local, photo != null, draft.name, draft.strength.orEmpty(), draft.doseUnit.raw)
+            val result = try {
+                val text = container.foodAnalysis.callSupplementLabelAi(route, prompt, photo, SupplementLabelAi.maxTokens(local, route.contextTokens))
+                NutrientLabel.parse(text)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                _ui.update { it.copy(aiBusy = false, aiError = e.message ?: AI_FAILED) }
+                return@launch
+            }
+            _ui.update {
+                when {
+                    !result.ok -> it.copy(aiBusy = false, aiError = AI_FAILED)
+                    result.items.isEmpty() && result.rejected.isEmpty() -> it.copy(aiBusy = false, aiError = AI_EMPTY)
+                    else -> it.copy(aiBusy = false, aiReview = result)
+                }
+            }
+        }
+    }
+
+    /** Adds the confirmed items as form rows (replacing a row of the same nutrient); not saved yet. */
+    fun confirmAiItems(items: List<LabelItem>) {
+        update { d ->
+            val keys = items.map { it.key }.toSet()
+            d.copy(nutrients = d.nutrients.filterNot { it.key in keys } + items.map {
+                NutrientInputRow(key = it.key, amount = NutrientInputRow.plain(it.amount), unit = it.unit)
+            })
+        }
+        _ui.update { it.copy(aiReview = null) }
+    }
+
+    fun dismissAi() {
+        _ui.update { it.copy(aiReview = null, aiError = null) }
     }
 
     /** Cancelling a brand-new medication must not leave its photo behind. */
@@ -142,6 +209,12 @@ class MedicationEditorViewModel(
             photos.delete(targetId)
             photoStoredForNew = false
         }
+    }
+
+    companion object {
+        const val AI_SETUP = "setup"
+        const val AI_EMPTY = "empty"
+        const val AI_FAILED = "failed"
     }
 
     class Factory(

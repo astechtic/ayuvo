@@ -29,6 +29,44 @@ the user acts, to a service they chose.
 - [Apple Health and Ayuvo](https://ayuvo-health.web.app/compare/apple-health): Ayuvo reads Apple Health, then adds records, medications, meals and a coach, all stored on your phone. See where each fits, and how to use both.
 - [MyChart and Ayuvo](https://ayuvo-health.web.app/compare/mychart): Ayuvo can't connect to MyChart. Download your documents, add them by scan, file or share sheet, and keep them on your phone with no account.
 - [Health Connect and Ayuvo](https://ayuvo-health.web.app/compare/health-connect): Health Connect is Android's shared health data layer. Ayuvo reads it and adds charts, records, medications and meals, kept on your phone.
+- [Nutrients](https://ayuvo-health.web.app/nutrients): Visual, sourced guides to 37 nutrients: what each does, food sources, how much adults need, and signs of too little or too much.
+- [Vitamin A](https://ayuvo-health.web.app/nutrients/vitamin-a): What vitamin A does for vision, immunity and growth, retinol vs beta-carotene, what RAE means, food sources, and signs of too little or too much.
+- [Vitamin C](https://ayuvo-health.web.app/nutrients/vitamin-c): What vitamin C does for collagen, immunity and iron absorption, how the body handles it, food sources, scurvy signs and what high doses can do.
+- [Vitamin D](https://ayuvo-health.web.app/nutrients/vitamin-d): How vitamin D is made in your skin, activated by the liver and kidney, and helps you absorb calcium. Foods, sunlight, D2 vs D3 and the 25(OH)D blood test.
+- [Vitamin E](https://ayuvo-health.web.app/nutrients/vitamin-e): What vitamin E (alpha-tocopherol) does as an antioxidant, how it is absorbed, nut, seed and oil sources, natural vs synthetic forms, and supplement safety.
+- [Vitamin K](https://ayuvo-health.web.app/nutrients/vitamin-k): How vitamin K helps blood clot and supports bone proteins, K1 vs K2, leafy green and fermented food sources, and why it matters with warfarin.
+- [Vitamin B12](https://ayuvo-health.web.app/nutrients/vitamin-b12): How vitamin B12 supports blood, nerves and DNA, how intrinsic factor helps absorption, B12-rich foods, B12 and MMA tests, and who is at risk of low levels.
+- [Folate](https://ayuvo-health.web.app/nutrients/folate): What folate does for DNA, red blood cells and early pregnancy, folate vs folic acid, folate-rich foods, blood tests, and why the upper limit covers folic acid.
+- [Vitamin B6](https://ayuvo-health.web.app/nutrients/vitamin-b6): What vitamin B6 does for protein metabolism, brain and blood, how PLP is made and carried, food sources, the PLP blood test and the nerve risk of high doses.
+- [Thiamin](https://ayuvo-health.web.app/nutrients/thiamin): What thiamin (vitamin B1) does in energy metabolism, how it is absorbed and activated, food sources, signs of deficiency such as beriberi, and supplement forms.
+- [Riboflavin](https://ayuvo-health.web.app/nutrients/riboflavin): What riboflavin (vitamin B2) does as part of the FMN and FAD coenzymes, how the body absorbs it, milk, egg and grain sources, and signs of too little.
+- [Niacin](https://ayuvo-health.web.app/nutrients/niacin): What niacin (vitamin B3) does as NAD and NADP, how tryptophan adds to it, poultry, fish and grain sources, pellagra, and why supplements can cause flushing.
+- [Biotin](https://ayuvo-health.web.app/nutrients/biotin): What biotin (vitamin B7) does for fat, sugar and protein metabolism, how raw egg white blocks it, food sources, and how high doses can skew lab tests.
+- [Pantothenic acid](https://ayuvo-health.web.app/nutrients/pantothenic-acid): What pantothenic acid (vitamin B5) does as the building block of coenzyme A, how the body absorbs it, food sources, deficiency signs and supplement forms.
+- [Calcium](https://ayuvo-health.web.app/nutrients/calcium): What calcium does for bones, muscles and nerves, how vitamin D helps you absorb it, dairy and non-dairy food sources, supplement forms and blood tests.
+- [Iron](https://ayuvo-health.web.app/nutrients/iron): How iron carries oxygen, heme vs non-heme iron, iron-rich foods, how vitamin C helps absorption, ferritin tests, and signs of too little or too much.
+- [Magnesium](https://ayuvo-health.web.app/nutrients/magnesium): What magnesium does for energy, muscles, nerves and bones, the nuts, seeds and greens richest in it, supplement forms and why blood tests can mislead.
+- [Potassium](https://ayuvo-health.web.app/nutrients/potassium): How potassium keeps nerves, muscles and your heart working, its link with blood pressure and sodium, fruit and vegetable sources, and when to be careful.
+- [Sodium](https://ayuvo-health.web.app/nutrients/sodium): What sodium does, why most of it comes from packaged foods, its link with blood pressure, high-sodium foods, lower-sodium swaps and the blood test.
+- [Zinc](https://ayuvo-health.web.app/nutrients/zinc): What zinc does for immunity, wound healing and taste, zinc-rich foods, why phytates matter, serum zinc tests, and how too much zinc affects copper.
+- [Phosphorus](https://ayuvo-health.web.app/nutrients/phosphorus): What phosphorus does for bones, teeth and energy, how the kidneys keep it in balance, food sources and phosphate additives, and signs of too little or too much.
+- [Chloride](https://ayuvo-health.web.app/nutrients/chloride): What chloride does for fluid balance, stomach acid and pH, why most of it comes from salt, food sources, and what too little or too much can look like.
+- [Copper](https://ayuvo-health.web.app/nutrients/copper): What copper does for energy, iron use and connective tissue, how the liver manages it, copper-rich foods, zinc interactions, and signs of too little or too much.
+- [Manganese](https://ayuvo-health.web.app/nutrients/manganese): What manganese does for metabolism, bones and antioxidant enzymes, how little the body absorbs, nut, grain and shellfish sources, and when too much becomes a risk.
+- [Selenium](https://ayuvo-health.web.app/nutrients/selenium): What selenium does for the thyroid and cell protection, how selenoproteins use it, food sources including Brazil nuts, and signs of too little or too much.
+- [Chromium](https://ayuvo-health.web.app/nutrients/chromium): What is known about chromium and insulin, why experts debate whether it is essential, food sources, and what supplement studies on blood sugar show.
+- [Molybdenum](https://ayuvo-health.web.app/nutrients/molybdenum): What molybdenum does as an enzyme cofactor, how the body absorbs and clears it, legume and grain sources, and why deficiency from food is not reported.
+- [Iodine](https://ayuvo-health.web.app/nutrients/iodine): How iodine becomes thyroid hormones T4 and T3, seafood, dairy and iodized salt sources, goiter, too much iodine, and what urinary iodine tells you.
+- [Saturated fat](https://ayuvo-health.web.app/nutrients/saturated-fat): What saturated fat is, which foods carry it, how it raises LDL cholesterol, and easy swaps for unsaturated fats, with food amounts from USDA data.
+- [Monounsaturated fat](https://ayuvo-health.web.app/nutrients/monounsaturated-fat): What monounsaturated fat does, which foods are rich in it, and how swapping it for saturated fat can help lower LDL cholesterol.
+- [Polyunsaturated fat](https://ayuvo-health.web.app/nutrients/polyunsaturated-fat): What polyunsaturated fat does, why omega-3 and omega-6 are essential, which foods are rich in it, and how it can help lower LDL cholesterol.
+- [Trans fat](https://ayuvo-health.web.app/nutrients/trans-fat): What trans fat is, industrial vs natural sources, how it raises LDL and lowers HDL, the U.S. phase-out of PHOs and how to spot it on labels.
+- [Cholesterol](https://ayuvo-health.web.app/nutrients/cholesterol): What cholesterol does, how dietary and blood cholesterol differ, which foods contain it, LDL vs HDL and what a cholesterol blood test measures.
+- [Omega-3](https://ayuvo-health.web.app/nutrients/omega-3): What omega-3 fats do, the difference between ALA, EPA and DHA, vegetarian and fish sources with amounts, and fish, krill and algal oil supplements.
+- [Fiber](https://ayuvo-health.web.app/nutrients/fiber): What dietary fiber does: soluble vs insoluble fiber, gut bacteria and short-chain fatty acids, fullness, regularity, LDL, plus high-fiber foods.
+- [Sugar](https://ayuvo-health.web.app/nutrients/sugar): Total sugars explained: natural sugars in fruit and milk vs added sugars, how to read the label, and how your body turns sugar into energy.
+- [Added sugar](https://ayuvo-health.web.app/nutrients/added-sugar): What counts as added sugar, the main sources in typical diets, its links with weight, tooth decay and heart health, and how to find it on labels.
+- [Caffeine](https://ayuvo-health.web.app/nutrients/caffeine): How caffeine works on your brain, how long it lasts, caffeine in coffee, tea, cola and energy drinks, side effects and withdrawal.
 - [About](https://ayuvo-health.web.app/about): Ayuvo is a free, private, open-source health app for iPhone and Android, published by Yaara Tech. Who we are, how it is built and how to contact us.
 - [Privacy Policy](https://ayuvo-health.web.app/privacy): How Ayuvo for iPhone and Android handles your data: it is stored on your device and leaves only when you send it to a service you chose.
 - [Support](https://ayuvo-health.web.app/support): Get help with Ayuvo on iPhone and Android: contact support, troubleshooting for AI providers, Health Connect and Apple Health, exports and deleting data.
@@ -38,6 +76,12 @@ the user acts, to a service they chose.
 
 The /compare pages are written by the Ayuvo team, so they are not neutral. Each fact about another product cites that product's own
 public page with the date it was checked, and every page states where Ayuvo is limited. Corrections: yaaratech@gmail.com
+
+## About the nutrient guides
+
+The /nutrients pages are general information for healthy adults, not medical advice. Recommended amounts and upper limits
+are rendered from shared/nutrients/nutrient_reference.json, the table the apps use for their chart lines; other facts cite
+the NIH Office of Dietary Supplements and other public-health sources, with the date each was checked.
 
 
 ## Source

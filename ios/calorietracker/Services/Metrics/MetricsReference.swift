@@ -467,6 +467,7 @@ nonisolated enum MetricsReference {
 
     private static func validPin(_ key: String, known: Set<String>, catalog: MetricCatalogData) -> Bool {
         if key.hasPrefix("app:") { return catalog.appMetricsByKey[key] != nil }
+        if key.hasPrefix("nutrient:") { return catalog.nutrientMetricsByKey[String(key.dropFirst("nutrient:".count))] != nil }
         return known.contains(key)
     }
 
@@ -514,6 +515,13 @@ nonisolated enum MetricsReference {
         /// Metric icon, then override icon, then domain icon, then the Other domain icon.
         let iconAndroid: String
         let iconIOS: String
+        /// Reference nutrient whose lines / About / Learn more the chart shows (`nutrient:<k>` → k; health
+        /// nutrition types → the override's `nutrient_key`); nil otherwise.
+        var nutrientKey: String? = nil
+        /// Website guide slug (`/nutrients/<slug>`); nil for sports supplements and non-nutrient metrics.
+        var learnSlug: String? = nil
+        /// `nutrient:<k>` for a health nutrition type whose nutrient is `app_tracked` (link to the app's chart).
+        var nutrientMetric: String? = nil
     }
 
     static func resolveMetric(_ key: String, catalog: MetricCatalogData = .shared) -> Resolved {
@@ -530,11 +538,23 @@ nonisolated enum MetricsReference {
                 iconAndroid: metric.icon.android, iconIOS: metric.icon.ios
             )
         }
+        if key.hasPrefix("nutrient:") {
+            guard let metric = catalog.nutrientMetricsByKey[String(key.dropFirst("nutrient:".count))],
+                  let domain = catalog.domain("nutrition") else { return unknown(catalog) }
+            return Resolved(
+                source: "nutrient", domain: "nutrition", colourHex: domain.colourHex, colourHexDark: domain.colourHexDark,
+                aggregation: metric.aggregation, chartKind: metric.chartKind, unit: metric.unit, goalSource: metric.goalSource,
+                defaultFavouriteOrder: nil, browseHidden: metric.browseHidden,
+                iconAndroid: domain.icon.android, iconIOS: domain.icon.ios,
+                nutrientKey: metric.key, learnSlug: metric.learnSlug, nutrientMetric: nil
+            )
+        }
         guard let type = HealthMetricRegistry.type(id: key) else { return unknown(catalog) }
         let override = catalog.override(key)
         let domainID = override?.domain ?? catalog.health.categoryDomains[type.category.rawValue] ?? "other"
         guard let domain = catalog.domain(domainID) else { return unknown(catalog) }
         let fav = override?.defaultFavourite
+        let nutrient = override?.nutrientKey.flatMap { NutrientsReference.byKey[$0] }
         return Resolved(
             source: "health", domain: domainID, colourHex: domain.colourHex, colourHexDark: domain.colourHexDark,
             aggregation: catalog.health.aggregationMap[type.aggregation.rawValue] ?? "last",
@@ -543,7 +563,9 @@ nonisolated enum MetricsReference {
             defaultFavouriteOrder: fav?.enabled == true ? fav?.order : nil,
             browseHidden: override?.browseHidden ?? false,
             iconAndroid: override?.icon?.android ?? domain.icon.android,
-            iconIOS: override?.icon?.ios ?? domain.icon.ios
+            iconIOS: override?.icon?.ios ?? domain.icon.ios,
+            nutrientKey: nutrient?.key, learnSlug: nutrient?.slug,
+            nutrientMetric: nutrient.flatMap { $0.appTracked ? "nutrient:\($0.key)" : nil }
         )
     }
 
@@ -884,6 +906,9 @@ nonisolated enum MetricsReference {
                 "default_favourite_order": r.defaultFavouriteOrder.map { RJ.int($0) } ?? .null,
                 "browse_hidden": .bool(r.browseHidden),
                 "icon_android": .str(r.iconAndroid), "icon_ios": .str(r.iconIOS),
+                "nutrient_key": r.nutrientKey.map { RJ.str($0) } ?? .null,
+                "learn_slug": r.learnSlug.map { RJ.str($0) } ?? .null,
+                "nutrient_metric": r.nutrientMetric.map { RJ.str($0) } ?? .null,
             ])
         case "nice_ticks":
             let t = niceTicks(min: input["min"].double ?? 0, max: input["max"].double ?? 0, count: Int(input["count"].double ?? 4), includeZero: input["include_zero"].bool ?? false)

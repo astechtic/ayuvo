@@ -55,6 +55,13 @@ struct MetricDescriptor: Identifiable {
     let browseHidden: Bool
     /// Canonical unit decimals for display.
     let decimals: Int
+    /// Reference nutrient whose lines, About and Learn more the detail shows (`nutrient:` metrics and the
+    /// health nutrition types, docs/ui-structure.md §7.10); nil otherwise.
+    var nutrientKey: String? = nil
+    /// Website guide slug; nil for sports supplements and non-nutrient metrics.
+    var learnSlug: String? = nil
+    /// Health nutrition types of an `app_tracked` nutrient: the app's own `nutrient:<key>` chart.
+    var nutrientMetric: MetricKey? = nil
 
     var id: String { key.id }
     var tint: Color { AyuvoPalette.domain(domainID) }
@@ -67,6 +74,11 @@ struct MetricDescriptor: Identifiable {
 enum MetricCatalog {
     static var appMetrics: [MetricDescriptor] {
         AppMetric.allCases.map { descriptor(for: .app($0)) }
+    }
+
+    /// Nutrient metrics in catalog order (hidden ones included; Browse filters `browseHidden`).
+    static var nutrientMetrics: [MetricDescriptor] {
+        MetricCatalogData.shared.nutrientMetrics.map { descriptor(for: .nutrient($0.key)) }
     }
 
     static func descriptor(for key: MetricKey) -> MetricDescriptor {
@@ -90,6 +102,26 @@ enum MetricCatalog {
                 browseHidden: false,
                 decimals: entry?.unit.decimals ?? 0
             )
+        case .nutrient(let nutrientKey):
+            let entry = MetricCatalogData.shared.nutrientMetricsByKey[nutrientKey]
+            let summary = NutrientsReference.byKey[nutrientKey]?.summary
+                ?? String(localized: "A sports supplement you log with food or take as a supplement.")
+            return MetricDescriptor(
+                key: key,
+                title: NutrientCatalog.title(nutrientKey),
+                domainID: resolved.domain,
+                systemImage: resolved.iconIOS,
+                unitLabel: NutrientCatalog.unit(nutrientKey),
+                chartKind: chart,
+                aggregation: aggregation,
+                ranges: (entry?.ranges ?? ["D", "W", "M", "6M", "Y"]).compactMap(HealthDetailRange.init(rawValue:)),
+                about: summary,
+                goalSource: resolved.goalSource,
+                browseHidden: resolved.browseHidden,
+                decimals: 2,
+                nutrientKey: resolved.nutrientKey,
+                learnSlug: resolved.learnSlug
+            )
         case .health(let typeID):
             let type = HealthMetricRegistry.resolve(typeID: typeID)
             return MetricDescriptor(
@@ -104,7 +136,10 @@ enum MetricCatalog {
                 about: String(localized: "\(type.displayName) readings shared with Ayuvo from Apple Health. Edit or delete them in the Health app."),
                 goalSource: resolved.goalSource,
                 browseHidden: resolved.browseHidden,
-                decimals: 1
+                decimals: 1,
+                nutrientKey: resolved.nutrientKey,
+                learnSlug: resolved.learnSlug,
+                nutrientMetric: resolved.nutrientMetric.flatMap { MetricKey(pinID: $0) }
             )
         }
     }
@@ -130,7 +165,7 @@ enum MetricCatalog {
     static func search(_ query: String, health: HealthDataStore) -> [MetricDescriptor] {
         let needle = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !needle.isEmpty else { return [] }
-        let app = appMetrics.filter { $0.title.localizedCaseInsensitiveContains(needle) }
+        let app = (appMetrics + nutrientMetrics).filter { $0.title.localizedCaseInsensitiveContains(needle) }
         let healthMatches = health.knownTypes
             .filter { $0.displayName.localizedCaseInsensitiveContains(needle) }
             .sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }

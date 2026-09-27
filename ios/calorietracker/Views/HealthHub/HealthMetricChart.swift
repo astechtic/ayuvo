@@ -9,15 +9,16 @@ struct HealthMetricChart: View {
     let series: HealthChartSeries
     @Binding var selected: HealthChartPoint?
     let calendar: Calendar
-    /// Daily goal in canonical units (steps); hidden on D.
-    var goal: Double?
+    /// Daily rules in canonical units: the goal (steps, calories) or, for health nutrition types, the nutrient
+    /// reference lines (docs/nutrients.md §5a). Hidden on D.
+    var referenceLines: [ChartReferenceLine] = []
     /// Tap on a bucket (drill-down or select); nil → the tap toggles the selection.
     var onTap: ((HealthChartPoint) -> Void)?
 
     private var isDurationInHours: Bool { type.isSleep || type.id == "time_in_daylight" }
     private var plotted: [HealthChartPoint] { series.points.filter { $0.value != nil } }
     private var tint: Color { type.category.tint }
-    private var shownGoal: Double? { series.range == .day ? nil : displayY(goal) }
+    private var shownLines: [ShownReferenceLine] { ReferenceRuleMarks.shown(referenceLines, range: series.range, y: displayY) }
     private var isBarKind: Bool {
         !type.isBloodPressure && (type.kind == .cumulative || type.kind == .duration || type.kind == .session)
     }
@@ -47,7 +48,7 @@ struct HealthMetricChart: View {
                 values += [displayY(point.value), displayY(point.min), displayY(point.max)].compactMap { $0 }
             }
         }
-        if let goal = shownGoal { values.append(goal) }
+        values += shownLines.map(\.y)
         return ChartAxisStyle.yTicks(values, includeZero: isBarKind || type.kind == .category)
     }
 
@@ -66,16 +67,8 @@ struct HealthMetricChart: View {
                     categoryMarks
                 }
             }
-            if let goal = shownGoal {
-                RuleMark(y: .value("Goal", goal))
-                    .foregroundStyle(Color.secondary.opacity(0.8))
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [6, 4]))
-                    .annotation(position: .top, alignment: .trailing, spacing: 2) {
-                        Text("Goal")
-                            .font(.system(.caption2, design: .rounded, weight: .medium))
-                            .foregroundStyle(.secondary)
-                    }
-            }
+            ReferenceRuleMarks(lines: shownLines, ruleCount: referenceLines.count, tint: tint, domain: ticks.min...ticks.max,
+                               text: { HealthUnitFormatting.text($0, type: type) })
             if let selected {
                 selectionRule(selected)
                     .foregroundStyle(Color.primary.opacity(0.28))
