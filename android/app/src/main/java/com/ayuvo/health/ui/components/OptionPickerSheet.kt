@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -62,7 +62,9 @@ fun <T> OptionPickerSheet(
     subtitle: (@Composable (T) -> String?)? = null,
     footer: String? = null,
     customPlaceholder: String? = null,
-    onCustomSubmit: ((String) -> Unit)? = null
+    onCustomSubmit: ((String) -> Unit)? = null,
+    /** Optional group title per item; a header is drawn where it changes (items must be grouped). */
+    section: (@Composable (T) -> String?)? = null
 ) {
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -79,7 +81,18 @@ fun <T> OptionPickerSheet(
                 Modifier.fillMaxWidth().heightIn(max = 420.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(items) { item ->
+                itemsIndexed(items) { index, item ->
+                    val header = section?.invoke(item)
+                    val previous = if (index > 0) section?.invoke(items[index - 1]) else null
+                    if (header != null && (index == 0 || header != previous)) {
+                        Text(
+                            header,
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            modifier = Modifier.padding(start = 4.dp, top = if (index == 0) 0.dp else 8.dp, bottom = 0.dp)
+                        )
+                    }
                     OptionPickerRow(
                         label = label(item),
                         subtitle = subtitle?.invoke(item),

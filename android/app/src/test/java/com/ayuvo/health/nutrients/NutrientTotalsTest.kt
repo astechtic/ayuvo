@@ -92,6 +92,46 @@ class NutrientTotalsTest {
         assertEquals(listOf(300.0), AppMetricAggregator.entries(AppMetricId.CALORIES, snap, nowMs, zone).map { it.value })
     }
 
+    /** Nutrition Details rows for untracked nutrients (docs/nutrients.md §5b). */
+    @Test
+    fun untrackedRowsFollowActiveMedicationsAndTakenDoses() {
+        val rows = listOf(
+            MedicationNutrientRow("multi", "copper", 1.7),
+            MedicationNutrientRow("multi", "thiamin", 1.4),
+            MedicationNutrientRow("multi", "zinc", 17.0),
+            MedicationNutrientRow("old", "iodine", 140.0),
+            MedicationNutrientRow("paused", "biotin", 30.0)
+        )
+        val doses = listOf(SupplementDose("old", "taken", at(9).toEpochMilli(), 1.0))
+        // "multi" is active (no dose today), "old" is completed but was taken today, "paused" adds nothing.
+        val snap = SupplementSnapshot(rows, doses, listOf(at(9).toEpochMilli()), activeMedicationIds = setOf("multi"))
+        val totals = NutrientTotals(listOf(food(8)), snap, zone)
+        assertEquals(listOf("copper", "iodine", "thiamin"), totals.untrackedDetailKeys(day))
+        assertEquals(NutrientAmount(null, 140.0, 140.0), totals.total("iodine", day))
+        assertEquals(NutrientAmount.NONE, totals.total("copper", day))
+        // Another day: only the active medication's keys.
+        assertEquals(listOf("copper", "thiamin"), totals.untrackedDetailKeys(day.minusDays(1)))
+        // Minerals after zinc, vitamins after folate, reference order.
+        val base = listOf("sodium", "zinc", "vitamin_a", "folate", "omega_3", "creatine")
+        assertEquals(
+            listOf("sodium", "zinc", "copper", "iodine", "vitamin_a", "folate", "thiamin", "omega_3", "creatine"),
+            NutrientFields.withUntrackedRows(base, listOf("copper", "iodine", "thiamin"))
+        )
+    }
+
+    @Test
+    fun untrackedNutrientSeriesIsSupplementsOnly() {
+        val rows = listOf(MedicationNutrientRow("multi", "copper", 1.7))
+        val snap = AppMetricSnapshot(
+            food = listOf(food(8, vitaminD = 5.0)),
+            supplements = SupplementSnapshot(rows, listOf(SupplementDose("multi", "taken", at(9).toEpochMilli(), 2.0)))
+        )
+        assertEquals(listOf(3.4), AppMetricAggregator.nutrientEntries("copper", snap).map { it.value })
+        // A stray food value for an untracked key is ignored by day_totals.
+        val fromFood = Nutrients.dayTotals(listOf(FoodNutrients(at(8).toEpochMilli(), mapOf("copper" to 1.0))), emptyList(), day.toString(), zone)
+        assertTrue(fromFood.isEmpty())
+    }
+
     @Test
     fun loggedDaysCountFoodAndAnyTakenDose() {
         val snap = SupplementSnapshot(d3, emptyList(), listOf(at(9).plusSeconds(86_400).toEpochMilli()))

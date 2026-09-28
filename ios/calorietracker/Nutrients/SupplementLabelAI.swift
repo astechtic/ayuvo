@@ -41,6 +41,10 @@ enum SupplementLabelAI {
         case failed(String)
     }
 
+    /// Output caps from the prompt file's routing table (prompt v2: a full multivitamin label has 20+ items).
+    static let localMaxOutputTokens = 600
+    static let cloudMaxOutputTokens = 800
+
     /// The system prompt and the filled user template for a route (plain replacement, each placeholder once).
     static func prompt(photo: Bool, route: SupplementAIRoute, name: String, strength: String, doseUnit: String,
                        prompts: NutrientsReference.Prompts) -> (system: String, user: String) {
@@ -85,10 +89,10 @@ enum SupplementLabelAI {
             #endif
             throw Failure.notConfigured
         case .gemma:
-            return try await Gemma4LocalModelManager.shared.generate(prompt: user, images: images, systemPrompt: system, maxOutputTokens: 400)
+            return try await Gemma4LocalModelManager.shared.generate(prompt: user, images: images, systemPrompt: system, maxOutputTokens: localMaxOutputTokens)
         case .cloud:
             // The provider of the role that matches the input (vision with a photo, text without); no fallback.
-            return try await GeminiService.callRecordsAI(prompt: system + "\n\n" + user, imageDataList: images, maxOutputTokens: 800).text
+            return try await GeminiService.callRecordsAI(prompt: system + "\n\n" + user, imageDataList: images, maxOutputTokens: cloudMaxOutputTokens).text
         }
     }
 }

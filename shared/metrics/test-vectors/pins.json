@@ -363,6 +363,7 @@
         "favourites": [
           "app:calories",
           "nutrient:vitamin_d",
+          "nutrient:niacin",
           "nutrient:creatine",
           "steps"
         ],
@@ -381,10 +382,10 @@
         ],
         "legacy_raw": null,
         "max": 12,
-        "new_raw": "app:calories,nutrient:vitamin_d,nutrient:niacin,nutrient:vitamin_d,nutrient:creatine,steps"
+        "new_raw": "app:calories,nutrient:vitamin_d,nutrient:niacin,nutrient:grape_seed_extract,nutrient:vitamin_d,nutrient:creatine,steps"
       },
       "name": "new pins keep known nutrient keys",
-      "notes": "nutrient: keys are valid when the catalog lists them; unknown nutrient keys and duplicates are dropped."
+      "notes": "nutrient:niacin (app_tracked: false) is a valid pin now; nutrient:grape_seed_extract is unknown and dropped; duplicates dropped."
     }
   ],
   "format": "ayuvo-metrics-vectors",

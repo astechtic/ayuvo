@@ -51,6 +51,9 @@ fun NutrientMetricDetailScreen(
     val unit = NutrientFields.unit(key.key)
     val name = MetricCatalog.title(context, key)
     val spec = MetricCatalog.nutrientSpec(catalog, key)
+    // food_tracked: false (copper, thiamin, …): the food log never records it, the chart counts
+    // Medications supplements only and Food vs Supplements gives way to a note (docs/nutrients.md §5).
+    val foodTracked = spec?.foodTracked ?: true
 
     val series = ui.series
     val window = series?.let { MetricsReference.localDateOf(it.bounds.startMs, zone)..MetricsReference.localDateOf(it.bounds.endMs, zone).minusDays(1) }
@@ -75,6 +78,7 @@ fun NutrientMetricDetailScreen(
         range = ui.range,
         onRange = vm::setRange,
         headline = selectedHeadline ?: series?.let { headline(it, unit, windowLabel) },
+        headlineNote = if (foodTracked) null else stringResource(R.string.nutrients_supplements_only_note, name),
         windowLabel = windowLabel,
         canGoForward = ui.canGoForward,
         onShift = vm::shiftAnchor,
@@ -113,14 +117,17 @@ fun NutrientMetricDetailScreen(
                     trailing = RowTrailing.Toggle(ui.pinned, vm::setPinned)
                 )
             }
-            row {
-                GroupRow(
-                    title = stringResource(R.string.metric_open_food_diary),
-                    modifier = Modifier.testTag("metric.log"),
-                    onClick = destinations.openFoodDiary
-                )
+            if (foodTracked) {
+                row {
+                    GroupRow(
+                        title = stringResource(R.string.metric_open_food_diary),
+                        modifier = Modifier.testTag("metric.log"),
+                        onClick = destinations.openFoodDiary
+                    )
+                }
             }
-            if (NutrientFields.optionalNutrient(key.key) != null) {
+            // No custom goal for untracked nutrients (they have no OptionalNutrient setting).
+            if (foodTracked && NutrientFields.optionalNutrient(key.key) != null) {
                 row {
                     GroupRow(
                         title = stringResource(R.string.nutrients_edit_goal),
@@ -132,7 +139,7 @@ fun NutrientMetricDetailScreen(
         },
         about = null,
         extraSections = {
-            if (series != null) {
+            if (series != null && foodTracked) {
                 item(key = "food-vs-supplements") {
                     InsetGroup(
                         modifier = Modifier.padding(top = 12.dp).testTag("nutrient.split"),

@@ -225,7 +225,10 @@ fun HealthTypeDetailScreen(
                             row {
                                 GroupRow(
                                     title = stringResource(R.string.nutrients_open_app_chart, nutrientName),
-                                    subtitle = stringResource(R.string.nutrients_open_app_chart_subtitle),
+                                    subtitle = stringResource(
+                                        if (goal.foodTracked == false) R.string.nutrients_open_app_chart_subtitle_supplements
+                                        else R.string.nutrients_open_app_chart_subtitle
+                                    ),
                                     modifier = Modifier.testTag("nutrient.openAppChart"),
                                     onClick = { destinations.openMetric(appChart) }
                                 )

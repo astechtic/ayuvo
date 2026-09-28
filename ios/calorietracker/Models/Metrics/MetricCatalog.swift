@@ -60,8 +60,11 @@ struct MetricDescriptor: Identifiable {
     var nutrientKey: String? = nil
     /// Website guide slug; nil for sports supplements and non-nutrient metrics.
     var learnSlug: String? = nil
-    /// Health nutrition types of an `app_tracked` nutrient: the app's own `nutrient:<key>` chart.
+    /// Health nutrition types: the app's own `nutrient:<key>` chart (every reference nutrient has one).
     var nutrientMetric: MetricKey? = nil
+    /// `resolve_metric` `food_tracked`: false when the food log does not record the nutrient, so the app chart
+    /// counts Medications supplements only; nil for non-nutrient metrics.
+    var foodTracked: Bool? = nil
 
     var id: String { key.id }
     var tint: Color { AyuvoPalette.domain(domainID) }
@@ -120,7 +123,8 @@ enum MetricCatalog {
                 browseHidden: resolved.browseHidden,
                 decimals: 2,
                 nutrientKey: resolved.nutrientKey,
-                learnSlug: resolved.learnSlug
+                learnSlug: resolved.learnSlug,
+                foodTracked: resolved.foodTracked
             )
         case .health(let typeID):
             let type = HealthMetricRegistry.resolve(typeID: typeID)
@@ -139,7 +143,8 @@ enum MetricCatalog {
                 decimals: 1,
                 nutrientKey: resolved.nutrientKey,
                 learnSlug: resolved.learnSlug,
-                nutrientMetric: resolved.nutrientMetric.flatMap { MetricKey(pinID: $0) }
+                nutrientMetric: resolved.nutrientMetric.flatMap { MetricKey(pinID: $0) },
+                foodTracked: resolved.foodTracked
             )
         }
     }

@@ -123,12 +123,9 @@ def ref_note(s: str) -> str:
 
 
 def app_tracked(slug: str) -> bool:
-    """False for the nutrients the food log does not track: the apps chart them from Apple Health / Health Connect."""
+    """False for the nutrients the food log does not estimate: the apps chart them from Medications supplements
+    and from Apple Health / Health Connect."""
     return ref_for(slug).get("app_tracked", True) is not False
-
-
-HEALTH_ONLY_PILL = "From Apple Health / Health Connect"
-HEALTH_ONLY_TAG = "From Health apps"   # short form for hub cards; the hub note spells it out
 
 
 def limit_value(r: dict, kcal: int = 2000):
@@ -523,9 +520,8 @@ def _photo(slug: str, f: dict, eager: bool) -> str:
 
 def _hero(slug: str, f: dict, r: dict, n_src: int) -> str:
     style = {"target": "Daily target", "limit": "Daily limit", "info": "For information"}.get(r.get("style"), "")
-    tracked = app_tracked(slug)
-    unit_pill = (f"Tracked in {r.get('unit', '')}" if tracked else f"Charted in {r.get('unit', '')}") if r.get("unit") else ""
-    meta = [CATEGORIES[f["category"]]["label"], unit_pill, "" if tracked else HEALTH_ONLY_PILL, style,
+    unit_pill = f"Tracked in {r.get('unit', '')}" if r.get("unit") else ""
+    meta = [CATEGORIES[f["category"]]["label"], unit_pill, style,
             f"{n_src} sources · checked {CHECKED}"]
     pills = "".join(f"<span>{x(m)}</span>" for m in meta if m)
     return (
@@ -784,10 +780,10 @@ def build_nutrient(slug: str) -> Page:
             "Supplements you log in Medications count too. Free, with no account.")
     else:
         body += cta_section(
-            f"See {x(lname(f))} <em>in Ayuvo</em>.",
-            f"The Ayuvo food log does not count {x(lname(f))}. When another app saves {x(lname(f))} to Apple Health on iPhone or Health Connect "
-            "on Android, Ayuvo charts it by day, week, month and year with the reference lines from this page, personalised by age and sex "
-            "where they differ. Supplements logged in Ayuvo Medications are not added to this chart. Free, with no account.")
+            f"Track {x(lname(f))} <em>in Ayuvo</em>.",
+            f"Food logging does not estimate {x(lname(f))}, so Ayuvo tracks it from supplements you log in Medications, and from Apple Health "
+            "on iPhone or Health Connect on Android when another app saves it there. Charts by day, week, month and year use the reference "
+            "lines from this page, personalised by age and sex where they differ. Free, with no account.")
     body += _sources(src, f)
     body += _related(slug, f)
     url = f"{BASE}/nutrients/{slug}"
@@ -818,12 +814,12 @@ HUB_FAQ = [
      "No. They are general information for healthy adults. They do not cover pregnancy, breastfeeding, children or medical conditions. "
      "Talk to a clinician before starting high-dose supplements."),
     ("Does Ayuvo count supplements?",
-     "Yes, for the nutrients the food log tracks. When you add a supplement in Medications with the nutrients it contains, every dose you mark "
-     "as taken is added to that day's totals, next to what you logged as food."),
-    ("Why do some guides say they come from Apple Health or Health Connect?",
-     f"The Ayuvo food log tracks {{tracked}} nutrients. {{health_word}} others, such as iodine, selenium and most B vitamins, are not in the food log. "
-     "Ayuvo charts them from Apple Health on iPhone or Health Connect on Android when another app has saved them there, with reference lines "
-     "from the same table. Supplements logged in Ayuvo Medications are not added to those charts."),
+     "Yes, for every nutrient on these pages. When you add a supplement in Medications with the nutrients it contains, every dose you mark "
+     "as taken is added to that day's totals, next to anything the food log counts."),
+    ("Which nutrients does the food log not estimate?",
+     f"The Ayuvo food log estimates {{tracked}} nutrients. {{health_word}} others, such as iodine, selenium and most B vitamins, are not estimated from food. "
+     "Ayuvo tracks them from supplements you log in Medications, and from Apple Health on iPhone or Health Connect on Android when another "
+     "app has saved them there, with reference lines from the same table."),
 ]
 
 
@@ -842,8 +838,7 @@ def _hub_card(slug: str, eager: bool = False) -> str:
     return (f'<a class="nt-hub-card" href="/nutrients/{slug}"><img src="{asset(f"/assets/nutrients/{slug}-thumb.webp")}" alt="" '
             f'width="{f["photo"]["thumb_w"]}" height="{f["photo"]["thumb_h"]}" {load}>'
             f'<div class="nt-hub-body"><h3>{x(f["name"])}</h3><p>{x(f["hub_line"])}</p>'
-            + ("" if app_tracked(slug) else f'<span class="nt-src">{HEALTH_ONLY_TAG}</span>')
-            + f'<span class="nt-style nt-style-{r.get("style", "info")}">{style}</span></div></a>')
+            f'<span class="nt-style nt-style-{r.get("style", "info")}">{style}</span></div></a>')
 
 
 def chart_illustration() -> str:
@@ -898,15 +893,15 @@ def build_nutrients_hub() -> Page:
                "<ul><li><span>Supplements you add in Medications count toward the totals when you mark a dose taken</span></li>"
                "<li><span>Weekly supplements show an average per logged day, so a weekly dose is not mistaken for a daily one</span></li>"
                "<li><span>Nutrients with no reference, such as total sugar, are shown without a line rather than an invented one</span></li>"
-               "<li><span>Vitamins and minerals the food log does not track, such as iodine or biotin, are charted from Apple Health or Health Connect "
-               "with the same lines, without supplements from Medications</span></li></ul>"
+               "<li><span>Vitamins and minerals food logging does not estimate, such as iodine or biotin, are charted from supplements in Medications "
+               "and from Apple Health or Health Connect, with the same lines</span></li></ul>"
                '</div><div class="split-media">' + chart_illustration() + "</div></div>")
     disc = band("paper", '<div class="prose wide"><div class="disclaimer"><p><strong>General information, not medical advice.</strong> These guides are for healthy adults '
                 "and do not cover pregnancy, breastfeeding, children or medical conditions. They cannot diagnose or treat anything. "
                 "Talk to a clinician before starting high-dose supplements.</p></div></div>")
     tracked = sum(1 for s in ORDER if app_tracked(s))
-    note = (f'<p class="nt-caption nt-hub-note">{tracked} of these nutrients come from the Ayuvo food log. The {len(ORDER) - tracked} marked '
-            f'<span class="nt-src">{HEALTH_ONLY_TAG}</span> are not in the food log: Ayuvo charts them when another app saves them to '
+    note = (f'<p class="nt-caption nt-hub-note">The Ayuvo food log estimates {tracked} of these nutrients. For the other {len(ORDER) - tracked}, '
+            "such as iodine or biotin, Ayuvo tracks supplements you log in Medications and data other apps save to "
             "Apple Health on iPhone or Health Connect on Android.</p>")
     body = (sprite + hero
             + band("paper", note + "".join(groups), "guides")

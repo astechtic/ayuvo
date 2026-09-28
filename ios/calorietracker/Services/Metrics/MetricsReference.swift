@@ -520,8 +520,12 @@ nonisolated enum MetricsReference {
         var nutrientKey: String? = nil
         /// Website guide slug (`/nutrients/<slug>`); nil for sports supplements and non-nutrient metrics.
         var learnSlug: String? = nil
-        /// `nutrient:<k>` for a health nutrition type whose nutrient is `app_tracked` (link to the app's chart).
+        /// `nutrient:<k>` for a health nutrition type whose `nutrient:<k>` is in `nutrient_metrics` (every reference
+        /// nutrient): the link to the app's own chart.
         var nutrientMetric: String? = nil
+        /// The `nutrient_metrics` entry's `food_tracked` for `nutrient:<k>` and for a health id with a
+        /// `nutrientMetric` (false: the app chart counts supplements only); nil otherwise.
+        var foodTracked: Bool? = nil
     }
 
     static func resolveMetric(_ key: String, catalog: MetricCatalogData = .shared) -> Resolved {
@@ -546,7 +550,7 @@ nonisolated enum MetricsReference {
                 aggregation: metric.aggregation, chartKind: metric.chartKind, unit: metric.unit, goalSource: metric.goalSource,
                 defaultFavouriteOrder: nil, browseHidden: metric.browseHidden,
                 iconAndroid: domain.icon.android, iconIOS: domain.icon.ios,
-                nutrientKey: metric.key, learnSlug: metric.learnSlug, nutrientMetric: nil
+                nutrientKey: metric.key, learnSlug: metric.learnSlug, nutrientMetric: nil, foodTracked: metric.foodTracked
             )
         }
         guard let type = HealthMetricRegistry.type(id: key) else { return unknown(catalog) }
@@ -555,6 +559,7 @@ nonisolated enum MetricsReference {
         guard let domain = catalog.domain(domainID) else { return unknown(catalog) }
         let fav = override?.defaultFavourite
         let nutrient = override?.nutrientKey.flatMap { NutrientsReference.byKey[$0] }
+        let appChart = nutrient.flatMap { catalog.nutrientMetricsByKey[$0.key] }
         return Resolved(
             source: "health", domain: domainID, colourHex: domain.colourHex, colourHexDark: domain.colourHexDark,
             aggregation: catalog.health.aggregationMap[type.aggregation.rawValue] ?? "last",
@@ -565,7 +570,8 @@ nonisolated enum MetricsReference {
             iconAndroid: override?.icon?.android ?? domain.icon.android,
             iconIOS: override?.icon?.ios ?? domain.icon.ios,
             nutrientKey: nutrient?.key, learnSlug: nutrient?.slug,
-            nutrientMetric: nutrient.flatMap { $0.appTracked ? "nutrient:\($0.key)" : nil }
+            nutrientMetric: appChart.map { "nutrient:\($0.key)" },
+            foodTracked: appChart?.foodTracked
         )
     }
 
@@ -909,6 +915,7 @@ nonisolated enum MetricsReference {
                 "nutrient_key": r.nutrientKey.map { RJ.str($0) } ?? .null,
                 "learn_slug": r.learnSlug.map { RJ.str($0) } ?? .null,
                 "nutrient_metric": r.nutrientMetric.map { RJ.str($0) } ?? .null,
+                "food_tracked": r.foodTracked.map { RJ.bool($0) } ?? .null,
             ])
         case "nice_ticks":
             let t = niceTicks(min: input["min"].double ?? 0, max: input["max"].double ?? 0, count: Int(input["count"].double ?? 4), includeZero: input["include_zero"].bool ?? false)

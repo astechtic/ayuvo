@@ -553,11 +553,133 @@
         "unit": null
       },
       "input": {
+        "key": "grape_seed_extract",
+        "unit": "mg",
+        "value": 50
+      },
+      "name": "unknown_key",
+      "notes": "Not a reference nutrient or sports supplement (grape seed extract from a multivitamin label)."
+    },
+    {
+      "expected": {
+        "amount": 16.0,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
         "key": "niacin",
         "unit": "mg",
         "value": 16
       },
-      "name": "unknown_key"
+      "name": "untracked_niacin_mg",
+      "notes": "app_tracked: false nutrients are supplement nutrients: niacin converts like any mg nutrient."
+    },
+    {
+      "expected": {
+        "amount": 1.7,
+        "error": null,
+        "ok": true,
+        "unit": "mg"
+      },
+      "input": {
+        "key": "copper",
+        "unit": "mg",
+        "value": 1.7
+      },
+      "name": "untracked_copper_cupric_sulphate_mg",
+      "notes": "Label 'Copper (cupric sulphate) 1.7 mg': the printed amount under the element key."
+    },
+    {
+      "expected": {
+        "amount": 140.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "iodine",
+        "unit": "mcg",
+        "value": 140
+      },
+      "name": "untracked_iodine_potassium_iodide_mcg",
+      "notes": "Label 'Potassium iodide (iodine) 140 mcg'."
+    },
+    {
+      "expected": {
+        "amount": 50.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "chromium",
+        "unit": "mg",
+        "value": 0.05
+      },
+      "name": "untracked_chromium_mg_to_mcg",
+      "notes": "Canonical unit mcg: 0.05 mg = 50 mcg."
+    },
+    {
+      "expected": {
+        "amount": 40.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "key": "biotin",
+        "unit": "µg",
+        "value": 40
+      },
+      "name": "untracked_biotin_ug_alias"
+    },
+    {
+      "expected": {
+        "amount": null,
+        "error": "iu_not_supported",
+        "ok": false,
+        "unit": null
+      },
+      "input": {
+        "key": "copper",
+        "unit": "IU",
+        "value": 2
+      },
+      "name": "untracked_copper_iu_not_supported",
+      "notes": "IU stays limited to vitamins A, D and E."
+    },
+    {
+      "expected": {
+        "amount": 1000.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": null,
+        "key": "vitamin_a",
+        "unit": "mcg",
+        "value": 1000
+      },
+      "name": "vitamin_a_retinyl_acetate_mcg_form_null",
+      "notes": "Label 'Vitamin A (Retinyl Acetate) 1000 mcg': retinol / retinyl esters are 1:1 mcg RAE."
+    },
+    {
+      "expected": {
+        "amount": 1000.0,
+        "error": null,
+        "ok": true,
+        "unit": "mcg"
+      },
+      "input": {
+        "form": "retinol",
+        "key": "vitamin_a",
+        "unit": "mcg",
+        "value": 1000
+      },
+      "name": "vitamin_a_retinol_form_mcg",
+      "notes": "retinol is an IU form only; for mass units it is not in mass_forms and is ignored (1:1 RAE)."
     }
   ],
   "format": "ayuvo-nutrients-vectors",

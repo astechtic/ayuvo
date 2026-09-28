@@ -63,7 +63,10 @@ import com.ayuvo.health.data.metrics.MetricKey
 import com.ayuvo.health.nutrients.NutrientAmount
 import com.ayuvo.health.nutrients.NutrientFields
 import com.ayuvo.health.nutrients.NutrientFormat
+import com.ayuvo.health.nutrients.NutrientReference
+import com.ayuvo.health.nutrients.Nutrients
 import com.ayuvo.health.nutrients.NutrientTotals
+import com.ayuvo.health.ui.metrics.nutrientDisplayName
 import java.time.LocalDate
 import kotlin.math.roundToInt
 import com.ayuvo.health.ui.components.GlassDialog
@@ -107,6 +110,13 @@ fun NutritionDetailSheet(
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showHomeCardsPicker by remember { mutableStateOf(false) }
     val dayTotals = remember(totals, day) { totals.day(day) }
+    // Food-log rows, plus the untracked nutrients (copper, thiamin, …) an active medication lists or
+    // a taken dose of the day contributed, after their category's rows (docs/nutrients.md §5b).
+    val detailedRows = remember(totals, day) {
+        val base = DETAILED_ROWS.associateBy { it.key }
+        NutrientFields.withUntrackedRows(DETAILED_ROWS.map { it.key }, totals.untrackedDetailKeys(day))
+            .map { k -> base[k] ?: untrackedRow(k) }
+    }
     fun amount(key: String): NutrientAmount = dayTotals[key] ?: NutrientAmount.NONE
     // Calories and macros are food only; supplements never add calories.
     val calories = amount(NutrientFields.CALORIES).food?.roundToInt() ?: 0
@@ -189,10 +199,15 @@ fun NutritionDetailSheet(
             item { SectionHeader(stringResource(R.string.nutrition_section_detailed)) }
             item {
                 Card {
-                    DETAILED_ROWS.forEachIndexed { index, row ->
+                    detailedRows.forEachIndexed { index, row ->
                         if (index > 0) Hairline()
                         val a = amount(row.key)
-                        val goal = NutrientFields.optionalNutrient(row.key)?.let { optionalGoals.effectiveGoal(it, nutrientProfile) }
+                        // Untracked nutrients have no custom goal: the reference default goal.
+                        val goal = if (NutrientFields.foodTracked(row.key)) {
+                            NutrientFields.optionalNutrient(row.key)?.let { optionalGoals.effectiveGoal(it, nutrientProfile) }
+                        } else {
+                            Nutrients.defaultGoalInt(Nutrients.defaultGoal(row.key, nutrientProfile))
+                        }
                         val unitRes = when (NutrientFields.unit(row.key)) {
                             "mg" -> R.string.unit_mg
                             "mcg" -> R.string.unit_mcg
@@ -201,7 +216,7 @@ fun NutritionDetailSheet(
                         val unitText = stringResource(unitRes)
                         DetailRow(
                             row.icon,
-                            stringResource(NutrientFields.nameRes(row.key)),
+                            nutrientDisplayName(row.key),
                             fmt(a.total),
                             unitText,
                             goal = goal?.toString(),
@@ -533,6 +548,10 @@ private fun DetailRow(
         }
     }
 }
+
+/** A row for an `app_tracked: false` nutrient: B vitamins get the "B" glyph, minerals the bolt. */
+private fun untrackedRow(key: String): DetailedRow =
+    if (NutrientReference.active?.byKey?.get(key)?.category == "vitamins") DetailedRow(key, glyph = "B") else DetailedRow(key, Icons.Filled.Bolt)
 
 /** One Detailed Nutrition row: the nutrient key and its icon or letter glyph. */
 private data class DetailedRow(val key: String, val icon: ImageVector? = null, val glyph: String? = null)

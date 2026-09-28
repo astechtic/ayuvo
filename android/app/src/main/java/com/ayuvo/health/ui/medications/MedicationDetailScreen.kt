@@ -62,6 +62,7 @@ import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
 import com.ayuvo.health.ui.components.GlassPrimaryButton
 import com.ayuvo.health.ui.components.IconBubble
+import com.ayuvo.health.ui.metrics.nutrientDisplayName
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import com.ayuvo.health.ui.records.RecordFormat
 import com.ayuvo.health.ui.records.RecordThumbnail
@@ -214,7 +215,7 @@ fun MedicationDetailScreen(
                                     .testTag("medications.detail.nutrient.${row.nutrientKey}"),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(stringResource(NutrientFields.nameRes(row.nutrientKey)), fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(nutrientDisplayName(row.nutrientKey), fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 Text(NutrientFormat.withUnit(row.amountPerUnit * medication.doseQuantity, unit), fontSize = 14.sp, modifier = Modifier.width(110.dp), textAlign = TextAlign.End)
                                 Text(NutrientFormat.withUnit(ui.todayNutrients[row.nutrientKey], unit), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f), modifier = Modifier.width(96.dp), textAlign = TextAlign.End)
                                 Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f), modifier = Modifier.size(22.dp))

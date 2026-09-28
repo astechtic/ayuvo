@@ -78,8 +78,10 @@ data class HealthGoalUi(
     /** Reference key whose lines, About and Learn more the chart shows; null for non-nutrient types. */
     val nutrientKey: String? = null,
     val learnSlug: String? = null,
-    /** The app's own `nutrient:<key>` chart (food + supplements) when the food log tracks the nutrient. */
+    /** The app's own `nutrient:<key>` chart (every reference nutrient has one). */
     val nutrientMetric: MetricKey.Nutrient? = null,
+    /** `food_tracked` of [nutrientMetric]: false = that chart counts Medications supplements only. */
+    val foodTracked: Boolean? = null,
     /** `reference_lines` for the user's age, sex, calorie goal and (app-tracked only) custom goal. */
     val lines: ReferenceLines? = null,
     val customGoal: Int? = null,
@@ -98,12 +100,13 @@ data class HealthGoalUi(
             if (nk == null || NutrientReference.active?.byKey?.get(nk) == null) {
                 return HealthGoalUi(goal = MetricCatalog.goal(resolved.goalSource, MetricGoalInputs(profile)))
             }
-            val tracked = resolved.nutrientMetric != null
+            val tracked = resolved.foodTracked == true
             val custom = if (tracked) NutrientFields.optionalNutrient(nk)?.let { goals.customGoal(it) } else null
             return HealthGoalUi(
                 nutrientKey = nk,
                 learnSlug = resolved.learnSlug,
                 nutrientMetric = resolved.nutrientMetric?.let { MetricKey.parse(it) as? MetricKey.Nutrient },
+                foodTracked = resolved.foodTracked,
                 lines = Nutrients.referenceLines(nk, NutrientFields.profile(profile), custom?.toDouble()),
                 customGoal = custom
             )

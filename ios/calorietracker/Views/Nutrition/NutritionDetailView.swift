@@ -87,8 +87,9 @@ struct NutritionDetailView: View {
                 .listRowBackground(AppColors.appCard)
 
                 Section {
-                    let totals = NutrientTotals(foodStore: foodStore, medicationStore: medicationStore).totals(NutrientCatalog.detailKeys, on: date)
-                    ForEach(NutrientCatalog.detailKeys, id: \.self) { key in
+                    let totals = NutrientTotals(foodStore: foodStore, medicationStore: medicationStore).totals(NutrientCatalog.allDetailKeys, on: date)
+                    let keys = NutrientCatalog.detailRowKeys(activeNutrientKeys: medicationStore.activeNutrientKeys, totals: totals)
+                    ForEach(keys, id: \.self) { key in
                         NavigationLink(value: MetricRoute.detail(.nutrient(key))) {
                             nutrientRow(key, total: totals[key] ?? .empty)
                         }
@@ -133,10 +134,12 @@ struct NutritionDetailView: View {
 
     /// Food + supplements for the day; "—" when nothing recorded it (never 0 for missing data).
     private func nutrientRow(_ key: String, total: NutrientsReference.DayTotal) -> some View {
-        let goal = NutrientCatalog.optionalNutrient(key)
-            .map { optionalNutrientGoals.goal(for: $0, profile: NutrientCatalog.profile(userProfile)) }
+        let goal = NutrientCatalog.detailGoal(key, profile: userProfile, goals: optionalNutrientGoals)
             .flatMap { $0 > 0 ? "\($0)" : nil }
-        let subline = total.supplements.flatMap { $0 > 0 ? String(localized: "incl. \(NutrientCatalog.text($0, key: key)) from supplements") : nil }
+        // The food log does not record app_tracked: false nutrients: the whole value is supplements.
+        let subline = !NutrientCatalog.foodTracked(key)
+            ? String(localized: "Supplements only")
+            : total.supplements.flatMap { $0 > 0 ? String(localized: "incl. \(NutrientCatalog.text($0, key: key)) from supplements") : nil }
         return NutritionDetailRow(
             icon: NutrientCatalog.iconName(key),
             label: NutrientCatalog.rowTitle(key),

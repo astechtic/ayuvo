@@ -1,6 +1,8 @@
 package com.ayuvo.health.nutrients
 
 import com.ayuvo.health.medications.data.MedicationsStore
+import com.ayuvo.health.medications.model.MedicationFilter
+import com.ayuvo.health.medications.model.MedicationStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +39,10 @@ class SupplementIntakeSource(
         if (!databaseExists() && !opened.value) return SupplementSnapshot.EMPTY
         val s = store()
         return try {
-            SupplementSnapshot(s.allNutrients(), s.supplementDoses(), s.takenDoseTimes())
+            SupplementSnapshot(
+                s.allNutrients(), s.supplementDoses(), s.takenDoseTimes(),
+                s.list(MedicationFilter(status = MedicationStatus.ACTIVE)).mapTo(HashSet()) { it.id }
+            )
         } catch (e: kotlinx.coroutines.CancellationException) {
             throw e
         } catch (_: Exception) {

@@ -45,8 +45,9 @@ data class NutrientSpec(
     val massForms: Map<String, Double>?,
     val sourceIds: List<String>,
     /**
-     * True for the 23 nutrients the food log tracks (docs/nutrients.md §3). Only these get a
-     * `nutrient:<key>` metric, can be supplement nutrients and appear in the AI label prompt.
+     * True for the 23 nutrients the FOOD LOG records (docs/nutrients.md §3). It never limits
+     * supplements: every reference entry can be a supplement nutrient, an AI label key and a
+     * `nutrient:<key>` chart; an untracked one's food part is always null.
      */
     val appTracked: Boolean = true,
     /** The health registry id of the same nutrient (`dietary_vitamin_d`); null when there is none. */
@@ -83,21 +84,27 @@ class NutrientReference(
     val byKey: Map<String, NutrientSpec> = nutrients.associateBy { it.key }
     val sportsByKey: Map<String, SportsSupplementSpec> = sports.associateBy { it.key }
 
-    /** The `app_tracked` entries in reference order (food log, goals, supplement pickers, AI keys). */
+    /** The `app_tracked` entries in reference order (food log, goals, Nutrition Details' always-shown rows). */
     val trackedNutrients: List<NutrientSpec> = nutrients.filter { it.appTracked }
 
     /** Reference entries by their health registry id (`dietary_copper` → copper). */
     val byHealthType: Map<String, NutrientSpec> = nutrients.filter { it.healthType != null }.associateBy { it.healthType!! }
 
-    /** `app_tracked` reference keys in reference order, then the sports supplement keys (= `nutrient_metrics`). */
-    val allKeys: List<String> = trackedNutrients.map { it.key } + sports.map { it.key }
+    /** `app_tracked` reference keys in reference order, then the sports supplement keys (the food log's keys). */
+    val foodKeys: List<String> = trackedNutrients.map { it.key } + sports.map { it.key }
 
     /**
-     * Canonical unit of an `app_tracked` nutrient or sports supplement; null for unknown keys and
-     * for the health-only nutrients (copper, niacin, …), which cannot be converted, parsed from a
-     * label or stored as supplement nutrients (docs/nutrients.md §3).
+     * `SUPPLEMENT_KEYS`: every reference key (all styles, `app_tracked` or not) in reference order,
+     * then the sports keys. Supplement pickers, AI label keys, archive validation and
+     * `nutrient_metrics` use this list (docs/nutrients.md §3).
      */
-    fun unitOf(key: String): String? = byKey[key]?.takeIf { it.appTracked }?.unit ?: sportsByKey[key]?.unit
+    val supplementKeys: List<String> = nutrients.map { it.key } + sports.map { it.key }
+
+    /** Canonical unit of a supplement nutrient (any reference entry or sports supplement); null for unknown keys. */
+    fun unitOf(key: String): String? = byKey[key]?.unit ?: sportsByKey[key]?.unit
+
+    /** `food_tracked(key)`: `app_tracked` for reference entries, true for sports, false for unknown keys. */
+    fun foodTracked(key: String): Boolean = byKey[key]?.appTracked ?: (key in sportsByKey)
 
     companion object {
         const val ASSET_PATH = "nutrients/nutrient_reference.json"

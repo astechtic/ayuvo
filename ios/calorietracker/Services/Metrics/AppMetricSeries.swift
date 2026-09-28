@@ -190,16 +190,17 @@ nonisolated struct NutrientSeriesExtras: Sendable, Equatable {
 nonisolated enum NutrientSeriesProvider {
     /// Food entries of the field then supplement entries, bucketed with the shared `bucket_series` (sum), plus the
     /// average per logged day and the food / supplement split for the bucket interval.
+    /// `key` names the nutrient: an `app_tracked: false` nutrient counts only the days with a taken dose of it.
     static func build(food: [MetricsReference.Entry], supplements: [MetricsReference.Entry], loggedDays: [String],
                       range: HealthDetailRange, anchor: Date, calendar: Calendar,
-                      weekStart: MetricsReference.WeekStart) -> (series: HealthChartSeries, extras: NutrientSeriesExtras) {
+                      weekStart: MetricsReference.WeekStart, key: String? = nil) -> (series: HealthChartSeries, extras: NutrientSeriesExtras) {
         let series = AppMetricSeriesProvider.build(entries: food + supplements, aggregation: .sum, range: range, anchor: anchor,
                                                    calendar: calendar, weekStart: weekStart)
         let zone = MetricsReference.Zone(calendar: calendar)
         let anchorMs = Int64((anchor.timeIntervalSince1970 * 1000).rounded())
         let bounds = MetricsReference.bucketBounds(range: range, anchorMs: anchorMs, zone: zone, weekStart: weekStart, nowMs: anchorMs)
         let average = NutrientsReference.loggedDayAverage(entries: food + supplements, loggedDays: loggedDays,
-                                                          startMs: bounds.startMs, endMs: bounds.endMs, zone: zone)
+                                                          startMs: bounds.startMs, endMs: bounds.endMs, zone: zone, key: key)
         func part(_ entries: [MetricsReference.Entry]) -> Double? {
             let inside = entries.compactMap { $0.tMs >= bounds.startMs && $0.tMs < bounds.endMs ? $0.value : nil }
             guard !inside.isEmpty else { return nil }
@@ -234,7 +235,7 @@ final class MetricSeriesCache {
         let loggedDays = totals.loggedDays
         let result = await Task.detached(priority: .userInitiated) {
             NutrientSeriesProvider.build(food: parts.food, supplements: parts.supplements, loggedDays: loggedDays, range: range,
-                                         anchor: anchor, calendar: calendar, weekStart: weekStart)
+                                         anchor: anchor, calendar: calendar, weekStart: weekStart, key: nutrientKey)
         }.value
         nutrientStorage[key] = result
         touch(key)

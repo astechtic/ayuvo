@@ -103,11 +103,39 @@ struct NutrientsVectorTests {
     }
 
     @Test func labelValidatorRejectsGuessesAndUnknowns() {
-        let answer = #"{"items":[{"key":"biotin","amount":30,"unit":"mcg"},{"key":"vitamin_a","amount":5000,"unit":"IU"},{"key":"calcium","amount":200,"unit":"IU"},{"key":"vitamin_d","amount":150000,"unit":"mcg"},{"key":"iron","amount":18,"unit":"mg"},{"key":"iron","amount":9,"unit":"mg"}]}"#
+        let answer = #"{"items":[{"key":"grape_seed_extract","amount":30,"unit":"mg"},{"key":"vitamin_a","amount":5000,"unit":"IU"},{"key":"calcium","amount":200,"unit":"IU"},{"key":"vitamin_d","amount":150000,"unit":"mcg"},{"key":"iron","amount":18,"unit":"mg"},{"key":"iron","amount":9,"unit":"mg"}]}"#
         let result = NutrientsReference.parseLabelOutput(answer)
         #expect(result.ok)
         #expect(result.items.map(\.key) == ["iron"])
         #expect(result.rejected.map(\.code) == ["unknown_nutrient", "form_required", "iu_not_supported", "amount_too_large", "duplicate_nutrient"])
+    }
+
+    /// The contract's new cases (every reference nutrient is a supplement nutrient) must be present and pass, so
+    /// a stale vector copy or a skipped case fails here.
+    @Test(arguments: [
+        ("day_totals", "kolkata_untracked_copper_iodine_supplements_only"),
+        ("day_totals", "utc_untracked_food_only_no_key"),
+        ("logged_day_average", "utc_untracked_iodine_dose_days_only"),
+        ("logged_day_average", "utc_tracked_zinc_same_days"),
+        ("iu_conversion", "vitamin_a_retinyl_acetate_mcg_form_null"),
+        ("label_output", "multivitamin_all_reference_nutrients"),
+    ])
+    func contractCaseIsPresentAndPasses(_ file: String, _ caseName: String) throws {
+        let url = Self.vectorsDirectory.appendingPathComponent("\(file).json")
+        let root = try #require(RJ.parse(try String(contentsOf: url, encoding: .utf8)))
+        let function = try #require(root["function"].string)
+        let match = (root["cases"].array ?? []).first { $0["name"].string == caseName }
+        let c = try #require(match, "\(file).json has no case \(caseName)")
+        let diff = RecordsVectorTests.firstDifference(NutrientsReference.runCase(function: function, input: c["input"]), c["expected"])
+        #expect(diff == nil, "\(caseName): \(diff ?? "")")
+    }
+
+    @Test func multivitaminLabelKeepsEveryReferenceNutrient() {
+        let answer = #"{"serving_units":1,"items":[{"key":"thiamin","amount":1.4,"unit":"mg"},{"key":"riboflavin","amount":1.6,"unit":"mg"},{"key":"vitamin_b6","amount":2,"unit":"mg"},{"key":"biotin","amount":30,"unit":"mcg"},{"key":"iodine","amount":140,"unit":"mcg"},{"key":"manganese","amount":2,"unit":"mg"},{"key":"copper","amount":1.7,"unit":"mg"},{"key":"chromium","amount":50,"unit":"mcg"},{"key":"vitamin_a","amount":1000,"unit":"mcg","form":null},{"key":"grape_seed_extract","amount":25,"unit":"mg"}]}"#
+        let result = NutrientsReference.parseLabelOutput(answer)
+        #expect(result.items.map(\.key) == ["thiamin", "riboflavin", "vitamin_b6", "biotin", "iodine", "manganese", "copper", "chromium", "vitamin_a"])
+        #expect(result.items.first { $0.key == "vitamin_a" }?.amount == 1000, "retinyl in mcg is 1:1 mcg RAE")
+        #expect(result.rejected.map(\.code) == ["unknown_nutrient"])
     }
 
     @Test func labelValidatorFailsOnProse() {

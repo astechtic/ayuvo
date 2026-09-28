@@ -1,7 +1,7 @@
 import XCTest
 
 /// Health nutrition types walk (docs/nutrients.md §5a): Browse › Nutrition › All Apple Health Nutrition → Vitamin D
-/// (reference lines, About, Learn more, the link to the Ayuvo chart), Copper (lines, no app chart) and Dietary
+/// (reference lines, About, Learn more, the link to the Ayuvo chart), Copper (lines, and a link to its supplements-only Ayuvo chart) and Dietary
 /// Energy (calorie goal rule).
 ///
 /// Needs `dietary_vitamin_d`, `dietary_copper` and `dietary_energy` rows in the app's Health mirror. The
@@ -121,14 +121,21 @@ final class HealthNutritionUITests: XCTestCase {
         shot(app, "07_vitamin_d_day")
         back(app)
 
-        // Copper: lines and Learn more, no Ayuvo chart (not tracked by the food log).
+        // Copper: lines and Learn more, and a link to the Ayuvo chart, which counts supplements only (the food log
+        // does not record copper).
         openType(app, "Copper")
         shot(app, "08_copper_week")
         let copperLearn = app.buttons["metric.nutrient.learnMore"].firstMatch
         scrollTo(app, copperLearn)
         sleep(1)
         shot(app, "09_copper_about_learn_more")
-        XCTAssertFalse(app.buttons["metric.nutrient.appChart"].firstMatch.exists, "Copper has no Ayuvo chart")
+        let copperChart = app.buttons["metric.nutrient.appChart"].firstMatch
+        for _ in 0..<4 where !(copperChart.exists && copperChart.isHittable) {
+            let top = app.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.35))
+            top.press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.75)))
+        }
+        XCTAssertTrue(copperChart.exists, "Copper links to its Ayuvo chart")
+        XCTAssertTrue(app.staticTexts["Supplements logged in Ayuvo Medications"].firstMatch.exists)
         back(app)
 
         // Dietary Energy: the calorie goal rule.

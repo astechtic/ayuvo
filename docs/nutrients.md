@@ -23,7 +23,10 @@ Envelope `{"format": "ayuvo-nutrient-reference", "version": 1, "checked", "popul
 - `sports_supplements`: `creatine, beta_alanine, l_citrulline, l_carnitine, l_arginine, taurine, betaine, hmb`, unit `g`. They have charts and can be supplement nutrients, but no reference lines and no guide page.
 - `sources`: `{id: {title, publisher, url, checked, page_updated?, verified_via?, note?}}`.
 - `nutrients[]`: `{key, slug, name, unit, category, style, summary, recommended, upper_limit, limit, iu, mass_forms, notes, source_ids, app_tracked, health_type}`.
-  - `app_tracked` (boolean, on every entry): `true` for the 23 nutrients the food log tracks. Their `key` is the app's `OptionalNutrient.jsonKey` (plus `monounsaturated_fat`, `polyunsaturated_fat` for the `FoodEntry` fields of those names), and `unit` equals the app's unit (the checker parses the iOS model). `false` for the 14 health nutrition types the food log does not track: phosphorus, chloride, copper, manganese, selenium, chromium, molybdenum, iodine, vitamin B6, thiamin, riboflavin, niacin, biotin and pantothenic acid. Their `unit` equals the registry unit. Only `app_tracked` nutrients get a `nutrient:<key>` metric, can be supplement nutrients (`medication_nutrients`, archive import) and appear in the AI label prompt. `convert_amount` and `parse_label_output` return `unknown_nutrient` for the others. `reference_lines` and `default_goal` work for every entry. **Ports:** any code or test that walks every reference entry for the food log, goals settings, supplement pickers, the AI key list or `nutrient_metrics` must filter `app_tracked == true`.
+  - `app_tracked` (boolean, on every entry): `true` for the 23 nutrients the food log tracks. Their `key` is the app's `OptionalNutrient.jsonKey` (plus `monounsaturated_fat`, `polyunsaturated_fat` for the `FoodEntry` fields of those names), and `unit` equals the app's unit (the checker parses the iOS model). `false` for the 14 health nutrition types the food log does not track: phosphorus, chloride, copper, manganese, selenium, chromium, molybdenum, iodine, vitamin B6, thiamin, riboflavin, niacin, biotin and pantothenic acid. Their `unit` equals the registry unit. `app_tracked` means only "the FOOD LOG records it"; it never limits supplements.
+  - **Supplement nutrients** (`SUPPLEMENT_KEYS` in the reference): every one of the 37 reference nutrients, `app_tracked` or not and of any style (info-style sugar, trans fat, cholesterol and the two fats stay allowed: they were supplement nutrients before, and a label can print them), plus the 8 sports supplements, in reference order then sports order. All of them can be `medication_nutrients` rows (form, archive import), AI label keys, and have a `nutrient:<key>` chart. `convert_amount` and `parse_label_output` return `unknown_nutrient` only for keys outside that list (for example `grape_seed_extract`). `reference_lines` and `default_goal` work for every entry.
+  - **`app_tracked: false` nutrients** (copper, iodine, thiamin, …): the food log never records them, so their food part is always `null` (never 0), their totals are supplements only (§4.6), their logged days are the days with a taken dose of that nutrient (§4.7), and their chart says so (§5). The apps store no goals for them: `custom_goal` is always null and the chart shows the reference lines. `food_tracked(key)` in the reference is `app_tracked` for reference nutrients and `true` for sports supplements (they are in the app's `OptionalNutrient` list).
+  - **Ports:** code that walks the reference for the food log, the goals settings or Nutrition Details' always-shown rows must filter `app_tracked == true`. Supplement pickers, the AI key list, archive validation and `nutrient_metrics` use every reference entry plus the sports supplements. Display names for `app_tracked: false` nutrients come from the reference `name` (they are not in `OptionalNutrient`).
   - `health_type`: the `shared/health/metric_registry.json` id of the same nutrient (`vitamin_d` → `dietary_vitamin_d`, `saturated_fat` → `dietary_fat_saturated`, `monounsaturated_fat` → `dietary_fat_monounsaturated`, `fiber` → `dietary_fiber`, `sugar` → `dietary_sugar`), or `null` when the registry has none (`added_sugar`, `trans_fat`, `omega_3`). The checker requires a registry type with category `nutrition`, aggregation `SUM` and the same unit (no unit conversion is modelled, so a differing unit is flagged, not converted), each type used once, and every registry `dietary_*` type mapped by one nutrient except the macro types `dietary_energy`, `dietary_protein`, `dietary_carbohydrates`, `dietary_fat_total`.
   - `category`: `carbs | fats | minerals | vitamins | other`. `style`: `target` (has `recommended`), `limit` (has `limit`), `info` (no lines).
   - `recommended`: `{kind: RDA | AI, male: {band: value}, female: {band: value}}`, every band present.
@@ -54,7 +57,8 @@ Envelope of every vector file: `{"format": "ayuvo-nutrients-vectors", "version":
 ### 4.4 `iu_conversion.json` → `convert_amount(value, unit, key, form?)`
 - output `{ok, amount, unit, error}` with `amount` in the canonical unit rounded to 6 decimals.
 - Errors, in check order: `unknown_nutrient`, `invalid_amount` (not a finite number > 0; booleans and strings are invalid), `unsupported_unit` (anything but g / mg / mcg / its aliases / IU, trimmed and lower-cased), `iu_not_supported`, `form_required`, `unknown_form`.
-- Mass: `value × mcg_per[unit] / mcg_per[canonical]` (g 1,000,000, mg 1,000, mcg 1), then ÷ the `mass_forms` factor when `form` names one (other forms are ignored for mass units).
+- Keys: every reference nutrient (`app_tracked` or not) and every sports supplement; anything else → `unknown_nutrient`.
+- Mass: `value × mcg_per[unit] / mcg_per[canonical]` (g 1,000,000, mg 1,000, mcg 1), then ÷ the `mass_forms` factor when `form` names one (other forms are ignored for mass units). Vitamin A in a mass unit with form `null` or `"retinol"` (retinol, retinyl acetate or palmitate: "Vitamin A (Retinyl Acetate) 1000 mcg") is taken 1:1 as mcg RAE, because `retinol` is not a mass form (vector `vitamin_a_retinyl_acetate_mcg_form_null`).
 - IU: vitamin D `value × 0.025`; vitamin A / E `value × forms[form]` (form required); every other nutrient → `iu_not_supported`.
 
 ### 4.5 `supplement_entries.json` → `supplement_entries(medication_nutrients, dose_logs)`
@@ -65,17 +69,20 @@ Envelope of every vector file: `{"format": "ayuvo-nutrients-vectors", "version":
 ### 4.6 `day_totals.json` → `day_totals(food_entries, supplement_entries, day, time_zone)`
 - input `{food_entries: [{t_ms, nutrients: {key: value | null}}], supplement_entries: [...4.5 entries], day: "yyyy-MM-dd", time_zone}`
 - output `{totals: {key: {food, supplements, total}}}` for the entries whose local day is `day`. Keys = every key named by a food entry of the day (even with only nulls) or by a supplement entry of the day. Each part is the sum of its non-null values in input order, `null` when there are none; `total` = food + supplements with a null part treated as absent, `null` only when both parts are null. Rounded to 6 decimals at the end.
+- `app_tracked: false` nutrients: food values for them are ignored and do not name a key (the food log does not record them; a stray value in an entry is dropped). Their row exists only when a supplement entry of the day names them, with `food: null` (never 0), `supplements` = the sum and `total` = `supplements` (`null` when every supplement value is null). Vectors `kolkata_untracked_copper_iodine_supplements_only`, `utc_untracked_food_only_no_key`.
 
 ### 4.7 `logged_day_average.json` → `logged_day_average(entries, logged_days, interval, time_zone)`
-- input `{entries: [{t_ms, value | null}], logged_days: ["yyyy-MM-dd"], interval: {start_ms, end_ms}, time_zone}` — entries of ONE nutrient (food and supplement entries together).
+- input `{entries: [{t_ms, value | null}], logged_days: ["yyyy-MM-dd"], interval: {start_ms, end_ms}, time_zone, key?}` — entries of ONE nutrient (food and supplement entries together); `key` (optional) names that nutrient.
 - output `{average, logged_days}`. Logged days = the caller's days whose local midnight is inside `[start_ms, end_ms)`, plus the local day of every non-null entry inside the interval. `average = interval total ÷ logged day count`, rounded to 6 decimals; `null` when no entry in the interval has a value.
-- Platforms pass as `logged_days` every local day with any food entry or any taken dose.
+- Platforms pass as `logged_days` every local day with any food entry or any taken dose, and pass `key`.
+- When `key` is an `app_tracked: false` nutrient the caller's `logged_days` are ignored: the logged days are exactly the days with a taken dose of that nutrient (the days of its supplement entries), so 140 mcg of iodine on 2 of 5 logged days averages 140, not 56 (vectors `utc_untracked_iodine_dose_days_only`, `utc_tracked_zinc_same_days`).
 
 ### 4.8 `label_output.json` → `parse_label_output(text)` (§7)
 - output `{ok, error, serving_units, items: [{key, amount, unit, form}], rejected: [{index, code}]}`.
 
 ## 5. Chart line rules
-- Nutrient metrics are `nutrient:<key>` (`shared/metrics/metric_catalog.json` → `nutrient_metrics`, docs/ui-structure.md §4). Entries = food entries of that field (null skipped) plus `supplement_entries` of that key, bucketed by the existing `bucket_series` (no new bucketing math).
+- Nutrient metrics are `nutrient:<key>` (`shared/metrics/metric_catalog.json` → `nutrient_metrics`, docs/ui-structure.md §4), one per reference nutrient plus the sports supplements. Entries = food entries of that field (null skipped) plus `supplement_entries` of that key, bucketed by the existing `bucket_series` (no new bucketing math). For a `food_tracked: false` entry (`app_tracked: false` nutrient) the entries are the supplement entries only.
+- Supplements-only note: when the entry has `food_tracked: false`, the chart shows under the headline "Food isn't recorded for ‹nutrient›: this chart counts supplements only." (‹nutrient› = the reference `name`, e.g. "Copper"). The "Food vs Supplements" section is replaced by that note (there is no food part to compare). With no taken dose in the period the chart shows the normal empty state.
 - Lines show on **W, M, 6M and Y** only. Those bars are daily totals (W, M) or means of daily totals (6M, Y) per the bucketing contract, so a daily reference is comparable. On **D** (hourly bars) the lines are hidden and the header shows "Today X of Y" instead.
 - Two dashed rules: "Recommended" (or "Your goal") in the domain colour, and "Upper limit" in the warning colour with the scope note when the scope is not `all_sources`. Limit-style nutrients show only "Limit" (or "Your goal"). Info-style nutrients show no rules unless the user set a goal. The y-domain grows to include every visible line.
 - The headline badge reads **"Average per logged day"** (§4.7) so a weekly supplement is not shown as a daily intake.
@@ -88,11 +95,19 @@ Browse › Nutrition › "All Apple Health Nutrition" (Health Connect on Android
 - Sections: About (summary, the value for the user's band and sex, the scope note, the source titles) and "Learn more about ‹nutrient›" → `https://ayuvo-health.web.app/nutrients/<learn_slug>`.
 - Badges on W, M, 6M and Y: Total, **Average per logged day** (the total over days that have a value, the same meaning as on the `nutrient:` charts) and Latest. D keeps the standard health badges.
 - **No Food vs Supplements split.** The values come from Apple Health / Health Connect, which do not include supplements logged in Ayuvo Medications (§6: supplement contributions are never written to HealthKit or Health Connect). A note under the chart says so.
-- When `nutrient_metric` is not null (the nutrient is `app_tracked`), the note has a row "Open Ayuvo ‹nutrient› chart" (`nutrient:<key>`, logged in Ayuvo: food and supplements). `app_tracked: false` nutrients have no app chart.
+- Every health nutrition type with a `nutrient_key` now has a `nutrient_metric` (every reference nutrient has an app chart), so the note always has a row "Open Ayuvo ‹nutrient› chart" (`nutrient:<key>`). Its subtitle follows `food_tracked` from `resolve_metric`: `true` → "Logged in Ayuvo: food and supplements"; `false` → "Supplements logged in Ayuvo Medications" (the food log does not record this nutrient).
 - Android: the per-nutrient `dietary_*` types are day rollups of Health Connect `NutritionRecord`s. Browse › Nutrition has an "All Health Connect Nutrition" row that lists the types with data, and their D chart is built by hour from the day's records.
 - Limitation: HealthKit and Health Connect store vitamin A and folate as plain mcg without saying whether the value is RAE or DFE. The lines assume mcg RAE and mcg DFE.
 
+## 5b. Nutrition Details rows for `app_tracked: false` nutrients
+Nutrition Details (iOS `NutritionDetailView`, Android `NutritionDetailSheet`) keeps its 23 food-log rows and sports rows as today. For the selected local day `D`, an `app_tracked: false` nutrient `k` gets a row exactly when at least one of these holds:
+1. a medication with `status = active` has a `medication_nutrients` row with `nutrient_key = k` (whether or not a dose was taken on `D`), or
+2. `day_totals(…, D, …)[k].supplements` is not null (a `taken` dose with `taken_at_ms` on `D` contributed `k`, whatever the medication's status now).
+
+Such rows are listed after the food-log rows of the same category (minerals after zinc, vitamins after folate) in reference order, show `total` for the day (`—` when null, never 0), use the reference `name`, unit and `default_goal` (no custom goal), and open `nutrient:<k>`. Paused, completed or deleted medications do not add a row by rule 1. Anything that mirrors the sheet (the "Today's Nutrition" action, docs/actions.md) uses the same row set.
+
 ## 6. Supplement contribution rules
+- Keys: every reference nutrient (`app_tracked` or not) plus the sports supplements (§3). The label's carbohydrate, fat, protein and energy lines are never supplement nutrients (no macro keys exist in the list).
 - Stored in `medication_nutrients` (docs/medications.md §4, schema v2): one row per medication and nutrient, `amount_per_unit` in the nutrient's canonical unit, per ONE dose unit (tablet, capsule, ml, …).
 - Only `taken` doses contribute (§4.5), at `taken_at_ms`.
 - Totals are recomputed from the rows and the dose history on every read and are never stored. Editing a supplement's nutrients therefore changes its past contributions too; the form's info text says so.
@@ -101,7 +116,8 @@ Browse › Nutrition › "All Apple Health Nutrition" (Health Connect on Android
 
 ## 7. AI supplement label rules
 - Prompt: `shared/nutrients/ai_supplement_label.md` (cloud and compact on-device versions; photo → vision role, name and strength → text role; routing through `AIRoleResolver`, no silent fallback).
-- Output `{"serving_units": n, "items": [{"key", "amount", "unit", "form"}]}`; only keys from the reference and the 8 sports keys; anything not printed is left out; `{"items": []}` when unsure; no advice.
+- Output `{"serving_units": n, "items": [{"key", "amount", "unit", "form"}]}`; only keys from the reference (all 37, `app_tracked` or not) and the 8 sports keys; anything not printed is left out; `{"items": []}` when unsure; no advice.
+- Prompt v2 mapping hints: thiamin = B1, riboflavin = B2, niacin = B3 / nicotinamide, pantothenic_acid = B5, vitamin_b6 = pyridoxine, biotin = B7; folic acid printed only as folic acid → form `folic_acid`; a mineral printed as a salt ("Zinc sulphate 17 mg", "Cupric sulphate 1.7 mg", "Potassium iodide 140 mcg") → the printed amount under the element key, and never the salt's other element (no potassium from potassium iodide); vitamin A in mcg (retinol / retinyl esters) → form null; extracts (grape seed) and the macros / energy lines are left out. Vector `multivitamin_all_reference_nutrients` is the user's multivitamin label.
 - `parse_label_output` validates every item through `convert_amount`, divides by `serving_units`, applies the sanity cap and rejects the rest with a code. The accepted items open a review sheet where the user edits, removes or confirms each row. Nothing is saved until the user confirms. Rejected items are shown as "Not recognised". Without an AI role the button shows the "Set up AI in Settings" hint.
 
 ## 8. IU rules
@@ -114,12 +130,13 @@ Browse › Nutrition › "All Apple Health Nutrition" (Health Connect on Android
 - Added sugar follows the Dietary Guidelines 2020–2025 (under 10 % of calories). The 2025–2030 Guidelines say no amount of added sugars is recommended and no more than 10 g per meal; there is no daily percentage to draw, so the line stays at 10 % and the note says so.
 - Folate and vitamin A amounts are totals in DFE and RAE; the app cannot split folic acid from food folate or preformed vitamin A from carotenoids.
 - Reference values were read from the NIH ODS fact sheets through Internet Archive captures of September 2026 because ods.od.nih.gov blocks automated requests; each source records its check date. Chloride has no ODS fact sheet in the reference; its AI and UL come from Health Canada's DRI table of elements, and the niacin UL scope wording from Health Canada's vitamins table.
-- The 14 `app_tracked: false` nutrients have lines only on their health nutrition charts. Their web guide pages (`/nutrients/<slug>`, content in `scripts/web/nutrient_facts_health.py`) say they are charted from Apple Health / Health Connect, not the food log, and that Medications supplements are not added.
+- The 14 `app_tracked: false` nutrients are not recorded by the food log: their `nutrient:<key>` charts count Medications supplements only, and their health nutrition charts show Apple Health / Health Connect data only. Their web guide pages (`/nutrients/<slug>`, content in `scripts/web/nutrient_facts_health.py`) say Ayuvo tracks them from Medications supplements and from Apple Health / Health Connect.
+- Minerals printed as a salt are taken as the elemental amount printed; a label that prints the salt's weight instead would overstate the element. Vitamin E printed in mg is taken as mg alpha-tocopherol whatever the form (d- or dl-); only IU amounts use the natural / synthetic factors.
 
 ## 10. Platform files
 - Data copies (byte-identical, written by the checker): `ios/calorietracker/Nutrients/Resources/{nutrient_reference.json, ai_supplement_label.md}`, `android/app/src/main/assets/nutrients/{nutrient_reference.json, ai_supplement_label.md}`.
 - Each platform runs every vector file (`NutrientsVectorTests`) with a coverage test that fails when a vector file has no runner.
-- Health nutrition types: the platform metric detail for a health id reads `nutrient_key` / `learn_slug` / `nutrient_metric` from its `resolve_metric` port (§5a) and reuses the `nutrient:` chart's reference-line, About and Learn more components.
+- Health nutrition types: the platform metric detail for a health id reads `nutrient_key` / `learn_slug` / `nutrient_metric` / `food_tracked` from its `resolve_metric` port (§5a) and reuses the `nutrient:` chart's reference-line, About and Learn more components.
 
 ## 11. Reference table
 
@@ -129,7 +146,7 @@ _Generated from `shared/nutrients/nutrient_reference.json` by `scripts/nutrients
 
 Population: adults 19+, not pregnant or lactating. Bands: 19-30, 31-50, 51-70, 71+ (default 31-50). Values that differ by band are listed as 19–30 / 31–50 / 51–70 / 71+.
 
-App tracked: ✓ = the food log tracks it (`nutrient:<key>` chart, supplements, AI label); — = health nutrition type only (Apple Health / Health Connect chart).
+App tracked: ✓ = the food log records it; — = the food log does not record it (its `nutrient:<key>` chart counts Medications supplements only). Every row can be a supplement nutrient and an AI label key and has a `nutrient:<key>` chart.
 
 | Nutrient | Unit | App | Health type | Style | Recommended | Upper limit (scope) | Limit | IU | Sources |
 |---|---|---|---|---|---|---|---|---|---|

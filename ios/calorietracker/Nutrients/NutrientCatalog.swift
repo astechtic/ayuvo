@@ -11,8 +11,56 @@ enum NutrientCatalog {
         "vitamin_d", "vitamin_b12", "vitamin_e", "vitamin_k", "folate", "omega_3",
     ] + SupplementalNutrient.allCases.map(\.jsonKey)
 
-    /// Keys a supplement can list (medication form): reference order, then the sports supplements.
+    /// Keys a supplement can list (medication form, AI label, archive): every reference nutrient in reference
+    /// order (`app_tracked` or not), then the sports supplements (docs/nutrients.md §3).
     static var supplementKeys: [String] { NutrientsReference.allKeys }
+
+    /// `app_tracked: false` reference nutrients (copper, iodine, thiamin, …) in reference order: the food log
+    /// never records them; their totals and charts are supplements only.
+    static var supplementOnlyKeys: [String] {
+        NutrientsReference.data.nutrients.filter { !$0.appTracked }.map(\.key)
+    }
+
+    /// True when the food log records `key` (reference `food_tracked`).
+    static func foodTracked(_ key: String) -> Bool { NutrientsReference.foodTracked(key) }
+
+    /// The medication form's "Add nutrient" menu, grouped: Vitamins, Minerals, Other (carbs, fats, caffeine)
+    /// and Sports Supplements, each in reference order.
+    static var supplementSections: [(title: String, keys: [String])] {
+        let nutrients = NutrientsReference.data.nutrients
+        func keys(_ categories: Set<String>) -> [String] { nutrients.filter { categories.contains($0.category) }.map(\.key) }
+        return [
+            (String(localized: "Vitamins"), keys(["vitamins"])),
+            (String(localized: "Minerals"), keys(["minerals"])),
+            (String(localized: "Other"), keys(["carbs", "fats", "other"])),
+            (String(localized: "Sports Supplements"), NutrientsReference.data.sportsSupplements.map(\.key)),
+        ]
+    }
+
+    /// Nutrition Details rows for one day (docs/nutrients.md §5b): the food-log rows (`detailKeys`), plus each
+    /// `app_tracked: false` nutrient that an active medication lists or that has a supplement part on that day,
+    /// placed after the food rows of its category in reference order.
+    static func detailRowKeys(activeNutrientKeys: Set<String>, totals: [String: NutrientsReference.DayTotal]) -> [String] {
+        var rows = detailKeys
+        let byKey = NutrientsReference.byKey
+        for key in supplementOnlyKeys where activeNutrientKeys.contains(key) || totals[key]?.supplements != nil {
+            let category = byKey[key]?.category
+            let anchor = rows.lastIndex { byKey[$0]?.category == category } ?? (rows.lastIndex { byKey[$0] != nil } ?? rows.count - 1)
+            rows.insert(key, at: anchor + 1)
+        }
+        return rows
+    }
+
+    /// Goal shown on a Nutrition Details row: the user's goal for food-log nutrients, the reference
+    /// `default_goal` for `app_tracked: false` nutrients (no custom goal), nil otherwise.
+    static func detailGoal(_ key: String, profile: UserProfile?, goals: OptionalNutrientGoals) -> Int? {
+        if let nutrient = optionalNutrient(key) { return goals.goal(for: nutrient, profile: Self.profile(profile)) }
+        guard NutrientsReference.isSupplementOnly(key) else { return nil }
+        return NutrientsReference.defaultGoalInt(NutrientsReference.defaultGoal(key: key, profile: Self.profile(profile)))
+    }
+
+    /// Every key Nutrition Details may show (for one totals pass).
+    static var allDetailKeys: [String] { detailKeys + supplementOnlyKeys }
 
     static func optionalNutrient(_ key: String) -> OptionalNutrient? { OptionalNutrient(jsonKey: key) }
 
@@ -22,6 +70,29 @@ enum NutrientCatalog {
         case "monounsaturated_fat": return String(localized: "Monounsaturated Fat")
         case "polyunsaturated_fat": return String(localized: "Polyunsaturated Fat")
         default: return NutrientsReference.byKey[key]?.name ?? key
+        }
+    }
+
+    /// `items` in supplement-key order (reference order, then sports); unknown keys last.
+    static func referenceOrdered<T>(_ items: [T], key: (T) -> String) -> [T] {
+        let order = Dictionary(supplementKeys.enumerated().map { ($1, $0) }, uniquingKeysWith: { first, _ in first })
+        return items.enumerated().sorted {
+            let l = order[key($0.element)] ?? Int.max, r = order[key($1.element)] ?? Int.max
+            return l != r ? l < r : $0.offset < $1.offset
+        }.map(\.element)
+    }
+
+    /// Name as supplement labels print it, for the medication form, review sheet and detail card: the B
+    /// vitamins also show their number ("Vitamin B1 (Thiamin)"); every other key is `title`.
+    static func labelTitle(_ key: String) -> String {
+        switch key {
+        case "thiamin": return String(localized: "Vitamin B1 (Thiamin)")
+        case "riboflavin": return String(localized: "Vitamin B2 (Riboflavin)")
+        case "niacin": return String(localized: "Vitamin B3 (Niacin)")
+        case "pantothenic_acid": return String(localized: "Vitamin B5 (Pantothenic Acid)")
+        case "biotin": return String(localized: "Vitamin B7 (Biotin)")
+        case "folate": return String(localized: "Folate (B9)")
+        default: return title(key)
         }
     }
 
@@ -43,7 +114,12 @@ enum NutrientCatalog {
         switch key {
         case "monounsaturated_fat": return "drop"
         case "polyunsaturated_fat": return "drop.halffull"
-        default: return "leaf.fill"
+        default:
+            switch NutrientsReference.byKey[key]?.category {
+            case "minerals": return "circle.hexagongrid.fill"
+            case "vitamins": return "pills.fill"
+            default: return "leaf.fill"
+            }
         }
     }
 
@@ -109,6 +185,7 @@ enum NutrientCatalog {
     }
 
     /// Recommended / limit / upper-limit lines for the chart, with the user's custom goal when one is set.
+    /// `app_tracked: false` nutrients have no custom goal (optionalNutrient is nil): reference lines only.
     static func lines(_ key: String, profile: UserProfile?, goals: OptionalNutrientGoals = .current) -> NutrientsReference.Lines {
         let custom = optionalNutrient(key).flatMap { goals.customGoal(for: $0, profile: Self.profile(profile)) }.map(Double.init)
         return NutrientsReference.referenceLines(key: key, profile: Self.profile(profile), customGoal: custom)

@@ -79,7 +79,9 @@ data class CatalogNutrientMetric(
     val dayBucket: String,
     val ranges: List<String>,
     val goalSource: String,
-    val learnSlug: String?
+    val learnSlug: String?,
+    /** False for `app_tracked: false` nutrients: the chart counts Medications supplements only. */
+    val foodTracked: Boolean = true
 ) {
     val metricKey: String get() = MetricKey.NUTRIENT_PREFIX + key
 }
@@ -169,7 +171,8 @@ data class MetricCatalogData(
                         browseOrder = n.i("browse_order") ?: 0, browseHidden = n.b("browse_hidden"),
                         aggregation = n.s("aggregation"), chartKind = n.s("chart_kind"), dayBucket = n.s("day_bucket"),
                         ranges = (n["ranges"] as JsonArray).map { (it as JsonPrimitive).content },
-                        goalSource = n.s("goal_source"), learnSlug = n.sOrNull("learn_slug")
+                        goalSource = n.s("goal_source"), learnSlug = n.sOrNull("learn_slug"),
+                        foodTracked = n.prim("food_tracked")?.booleanOrNull ?: true
                     )
                 },
                 favouritesMax = favourites.i("max") ?: 12,

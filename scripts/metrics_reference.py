@@ -9,7 +9,7 @@ Portability rules (same as scripts/medications_reference.py):
   * Python 3 stdlib only. Every function is pure: no clock, locale or randomness. "Now" and the time
     zone are always explicit inputs (`now_ms`, `time_zone` = IANA id). The only I/O is reading the two
     catalogs once at import (shared/metrics/metric_catalog.json, shared/health/metric_registry.json,
-    shared/nutrients/nutrient_reference.json for learn slugs and app_tracked);
+    shared/nutrients/nutrient_reference.json for learn slugs);
     ports load the same data from their bundled copies.
   * Regexes use only literals, explicit ASCII classes, (?:...), numbered groups, ? * + {n,m},
     alternation and ^/$ on single-line strings.
@@ -513,8 +513,12 @@ def resolve_metric(key):
                       "nutrient.reference" -> the override's nutrient_key (dietary_vitamin_d -> vitamin_d).
       learn_slug      the website guide slug (/nutrients/<slug>): the nutrient_metrics learn_slug (null for sports),
                       or the reference slug for health nutrition types.
-      nutrient_metric for a health nutrition type whose nutrient is app_tracked, the app's own chart key
-                      "nutrient:<k>" (link "Logged in Ayuvo"); null otherwise.
+      nutrient_metric for a health nutrition type whose nutrient_key has a nutrient_metrics entry (every reference
+                      nutrient has one, app_tracked or not), the app's own chart key "nutrient:<k>" (link "Open Ayuvo
+                      ‹nutrient› chart"); null otherwise.
+      food_tracked    the nutrient_metrics entry's food_tracked for nutrient:<k> and for a health id with a
+                      nutrient_metric (false = the food log does not record it: the app chart counts Medications
+                      supplements only); null otherwise.
     default_favourite_order is the order when enabled, else null.
     Icons (icon_android / icon_ios) fall back in this order: the metric's own icon (app metrics), else the
     override icon (health ids), else the domain icon; unknown keys get the Other domain icon."""
@@ -529,7 +533,7 @@ def resolve_metric(key):
                 "chart_kind": m["chart_kind"], "unit": m["unit"]["canonical"], "goal_source": m["goal_source"],
                 "default_favourite_order": fav.get("order") if fav.get("enabled") else None,
                 "browse_hidden": False, "icon_android": m["icon"]["android"], "icon_ios": m["icon"]["ios"],
-                "nutrient_key": None, "learn_slug": None, "nutrient_metric": None}
+                "nutrient_key": None, "learn_slug": None, "nutrient_metric": None, "food_tracked": None}
     if key.startswith(NUTRIENT_PREFIX):
         m = NUTRIENT_METRICS.get(key)
         if m is None:
@@ -539,7 +543,8 @@ def resolve_metric(key):
                 "colour_hex_dark": d["colour_hex_dark"], "aggregation": m["aggregation"], "chart_kind": m["chart_kind"],
                 "unit": m["unit"], "goal_source": m["goal_source"], "default_favourite_order": None,
                 "browse_hidden": bool(m["browse_hidden"]), "icon_android": d["icon"]["android"], "icon_ios": d["icon"]["ios"],
-                "nutrient_key": m["key"], "learn_slug": m["learn_slug"], "nutrient_metric": None}
+                "nutrient_key": m["key"], "learn_slug": m["learn_slug"], "nutrient_metric": None,
+                "food_tracked": bool(m["food_tracked"])}
     r = REGISTRY_BY_ID.get(key)
     if r is None:
         return _unknown()
@@ -551,6 +556,7 @@ def resolve_metric(key):
     icon = o.get("icon") or d["icon"]
     nk = o.get("nutrient_key")
     n = NUTRIENT_REFERENCE.get(nk) if nk else None
+    nm = NUTRIENT_METRICS.get(NUTRIENT_PREFIX + nk) if n else None
     return {"source": "health", "domain": domain, "colour_hex": d["colour_hex"], "colour_hex_dark": d["colour_hex_dark"],
             "aggregation": h["aggregation_map"][r["aggregation"]], "chart_kind": h["chart_kind_map"][r["aggregation"]],
             "unit": r["unit"], "goal_source": o.get("goal_source", "none"),
@@ -558,7 +564,8 @@ def resolve_metric(key):
             "browse_hidden": bool(o.get("browse_hidden", False)),
             "icon_android": icon["android"], "icon_ios": icon["ios"],
             "nutrient_key": nk if n else None, "learn_slug": n["slug"] if n else None,
-            "nutrient_metric": NUTRIENT_PREFIX + nk if n and n["app_tracked"] else None}
+            "nutrient_metric": NUTRIENT_PREFIX + nk if nm else None,
+            "food_tracked": bool(nm["food_tracked"]) if nm else None}
 
 
 def _unknown():
@@ -567,7 +574,7 @@ def _unknown():
             "aggregation": "last", "chart_kind": "line", "unit": "none", "goal_source": "none",
             "default_favourite_order": None, "browse_hidden": False,
             "icon_android": d["icon"]["android"], "icon_ios": d["icon"]["ios"],
-            "nutrient_key": None, "learn_slug": None, "nutrient_metric": None}
+            "nutrient_key": None, "learn_slug": None, "nutrient_metric": None, "food_tracked": None}
 
 
 # ---------------------------------------------------------------------------------------------

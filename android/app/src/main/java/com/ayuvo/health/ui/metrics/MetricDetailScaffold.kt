@@ -71,6 +71,8 @@ fun MetricDetailScaffold(
     chartFooter: (@Composable ColumnScope.() -> Unit)? = null,
     /** Replaces the standard headline (sleep D shows Apple's TIME IN BED / TIME ASLEEP pair). */
     headlineContent: (@Composable () -> Unit)? = null,
+    /** A note under the headline (a supplements-only nutrient chart, docs/nutrients.md §5). */
+    headlineNote: String? = null,
     extraSections: LazyListScope.() -> Unit = {}
 ) {
     Scaffold(
@@ -105,6 +107,15 @@ fun MetricDetailScaffold(
                         unit = if (h.value == null) "" else h.unit,
                         rangeText = h.rangeText,
                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp).testTag("metric.headline")
+                    )
+                }
+                if (headlineNote != null) {
+                    Text(
+                        headlineNote,
+                        modifier = Modifier.padding(horizontal = 4.dp).padding(top = 2.dp).testTag("metric.headlineNote"),
+                        fontSize = 13.sp,
+                        lineHeight = 17.sp,
+                        color = AyuvoColors.secondaryLabel()
                     )
                 }
             }

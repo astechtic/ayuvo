@@ -61,6 +61,7 @@ import com.ayuvo.health.ui.components.GlassTextField
 import com.ayuvo.health.ui.components.InAppCameraCaptureDialog
 import com.ayuvo.health.ui.components.OptionPickerSheet
 import com.ayuvo.health.ui.design.AyuvoColors
+import com.ayuvo.health.ui.metrics.nutrientDisplayName
 import java.io.ByteArrayOutputStream
 
 /** Display label of an input unit (`iu` → "IU"). */
@@ -149,7 +150,7 @@ internal fun MedicationNutrientsSection(
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         GlassTextButton(
-                            text = key?.let { stringResource(NutrientFields.nameRes(it)) } ?: stringResource(R.string.nutrients_choose_nutrient),
+                            text = key?.let { nutrientDisplayName(it) } ?: stringResource(R.string.nutrients_choose_nutrient),
                             onClick = { pickingKeyFor = row.id },
                             modifier = Modifier.weight(1f)
                         )
@@ -249,8 +250,9 @@ internal fun MedicationNutrientsSection(
         val used = draft.nutrients.filter { it.id != id }.mapNotNull { it.key }.toSet()
         OptionPickerSheet(
             title = stringResource(R.string.nutrients_choose_nutrient),
-            items = NutrientFields.REFERENCE_KEYS.filter { it !in used },
-            label = { stringResource(NutrientFields.nameRes(it)) },
+            items = NutrientFields.supplementPickerKeys().filter { it !in used },
+            label = { nutrientDisplayName(it) },
+            section = { k -> stringResource(NutrientFields.supplementPickerGroup(k).titleRes) },
             selected = { k -> draft.nutrients.firstOrNull { it.id == id }?.key == k },
             onSelect = { k ->
                 pickingKeyFor = null
@@ -310,7 +312,7 @@ internal fun NutrientReviewDialog(result: LabelParseResult, doseUnit: String, on
         ) {
             items.forEachIndexed { i, item ->
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(stringResource(NutrientFields.nameRes(item.key)), fontSize = 15.sp, modifier = Modifier.weight(1f))
+                    Text(nutrientDisplayName(item.key), fontSize = 15.sp, modifier = Modifier.weight(1f))
                     GlassTextField(
                         value = amounts[i],
                         onValueChange = { v -> amounts[i] = v.take(12) },

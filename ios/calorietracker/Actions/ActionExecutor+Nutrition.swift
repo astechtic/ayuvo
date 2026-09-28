@@ -162,17 +162,26 @@ extension ActionExecutor {
         var nutrients: [ActionField] = []
         var logged: [String] = []
         let referenceProfile = NutrientCatalog.profile(profile)
-        for nutrient in Self.detailNutrients {
-            let total = totals.total(nutrient.key, from: Date(timeIntervalSince1970: Double(r.fromMs) / 1000),
-                                     to: Date(timeIntervalSince1970: Double(r.toMs) / 1000)).total ?? 0
+        let from = Date(timeIntervalSince1970: Double(r.fromMs) / 1000), to = Date(timeIntervalSince1970: Double(r.toMs) / 1000)
+        var rangeTotals: [String: NutrientsReference.DayTotal] = [:]
+        for key in NutrientCatalog.allDetailKeys { rangeTotals[key] = totals.total(key, from: from, to: to) }
+        // The same rows as Nutrition Details: food-log nutrients, plus the app_tracked: false nutrients an active
+        // medication lists or a taken dose in the range contributed (docs/nutrients.md §5b).
+        let rowKeys = NutrientCatalog.detailRowKeys(activeNutrientKeys: await activeNutrientKeys(), totals: rangeTotals)
+        let byKey = Dictionary(Self.detailNutrients.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
+        for key in rowKeys {
+            let nutrient = byKey[key] ?? DetailNutrient(key: key, name: NutrientCatalog.title(key), unit: NutrientCatalog.unit(key), goal: nil) { _ in nil }
+            let total = rangeTotals[key]?.total ?? 0
             let rounded = ActionMath.roundTo(total, 1)
-            let goal = nutrient.goal.map { Double(goals.goal(for: $0, profile: referenceProfile)) }.flatMap { $0 > 0 ? $0 : nil }
-            fields[nutrient.field] = .number(rounded)
+            let goal = NutrientCatalog.detailGoal(key, profile: profile, goals: goals).map(Double.init).flatMap { $0 > 0 ? $0 : nil }
+            // An app_tracked: false nutrient with no taken dose has no value ("—" on the sheet), never 0.
+            let value: ActionField = NutrientsReference.isSupplementOnly(key) && rangeTotals[key]?.total == nil ? .null : .number(rounded)
+            fields[nutrient.field] = value
             nutrients.append(.object([
-                "key": .string(nutrient.key), "name": .string(nutrient.name), "value": .number(rounded),
+                "key": .string(nutrient.key), "name": .string(nutrient.name), "value": value,
                 "unit": .string(nutrient.unit), "goal": .optional(goal),
             ]))
-            lines.append("\(nutrient.name): \(amount(total, goal, nutrient.unit, digits: 1))")
+            lines.append(value == .null ? "\(nutrient.name): —" : "\(nutrient.name): \(amount(total, goal, nutrient.unit, digits: 1))")
             if rounded > 0 { logged.append("\(nutrient.name.lowercased()) \(Self.number(total, digits: 1)) \(nutrient.unit)") }
         }
         fields["nutrients"] = .list(nutrients)

@@ -96,10 +96,14 @@ struct MedicationNutrientArchiveTests {
         var draft = MedicationDraft(startDate: "2026-09-01")
         draft.name = "Multi"
         draft.isPRN = true
-        draft.nutrients = [DraftNutrient(key: "niacin", amountPerUnit: 16), DraftNutrient(key: "vitamin_d", amountPerUnit: 250_000),
+        draft.nutrients = [DraftNutrient(key: "grape_seed_extract", amountPerUnit: 50), DraftNutrient(key: "vitamin_d", amountPerUnit: 250_000),
                            DraftNutrient(key: "zinc", amountPerUnit: 10), DraftNutrient(key: "zinc", amountPerUnit: 5)]
         #expect(draft.validationErrors.map(\.code) == ["nutrient_unknown", "nutrient_amount_invalid", "nutrient_duplicate"])
         draft.nutrients = [DraftNutrient(key: "creatine", amountPerUnit: 5)]
+        #expect(draft.validationErrors.isEmpty)
+        // app_tracked: false nutrients (niacin, copper, iodine, ...) are supplement nutrients too.
+        draft.nutrients = [DraftNutrient(key: "niacin", amountPerUnit: 16), DraftNutrient(key: "copper", amountPerUnit: 0.9),
+                           DraftNutrient(key: "iodine", amountPerUnit: 140), DraftNutrient(key: "thiamin", amountPerUnit: 1.4)]
         #expect(draft.validationErrors.isEmpty)
     }
 }
@@ -158,6 +162,32 @@ struct NutrientTotalsTests {
         #expect(week.average == 302, "(1500 + 5 × 2) / 5 logged days, not a daily 1,500 mcg")
     }
 
+    /// docs/nutrients.md §4.6 / §4.7: an app_tracked: false nutrient is supplements only (food nil, never 0) and
+    /// its logged days are the days with a taken dose of it.
+    @Test func untrackedNutrientIsSupplementsOnly() {
+        let supplements = NutrientsReference.supplementEntries(
+            nutrients: [.init(medicationID: "multi", nutrientKey: "iodine", amountPerUnit: 140),
+                        .init(medicationID: "multi", nutrientKey: "copper", amountPerUnit: 0.9)],
+            doseLogs: [.init(medicationID: "multi", status: "taken", takenAtMs: ms(date(21, 9)), doseQuantity: 1),
+                       .init(medicationID: "multi", status: "taken", takenAtMs: ms(date(23, 9)), doseQuantity: 1)]
+        )
+        let foods = [21, 22, 23, 24, 25].map { food($0, 12, vitaminD: 2) }
+        let totals = NutrientTotals(foods: foods, supplements: supplements, calendar: calendar)
+        #expect(totals.total("iodine", on: date(21, 20)) == NutrientsReference.DayTotal(food: nil, supplements: 140, total: 140))
+        #expect(totals.total("copper", on: date(22, 20)) == .empty)
+        #expect(totals.entries("iodine").food.isEmpty)
+        let zone = MetricsReference.Zone(calendar: calendar)
+        let parts = totals.entries("iodine")
+        let week = NutrientsReference.loggedDayAverage(entries: parts.food + parts.supplements, loggedDays: totals.loggedDays,
+                                                       startMs: ms(date(21, 0)), endMs: ms(date(28, 0)), zone: zone, key: "iodine")
+        #expect(week.loggedDays == 2)
+        #expect(week.average == 140, "140 mcg on 2 dose days of 5 logged days averages 140, not 56")
+        let series = NutrientSeriesProvider.build(food: parts.food, supplements: parts.supplements, loggedDays: totals.loggedDays,
+                                                  range: .week, anchor: date(23, 12), calendar: calendar, weekStart: .sunday, key: "iodine")
+        #expect(series.extras.food == nil)
+        #expect(series.extras.average.average == 140)
+    }
+
     @Test func monoAndPolyFatsAreIncluded() {
         var entry = food(22, 12, vitaminD: nil)
         entry.monounsaturatedFat = 4
@@ -172,14 +202,21 @@ struct NutrientMetricKeyTests {
     @Test func nutrientKeysParseResolveAndPin() {
         #expect(MetricKey(pinID: "nutrient:vitamin_d") == .nutrient("vitamin_d"))
         #expect(MetricKey.nutrient("creatine").id == "nutrient:creatine")
-        #expect(MetricKey(pinID: "nutrient:niacin") == nil)
-        #expect(MetricCatalogData.shared.nutrientMetrics.count == 31)
+        #expect(MetricKey(pinID: "nutrient:niacin") == .nutrient("niacin"))
+        #expect(MetricKey(pinID: "nutrient:grape_seed_extract") == nil)
+        #expect(MetricCatalogData.shared.nutrientMetrics.count == 45)
+        #expect(MetricCatalogData.shared.nutrientMetrics.map(\.key) == NutrientCatalog.supplementKeys)
+        #expect(MetricCatalogData.shared.nutrientMetrics.filter { !$0.foodTracked }.map(\.key) == NutrientCatalog.supplementOnlyKeys)
+        #expect(NutrientCatalog.supplementOnlyKeys.count == 14)
         let resolved = MetricsReference.resolveMetric("nutrient:vitamin_d")
         #expect(resolved.source == "nutrient" && resolved.domain == "nutrition" && resolved.aggregation == "sum")
         #expect(MetricsReference.resolveMetric("nutrient:fiber").browseHidden)
-        #expect(MetricsReference.resolveMetric("nutrient:niacin").source == "unknown")
-        let pins = MetricsReference.favouritePinsMigrate(newRaw: "nutrient:vitamin_d,nutrient:niacin,app:calories", legacyRaw: nil, knownHealthIDs: [], max: 12)
-        #expect(pins.favourites == ["nutrient:vitamin_d", "app:calories"])
+        let niacin = MetricsReference.resolveMetric("nutrient:niacin")
+        #expect(niacin.source == "nutrient" && niacin.foodTracked == false && niacin.learnSlug != nil)
+        #expect(MetricsReference.resolveMetric("nutrient:vitamin_d").foodTracked == true)
+        #expect(MetricsReference.resolveMetric("nutrient:grape_seed_extract").source == "unknown")
+        let pins = MetricsReference.favouritePinsMigrate(newRaw: "nutrient:vitamin_d,nutrient:niacin,nutrient:grape_seed_extract,app:calories", legacyRaw: nil, knownHealthIDs: [], max: 12)
+        #expect(pins.favourites == ["nutrient:vitamin_d", "nutrient:niacin", "app:calories"])
     }
 
     @MainActor
@@ -240,5 +277,10 @@ struct PersonalizedNutrientGoalTests {
         #expect(cloud.user.contains("Its dose unit is capsule.") && cloud.user.contains("Name typed by the user: D3") && !cloud.user.contains("{"))
         let local = SupplementLabelAI.prompt(photo: false, route: .gemma, name: "Multi", strength: "", doseUnit: "tablet", prompts: prompts)
         #expect(local.system == prompts.local && local.user.contains("Name: Multi") && !local.user.contains("{"))
+        // Prompt v2 lists every reference nutrient and raises the compact cap to 600 tokens.
+        #expect(SupplementLabelAI.localMaxOutputTokens == 600 && SupplementLabelAI.cloudMaxOutputTokens == 800)
+        for key in NutrientCatalog.supplementKeys {
+            #expect(prompts.cloud.contains(key) && prompts.local.contains(key), "\(key) is in both prompts")
+        }
     }
 }

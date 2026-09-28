@@ -19,6 +19,8 @@
     <string name="nutrients_total">Total</string>
     <string name="nutrients_logged_days">Logged days</string>
     <string name="nutrients_food_vs_supplements">Food vs Supplements</string>
+    <!-- "Food isn't recorded for Copper: this chart counts supplements only." (food_tracked: false) -->
+    <string name="nutrients_supplements_only_note">Food isn\'t recorded for %1$s: this chart counts supplements only.</string>
     <string name="nutrients_split_footer">%1$s. Supplements count only doses marked as taken, and never add calories.</string>
     <string name="nutrients_from_food">Food</string>
     <string name="nutrients_from_supplements">Supplements</string>
@@ -40,7 +42,8 @@
     <string name="nutrients_health_source_note">These values come from Health Connect. Supplements you log in Ayuvo Medications are not included.</string>
     <!-- "Open Ayuvo Vitamin D chart" -->
     <string name="nutrients_open_app_chart">Open Ayuvo %1$s chart</string>
-    <string name="nutrients_open_app_chart_subtitle">Logged in Ayuvo, food and supplements</string>
+    <string name="nutrients_open_app_chart_subtitle">Logged in Ayuvo: food and supplements</string>
+    <string name="nutrients_open_app_chart_subtitle_supplements">Supplements logged in Ayuvo Medications</string>
     <string name="nutrients_reference_disclaimer">%1$s These are general reference values, not personal medical advice.</string>
 
     <!-- Browse › Nutrition sections (metric_catalog.json browse_sections) -->

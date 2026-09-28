@@ -14,7 +14,8 @@ Checks:
      (inputs are the source of truth; --write only replaces "expected").
   4. Output shapes: buckets ascending, contiguous and covering the interval; D has 23-25 buckets, W 7,
      Y 12; ring progress within [0, 1]; favourites unique and capped.
-     nutrient_metrics: app_tracked reference order + sports, units, sections, goal sources and learn slugs.
+     nutrient_metrics: every reference nutrient in reference order + sports, units, sections, goal sources, learn
+     slugs and food_tracked (= app_tracked; true for sports).
      Health nutrition overrides: every nutrient_reference.json health_type has an override with goal_source
      nutrient.reference and nutrient_key = that nutrient; the macro types map to profile.* goals.
   5. Regex portability lint of every pattern owned by the reference (records rule).
@@ -297,14 +298,15 @@ def check_health_nutrition_overrides(overrides, problems):
 
 
 def check_nutrient_metrics(cat, sections, sec_orders, problems):
-    """nutrient_metrics: the 23 app_tracked nutrient_reference.json nutrients in reference order, then the 8 sports
-    supplements, each summed hourly into bars on D-Y; browse_section = nutrition.<category> (sports:
+    """nutrient_metrics: EVERY nutrient_reference.json nutrient (37, app_tracked or not) in reference order, then the 8
+    sports supplements, each summed hourly into bars on D-Y; browse_section = nutrition.<category> (sports:
     nutrition.supplements); goal_source nutrient.reference with learn_slug = slug (sports: none / null); unit =
-    the reference unit; only fiber is browse_hidden (app:fiber already sits in Macronutrients)."""
+    the reference unit; food_tracked = app_tracked (sports: true; false = the chart counts supplements only);
+    only fiber is browse_hidden (app:fiber already sits in Macronutrients)."""
     ref = json.load(open(NUTRIENT_REFERENCE, encoding="utf-8"))
-    want = [(n["key"], n["unit"], "nutrition." + n["category"], "nutrient.reference", n["slug"]) for n in ref["nutrients"]
-            if n["app_tracked"]]
-    want += [(x["key"], x["unit"], "nutrition.supplements", "none", None) for x in ref["sports_supplements"]]
+    want = [(n["key"], n["unit"], "nutrition." + n["category"], "nutrient.reference", n["slug"], bool(n["app_tracked"]))
+            for n in ref["nutrients"]]
+    want += [(x["key"], x["unit"], "nutrition.supplements", "none", None, True) for x in ref["sports_supplements"]]
     rows = cat.get("nutrient_metrics")
     if not isinstance(rows, list):
         problems.append("catalog: nutrient_metrics missing")
@@ -313,8 +315,8 @@ def check_nutrient_metrics(cat, sections, sec_orders, problems):
         problems.append("nutrient_metrics keys %s != reference + sports order %s" % ([r.get("key") for r in rows], [w[0] for w in want]))
         return len(rows)
     fields = {"key", "unit", "browse_section", "browse_order", "browse_hidden", "aggregation", "chart_kind", "day_bucket",
-              "ranges", "goal_source", "learn_slug"}
-    for r, (key, unit, section, goal, slug) in zip(rows, want):
+              "ranges", "goal_source", "learn_slug", "food_tracked"}
+    for r, (key, unit, section, goal, slug, food) in zip(rows, want):
         w = "nutrient_metric %s" % key
         if set(r) != fields:
             problems.append("%s: keys %s" % (w, sorted(r)))
@@ -327,6 +329,8 @@ def check_nutrient_metrics(cat, sections, sec_orders, problems):
             problems.append("%s: must be sum / bar / hour / D-Y" % w)
         if r["goal_source"] not in R.GOAL_SOURCES:
             problems.append("%s: bad goal_source" % w)
+        if r["food_tracked"] is not food:
+            problems.append("%s: food_tracked must be %s (nutrient_reference app_tracked; sports true)" % (w, food))
         if r["browse_hidden"] is not (key == "fiber"):
             problems.append("%s: only fiber is browse_hidden (app:fiber is listed under Macronutrients)" % w)
         s = sections.get(r["browse_section"])
@@ -447,6 +451,10 @@ def check_shape(function, got, where, problems, inp):
             problems.append("%s: a health nutrient_key needs goal_source nutrient.reference" % where)
         if nm is not None and (nm != R.NUTRIENT_PREFIX + nk or nm not in R.NUTRIENT_METRICS):
             problems.append("%s: nutrient_metric must be the app chart of nutrient_key" % where)
+        if got["source"] == "health" and nk is not None and nm is None:
+            problems.append("%s: every health nutrient type links its app chart (nutrient_metric)" % where)
+        if (got["food_tracked"] is not None) != (got["source"] == "nutrient" or nm is not None):
+            problems.append("%s: food_tracked is set exactly for nutrient metrics and health types with nutrient_metric" % where)
 
 
 def _zones(obj, out):
@@ -625,7 +633,10 @@ class ReferenceTests(unittest.TestCase):
         r = R.resolve_metric("nutrient:vitamin_d")
         self.assertEqual((r["source"], r["domain"], r["unit"], r["goal_source"]), ("nutrient", "nutrition", "mcg", "nutrient.reference"))
         self.assertEqual(R.resolve_metric("nutrient:creatine")["goal_source"], "none")
-        self.assertEqual(R.resolve_metric("nutrient:niacin")["source"], "unknown")
+        r = R.resolve_metric("nutrient:niacin")
+        self.assertEqual((r["source"], r["unit"], r["food_tracked"], r["learn_slug"]), ("nutrient", "mg", False, "niacin"))
+        self.assertTrue(R.resolve_metric("nutrient:zinc")["food_tracked"])
+        self.assertEqual(R.resolve_metric("nutrient:grape_seed_extract")["source"], "unknown")
         self.assertEqual(R.favourite_pins_migrate("nutrient:zinc,nutrient:x", None, [], 12)["favourites"], ["nutrient:zinc"])
 
     def test_health_nutrition_types(self):
@@ -633,7 +644,10 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual((r["source"], r["goal_source"], r["nutrient_key"], r["learn_slug"], r["nutrient_metric"]),
                          ("health", "nutrient.reference", "vitamin_d", "vitamin-d", "nutrient:vitamin_d"))
         r = R.resolve_metric("dietary_copper")
-        self.assertEqual((r["nutrient_key"], r["learn_slug"], r["nutrient_metric"], r["unit"]), ("copper", "copper", None, "mg"))
+        self.assertEqual((r["nutrient_key"], r["learn_slug"], r["nutrient_metric"], r["unit"], r["food_tracked"]),
+                         ("copper", "copper", "nutrient:copper", "mg", False))
+        self.assertTrue(R.resolve_metric("dietary_vitamin_d")["food_tracked"])
+        self.assertIsNone(R.resolve_metric("dietary_energy")["food_tracked"])
         self.assertEqual(R.resolve_metric("dietary_fat_saturated")["nutrient_key"], "saturated_fat")
         r = R.resolve_metric("dietary_energy")
         self.assertEqual((r["goal_source"], r["nutrient_key"]), ("profile.calories", None))

@@ -87,7 +87,7 @@ object MetricCatalog {
 
     fun title(context: Context, key: MetricKey): String = when (key) {
         is MetricKey.App -> context.getString(titleRes(key.id))
-        is MetricKey.Nutrient -> context.getString(NutrientFields.nameRes(key.key))
+        is MetricKey.Nutrient -> NutrientFields.displayName(context, key.key)
         is MetricKey.Health -> HealthCategoryStyle.typeName(context, key.typeId)
     }
 

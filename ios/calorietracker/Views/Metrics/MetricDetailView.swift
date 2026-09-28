@@ -69,6 +69,21 @@ struct MetricDetailView: View {
         return ChartReferenceLine.goal(sources.goal(for: descriptor.goalSource))
     }
 
+    /// `nutrient:<key>` of a nutrient the food log does not record (docs/nutrients.md §5).
+    @ViewBuilder private var supplementsOnlyNote: some View {
+        if let nutrientKey, descriptor.foodTracked == false {
+            Label {
+                Text("Food isn't recorded for \(NutrientCatalog.title(nutrientKey)): this chart counts supplements only.")
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundStyle(.secondary)
+            } icon: {
+                Image(systemName: "pills.fill")
+                    .foregroundStyle(AyuvoPalette.domain("medications"))
+            }
+            .accessibilityIdentifier("metric.nutrient.supplementsOnly")
+        }
+    }
+
     private var loadKey: String {
         "\(model.loadKey(sources: sources, calendar: calendar))|\(weightUnitRaw)|\(waterUnitRaw)|\(weekStartsOnMonday)"
     }
@@ -87,6 +102,7 @@ struct MetricDetailView: View {
                         RangePicker(selection: $model.range, options: descriptor.ranges)
                     }
                     headline
+                    supplementsOnlyNote
                     intervalRow
                     chartContent
                     badges
@@ -98,8 +114,9 @@ struct MetricDetailView: View {
                 NutrientDetailSections(
                     nutrientKey: referenceNutrientKey, lines: lines, learnSlug: descriptor.learnSlug,
                     context: nutrientKey != nil
-                        ? .app(extras: model.nutrientExtras, periodTitle: model.rangeTitle(calendar: calendar))
-                        : .health(appChart: descriptor.nutrientMetric)
+                        ? .app(extras: model.nutrientExtras, periodTitle: model.rangeTitle(calendar: calendar),
+                               foodTracked: descriptor.foodTracked ?? true)
+                        : .health(appChart: descriptor.nutrientMetric, foodTracked: descriptor.foodTracked ?? true)
                 )
             }
 

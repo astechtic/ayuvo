@@ -67,6 +67,9 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
         let ranges: [String]
         let goalSource: String
         let learnSlug: String?
+        /// False for `app_tracked: false` nutrients: the food log does not record them, so the chart counts
+        /// Medications supplements only (docs/nutrients.md §5).
+        let foodTracked: Bool
     }
 
     struct Override: Decodable, Sendable {

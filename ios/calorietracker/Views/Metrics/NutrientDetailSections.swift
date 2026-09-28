@@ -7,10 +7,12 @@ struct NutrientDetailSections: View {
     /// Where the chart's values come from, which decides the first section.
     enum Context {
         /// `nutrient:<key>`: food entries plus taken supplement doses → Food vs Supplements for the shown period.
-        case app(extras: NutrientSeriesExtras?, periodTitle: String)
+        /// `foodTracked: false` (the food log does not record the nutrient): no split, the chart note says the
+        /// chart counts supplements only.
+        case app(extras: NutrientSeriesExtras?, periodTitle: String, foodTracked: Bool)
         /// A health nutrition type: Apple Health values (no supplements from Ayuvo Medications), with a link to
-        /// the app's own chart when the nutrient is `app_tracked`.
-        case health(appChart: MetricKey?)
+        /// the app's own chart (`foodTracked` picks its subtitle).
+        case health(appChart: MetricKey?, foodTracked: Bool)
     }
 
     let nutrientKey: String
@@ -25,10 +27,12 @@ struct NutrientDetailSections: View {
 
     var body: some View {
         switch context {
-        case .app(let extras, let periodTitle):
-            splitSection(extras: extras, periodTitle: periodTitle)
-        case .health(let appChart):
-            healthSourceSection(appChart: appChart)
+        case .app(let extras, let periodTitle, let foodTracked):
+            if foodTracked {
+                splitSection(extras: extras, periodTitle: periodTitle)
+            }
+        case .health(let appChart, let foodTracked):
+            healthSourceSection(appChart: appChart, foodTracked: foodTracked)
         }
         aboutSection
         if let learnSlug {
@@ -45,7 +49,7 @@ struct NutrientDetailSections: View {
 
     // MARK: Apple Health values
 
-    private func healthSourceSection(appChart: MetricKey?) -> some View {
+    private func healthSourceSection(appChart: MetricKey?, foodTracked: Bool) -> some View {
         Section {
             Label {
                 Text("These values come from Apple Health. They don't include supplements you log in Ayuvo Medications.")
@@ -58,7 +62,18 @@ struct NutrientDetailSections: View {
             .accessibilityIdentifier("metric.nutrient.healthNote")
             if let appChart {
                 NavigationLink(value: MetricRoute.detail(appChart)) {
-                    Label(String(localized: "Open Ayuvo \(title) chart"), systemImage: "chart.bar.xaxis")
+                    Label {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(localized: "Open Ayuvo \(title) chart"))
+                            Text(foodTracked
+                                 ? String(localized: "Logged in Ayuvo: food and supplements")
+                                 : String(localized: "Supplements logged in Ayuvo Medications"))
+                                .font(.system(.caption, design: .rounded))
+                                .foregroundStyle(.secondary)
+                        }
+                    } icon: {
+                        Image(systemName: "chart.bar.xaxis")
+                    }
                 }
                 .accessibilityIdentifier("metric.nutrient.appChart")
             }
@@ -66,7 +81,9 @@ struct NutrientDetailSections: View {
             Text("Data")
         } footer: {
             if appChart != nil {
-                Text("Logged in Ayuvo: the food you log plus the supplement doses you mark as taken.")
+                Text(foodTracked
+                     ? String(localized: "The Ayuvo chart counts the food you log plus the supplement doses you mark as taken.")
+                     : String(localized: "The food log doesn't record \(title), so the Ayuvo chart counts the supplement doses you mark as taken."))
             }
         }
     }

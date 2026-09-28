@@ -51,12 +51,12 @@ object NutrientReferenceSections {
      * Display name of a reference key: the app's nutrient name for tracked and sports keys, else
      * the reference `name` (copper, niacin, … have no app string).
      */
-    fun name(context: Context, key: String): String {
-        val res = NutrientFields.nameRes(key)
-        if (res != R.string.nutrients_unknown_name) return context.getString(res)
-        return NutrientReference.active?.byKey?.get(key)?.name?.takeIf { it.isNotBlank() } ?: context.getString(res)
-    }
+    fun name(context: Context, key: String): String = NutrientFields.displayName(context, key)
 }
+
+/** [NutrientFields.displayName] in composition. */
+@Composable
+fun nutrientDisplayName(key: String): String = NutrientFields.displayName(LocalContext.current, key)
 
 /**
  * Chart rules for [lines] on [range] (none on D): Recommended / Your goal in [tint], Upper limit

@@ -2123,6 +2123,10 @@
                   "key": "creatine"
                 },
                 {
+                  "amount_per_unit": 16,
+                  "key": "niacin"
+                },
+                {
                   "amount_per_unit": 10,
                   "key": "zinc"
                 }
@@ -2138,7 +2142,7 @@
           },
           {
             "id": "med-multi",
-            "nutrient_key": "niacin",
+            "nutrient_key": "grape_seed_extract",
             "op": "skip",
             "reason": "unknown_nutrient",
             "table": "medication_nutrients"
@@ -2239,6 +2243,10 @@
                   "key": "niacin"
                 },
                 {
+                  "amount_per_unit": 50,
+                  "key": "grape_seed_extract"
+                },
+                {
                   "amount_per_unit": 0,
                   "key": "iron"
                 },
@@ -2281,7 +2289,7 @@
         }
       },
       "name": "merge_supplement_nutrients_validated",
-      "notes": "Bad nutrient rows are skipped with a reason; the medication and its valid rows are kept."
+      "notes": "Bad nutrient rows are skipped with a reason; the medication and its valid rows are kept. niacin (app_tracked: false) is a valid supplement nutrient; grape_seed_extract is unknown_nutrient."
     },
     {
       "expected": {

@@ -53,7 +53,12 @@ class NutrientsVectorTests {
         assertEquals(false, filled.contains("{"))
         val prompt = SupplementLabelAi.prompt(p, local = true, photo = true, name = "D3", strength = "", doseUnit = "capsule")
         assertEquals(true, prompt.startsWith(p.local))
-        assertEquals(400, SupplementLabelAi.maxTokens(true))
+        assertEquals(600, SupplementLabelAi.maxTokens(true))
+        assertEquals(100, SupplementLabelAi.maxTokens(true, contextTokens = 400))
+        // Prompt v2: both key lists are SUPPLEMENT_KEYS (every reference nutrient, then sports).
+        val keys = NutrientsTestFiles.reference.supplementKeys.joinToString(", ")
+        assertEquals(true, p.local.contains("Keys: $keys\n"))
+        assertEquals(true, p.cloud.contains("\n$keys\n"))
         assertEquals(800, SupplementLabelAi.maxTokens(false))
     }
 }

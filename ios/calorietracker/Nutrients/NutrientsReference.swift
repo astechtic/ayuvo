@@ -18,22 +18,33 @@ nonisolated enum NutrientsReference {
     static let data = NutrientReferenceData.shared
     static let byKey: [String: NutrientReferenceData.Nutrient] = data.byKey
     static let sportsByKey: [String: NutrientReferenceData.Sports] = data.sportsByKey
-    /// `app_tracked` reference nutrients by key (docs/nutrients.md §3). The others exist only for the health
-    /// nutrition types and feed `referenceLines` / `defaultGoal`.
+    /// `app_tracked` reference nutrients by key (docs/nutrients.md §3): the nutrients the FOOD LOG records.
+    /// `app_tracked` never limits supplements (see `allKeys`).
     static let trackedByKey: [String: NutrientReferenceData.Nutrient] = byKey.filter { $0.value.appTracked }
 
-    /// Canonical unit of an app-tracked reference nutrient or a sports supplement; nil for anything else
-    /// (unknown keys and `app_tracked: false` nutrients, which cannot be supplement nutrients).
+    /// Canonical unit of a supplement nutrient (any reference nutrient, app_tracked or not, or a sports
+    /// supplement); nil for unknown keys.
     static func nutrientUnit(_ key: String) -> String? {
-        if let n = trackedByKey[key] { return n.unit }
+        if let n = byKey[key] { return n.unit }
         return sportsByKey[key]?.unit
     }
 
-    /// True when `key` is an app-tracked reference nutrient or a sports supplement.
+    /// True when `key` is a supplement nutrient (any reference nutrient or a sports supplement).
     static func isAppNutrient(_ key: String) -> Bool { nutrientUnit(key) != nil }
 
-    /// App-tracked reference keys (display order) followed by the sports supplement keys.
-    static var allKeys: [String] { data.trackedNutrients.map(\.key) + data.sportsSupplements.map(\.key) }
+    /// True when the food log records `key`: an `app_tracked` reference nutrient or a sports supplement.
+    /// False for `app_tracked: false` reference nutrients (copper, iodine, thiamin, …) and unknown keys.
+    static func foodTracked(_ key: String) -> Bool {
+        if let n = byKey[key] { return n.appTracked }
+        return sportsByKey[key] != nil
+    }
+
+    /// `app_tracked: false` reference nutrient (the food log never records it; supplements only).
+    static func isSupplementOnly(_ key: String) -> Bool { byKey[key].map { !$0.appTracked } ?? false }
+
+    /// `SUPPLEMENT_KEYS`: every reference nutrient (reference order, app_tracked or not) then the sports
+    /// supplements.
+    static var allKeys: [String] { data.nutrients.map(\.key) + data.sportsSupplements.map(\.key) }
 
     // MARK: - Numbers and days
 
@@ -296,11 +307,12 @@ nonisolated enum NutrientsReference {
     }
 
     /// {key: {food, supplements, total}} for the local `day`. A part with no values is nil; total is nil only
-    /// when both parts are nil. Sums in input order, rounded to 6 decimals at the end.
+    /// when both parts are nil. Food values of `app_tracked: false` nutrients are ignored (food stays nil). Sums in input order, rounded to 6 decimals at the end.
     static func dayTotals(food: [FoodInput], supplements: [SupplementEntry], day: String, zone: MetricsReference.Zone) -> [String: DayTotal] {
         var acc: [String: (Double?, Double?)] = [:]
         for e in food where localDayOf(e.tMs, zone: zone) == day {
-            for (k, v) in e.nutrients {
+            // The food log never records app_tracked: false nutrients: a stray food value is dropped.
+            for (k, v) in e.nutrients where !isSupplementOnly(k) {
                 var a = acc[k] ?? (nil, nil)
                 if let v, v.isFinite { a.0 = a.0.map { $0 + v } ?? v }
                 acc[k] = a
@@ -328,8 +340,11 @@ nonisolated enum NutrientsReference {
     /// Average per logged day over [startMs, endMs). `entries` are ONE nutrient's food and supplement entries;
     /// `loggedDays` the caller's days with any food entry or taken dose (counted when their local midnight is
     /// inside the interval), plus the day of every non-null entry inside the interval.
+    /// `key` names the nutrient: for an `app_tracked: false` nutrient the caller's `loggedDays` are ignored, so
+    /// the logged days are exactly the days with a taken dose of that nutrient.
     static func loggedDayAverage(entries: [MetricsReference.Entry], loggedDays: [String], startMs: Int64, endMs: Int64,
-                                 zone: MetricsReference.Zone) -> LoggedDayAverage {
+                                 zone: MetricsReference.Zone, key: String? = nil) -> LoggedDayAverage {
+        let loggedDays = key.map(isSupplementOnly) == true ? [] : loggedDays
         var days = Set<String>()
         for d in loggedDays {
             guard let m = localMidnightMs(d, zone: zone) else { continue }

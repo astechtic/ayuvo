@@ -29,6 +29,7 @@ import com.ayuvo.health.ui.design.AyuvoTopBar
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
+import com.ayuvo.health.ui.metrics.nutrientDisplayName
 import com.ayuvo.health.ui.navigation.BottomNavScrollPadding
 import java.time.LocalDate
 import java.time.ZoneId
@@ -109,7 +110,7 @@ fun NutrientListScreen(
 private fun NutrientRow(key: String, value: String?, onOpenMetric: (MetricKey) -> Unit) {
     val metric = metricKeyFor(key)
     GroupRow(
-        title = stringResource(NutrientFields.nameRes(key)),
+        title = nutrientDisplayName(key),
         value = value,
         modifier = Modifier.testTag("nutrients.row.$key"),
         trailing = RowTrailing.Chevron,

@@ -62,6 +62,13 @@ extension ActionExecutor {
         return NutrientTotals(foods: env.foodStore().entries, supplements: supplements, takenDoseMs: taken, calendar: env.calendar)
     }
 
+    /// Nutrient keys listed by an active medication (Nutrition Details rows, docs/nutrients.md §5b).
+    func activeNutrientKeys() async -> Set<String> {
+        guard let runtime = env.medicationsRuntime, runtime.databaseExists || runtime.isOpen, await runtime.openIfNeeded(),
+              let repository = runtime.repository else { return [] }
+        return (try? await repository.activeNutrientKeys()) ?? []
+    }
+
     /// Samples for `id` inside `range` (all history when `range` is nil).
     func metricSamples(_ id: String, range: ActionMath.DateRange?) async throws -> MetricSamples {
         let key = try metricKey(id)

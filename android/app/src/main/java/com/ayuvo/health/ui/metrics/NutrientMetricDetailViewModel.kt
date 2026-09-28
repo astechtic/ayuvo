@@ -73,7 +73,8 @@ class NutrientMetricDetailViewModel(private val container: AppContainer, private
             .mapLatest { i ->
                 val anchorMs = MetricsReference.localMidnight(i.anchor, zone)
                 val series = container.appMetrics.nutrientSeries(key.key, i.range.metricRange, anchorMs, i.weekStart)
-                val custom = NutrientFields.optionalNutrient(key.key)?.let { i.goals.customGoal(it) }
+                // Untracked nutrients (copper, thiamin, …) never have a custom goal: reference lines only.
+                val custom = NutrientFields.optionalNutrient(key.key)?.takeIf { NutrientFields.foodTracked(key.key) }?.let { i.goals.customGoal(it) }
                 val lines = if (NutrientReference.active?.unitOf(key.key) != null) {
                     Nutrients.referenceLines(key.key, NutrientFields.profile(i.profile), custom?.toDouble())
                 } else null

@@ -189,14 +189,14 @@ struct MedicationDetailView: View {
             } else {
                 let totals = NutrientTotals(foods: [], supplements: store.supplementEntries)
                 let perUnit = MedicationFormatting.doseText(quantity: 1, unit: detail.medication.doseUnit)
-                ForEach(detail.nutrients) { row in
+                ForEach(NutrientCatalog.referenceOrdered(detail.nutrients, key: \.nutrientKey)) { row in
                     NavigationLink(value: MetricRoute.detail(.nutrient(row.nutrientKey))) {
                         HStack(spacing: 10) {
                             Image(systemName: NutrientCatalog.iconName(row.nutrientKey))
                                 .foregroundStyle(AyuvoPalette.nutrition)
                                 .frame(width: 22)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(NutrientCatalog.title(row.nutrientKey))
+                                Text(NutrientCatalog.labelTitle(row.nutrientKey))
                                     .font(.system(.subheadline, design: .rounded, weight: .semibold))
                                     .foregroundStyle(.primary)
                                 Text(perUnitText(row, perUnit: perUnit))
@@ -227,6 +227,8 @@ struct MedicationDetailView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
+        // Keep the rows' own identifiers (a container identifier would otherwise apply to every child).
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("medications.detail.nutrition")
     }
 

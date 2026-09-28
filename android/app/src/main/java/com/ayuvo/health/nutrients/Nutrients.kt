@@ -245,13 +245,15 @@ object Nutrients {
     /**
      * `{key: {food, supplements, total}}` for the local [day]: keys named by a food entry of the day
      * (even with a null value) or by a supplement entry of the day, sorted. A part without values
-     * is null; total is null only when both parts are.
+     * is null; total is null only when both parts are. Food values of `app_tracked: false`
+     * nutrients are ignored and name no key: their food part is always null (never 0).
      */
     fun dayTotals(food: List<FoodNutrients>, supplements: List<SupplementEntry>, day: String, zone: ZoneId): Map<String, NutrientAmount> {
         val acc = HashMap<String, Array<Double?>>()
         for (e in food) {
             if (localDayOf(e.tMs, zone) != day) continue
             for ((k, v) in e.nutrients) {
+                if (ref.byKey[k]?.appTracked == false) continue
                 val a = acc.getOrPut(k) { arrayOfNulls(2) }
                 if (isNumber(v)) a[0] = a[0]?.plus(v!!) ?: v
             }
@@ -273,11 +275,20 @@ object Nutrients {
     /**
      * Average per logged day over [startMs, endMs): interval total ÷ logged days. [loggedDays] are
      * the caller's days with any food entry or taken dose; days of valued entries in the interval
-     * are added. Null average when no entry in the interval has a value.
+     * are added. Null average when no entry in the interval has a value. For an `app_tracked: false`
+     * [key] the caller's days are ignored: the logged days are the days with a taken dose of it.
      */
-    fun loggedDayAverage(entries: List<NutrientValueEntry>, loggedDays: Collection<String>, startMs: Long, endMs: Long, zone: ZoneId): LoggedDayAverage {
+    fun loggedDayAverage(
+        entries: List<NutrientValueEntry>,
+        loggedDays: Collection<String>,
+        startMs: Long,
+        endMs: Long,
+        zone: ZoneId,
+        key: String? = null
+    ): LoggedDayAverage {
         val days = HashSet<String>()
-        for (d in loggedDays) {
+        val callerDays = if (key != null && ref.byKey[key]?.appTracked == false) emptyList() else loggedDays
+        for (d in callerDays) {
             val m = localMidnightMs(d, zone)
             if (m in startMs until endMs) days += d
         }

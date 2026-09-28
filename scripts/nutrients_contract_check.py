@@ -15,7 +15,7 @@ Checks:
      tables, upper-limit scopes and notes, IU and mass-form blocks, source ids that exist (and every source used),
      canonical units equal to the app's OptionalNutrient units (iOS model parsed) and the sports supplement list.
   2. shared/nutrients/ai_supplement_label.md: the four fenced blocks load, placeholders appear once, and both key
-     lists equal the reference keys + sports keys in reference order.
+     lists equal ALL reference keys (app_tracked or not) + sports keys in reference order (R.SUPPLEMENT_KEYS).
   3. shared/nutrients/test-vectors/*.json: exact file set, envelope, unique names, allowed zones, canonical
      formatting and every "expected" equals scripts/nutrients_reference.py on its "input"; coverage of every error
      code, style, label, scope and band.
@@ -59,7 +59,8 @@ ALLOWED_ZONES = frozenset(["America/New_York", "Europe/London", "Asia/Kolkata", 
 BANDS = ["19-30", "31-50", "51-70", "71+"]
 CATEGORIES = ("carbs", "fats", "minerals", "vitamins", "other")
 EXTRA_KEYS = ("monounsaturated_fat", "polyunsaturated_fat")
-# app_tracked: false nutrients: registry nutrition types the food log does not track (health charts only).
+# app_tracked: false nutrients: registry nutrition types the food log does not record. They are still supplement
+# nutrients (medication_nutrients, AI label, `nutrient:<key>` chart counting supplements only).
 UNTRACKED_KEYS = ["phosphorus", "chloride", "copper", "manganese", "selenium", "chromium", "molybdenum", "iodine",
                   "vitamin_b6", "thiamin", "riboflavin", "niacin", "biotin", "pantothenic_acid"]
 # Registry dietary_* types that are not reference nutrients: they resolve to the app's macro goals
@@ -313,10 +314,14 @@ def check_prompt(ref, problems):
     except Exception as e:  # noqa: BLE001
         problems.append("ai_supplement_label.md: cannot load prompts (%s)" % e)
         return
-    keys = ", ".join([n["key"] for n in ref["nutrients"] if n["app_tracked"]] + SPORTS_KEYS)
+    keys = ", ".join([n["key"] for n in ref["nutrients"]] + SPORTS_KEYS)
+    if keys != ", ".join(R.SUPPLEMENT_KEYS):
+        problems.append("nutrients_reference.SUPPLEMENT_KEYS must be every reference key + sports keys in order")
     if ("\n" + keys + "\n") not in p["cloud"] or ("Keys: " + keys + "\n") not in p["local"]:
-        problems.append("ai_supplement_label.md: key lists must equal the app_tracked reference keys + sports keys in "
+        problems.append("ai_supplement_label.md: key lists must equal every reference key + sports keys in "
                         "order:\n%s" % keys)
+    if not re.search("prompt [(]v[0-9]+[)]", open(PROMPT, encoding="utf-8").read().split("\n")[0]):
+        problems.append("ai_supplement_label.md: the title must carry the prompt version (vN)")
     for k in ("cloud", "local"):
         if '{"serving_units":1,"items":[{"key":"","amount":0,"unit":"","form":null}]}' not in p[k]:
             problems.append("ai_supplement_label.md: %s prompt must show the output shape" % k)
@@ -372,6 +377,8 @@ def _cover(seen, f, inp, got):
             add("untracked_" + (got["error"] or "ok"))
         if inp.get("unit") and R.normalize_unit(inp["unit"]) == "iu" and got["ok"]:
             add("iu_ok")
+        if inp["key"] == "vitamin_a" and got["ok"] and R.normalize_unit(inp.get("unit")) != "iu" and got["amount"] == R.convert_amount(inp["value"], inp["unit"], "vitamin_a")["amount"] and inp.get("form") in (None, "retinol"):
+            add("vitamin_a_retinol_mass")
     elif f == "supplement_entries":
         for log in inp.get("dose_logs") or []:
             add("status_" + log["status"])
@@ -383,14 +390,27 @@ def _cover(seen, f, inp, got):
                 add("supplements_only")
             if v["food"] is not None and v["supplements"] is not None:
                 add("both")
+        for k, v in got["totals"].items():
+            if k in R.BY_KEY and not R.BY_KEY[k]["app_tracked"]:
+                if v["food"] is not None:
+                    add("untracked_food_not_null")      # never allowed: required_coverage cannot contain it
+                elif v["supplements"] is not None and v["total"] == v["supplements"]:
+                    add("untracked_supplements_only")
+        if any(k in R.BY_KEY and not R.BY_KEY[k]["app_tracked"] for e in inp.get("food_entries") or []
+               for k in (e.get("nutrients") or {})):
+            add("untracked_food_value_ignored")
     elif f == "logged_day_average":
         add("null" if got["average"] is None else "value")
+        if inp.get("key") in R.BY_KEY and not R.BY_KEY[inp["key"]]["app_tracked"] and inp.get("logged_days"):
+            add("untracked_dose_days_only")
     elif f == "parse_label_output":
         add(got["error"] or "ok")
         for r in got["rejected"]:
             add(r["code"])
-        if any('"%s"' % k in inp["text"] for k in UNTRACKED_KEYS) and any(r["code"] == "unknown_nutrient" for r in got["rejected"]):
-            add("untracked_rejected")
+        if any(it["key"] in UNTRACKED_KEYS for it in got["items"]):
+            add("untracked_accepted")
+        if len(set(it["key"] for it in got["items"]) & set(UNTRACKED_KEYS)) >= 8:
+            add("multivitamin_label")
 
 
 def required_coverage():
@@ -398,13 +418,15 @@ def required_coverage():
                                "band_71+", "unknown_nutrient", "your_goal", "unknown_sex", "pct_energy_value",
                                "pct_energy_null", "untracked"] + ["scope_" + s for s in R.UL_SCOPES],
            "default_goal": ["null", "value", "min_1", "untracked"],
-           "convert_amount": ["ok", "iu_ok", "untracked_unknown_nutrient"] + list(R.CONVERT_ERRORS),
+           "convert_amount": ["ok", "iu_ok", "untracked_ok", "untracked_iu_not_supported", "vitamin_a_retinol_mass"]
+           + list(R.CONVERT_ERRORS),
            "supplement_entries": ["status_taken", "status_skipped", "status_missed", "status_snoozed"],
-           "day_totals": ["all_null", "supplements_only", "both"],
-           "logged_day_average": ["null", "value"],
+           "day_totals": ["all_null", "supplements_only", "both", "untracked_supplements_only",
+                          "untracked_food_value_ignored"],
+           "logged_day_average": ["null", "value", "untracked_dose_days_only"],
            "parse_label_output": ["ok", "parse_error", "bad_shape", "bad_item", "unknown_nutrient", "duplicate_nutrient",
                                   "amount_too_large", "bad_serving", "form_required", "iu_not_supported",
-                                  "unsupported_unit", "invalid_amount", "untracked_rejected"]}
+                                  "unsupported_unit", "invalid_amount", "untracked_accepted", "multivitamin_label"]}
     return set("%s:%s" % (f, t) for f, tags in req.items() for t in tags)
 
 
@@ -462,6 +484,8 @@ def check_vectors(write, problems):
             problems.append("%s: not in canonical format (run --write)" % name)
     for tag in sorted(required_coverage() - seen):
         problems.append("coverage: no vector covers %s" % tag)
+    if "day_totals:untracked_food_not_null" in seen:
+        problems.append("day_totals: an app_tracked: false nutrient must have food null")
     if zones_seen != ALLOWED_ZONES:
         problems.append("coverage: vectors must use all four zones, missing %s" % sorted(ALLOWED_ZONES - zones_seen))
     return counts
@@ -523,8 +547,9 @@ def render_doc(ref):
            "--write`. Do not edit by hand._", "",
            "Population: %s. Bands: %s (default %s). Values that differ by band are listed as 19–30 / 31–50 / 51–70 / 71+." % (
                ref["population"], ", ".join(b["id"] for b in ref["age_bands"]), ref["default_band"]), "",
-           "App tracked: ✓ = the food log tracks it (`nutrient:<key>` chart, supplements, AI label); — = health "
-           "nutrition type only (Apple Health / Health Connect chart).", "",
+           "App tracked: ✓ = the food log records it; — = the food log does not record it (its `nutrient:<key>` chart "
+           "counts Medications supplements only). Every row can be a supplement nutrient and an AI label key and has "
+           "a `nutrient:<key>` chart.", "",
            "| Nutrient | Unit | App | Health type | Style | Recommended | Upper limit (scope) | Limit | IU | Sources |",
            "|---|---|---|---|---|---|---|---|---|---|"]
     for n in ref["nutrients"]:
@@ -654,7 +679,18 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual(R.reference_lines("chromium", {"age": 75})["recommended"], 30.0)
         self.assertIsNone(R.reference_lines("chromium", {})["upper_limit"])
         self.assertEqual(R.reference_lines("niacin", {})["upper_limit_scope"], "supplements_only")
-        self.assertEqual(R.convert_amount(1, "mg", "copper")["error"], "unknown_nutrient")
+        self.assertEqual(R.convert_amount(1.7, "mg", "copper")["amount"], 1.7)
+        self.assertEqual(R.convert_amount(140, "mcg", "iodine")["amount"], 140)
+        self.assertEqual(R.convert_amount(1, "IU", "copper")["error"], "iu_not_supported")
+        self.assertEqual(R.convert_amount(50, "mg", "grape_seed_extract")["error"], "unknown_nutrient")
+        self.assertEqual(R.convert_amount(1000, "mcg", "vitamin_a", "retinol")["amount"], 1000)
+        self.assertEqual(R.convert_amount(300, "mcg", "folate", "folic_acid")["amount"], 500)
+        t = R.day_totals([{"t_ms": 0, "nutrients": {"copper": 2, "zinc": 3}}],
+                         [{"t_ms": 1, "nutrient_key": "copper", "value": 1.7, "medication_id": "m"}], "1970-01-01", "UTC")
+        self.assertEqual(t["copper"], {"food": None, "supplements": 1.7, "total": 1.7})
+        self.assertEqual(t["zinc"], {"food": 3.0, "supplements": None, "total": 3.0})
+        self.assertFalse(R.food_tracked("copper"))
+        self.assertTrue(R.food_tracked("creatine"))
         self.assertEqual(R.BY_HEALTH_TYPE["dietary_vitamin_d"], "vitamin_d")
         self.assertEqual(R.BY_HEALTH_TYPE["dietary_fat_saturated"], "saturated_fat")
 

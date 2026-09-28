@@ -148,7 +148,10 @@ object NutrientsVectors {
             val entries = objects(input["entries"]).map { NutrientValueEntry(long(it["t_ms"])!!, num(it["value"])) }
             val interval = input["interval"] as JsonObject
             val days = (input["logged_days"] as? JsonArray).orEmpty().mapNotNull { str(it) }
-            val r = Nutrients.loggedDayAverage(entries, days, long(interval["start_ms"])!!, long(interval["end_ms"])!!, ZoneId.of(str(input["time_zone"])!!))
+            val r = Nutrients.loggedDayAverage(
+                entries, days, long(interval["start_ms"])!!, long(interval["end_ms"])!!, ZoneId.of(str(input["time_zone"])!!),
+                key = str(input["key"])
+            )
             MedicationJson.obj("average" to r.average, "logged_days" to r.loggedDays)
         }
         "parse_label_output" -> {

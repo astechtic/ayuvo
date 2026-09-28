@@ -1,7 +1,7 @@
-"""Guides for the 14 nutrients the Ayuvo food log does not track (merged into FACTS by nutrient_facts.py).
+"""Guides for the 14 nutrients the Ayuvo food log does not estimate (merged into FACTS by nutrient_facts.py).
 
-The apps chart these from Apple Health / Health Connect (`app_tracked: false` in shared/nutrients/nutrient_reference.json)
-and link to /nutrients/<slug>. Researched from the NIH Office of Dietary Supplements fact sheets (read through Internet Archive
+The apps chart these from supplements logged in Medications and from Apple Health / Health Connect
+(`app_tracked: false` in shared/nutrients/nutrient_reference.json) and link to /nutrients/<slug>. Researched from the NIH Office of Dietary Supplements fact sheets (read through Internet Archive
 captures because ods.od.nih.gov blocks automated requests; the original URLs are cited), NASEM, WHO, EFSA, Health Canada,
 MedlinePlus and PMC reviews, checked on CHECKED in nutrient_facts.py. Same copy rules as nutrient_facts.py: no intake numbers
 in copy (they are rendered from the reference JSON), associational wording, no treatment advice.

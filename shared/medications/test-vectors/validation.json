@@ -713,8 +713,8 @@
           "name": "Multivitamin",
           "nutrients": [
             {
-              "amount_per_unit": 16,
-              "key": "niacin"
+              "amount_per_unit": 50,
+              "key": "grape_seed_extract"
             },
             {
               "amount_per_unit": 0,
@@ -743,7 +743,58 @@
         }
       },
       "name": "supplement_nutrients_invalid",
-      "notes": "Unknown key (niacin is a reference nutrient with app_tracked: false, so it cannot be a supplement nutrient), zero amount, duplicate, a g nutrient above the 100 g cap (1000 typed as mg), a non-object row."
+      "notes": "Unknown key (grape seed extract is not a reference nutrient or sports supplement; app_tracked: false nutrients such as niacin are valid, see supplement_nutrients_untracked_valid), zero amount, duplicate, a g nutrient above the 100 g cap (1000 typed as mg), a non-object row."
+    },
+    {
+      "expected": {
+        "errors": []
+      },
+      "input": {
+        "draft": {
+          "anchor_time": null,
+          "days": [],
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "frequency_kind": "daily",
+          "instructions": null,
+          "interval_hours": null,
+          "is_prn": 0,
+          "name": "Multivitamin",
+          "nutrients": [
+            {
+              "amount_per_unit": 1.7,
+              "key": "copper"
+            },
+            {
+              "amount_per_unit": 140,
+              "key": "iodine"
+            },
+            {
+              "amount_per_unit": 16,
+              "key": "niacin"
+            },
+            {
+              "amount_per_unit": 40,
+              "key": "biotin"
+            },
+            {
+              "amount_per_unit": 17,
+              "key": "zinc"
+            }
+          ],
+          "start_date": "2026-09-01",
+          "strength": null,
+          "times": [
+            "08:00",
+            "20:00"
+          ]
+        }
+      },
+      "name": "supplement_nutrients_untracked_valid",
+      "notes": "Every reference nutrient is a supplement nutrient, including app_tracked: false ones (the food log does not record them): no errors."
     }
   ],
   "format": "ayuvo-medications-vectors",

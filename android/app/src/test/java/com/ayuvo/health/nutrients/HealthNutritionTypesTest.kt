@@ -24,7 +24,7 @@ import java.time.ZonedDateTime
 /**
  * Health nutrition types (docs/nutrients.md §5a, docs/ui-structure.md §4 "Health nutrition types"):
  * `dietary_*` details resolve to the same reference lines, About and guide as `nutrient:` charts;
- * health-only nutrients (copper) have lines but no app chart and are never supplement nutrients.
+ * untracked nutrients (copper) have lines, a supplements-only app chart and are supplement nutrients.
  */
 class HealthNutritionTypesTest {
     private val catalog = MetricsTestFiles.catalog
@@ -47,6 +47,7 @@ class HealthNutritionTypesTest {
         assertEquals("vitamin_d", r.nutrientKey)
         assertEquals("vitamin-d", r.learnSlug)
         assertEquals("nutrient:vitamin_d", r.nutrientMetric)
+        assertEquals(true, r.foodTracked)
         val g = HealthGoalUi.resolve(r, profile, OptionalNutrientGoals())
         assertTrue(g.isNutrient)
         assertEquals(MetricKey.Nutrient("vitamin_d"), g.nutrientMetric)
@@ -74,15 +75,17 @@ class HealthNutritionTypesTest {
     }
 
     @Test
-    fun copperHasLinesAndGuideButNoAppChart() {
+    fun copperHasLinesGuideAndASupplementsOnlyAppChart() {
         val r = resolve("dietary_copper")
         assertEquals("health", r.source)
         assertEquals("nutrient.reference", r.goalSource)
         assertEquals("copper", r.nutrientKey)
         assertEquals("copper", r.learnSlug)
-        assertNull(r.nutrientMetric)
+        assertEquals("nutrient:copper", r.nutrientMetric)
+        assertEquals(false, r.foodTracked)
         val g = HealthGoalUi.resolve(r, profile, OptionalNutrientGoals())
-        assertNull(g.nutrientMetric)
+        assertEquals(MetricKey.Nutrient("copper"), g.nutrientMetric)
+        assertEquals(false, g.foodTracked)
         assertNull(g.customGoal)
         val lines = g.lines!!
         assertNull(lines.error)
@@ -99,6 +102,7 @@ class HealthNutritionTypesTest {
         assertNull(energy.nutrientKey)
         assertNull(energy.learnSlug)
         assertNull(energy.nutrientMetric)
+        assertNull(energy.foodTracked)
         val g = HealthGoalUi.resolve(energy, profile, OptionalNutrientGoals())
         assertFalse(g.isNutrient)
         assertNull(g.lines)
@@ -125,23 +129,39 @@ class HealthNutritionTypesTest {
             assertNotNull(t.id, spec)
             assertEquals(t.id, spec!!.key, r.nutrientKey)
             assertEquals(t.id, spec.slug, r.learnSlug)
-            assertEquals(t.id, if (spec.appTracked) "nutrient:${spec.key}" else null, r.nutrientMetric)
+            assertEquals(t.id, "nutrient:${spec.key}", r.nutrientMetric)
+            assertEquals(t.id, spec.appTracked, r.foodTracked)
             assertEquals(t.id, spec.unit, t.unit)
         }
     }
 
     @Test
-    fun copperIsNeverASupplementNutrient() {
+    fun everyReferenceNutrientIsASupplementNutrient() {
         val ref = NutrientsTestFiles.reference
-        assertNull(ref.unitOf("copper"))
-        assertFalse("copper" in ref.allKeys)
+        assertEquals("mg", ref.unitOf("copper"))
+        assertEquals("mcg", ref.unitOf("iodine"))
+        assertTrue("copper" in ref.supplementKeys)
+        assertEquals(ref.nutrients.map { it.key } + ref.sports.map { it.key }, ref.supplementKeys)
+        assertEquals(45, ref.supplementKeys.size)
+        // The food log still does not record copper.
         assertFalse("copper" in NutrientFields.REFERENCE_KEYS)
-        assertEquals("unknown_nutrient", Nutrients.convertAmount(1.0, "mg", "copper").error)
-        assertEquals("unknown_nutrient", NutrientInputRow(key = "copper", amount = "1", unit = "mg").convert().error)
-        assertEquals("unknown_nutrient", ArchiveCodec.nutrientProblem("copper", 1.0))
-        val parsed = NutrientLabel.parse("""{"items": [{"key": "copper", "amount": 2, "unit": "mg"}, {"key": "zinc", "amount": 11, "unit": "mg"}]}""")
-        assertEquals(listOf("zinc"), parsed.items.map { it.key })
-        assertEquals(listOf(LabelRejection(0, "unknown_nutrient")), parsed.rejected)
+        assertFalse(ref.foodTracked("copper"))
+        assertTrue(ref.foodTracked("zinc"))
+        assertTrue(ref.foodTracked("creatine"))
+        assertFalse(ref.foodTracked("grape_seed_extract"))
+        assertEquals(1.7, Nutrients.convertAmount(1.7, "mg", "copper").amount!!, 0.0)
+        assertEquals(null, NutrientInputRow(key = "thiamin", amount = "1.4", unit = "mg").convert().error)
+        assertNull(ArchiveCodec.nutrientProblem("copper", 1.0))
+        assertEquals("unknown_nutrient", ArchiveCodec.nutrientProblem("grape_seed_extract", 1.0))
+        val parsed = NutrientLabel.parse("""{"items": [{"key": "copper", "amount": 2, "unit": "mg"}, {"key": "grape_seed_extract", "amount": 11, "unit": "mg"}]}""")
+        assertEquals(listOf("copper"), parsed.items.map { it.key })
+        assertEquals(listOf(LabelRejection(1, "unknown_nutrient")), parsed.rejected)
+        // The supplement picker lists every key, grouped Vitamins / Minerals / Other / Sports.
+        val picker = NutrientFields.supplementPickerKeys()
+        assertEquals(ref.supplementKeys.toSet(), picker.toSet())
+        assertEquals(45, picker.size)
+        assertEquals(NutrientFields.PickerGroup.entries, picker.map { NutrientFields.supplementPickerGroup(it) }.distinct())
+        assertTrue(picker.indexOf("thiamin") < picker.indexOf("copper"))
         // The reference itself still knows copper for its lines and default goal.
         assertEquals(0.9, Nutrients.defaultGoal("copper", NutrientFields.profile(profile))!!, 0.0)
         assertEquals(23, ref.trackedNutrients.size)

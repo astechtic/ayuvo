@@ -87,7 +87,7 @@ nonisolated extension NutrientsReference {
             let result = loggedDayAverage(entries: entries, loggedDays: (inp["logged_days"].array ?? []).compactMap(\.string),
                                           startMs: Int64(MR.int(inp["interval"]["start_ms"]) ?? 0),
                                           endMs: Int64(MR.int(inp["interval"]["end_ms"]) ?? 0),
-                                          zone: zone(inp["time_zone"].string ?? "UTC"))
+                                          zone: zone(inp["time_zone"].string ?? "UTC"), key: inp["key"].string)
             return .obj(["average": rj(result.average), "logged_days": .int(result.loggedDays)])
         case "parse_label_output":
             return rj(parseLabelOutput(inp["text"].string ?? ""))

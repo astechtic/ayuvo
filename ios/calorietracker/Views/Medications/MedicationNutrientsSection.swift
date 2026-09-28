@@ -76,6 +76,89 @@ extension NutrientsReference.Conversion {
     }
 }
 
+/// State of "Get nutrients with AI". The form owns it and presents the photo picker and review sheet from its
+/// root: a picker or sheet attached to a Form section is presented from a list row, which dismissed the whole
+/// medication sheet when the row was recycled.
+@MainActor
+@Observable
+final class SupplementNutrientReader {
+    var photoItem: PhotosPickerItem?
+    var showPhotoPicker = false
+    var isReading = false
+    var message: String?
+    var review: ReviewPayload?
+
+    struct ReviewPayload: Identifiable {
+        let id = UUID()
+        let result: NutrientsReference.LabelResult
+    }
+
+    func readPhoto(_ item: PhotosPickerItem, name: String, strength: String, doseUnit: DoseUnit) async {
+        defer { photoItem = nil }
+        guard let data = try? await item.loadTransferable(type: Data.self) else {
+            message = String(localized: "The photo couldn't be opened.")
+            return
+        }
+        await run(photo: data, name: name, strength: strength, doseUnit: doseUnit)
+    }
+
+    func run(photo: Data?, name: String, strength: String, doseUnit: DoseUnit) async {
+        isReading = true
+        message = nil
+        defer { isReading = false }
+        do {
+            let result = try await SupplementLabelAI.read(photo: photo, name: name, strength: strength, doseUnit: doseUnit.rawValue)
+            if !result.ok {
+                message = String(localized: "The AI answer couldn't be read. Add the nutrients by hand.")
+            } else if result.items.isEmpty && result.rejected.isEmpty {
+                message = String(localized: "No amounts were found. Add the nutrients by hand.")
+            } else {
+                review = ReviewPayload(result: result)
+            }
+        } catch SupplementLabelAI.Failure.notConfigured {
+            message = String(localized: "Set up AI in Settings to get nutrients from a label.")
+        } catch is CancellationError {
+            return
+        } catch {
+            message = String(localized: "The AI couldn't read this right now. Add the nutrients by hand.")
+        }
+    }
+
+    /// Confirmed items replace rows of the same nutrient; the form still needs Save.
+    static func merge(_ items: [NutrientsReference.LabelItem], into rows: inout [NutrientFormRow]) {
+        for item in items {
+            let row = NutrientFormRow(key: item.key, amountText: NutrientFormRow.plain(item.amount), unit: item.unit)
+            if let index = rows.firstIndex(where: { $0.key == item.key }) {
+                rows[index] = row
+            } else {
+                rows.append(row)
+            }
+        }
+    }
+}
+
+extension View {
+    /// Photo picker + review sheet of "Get nutrients with AI"; apply to the form's root, never to a section.
+    func supplementNutrientReader(_ reader: SupplementNutrientReader, rows: Binding<[NutrientFormRow]>, doseUnit: DoseUnit,
+                                  name: String, strength: String) -> some View {
+        @Bindable var reader = reader
+        return self
+            .photosPicker(isPresented: $reader.showPhotoPicker, selection: $reader.photoItem, matching: .images)
+            .onChange(of: reader.photoItem) { _, item in
+                guard let item else { return }
+                Task { await reader.readPhoto(item, name: name, strength: strength, doseUnit: doseUnit) }
+            }
+            .sheet(item: $reader.review) { payload in
+                SupplementNutrientReviewSheet(result: payload.result, perUnit: MedicationFormatting.doseText(quantity: 1, unit: doseUnit)) { accepted in
+                    SupplementNutrientReader.merge(accepted, into: &rows.wrappedValue)
+                    reader.review = nil
+                } onCancel: {
+                    reader.review = nil
+                }
+            }
+    }
+}
+
 /// "Nutrients (for supplements)" of the Add / Edit / Review form (docs/medications.md §21). Rows are amounts per
 /// ONE dose unit; "Get nutrients with AI" fills a review sheet and never saves on its own.
 struct MedicationNutrientsSection: View {
@@ -84,12 +167,7 @@ struct MedicationNutrientsSection: View {
     let name: String
     let strength: String
     var errors: [String: String] = [:]
-
-    @State private var photoItem: PhotosPickerItem?
-    @State private var showPhotoPicker = false
-    @State private var isReading = false
-    @State private var aiMessage: String?
-    @State private var review: NutrientsReference.LabelResult?
+    let reader: SupplementNutrientReader
 
     private var perUnit: String { MedicationFormatting.doseText(quantity: 1, unit: doseUnit) }
 
@@ -100,8 +178,17 @@ struct MedicationNutrientsSection: View {
             }
             .onDelete { rows.remove(atOffsets: $0) }
             Menu {
-                ForEach(NutrientCatalog.supplementKeys.filter { key in !rows.contains { $0.key == key } }, id: \.self) { key in
-                    Button(NutrientCatalog.title(key)) { rows.append(NutrientFormRow(key: key)) }
+                // Every reference nutrient (app_tracked or not) plus the sports supplements, grouped.
+                ForEach(NutrientCatalog.supplementSections, id: \.title) { section in
+                    let keys = section.keys.filter { key in !rows.contains { $0.key == key } }
+                    if !keys.isEmpty {
+                        Section(section.title) {
+                            ForEach(keys, id: \.self) { key in
+                                Button(NutrientCatalog.labelTitle(key)) { rows.append(NutrientFormRow(key: key)) }
+                                    .accessibilityIdentifier("medications.form.addNutrient.\(key)")
+                            }
+                        }
+                    }
                 }
             } label: {
                 Label("Add nutrient", systemImage: "plus.circle")
@@ -113,30 +200,12 @@ struct MedicationNutrientsSection: View {
         } footer: {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Amounts per \(perUnit). Doses you mark as taken add these to your nutrition, never to calories. Changing them also changes past doses.")
-                if let aiMessage {
-                    Text(aiMessage).foregroundStyle(.orange)
+                if let message = reader.message {
+                    Text(message).foregroundStyle(.orange)
                 }
             }
         }
         .listRowBackground(AppColors.appCard)
-        .photosPicker(isPresented: $showPhotoPicker, selection: $photoItem, matching: .images)
-        .onChange(of: photoItem) { _, item in
-            guard let item else { return }
-            Task { await readPhoto(item) }
-        }
-        .sheet(item: Binding(get: { review.map(ReviewPayload.init) }, set: { if $0 == nil { review = nil } })) { payload in
-            SupplementNutrientReviewSheet(result: payload.result, perUnit: perUnit) { accepted in
-                merge(accepted)
-                review = nil
-            } onCancel: {
-                review = nil
-            }
-        }
-    }
-
-    private struct ReviewPayload: Identifiable {
-        let id = UUID()
-        let result: NutrientsReference.LabelResult
     }
 
     @ViewBuilder
@@ -146,9 +215,10 @@ struct MedicationNutrientsSection: View {
                 Image(systemName: NutrientCatalog.iconName(row.wrappedValue.key))
                     .foregroundStyle(AyuvoPalette.nutrition)
                     .frame(width: 20)
-                Text(NutrientCatalog.title(row.wrappedValue.key))
+                Text(NutrientCatalog.labelTitle(row.wrappedValue.key))
                     .font(.system(.body, design: .rounded))
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
                 Spacer(minLength: 4)
                 TextField("0", text: row.amountText)
                     .keyboardType(.decimalPad)
@@ -204,14 +274,14 @@ struct MedicationNutrientsSection: View {
         } else {
             Menu {
                 Button {
-                    showPhotoPicker = true
+                    reader.showPhotoPicker = true
                 } label: {
                     Label(photoRoute == nil ? String(localized: "From a label photo (set up an image model in Settings)") : String(localized: "From a label photo"),
                           systemImage: "camera.viewfinder")
                 }
                 .disabled(photoRoute == nil)
                 Button {
-                    Task { await readText() }
+                    Task { await reader.run(photo: nil, name: name, strength: strength, doseUnit: doseUnit) }
                 } label: {
                     Label(textRoute == nil ? String(localized: "From name and strength (set up a text model in Settings)") : String(localized: "From name and strength"),
                           systemImage: "text.magnifyingglass")
@@ -220,59 +290,14 @@ struct MedicationNutrientsSection: View {
             } label: {
                 HStack {
                     Label("Get nutrients with AI", systemImage: "sparkles")
-                    if isReading {
+                    if reader.isReading {
                         Spacer()
                         ProgressView()
                     }
                 }
             }
-            .disabled(isReading)
+            .disabled(reader.isReading)
             .accessibilityIdentifier("medications.form.aiNutrients")
-        }
-    }
-
-    private func readPhoto(_ item: PhotosPickerItem) async {
-        defer { photoItem = nil }
-        guard let data = try? await item.loadTransferable(type: Data.self) else {
-            aiMessage = String(localized: "The photo couldn't be opened.")
-            return
-        }
-        await run(photo: data)
-    }
-
-    private func readText() async { await run(photo: nil) }
-
-    private func run(photo: Data?) async {
-        isReading = true
-        aiMessage = nil
-        defer { isReading = false }
-        do {
-            let result = try await SupplementLabelAI.read(photo: photo, name: name, strength: strength, doseUnit: doseUnit.rawValue)
-            if !result.ok {
-                aiMessage = String(localized: "The AI answer couldn't be read. Add the nutrients by hand.")
-            } else if result.items.isEmpty && result.rejected.isEmpty {
-                aiMessage = String(localized: "No amounts were found. Add the nutrients by hand.")
-            } else {
-                review = result
-            }
-        } catch SupplementLabelAI.Failure.notConfigured {
-            aiMessage = String(localized: "Set up AI in Settings to get nutrients from a label.")
-        } catch is CancellationError {
-            return
-        } catch {
-            aiMessage = String(localized: "The AI couldn't read this right now. Add the nutrients by hand.")
-        }
-    }
-
-    /// Confirmed items replace rows of the same nutrient; the form still needs Save.
-    private func merge(_ items: [NutrientsReference.LabelItem]) {
-        for item in items {
-            let row = NutrientFormRow(key: item.key, amountText: NutrientFormRow.plain(item.amount), unit: item.unit)
-            if let index = rows.firstIndex(where: { $0.key == item.key }) {
-                rows[index] = row
-            } else {
-                rows.append(row)
-            }
         }
     }
 }
@@ -311,7 +336,7 @@ struct SupplementNutrientReviewSheet: View {
                 Section {
                     ForEach(items, id: \.key) { item in
                         HStack {
-                            Text(NutrientCatalog.title(item.key))
+                            Text(NutrientCatalog.labelTitle(item.key))
                             Spacer()
                             TextField("0", text: Binding(get: { texts[item.key] ?? "" }, set: { texts[item.key] = $0 }))
                                 .keyboardType(.decimalPad)

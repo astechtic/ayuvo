@@ -3239,8 +3239,8 @@ FACTS = {'vitamin-a': {'name': 'Vitamin A',
                         'thumb_h': 400}}}
 
 
-# The 14 vitamins and minerals the food log does not track (app_tracked: false in nutrient_reference.json). The apps chart them
-# from Apple Health / Health Connect and link to these guides. Same shape and copy rules as FACTS above.
+# The 14 vitamins and minerals the food log does not estimate (app_tracked: false in nutrient_reference.json). The apps chart them
+# from Medications supplements and Apple Health / Health Connect, and link to these guides. Same shape and copy rules as FACTS above.
 from nutrient_facts_health import HEALTH_FACTS  # noqa: E402
 
 FACTS.update(HEALTH_FACTS)

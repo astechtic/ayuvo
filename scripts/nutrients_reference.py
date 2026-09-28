@@ -49,23 +49,34 @@ def load_reference(path=REFERENCE_PATH):
 
 REF = load_reference()
 BY_KEY = dict((n["key"], n) for n in REF["nutrients"])
-# Nutrients the app's food log tracks (app_tracked: true). Only these (plus the sports supplements) can be supplement
-# nutrients, AI label items and `nutrient:<key>` charts. The others (app_tracked: false) exist for the health nutrition
-# types (Apple Health / Health Connect `dietary_*`) and only feed reference_lines / default_goal.
+# Nutrients the app's FOOD LOG records (app_tracked: true). The others (app_tracked: false: copper, iodine, thiamin, ...)
+# are never recorded by the food log; their food part is always null (day_totals) and their `nutrient:<key>` chart
+# counts supplements only. app_tracked never limits supplements: see SUPPLEMENT_KEYS.
 TRACKED = dict((n["key"], n) for n in REF["nutrients"] if n["app_tracked"])
 # Registry health type id ("dietary_vitamin_d") -> reference nutrient key ("vitamin_d").
 BY_HEALTH_TYPE = dict((n["health_type"], n["key"]) for n in REF["nutrients"] if n["health_type"] is not None)
 SPORTS = dict((s["key"], s) for s in REF["sports_supplements"])
+# Supplement nutrients (medication_nutrients, archive import, AI label items, `nutrient:<key>` charts): EVERY reference
+# nutrient (all styles, app_tracked or not) plus the sports supplements, in reference order then sports order.
+SUPPLEMENT_KEYS = [n["key"] for n in REF["nutrients"]] + [s["key"] for s in REF["sports_supplements"]]
 
 
 def nutrient_unit(key):
-    """Canonical unit of an app-tracked reference nutrient or a sports supplement; None for anything else
-    (unknown keys and app_tracked: false nutrients, which cannot be supplement nutrients)."""
-    if key in TRACKED:
-        return TRACKED[key]["unit"]
+    """Canonical unit of a supplement nutrient (any reference nutrient or a sports supplement); None for unknown
+    keys."""
+    if key in BY_KEY:
+        return BY_KEY[key]["unit"]
     if key in SPORTS:
         return SPORTS[key]["unit"]
     return None
+
+
+def food_tracked(key):
+    """True when the food log records the key: an app_tracked reference nutrient or a sports supplement (the app's
+    OptionalNutrient list includes them). False for app_tracked: false reference nutrients and unknown keys."""
+    if key in BY_KEY:
+        return bool(BY_KEY[key]["app_tracked"])
+    return key in SPORTS
 
 
 # ---------------------------------------------------------------------------------------------
@@ -236,8 +247,9 @@ def convert_amount(value, unit, key, form=None):
     (vitamin A carotenoids, folic acid) then divides by that factor: 2 mcg supplemental beta-carotene = 1 mcg RAE,
     0.6 mcg folic acid = 1 mcg DFE. Other forms are ignored for mass units.
     IU: vitamin D value * mcg_per_iu; vitamin A / E need a form from iu.forms (form_required, unknown_form);
-    any other nutrient -> iu_not_supported. Result rounded to 6 decimals. Only app-tracked nutrients and sports
-    supplements convert; app_tracked: false keys (copper, niacin, ...) -> unknown_nutrient."""
+    any other nutrient -> iu_not_supported. Result rounded to 6 decimals. Every reference nutrient (app_tracked or
+    not: copper, iodine, thiamin, ...) and every sports supplement converts; other keys -> unknown_nutrient.
+    Vitamin A in a mass unit with form null or "retinol" (retinol, retinyl acetate / palmitate) is 1:1 mcg RAE."""
     unit_c = nutrient_unit(key)
     if unit_c is None:
         return _fail("unknown_nutrient")
@@ -246,7 +258,7 @@ def convert_amount(value, unit, key, form=None):
     u = normalize_unit(unit)
     if u is None:
         return _fail("unsupported_unit")
-    n = TRACKED.get(key)
+    n = BY_KEY.get(key)
     if u == "iu":
         iu = n["iu"] if n else None
         if iu is None:
@@ -297,12 +309,16 @@ def day_totals(food_entries, supplements, day, time_zone):
     """{key: {food, supplements, total}} for the local `day`. Keys = every key named by a food entry of the day
     (even with a null value) or by a supplement entry of the day, sorted. food = sum of the non-null food values,
     null when there are none; supplements likewise; total = food + supplements treating a null part as absent,
-    null only when both parts are null. Sums in input order, rounded to 6 decimals at the end."""
+    null only when both parts are null. Sums in input order, rounded to 6 decimals at the end.
+    Food values of app_tracked: false reference nutrients (copper, iodine, ...) are ignored and do not name a key:
+    the food log does not record them, so their food part is always null (never 0) and total = supplements."""
     acc = {}
     for e in food_entries or []:
         if local_day_of(e["t_ms"], time_zone) != day:
             continue
         for k, v in (e.get("nutrients") or {}).items():
+            if k in BY_KEY and not BY_KEY[k]["app_tracked"]:
+                continue
             a = acc.setdefault(k, [None, None])
             if _is_number(v):
                 a[0] = v if a[0] is None else a[0] + v
@@ -321,13 +337,17 @@ def day_totals(food_entries, supplements, day, time_zone):
     return out
 
 
-def logged_day_average(entries, logged_days, interval, time_zone):
+def logged_day_average(entries, logged_days, interval, time_zone, key=None):
     """Average per logged day over [start_ms, end_ms): {average, logged_days}.
     entries = [{t_ms, value|null}] for ONE nutrient (food and supplement entries together); logged_days = local
     days with any food entry or any taken dose (from the caller). A day counts when its local midnight lies in
     the interval; days of non-null entries inside the interval are added to the caller's list. average =
-    interval total / logged day count, null when no entry in the interval has a value. Rounded to 6 decimals."""
+    interval total / logged day count, null when no entry in the interval has a value. Rounded to 6 decimals.
+    `key` (optional) names the nutrient: for an app_tracked: false reference nutrient the caller's logged_days are
+    ignored, so the logged days are exactly the days with a taken dose of that nutrient (its supplement entries)."""
     start, end = interval["start_ms"], interval["end_ms"]
+    if key in BY_KEY and not BY_KEY[key]["app_tracked"]:
+        logged_days = []
     days = set()
     for d in logged_days or []:
         m = local_midnight_ms(d, time_zone)
@@ -388,8 +408,9 @@ def parse_label_output(text):
     """Validate a model answer for the supplement-label prompt.
     -> {ok, error, serving_units, items: [{key, amount, unit, form}], rejected: [{index, code}]}.
     `serving_units` (optional, default 1, must be a number > 0) is how many tablets / capsules / ml / servings the
-    printed amounts cover; each amount is divided by it after conversion. Each item needs a known key (app-tracked
-    reference nutrient or sports; app_tracked: false keys are unknown_nutrient), a number amount > 0 and a unit convert_amount accepts; a repeated key keeps the first. Converted
+    printed amounts cover; each amount is divided by it after conversion. Each item needs a known key (any reference
+    nutrient, app_tracked or not, or a sports supplement; anything else is unknown_nutrient), a number amount > 0 and
+    a unit convert_amount accepts; a repeated key keeps the first. Converted
     amounts above amount_per_unit_max[unit] are rejected (amount_too_large). Nothing here is saved: the app shows
     the items for the user to edit and confirm."""
     raw = extract_json_object(text)
@@ -471,7 +492,8 @@ def run_case(function, inp):
         return {"totals": day_totals(inp.get("food_entries"), inp.get("supplement_entries"), inp["day"],
                                      inp["time_zone"])}
     if function == "logged_day_average":
-        return logged_day_average(inp.get("entries"), inp.get("logged_days"), inp["interval"], inp["time_zone"])
+        return logged_day_average(inp.get("entries"), inp.get("logged_days"), inp["interval"], inp["time_zone"],
+                                  inp.get("key"))
     if function == "parse_label_output":
         return parse_label_output(inp["text"])
     raise ValueError("unknown function %r" % (function,))

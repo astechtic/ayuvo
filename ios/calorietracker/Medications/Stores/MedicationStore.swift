@@ -27,6 +27,8 @@ import Observation
     private(set) var supplementEntries: [NutrientsReference.SupplementEntry] = []
     /// Instants of every taken dose (any medicine): a local day with one counts as a "logged day".
     private(set) var takenDoseMs: [Int64] = []
+    /// Nutrient keys listed by an active medication (Nutrition Details shows their rows, docs/nutrients.md §5b).
+    private(set) var activeNutrientKeys: Set<String> = []
     /// Incremented when `supplementEntries` / `takenDoseMs` / `nutrientsByMedication` change (chart caches).
     private(set) var nutritionRevision = 0
     var filter: MedicationFilter = .active {
@@ -145,6 +147,7 @@ import Observation
             let counts = try await repository.countsByStatus()
             let nutrientRows = try await repository.allNutrients()
             let supplement = try await repository.supplementData()
+            let activeKeys = try await repository.activeNutrientKeys()
             guard generation == loadGeneration else { return }
             today = timeline
             medications = rows
@@ -152,8 +155,10 @@ import Observation
             pausedCount = counts[.paused] ?? 0
             totalCount = counts.values.reduce(0, +)
             let byMedication = Dictionary(grouping: nutrientRows, by: \.medicationID)
-            if byMedication != nutrientsByMedication || supplement.entries != supplementEntries || supplement.takenMs != takenDoseMs {
+            if byMedication != nutrientsByMedication || supplement.entries != supplementEntries || supplement.takenMs != takenDoseMs
+                || activeKeys != activeNutrientKeys {
                 nutrientsByMedication = byMedication
+                activeNutrientKeys = activeKeys
                 supplementEntries = supplement.entries
                 takenDoseMs = supplement.takenMs
                 nutritionRevision += 1
@@ -417,6 +422,7 @@ import Observation
         nutrientsByMedication = [:]
         supplementEntries = []
         takenDoseMs = []
+        activeNutrientKeys = []
         nutritionRevision += 1
         activeCount = 0
         pausedCount = 0

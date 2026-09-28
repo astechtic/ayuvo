@@ -39,6 +39,18 @@ extension MedicationsDatabase {
         return rows
     }
 
+    /// Nutrient keys listed by a medication with `status = active` (Nutrition Details rows, docs/nutrients.md §5b).
+    func activeNutrientKeys() throws -> Set<String> {
+        var keys = Set<String>()
+        try connection.query("""
+            SELECT DISTINCT n.nutrient_key FROM medication_nutrients n JOIN medications m ON m.id = n.medication_id
+            WHERE m.status = 'active'
+            """) { s in
+            if let key = s.text(0) { keys.insert(key) }
+        }
+        return keys
+    }
+
     private func insertNutrient(_ row: MedicationNutrient) throws {
         try connection.run("INSERT INTO medication_nutrients (\(Self.nutrientColumns)) VALUES (?, ?, ?)",
                            [.text(row.medicationID), .text(row.nutrientKey), .real(row.amountPerUnit)])

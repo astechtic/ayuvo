@@ -120,6 +120,11 @@ nonisolated struct MedicationsRepository: Sendable {
         try await database.allNutrients().filter { NutrientsReference.nutrientUnit($0.nutrientKey) != nil }
     }
 
+    /// Known nutrient keys of the active medications (docs/nutrients.md §5b rule 1).
+    func activeNutrientKeys() async throws -> Set<String> {
+        try await database.activeNutrientKeys().filter { NutrientsReference.nutrientUnit($0) != nil }
+    }
+
     /// Supplement contributions of every taken dose in `[fromMs, toMs)` (reference `supplement_entries`),
     /// plus the instants of every taken dose (any medicine) for "logged day" counting.
     func supplementData(from fromMs: Int64 = 0, to toMs: Int64 = Int64.max) async throws -> (entries: [NutrientsReference.SupplementEntry], takenMs: [Int64]) {

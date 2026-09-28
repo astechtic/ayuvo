@@ -13,7 +13,9 @@ import java.time.ZoneId
 data class SupplementSnapshot(
     val rows: List<MedicationNutrientRow> = emptyList(),
     val doses: List<SupplementDose> = emptyList(),
-    val takenDoseMs: List<Long> = emptyList()
+    val takenDoseMs: List<Long> = emptyList(),
+    /** Ids of the medications whose status is `active` (Nutrition Details rule 1, docs/nutrients.md §5b). */
+    val activeMedicationIds: Set<String> = emptySet()
 ) {
     /** `supplement_entries` of the whole history, sorted by time. */
     val entries: List<SupplementEntry> by lazy { Nutrients.supplementEntries(rows, doses) }
@@ -21,6 +23,11 @@ data class SupplementSnapshot(
     val medicationIdsWithNutrients: Set<String> by lazy { rows.mapTo(HashSet()) { it.medicationId } }
 
     fun entriesFor(key: String): List<SupplementEntry> = entries.filter { it.nutrientKey == key }
+
+    /** Nutrient keys listed by an active medication's `medication_nutrients` rows. */
+    val activeNutrientKeys: Set<String> by lazy {
+        rows.filter { it.medicationId in activeMedicationIds }.mapTo(HashSet()) { it.nutrientKey }
+    }
 
     companion object {
         val EMPTY = SupplementSnapshot()
@@ -56,6 +63,19 @@ class NutrientTotals(
         Nutrients.dayTotals(foodRows, supp, dayText, zone)
     }
 
+    /**
+     * The `app_tracked: false` nutrients Nutrition Details shows on [day] (docs/nutrients.md §5b),
+     * in reference order: listed by an active medication, or with a non-null supplements total on
+     * [day] (a taken dose, whatever the medication's status now).
+     */
+    fun untrackedDetailKeys(day: LocalDate): List<String> {
+        val ref = NutrientReference.active ?: return emptyList()
+        val totals = day(day)
+        return ref.nutrients.filter { !it.appTracked }.map { it.key }.filter { k ->
+            k in supplements.activeNutrientKeys || totals[k]?.supplements != null
+        }
+    }
+
     /** The supplement contributions of [day], per medication and key (for the medication detail card). */
     fun supplementEntries(day: LocalDate): List<SupplementEntry> {
         val start = day.atStartOfDay(zone).toInstant().toEpochMilli()
@@ -68,9 +88,12 @@ class NutrientTotals(
         val ALL_KEYS: List<String> = listOf(NutrientFields.CALORIES, NutrientFields.PROTEIN, NutrientFields.CARBS, NutrientFields.FAT) +
             NutrientFields.REFERENCE_KEYS
 
-        /** Chart entries of one nutrient: food values (null skipped) then its supplement entries. */
+        /**
+         * Chart entries of one nutrient: food values (null skipped) then its supplement entries. A
+         * `food_tracked: false` nutrient (copper, thiamin, …) has supplement entries only.
+         */
         fun seriesEntries(key: String, food: List<FoodEntry>, supplements: SupplementSnapshot): List<NutrientValueEntry> =
-            food.mapNotNull { e -> NutrientFields.foodValue(e, key)?.let { NutrientValueEntry(e.timestamp.toEpochMilli(), it) } } +
+            (if (NutrientFields.foodTracked(key)) food else emptyList()).mapNotNull { e -> NutrientFields.foodValue(e, key)?.let { NutrientValueEntry(e.timestamp.toEpochMilli(), it) } } +
                 supplements.entriesFor(key).map { NutrientValueEntry(it.tMs, it.value) }
 
         /** Local days with any food entry or any taken dose (`logged_day_average`'s logged days). */

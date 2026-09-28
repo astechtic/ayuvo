@@ -7,7 +7,8 @@ package com.ayuvo.health.nutrients
  */
 object SupplementLabelAi {
     const val CLOUD_MAX_TOKENS = 800
-    const val LOCAL_MAX_TOKENS = 400
+    /** Prompt v2: a full multivitamin label has 20+ items. */
+    const val LOCAL_MAX_TOKENS = 600
 
     fun prompt(prompts: LabelPrompts, local: Boolean, photo: Boolean, name: String, strength: String, doseUnit: String): String {
         val system = if (local) prompts.local else prompts.cloud

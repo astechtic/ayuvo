@@ -89,6 +89,7 @@ struct MedicationFormView: View {
     @State private var showDiscardConfirmation = false
     @State private var nutrientRows: [NutrientFormRow]
     @State private var nutrientErrors: [String: String] = [:]
+    @State private var nutrientReader = SupplementNutrientReader()
     @FocusState private var focusedField: Field?
 
     private enum Field: Hashable {
@@ -161,7 +162,7 @@ struct MedicationFormView: View {
                 medicineSection
                 doseSection
                 MedicationNutrientsSection(rows: $nutrientRows, doseUnit: draft.doseUnit, name: draft.name,
-                                           strength: draft.strength, errors: nutrientErrors)
+                                           strength: draft.strength, errors: nutrientErrors, reader: nutrientReader)
                 scheduleSection
                 durationSection
                 detailsSection
@@ -202,6 +203,8 @@ struct MedicationFormView: View {
                     showRecordPicker = false
                 }
             }
+            .supplementNutrientReader(nutrientReader, rows: $nutrientRows, doseUnit: draft.doseUnit,
+                                      name: draft.name, strength: draft.strength)
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)

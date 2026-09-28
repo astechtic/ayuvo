@@ -150,14 +150,15 @@ object MetricsVectors {
             "resolve_metric" -> {
                 val ref = com.ayuvo.health.nutrients.NutrientsTestFiles.reference
                 val r = MetricsReference.resolveMetric(catalog, input.str("key") ?: "", MetricsTestFiles::registry) { k ->
-                    ref.byKey[k]?.let { com.ayuvo.health.data.metrics.NutrientFacts(it.slug, it.appTracked) }
+                    ref.byKey[k]?.let { com.ayuvo.health.data.metrics.NutrientFacts(it.slug) }
                 }
                 obj(
                     "source" to r.source, "domain" to r.domain, "colour_hex" to r.colourHex, "colour_hex_dark" to r.colourHexDark,
                     "aggregation" to r.aggregation, "chart_kind" to r.chartKind, "unit" to r.unit, "goal_source" to r.goalSource,
                     "default_favourite_order" to r.defaultFavouriteOrder, "browse_hidden" to r.browseHidden,
                     "icon_android" to r.iconAndroid, "icon_ios" to r.iconIos,
-                    "nutrient_key" to r.nutrientKey, "learn_slug" to r.learnSlug, "nutrient_metric" to r.nutrientMetric
+                    "nutrient_key" to r.nutrientKey, "learn_slug" to r.learnSlug, "nutrient_metric" to r.nutrientMetric,
+                    "food_tracked" to r.foodTracked
                 )
             }
             "nice_ticks" -> {

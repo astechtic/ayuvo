@@ -47,7 +47,7 @@ REQUIRED = [
         "fiber", "sugar", "added-sugar", "saturated-fat", "monounsaturated-fat", "polyunsaturated-fat", "trans-fat",
         "cholesterol", "caffeine", "sodium", "potassium", "calcium", "iron", "magnesium", "zinc", "vitamin-a",
         "vitamin-c", "vitamin-d", "vitamin-b12", "vitamin-e", "vitamin-k", "folate", "omega-3",
-        # charted from Apple Health / Health Connect (app_tracked: false); the apps link to these slugs
+        # not estimated by the food log (app_tracked: false): charted from Medications supplements and Health apps; the apps link to these slugs
         "phosphorus", "chloride", "copper", "manganese", "selenium", "chromium", "molybdenum", "iodine",
         "vitamin-b6", "thiamin", "riboflavin", "niacin", "biotin", "pantothenic-acid")],
     "robots.txt", "sitemap.xml", "llms.txt", "manifest.webmanifest", "styles.css", "site.js", "firebase.json", ".firebaserc",

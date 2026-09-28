@@ -81,9 +81,9 @@ _NUTRIENT_REFERENCE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.
                                         "shared", "nutrients", "nutrient_reference.json")
 with open(_NUTRIENT_REFERENCE_PATH, encoding="utf-8") as _fh:
     _NUTRIENT_REFERENCE = json.load(_fh)
-# Only app-tracked nutrients (app_tracked: true) can be supplement nutrients; app_tracked: false entries exist for the
-# health nutrition types only (docs/nutrients.md §3).
-NUTRIENT_UNITS = dict([(n["key"], n["unit"]) for n in _NUTRIENT_REFERENCE["nutrients"] if n["app_tracked"]]
+# Every reference nutrient (app_tracked or not: copper, iodine, thiamin, ...) and every sports supplement can be a
+# supplement nutrient (docs/nutrients.md §3). app_tracked only says whether the food log records it.
+NUTRIENT_UNITS = dict([(n["key"], n["unit"]) for n in _NUTRIENT_REFERENCE["nutrients"]]
                       + [(s["key"], s["unit"]) for s in _NUTRIENT_REFERENCE["sports_supplements"]])
 NUTRIENT_AMOUNT_MAX = dict(_NUTRIENT_REFERENCE["amount_per_unit_max"])
 NUTRIENT_SKIP_REASONS = ("unknown_nutrient", "invalid_amount", "duplicate_nutrient")
@@ -1038,8 +1038,8 @@ def frequency_hint(value_json):
 
 def nutrient_problem(key, amount):
     """None when (key, amount_per_unit) may be stored, else unknown_nutrient | invalid_amount. The key must be an
-    app_tracked nutrient_reference.json key or a sports supplement key (app_tracked: false keys such as copper are
-    unknown_nutrient); the amount a finite number with
+    nutrient_reference.json key (app_tracked or not; copper and iodine are valid) or a sports supplement key; the
+    amount a finite number with
     0 < amount <= amount_per_unit_max[canonical unit] (g 100, mg 10000, mcg 100000)."""
     if not isinstance(key, str) or key not in NUTRIENT_UNITS:
         return "unknown_nutrient"

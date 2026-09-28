@@ -150,7 +150,8 @@ class AppMetricSeriesProvider(
             val agg = MetricAggregation.SUM
             val bounds = MetricsReference.bucketBounds(range, anchorMs, z, weekStart, nowMs)
             fun inWindow(t: Long) = t >= bounds.startMs && t < bounds.endMs
-            val food = snap.food.mapNotNull { e ->
+            // An untracked nutrient (copper, thiamin, …) has no food part: food total stays null.
+            val food = (if (NutrientFields.foodTracked(key)) snap.food else emptyList()).mapNotNull { e ->
                 NutrientFields.foodValue(e, key)?.takeIf { inWindow(e.timestamp.toEpochMilli()) }
             }
             val supp = snap.supplements.entriesFor(key).filter { inWindow(it.tMs) }.map { it.value }
@@ -163,7 +164,7 @@ class AppMetricSeriesProvider(
                 loggedDayAverage = Nutrients.loggedDayAverage(
                     entries.map { NutrientValueEntry(it.tMs, it.value) },
                     NutrientTotals.loggedDays(snap.food, snap.supplements, z),
-                    bounds.startMs, bounds.endMs, z
+                    bounds.startMs, bounds.endMs, z, key = key
                 )
             )
         }

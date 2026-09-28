@@ -32,13 +32,12 @@ struct NutrientListView: View {
         let totals = NutrientTotals(foodStore: foodStore, medicationStore: medicationStore)
             .totals(MetricCatalogData.shared.nutrientMetrics.map(\.key), on: Date())
         let goals = OptionalNutrientGoals.decoded(from: optionalNutrientGoalsData)
-        let profile = NutrientCatalog.profile(profileStore.profile)
         List {
             ForEach(groups) { group in
                 Section(group.title) {
                     ForEach(group.keys, id: \.self) { key in
                         NavigationLink(value: MetricRoute.detail(.nutrient(key))) {
-                            row(key, total: totals[key] ?? .empty, goal: NutrientCatalog.optionalNutrient(key).map { goals.goal(for: $0, profile: profile) })
+                            row(key, total: totals[key] ?? .empty, goal: NutrientCatalog.detailGoal(key, profile: profileStore.profile, goals: goals))
                         }
                         .accessibilityIdentifier("nutrients.row.\(key)")
                     }
@@ -62,7 +61,12 @@ struct NutrientListView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(NutrientCatalog.title(key))
                     .font(.system(.body, design: .rounded))
-                if let supplements = total.supplements, supplements > 0 {
+                if !NutrientCatalog.foodTracked(key) {
+                    // The food log does not record it: the value is supplements only (docs/nutrients.md §5).
+                    Text("Supplements only")
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(.secondary)
+                } else if let supplements = total.supplements, supplements > 0 {
                     Text(String(localized: "incl. \(NutrientCatalog.text(supplements, key: key)) from supplements"))
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)

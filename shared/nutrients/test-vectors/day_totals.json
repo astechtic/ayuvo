@@ -327,6 +327,90 @@
         "time_zone": "UTC"
       },
       "name": "empty_day"
+    },
+    {
+      "expected": {
+        "totals": {
+          "copper": {
+            "food": null,
+            "supplements": 1.7,
+            "total": 1.7
+          },
+          "iodine": {
+            "food": null,
+            "supplements": 140.0,
+            "total": 140.0
+          },
+          "zinc": {
+            "food": 2.5,
+            "supplements": 17.0,
+            "total": 19.5
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-22",
+        "food_entries": [
+          {
+            "nutrients": {
+              "copper": 0.4,
+              "iodine": null,
+              "zinc": 2.5
+            },
+            "t_ms": 1790062200000
+          }
+        ],
+        "supplement_entries": [
+          {
+            "medication_id": "med-multi",
+            "nutrient_key": "copper",
+            "t_ms": 1790046000000,
+            "value": 1.7
+          },
+          {
+            "medication_id": "med-multi",
+            "nutrient_key": "iodine",
+            "t_ms": 1790046000000,
+            "value": 140
+          },
+          {
+            "medication_id": "med-multi",
+            "nutrient_key": "zinc",
+            "t_ms": 1790046000000,
+            "value": 17
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "kolkata_untracked_copper_iodine_supplements_only",
+      "notes": "copper and iodine are app_tracked: false: food values are ignored (the food log does not record them), food is null (never 0) and total = supplements. zinc is food-tracked and adds both parts."
+    },
+    {
+      "expected": {
+        "totals": {
+          "iron": {
+            "food": 3.0,
+            "supplements": null,
+            "total": 3.0
+          }
+        }
+      },
+      "input": {
+        "day": "2026-09-22",
+        "food_entries": [
+          {
+            "nutrients": {
+              "iron": 3,
+              "thiamin": 1.1
+            },
+            "t_ms": 1790078400000
+          }
+        ],
+        "supplement_entries": [],
+        "time_zone": "UTC"
+      },
+      "name": "utc_untracked_food_only_no_key",
+      "notes": "A food value for an app_tracked: false nutrient names no key: no thiamin row at all."
     }
   ],
   "format": "ayuvo-nutrients-vectors",

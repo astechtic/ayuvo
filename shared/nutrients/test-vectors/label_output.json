@@ -88,7 +88,7 @@
         "serving_units": 1
       },
       "input": {
-        "text": "{\"items\": [{\"key\": \"vitamin_e\", \"amount\": 400, \"unit\": \"IU\"}, {\"key\": \"selenium\", \"amount\": 55, \"unit\": \"mcg\"}, {\"key\": \"vitamin_c\", \"amount\": 500, \"unit\": \"mg\"}, {\"key\": \"vitamin_c\", \"amount\": 250, \"unit\": \"mg\"}]}"
+        "text": "{\"items\": [{\"key\": \"vitamin_e\", \"amount\": 400, \"unit\": \"IU\"}, {\"key\": \"grape_seed_extract\", \"amount\": 50, \"unit\": \"mg\"}, {\"key\": \"vitamin_c\", \"amount\": 500, \"unit\": \"mg\"}, {\"key\": \"vitamin_c\", \"amount\": 250, \"unit\": \"mg\"}]}"
       },
       "name": "vitamin_e_iu_without_form_rejected",
       "notes": "Missing form, unknown key and duplicate key are rejected; serving_units defaults to 1."
@@ -235,6 +235,122 @@
         "text": "{\"items\":{\"key\":\"iron\"}}"
       },
       "name": "bad_shape"
+    },
+    {
+      "expected": {
+        "error": null,
+        "items": [
+          {
+            "amount": 17.0,
+            "form": null,
+            "key": "zinc",
+            "unit": "mg"
+          },
+          {
+            "amount": 440.0,
+            "form": null,
+            "key": "magnesium",
+            "unit": "mg"
+          },
+          {
+            "amount": 500.0,
+            "form": "folic_acid",
+            "key": "folate",
+            "unit": "mcg"
+          },
+          {
+            "amount": 140.0,
+            "form": null,
+            "key": "iodine",
+            "unit": "mcg"
+          },
+          {
+            "amount": 4.0,
+            "form": null,
+            "key": "manganese",
+            "unit": "mg"
+          },
+          {
+            "amount": 1.7,
+            "form": null,
+            "key": "copper",
+            "unit": "mg"
+          },
+          {
+            "amount": 50.0,
+            "form": null,
+            "key": "chromium",
+            "unit": "mcg"
+          },
+          {
+            "amount": 80.0,
+            "form": null,
+            "key": "vitamin_c",
+            "unit": "mg"
+          },
+          {
+            "amount": 7.5,
+            "form": null,
+            "key": "vitamin_e",
+            "unit": "mg"
+          },
+          {
+            "amount": 1000.0,
+            "form": null,
+            "key": "vitamin_a",
+            "unit": "mcg"
+          },
+          {
+            "amount": 15.0,
+            "form": null,
+            "key": "vitamin_d",
+            "unit": "mcg"
+          },
+          {
+            "amount": 1.4,
+            "form": null,
+            "key": "thiamin",
+            "unit": "mg"
+          },
+          {
+            "amount": 2.0,
+            "form": null,
+            "key": "riboflavin",
+            "unit": "mg"
+          },
+          {
+            "amount": 1.9,
+            "form": null,
+            "key": "vitamin_b6",
+            "unit": "mg"
+          },
+          {
+            "amount": 2.2,
+            "form": null,
+            "key": "vitamin_b12",
+            "unit": "mcg"
+          },
+          {
+            "amount": 40.0,
+            "form": null,
+            "key": "biotin",
+            "unit": "mcg"
+          }
+        ],
+        "ok": true,
+        "rejected": [
+          {
+            "code": "unknown_nutrient",
+            "index": 16
+          }
+        ],
+        "serving_units": 1
+      },
+      "input": {
+        "text": "{\"serving_units\": 1, \"items\": [{\"key\": \"zinc\", \"amount\": 17, \"unit\": \"mg\", \"form\": null}, {\"key\": \"magnesium\", \"amount\": 440, \"unit\": \"mg\", \"form\": null}, {\"key\": \"folate\", \"amount\": 300, \"unit\": \"mcg\", \"form\": \"folic_acid\"}, {\"key\": \"iodine\", \"amount\": 140, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"manganese\", \"amount\": 4, \"unit\": \"mg\", \"form\": null}, {\"key\": \"copper\", \"amount\": 1.7, \"unit\": \"mg\", \"form\": null}, {\"key\": \"chromium\", \"amount\": 50, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"vitamin_c\", \"amount\": 80, \"unit\": \"mg\", \"form\": null}, {\"key\": \"vitamin_e\", \"amount\": 7.5, \"unit\": \"mg\", \"form\": null}, {\"key\": \"vitamin_a\", \"amount\": 1000, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"vitamin_d\", \"amount\": 600, \"unit\": \"IU\", \"form\": null}, {\"key\": \"thiamin\", \"amount\": 1.4, \"unit\": \"mg\", \"form\": null}, {\"key\": \"riboflavin\", \"amount\": 2, \"unit\": \"mg\", \"form\": null}, {\"key\": \"vitamin_b6\", \"amount\": 1.9, \"unit\": \"mg\", \"form\": null}, {\"key\": \"vitamin_b12\", \"amount\": 2.2, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"biotin\", \"amount\": 40, \"unit\": \"mcg\", \"form\": null}, {\"key\": \"grape_seed_extract\", \"amount\": 50, \"unit\": \"mg\", \"form\": null}]}"
+      },
+      "name": "multivitamin_all_reference_nutrients",
+      "notes": "The user's multivitamin label per tablet: every vitamin and mineral is accepted, including app_tracked: false ones (iodine, manganese, copper, chromium, thiamin, riboflavin, vitamin B6, biotin). Folic acid 300 mcg -> 500 mcg DFE, D3 600 IU -> 15 mcg, retinyl acetate 1000 mcg -> 1000 mcg RAE. Grape seed extract -> unknown_nutrient. Carbohydrate / energy are not supplement nutrients and a correct answer leaves them out."
     }
   ],
   "format": "ayuvo-nutrients-vectors",

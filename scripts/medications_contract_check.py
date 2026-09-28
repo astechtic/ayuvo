@@ -502,7 +502,9 @@ class ReferenceTests(unittest.TestCase):
     def test_nutrient_rows(self):
         self.assertIsNone(M.nutrient_problem("vitamin_d", 1500))
         self.assertIsNone(M.nutrient_problem("creatine", 5))
-        self.assertEqual(M.nutrient_problem("niacin", 16), "unknown_nutrient")
+        self.assertIsNone(M.nutrient_problem("niacin", 16))            # app_tracked: false is still a supplement nutrient
+        self.assertIsNone(M.nutrient_problem("iodine", 140))
+        self.assertEqual(M.nutrient_problem("grape_seed_extract", 50), "unknown_nutrient")
         self.assertEqual(M.nutrient_problem("vitamin_d", 0), "invalid_amount")
         self.assertEqual(M.nutrient_problem("vitamin_d", 100001), "invalid_amount")
         self.assertEqual(M.nutrient_problem("creatine", 101), "invalid_amount")
