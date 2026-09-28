@@ -1,7 +1,7 @@
 {
  "/": {
-  "date": "2026-09-25",
-  "hash": "f5073bdde108"
+  "date": "2026-09-28",
+  "hash": "575e2bc6b78e"
  },
  "/404": {
   "date": "2026-09-25",
@@ -44,24 +44,28 @@
   "hash": "4510b7b69351"
  },
  "/features": {
-  "date": "2026-09-25",
-  "hash": "d9c4eafaae74"
+  "date": "2026-09-28",
+  "hash": "09476fbe19a4"
  },
  "/features/coach": {
-  "date": "2026-09-25",
-  "hash": "41e0cb860ff3"
+  "date": "2026-09-28",
+  "hash": "c9593256de48"
  },
  "/features/fasting-and-water": {
   "date": "2026-09-25",
   "hash": "051c28558c4b"
  },
  "/features/health-data": {
-  "date": "2026-09-25",
-  "hash": "4dab5f8596c3"
+  "date": "2026-09-28",
+  "hash": "8430cb996f25"
+ },
+ "/features/insights": {
+  "date": "2026-09-28",
+  "hash": "2a96b8c3096b"
  },
  "/features/nutrition": {
-  "date": "2026-09-25",
-  "hash": "7b9be145a20a"
+  "date": "2026-09-28",
+  "hash": "0bcc845eec61"
  },
  "/features/on-device-ai": {
   "date": "2026-09-25",
@@ -70,6 +74,10 @@
  "/features/records-and-medications": {
   "date": "2026-09-25",
   "hash": "58bf56d48ffa"
+ },
+ "/features/siri-and-shortcuts": {
+  "date": "2026-09-28",
+  "hash": "71fb9ff25368"
  },
  "/features/switch-phones": {
   "date": "2026-09-25",
@@ -240,8 +248,8 @@
   "hash": "a7fabf666978"
  },
  "/privacy-first": {
-  "date": "2026-09-25",
-  "hash": "e16950a20afd"
+  "date": "2026-09-28",
+  "hash": "9b5d9c941dea"
  },
  "/support": {
   "date": "2026-09-14",

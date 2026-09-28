@@ -220,8 +220,10 @@ FEATURE_LINKS = [
     ("/features/nutrition", "Nutrition", "Photo, barcode, voice"),
     ("/features/workouts", "Workouts", "Sets, reps, 1,300+ exercises"),
     ("/features/health-data", "Health data", "Apple Health and Health Connect"),
+    ("/features/insights", "Insights & trends", "Recovery, Health Age, reviews"),
     ("/features/records-and-medications", "Records & medications", "Documents and reminders"),
     ("/features/coach", "AI coach", "Ask about your own data"),
+    ("/features/siri-and-shortcuts", "Siri & Shortcuts", "Siri, Shortcuts, Android"),
     ("/features/fasting-and-water", "Fasting & water", "Optional timers and goals"),
     ("/features/switch-phones", "Switch phones", "iPhone ⇄ Android"),
     ("/features/on-device-ai", "On-device AI", "Run models on the phone"),
@@ -253,7 +255,8 @@ def nav(current: str) -> str:
 
 def footer() -> str:
     MARK = asset("/assets/brand/ayuvo-mark.svg")
-    feat = "".join(f'<li><a href="{u}">{t}</a></li>' for u, t, _ in FEATURE_LINKS[:6]) + '<li><a href="/compare">Compare apps</a></li><li><a href="/nutrients">Nutrient guides</a></li>'
+    # switch phones and on-device AI are listed under Privacy
+    feat = "".join(f'<li><a href="{u}">{t}</a></li>' for u, t, _ in FEATURE_LINKS if u not in ("/features/switch-phones", "/features/on-device-ai")) + '<li><a href="/compare">Compare apps</a></li><li><a href="/nutrients">Nutrient guides</a></li>'
     return f"""<footer class="footer"><div class="container">
 <div class="footer-grid">
 <div class="footer-brand"><a href="/" class="footer-brand-mark"><img src="{MARK}" alt="" width="30" height="30"><span>Ayuvo</span></a>
@@ -344,6 +347,8 @@ def website_node() -> dict:
         "@type": "WebSite",
         "@id": f"{BASE}/#website",
         "name": SITE_NAME,
+        # Google's site-name signal (the label above the URL in results); without it web.app pages can show "Google"
+        "alternateName": ["Ayuvo Health", "ayuvo-health.web.app"],
         "url": BASE + "/",
         "inLanguage": "en",
         "publisher": {"@id": f"{BASE}/#organization"},
@@ -435,6 +440,8 @@ def render(page: Page, css_v: str, js_v: str) -> str:
         f'<meta name="twitter:description" content="{esc(page.description)}">',
         f'<meta name="twitter:image" content="{og_url}">',
         f'<meta name="twitter:image:alt" content="{esc(og_alt)}">',
+        # Google Search needs a raster icon of at least 48 px; the 192 px tile also reads well on dark results pages
+        f'<link rel="icon" href="{asset("/assets/brand/logo-192.png")}" sizes="192x192" type="image/png">',
         f'<link rel="icon" href="{asset("/assets/brand/favicon.svg")}" type="image/svg+xml">',
         f'<link rel="icon" href="{asset("/assets/brand/favicon.ico")}" sizes="16x16 32x32 48x48">',
         f'<link rel="apple-touch-icon" href="{asset("/assets/brand/apple-touch-icon.png")}">',

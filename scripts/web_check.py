@@ -38,7 +38,7 @@ REQUIRED = [
     "index.html", "privacy.html", "terms.html", "support.html", "404.html",
     "features/index.html", "features/nutrition.html", "features/workouts.html", "features/health-data.html",
     "features/records-and-medications.html", "features/coach.html", "features/fasting-and-water.html",
-    "features/switch-phones.html", "features/on-device-ai.html",
+    "features/switch-phones.html", "features/on-device-ai.html", "features/insights.html", "features/siri-and-shortcuts.html",
     "privacy-first.html", "ai-providers.html", "open-source.html", "download.html",
     "compare/index.html", "compare/guava-health.html", "compare/picnichealth.html", "compare/apple-health.html",
     "compare/mychart.html", "compare/health-connect.html", "about.html",

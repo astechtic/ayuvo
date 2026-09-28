@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 
 from compare_pages import compare_pages, compare_strip
-from nutrient_pages import nutrient_pages
+from nutrient_pages import flow_svg, nutrient_pages
 from site_lib import (
     BASE, EMAIL, FUD_AI, GITHUB, MEDGEMMA_DISCLAIMER, STORES, WEB, Page, catalog_card, catalog_table, cta_section,
     asset, eyebrow, faq_section, gib, icon, medgemma, phone, phones, privacy_band, section_head, store_buttons,
@@ -22,6 +22,12 @@ from site_lib import (
 
 MG = medgemma()
 MG_SIZE = gib(MG["artifact"]["sizeBytes"])
+
+# The apps' own contracts: the Insights and Actions pages render their numbers and lists from these, so the site
+# cannot drift from what the apps compute.
+INSIGHTS = json.loads((WEB.parent / "shared" / "insights" / "insights_config.json").read_text(encoding="utf-8"))
+ACTIONS = json.loads((WEB.parent / "shared" / "actions" / "action_catalog.json").read_text(encoding="utf-8"))
+N_ACTIONS = len(ACTIONS["actions"])
 
 # ---------------------------------------------------------------------------
 # layout helpers
@@ -99,6 +105,8 @@ REL = {
     "nutrition": ("/features/nutrition", "Nutrition", "Photo, barcode and voice logging with 30+ nutrients."),
     "workouts": ("/features/workouts", "Workouts", "Sets, reps, weight, RPE and a 1,300+ exercise library."),
     "health": ("/features/health-data", "Health data", "Apple Health and Health Connect in one local hub."),
+    "insights": ("/features/insights", "Insights & trends", "Recovery, Health Age, a daily review and trends against your own baseline."),
+    "shortcuts": ("/features/siri-and-shortcuts", "Siri, Shortcuts & Android", "Ask Siri, build Shortcuts, or use Android shortcuts and links."),
     "records": ("/features/records-and-medications", "Records & medications", "Documents read on your phone, and dose reminders."),
     "coach": ("/features/coach", "AI coach", "Ask about your own data, with consent for each source."),
     "fasting": ("/features/fasting-and-water", "Fasting & water", "Optional timers and goals that stay local."),
@@ -118,6 +126,8 @@ HOME_FAQ = [
     ("Where is my data?", "In the app's storage on your phone. Ayuvo has no account and no server. Data leaves the device only when you act: sending a photo or message to your AI provider, scanning a barcode, browsing exercise images, downloading a model, sharing a record, exporting, or turning on Android's Google Drive backup."),
     ("What does the Health data hub do with Apple Health or Health Connect?", "With your permission it keeps a local mirror of the data types you grant so Ayuvo can show charts and history. It writes only nutrition, body measurements and calculated workout calories that you log. You can revoke access any time in Health or Health Connect settings."),
     ("Does the coach see my health data?", 'Only if you allow it. Health data, medications and health records each have their own consent, and medications and records are off by default. When a source is on, the coach can request summaries of it and sends them to the AI provider you chose, or to an on-device model that keeps them on the phone.'),
+    ("What are Recovery and Ayuvo Health Age?", 'Insights that Ayuvo calculates on your phone from your own synced data. Recovery is a 0 to 100 morning score comparing last night with your personal baselines. Ayuvo Health Age is Ayuvo\'s own estimate from fitness and habit markers, not a clinical or biological age. <a href="/features/insights">See how they are calculated</a>.'),
+    ("Does Ayuvo work with Siri, Shortcuts and Android assistants?", f'Yes. On iPhone you can ask Siri, or build Shortcuts from {N_ACTIONS} Ayuvo actions such as Get Nutrient, Log Water and Get Recovery. On Android there are launcher shortcuts and ayuvo:// links, and assistant capabilities are declared for Google Assistant and Gemini. <a href="/features/siri-and-shortcuts">See what works where</a>.'),
     ("Can I move from iPhone to Android, or back?", "Yes. Export All Data on one phone creates a zip that Ayuvo on the other platform imports, during setup (Restore from a backup) or later. Your profile, goals, units, logs, workouts, health data, medications, health records and coach chats come along. API keys, reminder schedules and your AI provider choice deliberately do not."),
     ("What is MedGemma, and is it medical advice?", "MedGemma is Google's open model family for medical text and images. Ayuvo offers MedGemma 1.5 4B as an optional on-device model: after a one-time gated download from Hugging Face it runs on the phone. It is a research model, not a medical device. Its answers can be wrong, and Ayuvo never diagnoses or advises on doses."),
     ("How do backups work?", "Export All Data creates a zip on either platform that you save wherever you choose. Android can also back up to your own Google Drive app folder, off by default. Health data and medications are never in that Drive backup."),
@@ -148,6 +158,8 @@ def bento() -> str:
         bento_tile("", "doc", "Records", "Documents that read themselves.", "Scan a report. Values and highlights appear, processed on your phone.", "/features/records-and-medications", "records", "Ayuvo health records with important highlights"),
         bento_tile("", "chat", "AI coach", "Ask about your own day.", "Consent for every data source, on your key or on your phone.", "/features/coach", "coach", "Ayuvo coach chat with suggested prompts"),
         bento_tile("", "timer", "Fasting & water", "Timers that stay optional.", "Off by default. Goals, reminders and widgets when you want them.", "/features/fasting-and-water", "summary", "Ayuvo Summary with Eat, Move and Drink rings"),
+        bento_tile(" wide", "heart", "Insights", "Your own baseline, not someone else's.", "Morning Recovery, Ayuvo Health Age, a Daily Review, trends and patterns, calculated on your phone.", "/features/insights"),
+        bento_tile(" wide", "sparkle", "Siri &amp; Shortcuts", "Ask Siri. Build a Shortcut.", f"{N_ACTIONS} actions for Siri, the Shortcuts app, Android shortcuts and links. No action can delete anything.", "/features/siri-and-shortcuts"),
         bento_tile(" wide", "swap", "Switch phones", "iPhone to Android, and back.", "Export All Data on one phone, import it on the other. Your history moves with you.", "/features/switch-phones"),
         bento_tile(" wide", "cpu", "On-device AI", "Models that live on the phone.", "Run Gemma, Qwen or a medical model on the phone itself. No key, no server, nothing to send.", "/features/on-device-ai"),
     ]
@@ -160,8 +172,8 @@ def build_home() -> Page:
         '<div class="hero-meta"><span><span class="dot"></span> iOS 17.6+ · Android 8.0+</span>'
         "<span>No account · No ads · No analytics</span><span>Open source</span></div>"
         '<h1 class="hero-title">Your health. Your device. <em>Your call.</em></h1>'
-        '<p class="hero-lede">Ayuvo brings nutrition, workouts, health records, medications and your Apple Health or Health Connect data together in one private app. '
-        "Everything is kept on your phone. Ask an AI coach only if you want to, with a key you bring or a model that runs on the phone itself.</p>"
+        '<p class="hero-lede">Ayuvo is a free, private health app for iPhone and Android. Nutrition, workouts, health records, medications, insights and your Apple Health or Health Connect data, together and kept on your phone. '
+        "Ask an AI coach only if you want to, with a key you bring or a model that runs on the phone itself.</p>"
         f'{store_buttons("hero")}'
         '<p class="cta-note">Free for iPhone and Android. No account. Open source under the MIT licence.</p></div>'
         '<div class="hero-stage">'
@@ -255,8 +267,8 @@ def build_home() -> Page:
 
     body = hero + privacy_band() + features + privacy + records + ondevice + worksw + switch + oss + compare_strip() + steps
     body += faq_section(HOME_FAQ, "03") + cta_section()
-    return Page(path="/", title="Ayuvo: Private AI Health App for iPhone & Android",
-                description="Nutrition, workouts, health records, medications and Apple Health or Health Connect data in one private, open-source app. No account, no ads, no analytics.",
+    return Page(path="/", title="Ayuvo: Free, Private AI Health App for iPhone & Android",
+                description="Ayuvo is a free, private health app for iPhone and Android: food, workouts, health records, medications and Apple Health data in one place. No account, no ads.",
                 body=body, kind="home", faqs=HOME_FAQ, lcp="/assets/screens/summary.webp", modified="2026-09-25",
                 og_headline="Your health. Your device. Your call.", og_screens=["records", "summary", "coach"],
                 og_alt="Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.")
@@ -271,16 +283,16 @@ def build_features() -> Page:
     body = (
         '<header class="hero compact"><div class="container">' + crumbs_html([], "Features")
         + f'<div class="hero-center">{eyebrow("Features")}<h1 class="hero-title">Everything in one place. <em>Nothing shared by default.</em></h1>'
-        '<p class="hero-lede">Nutrition, workouts, health data, records, medications, fasting, water and an AI coach, each built to keep working on your phone with no account.</p></div></div></header>'
+        '<p class="hero-lede">Nutrition, workouts, health data, insights, records, medications, fasting, water and an AI coach, each built to keep working on your phone with no account.</p></div></div></header>'
         + privacy_band()
         + band("paper", section_head("Core", "The parts of your health.") + bento())
         + band("ink", section_head("Around the app", "On your wrist, your Home Screen and your language.", "The same data, wherever you look for it.")
                + '<div class="grid-3">'
                  f'<div class="panel"><span class="kicker">{icon("watch")} Apple Watch</span><h3>Watch app and complications</h3><p>Calories, macros and water from your wrist, with water logging on the Watch.</p></div>'
                  f'<div class="panel"><span class="kicker">{icon("chart")} Widgets</span><h3>Today, My Metrics, Quick Log</h3><p>Home Screen widgets on iPhone and Android. They never invent data, and every action opens the app. Widget settings stay on the device.</p></div>'
-                 f'<div class="panel"><span class="kicker">{icon("sparkle")} Shortcuts</span><h3>Siri Shortcuts and Share Extension</h3><p>Log food and weight from Siri Shortcuts, and send a food photo or a health document straight into Ayuvo from any app on iPhone.</p></div>'
-                 f'<div class="panel"><span class="kicker">{icon("globe")} Languages</span><h3>18 languages</h3><p>English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian.</p></div>'
-                 f'<div class="panel"><span class="kicker">{icon("sparkle")} Appearance</span><h3>Dark mode, units and 18 accent colours</h3><p>Metric or imperial, kilograms or pounds, millilitres or fluid ounces, with matching app icons.</p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("sparkle")} Siri &amp; Shortcuts</span><h3>Siri, Shortcuts and Android shortcuts</h3><p>{N_ACTIONS} actions to ask Siri, chain in the Shortcuts app, or run from Android shortcuts and links. The Share Extension sends a food photo or a health document straight into Ayuvo. <a class="link-arrow" href="/features/siri-and-shortcuts">See the actions</a></p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("heart")} Insights</span><h3>Recovery, Health Age and trends</h3><p>Scores and trends measured against your own 60-day baseline, calculated on the phone, each with a sheet that shows how. <a class="link-arrow" href="/features/insights">See Insights</a></p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("globe")} Languages &amp; appearance</span><h3>18 languages, your units</h3><p>English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian. Dark mode, 18 accent colours, and metric or imperial units.</p></div>'
                  f'<div class="panel"><span class="kicker">{icon("swap")} Your data</span><h3>Export, import, delete</h3><p>Export All Data, import it on either platform, or delete everything from Settings.</p></div></div>')
         + compare_strip()
         + cta_section()
@@ -310,6 +322,13 @@ def build_nutrition() -> Page:
                "Pin Calories, Protein and other nutrients as Favourites with 7-day sparklines",
                "Water entries live in the same diary, and hydration has its own optional goal"],
               phone("summary", "Ayuvo Summary with Eat, Move and Drink rings"), reverse=True),
+        split("Nutrients", "A chart for every nutrient, with your reference lines.",
+              "<p>Open any nutrient for day, week, month, six-month and year charts. Dashed lines show the recommended amount for your age and sex and the upper limit, from the NIH and National Academies tables, or your own goal if you set one.</p>",
+              ["Supplements count too: add the nutrients in a vitamin or supplement in Medications, by hand or read from a label photo, and every dose you mark taken adds to that day",
+               "Food and supplements are shown separately, and supplements never add calories or get written to Apple Health or Health Connect",
+               "Each chart links to a sourced guide explaining what the nutrient does and how much adults need"],
+              '<div class="panel"><span class="kicker">Nutrient guides</span><h3>37 sourced guides</h3><p>What each vitamin and mineral does, food sources, how much adults need and signs of too little or too much.</p>'
+              '<p><a class="link-arrow" href="/nutrients">Browse the nutrient guides</a></p></div>'),
     ]
     sends = sends_panel("What a meal log sends, and to whom", "Logging is local. These are the only times something leaves your phone.", [
         ("Photos and text", "Sent to the AI provider you configured to identify the food. Choose an on-device model instead and the photo stays on the phone."),
@@ -322,7 +341,7 @@ def build_nutrition() -> Page:
         "Nutrition", "Log a meal in seconds. <em>Keep the data.</em>",
         "Photo, barcode, voice, text or manual entry, with calories, macros and 30+ nutrients to review before anything is saved. Your diary stays on your phone.",
         "Nutrition", phones([("nutrition", "Ayuvo Today nutrition diary")], "single"), blocks, sends,
-        [REL["health"], REL["coach"], REL["fasting"]], lcp_slug="nutrition", og_screens=["nutrition", "summary"],
+        [REL["health"], REL["insights"], REL["coach"]], lcp_slug="nutrition", og_screens=["nutrition", "summary"],
         og_headline="Log a meal in seconds. Keep the data.")
 
 
@@ -389,7 +408,7 @@ def build_health() -> Page:
         "Health data", "Every Health chart. <em>One private hub.</em>",
         "Mirror the Apple Health or Health Connect data you grant into a local hub, with charts, sources and history for every metric.",
         "Health data", phones([("browse", "Ayuvo Browse health categories"), ("heart-rate", "Ayuvo heart rate chart")], "pair"), blocks, sends,
-        [REL["coach"], REL["records"], REL["switch"]], lcp_slug="browse", og_screens=["browse", "heart-rate"], compare=True,
+        [REL["insights"], REL["coach"], REL["records"]], lcp_slug="browse", og_screens=["browse", "heart-rate"], compare=True,
         faqs=[("Which Android versions can use Health Connect?", "Health Connect is built into Android 14 and later, and is a Play Store app on Android 9 to 13. Ayuvo's Connect button opens the right screen."),
               ("Does Ayuvo change my Health data?", "Only by adding what you log in Ayuvo: nutrition, weight, height, body fat and calculated active calories. Fasting and water are never written."),
               ("Will Ayuvo see my old history?", "It reads the history you grant. On Android, without the special history permission, history starts 30 days before you first grant access, and Ayuvo says so on screen.")],
@@ -454,6 +473,12 @@ def build_coach() -> Page:
                "Each conversation can be turned down to fewer sources, never up to more",
                "A prompt gallery for nutrition, sleep, training, labs, medications and planning shows prompts only when the data behind them exists"],
               phone("coach", "Ayuvo coach with suggested prompts and blood report shortcuts")),
+        split("Actions", "It can suggest a change. <em>You tap Confirm.</em>",
+              "<p>The coach reads through the same actions that Siri and Shortcuts use, such as your goals, water, fasting status, Recovery, Health Age and the Daily Review. When a log would help, such as water or a set, it proposes it as a card in the chat, and nothing changes until you tap Confirm.</p>",
+              ["It never proposes medication or goal changes, and no action can delete anything",
+               "On-device models get no action tools, so they cannot propose changes",
+               "The same rules as Siri and Shortcuts, checked the same way on iPhone and Android"],
+              f'<div class="panel"><span class="kicker">One set of actions</span><h3>{N_ACTIONS} actions, every surface</h3><p>Siri, the Shortcuts app, Android shortcuts and the coach all call the same actions. <a class="link-arrow" href="/features/siri-and-shortcuts">See the actions</a></p></div>', reverse=True),
         split("In the chat", "Charts, files and history.",
               "<p>Answers arrive as Markdown with tables and charts. Attach photos, files, a record or a note, and the composer shows the exact text that will be sent before you send it.</p>",
               ["Nine chart types, and every number comes from your data, your message or an attached file. Missing days are left out, never drawn as zero",
@@ -478,7 +503,7 @@ def build_coach() -> Page:
         "AI coach", "A coach that knows your day. <em>Only what you allow.</em>",
         "Ask about food, training, sleep or labs. The coach reads your diary and, with separate consent, your health data, medications and records.",
         "AI coach", phones([("coach", "Ayuvo coach chat")], "single"), blocks, sends,
-        [REL["ondevice"], REL["providers"], REL["records"]], lcp_slug="coach", og_screens=["coach"], med=True,
+        [REL["insights"], REL["shortcuts"], REL["ondevice"]], lcp_slug="coach", og_screens=["coach"], med=True,
         og_headline="A coach that reads only what you allow.")
 
 
@@ -593,6 +618,199 @@ def build_ondevice() -> Page:
         og_headline="Health AI that stays on the phone.")
 
 
+def _fmt_num(v) -> str:
+    return f"{v:g}"
+
+
+def _table(head: list[str], rows: list[list[str]]) -> str:
+    th = "".join(f"<th>{h}</th>" for h in head)
+    tr = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>" for r in rows)
+    return f'<div class="table-wrap"><table class="data-table"><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table></div>'
+
+
+def _methodology(key: str) -> str:
+    """The in-app "How we calculate this" text, verbatim; its Limitations paragraph is rendered as a disclaimer."""
+    m = INSIGHTS["methodology"][key]
+    out = []
+    for s in m["sections"]:
+        if s["heading"] == "Limitations":
+            out.append(f'<div class="disclaimer"><p><strong>Limitations.</strong> {s["body"]}</p></div>')
+        else:
+            out.append(f'<p><strong>{s["heading"]}.</strong> {s["body"]}</p>')
+    return "".join(out)
+
+
+RECOVERY_LABELS = {"hrv": "Heart rate variability", "resting_heart_rate": "Resting heart rate", "sleep": "Sleep",
+                   "respiratory_rate": "Breathing rate", "blood_oxygen": "Blood oxygen"}
+
+
+def build_insights() -> Page:
+    rec, ha, dr = INSIGHTS["recovery"], INSIGHTS["health_age"], INSIGHTS["daily_review"]
+    rec_rows = [[RECOVERY_LABELS.get(c["id"], c["id"]), f'{_fmt_num(c["weight"])}%'] for c in rec["components"]]
+    # bands run high to low: 67–100, 34–66, 0–33
+    mins = [b["min"] for b in rec["bands"]]
+    bands = [[(f"{b['min']}–100" if i == 0 else f"{b['min']}–{mins[i - 1] - 1}"), b["label"], b["recommendation"]] for i, b in enumerate(rec["bands"])]
+    ha_rows = [[m["label"], f'{_fmt_num(m["weight"])}%', f'±{_fmt_num(m["cap_years"])} years'] for m in ha["markers"]]
+    area_rows = [[a["label"], f'{_fmt_num(a["weight"])}%'] for a in dr["areas"]]
+    pat = INSIGHTS["patterns"]
+
+    flow = {"title": "How Insights works", "steps": [
+        {"label": "Your synced data", "sub": "Apple Health or Health Connect, plus the food, water, fasting and workouts you log"},
+        {"label": "Your baselines", "sub": "A 60-day average and normal range for each metric"},
+        {"label": "Scores and trends", "sub": "Recovery, Health Age, Daily Review, Trends and Patterns"},
+        {"label": "On your screen", "sub": "Each with a How we calculate this sheet"}],
+        "side": {"at": 2, "label": "Explain with AI", "sub": "Optional, only when you tap", "verb": "rephrases"}}
+    diagram = f'<div class="flow-wrap">{flow_svg(flow, "Insights", "ins-flow")}</div>'
+
+    hero_card = ('<div class="panel"><span class="kicker">Recovery bands</span><h3>A 0 to 100 morning score</h3>'
+                 + _table(["Score", "Label", "Suggestion"], bands)
+                 + f'<p>Weights: {", ".join(f"{r[0].lower()} {r[1]}" for r in rec_rows)}.</p></div>')
+
+    blocks = [
+        f'<div class="prose wide">{section_head("How it works", "Compared with you, not with other people.", "Every score is calculated on your phone from data already on it, with the same shared maths and test vectors on iPhone and Android. AI never computes a number.")}{diagram}</div>',
+        split("Recovery", "A morning score from last night's signals.",
+              "<p>Once last night's sleep has synced, Ayuvo compares your overnight heart rate variability, resting heart rate, sleep, breathing rate and blood oxygen with your own baselines and gives a score from 0 to 100, a label and a training suggestion.</p>"
+              + _methodology("recovery"),
+              [], '<div class="panel"><span class="kicker">What counts</span>' + _table(["Signal", "Weight"], rec_rows) + "</div>"),
+        split("Ayuvo Health Age", "A direction to watch, <em>not a verdict</em>.",
+              _methodology("health_age"),
+              [], '<div class="panel"><span class="kicker">Markers</span>' + _table(["Marker", "Weight", "Limit"], ha_rows)
+              + f'<p>Total difference limited to ±{_fmt_num(ha["total_cap_years"])} years. Every table cites its published source in the app.</p></div>', reverse=True),
+        split("Daily Review", "A look back at your day.",
+              _methodology("daily_review"),
+              [], '<div class="panel"><span class="kicker">Day Score areas</span>' + _table(["Area", "Weight"], area_rows)
+              + "<p>Only areas you track and logged count. An area you did not log never lowers the score.</p></div>"),
+        split("Trends", "Is it moving, and which way?",
+              _methodology("baselines"),
+              ["Trends for sleep, resting heart rate, HRV, VO2 max, breathing rate, blood oxygen, steps, active energy, workouts, weight and body fat",
+               "Each shows your baseline, normal range, today, the percentage change and the 28-day direction",
+               "Lab values in Health Records have their own trends, joining the same test across reports"],
+              '<div class="panel"><span class="kicker">Trend maths</span><h3>Plain and checkable</h3><p>Baseline: the average of the previous 60 days. Normal range: that average plus or minus one standard deviation. Trend: the least-squares slope of the last 28 days, as a percentage of your baseline per week.</p></div>',
+              reverse=True),
+        split("Patterns", "Associations in your own data.",
+              _methodology("patterns"),
+              [], f'<div class="panel"><span class="kicker">The test</span><h3>Two conditions, both required</h3><p>At least {pat["min_group"]} days in each group over {pat["window_days"]} days, a Welch t of {_fmt_num(pat["min_abs_t"])} or more and an effect size of {_fmt_num(pat["min_abs_d"])} or more.</p></div>'),
+        split("Explain with AI", "Plain words, if you want them.",
+              "<p>Tap Explain with AI on Recovery, Health Age or the Daily Review and your chosen model rephrases the result. It receives only the derived values, such as scores, labels and review items, never raw readings, dates or names. Every number in its answer is checked against those values, and anything that fails is replaced by the standard text.</p>",
+              ["Runs only when you tap. There is no silent fallback from an on-device model to a cloud one",
+               "The screen says which was used: on this device, or online with the provider you named",
+               "Without AI set up, every score still works"],
+              '<div class="panel"><span class="kicker">When scores update</span>' + _methodology("background") + "</div>", reverse=True),
+        f'<div class="disclaimer"><p><strong>Not medical advice.</strong> {INSIGHTS["disclaimers"]["general"]} {INSIGHTS["disclaimers"]["health_age"]} Patterns: {INSIGHTS["disclaimers"]["patterns"]}</p></div>',
+    ]
+    sends = sends_panel("What Insights sends, and to whom", "The scores are local. Only one optional step can leave the phone.", [
+        ("Nothing, to calculate", "Scores, trends and patterns are recalculated on the phone each time you open them. Nothing is stored or uploaded."),
+        ("Explain with AI, on tap", "Derived values only, to the provider you configured, or to an on-device model that keeps them on the phone."),
+        ("Notifications without values", "The optional Recovery and Daily Review notifications only say something is ready, and never show your numbers."),
+    ])
+    return feature_page(
+        "/features/insights", "Recovery Score, Health Age & Health Trends | Ayuvo",
+        "Morning Recovery, Ayuvo Health Age, a Daily Review, trends and patterns, calculated on your phone against your own 60-day baseline, with every method shown.",
+        "Insights", "Your own baseline. <em>Not someone else's.</em>",
+        "Recovery, Ayuvo Health Age, a Daily Review, trends and patterns, calculated on your phone from the data you already have, with the method behind every number.",
+        "Insights", hero_card, blocks, sends,
+        [REL["health"], REL["coach"], REL["shortcuts"]], og_screens=["summary", "heart-rate"],
+        faqs=[("Is Ayuvo Health Age my biological age?", INSIGHTS["disclaimers"]["health_age"] + " Treat it as a direction to watch."),
+              ("Why does it say Learning your baseline?", "A baseline needs at least 14 days with a reading, and Recovery needs 14 nights. Until then Ayuvo shows a count such as 9/14 instead of a score."),
+              ("Why don't my iPhone and Android HRV match?", "Apple Health records HRV as SDNN and Health Connect as RMSSD. They are different measures, so Ayuvo keeps each with its own baseline and never compares them."),
+              ("Does Ayuvo upload my health data to calculate scores?", "No. Scores are calculated on the phone. Only Explain with AI, when you tap it, sends derived values to the provider you chose."),
+              ("Can I get my Recovery from Siri or Shortcuts?", 'Yes. Get Recovery, Get Health Age and Get Daily Review are actions in the Shortcuts app and on Android. <a href="/features/siri-and-shortcuts">See the actions</a>.')],
+        og_headline="Your own baseline. Not someone else's.", ld=None)
+
+
+SIRI_PHRASES = [
+    ("Today's Nutrition", "Calories today in Ayuvo"),
+    ("One Nutrient", "How much protein today in Ayuvo"),
+    ("Log Food", "Log food in Ayuvo"),
+    ("Log Water", "Log water in Ayuvo"),
+    ("Log Weight", "Log my weight in Ayuvo"),
+    ("Start Fast", "Start a fast in Ayuvo"),
+    ("Open Ayuvo", "Open Insights in Ayuvo"),
+    ("Quick Actions 1 to 3", "Quick action one in Ayuvo"),
+]  # the App Shortcuts registered in ios/calorietracker/AppIntents/AyuvoSiriIntents.swift (Apple allows 10)
+
+DOMAIN_LABELS = {"health": "Health data", "nutrition": "Nutrition", "water": "Water", "fasting": "Fasting", "body": "Body",
+                 "workouts": "Workouts", "records": "Health records", "medications": "Medications", "goals": "Goals &amp; profile",
+                 "search": "Search", "navigation": "Open", "insights": "Insights"}
+
+SHORTCUT_RECIPES = [
+    ("Protein check", "Get Nutrient (Protein, Today) → If Remaining &gt; 0 → Ask Ayuvo Coach"),
+    ("Hydration nudge", "Get Water → If Remaining &gt; 500 → Show Notification"),
+    ("Sleep", "Get Last Night's Sleep → If Hours &lt; 7 → Show Notification"),
+    ("Recovery", "Get Recovery → If Score &lt; 34 → Show Notification"),
+    ("Doses", "Get Next Dose → Mark Dose (Taken). Ayuvo asks you to confirm"),
+    ("Averages", "Get Health Samples (Weight, Last 30 Days) → Calculate Statistics (Average)"),
+]
+
+
+def build_shortcuts() -> Page:
+    acts = ACTIONS["actions"]
+    by_domain: dict[str, list[dict]] = {}
+    for a in acts:
+        by_domain.setdefault(a["domain"], []).append(a)
+    cells = "".join(
+        f'<div class="panel"><span class="kicker">{DOMAIN_LABELS.get(d, d.title())}</span>'
+        f'<p>{", ".join(a["title"] for a in items)}</p></div>'
+        for d, items in by_domain.items())
+    phrases = "".join(f"<li><span><strong>{t}.</strong> “{p}”</span></li>" for t, p in SIRI_PHRASES)
+    recipes = "".join(f"<li><span><strong>{t}.</strong> {r}</span></li>" for t, r in SHORTCUT_RECIPES)
+
+    flow = {"title": "One set of actions for every surface", "steps": [
+        {"label": "You ask", "sub": "Siri, the Shortcuts app, an Android shortcut, an ayuvo:// link or the coach"},
+        {"label": "One catalogue", "sub": f"{N_ACTIONS} typed actions, the same on iPhone and Android"},
+        {"label": "Checked", "sub": "Parameters and ranges validated the same way everywhere"},
+        {"label": "Runs on the phone", "sub": "Using the same data and screens as the app"}],
+        "side": {"at": 2, "label": "Confirm", "sub": "Medication, goal, link and coach changes ask first", "verb": "asks"}}
+    diagram = f'<div class="flow-wrap">{flow_svg(flow, "Actions", "act-flow")}</div>'
+
+    hero_card = (f'<div class="panel"><span class="kicker">Say it to Siri</span><h3>Built-in phrases</h3><ul class="ticks">{phrases}</ul>'
+                 f'<p>The other actions are in the Shortcuts app, and any shortcut you build can be run by its name.</p></div>')
+
+    blocks = [
+        f'<div class="prose wide">{section_head("How it works", "Ask anywhere. The same rules everywhere.", "Siri, Shortcuts, Android and the coach all call one catalogue of actions. The logic lives once in each app, so an answer from Siri matches what the app shows.")}{diagram}</div>',
+        split("iPhone", "Siri and the Shortcuts app.",
+              f"<p>Ayuvo registers App Shortcuts, so phrases such as “Log water in Ayuvo” work without any setup. All {N_ACTIONS} actions appear in the Shortcuts app with typed results, so one action's answer can feed the next.</p>",
+              ["Health values are shown only after your iPhone is unlocked, and never in phrases or shortcut titles",
+               "Ayuvo never asks for Apple Health access from Siri. If access is missing, it tells you how to grant it in the app",
+               "A Focus filter can mute meal reminders while a Focus is on"],
+              f'<div class="panel"><span class="kicker">Shortcut ideas</span><h3>Chain them together</h3><ul class="ticks">{recipes}</ul></div>'),
+        split("Android", "Shortcuts, links and assistants.",
+              "<p>Long-press the Ayuvo icon for Log water, Start fast, Today's summary and Log weight, plus shortcuts for actions you used recently. Every action can also be run from an app intent, and most from an ayuvo:// link, for automation apps and your own tools.</p>",
+              ["Any change that comes from outside the app shows a confirm sheet first, because any app can send these links",
+               "A change with no value, such as Log water without an amount, opens the logger in the app instead",
+               "Answers open the matching screen, with the result shown at the bottom"],
+              '<div class="panel"><span class="kicker">Google Assistant and Gemini</span><h3>Declared, not yet proven by voice</h3>'
+              "<p>Ayuvo declares Android App Actions for opening features and for health, food and exercise requests. Google is replacing Assistant with Gemini on phones, and Gemini may not use these yet. We have not tested them by voice, so treat assistant voice commands as experimental. Launcher shortcuts and links work regardless.</p></div>",
+              reverse=True),
+        split("Coach", "The coach uses the same actions.",
+              "<p>Ayuvo Coach reads through the same actions, and when a log would help it proposes one as a card in the chat. Nothing changes until you tap Confirm.</p>",
+              ["It never proposes medication or goal changes", "On-device models get no action tools"],
+              '<div class="panel"><span class="kicker">Safety rules</span><ul class="ticks">'
+              "<li><span>No action can delete anything</span></li>"
+              "<li><span>Medication actions can only mark one of today's doses taken, skipped or snoozed, and always ask first</span></li>"
+              "<li><span>Nothing can create or edit a medication, change a dose or give medical advice</span></li>"
+              "<li><span>Goal changes always ask first</span></li></ul></div>"),
+        f'<div class="prose wide">{section_head("Catalogue", f"All {N_ACTIONS} actions.", "Get answers, log entries, search and open screens. Each is documented in the open-source repository.")}<div class="grid-3">{cells}</div></div>',
+    ]
+    sends = sends_panel("What actions send, and to whom", "Actions read and write the data on your phone.", [
+        ("Nothing, from Ayuvo", "Actions work with the data stored on this device. There is no Ayuvo server."),
+        ("One exception, after you confirm", "Log Food with a description sends that description to your AI provider, the same as typing it in the app."),
+        ("Your assistant's own rules", "Siri and Android assistants handle your voice under Apple's or Google's settings, before Ayuvo sees the request."),
+    ])
+    return feature_page(
+        "/features/siri-and-shortcuts", "Siri, Shortcuts & Android Assistant Actions | Ayuvo",
+        f"Ask Siri, chain {N_ACTIONS} Ayuvo actions in the Shortcuts app, or use Android shortcuts and links. No action deletes, and medication changes always ask first.",
+        "Siri & Shortcuts", "Ask Siri. <em>Build a Shortcut.</em>",
+        f"Check today's protein, log water or get your Recovery with your voice, the Shortcuts app, an Android shortcut or a link: {N_ACTIONS} actions, one set of rules.",
+        "Siri &amp; Shortcuts", hero_card, blocks, sends,
+        [REL["insights"], REL["coach"], REL["nutrition"]], og_screens=["summary", "coach"],
+        faqs=[("Does Ayuvo work with Gemini?", "Ayuvo declares Android App Actions, which Google Assistant uses. Google is moving phones from Assistant to Gemini, and Gemini may not use them yet. Voice commands have not been tested, so launcher shortcuts and ayuvo:// links are the reliable way on Android today."),
+              ("Can Siri read my health data on a locked iPhone?", "No. Ayuvo shows health values only after the iPhone is unlocked."),
+              ("Can a shortcut delete my data or change my medication?", "No. There are no delete actions, and medication actions can only mark one of today's doses, after you confirm."),
+              ("Why are only some actions spoken without setup?", "Apple allows 10 App Shortcuts per app. Every other action is in the Shortcuts app, and a shortcut you build can be run by saying its name.")],
+        og_headline="Ask Siri. Build a Shortcut.")
+
+
 def build_privacy_first() -> Page:
     principles = (
         '<div class="grid-2">'
@@ -602,7 +820,9 @@ def build_privacy_first() -> Page:
         '<div class="panel"><span class="kicker">04 · Verifiable</span><h3>Open to inspection</h3><p>No analytics, crash-reporting or advertising SDKs, and no first-party endpoints. The code is open source so you can check it. This website sets no cookies and loads nothing from third parties.</p></div></div>')
     rows = [
         ("AI provider (your key)", "Photos, text, coach messages and the context you ask for. Health data, medications and records only with their switches on", "The provider you configured", "When you analyse or ask"),
+        ("Explain with AI (Insights)", "Derived scores, labels and review items only: no raw readings, dates or names", "The provider you configured, or an on-device model", "When you tap Explain with AI"),
         ("On-device model", "Nothing", "Stays on the phone", "Always"),
+        ("Siri, Shortcuts, Android shortcuts", "Ayuvo adds nothing, except Log Food with a description, which goes to your AI provider after you confirm. Voice requests are handled by Siri or your Android assistant under their own settings", "The provider you configured", "When you run that action"),
         ("Speech to text", "An audio clip, only for a cloud provider", "The provider you chose", "Voice input, if you picked a cloud provider"),
         ("Barcode", "The barcode number", "Open Food Facts", "When you scan"),
         ("Exercise images", "A plain image request", "GitHub (raw.githubusercontent.com)", "When you browse the library"),
@@ -813,7 +1033,10 @@ def build_404() -> Page:
 
 
 def all_pages() -> list[Page]:
-    pages = [build_home(), build_features(), build_nutrition(), build_workouts(), build_health(), build_records(), build_coach(),
+    new = [build_insights(), build_shortcuts()]
+    for p in new:
+        p.modified = "2026-09-28"  # first published; later edits are dated by lastmod.json
+    pages = [build_home(), build_features(), build_nutrition(), build_workouts(), build_health(), *new, build_records(), build_coach(),
              build_fasting(), build_switch(), build_ondevice(), build_privacy_first(), build_providers(), build_open_source(), build_download()]
     pages += compare_pages()
     pages += nutrient_pages()
