@@ -176,21 +176,27 @@ private val _stepsRefreshEpoch = MutableStateFlow(0)
         ) { p, entries, favKeys, sortOrder, day ->
             HomeDayFilterInputs(p, entries, favKeys, sortOrder, day)
         }
-            .map { (p, entries, favKeys, sortOrder, day) ->
+            .map { inputs ->
                 val zone = ZoneId.systemDefault()
-                val dayEntries = entries
-                    .filter { it.timestamp.atZone(zone).toLocalDate() == day }
+                val dayEntries = inputs.entries
+                    .filter { it.timestamp.atZone(zone).toLocalDate() == inputs.day }
                     .sortedByDescending { it.timestamp }
-                _ui.value.copy(
-                    profile = p,
-                    date = day,
-                    todayEntries = dayEntries,
-                    foodLogSortOrder = FoodLogSortOrder.fromStorage(sortOrder),
-                    favoriteKeys = favKeys
-                )
+                inputs to dayEntries
             }
             .flowOn(Dispatchers.Default)
-            .onEach { state ->
+            .onEach { (inputs, dayEntries) ->
+                // Copy the current state here on the main thread, not inside the Default
+                // map above: a snapshot taken there is stale by the time it lands and
+                // reverted analyzing / pendingAnalysis / foodSaveInProgress whenever a
+                // DataStore write (draft save, addEntry) raced it, leaving the analyzing
+                // overlay or the review sheet's spinner on screen for good.
+                val state = _ui.value.copy(
+                    profile = inputs.profile,
+                    date = inputs.day,
+                    todayEntries = dayEntries,
+                    foodLogSortOrder = FoodLogSortOrder.fromStorage(inputs.sortOrder),
+                    favoriteKeys = inputs.favoriteKeys
+                )
                 _ui.value = state
                 val filenames = state.todayEntries
                     .flatMap { it.allImageFilenames }
