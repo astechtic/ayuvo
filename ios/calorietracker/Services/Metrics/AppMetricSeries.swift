@@ -383,6 +383,23 @@ enum MetricTileBuilder {
                     sparkline: tile.sparkline,
                     caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today")
                 ))
+            case .derived(let metricID):
+                guard let info = DerivedCatalog.shared.byID[metricID] else { continue }
+                let snapshot = DerivedMetricStore.shared.tiles[pin]
+                let latest = snapshot?.latest
+                let display = DerivedMetricFormat.display(latest?.value, info: info)
+                let when = latest.flatMap { InsightsDay.date($0.day, calendar: calendar) }.map { HealthUnitFormatting.relativeText($0) }
+                let caption: String
+                if let latest, let when {
+                    caption = latest.isNative ? when : String(localized: "Estimated · \(when)")
+                } else {
+                    caption = String(localized: "No data")
+                }
+                tiles.append(MetricTileModel(
+                    key: pin, title: descriptor.title, systemImage: descriptor.systemImage, tint: descriptor.tint,
+                    valueText: display.value, unitText: display.unit, at: nil, sparkline: snapshot?.sparkline ?? [],
+                    caption: caption
+                ))
             case .health(let typeID):
                 let model = sources.health.homeSnapshot?.tiles.first { $0.typeID == typeID }
                 let type = sources.health.metricType(for: typeID)

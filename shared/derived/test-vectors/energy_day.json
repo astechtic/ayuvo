@@ -1,0 +1,102 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "bmr_mifflin": 1526.0,
+        "pal": 1.24,
+        "pal_band_index": 0,
+        "resting_kcal": 1521.0,
+        "status": "ok",
+        "tdee": 1890.0
+      },
+      "input": {
+        "active_kcal": 180.0,
+        "age": 24,
+        "height_cm": 175.0,
+        "resting_kcal": 1521.0,
+        "sex": "male",
+        "weight_kg": 54.7
+      },
+      "name": "full_day"
+    },
+    {
+      "expected": {
+        "bmr_mifflin": 1370.0,
+        "pal": null,
+        "pal_band_index": null,
+        "resting_kcal": null,
+        "status": "partial_day",
+        "tdee": null
+      },
+      "input": {
+        "active_kcal": 40.0,
+        "age": 40,
+        "height_cm": 165.0,
+        "resting_kcal": 600.0,
+        "sex": "female",
+        "weight_kg": 70.0
+      },
+      "name": "partial_day"
+    },
+    {
+      "expected": {
+        "bmr_mifflin": 1697.0,
+        "pal": 2.09,
+        "pal_band_index": 3,
+        "resting_kcal": 1700.0,
+        "status": "ok",
+        "tdee": 3556.0
+      },
+      "input": {
+        "active_kcal": 1500.0,
+        "age": 30,
+        "height_cm": 180.0,
+        "resting_kcal": 1700.0,
+        "sex": "other",
+        "weight_kg": 80.0
+      },
+      "name": "very_active"
+    },
+    {
+      "expected": {
+        "bmr_mifflin": 1780.0,
+        "pal": null,
+        "pal_band_index": null,
+        "resting_kcal": null,
+        "status": "no_resting",
+        "tdee": null
+      },
+      "input": {
+        "active_kcal": 300.0,
+        "age": 30,
+        "height_cm": 180.0,
+        "resting_kcal": null,
+        "sex": "male",
+        "weight_kg": 80.0
+      },
+      "name": "no_resting"
+    },
+    {
+      "expected": {
+        "bmr_mifflin": null,
+        "pal": null,
+        "pal_band_index": null,
+        "resting_kcal": null,
+        "status": "no_resting",
+        "tdee": null
+      },
+      "input": {
+        "active_kcal": 10.0,
+        "age": null,
+        "height_cm": null,
+        "resting_kcal": 0.0,
+        "sex": null,
+        "weight_kg": null
+      },
+      "name": "zero_resting"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "energy_day",
+  "version": 1
+}

@@ -1,0 +1,373 @@
+{
+  "algo_version": 1,
+  "config_version": 1,
+  "disclaimer": "Estimated by Ayuvo from your logs using published reference values. It is not medical advice; talk to your doctor about lab results and supplements.",
+  "dri": {
+    "age_bands": [
+      {
+        "id": "19-30",
+        "max": 30,
+        "min": 0
+      },
+      {
+        "id": "31-50",
+        "max": 50,
+        "min": 31
+      },
+      {
+        "id": "51-70",
+        "max": 70,
+        "min": 51
+      },
+      {
+        "id": "71+",
+        "max": 130,
+        "min": 71
+      }
+    ],
+    "goals": {
+      "calcium_mg": {
+        "19-30": [
+          1000,
+          1000
+        ],
+        "31-50": [
+          1000,
+          1000
+        ],
+        "51-70": [
+          1000,
+          1200
+        ],
+        "71+": [
+          1200,
+          1200
+        ]
+      },
+      "fiber_g": {
+        "19-30": [
+          38,
+          25
+        ],
+        "31-50": [
+          38,
+          25
+        ],
+        "51-70": [
+          30,
+          21
+        ],
+        "71+": [
+          30,
+          21
+        ]
+      },
+      "folate_mcg": {
+        "19-30": [
+          400,
+          400
+        ],
+        "31-50": [
+          400,
+          400
+        ],
+        "51-70": [
+          400,
+          400
+        ],
+        "71+": [
+          400,
+          400
+        ]
+      },
+      "iron_mg": {
+        "19-30": [
+          8,
+          18
+        ],
+        "31-50": [
+          8,
+          18
+        ],
+        "51-70": [
+          8,
+          8
+        ],
+        "71+": [
+          8,
+          8
+        ]
+      },
+      "magnesium_mg": {
+        "19-30": [
+          400,
+          310
+        ],
+        "31-50": [
+          420,
+          320
+        ],
+        "51-70": [
+          420,
+          320
+        ],
+        "71+": [
+          420,
+          320
+        ]
+      },
+      "potassium_mg": {
+        "19-30": [
+          3400,
+          2600
+        ],
+        "31-50": [
+          3400,
+          2600
+        ],
+        "51-70": [
+          3400,
+          2600
+        ],
+        "71+": [
+          3400,
+          2600
+        ]
+      },
+      "vitamin_a_mcg": {
+        "19-30": [
+          900,
+          700
+        ],
+        "31-50": [
+          900,
+          700
+        ],
+        "51-70": [
+          900,
+          700
+        ],
+        "71+": [
+          900,
+          700
+        ]
+      },
+      "vitamin_b12_mcg": {
+        "19-30": [
+          2.4,
+          2.4
+        ],
+        "31-50": [
+          2.4,
+          2.4
+        ],
+        "51-70": [
+          2.4,
+          2.4
+        ],
+        "71+": [
+          2.4,
+          2.4
+        ]
+      },
+      "vitamin_c_mg": {
+        "19-30": [
+          90,
+          75
+        ],
+        "31-50": [
+          90,
+          75
+        ],
+        "51-70": [
+          90,
+          75
+        ],
+        "71+": [
+          90,
+          75
+        ]
+      },
+      "vitamin_d_mcg": {
+        "19-30": [
+          15,
+          15
+        ],
+        "31-50": [
+          15,
+          15
+        ],
+        "51-70": [
+          15,
+          15
+        ],
+        "71+": [
+          20,
+          20
+        ]
+      },
+      "vitamin_e_mg": {
+        "19-30": [
+          15,
+          15
+        ],
+        "31-50": [
+          15,
+          15
+        ],
+        "51-70": [
+          15,
+          15
+        ],
+        "71+": [
+          15,
+          15
+        ]
+      },
+      "vitamin_k_mcg": {
+        "19-30": [
+          120,
+          90
+        ],
+        "31-50": [
+          120,
+          90
+        ],
+        "51-70": [
+          120,
+          90
+        ],
+        "71+": [
+          120,
+          90
+        ]
+      },
+      "zinc_mg": {
+        "19-30": [
+          11,
+          8
+        ],
+        "31-50": [
+          11,
+          8
+        ],
+        "51-70": [
+          11,
+          8
+        ],
+        "71+": [
+          11,
+          8
+        ]
+      }
+    },
+    "source": "National Academies (NASEM) Dietary Reference Intakes via NIH Office of Dietary Supplements fact sheets: RDA, or AI where no RDA exists (potassium and sodium 2019 update, fiber AI 14 g/1000 kcal); Tolerable Upper Intake Levels for adults 19-50.",
+    "upper": {
+      "calcium_mg": 2500,
+      "iron_mg": 45,
+      "sodium_mg": 2300,
+      "vitamin_a_mcg": 3000,
+      "vitamin_c_mg": 2000,
+      "vitamin_d_mcg": 100,
+      "zinc_mg": 40
+    }
+  },
+  "format": "ayuvo-intake-config",
+  "lab_links": [
+    {
+      "analytes": [
+        "hemoglobin",
+        "mcv",
+        "ferritin",
+        "iron"
+      ],
+      "id": "iron",
+      "nutrient": "iron_mg"
+    },
+    {
+      "analytes": [
+        "vitamin_d_25oh"
+      ],
+      "id": "vitamin_d",
+      "nutrient": "vitamin_d_mcg"
+    },
+    {
+      "analytes": [
+        "vitamin_b12"
+      ],
+      "id": "vitamin_b12",
+      "nutrient": "vitamin_b12_mcg"
+    },
+    {
+      "analytes": [
+        "folate"
+      ],
+      "id": "folate",
+      "nutrient": "folate_mcg"
+    }
+  ],
+  "muscle_groups": {
+    "legs": [
+      "quads",
+      "quadriceps",
+      "hamstrings",
+      "glutes",
+      "calves",
+      "adductors",
+      "abductors"
+    ],
+    "pull": [
+      "upper back",
+      "lats",
+      "back",
+      "biceps",
+      "forearms",
+      "traps",
+      "rear delts"
+    ],
+    "push": [
+      "chest",
+      "pectorals",
+      "delts",
+      "shoulders",
+      "triceps"
+    ]
+  },
+  "sources": {
+    "adherence": "Pharmacy Quality Alliance: proportion of days covered ≥ 80% as the adherence threshold.",
+    "energy": "Adaptive energy expenditure from intake and weight trend, about 7,700 kcal per kg of body-mass change (Hall KD, Int J Obes 2008 discusses its limits).",
+    "iron": "Tea and coffee polyphenols inhibit non-heme iron absorption (Hurrell RF et al. Br J Nutr 1999).",
+    "labs": "Report reference ranges as printed on the lab report; the card only suggests discussing results with a doctor.",
+    "macros": "Atwater factors 4/4/9 kcal/g; WHO: saturated fat below 10% of energy; Dietary Guidelines for Americans: fiber 14 g per 1,000 kcal; WHO sodium/potassium molar ratio below 1.",
+    "protein": "International Society of Sports Nutrition position stand: protein and exercise (Jäger R et al. 2017): 1.4-2.0 g/kg/day, about 0.25 g/kg per meal.",
+    "strength": "Epley B (1985) one-repetition maximum estimate; Schoenfeld BJ et al. J Sports Sci 2017: 10+ weekly sets per muscle; ACSM: resistance training 2+ days per week."
+  },
+  "thresholds": {
+    "adaptive_min_intake_days": 14,
+    "adaptive_min_weighins": 6,
+    "adaptive_window_days": 28,
+    "adherent_pct": 80,
+    "caffeine_max_mg": 400,
+    "e1rm_max_reps": 12,
+    "energy_per_kg": 7700,
+    "ewma_alpha": 0.1,
+    "fiber_per_1000kcal_target": 14,
+    "iron_absorption_window_min": 60,
+    "iron_rich_mg": 3.0,
+    "na_k_ratio_max": 1.0,
+    "on_time_min": 60,
+    "pair_min_group": 8,
+    "protein_g_per_kg_training": [
+      1.4,
+      2.0
+    ],
+    "protein_per_meal_g_per_kg": 0.25,
+    "saturated_fat_max_pct": 10,
+    "shortfall_min_days": 5,
+    "shortfall_pct": 70,
+    "suggest_delay_min": 60,
+    "suggest_min_taken": 5,
+    "weekly_sets_max": 20,
+    "weekly_sets_min": 10
+  }
+}

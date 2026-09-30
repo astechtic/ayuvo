@@ -72,7 +72,7 @@ object WidgetDashboardBuilder {
                 WorkoutsToday(
                     count = list.size,
                     minutes = list.sumOf { it.durationMinutes },
-                    burnKcal = list.mapNotNull { it.caloriesBurned }.takeIf { it.isNotEmpty() }?.sum(),
+                    burnKcal = list.mapNotNull { it.caloriesBurned ?: it.gps?.activeKcal }.takeIf { it.isNotEmpty() }?.sum(),
                     firstTitle = list.minByOrNull { it.startedAt }?.exercises?.firstOrNull()?.name
                 )
             },

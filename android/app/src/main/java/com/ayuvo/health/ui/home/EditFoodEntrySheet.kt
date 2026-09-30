@@ -172,6 +172,10 @@ fun EditFoodEntrySheet(
     var loggedTime by remember(entry.id, entry.timestamp) { mutableStateOf(initialLoggedAt.toLocalTime().withSecond(0).withNano(0)) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
+    // Eaten-at (docs/intake-metrics.md §3): null = the log time; only a changed time is stored.
+    val initialEatenTime = remember(entry.id, entry.eatenAt) { entry.eatenAt?.atZone(zone)?.toLocalTime()?.withSecond(0)?.withNano(0) }
+    var eatenTime by remember(entry.id, entry.eatenAt) { mutableStateOf(initialEatenTime) }
+    var showEatenPicker by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val sheetSurface = AyuvoColors.sheetBackground()
@@ -217,6 +221,7 @@ fun EditFoodEntrySheet(
             loggedTime == initialLoggedAt.toLocalTime().withSecond(0).withNano(0)
         ) entry.timestamp else loggedDate.atTime(loggedTime).atZone(zone).toInstant(),
         mealType = mealType,
+        eatenAt = EatenAtEditing.resolve(entry.eatenAt, initialEatenTime, eatenTime, loggedDate, loggedTime, initialLoggedAt, zone),
         customNote = noteText.trim().takeIf { it.isNotEmpty() },
         sugar = scaledD(currentBaseEntry.sugar),
         addedSugar = scaledD(currentBaseEntry.addedSugar),
@@ -708,6 +713,17 @@ fun EditFoodEntrySheet(
                     }
                 )
             }
+            item {
+                EatenAtRow(
+                    eatenTime = eatenTime ?: loggedTime,
+                    followsLogTime = eatenTime == null,
+                    onEdit = {
+                        dismissKeyboard()
+                        showEatenPicker = true
+                    },
+                    onReset = { eatenTime = null }
+                )
+            }
 
             item { SheetSectionHeader("Actions") }
             item {
@@ -812,6 +828,16 @@ fun EditFoodEntrySheet(
                 showTimePicker = false
             },
             onDismiss = { showTimePicker = false }
+        )
+    }
+    if (showEatenPicker) {
+        SheetTimePickerDialog(
+            initialTime = eatenTime ?: loggedTime,
+            onConfirm = {
+                eatenTime = it.takeUnless { t -> t == loggedTime }
+                showEatenPicker = false
+            },
+            onDismiss = { showEatenPicker = false }
         )
     }
     if (showDeleteConfirmation) {

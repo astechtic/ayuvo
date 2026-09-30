@@ -240,6 +240,19 @@ class PreferencesStore(
     val insightsEnabled: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_ENABLED] ?: true }
     suspend fun setInsightsEnabled(v: Boolean) { ds.edit { it[Keys.INSIGHTS_ENABLED] = v } }
 
+    /** Derived metrics (docs/derived-metrics.md): master switch (default on), switched-off ids, BMI cut-offs. */
+    val derivedMetricsEnabled: Flow<Boolean> = ds.data.map { it[Keys.DERIVED_METRICS_ENABLED] ?: true }
+    suspend fun setDerivedMetricsEnabled(v: Boolean) { ds.edit { it[Keys.DERIVED_METRICS_ENABLED] = v } }
+    /** Comma-separated ids of switched-off derived metrics (iOS stores an array under the same key). */
+    val derivedMetricsDisabled: Flow<Set<String>> = ds.data.map { p ->
+        p[Keys.DERIVED_METRICS_DISABLED].orEmpty().split(',').map { it.trim() }.filter { it.isNotEmpty() }.toSet()
+    }
+    suspend fun setDerivedMetricsDisabled(ids: Set<String>) {
+        ds.edit { it[Keys.DERIVED_METRICS_DISABLED] = ids.map { id -> id.trim() }.filter { id -> id.isNotEmpty() }.sorted().joinToString(",") }
+    }
+    val derivedBmiScheme: Flow<String> = ds.data.map { if (it[Keys.DERIVED_BMI_SCHEME] == "asian") "asian" else "who" }
+    suspend fun setDerivedBmiScheme(v: String) { ds.edit { it[Keys.DERIVED_BMI_SCHEME] = if (v == "asian") "asian" else "who" } }
+
     /** Opt-in "Your recovery is ready" morning notification (no values). */
     val insightsMorningNotification: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_MORNING_NOTIFICATION] ?: false }
     suspend fun setInsightsMorningNotification(v: Boolean) { ds.edit { it[Keys.INSIGHTS_MORNING_NOTIFICATION] = v } }
@@ -2113,6 +2126,9 @@ class PreferencesStore(
         val DAILY_HOUR = intPreferencesKey("dailySummaryHour")
         val DAILY_MINUTE = intPreferencesKey("dailySummaryMinute")
         val INSIGHTS_ENABLED = booleanPreferencesKey("insightsEnabled")
+        val DERIVED_METRICS_ENABLED = booleanPreferencesKey("derivedMetricsEnabled")
+        val DERIVED_METRICS_DISABLED = stringPreferencesKey("derivedMetricsDisabled")
+        val DERIVED_BMI_SCHEME = stringPreferencesKey("derivedBMIScheme")
         val INSIGHTS_MORNING_NOTIFICATION = booleanPreferencesKey("insightsMorningNotification")
         val INSIGHTS_MORNING_NOTIFIED_DAY = stringPreferencesKey("insightsMorningNotifiedDay")
         val WEIGHT_REMINDER_ENABLED = booleanPreferencesKey("weightReminderEnabled")

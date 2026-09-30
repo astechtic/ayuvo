@@ -63,6 +63,16 @@ nonisolated extension NutrientsReference {
             return .obj(["value": rj(value), "value_int": defaultGoalInt(value).map(RJ.int) ?? .null])
         case "convert_amount":
             return rj(convertAmount(number(inp["value"]), unit: inp["unit"].string, key: inp["key"].string ?? "", form: inp["form"].string))
+        case "interval_days":
+            let s = inp["schedule"]
+            let days = s.isNull ? 1 : intervalDays(frequencyKind: s["frequency_kind"].string,
+                                                   days: (s["days"].array ?? []).compactMap { MR.int($0) },
+                                                   intervalHours: MR.int(s["interval_hours"]))
+            return .obj(["days": .int(days)])
+        case "spread_supplements":
+            var intervals: [String: Int] = [:]
+            for (k, v) in inp["intervals"].object ?? [:] { intervals[k] = MR.int(v) ?? 1 }
+            return .obj(["entries": .arr(spreadSupplementEntries(supplementEntries(inp["entries"]), intervals: intervals).map(rj))])
         case "supplement_entries":
             let rows = (inp["medication_nutrients"].array ?? []).map {
                 MedicationNutrientInput(medicationID: $0["medication_id"].string ?? "", nutrientKey: $0["nutrient_key"].string ?? "",

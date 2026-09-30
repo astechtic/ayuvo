@@ -60,6 +60,18 @@ final class AppNavigator {
         openBrowse([.medications])
     }
 
+    /// Workout widget taps: starts the chosen workout (unless one already runs) and lands on the
+    /// workout log, which presents the live GPS screen (`WorkoutLogSessionState.liveWorkoutRequested`).
+    func openWorkout(starting sport: WorkoutWidgetSport?) {
+        if let sport {
+            let started = WorkoutSessionCoordinator.shared.startFromWidget(sport)
+            workoutLogSession.gpsStartRequested = sport.isGPS && !started
+        }
+        workoutLogSession.selectedDate = .now
+        workoutLogSession.liveWorkoutRequested = true
+        openWorkouts()
+    }
+
     /// Browse › Insights, optionally with one Insights screen on top (notification taps, actions, "See All").
     func openInsights(_ route: InsightsRoute?) {
         openBrowse([.insights])
@@ -110,6 +122,10 @@ final class AppNavigator {
             openSettings(pane)
         case .workouts:
             openWorkouts()
+        case .startWorkout(let sport):
+            openWorkout(starting: sport)
+        case .openWorkout:
+            openWorkout(starting: nil)
         case .medications:
             openMedications()
         case .addRecord:

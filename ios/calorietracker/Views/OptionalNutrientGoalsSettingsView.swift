@@ -36,7 +36,10 @@ struct OptionalNutrientGoalsSettingsView: View {
             } header: {
                 Text("Other Nutrients")
             } footer: {
-                Text("Separate from calorie, protein, carb, and fat goals. Unless you set your own, goals follow the reference amounts for your age and sex (NIH Office of Dietary Supplements, National Academies). \(NutrientReferenceData.shared.populationNote)")
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Separate from calorie, protein, carb, and fat goals. Unless you set your own, goals follow the reference amounts for your age and sex (NIH Office of Dietary Supplements, National Academies). \(NutrientReferenceData.shared.populationNote)")
+                    Text("Source: \(IntakeNutrientKeys.sourceLine)")
+                }
             }
             .listRowBackground(AppColors.appCard)
         }

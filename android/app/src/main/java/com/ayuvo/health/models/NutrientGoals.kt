@@ -241,6 +241,8 @@ data class OptionalNutrientGoals(
      */
     fun effectiveGoal(nutrient: OptionalNutrient, profile: NutrientProfile): Int? {
         customGoal(nutrient)?.let { return it }
+        // DRI defaults by sex and age band (docs/intake-metrics.md §3), e.g. 8 mg iron for adult men.
+        com.ayuvo.health.data.intake.IntakeDefaults.defaultGoal(nutrient, profile)?.let { return it }
         if (NutrientReference.active == null) return null
         return Nutrients.defaultGoalInt(Nutrients.defaultGoal(nutrient.referenceKey, profile))
     }

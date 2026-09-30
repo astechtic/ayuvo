@@ -1,0 +1,177 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "band": "19-30",
+        "goals": {
+          "calcium_mg": 1000,
+          "fiber_g": 38,
+          "folate_mcg": 400,
+          "iron_mg": 8,
+          "magnesium_mg": 400,
+          "potassium_mg": 3400,
+          "vitamin_a_mcg": 900,
+          "vitamin_b12_mcg": 2.4,
+          "vitamin_c_mg": 90,
+          "vitamin_d_mcg": 15,
+          "vitamin_e_mg": 15,
+          "vitamin_k_mcg": 120,
+          "zinc_mg": 11
+        },
+        "upper": {
+          "calcium_mg": 2500,
+          "iron_mg": 45,
+          "sodium_mg": 2300,
+          "vitamin_a_mcg": 3000,
+          "vitamin_c_mg": 2000,
+          "vitamin_d_mcg": 100,
+          "zinc_mg": 40
+        }
+      },
+      "input": {
+        "age": 24,
+        "sex": "male"
+      },
+      "name": "male_24"
+    },
+    {
+      "expected": {
+        "band": "31-50",
+        "goals": {
+          "calcium_mg": 1000,
+          "fiber_g": 25,
+          "folate_mcg": 400,
+          "iron_mg": 18,
+          "magnesium_mg": 320,
+          "potassium_mg": 2600,
+          "vitamin_a_mcg": 700,
+          "vitamin_b12_mcg": 2.4,
+          "vitamin_c_mg": 75,
+          "vitamin_d_mcg": 15,
+          "vitamin_e_mg": 15,
+          "vitamin_k_mcg": 90,
+          "zinc_mg": 8
+        },
+        "upper": {
+          "calcium_mg": 2500,
+          "iron_mg": 45,
+          "sodium_mg": 2300,
+          "vitamin_a_mcg": 3000,
+          "vitamin_c_mg": 2000,
+          "vitamin_d_mcg": 100,
+          "zinc_mg": 40
+        }
+      },
+      "input": {
+        "age": 45,
+        "sex": "female"
+      },
+      "name": "female_45"
+    },
+    {
+      "expected": {
+        "band": "51-70",
+        "goals": {
+          "calcium_mg": 1200,
+          "fiber_g": 21,
+          "folate_mcg": 400,
+          "iron_mg": 8,
+          "magnesium_mg": 320,
+          "potassium_mg": 2600,
+          "vitamin_a_mcg": 700,
+          "vitamin_b12_mcg": 2.4,
+          "vitamin_c_mg": 75,
+          "vitamin_d_mcg": 15,
+          "vitamin_e_mg": 15,
+          "vitamin_k_mcg": 90,
+          "zinc_mg": 8
+        },
+        "upper": {
+          "calcium_mg": 2500,
+          "iron_mg": 45,
+          "sodium_mg": 2300,
+          "vitamin_a_mcg": 3000,
+          "vitamin_c_mg": 2000,
+          "vitamin_d_mcg": 100,
+          "zinc_mg": 40
+        }
+      },
+      "input": {
+        "age": 60,
+        "sex": "female"
+      },
+      "name": "female_60"
+    },
+    {
+      "expected": {
+        "band": "71+",
+        "goals": {
+          "calcium_mg": 1200,
+          "fiber_g": 30,
+          "folate_mcg": 400,
+          "iron_mg": 8,
+          "magnesium_mg": 420,
+          "potassium_mg": 3400,
+          "vitamin_a_mcg": 900,
+          "vitamin_b12_mcg": 2.4,
+          "vitamin_c_mg": 90,
+          "vitamin_d_mcg": 20,
+          "vitamin_e_mg": 15,
+          "vitamin_k_mcg": 120,
+          "zinc_mg": 11
+        },
+        "upper": {
+          "calcium_mg": 2500,
+          "iron_mg": 45,
+          "sodium_mg": 2300,
+          "vitamin_a_mcg": 3000,
+          "vitamin_c_mg": 2000,
+          "vitamin_d_mcg": 100,
+          "zinc_mg": 40
+        }
+      },
+      "input": {
+        "age": 80,
+        "sex": null
+      },
+      "name": "other_80"
+    },
+    {
+      "expected": {
+        "band": "19-30",
+        "goals": {
+          "calcium_mg": 1000,
+          "fiber_g": 38,
+          "folate_mcg": 400,
+          "iron_mg": 8,
+          "magnesium_mg": 400,
+          "potassium_mg": 3400,
+          "vitamin_a_mcg": 900,
+          "vitamin_b12_mcg": 2.4,
+          "vitamin_c_mg": 90,
+          "vitamin_d_mcg": 15,
+          "vitamin_e_mg": 15,
+          "vitamin_k_mcg": 120,
+          "zinc_mg": 11
+        },
+        "upper": {
+          "calcium_mg": 2500,
+          "iron_mg": 45,
+          "sodium_mg": 2300,
+          "vitamin_a_mcg": 3000,
+          "vitamin_c_mg": 2000,
+          "vitamin_d_mcg": 100,
+          "zinc_mg": 40
+        }
+      },
+      "input": {
+        "age": 17,
+        "sex": "male"
+      },
+      "name": "teen_uses_first_band"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "dri_goals",
+  "version": 1
+}

@@ -1,0 +1,58 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "above_upper": true,
+        "daily_average": 214.3,
+        "doses": 1
+      },
+      "input": {
+        "amount_per_dose": 1500.0,
+        "doses": [
+          {
+            "taken_ms": 1790000000000
+          }
+        ],
+        "upper": 100.0,
+        "window_days": 7
+      },
+      "name": "weekly_60000_iu_vitamin_d"
+    },
+    {
+      "expected": {
+        "above_upper": false,
+        "daily_average": 14.6,
+        "doses": 6
+      },
+      "input": {
+        "amount_per_dose": 17.0,
+        "doses": [
+          {
+            "taken_ms": 1790000000000
+          },
+          {
+            "taken_ms": 1790086400000
+          },
+          {
+            "taken_ms": 1790172800000
+          },
+          {
+            "taken_ms": 1790259200000
+          },
+          {
+            "taken_ms": 1790345600000
+          },
+          {
+            "taken_ms": 1790432000000
+          }
+        ],
+        "upper": 40.0,
+        "window_days": 7
+      },
+      "name": "daily_multivitamin_zinc"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "supplement_daily",
+  "version": 1
+}

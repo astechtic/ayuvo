@@ -1,0 +1,224 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "adherence_pct": 85.7,
+        "adherent": true,
+        "median_delay_min": 166.0,
+        "missed_by_weekday": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "on_time_pct": 0.0,
+        "scheduled": 7,
+        "streak": 4,
+        "suggested_clock_min": 375,
+        "taken": 6
+      },
+      "input": {
+        "logs": [
+          {
+            "scheduled_ms": 1790200800000,
+            "status": "taken",
+            "taken_ms": 1790209860000
+          },
+          {
+            "scheduled_ms": 1790287200000,
+            "status": "taken",
+            "taken_ms": 1790298000000
+          },
+          {
+            "scheduled_ms": 1790373600000,
+            "status": "missed",
+            "taken_ms": null
+          },
+          {
+            "scheduled_ms": 1790460000000,
+            "status": "taken",
+            "taken_ms": 1790467200000
+          },
+          {
+            "scheduled_ms": 1790546400000,
+            "status": "taken",
+            "taken_ms": 1790564820000
+          },
+          {
+            "scheduled_ms": 1790632800000,
+            "status": "taken",
+            "taken_ms": 1790665680000
+          },
+          {
+            "scheduled_ms": 1790719200000,
+            "status": "taken",
+            "taken_ms": 1790724600000
+          }
+        ],
+        "time_zone": "Asia/Kolkata"
+      },
+      "name": "late_multivitamin_kolkata"
+    },
+    {
+      "expected": {
+        "adherence_pct": 100.0,
+        "adherent": true,
+        "median_delay_min": 5.0,
+        "missed_by_weekday": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "on_time_pct": 100.0,
+        "scheduled": 10,
+        "streak": 10,
+        "suggested_clock_min": null,
+        "taken": 10
+      },
+      "input": {
+        "logs": [
+          {
+            "scheduled_ms": 1790200800000,
+            "status": "taken",
+            "taken_ms": 1790201100000
+          },
+          {
+            "scheduled_ms": 1790287200000,
+            "status": "taken",
+            "taken_ms": 1790287500000
+          },
+          {
+            "scheduled_ms": 1790373600000,
+            "status": "taken",
+            "taken_ms": 1790373900000
+          },
+          {
+            "scheduled_ms": 1790460000000,
+            "status": "taken",
+            "taken_ms": 1790460300000
+          },
+          {
+            "scheduled_ms": 1790546400000,
+            "status": "taken",
+            "taken_ms": 1790546700000
+          },
+          {
+            "scheduled_ms": 1790632800000,
+            "status": "taken",
+            "taken_ms": 1790633100000
+          },
+          {
+            "scheduled_ms": 1790719200000,
+            "status": "taken",
+            "taken_ms": 1790719500000
+          },
+          {
+            "scheduled_ms": 1790805600000,
+            "status": "taken",
+            "taken_ms": 1790805900000
+          },
+          {
+            "scheduled_ms": 1790892000000,
+            "status": "taken",
+            "taken_ms": 1790892300000
+          },
+          {
+            "scheduled_ms": 1790978400000,
+            "status": "taken",
+            "taken_ms": 1790978700000
+          },
+          {
+            "scheduled_ms": 1791064800000,
+            "status": "skipped",
+            "taken_ms": null
+          }
+        ],
+        "time_zone": "UTC"
+      },
+      "name": "on_time_utc"
+    },
+    {
+      "expected": {
+        "adherence_pct": 25.0,
+        "adherent": false,
+        "median_delay_min": 10.0,
+        "missed_by_weekday": [
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        "on_time_pct": 100.0,
+        "scheduled": 4,
+        "streak": 0,
+        "suggested_clock_min": null,
+        "taken": 1
+      },
+      "input": {
+        "logs": [
+          {
+            "scheduled_ms": 1790200800000,
+            "status": "missed",
+            "taken_ms": null
+          },
+          {
+            "scheduled_ms": 1790287200000,
+            "status": "missed",
+            "taken_ms": null
+          },
+          {
+            "scheduled_ms": 1790373600000,
+            "status": "taken",
+            "taken_ms": 1790374200000
+          },
+          {
+            "scheduled_ms": 1790460000000,
+            "status": "missed",
+            "taken_ms": null
+          }
+        ],
+        "time_zone": "Europe/London"
+      },
+      "name": "mostly_missed_london"
+    },
+    {
+      "expected": {
+        "adherence_pct": null,
+        "adherent": null,
+        "median_delay_min": null,
+        "missed_by_weekday": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "on_time_pct": null,
+        "scheduled": 0,
+        "streak": 0,
+        "suggested_clock_min": null,
+        "taken": 0
+      },
+      "input": {
+        "logs": [],
+        "time_zone": "UTC"
+      },
+      "name": "no_logs"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "meds_adherence",
+  "version": 1
+}

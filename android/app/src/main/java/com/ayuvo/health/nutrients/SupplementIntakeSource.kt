@@ -35,13 +35,26 @@ class SupplementIntakeSource(
     /** The current snapshot (empty without a medications database). */
     suspend fun current(): SupplementSnapshot = snapshots.first()
 
+    /** Days one dose covers per supplement, from its latest schedule generation (docs/intake-metrics.md §3). */
+    private suspend fun intervalDays(s: MedicationsStore, medicationIds: Set<String>): Map<String, Int> {
+        val out = HashMap<String, Int>()
+        for (id in medicationIds) {
+            val latest = s.schedules(id, openOnly = false).maxByOrNull { it.activeFromMs }
+            val n = SupplementAveraging.intervalDays(latest)
+            if (n > 1) out[id] = n
+        }
+        return out
+    }
+
     private suspend fun load(): SupplementSnapshot {
         if (!databaseExists() && !opened.value) return SupplementSnapshot.EMPTY
         val s = store()
         return try {
+            val rows = s.allNutrients()
             SupplementSnapshot(
-                s.allNutrients(), s.supplementDoses(), s.takenDoseTimes(),
-                s.list(MedicationFilter(status = MedicationStatus.ACTIVE)).mapTo(HashSet()) { it.id }
+                rows, s.supplementDoses(), s.takenDoseTimes(),
+                s.list(MedicationFilter(status = MedicationStatus.ACTIVE)).mapTo(HashSet()) { it.id },
+                intervalDays = intervalDays(s, rows.mapTo(LinkedHashSet()) { it.medicationId })
             )
         } catch (e: kotlinx.coroutines.CancellationException) {
             throw e

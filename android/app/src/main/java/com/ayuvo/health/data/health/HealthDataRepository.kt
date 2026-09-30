@@ -16,6 +16,31 @@ class HealthDataRepository(
     private val zone: () -> ZoneId = { ZoneId.systemDefault() }
 ) {
     val revision: StateFlow<Long> get() = store.revision
+    val derivedRevision: StateFlow<Long> get() = store.derivedRevision
+
+    /**
+     * A derived metric per day with "native wins" applied (docs/derived-metrics.md §1): a day with a platform reading
+     * of [nativeTypeId] shows that reading (source kind "native"), other days show Ayuvo's stored estimate.
+     */
+    suspend fun derivedSeries(metricId: String, nativeTypeId: String?, from: LocalDate, to: LocalDate): List<DerivedPoint> {
+        val derived = store.derivedValues(metricId, from.toString(), to.toString()).associateBy { it.day }
+        val native = nativeTypeId?.let { type ->
+            store.dailyRollups(type, from.toString(), to.toString())
+                .mapNotNull { r -> (r.avg ?: r.lastValue ?: r.sum)?.takeIf { r.count > 0 || r.fromPlatformAggregate }?.let { r.day to it } }
+                .toMap()
+        }.orEmpty()
+        return (derived.keys + native.keys).sorted().mapNotNull { day ->
+            val n = native[day]
+            val d = derived[day]
+            when {
+                n != null -> DerivedPoint(LocalDate.parse(day), n, null, null, "native")
+                d?.value != null -> DerivedPoint(LocalDate.parse(day), d.value, d.value2, d.value3, "derived", d.quality)
+                else -> null
+            }
+        }
+    }
+
+    suspend fun derivedMetricIdsWithValues(): List<String> = store.derivedMetricIdsWithValues()
 
     suspend fun summaries(): Map<String, HealthTypeSummary> =
         store.typeSummaries().associateBy { it.typeId }
@@ -68,14 +93,33 @@ class HealthDataRepository(
     suspend fun count(typeId: String): Long = store.sampleCount(typeId)
 
     // -- Coach ------------------------------------------------------------------
-    private var cachedSnapshot: Pair<Long, HealthCoachSnapshot>? = null
+    private var cachedSnapshot: Pair<Triple<Long, Long, List<String>>, HealthCoachSnapshot>? = null
 
-    /** Bounded snapshot for Coach's tools, cached per store revision. */
-    suspend fun coachSnapshot(lastSyncMs: Long?, displayName: (String, String?) -> String): HealthCoachSnapshot {
-        val rev = store.revision.value
-        cachedSnapshot?.let { (cachedRev, snapshot) -> if (cachedRev == rev) return snapshot.copy(lastSyncMs = lastSyncMs) }
-        val built = withContext(Dispatchers.Default) { HealthCoachSnapshot.build(this@HealthDataRepository, lastSyncMs, zone(), displayName = displayName) }
-        cachedSnapshot = rev to built
+    /**
+     * Bounded snapshot for Coach's tools, cached per store and derived revision. [derivedMetrics] are the enabled
+     * derived metrics (docs/derived-metrics.md); the ones with values join the tools as `derived:<id>`.
+     */
+    suspend fun coachSnapshot(
+        lastSyncMs: Long?,
+        displayName: (String, String?) -> String,
+        derivedMetrics: List<com.ayuvo.health.data.derived.DerivedMetricInfo> = emptyList()
+    ): HealthCoachSnapshot {
+        val key = Triple(store.revision.value, store.derivedRevision.value, derivedMetrics.map { it.id })
+        cachedSnapshot?.let { (cachedKey, snapshot) -> if (cachedKey == key) return snapshot.copy(lastSyncMs = lastSyncMs) }
+        val built = withContext(Dispatchers.Default) {
+            HealthCoachSnapshot.build(this@HealthDataRepository, lastSyncMs, zone(), displayName = displayName, derivedMetrics = derivedMetrics)
+        }
+        cachedSnapshot = key to built
         return built
     }
 }
+
+/** One day of a derived metric after "native wins"; [sourceKind] is "native" or "derived". */
+data class DerivedPoint(
+    val day: LocalDate,
+    val value: Double,
+    val value2: Double?,
+    val value3: Double?,
+    val sourceKind: String,
+    val quality: Double? = null
+)

@@ -195,6 +195,7 @@ fun BrowseScreen(
                             query = query.trim(),
                             container = container,
                             hub = hub,
+                            derived = app.derived,
                             domains = domains,
                             onOpenTarget = onOpenTarget,
                             onOpenMetric = onOpenMetric,
@@ -317,7 +318,8 @@ fun BrowseScreen(
 
 /** Whether a Browse domain has anything to show (dimmed otherwise). */
 internal fun domainHasData(domain: CatalogDomain, app: BrowseAppState, hub: HealthHubUiState): Boolean {
-    fun category(id: String) = hub.categories.firstOrNull { it.category.id == id }?.rows?.any { it.count > 0 } == true
+    fun category(id: String) = hub.categories.firstOrNull { it.category.id == id }?.rows?.any { it.count > 0 } == true ||
+        derivedRowsFor(app.derived, id).isNotEmpty()
     val s = app.snapshot
     val target = domain.target
     return when {
@@ -370,6 +372,7 @@ private fun BrowseSearchResults(
     query: String,
     container: AppContainer,
     hub: HealthHubUiState,
+    derived: List<DerivedBrowseRow>,
     domains: List<CatalogDomain>,
     onOpenTarget: (String) -> Unit,
     onOpenMetric: (MetricKey) -> Unit,
@@ -387,7 +390,8 @@ private fun BrowseSearchResults(
         .filter { !it.reserved && (if (it.isVirtualDietary) it.id in withData else it.sdkAvailable || it.id in withData) }
         .filter { HealthCategoryStyle.typeName(context, it.id).contains(query, ignoreCase = true) }
         .sortedByDescending { it.id in withData }
-    if (features.isEmpty() && matchedDomains.isEmpty() && appMatches.isEmpty() && healthMatches.isEmpty()) {
+    val derivedMatches = derived.filter { it.info.title.contains(query, ignoreCase = true) }
+    if (features.isEmpty() && matchedDomains.isEmpty() && appMatches.isEmpty() && healthMatches.isEmpty() && derivedMatches.isEmpty()) {
         Text(
             stringResource(R.string.browse_search_empty, query),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
@@ -460,6 +464,15 @@ private fun BrowseSearchResults(
                             modifier = Modifier.testTag("browse.metric.${type.id}"),
                             onClick = { onOpenMetric(key) }
                         )
+                    }
+                }
+            }
+        }
+        if (derivedMatches.isNotEmpty()) {
+            InsetGroup(header = stringResource(R.string.derived_estimated_badge), dividerInset = 60.dp) {
+                derivedMatches.forEach { r ->
+                    row {
+                        DerivedMetricRow(r, catalog, caption = stringResource(domainTitleRes(MetricCatalog.derivedDomain(catalog, r.key).id))) { onOpenMetric(r.key) }
                     }
                 }
             }

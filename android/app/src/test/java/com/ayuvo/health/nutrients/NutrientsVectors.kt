@@ -45,7 +45,9 @@ object NutrientsVectors {
         "supplement_entries.json" to "supplement_entries",
         "day_totals.json" to "day_totals",
         "logged_day_average.json" to "logged_day_average",
-        "label_output.json" to "parse_label_output"
+        "label_output.json" to "parse_label_output",
+        "interval_days.json" to "interval_days",
+        "spread_supplements.json" to "spread_supplements"
     )
 
     data class Outcome(val file: String, val passed: Int, val total: Int, val failures: List<String>)
@@ -134,6 +136,19 @@ object NutrientsVectors {
                 MedicationJson.obj("t_ms" to it.tMs, "nutrient_key" to it.nutrientKey, "value" to it.value, "medication_id" to it.medicationId)
             })
         }
+        "interval_days" -> {
+            val s = input["schedule"] as? JsonObject
+            val days = if (s == null) 1 else SupplementAveraging.intervalDays(
+                str(s["frequency_kind"]), objectsOrNumbers(s["days"]).map { it.toInt() }, num(s["interval_hours"])?.toInt()
+            )
+            MedicationJson.obj("days" to days)
+        }
+        "spread_supplements" -> {
+            val intervals = (input["intervals"] as? JsonObject).orEmpty().mapValues { (_, v) -> num(v)?.toInt() ?: 1 }
+            MedicationJson.obj("entries" to SupplementAveraging.spread(supplementEntries(input["entries"]), intervals).map {
+                MedicationJson.obj("t_ms" to it.tMs, "nutrient_key" to it.nutrientKey, "value" to it.value, "medication_id" to it.medicationId)
+            })
+        }
         "day_totals" -> {
             val food = objects(input["food_entries"]).map { e ->
                 val n = (e["nutrients"] as? JsonObject).orEmpty()
@@ -165,3 +180,6 @@ object NutrientsVectors {
         else -> error("unknown function $function")
     }
 }
+
+private fun objectsOrNumbers(e: kotlinx.serialization.json.JsonElement?): List<Double> =
+    (e as? kotlinx.serialization.json.JsonArray).orEmpty().mapNotNull { (it as? kotlinx.serialization.json.JsonPrimitive)?.content?.toDoubleOrNull() }

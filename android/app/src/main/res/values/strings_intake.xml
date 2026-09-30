@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Intake metrics (docs/intake-metrics.md). Non-diagnostic, associational copy. -->
+
+    <!-- Food eaten-at time -->
+    <string name="intake_eaten_at">Eaten at</string>
+    <string name="intake_eaten_at_same_as_log">Same as the log time</string>
+    <string name="intake_eaten_at_hint">Used for your eating window and meal timing</string>
+    <string name="intake_eaten_at_reset">Use the log time</string>
+
+    <!-- Medications: last 30 days -->
+    <string name="intake_adherence_title">Last 30 days</string>
+    <string name="intake_adherence_none">No scheduled doses in the last 30 days yet.</string>
+    <string name="intake_adherence_pct">%1$s%% of doses taken (%2$d of %3$d)</string>
+    <string name="intake_adherence_adherent">On track: 80%% or more of doses taken</string>
+    <string name="intake_adherence_below">Below 80%% of doses taken</string>
+    <string name="intake_adherence_on_time">On time (within an hour)</string>
+    <string name="intake_adherence_median_delay">Typical delay</string>
+    <string name="intake_adherence_streak">Streak</string>
+    <string name="intake_adherence_missed_by_weekday">Missed doses by weekday</string>
+    <string name="intake_percent">%1$s%%</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d doses</string>
+    <string name="intake_move_reminder">Move reminder to %1$s?</string>
+    <string name="intake_move_reminder_body">You usually take this dose later than its reminder. Moving the reminder changes only its time; everything else stays the same.</string>
+    <string name="intake_move_reminder_action">Move reminder</string>
+
+    <!-- Supplements above the upper limit -->
+    <string name="intake_supplement_above_upper">%1$s averages %2$s a day over its dosing interval, above the upper intake limit of %3$s. Follow your prescriber.</string>
+
+    <!-- Health Records: labs and nutrition -->
+    <string name="intake_lab_links_title">Lab results and nutrition</string>
+    <string name="intake_lab_links_footer">Based on your food log and supplements over the last 30 days and the reference range printed on your report. Not medical advice.</string>
+    <string name="intake_lab_link_low_one">Your %1$s was below the report\'s range.</string>
+    <string name="intake_lab_link_low_many">Your %1$s were below the report\'s range.</string>
+    <string name="intake_lab_link_and">%1$s and %2$s</string>
+    <string name="intake_lab_link_intake">Your average %1$s intake is %2$d%% of the reference.</string>
+    <string name="intake_lab_link_intake_no_supplement">Your average %1$s intake is %2$d%% of the reference, and none of your supplements contain it.</string>
+    <string name="intake_lab_link_doctor">Consider discussing this with your doctor.</string>
+</resources>

@@ -16,6 +16,15 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
+    <!-- GPS outdoor workouts (docs/workouts-gps.md §4): When-In-Use location only, recorded by a `location`
+         foreground service started from the app. No ACCESS_BACKGROUND_LOCATION. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- Live Update (promoted ongoing) workout notification on Android 16. -->
+    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
+
     <uses-permission android:name="android.permission.health.READ_WEIGHT" />
     <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
     <uses-permission android:name="android.permission.health.READ_NUTRITION" />
@@ -25,6 +34,10 @@
     <uses-permission android:name="android.permission.health.WRITE_BODY_FAT" />
     <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.WRITE_ACTIVE_CALORIES_BURNED" />
+    <!-- Workouts: strength sessions and GPS workouts with their route and distance. -->
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE" />
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE_ROUTE" />
+    <uses-permission android:name="android.permission.health.WRITE_DISTANCE" />
     <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
@@ -70,6 +83,12 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.microphone"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.barometer"
         android:required="false" />
 
     <queries>
@@ -490,6 +509,17 @@
             android:name=".services.ReminderReceiver"
             android:exported="false" />
 
+        <!-- GPS outdoor workouts (docs/workouts-gps.md §4). -->
+        <service
+            android:name=".services.workout.OutdoorWorkoutService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <!-- Finish from the strength-session notification. -->
+        <receiver
+            android:name=".services.workout.WorkoutActionReceiver"
+            android:exported="false" />
+
         <receiver
             android:name=".services.FastingGoalReceiver"
             android:exported="false" />
@@ -608,6 +638,19 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/quick_log_widget_info" />
+        </receiver>
+
+        <!-- Workout widget (docs/widgets.md "Workout"): starts open MainActivity; controls go to the running service. -->
+        <receiver
+            android:name=".widget.WorkoutWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_workout_picker_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/workout_widget_info" />
         </receiver>
 
         <!-- Quick Log / My Metrics slot picker (docs/widgets.md). -->

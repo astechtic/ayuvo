@@ -37,6 +37,9 @@ struct ImportedHealthWorkout: Identifiable, Codable, Equatable, Hashable {
     }
 
     static func from(_ workout: HKWorkout, calendar: Calendar = .current) -> ImportedHealthWorkout? {
+        // Ayuvo's own workouts (strength sessions, GPS and Apple Watch recordings) are
+        // already diary sessions; importing them again would double-count them.
+        if workout.metadata?["ayuvo_workout_session_id"] != nil { return nil }
         let duration = Int(workout.duration.rounded())
         guard duration > 0 else { return nil }
 

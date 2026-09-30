@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "dose_pct": 11.13,
+        "loud_minutes": 72.0
+      },
+      "input": {
+        "samples": [
+          [
+            1773172800000,
+            1773176400000,
+            86.0
+          ],
+          [
+            1773178200000,
+            1773181800000,
+            74.0
+          ],
+          [
+            1773184800000,
+            1773185520000,
+            80.0
+          ]
+        ]
+      },
+      "name": "mixed"
+    },
+    {
+      "expected": {
+        "dose_pct": 0.0,
+        "loud_minutes": 0.0
+      },
+      "input": {
+        "samples": []
+      },
+      "name": "none"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "audio_day",
+  "version": 1
+}

@@ -26,6 +26,8 @@ struct MetricDetailView: View {
     @State private var showLogBodyFat = false
     @State private var showAllWeights = false
     @State private var showAllBodyFat = false
+    /// Bumped when the "Calculate this metric" switch changes (UserDefaults is not observed).
+    @State private var derivedSwitchRevision = 0
 
     init(key: MetricKey) {
         self.key = key
@@ -50,6 +52,12 @@ struct MetricDetailView: View {
 
     private var nutrientKey: String? {
         if case .nutrient(let key) = key { return key }
+        return nil
+    }
+
+    /// Catalog entry of a `derived:<id>` metric.
+    private var derivedInfo: DerivedMetricInfo? {
+        if case .derived(let id) = key { return DerivedCatalog.shared.byID[id] }
         return nil
     }
 
@@ -105,6 +113,7 @@ struct MetricDetailView: View {
                     supplementsOnlyNote
                     intervalRow
                     chartContent
+                    derivedSourceLine
                     badges
                 }
                 .padding(.vertical, 4)
@@ -129,6 +138,10 @@ struct MetricDetailView: View {
                         .foregroundStyle(.secondary)
                         .accessibilityIdentifier("metric.about")
                 }
+            }
+
+            if let info = derivedInfo {
+                derivedMethodSection(info)
             }
         }
         .listStyle(.insetGrouped)
@@ -267,7 +280,9 @@ struct MetricDetailView: View {
         }
         var caption = model.rangeTitle(calendar: calendar)
         if headline.kind == .latest, headline.value != nil {
-            caption = Date(timeIntervalSince1970: Double(headline.fromMs) / 1000).formatted(date: .abbreviated, time: .shortened)
+            let at = Date(timeIntervalSince1970: Double(headline.fromMs) / 1000)
+            // Derived values are daily: the date alone.
+            caption = derivedInfo != nil ? at.formatted(date: .abbreviated, time: .omitted) : at.formatted(date: .abbreviated, time: .shortened)
         } else if headline.kind == .average, headline.daysWithData > 0, isSummed {
             caption = headline.daysWithData == 1
                 ? String(localized: "\(caption) · 1 day with data")
@@ -285,6 +300,9 @@ struct MetricDetailView: View {
             return AppMetricFormat.display(value, metric: metric)
         case .nutrient(let nutrientKey):
             return (NutrientCatalog.number(value), NutrientCatalog.unit(nutrientKey))
+        case .derived:
+            guard let info = derivedInfo else { return ("—", "") }
+            return DerivedMetricFormat.display(value, info: info)
         case .health:
             guard let type = healthType else { return ("—", "") }
             guard let value else { return ("—", HealthUnitFormatting.unitLabel(for: type)) }
@@ -360,6 +378,19 @@ struct MetricDetailView: View {
                     calendar: calendar,
                     onTap: tapBucket
                 )
+            case .derived:
+                if let info = derivedInfo {
+                    MetricChart(
+                        format: .derived(info),
+                        chartKind: descriptor.chartKind,
+                        tint: descriptor.tint,
+                        series: series,
+                        selected: $model.selected,
+                        referenceLines: [],
+                        calendar: calendar,
+                        onTap: tapBucket
+                    )
+                }
             case .health:
                 if let type = healthType {
                     if type.isSleep {
@@ -392,6 +423,11 @@ struct MetricDetailView: View {
         switch key {
         case .app: return "Log an entry to see your trend here."
         case .nutrient: return "Log food with this nutrient, or mark a supplement dose as taken, to see your trend here."
+        case .derived:
+            if case .derived(let id) = key, !DerivedSettings.isEnabled(id) {
+                return "Calculation is off for this metric. Turn it on below to estimate it from your Apple Health data."
+            }
+            return "Ayuvo estimates this from your Apple Health data once enough readings are available."
         case .health: return healthStore.isEnabled ? "Try another range, or pull to refresh on the Health Data screen." : "Health sync is off. Existing data stays here read-only."
         }
     }
@@ -475,6 +511,10 @@ struct MetricDetailView: View {
 
             allDataRow
 
+            if case .derived(let id) = key {
+                derivedSwitch(id)
+            }
+
             if case .health(let id) = key {
                 NavigationLink(value: HealthRoute.sources(id)) {
                     Label("Data Sources & Access", systemImage: "square.stack.3d.up")
@@ -509,6 +549,9 @@ struct MetricDetailView: View {
                     }
                 }
                 .font(.system(.caption2, design: .rounded))
+            } else if case .derived(let id) = key {
+                derivedSwitchFooter(id)
+                    .font(.system(.caption2, design: .rounded))
             }
         }
     }
@@ -536,8 +579,101 @@ struct MetricDetailView: View {
                 Label("Show All Data", systemImage: "list.bullet.rectangle")
             }
             .accessibilityIdentifier("metric.allData")
-        case .nutrient:
+        case .nutrient, .derived:
             EmptyView()
+        }
+    }
+
+    // MARK: - Derived metrics (docs/derived-metrics.md)
+
+    /// Where the selected bucket's value (or the latest day's) came from: Apple Health's source, or Ayuvo's estimate.
+    @ViewBuilder
+    private var derivedSourceLine: some View {
+        if derivedInfo != nil {
+            let days: [DerivedDayValue] = {
+                if let selected = model.selected {
+                    return DerivedMetricSeries.days(in: selected, from: model.derivedDays, calendar: calendar)
+                }
+                return model.derivedDays.last.map { [$0] } ?? []
+            }()
+            if let text = DerivedMetricFormat.sourceText(days) {
+                let native = days.allSatisfy(\.isNative)
+                Label {
+                    Text(model.selected == nil ? String(localized: "Latest: \(text)") : text)
+                        .font(.system(.footnote, design: .rounded))
+                        .foregroundStyle(.secondary)
+                } icon: {
+                    Image(systemName: native ? "heart.text.square" : "wand.and.stars")
+                        .foregroundStyle(descriptor.tint)
+                }
+                .accessibilityIdentifier("metric.derived.source")
+            }
+        }
+    }
+
+    private func derivedSwitch(_ id: String) -> some View {
+        let _ = derivedSwitchRevision
+        let masterOn = DerivedSettings.isEnabled()
+        return Toggle(isOn: Binding(
+            get: { DerivedSettings.isEnabled(id) },
+            set: { on in
+                DerivedSettings.setEnabled(id, on)
+                derivedSwitchRevision += 1
+                DerivedMetricsService.shared.settingsDidChange()
+            }
+        )) {
+            Label("Calculate this metric", systemImage: "wand.and.stars")
+        }
+        .disabled(!masterOn)
+        .accessibilityIdentifier("metric.derived.calculate")
+    }
+
+    @ViewBuilder
+    private func derivedSwitchFooter(_ id: String) -> some View {
+        let _ = derivedSwitchRevision
+        VStack(alignment: .leading, spacing: 6) {
+            if !DerivedSettings.isEnabled() {
+                Text("Derived metrics are off in Settings › Derived metrics.")
+            } else if !DerivedSettings.isEnabled(id) {
+                Text("Off: Ayuvo does not calculate this metric and its estimates are deleted. Values from Apple Health still show.")
+                let dependents = DerivedCatalog.shared.dependents(of: id)
+                if !dependents.isEmpty {
+                    Text("Also affects: \(dependents.map { String(localized: String.LocalizationValue($0.title)) }.joined(separator: ", "))")
+                        .accessibilityIdentifier("metric.derived.dependents")
+                }
+            } else {
+                Text("Calculated on this iPhone from your Apple Health data. Never written back to Apple Health.")
+            }
+        }
+    }
+
+    /// Method, source, confidence and the catalog disclaimer.
+    private func derivedMethodSection(_ info: DerivedMetricInfo) -> some View {
+        let latestEstimate = model.derivedDays.last { !$0.isNative }
+        return Section {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(String(localized: String.LocalizationValue(info.method)))
+                    .font(.system(.subheadline, design: .rounded))
+                    .accessibilityIdentifier("metric.derived.method")
+                LabeledContent("Confidence", value: DerivedMetricFormat.confidenceText(latestEstimate?.quality))
+                    .font(.system(.subheadline, design: .rounded))
+                    .accessibilityIdentifier("metric.derived.confidence")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Source")
+                        .font(.system(.caption, design: .rounded, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                    Text(info.citation)
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityIdentifier("metric.derived.citation")
+            }
+            .padding(.vertical, 2)
+        } header: {
+            Text("How it's calculated")
+        } footer: {
+            Text(String(localized: String.LocalizationValue(DerivedCatalog.shared.disclaimer)))
+                .accessibilityIdentifier("metric.derived.disclaimer")
         }
     }
 

@@ -20,6 +20,19 @@ struct MetricChartFormat {
     let unit: String
     let text: (Double?) -> String
     let chartValue: (Double?) -> Double?
+    /// Y-axis tick text for an axis value; nil → plain numbers.
+    var axisLabel: ((Double) -> String)? = nil
+
+    /// A derived metric (docs/derived-metrics.md): catalog decimals and unit; clock metrics label the axis with times.
+    static func derived(_ info: DerivedMetricInfo) -> MetricChartFormat {
+        MetricChartFormat(
+            title: MetricCatalog.descriptor(for: .derived(info.id)).title,
+            unit: DerivedMetricFormat.unitLabel(info),
+            text: { DerivedMetricFormat.text($0, info: info) },
+            chartValue: { DerivedMetricFormat.chartValue($0, info: info) },
+            axisLabel: info.isClock ? { DerivedMetricFormat.clockText($0) } : nil
+        )
+    }
 
     static func app(_ metric: AppMetric) -> MetricChartFormat {
         MetricChartFormat(
@@ -182,7 +195,7 @@ struct MetricChart: View {
             .chartYScale(domain: ticks.min...ticks.max)
             .chartXScale(domain: series.interval.start...series.interval.end)
             .chartXAxis { ChartAxisStyle.xAxis(ChartAxisStyle.xMarks(range: series.range, interval: series.interval, calendar: calendar), range: series.range) }
-            .chartYAxis { ChartAxisStyle.yAxis(ticks.ticks) }
+            .chartYAxis { ChartAxisStyle.yAxis(ticks.ticks, label: format.axisLabel ?? ChartAxisStyle.numberText) }
             .chartOverlay { proxy in
                 ChartScrubOverlay(proxy: proxy, points: plotted, date: { ChartAxisStyle.mid($0) }, selected: $selected, onTap: onTap, persistent: true) { point in
                     ChartCallout(value: format.text(point.value), caption: ChartAxisStyle.bucketTitle(point, range: series.range))

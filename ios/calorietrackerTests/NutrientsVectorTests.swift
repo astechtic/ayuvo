@@ -7,7 +7,7 @@ import Testing
 struct NutrientsVectorTests {
     nonisolated static let vectorFiles = [
         "reference_lines", "default_goal", "iu_conversion", "supplement_entries", "day_totals",
-        "logged_day_average", "label_output",
+        "logged_day_average", "label_output", "interval_days", "spread_supplements",
     ]
 
     static var vectorsDirectory: URL {

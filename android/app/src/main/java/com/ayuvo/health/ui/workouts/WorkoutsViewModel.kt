@@ -62,7 +62,15 @@ data class WorkoutDiaryUiState(
     val weightUnit: WorkoutWeightUnit = WorkoutWeightUnit.LBS,
     val visualGender: Gender = Gender.MALE,
     val isCalculatingBurn: Boolean = false,
-    val notice: String? = null
+    val notice: String? = null,
+    /** Strength session started with Start session (any day); survives process death. */
+    val activeSession: com.ayuvo.health.models.ActiveStrengthSession? = null,
+    /** The selected day's calculated session when it has a real interval (Finish or a confirmed window). */
+    val sessionInterval: Pair<java.time.Instant, java.time.Instant>? = null,
+    /** Recorded GPS workouts of the selected day, newest first. */
+    val gpsSessions: List<com.ayuvo.health.models.WorkoutSession> = emptyList(),
+    /** Heart-rate windows suggested when Calculate is tapped without a session (docs/workouts-gps.md §3). */
+    val windowProposal: WorkoutWindowProposal? = null
 ) {
     val performedSetCount: Int
         get() = exercises.sumOf { exercise -> exercise.sets.count { it.reps.isNotBlank() } }
@@ -70,6 +78,11 @@ data class WorkoutDiaryUiState(
     val repCount: Int
         get() = exercises.sumOf { exercise -> exercise.sets.sumOf { it.reps.toIntOrNull() ?: 0 } }
 }
+
+data class WorkoutWindowProposal(
+    val date: LocalDate,
+    val windows: List<com.ayuvo.health.data.workout.HrWindow>
+)
 
 /**
  * Holds the Workouts library filter/sort/search state, mirroring the iOS browser.
@@ -261,7 +274,9 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
         }
         repositoryJob = viewModelScope.launch {
             repository.state.collectLatest { persisted ->
+                val previousSession = latestPersistedState.activeStrengthSession
                 latestPersistedState = persisted
+                syncStrengthNotification(previousSession, persisted.activeStrengthSession)
                 rebuildDiaryState()
             }
         }
@@ -421,17 +436,108 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             // Keep the state readable instead of flashing between two frames.
             delay(450)
-            val saved = repository.calculateBurn(
-                date = date,
-                bodyWeightKg = bodyWeightKg,
-                weightUnit = workoutWeightUnit
-            )
+            // docs/workouts-gps.md §3: without a session interval, suggest one from the day's heart rate and let the
+            // person confirm or edit it. Without heart rate the daily snapshot is saved as before.
+            val needsWindow = diaryUiState.sessionInterval == null && diaryUiState.activeSession?.dateKey != WorkoutDate.key(date)
+            val windows = if (needsWindow) {
+                runCatching { withContext(Dispatchers.IO) { appContainer()?.workoutHeartRate?.windows(date) } }.getOrNull().orEmpty()
+            } else emptyList()
+            if (windows.isNotEmpty()) {
+                diaryUiState = diaryUiState.copy(isCalculatingBurn = false, windowProposal = WorkoutWindowProposal(date, windows))
+                return@launch
+            }
+            saveBurn(repository, date, null)
+        }
+    }
+
+    /** Uses the confirmed (possibly edited) window as the session interval. */
+    fun confirmWindow(startMs: Long, endMs: Long, edited: Boolean) {
+        val proposal = diaryUiState.windowProposal ?: return
+        val repository = workoutRepository ?: return
+        diaryUiState = diaryUiState.copy(windowProposal = null, isCalculatingBurn = true)
+        viewModelScope.launch {
+            val interval = if (endMs > startMs) {
+                val stats = runCatching { withContext(Dispatchers.IO) { appContainer()?.workoutHeartRate?.stats(startMs, endMs) } }.getOrNull()
+                com.ayuvo.health.data.WorkoutInterval(
+                    java.time.Instant.ofEpochMilli(startMs),
+                    java.time.Instant.ofEpochMilli(endMs),
+                    if (edited) com.ayuvo.health.data.WorkoutInterval.SOURCE_MANUAL else com.ayuvo.health.data.WorkoutInterval.SOURCE_HR_WINDOW,
+                    stats
+                )
+            } else null
+            saveBurn(repository, proposal.date, interval)
+        }
+    }
+
+    /** Declines the suggested window: the daily snapshot is saved as before. */
+    fun skipWindow() {
+        val proposal = diaryUiState.windowProposal ?: return
+        val repository = workoutRepository ?: return
+        diaryUiState = diaryUiState.copy(windowProposal = null, isCalculatingBurn = true)
+        viewModelScope.launch { saveBurn(repository, proposal.date, null) }
+    }
+
+    fun dismissWindow() {
+        diaryUiState = diaryUiState.copy(windowProposal = null, isCalculatingBurn = false)
+    }
+
+    private suspend fun saveBurn(repository: WorkoutRepository, date: LocalDate, interval: com.ayuvo.health.data.WorkoutInterval?) {
+        val saved = repository.calculateBurn(
+            dateKey = WorkoutDate.key(date),
+            bodyWeightKg = bodyWeightKg,
+            weightUnit = workoutWeightUnit,
+            interval = interval
+        )
+        diaryUiState = diaryUiState.copy(
+            isCalculatingBurn = false,
+            notice = if (saved == null) {
+                "Stop and save an exercise timer, or enter reps for at least one set, before calculating workout calories."
+            } else null
+        )
+    }
+
+    // -- Strength sessions (docs/workouts-gps.md §1) ------------------------------------------------
+
+    fun startSession() {
+        val repository = workoutRepository ?: return
+        val date = diaryUiState.selectedDate
+        viewModelScope.launch { repository.startStrengthSession(WorkoutDate.key(date)) }
+    }
+
+    fun finishSession() {
+        val container = appContainer() ?: return
+        if (diaryUiState.isCalculatingBurn) return
+        diaryUiState = diaryUiState.copy(isCalculatingBurn = true)
+        viewModelScope.launch {
+            val saved = runCatching {
+                com.ayuvo.health.services.workout.WorkoutActionReceiver.finishStrength(getApplication(), container)
+            }.getOrNull()
             diaryUiState = diaryUiState.copy(
                 isCalculatingBurn = false,
-                notice = if (saved == null) {
-                    "Stop and save an exercise timer, or enter reps for at least one set, before calculating workout calories."
-                } else null
+                notice = if (saved == null) "Log at least one set with reps (or save an exercise timer), then tap Finish." else null
             )
+        }
+    }
+
+    fun cancelSession() {
+        viewModelScope.launch { workoutRepository?.cancelStrengthSession() }
+    }
+
+    fun deleteSession(id: UUID) {
+        viewModelScope.launch { workoutRepository?.deleteSession(id) }
+    }
+
+    private fun appContainer(): com.ayuvo.health.AppContainer? =
+        (getApplication<Application>() as? com.ayuvo.health.AyuvoApp)?.container
+
+    private fun syncStrengthNotification(
+        previous: com.ayuvo.health.models.ActiveStrengthSession?,
+        current: com.ayuvo.health.models.ActiveStrengthSession?
+    ) {
+        val context = getApplication<Application>()
+        when {
+            current == null && previous != null -> com.ayuvo.health.services.workout.WorkoutNotifications.cancelStrength(context)
+            current != null && current != previous -> com.ayuvo.health.services.workout.WorkoutNotifications.showStrength(context, current)
         }
     }
 
@@ -464,11 +570,21 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
         val date = diaryUiState.selectedDate
         val dateKey = WorkoutDate.key(date)
         val exercises = latestPersistedState.dayPlans[dateKey]?.exercises.orEmpty()
-        val burn = latestPersistedState.completedSessions
+        val burnSession = latestPersistedState.completedSessions
             .asSequence()
             .filter { it.diaryDateKey == dateKey && it.caloriesBurned != null }
             .maxWithOrNull(compareBy({ it.healthSyncVersion ?: 0 }, { it.completedAt }))
-            ?.caloriesBurned
+        val gpsSessions = latestPersistedState.completedSessions
+            .filter { it.diaryDateKey == dateKey && it.isGps }
+            .sortedByDescending { it.startedAt }
+        // The day's burn shows the calculated strength snapshot plus every recorded GPS workout.
+        val gpsKcal = gpsSessions.sumOf { it.gps?.activeKcal ?: 0 }
+        val strengthKcal = burnSession?.caloriesBurned
+        val burn = when {
+            strengthKcal != null -> strengthKcal + gpsKcal
+            gpsKcal > 0 -> gpsKcal
+            else -> null
+        }
         val counts = latestPersistedState.dayPlans.mapNotNull { (key, plan) ->
             WorkoutDate.parse(key)?.let { it to plan.exercises.size }
         }.toMap()
@@ -505,6 +621,9 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
             exercises = exercises,
             workoutCounts = counts,
             caloriesBurned = burn,
+            activeSession = latestPersistedState.activeStrengthSession,
+            sessionInterval = burnSession?.takeIf { it.hasRealInterval }?.let { it.startedAt to it.completedAt },
+            gpsSessions = gpsSessions,
             savedExerciseIds = latestPersistedState.savedExerciseIds,
             preferences = preferences,
             splitGroups = splitGroups,

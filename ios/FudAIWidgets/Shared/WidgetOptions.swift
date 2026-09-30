@@ -185,11 +185,16 @@ nonisolated enum WidgetMetricOption: String, CaseIterable, Codable, Sendable {
     var url: URL { URL(string: "ayuvo://metric/\(rawValue)")! }
 }
 
-/// Where a widget deep link lands (`ayuvo://log/<id>`, `ayuvo://metric/<key>`, `ayuvo://summary`).
+/// Where a widget deep link lands (`ayuvo://log/<id>`, `ayuvo://metric/<key>`, `ayuvo://summary`,
+/// `ayuvo://workout/start?sport=<id>`, `ayuvo://workout/open`).
 nonisolated enum WidgetDeepLink: Equatable, Sendable {
     case log(QuickLogAction)
     case metric(String)
     case summary
+    /// Workout widget: start this workout (or open the one already running).
+    case startWorkout(WorkoutWidgetSport)
+    /// Workout widget: open the running workout, else the workout log.
+    case openWorkout
 
     static let summaryURL = URL(string: "ayuvo://summary")!
 
@@ -205,6 +210,15 @@ nonisolated enum WidgetDeepLink: Equatable, Sendable {
             self = .metric(value)
         case "summary":
             self = .summary
+        case "workout":
+            if value == "open" {
+                self = .openWorkout
+                return
+            }
+            let sport = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "sport" })?.value
+            guard value == "start", let sport, let parsed = WorkoutWidgetSport(rawValue: sport) else { return nil }
+            self = .startWorkout(parsed)
         default:
             return nil
         }
@@ -216,12 +230,19 @@ nonisolated enum WidgetDeepLink: Equatable, Sendable {
         case .log(let action): "log:\(action.rawValue)"
         case .metric(let key): "metric:\(key)"
         case .summary: "summary"
+        case .startWorkout(let sport): "workout:start:\(sport.rawValue)"
+        case .openWorkout: "workout:open"
         }
     }
 
     init?(storageValue: String) {
         if storageValue == "summary" {
             self = .summary
+        } else if storageValue == "workout:open" {
+            self = .openWorkout
+        } else if storageValue.hasPrefix("workout:start:"),
+                  let sport = WorkoutWidgetSport(rawValue: String(storageValue.dropFirst("workout:start:".count))) {
+            self = .startWorkout(sport)
         } else if storageValue.hasPrefix("log:"), let action = QuickLogAction(rawValue: String(storageValue.dropFirst(4))) {
             self = .log(action)
         } else if storageValue.hasPrefix("metric:"), storageValue.count > 7 {

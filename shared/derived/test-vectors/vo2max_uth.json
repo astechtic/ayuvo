@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "confidence": "low",
+        "vo2max": 51.6
+      },
+      "input": {
+        "hr_max": 191.2,
+        "hr_max_method": "tanaka",
+        "rhr": 56.7
+      },
+      "name": "low_confidence_tanaka"
+    },
+    {
+      "expected": {
+        "confidence": "medium",
+        "vo2max": 58.0
+      },
+      "input": {
+        "hr_max": 182.0,
+        "hr_max_method": "observed",
+        "rhr": 48.0
+      },
+      "name": "medium_confidence_observed"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "vo2max": null
+      },
+      "input": {
+        "hr_max": 190.0,
+        "hr_max_method": "tanaka",
+        "rhr": null
+      },
+      "name": "missing_rhr"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "vo2max_uth",
+  "version": 1
+}

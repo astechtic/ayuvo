@@ -1,0 +1,34 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "vo2max": 42.4
+      },
+      "input": {
+        "distance_m": 2400.0
+      },
+      "name": "typical"
+    },
+    {
+      "expected": {
+        "vo2max": null
+      },
+      "input": {
+        "distance_m": 400.0
+      },
+      "name": "too_short"
+    },
+    {
+      "expected": {
+        "vo2max": null
+      },
+      "input": {
+        "distance_m": null
+      },
+      "name": "missing"
+    }
+  ],
+  "format": "ayuvo-workout-vectors",
+  "function": "cooper",
+  "version": 1
+}

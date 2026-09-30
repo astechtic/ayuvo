@@ -81,7 +81,7 @@ class DiaryExporterTest {
         val date = entry.timestamp.atZone(ZoneId.systemDefault()).toLocalDate()
         val (_, json) = requireNotNull(build(entry, date, DiaryFormat.JSON))
         val root = JsonParser.parseString(json).asJsonObject
-        assertEquals("1.5", root["export"].asJsonObject["format_version"].asString)
+        assertEquals("1.6", root["export"].asJsonObject["format_version"].asString)
         val item = root["days"].asJsonArray[0].asJsonObject["meals"].asJsonArray[0]
             .asJsonObject["items"].asJsonArray[0].asJsonObject
 
@@ -92,6 +92,26 @@ class DiaryExporterTest {
         assertEquals(18.8, item["vitamin_b12_mcg"].asDouble, 0.0001)
         assertEquals(5.0, item["supplemental_nutrients_g"].asJsonObject["creatine"].asDouble, 0.0001)
         assertEquals("Rice", item["ingredients"].asJsonArray[0].asJsonObject["name"].asString)
+        // Format 1.6: eaten_at defaults to the log time.
+        assertEquals(entry.timestamp.epochSecond, java.time.OffsetDateTime.parse(item["eaten_at"].asString).toEpochSecond())
+    }
+
+    @Test
+    fun eatenAtRoundTripsAndOlderFilesStillImport() {
+        val date = java.time.LocalDate.of(2026, 9, 20)
+        val zone = ZoneId.systemDefault()
+        val logged = date.atTime(22, 30).atZone(zone).toInstant()
+        val eaten = date.atTime(19, 15).atZone(zone).toInstant()
+        val food = FoodEntry(name = "Dal", calories = 300, protein = 12.0, carbs = 40.0, fat = 8.0,
+            timestamp = logged, source = com.ayuvo.health.models.FoodSource.MANUAL, eatenAt = eaten)
+        val json = requireNotNull(DiaryExporter.build(entries = listOf(food), start = date, end = date,
+            format = DiaryFormat.JSON, profile = null, mealDisplay = { it.name })).second
+        assertEquals(eaten, DiaryImporter.parse(json).entries.single().eatenAt)
+        val legacy = json.replace(Regex(",\\s*\"eaten_at\"\\s*:\\s*\"[^\"]*\""), "").replace("\"1.6\"", "\"1.5\"")
+        assertTrue(!legacy.contains("eaten_at"))
+        val old = DiaryImporter.parse(legacy).entries.single()
+        assertEquals(null, old.eatenAt)
+        assertEquals(old.timestamp, old.effectiveEatenAt)
     }
 
     @Test

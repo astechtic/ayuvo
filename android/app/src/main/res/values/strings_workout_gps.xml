@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GPS outdoor workouts and strength sessions (docs/workouts-gps.md). -->
+<resources>
+    <!-- Notification channel and actions -->
+    <string name="workout_live_channel">Workout in progress</string>
+    <string name="workout_live_channel_description">Live controls and numbers for a recording workout or strength session.</string>
+    <string name="workout_action_pause">Pause</string>
+    <string name="workout_action_resume">Resume</string>
+    <string name="workout_action_lap">Lap</string>
+    <string name="workout_action_end">End</string>
+    <string name="workout_action_finish">Finish</string>
+    <string name="workout_action_skip">Skip</string>
+    <string name="workout_live_paused">Paused</string>
+    <string name="workout_live_waiting_gps">Waiting for GPS…</string>
+    <string name="workout_live_saving">Saving workout…</string>
+    <string name="workout_live_recovery_title">Heart-rate recovery</string>
+    <string name="workout_live_recovery_text">Stay still for two minutes to measure recovery.</string>
+    <string name="workout_strength_live_title">Strength session</string>
+    <string name="workout_strength_live_text">Log your sets, then tap Finish.</string>
+    <string name="workout_strength_needs_sets">Log at least one set with reps, then tap Finish.</string>
+
+    <!-- Entry points -->
+    <string name="workout_gps_start_menu">Start GPS workout</string>
+    <string name="workout_gps_pick_title">GPS workout</string>
+    <string name="workout_gps_pick_subtitle">Records your route, pace, splits and elevation. Keep Ayuvo open or in the background while you move.</string>
+    <string name="workout_gps_cooper">Cooper 12-minute test</string>
+    <string name="workout_gps_cooper_detail">Cover as much distance as you can in 12 minutes. The workout ends by itself.</string>
+    <string name="workout_gps_start">Start</string>
+    <string name="workout_gps_in_progress">%1$s in progress</string>
+    <string name="workout_gps_open">Open</string>
+    <string name="workout_gps_unfinished_title">Unfinished workout</string>
+    <string name="workout_gps_unfinished_text">A %1$s recording stopped unexpectedly. Resume it, save it as it is, or discard it.</string>
+    <string name="workout_gps_resume">Resume</string>
+    <string name="workout_gps_save">Save</string>
+    <string name="workout_gps_discard">Discard</string>
+
+    <!-- Permissions -->
+    <string name="workout_location_rationale_title">Location for your route</string>
+    <string name="workout_location_rationale_text">Ayuvo uses precise location only while you record a workout, to measure distance, pace and your route. The route stays on this phone and, if you connected it, in Health Connect.</string>
+    <string name="workout_location_denied">Precise location is off for Ayuvo. Turn it on in Settings to record a GPS workout.</string>
+    <string name="workout_notifications_rationale_title">Live workout controls</string>
+    <string name="workout_notifications_rationale_text">Allow notifications to see time, distance and pace, and to pause, lap or end the workout from the notification and lock screen.</string>
+    <string name="workout_health_rationale_title">Save workouts to Health Connect</string>
+    <string name="workout_health_rationale_text">Allow Ayuvo to write exercise sessions, routes, distance and energy, and to read heart rate for zones, recovery and cardio fitness.</string>
+    <string name="workout_permission_continue">Continue</string>
+    <string name="workout_permission_not_now">Not now</string>
+    <string name="workout_open_settings">Open Settings</string>
+
+    <!-- Live screen -->
+    <string name="workout_live_time">Time</string>
+    <string name="workout_live_distance">Distance</string>
+    <string name="workout_live_pace">Pace</string>
+    <string name="workout_live_speed">Speed</string>
+    <string name="workout_live_avg_pace">Avg pace</string>
+    <string name="workout_live_heart_rate">Heart rate</string>
+    <string name="workout_live_elevation">Elevation gain</string>
+    <string name="workout_live_split">Current km</string>
+    <string name="workout_live_laps">Laps</string>
+    <string name="workout_live_gps_accuracy">GPS ±%1$s m</string>
+    <string name="workout_live_end_confirm_title">End workout?</string>
+    <string name="workout_live_end_confirm_text">The workout is saved to your diary and to Health Connect.</string>
+    <string name="workout_live_discard_confirm">Discard this workout?</string>
+    <string name="workout_live_minimize">Minimize</string>
+
+    <!-- Summary -->
+    <string name="workout_summary_splits">Splits</string>
+    <string name="workout_summary_laps">Laps</string>
+    <string name="workout_summary_elevation">Elevation</string>
+    <string name="workout_summary_gain_loss">+%1$s / −%2$s</string>
+    <string name="workout_summary_zones">Heart-rate zones</string>
+    <string name="workout_summary_zone_names">Below light|Light|Moderate|Vigorous|Near max</string>
+    <string name="workout_summary_moving">Moving time</string>
+    <string name="workout_summary_elapsed">Elapsed</string>
+    <string name="workout_summary_energy">Energy</string>
+    <string name="workout_summary_energy_keytel">From heart rate (Keytel 2005)</string>
+    <string name="workout_summary_energy_met">From pace (MET estimate)</string>
+    <string name="workout_summary_avg_hr">Avg heart rate</string>
+    <string name="workout_summary_max_hr">Max heart rate</string>
+    <string name="workout_summary_trimp">Training load (TRIMP)</string>
+    <string name="workout_summary_hrr1">Heart-rate recovery (1 min)</string>
+    <string name="workout_summary_hrr1_low">Below 12 bpm is lower than usual after exercise. If this repeats, consider asking a clinician.</string>
+    <string name="workout_summary_vo2max">Cardio fitness (VO₂max)</string>
+    <string name="workout_summary_cooper">Cooper test VO₂max</string>
+    <string name="workout_summary_no_vo2max">Needs heart rate, a resting heart rate and at least six steady minutes on flat ground.</string>
+    <string name="workout_summary_refresh_hr">Update heart rate</string>
+    <string name="workout_summary_delete">Delete workout</string>
+    <string name="workout_summary_delete_confirm">Delete this workout from Ayuvo and Health Connect?</string>
+    <string name="workout_summary_osm_attribution">© OpenStreetMap contributors</string>
+    <string name="workout_summary_no_route">No route was recorded.</string>
+    <string name="workout_summary_disclaimer">Estimated by Ayuvo from your GPS and heart-rate data using published formulas. It is not a clinical exercise test.</string>
+
+    <!-- Strength sessions -->
+    <string name="workout_session_start">Start session</string>
+    <string name="workout_session_finish">Finish</string>
+    <string name="workout_session_running">Session %1$s</string>
+    <string name="workout_session_cancel">Cancel session</string>
+    <string name="workout_session_times">%1$s – %2$s</string>
+    <string name="workout_window_title">When did you train?</string>
+    <string name="workout_window_text">Your heart rate suggests these workout times. Confirm or adjust them so energy, zones and Health Connect use the real session.</string>
+    <string name="workout_window_start">Start</string>
+    <string name="workout_window_end">End</string>
+    <string name="workout_window_use">Use these times</string>
+    <string name="workout_window_skip">No times</string>
+    <string name="workout_window_option">%1$s – %2$s · avg %3$s bpm</string>
+</resources>

@@ -290,6 +290,8 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
                 sample = samples.maxByOrNull { it.tMs }
                 unit = facts.unit
             }
+            // Derived metrics are not in the action catalog's metric list (docs/actions.md).
+            is MetricKey.Derived -> throw ActionException(ActionErrorCode.NOT_FOUND, "metric")
         }
         val s = sample ?: throw ActionException(ActionErrorCode.NOT_FOUND)
         return ActionResult(a.spec.id, linkedMapOf("value" to s.value, "unit" to unit, "t_ms" to s.tMs))
@@ -314,6 +316,7 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
                 env.healthSamples(key.typeId, fromMs, toMs) to facts
             }
             is MetricKey.Nutrient -> nutrientData(key.key)
+            is MetricKey.Derived -> throw ActionException(ActionErrorCode.NOT_FOUND, "metric")
         }
 
     /** `nutrient:<key>`: food values plus taken supplement amounts (docs/nutrients.md §5), summed. */

@@ -1,5 +1,6 @@
 package com.ayuvo.health.data
 
+import com.ayuvo.health.models.ActiveStrengthSession
 import com.ayuvo.health.models.CompletedExercise
 import com.ayuvo.health.models.CompletedSet
 import com.ayuvo.health.models.ExerciseLiftDay
@@ -19,12 +20,14 @@ import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.models.WorkoutTabMode
 import com.ayuvo.health.models.WorkoutWeightUnit
 import com.ayuvo.health.models.WorkoutIntensity
+import com.ayuvo.health.models.WorkoutHeartRateStats
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -45,6 +48,34 @@ interface WorkoutHealthSync {
     suspend fun upsertBurn(session: WorkoutSession): Boolean
     suspend fun deleteBurn(sessionId: UUID, diaryDateKey: String): Boolean
     suspend fun readOwnedBurns(): List<WorkoutSession>? = null
+
+    /**
+     * Writes a recorded GPS workout (docs/workouts-gps.md): `ExerciseSessionRecord` with laps, pauses and route,
+     * `DistanceRecord` and `ActiveCaloriesBurnedRecord`, all under the session's stable client ids.
+     */
+    suspend fun upsertGpsWorkout(session: WorkoutSession): Boolean = false
+
+    /** Best-effort removal of a GPS workout's Health records and its stored route. */
+    suspend fun deleteGpsWorkout(session: WorkoutSession): Boolean = false
+}
+
+/**
+ * A real workout interval: Start/Finish session, or a heart-rate window the person confirmed (and possibly edited).
+ * [heartRate] holds the `hr_workout` statistics for exactly this interval.
+ */
+data class WorkoutInterval(
+    val start: Instant,
+    val end: Instant,
+    val source: String,
+    val heartRate: WorkoutHeartRateStats? = null
+) {
+    init { require(end.isAfter(start)) { "interval must have a positive length" } }
+
+    companion object {
+        const val SOURCE_SESSION = "session"
+        const val SOURCE_HR_WINDOW = "hr_window"
+        const val SOURCE_MANUAL = "manual"
+    }
 }
 
 /** Persistent, local-first workout diary matching the final iOS StrengthWorkoutStore behavior. */
@@ -69,6 +100,11 @@ class WorkoutRepository(
         .map { sessions -> sessions.filter { it.caloriesBurned != null } }
         .distinctUntilChanged()
     val savedExerciseIds: Flow<Set<String>> = state.map { it.savedExerciseIds }.distinctUntilChanged()
+    val activeStrengthSession: Flow<ActiveStrengthSession?> = state.map { it.activeStrengthSession }.distinctUntilChanged()
+    /** Recorded GPS workouts, newest first. */
+    val gpsSessions: Flow<List<WorkoutSession>> = completedSessions
+        .map { sessions -> sessions.filter { it.isGps } }
+        .distinctUntilChanged()
 
     fun plan(date: LocalDate): Flow<WorkoutDayPlan> = plan(WorkoutDate.key(date))
 
@@ -431,8 +467,117 @@ class WorkoutRepository(
         dateKey: String,
         bodyWeightKg: Double,
         weightUnit: WorkoutWeightUnit,
-        calculatedAt: Instant = Instant.now()
-    ): WorkoutSession? = saveCalculatedWorkout(dateKey, null, bodyWeightKg, weightUnit, calculatedAt)
+        calculatedAt: Instant = Instant.now(),
+        interval: WorkoutInterval? = null
+    ): WorkoutSession? = saveCalculatedWorkout(dateKey, null, bodyWeightKg, weightUnit, calculatedAt, interval)
+
+    // -- Strength sessions with a real interval (docs/workouts-gps.md §1) ----------------------------
+
+    /** Starts (or returns the already running) strength session; the start survives process death. */
+    suspend fun startStrengthSession(dateKey: String, at: Instant = Instant.now()): ActiveStrengthSession {
+        val key = WorkoutDate.requireKey(dateKey)
+        var result: ActiveStrengthSession? = null
+        updateState { current ->
+            val running = current.activeStrengthSession
+            if (running != null) {
+                result = running
+                current
+            } else {
+                ActiveStrengthSession(key, at).let { started ->
+                    result = started
+                    current.copy(activeStrengthSession = started)
+                }
+            }
+        }
+        return result ?: ActiveStrengthSession(key, at)
+    }
+
+    suspend fun activeStrengthSessionNow(): ActiveStrengthSession? = snapshot().activeStrengthSession
+
+    /** Discards the running session's start; logged sets stay in the plan. */
+    suspend fun cancelStrengthSession() {
+        updateState { it.copy(activeStrengthSession = null) }
+    }
+
+    /**
+     * Finishes the running session over its real interval. [heartRate] computes `hr_workout` statistics for the
+     * interval (null without heart rate). Returns null — and keeps the session running — when nothing calculable
+     * was logged yet, or when no session is running.
+     */
+    suspend fun finishStrengthSession(
+        bodyWeightKg: Double,
+        weightUnit: WorkoutWeightUnit,
+        at: Instant = Instant.now(),
+        heartRate: suspend (Instant, Instant) -> WorkoutHeartRateStats? = { _, _ -> null }
+    ): WorkoutSession? {
+        val active = snapshot().activeStrengthSession ?: return null
+        val end = if (at.isAfter(active.startedAt.plusSeconds(MIN_SESSION_SECONDS))) at else active.startedAt.plusSeconds(MIN_SESSION_SECONDS)
+        val stats = runCatching { heartRate(active.startedAt, end) }.getOrNull()
+        return saveCalculatedWorkout(
+            dateKey = active.dateKey,
+            suppliedCalories = null,
+            bodyWeightKg = bodyWeightKg,
+            weightUnit = weightUnit,
+            calculatedAt = end,
+            interval = WorkoutInterval(active.startedAt, end, WorkoutInterval.SOURCE_SESSION, stats),
+            endsActiveSession = active
+        )
+    }
+
+    // -- Recorded GPS workouts ---------------------------------------------------------------------
+
+    /** Saves (or replaces) a recorded GPS workout and writes it to Health Connect. */
+    suspend fun saveGpsSession(session: WorkoutSession) {
+        require(session.isGps) { "not a GPS session" }
+        updateState { current ->
+            current.copy(completedSessions = current.completedSessions.filterNot { it.id == session.id } + session)
+        }
+        val adapter = health ?: return
+        healthMutex.withLock { performGpsHealthUpsertLocked(adapter, session.id) }
+    }
+
+    /**
+     * Updates a GPS workout (late heart rate, recovery). A changed energy value bumps the Health version so the
+     * Health Connect records are rewritten.
+     */
+    suspend fun updateGpsSession(sessionId: UUID, transform: (WorkoutSession) -> WorkoutSession): WorkoutSession? {
+        var updated: WorkoutSession? = null
+        updateState { current ->
+            val index = current.completedSessions.indexOfFirst { it.id == sessionId && it.isGps }
+            if (index < 0) return@updateState current
+            val before = current.completedSessions[index]
+            var after = transform(before)
+            val beforeGps = before.gps
+            val afterGps = after.gps
+            if (beforeGps != null && afterGps != null && afterGps.activeKcal != beforeGps.activeKcal) {
+                after = after.copy(gps = afterGps.copy(healthSynced = false, healthSyncVersion = beforeGps.healthSyncVersion + 1))
+            }
+            updated = after
+            current.copy(completedSessions = current.completedSessions.toMutableList().also { it[index] = after })
+        }
+        val adapter = health
+        if (adapter != null && updated?.gps?.healthSynced == false) {
+            healthMutex.withLock { performGpsHealthUpsertLocked(adapter, sessionId) }
+        }
+        return updated
+    }
+
+    private suspend fun performGpsHealthUpsertLocked(adapter: WorkoutHealthSync, sessionId: UUID) {
+        val latest = snapshot().completedSessions.firstOrNull { it.id == sessionId && it.isGps } ?: return
+        val gps = latest.gps ?: return
+        if (gps.healthSynced) return
+        if (!adapter.upsertGpsWorkout(latest)) return
+        updateState { current ->
+            val index = current.completedSessions.indexOfFirst { it.id == sessionId }
+            if (index < 0) return@updateState current
+            val still = current.completedSessions[index]
+            val stillGps = still.gps
+            if (stillGps == null || stillGps.healthSyncVersion != gps.healthSyncVersion) current
+            else current.copy(completedSessions = current.completedSessions.toMutableList().also {
+                it[index] = still.copy(gps = stillGps.copy(healthSynced = true))
+            })
+        }
+    }
 
     suspend fun upsertCalculatedWorkout(
         date: LocalDate,
@@ -459,7 +604,9 @@ class WorkoutRepository(
         suppliedCalories: Int?,
         bodyWeightKg: Double?,
         weightUnit: WorkoutWeightUnit,
-        calculatedAt: Instant
+        calculatedAt: Instant,
+        interval: WorkoutInterval? = null,
+        endsActiveSession: ActiveStrengthSession? = null
     ): WorkoutSession? {
         val key = WorkoutDate.requireKey(dateKey)
         var savedSession: WorkoutSession? = null
@@ -470,28 +617,38 @@ class WorkoutRepository(
             val planned = current.dayPlans[key]?.exercises.orEmpty()
             val logs = completedLogs(planned, weightUnit, current.preferences)
             if (planned.none { it.hasCalculableWork }) return@withLock
+            if (endsActiveSession != null && current.activeStrengthSession != endsActiveSession) return@withLock
+            val existingBurns = current.completedSessions
+                .filter { it.diaryDateKey == key && it.caloriesBurned != null }
+                .sortedWith(sessionDescendingComparator)
+            val existing = existingBurns.firstOrNull()
+            // A recalculation keeps the interval an earlier Finish or confirmed window established.
+            val window = interval ?: existing?.takeIf { it.hasRealInterval }?.let {
+                WorkoutInterval(it.startedAt, it.completedAt, it.intervalSource ?: WorkoutInterval.SOURCE_SESSION, it.heartRate)
+            }
+            // Keytel (only present at ≥70% heart-rate coverage) replaces the MET estimate (docs/workouts-gps.md §3).
+            val keytel = window?.heartRate?.keytelKcal?.takeIf { it.isFinite() }?.let { kotlin.math.round(it).toInt() }?.takeIf { it in 1..5_000 }
             // Derive burn and completed logs from the same plan while edits are excluded.
-            val caloriesBurned = suppliedCalories ?: WorkoutBurnEstimator.estimate(
+            val caloriesBurned = suppliedCalories ?: keytel ?: WorkoutBurnEstimator.estimate(
                 exercises = planned,
                 bodyWeightKg = bodyWeightKg ?: 70.0,
                 defaultWeightUnit = weightUnit,
                 defaultRpeScale = current.preferences.rpeScale
             )?.calories ?: return@withLock
 
-            val existingBurns = current.completedSessions
-                .filter { it.diaryDateKey == key && it.caloriesBurned != null }
-                .sortedWith(sessionDescendingComparator)
-            val existing = existingBurns.firstOrNull()
             val session = WorkoutSession(
                 id = existing?.id ?: UUID.randomUUID(),
                 diaryDateKey = key,
-                startedAt = calculatedAt,
-                completedAt = calculatedAt,
-                // Exercise timers may overlap; the daily snapshot has no session interval.
-                durationSeconds = 0,
+                startedAt = window?.start ?: calculatedAt,
+                completedAt = window?.end ?: calculatedAt,
+                // Without a real interval, exercise timers may overlap: the daily snapshot is a point in time.
+                durationSeconds = window?.let { Duration.between(it.start, it.end).seconds.coerceIn(0, Int.MAX_VALUE.toLong()).toInt() } ?: 0,
                 exercises = logs,
                 caloriesBurned = caloriesBurned.coerceIn(1, 5_000),
-                healthSyncVersion = (existing?.healthSyncVersion ?: 0) + 1
+                healthSyncVersion = (existing?.healthSyncVersion ?: 0) + 1,
+                realInterval = window != null,
+                intervalSource = window?.source,
+                heartRate = window?.heartRate
             )
             duplicateIds = existingBurns.drop(1)
                 .filter { it.id != session.id }
@@ -516,7 +673,8 @@ class WorkoutRepository(
                     completedSessions = sessions,
                     healthDeletionTombstones = tombstones,
                     pendingHealthDeleteIds = pendingDeletes,
-                    pendingHealthUpsertIds = pending
+                    pendingHealthUpsertIds = pending,
+                    activeStrengthSession = if (endsActiveSession != null) null else current.activeStrengthSession
                 )
             )
             savedSession = session
@@ -529,9 +687,11 @@ class WorkoutRepository(
 
     suspend fun deleteSession(sessionId: UUID) {
         var deletedBurn: Pair<UUID, String>? = null
+        var deletedGps: WorkoutSession? = null
         stateMutex.withLock {
             val current = store.workoutState.first().sanitized()
             val session = current.completedSessions.firstOrNull { it.id == sessionId } ?: return@withLock
+            if (session.isGps) deletedGps = session
             val tombstones = current.healthDeletionTombstones.toMutableMap()
             val pendingDeletes = current.pendingHealthDeleteIds.toMutableSet()
             val pending = current.pendingHealthUpsertIds.toMutableSet()
@@ -551,6 +711,7 @@ class WorkoutRepository(
             )
         }
         deletedBurn?.let { performHealthDelete(it.first, it.second) }
+        deletedGps?.let { gps -> health?.let { adapter -> runCatching { adapter.deleteGpsWorkout(gps) } } }
     }
 
     /**
@@ -686,6 +847,10 @@ class WorkoutRepository(
             runCatching { UUID.fromString(it) }.getOrNull()
         }
         pendingUpserts.forEach { performHealthUpsertLocked(adapter, it) }
+
+        snapshot().completedSessions
+            .filter { it.isGps && it.gps?.healthSynced == false }
+            .forEach { performGpsHealthUpsertLocked(adapter, it.id) }
     }
 
     /** Local-only wipe, matching iOS Delete Everything semantics. */
@@ -900,6 +1065,9 @@ class WorkoutRepository(
     }
 
     companion object {
+        /** A finished session is never shorter than a minute (Health Connect needs a positive interval). */
+        private const val MIN_SESSION_SECONDS = 60L
+
         private val sessionDescendingComparator =
             compareByDescending<WorkoutSession> { it.diaryDateKey }
                 .thenByDescending { it.completedAt }

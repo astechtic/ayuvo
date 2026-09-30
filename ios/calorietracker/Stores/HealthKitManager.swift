@@ -137,7 +137,10 @@ class HealthKitManager {
     /// (`HealthMetricRegistry.readObjectTypes()`, plus blood type / skin type /
     /// wheelchair use / move mode, activity summaries and state of mind) so no
     /// granted type sits empty for a release. The share set is unchanged.
-    private let typesVersion = 10
+    /// v11: workouts, workout routes and walking/running + cycling distance joined
+    /// the share set: strength sessions with a real start/end and GPS workouts are
+    /// saved as HKWorkouts (with their route) instead of a 12:00 energy sample.
+    private let typesVersion = 11
     private let typesVersionKey = "healthKitTypesVersion"
 
     /// Active-energy samples written for the workout diary are deliberately
@@ -209,6 +212,10 @@ class HealthKitManager {
             HKQuantityType(.height),
             HKQuantityType(.bodyFatPercentage),
             HKQuantityType(.activeEnergyBurned),
+            HKQuantityType(.distanceWalkingRunning),
+            HKQuantityType(.distanceCycling),
+            HKObjectType.workoutType(),
+            HKSeriesType.workoutRoute(),
         ]
         types.formUnion(dietaryShareTypes)
         return types
@@ -462,13 +469,16 @@ class HealthKitManager {
                     let calories = Int(caloriesValue.rounded())
                     guard calories > 0 else { continue }
 
+                    // A sample spanning an interval came from a workout with a real
+                    // start/end; a legacy 12:00 point sample restores as before.
+                    let span = sample.endDate.timeIntervalSince(sample.startDate)
                     let session = StrengthWorkoutSession(
                         id: sessionID,
                         diaryDate: diaryDate,
                         diaryDateKey: dateKey,
                         startedAt: sample.startDate,
                         completedAt: sample.endDate,
-                        durationSeconds: 0,
+                        durationSeconds: span >= 1 ? Int(span.rounded()) : 0,
                         exercises: [],
                         caloriesBurned: calories,
                         healthSyncVersion: syncVersionNumber.intValue
@@ -615,6 +625,40 @@ class HealthKitManager {
         // a replacement both contributing to Health's cumulative energy total.
         guard await deleteWorkoutBurnSamples(sessionID: session.id) else { return }
 
+        let syncVersionValue = max(
+            defaultWorkoutBurnSyncVersion,
+            session.healthSyncVersion ?? defaultWorkoutBurnSyncVersion
+        )
+        // Sessions with a real start/end are saved as an HKWorkout over that
+        // interval. Without workout write permission (a grant from before v11)
+        // they fall back to the legacy point sample below.
+        if session.hasRealInterval, session.outdoor == nil, WorkoutHealthWriter.canSaveWorkouts {
+            let energyMetadata: [String: Any] = [
+                workoutBurnSessionIDKey: session.id.uuidString,
+                workoutBurnDateKey: session.stableDiaryDateKey,
+                workoutBurnSyncVersionKey: syncVersionValue,
+                HKMetadataKeyWasUserEntered: true,
+            ]
+            let workoutMetadata: [String: Any] = [
+                workoutBurnSessionIDKey: session.id.uuidString,
+                workoutBurnDateKey: session.stableDiaryDateKey,
+                workoutBurnSyncVersionKey: syncVersionValue,
+                HKMetadataKeySyncIdentifier: "\(workoutBurnSyncIdentifierPrefix).\(session.id.uuidString)",
+                HKMetadataKeySyncVersion: syncVersionValue,
+                HKMetadataKeyIndoorWorkout: true,
+            ]
+            _ = await WorkoutHealthWriter.save(.init(
+                activity: .traditionalStrengthTraining,
+                start: session.startedAt,
+                end: session.completedAt,
+                energyKcal: Double(calories),
+                metadata: workoutMetadata,
+                energyMetadata: energyMetadata,
+                indoor: true
+            ))
+            return
+        }
+
         let diaryDate = session.calendarDiaryDate
         let sampleDate = Calendar.current.date(
             bySettingHour: 12,
@@ -661,11 +705,20 @@ class HealthKitManager {
         let predicate = NSCompoundPredicate(
             andPredicateWithSubpredicates: [idPredicate, ownSourcePredicate]
         )
-        return await withCheckedContinuation { continuation in
+        let samplesDeleted = await withCheckedContinuation { continuation in
             healthStore.deleteObjects(of: HKQuantityType(.activeEnergyBurned), predicate: predicate) { success, _, _ in
                 continuation.resume(returning: success)
             }
         }
+        // Real-interval sessions are HKWorkouts tagged with the same id; old
+        // point samples are removed above, so a recalculation migrates them.
+        guard healthStore.authorizationStatus(for: HKObjectType.workoutType()) == .sharingAuthorized else {
+            return samplesDeleted
+        }
+        let workoutsDeleted = await WorkoutHealthWriter.deleteOwnedWorkouts(
+            metadataKey: workoutBurnSessionIDKey, value: sessionID.uuidString
+        )
+        return samplesDeleted && workoutsDeleted
     }
 
     private var workoutBurnDeletionTombstones: Set<UUID> {
@@ -711,7 +764,9 @@ class HealthKitManager {
         _ sessions: [StrengthWorkoutSession]
     ) -> [String: StrengthWorkoutSession] {
         var preferred: [String: StrengthWorkoutSession] = [:]
-        for session in sessions where session.caloriesBurned != nil {
+        // GPS sessions save their energy inside their own HKWorkout (OutdoorWorkoutRecorder / the watch), so they
+        // never take part in the one-burn-per-day sample and never replace a strength burn.
+        for session in sessions where session.caloriesBurned != nil && session.outdoor == nil {
             let key = session.stableDiaryDateKey
             if let current = preferred[key], !shouldPreferWorkoutBurn(session, over: current) {
                 continue

@@ -55,6 +55,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.GpsFixed
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Timer
@@ -170,6 +171,57 @@ internal fun WorkoutDiaryScreen(
     var historyRequest by remember { mutableStateOf<WorkoutExerciseHistoryRequest?>(null) }
     var addMenuExpanded by remember { mutableStateOf(false) }
     var outdoorActivitySheet by remember { mutableStateOf<OutdoorActivityKind?>(null) }
+    // GPS workouts and strength sessions (docs/workouts-gps.md).
+    var gpsPickerVisible by remember { mutableStateOf(false) }
+    var startRequest by remember { mutableStateOf<WorkoutStartRequest?>(null) }
+    var liveOpen by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    var summaryId by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf<String?>(null) }
+    var unfinished by remember { mutableStateOf<com.ayuvo.health.data.workout.RecordedTrack?>(null) }
+    val live by rememberLiveWorkout()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    LaunchedEffect(Unit) {
+        if (live == null) {
+            unfinished = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                runCatching { container.gpsTrackStore.loadInProgress() }.getOrNull()
+            }
+        }
+    }
+    LaunchedEffect(live?.phase, live?.savedSessionId) {
+        val l = live ?: return@LaunchedEffect
+        if (l.phase == com.ayuvo.health.services.workout.OutdoorPhase.DONE) {
+            if (liveOpen && l.savedSessionId != null) summaryId = l.savedSessionId
+            liveOpen = false
+            com.ayuvo.health.services.workout.OutdoorWorkoutService.acknowledgeDone()
+        }
+    }
+    // Workout widget taps (docs/widgets.md "Workout"): start through the same permission flow as the buttons here,
+    // or open the running workout. An unfinished recording is offered first by the dialog below.
+    val widgetLaunch by com.ayuvo.health.widget.WorkoutWidgetLaunches.pending.collectAsState()
+    LaunchedEffect(widgetLaunch?.id) {
+        val launch = widgetLaunch ?: return@LaunchedEffect
+        com.ayuvo.health.widget.WorkoutWidgetLaunches.consume(launch.id)
+        val running = com.ayuvo.health.services.workout.OutdoorWorkoutService.live.value
+            ?.takeIf { it.phase != com.ayuvo.health.services.workout.OutdoorPhase.DONE }
+        val start = launch.start
+        when {
+            running != null -> liveOpen = true
+            start == null -> Unit
+            start == com.ayuvo.health.widget.WorkoutWidgetStart.STRENGTH -> {
+                viewModel.selectDate(LocalDate.now())
+                startRequest = WorkoutStartRequest.Strength
+            }
+            else -> {
+                val inProgress = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    runCatching { container.gpsTrackStore.loadInProgress() }.getOrNull()
+                }
+                if (inProgress == null) {
+                    startRequest = WorkoutStartRequest.Gps(start.gpsSport ?: "walk", cooper = false)
+                } else {
+                    unfinished = inProgress
+                }
+            }
+        }
+    }
     val walkRunQuickLogEnabled by container.prefs.walkRunQuickLogEnabled.collectAsState(initial = false)
     val listState = rememberLazyListState()
     val focusManager = LocalFocusManager.current
@@ -255,6 +307,31 @@ internal fun WorkoutDiaryScreen(
                         }
                     )
                 )
+            }
+
+            live?.takeIf { it.phase != com.ayuvo.health.services.workout.OutdoorPhase.DONE }?.let { current ->
+                item(key = "workout-gps-live") {
+                    GpsLiveBanner(state = current, onOpen = { liveOpen = true })
+                }
+            }
+
+            item(key = "workout-strength-session") {
+                StrengthSessionBar(
+                    state = state,
+                    onStart = {
+                        dismissKeyboard()
+                        startRequest = WorkoutStartRequest.Strength
+                    },
+                    onFinish = {
+                        dismissKeyboard()
+                        viewModel.finishSession()
+                    },
+                    onCancel = viewModel::cancelSession
+                )
+            }
+
+            items(state.gpsSessions, key = { "gps-" + it.id }) { session ->
+                GpsSessionRow(session = session, onOpen = { summaryId = session.id.toString() })
             }
 
             item(key = "workout-day-title") {
@@ -374,6 +451,16 @@ internal fun WorkoutDiaryScreen(
                 modifier = Modifier.heightIn(max = 520.dp),
                 menuWidth = 236.dp
             ) {
+                SheetGlassDropdownMenuItem(
+                    label = stringResource(R.string.workout_gps_start_menu),
+                    leadingIcon = Icons.Filled.GpsFixed,
+                    onClick = {
+                        addMenuExpanded = false
+                        if (live == null || live?.phase == com.ayuvo.health.services.workout.OutdoorPhase.DONE) gpsPickerVisible = true
+                        else liveOpen = true
+                    }
+                )
+                HorizontalDivider(color = workoutsColors().hairline.copy(alpha = 0.45f))
                 if (state.splitGroups.isEmpty()) {
                     SheetGlassDropdownMenuItem(
                         label = "All exercises",
@@ -537,6 +624,93 @@ internal fun WorkoutDiaryScreen(
             weightUnit = state.weightUnit,
             history = viewModel.exerciseLiftHistory(request.itemId, request.name),
             onDismiss = { historyRequest = null }
+        )
+    }
+
+    if (gpsPickerVisible) {
+        GpsSportPickerDialog(
+            config = container.workoutConfig,
+            onStart = { sport, cooper ->
+                gpsPickerVisible = false
+                startRequest = WorkoutStartRequest.Gps(sport, cooper)
+            },
+            onDismiss = { gpsPickerVisible = false }
+        )
+    }
+
+    startRequest?.let { request ->
+        WorkoutPermissionFlow(
+            container = container,
+            request = request,
+            onReady = {
+                startRequest = null
+                when (request) {
+                    is WorkoutStartRequest.Gps -> {
+                        if (request.resumeRecovered) {
+                            com.ayuvo.health.services.workout.OutdoorWorkoutService.send(
+                                context, com.ayuvo.health.services.workout.OutdoorWorkoutService.ACTION_RESUME_RECOVERED
+                            )
+                        } else {
+                            com.ayuvo.health.services.workout.OutdoorWorkoutService.start(context, request.sport, request.cooper)
+                        }
+                        liveOpen = true
+                    }
+                    WorkoutStartRequest.Strength -> viewModel.startSession()
+                }
+            },
+            onCancel = { startRequest = null }
+        )
+    }
+
+    if (liveOpen) {
+        live?.takeIf { it.phase != com.ayuvo.health.services.workout.OutdoorPhase.DONE }?.let { current ->
+            OutdoorLiveScreen(state = current, onMinimize = { liveOpen = false })
+        }
+    }
+
+    summaryId?.let { id ->
+        runCatching { UUID.fromString(id) }.getOrNull()?.let { uuid ->
+            GpsWorkoutSummaryScreen(container = container, sessionId = uuid, onClose = { summaryId = null })
+        }
+    }
+
+    unfinished?.let { track ->
+        val title = runCatching { container.workoutConfig.sport(track.sport).title }.getOrDefault(track.sport)
+        UnfinishedWorkoutDialog(
+            sportTitle = title,
+            onResume = {
+                unfinished = null
+                // Resuming records location again, so the permission must still be granted.
+                if (com.ayuvo.health.services.workout.OutdoorWorkoutService.hasFineLocation(context)) {
+                    com.ayuvo.health.services.workout.OutdoorWorkoutService.send(
+                        context, com.ayuvo.health.services.workout.OutdoorWorkoutService.ACTION_RESUME_RECOVERED
+                    )
+                    liveOpen = true
+                } else {
+                    startRequest = WorkoutStartRequest.Gps(track.sport, track.cooper, resumeRecovered = true)
+                }
+            },
+            onSave = {
+                unfinished = null
+                com.ayuvo.health.services.workout.OutdoorWorkoutService.send(
+                    context, com.ayuvo.health.services.workout.OutdoorWorkoutService.ACTION_SAVE_RECOVERED
+                )
+                liveOpen = true
+            },
+            onDiscard = {
+                unfinished = null
+                container.gpsTrackStore.clearInProgress()
+            },
+            onDismiss = { unfinished = null }
+        )
+    }
+
+    state.windowProposal?.let { proposal ->
+        WorkoutWindowDialog(
+            windows = proposal.windows,
+            onConfirm = viewModel::confirmWindow,
+            onSkip = viewModel::skipWindow,
+            onDismiss = viewModel::dismissWindow
         )
     }
 

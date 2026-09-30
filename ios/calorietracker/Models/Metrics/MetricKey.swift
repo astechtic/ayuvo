@@ -30,8 +30,11 @@ nonisolated enum MetricKey: Hashable, Sendable, Identifiable {
     /// A `nutrient_reference.json` key or a sports supplement key, e.g. `vitamin_d`.
     case nutrient(String)
     case health(String)
+    /// An on-device derived metric (`derived:<id>`, docs/derived-metrics.md), e.g. `derived:resting_hr_derived`.
+    case derived(String)
 
     static let nutrientPrefix = "nutrient:"
+    static let derivedPrefix = "derived:"
 
     /// Storage / pin id: `app:calories`, `nutrient:vitamin_d` or `steps`.
     var id: String {
@@ -39,10 +42,11 @@ nonisolated enum MetricKey: Hashable, Sendable, Identifiable {
         case .app(let metric): metric.key
         case .nutrient(let key): Self.nutrientPrefix + key
         case .health(let typeID): typeID
+        case .derived(let metricID): Self.derivedPrefix + metricID
         }
     }
 
-    /// Nil for blank strings and unknown `app:` / `nutrient:` keys.
+    /// Nil for blank strings and unknown `app:` / `nutrient:` / `derived:` keys.
     init?(pinID: String) {
         let trimmed = pinID.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
@@ -53,6 +57,10 @@ nonisolated enum MetricKey: Hashable, Sendable, Identifiable {
             let key = String(trimmed.dropFirst(Self.nutrientPrefix.count))
             guard MetricCatalogData.shared.nutrientMetricsByKey[key] != nil else { return nil }
             self = .nutrient(key)
+        } else if trimmed.hasPrefix(Self.derivedPrefix) {
+            let metricID = String(trimmed.dropFirst(Self.derivedPrefix.count))
+            guard DerivedCatalog.shared.byID[metricID] != nil else { return nil }
+            self = .derived(metricID)
         } else {
             self = .health(trimmed)
         }
@@ -92,7 +100,10 @@ nonisolated enum MetricPins {
 
     static var max: Int { MetricCatalogData.shared.favourites.max }
 
-    static var knownHealthIDs: [String] { HealthMetricRegistry.iOSTypes.map(\.id) }
+    /// Registry ids plus every `derived:<id>` (derived pins validate like health ids in `favourite_pins_migrate`).
+    static var knownHealthIDs: [String] {
+        HealthMetricRegistry.iOSTypes.map(\.id) + DerivedCatalog.shared.metrics.map { MetricKey.derivedPrefix + $0.id }
+    }
 
     /// Reads the favourites, running the one-time migration (and persisting its result) when the
     /// new key has never been written.

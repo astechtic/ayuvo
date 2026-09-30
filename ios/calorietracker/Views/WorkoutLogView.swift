@@ -9,6 +9,10 @@ final class WorkoutLogSessionState {
     var selectedDate = Date.now
     /// One-shot "Log a Workout" request (Browse search): the diary opens its exercise picker.
     var addExerciseRequested = false
+    /// One-shot Workout widget request: show the running GPS / Apple Watch workout full screen.
+    /// A GPS start that could not begin (location off) opens the start sheet, which explains why.
+    var liveWorkoutRequested = false
+    var gpsStartRequested = false
 
     func reset() {
         selectedDate = .now
@@ -88,6 +92,10 @@ struct WorkoutLogView: View {
     @State private var isCalculatingBurn = false
     @State private var workoutCardFrames: [UUID: CGRect] = [:]
     @State private var pendingWorkoutDeletion: StrengthPlannedExercise?
+    @State private var isGPSStartPresented = false
+    @State private var isGPSLivePresented = false
+    @State private var selectedOutdoorSession: StrengthWorkoutSession?
+    @State private var windowProposal: StrengthWindowProposal?
     @FocusState private var focusedSetField: WorkoutLogSetFocus?
 
     private var isWorkoutDeletionPresented: Binding<Bool> {
@@ -264,6 +272,23 @@ struct WorkoutLogView: View {
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    }
+
+                    Section {
+                        StrengthSessionCard(selectedDate: selectedDate, openGPS: { isGPSLivePresented = true })
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    }
+
+                    let outdoorSessions = workoutStore.outdoorSessions(on: selectedDate)
+                    if !outdoorSessions.isEmpty {
+                        Section {
+                            OutdoorWorkoutDaySection(sessions: outdoorSessions) { selectedOutdoorSession = $0 }
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                        }
                     }
 
                     if !importedHealthWorkouts.isEmpty {
@@ -475,6 +500,35 @@ struct WorkoutLogView: View {
             .navigationDestination(item: $selectedDetailItem) { item in
                 ExerciseLibraryDetailView(item: item)
             }
+            .navigationDestination(item: $selectedOutdoorSession) { session in
+                OutdoorWorkoutSummaryView(session: session)
+            }
+            .sheet(isPresented: $isGPSStartPresented) {
+                OutdoorWorkoutStartSheet(
+                    onStart: { sport, cooper in
+                        OutdoorWorkoutRecorder.shared.start(sport: sport, cooperTest: cooper)
+                        if OutdoorWorkoutRecorder.shared.isActive { isGPSLivePresented = true }
+                    },
+                    onStartOnWatch: { sport in
+                        await WatchWorkoutMirror.shared.startOnWatch(sport: sport)
+                    }
+                )
+            }
+            .fullScreenCover(isPresented: $isGPSLivePresented) {
+                OutdoorWorkoutLiveView()
+            }
+            .sheet(item: $windowProposal) { proposal in
+                StrengthWindowConfirmSheet(
+                    proposal: proposal,
+                    onConfirm: { interval in storeBurn(on: proposal.date, interval: interval) },
+                    onSkip: { storeBurn(on: proposal.date, interval: nil) }
+                )
+                .presentationDetents([.large])
+            }
+            .onChange(of: OutdoorWorkoutRecorder.shared.lastFinishedSessionID) { _, id in
+                // A workout ended from the Live Activity while the app was open: show its summary.
+                if id != nil { isGPSLivePresented = true }
+            }
             .alert("Log a workout first", isPresented: $isNoPerformedSetAlertPresented) {
                 Button("OK", role: .cancel) {}
             } message: {
@@ -482,6 +536,8 @@ struct WorkoutLogView: View {
             }
             .onAppear(perform: consumeAddExerciseRequest)
             .onChange(of: session.addExerciseRequested) { _, _ in consumeAddExerciseRequest() }
+            .onAppear(perform: consumeLiveWorkoutRequest)
+            .onChange(of: session.liveWorkoutRequested) { _, _ in consumeLiveWorkoutRequest() }
             .sheet(item: $pickerRequest) { request in
                 WorkoutLogExercisePickerSheet(
                     request: request,
@@ -531,6 +587,15 @@ struct WorkoutLogView: View {
 
     private var addExerciseMenu: some View {
         Menu {
+            Button {
+                if OutdoorWorkoutRecorder.shared.isActive || WatchWorkoutMirror.shared.isMirroring {
+                    isGPSLivePresented = true
+                } else {
+                    isGPSStartPresented = true
+                }
+            } label: {
+                Label("Start GPS Workout", systemImage: "location.fill")
+            }
             Button { workoutInputUsesVoice = false; isTextSheetPresented = true } label: {
                 Label("Text", systemImage: "text.bubble")
             }
@@ -616,6 +681,19 @@ struct WorkoutLogView: View {
         pickerRequest = WorkoutLogPickerRequest(context: .all, initialSource: .dataset)
     }
 
+    private func consumeLiveWorkoutRequest() {
+        guard session.liveWorkoutRequested else { return }
+        session.liveWorkoutRequested = false
+        let gpsStartFailed = session.gpsStartRequested
+        session.gpsStartRequested = false
+        if OutdoorWorkoutRecorder.shared.isActive || WatchWorkoutMirror.shared.isMirroring {
+            isGPSStartPresented = false
+            isGPSLivePresented = true
+        } else if gpsStartFailed {
+            isGPSStartPresented = true
+        }
+    }
+
     private var selectedDateTitle: String {
         if Calendar.current.isDateInToday(selectedDate) { return "Today" }
         if Calendar.current.isDateInTomorrow(selectedDate) { return "Tomorrow" }
@@ -691,11 +769,51 @@ struct WorkoutLogView: View {
                 return
             }
 
+            _ = estimate
+            // Propose a real start/end from that day's heart rate unless the
+            // day's burn already has one; without heart rate keep the old flow.
+            let existing = workoutStore.strengthBurnSession(on: calculationDate)
+            if existing?.hasRealInterval != true {
+                let context = await WorkoutHeartRateSource.context(weightKg: currentBodyWeightKg)
+                let windows = await WorkoutHeartRateSource.proposeWindows(on: calculationDate, context: context)
+                if !windows.isEmpty {
+                    isCalculatingBurn = false
+                    windowProposal = StrengthWindowProposal(date: calculationDate, windows: windows)
+                    return
+                }
+            }
+            storeBurn(on: calculationDate, interval: nil, weightUnit: calculationWeightUnit)
+            isCalculatingBurn = false
+        }
+    }
+
+    /// Stores the day's calculated burn. With a window, heart-rate statistics over it are kept and
+    /// Keytel calories replace the diary estimate when heart rate covers at least 70% of the window.
+    private func storeBurn(on date: Date, interval: DateInterval?, weightUnit unit: WeightUnit? = nil) {
+        let unit = unit ?? weightUnit
+        guard let estimate = StrengthWorkoutBurnEstimator.estimate(
+            exercises: workoutStore.exercises(for: date),
+            bodyWeightKg: currentBodyWeightKg,
+            defaultWeightUnit: unit,
+            defaultRPEScale: workoutStore.preferences.rpeScale
+        ) else {
+            isNoPerformedSetAlertPresented = true
+            return
+        }
+        guard let interval else {
+            withAnimation(.snappy(duration: 0.25)) {
+                _ = workoutStore.upsertCalculatedWorkout(on: date, caloriesBurned: estimate.calories, weightUnit: unit)
+            }
+            return
+        }
+        isCalculatingBurn = true
+        Task { @MainActor in
+            let context = await WorkoutHeartRateSource.context(weightKg: currentBodyWeightKg)
+            let heart = await WorkoutHeartRateSource.summary(start: interval.start, end: interval.end, context: context)
+            let calories = heart?.keytelKcal.map { Int($0.rounded()) }.flatMap { $0 > 0 ? $0 : nil } ?? estimate.calories
             withAnimation(.snappy(duration: 0.25)) {
                 _ = workoutStore.upsertCalculatedWorkout(
-                    on: calculationDate,
-                    caloriesBurned: estimate.calories,
-                    weightUnit: calculationWeightUnit
+                    on: date, caloriesBurned: calories, weightUnit: unit, interval: interval, heartRate: heart
                 )
             }
             isCalculatingBurn = false

@@ -95,6 +95,7 @@ fun BodyScreen(
                     exclude = hidden
                 )
             }
+            derivedMetricGroup(app.derived, HealthCategory.BODY.id, catalog, onOpenMetric)
         }
     }
 }

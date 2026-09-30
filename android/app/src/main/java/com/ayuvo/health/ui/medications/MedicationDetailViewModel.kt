@@ -36,7 +36,13 @@ data class MedicationDetailUiState(
     /** Supplement nutrients per dose unit (schema v2, §21), sorted by key. */
     val nutrients: List<MedicationNutrientRow> = emptyList(),
     /** Today's contribution per nutrient key from this medication's taken doses. */
-    val todayNutrients: Map<String, Double> = emptyMap()
+    val todayNutrients: Map<String, Double> = emptyMap(),
+    /** `meds_adherence` over the last 30 days (docs/intake-metrics.md §3); null for PRN or without the intake config. */
+    val intakeAdherence: com.ayuvo.health.data.intake.MedsAdherenceResult? = null,
+    /** `HH:mm` the single reminder time can move to, when the engine suggests one. */
+    val suggestedReminder: String? = null,
+    /** Nutrient key → `supplement_daily` of this regimen (dose averaged over its interval, against the upper limit). */
+    val nutrientRegimens: Map<String, com.ayuvo.health.data.intake.SupplementDailyResult> = emptyMap()
 )
 
 /** Medication detail (docs/medications.md): info, schedule, adherence, recent history, lifecycle. */
@@ -69,18 +75,32 @@ class MedicationDetailViewModel(private val container: AppContainer, private val
             missing = record == null
         }
         val nutrients = store.nutrients(med.id)
+        val interval = com.ayuvo.health.nutrients.SupplementAveraging.intervalDays(schedule)
         val today = if (nutrients.isEmpty()) emptyMap() else {
             val z = ZoneId.systemDefault()
             val day = java.time.LocalDate.now(z)
             val doses = store.supplementDoses().filter { it.medicationId == med.id }
-            NutrientTotals(emptyList(), SupplementSnapshot(nutrients, doses), z).supplementEntries(day)
+            NutrientTotals(emptyList(), SupplementSnapshot(nutrients, doses, intervalDays = mapOf(med.id to interval)), z).supplementEntries(day)
                 .groupBy { it.nutrientKey }.mapValues { (_, list) -> list.sumOf { e -> e.value } }
+        }
+        val intakeCfg = runCatching { container.intakeConfig }.getOrNull()
+        val now = System.currentTimeMillis()
+        val intakeAdherence = if (med.isPrn || intakeCfg == null) null else {
+            val logs30 = store.history(med.id, null, INSIGHT_LIMIT)
+            com.ayuvo.health.medications.logic.MedicationIntakeInsights.compute(logs30, now, zone, intakeCfg)
+        }
+        val suggested = intakeAdherence?.suggestedClockMin?.let { min ->
+            com.ayuvo.health.medications.logic.MedicationIntakeInsights.movedSchedule(schedule, min, now)?.times?.single()
+        }
+        val regimens = nutrients.associate { row ->
+            row.nutrientKey to com.ayuvo.health.nutrients.SupplementAveraging.regimen(row.nutrientKey, row.amountPerUnit * med.doseQuantity, interval, intakeCfg)
         }
         _ui.update {
             it.copy(
                 loading = false, medication = med, schedule = schedule, recentLogs = logs,
                 adherence = adherence, relatedRecord = record, relatedRecordMissing = missing,
-                nutrients = nutrients, todayNutrients = today
+                nutrients = nutrients, todayNutrients = today,
+                intakeAdherence = intakeAdherence, suggestedReminder = suggested, nutrientRegimens = regimens
             )
         }
     }
@@ -107,6 +127,20 @@ class MedicationDetailViewModel(private val container: AppContainer, private val
         }
     }
 
+    /** "Move reminder to HH:MM?": replaces the single reminder time (a new schedule generation, docs/medications.md §12). */
+    fun moveReminder() {
+        viewModelScope.launch {
+            val med = _ui.value.medication ?: return@launch
+            val min = _ui.value.intakeAdherence?.suggestedClockMin ?: return@launch
+            val now = System.currentTimeMillis()
+            val moved = com.ayuvo.health.medications.logic.MedicationIntakeInsights.movedSchedule(_ui.value.schedule, min, now) ?: return@launch
+            val error = runCatching {
+                store.update(med.copy(updatedMs = now), moved.copy(id = java.util.UUID.randomUUID().toString().lowercase(), createdMs = now), now)
+            }.getOrElse { "store_error" }
+            _ui.update { it.copy(actionError = error) }
+        }
+    }
+
     fun delete(onDeleted: () -> Unit) {
         viewModelScope.launch {
             store.delete(medicationId)
@@ -126,5 +160,7 @@ class MedicationDetailViewModel(private val container: AppContainer, private val
 
     private companion object {
         const val RECENT_LIMIT = 10
+        /** Enough history for 30 days of several doses a day. */
+        const val INSIGHT_LIMIT = 400
     }
 }

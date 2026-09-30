@@ -18,17 +18,25 @@ import androidx.health.connect.client.feature.ExperimentalMindfulnessSessionApi
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.BodyFatRecord
+import androidx.health.connect.client.records.DistanceRecord
+import androidx.health.connect.client.records.ExerciseLap
+import androidx.health.connect.client.records.ExerciseRoute
+import androidx.health.connect.client.records.ExerciseSegment
+import androidx.health.connect.client.records.ExerciseSessionRecord
+import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.MealType as HCMealType
 import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.metadata.DataOrigin
+import androidx.health.connect.client.records.metadata.Device
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.Energy
+import androidx.health.connect.client.units.Length
 import androidx.health.connect.client.units.Mass
 import androidx.health.connect.client.units.Percentage
 import com.ayuvo.health.models.BodyFatEntry
@@ -190,6 +198,25 @@ class HealthConnectManager(
         bodyFatRead, bodyFatWrite, activeEnergyRead, activeEnergyWrite, totalEnergyRead,
         stepsRead
     )
+
+    // Workouts (docs/workouts-gps.md): requested in context from the workout screens only, so they never widen
+    // the legacy set above or trigger the CURRENT_TYPES_VERSION re-authorization prompt.
+    private val exerciseWrite = HealthPermission.getWritePermission(ExerciseSessionRecord::class)
+    private val exerciseRouteWrite = HealthPermission.PERMISSION_WRITE_EXERCISE_ROUTE
+    private val distanceWrite = HealthPermission.getWritePermission(DistanceRecord::class)
+    private val heartRateRead = HealthPermission.getReadPermission(HeartRateRecord::class)
+
+    /** Strength sessions: the session record plus its energy, and heart rate for zones and Keytel energy. */
+    val strengthSessionPermissions: Set<String> = setOf(exerciseWrite, activeEnergyWrite, heartRateRead)
+
+    /** GPS workouts: session, route, distance, energy and heart rate. */
+    val gpsWorkoutPermissions: Set<String> = setOf(exerciseWrite, exerciseRouteWrite, distanceWrite, activeEnergyWrite, heartRateRead)
+
+    /** Which of [wanted] are not granted, or null when the permission probe failed. */
+    suspend fun missingPermissions(wanted: Set<String>): Set<String>? = grantedOrNull()?.let { wanted - it }
+
+    suspend fun hasHeartRateRead(): Boolean = heartRateRead in granted()
+    suspend fun hasExerciseWrite(): Boolean = exerciseWrite in granted()
 
     /** Requested only when Daily Summary is enabled. Keeping it out of [permissions]
      *  avoids asking every Health Connect user for background access. */
@@ -702,11 +729,194 @@ class HealthConnectManager(
         return runCatching { c.insertRecords(listOf(record)) }.isSuccess
     }
 
-    /** Deletes exactly the app-owned burn sample for this stable diary session. */
+    /**
+     * A strength session with a real interval (docs/workouts-gps.md §1): the energy sample moves from the legacy
+     * 12:00 point to the real interval under the same client id and version, and an `ExerciseSessionRecord`
+     * (strength training) is written alongside when WRITE_EXERCISE is granted. Both are inserted in one call, so
+     * Health Connect applies them atomically.
+     */
+    suspend fun upsertStrengthSession(
+        sessionId: UUID,
+        diaryDateKey: String,
+        start: Instant,
+        end: Instant,
+        caloriesBurned: Int,
+        healthSyncVersion: Int,
+        title: String?
+    ): Boolean {
+        val c = client ?: return false
+        if (caloriesBurned !in 1..MAX_WORKOUT_BURN_CALORIES || healthSyncVersion < 1 || !end.isAfter(start)) return false
+        val burnId = workoutBurnClientRecordId(diaryDateKey, sessionId) ?: return false
+        val sessionClientId = workoutSessionClientRecordId(diaryDateKey, sessionId) ?: return false
+        val zone = ZoneId.systemDefault()
+        val startOffset = zone.rules.getOffset(start)
+        val endOffset = zone.rules.getOffset(end)
+        val records = mutableListOf<androidx.health.connect.client.records.Record>(
+            ActiveCaloriesBurnedRecord(
+                startTime = start,
+                startZoneOffset = startOffset,
+                endTime = end,
+                endZoneOffset = endOffset,
+                energy = Energy.kilocalories(caloriesBurned.toDouble()),
+                metadata = Metadata.activelyRecorded(phoneDevice(), burnId, healthSyncVersion.toLong())
+            )
+        )
+        if (exerciseWrite in granted()) {
+            records += ExerciseSessionRecord(
+                startTime = start,
+                startZoneOffset = startOffset,
+                endTime = end,
+                endZoneOffset = endOffset,
+                metadata = Metadata.activelyRecorded(phoneDevice(), sessionClientId, healthSyncVersion.toLong()),
+                exerciseType = ExerciseSessionRecord.EXERCISE_TYPE_STRENGTH_TRAINING,
+                title = title
+            )
+        }
+        return runCatching { c.insertRecords(records) }
+            .onFailure { Log.w(TAG, "Strength session write failed: ${it.javaClass.simpleName}") }
+            .isSuccess
+    }
+
+    /** Deletes exactly the app-owned burn sample (and, when present, the strength session) for this diary session. */
     suspend fun deleteWorkoutBurn(sessionId: UUID, diaryDateKey: String): Boolean {
         val clientRecordId = workoutBurnClientRecordId(diaryDateKey, sessionId) ?: return false
+        workoutSessionClientRecordId(diaryDateKey, sessionId)?.let { sessionClientId ->
+            val c = client
+            if (c != null && exerciseWrite in granted()) {
+                runCatching {
+                    c.deleteRecords(ExerciseSessionRecord::class, recordIdsList = emptyList(), clientRecordIdsList = listOf(sessionClientId))
+                }
+            }
+        }
         return deleteWorkoutBurn(clientRecordId)
     }
+
+    // -- GPS workouts ------------------------------------------------------------------------------
+
+    /**
+     * Writes a recorded GPS workout: `ExerciseSessionRecord` (type from the sport config, laps, pauses as pause
+     * segments, and the route when WRITE_EXERCISE_ROUTE is granted), `DistanceRecord` and `ActiveCaloriesBurnedRecord`,
+     * each under a stable client id with [GpsWorkoutWrite.version], so a rewrite replaces instead of duplicating.
+     */
+    suspend fun upsertGpsWorkout(w: GpsWorkoutWrite): Boolean {
+        val c = client ?: return false
+        if (!w.end.isAfter(w.start) || w.version < 1) return false
+        val g = grantedOrNull() ?: return false
+        if (exerciseWrite !in g) return false
+        val ids = gpsClientRecordIds(w.diaryDateKey, w.sessionId) ?: return false
+        val zone = ZoneId.systemDefault()
+        val startOffset = zone.rules.getOffset(w.start)
+        val endOffset = zone.rules.getOffset(w.end)
+        val device = phoneDevice()
+        fun inside(t: Instant) = !t.isBefore(w.start) && !t.isAfter(w.end)
+        val laps = w.laps.filter { (s, e, _) -> inside(s) && inside(e) && e.isAfter(s) }
+            .sortedBy { it.first }
+            .fold(mutableListOf<ExerciseLap>()) { acc, (s, e, m) ->
+                if (acc.isEmpty() || !s.isBefore(acc.last().endTime)) {
+                    acc += ExerciseLap(s, e, m.takeIf { it > 0 && it <= 1_000_000.0 }?.let { Length.meters(it) })
+                }
+                acc
+            }
+        val segments = w.pauses.filter { (s, e) -> inside(s) && inside(e) && e.isAfter(s) }
+            .sortedBy { it.first }
+            .fold(mutableListOf<ExerciseSegment>()) { acc, (s, e) ->
+                if (acc.isEmpty() || !s.isBefore(acc.last().endTime)) {
+                    acc += ExerciseSegment(s, e, ExerciseSegment.EXERCISE_SEGMENT_TYPE_PAUSE, 0)
+                }
+                acc
+            }
+        val route = if (exerciseRouteWrite in g && w.route.isNotEmpty()) {
+            ExerciseRoute(
+                w.route.filter { inside(it.time) && it.lat in -90.0..90.0 && it.lon in -180.0..180.0 }
+                    .distinctBy { it.time }
+                    .sortedBy { it.time }
+                    .map { p ->
+                        ExerciseRoute.Location(
+                            time = p.time,
+                            latitude = p.lat,
+                            longitude = p.lon,
+                            horizontalAccuracy = p.accuracyM?.takeIf { it >= 0 }?.let { Length.meters(it) },
+                            verticalAccuracy = null,
+                            altitude = p.altitudeM?.takeIf { it in -10_000.0..10_000.0 }?.let { Length.meters(it) }
+                        )
+                    }
+            ).takeIf { it.route.isNotEmpty() }
+        } else null
+        val records = mutableListOf<androidx.health.connect.client.records.Record>(
+            ExerciseSessionRecord(
+                startTime = w.start,
+                startZoneOffset = startOffset,
+                endTime = w.end,
+                endZoneOffset = endOffset,
+                metadata = Metadata.activelyRecorded(device, ids.session, w.version.toLong()),
+                exerciseType = w.exerciseType,
+                title = w.title,
+                notes = null,
+                segments = segments,
+                laps = laps,
+                exerciseRoute = route
+            )
+        )
+        if (distanceWrite in g && w.distanceM > 0.0 && w.distanceM <= 1_000_000.0) {
+            records += DistanceRecord(
+                startTime = w.start, startZoneOffset = startOffset, endTime = w.end, endZoneOffset = endOffset,
+                distance = Length.meters(w.distanceM),
+                metadata = Metadata.activelyRecorded(device, ids.distance, w.version.toLong())
+            )
+        }
+        val kcal = w.activeKcal
+        if (activeEnergyWrite in g && kcal != null && kcal in 1..MAX_WORKOUT_BURN_CALORIES) {
+            records += ActiveCaloriesBurnedRecord(
+                startTime = w.start, startZoneOffset = startOffset, endTime = w.end, endZoneOffset = endOffset,
+                energy = Energy.kilocalories(kcal.toDouble()),
+                metadata = Metadata.activelyRecorded(device, ids.energy, w.version.toLong())
+            )
+        }
+        return runCatching { c.insertRecords(records) }
+            .onFailure { Log.w(TAG, "GPS workout write failed: ${it.javaClass.simpleName}") }
+            .isSuccess
+    }
+
+    /** Best-effort deletion of a GPS workout's session, distance and energy records. */
+    suspend fun deleteGpsWorkout(sessionId: UUID, diaryDateKey: String): Boolean {
+        val c = client ?: return false
+        val ids = gpsClientRecordIds(diaryDateKey, sessionId) ?: return false
+        val results = listOf(
+            ExerciseSessionRecord::class to ids.session,
+            DistanceRecord::class to ids.distance,
+            ActiveCaloriesBurnedRecord::class to ids.energy
+        ).map { (type, id) ->
+            runCatching { c.deleteRecords(type, recordIdsList = emptyList(), clientRecordIdsList = listOf(id)) }.isSuccess
+        }
+        return results.all { it }
+    }
+
+    /**
+     * Heart-rate samples in [from, to) from the single data origin with the most samples, or null when heart rate
+     * cannot be read (no permission, Health Connect unavailable or the query failed).
+     */
+    suspend fun readHeartRateSamples(from: Instant, to: Instant): List<Pair<Instant, Long>>? {
+        val c = client ?: return null
+        if (!from.isBefore(to)) return emptyList()
+        if (heartRateRead !in granted()) return null
+        val byOrigin = HashMap<String, MutableList<Pair<Instant, Long>>>()
+        var pageToken: String? = null
+        do {
+            val response = runCatching {
+                c.readRecords(ReadRecordsRequest(HeartRateRecord::class, TimeRangeFilter.between(from, to), pageToken = pageToken))
+            }.getOrNull() ?: return null
+            for (record in response.records) {
+                val list = byOrigin.getOrPut(record.metadata.dataOrigin.packageName) { ArrayList() }
+                for (s in record.samples) {
+                    if (!s.time.isBefore(from) && s.time.isBefore(to)) list += s.time to s.beatsPerMinute
+                }
+            }
+            pageToken = response.pageToken
+        } while (!pageToken.isNullOrEmpty())
+        return byOrigin.values.maxByOrNull { it.size }.orEmpty().sortedBy { it.first }
+    }
+
+    private fun phoneDevice(): Device = Device(type = Device.TYPE_PHONE, manufacturer = Build.MANUFACTURER, model = Build.MODEL)
 
     /**
      * Exact-id deletion variant for repositories that persist the Health client
@@ -1032,6 +1242,31 @@ class HealthConnectManager(
             return WorkoutBurnIdentity(sessionId = sessionId, diaryDateKey = date.toString())
         }
 
+        private const val WORKOUT_SESSION_CLIENT_PREFIX = "ayuvo_workout_session|"
+        private const val GPS_WORKOUT_CLIENT_PREFIX = "ayuvo_gps_workout|"
+
+        /** Strength `ExerciseSessionRecord` identity; shares the date/UUID scheme and version with the burn sample. */
+        fun workoutSessionClientRecordId(diaryDateKey: String, sessionId: UUID): String? {
+            val canonicalDate = parseDiaryDateKey(diaryDateKey) ?: return null
+            return "$WORKOUT_SESSION_CLIENT_PREFIX$canonicalDate$WORKOUT_BURN_SEPARATOR$sessionId"
+        }
+
+        /** GPS workout identities; never parsed as workout burns, so the daily burn sync ignores them. */
+        fun gpsClientRecordIds(diaryDateKey: String, sessionId: UUID): GpsClientRecordIds? {
+            val canonicalDate = parseDiaryDateKey(diaryDateKey) ?: return null
+            val base = "$GPS_WORKOUT_CLIENT_PREFIX$canonicalDate$WORKOUT_BURN_SEPARATOR$sessionId"
+            return GpsClientRecordIds("$base|session", "$base|distance", "$base|energy")
+        }
+
+        /** Health Connect exercise type for a workout config `hc_exercise` name. */
+        fun exerciseTypeFor(name: String?): Int = when (name) {
+            "EXERCISE_TYPE_RUNNING" -> ExerciseSessionRecord.EXERCISE_TYPE_RUNNING
+            "EXERCISE_TYPE_WALKING" -> ExerciseSessionRecord.EXERCISE_TYPE_WALKING
+            "EXERCISE_TYPE_BIKING" -> ExerciseSessionRecord.EXERCISE_TYPE_BIKING
+            "EXERCISE_TYPE_HIKING" -> ExerciseSessionRecord.EXERCISE_TYPE_HIKING
+            else -> ExerciseSessionRecord.EXERCISE_TYPE_OTHER_WORKOUT
+        }
+
         private fun parseDiaryDateKey(value: String): LocalDate? =
             runCatching { LocalDate.parse(value) }.getOrNull()?.takeIf { it.toString() == value }
 
@@ -1085,6 +1320,28 @@ data class HealthCapabilities(
     val anyWrite: Boolean get() = weightWrite || bodyFatWrite || nutritionWrite || activeEnergyWrite
     val connected: Boolean get() = legacyAny || hubAny
 }
+
+data class GpsClientRecordIds(val session: String, val distance: String, val energy: String)
+
+/** One route location for [GpsWorkoutWrite]. */
+data class GpsRoutePoint(val time: Instant, val lat: Double, val lon: Double, val altitudeM: Double?, val accuracyM: Double?)
+
+/** Everything [HealthConnectManager.upsertGpsWorkout] writes for one recorded GPS workout. */
+data class GpsWorkoutWrite(
+    val sessionId: UUID,
+    val diaryDateKey: String,
+    val start: Instant,
+    val end: Instant,
+    val exerciseType: Int,
+    val title: String?,
+    val distanceM: Double,
+    val activeKcal: Int?,
+    val version: Int,
+    /** (start, end, metres) per lap. */
+    val laps: List<Triple<Instant, Instant, Double>>,
+    val pauses: List<Pair<Instant, Instant>>,
+    val route: List<GpsRoutePoint>
+)
 
 data class WorkoutBurnIdentity(
     val sessionId: UUID,

@@ -110,6 +110,7 @@ struct MedicationDetailView: View {
                 scheduleCard(detail)
                 datesCard(detail)
                 adherenceCard(detail)
+                MedicationIntakeCard(detail: detail)
                 historyCard(detail)
                 relatedRecordCard(detail)
                 if let instructions = detail.medication.instructions, !instructions.isEmpty {

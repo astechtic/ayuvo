@@ -1,0 +1,77 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "links": [
+          {
+            "analytes_low": [
+              "hemoglobin",
+              "mcv"
+            ],
+            "id": "iron",
+            "intake_pct": 170.0,
+            "nutrient": "iron_mg",
+            "supplement_provides": false
+          }
+        ]
+      },
+      "input": {
+        "goals": {
+          "iron_mg": 8,
+          "vitamin_d_mcg": 15
+        },
+        "intake_avg": {
+          "iron_mg": 13.6,
+          "vitamin_d_mcg": 216.0
+        },
+        "labs": [
+          {
+            "analyte": "hemoglobin",
+            "ref_high": 17.0,
+            "ref_low": 13.0,
+            "value": 7.6
+          },
+          {
+            "analyte": "mcv",
+            "ref_high": 101.0,
+            "ref_low": 83.0,
+            "value": 68.7
+          },
+          {
+            "analyte": "vitamin_d_25oh",
+            "ref_high": 100.0,
+            "ref_low": 30.0,
+            "value": 32.0
+          }
+        ],
+        "supplement_nutrients": [
+          "vitamin_d_mcg",
+          "zinc_mg"
+        ]
+      },
+      "name": "low_hb_mcv_iron_not_supplemented"
+    },
+    {
+      "expected": {
+        "links": []
+      },
+      "input": {
+        "goals": {},
+        "intake_avg": {},
+        "labs": [
+          {
+            "analyte": "vitamin_d_25oh",
+            "ref_high": 100.0,
+            "ref_low": 30.0,
+            "value": 32.0
+          }
+        ],
+        "supplement_nutrients": []
+      },
+      "name": "all_in_range"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "lab_nutrient_links",
+  "version": 1
+}

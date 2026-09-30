@@ -159,6 +159,10 @@ enum DiaryExporter {
     private static let dayFmt: DateFormatter = {
         let f = DateFormatter(); f.locale = Locale(identifier: "en_US_POSIX"); f.dateFormat = "yyyy-MM-dd"; return f
     }()
+    /// `eaten_at` (format 1.6): ISO 8601 with the local offset.
+    private static let isoFmt: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter(); f.formatOptions = [.withInternetDateTime]; f.timeZone = .current; return f
+    }()
     private static let timeFmt: DateFormatter = {
         let f = DateFormatter(); f.locale = Locale(identifier: "en_US_POSIX"); f.dateFormat = "HH:mm"; return f
     }()
@@ -183,7 +187,7 @@ enum DiaryExporter {
             let vitamin_a_mcg: Double?; let vitamin_c_mg: Double?; let vitamin_d_mcg: Double?
             let vitamin_b12_mcg: Double?; let vitamin_e_mg: Double?; let vitamin_k_mcg: Double?
             let folate_mcg: Double?; let omega3_g: Double?
-            let time: String; let source: String; let note: String?; let ingredients: [Ingredient]
+            let time: String; let eaten_at: String; let source: String; let note: String?; let ingredients: [Ingredient]
         }
         struct Meal: Encodable { let type: String; let items: [Item] }
         struct Water: Encodable { let entry_id: String; let time: String; let milliliters: Int }
@@ -212,7 +216,8 @@ enum DiaryExporter {
                          vitamin_d_mcg: e.vitaminD.map(r1), vitamin_b12_mcg: e.vitaminB12.map(r1),
                          vitamin_e_mg: e.vitaminE.map(r1), vitamin_k_mcg: e.vitaminK.map(r1),
                          folate_mcg: e.folate.map(r1), omega3_g: e.omega3.map(r1),
-                         time: timeFmt.string(from: e.timestamp), source: sourceLabel(e.source),
+                         time: timeFmt.string(from: e.timestamp), eaten_at: isoFmt.string(from: e.eatenTime),
+                         source: sourceLabel(e.source),
                          note: (e.customNote?.isEmpty == false) ? e.customNote : nil,
                          ingredients: e.ingredients.map { ingredient in
                              Ingredient(
@@ -235,7 +240,7 @@ enum DiaryExporter {
                 water_total_ml: bundle.water.reduce(0) { $0 + $1.milliliters }
             )
         }
-        let doc = Doc(export: Meta(app: "Ayuvo", format_version: "1.5",
+        let doc = Doc(export: Meta(app: "Ayuvo", format_version: "1.6",
                                    date_range: Meta.Range(start: dayFmt.string(from: start), end: dayFmt.string(from: end))),
                       days: dayDocs)
         let enc = JSONEncoder()

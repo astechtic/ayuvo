@@ -25,6 +25,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         MedicationReminderRuntime.shared.start()
         QuickActionSettings.registerApplicationShortcuts()
         WatchSnapshotSync.shared.activate()
+        // Before launch completes so a workout mirrored from Apple Watch is delivered.
+        WatchWorkoutMirror.shared.install()
+        WorkoutSessionCoordinator.shared.installLiveActivityHandler()
+        #if DEBUG
+        #endif
         return true
     }
 

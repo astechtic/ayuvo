@@ -309,6 +309,10 @@ class PreferencesPortableStore(
         settings.preferGramsByDefault?.let { prefs.setPreferGramsByDefault(it) }
         settings.mealSchedule?.let { prefs.setMealSchedule(it) }
         settings.summaryFavourites?.let { prefs.setSummaryFavourites(it.joinToString(",")) }
+        settings.insightsEnabled?.let { prefs.setInsightsEnabled(it) }
+        settings.derivedMetricsEnabled?.let { prefs.setDerivedMetricsEnabled(it) }
+        settings.derivedMetricsDisabled?.let { prefs.setDerivedMetricsDisabled(it.toSet()) }
+        settings.derivedBmiScheme?.let { prefs.setDerivedBmiScheme(it) }
         if (settings.optionalNutrientGoals.isNotEmpty()) {
             prefs.setOptionalNutrientGoals(mergedGoals(prefs.optionalNutrientGoals.first(), settings.optionalNutrientGoals))
         }

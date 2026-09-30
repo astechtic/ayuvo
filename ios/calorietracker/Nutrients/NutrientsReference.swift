@@ -292,6 +292,45 @@ nonisolated enum NutrientsReference {
         }.map(\.element)
     }
 
+    /// Whole days one dose of a schedule covers (reference `supplement_interval_days`): weekly on n distinct days →
+    /// 7 ÷ n half-up (at least 1), an interval of ≥ 48 h → hours ÷ 24 half-up, anything else → 1.
+    static func intervalDays(frequencyKind: String?, days: [Int], intervalHours: Int?) -> Int {
+        switch frequencyKind {
+        case "weekly":
+            let n = Set(days).count
+            return n <= 0 ? 1 : max(1, Int((7.0 / Double(n) + 0.5).rounded(.down)))
+        case "interval":
+            let h = intervalHours ?? 0
+            return h >= 48 ? Int((Double(h) / 24.0 + 0.5).rounded(.down)) : 1
+        default:
+            return 1
+        }
+    }
+
+    /// `supplement_entries` averaged over each medication's dosing interval (reference `spread_supplement_entries`):
+    /// an entry of a medication with interval n > 1 becomes n entries of value ÷ n, one per day from the dose on.
+    static func spreadSupplementEntries(_ entries: [SupplementEntry], intervals: [String: Int]) -> [SupplementEntry] {
+        var out: [SupplementEntry] = []
+        for e in entries {
+            let n = intervals[e.medicationID] ?? 1
+            if n <= 1 {
+                out.append(e)
+                continue
+            }
+            for k in 0..<n {
+                out.append(SupplementEntry(tMs: e.tMs + Int64(k) * 86_400_000, nutrientKey: e.nutrientKey,
+                                           value: e.value / Double(n), medicationID: e.medicationID))
+            }
+        }
+        return out.enumerated().sorted { a, b in
+            let l = a.element, r = b.element
+            if l.tMs != r.tMs { return l.tMs < r.tMs }
+            if l.nutrientKey != r.nutrientKey { return l.nutrientKey < r.nutrientKey }
+            if l.medicationID != r.medicationID { return l.medicationID < r.medicationID }
+            return a.offset < b.offset
+        }.map(\.element)
+    }
+
     nonisolated struct FoodInput: Equatable, Sendable {
         var tMs: Int64
         /// Key → value (nil = named but no value).

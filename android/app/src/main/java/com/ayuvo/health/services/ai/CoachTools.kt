@@ -619,7 +619,7 @@ class CoachTools(
                 "sessions" to sessions.size,
                 "sets" to sessions.sumOf { it.performedSetCount },
                 "reps" to sessions.sumOf { it.repCount },
-                "calories_burned" to sessions.sumOf { it.caloriesBurned ?: 0 },
+                "calories_burned" to sessions.sumOf { it.caloriesBurned ?: it.gps?.activeKcal ?: 0 },
                 "minutes" to sessions.sumOf { it.durationMinutes },
                 "timed_exercise_seconds" to aggregates.values.sumOf { it.durationSeconds },
                 "by_exercise" to exercisePayloads

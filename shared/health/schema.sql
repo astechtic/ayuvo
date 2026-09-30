@@ -54,3 +54,8 @@ CREATE TABLE health_sync_state (
 CREATE TABLE health_type_meta (type_id TEXT PRIMARY KEY NOT NULL, category TEXT NOT NULL, kind TEXT NOT NULL,
   aggregation TEXT NOT NULL, unit TEXT NOT NULL, display_name TEXT, platform TEXT, native_id TEXT);  -- unknown/imported types
 CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT);      -- registry_version, rollup_rule_version, rollups_tz, schema_version
+CREATE TABLE derived_daily_values (   -- on-device derived metrics (docs/derived-metrics.md); never exported, rebuilt on demand
+  metric_id TEXT NOT NULL, day TEXT NOT NULL,
+  value REAL, value2 REAL, value3 REAL,
+  quality REAL, source_kind TEXT NOT NULL DEFAULT 'derived',   -- 'derived' only; native readings stay in health_samples
+  algo_version INTEGER NOT NULL, computed_ms INTEGER NOT NULL, PRIMARY KEY (metric_id, day));

@@ -218,6 +218,36 @@ enum BrowseFeatureCatalog {
         ]
     }
 
+    /// Derived metrics that are switched on and have values (docs/derived-metrics.md), as "Go to" results that open
+    /// their detail. Keywords: the title and category words plus "estimate", so "estimated" lists them all.
+    static func derivedFeatures(_ infos: [DerivedMetricInfo]) -> [BrowseFeature] {
+        infos.map { info in
+            let category = DerivedCatalog.categoryTitle(info.category)
+            var keywords = [info.title.lowercased(), category.lowercased(), "estimated", "estimate", "derived", "ayuvo"]
+            keywords += synonyms[info.id] ?? []
+            return BrowseFeature(
+                id: "derived.\(info.id)", title: String(localized: String.LocalizationValue(info.title)),
+                subtitle: String(localized: "Estimated by Ayuvo · \(String(localized: String.LocalizationValue(category)))"),
+                systemImage: info.systemImage, domain: DerivedMetricSeries.domainID(for: info.category),
+                keywords: keywords, destination: .metric(.derived(info.id))
+            )
+        }
+    }
+
+    private static let synonyms: [String: [String]] = [
+        "resting_hr_derived": ["rhr", "resting heart rate", "pulse"],
+        "vo2max_estimate": ["vo2", "vo2 max", "vo2max", "cardio fitness"],
+        "hr_max_estimate": ["max heart rate", "hrmax"],
+        "training_impulse": ["trimp", "training load"],
+        "cardio_minutes": ["zone minutes", "active zone minutes", "intensity minutes"],
+        "tdee": ["tdee", "calories burned", "total energy"],
+        "measured_bmr": ["bmr", "rmr", "metabolism"],
+        "bmi_derived": ["bmi", "body mass index"],
+        "sleep_regularity_index": ["sri", "sleep consistency"],
+        "social_jetlag": ["jet lag"],
+        "sound_dose": ["headphone", "noise", "loud"],
+    ]
+
     /// Features whose title or synonyms match `query`: every query word must start a word of the
     /// title or of a synonym. Title matches rank above synonym-only matches; ties keep table order.
     static func search(_ query: String, in features: [BrowseFeature] = all) -> [BrowseFeature] {

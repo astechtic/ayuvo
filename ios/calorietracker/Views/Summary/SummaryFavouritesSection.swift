@@ -25,7 +25,8 @@ struct SummaryFavouritesSection: View {
     }
 
     private var tiles: [MetricTileModel] {
-        MetricTileBuilder.tiles(pinIDs: healthStore.pinnedTypeIDs, sources: sources)
+        _ = DerivedMetricStore.shared.tiles
+        return MetricTileBuilder.tiles(pinIDs: healthStore.pinnedTypeIDs, sources: sources)
     }
 
     var body: some View {
@@ -64,5 +65,9 @@ struct SummaryFavouritesSection: View {
             }
         }
         .accessibilityIdentifier("summary.favourites")
+        // Derived pins (`derived:<id>`) read their latest value from the derived store.
+        .task(id: "\(DerivedMetricsService.shared.revision)|\(healthStore.pinnedTypeIDs.joined(separator: ","))") {
+            await DerivedMetricStore.shared.refresh(pinned: healthStore.pinnedTypeIDs, calendar: healthStore.calendar)
+        }
     }
 }

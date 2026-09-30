@@ -13,6 +13,8 @@ sealed interface WidgetTarget {
     data class Metric(val key: String) : WidgetTarget
     /** A Today widget tap: the Summary tab root. */
     data object Summary : WidgetTarget
+    /** A Workout widget tap: the workout log, which consumes [com.ayuvo.health.widget.WorkoutWidgetLaunches]. */
+    data object Workout : WidgetTarget
 }
 
 data class WidgetRequest(val target: WidgetTarget, val id: Long = System.nanoTime())

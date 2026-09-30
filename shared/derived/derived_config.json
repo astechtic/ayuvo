@@ -1,0 +1,1473 @@
+{
+  "algo_version": 2,
+  "categories": [
+    "heart",
+    "sleep",
+    "activity",
+    "energy",
+    "mobility",
+    "hearing",
+    "body",
+    "nutrition"
+  ],
+  "config_version": 1,
+  "disclaimer": "Estimated by Ayuvo from your own data using published formulas. It is not a medical measurement or diagnosis; talk to your doctor about anything that concerns you.",
+  "format": "ayuvo-derived-config",
+  "labels": {
+    "bmi_category": [
+      "Underweight",
+      "Healthy",
+      "Overweight",
+      "Obese"
+    ],
+    "pal_band": [
+      "Below sedentary",
+      "Sedentary or light",
+      "Active",
+      "Vigorous",
+      "Extremely active"
+    ],
+    "step_band": [
+      "Sedentary",
+      "Low active",
+      "Somewhat active",
+      "Active",
+      "Highly active"
+    ]
+  },
+  "metrics": [
+    {
+      "about": "Your lowest steady heart rate while asleep, estimated from minute-by-minute heart rate when your device does not provide a resting heart rate.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Nocturnal minimum heart rate as a resting-heart-rate estimate, as used by consumer wearables; adult resting range 60-100 bpm per American Heart Association, lower in trained people.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "resting_hr",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "resting_hr_derived",
+      "method": "Lowest average of 5 consecutive minutes inside last night's main sleep. Needs at least 3 hours of sleep with heart rate on at least 70% of those minutes.",
+      "native": {
+        "android": "resting_heart_rate",
+        "ios": "resting_heart_rate"
+      },
+      "requires": [],
+      "title": "Resting Heart Rate (estimated)",
+      "unit": "bpm"
+    },
+    {
+      "about": "Average heart rate across last night's main sleep.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Descriptive statistic of nocturnal heart rate.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "sleeping_hr",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "sleeping_hr",
+      "method": "Mean of every heart-rate minute inside the main sleep window.",
+      "native": null,
+      "requires": [],
+      "title": "Sleeping Heart Rate",
+      "unit": "bpm"
+    },
+    {
+      "about": "The single lowest heart-rate reading during last night's sleep.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Descriptive statistic of nocturnal heart rate.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "lowest_hr",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "lowest_night_hr",
+      "method": "Minimum heart-rate minute inside the main sleep window.",
+      "native": null,
+      "requires": [],
+      "title": "Lowest Heart Rate at Night",
+      "unit": "bpm"
+    },
+    {
+      "about": "How much lower your heart rate is asleep than awake. A dip of 10% or more is the usual healthy pattern.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Nocturnal heart-rate dipping (≥10%) by analogy with blood-pressure dipping; Ben-Dov IZ et al., Hypertension 2007; Eguchi K et al., Am J Hypertens 2009.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "dip_pct",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "night_hr_dip",
+      "method": "1 − (sleeping average ÷ awake average over the 14 hours after waking) × 100. Needs at least 4 hours of awake heart rate.",
+      "native": null,
+      "requires": [],
+      "title": "Night-time Heart Rate Dip",
+      "unit": "%"
+    },
+    {
+      "about": "Your heart rate while sitting still during the day (09:00-21:00), when you took no steps for at least 10 minutes.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Resting-while-awake heart rate; adult resting range 60-100 bpm (American Heart Association).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "sedentary_hr",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "sedentary_hr",
+      "method": "Mean of daytime heart-rate minutes where the current and previous 10 minutes had no steps. Needs 30 such minutes.",
+      "native": null,
+      "requires": [],
+      "title": "Sedentary Daytime Heart Rate",
+      "unit": "bpm"
+    },
+    {
+      "about": "Average, lowest and highest heart rate while awake today.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Descriptive statistic.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "day_avg",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "daytime_hr",
+      "method": "Mean, minimum and maximum of heart-rate minutes outside the main sleep window. Needs 60 minutes.",
+      "native": null,
+      "requires": [],
+      "title": "Daytime Heart Rate",
+      "unit": "bpm",
+      "value2_field": "day_min",
+      "value3_field": "day_max"
+    },
+    {
+      "about": "Highest heart rate held for at least 2 minutes today.",
+      "aggregation": "max",
+      "category": "heart",
+      "chart_kind": "bar",
+      "citation": "Artefact rejection by short rolling average.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "observed_max",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "observed_max_hr",
+      "method": "Maximum of 2-minute rolling averages, which ignores single-reading spikes.",
+      "native": null,
+      "requires": [],
+      "title": "Highest Heart Rate",
+      "unit": "bpm"
+    },
+    {
+      "about": "Your estimated maximum heart rate, used to set heart-rate zones.",
+      "aggregation": "latest",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Tanaka H, Monahan KD, Seals DR. Age-predicted maximal heart rate revisited. J Am Coll Cardiol 2001;37:153-156.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "hr_max",
+      "function": "hr_max",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "hr_max_estimate",
+      "method": "Tanaka formula 208 − 0.7 × age, raised to the highest 2-minute heart rate seen in the last 180 days when that is higher.",
+      "native": null,
+      "requires": [],
+      "title": "Maximum Heart Rate",
+      "unit": "bpm"
+    },
+    {
+      "about": "The gap between your maximum and resting heart rate. A larger reserve usually means better fitness.",
+      "aggregation": "latest",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "American College of Sports Medicine. ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. (2021), intensity classification by % heart-rate reserve (Karvonen) and % HRmax.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "hr_reserve",
+      "function": "hr_max",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "hr_reserve",
+      "method": "Maximum heart rate − resting heart rate (Karvonen).",
+      "native": null,
+      "requires": [
+        "resting_hr_derived"
+      ],
+      "title": "Heart Rate Reserve",
+      "unit": "bpm"
+    },
+    {
+      "about": "Minutes your heart rate was in the moderate or vigorous range, with vigorous minutes counted twice. WHO recommends 150-300 a week.",
+      "aggregation": "sum",
+      "category": "heart",
+      "chart_kind": "bar",
+      "citation": "American College of Sports Medicine. ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. (2021), intensity classification by % heart-rate reserve (Karvonen) and % HRmax. World Health Organization. WHO guidelines on physical activity and sedentary behaviour (2020): 150-300 min/week moderate or 75-150 min/week vigorous; vigorous minutes count double.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "moderate_equivalent",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "cardio_minutes",
+      "method": "Each heart-rate minute is classed by % heart-rate reserve (moderate 40-59%, vigorous 60-89%, near-maximal ≥90%). Without a resting heart rate % of maximum is used (moderate 64-76%, vigorous 77-95%, near-maximal ≥96%). Moderate + 2 × (vigorous + near-maximal).",
+      "native": null,
+      "requires": [],
+      "title": "Cardio Minutes",
+      "unit": "min",
+      "value2_field": "moderate_min",
+      "value3_field": "vigorous_min"
+    },
+    {
+      "about": "A load score that weighs time by how hard your heart worked. Harder minutes count exponentially more.",
+      "aggregation": "sum",
+      "category": "heart",
+      "chart_kind": "bar",
+      "citation": "Banister EW. Modeling elite athletic performance. In: Physiological Testing of Elite Athletes, Human Kinetics 1991; Morton RH et al., J Appl Physiol 1990.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "trimp",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "training_impulse",
+      "method": "Banister TRIMP over minutes at ≥30% heart-rate reserve: Σ minutes × HRr × 0.64 × e^(k × HRr), k = 1.92 for men and 1.67 for women.",
+      "native": null,
+      "requires": [
+        "resting_hr_derived"
+      ],
+      "title": "Training Impulse (TRIMP)",
+      "unit": ""
+    },
+    {
+      "about": "An estimate of your VO₂max from your maximum and resting heart rate. It is a rough guide; an outdoor GPS workout gives a better estimate.",
+      "aggregation": "latest",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Uth N, Sørensen H, Overgaard K, Pedersen PK. Estimation of VO2max from the ratio between HRmax and HRrest. Eur J Appl Physiol 2004;91:111-115.",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "vo2max",
+      "function": "vo2max_uth",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "vo2max_estimate",
+      "method": "Uth-Sørensen: 15.3 × maximum heart rate ÷ resting heart rate. Low confidence when the maximum comes from the age formula.",
+      "native": {
+        "android": "vo2_max",
+        "ios": "vo2_max"
+      },
+      "requires": [
+        "resting_hr_derived",
+        "hr_max_estimate"
+      ],
+      "title": "Cardio Fitness (estimated)",
+      "unit": "mL/kg/min"
+    },
+    {
+      "about": "How far today's resting heart rate is from your 30-day average. Two days in a row 5 bpm or more above usual can mean strain, poor sleep or getting ill.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Resting-heart-rate elevation as a strain and illness signal: Radin JM et al., Lancet Digital Health 2020; Buchheit M, Front Physiol 2014.",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "deviation",
+      "function": "rhr_strain",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "rhr_deviation",
+      "method": "Today − mean of the previous 30 days (needs 14 days). Flag when today and yesterday are both at least 5 bpm above.",
+      "native": null,
+      "requires": [
+        "resting_hr_derived"
+      ],
+      "title": "Resting Heart Rate vs Usual",
+      "unit": "bpm"
+    },
+    {
+      "about": "How many minutes today your wearable recorded heart rate. A day with 10 hours or more is counted as a valid day.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "bar",
+      "citation": "Valid-day rule of ≥10 h wear from accelerometry research: Troiano RP et al., Med Sci Sports Exerc 2008.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "wear_minutes",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "wear_minutes",
+      "method": "Count of minutes with a heart-rate reading in the local day.",
+      "native": null,
+      "requires": [],
+      "title": "Wear Time",
+      "unit": "min",
+      "value2_field": "completeness_pct"
+    },
+    {
+      "about": "Your average heart rate while walking. It usually falls as fitness improves.",
+      "aggregation": "average",
+      "category": "heart",
+      "chart_kind": "line",
+      "citation": "Walking heart rate average as a fitness marker (Apple Heart and Movement Study methodology).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "walking_hr",
+      "function": "heart_day",
+      "icon": {
+        "android": "Filled.Favorite",
+        "ios": "heart.fill"
+      },
+      "id": "walking_hr",
+      "method": "Mean heart rate in minutes with 60-130 steps, in runs of 3 or more such minutes (faster minutes count as running). Needs 10 minutes.",
+      "native": {
+        "android": null,
+        "ios": "walking_heart_rate_average"
+      },
+      "requires": [],
+      "title": "Walking Heart Rate",
+      "unit": "bpm"
+    },
+    {
+      "about": "Share of your time in bed spent asleep. 85% or more is considered good.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Ohayon M et al. National Sleep Foundation's sleep quality recommendations. Sleep Health 2017;3:6-19 (efficiency ≥85%).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "efficiency",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_efficiency",
+      "method": "Time asleep ÷ time in bed × 100.",
+      "native": null,
+      "requires": [],
+      "title": "Sleep Efficiency",
+      "unit": "%"
+    },
+    {
+      "about": "How long it took to fall asleep after getting into bed. Up to 30 minutes is typical.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Ohayon M et al., Sleep Health 2017 (latency ≤30 min).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "onset_latency_min",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_onset_latency",
+      "method": "First asleep stage − start of time in bed. Needs an In Bed record.",
+      "native": null,
+      "requires": [],
+      "title": "Time to Fall Asleep",
+      "unit": "min"
+    },
+    {
+      "about": "Share of sleep spent in deep sleep. Adults usually spend about 13-23%.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Ohayon MM et al. Meta-analysis of quantitative sleep parameters. Sleep 2004;27:1255-1273.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "deep_pct",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "deep_sleep_pct",
+      "method": "Deep minutes ÷ time asleep × 100. Only nights with sleep stages.",
+      "native": null,
+      "requires": [],
+      "title": "Deep Sleep",
+      "unit": "%"
+    },
+    {
+      "about": "Share of sleep spent in REM. Adults usually spend about 20-25%.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Ohayon MM et al., Sleep 2004.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "rem_pct",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "rem_sleep_pct",
+      "method": "REM minutes ÷ time asleep × 100. Only nights with sleep stages.",
+      "native": null,
+      "requires": [],
+      "title": "REM Sleep",
+      "unit": "%"
+    },
+    {
+      "about": "Times you were awake for 5 minutes or more after first falling asleep.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "bar",
+      "citation": "Wake after sleep onset (WASO), Ohayon M et al., Sleep Health 2017.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "wakeups",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_wakeups",
+      "method": "Gaps of ≥5 minutes between asleep stages, from first sleep to final waking. Minutes awake are shown as wake after sleep onset.",
+      "native": null,
+      "requires": [],
+      "title": "Wake-ups",
+      "unit": "",
+      "value2_field": "waso_min"
+    },
+    {
+      "about": "When your night started.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Descriptive.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "bedtime_clock",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "bedtime",
+      "method": "Start of the first sleep record, as a clock time.",
+      "native": null,
+      "requires": [],
+      "title": "Bedtime",
+      "unit": "clock"
+    },
+    {
+      "about": "When you finally woke up.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Descriptive.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "wake_clock",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "wake_time",
+      "method": "End of the last asleep stage, as a clock time.",
+      "native": null,
+      "requires": [],
+      "title": "Wake Time",
+      "unit": "clock"
+    },
+    {
+      "about": "Halfway between falling asleep and waking. It tracks your body-clock timing.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Roenneberg T et al. Life between clocks. J Biol Rhythms 2003.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "midpoint_clock",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_midpoint",
+      "method": "Sleep onset + half the time to final waking.",
+      "native": null,
+      "requires": [],
+      "title": "Sleep Midpoint",
+      "unit": "clock"
+    },
+    {
+      "about": "Minutes from falling asleep to the first deep sleep.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Descriptive (sleep architecture).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "deep_latency_min",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "deep_latency",
+      "method": "First deep stage − sleep onset.",
+      "native": null,
+      "requires": [],
+      "title": "Time to First Deep Sleep",
+      "unit": "min"
+    },
+    {
+      "about": "Minutes from falling asleep to the first REM sleep. Typically 70-120 minutes.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Carskadon MA, Dement WC. Normal human sleep: an overview. Principles and Practice of Sleep Medicine.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "rem_latency_min",
+      "function": "sleep_night",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "rem_latency",
+      "method": "First REM stage − sleep onset.",
+      "native": null,
+      "requires": [],
+      "title": "Time to First REM",
+      "unit": "min"
+    },
+    {
+      "about": "How much your bedtime varies across the last 14 nights. Under 30-60 minutes is regular.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Sleep timing regularity; Phillips AJK et al., Sci Rep 2017.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "bedtime_sd",
+      "function": "sleep_regularity",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_timing_variability",
+      "method": "Sample standard deviation of bedtime (and wake time) over the last 14 nights. Needs 5 nights.",
+      "native": null,
+      "requires": [],
+      "title": "Bedtime Variability",
+      "unit": "min",
+      "value2_field": "wake_sd"
+    },
+    {
+      "about": "The chance you are in the same state (asleep or awake) at the same time on consecutive days, scaled to 100. Higher is more regular.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Phillips AJK et al. Irregular sleep/wake patterns are associated with poorer academic performance and delayed circadian and sleep/wake timing. Sci Rep 2017;7:3216.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "sri",
+      "function": "sleep_regularity",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_regularity_index",
+      "method": "Minute-by-minute comparison of each noon-to-noon day with the next over the last 14 days: 200 × agreement − 100. Needs 5 day pairs.",
+      "native": null,
+      "requires": [],
+      "title": "Sleep Regularity Index",
+      "unit": ""
+    },
+    {
+      "about": "How much later you sleep on weekends than on weekdays. Under 1 hour is best.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Wittmann M, Dinich J, Merrow M, Roenneberg T. Social jetlag. Chronobiol Int 2006;23:497-509.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "social_jetlag_min",
+      "function": "sleep_regularity",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "social_jetlag",
+      "method": "|Mean sleep midpoint on free nights (waking Saturday or Sunday) − on work nights|. Needs 2 free and 3 work nights in 14 days.",
+      "native": null,
+      "requires": [],
+      "title": "Social Jet Lag",
+      "unit": "min"
+    },
+    {
+      "about": "Your natural body-clock timing: the midpoint of sleep on free days, corrected for catching up on sleep.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "line",
+      "citation": "Roenneberg T et al. Epidemiology of the human circadian clock. Sleep Med Rev 2007;11:429-438.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "msfsc_clock",
+      "function": "sleep_regularity",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "chronotype",
+      "method": "MSFsc = MSF − (SDf − SDweek) ÷ 2 when free-day sleep is longer than weekday sleep, where SDweek = (5 × SDw + 2 × SDf) ÷ 7.",
+      "native": null,
+      "requires": [],
+      "title": "Chronotype (MSFsc)",
+      "unit": "clock"
+    },
+    {
+      "about": "Sleep you missed against your nightly need over the last 14 nights. Adults need at least 7 hours.",
+      "aggregation": "average",
+      "category": "sleep",
+      "chart_kind": "bar",
+      "citation": "Watson NF et al. Recommended amount of sleep for a healthy adult (AASM/SRS). Sleep 2015;38:843-844.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "sleep_debt_min",
+      "function": "sleep_regularity",
+      "icon": {
+        "android": "Filled.Bedtime",
+        "ios": "bed.double.fill"
+      },
+      "id": "sleep_debt",
+      "method": "Σ max(0, need − time asleep) over recorded nights in the last 14 days. Need defaults to 8 hours.",
+      "native": null,
+      "requires": [],
+      "title": "Sleep Debt",
+      "unit": "min"
+    },
+    {
+      "about": "Minutes you walked at 100 steps a minute or faster, which counts as moderate activity.",
+      "aggregation": "sum",
+      "category": "activity",
+      "chart_kind": "bar",
+      "citation": "Tudor-Locke C et al. Walking cadence (steps/min) and intensity in 21-40 year olds: CADENCE-adults. Int J Behav Nutr Phys Act 2019; Tudor-Locke C et al., Br J Sports Med 2018.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "brisk_minutes",
+      "function": "activity_day",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "brisk_minutes",
+      "method": "Minutes with ≥100 steps from your wearable's minute data.",
+      "native": null,
+      "requires": [],
+      "title": "Brisk Walking Minutes",
+      "unit": "min"
+    },
+    {
+      "about": "The average of your 30 fastest minutes of stepping today.",
+      "aggregation": "average",
+      "category": "activity",
+      "chart_kind": "line",
+      "citation": "Tudor-Locke C et al. Peak stepping cadence in free-living adults. J Phys Act Health 2011.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "peak30_cadence",
+      "function": "activity_day",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "peak_30_cadence",
+      "method": "Mean of the 30 highest minute step counts in the day.",
+      "native": null,
+      "requires": [],
+      "title": "Peak 30-min Cadence",
+      "unit": "steps/min"
+    },
+    {
+      "about": "Hours between 07:00 and 22:00 with at least 250 steps. Breaking up sitting every hour is recommended.",
+      "aggregation": "average",
+      "category": "activity",
+      "chart_kind": "bar",
+      "citation": "WHO 2020 guideline: limit sedentary time and replace it with activity of any intensity.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "active_hours",
+      "function": "activity_day",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "active_hours",
+      "method": "Count of hours 07:00-21:59 whose de-duplicated steps are ≥250.",
+      "native": null,
+      "requires": [],
+      "title": "Active Hours",
+      "unit": "h"
+    },
+    {
+      "about": "Your longest run of minutes without a step between 07:00 and 22:00 while wearing your device.",
+      "aggregation": "average",
+      "category": "activity",
+      "chart_kind": "line",
+      "citation": "WHO 2020 guideline on sedentary behaviour.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "longest_sedentary_min",
+      "function": "activity_day",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "longest_sedentary",
+      "method": "Longest run of worn minutes (heart rate present) with no steps, 07:00-21:59.",
+      "native": null,
+      "requires": [],
+      "title": "Longest Sitting Spell",
+      "unit": "min"
+    },
+    {
+      "about": "Your daily steps placed in the Tudor-Locke bands: sedentary <5,000, low active 5,000-7,499, somewhat active 7,500-9,999, active 10,000-12,499, highly active ≥12,500.",
+      "aggregation": "latest",
+      "category": "activity",
+      "chart_kind": "line",
+      "citation": "Tudor-Locke C et al. How many steps/day are enough? for adults. Int J Behav Nutr Phys Act 2011;8:79.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "step_band_index",
+      "function": "activity_day",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "step_band",
+      "method": "Band of the day's de-duplicated step total.",
+      "native": null,
+      "requires": [],
+      "title": "Activity Level",
+      "unit": ""
+    },
+    {
+      "about": "Steps your wearable counted while your phone counted almost none, for example when the phone stayed at home.",
+      "aggregation": "sum",
+      "category": "activity",
+      "chart_kind": "bar",
+      "citation": "Data-quality rule.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "phone_missing_steps",
+      "function": "activity_day",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "phone_left_behind",
+      "method": "Flagged when the wearable counts ≥1,000 steps and the phone less than 10% of that.",
+      "native": null,
+      "requires": [],
+      "title": "Phone-free Steps",
+      "unit": "steps"
+    },
+    {
+      "about": "Consecutive days you reached your step goal.",
+      "aggregation": "latest",
+      "category": "activity",
+      "chart_kind": "line",
+      "citation": "Descriptive.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "current",
+      "function": "step_streak",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "step_streak",
+      "method": "Days in a row meeting the goal, counting today once it is met.",
+      "native": null,
+      "requires": [],
+      "title": "Step Goal Streak",
+      "unit": "days",
+      "value2_field": "best"
+    },
+    {
+      "about": "Average step length from your phone's distance and steps, compared with the typical length for your height.",
+      "aggregation": "average",
+      "category": "activity",
+      "chart_kind": "line",
+      "citation": "Hatano Y. Use of the pedometer for promoting daily walking exercise. ICHPER 1993.",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "stride_m",
+      "function": "stride",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "stride_length",
+      "method": "Distance ÷ steps from the same source (needs 1,000 steps). Typical = 0.415 × height for men and 0.413 × height for women.",
+      "native": null,
+      "requires": [],
+      "title": "Stride Length",
+      "unit": "m",
+      "value2_field": "expected_m"
+    },
+    {
+      "about": "All the energy your body used today: resting, activity and digesting food.",
+      "aggregation": "average",
+      "category": "energy",
+      "chart_kind": "bar",
+      "citation": "Westerterp KR. Diet induced thermogenesis. Nutr Metab 2004;1:5.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "tdee",
+      "function": "energy_day",
+      "icon": {
+        "android": "Filled.LocalFireDepartment",
+        "ios": "flame.fill"
+      },
+      "id": "tdee",
+      "method": "(Resting + active energy) ÷ 0.9, adding about 10% for digestion. Needs a full day of resting energy (at least 70% of your predicted BMR).",
+      "native": null,
+      "requires": [],
+      "title": "Total Energy Burned",
+      "unit": "kcal"
+    },
+    {
+      "about": "Energy used at rest per day from your device, next to the Mifflin-St Jeor prediction.",
+      "aggregation": "average",
+      "category": "energy",
+      "chart_kind": "line",
+      "citation": "Mifflin MD et al. A new predictive equation for resting energy expenditure. Am J Clin Nutr 1990;51:241-247.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "resting_kcal",
+      "function": "energy_day",
+      "icon": {
+        "android": "Filled.LocalFireDepartment",
+        "ios": "flame.fill"
+      },
+      "id": "measured_bmr",
+      "method": "Daily resting energy; prediction 10 × kg + 6.25 × cm − 5 × age + 5 (men) or − 161 (women).",
+      "native": {
+        "android": "basal_metabolic_rate",
+        "ios": null
+      },
+      "requires": [],
+      "title": "Resting Metabolic Rate",
+      "unit": "kcal",
+      "value2_field": "bmr_mifflin"
+    },
+    {
+      "about": "Total energy burned ÷ resting energy. 1.40-1.69 is sedentary to lightly active, 1.70-1.99 active, 2.00-2.40 vigorously active.",
+      "aggregation": "average",
+      "category": "energy",
+      "chart_kind": "line",
+      "citation": "FAO/WHO/UNU. Human energy requirements. Food and Nutrition Technical Report Series 1, 2004.",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "pal",
+      "function": "energy_day",
+      "icon": {
+        "android": "Filled.LocalFireDepartment",
+        "ios": "flame.fill"
+      },
+      "id": "physical_activity_level",
+      "method": "TDEE ÷ resting energy.",
+      "native": null,
+      "requires": [],
+      "title": "Physical Activity Level",
+      "unit": ""
+    },
+    {
+      "about": "Your typical walking speed over the last 7 days. Below 0.8 m/s is linked with higher health risk in older adults.",
+      "aggregation": "average",
+      "category": "mobility",
+      "chart_kind": "line",
+      "citation": "Studenski S et al. Gait speed and survival in older adults. JAMA 2011;305:50-58.",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "speed_median",
+      "function": "gait_week",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "walking_speed_weekly",
+      "method": "Median of walking-speed readings in the last 7 days.",
+      "native": null,
+      "requires": [],
+      "title": "Walking Speed (weekly)",
+      "unit": "m/s"
+    },
+    {
+      "about": "Share of each step with both feet on the ground. Typical values are 20-40%; higher can mean less balance.",
+      "aggregation": "average",
+      "category": "mobility",
+      "chart_kind": "line",
+      "citation": "Apple Inc. Measuring Walking Quality Through iPhone Mobility Metrics (2022).",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "double_support_median",
+      "function": "gait_week",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "double_support_weekly",
+      "method": "Median of double-support readings in the last 7 days.",
+      "native": null,
+      "requires": [],
+      "title": "Double Support Time (weekly)",
+      "unit": "%"
+    },
+    {
+      "about": "Walking readings in the last 7 days where one step was more than 10% different from the other.",
+      "aggregation": "average",
+      "category": "mobility",
+      "chart_kind": "bar",
+      "citation": "Apple Inc. Measuring Walking Quality Through iPhone Mobility Metrics (2022).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "asymmetry_flag_count",
+      "function": "gait_week",
+      "icon": {
+        "android": "AutoMirrored.Filled.DirectionsWalk",
+        "ios": "figure.walk"
+      },
+      "id": "asymmetry_flags",
+      "method": "Count of asymmetry readings >10% (readings of 100% are treated as sensor errors). Flagged at 3 or more.",
+      "native": null,
+      "requires": [],
+      "title": "Uneven Walking Readings",
+      "unit": ""
+    },
+    {
+      "about": "How much of the weekly safe-listening allowance you used, where 100% a week is 80 dB for 40 hours.",
+      "aggregation": "sum",
+      "category": "hearing",
+      "chart_kind": "bar",
+      "citation": "WHO-ITU H.870 Guidelines for safe listening devices/systems (2019).",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "dose_pct",
+      "function": "audio_day",
+      "icon": {
+        "android": "Filled.Hearing",
+        "ios": "ear.fill"
+      },
+      "id": "sound_dose",
+      "method": "Σ hours × 2^((dB − 80) ÷ 3) ÷ 40 × 100 (3 dB exchange rate).",
+      "native": null,
+      "requires": [],
+      "title": "Headphone Sound Dose",
+      "unit": "%",
+      "value2_field": "loud_minutes"
+    },
+    {
+      "about": "Your weight with day-to-day water swings smoothed out.",
+      "aggregation": "average",
+      "category": "body",
+      "chart_kind": "line",
+      "citation": "Walker J. The Hacker's Diet (exponentially smoothed moving average, α = 0.1).",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "trend_kg",
+      "function": "body_trend",
+      "icon": {
+        "android": "Filled.MonitorWeight",
+        "ios": "scalemass.fill"
+      },
+      "id": "weight_trend",
+      "method": "Exponentially smoothed average: trend += 0.1 × (weigh-in − trend) on each day with a weigh-in.",
+      "native": null,
+      "requires": [],
+      "title": "Weight Trend",
+      "unit": "kg",
+      "value2_field": "rate_kg_week"
+    },
+    {
+      "about": "How fast your smoothed weight is changing per week.",
+      "aggregation": "average",
+      "category": "body",
+      "chart_kind": "line",
+      "citation": "Derived from the smoothed trend.",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "rate_kg_week",
+      "function": "body_trend",
+      "icon": {
+        "android": "Filled.MonitorWeight",
+        "ios": "scalemass.fill"
+      },
+      "id": "weight_rate",
+      "method": "(Trend today − trend 14 days ago) ÷ 2. Needs 4 weigh-ins in 14 days.",
+      "native": null,
+      "requires": [
+        "weight_trend"
+      ],
+      "title": "Weekly Weight Change",
+      "unit": "kg/wk"
+    },
+    {
+      "about": "Body mass index from your smoothed weight and height.",
+      "aggregation": "latest",
+      "category": "body",
+      "chart_kind": "line",
+      "citation": "WHO Expert Consultation. Appropriate body-mass index for Asian populations. Lancet 2004;363:157-163.",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "bmi",
+      "function": "body_trend",
+      "icon": {
+        "android": "Filled.MonitorWeight",
+        "ios": "scalemass.fill"
+      },
+      "id": "bmi_derived",
+      "method": "Trend weight ÷ height². WHO categories, or the Asian cut-offs (overweight ≥23, obese ≥27.5) if chosen in Settings.",
+      "native": {
+        "android": "bmi",
+        "ios": "bmi"
+      },
+      "requires": [
+        "weight_trend"
+      ],
+      "title": "BMI",
+      "unit": "kg/m²"
+    },
+    {
+      "about": "The weight range with a healthy BMI for your height.",
+      "aggregation": "latest",
+      "category": "body",
+      "chart_kind": "line",
+      "citation": "WHO BMI classification.",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "healthy_low_kg",
+      "function": "body_trend",
+      "icon": {
+        "android": "Filled.MonitorWeight",
+        "ios": "scalemass.fill"
+      },
+      "id": "healthy_weight_range",
+      "method": "18.5 × height² to 24.9 × height² (22.9 with Asian cut-offs).",
+      "native": null,
+      "requires": [],
+      "title": "Healthy Weight Range",
+      "unit": "kg",
+      "value2_field": "healthy_high_kg"
+    },
+    {
+      "about": "How many weeks until you reach your goal weight at your current rate.",
+      "aggregation": "latest",
+      "category": "body",
+      "chart_kind": "line",
+      "citation": "Derived from the smoothed trend.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "eta_weeks",
+      "function": "body_trend",
+      "icon": {
+        "android": "Filled.MonitorWeight",
+        "ios": "scalemass.fill"
+      },
+      "id": "goal_eta",
+      "method": "(Goal − trend) ÷ weekly rate, when moving towards the goal at ≥0.05 kg a week.",
+      "native": null,
+      "requires": [
+        "weight_rate"
+      ],
+      "title": "Weeks to Goal Weight",
+      "unit": "wk"
+    },
+    {
+      "about": "Protein you logged per kilogram of body weight. 1.4-2.0 g/kg a day supports strength training.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "International Society of Sports Nutrition position stand: protein and exercise (Jäger R et al. 2017): 1.4-2.0 g/kg/day, about 0.25 g/kg per meal.",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "protein_g_per_kg",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "protein_per_kg",
+      "method": "Logged protein ÷ latest weight.",
+      "native": null,
+      "requires": [],
+      "title": "Protein per kg",
+      "unit": "g/kg"
+    },
+    {
+      "about": "Share of your energy from protein, carbohydrate and fat, from the grams you logged.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Atwater factors 4/4/9 kcal/g; WHO: saturated fat below 10% of energy; Dietary Guidelines for Americans: fiber 14 g per 1,000 kcal; WHO sodium/potassium molar ratio below 1.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "protein_pct",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "macro_split",
+      "method": "4 kcal/g protein and carbohydrate, 9 kcal/g fat; each share of their total.",
+      "native": null,
+      "requires": [],
+      "title": "Macro Split",
+      "unit": "%",
+      "value2_field": "carbs_pct",
+      "value3_field": "fat_pct"
+    },
+    {
+      "about": "Share of your energy from saturated fat. WHO recommends below 10%.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Atwater factors 4/4/9 kcal/g; WHO: saturated fat below 10% of energy; Dietary Guidelines for Americans: fiber 14 g per 1,000 kcal; WHO sodium/potassium molar ratio below 1.",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "saturated_fat_pct",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "saturated_fat_share",
+      "method": "9 × saturated fat g ÷ energy from macros × 100.",
+      "native": null,
+      "requires": [],
+      "title": "Saturated Fat",
+      "unit": "% kcal"
+    },
+    {
+      "about": "Fibre per 1,000 kcal you ate. About 14 g per 1,000 kcal is recommended.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Atwater factors 4/4/9 kcal/g; WHO: saturated fat below 10% of energy; Dietary Guidelines for Americans: fiber 14 g per 1,000 kcal; WHO sodium/potassium molar ratio below 1.",
+      "decimals": 1,
+      "default_enabled": true,
+      "field": "fiber_per_1000kcal",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "fiber_density",
+      "method": "Fibre g × 1,000 ÷ logged kcal.",
+      "native": null,
+      "requires": [],
+      "title": "Fibre per 1,000 kcal",
+      "unit": "g"
+    },
+    {
+      "about": "Molar ratio of sodium to potassium. WHO suggests keeping it below 1. Salt added while cooking is often not in food estimates.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Atwater factors 4/4/9 kcal/g; WHO: saturated fat below 10% of energy; Dietary Guidelines for Americans: fiber 14 g per 1,000 kcal; WHO sodium/potassium molar ratio below 1.",
+      "decimals": 2,
+      "default_enabled": true,
+      "field": "na_k_ratio",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "sodium_potassium_ratio",
+      "method": "(sodium mg ÷ 22.99) ÷ (potassium mg ÷ 39.10).",
+      "native": null,
+      "requires": [],
+      "title": "Sodium to Potassium",
+      "unit": "ratio"
+    },
+    {
+      "about": "Time from your first to your last logged food, using the time you ate it.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Descriptive; uses each item's eaten-at time, not when it was logged.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "eating_window_min",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "eating_window",
+      "method": "Last eaten time − first eaten time.",
+      "native": null,
+      "requires": [],
+      "title": "Eating Window",
+      "unit": "min"
+    },
+    {
+      "about": "Time between your last food and going to bed.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Descriptive; uses the eaten-at time and the night's first sleep record.",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "last_meal_to_bed_min",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "last_meal_to_bed",
+      "method": "Bedtime − last eaten time.",
+      "native": null,
+      "requires": [],
+      "title": "Last Meal to Bedtime",
+      "unit": "min"
+    },
+    {
+      "about": "Times you had tea or coffee within an hour of an iron-rich food, which can reduce how much iron you absorb.",
+      "aggregation": "sum",
+      "category": "nutrition",
+      "chart_kind": "bar",
+      "citation": "Tea and coffee polyphenols inhibit non-heme iron absorption (Hurrell RF et al. Br J Nutr 1999).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "iron_absorption_risk",
+      "function": "nutrition_day",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "iron_absorption_risk",
+      "method": "Count of tea/coffee items within 60 minutes of an item with ≥3 mg iron.",
+      "native": null,
+      "requires": [],
+      "title": "Tea or Coffee with Iron-rich Food",
+      "unit": ""
+    },
+    {
+      "about": "Calories you logged minus the energy you burned today.",
+      "aggregation": "average",
+      "category": "nutrition",
+      "chart_kind": "bar",
+      "citation": "Adaptive energy expenditure from intake and weight trend, about 7,700 kcal per kg of body-mass change (Hall KD, Int J Obes 2008 discusses its limits).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "balance_kcal",
+      "function": "energy_balance",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "energy_balance",
+      "method": "Logged kcal − total energy burned.",
+      "native": null,
+      "requires": [
+        "tdee"
+      ],
+      "title": "Energy Balance",
+      "unit": "kcal"
+    },
+    {
+      "about": "What your body likely burns per day, worked out from what you ate and how your weight trend changed over 4 weeks.",
+      "aggregation": "latest",
+      "category": "nutrition",
+      "chart_kind": "line",
+      "citation": "Adaptive energy expenditure from intake and weight trend, about 7,700 kcal per kg of body-mass change (Hall KD, Int J Obes 2008 discusses its limits).",
+      "decimals": 0,
+      "default_enabled": true,
+      "field": "adaptive_tdee",
+      "function": "energy_balance",
+      "icon": {
+        "android": "Filled.Restaurant",
+        "ios": "fork.knife"
+      },
+      "id": "adaptive_tdee",
+      "method": "Mean logged kcal − (trend change × 7,700 kcal/kg) ÷ 28 days. Needs 14 logged days and 6 weigh-ins.",
+      "native": null,
+      "requires": [
+        "weight_trend"
+      ],
+      "title": "Adaptive Energy Estimate",
+      "unit": "kcal"
+    }
+  ],
+  "thresholds": {
+    "active_hour_first": 7,
+    "active_hour_last": 21,
+    "active_hour_steps": 250,
+    "asymmetry_flag_count": 3,
+    "asymmetry_pct": 10,
+    "bmi": {
+      "asian": [
+        18.5,
+        23.0,
+        27.5
+      ],
+      "who": [
+        18.5,
+        25.0,
+        30.0
+      ]
+    },
+    "bmr_min_share": 0.7,
+    "brisk_cadence": 100,
+    "daytime_min_minutes": 60,
+    "dip_min_wake_min": 240,
+    "episode_gap_hours": 3,
+    "eta_min_rate": 0.05,
+    "ewma_alpha": 0.1,
+    "free_wake_weekdays": [
+      6,
+      7
+    ],
+    "healthy_bmi": {
+      "asian": [
+        18.5,
+        22.9
+      ],
+      "who": [
+        18.5,
+        24.9
+      ]
+    },
+    "height_conflict_m": 0.01,
+    "hr_max_lookback_days": 180,
+    "hr_valid_max": 250,
+    "hr_valid_min": 25,
+    "hrmax_zones": [
+      0.57,
+      0.64,
+      0.77,
+      0.96
+    ],
+    "hrr_zones": [
+      0.3,
+      0.4,
+      0.6,
+      0.9
+    ],
+    "mifflin": {
+      "female": -161,
+      "male": 5,
+      "other": -78
+    },
+    "pal_bands": [
+      1.4,
+      1.7,
+      2.0,
+      2.4
+    ],
+    "peak_minutes": 30,
+    "phone_min_wearable_steps": 1000,
+    "phone_ratio": 0.1,
+    "rate_min_weighins": 4,
+    "rate_window_days": 14,
+    "regularity_min_nights": 5,
+    "regularity_window_days": 14,
+    "rhr_min_coverage": 0.7,
+    "rhr_min_sleep_min": 180,
+    "rhr_window_min": 5,
+    "sedentary_end_hour": 21,
+    "sedentary_min_minutes": 30,
+    "sedentary_start_hour": 9,
+    "sedentary_still_min": 10,
+    "sleep_need_min": 480,
+    "slow_gait_mps": 0.8,
+    "social_min_free": 2,
+    "social_min_work": 3,
+    "sound_exchange_db": 3,
+    "sound_ref_db": 80,
+    "sound_weekly_hours": 40,
+    "sri_min_pairs": 5,
+    "step_bands": [
+      5000,
+      7500,
+      10000,
+      12500
+    ],
+    "strain_delta_bpm": 5,
+    "strain_min_days": 14,
+    "strain_sd_floor": 1.0,
+    "strain_window_days": 30,
+    "stride_factor": {
+      "female": 0.413,
+      "male": 0.415,
+      "other": 0.414
+    },
+    "stride_min_steps": 1000,
+    "tanaka": [
+      208,
+      0.7
+    ],
+    "tef_share": 0.1,
+    "trimp_k": {
+      "female": 1.67,
+      "male": 1.92,
+      "other": 1.795
+    },
+    "trimp_min_hrr": 0.3,
+    "uth_factor": 15.3,
+    "valid_wear_min": 600,
+    "wake_window_hours": 14,
+    "wakeup_min_gap_min": 5,
+    "walking_max_steps": 130,
+    "walking_min_minutes": 10,
+    "walking_min_steps": 60,
+    "walking_run_min": 3
+  }
+}

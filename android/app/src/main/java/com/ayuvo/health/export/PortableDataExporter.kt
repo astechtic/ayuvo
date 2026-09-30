@@ -47,6 +47,10 @@ class PortableDataExporter(
                 mealSchedule = prefs.mealSchedule.first(),
                 // Comma-separated natively; null until the favourites were first migrated.
                 summaryFavourites = prefs.summaryFavourites.first()?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() },
+                insightsEnabled = prefs.insightsEnabled.first(),
+                derivedMetricsEnabled = prefs.derivedMetricsEnabled.first(),
+                derivedMetricsDisabled = prefs.derivedMetricsDisabled.first().sorted(),
+                derivedBmiScheme = prefs.derivedBmiScheme.first(),
                 optionalNutrientGoals = goalsToMap(goals),
                 waterTrackingEnabled = prefs.waterTrackingEnabled.first(),
                 waterDailyGoalMl = prefs.waterDailyGoalMl.first(),

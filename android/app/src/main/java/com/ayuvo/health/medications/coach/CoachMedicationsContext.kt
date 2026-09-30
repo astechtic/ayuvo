@@ -37,7 +37,12 @@ data class CoachMedicationsContext(
         if (rows.isEmpty()) return com.ayuvo.health.nutrients.SupplementSnapshot.EMPTY
         val logs = snapshot.arr("dose_logs").orEmpty().filterIsInstance<JsonObject>().map(MedicationJson::doseLog)
         val doses = logs.map { com.ayuvo.health.nutrients.SupplementDose(it.medicationId, it.status.raw, it.takenAtMs, it.doseQuantity) }
-        return com.ayuvo.health.nutrients.SupplementSnapshot(rows, doses, doses.filter { it.status == "taken" }.mapNotNull { it.takenAtMs })
+        // Averaged over each dosing interval like the app's totals (docs/intake-metrics.md §3).
+        val intervals = snapshot.arr("schedules").orEmpty().filterIsInstance<JsonObject>().map(MedicationJson::schedule)
+            .groupBy { it.medicationId }
+            .mapValues { (_, list) -> com.ayuvo.health.nutrients.SupplementAveraging.intervalDays(list.maxByOrNull { it.activeFromMs }) }
+            .filterValues { it > 1 }
+        return com.ayuvo.health.nutrients.SupplementSnapshot(rows, doses, doses.filter { it.status == "taken" }.mapNotNull { it.takenAtMs }, intervalDays = intervals)
     }
 
     /** `## Data available` lines when the tools are advertised. */

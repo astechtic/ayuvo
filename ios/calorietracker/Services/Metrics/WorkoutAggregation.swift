@@ -24,22 +24,29 @@ enum WorkoutBurnAggregation {
         in range: ClosedRange<Date>,
         calendar: Calendar = .current
     ) -> [WorkoutBurnDay] {
+        // One strength-diary estimate per day (deduplicated), plus every recorded GPS workout that day
+        // (docs/workouts-gps.md): a walk never replaces the day's strength burn.
         var preferredByDay: [String: StrengthWorkoutSession] = [:]
+        var outdoorByDay: [String: (date: Date, calories: Int)] = [:]
         for session in sessions {
-            guard isReliable(session.caloriesBurned) else { continue }
+            guard isReliable(session.caloriesBurned), let calories = session.caloriesBurned else { continue }
             let day = calendar.startOfDay(for: session.calendarDiaryDate)
             guard range.contains(day) else { continue }
             let key = session.stableDiaryDateKey
+            if session.outdoor != nil {
+                outdoorByDay[key] = (day, (outdoorByDay[key]?.calories ?? 0) + calories)
+                continue
+            }
             if let current = preferredByDay[key], !shouldPrefer(session, over: current) { continue }
             preferredByDay[key] = session
         }
-        return preferredByDay.values.compactMap { session in
-            guard let calories = session.caloriesBurned else { return nil }
-            return WorkoutBurnDay(
-                date: calendar.startOfDay(for: session.calendarDiaryDate),
-                calories: calories
-            )
+        var totals: [String: (date: Date, calories: Int)] = outdoorByDay
+        for (key, session) in preferredByDay {
+            guard let calories = session.caloriesBurned else { continue }
+            let day = calendar.startOfDay(for: session.calendarDiaryDate)
+            totals[key] = (day, (totals[key]?.calories ?? 0) + calories)
         }
+        return totals.values.map { WorkoutBurnDay(date: $0.date, calories: $0.calories) }
         .sorted { $0.date < $1.date }
     }
 

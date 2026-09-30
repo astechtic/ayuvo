@@ -1,5 +1,6 @@
 package com.ayuvo.health.data.health
 
+import com.ayuvo.health.data.derived.DerivedMetricInfo
 import com.ayuvo.health.models.HealthDataType
 import java.time.LocalDate
 import java.time.ZoneId
@@ -20,6 +21,27 @@ data class HealthCoachTypeSummary(
 )
 
 /**
+ * A derived metric Coach can read (docs/derived-metrics.md): `derived:<id>` in the health tools, one value per day with
+ * native wins applied (ascending, newest [HealthCoachSnapshot.MAX_DAILY_ROWS]). Only enabled metrics with values.
+ */
+data class HealthCoachDerivedMetric(
+    val id: String,
+    val title: String,
+    val category: String,
+    val unit: String,
+    val aggregation: String,
+    val method: String,
+    val nativeTypeId: String?,
+    val days: List<DerivedPoint>
+) {
+    val dataType: String get() = DERIVED_PREFIX + id
+
+    companion object {
+        const val DERIVED_PREFIX = "derived:"
+    }
+}
+
+/**
  * Everything Coach's four health tools answer from — bounded (≤400 daily rows and ≤200 records
  * per type, ≤120 nights) and built once per store revision. Never persisted; tool payloads are
  * not written to chat history.
@@ -34,9 +56,11 @@ data class HealthCoachSnapshot(
     /** Nights ascending by wake day (newest 120). */
     val nights: List<SleepNight>,
     val zoneId: String,
-    val platform: String = "Health Connect"
+    val platform: String = "Health Connect",
+    /** Enabled derived metrics with values; empty when Derived Metrics are off. */
+    val derived: List<HealthCoachDerivedMetric> = emptyList()
 ) {
-    val isEmpty: Boolean get() = types.isEmpty()
+    val isEmpty: Boolean get() = types.isEmpty() && derived.isEmpty()
 
     companion object {
         const val MAX_DAILY_ROWS = 400
@@ -48,7 +72,8 @@ data class HealthCoachSnapshot(
             lastSyncMs: Long?,
             zone: ZoneId = ZoneId.systemDefault(),
             today: LocalDate = LocalDate.now(zone),
-            displayName: (String, String?) -> String = { id, hint -> hint ?: HealthDataType.byId(id)?.displayFallback() ?: HealthDataType.humanise(id) }
+            displayName: (String, String?) -> String = { id, hint -> hint ?: HealthDataType.byId(id)?.displayFallback() ?: HealthDataType.humanise(id) },
+            derivedMetrics: List<DerivedMetricInfo> = emptyList()
         ): HealthCoachSnapshot {
             val summaries = repo.summaries().values.filter { it.count > 0 }
             val meta = repo.typeMeta()
@@ -80,7 +105,22 @@ data class HealthCoachSnapshot(
             val nights = if (types.any { it.typeId == HealthDataType.SLEEP.id }) {
                 repo.sleepNights(today.minusDays((MAX_NIGHTS - 1).toLong()), today).takeLast(MAX_NIGHTS)
             } else emptyList()
-            return HealthCoachSnapshot(lastSyncMs, types, daily, samples, nights, zone.id)
+            val withValues = if (derivedMetrics.isEmpty()) emptySet() else repo.derivedMetricIdsWithValues().toSet()
+            val derived = derivedMetrics.filter { it.id in withValues }.mapNotNull { info ->
+                val days = repo.derivedSeries(info.id, info.nativeTypeId, today.minusDays((MAX_DAILY_ROWS - 1).toLong()), today).takeLast(MAX_DAILY_ROWS)
+                if (days.none { it.sourceKind == "derived" }) return@mapNotNull null
+                HealthCoachDerivedMetric(
+                    id = info.id,
+                    title = info.title,
+                    category = info.category,
+                    unit = info.unit,
+                    aggregation = info.aggregation,
+                    method = info.method,
+                    nativeTypeId = info.nativeTypeId,
+                    days = days
+                )
+            }
+            return HealthCoachSnapshot(lastSyncMs, types, daily, samples, nights, zone.id, derived = derived)
         }
     }
 }

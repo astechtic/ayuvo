@@ -74,6 +74,19 @@ data class HealthDailyRollup(
     val fromPlatformAggregate: Boolean = false
 )
 
+/** One `derived_daily_values` row (docs/derived-metrics.md §3): never exported, rebuilt on demand. */
+data class DerivedDailyValue(
+    val metricId: String,
+    val day: String,
+    val value: Double? = null,
+    val value2: Double? = null,
+    val value3: Double? = null,
+    val quality: Double? = null,
+    val sourceKind: String = "derived",
+    val algoVersion: Int,
+    val computedMs: Long
+)
+
 data class HealthHourlyRollup(
     val typeId: String,
     val day: String,

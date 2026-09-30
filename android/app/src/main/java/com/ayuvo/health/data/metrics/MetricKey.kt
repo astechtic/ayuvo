@@ -24,8 +24,9 @@ enum class AppMetricId(val slug: String) {
 
 /**
  * A chart/favourite key (docs/ui-structure.md §4 key grammar): `app:<slug>` for app metrics,
- * `nutrient:<key>` for nutrient metrics (a nutrient_reference.json or sports key), any other
- * string is a health registry id (kept as-is, unregistered imported ids included).
+ * `nutrient:<key>` for nutrient metrics (a nutrient_reference.json or sports key), `derived:<id>`
+ * for Ayuvo's derived metrics (docs/derived-metrics.md), any other string is a health registry id
+ * (kept as-is, unregistered imported ids included).
  */
 sealed interface MetricKey {
     val storageId: String
@@ -42,16 +43,23 @@ sealed interface MetricKey {
         override val storageId: String get() = typeId
     }
 
+    /** A derived metric (`derived_config.json` id); values come from `derived_daily_values` with native wins applied. */
+    data class Derived(val id: String) : MetricKey {
+        override val storageId: String get() = DERIVED_PREFIX + id
+    }
+
     companion object {
         const val NUTRIENT_PREFIX = "nutrient:"
+        const val DERIVED_PREFIX = "derived:"
         private val NUTRIENT_KEY = Regex("^[a-z][a-z0-9_]*$")
 
-        /** `app:` keys not in [AppMetricId], malformed `nutrient:` keys and blank strings → null. */
+        /** `app:` keys not in [AppMetricId], malformed `nutrient:` / `derived:` keys and blank strings → null. */
         fun parse(raw: String): MetricKey? {
             val k = raw.trim()
             if (k.isEmpty()) return null
             if (k.startsWith("app:")) return AppMetricId.bySlug(k.removePrefix("app:"))?.let(::App)
             if (k.startsWith(NUTRIENT_PREFIX)) return k.removePrefix(NUTRIENT_PREFIX).takeIf { NUTRIENT_KEY.matches(it) }?.let(::Nutrient)
+            if (k.startsWith(DERIVED_PREFIX)) return k.removePrefix(DERIVED_PREFIX).takeIf { NUTRIENT_KEY.matches(it) }?.let(::Derived)
             return Health(k)
         }
     }

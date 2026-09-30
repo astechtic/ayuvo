@@ -130,6 +130,9 @@ enum PortableData {
         Setting(group: .preferences, json: "app_theme_color", native: AppThemeColor.storageKey, kind: .choice(AppThemeColor.allCases.map(\.rawValue))),
         Setting(group: .preferences, json: "adaptive_goals_enabled", native: AdaptiveGoalSettings.enabledKey, kind: .bool),
         Setting(group: .preferences, json: "food_measurement_prefer_grams", native: FoodMeasurementSettings.preferGramsByDefaultKey, kind: .bool),
+        Setting(group: .preferences, json: "insights_enabled", native: InsightsSettings.enabledKey, kind: .bool),
+        Setting(group: .preferences, json: "derived_metrics_enabled", native: DerivedSettings.enabledKey, kind: .bool),
+        Setting(group: .preferences, json: "derived_bmi_scheme", native: DerivedSettings.bmiSchemeKey, kind: .choice(["who", "asian"])),
         Setting(group: .water, json: "tracking_enabled", native: WaterSettings.enabledKey, kind: .bool),
         Setting(group: .water, json: "daily_goal_ml", native: WaterSettings.dailyGoalKey, kind: .int(100...20_000)),
         Setting(group: .fasting, json: "tracking_enabled", native: FastingSettings.enabledKey, kind: .bool),
@@ -138,6 +141,7 @@ enum PortableData {
     ]
 
     static let maxSummaryFavourites = 12
+    static let maxDerivedDisabled = 200
     static let mealKeys = [
         MealScheduleSettings.breakfastStartKey, MealScheduleSettings.lunchStartKey,
         MealScheduleSettings.dinnerStartKey, MealScheduleSettings.snackStartKey,

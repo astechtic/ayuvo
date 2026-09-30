@@ -16,6 +16,8 @@ class NutrientsVectorTests {
     @Test fun dayTotals() = NutrientsVectors.assertAll("day_totals.json")
     @Test fun loggedDayAverage() = NutrientsVectors.assertAll("logged_day_average.json")
     @Test fun labelOutput() = NutrientsVectors.assertAll("label_output.json")
+    @Test fun intervalDays() = NutrientsVectors.assertAll("interval_days.json")
+    @Test fun spreadSupplements() = NutrientsVectors.assertAll("spread_supplements.json")
 
     /** A new vector file fails here until it has a runner above; each file declares the function it tests. */
     @Test

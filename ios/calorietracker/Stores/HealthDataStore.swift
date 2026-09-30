@@ -198,6 +198,8 @@ final class HealthDataStore {
             let now = Date()
             lastSyncAt = now
             defaults.set(now.timeIntervalSince1970, forKey: Self.lastSyncAtKey)
+            // Derived metrics (docs/derived-metrics.md) follow every committed sync.
+            DerivedMetricsService.shared.scheduleRefresh()
         }
         await refreshSnapshots()
         endBackgroundTask()

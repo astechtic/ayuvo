@@ -305,6 +305,7 @@ struct RecordsHomeView: View {
                     .accessibilityIdentifier("records.nearDuplicates")
                 }
                 if !store.importantHighlights.isEmpty { highlightsSection }
+                RecordsLabNutritionCard()
             }
             .padding(.horizontal)
             .padding(.bottom, RecordsLayout.sectionSpacing)

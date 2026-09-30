@@ -54,7 +54,8 @@ FORMAT = "ayuvo-nutrients-vectors"
 EXPECTED_FILES = {"reference_lines.json": "reference_lines", "default_goal.json": "default_goal",
                   "iu_conversion.json": "convert_amount", "supplement_entries.json": "supplement_entries",
                   "day_totals.json": "day_totals", "logged_day_average.json": "logged_day_average",
-                  "label_output.json": "parse_label_output"}
+                  "label_output.json": "parse_label_output",
+                  "interval_days.json": "interval_days", "spread_supplements.json": "spread_supplements"}
 ALLOWED_ZONES = frozenset(["America/New_York", "Europe/London", "Asia/Kolkata", "UTC"])
 BANDS = ["19-30", "31-50", "51-70", "71+"]
 CATEGORIES = ("carbs", "fats", "minerals", "vitamins", "other")

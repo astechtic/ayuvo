@@ -42,6 +42,8 @@ fun HealthCategoryScreen(
 ) {
     val vm: HealthHubViewModel = viewModel(factory = HealthHubViewModel.Factory(container))
     val hub by vm.ui.collectAsState()
+    val browseVm: BrowseViewModel = viewModel(factory = BrowseViewModel.Factory(container))
+    val app by browseVm.ui.collectAsState()
     val context = LocalContext.current
     val category = HealthCategory.byId(categoryId) ?: HealthCategory.OTHER
     val launch = rememberHealthPermissionLauncher(container, vm)
@@ -61,6 +63,11 @@ fun HealthCategoryScreen(
             if (hub.loading) return@LazyColumn
             val ui = hub.categories.firstOrNull { it.category == category }
             if (ui == null || (ui.rows.isEmpty() && ui.missingPermissions.isEmpty())) {
+                // Estimates can exist without a platform type of this category having data (docs/derived-metrics.md).
+                if (derivedRowsFor(app.derived, category.id).isNotEmpty()) {
+                    derivedMetricGroup(app.derived, category.id, container.metricCatalog, onOpenMetric)
+                    return@LazyColumn
+                }
                 item(key = "empty") {
                     EmptyState(
                         icon = Icons.Outlined.MonitorHeart,
@@ -78,6 +85,7 @@ fun HealthCategoryScreen(
                 onAllow = { launch(vm.categoryPermissions(category)) },
                 withDataHeader = null
             )
+            derivedMetricGroup(app.derived, category.id, container.metricCatalog, onOpenMetric)
         }
     }
 }

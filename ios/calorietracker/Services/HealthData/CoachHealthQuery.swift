@@ -15,6 +15,9 @@ nonisolated struct HealthCoachDataType: Sendable, Equatable {
     var latestValue: Double?
     var latestValueText: String?
     var historyLimitedBefore: String?
+    /// A metric Ayuvo derives on the device (`derived:<id>`, docs/derived-metrics.md); adds `derived`, `title`, `method`.
+    var isDerived = false
+    var method: String?
 
     var jsonObject: [String: Any] {
         var latest: [String: Any] = [
@@ -39,6 +42,11 @@ nonisolated struct HealthCoachDataType: Sendable, Equatable {
         if let historyLimitedBefore {
             object["history_limited_before"] = historyLimitedBefore
         }
+        if isDerived {
+            object["derived"] = true
+            object["title"] = displayName
+            object["method"] = method as Any? ?? NSNull()
+        }
         return object
     }
 }
@@ -55,6 +63,11 @@ nonisolated struct HealthCoachDay: Sendable, Equatable {
     var v2Min: Double?
     var v2Max: Double?
     var ownSum: Double?
+    /// Derived metrics: "native" (an Apple Health value won) or "derived" (Ayuvo's estimate), and the native source.
+    var sourceKind: String? = nil
+    var source: String? = nil
+    /// Steps / active energy: `sum` is the de-duplicated HealthKit statistics total, not the mirror's row sum.
+    var deduplicated = false
 
     var jsonObject: [String: Any] {
         var object: [String: Any] = [
@@ -70,6 +83,9 @@ nonisolated struct HealthCoachDay: Sendable, Equatable {
         if let v2Min { object["v2_min"] = v2Min }
         if let v2Max { object["v2_max"] = v2Max }
         if let ownSum { object["own_sum"] = ownSum }
+        if let sourceKind { object["source_kind"] = sourceKind }
+        if let source { object["source"] = source }
+        if deduplicated { object["deduplicated"] = true }
         return object
     }
 }
@@ -187,10 +203,19 @@ nonisolated struct CoachHealthQuery: Sendable {
     ) -> CoachHealthQuery {
         CoachHealthQuery(
             dataTypes: {
-                await HealthCoachQueryBuilder.dataTypes(reader: reader, calendar: calendar, typeMeta: typeMeta)
+                let types = await HealthCoachQueryBuilder.dataTypes(reader: reader, calendar: calendar, typeMeta: typeMeta)
+                return types + (await HealthCoachQueryBuilder.derivedDataTypes(reader: reader, calendar: calendar))
             },
             summary: { dataType, from, to, limit in
-                await HealthCoachQueryBuilder.summary(reader: reader, dataType: dataType, from: from, to: to, limit: limit, calendar: calendar, typeMeta: typeMeta)
+                if dataType.hasPrefix(MetricKey.derivedPrefix) {
+                    return await HealthCoachQueryBuilder.derivedSummary(reader: reader, dataType: dataType, from: from, to: to, limit: limit)
+                }
+                return await HealthCoachQueryBuilder.summary(
+                    reader: reader, dataType: dataType, from: from, to: to, limit: limit, calendar: calendar, typeMeta: typeMeta,
+                    dedupedTotals: { typeID, fromDay, toDay in
+                        await HealthCoachQueryBuilder.healthKitTotals(typeID: typeID, from: fromDay, to: toDay, calendar: calendar)
+                    }
+                )
             },
             samples: { dataType, from, to, limit in
                 await HealthCoachQueryBuilder.samples(reader: reader, dataType: dataType, from: from, to: to, limit: limit, calendar: calendar, typeMeta: typeMeta)
@@ -283,13 +308,40 @@ nonisolated enum HealthCoachQueryBuilder {
         }
     }
 
+    /// Types whose Coach daily sums come from de-duplicated HealthKit statistics (the mirror holds every source's
+    /// rows, so summing it counts iPhone and watch steps twice).
+    static let dedupedTypes: Set<String> = ["steps", "active_energy"]
+
+    /// De-duplicated daily totals through `InsightsHealthKitTotals` (nil when Health sync is off or unavailable).
+    static func healthKitTotals(typeID: String, from: String, to: String, calendar: Calendar) async -> [String: Double]? {
+        guard let start = InsightsDay.date(from, calendar: calendar), let end = InsightsDay.date(to, calendar: calendar) else { return nil }
+        return await InsightsHealthKitTotals.daily(typeID: typeID, from: start, to: end, calendar: calendar, defaults: .standard)
+    }
+
     static func summary(
         reader: HealthDatabase, dataType: String, from: String, to: String, limit: Int,
-        calendar: Calendar, typeMeta: [String: HealthTypeMetaRow]
+        calendar: Calendar, typeMeta: [String: HealthTypeMetaRow],
+        dedupedTotals: (@Sendable (_ typeID: String, _ from: String, _ to: String) async -> [String: Double]?)? = nil
     ) async -> HealthCoachSummary? {
         guard isValidDay(from), isValidDay(to), from <= to else { return nil }
         let type = resolve(dataType, typeMeta: typeMeta)
-        guard let rollups = try? await reader.dailyRollups(type: type.id, fromDay: from, toDay: to) else { return nil }
+        guard var rollups = try? await reader.dailyRollups(type: type.id, fromDay: from, toDay: to) else { return nil }
+        var deduped: [String: Double]?
+        if dedupedTypes.contains(type.id), let dedupedTotals, let totals = await dedupedTotals(type.id, from, to) {
+            deduped = totals
+            let known = Set(rollups.map(\.day))
+            for (day, total) in totals where !known.contains(day) && day >= from && day <= to {
+                rollups.append(HealthDailyRollupRow(typeID: type.id, day: day, tz: calendar.timeZone.identifier, sum: total))
+            }
+            rollups = rollups.map { rollup in
+                guard let total = totals[rollup.day] else { return rollup }
+                var r = rollup
+                r.sum = total
+                r.ownSum = nil
+                return r
+            }
+            .sorted { $0.day < $1.day }
+        }
         let recent = Array(rollups.suffix(max(1, limit)))
         let days = recent.map { rollup in
             HealthCoachDay(
@@ -303,7 +355,8 @@ nonisolated enum HealthCoachQueryBuilder {
                 v2Avg: rollup.v2Avg,
                 v2Min: rollup.v2Min,
                 v2Max: rollup.v2Max,
-                ownSum: rollup.ownSum
+                ownSum: rollup.ownSum,
+                deduplicated: deduped?[rollup.day] != nil
             )
         }
         var summary = HealthCoachSummary(dataType: type.id, unit: type.unit, from: from, to: to, total: nil, average: nil, min: nil, max: nil, latest: nil, days: days)
@@ -333,6 +386,58 @@ nonisolated enum HealthCoachQueryBuilder {
             summary.average = counts.isEmpty ? nil : counts.reduce(0, +) / Double(counts.count)
             summary.latest = recent.last?.lastValue
         }
+        return summary
+    }
+
+    // MARK: Derived metrics (docs/derived-metrics.md)
+
+    /// Switched-on derived metrics with at least one stored value, as `derived:<id>` data types.
+    static func derivedDataTypes(reader: HealthDatabase, calendar: Calendar, defaults: UserDefaults = .standard) async -> [HealthCoachDataType] {
+        let enabled = DerivedSettings.enabledIDs(defaults: defaults)
+        guard !enabled.isEmpty, let withValues = try? await reader.derivedMetricIDsWithValues() else { return [] }
+        let ids = Set(withValues)
+        var out: [HealthCoachDataType] = []
+        for info in DerivedCatalog.shared.metrics where enabled.contains(info.id) && ids.contains(info.id) {
+            let latest = (try? await reader.latestDerivedValue(metric: info.id)) ?? nil
+            out.append(HealthCoachDataType(
+                dataType: MetricKey.derivedPrefix + info.id,
+                category: info.category,
+                displayName: info.title,
+                unit: info.unit,
+                aggregation: info.aggregation,
+                count: 0,
+                first: nil,
+                last: latest.map { $0.day },
+                latestAt: latest.map { $0.day },
+                latestValue: latest?.value,
+                latestValueText: nil,
+                historyLimitedBefore: nil,
+                isDerived: true,
+                method: info.method
+            ))
+        }
+        return out
+    }
+
+    /// A derived metric's native-wins daily series: Apple Health's value when it has one, else Ayuvo's estimate.
+    static func derivedSummary(reader: HealthDatabase, dataType: String, from: String, to: String, limit: Int,
+                               defaults: UserDefaults = .standard) async -> HealthCoachSummary? {
+        guard isValidDay(from), isValidDay(to), from <= to else { return nil }
+        let id = String(dataType.dropFirst(MetricKey.derivedPrefix.count))
+        guard let info = DerivedCatalog.shared.byID[id] else { return nil }
+        let all = await DerivedMetricSeries.days(reader: reader, info: info, fromDay: from, toDay: to,
+                                                 enabled: DerivedSettings.isEnabled(id, defaults: defaults))
+        let recent = Array(all.suffix(max(1, limit)))
+        let days = recent.map { d in
+            HealthCoachDay(date: d.day, sum: info.aggregation == "sum" ? d.value : nil, avg: d.value, min: d.value, max: d.value,
+                           count: 1, durationS: nil, v2Avg: nil, v2Min: nil, v2Max: nil, ownSum: nil,
+                           sourceKind: d.isNative ? "native" : "derived", source: d.isNative ? d.source : "Estimated by Ayuvo")
+        }
+        let values = recent.map(\.value)
+        var summary = HealthCoachSummary(dataType: dataType, unit: info.unit, from: from, to: to, total: nil,
+                                         average: values.isEmpty ? nil : values.reduce(0, +) / Double(values.count),
+                                         min: values.min(), max: values.max(), latest: values.last, days: days)
+        if info.aggregation == "sum" { summary.total = values.isEmpty ? nil : values.reduce(0, +) }
         return summary
     }
 

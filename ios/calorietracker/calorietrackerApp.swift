@@ -623,6 +623,10 @@ struct calorietrackerApp: App {
         strengthWorkoutStore.onWorkoutBurnDeleted = { [healthKitManager] sessionID in
             healthKitManager.deleteWorkoutBurn(sessionID: sessionID)
         }
+        // Strength sessions, the GPS recorder and the workout Live Activity buttons.
+        WorkoutSessionCoordinator.shared.attach(store: strengthWorkoutStore) { [weightStore] in
+            weightStore.latestEntry?.weightKg ?? UserProfile.load()?.weightKg ?? 70
+        }
     }
 
     private func refreshWidgetSnapshot() {

@@ -128,6 +128,23 @@ extension ActionExecutor {
             }
             return MetricSamples(key: key, title: type.displayName, unit: type.unit, natural: natural,
                                  dailyTotals: summed, samples: samples, healthType: type)
+        case .derived(let metricID):
+            // One native-wins value per day (docs/derived-metrics.md §1).
+            guard let info = DerivedCatalog.shared.byID[metricID] else {
+                throw ActionError.notFound(String(localized: "Ayuvo doesn't know the metric “\(id)”."))
+            }
+            let reader = try await healthReader()
+            let fromDay = range.map { $0.firstDay.text } ?? "0000-01-01"
+            let toDay = range.map { $0.firstDay.adding(days: $0.dayCount - 1).text } ?? "9999-12-31"
+            let days = await DerivedMetricSeries.days(reader: reader, info: info, fromDay: fromDay, toDay: toDay,
+                                                      enabled: DerivedSettings.isEnabled(metricID))
+            let samples = days.compactMap { d -> ActionMath.Sample? in
+                guard let day = MetricsReference.LocalDay.parse(d.day) else { return nil }
+                return ActionMath.Sample(tMs: env.zone.midnight(day), value: d.value)
+            }
+            let natural = info.aggregation == "sum" ? "sum" : (info.aggregation == "latest" ? "latest" : "average")
+            return MetricSamples(key: key, title: MetricCatalog.descriptor(for: key).title, unit: info.unit, natural: natural,
+                                 dailyTotals: true, samples: samples, healthType: nil)
         }
     }
 
@@ -144,6 +161,9 @@ extension ActionExecutor {
         switch series.key {
         case .app(let metric): return AppMetricFormat.text(value, metric: metric)
         case .nutrient(let nutrientKey): return NutrientCatalog.text(value, key: nutrientKey)
+        case .derived(let metricID):
+            guard let info = DerivedCatalog.shared.byID[metricID] else { return Self.number(value, digits: 1) }
+            return DerivedMetricFormat.text(value, info: info)
         case .health:
             guard let type = series.healthType else { return Self.number(value, digits: 1) }
             return HealthUnitFormatting.text(value, type: type)

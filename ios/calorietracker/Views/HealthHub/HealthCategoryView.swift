@@ -33,6 +33,9 @@ struct HealthCategoryView: View {
                 .listRowBackground(AppColors.appCard)
             }
 
+            DerivedMetricsSection(categories: DerivedMetricsSection.categories(for: category))
+                .listRowBackground(AppColors.appCard)
+
             if !withoutData.isEmpty {
                 Section {
                     ForEach(withoutData) { type in

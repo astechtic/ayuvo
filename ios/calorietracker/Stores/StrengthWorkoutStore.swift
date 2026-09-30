@@ -13,6 +13,14 @@ final class StrengthWorkoutStore {
         var customActivities: [StrengthPlannedExercise]?
         /// User-created strength exercises (device-local templates).
         var userExercises: [StrengthPlannedExercise]?
+        /// A Start session tap that has not been finished yet. Optional so older diaries decode.
+        var activeSession: ActiveStrengthSession?
+    }
+
+    /// An in-progress strength session; persisted so the start survives relaunch.
+    struct ActiveStrengthSession: Codable, Equatable {
+        var startedAt: Date
+        var diaryDateKey: String
     }
 
     /// v2 moved the catalogue to exercises-dataset (numeric IDs, new metadata). v1 diaries
@@ -31,6 +39,7 @@ final class StrengthWorkoutStore {
     private(set) var preferences = StrengthWorkoutPreferences()
     private(set) var customActivities: [StrengthPlannedExercise] = []
     private(set) var userExercises: [StrengthPlannedExercise] = []
+    private(set) var activeSession: ActiveStrengthSession?
 
     private var cachedExerciseLibrary: ExerciseLibraryService?
     private var exerciseLibraryFingerprint: Int = 0
@@ -130,8 +139,56 @@ final class StrengthWorkoutStore {
         }
     }
 
+    /// The day's calculated strength burns (one per diary day) that the burn
+    /// sync owns. GPS/Watch outdoor sessions are written to Health by the
+    /// recorder and are excluded here.
     var workoutBurnSessions: [StrengthWorkoutSession] {
-        sortedCompletedSessions.filter { $0.caloriesBurned != nil }
+        sortedCompletedSessions.filter { $0.caloriesBurned != nil && $0.outdoor == nil }
+    }
+
+    /// GPS / Apple Watch outdoor workouts on a diary day, oldest first.
+    func outdoorSessions(on date: Date) -> [StrengthWorkoutSession] {
+        let key = Self.dateKey(for: date)
+        return completedSessions
+            .filter { $0.outdoor != nil && $0.stableDiaryDateKey == key }
+            .sorted { $0.startedAt < $1.startedAt }
+    }
+
+    func session(id: UUID) -> StrengthWorkoutSession? {
+        completedSessions.first { $0.id == id }
+    }
+
+    /// The day's calculated strength-burn record (never an outdoor session).
+    func strengthBurnSession(on date: Date) -> StrengthWorkoutSession? {
+        let key = Self.dateKey(for: date)
+        return sortedCompletedSessions.first {
+            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil && $0.outdoor == nil
+        }
+    }
+
+    // MARK: - Strength session start / finish
+
+    /// Starts a strength session for `date` (normally today). A running session is kept.
+    @discardableResult
+    func startSession(on date: Date, at startedAt: Date = .now) -> Bool {
+        guard activeSession == nil else { return false }
+        return commit { activeSession = ActiveStrengthSession(startedAt: startedAt, diaryDateKey: Self.dateKey(for: date)) }
+    }
+
+    func discardActiveSession() {
+        guard activeSession != nil else { return }
+        commit { activeSession = nil }
+    }
+
+    /// Stores one GPS / Apple Watch workout. Outdoor sessions are independent
+    /// records: the recorder writes their HKWorkout itself, so no burn callback fires.
+    @discardableResult
+    func addOutdoorSession(_ session: StrengthWorkoutSession) -> Bool {
+        guard session.outdoor != nil, !isPersistenceBlocked else { return false }
+        return commit {
+            completedSessions.removeAll { $0.id == session.id }
+            completedSessions.append(session)
+        }
     }
 
     static func dateKey(for date: Date, calendar: Calendar = .current) -> String {
@@ -438,17 +495,33 @@ final class StrengthWorkoutStore {
         return summary.isEmpty ? nil : summary
     }
 
+    /// Finishes a strength session with its real start and end. With a calorie
+    /// estimate the session becomes the day's calculated burn (replacing an
+    /// earlier Calculate snapshot, keeping its id so Health updates in place);
+    /// without one it is stored as a plain timed session.
     @discardableResult
     func completeWorkout(
         on date: Date,
         startedAt: Date,
         completedAt: Date = .now,
         elapsedSeconds: Int,
-        weightUnit: WeightUnit
+        weightUnit: WeightUnit,
+        caloriesBurned: Int? = nil,
+        heartRate: WorkoutHeartRateSummary? = nil
     ) -> StrengthWorkoutSession? {
         guard !isPersistenceBlocked else { return nil }
         let planned = exercises(for: date)
-        guard !planned.isEmpty else { return nil }
+        guard !planned.isEmpty || caloriesBurned != nil else { return nil }
+        let clearsActive = activeSession != nil
+
+        if let caloriesBurned {
+            let session = storeBurnSession(
+                on: date, caloriesBurned: caloriesBurned, weightUnit: weightUnit,
+                startedAt: startedAt, completedAt: completedAt, durationSeconds: max(1, elapsedSeconds),
+                heartRate: heartRate, clearActiveSession: clearsActive
+            )
+            return session
+        }
 
         let logs = completedExerciseLogs(from: planned, weightUnit: weightUnit)
         let session = StrengthWorkoutSession(
@@ -457,9 +530,13 @@ final class StrengthWorkoutStore {
             startedAt: startedAt,
             completedAt: completedAt,
             durationSeconds: max(1, elapsedSeconds),
-            exercises: logs
+            exercises: logs,
+            heartRate: heartRate
         )
-        guard commit({ completedSessions.append(session) }) else { return nil }
+        guard commit({
+            completedSessions.append(session)
+            if clearsActive { activeSession = nil }
+        }) else { return nil }
         return session
     }
 
@@ -471,42 +548,83 @@ final class StrengthWorkoutStore {
         on date: Date,
         caloriesBurned: Int,
         weightUnit: WeightUnit,
-        calculatedAt: Date = .now
+        calculatedAt: Date = .now,
+        interval: DateInterval? = nil,
+        heartRate: WorkoutHeartRateSummary? = nil
     ) -> StrengthWorkoutSession? {
         guard !isPersistenceBlocked else { return nil }
         let planned = exercises(for: date)
-        let logs = completedExerciseLogs(from: planned, weightUnit: weightUnit)
         guard planned.contains(where: {
             $0.timer?.isSaved == true
                 || (!$0.isCardio && $0.sets.contains { (Int($0.reps) ?? 0) > 0 })
         }) else { return nil }
 
+        if let interval, interval.duration >= 1 {
+            return storeBurnSession(
+                on: date, caloriesBurned: caloriesBurned, weightUnit: weightUnit,
+                startedAt: interval.start, completedAt: interval.end,
+                durationSeconds: Int(interval.duration.rounded()), heartRate: heartRate, clearActiveSession: false
+            )
+        }
+        // A recalculation without a new window keeps a previously confirmed
+        // real interval (and its heart-rate statistics).
+        if let existing = strengthBurnSession(on: date), existing.hasRealInterval {
+            return storeBurnSession(
+                on: date, caloriesBurned: caloriesBurned, weightUnit: weightUnit,
+                startedAt: existing.startedAt, completedAt: existing.completedAt,
+                durationSeconds: existing.durationSeconds, heartRate: heartRate ?? existing.heartRate,
+                clearActiveSession: false
+            )
+        }
+        return storeBurnSession(
+            on: date, caloriesBurned: caloriesBurned, weightUnit: weightUnit,
+            startedAt: calculatedAt, completedAt: calculatedAt, durationSeconds: 0,
+            heartRate: heartRate, clearActiveSession: false
+        )
+    }
+
+    /// Replaces the day's single calculated strength burn. Keeps the previous
+    /// id so Apple Health updates rather than duplicates it.
+    private func storeBurnSession(
+        on date: Date,
+        caloriesBurned: Int,
+        weightUnit: WeightUnit,
+        startedAt: Date,
+        completedAt: Date,
+        durationSeconds: Int,
+        heartRate: WorkoutHeartRateSummary?,
+        clearActiveSession: Bool
+    ) -> StrengthWorkoutSession? {
+        let planned = exercises(for: date)
+        let logs = completedExerciseLogs(from: planned, weightUnit: weightUnit)
         let key = Self.dateKey(for: date)
         let existingBurns = sortedCompletedSessions.filter {
-            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil
+            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil && $0.outdoor == nil
         }
         let existing = existingBurns.first
         let session = StrengthWorkoutSession(
             id: existing?.id ?? UUID(),
             diaryDate: Calendar.current.startOfDay(for: date),
             diaryDateKey: key,
-            startedAt: calculatedAt,
-            completedAt: calculatedAt,
-            durationSeconds: 0,
+            startedAt: startedAt,
+            completedAt: completedAt,
+            durationSeconds: durationSeconds,
             exercises: logs,
             caloriesBurned: min(max(caloriesBurned, 1), 5_000),
-            healthSyncVersion: (existing?.healthSyncVersion ?? 0) + 1
+            healthSyncVersion: (existing?.healthSyncVersion ?? 0) + 1,
+            heartRate: heartRate
         )
 
-        // Keep timer-era completed sessions intact. The burn calculator owns
-        // only the single daily burn snapshot it previously created.
+        // Keep timer-era completed sessions and outdoor workouts intact. The
+        // burn calculator owns only the single daily burn snapshot it created.
         // Health only hears about the burn once it is durably stored, so a
         // refused save cannot leave a sample with no diary record behind it.
         let committed = commit {
             completedSessions.removeAll {
-                $0.stableDiaryDateKey == key && $0.caloriesBurned != nil
+                $0.stableDiaryDateKey == key && $0.caloriesBurned != nil && $0.outdoor == nil
             }
             completedSessions.append(session)
+            if clearActiveSession { activeSession = nil }
         }
         guard committed else { return nil }
         for duplicate in existingBurns.dropFirst() where duplicate.id != session.id {
@@ -517,10 +635,7 @@ final class StrengthWorkoutStore {
     }
 
     func caloriesBurned(on date: Date) -> Int? {
-        let key = Self.dateKey(for: date)
-        return sortedCompletedSessions.first {
-            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil
-        }?.caloriesBurned
+        strengthBurnSession(on: date)?.caloriesBurned
     }
 
     func latestSession(on date: Date) -> StrengthWorkoutSession? {
@@ -541,10 +656,10 @@ final class StrengthWorkoutStore {
 
     func deleteSession(_ id: UUID) {
         guard !isPersistenceBlocked else { return }
-        let deletedBurnID = completedSessions.first {
-            $0.id == id && $0.caloriesBurned != nil
-        }?.id
+        let deleted = completedSessions.first { $0.id == id }
+        let deletedBurnID = deleted?.caloriesBurned != nil ? deleted?.id : nil
         guard commit({ completedSessions.removeAll { $0.id == id } }) else { return }
+        if deleted?.outdoor != nil { OutdoorRouteStore.delete(sessionID: id) }
         if let deletedBurnID { onWorkoutBurnDeleted?(deletedBurnID) }
     }
 
@@ -556,7 +671,7 @@ final class StrengthWorkoutStore {
         var merged = completedSessions
         var changed = false
 
-        for session in imported where session.caloriesBurned != nil {
+        for session in imported where session.caloriesBurned != nil && session.outdoor == nil {
             if let index = merged.firstIndex(where: { $0.id == session.id }) {
                 let localVersion = merged[index].healthSyncVersion ?? 0
                 let importedVersion = session.healthSyncVersion ?? 0
@@ -568,7 +683,7 @@ final class StrengthWorkoutStore {
             }
 
             if let sameDay = merged.firstIndex(where: {
-                $0.stableDiaryDateKey == session.stableDiaryDateKey && $0.caloriesBurned != nil
+                $0.stableDiaryDateKey == session.stableDiaryDateKey && $0.caloriesBurned != nil && $0.outdoor == nil
             }) {
                 let localVersion = merged[sameDay].healthSyncVersion ?? 0
                 let importedVersion = session.healthSyncVersion ?? 0
@@ -601,7 +716,8 @@ final class StrengthWorkoutStore {
             durationSeconds: imported.exercises.isEmpty ? local.durationSeconds : imported.durationSeconds,
             exercises: imported.exercises.isEmpty ? local.exercises : imported.exercises,
             caloriesBurned: imported.caloriesBurned,
-            healthSyncVersion: imported.healthSyncVersion
+            healthSyncVersion: imported.healthSyncVersion,
+            heartRate: local.heartRate
         )
     }
 
@@ -634,6 +750,7 @@ final class StrengthWorkoutStore {
             exercise.imagePaths.forEach { FoodImageStore.shared.delete(filename: $0) }
         }
         userExercises = []
+        activeSession = nil
         preferences = StrengthWorkoutPreferences()
     }
 
@@ -667,10 +784,10 @@ final class StrengthWorkoutStore {
         // Health sample; otherwise discarded time would keep counting forever.
         guard previousTimerInputs != savedTimerBurnInputs(in: plan) else { return [] }
         let invalidatedBurnIDs = completedSessions.filter {
-            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil
+            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil && $0.outdoor == nil
         }.map(\.id)
         completedSessions.removeAll {
-            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil
+            $0.stableDiaryDateKey == key && $0.caloriesBurned != nil && $0.outdoor == nil
         }
         return invalidatedBurnIDs
     }
@@ -713,7 +830,7 @@ final class StrengthWorkoutStore {
     }
 
     private func preferredHistorySession(on dateKey: String) -> StrengthWorkoutSession? {
-        let sessions = completedSessions.filter { $0.stableDiaryDateKey == dateKey }
+        let sessions = completedSessions.filter { $0.stableDiaryDateKey == dateKey && $0.outdoor == nil }
         guard !sessions.isEmpty else { return nil }
         let burns = sessions.filter { $0.caloriesBurned != nil }
         if let latestBurn = burns.max(by: {
@@ -797,7 +914,8 @@ final class StrengthWorkoutStore {
             savedExerciseIDs: savedExerciseIDs,
             preferences: preferences,
             customActivities: customActivities,
-            userExercises: userExercises
+            userExercises: userExercises,
+            activeSession: activeSession
         )
     }
 
@@ -807,6 +925,7 @@ final class StrengthWorkoutStore {
         savedExerciseIDs = state.savedExerciseIDs
         customActivities = state.customActivities ?? []
         userExercises = state.userExercises ?? []
+        activeSession = state.activeSession
         preferences = state.preferences
     }
 

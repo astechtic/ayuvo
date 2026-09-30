@@ -1,0 +1,99 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "bmi": 17.9,
+        "bmi_category_index": 0,
+        "eta_weeks": 32.6,
+        "healthy_high_kg": 70.1,
+        "healthy_low_kg": 56.7,
+        "rate_kg_week": 0.17,
+        "trend_kg": 54.85
+      },
+      "input": {
+        "day": "2026-03-15",
+        "goal_kg": 60.5,
+        "height_m": 1.75,
+        "scheme": "asian",
+        "weights": {
+          "2026-03-01": 54.5,
+          "2026-03-04": 54.9,
+          "2026-03-08": 55.2,
+          "2026-03-11": 55.0,
+          "2026-03-13": 55.6,
+          "2026-03-15": 55.8
+        }
+      },
+      "name": "gaining_towards_goal_asian"
+    },
+    {
+      "expected": {
+        "bmi": 17.9,
+        "bmi_category_index": 0,
+        "eta_weeks": null,
+        "healthy_high_kg": 76.3,
+        "healthy_low_kg": 56.7,
+        "rate_kg_week": 0.17,
+        "trend_kg": 54.85
+      },
+      "input": {
+        "day": "2026-03-15",
+        "goal_kg": 52.0,
+        "height_m": 1.75,
+        "scheme": "who",
+        "weights": {
+          "2026-03-01": 54.5,
+          "2026-03-04": 54.9,
+          "2026-03-08": 55.2,
+          "2026-03-11": 55.0,
+          "2026-03-13": 55.6,
+          "2026-03-15": 55.8
+        }
+      },
+      "name": "who_moving_away_from_goal"
+    },
+    {
+      "expected": {
+        "bmi": 31.1,
+        "bmi_category_index": 3,
+        "eta_weeks": null,
+        "healthy_high_kg": 72.0,
+        "healthy_low_kg": 53.5,
+        "rate_kg_week": null,
+        "trend_kg": 90.0
+      },
+      "input": {
+        "day": "2026-03-15",
+        "goal_kg": 80.0,
+        "height_m": 1.7,
+        "scheme": "who",
+        "weights": {
+          "2026-03-15": 90.0
+        }
+      },
+      "name": "single_weighin_no_rate"
+    },
+    {
+      "expected": {
+        "bmi": null,
+        "bmi_category_index": null,
+        "eta_weeks": null,
+        "healthy_high_kg": 63.7,
+        "healthy_low_kg": 47.4,
+        "rate_kg_week": null,
+        "trend_kg": null
+      },
+      "input": {
+        "day": "2026-03-15",
+        "goal_kg": null,
+        "height_m": 1.6,
+        "scheme": "who",
+        "weights": {}
+      },
+      "name": "no_weights"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "body_trend",
+  "version": 1
+}

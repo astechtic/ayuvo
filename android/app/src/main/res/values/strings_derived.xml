@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Derived metrics (docs/derived-metrics.md) -->
+    <string name="settings_derived_metrics">Derived Metrics</string>
+    <string name="settings_derived_enabled">Derived Metrics</string>
+    <string name="settings_derived_enabled_sub">Estimate vitals your devices don\'t record</string>
+    <string name="settings_derived_footer">Ayuvo estimates vitals your devices don\'t record, such as resting heart rate from minute-by-minute heart rate. When Health Connect already has a value for the same day, that value is shown instead. Estimates are never written to Health Connect.</string>
+    <string name="settings_derived_bmi_scheme">BMI categories</string>
+    <string name="settings_derived_bmi_who">WHO</string>
+    <string name="settings_derived_bmi_asian">Asian</string>
+    <string name="settings_derived_bmi_footer">Asian cut-offs (overweight from 23, obese from 27.5) follow the WHO expert consultation for Asian populations.</string>
+    <string name="settings_derived_native_wins">Health Connect value is used when available</string>
+    <string name="settings_derived_also_affects">Also affects: %1$s</string>
+    <string name="derived_estimated_badge">Estimated by Ayuvo</string>
+    <string name="derived_how_calculated">How it\'s calculated</string>
+    <string name="derived_source_label">Source</string>
+    <string name="derived_metric_toggle">Calculate this metric</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvo is not calculating this metric. Values from Health Connect are still shown.</string>
+    <string name="derived_headline_highest">HIGHEST</string>
+    <string name="derived_source_estimated">Estimated by Ayuvo from your Health Connect data</string>
+    <string name="derived_source_native">From Health Connect (%1$s)</string>
+    <string name="derived_source_native_generic">From Health Connect</string>
+    <string name="derived_source_mixed">Health Connect values where recorded; estimated by Ayuvo on other days</string>
+    <string name="derived_method">Method</string>
+    <string name="derived_citation">Reference</string>
+    <string name="derived_confidence">Confidence</string>
+    <string name="derived_confidence_high">High</string>
+    <string name="derived_confidence_medium">Medium</string>
+    <string name="derived_confidence_low">Low</string>
+    <string name="derived_confidence_native">Measured by your device</string>
+    <string name="derived_estimated_caption">%1$s · Estimated</string>
+    <string name="derived_master_off">Derived Metrics are off in Settings.</string>
+</resources>

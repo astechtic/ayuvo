@@ -1,0 +1,106 @@
+{
+  "algo_version": 1,
+  "config_version": 1,
+  "disclaimer": "Estimated by Ayuvo from your GPS and heart-rate data using published formulas. It is not a clinical exercise test.",
+  "format": "ayuvo-workout-config",
+  "sources": {
+    "acsm": "ACSM metabolic equations for walking and running (Guidelines, ch. 6) and %HRR ≈ %VO2R (Swain DP, Leutholtz BC. Med Sci Sports Exerc 1997;29:410-414).",
+    "cooper": "Cooper KH. A means of assessing maximal oxygen intake. JAMA 1968;203:201-204.",
+    "gps": "Distance by the haversine formula on the WGS-84 mean radius; accuracy gate and speed gate reject GPS jumps; auto-pause below a sport-specific speed.",
+    "hrr1": "Cole CR et al. Heart-rate recovery immediately after exercise as a predictor of mortality. N Engl J Med 1999;341:1351-1357 (≤12 bpm abnormal).",
+    "keytel": "Keytel LR et al. Prediction of energy expenditure from heart rate monitoring during submaximal exercise. J Sports Sci 2005;23:289-297.",
+    "trimp": "Banister EW (1991); Morton RH et al., J Appl Physiol 1990.",
+    "windows": "Heart-rate based activity detection: sustained heart rate at ≥50% heart-rate reserve (ACSM moderate intensity) or ≥100 bpm.",
+    "zones": "American College of Sports Medicine. ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. (2021): % heart-rate reserve and % HRmax intensity classes."
+  },
+  "sports": {
+    "cycle": {
+      "auto_pause_speed_mps": 1.5,
+      "hc_exercise": "EXERCISE_TYPE_BIKING",
+      "hk_activity": "cycling",
+      "max_speed_mps": 25.0,
+      "met_item_id": "Cycling_Outdoor",
+      "title": "Outdoor Cycle"
+    },
+    "hike": {
+      "auto_pause_speed_mps": 0.3,
+      "hc_exercise": "EXERCISE_TYPE_HIKING",
+      "hk_activity": "hiking",
+      "max_speed_mps": 4.0,
+      "met_item_id": "Hiking",
+      "title": "Hike"
+    },
+    "run": {
+      "auto_pause_speed_mps": 1.0,
+      "hc_exercise": "EXERCISE_TYPE_RUNNING",
+      "hk_activity": "running",
+      "max_speed_mps": 9.0,
+      "met_item_id": "Running_Outdoor",
+      "title": "Outdoor Run"
+    },
+    "walk": {
+      "auto_pause_speed_mps": 0.4,
+      "hc_exercise": "EXERCISE_TYPE_WALKING",
+      "hk_activity": "walking",
+      "max_speed_mps": 4.5,
+      "met_item_id": "Walking_Outdoor",
+      "title": "Outdoor Walk"
+    }
+  },
+  "thresholds": {
+    "detect_bpm": 100,
+    "detect_hrr": 0.5,
+    "elevation_hysteresis_m": 3,
+    "hr_valid_max": 250,
+    "hr_valid_min": 25,
+    "hrmax_zones": [
+      0.57,
+      0.64,
+      0.77,
+      0.96
+    ],
+    "hrr1_abnormal_below": 12,
+    "hrr_zones": [
+      0.3,
+      0.4,
+      0.6,
+      0.9
+    ],
+    "keytel": {
+      "female": [
+        -20.4022,
+        0.4472,
+        -0.1263,
+        0.074
+      ],
+      "male": [
+        -55.0969,
+        0.6309,
+        0.1988,
+        0.2017
+      ],
+      "other": [
+        -37.75455,
+        0.53905,
+        0.03625,
+        0.13785
+      ]
+    },
+    "keytel_min_coverage": 0.7,
+    "max_grade": 0.02,
+    "max_h_accuracy_m": 20,
+    "max_hrr": 0.9,
+    "max_sample_gap_s": 120,
+    "merge_gap_min": 5,
+    "min_hrr": 0.4,
+    "min_segment_s": 360,
+    "min_window_min": 15,
+    "recovery_tolerance_s": 30,
+    "trimp_k": {
+      "female": 1.67,
+      "male": 1.92,
+      "other": 1.795
+    },
+    "walk_run_split_mps": 2.2
+  }
+}

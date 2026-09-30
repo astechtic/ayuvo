@@ -1,0 +1,105 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "entries": [
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1789957800000,
+            "value": 214.28571428571428
+          },
+          {
+            "medication_id": "med-mv",
+            "nutrient_key": "zinc",
+            "t_ms": 1789957800000,
+            "value": 17.0
+          },
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790044200000,
+            "value": 214.28571428571428
+          },
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790130600000,
+            "value": 214.28571428571428
+          },
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790217000000,
+            "value": 214.28571428571428
+          },
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790303400000,
+            "value": 214.28571428571428
+          },
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790389800000,
+            "value": 214.28571428571428
+          },
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1790476200000,
+            "value": 214.28571428571428
+          }
+        ]
+      },
+      "input": {
+        "entries": [
+          {
+            "medication_id": "med-d3",
+            "nutrient_key": "vitamin_d",
+            "t_ms": 1789957800000,
+            "value": 1500.0
+          },
+          {
+            "medication_id": "med-mv",
+            "nutrient_key": "zinc",
+            "t_ms": 1789957800000,
+            "value": 17.0
+          }
+        ],
+        "intervals": {
+          "med-d3": 7
+        }
+      },
+      "name": "weekly_vitamin_d_and_daily_zinc"
+    },
+    {
+      "expected": {
+        "entries": [
+          {
+            "medication_id": "med-fe",
+            "nutrient_key": "iron",
+            "t_ms": 1789957800000,
+            "value": 18.0
+          }
+        ]
+      },
+      "input": {
+        "entries": [
+          {
+            "medication_id": "med-fe",
+            "nutrient_key": "iron",
+            "t_ms": 1789957800000,
+            "value": 18.0
+          }
+        ],
+        "intervals": {}
+      },
+      "name": "no_intervals"
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "spread_supplements",
+  "version": 1
+}

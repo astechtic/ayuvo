@@ -18,6 +18,7 @@ struct BrowseView: View {
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
 
     @State private var query = ""
+    private var derivedStore: DerivedMetricStore { DerivedMetricStore.shared }
     @State private var isRebuilding = false
     @State private var showLogWeight = false
     @State private var showLogBodyFat = false
@@ -90,6 +91,9 @@ struct BrowseView: View {
                     await store.refreshSnapshots()
                 }
             }
+            .task(id: DerivedMetricsService.shared.revision) {
+                await derivedStore.refresh(pinned: store.pinnedTypeIDs, calendar: store.calendar)
+            }
             .task {
                 if store.isEnabled, store.needsGrant == nil {
                     await store.refreshAuthorizationStatus()
@@ -147,7 +151,9 @@ struct BrowseView: View {
     /// Search results: "Go to" features (destinations and actions) first, then metric trends.
     @ViewBuilder
     private var searchSection: some View {
-        let features = BrowseFeatureCatalog.search(query)
+        let features = BrowseFeatureCatalog.search(
+            query, in: BrowseFeatureCatalog.all + BrowseFeatureCatalog.derivedFeatures(derivedStore.availableInfos)
+        )
         let results = MetricCatalog.search(query, health: store).filter { !$0.browseHidden }
         if features.isEmpty && results.isEmpty {
             Section {
@@ -237,6 +243,9 @@ struct BrowseView: View {
         case .health(let id):
             let type = store.metricType(for: id)
             HealthMetricRow(type: type, summary: store.summary(for: id))
+        case .derived:
+            MetricRow(systemImage: descriptor.systemImage, tint: descriptor.tint, title: descriptor.title,
+                      subtitle: String(localized: "Estimated by Ayuvo"))
         }
     }
 

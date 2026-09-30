@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "hr_max": 191.2,
+        "hr_reserve": 134.5,
+        "method": "tanaka"
+      },
+      "input": {
+        "age": 24,
+        "observed": [
+          140.0,
+          null,
+          150.5
+        ],
+        "rhr": 56.7
+      },
+      "name": "tanaka_only"
+    },
+    {
+      "expected": {
+        "hr_max": 182.0,
+        "hr_reserve": 122.0,
+        "method": "observed"
+      },
+      "input": {
+        "age": 50,
+        "observed": [
+          182.0,
+          171.0
+        ],
+        "rhr": 60.0
+      },
+      "name": "observed_higher"
+    },
+    {
+      "expected": {
+        "hr_max": 183.5,
+        "hr_reserve": null,
+        "method": "tanaka"
+      },
+      "input": {
+        "age": 35,
+        "observed": [],
+        "rhr": null
+      },
+      "name": "no_rhr"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "hr_max",
+  "version": 1
+}

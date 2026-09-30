@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "expected_m": 0.73,
+        "ratio_pct": 87.1,
+        "stride_m": 0.63
+      },
+      "input": {
+        "distance_m": 5640.0,
+        "height_cm": 175.0,
+        "sex": "male",
+        "steps": 8917
+      },
+      "name": "typical"
+    },
+    {
+      "expected": {
+        "expected_m": 0.67,
+        "ratio_pct": null,
+        "stride_m": null
+      },
+      "input": {
+        "distance_m": 400.0,
+        "height_cm": 162.0,
+        "sex": "female",
+        "steps": 600
+      },
+      "name": "too_few_steps"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "stride",
+  "version": 1
+}

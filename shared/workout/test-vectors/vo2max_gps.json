@@ -1,0 +1,103 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "segments_used": 2,
+        "status": "ok",
+        "vo2max": 52.8
+      },
+      "input": {
+        "hr_max": 191.0,
+        "rhr": 55.0,
+        "segments": [
+          {
+            "duration_s": 900,
+            "grade": 0.0,
+            "hr": 150,
+            "speed_mps": 2.8
+          },
+          {
+            "duration_s": 600,
+            "grade": 0.01,
+            "hr": 162,
+            "speed_mps": 3.2
+          }
+        ],
+        "sport": "run"
+      },
+      "name": "easy_run_two_segments"
+    },
+    {
+      "expected": {
+        "segments_used": 1,
+        "status": "ok",
+        "vo2max": 25.9
+      },
+      "input": {
+        "hr_max": 191.0,
+        "rhr": 57.0,
+        "segments": [
+          {
+            "duration_s": 1200,
+            "grade": 0.0,
+            "hr": 118,
+            "speed_mps": 1.7
+          }
+        ],
+        "sport": "walk"
+      },
+      "name": "brisk_walk"
+    },
+    {
+      "expected": {
+        "segments_used": 0,
+        "status": "no_steady_segment",
+        "vo2max": null
+      },
+      "input": {
+        "hr_max": 191.0,
+        "rhr": 57.0,
+        "segments": [
+          {
+            "duration_s": 1200,
+            "grade": 0.0,
+            "hr": 85,
+            "speed_mps": 1.2
+          },
+          {
+            "duration_s": 120,
+            "grade": 0.0,
+            "hr": 160,
+            "speed_mps": 3.0
+          }
+        ],
+        "sport": "walk"
+      },
+      "name": "too_easy_and_too_short"
+    },
+    {
+      "expected": {
+        "segments_used": 0,
+        "status": "no_heart_rate_reserve",
+        "vo2max": null
+      },
+      "input": {
+        "hr_max": 191.0,
+        "rhr": null,
+        "segments": [
+          {
+            "duration_s": 900,
+            "grade": 0.0,
+            "hr": 150,
+            "speed_mps": 3.0
+          }
+        ],
+        "sport": "run"
+      },
+      "name": "no_rhr"
+    }
+  ],
+  "format": "ayuvo-workout-vectors",
+  "function": "vo2max_gps",
+  "version": 1
+}

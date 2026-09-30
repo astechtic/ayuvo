@@ -197,6 +197,7 @@ actor HealthDatabase {
             DELETE FROM health_hourly_rollups;
             DELETE FROM health_sources;
             DELETE FROM health_type_meta;
+            DELETE FROM derived_daily_values;
             UPDATE health_sync_state SET cursor=NULL, cursor_issued_ms=NULL, last_sync_ms=NULL, backfill_done=0, status='idle', last_error=NULL, last_error_ms=NULL;
             """)
         }

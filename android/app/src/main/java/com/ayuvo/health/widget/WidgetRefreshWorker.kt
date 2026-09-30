@@ -64,7 +64,8 @@ object WidgetRefreshScheduler {
         WaterWidgetReceiver::class.java,
         TodayWidgetReceiver::class.java,
         MyMetricsWidgetReceiver::class.java,
-        QuickLogWidgetReceiver::class.java
+        QuickLogWidgetReceiver::class.java,
+        WorkoutWidgetReceiver::class.java
     )
 
     /** Widgets that read the dashboard snapshot (Quick Log uses its water/fasting state). */

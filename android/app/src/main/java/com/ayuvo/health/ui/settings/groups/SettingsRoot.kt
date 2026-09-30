@@ -174,6 +174,7 @@ internal fun SettingsPageContent(ctx: SettingsPageContext, page: SettingsPage) {
         SettingsPage.FASTING -> FastingTrackingPage(ctx)
         SettingsPage.ACTIVITY -> ActivityPage(ctx)
         SettingsPage.INSIGHTS -> InsightsSettingsPage(ctx)
+        SettingsPage.DERIVED_METRICS -> DerivedMetricsSettingsPage(ctx)
         SettingsPage.MEDICATIONS -> MedicationsSettingsPage(ctx)
         SettingsPage.NOTIFICATIONS -> NotificationsPage(ctx)
         SettingsPage.HEALTH_SYNC -> HealthSyncPage(ctx)

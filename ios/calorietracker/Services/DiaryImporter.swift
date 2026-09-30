@@ -119,6 +119,8 @@ enum DiaryImporter {
         let folate_mcg: Double?
         let omega3_g: Double?
         let time: String
+        /// Format 1.6+: ISO 8601 eaten-at time; older files omit it (eaten at the log time).
+        let eaten_at: String?
         let source: String
         let note: String?
         let ingredients: [Ingredient]?
@@ -235,7 +237,8 @@ enum DiaryImporter {
                         omega3: item.omega3_g,
                         servingSizeGrams: item.quantity_g,
                         customNote: item.note,
-                        ingredients: ingredients
+                        ingredients: ingredients,
+                        eatenAt: eatenAt(item.eaten_at, loggedAt: timestamp)
                     ))
                 }
             }
@@ -382,8 +385,23 @@ enum DiaryImporter {
             selectedServingQuantity: old?.selectedServingQuantity,
             customNote: imported.customNote,
             progressiveMeal: old?.progressiveMeal ?? false,
-            ingredients: imported.ingredients
+            ingredients: imported.ingredients,
+            eatenAt: imported.eatenAt
         )
+    }
+
+    /// The eaten-at time when the file has one that differs from the (minute-precision) log time; unreadable
+    /// values are ignored rather than failing the import.
+    static func eatenAt(_ value: String?, loggedAt: Date) -> Date? {
+        guard let value, !value.isEmpty else { return nil }
+        let formatter = ISO8601DateFormatter()
+        var date = formatter.date(from: value)
+        if date == nil {
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            date = formatter.date(from: value)
+        }
+        guard let date, abs(date.timeIntervalSince(loggedAt)) >= 60 else { return nil }
+        return date
     }
 
     private static func validate(_ item: Item) throws {

@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.graphics.toColorInt
 import com.ayuvo.health.R
+import com.ayuvo.health.data.derived.DerivedCatalog
+import com.ayuvo.health.data.derived.DerivedMetricInfo
 import com.ayuvo.health.data.metrics.AppMetricId
 import com.ayuvo.health.data.metrics.CatalogBrowseSection
 import com.ayuvo.health.data.metrics.CatalogDomain
@@ -51,7 +53,16 @@ object MetricCatalog {
     fun spec(catalog: MetricCatalogData, id: AppMetricId): CatalogMetric = catalog.metricByKey.getValue(id.key)
 
     fun domain(catalog: MetricCatalogData, key: MetricKey): CatalogDomain =
-        catalog.domainById.getValue(resolve(catalog, key).domain)
+        if (key is MetricKey.Derived) derivedDomain(catalog, key) else catalog.domainById.getValue(resolve(catalog, key).domain)
+
+    /** A derived metric's catalog entry once the derived catalog is loaded (the container loads it on first use). */
+    fun derivedInfo(key: MetricKey.Derived): DerivedMetricInfo? = DerivedCatalog.loaded()?.byId?.get(key.id)
+
+    /** Derived metrics sit in the domain of their Health category (energy with Activity); Other when unknown. */
+    fun derivedDomain(catalog: MetricCatalogData, key: MetricKey.Derived): CatalogDomain {
+        val category = derivedInfo(key)?.let(DerivedMetricSupport::healthCategory) ?: "other"
+        return catalog.categoryDomains[category]?.let { catalog.domainById[it] } ?: catalog.domainById.getValue("other")
+    }
 
     @StringRes
     fun titleRes(id: AppMetricId): Int = when (id) {
@@ -89,6 +100,7 @@ object MetricCatalog {
         is MetricKey.App -> context.getString(titleRes(key.id))
         is MetricKey.Nutrient -> NutrientFields.displayName(context, key.key)
         is MetricKey.Health -> HealthCategoryStyle.typeName(context, key.typeId)
+        is MetricKey.Derived -> DerivedCatalog.get(context).byId[key.id]?.title ?: key.id
     }
 
     /** The catalog's `nutrient_metrics` entry of [key]; null for a key the catalog does not list. */
@@ -124,7 +136,8 @@ object MetricCatalog {
 
     /** Metric icon, then override icon, then domain icon, then the Other domain icon (docs/ui-structure.md §4). */
     fun icon(catalog: MetricCatalogData, key: MetricKey): ImageVector =
-        MetricIcons.byName(resolve(catalog, key).iconAndroid)
+        (key as? MetricKey.Derived)?.let { d -> derivedInfo(d)?.let { MetricIcons.byName(it.androidIcon) } ?: MetricIcons.byNameOrDefault(derivedDomain(catalog, d).iconAndroid) }
+            ?: MetricIcons.byName(resolve(catalog, key).iconAndroid)
             ?: (key as? MetricKey.Health)?.let { HealthCategoryStyle.icon(HealthDataType.byId(it.typeId)?.category ?: HealthCategory.OTHER) }
             ?: MetricIcons.byNameOrDefault(catalog.domainById.getValue("other").iconAndroid)
 

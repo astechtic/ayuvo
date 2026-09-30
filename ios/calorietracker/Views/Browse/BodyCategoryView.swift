@@ -30,6 +30,8 @@ struct BodyCategoryView: View {
             }
 
             HealthTypeSections(types: healthTypes)
+
+            DerivedMetricsSection(categories: DerivedMetricsSection.categories(for: .body))
         }
         .listStyle(.insetGrouped)
         .navigationTitle(BrowseCategory.body.title)
@@ -62,6 +64,8 @@ struct ActivityCategoryView: View {
             }
 
             HealthTypeSections(types: store.types(in: .activity))
+
+            DerivedMetricsSection(categories: DerivedMetricsSection.categories(for: .activity))
         }
         .listStyle(.insetGrouped)
         .navigationTitle(BrowseCategory.activity.title)

@@ -58,10 +58,19 @@ data class FoodEntry(
     /** Origin of a Health Connect import; never export these entries back to Health Connect. */
     val healthConnectOrigin: String? = null,
     val healthConnectRecordId: String? = null,
-    val productMetadata: FoodProductMetadata? = null
+    val productMetadata: FoodProductMetadata? = null,
+    /**
+     * When the food was actually eaten (docs/intake-metrics.md §3). Null means "at the log time":
+     * older diaries have no value and the edit screen only stores one the person changed.
+     */
+    @Serializable(with = InstantSerializer::class)
+    val eatenAt: Instant? = null
 ) {
     /** Unique key for favorite deduplication (name + calorie combo). */
     val favoriteKey: String get() = "${name.lowercase()}|$calories"
+
+    /** The eaten-at time, defaulting to the log time. */
+    val effectiveEatenAt: Instant get() = eatenAt ?: timestamp
 
     /** True only when the original food mass is actually known. */
     val hasKnownServingSize: Boolean

@@ -138,6 +138,10 @@ class AyuvoApp : Application() {
         runCatching { com.ayuvo.health.insights.InsightsWorker.onAppStarted(this) }
         container.widgetSnapshotWriter.observe().launchIn(appScope)
         container.widgetDashboardWriter.observe().launchIn(appScope)
+        // Workout widget (docs/widgets.md "Workout"): re-rendered on GPS / strength phase changes, ≤ every 30 s for distance.
+        com.ayuvo.health.widget.WorkoutWidgetSync.observe(this, appScope, container.workoutRepository.activeStrengthSession)
+        // Derived metrics (docs/derived-metrics.md): recomputed after mirror writes and switch changes.
+        container.derivedMetrics.observe(appScope, container.derivedTrigger())
         // Warm exercise catalog off the main thread before the first Workouts tab open.
         ExerciseRepository.warm(this)
         appScope.launch {
@@ -514,6 +518,19 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             if (!prefs.healthConnectEnabled.first() || !health.hasActiveEnergyWrite()) return false
             val calories = session.caloriesBurned ?: return false
             val version = session.healthSyncVersion ?: return false
+            // docs/workouts-gps.md §1: a real interval replaces the legacy 12:00 point sample (same id and version
+            // scheme) and adds a strength ExerciseSessionRecord.
+            if (session.hasRealInterval) {
+                return health.upsertStrengthSession(
+                    sessionId = session.id,
+                    diaryDateKey = session.diaryDateKey,
+                    start = session.startedAt,
+                    end = session.completedAt,
+                    caloriesBurned = calories,
+                    healthSyncVersion = version,
+                    title = session.exercises.joinToString(", ") { it.name }.take(120).ifBlank { null }
+                )
+            }
             return health.upsertWorkoutBurn(
                 sessionId = session.id,
                 diaryDateKey = session.diaryDateKey,
@@ -534,18 +551,79 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             val now = Instant.now()
             return health.readOwnedWorkoutBurns(now.minus(Duration.ofDays(7_300)), now.plus(Duration.ofDays(2)))
                 ?.map { burn ->
+                    // A sample longer than the legacy one-minute point carries a real session interval.
+                    val seconds = Duration.between(burn.startTime, burn.endTime).seconds
+                    val real = seconds > 90
                     WorkoutSession(
                         id = burn.sessionId,
                         diaryDateKey = burn.diaryDateKey,
                         startedAt = burn.startTime,
                         completedAt = burn.endTime,
-                        durationSeconds = 0,
+                        durationSeconds = if (real) seconds.coerceAtMost(Int.MAX_VALUE.toLong()).toInt() else 0,
                         exercises = emptyList(),
                         caloriesBurned = burn.caloriesBurned,
-                        healthSyncVersion = burn.healthSyncVersion
+                        healthSyncVersion = burn.healthSyncVersion,
+                        realInterval = real,
+                        intervalSource = if (real) com.ayuvo.health.data.WorkoutInterval.SOURCE_SESSION else null
                     )
                 }
         }
+
+        override suspend fun upsertGpsWorkout(session: WorkoutSession): Boolean {
+            val gps = session.gps ?: return false
+            if (!prefs.healthConnectEnabled.first() || !health.isAvailable()) return false
+            val track = withContext(Dispatchers.IO) { gpsTrackStore.load(session.id.toString()) }
+            val sport = runCatching { workoutConfig.sport(gps.sport) }.getOrNull()
+            val input = track?.trackInput(session.completedAt.toEpochMilli()) ?: return false
+            return health.upsertGpsWorkout(
+                com.ayuvo.health.services.health.GpsWorkoutWrite(
+                    sessionId = session.id,
+                    diaryDateKey = session.diaryDateKey,
+                    start = session.startedAt,
+                    end = session.completedAt,
+                    exerciseType = HealthConnectManager.exerciseTypeFor(sport?.hcExercise),
+                    title = sport?.title,
+                    distanceM = gps.distanceM,
+                    activeKcal = gps.activeKcal,
+                    version = gps.healthSyncVersion,
+                    laps = gps.laps.map { Triple(Instant.ofEpochMilli(it.startMs), Instant.ofEpochMilli(it.endMs), it.distanceM) },
+                    pauses = track?.pauses.orEmpty().map { Instant.ofEpochMilli(it.s) to Instant.ofEpochMilli(it.e) },
+                    route = com.ayuvo.health.data.workout.GpsWorkoutAnalysis.keptPoints(input, workoutConfig).map {
+                        com.ayuvo.health.services.health.GpsRoutePoint(Instant.ofEpochMilli(it.tMs), it.lat, it.lon, it.altM, it.hAccM)
+                    }
+                )
+            )
+        }
+
+        override suspend fun deleteGpsWorkout(session: WorkoutSession): Boolean {
+            withContext(Dispatchers.IO) { gpsTrackStore.delete(session.id.toString()) }
+            if (!health.isAvailable()) return false
+            return health.deleteGpsWorkout(session.id, session.diaryDateKey)
+        }
+    }
+
+    // -- Workouts (docs/workouts-gps.md): sport config, recorded routes and workout heart rate ----------
+    val workoutConfig: com.ayuvo.health.data.workout.WorkoutConfig by lazy {
+        com.ayuvo.health.data.workout.WorkoutConfig.parse(
+            app.assets.open(com.ayuvo.health.data.workout.WorkoutConfig.ASSET_PATH).bufferedReader().use { it.readText() }
+        ).also { com.ayuvo.health.data.workout.WorkoutConfig.active = it }
+    }
+    val gpsTrackStore = com.ayuvo.health.data.workout.GpsTrackStore(
+        java.io.File(app.filesDir, com.ayuvo.health.data.workout.GpsTrackStore.DIRECTORY)
+    )
+    val workoutHeartRate: com.ayuvo.health.data.workout.WorkoutHeartRateSource by lazy {
+        com.ayuvo.health.data.workout.WorkoutHeartRateSource(
+            mirror = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthStore else null },
+            direct = { from, to ->
+                if (!prefs.healthConnectEnabled.first() || !health.isAvailable()) null
+                else health.readHeartRateSamples(from, to)?.map {
+                    com.ayuvo.health.data.workout.HrSample(it.first.toEpochMilli(), it.second.toDouble())
+                }
+            },
+            profile = { profileRepository.current() },
+            weightKg = { weightRepository.latest.first()?.weightKg },
+            config = { workoutConfig }
+        )
     }
 
     val profileRepository = ProfileRepository(prefs)
@@ -569,7 +647,9 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val metricCatalog: MetricCatalogData by lazy {
         MetricCatalogData.parse(app.assets.open(METRIC_CATALOG_ASSET).bufferedReader().use { it.readText() })
     }
-    val favoritePins: FavoritePins by lazy { FavoritePins(prefs) { metricCatalog } }
+    val favoritePins: FavoritePins by lazy {
+        FavoritePins(prefs, derivedKeys = { derivedCatalog.metrics.map { com.ayuvo.health.data.metrics.MetricKey.DERIVED_PREFIX + it.id }.toSet() }) { metricCatalog }
+    }
     val appMetrics: AppMetricSeriesProvider by lazy {
         AppMetricSeriesProvider(
             sources = RepositoryMetricSources(
@@ -584,6 +664,47 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             scope = scope
         )
     }
+    // -- Derived metrics (docs/derived-metrics.md): estimates the platform does not provide ------------
+    val derivedCatalog: com.ayuvo.health.data.derived.DerivedCatalog by lazy { com.ayuvo.health.data.derived.DerivedCatalog.get(app) }
+    val derivedConfig: com.ayuvo.health.data.derived.DerivedConfig by lazy {
+        com.ayuvo.health.data.derived.DerivedConfig.parse(
+            app.assets.open(com.ayuvo.health.data.derived.DerivedConfig.ASSET_PATH).bufferedReader().use { it.readText() }
+        )
+    }
+    /** Intake contract (docs/intake-metrics.md); loading it publishes IntakeConfig.active for the pure helpers. */
+    val intakeConfig: com.ayuvo.health.data.intake.IntakeConfig by lazy { com.ayuvo.health.data.intake.IntakeConfig.get(app) }
+    val derivedMetrics: com.ayuvo.health.data.derived.DerivedMetricsService by lazy {
+        runCatching { intakeConfig } // nutrition_day / energy_balance inputs read IntakeConfig.active
+        com.ayuvo.health.data.derived.DerivedMetricsService(
+            // Never creates the mirror: derived metrics only exist once Health sync has data.
+            store = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthStore else null },
+            prefs = prefs,
+            catalog = { derivedCatalog },
+            config = { derivedConfig },
+            // docs/workouts-gps.md §1: the latest GPS (or Cooper) VO2max wins over the Uth estimate.
+            gpsVo2max = {
+                workoutRepository.snapshot().completedSessions.mapNotNull { s ->
+                    val v = s.gps?.bestVo2max ?: return@mapNotNull null
+                    runCatching { java.time.LocalDate.parse(s.diaryDateKey) }.getOrNull()?.let { it to v }
+                }
+            }
+        )
+    }
+
+    /** Derived metric ids the switches currently allow (master switch and per-metric switches). */
+    suspend fun derivedEnabledIds(): Set<String> =
+        derivedCatalog.enabledIds(prefs.derivedMetricsEnabled.first(), prefs.derivedMetricsDisabled.first())
+
+    /** Mirror revision while the hub is on (the derived-metrics recompute trigger); never opens the mirror just to watch it. */
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun derivedTrigger(): kotlinx.coroutines.flow.Flow<Long> = kotlinx.coroutines.flow.combine(
+        prefs.healthHubEnabled.flatMapLatest { on ->
+            if (on && appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.revision else kotlinx.coroutines.flow.flowOf(-1L)
+        },
+        // Food edits (eaten-at, nutrients) recompute the nutrition metrics (docs/intake-metrics.md).
+        prefs.foodEntries.map { it.hashCode().toLong() }.distinctUntilChanged()
+    ) { rev, food -> if (rev < 0) rev else rev * 1_000_003L + food }
+
     // -- Insights (docs/insights.md): Recovery, Health Age, Daily Review, Patterns ----------------
     // Recomputed from the stores on demand; nothing is persisted and no health value reaches prefs.
     val insightsConfig: com.ayuvo.health.insights.InsightsConfig by lazy {
@@ -608,8 +729,10 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val insightsRepository: com.ayuvo.health.insights.InsightsRepository by lazy {
         com.ayuvo.health.insights.InsightsRepository(
             config = { insightsConfig },
-            source = com.ayuvo.health.insights.InsightsDataSource { healthRepository },
+            // Derived resting heart rate / VO2 max fill days without a native reading (docs/derived-metrics.md §1).
+            source = com.ayuvo.health.insights.InsightsDataSource(derivedEnabled = { derivedEnabledIds() }) { healthRepository },
             healthRevision = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.revision.value else -1L },
+            derivedRevision = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.derivedRevision.value else -1L },
             hubEnabled = { prefs.healthHubEnabled.first() && appContext.getDatabasePath(HealthDatabase.NAME).exists() },
             appSnapshot = { appMetrics.snapshot() },
             profile = { profileRepository.current() },
@@ -623,6 +746,9 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         // Never opens the mirror just to watch it: the revision is only observed once the hub is on.
         prefs.healthHubEnabled.flatMapLatest { on ->
             if (on && appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.revision else kotlinx.coroutines.flow.flowOf(-1L)
+        },
+        prefs.healthHubEnabled.flatMapLatest { on ->
+            if (on && appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.derivedRevision else kotlinx.coroutines.flow.flowOf(-1L)
         },
         appMetrics.revision,
         profileRepository.profile,

@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 interface HealthDataStore {
     /** Bumped after every committed write so UI/Coach caches can invalidate cheaply. */
     val revision: StateFlow<Long>
+    /** Bumped after derived-metric writes only (they never bump [revision], so recomputing cannot re-trigger itself). */
+    val derivedRevision: StateFlow<Long> get() = revision
 
     // -- Samples -----------------------------------------------------------
     suspend fun commit(page: HealthPageCommit): HealthPageCommitResult
@@ -38,6 +40,14 @@ interface HealthDataStore {
     suspend fun hourlyRollups(typeId: String, day: String): List<HealthHourlyRollup>
     suspend fun replaceHourlyRollups(typeId: String, day: String, rows: List<HealthHourlyRollup>)
     suspend fun deleteRollupsFor(typeIds: Collection<String>)
+
+    // -- Derived metrics (docs/derived-metrics.md) --------------------------
+    suspend fun derivedValues(metricId: String, fromDay: String, toDay: String): List<DerivedDailyValue> = emptyList()
+    /** Clears every (metric, day) pair of [metricIds] × [days], then inserts [rows], in one transaction. */
+    suspend fun replaceDerivedValues(metricIds: Collection<String>, days: Collection<String>, rows: List<DerivedDailyValue>) {}
+    /** Metric ids with at least one stored value. */
+    suspend fun derivedMetricIdsWithValues(): List<String> = emptyList()
+    suspend fun deleteDerivedValues(metricIds: Collection<String>) {}
 
     // -- Sync state --------------------------------------------------------
     suspend fun syncStates(): List<HealthSyncState>

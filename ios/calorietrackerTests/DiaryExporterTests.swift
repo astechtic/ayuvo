@@ -66,6 +66,25 @@ struct DiaryExporterTests {
         #expect(range.0 == Calendar.current.startOfDay(for: previous))
     }
 
+    @Test func eatenAtRoundTripsAndOlderFilesDefaultToLogTime() throws {
+        let fixture = makeFixture()
+        var entry = fixture.entry
+        entry.eatenAt = fixture.entry.timestamp.addingTimeInterval(-90 * 60)
+        let export = try #require(DiaryExporter.build(from: fixture.date, to: fixture.date, format: .json,
+                                                      entries: [entry], profile: makeProfile()))
+        let text = String(decoding: export.data, as: UTF8.self)
+        #expect(text.contains("\"eaten_at\""))
+        let preview = try DiaryImporter.parse(export.data)
+        let eaten = try #require(preview.entries.first?.eatenAt)
+        #expect(abs(eaten.timeIntervalSince(entry.eatenAt!)) < 1)
+        // Format 1.5 files have no eaten_at: the entry is eaten at its log time.
+        let legacy = text.replacingOccurrences(of: "\"1.6\"", with: "\"1.5\"")
+            .split(separator: "\n").filter { !$0.contains("\"eaten_at\"") }.joined(separator: "\n")
+        let old = try DiaryImporter.parse(Data(legacy.utf8))
+        #expect(old.entries.first?.eatenAt == nil)
+        #expect(old.entries.first.map { $0.eatenTime == $0.timestamp } == true)
+    }
+
     private let nutrientFields = [
         "sugar_g", "added_sugar_g", "fiber_g", "saturated_fat_g",
         "monounsaturated_fat_g", "polyunsaturated_fat_g", "cholesterol_mg",
@@ -87,7 +106,7 @@ struct DiaryExporterTests {
 
         let root = try #require(JSONSerialization.jsonObject(with: export.data) as? [String: Any])
         let metadata = try #require(root["export"] as? [String: Any])
-        #expect(metadata["format_version"] as? String == "1.5")
+        #expect(metadata["format_version"] as? String == "1.6")
         let days = try #require(root["days"] as? [[String: Any]])
         let meals = try #require(days.first?["meals"] as? [[String: Any]])
         let items = try #require(meals.first?["items"] as? [[String: Any]])

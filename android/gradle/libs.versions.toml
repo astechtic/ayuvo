@@ -32,6 +32,7 @@ litertLm = "0.16.0"
 whisperAndroid = "1.0.0"
 googleServices = "4.5.0"
 firebaseBom = "34.19.0"
+osmdroid = "6.1.20"
 
 [libraries]
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
@@ -82,6 +83,7 @@ litert-lm-android = { group = "com.google.ai.edge.litertlm", name = "litertlm-an
 whisper-android = { group = "dev.ffmpegkit-maintained", name = "whisper-android", version.ref = "whisperAndroid" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-common = { group = "com.google.firebase", name = "firebase-common" }
+osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

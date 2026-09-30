@@ -11,5 +11,7 @@ struct AyuvoWidgetsBundle: WidgetBundle {
         TodayWidget()
         MyMetricsWidget()
         QuickLogWidget()
+        WorkoutWidget()
+        WorkoutLiveActivityWidget()
     }
 }

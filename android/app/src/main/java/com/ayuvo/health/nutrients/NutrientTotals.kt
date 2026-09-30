@@ -15,10 +15,15 @@ data class SupplementSnapshot(
     val doses: List<SupplementDose> = emptyList(),
     val takenDoseMs: List<Long> = emptyList(),
     /** Ids of the medications whose status is `active` (Nutrition Details rule 1, docs/nutrients.md §5b). */
-    val activeMedicationIds: Set<String> = emptySet()
+    val activeMedicationIds: Set<String> = emptySet(),
+    /**
+     * Medication id → days one dose covers (docs/intake-metrics.md §3). Doses of a medication with an interval > 1
+     * are averaged over it ([SupplementAveraging.spread]); missing ids count as daily.
+     */
+    val intervalDays: Map<String, Int> = emptyMap()
 ) {
-    /** `supplement_entries` of the whole history, sorted by time. */
-    val entries: List<SupplementEntry> by lazy { Nutrients.supplementEntries(rows, doses) }
+    /** `supplement_entries` of the whole history, averaged over each dosing interval, sorted by time. */
+    val entries: List<SupplementEntry> by lazy { SupplementAveraging.spread(Nutrients.supplementEntries(rows, doses), intervalDays) }
 
     val medicationIdsWithNutrients: Set<String> by lazy { rows.mapTo(HashSet()) { it.medicationId } }
 

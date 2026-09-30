@@ -110,6 +110,9 @@ struct InsightsDataSource {
             "\(bodyFat.revision)", "\(workouts.revision)", "\(importedWorkouts.revision)", "\(healthRevision)",
             p.goalInputSignature, "\(p.effectiveCalories)", p.gender.rawValue, "\(p.birthday.timeIntervalSince1970)", settings,
             "\(defaults.integer(forKey: WaterSettings.dailyGoalKey))", "\(ActivitySettings.dailyStepGoal(defaults: defaults))",
+            // Derived fallbacks (resting heart rate, VO2 max) change with their switches and each derived pass.
+            Self.derivedFallbacks.map(\.derivedID).filter { DerivedSettings.isEnabled($0, defaults: defaults) }.joined(separator: ","),
+            "\(DerivedMetricsService.shared.revision)",
         ].joined(separator: "|")
     }
 
@@ -134,7 +137,8 @@ struct InsightsDataSource {
         let from = InsightsDay.add(today, -Self.historyDays)
         appInputs(into: &inputs, from: from, through: today, supplements: await supplementEntries())
         if healthSyncEnabled, let database = await healthDatabase() {
-            await Self.healthInputs(into: &inputs, database: database, from: from, through: today, calendar: calendar)
+            await Self.healthInputs(into: &inputs, database: database, from: from, through: today, calendar: calendar,
+                                    derivedFallback: DerivedSettings.enabledIDs(defaults: defaults))
         }
         if healthSyncEnabled, let start = InsightsDay.date(from, calendar: calendar), let end = InsightsDay.date(today, calendar: calendar) {
             for id in ["steps", "active_energy"] {
@@ -274,7 +278,7 @@ struct InsightsDataSource {
     /// Health mirror → sleep nights, overnight HRV / resting heart rate / breathing rate / blood oxygen, VO2 max
     /// and BMI. Static so tests can run it against an in-memory database.
     static func healthInputs(into inputs: inout InsightsInputs, database: HealthDatabase, from: String, through today: String,
-                             calendar: Calendar) async {
+                             calendar: Calendar, derivedFallback: Set<String> = []) async {
         // One day earlier: stages that end before midnight carry the previous local_day.
         let sleepRows = (try? await database.rowsForDays(type: "sleep", fromDay: InsightsDay.add(from, -1), toDay: today)) ?? []
         var nights: [String: InsightsNight] = [:]
@@ -321,7 +325,24 @@ struct InsightsDataSource {
             }
             if !series.isEmpty { inputs.series[metric] = series }
         }
+
+        // Derived fallback (docs/derived-metrics.md §1): a day without a native value takes Ayuvo's estimate when
+        // that metric is switched on. Native values always win.
+        for (metric, derivedID) in derivedFallbacks where derivedFallback.contains(derivedID) {
+            let rows = (try? await database.derivedValues(metric: derivedID, fromDay: from, toDay: today)) ?? []
+            guard !rows.isEmpty else { continue }
+            var series = inputs.series[metric] ?? [:]
+            for row in rows where series[row.day] == nil {
+                if let value = row.value { series[row.day] = value }
+            }
+            if !series.isEmpty { inputs.series[metric] = series }
+        }
     }
+
+    /// Insights series that fall back to a derived metric on days without a native value.
+    static let derivedFallbacks: [(metric: String, derivedID: String)] = [
+        ("resting_heart_rate", "resting_hr_derived"), ("vo2_max", "vo2max_estimate"),
+    ]
 
     static func ms(_ date: Date) -> Int64 { Int64((date.timeIntervalSince1970 * 1000).rounded()) }
 }

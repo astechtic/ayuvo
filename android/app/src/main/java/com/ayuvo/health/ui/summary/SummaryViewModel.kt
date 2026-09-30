@@ -19,6 +19,7 @@ import com.ayuvo.health.records.data.HighlightWithRecord
 import com.ayuvo.health.services.WeightAnalysisService
 import com.ayuvo.health.ui.fasting.FastingActions
 import com.ayuvo.health.ui.health.healthUnitPrefsFlow
+import com.ayuvo.health.ui.metrics.DerivedTileSource
 import com.ayuvo.health.ui.metrics.MetricTileBuilder
 import com.ayuvo.health.ui.metrics.MetricTileUi
 import com.ayuvo.health.ui.metrics.MetricUnits
@@ -167,13 +168,19 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
                 if (!fast) add(AppMetricId.FASTING)
             }
         }
+        // Derived pins (docs/derived-metrics.md): shown while their switch is on; a derived write reloads the tiles.
+        val derivedEnabled = combine(
+            prefs.derivedMetricsEnabled,
+            prefs.derivedMetricsDisabled,
+            container.healthRepository.derivedRevision.debounce(REVISION_DEBOUNCE_MS).onStart { emit(0L) }
+        ) { on, off, _ -> container.derivedCatalog.enabledIds(on, off) to System.nanoTime() }
         combine(
             combine(container.favoritePins.keys, container.appMetrics.revision, prefs.healthHubEnabled) { k, _, hub -> k to hub },
             container.healthRepository.revision.debounce(REVISION_DEBOUNCE_MS).onStart { emit(0L) },
             units,
-            combine(hidden, healthUnitPrefsFlow(prefs)) { h, hu -> h to hu },
+            combine(hidden, healthUnitPrefsFlow(prefs), derivedEnabled) { h, hu, d -> Triple(h, hu, d) },
             _ui.map { it.stepsToday }.distinctUntilChanged()
-        ) { (keys, hub), _, u, (h, hu), steps -> FavouriteInputs(keys, hub, u, h, hu, steps) }
+        ) { (keys, hub), _, u, (h, hu, d), steps -> FavouriteInputs(keys, hub, u, h, hu, steps, d) }
             .mapLatest { i ->
                 val today = LocalDate.now(zone)
                 MetricTileBuilder.build(
@@ -187,7 +194,13 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
                     units = i.units,
                     liveStepsToday = i.steps,
                     hidden = i.hidden,
-                    zone = zone
+                    zone = zone,
+                    derived = DerivedTileSource(
+                        catalog = container.derivedCatalog,
+                        enabled = i.derived.first,
+                        labels = container.derivedConfig.labels,
+                        is24 = android.text.format.DateFormat.is24HourFormat(container.appContext)
+                    )
                 )
             }
             .flowOn(Dispatchers.Default)
@@ -305,7 +318,9 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
         val units: MetricUnits,
         val hidden: Set<AppMetricId>,
         val healthUnits: com.ayuvo.health.ui.health.HealthUnitPrefs,
-        val steps: Int?
+        val steps: Int?,
+        /** Enabled derived ids, plus a stamp so each derived write rebuilds the tiles. */
+        val derived: Pair<Set<String>, Long>
     )
 
     private data class HighlightInputs(

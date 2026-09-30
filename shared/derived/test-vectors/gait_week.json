@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "asymmetry_flag": false,
+        "asymmetry_flag_count": 1,
+        "double_support_median": 27.0,
+        "slow_gait": false,
+        "speed_median": 1.08
+      },
+      "input": {
+        "asymmetry": [
+          0.0,
+          4.0,
+          100.0,
+          12.0
+        ],
+        "double_support": [
+          27.0,
+          28.5,
+          26.0
+        ],
+        "walking_speed": [
+          1.1,
+          1.2,
+          1.05,
+          0.95
+        ]
+      },
+      "name": "normal"
+    },
+    {
+      "expected": {
+        "asymmetry_flag": true,
+        "asymmetry_flag_count": 3,
+        "double_support_median": 34.0,
+        "slow_gait": true,
+        "speed_median": 0.75
+      },
+      "input": {
+        "asymmetry": [
+          11.0,
+          15.0,
+          22.0
+        ],
+        "double_support": [
+          34.0
+        ],
+        "walking_speed": [
+          0.7,
+          0.75,
+          0.9
+        ]
+      },
+      "name": "slow_and_uneven"
+    },
+    {
+      "expected": {
+        "asymmetry_flag": false,
+        "asymmetry_flag_count": 0,
+        "double_support_median": null,
+        "slow_gait": false,
+        "speed_median": null
+      },
+      "input": {
+        "asymmetry": [],
+        "double_support": [],
+        "walking_speed": []
+      },
+      "name": "empty"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "gait_week",
+  "version": 1
+}

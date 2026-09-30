@@ -550,9 +550,11 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
         val healthHubEnabled = container.prefs.healthHubEnabled.first()
         val healthSnapshot = if (healthHubEnabled && container.prefs.coachHealthDataEnabled.first()) {
             runCatching {
+                val derivedOn = container.derivedEnabledIds()
                 container.healthRepository.coachSnapshot(
                     lastSyncMs = container.healthSync.status.value.lastSyncMs ?: container.prefs.lastSyncAtMs(),
-                    displayName = { id, hint -> HealthCategoryStyle.typeName(container.appContext, id, hint) }
+                    displayName = { id, hint -> HealthCategoryStyle.typeName(container.appContext, id, hint) },
+                    derivedMetrics = container.derivedCatalog.metrics.filter { it.id in derivedOn }
                 )
             }.getOrNull()?.takeIf { !it.isEmpty }
         } else null

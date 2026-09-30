@@ -1,0 +1,102 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "days": 1
+      },
+      "input": {
+        "schedule": {
+          "days": [],
+          "frequency_kind": "daily",
+          "interval_hours": null
+        }
+      },
+      "name": "daily"
+    },
+    {
+      "expected": {
+        "days": 7
+      },
+      "input": {
+        "schedule": {
+          "days": [
+            1
+          ],
+          "frequency_kind": "weekly",
+          "interval_hours": null
+        }
+      },
+      "name": "weekly_one_day"
+    },
+    {
+      "expected": {
+        "days": 4
+      },
+      "input": {
+        "schedule": {
+          "days": [
+            1,
+            4
+          ],
+          "frequency_kind": "weekly",
+          "interval_hours": null
+        }
+      },
+      "name": "weekly_two_days"
+    },
+    {
+      "expected": {
+        "days": 7
+      },
+      "input": {
+        "schedule": {
+          "days": [
+            3,
+            3
+          ],
+          "frequency_kind": "weekly",
+          "interval_hours": null
+        }
+      },
+      "name": "weekly_duplicate_days"
+    },
+    {
+      "expected": {
+        "days": 3
+      },
+      "input": {
+        "schedule": {
+          "days": [],
+          "frequency_kind": "interval",
+          "interval_hours": 72
+        }
+      },
+      "name": "every_72_hours"
+    },
+    {
+      "expected": {
+        "days": 1
+      },
+      "input": {
+        "schedule": {
+          "days": [],
+          "frequency_kind": "interval",
+          "interval_hours": 36
+        }
+      },
+      "name": "every_36_hours_counts_daily"
+    },
+    {
+      "expected": {
+        "days": 1
+      },
+      "input": {
+        "schedule": null
+      },
+      "name": "no_schedule"
+    }
+  ],
+  "format": "ayuvo-nutrients-vectors",
+  "function": "interval_days",
+  "version": 1
+}

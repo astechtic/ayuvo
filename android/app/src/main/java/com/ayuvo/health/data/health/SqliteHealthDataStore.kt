@@ -21,7 +21,24 @@ class SqliteHealthDataStore(private val helper: HealthDatabase) : HealthDataStor
     private val _revision = MutableStateFlow(0L)
     override val revision: StateFlow<Long> = _revision
 
+    private val _derivedRevision = MutableStateFlow(0L)
+    override val derivedRevision: StateFlow<Long> = _derivedRevision
+
     private val db: SQLiteDatabase get() = helper.writableDatabase
+
+    /** Transaction for derived-metric writes: bumps [derivedRevision], never [revision]. */
+    private inline fun <T> writeDerived(block: (SQLiteDatabase) -> T): T {
+        val database = db
+        database.beginTransactionNonExclusive()
+        return try {
+            val result = block(database)
+            database.setTransactionSuccessful()
+            result
+        } finally {
+            database.endTransaction()
+            _derivedRevision.value = _derivedRevision.value + 1
+        }
+    }
 
     private fun bump() {
         _revision.value = _revision.value + 1
@@ -323,6 +340,76 @@ class SqliteHealthDataStore(private val helper: HealthDatabase) : HealthDataStor
             }
             Unit
         }
+
+    // -- Derived metrics ---------------------------------------------------
+
+    override suspend fun derivedValues(metricId: String, fromDay: String, toDay: String): List<DerivedDailyValue> =
+        withContext(Dispatchers.IO) {
+            db.rawQuery(
+                "SELECT metric_id, day, value, value2, value3, quality, source_kind, algo_version, computed_ms FROM derived_daily_values WHERE metric_id = ? AND day >= ? AND day <= ? ORDER BY day ASC",
+                arrayOf(metricId, fromDay, toDay)
+            ).use { c ->
+                c.readAll { cursor ->
+                    DerivedDailyValue(
+                        metricId = cursor.getString(0),
+                        day = cursor.getString(1),
+                        value = cursor.getDoubleOrNull(2),
+                        value2 = cursor.getDoubleOrNull(3),
+                        value3 = cursor.getDoubleOrNull(4),
+                        quality = cursor.getDoubleOrNull(5),
+                        sourceKind = cursor.getString(6),
+                        algoVersion = cursor.getInt(7),
+                        computedMs = cursor.getLong(8)
+                    )
+                }
+            }
+        }
+
+    override suspend fun replaceDerivedValues(metricIds: Collection<String>, days: Collection<String>, rows: List<DerivedDailyValue>) =
+        withContext(Dispatchers.IO) {
+            writeDerived { database ->
+                val delete = database.compileStatement("DELETE FROM derived_daily_values WHERE metric_id = ? AND day = ?")
+                for (metric in metricIds) {
+                    for (day in days) {
+                        delete.bindString(1, metric)
+                        delete.bindString(2, day)
+                        delete.executeUpdateDelete()
+                    }
+                }
+                val insert = database.compileStatement(
+                    "INSERT OR REPLACE INTO derived_daily_values(metric_id, day, value, value2, value3, quality, source_kind, algo_version, computed_ms) VALUES (?,?,?,?,?,?,?,?,?)"
+                )
+                for (row in rows) {
+                    insert.bindString(1, row.metricId)
+                    insert.bindString(2, row.day)
+                    insert.bindDoubleOrNull(3, row.value)
+                    insert.bindDoubleOrNull(4, row.value2)
+                    insert.bindDoubleOrNull(5, row.value3)
+                    insert.bindDoubleOrNull(6, row.quality)
+                    insert.bindString(7, row.sourceKind)
+                    insert.bindLong(8, row.algoVersion.toLong())
+                    insert.bindLong(9, row.computedMs)
+                    insert.executeInsert()
+                }
+            }
+            Unit
+        }
+
+    override suspend fun derivedMetricIdsWithValues(): List<String> = withContext(Dispatchers.IO) {
+        db.rawQuery("SELECT DISTINCT metric_id FROM derived_daily_values WHERE value IS NOT NULL ORDER BY metric_id", null)
+            .use { c -> c.readAll { it.getString(0) } }
+    }
+
+    override suspend fun deleteDerivedValues(metricIds: Collection<String>) = withContext(Dispatchers.IO) {
+        if (metricIds.isEmpty()) return@withContext
+        writeDerived { database ->
+            val delete = database.compileStatement("DELETE FROM derived_daily_values WHERE metric_id = ?")
+            for (id in metricIds) {
+                delete.bindString(1, id)
+                delete.executeUpdateDelete()
+            }
+        }
+    }
 
     override suspend fun hourlyRollups(typeId: String, day: String): List<HealthHourlyRollup> = withContext(Dispatchers.IO) {
         db.rawQuery(

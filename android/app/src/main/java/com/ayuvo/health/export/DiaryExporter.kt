@@ -40,6 +40,10 @@ object DiaryExporter {
     private val zone: ZoneId get() = ZoneId.systemDefault()
     private val dayFmt: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     private val timeFmt: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    private val eatenAtFmt: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+    /** 1.6 adds `eaten_at` per item; readers tolerate its absence. */
+    const val FORMAT_VERSION = "1.6"
 
     private fun LocalDate.of(entry: FoodEntry): Boolean =
         entry.timestamp.atZone(zone).toLocalDate() == this
@@ -151,6 +155,8 @@ object DiaryExporter {
         val folate_mcg: Double? = null, val omega3_g: Double? = null,
         val time: String, val source: String, val note: String? = null,
         val ingredients: List<IngredientDto> = emptyList(),
+        /** ISO-8601 offset date-time the food was eaten (format 1.6); defaults to the log time. */
+        val eaten_at: String? = null,
     )
     @Serializable private data class MealDto(val type: String, val items: List<ItemDto>)
     @Serializable private data class WaterDto(val entry_id: String, val time: String, val milliliters: Int)
@@ -199,6 +205,7 @@ object DiaryExporter {
                                     fat_g = r1(ingredient.fat),
                                 )
                             },
+                            eaten_at = eatenAtFmt.format(e.effectiveEatenAt.atZone(zone)),
                         )
                     },
                 )
@@ -219,7 +226,7 @@ object DiaryExporter {
             )
         }
         val doc = Doc(
-            export = MetaDto("Ayuvo", "1.5", RangeDto(dayFmt.format(lo), dayFmt.format(hi))),
+            export = MetaDto("Ayuvo", FORMAT_VERSION, RangeDto(dayFmt.format(lo), dayFmt.format(hi))),
             days = days,
         )
         return jsonPretty.encodeToString(Doc.serializer(), doc)

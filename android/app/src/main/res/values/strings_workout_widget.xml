@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Workout home-screen widget (docs/widgets.md "Workout"). -->
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo Workout</string>
+    <string name="widget_workout_description">Start and control a workout</string>
+    <string name="widget_workout_title">Workout</string>
+
+    <string name="widget_workout_walk">Walk</string>
+    <string name="widget_workout_run">Run</string>
+    <string name="widget_workout_cycle">Cycle</string>
+    <string name="widget_workout_hike">Hike</string>
+    <string name="widget_workout_strength">Strength</string>
+    <string name="widget_workout_strength_title">Strength session</string>
+
+    <string name="widget_workout_status_recording">Recording</string>
+    <string name="widget_workout_status_paused">Paused</string>
+    <string name="widget_workout_status_saving">Saving…</string>
+    <string name="widget_workout_status_recovery">Recovery</string>
+    <string name="widget_workout_status_strength">In progress</string>
+    <string name="widget_workout_waiting_gps">Waiting for GPS</string>
+
+    <string name="widget_workout_distance">Distance</string>
+    <string name="widget_workout_pace">Avg pace</string>
+    <string name="widget_workout_speed">Avg speed</string>
+
+    <string name="widget_workout_pause">Pause</string>
+    <string name="widget_workout_resume">Resume</string>
+    <string name="widget_workout_lap">Lap</string>
+    <string name="widget_workout_end">End</string>
+    <string name="widget_workout_skip">Skip</string>
+    <string name="widget_workout_finish">Finish</string>
+</resources>

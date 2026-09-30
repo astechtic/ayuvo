@@ -25,7 +25,8 @@ object WidgetUpdateCoordinator {
         WaterAppWidget(),
         TodayAppWidget(),
         MyMetricsAppWidget(),
-        QuickLogAppWidget()
+        QuickLogAppWidget(),
+        WorkoutAppWidget()
     )
 
     private const val TAG = "AyuvoWidget"

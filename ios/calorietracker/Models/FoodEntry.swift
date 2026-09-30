@@ -326,6 +326,9 @@ struct FoodEntry: Identifiable, Codable {
     var carbs: Double
     var fat: Double
     let timestamp: Date
+    /// When the food was eaten, when it differs from the log time (docs/intake-metrics.md §3). nil = eaten at
+    /// `timestamp`; read it through `eatenTime`.
+    var eatenAt: Date?
     /// In-memory image bytes. NEVER persisted directly — see `imageFilename`.
     /// Kept as a property so existing views continue to read `entry.imageData`
     /// unchanged; the on-disk filename is the source of truth for persistence.
@@ -454,7 +457,8 @@ struct FoodEntry: Identifiable, Codable {
         customNote: String? = nil,
         progressiveMeal: Bool = false,
         ingredients: [MealIngredient] = [],
-        productMetadata: FoodProductMetadata? = nil
+        productMetadata: FoodProductMetadata? = nil,
+        eatenAt: Date? = nil
     ) {
         self.id = id
         self.name = name
@@ -502,10 +506,14 @@ struct FoodEntry: Identifiable, Codable {
         self.progressiveMeal = progressiveMeal
         self.ingredients = ingredients
         self.productMetadata = productMetadata
+        self.eatenAt = eatenAt
     }
 
+    /// The eaten-at time, defaulting to the log timestamp.
+    nonisolated var eatenTime: Date { eatenAt ?? timestamp }
+
     private enum CodingKeys: String, CodingKey {
-        case id, name, calories, protein, carbs, fat, timestamp
+        case id, name, calories, protein, carbs, fat, timestamp, eatenAt
         case imageData     // legacy — old rows stored bytes inline; kept only for decode
         case imageFilename // current — filename on disk
         case additionalImageFilenames
@@ -545,6 +553,7 @@ struct FoodEntry: Identifiable, Codable {
         carbs = try Self.decodeDouble(container, forKey: .carbs)
         fat = try Self.decodeDouble(container, forKey: .fat)
         timestamp = try container.decode(Date.self, forKey: .timestamp)
+        eatenAt = try container.decodeIfPresent(Date.self, forKey: .eatenAt)
 
         // Prefer filename (new format). Fall back to inline bytes (legacy rows).
         // FoodStore.loadEntries() migrates legacy rows to disk on first load so
@@ -601,6 +610,7 @@ struct FoodEntry: Identifiable, Codable {
         try container.encode(carbs, forKey: .carbs)
         try container.encode(fat, forKey: .fat)
         try container.encode(timestamp, forKey: .timestamp)
+        try container.encodeIfPresent(eatenAt, forKey: .eatenAt)
         // Persist ONLY the filename — never the raw bytes. This is the fix for
         // the silent 4 MiB UserDefaults cap that was dropping adds/deletes.
         try container.encodeIfPresent(imageFilename, forKey: .imageFilename)
@@ -817,7 +827,8 @@ extension FoodEntry {
             customNote: customNote,
             progressiveMeal: progressiveMeal,
             ingredients: ingredients,
-            productMetadata: productMetadata
+            productMetadata: productMetadata,
+            eatenAt: eatenAt
         )
     }
 }

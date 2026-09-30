@@ -12,6 +12,8 @@ final class MetricDetailModel {
     private(set) var series: HealthChartSeries?
     /// Nutrient metrics: average per logged day and the food / supplement split of the shown interval.
     private(set) var nutrientExtras: NutrientSeriesExtras?
+    /// Derived metrics: the native-wins days of the shown interval (source line per point).
+    private(set) var derivedDays: [DerivedDayValue] = []
     private(set) var isLoading = false
 
     init(key: MetricKey, range: HealthDetailRange) {
@@ -34,6 +36,9 @@ final class MetricDetailModel {
         case .app(let metric): revision = sources.revision(for: metric)
         case .nutrient: revision = sources.nutrientRevision
         case .health: revision = sources.health.snapshotRevision
+        case .derived(let metricID):
+            revision = sources.health.snapshotRevision &* 31 &+ DerivedMetricsService.shared.revision
+                &* 2 &+ (DerivedSettings.isEnabled(metricID) ? 1 : 0)
         }
         let day = Int(calendar.startOfDay(for: anchor).timeIntervalSince1970)
         return "\(key.id)|\(range.rawValue)|\(day)|\(revision)|\(ActivitySettings.weekStart().rawValue)"
@@ -50,8 +55,29 @@ final class MetricDetailModel {
             nutrientExtras = result.extras
         case .health(let typeID):
             series = await sources.health.series(typeID: typeID, range: range, anchor: anchor)
+        case .derived(let metricID):
+            await loadDerived(metricID, calendar: calendar)
         }
         isLoading = false
+    }
+
+    /// Native-wins days of the interval, bucketed by the metric's aggregation.
+    private func loadDerived(_ metricID: String, calendar: Calendar) async {
+        guard let info = DerivedCatalog.shared.byID[metricID], let db = await DerivedMetricStore.database() else {
+            series = nil
+            derivedDays = []
+            return
+        }
+        let interval = range.interval(containing: anchor, calendar: calendar)
+        let fromDay = InsightsDay.key(for: interval.start, calendar: calendar)
+        let toDay = InsightsDay.key(for: interval.end.addingTimeInterval(-1), calendar: calendar)
+        let days = await DerivedMetricSeries.days(reader: db, info: info, fromDay: fromDay, toDay: toDay,
+                                                  enabled: DerivedSettings.isEnabled(metricID))
+        let range = range, anchor = anchor, weekStart = ActivitySettings.weekStart()
+        series = await Task.detached(priority: .userInitiated) {
+            DerivedMetricSeries.build(days: days, info: info, range: range, anchor: anchor, calendar: calendar, weekStart: weekStart)
+        }.value
+        derivedDays = days
     }
 
     func step(_ direction: Int, calendar: Calendar) {

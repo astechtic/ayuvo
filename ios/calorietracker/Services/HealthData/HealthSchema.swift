@@ -4,13 +4,13 @@ import Foundation
 /// tables this DDL creates against the shared file (`PRAGMA table_info`), so the two
 /// must stay identical column-for-column.
 nonisolated enum HealthSchema {
-    static let schemaVersion = 1
+    static let schemaVersion = 2
     static let registryVersion = 1
     static let rollupRuleVersion = 1
 
     static let tableNames: [String] = [
         "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
-        "health_sources", "health_sync_state", "health_type_meta", "health_meta",
+        "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
     ]
 
     static let indexNames: [String] = ["idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t"]
@@ -57,6 +57,11 @@ nonisolated enum HealthSchema {
     CREATE TABLE health_type_meta (type_id TEXT PRIMARY KEY NOT NULL, category TEXT NOT NULL, kind TEXT NOT NULL,
       aggregation TEXT NOT NULL, unit TEXT NOT NULL, display_name TEXT, platform TEXT, native_id TEXT);  -- unknown/imported types
     CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT);      -- registry_version, rollup_rule_version, rollups_tz, schema_version
+    CREATE TABLE derived_daily_values (   -- on-device derived metrics (docs/derived-metrics.md); never exported, rebuilt on demand
+      metric_id TEXT NOT NULL, day TEXT NOT NULL,
+      value REAL, value2 REAL, value3 REAL,
+      quality REAL, source_kind TEXT NOT NULL DEFAULT 'derived',   -- 'derived' only; native readings stay in health_samples
+      algo_version INTEGER NOT NULL, computed_ms INTEGER NOT NULL, PRIMARY KEY (metric_id, day));
     """
 
     /// The same DDL made re-runnable (`IF NOT EXISTS`) for `applySchema()`.

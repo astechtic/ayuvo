@@ -37,6 +37,7 @@ enum PortableDataImport {
         var settings: [(key: String, value: PortableData.SettingValue)] = []
         var mealSchedule: MealSchedule?
         var summaryFavourites: [String]?
+        var derivedDisabled: [String]?
         var nutrientGoals: [OptionalNutrient: Int] = [:]
         var weights: [WeightEntry] = []
         var bodyFat: [BodyFatEntry] = []
@@ -139,6 +140,10 @@ enum PortableDataImport {
             if let raw = preferences["summary_favourites"] as? [Any] {
                 let ids = raw.compactMap { ($0 as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
                 document.summaryFavourites = Array(ids.prefix(PortableData.maxSummaryFavourites))
+            }
+            if let raw = preferences["derived_metrics_disabled"] as? [Any] {
+                let ids = raw.compactMap { ($0 as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+                document.derivedDisabled = Array(Set(ids).sorted().prefix(PortableData.maxDerivedDisabled))
             }
             if let goals = preferences["optional_nutrient_goals"] as? PortableData.JSON {
                 for nutrient in OptionalNutrient.allCases {
@@ -390,6 +395,10 @@ enum PortableDataImport {
         }
         if let favourites = document.summaryFavourites {
             defaults.set(favourites, forKey: MetricPins.key)
+            count += 1
+        }
+        if let disabled = document.derivedDisabled {
+            defaults.set(disabled, forKey: DerivedSettings.disabledKey)
             count += 1
         }
         if !document.nutrientGoals.isEmpty {

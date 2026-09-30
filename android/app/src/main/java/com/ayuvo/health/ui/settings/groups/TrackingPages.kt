@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Functions
+import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.LocalDining
 import androidx.compose.material.icons.filled.Medication
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.ayuvo.health.R
+import com.ayuvo.health.data.derived.DerivedCatalog
 import com.ayuvo.health.ui.design.GroupRow
 import com.ayuvo.health.ui.design.InsetGroup
 import com.ayuvo.health.ui.design.RowTrailing
@@ -301,5 +304,69 @@ internal fun InsightsSettingsPage(ctx: SettingsPageContext) {
             },
             onDismiss = { pickTime = false }
         )
+    }
+}
+
+/**
+ * Tracking › Derived Metrics (docs/derived-metrics.md): the master switch, the BMI cut-offs and one switch per derived
+ * metric. Native Health Connect data always wins; these switches only control Ayuvo's estimates. The derived-metrics
+ * service observes the same preferences and recomputes or deletes values when they change.
+ */
+@Composable
+internal fun DerivedMetricsSettingsPage(ctx: SettingsPageContext) {
+    val prefs = ctx.container.prefs
+    val scope = rememberCoroutineScope()
+    val tint = SettingsPage.DERIVED_METRICS.tint
+    val context = LocalContext.current
+    val catalog = remember { DerivedCatalog.get(context) }
+    val enabled by prefs.derivedMetricsEnabled.collectAsState(initial = true)
+    val disabled by prefs.derivedMetricsDisabled.collectAsState(initial = emptySet())
+    val bmiScheme by prefs.derivedBmiScheme.collectAsState(initial = "who")
+    InsetGroup(footer = stringResource(R.string.settings_derived_footer)) {
+        row {
+            GroupRow(
+                title = stringResource(R.string.settings_derived_enabled),
+                subtitle = stringResource(R.string.settings_derived_enabled_sub),
+                icon = Icons.Filled.Functions, iconTint = tint,
+                modifier = Modifier.settingsRow("derivedMetricsEnabled"),
+                trailing = RowTrailing.Toggle(enabled, { v -> scope.launch { prefs.setDerivedMetricsEnabled(v) } })
+            )
+        }
+    }
+    if (!enabled) return
+    InsetGroup(footer = stringResource(R.string.settings_derived_bmi_footer)) {
+        row {
+            GroupRow(
+                title = stringResource(R.string.settings_derived_bmi_scheme),
+                value = stringResource(if (bmiScheme == "asian") R.string.settings_derived_bmi_asian else R.string.settings_derived_bmi_who),
+                icon = Icons.Filled.MonitorWeight, iconTint = tint,
+                modifier = Modifier.settingsRow("derivedBmiScheme"),
+                onClick = { scope.launch { prefs.setDerivedBmiScheme(if (bmiScheme == "asian") "who" else "asian") } }
+            )
+        }
+    }
+    for (category in catalog.categories) {
+        InsetGroup(header = DerivedCatalog.categoryTitle(category)) {
+            for (metric in catalog.metricsIn(category)) {
+                row {
+                    val on = metric.id !in disabled
+                    val dependents = catalog.dependentsOf(metric.id).map { it.title }
+                    val subtitle = when {
+                        !on && dependents.isNotEmpty() ->
+                            stringResource(R.string.settings_derived_also_affects, dependents.joinToString(", "))
+                        metric.nativeTypeId != null -> stringResource(R.string.settings_derived_native_wins)
+                        else -> null
+                    }
+                    GroupRow(
+                        title = metric.title,
+                        subtitle = subtitle,
+                        modifier = Modifier.settingsRow("derived.${metric.id}"),
+                        trailing = RowTrailing.Toggle(on, { v ->
+                            scope.launch { prefs.setDerivedMetricsDisabled(if (v) disabled - metric.id else disabled + metric.id) }
+                        })
+                    )
+                }
+            }
+        }
     }
 }

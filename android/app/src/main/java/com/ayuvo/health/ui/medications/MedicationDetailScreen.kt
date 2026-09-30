@@ -221,6 +221,7 @@ fun MedicationDetailScreen(
                                 Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f), modifier = Modifier.size(22.dp))
                             }
                         }
+                        SupplementUpperLimitNotes(ui.nutrientRegimens)
                         Text(
                             stringResource(R.string.nutrients_card_note),
                             fontSize = 12.sp,
@@ -262,6 +263,9 @@ fun MedicationDetailScreen(
                         )
                     }
                 }
+
+                // Last 30 days: adherence, lateness, suggested reminder time (docs/intake-metrics.md §3)
+                ui.intakeAdherence?.let { MedicationAdherenceInsightsCard(it, ui.suggestedReminder, vm::moveReminder) }
 
                 // Recent history
                 DetailCard(stringResource(R.string.medications_detail_history), tag = "history") {

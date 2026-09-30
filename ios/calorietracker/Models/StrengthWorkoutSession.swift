@@ -430,6 +430,13 @@ struct StrengthWorkoutSession: Identifiable, Codable, Equatable, Hashable {
     /// Monotonically increases when the same daily estimate is recalculated.
     /// HealthKit uses this to replace the tagged active-energy sample safely.
     var healthSyncVersion: Int? = nil
+    /// Heart-rate statistics over the real start/end window. Optional so older
+    /// sessions (and builds without heart-rate support) still decode.
+    var heartRate: WorkoutHeartRateSummary? = nil
+    /// Present for GPS / Apple Watch outdoor workouts. These sessions are
+    /// separate records (several per day) and never replace the day's
+    /// calculated strength burn.
+    var outdoor: OutdoorWorkoutSummary? = nil
 
     var durationMinutes: Int { max(0, Int(ceil(Double(durationSeconds) / 60))) }
     var exerciseCount: Int { exercises.count }
@@ -448,6 +455,7 @@ struct StrengthWorkoutSession: Identifiable, Codable, Equatable, Hashable {
 
     var displayTitle: String {
         let calendar = Calendar.current
+        if let outdoor { return outdoor.sportTitle }
         if calendar.isDateInToday(calendarDiaryDate) { return "Today Workout" }
         return "\(calendarDiaryDate.formatted(.dateTime.weekday(.wide))) Workout"
     }
@@ -551,21 +559,35 @@ enum StrengthWorkoutBurnEstimator {
     /// and /conditioning-exercise/. Intensity is an RPE-derived approximation
     /// of pace/effort, not a measured speed, power output, or energy expenditure.
     private static func timedMET(for exercise: StrengthPlannedExercise, intensity: StrengthWorkoutIntensity) -> Double {
+        exercise.isCardio ? cardioMET(itemID: exercise.itemID, intensity: intensity) : met((3.5, 5, 6), intensity)
+    }
+
+    /// Cardio MET by catalogue id (also the GPS sports' `met_item_id`).
+    static func cardioMET(itemID: String, intensity: StrengthWorkoutIntensity) -> Double {
         let values: (Double, Double, Double)
-        if exercise.isCardio {
-            // Catalogue IDs from exercises-dataset (see shared/exercises/exercises.json).
-            switch exercise.itemID {
-            case "2138", "0798": values = (3.5, 6, 10.8) // stationary bike run / walk
-            case "2141": values = (5, 5, 9) // elliptical cross trainer
-            case "3666", "Walking_Outdoor": values = (2.8, 3.8, 4.8) // incline treadmill walk
-            case "0685", "0684", "3656", "Running_Outdoor": values = (6.5, 8.5, 10.5) // run
-            case "2612": values = (8.3, 11.8, 12.3) // jump rope
-            case "2311": values = (4.5, 6.8, 9.3) // walking on stepmill
-            default: values = (3.5, 5, 7.5)
-            }
-        } else {
-            values = (3.5, 5, 6)
+        // Catalogue IDs from exercises-dataset (see shared/exercises/exercises.json).
+        switch itemID {
+        case "2138", "0798": values = (3.5, 6, 10.8) // stationary bike run / walk
+        case "2141": values = (5, 5, 9) // elliptical cross trainer
+        case "3666", "Walking_Outdoor": values = (2.8, 3.8, 4.8) // incline treadmill walk
+        case "0685", "0684", "3656", "Running_Outdoor": values = (6.5, 8.5, 10.5) // run
+        case "2612": values = (8.3, 11.8, 12.3) // jump rope
+        case "2311": values = (4.5, 6.8, 9.3) // walking on stepmill
+        case "Cycling_Outdoor": values = (4.0, 6.8, 10.0) // bicycling, leisure / general / fast
+        case "Hiking": values = (5.3, 6.0, 7.8) // hiking, cross-country / moderate / steep
+        default: values = (3.5, 5, 7.5)
         }
+        return met(values, intensity)
+    }
+
+    /// kcal = MET × 3.5 × kg ÷ 200 × minutes.
+    static func metCalories(met: Double, bodyWeightKg: Double, seconds: Double) -> Int {
+        let weight = bodyWeightKg.isFinite ? min(max(bodyWeightKg, 35), 300) : 70
+        let kcal = met * 3.5 * weight / 200 * (max(0, seconds) / 60)
+        return min(max(Int(kcal.rounded()), 1), 5_000)
+    }
+
+    private static func met(_ values: (Double, Double, Double), _ intensity: StrengthWorkoutIntensity) -> Double {
         switch intensity {
         case .light: return values.0
         case .moderate: return values.1

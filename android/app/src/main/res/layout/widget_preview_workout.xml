@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview (android:previewLayout); mirrors the idle medium Glance layout. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UseAppTint" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/widget_preview_bg" android:orientation="vertical" android:padding="8dp">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="4dp" android:paddingBottom="6dp">
+        <ImageView android:layout_width="13dp" android:layout_height="13dp" android:src="@drawable/ic_widget_fitness" android:tint="#FFFF9500" android:contentDescription="@null"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:text="@string/widget_workout_title" android:textSize="12sp" android:textColor="@color/widget_preview_secondary" android:maxLines="1" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+    <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="0dp" android:layout_marginEnd="3dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center" android:padding="4dp">
+        <FrameLayout android:layout_width="34dp" android:layout_height="34dp" android:background="@drawable/widget_preview_bubble_move">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_gravity="center" android:src="@drawable/ic_widget_walk" android:tint="#FFFF9500" android:contentDescription="@null"/>
+        </FrameLayout>
+        <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_workout_walk" android:textSize="12sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="3dp" android:layout_marginEnd="3dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center" android:padding="4dp">
+        <FrameLayout android:layout_width="34dp" android:layout_height="34dp" android:background="@drawable/widget_preview_bubble_move">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_gravity="center" android:src="@drawable/ic_widget_run" android:tint="#FFFF9500" android:contentDescription="@null"/>
+        </FrameLayout>
+        <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_workout_run" android:textSize="12sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="3dp" android:layout_marginEnd="3dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center" android:padding="4dp">
+        <FrameLayout android:layout_width="34dp" android:layout_height="34dp" android:background="@drawable/widget_preview_bubble_move">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_gravity="center" android:src="@drawable/ic_widget_cycle" android:tint="#FFFF9500" android:contentDescription="@null"/>
+        </FrameLayout>
+        <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_workout_cycle" android:textSize="12sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="3dp" android:layout_marginEnd="3dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center" android:padding="4dp">
+        <FrameLayout android:layout_width="34dp" android:layout_height="34dp" android:background="@drawable/widget_preview_bubble_move">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_gravity="center" android:src="@drawable/ic_widget_hike" android:tint="#FFFF9500" android:contentDescription="@null"/>
+        </FrameLayout>
+        <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_workout_hike" android:textSize="12sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginStart="3dp" android:layout_marginEnd="0dp" android:background="@drawable/widget_preview_tile" android:orientation="vertical" android:gravity="center" android:padding="4dp">
+        <FrameLayout android:layout_width="34dp" android:layout_height="34dp" android:background="@drawable/widget_preview_bubble_move">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_gravity="center" android:src="@drawable/ic_widget_fitness" android:tint="#FFFF9500" android:contentDescription="@null"/>
+        </FrameLayout>
+        <FrameLayout android:layout_width="1dp" android:layout_height="4dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_workout_strength" android:textSize="12sp" android:textColor="@color/widget_preview_primary" android:maxLines="1" android:includeFontPadding="false" android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

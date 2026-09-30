@@ -5,6 +5,7 @@ import SwiftUI
 struct ContentView: View {
     @Environment(NotificationManager.self) private var notificationManager
     @Environment(\.scenePhase) private var scenePhase
+    @State private var lastDerivedRefresh: Date?
     @Environment(RecordsStore.self) private var recordsStore
     @Environment(CoachStore.self) private var chatStore
     @Environment(MedicationStore.self) private var medicationStore
@@ -97,6 +98,12 @@ struct ContentView: View {
                 if newPhase == .active {
                     consumePendingLaunchRoutes()
                     InsightsBackgroundRefresh.schedule()
+                    // Derived metrics (docs/derived-metrics.md): recompute on launch and on returning after a while
+                    // (sync commits schedule their own pass).
+                    if lastDerivedRefresh.map({ Date().timeIntervalSince($0) > 30 * 60 }) ?? true {
+                        lastDerivedRefresh = Date()
+                        DerivedMetricsService.shared.scheduleRefresh()
+                    }
                 }
             }
     }

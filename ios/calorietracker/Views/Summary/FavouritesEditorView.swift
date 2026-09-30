@@ -17,6 +17,13 @@ struct FavouritesEditorView: View {
         MetricCatalog.appMetrics.filter { !store.isPinned($0.key.id) }
     }
 
+    /// Derived metrics that are switched on and have values (docs/derived-metrics.md).
+    private var derivedCandidates: [MetricDescriptor] {
+        DerivedMetricStore.shared.availableInfos
+            .map { MetricCatalog.descriptor(for: .derived($0.id)) }
+            .filter { !store.isPinned($0.key.id) }
+    }
+
     private var isFull: Bool { pinned.count >= MetricPins.max }
 
     var body: some View {
@@ -64,9 +71,20 @@ struct FavouritesEditorView: View {
                     addButton(id: type.id, descriptor: MetricCatalog.descriptor(for: .health(type.id)))
                 }
             }
+
+            if !derivedCandidates.isEmpty {
+                Section("Estimated by Ayuvo") {
+                    ForEach(derivedCandidates) { descriptor in
+                        addButton(id: descriptor.key.id, descriptor: descriptor)
+                    }
+                }
+            }
         }
         .listStyle(.insetGrouped)
         .environment(\.editMode, .constant(.active))
+        .task(id: DerivedMetricsService.shared.revision) {
+            await DerivedMetricStore.shared.refresh(pinned: store.pinnedTypeIDs, calendar: store.calendar)
+        }
         .navigationTitle("Edit Favourites")
         .navigationBarTitleDisplayMode(.inline)
     }

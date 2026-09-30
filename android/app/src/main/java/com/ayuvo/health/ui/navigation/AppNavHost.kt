@@ -364,6 +364,7 @@ fun AppNavHost(
                 }
             }
             WidgetTarget.Summary -> openSummaryRoot()
+            WidgetTarget.Workout -> if (routeNow() != AppRoutes.WORKOUTS_LOG) openBrowsePlace(AppRoutes.WORKOUTS_LOG)
         }
     }
 

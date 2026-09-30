@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "conflict": true,
+        "values": [
+          1.75,
+          1.77
+        ]
+      },
+      "input": {
+        "heights": [
+          {
+            "source": "app",
+            "value_m": 1.75
+          },
+          {
+            "source": "health",
+            "value_m": 1.77
+          }
+        ]
+      },
+      "name": "conflict"
+    },
+    {
+      "expected": {
+        "conflict": false,
+        "values": [
+          1.75
+        ]
+      },
+      "input": {
+        "heights": [
+          {
+            "source": "a",
+            "value_m": 1.751
+          },
+          {
+            "source": "b",
+            "value_m": 1.748
+          }
+        ]
+      },
+      "name": "same_within_a_centimetre"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "height_conflict",
+  "version": 1
+}

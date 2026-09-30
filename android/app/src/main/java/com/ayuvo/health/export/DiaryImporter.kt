@@ -94,6 +94,8 @@ object DiaryImporter {
         val source: String,
         val note: String? = null,
         val ingredients: List<Ingredient> = emptyList(),
+        /** Format 1.6+; older files have none and the food counts as eaten at its log time. */
+        val eaten_at: String? = null,
     )
 
     @Serializable
@@ -193,6 +195,7 @@ object DiaryImporter {
                             omega3 = item.omega3_g,
                             servingSizeGrams = item.quantity_g,
                             customNote = item.note,
+                            eatenAt = parseEatenAt(item.eaten_at, timestamp),
                             ingredients = item.ingredients.map { ingredient ->
                                 validate(ingredient, item.name)
                                 MealIngredient(
@@ -312,6 +315,7 @@ object DiaryImporter {
         servingSizeGrams = imported.servingSizeGrams,
         customNote = imported.customNote,
         ingredients = imported.ingredients,
+        eatenAt = imported.eatenAt,
     )
 
     private fun validate(item: Item) {
@@ -333,6 +337,15 @@ object DiaryImporter {
         if (ingredient.name.isBlank() || ingredient.calories < 0 || values.any { !it.isFinite() || it < 0 }) {
             throw DiaryImportException("The diary contains an invalid ingredient in $foodName.")
         }
+    }
+
+    /** Tolerant: a missing or unreadable `eaten_at`, or one equal to the log time, stays null (= the log time). */
+    private fun parseEatenAt(raw: String?, timestamp: java.time.Instant): java.time.Instant? {
+        val value = raw?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        val parsed = runCatching { java.time.OffsetDateTime.parse(value).toInstant() }
+            .recoverCatching { java.time.Instant.parse(value) }
+            .getOrNull() ?: return null
+        return parsed.takeUnless { it.epochSecond / 60 == timestamp.epochSecond / 60 }
     }
 
     private fun parseDate(value: String): LocalDate = try {

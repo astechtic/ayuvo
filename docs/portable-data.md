@@ -95,6 +95,10 @@ Import **replaces** the device profile when `profile` is present. Not carried: t
 | `meal_start_minutes` | `{breakfast, lunch, dinner, snack}` ints (strictly increasing, < 1440, else ignored) | `meal{Breakfast,Lunch,Dinner,Snack}StartMinutes` |
 | `summary_favourites` | string[] (max 12) | `summaryFavourites` (iOS: array, Android: comma-separated) |
 | `optional_nutrient_goals` | `{ "<camelCase nutrient>": int 0…999999 }`, supplements (`creatine`, `betaAlanine`, `lCitrulline`, `lCarnitine`, `lArginine`, `taurine`, `betaine`, `hmb`) in the same flat object | `optionalNutrientGoals` (iOS `{values:{…}}` blob, Android object + `supplementalNutrients` map) |
+| `insights_enabled` | bool | `insightsEnabled` |
+| `derived_metrics_enabled` | bool | `derivedMetricsEnabled` (docs/derived-metrics.md) |
+| `derived_metrics_disabled` | string[] of derived metric ids, sorted, max 200 (unknown ids are kept and ignored) | `derivedMetricsDisabled` (iOS: array, Android: comma-separated) |
+| `derived_bmi_scheme` | `who` \| `asian` | `derivedBMIScheme` |
 
 Out of range or unknown values are ignored one by one. **Never carried:** notification and reminder switches and times (they differ per platform and need an OS grant), health-sync flags, AI provider/model/keys, speech provider, quick actions and Add-menu layout (different method sets), Records/medication/Coach preferences, onboarding state, widgets.
 

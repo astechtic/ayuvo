@@ -62,6 +62,8 @@ struct EditFoodEntryView: View {
     @State private var isQuantityEditing = false
     @State private var mealType: MealType
     @State private var loggedAt: Date
+    @State private var eatenAt: Date
+    @State private var eatenAtEdited: Bool
 
     private var scale: Double {
         guard baseServingSizeGrams > 0 else { return 1 }
@@ -175,6 +177,8 @@ struct EditFoodEntryView: View {
         self._selectedServingUnitID = State(initialValue: initialServingUnitID)
         self._mealType = State(initialValue: entry.mealType)
         self._loggedAt = State(initialValue: entry.timestamp)
+        self._eatenAt = State(initialValue: entry.eatenTime)
+        self._eatenAtEdited = State(initialValue: entry.eatenAt != nil)
     }
 
     private static func formatGrams(_ value: Double) -> String {
@@ -441,11 +445,17 @@ struct EditFoodEntryView: View {
                         .tint(AppColors.calorie)
                     }
 
-                    Section("Date & Time") {
+                    Section {
                         DatePicker("Date", selection: $loggedAt, displayedComponents: .date)
                             .tint(AppColors.calorie)
                         DatePicker("Time", selection: $loggedAt, displayedComponents: .hourAndMinute)
                             .tint(AppColors.calorie)
+                        DatePicker("Eaten at", selection: eatenAtBinding, displayedComponents: [.date, .hourAndMinute])
+                            .tint(AppColors.calorie)
+                    } header: {
+                        Text("Date & Time")
+                    } footer: {
+                        Text("Eaten at is when you ate it. It starts at the log time and is used for your eating window and meal timing.")
                     }
 
                     Section("Actions") {
@@ -557,6 +567,17 @@ struct EditFoodEntryView: View {
                 proxy.scrollTo(ScrollTarget.quantity, anchor: .bottom)
             }
         }
+    }
+
+    /// Until the person edits it, the eaten-at time follows the log time.
+    private var eatenAtBinding: Binding<Date> {
+        Binding(
+            get: { eatenAtEdited ? eatenAt : loggedAt },
+            set: { newValue in
+                eatenAt = newValue
+                eatenAtEdited = true
+            }
+        )
     }
 
     private var noteChanged: Bool {
@@ -688,7 +709,8 @@ struct EditFoodEntryView: View {
             customNote: customNote.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : customNote,
             progressiveMeal: entry.progressiveMeal,
             ingredients: scaledIngredients,
-            productMetadata: entry.productMetadata
+            productMetadata: entry.productMetadata,
+            eatenAt: eatenAtEdited ? eatenAt : nil
         )
         foodStore.updateEntry(updated.removingPhotos(withIDs: removedPhotoIDs))
         dismiss()

@@ -1,5 +1,6 @@
 package com.ayuvo.health.services.ai
 
+import com.ayuvo.health.data.health.HealthCoachDerivedMetric
 import com.ayuvo.health.data.health.HealthCoachSnapshot
 import com.ayuvo.health.data.health.HealthDailyRollup
 import com.ayuvo.health.data.health.HealthRollupMath
@@ -35,7 +36,7 @@ class CoachHealthData(
     fun dataTypes(): Map<String, Any?> = linkedMapOf(
         "health_data_enabled" to true,
         "last_sync" to snapshot.lastSyncMs?.let(::isoInstant),
-        "count" to snapshot.types.size,
+        "count" to snapshot.types.size + snapshot.derived.size,
         "data_types" to snapshot.types.map { t ->
             linkedMapOf<String, Any?>(
                 "data_type" to t.typeId,
@@ -56,10 +57,70 @@ class CoachHealthData(
             ).apply {
                 t.historyLimitedBeforeMs?.let { put("history_limited_before", isoDate(it)) }
             }
-        }
+        } + snapshot.derived.map(::derivedTypePayload)
     )
 
+    /**
+     * A derived metric in `get_health_data_types` (docs/derived-metrics.md): Ayuvo's estimate from the user's own data,
+     * one value per day; a platform reading of [HealthCoachDerivedMetric.nativeTypeId] wins on its days.
+     */
+    private fun derivedTypePayload(m: HealthCoachDerivedMetric): Map<String, Any?> {
+        val latest = m.days.lastOrNull()
+        return linkedMapOf<String, Any?>(
+            "data_type" to m.dataType,
+            "category" to m.category,
+            "display_name" to m.title,
+            "unit" to m.unit,
+            "aggregation" to m.aggregation.uppercase(Locale.ROOT),
+            "count" to m.days.size,
+            "first" to m.days.firstOrNull()?.day?.toString(),
+            "last" to latest?.day?.toString(),
+            "latest" to latest?.let { p -> linkedMapOf("at" to p.day.toString(), "value" to round2(p.value), "value_text" to null) },
+            "derived" to true,
+            "method" to m.method,
+            "note" to DERIVED_NOTE
+        ).apply {
+            m.nativeTypeId?.let { put("native_data_type", it) }
+        }
+    }
+
+    /** `get_health_summary` for `derived:<id>`: per-day values with their source ("native" or "derived"). */
+    private fun derivedSummary(m: HealthCoachDerivedMetric, from: String?, to: String?, limit: Int?): Map<String, Any?> {
+        val range = parseRange(from, to)
+        val cap = (limit ?: 400).coerceIn(1, 400)
+        val days = m.days.filter { !it.day.isBefore(range.first) && !it.day.isAfter(range.second) }.takeLast(cap)
+        val values = days.map { it.value }
+        val highlights = linkedMapOf<String, Any?>(
+            "total" to values.takeIf { it.isNotEmpty() && m.aggregation == "sum" }?.sum()?.let(::round2),
+            "average" to values.takeIf { it.isNotEmpty() }?.average()?.let(::round2),
+            "min" to values.minOrNull()?.let(::round2),
+            "max" to values.maxOrNull()?.let(::round2),
+            "latest" to days.lastOrNull()?.value?.let(::round2)
+        )
+        return linkedMapOf(
+            "data_type" to m.dataType,
+            "unit" to m.unit,
+            "from" to range.first.toString(),
+            "to" to range.second.toString(),
+            "derived" to true,
+            "method" to m.method,
+            "note" to DERIVED_NOTE,
+            "highlights" to highlights,
+            "days" to days.map { d ->
+                linkedMapOf<String, Any?>("date" to d.day.toString(), "value" to round2(d.value)).apply {
+                    d.value2?.let { put("value2", round2(it)) }
+                    d.value3?.let { put("value3", round2(it)) }
+                    put("source", d.sourceKind)
+                }
+            }
+        )
+    }
+
+    private fun resolveDerived(dataType: String?): HealthCoachDerivedMetric? =
+        dataType?.trim()?.takeIf { it.startsWith(HealthCoachDerivedMetric.DERIVED_PREFIX) }?.let { id -> snapshot.derived.firstOrNull { it.dataType == id } }
+
     fun summary(dataType: String?, from: String?, to: String?, limit: Int?): Map<String, Any?> {
+        resolveDerived(dataType)?.let { return derivedSummary(it, from, to, limit) }
         val type = resolveType(dataType) ?: return error("Unknown data_type '${dataType.orEmpty()}'. Call get_health_data_types for valid keys.")
         val range = parseRange(from, to)
         val cap = (limit ?: 400).coerceIn(1, 400)
@@ -94,6 +155,7 @@ class CoachHealthData(
     }
 
     fun samples(dataType: String?, from: String?, to: String?, limit: Int?): Map<String, Any?> {
+        resolveDerived(dataType)?.let { return error("'${it.dataType}' is a daily estimate without individual records. Use get_health_summary.") }
         val type = resolveType(dataType) ?: return error("Unknown data_type '${dataType.orEmpty()}'. Call get_health_data_types for valid keys.")
         val range = parseRange(from, to)
         val cap = (limit ?: 200).coerceIn(1, 200)
@@ -166,6 +228,9 @@ class CoachHealthData(
             lines += "- Active energy: avg ${fmt(d.mapNotNull { it.sum }.average())} kcal/day" + (if (own > 0) " (includes ${fmt(own)} kcal of Ayuvo's own workout estimates over the week)" else "")
         }
         recent("resting_heart_rate").takeIf { it.isNotEmpty() }?.let { lines += "- Resting heart rate: avg ${fmt(it.mapNotNull { d -> d.avg }.average())} bpm" }
+            ?: snapshot.derived.firstOrNull { it.id == "resting_hr_derived" }?.days?.filter { it.day.toString() >= since }?.takeIf { it.isNotEmpty() }?.let {
+                lines += "- Resting heart rate (estimated by Ayuvo): avg ${fmt(it.map { d -> d.value }.average())} bpm"
+            }
         recent("heart_rate").takeIf { it.isNotEmpty() }?.let { lines += "- Heart rate: ${fmt(it.mapNotNull { d -> d.min }.min())}–${fmt(it.mapNotNull { d -> d.max }.max())} bpm" }
         recent("hrv_rmssd").takeIf { it.isNotEmpty() }?.let { lines += "- HRV (RMSSD): avg ${fmt(it.mapNotNull { d -> d.avg }.average())} ms" }
         snapshot.nights.filter { it.nightOf >= since }.takeIf { it.isNotEmpty() }?.let { lines += "- Sleep: avg ${(it.map { n -> n.asleepS }.average() / 3600).let { h -> String.format(Locale.US, "%.1f", h) }} h asleep over ${it.size} nights" }
@@ -246,6 +311,8 @@ class CoachHealthData(
     }
 
     companion object {
+        private const val DERIVED_NOTE = "Estimated by Ayuvo from the user's own data with a published formula; a health platform value wins on days it has one. Not a medical measurement."
+
         val TOOL_NAMES: List<String> = listOf(
             "get_health_data_types",
             "get_health_summary",

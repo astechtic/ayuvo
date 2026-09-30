@@ -126,6 +126,28 @@ enum MetricCatalog {
                 learnSlug: resolved.learnSlug,
                 foodTracked: resolved.foodTracked
             )
+        case .derived(let metricID):
+            guard let info = DerivedCatalog.shared.byID[metricID] else {
+                return MetricDescriptor(
+                    key: key, title: metricID, domainID: "other", systemImage: "waveform.path.ecg", unitLabel: "",
+                    chartKind: .line, aggregation: .avg, ranges: DerivedMetricSeries.ranges, about: "", goalSource: "",
+                    browseHidden: true, decimals: 0
+                )
+            }
+            return MetricDescriptor(
+                key: key,
+                title: String(localized: String.LocalizationValue(info.title)),
+                domainID: DerivedMetricSeries.domainID(for: info.category),
+                systemImage: info.systemImage,
+                unitLabel: DerivedMetricFormat.unitLabel(info),
+                chartKind: DerivedMetricSeries.chartKind(info),
+                aggregation: DerivedMetricSeries.aggregation(info),
+                ranges: DerivedMetricSeries.ranges,
+                about: String(localized: String.LocalizationValue(info.about)),
+                goalSource: "",
+                browseHidden: false,
+                decimals: info.decimals
+            )
         case .health(let typeID):
             let type = HealthMetricRegistry.resolve(typeID: typeID)
             return MetricDescriptor(

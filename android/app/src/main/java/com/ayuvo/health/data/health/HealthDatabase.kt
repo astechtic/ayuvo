@@ -40,14 +40,22 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // v1 is the first schema; future migrations append here.
+        if (oldVersion < 2) db.execSQL(DERIVED_DAILY_VALUES)
+        db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('schema_version', ?)", arrayOf(newVersion.toString()))
     }
 
     fun files(): List<File> = databaseFiles(context)
 
     companion object {
         const val NAME = "ayuvo_health.db"
-        const val VERSION = 1
+        const val VERSION = 2
+
+        /** v2: on-device derived metrics (docs/derived-metrics.md); never exported, rebuilt on demand. */
+        const val DERIVED_DAILY_VALUES = """CREATE TABLE derived_daily_values (
+  metric_id TEXT NOT NULL, day TEXT NOT NULL,
+  value REAL, value2 REAL, value3 REAL,
+  quality REAL, source_kind TEXT NOT NULL DEFAULT 'derived',
+  algo_version INTEGER NOT NULL, computed_ms INTEGER NOT NULL, PRIMARY KEY (metric_id, day))"""
 
         /** Verbatim `shared/health/schema.sql`, one statement per entry. */
         val SCHEMA_STATEMENTS: List<String> = listOf(
@@ -91,14 +99,15 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   last_error TEXT, last_error_ms INTEGER, ipc_calls_total INTEGER NOT NULL DEFAULT 0)""",
             """CREATE TABLE health_type_meta (type_id TEXT PRIMARY KEY NOT NULL, category TEXT NOT NULL, kind TEXT NOT NULL,
   aggregation TEXT NOT NULL, unit TEXT NOT NULL, display_name TEXT, platform TEXT, native_id TEXT)""",
-            "CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT)"
+            "CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT)",
+            DERIVED_DAILY_VALUES
         )
 
         val SCHEMA_SQL: String get() = SCHEMA_STATEMENTS.joinToString(";\n", postfix = ";\n")
 
         val TABLES: List<String> = listOf(
             "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
-            "health_sources", "health_sync_state", "health_type_meta", "health_meta"
+            "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values"
         )
 
         fun databaseFiles(context: Context): List<File> {

@@ -79,6 +79,20 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
+     * A Workout widget tap (docs/widgets.md "Workout"): the workout log consumes the launch, runs the permission
+     * flow and starts the GPS recorder or strength session while the app is visible.
+     */
+    private fun handleWorkoutWidgetIntent(intent: Intent?) {
+        val launch = com.ayuvo.health.widget.WorkoutWidgetIntentContract.launchFrom(
+            intent?.action,
+            intent?.getStringExtra(com.ayuvo.health.widget.WorkoutWidgetIntentContract.EXTRA_START)
+        ) ?: return
+        com.ayuvo.health.widget.WorkoutWidgetLaunches.post(launch)
+        pendingWidgetRequest = WidgetRequest(com.ayuvo.health.models.WidgetTarget.Workout)
+        intent?.action = null
+    }
+
+    /**
      * `ayuvo://action` / `ayuvo://open` links, launcher shortcuts and App Actions (docs/actions.md).
      * Runs before the records handler, which would otherwise treat an `ayuvo://` VIEW as a document.
      */
@@ -138,6 +152,7 @@ class MainActivity : ComponentActivity() {
         handleActionIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
+        handleWorkoutWidgetIntent(intent)
         handleWidgetIntent(intent)
         handleIncomingRecordsIntent(intent)
     }
@@ -204,6 +219,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) handleActionIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
+        if (savedInstanceState == null) handleWorkoutWidgetIntent(intent)
         if (savedInstanceState == null) handleWidgetIntent(intent)
         // A recreated activity (rotation, process restore) still carries the original share intent.
         if (savedInstanceState == null) handleIncomingRecordsIntent(intent)

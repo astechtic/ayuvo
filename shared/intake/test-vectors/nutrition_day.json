@@ -1,0 +1,210 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "caffeine_mg": 150.0,
+        "calories": 2174.0,
+        "carbs_pct": 53.3,
+        "eating_window_min": 660.0,
+        "fat_pct": 28.6,
+        "fiber_per_1000kcal": 16.1,
+        "iron_absorption_risk": 1,
+        "items": 5,
+        "last_caffeine_min": 1183,
+        "last_meal_to_bed_min": 180.0,
+        "meals": 4,
+        "meals_with_protein_target": 4,
+        "na_k_ratio": 1.02,
+        "protein_g_per_kg": 1.77,
+        "protein_pct": 18.1,
+        "saturated_fat_pct": 13.9
+      },
+      "input": {
+        "bedtime_ms": 1790050400000,
+        "items": [
+          {
+            "caffeine_mg": 150,
+            "calories": 4,
+            "carbs_g": 0,
+            "eaten_ms": 1790000000000,
+            "fat_g": 0,
+            "fiber_g": 0,
+            "iron_mg": 0,
+            "is_tea_or_coffee": true,
+            "meal": "breakfast",
+            "potassium_mg": 238,
+            "protein_g": 0,
+            "saturated_fat_g": 0,
+            "sodium_mg": 0
+          },
+          {
+            "caffeine_mg": 0,
+            "calories": 520,
+            "carbs_g": 90,
+            "eaten_ms": 1790001080000,
+            "fat_g": 10,
+            "fiber_g": 14,
+            "iron_mg": 4.5,
+            "is_tea_or_coffee": false,
+            "meal": "breakfast",
+            "potassium_mg": 400,
+            "protein_g": 18,
+            "saturated_fat_g": 2,
+            "sodium_mg": 300
+          },
+          {
+            "caffeine_mg": 0,
+            "calories": 700,
+            "carbs_g": 95,
+            "eaten_ms": 1790018000000,
+            "fat_g": 24,
+            "fiber_g": 10,
+            "iron_mg": 3.2,
+            "is_tea_or_coffee": false,
+            "meal": "lunch",
+            "potassium_mg": 700,
+            "protein_g": 25,
+            "saturated_fat_g": 12,
+            "sodium_mg": 600
+          },
+          {
+            "caffeine_mg": 0,
+            "calories": 650,
+            "carbs_g": 70,
+            "eaten_ms": 1790032400000,
+            "fat_g": 26,
+            "fiber_g": 9,
+            "iron_mg": 2.0,
+            "is_tea_or_coffee": false,
+            "meal": "dinner",
+            "potassium_mg": 900,
+            "protein_g": 30,
+            "saturated_fat_g": 14,
+            "sodium_mg": 500
+          },
+          {
+            "caffeine_mg": 0,
+            "calories": 300,
+            "carbs_g": 30,
+            "eaten_ms": 1790039600000,
+            "fat_g": 8,
+            "fiber_g": 2,
+            "iron_mg": 0,
+            "is_tea_or_coffee": false,
+            "meal": "snack",
+            "potassium_mg": 300,
+            "protein_g": 24,
+            "saturated_fat_g": 5,
+            "sodium_mg": 120
+          }
+        ],
+        "time_zone": "Asia/Kolkata",
+        "weight_kg": 54.7
+      },
+      "name": "vegetarian_day_kolkata"
+    },
+    {
+      "expected": {
+        "caffeine_mg": 150.0,
+        "calories": 1224.0,
+        "carbs_pct": 60.8,
+        "eating_window_min": 300.0,
+        "fat_pct": 25.1,
+        "fiber_per_1000kcal": 19.6,
+        "iron_absorption_risk": 1,
+        "items": 3,
+        "last_caffeine_min": 613,
+        "last_meal_to_bed_min": null,
+        "meals": 2,
+        "meals_with_protein_target": null,
+        "na_k_ratio": 1.14,
+        "protein_g_per_kg": null,
+        "protein_pct": 14.1,
+        "saturated_fat_pct": 10.3
+      },
+      "input": {
+        "bedtime_ms": null,
+        "items": [
+          {
+            "caffeine_mg": 150,
+            "calories": 4,
+            "carbs_g": 0,
+            "eaten_ms": 1790000000000,
+            "fat_g": 0,
+            "fiber_g": 0,
+            "iron_mg": 0,
+            "is_tea_or_coffee": true,
+            "meal": "breakfast",
+            "potassium_mg": 238,
+            "protein_g": 0,
+            "saturated_fat_g": 0,
+            "sodium_mg": 0
+          },
+          {
+            "caffeine_mg": 0,
+            "calories": 520,
+            "carbs_g": 90,
+            "eaten_ms": 1790001080000,
+            "fat_g": 10,
+            "fiber_g": 14,
+            "iron_mg": 4.5,
+            "is_tea_or_coffee": false,
+            "meal": "breakfast",
+            "potassium_mg": 400,
+            "protein_g": 18,
+            "saturated_fat_g": 2,
+            "sodium_mg": 300
+          },
+          {
+            "caffeine_mg": 0,
+            "calories": 700,
+            "carbs_g": 95,
+            "eaten_ms": 1790018000000,
+            "fat_g": 24,
+            "fiber_g": 10,
+            "iron_mg": 3.2,
+            "is_tea_or_coffee": false,
+            "meal": "lunch",
+            "potassium_mg": 700,
+            "protein_g": 25,
+            "saturated_fat_g": 12,
+            "sodium_mg": 600
+          }
+        ],
+        "time_zone": "America/New_York",
+        "weight_kg": null
+      },
+      "name": "no_weight_new_york"
+    },
+    {
+      "expected": {
+        "caffeine_mg": null,
+        "calories": null,
+        "carbs_pct": null,
+        "eating_window_min": null,
+        "fat_pct": null,
+        "fiber_per_1000kcal": null,
+        "iron_absorption_risk": 0,
+        "items": 0,
+        "last_caffeine_min": null,
+        "last_meal_to_bed_min": null,
+        "meals": 0,
+        "meals_with_protein_target": null,
+        "na_k_ratio": null,
+        "protein_g_per_kg": null,
+        "protein_pct": null,
+        "saturated_fat_pct": null
+      },
+      "input": {
+        "bedtime_ms": null,
+        "items": [],
+        "time_zone": "UTC",
+        "weight_kg": 70.0
+      },
+      "name": "empty"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "nutrition_day",
+  "version": 1
+}

@@ -92,6 +92,10 @@ data class PortableSettings(
     val preferGramsByDefault: Boolean? = null,
     val mealSchedule: MealSchedule? = null,
     val summaryFavourites: List<String>? = null,
+    val insightsEnabled: Boolean? = null,
+    val derivedMetricsEnabled: Boolean? = null,
+    val derivedMetricsDisabled: List<String>? = null,
+    val derivedBmiScheme: String? = null,
     val optionalNutrientGoals: Map<OptionalNutrient, Int> = emptyMap(),
     val waterTrackingEnabled: Boolean? = null,
     val waterDailyGoalMl: Int? = null,
@@ -104,6 +108,7 @@ data class PortableSettings(
         get() = listOfNotNull(
             heightUnit, weightUnit, waterUnit, glucoseUnit, weekStartsOnMonday, dailyStepGoal, appearanceMode,
             appThemeColor, adaptiveGoalsEnabled, preferGramsByDefault, mealSchedule, summaryFavourites,
+            insightsEnabled, derivedMetricsEnabled, derivedMetricsDisabled, derivedBmiScheme,
             waterTrackingEnabled, waterDailyGoalMl, fastingTrackingEnabled, fastingDefaultGoalMinutes,
             fastingGoalNotificationEnabled
         ).size + if (optionalNutrientGoals.isEmpty()) 0 else 1
@@ -121,6 +126,10 @@ data class PortableSettings(
             adaptiveGoalsEnabled = true,
             preferGramsByDefault = false,
             mealSchedule = MealSchedule.Default,
+            insightsEnabled = true,
+            derivedMetricsEnabled = true,
+            derivedMetricsDisabled = emptyList(),
+            derivedBmiScheme = "who",
             waterTrackingEnabled = false,
             waterDailyGoalMl = 2_000,
             fastingTrackingEnabled = false,
@@ -158,6 +167,7 @@ object PortableFormat {
     const val PLATFORM = "android"
     const val MAX_FILE_BYTES = 32L * 1024 * 1024
     const val MAX_FAVOURITES = 12
+    const val MAX_DERIVED_DISABLED = 200
 
     private val printer = Json {
         prettyPrint = true
@@ -356,6 +366,10 @@ object PortableFormat {
                 })
             }
             s.summaryFavourites?.let { put("summary_favourites", strings(it)) }
+            opt("insights_enabled", s.insightsEnabled)
+            opt("derived_metrics_enabled", s.derivedMetricsEnabled)
+            s.derivedMetricsDisabled?.let { put("derived_metrics_disabled", strings(it.distinct().sorted().take(MAX_DERIVED_DISABLED))) }
+            opt("derived_bmi_scheme", s.derivedBmiScheme)
             if (s.optionalNutrientGoals.isNotEmpty()) {
                 put("optional_nutrient_goals", buildJsonObject {
                     s.optionalNutrientGoals.entries.sortedBy { it.key.ordinal }.forEach { (nutrient, value) ->
@@ -632,6 +646,13 @@ object PortableFormat {
                 ?.map { it.trim() }
                 ?.filter { it.isNotEmpty() && ',' !in it }
                 ?.distinct()?.take(MAX_FAVOURITES),
+            insightsEnabled = prefs?.bool("insights_enabled"),
+            derivedMetricsEnabled = prefs?.bool("derived_metrics_enabled"),
+            derivedMetricsDisabled = prefs?.strings("derived_metrics_disabled")
+                ?.map { it.trim() }
+                ?.filter { it.isNotEmpty() && ',' !in it }
+                ?.distinct()?.sorted()?.take(MAX_DERIVED_DISABLED),
+            derivedBmiScheme = canonical(listOf("who", "asian"), prefs?.str("derived_bmi_scheme")),
             optionalNutrientGoals = prefs?.obj("optional_nutrient_goals")?.let(::nutrientGoalsFrom).orEmpty(),
             waterTrackingEnabled = water?.bool("tracking_enabled"),
             waterDailyGoalMl = water?.int("daily_goal_ml")?.takeIf { it in 100..20_000 },

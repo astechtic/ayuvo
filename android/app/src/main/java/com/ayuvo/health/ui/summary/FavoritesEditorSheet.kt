@@ -57,9 +57,11 @@ internal fun FavoritesEditorSheet(
     val context = LocalContext.current
     val max = catalog.favouritesMax
     var selected by remember(current) { mutableStateOf(current.map { it.storageId }) }
-    val candidates = remember {
+    // Nutrient and derived pins are added from their detail pages; they are listed here so they can be removed.
+    val candidates = remember(current) {
         AppMetricId.entries.map { MetricKey.App(it) as MetricKey } +
-            HealthHomeTiles.candidates(emptySet()).map { MetricKey.Health(it.id) }
+            HealthHomeTiles.candidates(emptySet()).map { MetricKey.Health(it.id) } +
+            current.filter { it is MetricKey.Nutrient || it is MetricKey.Derived }
     }
     ModalBottomSheet(
         onDismissRequest = onDismiss,

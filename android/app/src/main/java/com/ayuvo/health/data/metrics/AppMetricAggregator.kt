@@ -84,19 +84,28 @@ object AppMetricAggregator {
  * Chooses one reliable calculated-burn snapshot per day. Local/Health Connect restore races can
  * briefly leave duplicate snapshots; the higher sync version wins, then the later completion.
  */
-internal fun preferredDailyWorkoutBurns(entries: List<WorkoutSession>): List<Pair<LocalDate, Int>> =
-    entries.mapNotNull { session ->
+internal fun preferredDailyWorkoutBurns(entries: List<WorkoutSession>): List<Pair<LocalDate, Int>> {
+    // One strength-diary estimate per day (deduplicated), plus every recorded GPS workout that day
+    // (docs/workouts-gps.md): a walk never replaces the day's strength burn. GPS kcal live in `gps.activeKcal`.
+    val totals = HashMap<LocalDate, Int>()
+    for (session in entries) {
+        val date = runCatching { LocalDate.parse(session.diaryDateKey) }.getOrNull() ?: continue
+        if (session.isGps) {
+            val kcal = session.gps?.activeKcal?.takeIf { it in 1..5_000 } ?: continue
+            totals[date] = (totals[date] ?: 0) + kcal
+        }
+    }
+    entries.filter { !it.isGps }.mapNotNull { session ->
         val date = runCatching { LocalDate.parse(session.diaryDateKey) }.getOrNull()
         val calories = session.caloriesBurned?.takeIf { it in 1..5_000 }
         if (date == null || calories == null) null else date to session
     }.groupBy(Pair<LocalDate, WorkoutSession>::first)
-        .mapNotNull { (date, values) ->
-            values.map(Pair<LocalDate, WorkoutSession>::second)
-                .maxWithOrNull(preferredWorkoutBurnComparator)
-                ?.caloriesBurned
-                ?.let { date to it }
+        .forEach { (date, values) ->
+            values.map(Pair<LocalDate, WorkoutSession>::second).maxWithOrNull(preferredWorkoutBurnComparator)?.caloriesBurned
+                ?.let { totals[date] = (totals[date] ?: 0) + it }
         }
-        .sortedBy(Pair<LocalDate, Int>::first)
+    return totals.entries.map { it.key to it.value }.sortedBy(Pair<LocalDate, Int>::first)
+}
 
 private val preferredWorkoutBurnComparator =
     compareBy<WorkoutSession> { it.healthSyncVersion ?: 0 }

@@ -36,11 +36,19 @@ enum WidgetRouteAction: Equatable {
     case fasting
     case metric(MetricKey)
     case summary
+    /// Workout widget: start this workout (a no-op when one already runs) and show it.
+    case startWorkout(WorkoutWidgetSport)
+    /// Workout widget: show the running workout, else the workout log.
+    case openWorkout
 
     static func resolve(_ link: WidgetDeepLink, defaults: UserDefaults = .standard) -> WidgetRouteAction {
         switch link {
         case .summary:
             return .summary
+        case .startWorkout(let sport):
+            return .startWorkout(sport)
+        case .openWorkout:
+            return .openWorkout
         case .metric(let key):
             if key == WidgetMetricOption.nextDose.rawValue { return .medications }
             if key == WidgetMetricOption.fasting.rawValue { return .fasting }

@@ -130,10 +130,20 @@ nonisolated struct MedicationsRepository: Sendable {
     func supplementData(from fromMs: Int64 = 0, to toMs: Int64 = Int64.max) async throws -> (entries: [NutrientsReference.SupplementEntry], takenMs: [Int64]) {
         let rows = try await allNutrients()
         let logs = try await database.takenDoseLogs(from: fromMs, to: toMs)
-        let entries = NutrientsReference.supplementEntries(
+        let raw = NutrientsReference.supplementEntries(
             nutrients: rows.map(\.referenceInput),
             doseLogs: logs.map { NutrientsReference.DoseInput(medicationID: $0.medicationID, status: $0.status.rawValue, takenAtMs: $0.takenAtMs, doseQuantity: $0.doseQuantity) }
         )
+        // A dose of a weekly or multi-day supplement counts spread over the days it covers (reference
+        // `spread_supplement_entries`, docs/intake-metrics.md §3), from each medication's latest schedule.
+        var latest: [String: MedicationSchedule] = [:]
+        for s in (try? await database.allSchedules()) ?? [] where (latest[s.medicationID]?.activeFromMs ?? .min) <= s.activeFromMs {
+            latest[s.medicationID] = s
+        }
+        let intervals = latest.mapValues {
+            NutrientsReference.intervalDays(frequencyKind: $0.frequency.rawValue, days: $0.days, intervalHours: $0.intervalHours)
+        }
+        let entries = NutrientsReference.spreadSupplementEntries(raw, intervals: intervals)
         return (entries, logs.compactMap(\.takenAtMs))
     }
 

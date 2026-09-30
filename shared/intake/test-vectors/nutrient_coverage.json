@@ -1,0 +1,160 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "coverage": {
+          "calcium_mg": 95.0,
+          "fiber_g": 97.0,
+          "iron_mg": 181.0,
+          "vitamin_d_mcg": 13.0
+        },
+        "days": 7,
+        "excesses": [
+          "sodium_mg"
+        ],
+        "shortfalls": [
+          "vitamin_d_mcg"
+        ]
+      },
+      "input": {
+        "days": [
+          {
+            "day": "2026-09-20",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 13.6,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-21",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 13.9,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-22",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 14.2,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-23",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 14.5,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-24",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 14.799999999999999,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-25",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 15.1,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-26",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 15.399999999999999,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          }
+        ],
+        "goals": {
+          "calcium_mg": 1000,
+          "fiber_g": 38,
+          "iron_mg": 8,
+          "vitamin_d_mcg": 15
+        },
+        "limits": {
+          "sodium_mg": 2300
+        }
+      },
+      "name": "week_with_gaps"
+    },
+    {
+      "expected": {
+        "coverage": {},
+        "days": 3,
+        "excesses": [],
+        "shortfalls": []
+      },
+      "input": {
+        "days": [
+          {
+            "day": "2026-09-20",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 13.6,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-21",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 13.9,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          },
+          {
+            "day": "2026-09-22",
+            "totals": {
+              "calcium_mg": 950.0,
+              "fiber_g": 37.0,
+              "iron_mg": 14.2,
+              "sodium_mg": 2500.0,
+              "vitamin_d_mcg": 2.0
+            }
+          }
+        ],
+        "goals": {
+          "calcium_mg": 1000,
+          "fiber_g": 38,
+          "iron_mg": 8,
+          "vitamin_d_mcg": 15
+        },
+        "limits": {
+          "sodium_mg": 2300
+        }
+      },
+      "name": "too_few_days"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "nutrient_coverage",
+  "version": 1
+}

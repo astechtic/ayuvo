@@ -54,6 +54,13 @@ enum PortableDataExport {
             preferences["summary_favourites"] = Array(ids.prefix(PortableData.maxSummaryFavourites))
             settingCount += 1
         }
+        if defaults.object(forKey: DerivedSettings.disabledKey) != nil {
+            let ids = (defaults.stringArray(forKey: DerivedSettings.disabledKey) ?? [])
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+            preferences["derived_metrics_disabled"] = Array(Set(ids).sorted().prefix(PortableData.maxDerivedDisabled))
+            settingCount += 1
+        }
         if let data = defaults.data(forKey: OptionalNutrientGoals.storageKey) {
             let goals = OptionalNutrientGoals.decoded(from: data)
             preferences["optional_nutrient_goals"] = Dictionary(

@@ -44,3 +44,5 @@ marketing/raw/**/*.tmp
 # Generated workout data / QA artifacts
 shared/workout-vectors/
 artifacts/workout-visual-qa/
+
+Ayuvo-Export-2026-09-29/

@@ -648,6 +648,7 @@ private fun HomeSectionsContent(
     }
     NeedsReviewSection(records = ui.needsReview, files = container.recordFiles, onOpen = onOpen)
     HighlightsSection(items = ui.highlights, onOpen = { onOpen(it.record) })
+    LabLinksCard(container) // docs/intake-metrics.md §3: low lab values ↔ nutrition
 }
 
 /** Universal search results (§17), grouped under "Records" with matched snippets. */

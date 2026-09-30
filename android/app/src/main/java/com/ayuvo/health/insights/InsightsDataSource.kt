@@ -50,7 +50,14 @@ data class InsightsBundle(
  * snapshot gives food, water, fasting, weight, body fat and strength sessions. A missing value stays
  * missing, never 0.
  */
-class InsightsDataSource(private val healthRepository: () -> HealthDataRepository?) {
+class InsightsDataSource(
+    /**
+     * Derived metric ids the switches allow (docs/derived-metrics.md). When `resting_hr_derived` / `vo2max_estimate`
+     * are on, their stored estimates fill the days the platform has no resting heart rate / VO2 max for.
+     */
+    private val derivedEnabled: suspend () -> Set<String> = { emptySet() },
+    private val healthRepository: () -> HealthDataRepository?
+) {
     /** [hubOn]: the Health Data hub is enabled; without it only the app's own logs are read. */
     suspend fun build(
         today: LocalDate,
@@ -79,6 +86,15 @@ class InsightsDataSource(private val healthRepository: () -> HealthDataRepositor
                 if (values.isNotEmpty()) series[metric] = values
             }
             dailyAverage(health, HealthDataType.VO2_MAX, from, today).takeIf { it.isNotEmpty() }?.let { series["vo2_max"] = it }
+            val derived = runCatching { derivedEnabled() }.getOrDefault(emptySet())
+            for ((metric, derivedId) in DERIVED_FALLBACK) {
+                if (derivedId !in derived) continue
+                val estimates = runCatching { health.derivedSeries(derivedId, null, from, today) }.getOrDefault(emptyList())
+                    .filter { it.sourceKind == "derived" }
+                    .associate { it.day to it.value }
+                val merged = withDerivedFallback(series[metric].orEmpty(), estimates)
+                if (merged.isNotEmpty()) series[metric] = merged
+            }
             dailySum(health, HealthDataType.STEPS, from, today).takeIf { it.isNotEmpty() }?.let { series["steps"] = it }
             dailySum(health, HealthDataType.ACTIVE_ENERGY, from, today).takeIf { it.isNotEmpty() }?.let { series["active_energy"] = it }
             for (row in health.samples(HealthDataType.WORKOUT.id, from.minusDays(1), today)) {
@@ -143,6 +159,20 @@ class InsightsDataSource(private val healthRepository: () -> HealthDataRepositor
         /** Patterns look back 120 days and each Recovery needs 60 more; Health Age pace needs 12 weeks + 90 days. */
         const val HISTORY_DAYS = 200L
         private const val WORKOUT_TRACKING_DAYS = 90L
+
+        /** Insights series filled from a derived metric on days without a native value (docs/derived-metrics.md §1). */
+        val DERIVED_FALLBACK: List<Pair<String, String>> = listOf(
+            "resting_heart_rate" to "resting_hr_derived",
+            "vo2_max" to "vo2max_estimate"
+        )
+
+        /** Native days are kept as they are; a derived estimate only fills a day with no native value. */
+        fun withDerivedFallback(native: Map<LocalDate, Double>, derived: Map<LocalDate, Double>): Map<LocalDate, Double> {
+            if (derived.isEmpty()) return native
+            val out = java.util.TreeMap<LocalDate, Double>(native)
+            for ((day, v) in derived) if (day !in out) out[day] = v
+            return LinkedHashMap(out)
+        }
 
         /** Overnight metrics and their Android health types (`hrv_kind` = RMSSD). */
         val OVERNIGHT: List<Pair<String, HealthDataType>> = listOf(

@@ -209,6 +209,8 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.litert.lm.android)
     implementation(libs.whisper.android)
+    // GPS workout summary map (docs/workouts-gps.md §4): OpenStreetMap tiles, no API key.
+    implementation(libs.osmdroid.android)
 
     testImplementation(libs.junit)
     testImplementation("com.squareup.okhttp3:mockwebserver:${libs.versions.okhttp.get()}")

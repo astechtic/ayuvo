@@ -262,6 +262,18 @@
         }
       }
     },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location When In Use Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ayuvo uses your location while you record an outdoor walk, run, ride or hike to measure distance, pace, splits and your route. Location is only used during a workout you start."
+          }
+        }
+      }
+    },
     "NSMicrophoneUsageDescription" : {
       "comment" : "Privacy - Microphone Usage Description",
       "extractionState" : "extracted_with_value",
@@ -270,6 +282,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Ayuvo needs microphone access so you can log food by voice."
+          }
+        }
+      }
+    },
+    "NSMotionUsageDescription" : {
+      "comment" : "Privacy - Motion Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ayuvo uses the barometer to measure elevation gain and loss during outdoor workouts."
           }
         }
       }

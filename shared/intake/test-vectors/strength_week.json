@@ -1,0 +1,195 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "below_range": [
+          "biceps",
+          "chest",
+          "glutes",
+          "quads",
+          "triceps",
+          "upper back"
+        ],
+        "e1rm": {
+          "Barbell Incline Close Grip Bench Press": 40.0,
+          "Dumbbell Hammer Curl": 13.3,
+          "Lever Reverse Grip Vertical Row": 35.0,
+          "Lever Seated Fly": 46.7,
+          "Sled 45 Leg Press": 139.3
+        },
+        "pattern_pct": {
+          "legs": 42.1,
+          "pull": 26.3,
+          "push": 31.6
+        },
+        "planned": 3,
+        "sessions": 3,
+        "sets_by_muscle": {
+          "biceps": 2,
+          "chest": 3,
+          "glutes": 4,
+          "quads": 4,
+          "triceps": 3,
+          "upper back": 3
+        },
+        "volume_by_muscle": {
+          "biceps": 196.0,
+          "chest": 1070.0,
+          "glutes": 4040.0,
+          "quads": 4040.0,
+          "triceps": 950.0,
+          "upper back": 850.0
+        }
+      },
+      "input": {
+        "planned_sessions": 3,
+        "sessions": [
+          {
+            "day": "2026-09-21",
+            "exercises": [
+              {
+                "name": "Barbell Incline Close Grip Bench Press",
+                "primary_muscles": [
+                  "triceps"
+                ],
+                "sets": [
+                  {
+                    "reps": 14,
+                    "weight_kg": 25
+                  },
+                  {
+                    "reps": 12,
+                    "weight_kg": 25
+                  },
+                  {
+                    "reps": 10,
+                    "weight_kg": 30
+                  }
+                ]
+              },
+              {
+                "name": "Lever Seated Fly",
+                "primary_muscles": [
+                  "chest"
+                ],
+                "sets": [
+                  {
+                    "reps": 12,
+                    "weight_kg": 30
+                  },
+                  {
+                    "reps": 12,
+                    "weight_kg": 30
+                  },
+                  {
+                    "reps": 10,
+                    "weight_kg": 35
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "day": "2026-09-22",
+            "exercises": [
+              {
+                "name": "Lever Reverse Grip Vertical Row",
+                "primary_muscles": [
+                  "upper back"
+                ],
+                "sets": [
+                  {
+                    "reps": 15,
+                    "weight_kg": 20
+                  },
+                  {
+                    "reps": 12,
+                    "weight_kg": 25
+                  },
+                  {
+                    "reps": 10,
+                    "weight_kg": 25
+                  }
+                ]
+              },
+              {
+                "name": "Dumbbell Hammer Curl",
+                "primary_muscles": [
+                  "biceps"
+                ],
+                "sets": [
+                  {
+                    "reps": 12,
+                    "weight_kg": 8
+                  },
+                  {
+                    "reps": 10,
+                    "weight_kg": 10
+                  },
+                  {
+                    "reps": 0,
+                    "weight_kg": 10
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "day": "2026-09-24",
+            "exercises": [
+              {
+                "name": "Sled 45 Leg Press",
+                "primary_muscles": [
+                  "quads",
+                  "glutes"
+                ],
+                "sets": [
+                  {
+                    "reps": 12,
+                    "weight_kg": 80
+                  },
+                  {
+                    "reps": 10,
+                    "weight_kg": 100
+                  },
+                  {
+                    "reps": 8,
+                    "weight_kg": 110
+                  },
+                  {
+                    "reps": 20,
+                    "weight_kg": 60
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "name": "push_pull_legs_week"
+    },
+    {
+      "expected": {
+        "below_range": [],
+        "e1rm": {},
+        "pattern_pct": {
+          "legs": null,
+          "pull": null,
+          "push": null
+        },
+        "planned": null,
+        "sessions": 0,
+        "sets_by_muscle": {},
+        "volume_by_muscle": {}
+      },
+      "input": {
+        "planned_sessions": null,
+        "sessions": []
+      },
+      "name": "empty_week"
+    }
+  ],
+  "format": "ayuvo-intake-vectors",
+  "function": "strength_week",
+  "version": 1
+}

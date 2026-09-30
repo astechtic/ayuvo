@@ -280,8 +280,13 @@ enum OptionalNutrient: String, CaseIterable, Identifiable, Codable {
 
     /// The default goal for this profile (reference `default_goal_int`); nil for info-style nutrients and
     /// sports supplements, which have no default goal line.
+    /// Nutrients in the DRI table use `dri_goals(sex, age)` when the age is known (docs/intake-metrics.md §3); the
+    /// rest, and profiles without an age, use the nutrient reference.
     func personalizedDefaultGoal(for profile: NutrientsReference.Profile) -> Int? {
-        NutrientsReference.defaultGoalInt(NutrientsReference.defaultGoal(key: jsonKey, profile: profile))
+        if referenceStyle == "target", let dri = IntakeNutrientKeys.driDefaultGoal(key: jsonKey, profile: profile) {
+            return NutrientsReference.defaultGoalInt(dri)
+        }
+        return NutrientsReference.defaultGoalInt(NutrientsReference.defaultGoal(key: jsonKey, profile: profile))
     }
 
     /// The reference upper intake level for this profile (non-blocking guidance for custom goals); nil when the

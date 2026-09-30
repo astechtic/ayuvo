@@ -305,6 +305,42 @@ def supplement_entries(medication_nutrients, dose_logs):
     return out
 
 
+DAY_MS = 86400000
+
+
+def supplement_interval_days(schedule):
+    """Whole days one dose of a schedule covers (docs/intake-metrics.md §3): weekly on n distinct days -> 7 / n
+    (half-up, at least 1), an interval of >= 48 hours -> hours / 24 (half-up), anything else (daily, shorter
+    intervals, no schedule) -> 1. `schedule`: {frequency_kind: "daily"|"weekly"|"interval", days, interval_hours}."""
+    if not schedule:
+        return 1
+    kind = schedule.get("frequency_kind")
+    if kind == "weekly":
+        n = len(set(schedule.get("days") or []))
+        return 1 if n <= 0 else max(1, int(math.floor(7.0 / n + 0.5)))
+    if kind == "interval":
+        h = schedule.get("interval_hours") or 0
+        return int(math.floor(h / 24.0 + 0.5)) if h >= 48 else 1
+    return 1
+
+
+def spread_supplement_entries(entries, intervals):
+    """`supplement_entries` averaged over each medication's dosing interval: an entry of a medication whose
+    interval n > 1 becomes n entries of value / n at t_ms + k days (k = 0..n-1), so a weekly 60,000 IU vitamin D dose
+    counts 1/7 on each day it covers and the total is kept. Sorted by (t_ms, nutrient_key, medication_id), stable."""
+    out = []
+    for e in entries or []:
+        n = (intervals or {}).get(e["medication_id"], 1)
+        if n <= 1:
+            out.append(dict(e))
+            continue
+        for k in range(n):
+            out.append({"t_ms": e["t_ms"] + k * DAY_MS, "nutrient_key": e["nutrient_key"], "value": e["value"] / n,
+                        "medication_id": e["medication_id"]})
+    out.sort(key=lambda x: (x["t_ms"], x["nutrient_key"], x["medication_id"]))
+    return out
+
+
 def day_totals(food_entries, supplements, day, time_zone):
     """{key: {food, supplements, total}} for the local `day`. Keys = every key named by a food entry of the day
     (even with a null value) or by a supplement entry of the day, sorted. food = sum of the non-null food values,
@@ -488,6 +524,10 @@ def run_case(function, inp):
         return convert_amount(inp.get("value"), inp.get("unit"), inp["key"], inp.get("form"))
     if function == "supplement_entries":
         return {"entries": supplement_entries(inp.get("medication_nutrients"), inp.get("dose_logs"))}
+    if function == "interval_days":
+        return {"days": supplement_interval_days(inp.get("schedule"))}
+    if function == "spread_supplements":
+        return {"entries": spread_supplement_entries(inp.get("entries"), inp.get("intervals"))}
     if function == "day_totals":
         return {"totals": day_totals(inp.get("food_entries"), inp.get("supplement_entries"), inp["day"],
                                      inp["time_zone"])}

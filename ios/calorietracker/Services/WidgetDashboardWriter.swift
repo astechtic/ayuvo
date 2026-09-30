@@ -323,6 +323,9 @@ final class WidgetDashboardWriter {
                     valueText: tile?.valueText ?? "—", unitText: tile?.unitText ?? HealthUnitFormatting.unitLabel(for: type),
                     progress: progress, dayScoped: cumulative && !type.isSleep, at: tile?.at, caption: nil
                 )
+            case .derived:
+                // Widget options never name a derived metric.
+                return nil
             }
         }
     }

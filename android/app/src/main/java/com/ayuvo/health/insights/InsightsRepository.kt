@@ -27,6 +27,8 @@ class InsightsRepository(
     private val config: () -> InsightsConfig,
     private val source: InsightsDataSource,
     private val healthRevision: () -> Long,
+    /** Derived-metric writes (the resting heart rate / VO2 max fallback) bump only this revision. */
+    private val derivedRevision: () -> Long = { 0L },
     private val hubEnabled: suspend () -> Boolean,
     private val appSnapshot: suspend () -> AppMetricSnapshot,
     private val profile: suspend () -> UserProfile?,
@@ -36,6 +38,7 @@ class InsightsRepository(
 ) {
     private data class Key(
         val healthRevision: Long,
+        val derivedRevision: Long,
         val settings: InsightsSettings,
         val profile: UserProfile?,
         val hub: Boolean,
@@ -53,7 +56,7 @@ class InsightsRepository(
         val s = settings()
         val p = profile()
         val hub = hubEnabled()
-        val key = Key(healthRevision(), s, p, hub, today(z), z.id)
+        val key = Key(healthRevision(), derivedRevision(), s, p, hub, today(z), z.id)
         mutex.withLock {
             // The app snapshot is compared by value: an idle provider hands out a fresh but equal copy.
             cached?.let { (k, sn, result) -> if (k == key && (sn === snap || sn == snap)) return@withContext result }

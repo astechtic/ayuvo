@@ -106,6 +106,7 @@ fun ActivityScreen(
                     withDataHeader = healthHeader
                 )
             }
+            derivedMetricGroup(app.derived, HealthCategory.ACTIVITY.id, catalog, onOpenMetric)
         }
     }
 }

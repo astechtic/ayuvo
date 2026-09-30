@@ -1,0 +1,302 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "asleep_min": 400.0,
+        "bedtime_clock": 660,
+        "deep_latency_min": 60.0,
+        "deep_pct": 16.3,
+        "efficiency": 93.9,
+        "in_bed_min": 426.0,
+        "light_pct": 60.0,
+        "midpoint_clock": 880,
+        "onset_latency_min": 15.0,
+        "rem_latency_min": 135.0,
+        "rem_pct": 23.8,
+        "staged": true,
+        "wake_clock": 1086,
+        "wakeups": 1,
+        "waso_min": 11.0
+      },
+      "input": {
+        "rows": [
+          [
+            1774719000000,
+            1774719900000,
+            2
+          ],
+          [
+            1774719900000,
+            1774723500000,
+            3
+          ],
+          [
+            1774723500000,
+            1774726200000,
+            4
+          ],
+          [
+            1774726200000,
+            1774728000000,
+            3
+          ],
+          [
+            1774728000000,
+            1774729500000,
+            5
+          ],
+          [
+            1774729500000,
+            1774729980000,
+            2
+          ],
+          [
+            1774729980000,
+            1774735380000,
+            3
+          ],
+          [
+            1774735380000,
+            1774736580000,
+            4
+          ],
+          [
+            1774736580000,
+            1774738980000,
+            5
+          ],
+          [
+            1774738980000,
+            1774739160000,
+            2
+          ],
+          [
+            1774739160000,
+            1774742760000,
+            3
+          ],
+          [
+            1774742760000,
+            1774744560000,
+            5
+          ],
+          [
+            1774719000000,
+            1774744560000,
+            0
+          ]
+        ],
+        "time_zone": "Asia/Kolkata",
+        "wake_day": "2026-03-29"
+      },
+      "name": "staged_kolkata"
+    },
+    {
+      "expected": {
+        "asleep_min": 400.0,
+        "bedtime_clock": 660,
+        "deep_latency_min": 60.0,
+        "deep_pct": 16.3,
+        "efficiency": 93.9,
+        "in_bed_min": 426.0,
+        "light_pct": 60.0,
+        "midpoint_clock": 940,
+        "onset_latency_min": 15.0,
+        "rem_latency_min": 135.0,
+        "rem_pct": 23.8,
+        "staged": true,
+        "wake_clock": 1146,
+        "wakeups": 1,
+        "waso_min": 11.0
+      },
+      "input": {
+        "rows": [
+          [
+            1774738800000,
+            1774739700000,
+            2
+          ],
+          [
+            1774739700000,
+            1774743300000,
+            3
+          ],
+          [
+            1774743300000,
+            1774746000000,
+            4
+          ],
+          [
+            1774746000000,
+            1774747800000,
+            3
+          ],
+          [
+            1774747800000,
+            1774749300000,
+            5
+          ],
+          [
+            1774749300000,
+            1774749780000,
+            2
+          ],
+          [
+            1774749780000,
+            1774755180000,
+            3
+          ],
+          [
+            1774755180000,
+            1774756380000,
+            4
+          ],
+          [
+            1774756380000,
+            1774758780000,
+            5
+          ],
+          [
+            1774758780000,
+            1774758960000,
+            2
+          ],
+          [
+            1774758960000,
+            1774762560000,
+            3
+          ],
+          [
+            1774762560000,
+            1774764360000,
+            5
+          ],
+          [
+            1774738800000,
+            1774764360000,
+            0
+          ]
+        ],
+        "time_zone": "Europe/London",
+        "wake_day": "2026-03-29"
+      },
+      "name": "staged_london"
+    },
+    {
+      "expected": {
+        "asleep_min": 400.0,
+        "bedtime_clock": -690,
+        "deep_latency_min": null,
+        "deep_pct": null,
+        "efficiency": 93.0,
+        "in_bed_min": 430.0,
+        "light_pct": null,
+        "midpoint_clock": -475,
+        "onset_latency_min": null,
+        "rem_latency_min": null,
+        "rem_pct": null,
+        "staged": false,
+        "wake_clock": -260,
+        "wakeups": 1,
+        "waso_min": 30.0
+      },
+      "input": {
+        "rows": [
+          [
+            1773016200000,
+            1773028200000,
+            1
+          ],
+          [
+            1773028200000,
+            1773030000000,
+            2
+          ],
+          [
+            1773030000000,
+            1773042000000,
+            1
+          ]
+        ],
+        "time_zone": "UTC",
+        "wake_day": "2026-03-10"
+      },
+      "name": "unstaged_after_midnight"
+    },
+    {
+      "expected": {
+        "asleep_min": 180.0,
+        "bedtime_clock": 660,
+        "deep_latency_min": 120.0,
+        "deep_pct": 33.3,
+        "efficiency": 100.0,
+        "in_bed_min": 180.0,
+        "light_pct": 66.7,
+        "midpoint_clock": 750,
+        "onset_latency_min": null,
+        "rem_latency_min": null,
+        "rem_pct": 0.0,
+        "staged": true,
+        "wake_clock": 840,
+        "wakeups": 0,
+        "waso_min": 0.0
+      },
+      "input": {
+        "rows": [
+          [
+            1773097200000,
+            1773104400000,
+            3
+          ],
+          [
+            1773104400000,
+            1773108000000,
+            4
+          ],
+          [
+            1773099000000,
+            1773102600000,
+            3
+          ]
+        ],
+        "time_zone": "UTC",
+        "wake_day": "2026-03-10"
+      },
+      "name": "overlapping_rows_unioned"
+    },
+    {
+      "expected": {
+        "asleep_min": null,
+        "bedtime_clock": null,
+        "deep_latency_min": null,
+        "deep_pct": null,
+        "efficiency": null,
+        "in_bed_min": null,
+        "light_pct": null,
+        "midpoint_clock": null,
+        "onset_latency_min": null,
+        "rem_latency_min": null,
+        "rem_pct": null,
+        "staged": false,
+        "wake_clock": null,
+        "wakeups": null,
+        "waso_min": null
+      },
+      "input": {
+        "rows": [
+          [
+            1773097200000,
+            1773122400000,
+            0
+          ]
+        ],
+        "time_zone": "UTC",
+        "wake_day": "2026-03-10"
+      },
+      "name": "no_asleep_rows"
+    }
+  ],
+  "format": "ayuvo-derived-vectors",
+  "function": "sleep_night",
+  "version": 1
+}

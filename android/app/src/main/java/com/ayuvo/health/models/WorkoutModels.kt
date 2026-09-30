@@ -408,13 +408,99 @@ data class WorkoutSession(
     val durationSeconds: Int = 0,
     val exercises: List<CompletedExercise>,
     val caloriesBurned: Int? = null,
-    val healthSyncVersion: Int? = null
+    val healthSyncVersion: Int? = null,
+    /** Null for diary (strength) sessions; [KIND_GPS] for a recorded outdoor workout (docs/workouts-gps.md). */
+    val kind: String? = null,
+    /**
+     * True when [startedAt]..[completedAt] is the real workout interval: Start/Finish session, a confirmed
+     * heart-rate window, or a GPS recording. Legacy daily snapshots stay false (a zero-length point in time).
+     */
+    val realInterval: Boolean = false,
+    /** "session" (Start/Finish), "hr_window" (confirmed suggestion), "manual" (edited times) or "gps". */
+    val intervalSource: String? = null,
+    val heartRate: WorkoutHeartRateStats? = null,
+    val gps: GpsWorkoutSummary? = null
 ) {
+    val isGps: Boolean get() = kind == KIND_GPS && gps != null
+
+    /** Real interval with a positive length (a Health Connect session can be written over it). */
+    val hasRealInterval: Boolean get() = realInterval && completedAt.isAfter(startedAt)
+
     val durationMinutes: Int get() = ceil(durationSeconds.coerceAtLeast(0) / 60.0).toInt()
     val exerciseCount: Int get() = exercises.size
     val performedSetCount: Int get() = exercises.sumOf { exercise -> exercise.sets.count { it.isPerformed } }
     val repCount: Int get() = exercises.sumOf { exercise -> exercise.sets.sumOf { it.reps.toIntOrNull() ?: 0 } }
+
+    companion object {
+        const val KIND_GPS = "gps"
+    }
 }
+
+/** Heart rate during a workout (`hr_workout` + `hr_recovery` of scripts/workout_reference.py). Never written to Health. */
+@Serializable
+data class WorkoutHeartRateStats(
+    val avgHr: Double? = null,
+    val maxHr: Double? = null,
+    val coveragePct: Double = 0.0,
+    /** Five entries: below light, light, moderate, vigorous, near-maximal. */
+    val zoneSeconds: List<Double> = emptyList(),
+    val trimp: Double? = null,
+    /** Keytel 2005 energy; only present when heart rate covered at least 70% of the workout. */
+    val keytelKcal: Double? = null,
+    val zoneMethod: String? = null,
+    val restingHr: Double? = null,
+    val hrMax: Double? = null,
+    val hrr1: Double? = null,
+    val hrr1FlagLow: Boolean = false,
+    val hrr1Confidence: String? = null
+)
+
+@Serializable
+data class GpsSplit(val km: Int, val seconds: Double)
+
+@Serializable
+data class GpsLap(val index: Int, val startMs: Long, val endMs: Long, val distanceM: Double)
+
+/** Summary of a recorded GPS workout; the route itself lives in `files/workouts/tracks/<session id>.json`. */
+@Serializable
+data class GpsWorkoutSummary(
+    val sport: String,
+    val distanceM: Double = 0.0,
+    val movingSeconds: Double = 0.0,
+    val elapsedSeconds: Double = 0.0,
+    val avgSpeedMps: Double? = null,
+    val avgPaceSecondsPerKm: Double? = null,
+    val maxSpeedMps: Double? = null,
+    val splits: List<GpsSplit> = emptyList(),
+    val laps: List<GpsLap> = emptyList(),
+    val elevationGainM: Double = 0.0,
+    val elevationLossM: Double = 0.0,
+    /** "barometer" or "gps". */
+    val altitudeSource: String? = null,
+    val activeKcal: Int? = null,
+    /** "keytel" (heart rate covered ≥70%) or "met". */
+    val kcalMethod: String? = null,
+    val vo2max: Double? = null,
+    val vo2maxStatus: String? = null,
+    val vo2maxSegments: Int = 0,
+    val cooperTest: Boolean = false,
+    val cooperVo2max: Double? = null,
+    val keptPoints: Int = 0,
+    val droppedPoints: Int = 0,
+    val healthSynced: Boolean = false,
+    val healthSyncVersion: Int = 1
+) {
+    /** The cardio-fitness value this workout contributes (docs/workouts-gps.md §3). */
+    val bestVo2max: Double? get() = cooperVo2max ?: vo2max
+}
+
+/** A strength session started with Start session; survives process death until Finish or Cancel. */
+@Serializable
+data class ActiveStrengthSession(
+    val dateKey: String,
+    @Serializable(with = InstantSerializer::class)
+    val startedAt: Instant
+)
 
 @Serializable
 data class WorkoutPersistedState(
@@ -435,7 +521,8 @@ data class WorkoutPersistedState(
      * until a subsequent owned-record read proves the sample is no longer visible. */
     val pendingHealthDeleteIds: Set<String> = emptySet(),
     /** Failed/deferred health writes can be retried without losing local calculations. */
-    val pendingHealthUpsertIds: Set<String> = emptySet()
+    val pendingHealthUpsertIds: Set<String> = emptySet(),
+    val activeStrengthSession: ActiveStrengthSession? = null
 ) {
     fun sanitized(): WorkoutPersistedState = if (version != CurrentVersion) {
         WorkoutPersistedState()
