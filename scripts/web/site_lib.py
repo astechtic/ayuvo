@@ -218,8 +218,9 @@ def cta_section(h2: str = "Start with <em>the whole picture</em>.", lede: str | 
 # ---------------------------------------------------------------------------
 FEATURE_LINKS = [
     ("/features/nutrition", "Nutrition", "Photo, barcode, voice"),
-    ("/features/workouts", "Workouts", "Sets, reps, 1,300+ exercises"),
+    ("/features/workouts", "Workouts", "GPS routes, sets, 1,300+ exercises"),
     ("/features/health-data", "Health data", "Apple Health and Health Connect"),
+    ("/features/derived-metrics", "Derived metrics", "Vitals your devices don't record"),
     ("/features/insights", "Insights & trends", "Recovery, Health Age, reviews"),
     ("/features/records-and-medications", "Records & medications", "Documents and reminders"),
     ("/features/coach", "AI coach", "Ask about your own data"),

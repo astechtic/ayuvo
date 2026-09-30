@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://ayuvo-health.web.app/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/home.jpg</image:loc>
       <image:title>Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.</image:title>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features.jpg</image:loc>
       <image:title>Ayuvo features: nutrition, workouts, health data, records, coach</image:title>
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/nutrition</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-nutrition.jpg</image:loc>
       <image:title>Private AI Food Scanner &amp; Calorie Tracker | Ayuvo</image:title>
@@ -26,18 +26,26 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/workouts</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-workouts.jpg</image:loc>
-      <image:title>Workout Tracker with 1,300+ Exercises | Ayuvo</image:title>
+      <image:title>GPS Workout Tracker, Strength Log &amp; Exercises | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/health-data</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-health-data.jpg</image:loc>
       <image:title>Apple Health &amp; Health Connect Data Hub | Ayuvo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ayuvo-health.web.app/features/derived-metrics</loc>
+    <lastmod>2026-09-30</lastmod>
+    <image:image>
+      <image:loc>https://ayuvo-health.web.app/assets/og/features-derived-metrics.jpg</image:loc>
+      <image:title>Resting Heart Rate, Zones &amp; Sleep Estimates | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
@@ -58,7 +66,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/records-and-medications</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-records-and-medications.jpg</image:loc>
       <image:title>Private Health Records &amp; Medication Tracker | Ayuvo</image:title>
@@ -98,7 +106,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/privacy-first</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/privacy-first.jpg</image:loc>
       <image:title>Ayuvo is private by design: your health data stays on your phone.</image:title>

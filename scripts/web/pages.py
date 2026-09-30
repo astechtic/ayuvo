@@ -28,6 +28,26 @@ MG_SIZE = gib(MG["artifact"]["sizeBytes"])
 INSIGHTS = json.loads((WEB.parent / "shared" / "insights" / "insights_config.json").read_text(encoding="utf-8"))
 ACTIONS = json.loads((WEB.parent / "shared" / "actions" / "action_catalog.json").read_text(encoding="utf-8"))
 N_ACTIONS = len(ACTIONS["actions"])
+# Derived metrics and GPS workouts: the metric list, methods, citations, sports and thresholds come from the apps' contracts.
+DERIVED = json.loads((WEB.parent / "shared" / "derived" / "derived_config.json").read_text(encoding="utf-8"))
+WORKOUT = json.loads((WEB.parent / "shared" / "workout" / "workout_config.json").read_text(encoding="utf-8"))
+N_DERIVED = len(DERIVED["metrics"])
+SCREENS = WEB / "assets" / "screens"
+
+
+def have(slug: str) -> bool:
+    return (SCREENS / f"{slug}.webp").exists()
+
+
+def shot(slug: str, alt: str, fallback: str) -> str:
+    """The phone screenshot once web/assets/screens/<slug>.webp exists, the fallback panel until then."""
+    return phone(slug, alt) if have(slug) else fallback
+
+
+def shots(items: list[tuple[str, str]], fallback: str, cls: str = "single") -> str:
+    """A phones group of the screenshots that exist; the fallback when none does."""
+    got = [(s, a) for s, a in items if have(s)]
+    return phones(got, "pair" if len(got) > 1 else cls) if got else fallback
 
 # ---------------------------------------------------------------------------
 # layout helpers
@@ -103,8 +123,9 @@ def feature_page(path, title, description, crumb, h1, lede, eyebrow_text, hero_v
 
 REL = {
     "nutrition": ("/features/nutrition", "Nutrition", "Photo, barcode and voice logging with 30+ nutrients."),
-    "workouts": ("/features/workouts", "Workouts", "Sets, reps, weight, RPE and a 1,300+ exercise library."),
+    "workouts": ("/features/workouts", "Workouts", "GPS walks, runs and rides, strength sessions and a 1,300+ exercise library."),
     "health": ("/features/health-data", "Health data", "Apple Health and Health Connect in one local hub."),
+    "derived": ("/features/derived-metrics", "Derived metrics", f"{N_DERIVED} estimates from your own data, each with its published method."),
     "insights": ("/features/insights", "Insights & trends", "Recovery, Health Age, a daily review and trends against your own baseline."),
     "shortcuts": ("/features/siri-and-shortcuts", "Siri, Shortcuts & Android", "Ask Siri, build Shortcuts, or use Android shortcuts and links."),
     "records": ("/features/records-and-medications", "Records & medications", "Documents read on your phone, and dose reminders."),
@@ -124,7 +145,9 @@ HOME_FAQ = [
     ("Is Ayuvo free?", "Yes. There are no subscriptions, credits or in-app purchases. AI features use an API key you create with a provider (many have free tiers); any usage is billed by that provider, never by Ayuvo. On-device models cost nothing to run after the download."),
     ("Which AI can I use?", 'Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint. On supported phones, on-device models such as Gemma 4 E2B and MedGemma 1.5 4B run on the phone after a one-time download; iPhones can also use Apple Intelligence.'),
     ("Where is my data?", "In the app's storage on your phone. Ayuvo has no account and no server. Data leaves the device only when you act: sending a photo or message to your AI provider, scanning a barcode, browsing exercise images, downloading a model, sharing a record, exporting, or turning on Android's Google Drive backup."),
-    ("What does the Health data hub do with Apple Health or Health Connect?", "With your permission it keeps a local mirror of the data types you grant so Ayuvo can show charts and history. It writes only nutrition, body measurements and calculated workout calories that you log. You can revoke access any time in Health or Health Connect settings."),
+    ("What does the Health data hub do with Apple Health or Health Connect?", "With your permission it keeps a local mirror of the data types you grant so Ayuvo can show charts and history. It writes only what you log or record in Ayuvo: nutrition, body measurements, workouts with their calories, and the route of a GPS workout. Values Ayuvo estimates are never written. You can revoke access any time in Health or Health Connect settings."),
+    ("Can Ayuvo estimate vitals my watch or band doesn't record?", f'Yes. From data you already have, such as minute-by-minute heart rate, sleep and steps, Ayuvo estimates up to {N_DERIVED} metrics, including resting heart rate, heart rate zones, sleep regularity and cardio fitness, with published formulas. When Apple Health or Health Connect already has a value for that day, that value is shown instead. Each metric can be switched off. <a href="/features/derived-metrics">See every metric and its method</a>.'),
+    ("Does Ayuvo track my location?", 'Only while you record a GPS walk, run, ride or hike. The route is stored on your phone and written to Apple Health or Health Connect with the workout. Ayuvo asks only for location while in use; on iPhone it keeps recording with the screen locked, with the location indicator showing. <a href="/features/workouts">See GPS workouts</a>.'),
     ("Does the coach see my health data?", 'Only if you allow it. Health data, medications and health records each have their own consent, and medications and records are off by default. When a source is on, the coach can request summaries of it and sends them to the AI provider you chose, or to an on-device model that keeps them on the phone.'),
     ("What are Recovery and Ayuvo Health Age?", 'Insights that Ayuvo calculates on your phone from your own synced data. Recovery is a 0 to 100 morning score comparing last night with your personal baselines. Ayuvo Health Age is Ayuvo\'s own estimate from fitness and habit markers, not a clinical or biological age. <a href="/features/insights">See how they are calculated</a>.'),
     ("Does Ayuvo work with Siri, Shortcuts and Android assistants?", f'Yes. On iPhone you can ask Siri, or build Shortcuts from {N_ACTIONS} Ayuvo actions such as Get Nutrient, Log Water and Get Recovery. On Android there are launcher shortcuts and ayuvo:// links, and assistant capabilities are declared for Google Assistant and Gemini. <a href="/features/siri-and-shortcuts">See what works where</a>.'),
@@ -153,12 +176,14 @@ def bento_tile(cls, ico, eyebrow_text, h3, p, href, screen=None, alt="") -> str:
 def bento() -> str:
     tiles = [
         bento_tile("", "fork", "Nutrition", "Snap it, scan it, say it.", "Photos, barcodes, voice or text, reviewed before anything is saved.", "/features/nutrition", "nutrition", "Ayuvo daily nutrition diary with calories, macros and water"),
-        bento_tile("", "dumbbell", "Workouts", "Plan the week, log the set.", "Sets, reps, weight and RPE, with a 1,300+ exercise library.", "/features/workouts", "workouts", "Ayuvo workout diary with calculated calorie burn"),
+        bento_tile("", "dumbbell", "Workouts", "Record the route. Log the set.", "GPS walks, runs, rides and hikes with splits and a map, and strength sessions from a 1,300+ exercise library.", "/features/workouts", "workouts", "Ayuvo workout diary with calculated calorie burn"),
         bento_tile("", "chart", "Health data", "Every chart, one hub.", "Apple Health and Health Connect, mirrored on your phone.", "/features/health-data", "heart-rate", "Ayuvo heart rate chart with day, week, month and year ranges"),
         bento_tile("", "doc", "Records", "Documents that read themselves.", "Scan a report. Values and highlights appear, processed on your phone.", "/features/records-and-medications", "records", "Ayuvo health records with important highlights"),
         bento_tile("", "chat", "AI coach", "Ask about your own day.", "Consent for every data source, on your key or on your phone.", "/features/coach", "coach", "Ayuvo coach chat with suggested prompts"),
         bento_tile("", "timer", "Fasting & water", "Timers that stay optional.", "Off by default. Goals, reminders and widgets when you want them.", "/features/fasting-and-water", "summary", "Ayuvo Summary with Eat, Move and Drink rings"),
         bento_tile(" wide", "heart", "Insights", "Your own baseline, not someone else's.", "Morning Recovery, Ayuvo Health Age, a Daily Review, trends and patterns, calculated on your phone.", "/features/insights"),
+        bento_tile(" wide", "chart", "Derived metrics", "Vitals your devices don't record.", f"Resting heart rate, zones, sleep regularity, cardio fitness and {N_DERIVED - 4} more, estimated from your own data. A value from Health always wins.", "/features/derived-metrics"),
+        bento_tile(" wide", "timer", "GPS workouts", "Walk, run, ride or hike.", "Route, splits and elevation, with Pause, Lap and End on the Lock Screen, in a notification, on a widget or on Apple Watch.", "/features/workouts"),
         bento_tile(" wide", "sparkle", "Siri &amp; Shortcuts", "Ask Siri. Build a Shortcut.", f"{N_ACTIONS} actions for Siri, the Shortcuts app, Android shortcuts and links. No action can delete anything.", "/features/siri-and-shortcuts"),
         bento_tile(" wide", "swap", "Switch phones", "iPhone to Android, and back.", "Export All Data on one phone, import it on the other. Your history moves with you.", "/features/switch-phones"),
         bento_tile(" wide", "cpu", "On-device AI", "Models that live on the phone.", "Run Gemma, Qwen or a medical model on the phone itself. No key, no server, nothing to send.", "/features/on-device-ai"),
@@ -199,6 +224,7 @@ def build_home() -> Page:
                "<li>Audio to a speech provider, only if you pick a cloud one</li>"
                "<li>A barcode number to Open Food Facts, when you scan</li>"
                "<li>Exercise images and model files, as plain requests to GitHub and Hugging Face</li>"
+               "<li>Map images of the area shown, when you look at a workout route</li>"
                "<li>A record or export, when you tap Share or Export</li>"
                "<li>Your own Google Drive, if you turn on Android backup</li></ul></div>"),
         link=("/privacy-first", "See every data flow"))
@@ -232,11 +258,13 @@ def build_home() -> Page:
     worksw = band("paper alt", split(
         "Works with", "Apple Health and <em>Health Connect</em>, mirrored locally.",
         "<p>With your permission Ayuvo keeps a local copy of the Health data you grant, then shows day, week, month, six-month and year charts, sources and units for every metric. "
-        "It writes back only nutrition, body measurements and calculated workout calories that you log.</p>"
+        "It writes back only what you log or record: nutrition, body measurements, workouts and GPS routes. "
+        "Where your devices leave a gap, Ayuvo estimates vitals such as resting heart rate from the data you already have, and a value from Health always wins.</p>"
         f'<div class="works-with"><span class="chip">{icon("heart")}<span>Works with Apple Health<small>iPhone</small></span></span>'
         f'<span class="chip">{icon("heart")}<span>Works with Health Connect<small>Android</small></span></span></div>',
         ["13 categories, from activity and sleep to cycle tracking and vitals",
          "Pin up to 12 favourites to Summary, with 7-day sparklines",
+         f"{N_DERIVED} derived metrics, each with its method and source, and each one can be switched off",
          "Your Health data is never in a cloud backup"],
         media=phones([("browse", "Ayuvo Browse list of health categories"), ("heart-rate", "Ayuvo heart rate detail chart")], "pair"),
         link=("/features/health-data", "See the Health data hub")), "health")
@@ -288,12 +316,14 @@ def build_features() -> Page:
         + band("paper", section_head("Core", "The parts of your health.") + bento())
         + band("ink", section_head("Around the app", "On your wrist, your Home Screen and your language.", "The same data, wherever you look for it.")
                + '<div class="grid-3">'
-                 f'<div class="panel"><span class="kicker">{icon("watch")} Apple Watch</span><h3>Watch app and complications</h3><p>Calories, macros and water from your wrist, with water logging on the Watch.</p></div>'
-                 f'<div class="panel"><span class="kicker">{icon("chart")} Widgets</span><h3>Today, My Metrics, Quick Log</h3><p>Home Screen widgets on iPhone and Android. They never invent data, and every action opens the app. Widget settings stay on the device.</p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("watch")} Apple Watch</span><h3>Watch app, workouts and complications</h3><p>Calories, macros and water from your wrist, with water logging on the Watch. Start a walk, run, ride or hike on the Watch, and the iPhone shows it live. <a class="link-arrow" href="/features/workouts">See workouts</a></p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("chart")} Widgets</span><h3>Today, My Metrics, Quick Log, Workout</h3><p>Home Screen widgets on iPhone and Android. They never invent data. The Workout widget starts a walk, run, ride, hike or strength session and controls it while it runs. Widget settings stay on the device.</p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("chart")} Derived metrics</span><h3>{N_DERIVED} estimates, one switch each</h3><p>Resting heart rate, zones, sleep regularity, cardio fitness and more, estimated from your own data with published formulas. A value from Health always wins. <a class="link-arrow" href="/features/derived-metrics">See the metrics</a></p></div>'
                  f'<div class="panel"><span class="kicker">{icon("sparkle")} Siri &amp; Shortcuts</span><h3>Siri, Shortcuts and Android shortcuts</h3><p>{N_ACTIONS} actions to ask Siri, chain in the Shortcuts app, or run from Android shortcuts and links. The Share Extension sends a food photo or a health document straight into Ayuvo. <a class="link-arrow" href="/features/siri-and-shortcuts">See the actions</a></p></div>'
                  f'<div class="panel"><span class="kicker">{icon("heart")} Insights</span><h3>Recovery, Health Age and trends</h3><p>Scores and trends measured against your own 60-day baseline, calculated on the phone, each with a sheet that shows how. <a class="link-arrow" href="/features/insights">See Insights</a></p></div>'
                  f'<div class="panel"><span class="kicker">{icon("globe")} Languages &amp; appearance</span><h3>18 languages, your units</h3><p>English, Arabic, Azerbaijani, Czech, Dutch, French, German, Hindi, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Romanian, Russian, Simplified Chinese, Spanish and Ukrainian. Dark mode, 18 accent colours, and metric or imperial units.</p></div>'
-                 f'<div class="panel"><span class="kicker">{icon("swap")} Your data</span><h3>Export, import, delete</h3><p>Export All Data, import it on either platform, or delete everything from Settings.</p></div></div>')
+                 f'<div class="panel"><span class="kicker">{icon("swap")} Your data</span><h3>Export, import, delete</h3><p>Export All Data, import it on either platform, or delete everything from Settings.</p></div>'
+                 f'<div class="panel"><span class="kicker">{icon("lock")} Lock Screen</span><h3>Live Activity and live notification</h3><p>A GPS workout keeps its time, distance and pace on the iPhone Lock Screen and Dynamic Island, or in an Android notification, with Pause, Lap and End buttons.</p></div></div>')
         + compare_strip()
         + cta_section()
     )
@@ -324,11 +354,20 @@ def build_nutrition() -> Page:
               phone("summary", "Ayuvo Summary with Eat, Move and Drink rings"), reverse=True),
         split("Nutrients", "A chart for every nutrient, with your reference lines.",
               "<p>Open any nutrient for day, week, month, six-month and year charts. Dashed lines show the recommended amount for your age and sex and the upper limit, from the NIH and National Academies tables, or your own goal if you set one.</p>",
-              ["Supplements count too: add the nutrients in a vitamin or supplement in Medications, by hand or read from a label photo, and every dose you mark taken adds to that day",
+              ["Default nutrient goals follow the NASEM Dietary Reference Intakes for your sex and age. A goal you set yourself is never overwritten",
+               "Supplements count too: add the nutrients in a vitamin or supplement in Medications, by hand or read from a label photo, and every dose you mark taken adds to that day",
+               "A weekly supplement, such as 60,000 IU of vitamin D, is spread over the seven days it covers instead of counting as one huge day, and anything above the upper limit is flagged with “follow your prescriber”",
                "Food and supplements are shown separately, and supplements never add calories or get written to Apple Health or Health Connect",
                "Each chart links to a sourced guide explaining what the nutrient does and how much adults need"],
               '<div class="panel"><span class="kicker">Nutrient guides</span><h3>37 sourced guides</h3><p>What each vitamin and mineral does, food sources, how much adults need and signs of too little or too much.</p>'
               '<p><a class="link-arrow" href="/nutrients">Browse the nutrient guides</a></p></div>'),
+        split("Quality and timing", "Not just how much. <em>What, and when.</em>",
+              "<p>Each entry has an eaten-at time, separate from when you logged it, and you can change it. From your diary Ayuvo works out protein per kilogram, macro split, saturated fat share, fibre per 1,000 kcal, sodium to potassium, your eating window and the gap between your last meal and bedtime.</p>",
+              ["Saturated fat against the WHO limit of 10% of energy, fibre against 14 g per 1,000 kcal",
+               "A gentle note when tea or coffee came within an hour of an iron-rich meal",
+               "Energy balance, and an adaptive energy estimate from what you ate and your weight trend, once you have 14 logged days and 6 weigh-ins"],
+              '<div class="panel"><span class="kicker">Derived metrics</span><h3>Every one can be switched off</h3><p>Nutrition metrics follow the same rules as the rest of Ayuvo\'s estimates: shown with their method, and off with one switch.</p>'
+              '<p><a class="link-arrow" href="/features/derived-metrics">See the metrics</a></p></div>', reverse=True),
     ]
     sends = sends_panel("What a meal log sends, and to whom", "Logging is local. These are the only times something leaves your phone.", [
         ("Photos and text", "Sent to the AI provider you configured to identify the food. Choose an on-device model instead and the photo stays on the phone."),
@@ -341,16 +380,74 @@ def build_nutrition() -> Page:
         "Nutrition", "Log a meal in seconds. <em>Keep the data.</em>",
         "Photo, barcode, voice, text or manual entry, with calories, macros and 30+ nutrients to review before anything is saved. Your diary stays on your phone.",
         "Nutrition", phones([("nutrition", "Ayuvo Today nutrition diary")], "single"), blocks, sends,
-        [REL["health"], REL["insights"], REL["coach"]], lcp_slug="nutrition", og_screens=["nutrition", "summary"],
+        [REL["health"], REL["derived"], REL["coach"]], lcp_slug="nutrition", og_screens=["nutrition", "summary"],
         og_headline="Log a meal in seconds. Keep the data.")
 
 
+def _panel(kicker: str, h3: str, body: str) -> str:
+    return f'<div class="panel"><span class="kicker">{kicker}</span><h3>{h3}</h3>{body}</div>'
+
+
+def _ticks(items: list[str]) -> str:
+    return '<ul class="ticks">' + "".join(f"<li><span>{i}</span></li>" for i in items) + "</ul>"
+
+
 def build_workouts() -> Page:
+    th = WORKOUT["thresholds"]
+    sports = [s["title"] for s in WORKOUT["sports"].values()]
+    sport_rows = [[s["title"], f'{s["auto_pause_speed_mps"] * 3.6:g} km/h']
+                  for s in sorted(WORKOUT["sports"].values(), key=lambda s: s["auto_pause_speed_mps"])]
+    widget_rows = [["Ready", "Walk, Run, Cycle, Hike and Strength buttons", "Each opens the app and starts recording"],
+                   ["Recording", "Sport, a ticking timer, distance and pace (speed for cycling)", "Pause · Lap · End"],
+                   ["Paused", "A frozen timer", "Resume · End"],
+                   ["Strength session", "A ticking timer", "Finish"]]
+
+    gps_fallback = _panel("GPS workouts", f"{len(sports)} outdoor sports",
+                          "<p>Live time, distance, pace, heart rate, elevation and the current split while you move, then a map of the route, "
+                          "per-kilometre splits, elevation gain and loss, heart rate zones and heart rate along the route.</p>"
+                          + _table(["Sport", "Auto-pause below"], sport_rows))
+    live_fallback = _panel("While it runs", "Controls where you already look",
+                           _ticks(["<strong>iPhone Lock Screen and Dynamic Island.</strong> A Live Activity with the timer, distance and pace, and Pause, Resume, Lap and End buttons",
+                                   "<strong>Android.</strong> An ongoing notification with the same four buttons, promoted to a Live Update on Android 16",
+                                   "<strong>Apple Watch.</strong> Start on the Watch and the iPhone shows it live. Only one device saves the workout, so it is never counted twice"]))
+    widget_fallback = _panel("Workout widget", "Start and control a workout from the Home Screen", _table(["State", "Shows", "Buttons"], widget_rows)
+                             + "<p>iPhone: small, medium and Lock Screen. Android: 2×2 and 4×2.</p>")
+    fitness_fallback = _panel("Cardio fitness", "Measured on a real route",
+                              f"<p>Steady stretches of at least {th['min_segment_s'] // 60} minutes on flat ground (grade under {th['max_grade'] * 100:g}%) with heart rate between "
+                              f"{th['min_hrr'] * 100:g}% and {th['max_hrr'] * 100:g}% of your reserve give a VO₂max estimate from the ACSM walking and running equations. "
+                              "A guided 12-minute Cooper test is there if you want one.</p>"
+                              f"<p>Heart rate recovery one minute after End is shown too. A drop of less than {th['hrr1_abnormal_below']} bpm is flagged as worth mentioning to a doctor.</p>")
+
     blocks = [
-        split("Diary", "A workout diary that counts the way you do.",
-              "<p>Plan the week and log every set with reps, weight and RPE. Tap Calculate calorie burn to see the totals for the day: sets, workouts, reps and calories burned.</p>",
-              ["Day-by-day diary with a week strip you can swipe",
-               "Calculated calorie burn, written to Apple Health or Health Connect only if you enable it",
+        split("GPS", "Walk, run, ride or hike. <em>Keep the route.</em>",
+              "<p>Choose a sport and press Start. Ayuvo records the route with your phone's GPS, and keeps going with the screen locked. Pause, laps and auto-pause are built in, and when you finish you get the map, splits and elevation.</p>",
+              ["Real start and end times, and moving time that leaves out every pause",
+               "Poor fixes (worse than 20 m) and GPS jumps are dropped before any distance is counted",
+               "Elevation from the barometer when the phone has one, otherwise from GPS with a 3 m threshold",
+               "Saved to Apple Health or Health Connect as a workout with its route"],
+              shots([("gps-live", "Ayuvo GPS run in progress with time, distance, pace and map"),
+                     ("gps-summary", "Ayuvo GPS workout summary with route map, splits and elevation")], gps_fallback)),
+        split("Lock Screen", "Pause, lap and end <em>without opening the app</em>.",
+              "<p>A GPS workout or strength session stays in view while it runs. On iPhone it is a Live Activity on the Lock Screen and in the Dynamic Island. On Android it is an ongoing notification. Both have Pause, Resume, Lap and End.</p>",
+              ["Start on Apple Watch and the iPhone shows the Watch's heart rate and distance live",
+               "If the app is closed mid-workout, the recording can be resumed or saved when you come back"],
+              shots([("gps-live-activity", "Ayuvo workout Live Activity on the iPhone Lock Screen with Pause, Lap and End"),
+                     ("gps-notification", "Ayuvo workout notification on Android with Pause, Lap and End")], live_fallback), reverse=True),
+        split("Widget", "One tap from the Home Screen.",
+              "<p>Add the Workout widget and start a walk, run, ride, hike or strength session straight from the Home Screen. While it runs, the widget shows the ticking timer, distance and pace, and its buttons pause, lap and end the workout.</p>",
+              ["The timer ticks on its own, so the widget stays current without draining the battery",
+               "It never replaces a running workout: a tap on Start opens the one already running"],
+              shots([("widget-workout", "Ayuvo Workout widget with a run in progress"),
+                     ("widget-workout-idle", "Ayuvo Workout widget with Walk, Run, Cycle, Hike and Strength buttons")], widget_fallback)),
+        split("Cardio fitness", "A fitness estimate from your own runs.",
+              "<p>With a heart rate source, each GPS walk or run can give an estimate of your VO₂max, the standard measure of cardio fitness. It replaces the rougher estimate from resting heart rate, and a VO₂max from your watch still takes priority.</p>",
+              ["Heart rate zones from your heart rate reserve (ACSM), training load as Banister TRIMP",
+               "Calories from heart rate (Keytel 2005) when it covers at least 70% of the workout, otherwise from the activity's MET value"],
+              fitness_fallback, reverse=True),
+        split("Strength", "A strength session with a real start and finish.",
+              "<p>Press Start session before your first set and Finish at the end, and the session gets its real time window. Forgot? When you calculate the day's burn, Ayuvo looks at your heart rate and suggests the window when you were training. You confirm or change the times.</p>",
+              ["Plan the week and log every set with reps, weight and RPE",
+               "Calculated burn, written to Apple Health or Health Connect as a workout over the real window, only if you enable it",
                "Ask the coach about your plans, sets and completed sessions, if you allow it"],
               phone("workouts", "Ayuvo workout diary with sets, reps and calculated burn")),
         split("Library", "1,300+ exercises, filtered your way.",
@@ -358,20 +455,115 @@ def build_workouts() -> Page:
               ["Exercise photos and animations load from the open exercises-dataset when you browse the library, as plain image requests",
                "Workout plans, sessions and saved exercises move between iPhone and Android in Export All Data"],
               phone("exercises", "Ayuvo exercise library with search and filters"), reverse=True),
+        f'<div class="disclaimer"><p><strong>Not a clinical test.</strong> {WORKOUT["disclaimer"]}</p></div>',
     ]
-    sends = sends_panel("What the workout diary sends, and to whom", "Your sets and plans are stored on the phone.", [
-        ("Exercise media", "Browsing the library requests thumbnails and animations from GitHub (raw.githubusercontent.com). It is a plain image request with no account or identifier."),
-        ("Health sync", "Calculated burn is written to Apple Health or Health Connect only when you turn that on."),
-        ("Coach", "The coach reads your workouts only when you ask it something, and sends them to the provider you chose or to an on-device model."),
+    sends = sends_panel("What workouts send, and to whom", "Your routes, sets and plans are stored on the phone.", [
+        ("Location", "Only while a GPS workout records, and only on the phone. The route goes to Apple Health or Health Connect with the workout."),
+        ("Map tiles", "Showing a route map loads map images: from Apple Maps on iPhone, and from OpenStreetMap on Android. Those services see which area is shown, not your route."),
+        ("Exercise media and coach", "Browsing the library requests images from GitHub. The coach reads your workouts only when you ask, and sends them to the provider you chose or to an on-device model."),
     ])
     return feature_page(
-        "/features/workouts", "Workout Tracker with 1,300+ Exercises | Ayuvo",
-        "Plan and log workouts with sets, reps, weight and RPE, calculated calorie burn and a 1,300+ exercise library. Your training diary stays on your phone.",
-        "Workouts", "Plan the week. <em>Log the set.</em>",
-        "A day-by-day workout diary with sets, reps, weight and RPE, calculated calorie burn and a library of more than 1,300 exercises.",
-        "Workouts", phones([("workouts", "Ayuvo workout diary")], "single"), blocks, sends,
-        [REL["nutrition"], REL["health"], REL["switch"]], lcp_slug="workouts", og_screens=["workouts", "exercises"],
-        og_headline="Plan the week. Log the set.")
+        "/features/workouts", "GPS Workout Tracker, Strength Log & Exercises | Ayuvo",
+        "Record GPS walks, runs, rides and hikes with a route map, splits and elevation, and log strength sessions from a 1,300+ exercise library. Stored on your phone.",
+        "Workouts", "Record the route. <em>Log the set.</em>",
+        "GPS walks, runs, rides and hikes with a map, splits and elevation, controls on the Lock Screen, a widget and Apple Watch, and a strength diary with a library of more than 1,300 exercises.",
+        "Workouts", shots([("gps-summary", "Ayuvo GPS workout summary with route map")], phones([("workouts", "Ayuvo workout diary")], "single")), blocks, sends,
+        [REL["derived"], REL["health"], REL["insights"]], lcp_slug="gps-summary" if have("gps-summary") else "workouts",
+        og_screens=[s for s in ("gps-summary", "workouts", "exercises") if have(s)][:2],
+        faqs=[("Does Ayuvo need location access all the time?", "No. It asks only for location while using the app. A workout started in the app keeps recording with the screen locked, and the location indicator shows while it does."),
+              ("Does the Workout widget start recording by itself?", "A tap on a sport opens Ayuvo and starts the recording there, because phones only allow location recording to begin while the app is open. After that, Pause, Lap and End work from the widget."),
+              ("Will a Watch workout be counted twice?", "No. When the Apple Watch records the workout, it saves it and the iPhone only shows it live."),
+              ("How accurate is the VO₂max estimate?", "It is an estimate from published equations, not a lab test. It needs a heart rate source and steady, flat stretches, and a VO₂max from your watch is shown instead when there is one.")],
+        og_headline="Record the route. Log the set.")
+
+
+DERIVED_CATS = {"heart": "Heart", "sleep": "Sleep", "activity": "Activity", "energy": "Energy", "mobility": "Walking",
+                "hearing": "Hearing", "body": "Body", "nutrition": "Nutrition"}
+
+
+def build_derived() -> Page:
+    ms = DERIVED["metrics"]
+    by_cat: dict[str, list[dict]] = {}
+    for m in ms:
+        by_cat.setdefault(m["category"], []).append(m)
+    counts = ", ".join(f"{DERIVED_CATS.get(c, c.title()).lower()} {len(v)}" for c, v in by_cat.items())
+    native = [m for m in ms if m.get("native") and any(m["native"].values())]
+
+    def row(m: dict) -> list[str]:
+        tag = ' <span class="tag">Health wins</span>' if m in native else ""
+        return [f"<strong>{m['title']}</strong>{tag}", m["method"], f"<small>{m['citation']}</small>"]
+
+    catalogue = "".join(f'<h3>{DERIVED_CATS.get(c, c.title())}</h3>' + _table(["Metric", "How it is calculated", "Reference"], [row(m) for m in v])
+                        for c, v in by_cat.items())
+
+    flow = {"title": "How a derived metric is chosen", "steps": [
+        {"label": "Your synced data", "sub": "Minute-by-minute heart rate, sleep, steps, weight and your logs"},
+        {"label": "Quality check", "sub": "Enough coverage that day, one source per window, never two devices averaged"},
+        {"label": "Published formula", "sub": "The same maths and test vectors on iPhone and Android"},
+        {"label": "On your screen", "sub": "Badged Estimated by Ayuvo, with the method and reference"}],
+        "side": {"at": 3, "label": "Health value", "sub": "A value Apple Health or Health Connect has for that day", "verb": "replaces"}}
+    diagram = f'<div class="flow-wrap">{flow_svg(flow, "Derived", "der-flow")}</div>'
+
+    examples = [
+        ["Resting heart rate", "Lowest 5-minute average inside last night's sleep", "Your watch's resting heart rate"],
+        ["Cardio fitness (VO₂max)", "From resting and maximum heart rate, then from GPS runs", "Your watch's VO₂max"],
+        ["BMI", "Weight and height, WHO or Asian cut-offs", "A BMI in Health"],
+        ["Sleep Regularity Index", "How alike each pair of days is, minute by minute", "Nothing: Ayuvo's own"],
+    ]
+    hero_card = _panel("Priority, per metric, per day", "A value from Health always wins",
+                       _table(["Metric", "Ayuvo estimates", "Shown instead when present"], examples)
+                       + "<p>Estimates are never written to Apple Health or Health Connect.</p>")
+
+    blocks = [
+        f'<div class="prose wide">{section_head("How it works", "Filling the gaps your devices leave.", f"Many bands and watches record heart rate, sleep and steps but never turn them into resting heart rate, zones or sleep regularity. Ayuvo does, on your phone, for {N_DERIVED} metrics ({counts}).")}{diagram}</div>',
+        split("Priority", "Your device first. <em>Ayuvo second.</em>",
+              "<p>For each metric and each day, if Apple Health or Health Connect already holds a value, Ayuvo shows that value with its source. Only on days without one does it show its own estimate, badged Estimated by Ayuvo.</p>",
+              ["Estimates are never written back, so they can never feed into their own inputs",
+               "Every estimate carries its coverage and confidence, and is hidden when there is too little data",
+               "Each metric's page shows the method, the published reference and the inputs used"],
+              shots([("derived-detail", "Ayuvo derived resting heart rate with the Estimated by Ayuvo badge and method")], hero_card)),
+        split("Your switches", "Turn off any metric. <em>Or all of them.</em>",
+              "<p>Settings, Derived Metrics has a master switch and one switch per metric, and each metric's page has its own. A metric you turn off is no longer calculated, its stored values are deleted, and it disappears from Browse, Summary and Coach.</p>",
+              ["Metrics that depend on it say so: turning off resting heart rate moves zones to percentages of maximum heart rate",
+               "Choose WHO or Asian BMI categories (overweight from 23, obese from 27.5)",
+               "Your switches move with you between iPhone and Android in Export All Data"],
+              shots([("derived-settings", "Ayuvo Derived Metrics settings with a switch for each metric")],
+                    _panel("Settings", "Derived Metrics", _ticks(["Master switch: on by default", "One switch per metric, grouped by category", "“Also affects” lists the metrics that depend on each one", "BMI categories: WHO or Asian"]))),
+              reverse=True),
+        split("Heart", "Resting heart rate, zones and load.",
+              "<p>From minute-by-minute heart rate: resting and sleeping heart rate, the night-time dip, your daytime range, maximum heart rate (Tanaka, replaced by your observed maximum after enough workouts), heart rate reserve, cardio minutes in ACSM zones, training load and a resting heart rate compared with your usual.</p>",
+              ["Weekly moderate and vigorous minutes against the WHO 150 to 300 minute guideline",
+               "Wear time and valid days (10 hours or more), so a day with the band off is not judged"],
+              _panel("Sleep", "Regularity, timing and debt",
+                     "<p>Efficiency, time to fall asleep, deep and REM share, wake-ups, bedtime and wake time, the Sleep Regularity Index, social jet lag, chronotype and a 14-day sleep debt against the 7 hours or more that the AASM and SRS recommend for adults.</p>")),
+        split("Every day", "Activity, energy, walking and body.",
+              "<p>Brisk walking minutes (100 steps a minute or more), peak cadence, active hours, the longest sitting spell, your activity level, total energy burned and physical activity level, walking speed and steadiness trends, weekly headphone sound dose against the WHO-ITU safe listening limit, and a smoothed weight trend with a healthy range and weeks to goal.</p>",
+              ["Steps are counted once, even when your phone and watch both recorded them",
+               "Nutrition metrics use the time you ate, not the time you logged it"],
+              shots([("derived-browse", "Ayuvo Browse with derived metrics badged Estimated by Ayuvo")],
+                    _panel("Nutrition and balance", "From your food diary",
+                           "<p>Protein per kilogram, macro split, saturated fat share, fibre per 1,000 kcal, sodium to potassium, eating window, last meal to bedtime, tea or coffee with an iron-rich meal, energy balance and an adaptive energy estimate from intake and your weight trend.</p>")),
+              reverse=True),
+        f'<div class="prose wide">{section_head("Catalogue", f"All {N_DERIVED} metrics, with their methods.", "Rendered from the same file the apps read, so this list cannot drift from what they calculate. “Health wins” marks the metrics where a value from Apple Health or Health Connect is shown instead when there is one.")}{catalogue}</div>',
+        f'<div class="disclaimer"><p><strong>Not medical advice.</strong> {DERIVED["disclaimer"]}</p></div>',
+    ]
+    sends = sends_panel("What derived metrics send, and to whom", "They are calculated from data already on the phone.", [
+        ("Nothing, to calculate", "Every estimate is calculated on the phone from your synced data and logs. Nothing is uploaded."),
+        ("Nothing to Health", "Estimates are never written to Apple Health or Health Connect, and they are not in an export: they are recalculated."),
+        ("Coach, with its toggle", "The coach sees the derived metrics you have on, marked as estimates, only while its health data consent is on."),
+    ])
+    return feature_page(
+        "/features/derived-metrics", "Resting Heart Rate, Zones & Sleep Estimates | Ayuvo",
+        f"Ayuvo estimates {N_DERIVED} health metrics your devices don't record, from resting heart rate to sleep regularity, with published methods. Health values always win.",
+        "Derived metrics", "Vitals your devices <em>don't record.</em>",
+        f"Resting heart rate, zones, sleep regularity, cardio fitness and {N_DERIVED - 4} more, estimated on your phone from the data you already have. A value from Apple Health or Health Connect always wins, and every metric can be switched off.",
+        "Derived metrics", hero_card, blocks, sends,
+        [REL["insights"], REL["health"], REL["workouts"]], og_screens=[s for s in ("derived-detail", "heart-rate", "browse") if have(s)][:2],
+        faqs=[("Why does a metric say Estimated by Ayuvo?", "Your devices did not record that metric for that day, so Ayuvo calculated it from other data you have, such as minute-by-minute heart rate. When Health has a real value, that is shown with its source instead."),
+              ("Does Ayuvo write its estimates to Apple Health or Health Connect?", "No. Only what you log or record, such as food, weight and workouts, is written. Estimates stay in Ayuvo."),
+              ("How do I turn a metric off?", "Settings, Derived Metrics, or the switch on the metric's own page. Its stored values are deleted, and metrics that depend on it switch to their fallback."),
+              ("Are these numbers medical advice?", "No. They are estimates from published formulas, shown with their confidence. Talk to your doctor about anything that concerns you.")],
+        og_headline="Vitals your devices don't record.")
 
 
 def build_health() -> Page:
@@ -390,12 +582,21 @@ def build_health() -> Page:
                "Units in kilograms or pounds, centimetres or feet and inches, millilitres or fluid ounces, mmol/L or mg/dL",
                "A goal line appears on charts when you have set a goal"],
               phone("heart-rate", "Ayuvo heart rate detail with day, week, month, six month and year ranges"), reverse=True),
+        split("Derived", "What your devices don't record, estimated.",
+              f"<p>Many bands record heart rate every minute but never a resting heart rate. Ayuvo fills gaps like that for {N_DERIVED} metrics, from heart rate zones and sleep regularity to cardio fitness, using published formulas. When Health has a value for that day, that value is shown instead.</p>",
+              ["Badged Estimated by Ayuvo, with the method and reference on every metric",
+               "One switch per metric in Settings, Derived Metrics",
+               "Never written to Apple Health or Health Connect"],
+              shot("derived-detail", "Ayuvo derived resting heart rate with the Estimated by Ayuvo badge",
+                   '<div class="panel"><span class="kicker">Derived metrics</span><h3>Your device first, Ayuvo second</h3><p>A value from Apple Health or Health Connect wins, per metric and per day.</p>'
+                   '<p><a class="link-arrow" href="/features/derived-metrics">See every metric</a></p></div>'),
+              link=("/features/derived-metrics", "See how each metric is calculated")),
         split("Control", "Read a lot. Write back a little.",
-              "<p>Ayuvo writes to Apple Health or Health Connect only the nutrition, weight, height, body fat and active calories you log in Ayuvo. Fasting and water are never written.</p>",
+              "<p>Ayuvo writes to Apple Health or Health Connect only what you log or record in Ayuvo: nutrition, weight, height, body fat, workouts with their calories and the route of a GPS workout. Fasting, water and Ayuvo's own estimates are never written.</p>",
               ["Revoke access at any time in Apple Health or Health Connect settings",
                "The mirror is never included in a cloud backup, and you can clear it from Settings",
                "Export the hub in Export All Data, and import it on iPhone or Android"],
-              phone("summary", "Ayuvo Summary with Health favourites")),
+              phone("summary", "Ayuvo Summary with Health favourites"), reverse=True),
     ]
     sends = sends_panel("What the Health hub sends, and to whom", "The mirror lives in a local database and is excluded from cloud backups.", [
         ("Nothing by default", "Reading Health data sends nothing anywhere. The database is stored on this device only."),
@@ -408,9 +609,9 @@ def build_health() -> Page:
         "Health data", "Every Health chart. <em>One private hub.</em>",
         "Mirror the Apple Health or Health Connect data you grant into a local hub, with charts, sources and history for every metric.",
         "Health data", phones([("browse", "Ayuvo Browse health categories"), ("heart-rate", "Ayuvo heart rate chart")], "pair"), blocks, sends,
-        [REL["insights"], REL["coach"], REL["records"]], lcp_slug="browse", og_screens=["browse", "heart-rate"], compare=True,
+        [REL["derived"], REL["insights"], REL["coach"]], lcp_slug="browse", og_screens=["browse", "heart-rate"], compare=True,
         faqs=[("Which Android versions can use Health Connect?", "Health Connect is built into Android 14 and later, and is a Play Store app on Android 9 to 13. Ayuvo's Connect button opens the right screen."),
-              ("Does Ayuvo change my Health data?", "Only by adding what you log in Ayuvo: nutrition, weight, height, body fat and calculated active calories. Fasting and water are never written."),
+              ("Does Ayuvo change my Health data?", "Only by adding what you log or record in Ayuvo: nutrition, weight, height, body fat, workouts with their calories and GPS routes. Fasting, water and Ayuvo's estimates are never written."),
               ("Will Ayuvo see my old history?", "It reads the history you grant. On Android, without the special history permission, history starts 30 days before you first grant access, and Ayuvo says so on screen.")],
         og_headline="Every Health chart. One private hub.")
 
@@ -438,6 +639,8 @@ def build_records() -> Page:
         split("Medications", "Reminders for the medicines you choose to add.",
               "<p>Add a medicine with its dose, form, food relation and schedule: daily times, weekdays, every few hours, or as needed. Ayuvo reminds you when a dose is due, and you mark it Taken, Skip or Snooze straight from the notification.</p>",
               ["Statuses of Scheduled, Due, Taken, Skipped, Missed and Snoozed, and a rolling 7-day adherence figure",
+               "Adherence per medicine, where doses you chose to skip are left out, and a suggested reminder time when you usually take a dose more than an hour late",
+               "When a lab report shows low haemoglobin or another linked value, a card sets it beside your intake of the related nutrient and suggests talking to your doctor",
                "Import a prescription from a record, then review every suggested medicine before it is created",
                "Stored on this device, excluded from cloud backups, and included in Export All Data"],
               phone("medications", "Ayuvo medications with taken, upcoming and missed doses"), reverse=True),
@@ -822,6 +1025,9 @@ def build_privacy_first() -> Page:
         ("AI provider (your key)", "Photos, text, coach messages and the context you ask for. Health data, medications and records only with their switches on", "The provider you configured", "When you analyse or ask"),
         ("Explain with AI (Insights)", "Derived scores, labels and review items only: no raw readings, dates or names", "The provider you configured, or an on-device model", "When you tap Explain with AI"),
         ("On-device model", "Nothing", "Stays on the phone", "Always"),
+        ("Derived metrics", "Nothing. Estimates are calculated on the phone and never written to Health", "Stays on the phone", "Always"),
+        ("GPS workout", "The workout and its route", "Apple Health or Health Connect, on the phone", "When you finish a GPS workout"),
+        ("Route map", "Requests for map images of the area shown, not your route", "Apple Maps (iPhone) or OpenStreetMap (Android)", "When a route map is on screen"),
         ("Siri, Shortcuts, Android shortcuts", "Ayuvo adds nothing, except Log Food with a description, which goes to your AI provider after you confirm. Voice requests are handled by Siri or your Android assistant under their own settings", "The provider you configured", "When you run that action"),
         ("Speech to text", "An audio clip, only for a cloud provider", "The provider you chose", "Voice input, if you picked a cloud provider"),
         ("Barcode", "The barcode number", "Open Food Facts", "When you scan"),
@@ -1036,7 +1242,9 @@ def all_pages() -> list[Page]:
     new = [build_insights(), build_shortcuts()]
     for p in new:
         p.modified = "2026-09-28"  # first published; later edits are dated by lastmod.json
-    pages = [build_home(), build_features(), build_nutrition(), build_workouts(), build_health(), *new, build_records(), build_coach(),
+    derived = build_derived()
+    derived.modified = "2026-09-30"
+    pages = [build_home(), build_features(), build_nutrition(), build_workouts(), build_health(), derived, *new, build_records(), build_coach(),
              build_fasting(), build_switch(), build_ondevice(), build_privacy_first(), build_providers(), build_open_source(), build_download()]
     pages += compare_pages()
     pages += nutrient_pages()
