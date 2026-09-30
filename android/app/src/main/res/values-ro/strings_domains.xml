@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Perspective</string>
+    <string name="domain_nutrition">Nutriție</string>
+    <string name="domain_hydration">Hidratare</string>
+    <string name="domain_fasting">Post</string>
+    <string name="domain_body">Măsurători corporale</string>
+    <string name="domain_activity">Activitate</string>
+    <string name="domain_heart">Inimă</string>
+    <string name="domain_sleep">Somn</string>
+    <string name="domain_vitals">Semne vitale</string>
+    <string name="domain_respiratory">Respirație</string>
+    <string name="domain_cycle">Urmărirea ciclului</string>
+    <string name="domain_mindfulness">Mindfulness</string>
+    <string name="domain_mobility">Mobilitate</string>
+    <string name="domain_hearing">Auz</string>
+    <string name="domain_symptoms">Simptome</string>
+    <string name="domain_medications">Medicamente</string>
+    <string name="domain_records">Dosare medicale</string>
+    <string name="domain_other">Alte date</string>
+    <string name="design_back">Înapoi</string>
+</resources>

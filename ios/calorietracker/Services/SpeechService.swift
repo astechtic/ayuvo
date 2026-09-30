@@ -14,15 +14,15 @@ struct SpeechService {
         var errorDescription: String? {
             switch self {
             case .noAPIKey:
-                return "No API key configured for this speech provider. Add one in Settings → Speech-to-Text."
+                return String(localized: "No API key configured for this speech provider. Add one in Settings → Speech-to-Text.", comment: "Speech-to-text error")
             case .fileReadFailed:
-                return "Could not read the recorded audio file."
+                return String(localized: "Could not read the recorded audio file.", comment: "Speech-to-text error")
             case .networkError(let err):
-                return "Network error: \(err.localizedDescription)"
+                return String(localized: "Network error: \(err.localizedDescription)", comment: "Speech-to-text error; placeholder is the system network error")
             case .apiError(let msg):
-                return "Speech API error: \(msg)"
+                return String(localized: "Speech API error: \(msg)", comment: "Speech-to-text error; placeholder is the provider message")
             case .invalidResponse:
-                return "Unexpected response from the speech provider."
+                return String(localized: "Unexpected response from the speech provider.", comment: "Speech-to-text error")
             }
         }
     }
@@ -59,7 +59,7 @@ struct SpeechService {
             )
         }
         guard provider.requiresAPIKey else {
-            throw SpeechError.apiError("Native iOS transcription is handled in-view, not via SpeechService.")
+            throw SpeechError.apiError(String(localized: "Native iOS transcription is handled in-view, not via SpeechService.", comment: "Speech-to-text error"))
         }
         let apiKey = SpeechSettings.apiKey(for: provider)
         if apiKey == nil || apiKey?.isEmpty == true {
@@ -68,9 +68,9 @@ struct SpeechService {
         let resolvedAPIKey = apiKey ?? ""
         switch provider {
         case .nativeIOS:
-            throw SpeechError.apiError("Native iOS transcription is handled in-view.")
+            throw SpeechError.apiError(String(localized: "Native iOS transcription is handled in-view.", comment: "Speech-to-text error"))
         case .whisperBase:
-            throw SpeechError.apiError("Whisper Base could not be initialized.")
+            throw SpeechError.apiError(String(localized: "Whisper Base could not be initialized.", comment: "Speech-to-text error"))
         case .gemini:
             return try await callGeminiAudio(
                 model: provider.defaultModel,
@@ -131,7 +131,7 @@ struct SpeechService {
 
         do {
             guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/interactions") else {
-                throw SpeechError.apiError("Invalid Gemini interactions URL.")
+                throw SpeechError.apiError(String(localized: "Invalid Gemini interactions URL.", comment: "Speech-to-text error"))
             }
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -212,7 +212,7 @@ struct SpeechService {
 
     private static func uploadGeminiAudio(audioData: Data, apiKey: String) async throws -> GeminiUploadedFile {
         guard let startURL = URL(string: "https://generativelanguage.googleapis.com/upload/v1beta/files") else {
-            throw SpeechError.apiError("Invalid Gemini upload URL.")
+            throw SpeechError.apiError(String(localized: "Invalid Gemini upload URL.", comment: "Speech-to-text error"))
         }
         var startRequest = URLRequest(url: startURL)
         startRequest.httpMethod = "POST"
@@ -232,7 +232,7 @@ struct SpeechService {
               let uploadURLString = startHTTP.value(forHTTPHeaderField: "X-Goog-Upload-URL"),
               let uploadURL = URL(string: uploadURLString)
         else {
-            throw SpeechError.apiError(decodeErrorMessage(startData) ?? "Gemini upload could not be started.")
+            throw SpeechError.apiError(decodeErrorMessage(startData) ?? String(localized: "Gemini upload could not be started.", comment: "Speech-to-text error"))
         }
 
         var uploadRequest = URLRequest(url: uploadURL)
@@ -251,7 +251,7 @@ struct SpeechService {
               let uri = file["uri"] as? String,
               let name = file["name"] as? String
         else {
-            throw SpeechError.apiError(decodeErrorMessage(uploadData) ?? "Gemini audio upload failed.")
+            throw SpeechError.apiError(decodeErrorMessage(uploadData) ?? String(localized: "Gemini audio upload failed.", comment: "Speech-to-text error"))
         }
         return GeminiUploadedFile(uri: uri, name: name)
     }
@@ -276,7 +276,7 @@ struct SpeechService {
         responseFormat: String? = "text"
     ) async throws -> String {
         guard let url = URL(string: "\(baseURL)/audio/transcriptions") else {
-            throw SpeechError.apiError("Invalid URL.")
+            throw SpeechError.apiError(String(localized: "Invalid URL.", comment: "Speech-to-text error"))
         }
         let boundary = "Boundary-\(UUID().uuidString)"
         var request = URLRequest(url: url)
@@ -326,7 +326,7 @@ struct SpeechService {
         components?.queryItems = queryItems
 
         guard let url = components?.url else {
-            throw SpeechError.apiError("Invalid URL.")
+            throw SpeechError.apiError(String(localized: "Invalid URL.", comment: "Speech-to-text error"))
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -379,7 +379,7 @@ struct SpeechService {
     ) async throws -> String {
         // 1. Upload raw audio, get a temporary upload URL.
         guard let uploadURL = URL(string: "https://api.assemblyai.com/v2/upload") else {
-            throw SpeechError.apiError("Invalid URL.")
+            throw SpeechError.apiError(String(localized: "Invalid URL.", comment: "Speech-to-text error"))
         }
         var uploadReq = URLRequest(url: uploadURL)
         uploadReq.httpMethod = "POST"
@@ -391,12 +391,12 @@ struct SpeechService {
               let uploadJson = try? JSONSerialization.jsonObject(with: uploadData) as? [String: Any],
               let audioRef = uploadJson["upload_url"] as? String
         else {
-            throw SpeechError.apiError(decodeErrorMessage(uploadData) ?? "Upload failed.")
+            throw SpeechError.apiError(decodeErrorMessage(uploadData) ?? String(localized: "Upload failed.", comment: "Speech-to-text error"))
         }
 
         // 2. Submit a transcript job.
         guard let submitURL = URL(string: "https://api.assemblyai.com/v2/transcript") else {
-            throw SpeechError.apiError("Invalid URL.")
+            throw SpeechError.apiError(String(localized: "Invalid URL.", comment: "Speech-to-text error"))
         }
         var submitReq = URLRequest(url: submitURL)
         submitReq.httpMethod = "POST"
@@ -413,12 +413,12 @@ struct SpeechService {
               let submitJson = try? JSONSerialization.jsonObject(with: submitData) as? [String: Any],
               let jobID = submitJson["id"] as? String
         else {
-            throw SpeechError.apiError(decodeErrorMessage(submitData) ?? "Submit failed.")
+            throw SpeechError.apiError(decodeErrorMessage(submitData) ?? String(localized: "Submit failed.", comment: "Speech-to-text error"))
         }
 
         // 3. Poll every 1s up to 60s until the job finishes.
         guard let pollURL = URL(string: "https://api.assemblyai.com/v2/transcript/\(jobID)") else {
-            throw SpeechError.apiError("Invalid URL.")
+            throw SpeechError.apiError(String(localized: "Invalid URL.", comment: "Speech-to-text error"))
         }
         for _ in 0..<60 {
             var pollReq = URLRequest(url: pollURL)
@@ -432,12 +432,12 @@ struct SpeechService {
                 if let text = pollJson["text"] as? String { return text }
                 throw SpeechError.invalidResponse
             case "error":
-                throw SpeechError.apiError(pollJson["error"] as? String ?? "Transcription failed.")
+                throw SpeechError.apiError(pollJson["error"] as? String ?? String(localized: "Transcription failed.", comment: "Speech-to-text error"))
             default:
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
             }
         }
-        throw SpeechError.apiError("Transcription timed out after 60 seconds.")
+        throw SpeechError.apiError(String(localized: "Transcription timed out after 60 seconds.", comment: "Speech-to-text error"))
     }
 
     // MARK: - Helpers

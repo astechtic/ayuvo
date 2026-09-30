@@ -5,37 +5,39 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 import java.time.LocalDate
 import java.util.UUID
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** Editable, uncommitted AI output. Diary writes only happen after validation and review. */
 @Serializable
 data class WorkoutTextDraft(val date: String, val exercises: List<WorkoutTextExercise>) {
     fun planned(library: List<ExerciseItem>, today: LocalDate = LocalDate.now()): List<PlannedExercise> {
         val day = LocalDate.parse(date)
-        require(!day.isAfter(today)) { "Choose today or an earlier date." }
-        require(exercises.size in 1..30) { "Add between 1 and 30 exercises." }
+        require(!day.isAfter(today)) { AppText.orEnglish("Choose today or an earlier date.", R.string.core_workout_text_date_future) }
+        require(exercises.size in 1..30) { AppText.orEnglish("Add between 1 and 30 exercises.", R.string.core_workout_text_exercise_count) }
         return exercises.map { entry ->
             val item = entry.exerciseId?.let { id ->
-                library.find { it.id == id } ?: error("Exercise not found. Describe the exercise again.")
+                library.find { it.id == id } ?: error(AppText.orEnglish("Exercise not found. Describe the exercise again.", R.string.core_workout_text_not_found))
             }
-            require(entry.name.isNotBlank() && entry.name.length <= 120) { "Enter an activity name." }
+            require(entry.name.isNotBlank() && entry.name.length <= 120) { AppText.orEnglish("Enter an activity name.", R.string.core_workout_text_name) }
             val minutes = entry.minutes.takeIf { it.isNotBlank() }?.let {
                 it.replace(',', '.').toDoubleOrNull()?.takeIf { n -> n.isFinite() && n > 0 && n <= 1440 }
-                    ?: error("Duration must be between 0 and 1,440 minutes.")
+                    ?: error(AppText.orEnglish("Duration must be between 0 and 1,440 minutes.", R.string.core_workout_text_duration))
             }
-            require(entry.sets.size <= 12) { "Use at most 12 sets per exercise." }
-            require(entry.unit in listOf("kg", "lbs")) { "Choose kg or lbs." }
+            require(entry.sets.size <= 12) { AppText.orEnglish("Use at most 12 sets per exercise.", R.string.core_workout_text_sets) }
+            require(entry.unit in listOf("kg", "lbs")) { AppText.orEnglish("Choose kg or lbs.", R.string.core_workout_text_unit) }
             val intensity = WorkoutIntensity.entries.find { it.name.lowercase() == entry.intensity }
-                ?: error("Choose light, moderate, or vigorous effort.")
+                ?: error(AppText.orEnglish("Choose light, moderate, or vigorous effort.", R.string.core_workout_text_effort))
             val sets = entry.sets.map { set ->
                 val reps = set.reps.toIntOrNull()
                 if (reps == null) throw missingDetails(entry, item)
-                require(reps in 1..999) { "Enter 1–999 reps for each set." }
+                require(reps in 1..999) { AppText.orEnglish("Enter 1–999 reps for each set.", R.string.core_workout_text_reps) }
                 val weight = set.weight.takeIf { it.isNotBlank() }?.let {
                     it.replace(',', '.').toDoubleOrNull()?.takeIf { n -> n.isFinite() && n in 0.0..1500.0 }
-                        ?: error("Enter a valid weight between 0 and 1,500.")
+                        ?: error(AppText.orEnglish("Enter a valid weight between 0 and 1,500.", R.string.core_workout_text_weight))
                 }
                 val rpe = set.rpe.takeIf { it.isNotBlank() }?.replace(',', '.')?.toDoubleOrNull()
-                require(set.rpe.isBlank() || (rpe != null && rpe.isFinite() && rpe in 1.0..10.0)) { "Enter an RPE from 1 to 10." }
+                require(set.rpe.isBlank() || (rpe != null && rpe.isFinite() && rpe in 1.0..10.0)) { AppText.orEnglish("Enter an RPE from 1 to 10.", R.string.core_workout_text_rpe) }
                 PlannedSet(weight = weight?.toString().orEmpty(), reps = reps.toString(),
                     rpe = rpe?.toString().orEmpty(), rpeScale = rpe?.let { WorkoutRpeScale.STRENGTH },
                     weightUnit = WorkoutWeightUnit.fromStorage(entry.unit))
@@ -43,8 +45,12 @@ data class WorkoutTextDraft(val date: String, val exercises: List<WorkoutTextExe
             if (minutes == null && sets.isEmpty()) throw missingDetails(entry, item)
             if (item == null && (minutes == null || sets.isNotEmpty())) {
                 throw WorkoutClarification(
-                    "Which variation of ${entry.name} did you do?",
-                    listOf("Barbell", "Dumbbells", "Machine")
+                    AppText.orEnglish("Which variation of ${entry.name} did you do?", R.string.core_workout_text_which_variation, entry.name),
+                    listOf(
+                        AppText.orEnglish("Barbell", R.string.core_workout_text_option_barbell),
+                        AppText.orEnglish("Dumbbells", R.string.core_workout_text_option_dumbbells),
+                        AppText.orEnglish("Machine", R.string.core_workout_text_option_machine)
+                    )
                 )
             }
             val base = item?.let(PlannedExercise::from) ?: PlannedExercise(
@@ -58,17 +64,17 @@ data class WorkoutTextDraft(val date: String, val exercises: List<WorkoutTextExe
     }
 
     private fun missingDetails(entry: WorkoutTextExercise, item: ExerciseItem?): Nothing {
-        val name = entry.name.trim().ifBlank { "that exercise" }
+        val name = entry.name.trim().ifBlank { AppText.orEnglish("that exercise", R.string.core_workout_text_that_exercise) }
         if (item?.isCardio == true) {
-            throw WorkoutClarification("How many minutes of $name did you do?", listOf("10", "20", "30", "45"))
+            throw WorkoutClarification(AppText.orEnglish("How many minutes of $name did you do?", R.string.core_workout_text_how_many_minutes, name), listOf("10", "20", "30", "45"))
         }
-        throw WorkoutClarification("How many sets and reps of $name did you do?", listOf("3x10", "3x8", "3x12"))
+        throw WorkoutClarification(AppText.orEnglish("How many sets and reps of $name did you do?", R.string.core_workout_text_how_many_sets, name), listOf("3x10", "3x8", "3x12"))
     }
 
     companion object {
         fun parse(response: String, library: List<ExerciseItem>, today: LocalDate = LocalDate.now()): WorkoutTextDraft {
             val start = response.indexOf('{'); val end = response.lastIndexOf('}')
-            require(start >= 0 && end >= start) { "Could not read the workout. Please try again." }
+            require(start >= 0 && end >= start) { AppText.orEnglish("Could not read the workout. Please try again.", R.string.core_workout_text_unreadable) }
             val root = Json.parseToJsonElement(response.substring(start, end + 1)).jsonObject
             val question = root["question"]?.jsonPrimitive?.contentOrNull
             if (!question.isNullOrBlank()) throw WorkoutClarification(question,
@@ -195,8 +201,8 @@ data class WorkoutFollowUp(
 @Serializable
 data class WorkoutConversation(val original: String, val turns: List<WorkoutFollowUp> = emptyList()) {
     fun answering(question: String, answer: String, exerciseId: String? = null): WorkoutConversation {
-        require(answer.isNotBlank() && answer.length <= 500) { "Reply in up to 500 characters." }
-        require(turns.size < 6) { "Please start over with the details gathered so far." }
+        require(answer.isNotBlank() && answer.length <= 500) { AppText.orEnglish("Reply in up to 500 characters.", R.string.core_workout_text_reply_length) }
+        require(turns.size < 6) { AppText.orEnglish("Please start over with the details gathered so far.", R.string.core_workout_text_start_over) }
         return copy(turns = turns + WorkoutFollowUp(question.take(500), answer.trim(), exerciseId))
     }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">推算指标</string>
+    <string name="settings_derived_enabled">推算指标</string>
+    <string name="settings_derived_enabled_sub">估算你的设备未记录的生命体征</string>
+    <string name="settings_derived_footer">Ayuvo 会估算你的设备未记录的生命体征，例如根据逐分钟心率推算静息心率。如果 Health Connect 中已有同一天的数值，则会改为显示该数值。估算值绝不会写入 Health Connect。</string>
+    <string name="settings_derived_bmi_scheme">BMI 分类</string>
+    <string name="settings_derived_bmi_who">WHO</string>
+    <string name="settings_derived_bmi_asian">亚洲</string>
+    <string name="settings_derived_bmi_footer">亚洲标准（23 起为超重，27.5 起为肥胖）遵循 WHO 针对亚洲人群的专家咨询意见。</string>
+    <string name="settings_derived_native_wins">如有 Health Connect 数值，则优先使用</string>
+    <string name="settings_derived_also_affects">同时影响：%1$s</string>
+    <string name="derived_estimated_badge">由 Ayuvo 估算</string>
+    <string name="derived_how_calculated">计算方式</string>
+    <string name="derived_source_label">来源</string>
+    <string name="derived_metric_toggle">计算此指标</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvo 不会计算此指标。仍会显示来自 Health Connect 的数值。</string>
+    <string name="derived_headline_highest">最高</string>
+    <string name="derived_source_estimated">由 Ayuvo 根据你的 Health Connect 数据估算</string>
+    <string name="derived_source_native">来自 Health Connect（%1$s）</string>
+    <string name="derived_source_native_generic">来自 Health Connect</string>
+    <string name="derived_source_mixed">有记录的日期使用 Health Connect 数值；其他日期由 Ayuvo 估算</string>
+    <string name="derived_method">方法</string>
+    <string name="derived_citation">参考文献</string>
+    <string name="derived_confidence">置信度</string>
+    <string name="derived_confidence_high">高</string>
+    <string name="derived_confidence_medium">中</string>
+    <string name="derived_confidence_low">低</string>
+    <string name="derived_confidence_native">由你的设备测量</string>
+    <string name="derived_estimated_caption">%1$s · 估算值</string>
+    <string name="derived_master_off">推算指标已在“设置”中关闭。</string>
+</resources>

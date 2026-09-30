@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Hora de la comida</string>
+    <string name="intake_eaten_at_same_as_log">Igual que la hora de registro</string>
+    <string name="intake_eaten_at_hint">Se usa para tu ventana de alimentación y el horario de las comidas</string>
+    <string name="intake_eaten_at_reset">Usar la hora de registro</string>
+    <string name="intake_adherence_title">Últimos 30 días</string>
+    <string name="intake_adherence_none">Aún no hay dosis programadas en los últimos 30 días.</string>
+    <string name="intake_adherence_pct">%1$s %% de dosis tomadas (%2$d de %3$d)</string>
+    <string name="intake_adherence_adherent">Bien encaminado: 80 %% o más de dosis tomadas</string>
+    <string name="intake_adherence_below">Menos del 80 %% de dosis tomadas</string>
+    <string name="intake_adherence_on_time">A tiempo (dentro de una hora)</string>
+    <string name="intake_adherence_median_delay">Retraso habitual</string>
+    <string name="intake_adherence_streak">Racha</string>
+    <string name="intake_adherence_missed_by_weekday">Dosis olvidadas por día de la semana</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d dosis</string>
+    <string name="intake_move_reminder">¿Mover el recordatorio a las %1$s?</string>
+    <string name="intake_move_reminder_body">Sueles tomar esta dosis más tarde que su recordatorio. Mover el recordatorio solo cambia su hora; todo lo demás sigue igual.</string>
+    <string name="intake_move_reminder_action">Mover recordatorio</string>
+    <string name="intake_supplement_above_upper">%1$s tiene una media de %2$s al día durante su intervalo de dosificación, por encima del límite superior de ingesta de %3$s. Sigue las indicaciones de quien te lo recetó.</string>
+    <string name="intake_lab_links_title">Resultados de laboratorio y nutrición</string>
+    <string name="intake_lab_links_footer">Basado en tu registro de comidas y suplementos de los últimos 30 días y en el rango de referencia impreso en tu informe. No es un consejo médico.</string>
+    <string name="intake_lab_link_low_one">Tu %1$s estaba por debajo del rango del informe.</string>
+    <string name="intake_lab_link_low_many">Tus niveles de %1$s estaban por debajo del rango del informe.</string>
+    <string name="intake_lab_link_and">%1$s y %2$s</string>
+    <string name="intake_lab_link_intake">Tu ingesta media de %1$s es el %2$d %% de la referencia.</string>
+    <string name="intake_lab_link_intake_no_supplement">Tu ingesta media de %1$s es el %2$d %% de la referencia y ninguno de tus suplementos lo contiene.</string>
+    <string name="intake_lab_link_doctor">Considera comentarlo con tu médico.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

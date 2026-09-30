@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Training beschreiben</string>
+    <string name="workout_text_intro">Beschreibe, was du gemacht hast. Prüfe die Details, bevor du sie deinem Trainingstagebuch hinzufügst.</string>
+    <string name="workout_text_description">Trainingsbeschreibung</string>
+    <string name="workout_text_example">20 Minuten Seilspringen, dann 3 Sätze mit 10 Bankdrücken bei 40 kg</string>
+    <string name="workout_text_voice">Stimme</string>
+    <string name="workout_text_preparing">Übungen werden gesucht…</string>
+    <string name="workout_text_preview">Analysieren</string>
+    <string name="workout_text_retry">Erneut versuchen</string>
+    <string name="workout_text_review">Training prüfen</string>
+    <string name="workout_text_date">Datum (JJJJ-MM-TT)</string>
+    <string name="workout_text_custom">Eigene zeitbasierte Aktivität · Kalorienschätzung nutzt einen allgemeinen Aktivitätswert</string>
+    <string name="workout_text_minutes">Minuten</string>
+    <string name="workout_text_reps">Wdh.</string>
+    <string name="workout_text_remove">Übung entfernen</string>
+    <string name="workout_text_calories_note">Kalorien sind Schätzungen. Verwende „Berechnen“ im Tagebuch, nachdem du dein Training hinzugefügt hast.</string>
+    <string name="workout_text_edit">Beschreibung bearbeiten</string>
+    <string name="workout_text_adding">Wird hinzugefügt…</string>
+    <string name="workout_text_add">Zum Tagebuch hinzufügen</string>
+    <string name="workout_text_menu">Text</string>
+    <string name="workout_text_set_weight">Satz %1$d · %2$s</string>
+    <string name="workout_text_estimate">Geschätzter Verbrauch: %1$d kcal</string>
+    <string name="workout_text_effort">Anstrengung (moderat, wenn nicht angegeben)</string>
+    <string name="workout_text_light">Hell</string>
+    <string name="workout_text_moderate">Moderat</string>
+    <string name="workout_text_vigorous">Intensiv</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Neu beginnen</string>
+    <string name="workout_clarify_title">Eine kurze Frage</string>
+    <string name="workout_clarify_hint">Tippe auf eine Übung, um sie auszuwählen, oder gib deine Antwort ein.</string>
+    <string name="workout_clarify_answer">Deine Antwort</string>
+    <string name="workout_clarify_voice">Sprachantwort</string>
+    <string name="workout_text_repeat_error">Mit deinen Antworten konnte nicht abgeschlossen werden. Ergänze die fehlende Angabe in deiner Beschreibung (z. B. Sätze und Wiederholungen) oder beginne von vorn.</string>
+</resources>

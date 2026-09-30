@@ -69,14 +69,14 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
                     if granted {
                         self?.configureSession()
                     } else {
-                        self?.showCameraUnavailable("Camera access is needed to scan barcodes.")
+                        self?.showCameraUnavailable(String(localized: "Camera access is needed to scan barcodes.", comment: "Barcode scanner camera error"))
                     }
                 }
             }
         case .denied, .restricted:
-            showCameraUnavailable("Camera access is needed to scan barcodes.")
+            showCameraUnavailable(String(localized: "Camera access is needed to scan barcodes.", comment: "Barcode scanner camera error"))
         @unknown default:
-            showCameraUnavailable("Camera is unavailable.")
+            showCameraUnavailable(String(localized: "Camera is unavailable.", comment: "Barcode scanner camera error"))
         }
     }
 
@@ -88,7 +88,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
               let input = try? AVCaptureDeviceInput(device: camera),
               session.canAddInput(input) else {
             session.commitConfiguration()
-            showCameraUnavailable("Camera is unavailable.")
+            showCameraUnavailable(String(localized: "Camera is unavailable.", comment: "Barcode scanner camera error"))
             return
         }
         session.addInput(input)
@@ -97,7 +97,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         let output = AVCaptureMetadataOutput()
         guard session.canAddOutput(output) else {
             session.commitConfiguration()
-            showCameraUnavailable("Barcode scanning is unavailable.")
+            showCameraUnavailable(String(localized: "Barcode scanning is unavailable.", comment: "Barcode scanner camera error"))
             return
         }
         session.addOutput(output)
@@ -116,7 +116,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         let availableTypes = supportedTypes.filter { output.availableMetadataObjectTypes.contains($0) }
         guard !availableTypes.isEmpty else {
             session.commitConfiguration()
-            showCameraUnavailable("Barcode scanning is unavailable.")
+            showCameraUnavailable(String(localized: "Barcode scanning is unavailable.", comment: "Barcode scanner camera error"))
             return
         }
         output.metadataObjectTypes = availableTypes
@@ -179,7 +179,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
 
     private func buildOverlay() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("Cancel", for: .normal)
+        closeButton.setTitle(String(localized: "Cancel", comment: "Barcode scanner close button"), for: .normal)
         closeButton.setTitleColor(.white, for: .normal)
         closeButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -195,7 +195,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         view.addSubview(scanBox)
 
         let label = UILabel()
-        label.text = "Point the camera at the barcode"
+        label.text = String(localized: "Point the camera at the barcode", comment: "Barcode scanner instruction")
         label.textColor = .white
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         label.textAlignment = .center
@@ -204,7 +204,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         view.addSubview(label)
 
         let hint = UILabel()
-        hint.text = "If the product is not found, scan the nutrition label instead."
+        hint.text = String(localized: "If the product is not found, scan the nutrition label instead.", comment: "Barcode scanner hint")
         hint.textColor = UIColor.white.withAlphaComponent(0.72)
         hint.font = .systemFont(ofSize: 14, weight: .medium)
         hint.textAlignment = .center

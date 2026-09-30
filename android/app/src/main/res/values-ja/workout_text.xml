@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">ワークアウトを説明</string>
+    <string name="workout_text_intro">行った内容を説明してください。ワークアウト日記に追加する前に詳細を確認してください。</string>
+    <string name="workout_text_description">ワークアウトの説明</string>
+    <string name="workout_text_example">縄跳び20分、その後40 kgでベンチプレス10回×3セット</string>
+    <string name="workout_text_voice">音声</string>
+    <string name="workout_text_preparing">種目を検索中…</string>
+    <string name="workout_text_preview">分析</string>
+    <string name="workout_text_retry">再試行</string>
+    <string name="workout_text_review">ワークアウトを確認</string>
+    <string name="workout_text_date">日付（YYYY-MM-DD）</string>
+    <string name="workout_text_custom">カスタムの時間制アクティビティ · カロリーは一般的な活動量で推定</string>
+    <string name="workout_text_minutes">分</string>
+    <string name="workout_text_reps">レップ</string>
+    <string name="workout_text_remove">種目を削除</string>
+    <string name="workout_text_calories_note">カロリーは推定値です。ワークアウトを追加した後、日記で「計算」を使用してください。</string>
+    <string name="workout_text_edit">説明を編集</string>
+    <string name="workout_text_adding">追加しています…</string>
+    <string name="workout_text_add">日記に追加</string>
+    <string name="workout_text_menu">テキスト</string>
+    <string name="workout_text_set_weight">セット%1$d · %2$s</string>
+    <string name="workout_text_estimate">推定消費：%1$d kcal</string>
+    <string name="workout_text_effort">強度（指定がない場合は中程度）</string>
+    <string name="workout_text_light">ライト</string>
+    <string name="workout_text_moderate">中程度</string>
+    <string name="workout_text_vigorous">高強度</string>
+    <string name="workout_text_rpe">RPE 1〜10</string>
+    <string name="workout_text_start_over">最初からやり直す</string>
+    <string name="workout_clarify_title">ひとつ質問です</string>
+    <string name="workout_clarify_hint">種目をタップして選ぶか、回答を入力してください。</string>
+    <string name="workout_clarify_answer">あなたの回答</string>
+    <string name="workout_clarify_voice">音声で返信</string>
+    <string name="workout_text_repeat_error">回答から完了できませんでした。不足している詳細（セット数やレップ数など）を説明に追加するか、最初からやり直してください。</string>
+</resources>

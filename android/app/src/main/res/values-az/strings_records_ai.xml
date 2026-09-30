@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Ayuvo Sİ-nin sağlamlıq qeydlərinizi necə emal etməsini istəyirsiniz?</string>
+    <string name="records_ai_mode_local">Lokal Sİ</string>
+    <string name="records_ai_mode_local_detail">Cihazdaxili modeldən istifadə edir. Qeyd mətni Sİ emalı üçün bu telefonda qalır.</string>
+    <string name="records_ai_mode_cloud">Bulud Sİ</string>
+    <string name="records_ai_mode_cloud_detail">Səhifə mətnini (mətnsiz səhifələr üçün yalnız şəkilləri) Sİ provayderinizə göndərir.</string>
+    <string name="records_ai_mode_ask">Lazım olanda məndən soruş</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo qeyddə Sİ-dən istifadə etməzdən əvvəl soruşur.</string>
+    <string name="records_ai_mode_off">Hələlik Sİ-ni keç</string>
+    <string name="records_ai_mode_off_detail">Təfərrüatlar Sİ olmadan tapılır. Bunu Parametrlərdə dəyişə bilərsiniz.</string>
+    <string name="records_ai_onboarding_note">Bunu istənilən vaxt Parametrlər › Sağlamlıq qeydləri bölməsində dəyişə bilərsiniz.</string>
+    <string name="records_ai_chooser_title">Sİ-nin qeydlərinizə necə kömək edəcəyini seçin</string>
+    <string name="records_ai_settings_title">Sİ emalı</string>
+    <string name="records_ai_local_unavailable">Cihazdaxili Sİ ayarlanmayıb — təfərrüatlar Sİ olmadan tapıldı.</string>
+    <string name="records_ai_set_up_local">Cihazdaxili Sİ-ni ayarla</string>
+    <string name="records_ai_no_cloud_provider">Onlayn Sİ-dən istifadə etmək üçün Sİ provayderi əlavə edin.</string>
+    <string name="records_ai_add_provider">Sİ provayderi əlavə et</string>
+    <string name="records_ai_cloud_provider_note">Onlayn Sİ %1$s istifadə edir.</string>
+    <string name="records_ai_consent_title">Daha çox təfərrüat tapmaq üçün Sİ-dən istifadə edilsin?</string>
+    <string name="records_ai_consent_body">Sİ qaydaların qaçırdığı təfərrüatları tapa bilər. Nəticələr orijinalla yoxlaya biləcəyiniz təkliflərdir.</string>
+    <string name="records_ai_consent_local">Bu cihazda</string>
+    <string name="records_ai_consent_cloud">Onlayn Sİ · %1$s</string>
+    <string name="records_ai_consent_not_now">İndi yox</string>
+    <string name="records_ai_consent_apply_all">Gözləyən bütün qeydlərə tətbiq et</string>
+    <string name="records_ai_consent_none_available">Hələ heç bir Sİ əlçatan deyil. Parametrlərdə cihazdaxili Sİ-ni ayarlayın və ya Sİ provayderi əlavə edin.</string>
+    <string name="records_ai_status_local">Bu cihazda emal edilib</string>
+    <string name="records_ai_status_cloud">Onlayn Sİ ilə emal edilib · %1$s</string>
+    <string name="records_ai_status_none">Sİ tərəfindən emal edilməyib</string>
+</resources>

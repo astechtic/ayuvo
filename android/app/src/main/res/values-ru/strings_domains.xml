@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Аналитика</string>
+    <string name="domain_nutrition">Питание</string>
+    <string name="domain_hydration">Гидратация</string>
+    <string name="domain_fasting">Голодание</string>
+    <string name="domain_body">Замеры тела</string>
+    <string name="domain_activity">Активность</string>
+    <string name="domain_heart">Сердце</string>
+    <string name="domain_sleep">Сон</string>
+    <string name="domain_vitals">Жизненные показатели</string>
+    <string name="domain_respiratory">Дыхание</string>
+    <string name="domain_cycle">Отслеживание цикла</string>
+    <string name="domain_mindfulness">Осознанность</string>
+    <string name="domain_mobility">Подвижность</string>
+    <string name="domain_hearing">Слух</string>
+    <string name="domain_symptoms">Симптомы</string>
+    <string name="domain_medications">Лекарства</string>
+    <string name="domain_records">Медкарта</string>
+    <string name="domain_other">Другие данные</string>
+    <string name="design_back">Назад</string>
+</resources>

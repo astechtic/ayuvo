@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Məşqçi sağlamlıq qeydlərinizi oxusun?</string>
+    <string name="records_coach_consent_body">Məşqçi sizə cavab vermək üçün oxuduğu qeydlərin məlumatlarını — test nəticələri, tarixlər, həkimlər və diaqnozlar — %1$s xidmətinə göndərir. Qeydlər bu cihazda saxlanılır.</string>
+    <string name="records_coach_consent_body_on_device">Məşqçi qeydləri bu cihazda oxuyur; onlayn heç nə göndərilmir.</string>
+    <string name="records_coach_consent_allow">İcazə Ver</string>
+    <string name="records_coach_consent_not_now">İndi yox</string>
+    <string name="records_coach_settings_title">Məşqçi</string>
+    <string name="records_coach_settings_toggle">Məşqçiyə sağlamlıq qeydlərimdən istifadə etməyə icazə ver</string>
+    <string name="records_coach_settings_subtitle">Məşqçi sualları cavablandırmaq üçün qeydlərinizdə axtarış edə və onları oxuya bilər. Bunu söndürmək girişi dərhal ləğv edir.</string>
+    <string name="records_coach_analyzing">Təhlil edilir:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">%d qeyd təhlil edilir</item>
+        <item quantity="other">%d qeyd təhlil edilir</item>
+    </plurals>
+    <string name="records_coach_change_records">Qeydləri dəyiş</string>
+    <string name="records_coach_used_records">İstifadə edilmiş qeydlər</string>
+    <string name="records_coach_picker_title">Bu söhbət üçün qeydlər</string>
+    <string name="records_coach_picker_search">Qeydlərdə axtar</string>
+    <string name="records_coach_picker_limit">%d qeydə qədər seçin.</string>
+    <string name="records_coach_picker_done">Hazır</string>
+    <string name="records_coach_picker_empty">Qeyd tapılmadı.</string>
+    <string name="records_coach_picker_selected">Seçilmiş</string>
+    <string name="records_coach_picker_recent">Son qeydlər</string>
+    <string name="records_coach_picker_results">Nəticələr</string>
+    <string name="records_coach_mode_title">Qeydlər onlayn göndərilsin?</string>
+    <string name="records_coach_mode_body">Məşqçi %1$s istifadə edir. Seçilmiş qeydlərin məlumatları onlayn göndərilsin?</string>
+    <string name="records_coach_mode_send">Göndər</string>
+    <string name="records_coach_mode_on_device">Cihazdaxili Məşqçidən istifadə et</string>
+    <string name="records_coach_ask_report">Bu hesabat haqqında soruş</string>
+    <string name="records_coach_compare_previous">Əvvəlki hesabatla müqayisə et</string>
+    <string name="records_coach_explain_trend">Bu trendi izah et</string>
+    <string name="records_coach_ask_coach">Məşqçidən soruş</string>
+    <string name="records_coach_prompt_report">Bu hesabatı izah et: nə diqqət çəkir və həkimimdən nə soruşmalıyam?</string>
+    <string name="records_coach_prompt_compare">Bu hesabatı əvvəlki ilə müqayisə et. Nə dəyişib?</string>
+    <string name="records_coach_prompt_trend">%1$s göstəricimin zamanla necə dəyişdiyini izah et.</string>
+    <string name="records_coach_chip_latest">Son qan analizlərimi təhlil et</string>
+    <string name="records_coach_chip_abnormal">Anormal dəyərləri tap</string>
+    <string name="records_coach_chip_compare">Əvvəlki hesabatla müqayisə et</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

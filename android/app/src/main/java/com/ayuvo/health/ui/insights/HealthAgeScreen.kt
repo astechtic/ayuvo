@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,7 +54,7 @@ fun HealthAgeScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         tag = "insights.healthAge",
         onBack = onBack,
         onInfo = { info = true },
-        disclaimers = listOfNotNull(cfg.disclaimers["health_age"], cfg.disclaimers["general"])
+        disclaimers = listOfNotNull(InsightsText.disclaimer(LocalContext.current, cfg, "health_age"), InsightsText.disclaimer(LocalContext.current, cfg, "general"))
     ) {
         if (!insightsGate(ui, "insights.healthAge")) return@InsightsScaffold
         val snap = ui.snapshot ?: return@InsightsScaffold
@@ -72,7 +73,7 @@ fun HealthAgeScreen(vm: InsightsViewModel, onBack: () -> Unit) {
                 ExplainSection(
                     state = ui.explanations[vm.explanationKey("health_age")] ?: ExplainUi.Idle,
                     availability = ui.ai,
-                    disclaimer = cfg.disclaimers["ai"],
+                    disclaimer = InsightsText.disclaimer(LocalContext.current, cfg, "ai"),
                     tag = "insights.healthAge",
                     onExplain = { vm.explain("health_age") }
                 )
@@ -80,7 +81,7 @@ fun HealthAgeScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         }
         item(key = "chart") { PaceChart(snap.pace) }
     }
-    if (info) InsightMethodologySheet(cfg, InsightMethodology.healthAge(cfg, ui.snapshot), onDismiss = { info = false })
+    if (info) InsightMethodologySheet(cfg, InsightMethodology.healthAge(LocalContext.current, cfg, ui.snapshot), onDismiss = { info = false })
 }
 
 @Composable
@@ -115,7 +116,7 @@ private fun HealthAgeHero(h: HealthAgeResult, pace: HealthAgePace, cfg: Insights
         "collecting" -> StateCard(
             Icons.Outlined.Insights,
             stringResource(R.string.insights_collecting_days, h.collecting?.have ?: 0, h.collecting?.need ?: cfg.healthAge.collectingDays),
-            cfg.disclaimers["health_age"].orEmpty(),
+            InsightsText.disclaimer(LocalContext.current, cfg, "health_age").orEmpty(),
             "insights.healthAge.collecting"
         )
         else -> SurfaceCard(modifier = Modifier.testTag("insights.healthAge.value"), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -141,9 +142,9 @@ private fun MarkersGroup(h: HealthAgeResult, cfg: InsightsConfig) {
             row {
                 Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        Text(spec?.label ?: m.id, fontSize = 15.sp)
+                        Text(spec?.let { InsightsText.markerLabel(LocalContext.current, it) } ?: m.id, fontSize = 15.sp)
                         Text(
-                            if (m.available) InsightsFormat.markerValue(m.id, m.basis, m.value, m.secondaryValue)
+                            if (m.available) InsightsFormat.markerValue(m.id, m.basis, m.value, m.secondaryValue, res = androidx.compose.ui.platform.LocalResources.current)
                             else stringResource(R.string.insights_marker_days, m.days, m.neededDays),
                             fontSize = 13.sp,
                             color = AyuvoColors.secondaryLabel()

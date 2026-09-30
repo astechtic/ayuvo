@@ -113,7 +113,7 @@ object PatternEngine {
                 id = pair.id, status = "ok", nExposed = ex.size, nUnexposed = un.size, needed = pc.minGroup,
                 meanExposed = roundTo(me, 1), meanUnexposed = roundTo(mu, 1), diff = roundTo(diff, 1),
                 t = roundTo(t, 2), d = roundTo(d, 2), surfaced = surfaced, text = fill(pair.template, params),
-                reviewCategory = pair.reviewCategory
+                reviewCategory = pair.reviewCategory, params = params
             )
         }
     }

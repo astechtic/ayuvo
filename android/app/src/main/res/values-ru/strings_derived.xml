@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">Расчётные показатели</string>
+    <string name="settings_derived_enabled">Расчётные показатели</string>
+    <string name="settings_derived_enabled_sub">Оценивать показатели, которые не записывают ваши устройства</string>
+    <string name="settings_derived_footer">Ayuvo оценивает показатели, которые не записывают ваши устройства, например пульс в покое по поминутным данным пульса. Если в Health Connect уже есть значение за тот же день, показывается оно. Оценки никогда не записываются в Health Connect.</string>
+    <string name="settings_derived_bmi_scheme">Категории ИМТ</string>
+    <string name="settings_derived_bmi_who">ВОЗ</string>
+    <string name="settings_derived_bmi_asian">Азиатские</string>
+    <string name="settings_derived_bmi_footer">Азиатские пороги (избыточный вес от 23, ожирение от 27,5) соответствуют рекомендациям экспертной консультации ВОЗ для азиатских популяций.</string>
+    <string name="settings_derived_native_wins">Если есть значение Health Connect, используется оно</string>
+    <string name="settings_derived_also_affects">Также влияет на: %1$s</string>
+    <string name="derived_estimated_badge">Оценка Ayuvo</string>
+    <string name="derived_how_calculated">Как это рассчитывается</string>
+    <string name="derived_source_label">Источник</string>
+    <string name="derived_metric_toggle">Рассчитывать этот показатель</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvo не рассчитывает этот показатель. Значения из Health Connect по-прежнему отображаются.</string>
+    <string name="derived_headline_highest">МАКСИМУМ</string>
+    <string name="derived_source_estimated">Оценка Ayuvo по вашим данным Health Connect</string>
+    <string name="derived_source_native">Из Health Connect (%1$s)</string>
+    <string name="derived_source_native_generic">Из Health Connect</string>
+    <string name="derived_source_mixed">Значения Health Connect там, где они записаны; в остальные дни — оценка Ayuvo</string>
+    <string name="derived_method">Метод</string>
+    <string name="derived_citation">Источник</string>
+    <string name="derived_confidence">Достоверность</string>
+    <string name="derived_confidence_high">Высокий</string>
+    <string name="derived_confidence_medium">Среднее</string>
+    <string name="derived_confidence_low">Низкий</string>
+    <string name="derived_confidence_native">Измерено вашим устройством</string>
+    <string name="derived_estimated_caption">%1$s · Оценка</string>
+    <string name="derived_master_off">Расчётные показатели выключены в настройках.</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo Training</string>
+    <string name="widget_workout_description">Start en bedien een training</string>
+    <string name="widget_workout_title">Training</string>
+    <string name="widget_workout_walk">Wandelen</string>
+    <string name="widget_workout_run">Hardlopen</string>
+    <string name="widget_workout_cycle">Fietsen</string>
+    <string name="widget_workout_hike">Hiken</string>
+    <string name="widget_workout_strength">Kracht</string>
+    <string name="widget_workout_strength_title">Krachtsessie</string>
+    <string name="widget_workout_status_recording">Registreren</string>
+    <string name="widget_workout_status_paused">Gepauzeerd</string>
+    <string name="widget_workout_status_saving">Bewaren…</string>
+    <string name="widget_workout_status_recovery">Herstel</string>
+    <string name="widget_workout_status_strength">Bezig</string>
+    <string name="widget_workout_waiting_gps">Wachten op gps</string>
+    <string name="widget_workout_distance">Afstand</string>
+    <string name="widget_workout_pace">Gem. tempo</string>
+    <string name="widget_workout_speed">Gem. snelheid</string>
+    <string name="widget_workout_pause">Pauzeer</string>
+    <string name="widget_workout_resume">Hervat</string>
+    <string name="widget_workout_lap">Ronde</string>
+    <string name="widget_workout_end">Stop</string>
+    <string name="widget_workout_skip">Overslaan</string>
+    <string name="widget_workout_finish">Voltooi</string>
+</resources>

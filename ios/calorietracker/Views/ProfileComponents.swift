@@ -196,7 +196,7 @@ struct WeightPickerSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                Text(LocalizedDisplayText.text("Weight"))
+                Text(String(localized: "Weight", comment: "Profile weight label"))
                     .font(.system(.title2, design: .rounded, weight: .bold))
 
                 Picker("Unit", selection: $weightUnitRaw) {
@@ -586,12 +586,17 @@ struct GoalSpeedSelectionView: View {
     @AppStorage("weightUnit") private var weightUnitRaw = "lbs"
 
     private var options: [(label: String, subtitle: String, value: Double)] {
-        let unit = goal == .lose ? "loss" : "gain"
         let useMetric = weightUnitRaw == "kg"
+        func subtitle(_ kilograms: Double) -> String {
+            let change = WeightDisplayFormatter.weeklyChange(kilograms: kilograms, useMetric: useMetric)
+            return goal == .lose
+                ? String(localized: "\(change) loss", comment: "Weekly weight change option subtitle, e.g. '0.5 kg loss'")
+                : String(localized: "\(change) gain", comment: "Weekly weight change option subtitle, e.g. '0.5 kg gain'")
+        }
         return [
-            ("Slow", "\(WeightDisplayFormatter.weeklyChange(kilograms: 0.25, useMetric: useMetric)) \(unit)", 0.25),
-            ("Recommended", "\(WeightDisplayFormatter.weeklyChange(kilograms: 0.5, useMetric: useMetric)) \(unit)", 0.5),
-            ("Fast", "\(WeightDisplayFormatter.weeklyChange(kilograms: 1.0, useMetric: useMetric)) \(unit)", 1.0),
+            (String(localized: "Slow", comment: "Weekly weight change pace option"), subtitle(0.25), 0.25),
+            (String(localized: "Recommended", comment: "Weekly weight change pace option"), subtitle(0.5), 0.5),
+            (String(localized: "Fast", comment: "Weekly weight change pace option"), subtitle(1.0), 1.0),
         ]
     }
 
@@ -647,28 +652,28 @@ struct MealTimeSettingsView: View {
         List {
             Section {
                 mealTimePicker(
-                    title: "Breakfast starts",
+                    title: String(localized: "Breakfast starts", comment: "Meal start time setting"),
                     icon: "sunrise.fill",
                     tint: SettingsTint.nutrition,
                     minutes: $breakfastStartMinutes,
                     allowedMinutes: validRange(0, lunchStartMinutes - 15)
                 )
                 mealTimePicker(
-                    title: "Lunch starts",
+                    title: String(localized: "Lunch starts", comment: "Meal start time setting"),
                     icon: "sun.max.fill",
                     tint: SettingsTint.nutrition,
                     minutes: $lunchStartMinutes,
                     allowedMinutes: validRange(breakfastStartMinutes + 15, dinnerStartMinutes - 15)
                 )
                 mealTimePicker(
-                    title: "Dinner starts",
+                    title: String(localized: "Dinner starts", comment: "Meal start time setting"),
                     icon: "moon.fill",
                     tint: SettingsTint.nutrition,
                     minutes: $dinnerStartMinutes,
                     allowedMinutes: validRange(lunchStartMinutes + 15, snackStartMinutes - 15)
                 )
                 mealTimePicker(
-                    title: "Late snack starts",
+                    title: String(localized: "Late snack starts", comment: "Meal start time setting"),
                     icon: "cup.and.saucer.fill",
                     tint: SettingsTint.nutrition,
                     minutes: $snackStartMinutes,
@@ -873,7 +878,7 @@ struct NutritionPickerSheet: View {
     /// When provided, a button labeled `resetLabel` appears in the sheet.
     var onResetToAuto: (() -> Void)? = nil
     /// Label for the reset button (defaults to the macro "Reset to Auto-balance" wording).
-    var resetLabel: String = "Reset to Auto-balance"
+    var resetLabel: String = String(localized: "Reset to Auto-balance", comment: "Goal picker sheet reset button")
     /// Optional live wheel-selection reporter, for hosts that need the current
     /// value before Save (e.g. to convert it when a unit switcher flips).
     var onValueChange: ((Int) -> Void)? = nil
@@ -894,7 +899,7 @@ struct NutritionPickerSheet: View {
         customValueDetail: ((Int) -> String?)? = nil,
         onSave: @escaping (Int) -> Void,
         onResetToAuto: (() -> Void)? = nil,
-        resetLabel: String = "Reset to Auto-balance",
+        resetLabel: String = String(localized: "Reset to Auto-balance", comment: "Goal picker sheet reset button"),
         onValueChange: ((Int) -> Void)? = nil
     ) {
         self.label = label
@@ -950,7 +955,7 @@ struct NutritionPickerSheet: View {
                                 onEditingChanged: { _ in },
                                 keyboardType: .numberPad,
                                 placeholder: "0",
-                                accessibilityLabel: "Custom \(label) goal"
+                                accessibilityLabel: String(localized: "Custom \(label) goal", comment: "Accessibility label for custom goal value field; argument is the nutrient name")
                             )
                             .frame(height: 28)
 
@@ -1159,7 +1164,7 @@ struct NotificationSettingsView: View {
                 // Meal Reminders
                 Section("Meal Reminders") {
                     NotificationTimeRow(
-                        label: "Breakfast",
+                        label: String(localized: "Breakfast", comment: "Notification reminder row"),
                         icon: "sunrise.fill",
                         tint: SettingsTint.nutrition,
                         isEnabled: $breakfastEnabled,
@@ -1171,7 +1176,7 @@ struct NotificationSettingsView: View {
                     .onChange(of: breakfastMinute) { _, _ in applyMealReminders() }
 
                     NotificationTimeRow(
-                        label: "Lunch",
+                        label: String(localized: "Lunch", comment: "Notification reminder row"),
                         icon: "sun.max.fill",
                         tint: SettingsTint.nutrition,
                         isEnabled: $lunchEnabled,
@@ -1183,7 +1188,7 @@ struct NotificationSettingsView: View {
                     .onChange(of: lunchMinute) { _, _ in applyMealReminders() }
 
                     NotificationTimeRow(
-                        label: "Dinner",
+                        label: String(localized: "Dinner", comment: "Notification reminder row"),
                         icon: "moon.fill",
                         tint: SettingsTint.nutrition,
                         isEnabled: $dinnerEnabled,
@@ -1199,7 +1204,7 @@ struct NotificationSettingsView: View {
                 if waterTrackingEnabled {
                     Section("Water") {
                         NotificationTimeRow(
-                            label: "Water Reminder",
+                            label: String(localized: "Water Reminder", comment: "Notification reminder row"),
                             icon: "drop.fill",
                             tint: SettingsTint.hydration,
                             isEnabled: $waterReminderEnabled,
@@ -1300,7 +1305,7 @@ struct NotificationSettingsView: View {
                 // Smart Notifications
                 Section {
                     NotificationTimeRow(
-                        label: "Streak Reminder",
+                        label: String(localized: "Streak Reminder", comment: "Notification reminder row"),
                         icon: "flame.fill",
                         tint: SettingsTint.activity,
                         isEnabled: $streakEnabled,
@@ -1309,7 +1314,7 @@ struct NotificationSettingsView: View {
                     )
 
                     NotificationTimeRow(
-                        label: "Daily Review",
+                        label: String(localized: "Daily Review", comment: "Notification reminder row"),
                         icon: "chart.bar.fill",
                         tint: SettingsTint.nutrition,
                         isEnabled: $summaryEnabled,
@@ -1318,7 +1323,7 @@ struct NotificationSettingsView: View {
                     )
 
                     NotificationTimeRow(
-                        label: "Log Weight",
+                        label: String(localized: "Log Weight", comment: "Notification reminder row"),
                         icon: "scalemass.fill",
                         tint: SettingsTint.body,
                         isEnabled: $weightLogEnabled,
@@ -1327,7 +1332,7 @@ struct NotificationSettingsView: View {
                     )
 
                     NotificationTimeRow(
-                        label: "Log Body Fat",
+                        label: String(localized: "Log Body Fat", comment: "Notification reminder row"),
                         icon: "percent",
                         tint: SettingsTint.body,
                         isEnabled: $bodyFatLogEnabled,

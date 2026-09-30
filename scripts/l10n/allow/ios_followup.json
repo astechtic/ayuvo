@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "dirs": [],
+  "contains": [
+    "let english = config.ai.statusLabels[",
+    "case .inBed: return \"In Bed\"",
+    "case .asleepUnspecified: return \"Asleep\"",
+    "case .awake: return \"Awake\"",
+    "case .light: return \"Core\"",
+    "case .deep: return \"Deep\"",
+    "case .outOfBed: return \"Out of Bed\"",
+    "default: \"\\(n.formatted()) \\(key.replacingOccurrences(of: \"_\", with: \" \"))\""
+  ]
+}

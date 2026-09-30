@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Mangé à</string>
+    <string name="intake_eaten_at_same_as_log">Identique à l\'heure d\'enregistrement</string>
+    <string name="intake_eaten_at_hint">Utilisé pour votre fenêtre alimentaire et l\'horaire des repas</string>
+    <string name="intake_eaten_at_reset">Utiliser l\'heure d\'enregistrement</string>
+    <string name="intake_adherence_title">30 derniers jours</string>
+    <string name="intake_adherence_none">Aucune dose prévue au cours des 30 derniers jours.</string>
+    <string name="intake_adherence_pct">%1$s %% des doses prises (%2$d sur %3$d)</string>
+    <string name="intake_adherence_adherent">Sur la bonne voie : 80 %% des doses prises ou plus</string>
+    <string name="intake_adherence_below">Moins de 80 %% des doses prises</string>
+    <string name="intake_adherence_on_time">À l\'heure (dans l\'heure)</string>
+    <string name="intake_adherence_median_delay">Retard habituel</string>
+    <string name="intake_adherence_streak">Série</string>
+    <string name="intake_adherence_missed_by_weekday">Doses manquées par jour de la semaine</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d doses</string>
+    <string name="intake_move_reminder">Déplacer le rappel à %1$s ?</string>
+    <string name="intake_move_reminder_body">Vous prenez généralement cette dose plus tard que son rappel. Déplacer le rappel ne modifie que son heure ; tout le reste est inchangé.</string>
+    <string name="intake_move_reminder_action">Déplacer le rappel</string>
+    <string name="intake_supplement_above_upper">%1$s représente en moyenne %2$s par jour sur son intervalle de prise, au-dessus de la limite supérieure d\'apport de %3$s. Suivez les indications de votre prescripteur.</string>
+    <string name="intake_lab_links_title">Résultats d\'analyses et nutrition</string>
+    <string name="intake_lab_links_footer">Basé sur votre journal alimentaire et vos compléments des 30 derniers jours et sur la plage de référence indiquée dans votre rapport. Ceci n\'est pas un avis médical.</string>
+    <string name="intake_lab_link_low_one">Votre %1$s était en dessous de la plage du rapport.</string>
+    <string name="intake_lab_link_low_many">Vos taux de %1$s étaient en dessous de la plage du rapport.</string>
+    <string name="intake_lab_link_and">%1$s et %2$s</string>
+    <string name="intake_lab_link_intake">Votre apport moyen en %1$s est de %2$d %% de la référence.</string>
+    <string name="intake_lab_link_intake_no_supplement">Votre apport moyen en %1$s est de %2$d %% de la référence, et aucun de vos compléments n\'en contient.</string>
+    <string name="intake_lab_link_doctor">Envisagez d\'en parler à votre médecin.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

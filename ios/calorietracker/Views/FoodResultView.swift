@@ -239,7 +239,7 @@ struct FoodResultView: View {
         if value == value.rounded() {
             return String(Int(value))
         }
-        return String(format: "%.1f", value)
+        return value.formatted(.number.precision(.fractionLength(1)).grouping(.never))
     }
 
     private var safeInverseScale: Double {
@@ -257,11 +257,11 @@ struct FoodResultView: View {
     }
 
     private func editText(_ value: Double?) -> String {
-        value.map { String(format: "%.1f", $0) } ?? ""
+        value.map { $0.formatted(.number.precision(.fractionLength(1)).grouping(.never)) } ?? ""
     }
 
     private func displayText(_ value: Double?) -> String {
-        value.map { String(format: "%.1f", $0) } ?? "—"
+        value.map { $0.formatted(.number.precision(.fractionLength(1))) } ?? "—"
     }
 
     private func updateBaseCalories(from text: String) {
@@ -417,7 +417,7 @@ struct FoodResultView: View {
 
                     Section {
                         ReviewNutritionValueRow(
-                            label: "Calories",
+                            label: String(localized: "Calories", comment: "Nutrient row label on the food review screen"),
                             displayValue: "\(scaledCalories)",
                             editValue: "\(scaledCalories)",
                             unit: "kcal",
@@ -425,24 +425,24 @@ struct FoodResultView: View {
                             onEdit: updateBaseCalories
                         )
                         ReviewNutritionValueRow(
-                            label: "Protein",
-                            displayValue: MacroValueFormatter.string(scaledProtein),
+                            label: String(localized: "Protein", comment: "Nutrient row label on the food review screen"),
+                            displayValue: MacroValueFormatter.display(scaledProtein),
                             editValue: MacroValueFormatter.string(scaledProtein),
                             unit: "g",
                             isUnlocked: nutritionUnlocked,
                             onEdit: { updateBaseDouble(from: $0) { editableProtein = $0 } }
                         )
                         ReviewNutritionValueRow(
-                            label: "Carbs",
-                            displayValue: MacroValueFormatter.string(scaledCarbs),
+                            label: String(localized: "Carbs", comment: "Nutrient row label on the food review screen"),
+                            displayValue: MacroValueFormatter.display(scaledCarbs),
                             editValue: MacroValueFormatter.string(scaledCarbs),
                             unit: "g",
                             isUnlocked: nutritionUnlocked,
                             onEdit: { updateBaseDouble(from: $0) { editableCarbs = $0 } }
                         )
                         ReviewNutritionValueRow(
-                            label: "Fat",
-                            displayValue: MacroValueFormatter.string(scaledFat),
+                            label: String(localized: "Fat", comment: "Nutrient row label on the food review screen"),
+                            displayValue: MacroValueFormatter.display(scaledFat),
                             editValue: MacroValueFormatter.string(scaledFat),
                             unit: "g",
                             isUnlocked: nutritionUnlocked,
@@ -484,29 +484,29 @@ struct FoodResultView: View {
 
                     Section {
                         DisclosureGroup("More Nutrition") {
-                            ReviewNutritionValueRow(label: "Sugar", displayValue: displayText(scaledSugar), editValue: editText(scaledSugar), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableSugar = $0 } })
-                            ReviewNutritionValueRow(label: "Added Sugar", displayValue: displayText(scaledAddedSugar), editValue: editText(scaledAddedSugar), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableAddedSugar = $0 } })
-                            ReviewNutritionValueRow(label: "Fiber", displayValue: displayText(scaledFiber), editValue: editText(scaledFiber), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableFiber = $0 } })
-                            ReviewNutritionValueRow(label: "Saturated Fat", displayValue: displayText(scaledSaturatedFat), editValue: editText(scaledSaturatedFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableSaturatedFat = $0 } })
-                            ReviewNutritionValueRow(label: "Mono Fat", displayValue: displayText(scaledMonounsaturatedFat), editValue: editText(scaledMonounsaturatedFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableMonounsaturatedFat = $0 } })
-                            ReviewNutritionValueRow(label: "Poly Fat", displayValue: displayText(scaledPolyunsaturatedFat), editValue: editText(scaledPolyunsaturatedFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editablePolyunsaturatedFat = $0 } })
-                            ReviewNutritionValueRow(label: "Cholesterol", displayValue: displayText(scaledCholesterol), editValue: editText(scaledCholesterol), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableCholesterol = $0 } })
-                            ReviewNutritionValueRow(label: "Caffeine", displayValue: displayText(scaledCaffeine), editValue: editText(scaledCaffeine), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableCaffeine = $0 } })
-                            ReviewNutritionValueRow(label: "Sodium", displayValue: displayText(scaledSodium), editValue: editText(scaledSodium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableSodium = $0 } })
-                            ReviewNutritionValueRow(label: "Potassium", displayValue: displayText(scaledPotassium), editValue: editText(scaledPotassium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editablePotassium = $0 } })
-                            ReviewNutritionValueRow(label: "Trans Fat", displayValue: displayText(scaledTransFat), editValue: editText(scaledTransFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableTransFat = $0 } })
-                            ReviewNutritionValueRow(label: "Calcium", displayValue: displayText(scaledCalcium), editValue: editText(scaledCalcium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableCalcium = $0 } })
-                            ReviewNutritionValueRow(label: "Iron", displayValue: displayText(scaledIron), editValue: editText(scaledIron), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableIron = $0 } })
-                            ReviewNutritionValueRow(label: "Magnesium", displayValue: displayText(scaledMagnesium), editValue: editText(scaledMagnesium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableMagnesium = $0 } })
-                            ReviewNutritionValueRow(label: "Zinc", displayValue: displayText(scaledZinc), editValue: editText(scaledZinc), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableZinc = $0 } })
-                            ReviewNutritionValueRow(label: "Vitamin A", displayValue: displayText(scaledVitaminA), editValue: editText(scaledVitaminA), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminA = $0 } })
-                            ReviewNutritionValueRow(label: "Vitamin C", displayValue: displayText(scaledVitaminC), editValue: editText(scaledVitaminC), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminC = $0 } })
-                            ReviewNutritionValueRow(label: "Vitamin D", displayValue: displayText(scaledVitaminD), editValue: editText(scaledVitaminD), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminD = $0 } })
-                            ReviewNutritionValueRow(label: "Vitamin B12", displayValue: displayText(scaledVitaminB12), editValue: editText(scaledVitaminB12), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminB12 = $0 } })
-                            ReviewNutritionValueRow(label: "Vitamin E", displayValue: displayText(scaledVitaminE), editValue: editText(scaledVitaminE), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminE = $0 } })
-                            ReviewNutritionValueRow(label: "Vitamin K", displayValue: displayText(scaledVitaminK), editValue: editText(scaledVitaminK), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminK = $0 } })
-                            ReviewNutritionValueRow(label: "Folate", displayValue: displayText(scaledFolate), editValue: editText(scaledFolate), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableFolate = $0 } })
-                            ReviewNutritionValueRow(label: "Omega-3", displayValue: displayText(scaledOmega3), editValue: editText(scaledOmega3), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableOmega3 = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Sugar", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledSugar), editValue: editText(scaledSugar), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableSugar = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Added Sugar", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledAddedSugar), editValue: editText(scaledAddedSugar), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableAddedSugar = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Fiber", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledFiber), editValue: editText(scaledFiber), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableFiber = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Saturated Fat", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledSaturatedFat), editValue: editText(scaledSaturatedFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableSaturatedFat = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Mono Fat", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledMonounsaturatedFat), editValue: editText(scaledMonounsaturatedFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableMonounsaturatedFat = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Poly Fat", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledPolyunsaturatedFat), editValue: editText(scaledPolyunsaturatedFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editablePolyunsaturatedFat = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Cholesterol", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledCholesterol), editValue: editText(scaledCholesterol), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableCholesterol = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Caffeine", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledCaffeine), editValue: editText(scaledCaffeine), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableCaffeine = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Sodium", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledSodium), editValue: editText(scaledSodium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableSodium = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Potassium", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledPotassium), editValue: editText(scaledPotassium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editablePotassium = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Trans Fat", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledTransFat), editValue: editText(scaledTransFat), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableTransFat = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Calcium", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledCalcium), editValue: editText(scaledCalcium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableCalcium = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Iron", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledIron), editValue: editText(scaledIron), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableIron = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Magnesium", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledMagnesium), editValue: editText(scaledMagnesium), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableMagnesium = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Zinc", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledZinc), editValue: editText(scaledZinc), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableZinc = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Vitamin A", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledVitaminA), editValue: editText(scaledVitaminA), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminA = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Vitamin C", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledVitaminC), editValue: editText(scaledVitaminC), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminC = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Vitamin D", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledVitaminD), editValue: editText(scaledVitaminD), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminD = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Vitamin B12", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledVitaminB12), editValue: editText(scaledVitaminB12), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminB12 = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Vitamin E", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledVitaminE), editValue: editText(scaledVitaminE), unit: "mg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminE = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Vitamin K", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledVitaminK), editValue: editText(scaledVitaminK), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableVitaminK = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Folate", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledFolate), editValue: editText(scaledFolate), unit: "mcg", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableFolate = $0 } })
+                            ReviewNutritionValueRow(label: String(localized: "Omega-3", comment: "Nutrient row label on the food review screen"), displayValue: displayText(scaledOmega3), editValue: editText(scaledOmega3), unit: "g", isUnlocked: nutritionUnlocked, dim: true, onEdit: { updateOptionalBaseDouble(from: $0) { editableOmega3 = $0 } })
                             ForEach(SupplementalNutrient.allCases) { nutrient in
                                 let value = scaledSupplementalNutrients[nutrient.rawValue]
                                 ReviewNutritionValueRow(
@@ -723,7 +723,7 @@ struct MealIngredientsSection: View {
                                     .font(.system(.body, design: .rounded, weight: .semibold))
                                     .foregroundStyle(.primary)
                                 Spacer()
-                                Text("\(MacroValueFormatter.string(ingredient.grams))g · \(ingredient.calories) kcal")
+                                Text("\(MacroValueFormatter.display(ingredient.grams))g · \(ingredient.calories) kcal")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 Image(systemName: "chevron.right")
@@ -759,7 +759,7 @@ struct MealIngredientsSection: View {
     }
 
     private func macro(_ label: String, _ value: Double, _ color: Color) -> some View {
-        Text("\(label) \(MacroValueFormatter.string(value))g")
+        Text("\(label) \(MacroValueFormatter.display(value))g")
             .font(.caption.weight(.semibold))
             .foregroundStyle(color)
     }
@@ -881,7 +881,7 @@ struct IngredientEditorSheet: View {
         })
     }
 
-    private func valueRow(_ label: String, text: Binding<String>, unit: String) -> some View {
+    private func valueRow(_ label: LocalizedStringKey, text: Binding<String>, unit: String) -> some View {
         HStack {
             Text(label)
             Spacer()
@@ -954,32 +954,32 @@ private struct WhatIfMealImpactSheet: View {
                 Section {
                     WhatIfImpactRow(
                         label: "Calories",
-                        added: "+\(entry.calories) kcal",
-                        after: "\(afterTotals.calories) / \(goals.calories) kcal",
+                        added: String(localized: "+\(entry.calories) kcal", comment: "What-if meal impact sheet"),
+                        after: String(localized: "\(afterTotals.calories) / \(goals.calories) kcal", comment: "What-if meal impact sheet"),
                         remaining: remainingCaloriesText,
                         isOver: afterTotals.calories > goals.calories,
                         tint: AppColors.calorie
                     )
                     WhatIfImpactRow(
                         label: "Protein",
-                        added: "+\(MacroValueFormatter.withUnit(entry.protein))",
-                        after: "\(MacroValueFormatter.string(afterTotals.protein)) / \(profile.effectiveProtein)g",
+                        added: String(localized: "+\(MacroValueFormatter.withUnit(entry.protein))", comment: "What-if meal impact sheet"),
+                        after: String(localized: "\(MacroValueFormatter.display(afterTotals.protein)) / \(profile.effectiveProtein)g", comment: "What-if meal impact sheet"),
                         remaining: remainingMacroText(afterTotals.protein, goal: Double(profile.effectiveProtein)),
                         isOver: false,
                         tint: AppColors.protein
                     )
                     WhatIfImpactRow(
                         label: "Carbs",
-                        added: "+\(MacroValueFormatter.withUnit(entry.carbs))",
-                        after: "\(MacroValueFormatter.string(afterTotals.carbs)) / \(profile.effectiveCarbs)g",
+                        added: String(localized: "+\(MacroValueFormatter.withUnit(entry.carbs))", comment: "What-if meal impact sheet"),
+                        after: String(localized: "\(MacroValueFormatter.display(afterTotals.carbs)) / \(profile.effectiveCarbs)g", comment: "What-if meal impact sheet"),
                         remaining: remainingMacroText(afterTotals.carbs, goal: Double(profile.effectiveCarbs)),
                         isOver: afterTotals.carbs > Double(profile.effectiveCarbs),
                         tint: AppColors.carbs
                     )
                     WhatIfImpactRow(
                         label: "Fat",
-                        added: "+\(MacroValueFormatter.withUnit(entry.fat))",
-                        after: "\(MacroValueFormatter.string(afterTotals.fat)) / \(profile.effectiveFat)g",
+                        added: String(localized: "+\(MacroValueFormatter.withUnit(entry.fat))", comment: "What-if meal impact sheet"),
+                        after: String(localized: "\(MacroValueFormatter.display(afterTotals.fat)) / \(profile.effectiveFat)g", comment: "What-if meal impact sheet"),
                         remaining: remainingMacroText(afterTotals.fat, goal: Double(profile.effectiveFat)),
                         isOver: afterTotals.fat > Double(profile.effectiveFat),
                         tint: AppColors.fat
@@ -1036,17 +1036,17 @@ private struct WhatIfMealImpactSheet: View {
     private var remainingCaloriesText: String {
         let remaining = goals.calories - afterTotals.calories
         if remaining >= 0 {
-            return "\(remaining) kcal left"
+            return String(localized: "\(remaining) kcal left", comment: "What-if meal impact sheet")
         }
-        return "\(abs(remaining)) kcal over"
+        return String(localized: "\(abs(remaining)) kcal over", comment: "What-if meal impact sheet")
     }
 
     private func remainingMacroText(_ value: Double, goal: Double) -> String {
         let remaining = goal - value
         if remaining >= 0 {
-            return "\(MacroValueFormatter.string(remaining))g left"
+            return String(localized: "\(MacroValueFormatter.display(remaining))g left", comment: "What-if meal impact sheet")
         }
-        return "\(MacroValueFormatter.string(abs(remaining)))g over"
+        return String(localized: "\(MacroValueFormatter.display(abs(remaining)))g over", comment: "What-if meal impact sheet")
     }
 
     @MainActor
@@ -1062,7 +1062,7 @@ private struct WhatIfMealImpactSheet: View {
                 profile: profile,
                 weightMetric: weightMetric
             )
-            suggestion = text.isEmpty ? "No suggestion returned. You can still review the numbers above before logging." : text
+            suggestion = text.isEmpty ? String(localized: "No suggestion returned. You can still review the numbers above before logging.", comment: "What-if sheet when the AI returns an empty suggestion") : text
         } catch {
             suggestionError = GeminiService.analysisErrorMessage(error)
         }
@@ -1072,7 +1072,7 @@ private struct WhatIfMealImpactSheet: View {
 }
 
 private struct WhatIfImpactRow: View {
-    let label: String
+    let label: LocalizedStringKey
     let added: String
     let after: String
     let remaining: String
@@ -1091,7 +1091,7 @@ private struct WhatIfImpactRow: View {
                 }
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(LocalizedDisplayText.text(label))
+                Text(label)
                     .font(.system(.body, design: .rounded, weight: .semibold))
                 Text(after)
                     .font(.caption)
@@ -1290,7 +1290,7 @@ struct EndEditingDecimalTextField: UIViewRepresentable {
                 return makeCalculatorAccessoryView()
             }
 
-            let doneItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneTapped))
+            let doneItem = UIBarButtonItem(title: String(localized: "Done", comment: "Keyboard toolbar button"), style: .plain, target: self, action: #selector(doneTapped))
             doneItem.tintColor = Self.calorieTint
 
             let toolbar = UIToolbar()
@@ -1320,13 +1320,13 @@ struct EndEditingDecimalTextField: UIViewRepresentable {
             glassSurface.translatesAutoresizingMaskIntoConstraints = false
             accessory.addSubview(glassSurface)
 
-            let clear = button("C", action: #selector(clearTapped), accessibilityLabel: "Clear")
-            let add = button("+", action: #selector(addTapped), accessibilityLabel: "Add")
-            let subtract = button("−", action: #selector(subtractTapped), accessibilityLabel: "Subtract")
-            let multiply = button("×", action: #selector(multiplyTapped), accessibilityLabel: "Multiply")
-            let divide = button("÷", action: #selector(divideTapped), accessibilityLabel: "Divide")
-            let equals = button("=", action: #selector(equalsTapped), accessibilityLabel: "Equals")
-            let done = button("Done", action: #selector(doneTapped), accessibilityLabel: "Done", emphasized: true)
+            let clear = button("C", action: #selector(clearTapped), accessibilityLabel: String(localized: "Clear", comment: "Calculator keyboard button accessibility label"))
+            let add = button("+", action: #selector(addTapped), accessibilityLabel: String(localized: "Add", comment: "Calculator keyboard button accessibility label (plus)"))
+            let subtract = button("−", action: #selector(subtractTapped), accessibilityLabel: String(localized: "Subtract", comment: "Calculator keyboard button accessibility label"))
+            let multiply = button("×", action: #selector(multiplyTapped), accessibilityLabel: String(localized: "Multiply", comment: "Calculator keyboard button accessibility label"))
+            let divide = button("÷", action: #selector(divideTapped), accessibilityLabel: String(localized: "Divide", comment: "Calculator keyboard button accessibility label"))
+            let equals = button("=", action: #selector(equalsTapped), accessibilityLabel: String(localized: "Equals", comment: "Calculator keyboard button accessibility label"))
+            let done = button(String(localized: "Done", comment: "Keyboard toolbar button"), action: #selector(doneTapped), accessibilityLabel: String(localized: "Done", comment: "Keyboard toolbar button"), emphasized: true)
             equalsButton = equals
 
             let stack = UIStackView(arrangedSubviews: [clear, add, subtract, multiply, divide, equals, done])
@@ -1462,7 +1462,7 @@ private struct ReviewNutritionValueRow: View {
 
     var body: some View {
         HStack {
-            Text(LocalizedDisplayText.text(label))
+            Text(label)
                 .foregroundStyle(dim ? .secondary : .primary)
             Spacer()
             if isUnlocked {
@@ -1512,7 +1512,7 @@ struct NutritionDisplayRow: View {
 
     var body: some View {
         HStack {
-            Text(LocalizedDisplayText.text(label))
+            Text(label)
             Spacer()
             Text(value)
                 .fontWeight(.medium)
@@ -1530,10 +1530,10 @@ struct OptionalNutritionDisplayRow: View {
 
     var body: some View {
         HStack {
-            Text(LocalizedDisplayText.text(label))
+            Text(label)
                 .foregroundStyle(.secondary)
             Spacer()
-            Text(value.map { String(format: "%.1f", $0) } ?? "—")
+            Text(value.map { $0.formatted(.number.precision(.fractionLength(1))) } ?? "—")
                 .fontWeight(.medium)
             Text(unit)
                 .foregroundStyle(.secondary)

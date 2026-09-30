@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Workout diary: + button accessibility label -->
+    <string name="ui_workout_add_workout">Add workout</string>
+    <!-- Workout add menu / exercise picker title -->
+    <string name="ui_workout_all_exercises">All exercises</string>
+    <!-- Exercise picker title for bookmarked exercises -->
+    <string name="ui_workout_saved_exercises">Saved exercises</string>
+    <!-- Workout add menu and copy sheet title -->
+    <string name="ui_workout_copy_from_day">Copy from day</string>
+    <!-- Workout add menu item / picker source segment: bookmarked exercises -->
+    <string name="ui_workout_saved">Saved</string>
+    <!-- Workout diary: notice dialog title -->
+    <string name="ui_workout_log_first_title">Log your workout first</string>
+    <!-- Workout diary summary metric -->
+    <string name="ui_workout_metric_sets">Sets</string>
+    <!-- Workout diary summary metric -->
+    <string name="ui_workout_metric_workouts">Workouts</string>
+    <!-- Workout diary summary metric / set row placeholder -->
+    <string name="ui_workout_metric_reps">Reps</string>
+    <!-- Workout diary summary metric: calories burned -->
+    <string name="ui_workout_metric_burn">Burn</string>
+    <!-- Calories value, e.g. 320 kcal -->
+    <string name="ui_workout_kcal_value">%1$s kcal</string>
+    <!-- Calories placeholder when not calculated -->
+    <string name="ui_workout_kcal_empty">-- kcal</string>
+    <!-- Accessibility label of the calorie burn button while calculating -->
+    <string name="ui_workout_calculating_burn">Calculating calorie burn</string>
+    <!-- Accessibility label of the calorie burn button -->
+    <string name="ui_workout_calculate_burn">Calculate calorie burn</string>
+    <!-- Calorie burn button title while calculating -->
+    <string name="ui_workout_calculating">Calculating…</string>
+    <!-- Calorie burn button title -->
+    <string name="ui_workout_calculate">Calculate</string>
+    <!-- Calorie burn button caption (all caps) -->
+    <string name="ui_workout_calorie_burn_caps">CALORIE BURN</string>
+    <!-- Workout diary empty state title -->
+    <string name="ui_workout_no_workouts">No workouts logged</string>
+    <!-- Workout diary empty state; %1$s is the split name -->
+    <string name="ui_workout_empty_hint">Use + to pick %1$s exercises for this day</string>
+    <!-- Swipe action: remove bookmark -->
+    <string name="ui_workout_unsave">Unsave</string>
+    <!-- Exercise muscle / body part / equipment when none is set -->
+    <string name="ui_workout_unspecified">Unspecified</string>
+    <!-- Accessibility label of the chevron on an exercise card -->
+    <string name="ui_workout_open_instructions">Open exercise instructions</string>
+    <!-- Exercise card: summary of the last session -->
+    <string name="ui_workout_last_time">Last time: %1$s</string>
+    <!-- Exercise card link to lift history -->
+    <string name="ui_workout_history">History</string>
+    <!-- Accessibility label -->
+    <string name="ui_workout_remove_set">Remove set</string>
+    <!-- Accessibility label -->
+    <string name="ui_workout_add_blank_set">Add blank set</string>
+    <!-- Exercise card label for cardio exercises -->
+    <string name="ui_workout_timed_activity">Timed activity</string>
+    <!-- Accessibility label: remove bookmark -->
+    <string name="ui_workout_unsave_exercise">Unsave exercise</string>
+    <!-- Accessibility label: bookmark exercise -->
+    <string name="ui_workout_save_exercise">Save exercise</string>
+    <!-- Accessibility label -->
+    <string name="ui_workout_remove_exercise">Remove exercise</string>
+    <!-- Accessibility label; %1$s is the exercise name -->
+    <string name="ui_workout_timer_start">Start timer for %1$s</string>
+    <!-- Accessibility label; exercise name, elapsed time -->
+    <string name="ui_workout_timer_options_running">Timer options for %1$s, %2$s, running</string>
+    <!-- Accessibility label; exercise name, elapsed time -->
+    <string name="ui_workout_timer_options_saved">Timer options for %1$s, %2$s, saved</string>
+    <!-- Accessibility label; exercise name, elapsed time -->
+    <string name="ui_workout_timer_options_paused">Timer options for %1$s, %2$s, paused</string>
+    <!-- Exercise timer menu -->
+    <string name="ui_workout_timer_stop_save">Stop &amp; save</string>
+    <!-- Exercise timer menu -->
+    <string name="ui_workout_timer_restart">Restart timer</string>
+    <!-- Exercise timer menu -->
+    <string name="ui_workout_timer_discard">Discard timer</string>
+    <!-- Exercise timer confirmation title -->
+    <string name="ui_workout_timer_restart_q">Restart timer?</string>
+    <!-- Exercise timer confirmation title -->
+    <string name="ui_workout_timer_discard_q">Discard timer?</string>
+    <!-- Exercise timer confirmation body; %1$s is the exercise name -->
+    <string name="ui_workout_timer_clear_body">This clears the recorded time for %1$s.</string>
+    <!-- Exercise timer confirmation button -->
+    <string name="ui_workout_restart">Restart</string>
+    <!-- Set row label, e.g. Set 1 -->
+    <string name="ui_workout_set_n">Set %1$d</string>
+    <!-- Workout diary date title -->
+    <string name="ui_workout_today">Today</string>
+    <!-- Workout diary date title -->
+    <string name="ui_workout_tomorrow">Tomorrow</string>
+    <!-- Workout diary date title -->
+    <string name="ui_workout_yesterday">Yesterday</string>
+    <!-- Exercise picker filter: primary muscle -->
+    <string name="ui_workout_filter_target">Target</string>
+    <!-- Exercise picker filter: secondary muscle -->
+    <string name="ui_workout_filter_secondary">Secondary</string>
+    <!-- Exercise picker filter -->
+    <string name="ui_workout_filter_equipment">Equipment</string>
+    <!-- Exercise picker filter -->
+    <string name="ui_workout_filter_body_part">Body Part</string>
+    <!-- Exercise picker filter with nothing selected; %1$d options -->
+    <string name="ui_workout_filter_all_count">All %1$d</string>
+    <!-- Exercise picker filter with nothing selected -->
+    <string name="ui_workout_filter_all">All</string>
+    <!-- Exercise picker: deselect exercise -->
+    <string name="ui_workout_remove_from_day">Remove from day</string>
+    <!-- Exercise picker: accessibility label to select exercise -->
+    <string name="ui_workout_add_to_day">Add to day</string>
+    <!-- Accessibility label; %1$s is the exercise name -->
+    <string name="ui_workout_preview">Preview %1$s</string>
+    <!-- Exercise preview button -->
+    <string name="ui_workout_add_exercise">Add exercise</string>
+    <!-- Exercise picker source segment: built-in exercise library -->
+    <string name="ui_workout_source_dataset">Dataset</string>
+    <!-- Exercise picker empty state -->
+    <string name="ui_workout_no_saved">No saved exercises</string>
+    <!-- Exercise picker empty state -->
+    <string name="ui_workout_no_matching">No matching exercises</string>
+    <!-- Exercise picker empty state hint -->
+    <string name="ui_workout_no_saved_hint">Bookmark exercises from the dataset to keep them here.</string>
+    <!-- Exercise picker empty state hint -->
+    <string name="ui_workout_no_matching_hint">Try clearing filters — or create your own exercise.</string>
+    <!-- Copy sheet subtitle; %1$s is a day title such as Today -->
+    <string name="ui_workout_copy_subtitle">Add a previous plan to %1$s</string>
+    <!-- Accessibility label -->
+    <string name="ui_workout_close_copy">Close copy picker</string>
+    <!-- Copy sheet section title -->
+    <string name="ui_workout_what_to_copy">What to copy</string>
+    <!-- Copy sheet option -->
+    <string name="ui_workout_without_details">Without details</string>
+    <!-- Copy sheet option -->
+    <string name="ui_workout_with_set_details">With set details</string>
+    <!-- Copy sheet option description -->
+    <string name="ui_workout_copy_with_details_hint">Copies sets, weights, reps, RPE, units, and timers.</string>
+    <!-- Copy sheet option description -->
+    <string name="ui_workout_copy_without_details_hint">Adds exercise names only, with blank sets.</string>
+    <!-- Copy sheet empty state -->
+    <string name="ui_workout_copy_none">No earlier workout days to copy.</string>
+    <!-- Workout diary day header count -->
+    <plurals name="ui_workout_count">
+        <item quantity="one">%d workout</item>
+        <item quantity="other">%d workouts</item>
+    </plurals>
+    <!-- Exercise card set count -->
+    <plurals name="ui_workout_set_count">
+        <item quantity="one">%d set</item>
+        <item quantity="other">%d sets</item>
+    </plurals>
+    <!-- Exercise picker header count -->
+    <plurals name="ui_workout_exercise_count">
+        <item quantity="one">%d exercise</item>
+        <item quantity="other">%d exercises</item>
+    </plurals>
+    <!-- Custom exercise editor: delete confirmation title -->
+    <string name="ui_exercise_delete_title">Delete this custom exercise?</string>
+    <!-- Custom exercise editor: delete confirmation body -->
+    <string name="ui_exercise_delete_body">This removes the exercise from your library. Logged workouts keep their history.</string>
+    <!-- Custom exercise editor title when editing -->
+    <string name="ui_exercise_edit">Edit exercise</string>
+    <!-- Custom exercise editor photo placeholder -->
+    <string name="ui_exercise_add_photo">Add photo (optional)</string>
+    <!-- Button / accessibility label removing a photo -->
+    <string name="ui_remove_photo">Remove photo</string>
+    <!-- Custom exercise editor field -->
+    <string name="ui_exercise_body_part">Body part</string>
+    <!-- Custom exercise editor field -->
+    <string name="ui_exercise_primary_muscles">Primary muscles</string>
+    <!-- Custom exercise editor field -->
+    <string name="ui_exercise_secondary_muscles">Secondary muscles</string>
+    <!-- Custom exercise editor button -->
+    <string name="ui_exercise_delete">Delete exercise</string>
+    <!-- Workouts tab toggle accessibility label -->
+    <string name="ui_workout_show_library">Show exercise library</string>
+    <!-- Workouts tab toggle accessibility label -->
+    <string name="ui_workout_show_log">Show workout log</string>
+    <!-- Exercise library filter: workout split group -->
+    <string name="ui_workout_filter_split">Split</string>
+    <!-- Exercise lift history sheet empty state -->
+    <string name="ui_workout_no_history">No lift history yet</string>
+    <!-- Exercise lift history day header for the selected diary day -->
+    <string name="ui_workout_selected_day">Selected day</string>
+    <!-- Strength session times followed by its length in minutes -->
+    <string name="ui_gps_session_duration">%1$s · %2$d min</string>
+    <!-- Accessibility label: subtract one minute -->
+    <string name="ui_minus_one_min">−1 min</string>
+    <!-- Accessibility label: add one minute -->
+    <string name="ui_plus_one_min">+1 min</string>
+    <!-- Workout from text: error -->
+    <string name="ui_workout_text_prepare_error">Could not prepare the workout. Try again.</string>
+    <!-- Workout from text: error -->
+    <string name="ui_workout_text_save_error">Could not save the workout. Try again.</string>
+    <!-- Workout diary notice -->
+    <string name="ui_workout_burn_needs_work">Stop and save an exercise timer, or enter reps for at least one set, before calculating workout calories.</string>
+    <!-- Strength session notice -->
+    <string name="ui_workout_finish_needs_work">Log at least one set with reps (or save an exercise timer), then tap Finish.</string>
+    <!-- How we calculate Recovery: weights table row -->
+    <string name="ui_insights_training_load">Training load</string>
+    <!-- Training load thresholds (high / very high) -->
+    <string name="ui_insights_load_points">%1$s / %2$s points</string>
+    <!-- Your inputs: last night value and personal baseline -->
+    <string name="ui_insights_value_baseline">%1$s · baseline %2$s</string>
+    <!-- Your inputs: value, baseline, daily value used as fallback -->
+    <string name="ui_insights_value_baseline_daily">%1$s · baseline %2$s · daily value</string>
+    <!-- Your inputs: missing metric -->
+    <string name="ui_insights_no_reading">No reading last night</string>
+    <!-- Your inputs: baseline still being learned -->
+    <string name="ui_insights_learning_nights">Learning (%1$d/%2$d nights)</string>
+    <!-- Your inputs: training load row -->
+    <string name="ui_insights_yesterday_training">Yesterday\'s training</string>
+    <!-- Health Age weights: weight and cap in years -->
+    <string name="ui_insights_weight_cap">%1$s · ±%2$s y</string>
+    <!-- Health Age input: value and contribution in years -->
+    <string name="ui_insights_value_years">%1$s · %2$s y</string>
+    <!-- Health Age input -->
+    <string name="ui_insights_actual_age">Actual age</string>
+    <!-- Health Age input when no birthday is set -->
+    <string name="ui_insights_birthday_missing">Birthday missing</string>
+    <!-- Health Age input: marker lacks data -->
+    <string name="ui_insights_not_enough_days">Not enough data (%1$d/%2$d days)</string>
+    <!-- Daily Review input: area not logged -->
+    <string name="ui_insights_not_logged">Not logged</string>
+    <!-- Patterns method: analysis window -->
+    <string name="ui_insights_window">Window</string>
+    <!-- Patterns method: minimum days per group -->
+    <string name="ui_insights_each_group">Each group</string>
+    <!-- Patterns method: minimum days -->
+    <string name="ui_insights_at_least_days">≥ %1$d days</string>
+    <!-- Patterns method: statistical test name -->
+    <string name="ui_insights_welch_t">Welch t</string>
+    <!-- Patterns method: effect size name -->
+    <string name="ui_insights_cohens_d">Cohen\'s d</string>
+    <!-- Patterns input: days with vs without the factor -->
+    <string name="ui_insights_days_vs">%1$d vs %2$d days</string>
+    <!-- Baselines method: window in days and minimum readings -->
+    <string name="ui_insights_window_readings">%1$d d · ≥ %2$d readings</string>
+    <!-- Baselines input while learning -->
+    <string name="ui_insights_readings_of">%1$d/%2$d readings</string>
+    <!-- Health Age marker value -->
+    <string name="ui_insights_marker_steps">%1$s steps/day</string>
+    <!-- Health Age marker value -->
+    <string name="ui_insights_marker_workouts">%1$s min/week</string>
+    <!-- Health Age marker value -->
+    <string name="ui_insights_marker_bmi">BMI %1$s</string>
+    <!-- Health Age marker value, e.g. 18.5% body fat -->
+    <string name="ui_insights_marker_body_fat">%1$s%% body fat</string>
+    <!-- Health Age sleep marker: duration and variability -->
+    <string name="ui_insights_marker_sleep_sd">%1$s · ±%2$s min</string>
+    <!-- Patterns method window length -->
+    <plurals name="ui_insights_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <!-- Baselines input count -->
+    <plurals name="ui_insights_readings">
+        <item quantity="one">%d reading</item>
+        <item quantity="other">%d readings</item>
+    </plurals>
+    <!-- Food photo review sheet title -->
+    <string name="ui_meal_photos">Meal Photos</string>
+    <!-- Food photo review: photo count out of the maximum -->
+    <string name="ui_photos_of_max">%1$d of %2$d photos</string>
+    <!-- Food photo review: add from library -->
+    <string name="ui_add_photos">Add Photos</string>
+    <!-- Food photo review: take one more photo -->
+    <string name="ui_add_photo">Add Photo</string>
+    <!-- Food photo review: note section header -->
+    <string name="ui_food_note_header">Note for food analysis (optional)</string>
+    <!-- Food photo review: note placeholder -->
+    <string name="ui_food_note_placeholder">e.g. chicken is 180g, rice is 220g, use half the sauce</string>
+    <!-- Edit food sheet section header -->
+    <string name="ui_actions">Actions</string>
+    <!-- Edit food sheet action -->
+    <string name="ui_remove_from_favorites">Remove from Favorites</string>
+    <!-- Edit food sheet action -->
+    <string name="ui_save_to_favorites">Save to Favorites</string>
+    <!-- Edit food sheet action -->
+    <string name="ui_delete_food_log">Delete Food Log</string>
+    <!-- Delete confirmation title -->
+    <string name="ui_delete_food_log_q">Delete Food Log?</string>
+    <!-- Delete confirmation title -->
+    <string name="ui_delete_water_log_q">Delete Water Log?</string>
+    <!-- Delete confirmation title -->
+    <string name="ui_delete_fasting_log_q">Delete Fasting Log?</string>
+    <!-- Delete confirmation body -->
+    <string name="ui_delete_food_body">This removes the food from your diary. Saved favorites are kept.</string>
+    <!-- Delete confirmation body -->
+    <string name="ui_delete_water_body">This removes the water entry from your diary.</string>
+    <!-- Delete confirmation body -->
+    <string name="ui_delete_fasting_body">This removes the completed fast from your diary.</string>
+    <!-- What-if impact: calories added -->
+    <string name="ui_kcal_added">+%1$d kcal</string>
+    <!-- What-if impact: total of goal -->
+    <string name="ui_kcal_of_goal">%1$d / %2$d kcal</string>
+    <!-- Calories amount -->
+    <string name="ui_kcal_amount">%1$d kcal</string>
+    <!-- Progress ring status when no goal is set -->
+    <string name="ui_no_goal">No goal</string>
+    <!-- Progress ring status -->
+    <string name="ui_goal_reached">Goal reached</string>
+    <!-- Progress ring status: amount above goal, e.g. 120 over -->
+    <string name="ui_amount_over">%1$s over</string>
+    <!-- Copy food sheet footnote; %1$s is the target day -->
+    <string name="ui_copy_foods_note">Foods will be copied to %1$s. Original entries stay unchanged.</string>
+    <!-- Meal ingredient row: grams and calories -->
+    <string name="ui_ingredient_grams_kcal">%1$sg · %2$d kcal</string>
+    <!-- Adaptive goals alert message; AI reason may follow -->
+    <string name="ui_goals_updated_latest">Updated to %1$d kcal from your latest data.</string>
+    <!-- Recalculate goals alert message; AI reason may follow -->
+    <string name="ui_goals_updated">Updated to %1$d kcal.</string>
+    <!-- Recalculate goals failure alert title -->
+    <string name="ui_goals_recalc_failed_title">Couldn\'t Recalculate</string>
+    <!-- Recalculate goals failure; %1$s is the error -->
+    <string name="ui_goals_recalc_failed_message">Ayuvo couldn\'t reach your AI provider, so your goals are unchanged. Check your AI provider and API key in Settings, then try again. (%1$s)</string>
+    <!-- Fallback error detail when the AI provider gave no message -->
+    <string name="ui_no_response">no response</string>
+    <!-- Calculation methods: link opening the cited source -->
+    <string name="ui_open_source_link">Open source ↗</string>
+    <!-- Records: accessibility label of the view mode menu -->
+    <string name="ui_records_view_settings">View settings</string>
+    <!-- Body measurement history: estimated body fat, e.g. BF 18% -->
+    <string name="ui_body_fat_short">BF %1$s</string>
+    <!-- Body measurements screen intro -->
+    <string name="ui_body_measurements_intro" formatted="false">Optional. Ayuvo turns these into waist-to-hip, waist-to-height, body-fat %, and frame size, and reads them when it recalculates your goals and in Coach.</string>
+    <!-- Camera: accessibility label of flash button -->
+    <string name="ui_flash_on">Flash on</string>
+    <!-- Camera: accessibility label of flash button -->
+    <string name="ui_flash_auto">Flash auto</string>
+    <!-- Camera: accessibility label of flash button -->
+    <string name="ui_flash_off">Flash off</string>
+    <!-- Set row placeholder: rate of perceived exertion -->
+    <string name="ui_workout_rpe">RPE</string>
+    <!-- GPS workout summary split row, e.g. km 3 -->
+    <string name="ui_gps_split_km">km %1$d</string>
+</resources>

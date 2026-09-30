@@ -10,6 +10,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 sealed class AndroidUpdateState {
     object Idle : AndroidUpdateState()
@@ -30,7 +32,7 @@ object AndroidUpdateChecker {
             .versionName
             ?.substringBefore("-")
             ?.ifBlank { null }
-            ?: "Unknown"
+            ?: context.getString(R.string.core_update_version_unknown)
 
     suspend fun check(context: Context, current: String): AndroidUpdateState {
         if (context.packageName != RELEASE_PACKAGE_NAME) {
@@ -65,7 +67,7 @@ object AndroidUpdateChecker {
 
     private fun AppUpdateInfo.playVersionLabel(): String {
         val versionCode = availableVersionCode()
-        return if (versionCode > 0) "build $versionCode" else "Google Play"
+        return if (versionCode > 0) AppText.orEnglish("build $versionCode", R.string.core_update_build, versionCode) else "Google Play"
     }
 
     private suspend fun <T> Task<T>.awaitTask(): T =

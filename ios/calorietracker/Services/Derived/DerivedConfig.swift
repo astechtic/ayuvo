@@ -119,6 +119,21 @@ nonisolated struct DerivedConfig: Decodable, Sendable {
         }
     }
 
+    /// Translated disclaimer for display.
+    var displayDisclaimer: String { ContractText.text("derived.disclaimer", disclaimer) }
+
+    /// Translated band label `labels[name][index]` for display; engines keep the English list.
+    func displayLabel(_ name: String, _ index: Int) -> String? {
+        guard let list = labels[name], list.indices.contains(index) else { return nil }
+        return ContractText.text("derived.labels.\(name).\(index)", list[index])
+    }
+
+    /// Translated form of an English band label produced by an engine (looked up by its position in `labels[name]`).
+    func displayLabel(_ name: String, english: String) -> String {
+        guard let index = labels[name]?.firstIndex(of: english) else { return english }
+        return displayLabel(name, index) ?? english
+    }
+
     // MARK: Loading
 
     /// The bundled config. Missing or malformed resources are a build error, so this traps loudly in development.

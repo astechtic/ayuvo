@@ -1,5 +1,8 @@
 package com.ayuvo.health.data
 
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
+
 /**
  * Raw record as stored in exercises.json (shared/exercises, generated from
  * hasaneyldrm/exercises-dataset by scripts/import_exercises_dataset.py).
@@ -45,7 +48,7 @@ data class ExerciseItem(
         get() = if (primaryMuscles.isEmpty()) "Unspecified" else primaryMuscles.joinToString(", ")
 
     val secondaryMusclesTitle: String
-        get() = if (secondaryMuscles.isEmpty()) "None" else secondaryMuscles.joinToString(", ")
+        get() = if (secondaryMuscles.isEmpty()) AppText.orEnglish("None", R.string.core_exercise_no_secondary_muscles) else secondaryMuscles.joinToString(", ")
 
     /** Lowercased haystack for free-text search (precomputed once). Instructions are excluded. */
     val searchableText: String by lazy(LazyThreadSafetyMode.PUBLICATION) {

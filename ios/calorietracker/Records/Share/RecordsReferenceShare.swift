@@ -4,6 +4,40 @@ import Foundation
 // text, redaction target detection and the share-plan warnings. Everything works on the same plain
 // store snapshot the Phase 4 functions use (`records`, `fields`, `observations`, `highlights`,
 // `pages`). Vectors: `share_summary.json`, `redaction.json`.
+
+/// The words of the §34 share summary. `english` is the reference text the vectors pin; the app passes
+/// `RecordsShareText.localized` so the summary a person shares reads in their language.
+nonisolated struct RecordsShareLabels: Sendable {
+    var dateLabels: [String: String]
+    var flagWords: [String: String]
+    var ref: String
+    var doctor: String
+    var patient: String
+    var dates: String
+    var results: String
+    var medications: String
+    var diagnoses: String
+    var recommendations: String
+    var notesHeader: String
+    var highlightsHeader: String
+    var footer: String
+
+    /// Same text as `RR.shareDateLabels`, `RR.coachFlagWord`, `RR.shareNotesHeader`, `RR.shareHighlightsHeader`
+    /// and `RR.shareFooter` (spelled out here so the default is usable from any isolation).
+    static let english = RecordsShareLabels(
+        dateLabels: [
+            "collection_date": "Collected", "report_date": "Reported", "visit_date": "Visit",
+            "prescription_date": "Prescribed", "admission_date": "Admitted", "discharge_date": "Discharged",
+            "follow_up_date": "Follow-up",
+        ],
+        flagWords: ["low": "low", "high": "high", "critical_low": "critical low", "critical_high": "critical high", "abnormal": "abnormal"],
+        ref: "ref", doctor: "Doctor", patient: "Patient", dates: "Dates",
+        results: "Results", medications: "Medications", diagnoses: "Diagnoses", recommendations: "Recommendations",
+        notesHeader: "Notes:", highlightsHeader: "AI highlights (verify against the original report):",
+        footer: "Shared from Ayuvo. Values were read from the original document and may contain mistakes."
+    )
+}
+
 extension RR {
     // MARK: - §34 constants
 
@@ -57,7 +91,7 @@ extension RR {
     }
 
     /// `_share_result_item`: `<name>: <value> <unit> (<flag word>, ref <range>)`.
-    static func shareResultItem(_ tr: RJ) -> String {
+    static func shareResultItem(_ tr: RJ, labels: RecordsShareLabels = .english) -> String {
         let name = collapseWS(tr["name"].string) ?? ""
         let rest = ["value", "unit"].compactMap { key -> String? in
             guard let raw = tr[key].string, let value = collapseWS(raw), !value.isEmpty else { return nil }
@@ -65,9 +99,9 @@ extension RR {
         }
         var text = name + (rest.isEmpty ? "" : ": " + rest.joined(separator: " "))
         var inner: [String] = []
-        if let word = coachFlagWord[tr["flag"].string ?? ""] { inner.append(word) }
+        if let word = labels.flagWords[tr["flag"].string ?? ""] { inner.append(word) }
         if let ref = tr["ref_text"].isNull ? nil : stripRefBrackets(tr["ref_text"].string), !ref.isEmpty {
-            inner.append("ref " + ref)
+            inner.append(labels.ref + " " + ref)
         }
         if !inner.isEmpty { text += " (" + inner.joined(separator: ", ") + ")" }
         return text
@@ -96,7 +130,8 @@ extension RR {
     }
 
     /// `share_summary_text(snapshot, plan, type_labels)` → `{text, record_ids}`.
-    static func shareSummary(_ snapshot: RJ, plan: RJ, typeLabels: [String: String]?) -> RJ {
+    static func shareSummary(_ snapshot: RJ, plan: RJ, typeLabels: [String: String]?,
+                             labels: RecordsShareLabels = .english) -> RJ {
         let fields = Set((plan["summary_fields"].array ?? []).compactMap(\.string))
         let records = planRecords(snapshot, plan)
         guard plan["include_summary"].truthy, !records.isEmpty else {
@@ -114,29 +149,29 @@ extension RR {
             }
             lines.append(head)
             if fields.contains("doctor"), let doctor = collapseWS(coachBestValue(rows, "doctor_name")), !doctor.isEmpty {
-                lines.append("Doctor: " + doctor)
+                lines.append(labels.doctor + ": " + doctor)
             }
             if fields.contains("patient_name"), let patient = collapseWS(coachBestValue(rows, "patient_name")), !patient.isEmpty {
-                lines.append("Patient: " + patient)
+                lines.append(labels.patient + ": " + patient)
             }
             if fields.contains("dates") {
                 let parts = shareDateLabels.compactMap { entry -> String? in
                     guard let value = collapseWS(coachBestValue(rows, entry.key)), !value.isEmpty else { return nil }
-                    return entry.label + " " + value
+                    return (labels.dateLabels[entry.key] ?? entry.label) + " " + value
                 }
-                if !parts.isEmpty { lines.append("Dates: " + parts.joined(separator: " · ")) }
+                if !parts.isEmpty { lines.append(labels.dates + ": " + parts.joined(separator: " · ")) }
             }
             if fields.contains("test_results") {
                 let items = recordTestResults(snapshot, id).enumeratedArray().stableSorted { a, b in
                     let ga = flagGroup(a.element["flag"].string), gb = flagGroup(b.element["flag"].string)
                     if ga != gb { return ga < gb }
                     return a.offset < b.offset
-                }.map { shareResultItem($0.element) }.filter { !$0.isEmpty }
-                if !items.isEmpty { lines += ["Results:"] + items.map { "- " + $0 } }
+                }.map { shareResultItem($0.element, labels: labels) }.filter { !$0.isEmpty }
+                if !items.isEmpty { lines += [labels.results + ":"] + items.map { "- " + $0 } }
             }
-            for (label, key, section) in [("Medications", "medication", "medications"),
-                                          ("Diagnoses", "diagnosis", "diagnoses"),
-                                          ("Recommendations", "recommendation", "recommendations")] {
+            for (label, key, section) in [(labels.medications, "medication", "medications"),
+                                          (labels.diagnoses, "diagnosis", "diagnoses"),
+                                          (labels.recommendations, "recommendation", "recommendations")] {
                 guard fields.contains(section) else { continue }
                 let items = rows.filter { $0["field_key"].string == key }.compactMap { row -> String? in
                     let text = key == "medication" ? shareMedicationItem(row) : (collapseWS(row["value_text"].string) ?? "")
@@ -146,7 +181,7 @@ extension RR {
             }
             if plan["include_notes"].truthy {
                 let notes = shareNotesLines(record["notes"].string)
-                if !notes.isEmpty { lines += [shareNotesHeader] + notes }
+                if !notes.isEmpty { lines += [labels.notesHeader] + notes }
             }
             if plan["include_highlights"].truthy {
                 let items = highlights
@@ -158,12 +193,12 @@ extension RR {
                     }
                     .compactMap { collapseWS($0["text"].string) }
                     .filter { !$0.isEmpty }
-                if !items.isEmpty { lines += [shareHighlightsHeader] + items.map { "- " + $0 } }
+                if !items.isEmpty { lines += [labels.highlightsHeader] + items.map { "- " + $0 } }
             }
             blocks.append(lines.joined(separator: "\n"))
         }
         return .obj([
-            "text": .str(blocks.joined(separator: shareSeparator) + "\n" + shareFooter),
+            "text": .str(blocks.joined(separator: shareSeparator) + "\n" + labels.footer),
             "record_ids": .arr(records.map { $0["id"] }),
         ])
     }

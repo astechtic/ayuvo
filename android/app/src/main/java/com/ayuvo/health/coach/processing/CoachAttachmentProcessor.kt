@@ -19,6 +19,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Turns a file the user attached into the text Coach will send (docs/coach.md §6).
@@ -105,7 +107,7 @@ class CoachAttachmentProcessor(
         return Outcome(
             attachment = ChatAttachment(
                 kind = AttachmentKind.NOTE,
-                filename = "Note",
+                filename = AppText.orEnglish("Note", R.string.core_coach_note_filename),
                 mimeType = "text/plain",
                 bytes = raw.toByteArray().size.toLong(),
                 charCount = intOf(excerpt, "chars"),

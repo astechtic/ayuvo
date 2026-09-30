@@ -1,5 +1,7 @@
 package com.ayuvo.health.ui.insights
 
+import com.ayuvo.health.insights.InsightsConfig
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -124,8 +126,10 @@ private fun RecoveryCard(c: SummaryInsights.Cards, onClick: () -> Unit) {
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(stringResource(R.string.insights_recovery), fontSize = 13.sp, color = AyuvoColors.secondaryLabel())
-                Text(r.labelText.orEmpty(), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = color)
-                c.topSignals.forEach { Text(it, fontSize = 13.sp, color = AyuvoColors.secondaryLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                Text(InsightsText.bandLabel(LocalContext.current, r.label, r.labelText), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = color)
+                val context = LocalContext.current
+                val signals = (r.positives + r.negatives).sortedByDescending { abs(it.impact) }.take(2)
+                signals.forEach { Text(InsightsText.signal(context, InsightsConfig.active, r, it), fontSize = 13.sp, color = AyuvoColors.secondaryLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
             }
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = AyuvoColors.tertiaryLabel())
         }

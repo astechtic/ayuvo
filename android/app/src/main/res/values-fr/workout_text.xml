@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Décrire l\'entraînement</string>
+    <string name="workout_text_intro">Décrivez ce que vous avez fait. Vérifiez les détails avant de les ajouter à votre journal d\'entraînement.</string>
+    <string name="workout_text_description">Description de l\'entraînement</string>
+    <string name="workout_text_example">20 minutes de corde à sauter, puis 3 séries de 10 développés couchés à 40 kg</string>
+    <string name="workout_text_voice">Voix</string>
+    <string name="workout_text_preparing">Recherche des exercices…</string>
+    <string name="workout_text_preview">Analyser</string>
+    <string name="workout_text_retry">Réessayer</string>
+    <string name="workout_text_review">Vérifier l\'entraînement</string>
+    <string name="workout_text_date">Date (AAAA-MM-JJ)</string>
+    <string name="workout_text_custom">Activité chronométrée personnalisée · l\'estimation des calories utilise un taux d\'activité général</string>
+    <string name="workout_text_minutes">Minutes</string>
+    <string name="workout_text_reps">Répétitions</string>
+    <string name="workout_text_remove">Retirer l\'exercice</string>
+    <string name="workout_text_calories_note">Les calories sont des estimations. Utilisez Calculer dans le journal après avoir ajouté votre entraînement.</string>
+    <string name="workout_text_edit">Modifier la description</string>
+    <string name="workout_text_adding">Ajout…</string>
+    <string name="workout_text_add">Ajouter au journal</string>
+    <string name="workout_text_menu">Texte</string>
+    <string name="workout_text_set_weight">Série %1$d · %2$s</string>
+    <string name="workout_text_estimate">Dépense estimée : %1$d kcal</string>
+    <string name="workout_text_effort">Effort (modéré si non précisé)</string>
+    <string name="workout_text_light">Clair</string>
+    <string name="workout_text_moderate">Modérée</string>
+    <string name="workout_text_vigorous">Intense</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Recommencer</string>
+    <string name="workout_clarify_title">Une petite question</string>
+    <string name="workout_clarify_hint">Touchez un exercice pour le choisir, ou saisissez votre réponse.</string>
+    <string name="workout_clarify_answer">Votre réponse</string>
+    <string name="workout_clarify_voice">Réponse vocale</string>
+    <string name="workout_text_repeat_error">Impossible de terminer à partir de vos réponses. Ajoutez le détail manquant à votre description (par exemple séries et répétitions) ou recommencez.</string>
+</resources>

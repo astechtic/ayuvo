@@ -1,5 +1,7 @@
 package com.ayuvo.health.ui.components
 
+import com.ayuvo.health.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
@@ -71,10 +73,10 @@ fun MacroCard(
     val firstColor = gradientColors.firstOrNull() ?: AppColors.Calorie
     val goalValue = goal
     val statusText = when {
-        goal <= 0 -> "No goal"
-        current == goalValue -> "Goal reached"
-        current < goalValue -> "${MacroValueFormatter.string(goalValue - current)}$unit left"
-        else -> "${MacroValueFormatter.string(current - goalValue)}$unit over"
+        goal <= 0 -> stringResource(R.string.ui_no_goal)
+        current == goalValue -> stringResource(R.string.ui_goal_reached)
+        current < goalValue -> stringResource(R.string.home_kcal_left_format, MacroValueFormatter.string(goalValue - current) + unit)
+        else -> stringResource(R.string.ui_amount_over, MacroValueFormatter.string(current - goalValue) + unit)
     }
 
     Column(

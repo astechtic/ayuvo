@@ -120,14 +120,20 @@ nonisolated struct WorkoutWidgetState: Codable, Equatable, Sendable {
 
     var distanceText: String {
         guard let distanceM else { return "—" }
-        return useMetric ? String(format: "%.2f km", distanceM / 1000) : String(format: "%.2f mi", distanceM / 1609.344)
+        let value = (useMetric ? distanceM / 1000 : distanceM / 1609.344).formatted(.number.precision(.fractionLength(2)))
+        return useMetric
+            ? String(localized: "\(value) km", comment: "Workout widget distance in kilometres")
+            : String(localized: "\(value) mi", comment: "Workout widget distance in miles")
     }
 
     /// Pace for walk, run and hike; speed for cycling.
     var paceText: String {
         if sport == .cycle {
             guard let speedMps, speedMps.isFinite, speedMps >= 0 else { return "—" }
-            return useMetric ? String(format: "%.1f km/h", speedMps * 3.6) : String(format: "%.1f mph", speedMps * 2.236936)
+            let value = (useMetric ? speedMps * 3.6 : speedMps * 2.236936).formatted(.number.precision(.fractionLength(1)))
+            return useMetric
+                ? String(localized: "\(value) km/h", comment: "Workout widget speed in km per hour")
+                : String(localized: "\(value) mph", comment: "Workout widget speed in miles per hour")
         }
         guard let paceSecondsPerKm, paceSecondsPerKm.isFinite, paceSecondsPerKm > 0, paceSecondsPerKm < 3600 else { return "—" }
         return Self.duration(useMetric ? paceSecondsPerKm : paceSecondsPerKm * 1.609344) + (useMetric ? " /km" : " /mi")
@@ -194,7 +200,7 @@ struct StartWorkoutFromWidgetIntent: AppIntent {
     static var openAppWhenRun = true
     static var isDiscoverable = false
 
-    @Parameter(title: "Workout", default: .run)
+    @Parameter(title: LocalizedStringResource("Workout", comment: "Workout widget intent parameter: which workout to start"), default: .run)
     var sport: WorkoutWidgetSport
 
     init() {}

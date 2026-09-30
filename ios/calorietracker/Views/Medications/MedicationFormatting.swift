@@ -47,24 +47,24 @@ enum MedicationFormatting {
 
     private static func countedUnit(_ count: Int, _ unit: DoseUnit) -> String {
         switch unit {
-        case .tablet: count == 1 ? String(localized: "1 tablet") : String(localized: "\(count) tablets")
-        case .capsule: count == 1 ? String(localized: "1 capsule") : String(localized: "\(count) capsules")
-        case .drop: count == 1 ? String(localized: "1 drop") : String(localized: "\(count) drops")
-        case .puff: count == 1 ? String(localized: "1 puff") : String(localized: "\(count) puffs")
-        case .unit: count == 1 ? String(localized: "1 unit") : String(localized: "\(count) units")
-        case .sachet: count == 1 ? String(localized: "1 sachet") : String(localized: "\(count) sachets")
-        case .application: count == 1 ? String(localized: "1 application") : String(localized: "\(count) applications")
+        case .tablet: String(localized: "\(count) tablets", comment: "Medication dose amount with unit")
+        case .capsule: String(localized: "\(count) capsules", comment: "Medication dose amount with unit")
+        case .drop: String(localized: "\(count) drops", comment: "Medication dose amount with unit")
+        case .puff: String(localized: "\(count) puffs", comment: "Medication dose amount with unit")
+        case .unit: String(localized: "\(count) units", comment: "Medication dose amount with unit")
+        case .sachet: String(localized: "\(count) sachets", comment: "Medication dose amount with unit")
+        case .application: String(localized: "\(count) applications", comment: "Medication dose amount with unit")
         default: "\(count)"
         }
     }
 
     /// "1 medication" / "3 medications" (explicit variants; the string catalog can add plural rules per locale).
     static func medicationCount(_ count: Int) -> String {
-        count == 1 ? String(localized: "1 medication") : String(localized: "\(count) medications")
+        String(localized: "\(count) medications", comment: "Number of medications")
     }
 
     static func doseCount(_ count: Int) -> String {
-        count == 1 ? String(localized: "1 dose") : String(localized: "\(count) doses")
+        String(localized: "\(count) doses", comment: "Number of medication doses")
     }
 
     // MARK: Time and dates

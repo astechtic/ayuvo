@@ -457,7 +457,7 @@ internal fun CalcFormulaCard(
                 )
                 if (url != null) {
                     Text(
-                        "Open source ↗",
+                        stringResource(R.string.ui_open_source_link),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
                         color = AppColors.Calorie,

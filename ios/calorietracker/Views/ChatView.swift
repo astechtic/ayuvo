@@ -269,7 +269,7 @@ struct ChatView: View {
                         for item in items {
                             guard let data = try await item.loadTransferable(type: Data.self),
                                   let image = UIImage(data: data) else {
-                                await MainActor.run { errorMessage = "Could not load that photo." }
+                                await MainActor.run { errorMessage = String(localized: "Could not load that photo.", comment: "Coach chat photo attachment error") }
                                 continue
                             }
                             await MainActor.run {
@@ -279,7 +279,7 @@ struct ChatView: View {
                         }
                     } catch {
                         await MainActor.run {
-                            errorMessage = "Could not load that photo."
+                            errorMessage = String(localized: "Could not load that photo.", comment: "Coach chat photo attachment error")
                         }
                     }
                 }
@@ -709,8 +709,7 @@ struct ChatView: View {
                 )
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(images.count == 1 ? String(localized: "Image attached")
-                                        : String(localized: "\(images.count) images attached"))
+                Text(String(localized: "\(images.count) images attached", comment: "Coach composer: number of attached images"))
                     .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 Text("Send with your message")
                     .font(.system(.caption, design: .rounded))
@@ -961,9 +960,9 @@ struct ChatView: View {
 
     private var voiceHint: String {
         if voice.phase == .holding {
-            return voice.cancelArmed ? "Release to cancel" : "‹ slide to cancel"
+            return voice.cancelArmed ? String(localized: "Release to cancel", comment: "Coach hold-to-talk hint") : String(localized: "‹ slide to cancel", comment: "Coach hold-to-talk hint")
         }
-        return voice.liveText.isEmpty ? "Listening…" : voice.liveText
+        return voice.liveText.isEmpty ? String(localized: "Listening…", comment: "Coach hold-to-talk hint while recording") : voice.liveText
     }
 
     private var canSend: Bool {
@@ -1022,7 +1021,7 @@ struct ChatView: View {
             resizedJPEGData(from: $0, maxDimension: 700, compressionQuality: 0.68)
         }
         if !images.isEmpty, imagesForAI.count != images.count {
-            errorMessage = "Failed to process the image."
+            errorMessage = String(localized: "Failed to process the image.", comment: "Coach chat image attachment error")
             return
         }
 
@@ -1327,7 +1326,7 @@ struct ChatView: View {
 
     private func openCamera() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            errorMessage = "Camera is not available on this device."
+            errorMessage = String(localized: "Camera is not available on this device.", comment: "Coach chat camera error")
             return
         }
         showCamera = true

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo 训练</string>
+    <string name="widget_workout_description">开始和控制训练</string>
+    <string name="widget_workout_title">训练</string>
+    <string name="widget_workout_walk">步行</string>
+    <string name="widget_workout_run">跑步</string>
+    <string name="widget_workout_cycle">骑行</string>
+    <string name="widget_workout_hike">徒步</string>
+    <string name="widget_workout_strength">力量</string>
+    <string name="widget_workout_strength_title">力量训练</string>
+    <string name="widget_workout_status_recording">记录中</string>
+    <string name="widget_workout_status_paused">已暂停</string>
+    <string name="widget_workout_status_saving">正在保存…</string>
+    <string name="widget_workout_status_recovery">恢复</string>
+    <string name="widget_workout_status_strength">进行中</string>
+    <string name="widget_workout_waiting_gps">等待 GPS</string>
+    <string name="widget_workout_distance">距离</string>
+    <string name="widget_workout_pace">平均配速</string>
+    <string name="widget_workout_speed">平均速度</string>
+    <string name="widget_workout_pause">暂停</string>
+    <string name="widget_workout_resume">继续</string>
+    <string name="widget_workout_lap">计圈</string>
+    <string name="widget_workout_end">结束</string>
+    <string name="widget_workout_skip">跳过</string>
+    <string name="widget_workout_finish">完成</string>
+</resources>

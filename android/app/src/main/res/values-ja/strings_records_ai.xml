@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Ayuvo AIで医療記録をどのように処理しますか？</string>
+    <string name="records_ai_mode_local">ローカルAI</string>
+    <string name="records_ai_mode_local_detail">オンデバイスモデルを使用します。記録のテキストはAI処理のためにこの端末内にとどまります。</string>
+    <string name="records_ai_mode_cloud">クラウドAI</string>
+    <string name="records_ai_mode_cloud_detail">ページのテキスト（テキストのないページは画像のみ）をAIプロバイダに送信します。</string>
+    <string name="records_ai_mode_ask">必要なときに確認する</string>
+    <string name="records_ai_mode_ask_detail">記録にAIを使用する前にAyuvoが確認します。</string>
+    <string name="records_ai_mode_off">今はAIを使わない</string>
+    <string name="records_ai_mode_off_detail">詳細はAIを使わずに抽出されます。これは設定で変更できます。</string>
+    <string name="records_ai_onboarding_note">これは設定 › 医療記録でいつでも変更できます。</string>
+    <string name="records_ai_chooser_title">記録へのAIの使い方を選択</string>
+    <string name="records_ai_settings_title">AI処理</string>
+    <string name="records_ai_local_unavailable">オンデバイスAIが設定されていません — 詳細はAIを使わずに抽出されました。</string>
+    <string name="records_ai_set_up_local">オンデバイスAIを設定</string>
+    <string name="records_ai_no_cloud_provider">オンラインAIを使用するには、AIプロバイダを追加してください。</string>
+    <string name="records_ai_add_provider">AIプロバイダを追加</string>
+    <string name="records_ai_cloud_provider_note">オンラインAIには%1$sが使われます。</string>
+    <string name="records_ai_consent_title">AIで詳細を探しますか？</string>
+    <string name="records_ai_consent_body">AIは、ルールで見つからなかった詳細を見つけられます。結果は提案であり、元のファイルと照らし合わせて確認できます。</string>
+    <string name="records_ai_consent_local">このデバイス上</string>
+    <string name="records_ai_consent_cloud">オンラインAI · %1$s</string>
+    <string name="records_ai_consent_not_now">今はしない</string>
+    <string name="records_ai_consent_apply_all">待機中のすべての記録に適用</string>
+    <string name="records_ai_consent_none_available">利用できるAIがまだありません。設定でオンデバイスAIを設定するか、AIプロバイダを追加してください。</string>
+    <string name="records_ai_status_local">このデバイス上で処理済み</string>
+    <string name="records_ai_status_cloud">オンラインAIで処理済み · %1$s</string>
+    <string name="records_ai_status_none">AI未処理</string>
+</resources>

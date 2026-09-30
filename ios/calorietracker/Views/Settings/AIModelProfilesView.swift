@@ -17,7 +17,7 @@ struct AIModelProfilesSection: View {
     var body: some View {
         Section {
             AISettingsSubsectionHeader(
-                title: "Models",
+                title: String(localized: "Models", comment: "AI settings section header"),
                 systemImage: "square.stack.3d.up",
                 infoTopic: .primaryAI
             )
@@ -60,7 +60,7 @@ struct AIModelProfilesSection: View {
             AIModelProfileEditor(profile: nil) { reload(); onChange() }
         }
         .confirmationDialog(
-            pendingDelete.map { "Delete “\($0.displayName)”?" } ?? "",
+            pendingDelete.map { String(localized: "Delete “\($0.displayName)”?", comment: "Confirm deleting an AI model profile; argument is its name") } ?? "",
             isPresented: Binding(get: { pendingDelete != nil },
                                  set: { if !$0 { pendingDelete = nil } }),
             titleVisibility: .visible

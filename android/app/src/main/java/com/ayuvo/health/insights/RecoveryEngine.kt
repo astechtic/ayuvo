@@ -129,12 +129,13 @@ object RecoveryEngine {
         val band = rc.bands.first { final >= it.min }
         val allHigh = avail.all { it.baselineConfidence == "high" }
         val confidence = if (avail.size >= 4 && allHigh) "high" else if (avail.size >= 3 || allHigh) "medium" else "low"
-        val signals = avail.map { RecoverySignal(it.id, it.impact!!, fill(rc.contributors.getValue(it.id), contributorParams(it))) }
+        val signals = avail.map { contributorParams(it).let { p -> RecoverySignal(it.id, it.impact!!, fill(rc.contributors.getValue(it.id), p), p) } }
         val pos = signals.filter { it.impact > 0 }.sortedBy { -it.impact }
         var neg = signals.filter { it.impact < 0 }.sortedBy { it.impact }
         val loadLabel = cfg.trainingLoad.labels.getValue(load.category)
         if (mod < 0) {
-            neg = (neg + RecoverySignal("training_load", mod.toDouble(), fill(rc.contributors.getValue("training_load"), mapOf("category" to loadLabel))))
+            val loadParams = mapOf("category" to loadLabel)
+            neg = (neg + RecoverySignal("training_load", mod.toDouble(), fill(rc.contributors.getValue("training_load"), loadParams), loadParams))
                 .sortedBy { it.impact }
         }
         val recoveryLoad = RecoveryLoad(

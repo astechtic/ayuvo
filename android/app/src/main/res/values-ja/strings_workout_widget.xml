@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo ワークアウト</string>
+    <string name="widget_workout_description">ワークアウトを開始・操作</string>
+    <string name="widget_workout_title">ワークアウト</string>
+    <string name="widget_workout_walk">ウォーキング</string>
+    <string name="widget_workout_run">ラン</string>
+    <string name="widget_workout_cycle">自転車</string>
+    <string name="widget_workout_hike">ハイク</string>
+    <string name="widget_workout_strength">筋トレ</string>
+    <string name="widget_workout_strength_title">筋トレセッション</string>
+    <string name="widget_workout_status_recording">記録中</string>
+    <string name="widget_workout_status_paused">一時停止中</string>
+    <string name="widget_workout_status_saving">保存中…</string>
+    <string name="widget_workout_status_recovery">リカバリー</string>
+    <string name="widget_workout_status_strength">実行中</string>
+    <string name="widget_workout_waiting_gps">GPS待機中</string>
+    <string name="widget_workout_distance">距離</string>
+    <string name="widget_workout_pace">平均ペース</string>
+    <string name="widget_workout_speed">平均速度</string>
+    <string name="widget_workout_pause">一時停止</string>
+    <string name="widget_workout_resume">再開</string>
+    <string name="widget_workout_lap">ラップ</string>
+    <string name="widget_workout_end">終了</string>
+    <string name="widget_workout_skip">スキップ</string>
+    <string name="widget_workout_finish">終了</string>
+</resources>

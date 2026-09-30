@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">वर्कआउट का वर्णन करें</string>
+    <string name="workout_text_intro">बताएँ कि आपने क्या किया। अपनी वर्कआउट डायरी में जोड़ने से पहले विवरण की समीक्षा करें।</string>
+    <string name="workout_text_description">वर्कआउट विवरण</string>
+    <string name="workout_text_example">20 मिनट रस्सी कूद, फिर 40 kg पर 10 बेंच प्रेस के 3 सेट</string>
+    <string name="workout_text_voice">आवाज़</string>
+    <string name="workout_text_preparing">एक्सरसाइज़ खोजी जा रही हैं…</string>
+    <string name="workout_text_preview">विश्लेषण करें</string>
+    <string name="workout_text_retry">फिर से कोशिश करें</string>
+    <string name="workout_text_review">वर्कआउट की समीक्षा</string>
+    <string name="workout_text_date">तिथि (YYYY-MM-DD)</string>
+    <string name="workout_text_custom">कस्टम समयबद्ध गतिविधि · कैलोरी अनुमान एक सामान्य गतिविधि दर का उपयोग करता है</string>
+    <string name="workout_text_minutes">मिनट</string>
+    <string name="workout_text_reps">रेप्स</string>
+    <string name="workout_text_remove">एक्सरसाइज़ हटाएं</string>
+    <string name="workout_text_calories_note">कैलोरी अनुमान हैं। अपना वर्कआउट जोड़ने के बाद डायरी में \"गणना करें\" का उपयोग करें।</string>
+    <string name="workout_text_edit">विवरण संपादित करें</string>
+    <string name="workout_text_adding">जोड़ा जा रहा है…</string>
+    <string name="workout_text_add">डायरी में जोड़ें</string>
+    <string name="workout_text_menu">टेक्स्ट</string>
+    <string name="workout_text_set_weight">सेट %1$d · %2$s</string>
+    <string name="workout_text_estimate">अनुमानित बर्न: %1$d kcal</string>
+    <string name="workout_text_effort">प्रयास (न बताने पर मध्यम)</string>
+    <string name="workout_text_light">लाइट</string>
+    <string name="workout_text_moderate">मध्यम</string>
+    <string name="workout_text_vigorous">ज़ोरदार</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">फिर से शुरू करें</string>
+    <string name="workout_clarify_title">एक छोटा सवाल</string>
+    <string name="workout_clarify_hint">किसी एक्सरसाइज़ को चुनने के लिए उस पर टैप करें, या अपना जवाब टाइप करें।</string>
+    <string name="workout_clarify_answer">आपका जवाब</string>
+    <string name="workout_clarify_voice">वॉइस से जवाब</string>
+    <string name="workout_text_repeat_error">आपके जवाबों से पूरा नहीं हो सका। अपने विवरण में छूटी जानकारी जोड़ें (जैसे सेट और रेप्स) या फिर से शुरू करें।</string>
+</resources>

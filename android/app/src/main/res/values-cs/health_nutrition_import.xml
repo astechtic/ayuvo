@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importovat historii výživy</string>
+    <string name="health_import_action">Importovat</string>
+    <string name="health_import_description">Přenes záznamy jídla z jiné aplikace do svého deníku. Zobraz náhled dostupných záznamů a pak vyber jednu zdrojovou aplikaci, aby se sdílené záznamy nezapočítaly dvakrát.</string>
+    <string name="health_import_from">Od (RRRR-MM-DD)</string>
+    <string name="health_import_to">Do (RRRR-MM-DD)</string>
+    <string name="health_import_history_hint">Bez přístupu k historii vyber data v rozmezí posledních 30 dnů. Starší záznamy vyžadují přístup k historii na podporovaném zařízení.</string>
+    <string name="health_import_grant">Povolit přístup k výživě a historii</string>
+    <string name="health_import_access_result">Nastavení přístupu bylo aktualizováno. Znovu zobraz náhled a zkontroluj dostupné záznamy.</string>
+    <string name="health_import_access_needed">Povol v Health Connect čtení výživy a pak znovu zobraz náhled.</string>
+    <string name="health_import_invalid_dates">Zadej platná data ve formátu RRRR-MM-DD. Datum konce musí být stejné nebo pozdější než datum začátku a nejpozději dnešní.</string>
+    <string name="health_import_history_needed">Toto období vyžaduje přístup k historii. Povol přístup na podporovaném zařízení, nebo vyber data v rozmezí posledních 30 dnů.</string>
+    <string name="health_import_preview">Zobrazit náhled dostupných záznamů</string>
+    <string name="health_import_failed">Import se nepodařilo dokončit. Zkontroluj přístup k Health Connect a zkus to znovu.</string>
+    <string name="health_import_empty">V tomto období nebyly nalezeny žádné nové záznamy výživy z jiných aplikací. Zkontroluj, že tvoje zdrojová aplikace sdílí výživu s Health Connect. Dříve importované záznamy se přeskakují, včetně těch odstraněných z deníku.</string>
+    <string name="health_import_count">Nové záznamy: %1$d · %2$d kcal</string>
+    <string name="health_import_unnamed">Importované jídlo</string>
+    <string name="health_import_local_only">Jde o místní kopie. Úpravy a smazání zůstávají v Ayuvo. Opakovaný import přeskočí dříve importované záznamy; neaktualizuje je.</string>
+    <string name="health_import_done">Do deníku bylo importováno záznamů: %1$d.</string>
+    <string name="health_import_close">Zavřít</string>
+</resources>

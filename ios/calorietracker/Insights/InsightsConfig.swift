@@ -389,3 +389,184 @@ nonisolated struct InsightsConfig: Decodable, Sendable {
 
     func disclaimer(_ key: String) -> String { disclaimers[key] ?? disclaimers["general"] ?? "" }
 }
+
+// MARK: - Display text (docs/localization.md)
+
+/// Translated display text for the config (table "Contracts", keys `insights.…`). Engines, reference vectors and
+/// the AI payload keep the English the engines wrote; a sentence is re-filled from its params only when its
+/// template has a translation, otherwise the engine text is shown unchanged.
+nonisolated extension InsightsConfig {
+    func metricLabel(_ id: String) -> String {
+        guard let metric = metrics[id] else { return id }
+        return ContractText.text("insights.metrics.\(id).label", metric.label)
+    }
+
+    func markerLabel(_ id: String) -> String {
+        guard let marker = marker(id) else { return id }
+        return ContractText.text("insights.health_age.markers.\(id).label", marker.label)
+    }
+
+    func areaLabel(_ id: String) -> String {
+        guard let area = dailyReview.areas.first(where: { $0.id == id }) else { return id }
+        return ContractText.text("insights.daily_review.areas.\(id).label", area.label)
+    }
+
+    func displayDisclaimer(_ key: String) -> String {
+        if let text = disclaimers[key] { return ContractText.text("insights.disclaimers.\(key)", text) }
+        return disclaimers["general"].map { ContractText.text("insights.disclaimers.general", $0) } ?? ""
+    }
+
+    func methodologyTitle(_ topic: String) -> String? {
+        methodology[topic].map { ContractText.text("insights.methodology.\(topic).title", $0.title) }
+    }
+
+    func sectionHeading(_ topic: String, _ index: Int, _ section: Methodology.Section) -> String {
+        ContractText.text("insights.methodology.\(topic).sections.\(index).heading", section.heading)
+    }
+
+    func sectionBody(_ topic: String, _ index: Int, _ section: Methodology.Section) -> String {
+        ContractText.text("insights.methodology.\(topic).sections.\(index).body", section.body)
+    }
+
+    /// Recovery band name for `RecoveryResult.label` (`good`, `moderate`, `low`); `english` is `labelText`.
+    func bandLabel(_ id: String?, english: String?) -> String? {
+        guard let id, let english else { return english }
+        return ContractText.text("insights.recovery.bands.\(id).label", english)
+    }
+
+    func bandRecommendation(_ id: String?, english: String?) -> String? {
+        guard let id, let english else { return english }
+        return ContractText.text("insights.recovery.bands.\(id).recommendation", english)
+    }
+
+    /// Training-load category label (`none`, `light`, `moderate`, `high`).
+    func trainingLoadLabel(_ category: String, english: String) -> String {
+        ContractText.text("insights.training_load.labels.\(category)", english)
+    }
+
+    /// A Recovery contributor line ("HRV +8% vs baseline"), params rebuilt from the result's components.
+    func signalText(_ signal: RecoverySignal, in result: RecoveryResult) -> String {
+        guard let english = recovery.contributors[signal.id] else { return signal.text }
+        let template = ContractText.text("insights.recovery.contributors.\(signal.id)", english)
+        guard template != english else { return signal.text }
+        if signal.id == "training_load" {
+            guard let load = result.load else { return signal.text }
+            return InsightsFormat.fill(template, ["category": .text(trainingLoadLabel(load.category, english: load.label))])
+        }
+        guard let c = result.components.first(where: { $0.id == signal.id }) else { return signal.text }
+        let value = c.value ?? 0, delta = c.delta ?? 0
+        return InsightsFormat.fill(template, [
+            "pct": .text(InsightsDisplayFormat.signed(c.pct ?? 0, 0)),
+            "delta0": .text(InsightsDisplayFormat.signed(delta, 0)),
+            "delta1": .text(InsightsDisplayFormat.signed(delta, 1)),
+            "value1": .text(InsightsMath.roundTo(value, 1).formatted(.number.precision(.fractionLength(1)))),
+            "duration": .text(InsightsDisplayFormat.duration(minutes: value)),
+        ])
+    }
+
+    /// A pattern sentence; the more/less word and unit are translated with the template.
+    func patternText(_ pattern: PatternResult) -> String? {
+        guard let text = pattern.text else { return nil }
+        guard let pair = patterns.pairs.first(where: { $0.id == pattern.id }), let diff = pattern.diff else { return text }
+        let key = "insights.patterns.pairs.\(pair.id)"
+        let template = ContractText.text("\(key).template", pair.template)
+        guard template != pair.template else { return text }
+        let word = diff > 0
+            ? ContractText.text("\(key).more_word", pair.moreWord)
+            : ContractText.text("\(key).less_word", pair.lessWord)
+        return InsightsFormat.fill(template, [
+            "abs_diff": .text(InsightsDisplayFormat.number(InsightsMath.roundTo(abs(diff), pair.decimals))),
+            "unit": .text(InsightsDisplayFormat.unit(pair.unit)),
+            "direction_word": .text(word),
+            "n_exposed": .text(pattern.nExposed.formatted()),
+            "n_unexposed": .text(pattern.nUnexposed.formatted()),
+        ])
+    }
+
+    /// A Daily Review line (rule or "not logged"); `patterns` resolve the `reduce_pattern` sentence.
+    func reviewText(_ item: ReviewItem, patterns found: [PatternResult]? = nil) -> String {
+        let rv = dailyReview
+        if item.ruleId == "reduce_pattern" {
+            let source = found?.first { $0.text != nil && $0.text == item.params["pattern_text"]?.text }
+            return source.flatMap(patternText) ?? item.text
+        }
+        let source: (key: String, english: String)
+        if item.ruleId == "not_logged" {
+            source = ("insights.daily_review.not_logged_template", rv.notLoggedTemplate)
+        } else {
+            guard let rule = rv.rules.first(where: { $0.id == item.ruleId }) else { return item.text }
+            source = ("insights.daily_review.rules.\(rule.id).template", rule.template)
+        }
+        let (key, english) = source
+        let template = ContractText.text(key, english)
+        guard template != english else { return item.text }
+        var params: [String: InsightsParam] = [:]
+        for (name, value) in item.params {
+            switch (name, value) {
+            case ("area_label", _):
+                params[name] = .text(item.params["area"]?.text.map(areaLabel) ?? value.templateText)
+            case ("nutrient", .text(let label)):
+                let nutrient = rv.reduceNutrients.first { $0.label == label }
+                params[name] = .text(nutrient.map {
+                    ContractText.text("insights.daily_review.reduce_nutrients.\($0.id).label", $0.label)
+                } ?? label)
+            case ("unit", .text(let unit)):
+                params[name] = .text(InsightsDisplayFormat.unit(unit))
+            case ("duration", .text(let text)):
+                params[name] = .text(InsightsDisplayFormat.duration(engineText: text) ?? text)
+            case (_, .number(let x)):
+                params[name] = .text(InsightsDisplayFormat.number(x))
+            default:
+                params[name] = value
+            }
+        }
+        return InsightsFormat.fill(template, params)
+    }
+}
+
+/// Locale-aware versions of the `InsightsFormat` helpers for display (the engine keeps English formatting).
+nonisolated enum InsightsDisplayFormat {
+    /// Integral → grouped integer, otherwise one decimal, in the user's locale.
+    static func number(_ x: Double) -> String {
+        x.formatted(.number.precision(.fractionLength(0...1)))
+    }
+
+    /// "+8", "−3", "+0.4" or "0" in the user's locale.
+    static func signed(_ x: Double, _ decimals: Int) -> String {
+        let r = InsightsMath.roundTo(x, decimals)
+        if r == 0 { return 0.formatted() }
+        return (r > 0 ? "+" : InsightsMath.minus) + abs(r).formatted(.number.precision(.fractionLength(decimals)))
+    }
+
+    /// Hours and minutes in the user's locale ("7 hr 48 min").
+    static func duration(minutes: Double) -> String {
+        let m = InsightsMath.roundInt(minutes)
+        let allowed: Set<Duration.UnitsFormatStyle.Unit> = m < 60 ? [.minutes] : [.hours, .minutes]
+        return Duration.seconds(Int64(m) * 60).formatted(.units(allowed: allowed, width: .narrow))
+    }
+
+    /// Re-formats an engine duration ("7h 48m" / "45m"); nil when it is not one.
+    static func duration(engineText text: String) -> String? {
+        let parts = text.split(separator: " ")
+        var minutes = 0
+        for part in parts {
+            if part.hasSuffix("h"), let h = Int(part.dropLast()) { minutes += h * 60 }
+            else if part.hasSuffix("m"), let m = Int(part.dropLast()) { minutes += m }
+            else { return nil }
+        }
+        return parts.isEmpty ? nil : duration(minutes: Double(minutes))
+    }
+
+    /// Units used in pattern and review sentences.
+    static func unit(_ unit: String) -> String {
+        switch unit {
+        case "min": String(localized: "insights.unit.min", defaultValue: "min", comment: "Insights sentence unit: minutes")
+        case "points": String(localized: "insights.unit.points", defaultValue: "points", comment: "Insights sentence unit: score points")
+        case "steps": String(localized: "insights.unit.steps", defaultValue: "steps", comment: "Insights sentence unit: steps")
+        case "kg": String(localized: "kg", comment: "Unit: kilograms")
+        case "g": String(localized: "g", comment: "Unit: grams")
+        case "mg": String(localized: "mg", comment: "Unit: milligrams")
+        default: unit
+        }
+    }
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Coach deine Gesundheitsbefunde lesen lassen?</string>
+    <string name="records_coach_consent_body">Coach sendet die Details der gelesenen Befunde – Testergebnisse, Daten, Ärztinnen und Ärzte sowie Diagnosen – an %1$s, um dir zu antworten. Die Befunde bleiben auf diesem Gerät gespeichert.</string>
+    <string name="records_coach_consent_body_on_device">Coach liest die Befunde auf diesem Gerät; es wird nichts online gesendet.</string>
+    <string name="records_coach_consent_allow">Erlauben</string>
+    <string name="records_coach_consent_not_now">Jetzt nicht</string>
+    <string name="records_coach_settings_title">Coach</string>
+    <string name="records_coach_settings_toggle">Coach meine Gesundheitsbefunde nutzen lassen</string>
+    <string name="records_coach_settings_subtitle">Coach kann deine Befunde durchsuchen und lesen, um Fragen zu beantworten. Wenn du dies deaktivierst, wird der Zugriff sofort entzogen.</string>
+    <string name="records_coach_analyzing">Analysiert:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">%d Befund wird analysiert</item>
+        <item quantity="other">%d Befunde werden analysiert</item>
+    </plurals>
+    <string name="records_coach_change_records">Befunde ändern</string>
+    <string name="records_coach_used_records">Verwendete Befunde</string>
+    <string name="records_coach_picker_title">Befunde für diese Unterhaltung</string>
+    <string name="records_coach_picker_search">Einträge durchsuchen</string>
+    <string name="records_coach_picker_limit">Wähle bis zu %d Befunde.</string>
+    <string name="records_coach_picker_done">Fertig</string>
+    <string name="records_coach_picker_empty">Keine Befunde gefunden.</string>
+    <string name="records_coach_picker_selected">Ausgewählt</string>
+    <string name="records_coach_picker_recent">Letzte Einträge</string>
+    <string name="records_coach_picker_results">Ergebnisse</string>
+    <string name="records_coach_mode_title">Befunde online senden?</string>
+    <string name="records_coach_mode_body">Coach verwendet %1$s. Details der ausgewählten Befunde online senden?</string>
+    <string name="records_coach_mode_send">Senden</string>
+    <string name="records_coach_mode_on_device">Coach auf dem Gerät verwenden</string>
+    <string name="records_coach_ask_report">Zu diesem Befund fragen</string>
+    <string name="records_coach_compare_previous">Mit vorherigem Befund vergleichen</string>
+    <string name="records_coach_explain_trend">Diesen Trend erklären</string>
+    <string name="records_coach_ask_coach">Coach fragen</string>
+    <string name="records_coach_prompt_report">Erkläre diesen Befund: Was fällt auf und was sollte ich meine Ärztin oder meinen Arzt fragen?</string>
+    <string name="records_coach_prompt_compare">Vergleiche diesen Befund mit dem vorherigen. Was hat sich verändert?</string>
+    <string name="records_coach_prompt_trend">Erkläre, wie sich mein Wert für %1$s im Zeitverlauf verändert hat.</string>
+    <string name="records_coach_chip_latest">Analysiere meine neuesten Blutbefunde</string>
+    <string name="records_coach_chip_abnormal">Auffällige Werte finden</string>
+    <string name="records_coach_chip_compare">Mit vorherigem Befund vergleichen</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

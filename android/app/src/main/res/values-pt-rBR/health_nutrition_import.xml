@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importar histórico de nutrição</string>
+    <string name="health_import_action">Importar</string>
+    <string name="health_import_description">Traga registros de alimentos de outro app para o seu diário. Visualize os registros disponíveis e escolha um app de origem para não contar duas vezes registros compartilhados.</string>
+    <string name="health_import_from">De (AAAA-MM-DD)</string>
+    <string name="health_import_to">Até (AAAA-MM-DD)</string>
+    <string name="health_import_history_hint">Sem acesso ao histórico, escolha datas dos últimos 30 dias. Registros mais antigos exigem acesso ao histórico em um dispositivo compatível.</string>
+    <string name="health_import_grant">Permitir acesso à nutrição e ao histórico</string>
+    <string name="health_import_access_result">Configurações de acesso atualizadas. Visualize novamente para verificar os registros disponíveis.</string>
+    <string name="health_import_access_needed">Permita a leitura de nutrição no Health Connect e visualize novamente.</string>
+    <string name="health_import_invalid_dates">Insira datas válidas no formato AAAA-MM-DD. A data final deve ser igual ou posterior à data inicial e não pode ser depois de hoje.</string>
+    <string name="health_import_history_needed">Este período requer acesso ao histórico. Permita o acesso em um dispositivo compatível ou escolha datas dos últimos 30 dias.</string>
+    <string name="health_import_preview">Visualizar registros disponíveis</string>
+    <string name="health_import_failed">Não foi possível concluir a importação. Verifique o acesso ao Health Connect e tente novamente.</string>
+    <string name="health_import_empty">Nenhum registro novo de nutrição de outros apps foi encontrado neste período. Verifique se o app de origem compartilhou dados de nutrição com o Health Connect. Registros importados anteriormente são ignorados, inclusive os removidos do seu diário.</string>
+    <string name="health_import_count">%1$d novos registros · %2$d kcal</string>
+    <string name="health_import_unnamed">Refeição importada</string>
+    <string name="health_import_local_only">Estas são cópias locais. Edições e exclusões ficam no Ayuvo. Repetir uma importação ignora registros já importados; não os atualiza.</string>
+    <string name="health_import_done">%1$d registros importados para o seu diário.</string>
+    <string name="health_import_close">Fechar</string>
+</resources>

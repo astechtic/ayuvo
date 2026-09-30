@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Описать тренировку</string>
+    <string name="workout_text_intro">Опишите, что вы делали. Проверьте сведения, прежде чем добавить их в дневник тренировок.</string>
+    <string name="workout_text_description">Описание тренировки</string>
+    <string name="workout_text_example">20 минут прыжков через скакалку, затем 3 подхода по 10 жимов лёжа с 40 кг</string>
+    <string name="workout_text_voice">Голос</string>
+    <string name="workout_text_preparing">Поиск упражнений…</string>
+    <string name="workout_text_preview">Анализ</string>
+    <string name="workout_text_retry">Повторить</string>
+    <string name="workout_text_review">Проверить тренировку</string>
+    <string name="workout_text_date">Дата (ГГГГ-ММ-ДД)</string>
+    <string name="workout_text_custom">Своя активность по времени · калории оцениваются по общему уровню активности</string>
+    <string name="workout_text_minutes">Минуты</string>
+    <string name="workout_text_reps">Повторения</string>
+    <string name="workout_text_remove">Удалить упражнение</string>
+    <string name="workout_text_calories_note">Калории — это оценка. После добавления тренировки нажмите «Рассчитать» в дневнике.</string>
+    <string name="workout_text_edit">Изменить описание</string>
+    <string name="workout_text_adding">Добавление…</string>
+    <string name="workout_text_add">Добавить в дневник</string>
+    <string name="workout_text_menu">Текст</string>
+    <string name="workout_text_set_weight">Подход %1$d · %2$s</string>
+    <string name="workout_text_estimate">Расход (оценка): %1$d ккал</string>
+    <string name="workout_text_effort">Нагрузка (если не указана — умеренная)</string>
+    <string name="workout_text_light">Светлая</string>
+    <string name="workout_text_moderate">Умеренный</string>
+    <string name="workout_text_vigorous">Высокая</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Начать заново</string>
+    <string name="workout_clarify_title">Короткий вопрос</string>
+    <string name="workout_clarify_hint">Нажмите на упражнение, чтобы выбрать его, или введите ответ.</string>
+    <string name="workout_clarify_answer">Ваш ответ</string>
+    <string name="workout_clarify_voice">Ответить голосом</string>
+    <string name="workout_text_repeat_error">Не удалось завершить по вашим ответам. Добавьте недостающие сведения в описание (например, подходы и повторения) или начните заново.</string>
+</resources>

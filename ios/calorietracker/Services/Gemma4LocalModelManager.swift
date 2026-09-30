@@ -302,8 +302,8 @@ final class Gemma4LocalModelManager {
             if descriptor.requiresAuth, Self.huggingFaceToken == nil {
                 throw LocalModelError.invalidDownload(
                     descriptor.repositoryURL.map {
-                        "\(descriptor.displayName) is gated. Add a Hugging Face token in Settings, and accept its terms at \($0.absoluteString) with the same account."
-                    } ?? "\(descriptor.displayName) needs a Hugging Face token. Add one in Settings."
+                        String(localized: "\(descriptor.displayName) is gated. Add a Hugging Face token in Settings, and accept its terms at \($0.absoluteString) with the same account.", comment: "Local model download error; placeholders are model name and terms URL")
+                    } ?? String(localized: "\(descriptor.displayName) needs a Hugging Face token. Add one in Settings.", comment: "Local model download error; placeholder is model name")
                 )
             }
             try await download.start(url: descriptor.url,

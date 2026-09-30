@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">इनसाइट्स</string>
+    <string name="domain_nutrition">पोषण</string>
+    <string name="domain_hydration">हाइड्रेशन</string>
+    <string name="domain_fasting">उपवास</string>
+    <string name="domain_body">शरीर के माप</string>
+    <string name="domain_activity">गतिविधि</string>
+    <string name="domain_heart">हृदय</string>
+    <string name="domain_sleep">नींद</string>
+    <string name="domain_vitals">वाइटल्स</string>
+    <string name="domain_respiratory">श्वसन</string>
+    <string name="domain_cycle">मासिक चक्र ट्रैकिंग</string>
+    <string name="domain_mindfulness">माइंडफ़ुलनेस</string>
+    <string name="domain_mobility">गतिशीलता</string>
+    <string name="domain_hearing">सुनने की क्षमता</string>
+    <string name="domain_symptoms">लक्षण</string>
+    <string name="domain_medications">दवाइयाँ</string>
+    <string name="domain_records">स्वास्थ्य रिकॉर्ड</string>
+    <string name="domain_other">अन्य डेटा</string>
+    <string name="design_back">वापस</string>
+</resources>

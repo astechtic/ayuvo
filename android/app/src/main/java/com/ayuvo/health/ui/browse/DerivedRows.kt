@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.browse
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ internal fun LazyListScope.derivedMetricGroup(
 internal fun DerivedMetricRow(row: DerivedBrowseRow, catalog: MetricCatalogData, caption: String? = null, onClick: () -> Unit) {
     val tile = row.tile
     MetricRow(
-        title = row.info.title,
+        title = row.info.displayTitle(LocalContext.current),
         value = tile.number.takeIf { tile.hasData },
         unit = tile.unit.takeIf { tile.hasData && it.isNotEmpty() },
         caption = caption ?: tileCaption(tile),

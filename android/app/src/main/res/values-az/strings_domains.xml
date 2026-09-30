@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Təhlillər</string>
+    <string name="domain_nutrition">Qidalanma</string>
+    <string name="domain_hydration">Hidratasiya</string>
+    <string name="domain_fasting">Oruc</string>
+    <string name="domain_body">Bədən Ölçüləri</string>
+    <string name="domain_activity">Fəaliyyət</string>
+    <string name="domain_heart">Ürək</string>
+    <string name="domain_sleep">Yuxu</string>
+    <string name="domain_vitals">Həyati göstəricilər</string>
+    <string name="domain_respiratory">Tənəffüs</string>
+    <string name="domain_cycle">Tsikl izləmə</string>
+    <string name="domain_mindfulness">Düşüncəlilik</string>
+    <string name="domain_mobility">Hərəkətlilik</string>
+    <string name="domain_hearing">Eşitmə</string>
+    <string name="domain_symptoms">Simptomlar</string>
+    <string name="domain_medications">Dərmanlar</string>
+    <string name="domain_records">Sağlamlıq qeydləri</string>
+    <string name="domain_other">Digər məlumatlar</string>
+    <string name="design_back">Geri</string>
+</resources>

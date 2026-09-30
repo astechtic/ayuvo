@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.metrics
 
+import com.ayuvo.health.l10n.ContractStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -52,11 +53,12 @@ fun DerivedMetricDetailScreen(
     val catalog = container.metricCatalog
     val zone = remember { ZoneId.systemDefault() }
     val info = ui.info
-    val name = info?.title ?: key.id
+    val name = info?.displayTitle(context) ?: key.id
     val tint = MetricCatalog.color(catalog, key)
     val is24 = android.text.format.DateFormat.is24HourFormat(context)
     val unit = info?.let(DerivedMetricSupport::unitLabel).orEmpty()
-    val format: (Double) -> String = { v -> if (info == null) v.toString() else DerivedMetricSupport.format(info, v, is24, ui.labels) }
+    val labels = remember(ui.labels) { ui.labels?.mapIndexed { i, t -> ContractStrings.text(context, "derived.labels.${key.id}.$i", t) } }
+    val format: (Double) -> String = { v -> if (info == null) v.toString() else DerivedMetricSupport.format(info, v, is24, labels) }
 
     val bounds = ui.bounds
     val window = bounds?.let { MetricsReference.localDateOf(it.startMs, zone)..MetricsReference.localDateOf(it.endMs, zone).minusDays(1) }
@@ -125,7 +127,7 @@ fun DerivedMetricDetailScreen(
                 val subtitle = when {
                     !ui.masterOn -> stringResource(R.string.derived_master_off)
                     !ui.metricOn && ui.dependents.isNotEmpty() ->
-                        stringResource(R.string.settings_derived_also_affects, ui.dependents.joinToString(", "))
+                        stringResource(R.string.settings_derived_also_affects, container.derivedCatalog.dependentsOf(key.id).joinToString(", ") { it.displayTitle(context) })
                     !ui.metricOn -> stringResource(R.string.derived_metric_toggle_off_footer)
                     else -> null
                 }
@@ -146,7 +148,7 @@ fun DerivedMetricDetailScreen(
                         header = stringResource(R.string.metric_about),
                         dividerInset = 16.dp
                     ) {
-                        row { BodyText(info.about) }
+                        row { BodyText(info.displayAbout(context)) }
                     }
                 }
             }
@@ -165,10 +167,10 @@ fun DerivedMetricDetailScreen(
                     InsetGroup(
                         modifier = Modifier.padding(top = 12.dp).testTag("derived.how"),
                         header = stringResource(R.string.derived_how_calculated),
-                        footer = container.derivedCatalog.disclaimer.takeIf { it.isNotBlank() },
+                        footer = container.derivedCatalog.displayDisclaimer(context).takeIf { it.isNotBlank() },
                         dividerInset = 16.dp
                     ) {
-                        if (info.method.isNotBlank()) row { LabelledText(methodLabel, info.method) }
+                        if (info.method.isNotBlank()) row { LabelledText(methodLabel, info.displayMethod(context)) }
                         if (info.citation.isNotBlank()) row { LabelledText(citationLabel, info.citation) }
                         if (confidenceText != null) {
                             row {

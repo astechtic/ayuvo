@@ -22,7 +22,7 @@ struct WidgetNutrientValue: Codable, Equatable, Identifiable {
     var displayCurrentWithUnit: String { "\(displayValue)\(unit)" }
     var displayGoalWithUnit: String { "\(displayGoal)\(unit)" }
     var displayPair: String { "\(displayCurrentWithUnit) / \(displayGoalWithUnit)" }
-    var displayRemaining: String { "\(Self.format(max(0, goal - value)))\(unit) left" }
+    var displayRemaining: String { String(localized: "\(Self.format(max(0, goal - value)))\(unit) left", comment: "Widget: amount of a nutrient left for today, e.g. 40g left") }
 
     func zeroedForToday() -> WidgetNutrientValue {
         WidgetNutrientValue(
@@ -126,9 +126,9 @@ struct WidgetSnapshot: Codable, Equatable {
             carbs: 132, carbsGoal: 220,
             fat: 42, fatGoal: 70,
             homeNutrients: [
-                WidgetNutrientValue(id: "protein", label: "Protein", shortLabel: "P", unit: "g", iconName: "fork.knife", value: 84, goal: 150),
-                WidgetNutrientValue(id: "carbs", label: "Carbs", shortLabel: "C", unit: "g", iconName: "leaf", value: 132, goal: 220),
-                WidgetNutrientValue(id: "fat", label: "Fat", shortLabel: "F", unit: "g", iconName: "drop.fill", value: 42, goal: 70),
+                WidgetNutrientValue(id: "protein", label: String(localized: "Protein", comment: "Widget nutrient name"), shortLabel: "P", unit: "g", iconName: "fork.knife", value: 84, goal: 150),
+                WidgetNutrientValue(id: "carbs", label: String(localized: "Carbs", comment: "Widget nutrient name"), shortLabel: "C", unit: "g", iconName: "leaf", value: 132, goal: 220),
+                WidgetNutrientValue(id: "fat", label: String(localized: "Fat", comment: "Widget nutrient name"), shortLabel: "F", unit: "g", iconName: "drop.fill", value: 42, goal: 70),
             ],
             waterTrackingEnabled: true,
             waterCurrentMl: 1_250,
@@ -146,9 +146,9 @@ struct WidgetSnapshot: Codable, Equatable {
             carbs: 0, carbsGoal: 220,
             fat: 0, fatGoal: 70,
             homeNutrients: [
-                WidgetNutrientValue(id: "protein", label: "Protein", shortLabel: "P", unit: "g", iconName: "fork.knife", value: 0, goal: 150),
-                WidgetNutrientValue(id: "carbs", label: "Carbs", shortLabel: "C", unit: "g", iconName: "leaf", value: 0, goal: 220),
-                WidgetNutrientValue(id: "fat", label: "Fat", shortLabel: "F", unit: "g", iconName: "drop.fill", value: 0, goal: 70),
+                WidgetNutrientValue(id: "protein", label: String(localized: "Protein", comment: "Widget nutrient name"), shortLabel: "P", unit: "g", iconName: "fork.knife", value: 0, goal: 150),
+                WidgetNutrientValue(id: "carbs", label: String(localized: "Carbs", comment: "Widget nutrient name"), shortLabel: "C", unit: "g", iconName: "leaf", value: 0, goal: 220),
+                WidgetNutrientValue(id: "fat", label: String(localized: "Fat", comment: "Widget nutrient name"), shortLabel: "F", unit: "g", iconName: "drop.fill", value: 0, goal: 70),
             ],
             waterTrackingEnabled: false,
             waterCurrentMl: 0,
@@ -210,7 +210,7 @@ struct WidgetSnapshot: Codable, Equatable {
     var waterRemaining: Int { max(0, waterGoal - waterCurrent) }
     var waterProgress: Double { min(1, Double(waterCurrent) / Double(waterGoal)) }
     var waterUsesFluidOunces: Bool { waterUnitRaw == "floz" }
-    var waterUnitSymbol: String { waterUsesFluidOunces ? "fl oz" : "ml" }
+    var waterUnitSymbol: String { waterUsesFluidOunces ? String(localized: "fl oz", comment: "Unit: US fluid ounces") : "ml" }
     func waterDisplayValue(_ milliliters: Int) -> String {
         guard waterUsesFluidOunces else { return milliliters.formatted() }
         let ounces = Double(milliliters) / 29.5735295625
@@ -236,9 +236,9 @@ struct WidgetSnapshot: Codable, Equatable {
 
     private var defaultHomeNutrients: [WidgetNutrientValue] {
         [
-            WidgetNutrientValue(id: "protein", label: "Protein", shortLabel: "P", unit: "g", iconName: "fork.knife", value: protein, goal: Double(proteinGoal)),
-            WidgetNutrientValue(id: "carbs", label: "Carbs", shortLabel: "C", unit: "g", iconName: "leaf", value: carbs, goal: Double(carbsGoal)),
-            WidgetNutrientValue(id: "fat", label: "Fat", shortLabel: "F", unit: "g", iconName: "drop.fill", value: fat, goal: Double(fatGoal)),
+            WidgetNutrientValue(id: "protein", label: String(localized: "Protein", comment: "Widget nutrient name"), shortLabel: "P", unit: "g", iconName: "fork.knife", value: protein, goal: Double(proteinGoal)),
+            WidgetNutrientValue(id: "carbs", label: String(localized: "Carbs", comment: "Widget nutrient name"), shortLabel: "C", unit: "g", iconName: "leaf", value: carbs, goal: Double(carbsGoal)),
+            WidgetNutrientValue(id: "fat", label: String(localized: "Fat", comment: "Widget nutrient name"), shortLabel: "F", unit: "g", iconName: "drop.fill", value: fat, goal: Double(fatGoal)),
         ]
     }
 
@@ -246,9 +246,9 @@ struct WidgetSnapshot: Codable, Equatable {
         let divisor = waterUsesFluidOunces ? 29.5735295625 : 1
         return WidgetNutrientValue(
             id: "water",
-            label: "Water",
+            label: String(localized: "Water", comment: "Widget nutrient name"),
             shortLabel: "W",
-            unit: waterUsesFluidOunces ? " fl oz" : "ml",
+            unit: waterUsesFluidOunces ? " " + String(localized: "fl oz", comment: "Unit: US fluid ounces") : "ml",
             iconName: "drop.fill",
             value: Double(waterCurrent) / divisor,
             goal: Double(waterGoal) / divisor

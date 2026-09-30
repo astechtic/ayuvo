@@ -198,7 +198,7 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
                     derived = DerivedTileSource(
                         catalog = container.derivedCatalog,
                         enabled = i.derived.first,
-                        labels = container.derivedConfig.labels,
+                        labels = container.derivedConfig.displayLabels(container.appContext),
                         is24 = android.text.format.DateFormat.is24HourFormat(container.appContext)
                     )
                 )

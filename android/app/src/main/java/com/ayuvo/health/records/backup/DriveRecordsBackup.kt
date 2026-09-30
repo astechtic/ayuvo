@@ -9,6 +9,8 @@ import com.ayuvo.health.records.data.RecordsStore
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.File
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * The opt-in "Include Health Records in Google Drive backup" (docs/health-records.md §36).
@@ -59,7 +61,7 @@ class DriveRecordsBackup(
     }
 
     private suspend fun upload(nowMs: Long, onProgress: (Long, Long) -> Unit = { _, _ -> }) = mutex.withLock {
-        val token = accessToken() ?: error("Sign in to Google Drive first")
+        val token = accessToken() ?: error(AppText.get(R.string.core_drive_sign_in_first))
         val revision = store.contentRevision()
         val cache = File(context.cacheDir, DRIVE_CACHE_NAME)
         try {
@@ -88,10 +90,10 @@ class DriveRecordsBackup(
         onProgress: (ArchiveProgress) -> Unit = {}
     ): Result<ArchiveImportResult> = runCatching {
         mutex.withLock {
-            val token = accessToken() ?: error("Sign in to Google Drive first")
+            val token = accessToken() ?: error(AppText.get(R.string.core_drive_sign_in_first))
             val fileId = store.backupState(RecordsBackupKeys.DRIVE_FILE_ID)
                 ?: drive.findFileId(token, RecordsBackupCoordinator.DRIVE_FILE_NAME)
-                ?: error("No Health Records backup in Drive")
+                ?: error(AppText.get(R.string.core_drive_no_records_backup))
             val cache = File(context.cacheDir, DRIVE_CACHE_NAME)
             try {
                 onProgress(ArchiveProgress(STEP_DOWNLOAD))

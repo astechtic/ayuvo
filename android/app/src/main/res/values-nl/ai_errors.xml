@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Geen API-sleutel ingesteld. Voeg je sleutel toe in Instellingen → AI-provider.</string>
+    <string name="ai_error_image_conversion">Kan de afbeelding niet verwerken. Probeer een andere foto.</string>
+    <string name="ai_error_invalid_response">Het AI-antwoord was niet te begrijpen. Probeer het opnieuw.</string>
+    <string name="ai_error_invalid_url">Ongeldige API-URL. Controleer je providerinstellingen.</string>
+    <string name="ai_error_offline">Je lijkt offline te zijn. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="ai_error_connection">Kan geen verbinding maken met de AI-provider. Controleer je verbinding en de provider-URL en probeer het opnieuw.</string>
+    <string name="ai_error_timeout">De AI deed er te lang over om te antwoorden. Probeer het opnieuw of verhoog de time-out in Instellingen → AI-provider.</string>
+    <string name="ai_error_credits">Je AI-account heeft geen tegoed meer. Waardeer op of kies een andere provider in Instellingen → AI-provider.</string>
+    <string name="ai_error_daily_quota">Het dagquotum van je AI-account is op. Probeer het morgen opnieuw of kies een andere provider in Instellingen → AI-provider.</string>
+    <string name="ai_error_quota">Het gebruiksquotum van je AI-account is overschreden. Controleer de limieten van je provider of kies een andere provider in Instellingen → AI-provider.</string>
+    <string name="ai_error_model">Het gekozen model of API-endpoint is niet beschikbaar. Controleer het model en de API-URL in Instellingen → AI-provider.</string>
+    <string name="ai_error_rate_limit">Snelheidslimiet bereikt voor je API-sleutel. Wacht een minuut of kies een andere provider in Instellingen → AI-provider. Gebruik je een gratis abonnement, controleer dan of het dagquotum op is.</string>
+    <string name="ai_error_key_rejected">Je API-sleutel is geweigerd. Open Instellingen → AI-provider en plak opnieuw een geldige sleutel.</string>
+    <string name="ai_error_overloaded">De AI-provider is op dit moment overbelast. We hebben het een paar keer opnieuw geprobeerd — probeer het over een minuut nog eens of kies een andere provider/ander model in Instellingen → AI-provider.</string>
+    <string name="ai_error_generic">Het AI-verzoek is mislukt. Probeer het opnieuw of kies een andere provider in Instellingen → AI-provider.</string>
+    <string name="ai_error_local_unavailable">De AI op het apparaat is niet beschikbaar. Controleer het gedownloade model in Instellingen → AI-provider.</string>
+    <string name="ai_error_truncated">Het AI-antwoord is twee keer afgekapt. Probeer een kortere invoer of een ander model.</string>
+    <string name="ai_error_both_failed">%1$s en reserve %2$s zijn allebei mislukt. %3$s</string>
+</resources>

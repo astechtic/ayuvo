@@ -22,14 +22,14 @@ struct FoodRow: View {
             let quantityText = ServingUnitEditor.formatQuantity(quantity)
             return "\(quantityText) \(String(localized: "Serving"))"
         }
-        let formatted = grams == grams.rounded() ? "\(Int(grams))" : String(format: "%.1f", grams)
+        let formatted = grams.formatted(.number.precision(.fractionLength(0...1)))
         if let selectedUnit = entry.selectedServingUnit,
            let quantity = entry.selectedServingQuantity,
            quantity > 0 {
             let option = ServingUnitOption.option(matching: selectedUnit, in: entry.servingUnitOptions)
             if !option.isGramUnit {
                 let quantityText = ServingUnitEditor.formatQuantity(quantity)
-                return "\(quantityText) \(option.displayUnit(for: quantity)) (~\(formatted)g)"
+                return String(localized: "\(quantityText) \(option.displayUnit(for: quantity)) (~\(formatted)g)", comment: "Food row serving: quantity, unit and approximate grams")
             }
         }
         return "\(formatted)g"

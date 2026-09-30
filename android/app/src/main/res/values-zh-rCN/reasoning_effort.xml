@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">OpenRouter 推理强度</string>
+    <string name="settings_reasoning_effort_help">适用于所有 OpenRouter 请求。支持的级别因模型而异。更高的推理强度可能耗时更长、费用更高。“自动”保持模型默认设置；不完整的回复会以“低”重试。</string>
+    <string name="reasoning_effort_auto">默认 / 自动</string>
+    <string name="reasoning_effort_none">无</string>
+    <string name="reasoning_effort_minimal">最低</string>
+    <string name="reasoning_effort_low">低</string>
+    <string name="reasoning_effort_medium">中</string>
+    <string name="reasoning_effort_high">高</string>
+    <string name="reasoning_effort_xhigh">极高</string>
+    <string name="reasoning_effort_max">最大</string>
+</resources>

@@ -40,8 +40,8 @@ class NotificationManager {
         if breakfastEnabled {
             scheduleRepeatingMeal(
                 id: "meal.breakfast",
-                title: "Breakfast Time",
-                body: "Don't forget to log your breakfast!",
+                title: String(localized: "Breakfast Time", comment: "Meal reminder notification title"),
+                body: String(localized: "Don't forget to log your breakfast!", comment: "Meal reminder notification body"),
                 hour: breakfastHour, minute: breakfastMinute
             )
         }
@@ -49,8 +49,8 @@ class NotificationManager {
         if lunchEnabled {
             scheduleRepeatingMeal(
                 id: "meal.lunch",
-                title: "Lunch Time",
-                body: "Snap a photo to keep tracking!",
+                title: String(localized: "Lunch Time", comment: "Meal reminder notification title"),
+                body: String(localized: "Snap a photo to keep tracking!", comment: "Meal reminder notification body"),
                 hour: lunchHour, minute: lunchMinute
             )
         }
@@ -58,8 +58,8 @@ class NotificationManager {
         if dinnerEnabled {
             scheduleRepeatingMeal(
                 id: "meal.dinner",
-                title: "Dinner Time",
-                body: "Log your dinner to stay on track!",
+                title: String(localized: "Dinner Time", comment: "Meal reminder notification title"),
+                body: String(localized: "Log your dinner to stay on track!", comment: "Meal reminder notification body"),
                 hour: dinnerHour, minute: dinnerMinute
             )
         }
@@ -89,8 +89,8 @@ class NotificationManager {
         guard enabled else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Time to Hydrate"
-        content.body = "Have some water and log it in Ayuvo."
+        content.title = String(localized: "Time to Hydrate", comment: "Water reminder notification title")
+        content.body = String(localized: "Have some water and log it in Ayuvo.", comment: "Water reminder notification body")
         content.sound = .default
 
         var dateComponents = DateComponents()
@@ -140,8 +140,8 @@ class NotificationManager {
         ), fireDate > now else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Don't Break Your \(currentStreak)-Day Streak!"
-        content.body = "Log something before the day ends."
+        content.title = String(localized: "Don't Break Your \(currentStreak)-Day Streak!", comment: "Streak reminder notification title; streak length in days")
+        content.body = String(localized: "Log something before the day ends.", comment: "Streak reminder notification body")
         content.sound = .default
 
         var dateComponents = DateComponents()
@@ -200,8 +200,8 @@ class NotificationManager {
         ), fireDate > now else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Time to Weigh In"
-        content.body = "Log today's weight to keep your progress chart accurate."
+        content.title = String(localized: "Time to Weigh In", comment: "Weight reminder notification title")
+        content.body = String(localized: "Log today's weight to keep your progress chart accurate.", comment: "Weight reminder notification body")
         content.sound = .default
 
         var dateComponents = DateComponents()
@@ -231,8 +231,8 @@ class NotificationManager {
         ), fireDate > now else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Body Fat Check-In"
-        content.body = "Log today's body fat % to track your composition trend."
+        content.title = String(localized: "Body Fat Check-In", comment: "Body fat reminder notification title")
+        content.body = String(localized: "Log today's body fat % to track your composition trend.", comment: "Body fat reminder notification body")
         content.sound = .default
 
         var dateComponents = DateComponents()
@@ -313,8 +313,8 @@ class NotificationManager {
         guard settings.authorizationStatus == .authorized else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Update Available"
-        content.body = "Ayuvo \(version) is ready. Tap to update."
+        content.title = String(localized: "Update Available", comment: "App update notification title")
+        content.body = String(localized: "Ayuvo \(version) is ready. Tap to update.", comment: "App update notification body; version number")
         content.sound = .default
         content.userInfo = ["updateURL": url.absoluteString]
 

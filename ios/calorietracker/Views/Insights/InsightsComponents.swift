@@ -31,18 +31,21 @@ enum InsightsText {
     static func value(_ value: Double?, metric: String) -> String {
         guard let value else { return missing }
         switch metric {
-        case "sleep", "workout": return InsightsFormat.duration(value)
+        case "sleep", "workout": return InsightsDisplayFormat.duration(minutes: value)
         case "hrv": return String(localized: "\(Int(value.rounded())) ms")
         case "resting_heart_rate": return String(localized: "\(Int(value.rounded())) bpm")
         case "respiratory_rate": return String(localized: "\(value.formatted(.number.precision(.fractionLength(1)))) br/min")
         case "blood_oxygen", "body_fat": return "\(value.formatted(.number.precision(.fractionLength(1))))%"
         case "vo2_max": return String(localized: "\(value.formatted(.number.precision(.fractionLength(1)))) mL/kg/min")
-        case "steps": return InsightsFormat.groupInt(Int(value.rounded()))
+        case "steps": return Int(value.rounded()).formatted()
         case "active_energy": return String(localized: "\(Int(value.rounded()).formatted()) kcal")
         case "weight":
             let unit = WeightUnit(rawValue: UserDefaults.standard.string(forKey: WeightUnit.storageKey) ?? "") ?? .lbs
             let shown = unit == .kg ? value : value / 0.45359237
-            return "\(shown.formatted(.number.precision(.fractionLength(1)))) \(unit == .kg ? "kg" : "lb")"
+            let number = shown.formatted(.number.precision(.fractionLength(1)))
+            return unit == .kg
+                ? String(localized: "\(number) kg", comment: "Weight in kilograms")
+                : String(localized: "\(number) lb", comment: "Weight in pounds")
         case "bmi": return value.formatted(.number.precision(.fractionLength(1)))
         default: return value.formatted(.number.precision(.fractionLength(0...1)))
         }
@@ -51,13 +54,13 @@ enum InsightsText {
     /// "+8%" / "−3%" / "0%".
     static func percent(_ pct: Double?) -> String {
         guard let pct else { return missing }
-        return InsightsFormat.signed(pct, 0) + "%"
+        return InsightsDisplayFormat.signed(pct, 0) + "%"
     }
 
     /// Signed years ("−2.1 years").
     static func years(_ value: Double?) -> String {
         guard let value else { return missing }
-        return String(localized: "\(InsightsFormat.signed(value, 1)) years")
+        return String(localized: "\(InsightsDisplayFormat.signed(value, 1)) years")
     }
 
     static func dayTitle(_ day: String, today: String?) -> String {
@@ -151,7 +154,7 @@ struct InsightsDisclaimerFooter: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             ForEach(keys, id: \.self) { key in
-                Text(InsightsConfig.shared.disclaimer(key))
+                Text(InsightsConfig.shared.displayDisclaimer(key))
             }
         }
         .font(.system(.footnote, design: .rounded))
@@ -329,7 +332,7 @@ struct InsightsExplainSection: View {
                     .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("insights.ai.status")
-                Text(InsightsConfig.shared.disclaimer("ai"))
+                Text(InsightsConfig.shared.displayDisclaimer("ai"))
                     .font(.system(.caption, design: .rounded))
                     .foregroundStyle(.secondary)
             case .failed(let message):

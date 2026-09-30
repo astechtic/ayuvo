@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Restaurează dintr-un backup</string>
+    <string name="onboarding_restore_title">Restaurează dintr-un backup</string>
+    <string name="onboarding_restore_message">Recuperează profilul, obiectivele, jurnalul de alimente și setările dintr-un backup Ayuvo. Va trebui totuși să configurezi notificările, Health Connect și AI-ul pe acest telefon. Cheile API nu sunt niciodată incluse într-un backup.</string>
+    <string name="onboarding_restore_file">Alege un fișier de backup</string>
+    <string name="onboarding_restore_drive">Restaurează din Google Drive</string>
+    <string name="onboarding_restore_busy">Se restaurează backupul…</string>
+    <string name="onboarding_restore_error_no_drive">Nu s-a găsit niciun backup Ayuvo în Drive-ul acelui cont Google.</string>
+    <string name="onboarding_restore_error_no_profile">Acel backup nu include un profil. Alege alt backup sau continuă configurarea aici.</string>
+    <string name="onboarding_restore_error_failed">Backupul nu a putut fi restaurat: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Backupul nu a putut fi restaurat.</string>
+</resources>

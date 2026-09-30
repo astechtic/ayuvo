@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">인사이트</string>
+    <string name="domain_nutrition">영양</string>
+    <string name="domain_hydration">수분 섭취</string>
+    <string name="domain_fasting">단식</string>
+    <string name="domain_body">신체 측정</string>
+    <string name="domain_activity">활동</string>
+    <string name="domain_heart">심장</string>
+    <string name="domain_sleep">수면</string>
+    <string name="domain_vitals">활력 징후</string>
+    <string name="domain_respiratory">호흡</string>
+    <string name="domain_cycle">생리 주기 추적</string>
+    <string name="domain_mindfulness">마음챙김</string>
+    <string name="domain_mobility">이동성</string>
+    <string name="domain_hearing">청각</string>
+    <string name="domain_symptoms">증상</string>
+    <string name="domain_medications">약</string>
+    <string name="domain_records">건강 기록</string>
+    <string name="domain_other">기타 데이터</string>
+    <string name="design_back">뒤로</string>
+</resources>

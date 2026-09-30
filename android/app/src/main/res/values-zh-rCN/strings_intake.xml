@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">进食时间</string>
+    <string name="intake_eaten_at_same_as_log">与记录时间相同</string>
+    <string name="intake_eaten_at_hint">用于你的进食窗口和用餐时间</string>
+    <string name="intake_eaten_at_reset">使用记录时间</string>
+    <string name="intake_adherence_title">过去 30 天</string>
+    <string name="intake_adherence_none">过去 30 天内还没有计划的剂量。</string>
+    <string name="intake_adherence_pct">已服用 %1$s%% 的剂量（%3$d 剂中的 %2$d 剂）</string>
+    <string name="intake_adherence_adherent">按计划：已服用 80%% 或以上的剂量</string>
+    <string name="intake_adherence_below">已服用的剂量低于 80%%</string>
+    <string name="intake_adherence_on_time">按时（一小时内）</string>
+    <string name="intake_adherence_median_delay">典型延迟</string>
+    <string name="intake_adherence_streak">连续天数</string>
+    <string name="intake_adherence_missed_by_weekday">按星期统计的漏服剂量</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d 剂</string>
+    <string name="intake_move_reminder">将提醒移到 %1$s？</string>
+    <string name="intake_move_reminder_body">你通常比提醒时间晚服用此剂量。调整提醒只会更改其时间，其他一切保持不变。</string>
+    <string name="intake_move_reminder_action">调整提醒</string>
+    <string name="intake_supplement_above_upper">%1$s在其服药间隔内平均每天 %2$s，高于可耐受最高摄入量 %3$s。请遵照开药医生的指示。</string>
+    <string name="intake_lab_links_title">化验结果与营养</string>
+    <string name="intake_lab_links_footer">基于你过去 30 天的饮食记录和补充剂，以及报告上印出的参考范围。不构成医疗建议。</string>
+    <string name="intake_lab_link_low_one">你的%1$s低于报告的参考范围。</string>
+    <string name="intake_lab_link_low_many">你的%1$s低于报告的参考范围。</string>
+    <string name="intake_lab_link_and">%1$s和%2$s</string>
+    <string name="intake_lab_link_intake">你的%1$s平均摄入量为参考值的 %2$d%%。</string>
+    <string name="intake_lab_link_intake_no_supplement">你的%1$s平均摄入量为参考值的 %2$d%%，且你的补充剂中都不含该营养素。</string>
+    <string name="intake_lab_link_doctor">建议与你的医生讨论此情况。</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

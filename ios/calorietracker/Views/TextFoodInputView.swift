@@ -9,10 +9,10 @@ struct TextFoodInputView: View {
     var onSubmit: (String) -> Void
 
     var placeholders = [
-        "2 eggs, toast with butter and a coffee",
-        "Chipotle burrito bowl with chicken and rice",
-        "Domino's pepperoni pizza, 2 slices",
-        "Greek yogurt with granola and blueberries",
+        String(localized: "2 eggs, toast with butter and a coffee", comment: "Example food description placeholder in text food input"),
+        String(localized: "Chipotle burrito bowl with chicken and rice", comment: "Example food description placeholder in text food input"),
+        String(localized: "Domino's pepperoni pizza, 2 slices", comment: "Example food description placeholder in text food input"),
+        String(localized: "Greek yogurt with granola and blueberries", comment: "Example food description placeholder in text food input"),
     ]
 
     /// Lines the field always occupies. A fixed height means neither the rotating placeholder

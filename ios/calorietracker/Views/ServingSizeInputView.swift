@@ -61,9 +61,9 @@ struct ServingSizeInputView: View {
 
                 Section("Estimated Nutrition") {
                     LabeledContent("Calories", value: "\(preview.calories) kcal")
-                    LabeledContent("Protein", value: "\(MacroValueFormatter.string(preview.protein)) g")
-                    LabeledContent("Carbs", value: "\(MacroValueFormatter.string(preview.carbs)) g")
-                    LabeledContent("Fat", value: "\(MacroValueFormatter.string(preview.fat)) g")
+                    LabeledContent("Protein", value: "\(MacroValueFormatter.display(preview.protein)) g")
+                    LabeledContent("Carbs", value: "\(MacroValueFormatter.display(preview.carbs)) g")
+                    LabeledContent("Fat", value: "\(MacroValueFormatter.display(preview.fat)) g")
                 }
 
                 Section {

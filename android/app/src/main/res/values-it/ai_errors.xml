@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Nessuna chiave API configurata. Aggiungi la tua chiave in Impostazioni → Provider IA.</string>
+    <string name="ai_error_image_conversion">Impossibile elaborare l\'immagine. Prova con un\'altra foto.</string>
+    <string name="ai_error_invalid_response">Impossibile interpretare la risposta dell\'IA. Riprova.</string>
+    <string name="ai_error_invalid_url">URL API non valido. Controlla le impostazioni del provider.</string>
+    <string name="ai_error_offline">Sembra che tu sia offline. Controlla la connessione e riprova.</string>
+    <string name="ai_error_connection">Impossibile connettersi al provider IA. Controlla la connessione e l\'URL del provider, poi riprova.</string>
+    <string name="ai_error_timeout">L\'IA ha impiegato troppo tempo a rispondere. Riprova oppure aumenta il timeout della richiesta in Impostazioni → Provider IA.</string>
+    <string name="ai_error_credits">Il tuo account IA ha esaurito i crediti. Ricaricalo oppure cambia provider in Impostazioni → Provider IA.</string>
+    <string name="ai_error_daily_quota">La quota giornaliera del tuo account IA è esaurita. Riprova domani oppure cambia provider in Impostazioni → Provider IA.</string>
+    <string name="ai_error_quota">La quota di utilizzo del tuo account IA è stata superata. Controlla i limiti del provider oppure cambia provider in Impostazioni → Provider IA.</string>
+    <string name="ai_error_model">Il modello o l\'endpoint API selezionato non è disponibile. Controlla il modello e l\'URL API in Impostazioni → Provider IA.</string>
+    <string name="ai_error_rate_limit">Limite di richieste raggiunto per la tua chiave API. Attendi un minuto oppure cambia provider in Impostazioni → Provider IA. Se usi un piano gratuito, controlla se la quota giornaliera è esaurita.</string>
+    <string name="ai_error_key_rejected">La tua chiave API è stata rifiutata. Apri Impostazioni → Provider IA e incolla di nuovo una chiave valida.</string>
+    <string name="ai_error_overloaded">Il provider IA è sovraccarico in questo momento. Abbiamo riprovato alcune volte: riprova tra un minuto oppure cambia provider/modello in Impostazioni → Provider IA.</string>
+    <string name="ai_error_generic">La richiesta all\'IA non è riuscita. Riprova oppure cambia provider in Impostazioni → Provider IA.</string>
+    <string name="ai_error_local_unavailable">Il motore IA sul dispositivo non è disponibile. Controlla il modello scaricato in Impostazioni → Provider IA.</string>
+    <string name="ai_error_truncated">La risposta dell\'IA è stata troncata due volte. Prova con un input più breve o con un altro modello.</string>
+    <string name="ai_error_both_failed">%1$s e il modello di riserva %2$s non sono riusciti. %3$s</string>
+</resources>

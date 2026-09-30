@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Cum vrei ca Ayuvo AI să-ți proceseze dosarele medicale?</string>
+    <string name="records_ai_mode_local">AI local</string>
+    <string name="records_ai_mode_local_detail">Folosește modelul de pe dispozitiv. Textul dosarelor rămâne pe acest telefon pentru procesarea AI.</string>
+    <string name="records_ai_mode_cloud">AI în cloud</string>
+    <string name="records_ai_mode_cloud_detail">Trimite textul paginilor (imagini doar pentru paginile fără text) furnizorului tău AI.</string>
+    <string name="records_ai_mode_ask">Întreabă-mă când e nevoie</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo întreabă înainte de a folosi AI pentru o înregistrare.</string>
+    <string name="records_ai_mode_off">Omite AI deocamdată</string>
+    <string name="records_ai_mode_off_detail">Detaliile sunt găsite fără AI. Poți schimba asta în Setări.</string>
+    <string name="records_ai_onboarding_note">Poți schimba oricând asta în Setări › Dosare medicale.</string>
+    <string name="records_ai_chooser_title">Alege cum te ajută AI-ul cu dosarele</string>
+    <string name="records_ai_settings_title">Procesare AI</string>
+    <string name="records_ai_local_unavailable">AI-ul de pe dispozitiv nu este configurat — detalii găsite fără AI.</string>
+    <string name="records_ai_set_up_local">Configurează AI-ul de pe dispozitiv</string>
+    <string name="records_ai_no_cloud_provider">Adaugă un furnizor AI pentru a folosi AI online.</string>
+    <string name="records_ai_add_provider">Adaugă un furnizor AI</string>
+    <string name="records_ai_cloud_provider_note">AI-ul online folosește %1$s.</string>
+    <string name="records_ai_consent_title">Folosești AI pentru a găsi mai multe detalii?</string>
+    <string name="records_ai_consent_body">AI-ul poate găsi detalii pe care regulile le-au ratat. Rezultatele sunt sugestii pe care le poți verifica cu originalul.</string>
+    <string name="records_ai_consent_local">Pe acest dispozitiv</string>
+    <string name="records_ai_consent_cloud">AI online · %1$s</string>
+    <string name="records_ai_consent_not_now">Nu acum</string>
+    <string name="records_ai_consent_apply_all">Aplică tuturor dosarelor în așteptare</string>
+    <string name="records_ai_consent_none_available">Încă nu este disponibil niciun AI. Configurează AI-ul de pe dispozitiv sau adaugă un furnizor AI în Setări.</string>
+    <string name="records_ai_status_local">Procesat pe acest dispozitiv</string>
+    <string name="records_ai_status_cloud">Procesat cu AI online · %1$s</string>
+    <string name="records_ai_status_none">Neprocesat de AI</string>
+</resources>

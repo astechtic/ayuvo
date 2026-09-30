@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Postřehy</string>
+    <string name="domain_nutrition">Nutriční hodnoty</string>
+    <string name="domain_hydration">Hydratace</string>
+    <string name="domain_fasting">Půst</string>
+    <string name="domain_body">Tělesné míry</string>
+    <string name="domain_activity">Aktivita</string>
+    <string name="domain_heart">Srdce</string>
+    <string name="domain_sleep">Spánek</string>
+    <string name="domain_vitals">Životní funkce</string>
+    <string name="domain_respiratory">Dýchání</string>
+    <string name="domain_cycle">Sledování cyklu</string>
+    <string name="domain_mindfulness">Všímavost</string>
+    <string name="domain_mobility">Pohyblivost</string>
+    <string name="domain_hearing">Sluch</string>
+    <string name="domain_symptoms">Příznaky</string>
+    <string name="domain_medications">Léky</string>
+    <string name="domain_records">Zdravotní záznamy</string>
+    <string name="domain_other">Další data</string>
+    <string name="design_back">Zpět</string>
+</resources>

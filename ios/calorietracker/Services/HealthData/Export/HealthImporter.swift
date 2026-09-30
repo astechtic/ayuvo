@@ -17,13 +17,13 @@ nonisolated enum HealthImportError: LocalizedError, Sendable, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .fileTooLarge: return "This file is too large to import."
-        case .notAnArchive: return "This is not a Ayuvo health data archive."
-        case .invalidManifest: return "The archive's manifest could not be read."
-        case .unsupportedFormat: return "This archive is not Ayuvo health data."
-        case .newerFormat: return "This health data archive needs a newer Ayuvo."
-        case .missingSamples: return "The archive does not contain any health records."
-        case .lineTooLong: return "The archive contains a record that is too large to import."
+        case .fileTooLarge: return String(localized: "This file is too large to import.", comment: "Health data import error")
+        case .notAnArchive: return String(localized: "This is not a Ayuvo health data archive.", comment: "Health data import error")
+        case .invalidManifest: return String(localized: "The archive's manifest could not be read.", comment: "Health data import error")
+        case .unsupportedFormat: return String(localized: "This archive is not Ayuvo health data.", comment: "Health data import error")
+        case .newerFormat: return String(localized: "This health data archive needs a newer Ayuvo.", comment: "Health data import error")
+        case .missingSamples: return String(localized: "The archive does not contain any health records.", comment: "Health data import error")
+        case .lineTooLong: return String(localized: "The archive contains a record that is too large to import.", comment: "Health data import error")
         }
     }
 }

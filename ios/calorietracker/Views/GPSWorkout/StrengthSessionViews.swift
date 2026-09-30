@@ -21,7 +21,7 @@ struct StrengthSessionCard: View {
                         Image(systemName: mirror.isMirroring && !recorder.isActive ? "applewatch" : recorder.sport.systemImage)
                             .foregroundStyle(Color.workoutAccent)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(recorder.isActive ? recorder.sport.title : "Apple Watch workout")
+                            Text(recorder.isActive ? recorder.sport.title : String(localized: "Apple Watch workout", comment: "Banner title for a workout running on Apple Watch"))
                                 .font(.system(.subheadline, design: .rounded, weight: .semibold))
                             Text(gpsStatus).font(.caption).foregroundStyle(.secondary)
                         }
@@ -86,12 +86,12 @@ struct StrengthSessionCard: View {
     }
 
     private var gpsStatus: String {
-        if !recorder.isActive { return "Recording on your watch" }
+        if !recorder.isActive { return String(localized: "Recording on your watch", comment: "Workout banner status for a running GPS or Apple Watch workout") }
         switch recorder.phase {
-        case .paused: return "Paused"
-        case .recovery: return "Measuring recovery"
-        case .interrupted: return "Interrupted — resume or save"
-        case .saving: return "Saving"
+        case .paused: return String(localized: "Paused", comment: "Workout banner status for a running GPS or Apple Watch workout")
+        case .recovery: return String(localized: "Measuring recovery", comment: "Workout banner status for a running GPS or Apple Watch workout")
+        case .interrupted: return String(localized: "Interrupted — resume or save", comment: "Workout banner status for a running GPS or Apple Watch workout")
+        case .saving: return String(localized: "Saving", comment: "Workout banner status for a running GPS or Apple Watch workout")
         default: return WorkoutFormat.distance(recorder.live?.distanceM ?? 0)
         }
     }
@@ -139,7 +139,7 @@ struct OutdoorWorkoutDaySection: View {
         if let o = session.outdoor { parts.append(WorkoutFormat.distance(o.distanceM)) }
         parts.append(WorkoutFormat.duration(Double(session.durationSeconds)))
         parts.append(session.startedAt.formatted(date: .omitted, time: .shortened))
-        if session.outdoor?.recordedOn == "watch" { parts.append("Apple Watch") }
+        if session.outdoor?.recordedOn == "watch" { parts.append(String(localized: "Apple Watch", comment: "Device name: workout recorded on Apple Watch")) }
         return parts.joined(separator: " · ")
     }
 }

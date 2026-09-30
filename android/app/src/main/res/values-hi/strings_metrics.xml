@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">कैलोरी</string>
+    <string name="metric_protein">प्रोटीन</string>
+    <string name="metric_carbs">कार्बोहाइड्रेट</string>
+    <string name="metric_fat">कुल फैट</string>
+    <string name="metric_fiber">फ़ाइबर</string>
+    <string name="metric_water">पानी</string>
+    <string name="metric_fasting">उपवास</string>
+    <string name="metric_weight">वजन</string>
+    <string name="metric_body_fat">बॉडी फैट प्रतिशत</string>
+    <string name="metric_workouts">वर्कआउट</string>
+    <string name="metric_workout_minutes">वर्कआउट का समय</string>
+    <string name="metric_workout_burn">वर्कआउट ऊर्जा</string>
+    <string name="metric_about_calories">Ayuvo में लॉग किए गए भोजन से ऊर्जा, प्रतिदिन जोड़ी गई। लंबी सीमाओं में उन दिनों का औसत दिखता है जिन दिनों आपने भोजन लॉग किया।</string>
+    <string name="metric_about_protein">Ayuvo में लॉग किए गए भोजन से प्रोटीन, प्रतिदिन जोड़ा गया।</string>
+    <string name="metric_about_carbs">Ayuvo में लॉग किए गए भोजन से कार्बोहाइड्रेट, प्रतिदिन जोड़े गए।</string>
+    <string name="metric_about_fat">Ayuvo में लॉग किए गए भोजन से फैट, प्रतिदिन जोड़ा गया।</string>
+    <string name="metric_about_fiber">Ayuvo में लॉग किए गए भोजन से डाइटरी फ़ाइबर, प्रतिदिन जोड़ा गया। बिना फ़ाइबर जानकारी वाले भोजन छोड़ दिए जाते हैं।</string>
+    <string name="metric_about_water">Ayuvo में लॉग किया गया पानी, प्रतिदिन जोड़ा गया।</string>
+    <string name="metric_about_fasting">प्रतिदिन उपवास में बिताया गया समय। आधी रात पार करने वाला उपवास उन सभी दिनों में गिना जाता है जिन्हें वह कवर करता है।</string>
+    <string name="metric_about_weight">Ayuvo में लॉग की गई वज़न एंट्री, जिनमें कनेक्ट किए गए हेल्थ ऐप से इम्पोर्ट की गई रीडिंग भी शामिल हैं। हर पॉइंट उस अवधि की सबसे हाल की रीडिंग दिखाता है।</string>
+    <string name="metric_about_body_fat">Ayuvo में लॉग की गई बॉडी फैट रीडिंग। हर पॉइंट उस अवधि की सबसे हाल की रीडिंग दिखाता है।</string>
+    <string name="metric_about_workouts">Ayuvo में पूरे किए गए वर्कआउट, उस दिन गिने जाते हैं जिस दिन वे लॉग किए गए।</string>
+    <string name="metric_about_workout_minutes">Ayuvo में पूरे किए गए वर्कआउट में बिताया गया समय।</string>
+    <string name="metric_about_workout_burn">Ayuvo में पूरे किए गए वर्कआउट में बर्न हुई अनुमानित ऊर्जा। बिना अनुमान वाले वर्कआउट छोड़ दिए जाते हैं।</string>
+    <string name="metric_add_to_favourites">पसंदीदा में जोड़ें</string>
+    <string name="metric_about">परिचय</string>
+    <string name="metric_log">लॉग</string>
+    <string name="metric_log_weight">वज़न डेटा जोड़ें</string>
+    <string name="metric_log_body_fat">बॉडी फैट डेटा जोड़ें</string>
+    <string name="metric_add_water">पानी जोड़ें</string>
+    <string name="metric_add_water_quick">%1$s जोड़ें</string>
+    <string name="metric_add_water_custom">कस्टम मात्रा</string>
+    <string name="metric_open_food_diary">भोजन डायरी खोलें</string>
+    <string name="metric_open_fasting">उपवास खोलें</string>
+    <string name="metric_open_workouts">वर्कआउट खोलें</string>
+    <string name="metric_details">विवरण दिखाएँ</string>
+    <string name="metric_goal_label">लक्ष्य %1$s</string>
+    <string name="metric_no_rows">इस सीमा में कोई एंट्री नहीं</string>
+    <string name="metric_row_logged_in_diary">भोजन डायरी में लॉग किया गया</string>
+    <string name="metric_delete_entry">एंट्री हटाएं</string>
+    <string name="metric_delete_entry_body">यह एंट्री Ayuvo से हटा दी जाएगी।</string>
+    <string name="metric_sources_app">Ayuvo में रिकॉर्ड किया गया</string>
+</resources>

@@ -80,21 +80,24 @@ enum OutdoorSport: String, CaseIterable, Identifiable, Codable, Sendable {
 
     var id: String { rawValue }
 
+    /// Display name from `workout_config.json` `sports.<id>.title`, translated through table "Contracts".
     var title: String {
+        let fallback: String
         switch self {
-        case .walk: return "Outdoor Walk"
-        case .run: return "Outdoor Run"
-        case .cycle: return "Outdoor Cycle"
-        case .hike: return "Hike"
+        case .walk: fallback = String(localized: "Outdoor Walk", comment: "GPS workout sport name")
+        case .run: fallback = String(localized: "Outdoor Run", comment: "GPS workout sport name")
+        case .cycle: fallback = String(localized: "Outdoor Cycle", comment: "GPS workout sport name")
+        case .hike: fallback = String(localized: "Hike", comment: "GPS workout sport name")
         }
+        return ContractText.text("workout.sports.\(rawValue).title", fallback)
     }
 
     var shortTitle: String {
         switch self {
-        case .walk: return "Walk"
-        case .run: return "Run"
-        case .cycle: return "Cycle"
-        case .hike: return "Hike"
+        case .walk: return String(localized: "Walk", comment: "GPS workout short sport name")
+        case .run: return String(localized: "Run", comment: "GPS workout short sport name")
+        case .cycle: return String(localized: "Cycle", comment: "GPS workout short sport name")
+        case .hike: return String(localized: "Hike", comment: "GPS workout short sport name")
         }
     }
 
@@ -131,8 +134,10 @@ enum WorkoutFormat {
     }
 
     static func distance(_ meters: Double, useMetric: Bool = Locale.current.measurementSystem == .metric) -> String {
-        if useMetric { return String(format: "%.2f km", meters / 1000) }
-        return String(format: "%.2f mi", meters / 1609.344)
+        let value = (useMetric ? meters / 1000 : meters / 1609.344).formatted(.number.precision(.fractionLength(2)))
+        return useMetric
+            ? String(localized: "\(value) km", comment: "Workout distance in kilometres")
+            : String(localized: "\(value) mi", comment: "Workout distance in miles")
     }
 
     static func pace(secondsPerKm: Double?, useMetric: Bool = Locale.current.measurementSystem == .metric) -> String {
@@ -143,6 +148,9 @@ enum WorkoutFormat {
 
     static func speed(mps: Double?, useMetric: Bool = Locale.current.measurementSystem == .metric) -> String {
         guard let mps, mps.isFinite, mps >= 0 else { return "--" }
-        return useMetric ? String(format: "%.1f km/h", mps * 3.6) : String(format: "%.1f mph", mps * 2.236_936)
+        let value = (useMetric ? mps * 3.6 : mps * 2.236_936).formatted(.number.precision(.fractionLength(1)))
+        return useMetric
+            ? String(localized: "\(value) km/h", comment: "Workout speed in kilometres per hour")
+            : String(localized: "\(value) mph", comment: "Workout speed in miles per hour")
     }
 }

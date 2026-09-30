@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Ehtiyat nüsxədən bərpa et</string>
+    <string name="onboarding_restore_title">Ehtiyat nüsxədən bərpa et</string>
+    <string name="onboarding_restore_message">Profilinizi, hədəflərinizi, qida qeydlərinizi və parametrlərinizi Ayuvo ehtiyat nüsxəsindən geri qaytarın. Bildirişləri, Health Connect-i və Sİ-ni bu telefonda yenə ayarlamalı olacaqsınız. API açarları heç vaxt ehtiyat nüsxəyə daxil olmur.</string>
+    <string name="onboarding_restore_file">Ehtiyat nüsxə faylı seçin</string>
+    <string name="onboarding_restore_drive">Google Drive-dan bərpa et</string>
+    <string name="onboarding_restore_busy">Ehtiyat nüsxəniz bərpa edilir…</string>
+    <string name="onboarding_restore_error_no_drive">Həmin Google hesabının Drive-ında Ayuvo ehtiyat nüsxəsi tapılmadı.</string>
+    <string name="onboarding_restore_error_no_profile">Bu ehtiyat nüsxədə profil yoxdur. Başqa ehtiyat nüsxə seçin və ya ayarlamanı burada davam etdirin.</string>
+    <string name="onboarding_restore_error_failed">Ehtiyat nüsxəni bərpa etmək mümkün olmadı: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Ehtiyat nüsxəni bərpa etmək mümkün olmadı.</string>
+</resources>

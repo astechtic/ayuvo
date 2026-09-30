@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Nie skonfigurowano klucza API. Dodaj klucz w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_image_conversion">Nie udało się przetworzyć obrazu. Spróbuj innego zdjęcia.</string>
+    <string name="ai_error_invalid_response">Nie udało się zrozumieć odpowiedzi AI. Spróbuj ponownie.</string>
+    <string name="ai_error_invalid_url">Nieprawidłowy URL API. Sprawdź ustawienia dostawcy.</string>
+    <string name="ai_error_offline">Wygląda na to, że jesteś offline. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="ai_error_connection">Nie udało się połączyć z dostawcą AI. Sprawdź połączenie i URL dostawcy, a potem spróbuj ponownie.</string>
+    <string name="ai_error_timeout">AI zbyt długo nie odpowiadała. Spróbuj ponownie lub zwiększ limit czasu żądania w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_credits">Na Twoim koncie AI skończyły się środki. Doładuj je lub zmień dostawcę w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_daily_quota">Dzienny limit Twojego konta AI został wykorzystany. Spróbuj jutro lub zmień dostawcę w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_quota">Przekroczono limit użycia Twojego konta AI. Sprawdź limity dostawcy lub zmień dostawcę w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_model">Wybrany model lub endpoint API jest niedostępny. Sprawdź model i URL API w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_rate_limit">Przekroczono limit zapytań dla Twojego klucza API. Odczekaj minutę lub zmień dostawcę w Ustawienia → Dostawca AI. Jeśli korzystasz z darmowego planu, sprawdź, czy nie wykorzystano dziennego limitu.</string>
+    <string name="ai_error_key_rejected">Twój klucz API został odrzucony. Otwórz Ustawienia → Dostawca AI i wklej ponownie prawidłowy klucz.</string>
+    <string name="ai_error_overloaded">Dostawca AI jest teraz przeciążony. Ponowiliśmy próbę kilka razy — spróbuj za minutę lub zmień dostawcę/model w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_generic">Żądanie AI nie powiodło się. Spróbuj ponownie lub zmień dostawcę w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_local_unavailable">Środowisko AI na urządzeniu jest niedostępne. Sprawdź pobrany model w Ustawienia → Dostawca AI.</string>
+    <string name="ai_error_truncated">Odpowiedź AI została dwukrotnie ucięta. Spróbuj krótszego tekstu lub innego modelu.</string>
+    <string name="ai_error_both_failed">Zawiodły zarówno %1$s, jak i zapasowy %2$s. %3$s</string>
+</resources>

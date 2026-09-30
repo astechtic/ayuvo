@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">¿Cómo quieres que la IA de Ayuvo procese tus registros de salud?</string>
+    <string name="records_ai_mode_local">IA local</string>
+    <string name="records_ai_mode_local_detail">Usa el modelo en el dispositivo. El texto de los registros se queda en este teléfono para el procesamiento con IA.</string>
+    <string name="records_ai_mode_cloud">IA en la nube</string>
+    <string name="records_ai_mode_cloud_detail">Envía el texto de las páginas (imágenes solo para páginas sin texto) a tu proveedor de IA.</string>
+    <string name="records_ai_mode_ask">Preguntarme cuando haga falta</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo pregunta antes de usar la IA en un registro.</string>
+    <string name="records_ai_mode_off">Omitir la IA por ahora</string>
+    <string name="records_ai_mode_off_detail">Los datos se extraen sin IA. Puedes cambiarlo en Ajustes.</string>
+    <string name="records_ai_onboarding_note">Puedes cambiarlo cuando quieras en Ajustes › Registros de salud.</string>
+    <string name="records_ai_chooser_title">Elige cómo te ayuda la IA con tus registros</string>
+    <string name="records_ai_settings_title">Procesamiento con IA</string>
+    <string name="records_ai_local_unavailable">La IA en el dispositivo no está configurada; datos extraídos sin IA.</string>
+    <string name="records_ai_set_up_local">Configurar IA en el dispositivo</string>
+    <string name="records_ai_no_cloud_provider">Añade un proveedor de IA para usar la IA en línea.</string>
+    <string name="records_ai_add_provider">Añadir un proveedor de IA</string>
+    <string name="records_ai_cloud_provider_note">La IA en línea usa %1$s.</string>
+    <string name="records_ai_consent_title">¿Usar la IA para buscar más detalles?</string>
+    <string name="records_ai_consent_body">La IA puede encontrar datos que las reglas no detectaron. Los resultados son sugerencias que puedes comprobar con el original.</string>
+    <string name="records_ai_consent_local">En este dispositivo</string>
+    <string name="records_ai_consent_cloud">IA en línea · %1$s</string>
+    <string name="records_ai_consent_not_now">Ahora no</string>
+    <string name="records_ai_consent_apply_all">Aplicar a todos los registros en espera</string>
+    <string name="records_ai_consent_none_available">Aún no hay ninguna IA disponible. Configura la IA en el dispositivo o añade un proveedor de IA en Ajustes.</string>
+    <string name="records_ai_status_local">Procesado en este dispositivo</string>
+    <string name="records_ai_status_cloud">Procesado con IA en línea · %1$s</string>
+    <string name="records_ai_status_none">No procesado por la IA</string>
+</resources>

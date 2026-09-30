@@ -1276,8 +1276,21 @@ enum CR {
 
     /// §10 "Export as Markdown". A readable transcript. Attachment *contents* are never inlined —
     /// only their names, because the excerpt was a redacted copy of a file the user still has.
+    /// The words of the Markdown export. `english` is what the vectors pin; the app passes localized ones.
+    struct ExportLabels {
+        var newChat = "New chat"
+        var messageCount: (Int) -> String = { "\($0) messages" }
+        var coach = "Coach"
+        var you = "You"
+        var attached = "Attached"
+        var usedRecords = "Used records"
+
+        static let english = ExportLabels()
+    }
+
     static func conversationMarkdown(conversation: RJ, messages: [RJ], attachments: [RJ],
-                                     localDay: String, provider: String? = nil) -> RJ {
+                                     localDay: String, provider: String? = nil,
+                                     labels: ExportLabels = .english) -> RJ {
         var byID: [String: RJ] = [:]
         for attachment in attachments {
             if let id = attachment["id"].string { byID[id] = attachment }
@@ -1290,14 +1303,14 @@ enum CR {
         }
         let shown = latestVariants(rows)
 
-        let title = conversation["title"].string.flatMap { $0.isEmpty ? nil : $0 } ?? "New chat"
-        var header = [localDay, "\(shown.count) messages"]
+        let title = conversation["title"].string.flatMap { $0.isEmpty ? nil : $0 } ?? labels.newChat
+        var header = [localDay, labels.messageCount(shown.count)]
         if let provider { header.append(provider) }
         var lines = ["# " + collapseWS(title), "", header.joined(separator: " · "), "", "---"]
 
         for message in shown {
             lines.append("")
-            let speaker = message["role"].string == "assistant" ? "Coach" : "You"
+            let speaker = message["role"].string == "assistant" ? labels.coach : labels.you
             lines.append("**\(speaker):** " + (message["content"].string ?? ""))
             let names = (message["attachment_ids"].array ?? []).compactMap { id -> String? in
                 guard let key = id.string else { return nil }
@@ -1305,12 +1318,12 @@ enum CR {
             }
             if !names.isEmpty {
                 lines.append("")
-                lines.append("Attached: " + names.joined(separator: ", "))
+                lines.append(labels.attached + ": " + names.joined(separator: ", "))
             }
             let refs = message["record_refs"].array ?? []
             if !refs.isEmpty {
                 lines.append("")
-                lines.append("Used records: " + refs.map { ref in
+                lines.append(labels.usedRecords + ": " + refs.map { ref in
                     let name = ref["title"].string ?? ref["record_id"].string ?? ""
                     return "\(name) — \(ref["date"].string ?? "")"
                 }.joined(separator: "; "))

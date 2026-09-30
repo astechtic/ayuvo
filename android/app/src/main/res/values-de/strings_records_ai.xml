@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Wie soll Ayuvo AI deine Gesundheitsbefunde verarbeiten?</string>
+    <string name="records_ai_mode_local">Lokale KI</string>
+    <string name="records_ai_mode_local_detail">Nutzt das Modell auf dem Gerät. Der Befundtext bleibt für die KI-Verarbeitung auf diesem Telefon.</string>
+    <string name="records_ai_mode_cloud">Cloud-KI</string>
+    <string name="records_ai_mode_cloud_detail">Sendet den Seitentext (Bilder nur bei Seiten ohne Text) an deinen KI-Anbieter.</string>
+    <string name="records_ai_mode_ask">Bei Bedarf fragen</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo fragt, bevor KI auf einen Befund angewendet wird.</string>
+    <string name="records_ai_mode_off">KI vorerst überspringen</string>
+    <string name="records_ai_mode_off_detail">Details werden ohne KI ermittelt. Du kannst das in den Einstellungen ändern.</string>
+    <string name="records_ai_onboarding_note">Du kannst das jederzeit unter Einstellungen › Gesundheitsbefunde ändern.</string>
+    <string name="records_ai_chooser_title">Wähle, wie KI dir bei deinen Befunden hilft</string>
+    <string name="records_ai_settings_title">KI-Verarbeitung</string>
+    <string name="records_ai_local_unavailable">KI auf dem Gerät ist nicht eingerichtet – Details ohne KI ermittelt.</string>
+    <string name="records_ai_set_up_local">KI auf dem Gerät einrichten</string>
+    <string name="records_ai_no_cloud_provider">Füge einen KI-Anbieter hinzu, um Online-KI zu nutzen.</string>
+    <string name="records_ai_add_provider">KI-Anbieter hinzufügen</string>
+    <string name="records_ai_cloud_provider_note">Online-KI nutzt %1$s.</string>
+    <string name="records_ai_consent_title">KI verwenden, um weitere Details zu finden?</string>
+    <string name="records_ai_consent_body">KI kann Details finden, die die Regeln übersehen haben. Die Ergebnisse sind Vorschläge, die du mit dem Original abgleichen kannst.</string>
+    <string name="records_ai_consent_local">Auf diesem Gerät</string>
+    <string name="records_ai_consent_cloud">Online-KI · %1$s</string>
+    <string name="records_ai_consent_not_now">Jetzt nicht</string>
+    <string name="records_ai_consent_apply_all">Auf alle wartenden Befunde anwenden</string>
+    <string name="records_ai_consent_none_available">Noch keine KI verfügbar. Richte KI auf dem Gerät ein oder füge in den Einstellungen einen KI-Anbieter hinzu.</string>
+    <string name="records_ai_status_local">Auf diesem Gerät verarbeitet</string>
+    <string name="records_ai_status_cloud">Mit Online-KI verarbeitet · %1$s</string>
+    <string name="records_ai_status_none">Nicht per KI verarbeitet</string>
+</resources>

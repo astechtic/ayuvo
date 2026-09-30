@@ -43,7 +43,7 @@ struct UserExerciseEditorView: View {
                         .textInputAutocapitalization(.words)
 
                     Picker("Body Part", selection: $draft.bodyPart) {
-                        ForEach(bodyPartOptions, id: \.self) { Text($0).tag($0) }
+                        ForEach(bodyPartOptions, id: \.self) { Text(ExerciseTermText.bodyPart($0)).tag($0) }
                     }
                 }
 
@@ -52,7 +52,7 @@ struct UserExerciseEditorView: View {
                     musclePicker(title: "Secondary muscles", selection: $draft.secondaryMuscles, options: catalog.availableSecondaryMuscles)
 
                     Picker("Equipment", selection: $draft.rawEquipment) {
-                        ForEach(equipmentOptions, id: \.self) { Text($0).tag($0) }
+                        ForEach(equipmentOptions, id: \.self) { Text(ExerciseTermText.equipment($0)).tag($0) }
                     }
                 }
 
@@ -151,14 +151,14 @@ struct UserExerciseEditorView: View {
     }
 
     @ViewBuilder
-    private func musclePicker(title: String, selection: Binding<[String]>, options: [String]) -> some View {
+    private func musclePicker(title: LocalizedStringKey, selection: Binding<[String]>, options: [String]) -> some View {
         NavigationLink(title) {
             List(options, id: \.self) { muscle in
                 Button {
                     toggleMuscle(muscle, in: selection)
                 } label: {
                     HStack {
-                        Text(muscle)
+                        Text(ExerciseTermText.muscle(muscle))
                         Spacer()
                         if selection.wrappedValue.contains(muscle) {
                             Image(systemName: "checkmark")

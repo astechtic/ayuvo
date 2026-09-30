@@ -17,16 +17,16 @@ enum QuickAction: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .camera: "Camera + Note"
-        case .photos: "Photos"
-        case .voice: "Voice"
-        case .text: "Text"
-        case .barcode: "Barcode"
-        case .favorites: "Favorites"
-        case .frequent: "Frequent"
-        case .recent: "Recent"
-        case .manual: "Manual"
-        case .fasting: "Fasting"
+        case .camera: String(localized: "Camera + Note", comment: "Home-screen quick action title")
+        case .photos: String(localized: "Photos", comment: "Home-screen quick action title")
+        case .voice: String(localized: "Voice", comment: "Home-screen quick action title")
+        case .text: String(localized: "Text", comment: "Home-screen quick action title")
+        case .barcode: String(localized: "Barcode", comment: "Home-screen quick action title")
+        case .favorites: String(localized: "Favorites", comment: "Home-screen quick action title")
+        case .frequent: String(localized: "Frequent", comment: "Home-screen quick action title")
+        case .recent: String(localized: "Recent", comment: "Home-screen quick action title")
+        case .manual: String(localized: "Manual", comment: "Home-screen quick action title")
+        case .fasting: String(localized: "Fasting", comment: "Home-screen quick action title")
         }
     }
 
@@ -78,7 +78,7 @@ enum QuickActionSettings {
             return UIApplicationShortcutItem(
                 type: QuickActionCoordinator.shortcutType(for: slot),
                 localizedTitle: action.title,
-                localizedSubtitle: "Quick Action \(slot + 1)",
+                localizedSubtitle: String(localized: "Quick Action \(slot + 1)", comment: "Home-screen quick action subtitle; slot number"),
                 icon: UIApplicationShortcutIcon(systemImageName: action.systemImageName),
                 userInfo: nil
             )

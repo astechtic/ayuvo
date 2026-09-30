@@ -149,7 +149,7 @@ struct SettingsPaneView: View {
     // Height formatting
     var heightDisplay: String {
         if heightMetric {
-            return "\(Int(profile.heightCm)) cm"
+            return String(localized: "\(Int(profile.heightCm)) cm", comment: "Height in centimetres")
         }
         // Round to the nearest inch — truncating shows 5'6" for a 170 cm / 5'7" pick.
         let totalInches = Int((profile.heightCm / 2.54).rounded())
@@ -161,9 +161,9 @@ struct SettingsPaneView: View {
     // Weight formatting
     var weightDisplay: String {
         if weightMetric {
-            return String(format: "%.1f kg", profile.weightKg)
+            return String(localized: "\(profile.weightKg.formatted(.number.precision(.fractionLength(1)))) kg", comment: "Weight in kilograms")
         }
-        return String(format: "%.1f lbs", profile.weightKg * 2.20462)
+        return String(localized: "\((profile.weightKg * 2.20462).formatted(.number.precision(.fractionLength(1)))) lbs", comment: "Weight in pounds")
     }
 
     // Birthday formatting
@@ -175,20 +175,22 @@ struct SettingsPaneView: View {
 
     // Goal weight display
     var goalWeightDisplay: String {
-        guard let gw = profile.goalWeightKg else { return "Not set" }
+        guard let gw = profile.goalWeightKg else { return String(localized: "Not set", comment: "Settings value placeholder when nothing is set") }
         if weightMetric {
-            return String(format: "%.1f kg", gw)
+            return String(localized: "\(gw.formatted(.number.precision(.fractionLength(1)))) kg", comment: "Goal weight in kilograms")
         }
-        return String(format: "%.1f lbs", gw * 2.20462)
+        return String(localized: "\((gw * 2.20462).formatted(.number.precision(.fractionLength(1)))) lbs", comment: "Goal weight in pounds")
     }
 
     /// Glanceable value for the Body Measurements row — the latest waist, or "Not set".
     var bodyMeasurementsRowValue: String {
-        guard let latest = bodyMeasurementStore.latestEntry else { return "Not set" }
+        guard let latest = bodyMeasurementStore.latestEntry else { return String(localized: "Not set", comment: "Settings value placeholder when nothing is set") }
         if let waist = latest.waistCm {
-            return heightMetric ? String(format: "Waist %.0f cm", waist) : String(format: "Waist %.0f in", waist / 2.54)
+            return heightMetric
+                ? String(localized: "Waist \(waist.formatted(.number.precision(.fractionLength(0)))) cm", comment: "Body measurements row value")
+                : String(localized: "Waist \((waist / 2.54).formatted(.number.precision(.fractionLength(0)))) in", comment: "Body measurements row value")
         }
-        return "Logged"
+        return String(localized: "Logged", comment: "Body measurements row value when logged without a waist value")
     }
 
     // Weekly change display
@@ -318,8 +320,8 @@ struct SettingsPaneView: View {
                                    || (profile.goal == .gain && newGoalWeight <= profile.weightKg)
                         if invalid {
                             invalidGoalWeightMessage = profile.goal == .lose
-                                ? "A Lose goal needs a target below your current weight."
-                                : "A Gain goal needs a target above your current weight."
+                                ? String(localized: "A Lose goal needs a target below your current weight.", comment: "Invalid goal weight alert")
+                                : String(localized: "A Gain goal needs a target above your current weight.", comment: "Invalid goal weight alert")
                             showInvalidGoalWeightAlert = true
                             return
                         }
@@ -329,7 +331,7 @@ struct SettingsPaneView: View {
 
                 case .editCalories:
                     NutritionPickerSheet(
-                        label: "Calories", unit: "kcal",
+                        label: String(localized: "Calories", comment: "Goal picker sheet title"), unit: "kcal",
                         currentValue: profile.effectiveCalories,
                         range: 800...6000, step: 50,
                         onSave: { setCalories(to: $0) },
@@ -338,7 +340,7 @@ struct SettingsPaneView: View {
 
                 case .editProtein:
                     NutritionPickerSheet(
-                        label: "Protein", unit: "g",
+                        label: String(localized: "Protein", comment: "Goal picker sheet title"), unit: "g",
                         currentValue: profile.effectiveProtein,
                         range: 10...500, step: 5,
                         onSave: { setMacro(.protein, to: $0) },
@@ -347,7 +349,7 @@ struct SettingsPaneView: View {
 
                 case .editCarbs:
                     NutritionPickerSheet(
-                        label: "Carbs", unit: "g",
+                        label: String(localized: "Carbs", comment: "Goal picker sheet title"), unit: "g",
                         currentValue: profile.effectiveCarbs,
                         range: 0...800, step: 5,
                         onSave: { setMacro(.carbs, to: $0) },
@@ -356,7 +358,7 @@ struct SettingsPaneView: View {
 
                 case .editFat:
                     NutritionPickerSheet(
-                        label: "Fat", unit: "g",
+                        label: String(localized: "Fat", comment: "Goal picker sheet title"), unit: "g",
                         currentValue: profile.effectiveFat,
                         range: 10...300, step: 5,
                         onSave: { setMacro(.fat, to: $0) },

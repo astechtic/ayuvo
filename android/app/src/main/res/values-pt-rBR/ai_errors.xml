@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Nenhuma chave de API configurada. Adicione sua chave em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_image_conversion">Falha ao processar a imagem. Tente outra foto.</string>
+    <string name="ai_error_invalid_response">Não foi possível entender a resposta da IA. Tente novamente.</string>
+    <string name="ai_error_invalid_url">URL da API inválida. Verifique os ajustes do provedor.</string>
+    <string name="ai_error_offline">Parece que você está offline. Verifique sua conexão e tente novamente.</string>
+    <string name="ai_error_connection">Não foi possível conectar ao provedor de IA. Verifique sua conexão e a URL do provedor e tente novamente.</string>
+    <string name="ai_error_timeout">A IA demorou demais para responder. Tente novamente ou aumente o tempo limite da solicitação em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_credits">Sua conta de IA ficou sem créditos. Recarregue ou troque de provedor em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_daily_quota">A cota diária da sua conta de IA acabou. Tente novamente amanhã ou troque de provedor em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_quota">A cota de uso da sua conta de IA foi excedida. Verifique os limites do seu provedor ou troque de provedor em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_model">O modelo ou endpoint de API selecionado não está disponível. Verifique o modelo e a URL da API em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_rate_limit">Limite de requisições atingido na sua chave de API. Aguarde um minuto ou troque de provedor em Ajustes → Provedor de IA. Se você usa um plano gratuito, verifique se a cota diária acabou.</string>
+    <string name="ai_error_key_rejected">Sua chave de API foi recusada. Abra Ajustes → Provedor de IA e cole novamente uma chave válida.</string>
+    <string name="ai_error_overloaded">O provedor de IA está sobrecarregado no momento. Tentamos algumas vezes — tente novamente em um minuto ou troque de provedor/modelo em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_generic">A solicitação à IA falhou. Tente novamente ou troque de provedor em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_local_unavailable">O runtime de IA no dispositivo não está disponível. Verifique o modelo baixado em Ajustes → Provedor de IA.</string>
+    <string name="ai_error_truncated">A resposta da IA foi cortada duas vezes. Tente uma entrada mais curta ou outro modelo.</string>
+    <string name="ai_error_both_failed">%1$s e a alternativa %2$s falharam. %3$s</string>
+</resources>

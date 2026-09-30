@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">卡路里</string>
+    <string name="metric_protein">蛋白质</string>
+    <string name="metric_carbs">碳水化合物</string>
+    <string name="metric_fat">总脂肪</string>
+    <string name="metric_fiber">纤维</string>
+    <string name="metric_water">饮水</string>
+    <string name="metric_fasting">禁食</string>
+    <string name="metric_weight">体重</string>
+    <string name="metric_body_fat">体脂率</string>
+    <string name="metric_workouts">锻炼</string>
+    <string name="metric_workout_minutes">训练时间</string>
+    <string name="metric_workout_burn">训练能量</string>
+    <string name="metric_about_calories">你在 Ayuvo 中记录的食物所含能量，按天累计。较长的范围显示你有饮食记录的日子的平均值。</string>
+    <string name="metric_about_protein">你在 Ayuvo 中记录的食物所含蛋白质，按天累计。</string>
+    <string name="metric_about_carbs">你在 Ayuvo 中记录的食物所含碳水化合物，按天累计。</string>
+    <string name="metric_about_fat">你在 Ayuvo 中记录的食物所含脂肪，按天累计。</string>
+    <string name="metric_about_fiber">你在 Ayuvo 中记录的食物所含膳食纤维，按天累计。没有纤维信息的食物会被跳过。</string>
+    <string name="metric_about_water">你在 Ayuvo 中记录的饮水量，按天累计。</string>
+    <string name="metric_about_fasting">每天的禁食时长。跨越午夜的禁食会计入其覆盖的每一天。</string>
+    <string name="metric_about_weight">你在 Ayuvo 中记录的体重条目，包括从已连接的健康 App 导入的读数。每个点显示该时段的最新读数。</string>
+    <string name="metric_about_body_fat">你在 Ayuvo 中记录的体脂率读数。每个点显示该时段的最新读数。</string>
+    <string name="metric_about_workouts">你在 Ayuvo 中完成的训练，按记录当天计数。</string>
+    <string name="metric_about_workout_minutes">你在 Ayuvo 中完成的训练所用时间。</string>
+    <string name="metric_about_workout_burn">你在 Ayuvo 中完成的训练的估算能量消耗。没有估算值的训练会被跳过。</string>
+    <string name="metric_add_to_favourites">添加到收藏</string>
+    <string name="metric_about">关于</string>
+    <string name="metric_log">记录</string>
+    <string name="metric_log_weight">添加体重数据</string>
+    <string name="metric_log_body_fat">添加体脂率数据</string>
+    <string name="metric_add_water">添加饮水</string>
+    <string name="metric_add_water_quick">添加 %1$s</string>
+    <string name="metric_add_water_custom">自定义量</string>
+    <string name="metric_open_food_diary">打开饮食日记</string>
+    <string name="metric_open_fasting">打开禁食</string>
+    <string name="metric_open_workouts">打开锻炼</string>
+    <string name="metric_details">显示详情</string>
+    <string name="metric_goal_label">目标 %1$s</string>
+    <string name="metric_no_rows">此范围内没有条目</string>
+    <string name="metric_row_logged_in_diary">已记录在饮食日记中</string>
+    <string name="metric_delete_entry">删除条目</string>
+    <string name="metric_delete_entry_body">此条目将从 Ayuvo 中移除。</string>
+    <string name="metric_sources_app">记录于 Ayuvo</string>
+</resources>

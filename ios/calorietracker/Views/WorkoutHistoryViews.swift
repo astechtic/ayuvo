@@ -175,7 +175,7 @@ struct ImportedHealthWorkoutRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .firstTextBaseline) {
-                Text(workout.activityTitle)
+                Text(workout.displayActivityTitle)
                     .font(.system(.body, design: .rounded, weight: .medium))
                 Spacer()
                 if let calories = workout.totalEnergyBurned, calories > 0 {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">बैकअप से रीस्टोर करें</string>
+    <string name="onboarding_restore_title">बैकअप से रीस्टोर करें</string>
+    <string name="onboarding_restore_message">Ayuvo बैकअप से अपनी प्रोफ़ाइल, लक्ष्य, भोजन लॉग और सेटिंग्स वापस लाएँ। आपको इस फ़ोन पर सूचनाएँ, Health Connect और AI फिर भी सेट करने होंगे। API कुंजियाँ कभी बैकअप में नहीं होतीं।</string>
+    <string name="onboarding_restore_file">बैकअप फ़ाइल चुनें</string>
+    <string name="onboarding_restore_drive">Google Drive से रीस्टोर करें</string>
+    <string name="onboarding_restore_busy">आपका बैकअप रीस्टोर हो रहा है…</string>
+    <string name="onboarding_restore_error_no_drive">उस Google खाते की Drive में कोई Ayuvo बैकअप नहीं मिला।</string>
+    <string name="onboarding_restore_error_no_profile">उस बैकअप में कोई प्रोफ़ाइल नहीं है। कोई दूसरा बैकअप चुनें, या यहीं सेटअप जारी रखें।</string>
+    <string name="onboarding_restore_error_failed">बैकअप रीस्टोर नहीं हो सका: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">बैकअप रीस्टोर नहीं हो सका।</string>
+</resources>

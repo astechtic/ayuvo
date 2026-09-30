@@ -26,7 +26,7 @@ struct HomeMedicationsCard: View {
         if let (item, medication) = nextDose {
             parts.append(String(localized: "Next \(medication.displayName) at \(MedicationFormatting.timeText(ms: item.scheduledAtMs))"))
         } else if summary.missed > 0 {
-            parts.append(summary.missed == 1 ? String(localized: "1 missed dose") : String(localized: "\(summary.missed) missed doses"))
+            parts.append(String(localized: "\(summary.missed) missed doses", comment: "Home medications card: missed doses today"))
         }
         return parts.joined(separator: " · ")
     }

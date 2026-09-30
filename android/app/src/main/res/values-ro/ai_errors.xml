@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Nu este configurată nicio cheie API. Adaugă cheia în Setări → Furnizor AI.</string>
+    <string name="ai_error_image_conversion">Imaginea nu a putut fi procesată. Încearcă altă fotografie.</string>
+    <string name="ai_error_invalid_response">Răspunsul AI nu a putut fi înțeles. Încearcă din nou.</string>
+    <string name="ai_error_invalid_url">URL API invalid. Verifică setările furnizorului.</string>
+    <string name="ai_error_offline">Se pare că ești offline. Verifică-ți conexiunea și încearcă din nou.</string>
+    <string name="ai_error_connection">Nu s-a putut face conexiunea cu furnizorul AI. Verifică-ți conexiunea și URL-ul furnizorului, apoi încearcă din nou.</string>
+    <string name="ai_error_timeout">AI-ul a răspuns prea greu. Încearcă din nou sau mărește timpul limită al cererii în Setări → Furnizor AI.</string>
+    <string name="ai_error_credits">Contul tău AI a rămas fără credite. Reîncarcă-l sau schimbă furnizorul în Setări → Furnizor AI.</string>
+    <string name="ai_error_daily_quota">Cota zilnică a contului tău AI a fost epuizată. Încearcă din nou mâine sau schimbă furnizorul în Setări → Furnizor AI.</string>
+    <string name="ai_error_quota">Cota de utilizare a contului tău AI a fost depășită. Verifică limitele furnizorului sau schimbă furnizorul în Setări → Furnizor AI.</string>
+    <string name="ai_error_model">Modelul selectat sau endpoint-ul API nu este disponibil. Verifică modelul și URL-ul API în Setări → Furnizor AI.</string>
+    <string name="ai_error_rate_limit">Cheia ta API a atins limita de cereri. Așteaptă un minut sau schimbă furnizorul în Setări → Furnizor AI. Dacă folosești un plan gratuit, verifică dacă i s-a epuizat cota zilnică.</string>
+    <string name="ai_error_key_rejected">Cheia ta API a fost respinsă. Deschide Setări → Furnizor AI și lipește din nou o cheie validă.</string>
+    <string name="ai_error_overloaded">Furnizorul AI este suprasolicitat acum. Am reîncercat de câteva ori — încearcă din nou peste un minut sau schimbă furnizorul/modelul în Setări → Furnizor AI.</string>
+    <string name="ai_error_generic">Cererea AI a eșuat. Încearcă din nou sau schimbă furnizorul în Setări → Furnizor AI.</string>
+    <string name="ai_error_local_unavailable">Motorul AI de pe dispozitiv nu este disponibil. Verifică modelul descărcat în Setări → Furnizor AI.</string>
+    <string name="ai_error_truncated">Răspunsul AI a fost trunchiat de două ori. Încearcă un text mai scurt sau alt model.</string>
+    <string name="ai_error_both_failed">Atât %1$s, cât și alternativa %2$s au eșuat. %3$s</string>
+</resources>

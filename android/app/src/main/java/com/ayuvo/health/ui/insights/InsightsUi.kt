@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -235,15 +236,16 @@ internal fun InsightMethodologySheet(config: InsightsConfig, content: Methodolog
                 Text(stringResource(R.string.insights_info), fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f).padding(start = 4.dp))
                 TextButton(onClick = onDismiss) { Text(stringResource(R.string.insights_info_close)) }
             }
+            val context = LocalContext.current
             for (id in content.methodologyIds) {
                 val m = config.methodology[id] ?: continue
-                InsetGroup(header = m.title, dividerInset = 16.dp) {
-                    m.sections.forEach { s ->
+                InsetGroup(header = InsightsText.methodologyTitle(context, id, m), dividerInset = 16.dp) {
+                    m.sections.forEachIndexed { index, s ->
                         row {
                             Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-                                Text(s.heading, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                                Text(InsightsText.sectionHeading(context, id, index, s), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                                 Spacer(Modifier.height(4.dp))
-                                Text(s.body, fontSize = 15.sp, lineHeight = 20.sp)
+                                Text(InsightsText.sectionBody(context, id, index, s), fontSize = 15.sp, lineHeight = 20.sp)
                             }
                         }
                     }

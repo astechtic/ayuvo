@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">هل تسمح للمدرب بقراءة سجلاتك الصحية؟</string>
+    <string name="records_coach_consent_body">يرسل المدرب تفاصيل السجلات التي يقرؤها — نتائج الفحوصات والتواريخ والأطباء والتشخيصات — إلى %1$s للإجابة عنك. تبقى السجلات مخزّنة على هذا الجهاز.</string>
+    <string name="records_coach_consent_body_on_device">يقرأ المدرب السجلات على هذا الجهاز؛ ولا يُرسل أي شيء عبر الإنترنت.</string>
+    <string name="records_coach_consent_allow">السماح</string>
+    <string name="records_coach_consent_not_now">ليس الآن</string>
+    <string name="records_coach_settings_title">المدرب</string>
+    <string name="records_coach_settings_toggle">السماح للمدرب باستخدام سجلاتي الصحية</string>
+    <string name="records_coach_settings_subtitle">يمكن للمدرب البحث في سجلاتك وقراءتها للإجابة عن الأسئلة. إيقاف هذا الخيار يزيل الوصول فورًا.</string>
+    <string name="records_coach_analyzing">جارٍ التحليل:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="zero">جارٍ تحليل %d سجل</item>
+        <item quantity="one">جارٍ تحليل سجل واحد</item>
+        <item quantity="two">جارٍ تحليل سجلين</item>
+        <item quantity="few">جارٍ تحليل %d سجلات</item>
+        <item quantity="many">جارٍ تحليل %d سجلًا</item>
+        <item quantity="other">جارٍ تحليل %d سجل</item>
+    </plurals>
+    <string name="records_coach_change_records">تغيير السجلات</string>
+    <string name="records_coach_used_records">السجلات المستخدمة</string>
+    <string name="records_coach_picker_title">السجلات لهذه المحادثة</string>
+    <string name="records_coach_picker_search">البحث في السجلات</string>
+    <string name="records_coach_picker_limit">اختر حتى %d سجلات.</string>
+    <string name="records_coach_picker_done">تم</string>
+    <string name="records_coach_picker_empty">لم يتم العثور على سجلات.</string>
+    <string name="records_coach_picker_selected">محدد</string>
+    <string name="records_coach_picker_recent">السجلات الأخيرة</string>
+    <string name="records_coach_picker_results">النتائج</string>
+    <string name="records_coach_mode_title">إرسال السجلات عبر الإنترنت؟</string>
+    <string name="records_coach_mode_body">يستخدم المدرب %1$s. هل تريد إرسال تفاصيل السجلات المحددة عبر الإنترنت؟</string>
+    <string name="records_coach_mode_send">إرسال</string>
+    <string name="records_coach_mode_on_device">استخدام المدرب على الجهاز</string>
+    <string name="records_coach_ask_report">اسأل عن هذا التقرير</string>
+    <string name="records_coach_compare_previous">مقارنة بالتقرير السابق</string>
+    <string name="records_coach_explain_trend">اشرح هذا الاتجاه</string>
+    <string name="records_coach_ask_coach">اسأل المدرب</string>
+    <string name="records_coach_prompt_report">اشرح هذا التقرير: ما الذي يلفت الانتباه وماذا يجب أن أسأل طبيبي؟</string>
+    <string name="records_coach_prompt_compare">قارن هذا التقرير بالتقرير السابق. ما الذي تغيّر؟</string>
+    <string name="records_coach_prompt_trend">اشرح كيف تغيّر %1$s لدي بمرور الوقت.</string>
+    <string name="records_coach_chip_latest">حلّل أحدث تقارير الدم لدي</string>
+    <string name="records_coach_chip_abnormal">البحث عن القيم غير الطبيعية</string>
+    <string name="records_coach_chip_compare">مقارنة بالتقرير السابق</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

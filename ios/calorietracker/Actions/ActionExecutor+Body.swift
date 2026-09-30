@@ -70,8 +70,14 @@ extension ActionExecutor {
         }
         let dialog: String
         if let first = change.firstKg, let last = change.lastKg, let delta = change.changeKg, change.count > 1 {
-            let direction = delta < 0 ? String(localized: "down") : (delta > 0 ? String(localized: "up") : String(localized: "unchanged"))
-            dialog = String(localized: "\(change.count) weigh-ins \(Self.rangeText(v.string("range"))): \(weightText(first)) → \(weightText(last)), \(direction) \(weightText(abs(delta))).")
+            let range = Self.rangeText(v.string("range")), from = weightText(first), to = weightText(last), by = weightText(abs(delta))
+            if delta < 0 {
+                dialog = String(localized: "\(change.count) weigh-ins \(range): \(from) → \(to), down \(by).", comment: "Weight history action result; count, period, first weight, last weight, change")
+            } else if delta > 0 {
+                dialog = String(localized: "\(change.count) weigh-ins \(range): \(from) → \(to), up \(by).", comment: "Weight history action result; count, period, first weight, last weight, change")
+            } else {
+                dialog = String(localized: "\(change.count) weigh-ins \(range): \(from) → \(to), unchanged.", comment: "Weight history action result; count, period, first weight, last weight")
+            }
         } else if let last = change.lastKg {
             dialog = String(localized: "One weigh-in \(Self.rangeText(v.string("range"))): \(weightText(last)).")
         } else {

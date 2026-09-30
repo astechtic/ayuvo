@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">Kalorie</string>
+    <string name="metric_protein">Bílkoviny</string>
+    <string name="metric_carbs">Sacharidy</string>
+    <string name="metric_fat">Tuky celkem</string>
+    <string name="metric_fiber">Vláknina</string>
+    <string name="metric_water">Voda</string>
+    <string name="metric_fasting">Půst</string>
+    <string name="metric_weight">Váha</string>
+    <string name="metric_body_fat">Procento tělesného tuku</string>
+    <string name="metric_workouts">Tréninky</string>
+    <string name="metric_workout_minutes">Čas tréninku</string>
+    <string name="metric_workout_burn">Energie z tréninku</string>
+    <string name="metric_about_calories">Energie z jídla, které zapisuješ v Ayuvo, sečtená za každý den. Delší období zobrazují průměr za dny, kdy jsi zapsal(a) jídlo.</string>
+    <string name="metric_about_protein">Bílkoviny z jídla, které zapisuješ v Ayuvo, sečtené za každý den.</string>
+    <string name="metric_about_carbs">Sacharidy z jídla, které zapisuješ v Ayuvo, sečtené za každý den.</string>
+    <string name="metric_about_fat">Tuky z jídla, které zapisuješ v Ayuvo, sečtené za každý den.</string>
+    <string name="metric_about_fiber">Vláknina z jídla, které zapisuješ v Ayuvo, sečtená za každý den. Potraviny bez údaje o vláknině se přeskakují.</string>
+    <string name="metric_about_water">Voda, kterou zapisuješ v Ayuvo, sečtená za každý den.</string>
+    <string name="metric_about_fasting">Čas strávený půstem za den. Půst přes půlnoc se započítá do každého dne, který zasahuje.</string>
+    <string name="metric_about_weight">Záznamy hmotnosti, které zapisuješ v Ayuvo, včetně měření importovaných z připojených zdravotních aplikací. Každý bod ukazuje nejnovější měření daného období.</string>
+    <string name="metric_about_body_fat">Měření tělesného tuku, která zapisuješ v Ayuvo. Každý bod ukazuje nejnovější měření daného období.</string>
+    <string name="metric_about_workouts">Tréninky, které dokončíš v Ayuvo, započítané v den, kdy byly zapsány.</string>
+    <string name="metric_about_workout_minutes">Čas strávený v trénincích, které dokončíš v Ayuvo.</string>
+    <string name="metric_about_workout_burn">Odhadovaná energie spálená v trénincích, které dokončíš v Ayuvo. Tréninky bez odhadu se přeskakují.</string>
+    <string name="metric_add_to_favourites">Přidat do oblíbených</string>
+    <string name="metric_about">O aplikaci</string>
+    <string name="metric_log">Zapsat</string>
+    <string name="metric_log_weight">Přidat údaje o hmotnosti</string>
+    <string name="metric_log_body_fat">Přidat údaje o tělesném tuku</string>
+    <string name="metric_add_water">Přidat vodu</string>
+    <string name="metric_add_water_quick">Přidat %1$s</string>
+    <string name="metric_add_water_custom">Vlastní množství</string>
+    <string name="metric_open_food_diary">Otevřít deník jídla</string>
+    <string name="metric_open_fasting">Otevřít Půst</string>
+    <string name="metric_open_workouts">Otevřít Tréninky</string>
+    <string name="metric_details">Zobrazit podrobnosti</string>
+    <string name="metric_goal_label">Cíl %1$s</string>
+    <string name="metric_no_rows">V tomto období nejsou žádné záznamy</string>
+    <string name="metric_row_logged_in_diary">Zapsáno v deníku jídla</string>
+    <string name="metric_delete_entry">Smazat záznam</string>
+    <string name="metric_delete_entry_body">Tento záznam bude z Ayuvo odstraněn.</string>
+    <string name="metric_sources_app">Zaznamenáno v Ayuvo</string>
+</resources>

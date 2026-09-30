@@ -56,7 +56,7 @@ final class CoachVoiceRecorder {
             startNative()
         } else {
             guard !provider.requiresAPIKey || SpeechSettings.apiKey(for: provider) != nil else {
-                fail("No API key for \(provider.displayName). Add one in Settings → Speech-to-Text.")
+                fail(String(localized: "No API key for \(provider.displayName). Add one in Settings → Speech-to-Text.", comment: "Voice input error; placeholder is the speech provider name"))
                 return
             }
             startRemote()
@@ -129,13 +129,13 @@ final class CoachVoiceRecorder {
         SFSpeechRecognizer.requestAuthorization { status in
             DispatchQueue.main.async {
                 guard status == .authorized else {
-                    self.fail("Speech recognition permission denied. Enable it in Settings.")
+                    self.fail(String(localized: "Speech recognition permission denied. Enable it in Settings.", comment: "Voice input error"))
                     return
                 }
                 AVAudioApplication.requestRecordPermission { allowed in
                     DispatchQueue.main.async {
                         guard allowed else {
-                            self.fail("Microphone permission denied. Enable it in Settings.")
+                            self.fail(String(localized: "Microphone permission denied. Enable it in Settings.", comment: "Voice input error"))
                             return
                         }
                         // The gesture may have already ended (cancel / immediate send).
@@ -150,7 +150,7 @@ final class CoachVoiceRecorder {
     private func beginNativeSession() {
         speechRecognizer = Self.makeRecognizer(for: SpeechSettings.selectedLanguage(for: .nativeIOS))
         guard let speechRecognizer, speechRecognizer.isAvailable else {
-            fail("Native speech recognition is unavailable on this device.")
+            fail(String(localized: "Native speech recognition is unavailable on this device.", comment: "Voice input error"))
             return
         }
 
@@ -167,7 +167,7 @@ final class CoachVoiceRecorder {
             try session.setCategory(.record, mode: .measurement, options: .duckOthers)
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            fail("Failed to set up the audio session.")
+            fail(String(localized: "Failed to set up the audio session.", comment: "Voice input error"))
             return
         }
 
@@ -182,7 +182,7 @@ final class CoachVoiceRecorder {
         do {
             try audioEngine.start()
         } catch {
-            fail("Failed to start the audio engine.")
+            fail(String(localized: "Failed to start the audio engine.", comment: "Voice input error"))
             return
         }
 
@@ -211,7 +211,7 @@ final class CoachVoiceRecorder {
         AVAudioApplication.requestRecordPermission { allowed in
             DispatchQueue.main.async {
                 guard allowed else {
-                    self.fail("Microphone permission denied. Enable it in Settings.")
+                    self.fail(String(localized: "Microphone permission denied. Enable it in Settings.", comment: "Voice input error"))
                     return
                 }
                 guard self.isRecording else { return }
@@ -226,7 +226,7 @@ final class CoachVoiceRecorder {
             try session.setCategory(.record, mode: .default, options: .duckOthers)
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            fail("Failed to set up the audio session.")
+            fail(String(localized: "Failed to set up the audio session.", comment: "Voice input error"))
             return
         }
 
@@ -244,7 +244,7 @@ final class CoachVoiceRecorder {
             audioRecorder = try AVAudioRecorder(url: fileURL, settings: settings)
             audioRecorder?.record()
         } catch {
-            fail("Failed to start recording: \(error.localizedDescription)")
+            fail(String(localized: "Failed to start recording: \(error.localizedDescription)", comment: "Voice input error; placeholder is the system error"))
         }
     }
 

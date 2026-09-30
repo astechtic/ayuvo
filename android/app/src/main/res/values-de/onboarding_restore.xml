@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Aus einem Backup wiederherstellen</string>
+    <string name="onboarding_restore_title">Aus einem Backup wiederherstellen</string>
+    <string name="onboarding_restore_message">Hol dein Profil, deine Ziele, dein Ernährungsprotokoll und deine Einstellungen aus einem Ayuvo-Backup zurück. Mitteilungen, Health Connect und KI richtest du auf diesem Telefon trotzdem ein. API-Schlüssel sind nie in einem Backup enthalten.</string>
+    <string name="onboarding_restore_file">Backup-Datei auswählen</string>
+    <string name="onboarding_restore_drive">Aus Google Drive wiederherstellen</string>
+    <string name="onboarding_restore_busy">Dein Backup wird wiederhergestellt…</string>
+    <string name="onboarding_restore_error_no_drive">Im Drive dieses Google-Kontos wurde kein Ayuvo-Backup gefunden.</string>
+    <string name="onboarding_restore_error_no_profile">Dieses Backup enthält kein Profil. Wähle ein anderes Backup oder richte die App hier weiter ein.</string>
+    <string name="onboarding_restore_error_failed">Backup konnte nicht wiederhergestellt werden: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Backup konnte nicht wiederhergestellt werden.</string>
+</resources>

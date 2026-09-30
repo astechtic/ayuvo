@@ -5,6 +5,7 @@ import android.content.Intent
 import com.ayuvo.health.R
 import com.ayuvo.health.models.FoodEntry
 import kotlin.math.roundToInt
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Shares a meal as a plain-text summary (name, calories and macros per entry) through the
@@ -14,9 +15,11 @@ import kotlin.math.roundToInt
 object MealShareText {
     /** Human-readable summary of every entry — the text put on the share sheet. */
     fun text(entries: List<FoodEntry>): String = entries.joinToString("\n") { e ->
-        val macros = "${e.protein.roundToInt()}P · ${e.carbs.roundToInt()}C · ${e.fat.roundToInt()}F"
         val prefix = e.emoji?.let { "$it " } ?: ""
-        "$prefix${e.name} — ${e.calories} kcal · $macros"
+        val p = e.protein.roundToInt()
+        val c = e.carbs.roundToInt()
+        val f = e.fat.roundToInt()
+        AppText.orEnglish("$prefix${e.name} — ${e.calories} kcal · ${p}P · ${c}C · ${f}F", R.string.core_meal_share_line, prefix, e.name, e.calories, p, c, f)
     }
 
     /** Fire the system share sheet with the summary text. */

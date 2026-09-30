@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Snědeno v</string>
+    <string name="intake_eaten_at_same_as_log">Stejný jako čas zápisu</string>
+    <string name="intake_eaten_at_hint">Používá se pro tvé stravovací okno a načasování jídel</string>
+    <string name="intake_eaten_at_reset">Použít čas zápisu</string>
+    <string name="intake_adherence_title">Posledních 30 dní</string>
+    <string name="intake_adherence_none">Za posledních 30 dnů zatím žádné naplánované dávky.</string>
+    <string name="intake_adherence_pct">Užito %1$s %% dávek (%2$d z %3$d)</string>
+    <string name="intake_adherence_adherent">V pořádku: užito 80 %% dávek nebo více</string>
+    <string name="intake_adherence_below">Užito méně než 80 %% dávek</string>
+    <string name="intake_adherence_on_time">Včas (do hodiny)</string>
+    <string name="intake_adherence_median_delay">Obvyklé zpoždění</string>
+    <string name="intake_adherence_streak">Série</string>
+    <string name="intake_adherence_missed_by_weekday">Zmeškané dávky podle dne v týdnu</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">Dávky: %1$d</string>
+    <string name="intake_move_reminder">Přesunout připomínku na %1$s?</string>
+    <string name="intake_move_reminder_body">Tuto dávku obvykle užíváš později, než přijde připomínka. Posunutím připomínky se změní jen její čas; vše ostatní zůstane stejné.</string>
+    <string name="intake_move_reminder_action">Posunout připomínku</string>
+    <string name="intake_supplement_above_upper">%1$s má v průměru %2$s denně za interval dávkování, což je nad horním limitem příjmu %3$s. Řiď se pokyny lékaře, který ho předepsal.</string>
+    <string name="intake_lab_links_title">Laboratorní výsledky a výživa</string>
+    <string name="intake_lab_links_footer">Vychází z tvého deníku jídla a doplňků stravy za posledních 30 dnů a z referenčního rozmezí uvedeného ve tvé zprávě. Nejde o lékařskou radu.</string>
+    <string name="intake_lab_link_low_one">Tvoje hodnota %1$s byla pod rozmezím uvedeným ve zprávě.</string>
+    <string name="intake_lab_link_low_many">Tvoje hodnoty %1$s byly pod rozmezím uvedeným ve zprávě.</string>
+    <string name="intake_lab_link_and">%1$s a %2$s</string>
+    <string name="intake_lab_link_intake">Tvůj průměrný příjem živiny %1$s je %2$d %% referenční hodnoty.</string>
+    <string name="intake_lab_link_intake_no_supplement">Tvůj průměrný příjem živiny %1$s je %2$d %% referenční hodnoty a žádný z tvých doplňků stravy ji neobsahuje.</string>
+    <string name="intake_lab_link_doctor">Zvaž, zda to neprobrat se svým lékařem.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

@@ -34,6 +34,7 @@ import com.ayuvo.health.R
 import com.ayuvo.health.data.PreferencesStore
 import com.ayuvo.health.models.WidgetSnapshot
 import kotlinx.coroutines.flow.first
+import androidx.glance.LocalContext
 
 class WaterAppWidget : AyuvoGlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
@@ -87,7 +88,7 @@ private fun WaterProgressContent(snapshot: WidgetSnapshot) {
     val gaugeW = minOf(contentW, (contentH - 44f) / 0.58f).toInt().coerceAtLeast(80)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_water, label = "Water", themeHex = snapshot.themeStartHex)
+        WidgetHeader(iconRes = R.drawable.ic_widget_water, label = LocalContext.current.getString(R.string.widget_water), themeHex = snapshot.themeStartHex)
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
             contentAlignment = Alignment.Center
@@ -102,7 +103,7 @@ private fun WaterProgressContent(snapshot: WidgetSnapshot) {
             )
         }
         Text(
-            text = "${snapshot.waterUnit.format(snapshot.waterRemaining)} left",
+            text = LocalContext.current.getString(R.string.core_widget_amount_left, snapshot.waterUnit.format(snapshot.waterRemaining)),
             style = TextStyle(
                 color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                 fontWeight = FontWeight.Medium,
@@ -123,12 +124,12 @@ private fun WaterDisabledContent() {
             )
             Spacer(modifier = GlanceModifier.height(8.dp))
             Text(
-                text = "Water Tracking",
+                text = LocalContext.current.getString(R.string.settings_water_tracking),
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp)
             )
             Spacer(modifier = GlanceModifier.height(4.dp))
             Text(
-                text = "Enable in Ayuvo",
+                text = LocalContext.current.getString(R.string.core_widget_enable_in_app),
                 style = TextStyle(color = WidgetTheme.secondaryTextProvider, fontSize = 12.sp)
             )
         }

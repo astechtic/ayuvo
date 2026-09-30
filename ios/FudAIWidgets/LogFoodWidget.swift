@@ -38,7 +38,7 @@ struct LogFoodWidgetConfigurationIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Log Food Widget"
     static var description = IntentDescription("Choose which logging flow opens when you tap the widget.")
 
-    @Parameter(title: "Method", default: .camera)
+    @Parameter(title: LocalizedStringResource("Method", comment: "Log Food widget setting: which logging flow opens"), default: .camera)
     var method: LogFoodMethodAppEnum
 }
 
@@ -98,7 +98,7 @@ struct LogFoodWidgetView: View {
         .padding(12)
     }
 
-    private var title: String {
+    private var title: LocalizedStringKey {
         switch method {
         case .camera: "Camera + Note"
         case .photos: "Photos"

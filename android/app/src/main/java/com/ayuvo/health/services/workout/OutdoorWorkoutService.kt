@@ -479,7 +479,7 @@ class OutdoorWorkoutService : Service() {
             phase = phase,
             sessionId = t.sessionId,
             sport = t.sport,
-            sportTitle = sport.title,
+            sportTitle = sport.displayTitle(this),
             cooper = t.cooper,
             startMs = t.startMs,
             activeMs = t.activeMs(now),

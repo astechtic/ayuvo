@@ -287,7 +287,7 @@ internal fun formatBytes(bytes: Long): String {
         value /= 1024
         unit++
     }
-    return String.format(java.util.Locale.US, if (value >= 10) "%.0f %s" else "%.1f %s", value, units[unit])
+    return String.format(java.util.Locale.getDefault(), if (value >= 10) "%.0f %s" else "%.1f %s", value, units[unit])
 }
 
 private fun StorageAction.labelRes(): Int = when (this) {

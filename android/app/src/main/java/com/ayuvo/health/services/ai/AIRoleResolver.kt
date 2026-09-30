@@ -13,6 +13,8 @@ import com.ayuvo.health.services.ondevice.LocalModelId
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Turns the saved profiles into "which provider, which model, which key" (docs/ai-models.md 5).
@@ -174,14 +176,14 @@ class AIRoleResolver(
             val name = route.model.ifEmpty { route.provider.token }
             return when (reason) {
                 "no_key" ->
-                    "$name has no API key. Add one in Settings, or pick another model for this chat."
+                    AppText.orEnglish("$name has no API key. Add one in Settings, or pick another model for this chat.", R.string.core_ai_refusal_no_key, name)
                 "model_not_installed" ->
-                    "$name is not installed on this device. Download it in Settings, or pick another model for this chat."
+                    AppText.orEnglish("$name is not installed on this device. Download it in Settings, or pick another model for this chat.", R.string.core_ai_refusal_not_installed, name)
                 "no_vision" ->
-                    "$name cannot read images. Pick another model for this chat, or send the message without the photo."
+                    AppText.orEnglish("$name cannot read images. Pick another model for this chat, or send the message without the photo.", R.string.core_ai_refusal_no_vision, name)
                 "no_base_url" ->
-                    "$name has no server URL. Add one in Settings, or pick another model for this chat."
-                else -> "$name is not available. Pick another model for this chat."
+                    AppText.orEnglish("$name has no server URL. Add one in Settings, or pick another model for this chat.", R.string.core_ai_refusal_no_base_url, name)
+                else -> AppText.orEnglish("$name is not available. Pick another model for this chat.", R.string.core_ai_refusal_unavailable, name)
             }
         }
     }

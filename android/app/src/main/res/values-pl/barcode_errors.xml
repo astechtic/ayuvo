@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_barcode_invalid">Nie udało się odczytać tego kodu kreskowego. Zeskanuj go ponownie.</string>
+    <string name="error_barcode_product_not_found">Nie znaleziono produktu w Open Food Facts. Zeskanuj etykietę wartości odżywczych.</string>
+    <string name="error_barcode_missing_nutrition">Znaleziono ten kod kreskowy, ale dane żywieniowe są niepełne. Zeskanuj etykietę wartości odżywczych.</string>
+    <string name="error_barcode_rate_limited">Wykonano zbyt wiele wyszukiwań kodów kreskowych. Odczekaj chwilę i spróbuj ponownie.</string>
+    <string name="error_barcode_service_unavailable">Open Food Facts jest tymczasowo niedostępny. Spróbuj ponownie później.</string>
+    <string name="error_barcode_unexpected_response">Open Food Facts zwrócił nieoczekiwaną odpowiedź.</string>
+    <string name="error_barcode_network">Nie udało się połączyć z Open Food Facts. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="error_barcode_offline">Wygląda na to, że jesteś offline. Sprawdź połączenie i zeskanuj ponownie.</string>
+    <string name="error_barcode_timeout">Open Food Facts zbyt długo nie odpowiadało. Zeskanuj ponownie.</string>
+</resources>

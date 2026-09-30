@@ -8,9 +8,9 @@ struct QuickActionsSettingsView: View {
     var body: some View {
         Form {
             Section {
-                quickActionPicker(title: "Quick Action 1", selection: $firstRaw)
-                quickActionPicker(title: "Quick Action 2", selection: $secondRaw)
-                quickActionPicker(title: "Quick Action 3", selection: $thirdRaw)
+                quickActionPicker(slot: 1, title: String(localized: "Quick Action 1", comment: "Quick action slot setting"), selection: $firstRaw)
+                quickActionPicker(slot: 2, title: String(localized: "Quick Action 2", comment: "Quick action slot setting"), selection: $secondRaw)
+                quickActionPicker(slot: 3, title: String(localized: "Quick Action 3", comment: "Quick action slot setting"), selection: $thirdRaw)
             } header: {
                 Text("App Icon Shortcuts")
             } footer: {
@@ -24,21 +24,21 @@ struct QuickActionsSettingsView: View {
         .onChange(of: thirdRaw) { _, _ in refreshShortcuts() }
     }
 
-    private func quickActionPicker(title: String, selection: Binding<String>) -> some View {
+    private func quickActionPicker(slot: Int, title: String, selection: Binding<String>) -> some View {
         Picker(selection: selection) {
             ForEach(QuickAction.allCases) { action in
                 Label(action.title, systemImage: action.systemImageName)
                     .tag(action.rawValue)
             }
         } label: {
-            SettingsLabel(title, systemImage: numberIcon(for: title), tint: SettingsTint.quickActions)
+            SettingsLabel(title, systemImage: numberIcon(for: slot), tint: SettingsTint.quickActions)
         }
         .pickerStyle(.menu)
         .tint(.secondary)
     }
 
-    private func numberIcon(for title: String) -> String {
-        title.hasSuffix("1") ? "1.circle.fill" : title.hasSuffix("2") ? "2.circle.fill" : "3.circle.fill"
+    private func numberIcon(for slot: Int) -> String {
+        "\(slot).circle.fill"
     }
 
     private func refreshShortcuts() {

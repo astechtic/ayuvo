@@ -41,7 +41,10 @@ struct InsightsHubView: View {
 
     private var recoverySubtitle: String? {
         guard let recovery = store.recovery else { return nil }
-        if let score = recovery.score, recovery.isReady { return "\(score) · \(recovery.labelText ?? "")" }
+        if let score = recovery.score, recovery.isReady {
+            let label = InsightsConfig.shared.bandLabel(recovery.label, english: recovery.labelText) ?? ""
+            return "\(score) · \(label)"
+        }
         if let collecting = recovery.collecting {
             return String(localized: "Learning your baseline (\(collecting.have)/\(collecting.need) nights)")
         }
@@ -64,6 +67,6 @@ struct InsightsHubView: View {
 
     private var patternsSubtitle: String {
         let count = store.patterns.filter(\.surfaced).count
-        return count == 0 ? String(localized: "No clear patterns yet") : (count == 1 ? String(localized: "1 pattern found") : String(localized: "\(count) patterns found"))
+        return count == 0 ? String(localized: "No clear patterns yet") : String(localized: "\(count) patterns found", comment: "Insights hub: number of patterns found")
     }
 }

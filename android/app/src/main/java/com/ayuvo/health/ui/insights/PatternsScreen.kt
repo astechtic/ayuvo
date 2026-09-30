@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +34,7 @@ fun PatternsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         tag = "insights.patterns",
         onBack = onBack,
         onInfo = { info = true },
-        disclaimers = listOfNotNull(cfg.disclaimers["patterns"], cfg.disclaimers["general"])
+        disclaimers = listOfNotNull(InsightsText.disclaimer(LocalContext.current, cfg, "patterns"), InsightsText.disclaimer(LocalContext.current, cfg, "general"))
     ) {
         if (!insightsGate(ui, "insights.patterns", needsHealth = false)) return@InsightsScaffold
         val snap = ui.snapshot ?: return@InsightsScaffold
@@ -41,12 +42,12 @@ fun PatternsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         val rest = snap.patterns.filter { !it.surfaced }
         if (found.isNotEmpty()) {
             item(key = "found") {
-                InsetGroup(header = stringResource(R.string.insights_patterns_found), footer = cfg.disclaimers["patterns"], dividerInset = 16.dp, modifier = Modifier.testTag("insights.patterns.found")) {
+                InsetGroup(header = stringResource(R.string.insights_patterns_found), footer = InsightsText.disclaimer(LocalContext.current, cfg, "patterns"), dividerInset = 16.dp, modifier = Modifier.testTag("insights.patterns.found")) {
                     found.forEach { p ->
                         row {
                             Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 11.dp)) {
                                 Text(patternLabel(p.id), fontSize = 13.sp, color = AyuvoColors.secondaryLabel())
-                                Text(p.text.orEmpty(), fontSize = 15.sp, lineHeight = 20.sp)
+                                Text(InsightsText.pattern(LocalContext.current, cfg, p).orEmpty(), fontSize = 15.sp, lineHeight = 20.sp)
                             }
                         }
                     }
@@ -59,7 +60,7 @@ fun PatternsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
             }
         }
     }
-    if (info) InsightMethodologySheet(cfg, InsightMethodology.patterns(cfg, ui.snapshot) { id -> resources.getString(patternLabelRes(id)) }, onDismiss = { info = false })
+    if (info) InsightMethodologySheet(cfg, InsightMethodology.patterns(LocalContext.current, cfg, ui.snapshot) { id -> resources.getString(patternLabelRes(id)) }, onDismiss = { info = false })
 }
 
 internal fun patternLabelRes(id: String): Int = when (id) {

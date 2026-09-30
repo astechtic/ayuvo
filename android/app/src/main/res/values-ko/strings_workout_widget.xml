@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo 운동</string>
+    <string name="widget_workout_description">운동 시작 및 조작</string>
+    <string name="widget_workout_title">운동</string>
+    <string name="widget_workout_walk">걷기</string>
+    <string name="widget_workout_run">달리기</string>
+    <string name="widget_workout_cycle">사이클</string>
+    <string name="widget_workout_hike">하이킹</string>
+    <string name="widget_workout_strength">근력</string>
+    <string name="widget_workout_strength_title">근력 세션</string>
+    <string name="widget_workout_status_recording">기록 중</string>
+    <string name="widget_workout_status_paused">일시정지됨</string>
+    <string name="widget_workout_status_saving">저장 중…</string>
+    <string name="widget_workout_status_recovery">회복</string>
+    <string name="widget_workout_status_strength">진행 중</string>
+    <string name="widget_workout_waiting_gps">GPS 대기 중</string>
+    <string name="widget_workout_distance">거리</string>
+    <string name="widget_workout_pace">평균 페이스</string>
+    <string name="widget_workout_speed">평균 속도</string>
+    <string name="widget_workout_pause">일시정지</string>
+    <string name="widget_workout_resume">재개</string>
+    <string name="widget_workout_lap">랩</string>
+    <string name="widget_workout_end">종료</string>
+    <string name="widget_workout_skip">건너뛰기</string>
+    <string name="widget_workout_finish">완료</string>
+</resources>

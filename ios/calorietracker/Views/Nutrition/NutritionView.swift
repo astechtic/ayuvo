@@ -71,17 +71,17 @@ struct NutritionView: View {
 
         var title: String {
             switch self {
-            case .food: return "Delete Food Log?"
-            case .water: return "Delete Water Log?"
-            case .fasting: return "Delete Fasting Log?"
+            case .food: return String(localized: "Delete Food Log?", comment: "Delete diary entry confirmation")
+            case .water: return String(localized: "Delete Water Log?", comment: "Delete diary entry confirmation")
+            case .fasting: return String(localized: "Delete Fasting Log?", comment: "Delete diary entry confirmation")
             }
         }
 
         var message: String {
             switch self {
-            case .food: return "This removes the food from your diary. Saved favorites are kept."
-            case .water: return "This removes the water entry from your diary."
-            case .fasting: return "This removes the completed fast from your diary."
+            case .food: return String(localized: "This removes the food from your diary. Saved favorites are kept.", comment: "Delete diary entry confirmation")
+            case .water: return String(localized: "This removes the water entry from your diary.", comment: "Delete diary entry confirmation")
+            case .fasting: return String(localized: "This removes the completed fast from your diary.", comment: "Delete diary entry confirmation")
             }
         }
     }
@@ -137,7 +137,7 @@ struct NutritionView: View {
                 activeSheet = .editFood
             } else {
                 selectedFoodIDs.removeAll()
-                errorMessage = "Can't combine foods while fasting is active."
+                errorMessage = String(localized: "Can't combine foods while fasting is active.", comment: "Error when combining diary foods during an active fast")
                 showError = true
             }
         } label: {
@@ -205,11 +205,11 @@ struct NutritionView: View {
     }
     private var optionalNutrientGoals: OptionalNutrientGoals { OptionalNutrientGoals.decoded(from: optionalNutrientGoalsData) }
     private var waterUnit: WaterUnit { WaterUnit(rawValue: waterUnitRaw) ?? .defaultUnit }
-    private var waterPillarUnit: String { waterUnit == .fluidOunces ? " fl oz" : "ml" }
+    private var waterPillarUnit: String { waterUnit == .fluidOunces ? String(localized: " fl oz", comment: "Water unit suffix after an amount (leading space)") : "ml" }
     private var logDateForSelectedDay: Date { logDate(on: selectedDate) }
 
     private var navigationTitle: String {
-        if isToday { return "Today" }
+        if isToday { return String(localized: "Today", comment: "Food diary navigation title for the current day") }
         return selectedDate.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
     }
 
@@ -458,7 +458,7 @@ private var dailyStepsTaskKey: String {
 
     var body: some View {
         homeContent
-            .alert(pendingDiaryDeletion?.title ?? "Delete Entry?", isPresented: isDiaryDeletionPresented, presenting: pendingDiaryDeletion) { target in
+            .alert(pendingDiaryDeletion?.title ?? String(localized: "Delete Entry?", comment: "Fallback title of the diary delete confirmation alert"), isPresented: isDiaryDeletionPresented, presenting: pendingDiaryDeletion) { target in
                 Button("Cancel", role: .cancel) { pendingDiaryDeletion = nil }
                 Button("Delete", role: .destructive) {
                     confirmDiaryDeletion(target)
@@ -555,7 +555,7 @@ private var dailyStepsTaskKey: String {
                         }
                         if waterTrackingEnabled {
                             MacroVerticalBar(
-                                label: "Water",
+                                label: String(localized: "Water", comment: "Home nutrient bar label"),
                                 current: waterUnit.displayAmount(
                                     forMilliliters: waterStore.total(on: selectedDate)
                                 ),
@@ -895,7 +895,7 @@ private var dailyStepsTaskKey: String {
             .fullScreenCover(isPresented: $showCamera) {
                 CameraView(
                     image: $capturedImage,
-                    title: captureImages.isEmpty ? nil : "Photo \(captureImages.count + 1)",
+                    title: captureImages.isEmpty ? nil : String(localized: "Photo \(captureImages.count + 1)", comment: "Camera title when capturing an additional photo of a meal"),
                     onCancel: {
                         if !captureImages.isEmpty {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -1686,20 +1686,20 @@ private enum BarcodeLookupAlertPresenter {
         }
 
         let alert = UIAlertController(
-            title: "Couldn't use this barcode",
+            title: String(localized: "Couldn't use this barcode", comment: "Barcode lookup failure alert title"),
             message: message,
             preferredStyle: .alert
         )
         if offersScanLabel {
-            alert.addAction(UIAlertAction(title: "Scan Label", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Scan Label", comment: "Barcode failure alert button"), style: .default) { _ in
                 NotificationCenter.default.post(name: .fudBarcodeAlertScanLabel, object: nil)
             })
         } else {
-            alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Retry", comment: "Barcode failure alert button"), style: .default) { _ in
                 NotificationCenter.default.post(name: .fudBarcodeAlertRetry, object: nil)
             })
         }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel", comment: "Barcode failure alert button"), style: .cancel) { _ in
             NotificationCenter.default.post(name: .fudBarcodeAlertCancel, object: nil)
         })
         root.present(alert, animated: true)

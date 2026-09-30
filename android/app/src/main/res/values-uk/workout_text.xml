@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Описати тренування</string>
+    <string name="workout_text_intro">Опишіть, що ви робили. Перевірте дані, перш ніж додати їх у щоденник тренувань.</string>
+    <string name="workout_text_description">Опис тренування</string>
+    <string name="workout_text_example">20 хвилин стрибків на скакалці, потім 3 підходи по 10 жимів лежачи з 40 кг</string>
+    <string name="workout_text_voice">Голос</string>
+    <string name="workout_text_preparing">Пошук вправ…</string>
+    <string name="workout_text_preview">Проаналізувати</string>
+    <string name="workout_text_retry">Повторити</string>
+    <string name="workout_text_review">Перевірити тренування</string>
+    <string name="workout_text_date">Дата (РРРР-ММ-ДД)</string>
+    <string name="workout_text_custom">Власна активність на час · оцінка калорій використовує загальний рівень активності</string>
+    <string name="workout_text_minutes">Хвилини</string>
+    <string name="workout_text_reps">Повтори</string>
+    <string name="workout_text_remove">Видалити вправу</string>
+    <string name="workout_text_calories_note">Калорії — це оцінка. Після додавання тренування скористайтеся кнопкою «Розрахувати» в щоденнику.</string>
+    <string name="workout_text_edit">Редагувати опис</string>
+    <string name="workout_text_adding">Додавання…</string>
+    <string name="workout_text_add">Додати в щоденник</string>
+    <string name="workout_text_menu">Текст</string>
+    <string name="workout_text_set_weight">Підхід %1$d · %2$s</string>
+    <string name="workout_text_estimate">Орієнтовна витрата: %1$d ккал</string>
+    <string name="workout_text_effort">Навантаження (помірне, якщо не вказано)</string>
+    <string name="workout_text_light">Світлий</string>
+    <string name="workout_text_moderate">Помірна активність</string>
+    <string name="workout_text_vigorous">Інтенсивна</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Почати спочатку</string>
+    <string name="workout_clarify_title">Коротке запитання</string>
+    <string name="workout_clarify_hint">Торкніться вправи, щоб вибрати її, або введіть відповідь.</string>
+    <string name="workout_clarify_answer">Ваша відповідь</string>
+    <string name="workout_clarify_voice">Голосова відповідь</string>
+    <string name="workout_text_repeat_error">Не вдалося завершити за вашими відповідями. Додайте відсутні деталі в опис (наприклад, підходи й повтори) або почніть спочатку.</string>
+</resources>

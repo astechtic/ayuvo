@@ -104,9 +104,9 @@ struct BodyMeasurement: Identifiable, Codable, Equatable {
         case small, medium, large
         var label: String {
             switch self {
-            case .small: return "Small"
-            case .medium: return "Medium"
-            case .large: return "Large"
+            case .small: return String(localized: "Small", comment: "Body frame size (from wrist measurement)")
+            case .medium: return String(localized: "Medium", comment: "Body frame size (from wrist measurement)")
+            case .large: return String(localized: "Large", comment: "Body frame size (from wrist measurement)")
             }
         }
     }
@@ -117,14 +117,14 @@ struct BodyMeasurement: Identifiable, Codable, Equatable {
         var id: String { rawValue }
         var label: String {
             switch self {
-            case .neck: return "Neck"
-            case .waist: return "Waist"
-            case .hips: return "Hips"
-            case .chest: return "Chest"
-            case .upperArm: return "Upper Arm"
-            case .thigh: return "Thigh"
-            case .calf: return "Calf"
-            case .wrist: return "Wrist"
+            case .neck: return String(localized: "Neck", comment: "Body measurement site")
+            case .waist: return String(localized: "Waist", comment: "Body measurement site")
+            case .hips: return String(localized: "Hips", comment: "Body measurement site")
+            case .chest: return String(localized: "Chest", comment: "Body measurement site")
+            case .upperArm: return String(localized: "Upper Arm", comment: "Body measurement site")
+            case .thigh: return String(localized: "Thigh", comment: "Body measurement site")
+            case .calf: return String(localized: "Calf", comment: "Body measurement site")
+            case .wrist: return String(localized: "Wrist", comment: "Body measurement site")
             }
         }
     }
@@ -186,7 +186,7 @@ struct BodyMeasurement: Identifiable, Codable, Equatable {
             metrics.append("US-Navy body fat ~\(String(format: "%.0f", bf))%")
         }
         if let frame = wristFrame(gender: gender, heightCm: heightCm) {
-            metrics.append("frame \(frame.label.lowercased())")
+            metrics.append("frame \(frame.rawValue)") // English for the AI prompt
         }
 
         var summary = sites.joined(separator: ", ")

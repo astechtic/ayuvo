@@ -416,7 +416,7 @@ struct WorkoutLogView: View {
                         HStack(alignment: .center) {
                             Label(selectedDateTitle, systemImage: "dumbbell.fill")
                             Spacer()
-                            Text("\(selectedExercises.count) workout\(selectedExercises.count == 1 ? "" : "s")")
+                            Text("\(selectedExercises.count) workouts", comment: "Workout diary header: number of exercises logged on the day")
                                 .font(.caption.weight(.bold))
                         }
                         .textCase(nil)
@@ -695,9 +695,9 @@ struct WorkoutLogView: View {
     }
 
     private var selectedDateTitle: String {
-        if Calendar.current.isDateInToday(selectedDate) { return "Today" }
-        if Calendar.current.isDateInTomorrow(selectedDate) { return "Tomorrow" }
-        if Calendar.current.isDateInYesterday(selectedDate) { return "Yesterday" }
+        if Calendar.current.isDateInToday(selectedDate) { return String(localized: "Today", comment: "Workout diary day title") }
+        if Calendar.current.isDateInTomorrow(selectedDate) { return String(localized: "Tomorrow", comment: "Workout diary day title") }
+        if Calendar.current.isDateInYesterday(selectedDate) { return String(localized: "Yesterday", comment: "Workout diary day title") }
         return selectedDate.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
     }
 
@@ -942,7 +942,9 @@ private struct WorkoutLogWeekStrip: View {
         .buttonStyle(.plain)
         .frame(maxWidth: .infinity)
         .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
-        .accessibilityValue("\(workoutCount) workout\(workoutCount == 1 ? "" : "s")\(isSelected ? ", selected" : "")")
+        .accessibilityValue(isSelected
+            ? String(localized: "\(workoutCount) workouts, selected", comment: "Workout calendar day accessibility value")
+            : String(localized: "\(workoutCount) workouts", comment: "Workout calendar day accessibility value"))
     }
 
     private func weekDates(for weekIndex: Int) -> [Date] {
@@ -1085,7 +1087,7 @@ private struct WorkoutLogStatsStrip: View {
             divider
             metric(
                 label: "Burn",
-                value: caloriesBurned.map { "\($0.formatted()) kcal" } ?? "-- kcal",
+                value: caloriesBurned.map { String(localized: "\($0.formatted()) kcal", comment: "Workout calories burned") } ?? String(localized: "-- kcal", comment: "Workout calories burned, not calculated yet"),
                 systemImage: "flame.fill",
                 active: caloriesBurned != nil
             )
@@ -1114,7 +1116,7 @@ private struct WorkoutLogStatsStrip: View {
             .accessibilityHidden(true)
     }
 
-    private func metric(label: String, value: String, systemImage: String, active: Bool) -> some View {
+    private func metric(label: LocalizedStringKey, value: String, systemImage: String, active: Bool) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 4) {
                 Image(systemName: systemImage)
@@ -1209,7 +1211,7 @@ private struct WorkoutLogExerciseCard: View {
                             .foregroundStyle(Color.workoutCharcoal)
                             .lineLimit(2)
 
-                        Text("\(exercise.primaryMuscles.joined(separator: ", ")) - \(exercise.rawEquipment)")
+                        Text(verbatim: "\(ExerciseTermText.muscles(exercise.primaryMuscles)) - \(ExerciseTermText.equipment(exercise.rawEquipment))")
                             .font(.system(.caption, design: .rounded, weight: .semibold))
                             .foregroundStyle(Color.workoutMutedText)
                             .lineLimit(1)
@@ -1225,7 +1227,7 @@ private struct WorkoutLogExerciseCard: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("\(exercise.name), \(exercise.primaryMuscles.joined(separator: ", ")), \(exercise.rawEquipment)")
+            .accessibilityLabel(Text(verbatim: "\(exercise.name), \(ExerciseTermText.muscles(exercise.primaryMuscles)), \(ExerciseTermText.equipment(exercise.rawEquipment))"))
             .accessibilityHint("Opens exercise instructions")
 
             if !isCardio {
@@ -1384,8 +1386,8 @@ private struct WorkoutExerciseTimerControls: View {
         }
         .buttonStyle(.plain)
         .foregroundStyle(timer == nil ? Color.workoutMutedText.opacity(0.72) : Color.workoutAccent)
-        .accessibilityLabel("\(timer == nil ? "Start timer" : "Timer options") for \(exerciseName)")
-        .accessibilityValue(timer == nil ? "" : "\(durationText(at: .now)), \(isRunning ? "running" : (isSaved ? "saved" : "paused"))")
+        .accessibilityLabel(timer == nil ? Text("Start timer for \(exerciseName)", comment: "Exercise timer button") : Text("Timer options for \(exerciseName)", comment: "Exercise timer button"))
+        .accessibilityValue(timerAccessibilityValue)
         .accessibilityIdentifier("workout.timer.\(exerciseID).primary")
         .confirmationDialog("Timer for \(exerciseName)", isPresented: $showingActions, titleVisibility: .visible) {
             Button(isRunning ? "Pause" : "Resume") { action(isRunning ? .pause : .resume) }
@@ -1396,6 +1398,14 @@ private struct WorkoutExerciseTimerControls: View {
             Button("Discard timer", role: .destructive) { action(.discard) }
             Button("Cancel", role: .cancel) { }
         }
+    }
+
+    private var timerAccessibilityValue: String {
+        guard timer != nil else { return "" }
+        let duration = durationText(at: .now)
+        if isRunning { return String(localized: "\(duration), running", comment: "Exercise timer accessibility value") }
+        if isSaved { return String(localized: "\(duration), saved", comment: "Exercise timer accessibility value") }
+        return String(localized: "\(duration), paused", comment: "Exercise timer accessibility value")
     }
 
     private func durationText(at date: Date) -> String {
@@ -1438,7 +1448,7 @@ private struct WorkoutLogSetRow: View {
             .frame(maxWidth: .infinity)
 
             WorkoutLogSetValueField(
-                placeholder: "Reps",
+                placeholder: String(localized: "Reps", comment: "Workout set field placeholder"),
                 text: Binding(get: { set.reps }, set: updateReps),
                 keyboardType: .numberPad,
                 focus: WorkoutLogSetFocus(exerciseID: exerciseID, setID: set.id, field: .reps),
@@ -1585,11 +1595,22 @@ private enum WorkoutLogPickerSource: String, CaseIterable, Identifiable {
 }
 
 private struct WorkoutLogPickerContext: Hashable {
-    static let all = WorkoutLogPickerContext(title: "All Workouts", muscles: [])
-    static let saved = WorkoutLogPickerContext(title: "Saved", muscles: [])
+    // `title` is the persisted filter-state key (`id`) and the glyph hint, so it stays English;
+    // `displayName` is what the user sees.
+    static let all = WorkoutLogPickerContext(
+        title: "All Workouts", muscles: [],
+        displayName: String(localized: "All Workouts", comment: "Workout picker: show every exercise")
+    )
+    static let saved = WorkoutLogPickerContext(
+        title: "Saved", muscles: [],
+        displayName: String(localized: "Saved", comment: "Workout picker: saved exercises")
+    )
 
     let title: String
     let muscles: Set<String>
+    var displayName: String? = nil
+
+    var displayTitle: String { displayName ?? title }
 
     var id: String { title }
 }
@@ -1605,10 +1626,10 @@ private struct WorkoutLogPickerContextMenuLabel: View {
 
     var body: some View {
         if context.id == WorkoutLogPickerContext.saved.id {
-            Label(context.title, systemImage: "bookmark.fill")
+            Label(context.displayTitle, systemImage: "bookmark.fill")
         } else {
             Label(
-                context.title,
+                context.displayTitle,
                 image: MuscleGlyphAsset.name(title: context.title, muscles: context.muscles)
             )
         }
@@ -1829,7 +1850,7 @@ private struct WorkoutLogExercisePickerSheet: View {
                 }
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search workouts")
                 .listSectionSpacing(0)
-                .navigationTitle("Add \(request.context.title)")
+                .navigationTitle("Add \(request.context.displayTitle)")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(item: $previewItem) { item in
                     ExerciseLibraryDetailView(
@@ -2015,7 +2036,7 @@ private struct WorkoutLogExercisePickerSheet: View {
     private var resultsHeader: some View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(pagedExercises.totalCount) \(pagedExercises.totalCount == 1 ? "exercise" : "exercises")")
+                Text("\(pagedExercises.totalCount) exercises", comment: "Exercise picker result count")
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(Color.workoutCharcoal)
                     .textCase(nil)
@@ -2083,12 +2104,12 @@ private struct WorkoutLogExercisePickerSheet: View {
             HStack(spacing: 9) {
                 if !hidesPrimaryFilter {
                     filterMenu(
-                        title: "Target",
+                        title: String(localized: "Target", comment: "Exercise picker filter"),
                         value: primaryFilterTitle,
                         systemImage: "scope",
                         isActive: !selectedPrimaryMuscles.isEmpty
                     ) {
-                        menuChoice("All Targets (\(contextPrimaryMuscles.count))", isSelected: selectedPrimaryMuscles.isEmpty) {
+                        menuChoice(String(localized: "All Targets (\(contextPrimaryMuscles.count))", comment: "Exercise picker filter"), isSelected: selectedPrimaryMuscles.isEmpty) {
                             selectedPrimaryMuscles.removeAll()
                         }
                         ForEach(contextPrimaryMuscles, id: \.self) { value in
@@ -2100,12 +2121,12 @@ private struct WorkoutLogExercisePickerSheet: View {
                 }
 
                 filterMenu(
-                    title: "Secondary",
-                    value: selectionTitle(selectedSecondaryMuscles),
+                    title: String(localized: "Secondary", comment: "Exercise picker filter"),
+                    value: selectionTitle(selectedSecondaryMuscles, display: ExerciseTermText.muscle),
                     systemImage: "scope",
                     isActive: !selectedSecondaryMuscles.isEmpty
                 ) {
-                    menuChoice("All Secondary", isSelected: selectedSecondaryMuscles.isEmpty) { selectedSecondaryMuscles.removeAll() }
+                    menuChoice(String(localized: "All Secondary", comment: "Exercise picker filter"), isSelected: selectedSecondaryMuscles.isEmpty) { selectedSecondaryMuscles.removeAll() }
                     ForEach(library.availableSecondaryMuscles, id: \.self) { value in
                         muscleMenuChoice(value, muscles: [value], isSelected: selectedSecondaryMuscles.contains(value)) {
                             selectedSecondaryMuscles = [value]
@@ -2114,28 +2135,28 @@ private struct WorkoutLogExercisePickerSheet: View {
                 }
 
                 filterMenu(
-                    title: "Equipment",
+                    title: String(localized: "Equipment", comment: "Exercise picker filter"),
                     value: equipmentFilterTitle,
                     systemImage: "dumbbell.fill",
                     isActive: !selectedEquipment.isEmpty
                 ) {
-                    menuChoice("All Equipment (\(availableEquipment.count))", isSelected: selectedEquipment.isEmpty) {
+                    menuChoice(String(localized: "All Equipment (\(availableEquipment.count))", comment: "Exercise picker filter"), isSelected: selectedEquipment.isEmpty) {
                         selectedEquipment.removeAll()
                     }
                     ForEach(availableEquipment, id: \.self) { value in
-                        menuChoice(value, isSelected: selectedEquipment.contains(value)) { selectedEquipment = [value] }
+                        menuChoice(ExerciseTermText.equipment(value), isSelected: selectedEquipment.contains(value)) { selectedEquipment = [value] }
                     }
                 }
 
                 filterMenu(
-                    title: "Body Part",
-                    value: selectionTitle(selectedBodyParts),
+                    title: String(localized: "Body Part", comment: "Exercise picker filter"),
+                    value: selectionTitle(selectedBodyParts, display: ExerciseTermText.bodyPart),
                     systemImage: "tag",
                     isActive: !selectedBodyParts.isEmpty
                 ) {
-                    menuChoice("All Body Parts", isSelected: selectedBodyParts.isEmpty) { selectedBodyParts.removeAll() }
+                    menuChoice(String(localized: "All Body Parts", comment: "Exercise picker filter"), isSelected: selectedBodyParts.isEmpty) { selectedBodyParts.removeAll() }
                     ForEach(library.availableBodyPartCounts) { value in
-                        menuChoice(value.bodyPart, isSelected: selectedBodyParts.contains(value.bodyPart)) {
+                        menuChoice(ExerciseTermText.bodyPart(value.bodyPart), isSelected: selectedBodyParts.contains(value.bodyPart)) {
                             selectedBodyParts = [value.bodyPart]
                         }
                     }
@@ -2157,17 +2178,18 @@ private struct WorkoutLogExercisePickerSheet: View {
     }
 
     private var equipmentFilterTitle: String {
-        selectedEquipment.isEmpty ? "All \(availableEquipment.count)" : selectionTitle(selectedEquipment)
+        selectedEquipment.isEmpty ? String(localized: "All \(availableEquipment.count)", comment: "Exercise picker filter") : selectionTitle(selectedEquipment, display: ExerciseTermText.equipment)
     }
 
     private var primaryFilterTitle: String {
-        selectedPrimaryMuscles.isEmpty ? "All \(contextPrimaryMuscles.count)" : selectionTitle(selectedPrimaryMuscles)
+        selectedPrimaryMuscles.isEmpty ? String(localized: "All \(contextPrimaryMuscles.count)", comment: "Exercise picker filter") : selectionTitle(selectedPrimaryMuscles, display: ExerciseTermText.muscle)
     }
 
-    private func selectionTitle(_ selection: Set<String>) -> String {
-        if selection.isEmpty { return "All" }
-        if selection.count == 1 { return selection.first ?? "All" }
-        return "\(selection.count) selected"
+    private func selectionTitle(_ selection: Set<String>, display: (String) -> String) -> String {
+        let all = String(localized: "All", comment: "Exercise picker filter")
+        if selection.isEmpty { return all }
+        if selection.count == 1 { return selection.first.map(display) ?? all }
+        return String(localized: "\(selection.count) selected", comment: "Exercise picker filter")
     }
 
     private func filterMenu<Content: View>(
@@ -2205,10 +2227,11 @@ private struct WorkoutLogExercisePickerSheet: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
+            // `title` stays the English catalogue value for the glyph lookup; the label shows it translated.
             if isSelected {
-                Label(title, systemImage: "checkmark")
+                Label(ExerciseTermText.muscle(title), systemImage: "checkmark")
             } else {
-                Label(title, image: MuscleGlyphAsset.name(title: title, muscles: muscles))
+                Label(ExerciseTermText.muscle(title), image: MuscleGlyphAsset.name(title: title, muscles: muscles))
             }
         }
     }
@@ -2347,7 +2370,7 @@ private struct WorkoutLogPickerRow: View {
                             .foregroundStyle(Color.workoutCharcoal)
                             .lineLimit(2)
 
-                        Text("\(item.primaryMusclesTitle) - \(item.rawEquipment)")
+                        Text(verbatim: "\(ExerciseTermText.muscles(item.primaryMuscles)) - \(ExerciseTermText.equipment(item.rawEquipment))")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Color.workoutMutedText)
                             .lineLimit(1)
@@ -2364,7 +2387,7 @@ private struct WorkoutLogPickerRow: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("\(item.name), \(item.primaryMusclesTitle), \(item.rawEquipment)")
+            .accessibilityLabel(Text(verbatim: "\(item.name), \(ExerciseTermText.muscles(item.primaryMuscles)), \(ExerciseTermText.equipment(item.rawEquipment))"))
             .accessibilityValue(isSelected ? "Added" : "Not added")
             .accessibilityHint(isSelected ? "Double tap to remove from this day" : "Double tap to add to this day")
 
@@ -2488,9 +2511,9 @@ private struct WorkoutLogExerciseHistorySheet: View {
 
     private func dayTitle(for dateKey: String) -> String {
         guard let date = StrengthWorkoutStore.date(for: dateKey) else { return dateKey }
-        if Calendar.current.isDateInToday(date) { return "Today" }
-        if Calendar.current.isDateInYesterday(date) { return "Yesterday" }
-        if Calendar.current.isDate(date, inSameDayAs: selectedDate) { return "Selected day" }
+        if Calendar.current.isDateInToday(date) { return String(localized: "Today", comment: "Workout diary day title") }
+        if Calendar.current.isDateInYesterday(date) { return String(localized: "Yesterday", comment: "Workout diary day title") }
+        if Calendar.current.isDate(date, inSameDayAs: selectedDate) { return String(localized: "Selected day", comment: "Workout diary day title") }
         return date.formatted(.dateTime.weekday(.wide).month(.abbreviated).day().year())
     }
 }
@@ -2563,6 +2586,17 @@ private struct WorkoutLogCopyDayRow: View {
         return remaining > 0 ? "\(names) + \(remaining)" : names
     }
 
+    /// "3 workouts" as one plural-aware string, the count drawn large.
+    private var workoutCountText: AttributedString {
+        let count = day.exercises.count
+        var text = AttributedString(String(localized: "\(count) workouts", comment: "Workout count of a day in the workout log"))
+        if let range = text.range(of: count.formatted()) ?? text.range(of: String(count)) {
+            text[range].font = .system(.title3, design: .rounded, weight: .black).monospacedDigit()
+            text[range].foregroundColor = Color.workoutAccent
+        }
+        return text
+    }
+
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             Image(systemName: "calendar")
@@ -2587,14 +2621,11 @@ private struct WorkoutLogCopyDayRow: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            VStack(alignment: .trailing, spacing: 4) {
-                Text("\(day.exercises.count)")
-                    .font(.system(.title3, design: .rounded, weight: .black).monospacedDigit())
-                    .foregroundStyle(Color.workoutAccent)
-                Text(day.exercises.count == 1 ? "workout" : "workouts")
-                    .font(.caption2.weight(.heavy))
-                    .foregroundStyle(Color.workoutMutedText)
-            }
+            Text(workoutCountText)
+                .font(.caption2.weight(.heavy))
+                .foregroundStyle(Color.workoutMutedText)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
 
             Image(systemName: "plus")
                 .font(.caption.weight(.black))
@@ -2606,8 +2637,8 @@ private struct WorkoutLogCopyDayRow: View {
     }
 
     private var dayTitle: String {
-        if Calendar.current.isDateInToday(day.date) { return "Today" }
-        if Calendar.current.isDateInYesterday(day.date) { return "Yesterday" }
+        if Calendar.current.isDateInToday(day.date) { return String(localized: "Today", comment: "Workout diary day title") }
+        if Calendar.current.isDateInYesterday(day.date) { return String(localized: "Yesterday", comment: "Workout diary day title") }
         return day.date.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
     }
 }

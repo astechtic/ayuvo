@@ -724,8 +724,8 @@ internal fun SheetDateTimeCard(
     onEditTime: () -> Unit
 ) {
     val context = LocalContext.current
-    val dateFormatter = remember { DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US) }
-    val timeFormatter = remember(context) { DateTimeFormatter.ofPattern(clockTimePattern(context), Locale.US) }
+    val dateFormatter = remember { DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM) }
+    val timeFormatter = remember(context) { DateTimeFormatter.ofPattern(clockTimePattern(context), Locale.getDefault()) }
     SheetPillCard {
         Row(
             Modifier

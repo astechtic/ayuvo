@@ -66,7 +66,7 @@ struct InsightsSettingsSection: View {
                 }
 
                 NotificationTimeRow(
-                    label: "Daily Review",
+                    label: String(localized: "Daily Review", comment: "Notification reminder row"),
                     icon: "checklist",
                     tint: SettingsTint.insights,
                     isEnabled: $reviewEnabled,

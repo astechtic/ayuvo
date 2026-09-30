@@ -40,12 +40,14 @@ struct OutdoorWorkoutSummaryView: View {
                         row("Avg pace", WorkoutFormat.pace(secondsPerKm: summary.avgPaceSecondsPerKm, useMetric: useMetric))
                     }
                     if let max = summary.maxSpeedMps { row("Max speed", WorkoutFormat.speed(mps: max, useMetric: useMetric)) }
-                    row("Elevation", String(format: "+%.0f m / −%.0f m", summary.elevationGainM, summary.elevationLossM))
+                    row("Elevation", String(localized: "+\(summary.elevationGainM.formatted(.number.precision(.fractionLength(0)))) m / −\(summary.elevationLossM.formatted(.number.precision(.fractionLength(0)))) m", comment: "Workout summary elevation gain / loss in metres"))
                 }
                 if let kcal = session.caloriesBurned {
-                    row("Energy", "\(kcal) kcal" + (summary?.energyMethod == "keytel" ? " (heart rate)" : " (estimate)"))
+                    row("Energy", summary?.energyMethod == "keytel"
+                        ? String(localized: "\(kcal) kcal (heart rate)", comment: "Workout summary energy, calculated from heart rate")
+                        : String(localized: "\(kcal) kcal (estimate)", comment: "Workout summary energy, estimated"))
                 }
-                if summary?.recordedOn == "watch" { row("Recorded on", "Apple Watch") }
+                if summary?.recordedOn == "watch" { row("Recorded on", String(localized: "Apple Watch", comment: "Device name: workout recorded on Apple Watch")) }
             }
 
             if let splits = summary?.splits, !splits.isEmpty {
@@ -66,16 +68,18 @@ struct OutdoorWorkoutSummaryView: View {
 
             if let heart = session.heartRate {
                 Section("Heart rate") {
-                    if let avg = heart.avgHr { row("Average", "\(Int(avg.rounded())) bpm") }
-                    if let max = heart.maxHr { row("Maximum", "\(Int(max.rounded())) bpm") }
-                    if let trimp = heart.trimp { row("TRIMP", String(format: "%.0f", trimp)) }
+                    if let avg = heart.avgHr { row("Average", String(localized: "\(Int(avg.rounded())) bpm", comment: "Heart rate value")) }
+                    if let max = heart.maxHr { row("Maximum", String(localized: "\(Int(max.rounded())) bpm", comment: "Heart rate value")) }
+                    if let trimp = heart.trimp { row("TRIMP", trimp.formatted(.number.precision(.fractionLength(0)))) }
                     if let hrr1 = heart.hrr1 {
-                        row("Recovery (1 min)", "\(Int(hrr1)) bpm" + (heart.hrr1FlagLow == true ? " · low" : ""))
+                        row("Recovery (1 min)", heart.hrr1FlagLow == true
+                            ? String(localized: "\(Int(hrr1)) bpm · low", comment: "Heart-rate recovery value flagged as low")
+                            : String(localized: "\(Int(hrr1)) bpm", comment: "Heart rate value"))
                     }
                     if heart.zoneSeconds.contains(where: { $0 > 0 }) {
                         HeartRateZoneBars(zoneSeconds: heart.zoneSeconds)
                     }
-                    Text(String(format: "Coverage %.0f%%", heart.coveragePct))
+                    Text("Coverage \((heart.coveragePct / 100).formatted(.percent.precision(.fractionLength(0))))", comment: "Share of the workout with heart-rate samples")
                         .font(.caption).foregroundStyle(.secondary)
                 }
             }
@@ -83,16 +87,16 @@ struct OutdoorWorkoutSummaryView: View {
             if let summary, summary.bestVO2max != nil {
                 Section {
                     if let cooper = summary.cooperVO2max {
-                        row("Cooper test", String(format: "%.1f mL/kg/min", cooper))
+                        row("Cooper test", String(localized: "\(cooper.formatted(.number.precision(.fractionLength(1)))) mL/kg/min", comment: "VO2max value"))
                         if let d = summary.cooperDistanceM { row("12-minute distance", WorkoutFormat.distance(d, useMetric: useMetric)) }
                     }
                     if let v = summary.vo2max {
-                        row("Steady segments", String(format: "%.1f mL/kg/min", v))
+                        row("Steady segments", String(localized: "\(v.formatted(.number.precision(.fractionLength(1)))) mL/kg/min", comment: "VO2max value"))
                     }
                 } header: {
                     Text("Cardio fitness (VO₂max)")
                 } footer: {
-                    Text(WorkoutConfig.shared.disclaimer)
+                    Text(WorkoutConfig.shared.displayDisclaimer)
                 }
             }
 
@@ -100,7 +104,7 @@ struct OutdoorWorkoutSummaryView: View {
                 Button("Delete Workout", role: .destructive) { confirmDelete = true }
             }
         }
-        .navigationTitle(summary?.sportTitle ?? "Workout")
+        .navigationTitle(summary?.sportTitle ?? String(localized: "Workout", comment: "Fallback workout summary title"))
         .navigationBarTitleDisplayMode(.inline)
         .task(id: session.id) { route = OutdoorRouteStore.load(sessionID: session.id) }
         .confirmationDialog("Delete this workout?", isPresented: $confirmDelete, titleVisibility: .visible) {
@@ -114,7 +118,7 @@ struct OutdoorWorkoutSummaryView: View {
         }
     }
 
-    private func row(_ title: String, _ value: String) -> some View {
+    private func row(_ title: LocalizedStringKey, _ value: String) -> some View {
         HStack {
             Text(title)
             Spacer()

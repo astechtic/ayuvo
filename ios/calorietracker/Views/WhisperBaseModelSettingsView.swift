@@ -18,7 +18,7 @@ struct WhisperBaseModelSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                SettingsLabel(localized("whisper.name", "Whisper Base"), systemImage: "waveform.badge.mic", tint: SettingsTint.speech)
+                SettingsLabel(String(localized: "whisper.name", defaultValue: "Whisper Base", table: "LocalModels", comment: "Whisper Base on-device speech model settings"), systemImage: "waveform.badge.mic", tint: SettingsTint.speech)
                     .font(.body.weight(.medium))
                 Spacer()
                 Text(statusLabel)
@@ -33,13 +33,13 @@ struct WhisperBaseModelSettingsView: View {
             if let progress = modelManager.downloadProgress {
                 ProgressView(value: progress)
                     .tint(AppColors.calorie)
-                    .accessibilityLabel(localized("whisper.downloadProgress", "Whisper Base download progress"))
+                    .accessibilityLabel(String(localized: "whisper.downloadProgress", defaultValue: "Whisper Base download progress", table: "LocalModels", comment: "Whisper Base on-device speech model settings"))
                     .accessibilityValue(Text(progress, format: .percent))
             }
 
             HStack {
                 if isDownloading {
-                    Button(localized("common.cancel", "Cancel"), role: .cancel) {
+                    Button(String(localized: "common.cancel", defaultValue: "Cancel", table: "LocalModels", comment: "On-device model settings"), role: .cancel) {
                         modelManager.cancelDownload()
                     }
                     .buttonStyle(.bordered)
@@ -53,7 +53,7 @@ struct WhisperBaseModelSettingsView: View {
                 }
 
                 if modelManager.hasStoredData {
-                    Button(localized("common.delete", "Delete"), role: .destructive) {
+                    Button(String(localized: "common.delete", defaultValue: "Delete", table: "LocalModels", comment: "On-device model settings"), role: .destructive) {
                         showDeleteConfirmation = true
                     }
                     .buttonStyle(.bordered)
@@ -77,38 +77,35 @@ struct WhisperBaseModelSettingsView: View {
             onAvailabilityChange()
         }
         .confirmationDialog(
-            localized("whisper.deleteTitle", "Delete Whisper Base?"),
+            String(localized: "whisper.deleteTitle", defaultValue: "Delete Whisper Base?", table: "LocalModels", comment: "Whisper Base on-device speech model settings"),
             isPresented: $showDeleteConfirmation,
             titleVisibility: .visible
         ) {
-            Button(localized("common.deleteModel", "Delete Model"), role: .destructive) {
+            Button(String(localized: "common.deleteModel", defaultValue: "Delete Model", table: "LocalModels", comment: "On-device model settings"), role: .destructive) {
                 deleteModel()
             }
-            Button(localized("common.cancel", "Cancel"), role: .cancel) { }
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", table: "LocalModels", comment: "On-device model settings"), role: .cancel) { }
         } message: {
-            Text(localized(
-                "whisper.deleteMessage",
-                "The downloaded model will be removed from this iPhone. You can download it again later."
-            ))
+            Text(String(localized: "whisper.deleteMessage", defaultValue: "The downloaded model will be removed from this iPhone. You can download it again later.", table: "LocalModels", comment: "Whisper Base on-device speech model settings"))
         }
     }
 
     private var statusLabel: String {
         switch modelManager.state {
         case .notDownloaded:
-            localized("common.notDownloaded", "Not downloaded")
+            String(localized: "common.notDownloaded", defaultValue: "Not downloaded", table: "LocalModels", comment: "On-device model settings")
         case .downloaded:
-            localized("common.downloaded", "Downloaded")
+            String(localized: "common.downloaded", defaultValue: "Downloaded", table: "LocalModels", comment: "On-device model settings")
         case .downloading(let progress):
-            "\(Int(progress * 100))%"
+            progress.formatted(.percent.precision(.fractionLength(0)))
         case .preparing:
-            localized("common.preparing", "Preparing")
+            String(localized: "common.preparing", defaultValue: "Preparing", table: "LocalModels", comment: "On-device model settings")
         case .ready:
-            localized("common.ready", "Ready")
+            String(localized: "common.ready", defaultValue: "Ready", table: "LocalModels", comment: "On-device model settings")
         case .transcribing:
-            localized("common.inUse", "In use")
+            String(localized: "common.inUse", defaultValue: "In use", table: "LocalModels", comment: "On-device model settings")
         case .failed:
-            localized("common.needsAttention", "Needs attention")
+            String(localized: "common.needsAttention", defaultValue: "Needs attention", table: "LocalModels", comment: "On-device model settings")
         }
     }
 
@@ -126,23 +123,19 @@ struct WhisperBaseModelSettingsView: View {
     private var statusDescription: String {
         switch modelManager.state {
         case .notDownloaded:
-            localized("whisper.about", "About 147 MB. Runs fully on-device after download.")
+            String(localized: "whisper.about", defaultValue: "About 147 MB. Runs fully on-device after download.", table: "LocalModels", comment: "Whisper Base on-device speech model settings")
         case .downloaded, .ready:
             if let size = modelManager.installedSizeDescription {
-                LocalModelStrings.format(
-                    "whisper.storedWithSize",
-                    defaultValue: "Stored locally (%@). No audio leaves this iPhone.",
-                    size
-                )
+                String(localized: "whisper.storedWithSize", defaultValue: "Stored locally (\(size)). No audio leaves this iPhone.", table: "LocalModels", comment: "Whisper Base on-device speech model settings")
             } else {
-                localized("whisper.stored", "Stored locally. No audio leaves this iPhone.")
+                String(localized: "whisper.stored", defaultValue: "Stored locally. No audio leaves this iPhone.", table: "LocalModels", comment: "Whisper Base on-device speech model settings")
             }
         case .downloading:
-            localized("whisper.downloading", "Downloading the multilingual Core ML model…")
+            String(localized: "whisper.downloading", defaultValue: "Downloading the multilingual Core ML model…", table: "LocalModels", comment: "Whisper Base on-device speech model settings")
         case .preparing:
-            localized("whisper.optimizing", "Optimizing the model for this iPhone…")
+            String(localized: "whisper.optimizing", defaultValue: "Optimizing the model for this iPhone…", table: "LocalModels", comment: "Whisper Base on-device speech model settings")
         case .transcribing:
-            localized("whisper.transcribing", "Transcribing locally…")
+            String(localized: "whisper.transcribing", defaultValue: "Transcribing locally…", table: "LocalModels", comment: "Whisper Base on-device speech model settings")
         case .failed(let message):
             message
         }
@@ -150,8 +143,8 @@ struct WhisperBaseModelSettingsView: View {
 
     private var downloadButtonTitle: String {
         modelManager.isDownloaded
-            ? localized("common.downloaded", "Downloaded")
-            : localized("common.download", "Download")
+            ? String(localized: "common.downloaded", defaultValue: "Downloaded", table: "LocalModels", comment: "On-device model settings")
+            : String(localized: "common.download", defaultValue: "Download", table: "LocalModels", comment: "On-device model settings")
     }
 
     private var isDownloading: Bool {
@@ -163,7 +156,7 @@ struct WhisperBaseModelSettingsView: View {
     private var attributionLinks: some View {
         Link(destination: WhisperBaseModelManager.modelSourceURL) {
             Label(
-                localized("gemma.modelSource", "Model Source"),
+                String(localized: "gemma.modelSource", defaultValue: "Model Source", table: "LocalModels", comment: "Gemma 4 on-device model settings"),
                 systemImage: "shippingbox"
             )
         }
@@ -183,9 +176,5 @@ struct WhisperBaseModelSettingsView: View {
         } catch {
             modelManager.refresh()
         }
-    }
-
-    private func localized(_ key: String, _ defaultValue: String) -> String {
-        LocalModelStrings.text(key, defaultValue: defaultValue)
     }
 }

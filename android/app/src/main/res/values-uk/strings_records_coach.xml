@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Дозволити Тренеру читати ваші медичні записи?</string>
+    <string name="records_coach_consent_body">Щоб відповісти вам, Тренер надсилає дані записів, які читає, — результати аналізів, дати, лікарів і діагнози — до %1$s. Записи зберігаються на цьому пристрої.</string>
+    <string name="records_coach_consent_body_on_device">Тренер читає записи на цьому пристрої; нічого не надсилається онлайн.</string>
+    <string name="records_coach_consent_allow">Разрешить</string>
+    <string name="records_coach_consent_not_now">Не зараз</string>
+    <string name="records_coach_settings_title">Тренер</string>
+    <string name="records_coach_settings_toggle">Дозволити Тренеру використовувати мої медичні записи</string>
+    <string name="records_coach_settings_subtitle">Тренер може шукати й читати ваші записи, щоб відповідати на запитання. Якщо вимкнути, доступ буде припинено негайно.</string>
+    <string name="records_coach_analyzing">Аналізується:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Аналіз %d запису</item>
+        <item quantity="few">Аналіз %d записів</item>
+        <item quantity="many">Аналіз %d записів</item>
+        <item quantity="other">Аналіз %d запису</item>
+    </plurals>
+    <string name="records_coach_change_records">Змінити записи</string>
+    <string name="records_coach_used_records">Використані записи</string>
+    <string name="records_coach_picker_title">Записи для цієї розмови</string>
+    <string name="records_coach_picker_search">Пошук записів</string>
+    <string name="records_coach_picker_limit">Виберіть не більше %d записів.</string>
+    <string name="records_coach_picker_done">Готово</string>
+    <string name="records_coach_picker_empty">Записів не знайдено.</string>
+    <string name="records_coach_picker_selected">Вибрано</string>
+    <string name="records_coach_picker_recent">Нещодавні записи</string>
+    <string name="records_coach_picker_results">Результати</string>
+    <string name="records_coach_mode_title">Надіслати записи онлайн?</string>
+    <string name="records_coach_mode_body">Тренер використовує %1$s. Надіслати дані вибраних записів онлайн?</string>
+    <string name="records_coach_mode_send">Надіслати</string>
+    <string name="records_coach_mode_on_device">Використовувати Тренера на пристрої</string>
+    <string name="records_coach_ask_report">Запитати про цей звіт</string>
+    <string name="records_coach_compare_previous">Порівняти з попереднім звітом</string>
+    <string name="records_coach_explain_trend">Поясни цю тенденцію</string>
+    <string name="records_coach_ask_coach">Запитати Тренера</string>
+    <string name="records_coach_prompt_report">Поясни цей звіт: що вирізняється і що мені запитати в лікаря?</string>
+    <string name="records_coach_prompt_compare">Порівняй цей звіт із попереднім. Що змінилося?</string>
+    <string name="records_coach_prompt_trend">Поясни, як змінювався мій показник «%1$s» із часом.</string>
+    <string name="records_coach_chip_latest">Проаналізуй мої останні аналізи крові</string>
+    <string name="records_coach_chip_abnormal">Знайти значення поза нормою</string>
+    <string name="records_coach_chip_compare">Порівняти з попереднім звітом</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

@@ -87,7 +87,7 @@ final class WatchWorkoutMirror: NSObject {
                 if WorkoutLiveActivityController.shared.isActive {
                     WorkoutLiveActivityController.shared.update(state)
                 } else {
-                    let title = OutdoorSport(rawValue: message.sport ?? "")?.title ?? "Workout"
+                    let title = OutdoorSport(rawValue: message.sport ?? "")?.title ?? String(localized: "Workout", comment: "Workout Live Activity title fallback")
                     WorkoutLiveActivityController.shared.start(title: title, state: state)
                 }
             }

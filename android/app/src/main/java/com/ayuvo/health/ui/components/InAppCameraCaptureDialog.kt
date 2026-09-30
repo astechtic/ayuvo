@@ -145,11 +145,12 @@ fun InAppCameraCaptureDialog(
                         .clip(CircleShape)
                         .background(Color.Black.copy(alpha = 0.45f))
                 ) {
-                    val (flashIcon, flashDesc) = when (flashMode) {
-                        ImageCapture.FLASH_MODE_ON -> Icons.Filled.FlashOn to "Flash on"
-                        ImageCapture.FLASH_MODE_AUTO -> Icons.Filled.FlashAuto to "Flash auto"
-                        else -> Icons.Filled.FlashOff to "Flash off"
+                    val (flashIcon, flashDescRes) = when (flashMode) {
+                        ImageCapture.FLASH_MODE_ON -> Icons.Filled.FlashOn to R.string.ui_flash_on
+                        ImageCapture.FLASH_MODE_AUTO -> Icons.Filled.FlashAuto to R.string.ui_flash_auto
+                        else -> Icons.Filled.FlashOff to R.string.ui_flash_off
                     }
+                    val flashDesc = stringResource(flashDescRes)
                     Icon(
                         flashIcon,
                         contentDescription = flashDesc,

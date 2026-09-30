@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Как ИИ Ayuvo должен обрабатывать ваши медицинские записи?</string>
+    <string name="records_ai_mode_local">Локальный ИИ</string>
+    <string name="records_ai_mode_local_detail">Используется модель на устройстве. Текст записей остаётся на этом телефоне для обработки ИИ.</string>
+    <string name="records_ai_mode_cloud">Облачный ИИ</string>
+    <string name="records_ai_mode_cloud_detail">Отправляет текст страниц (изображения — только для страниц без текста) вашему провайдеру ИИ.</string>
+    <string name="records_ai_mode_ask">Спрашивать при необходимости</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo спрашивает, прежде чем использовать ИИ для записи.</string>
+    <string name="records_ai_mode_off">Пока без ИИ</string>
+    <string name="records_ai_mode_off_detail">Сведения извлекаются без ИИ. Это можно изменить в настройках.</string>
+    <string name="records_ai_onboarding_note">Это можно изменить в любое время в разделе «Настройки › Медкарта».</string>
+    <string name="records_ai_chooser_title">Выберите, как ИИ будет помогать с записями</string>
+    <string name="records_ai_settings_title">Обработка ИИ</string>
+    <string name="records_ai_local_unavailable">ИИ на устройстве не настроен — сведения извлечены без ИИ.</string>
+    <string name="records_ai_set_up_local">Настроить ИИ на устройстве</string>
+    <string name="records_ai_no_cloud_provider">Добавьте провайдера ИИ, чтобы использовать онлайн-ИИ.</string>
+    <string name="records_ai_add_provider">Добавить провайдера ИИ</string>
+    <string name="records_ai_cloud_provider_note">Онлайн-ИИ использует %1$s.</string>
+    <string name="records_ai_consent_title">Использовать ИИ, чтобы найти больше сведений?</string>
+    <string name="records_ai_consent_body">ИИ может найти сведения, пропущенные правилами. Результаты — это предложения, которые можно сверить с оригиналом.</string>
+    <string name="records_ai_consent_local">На этом устройстве</string>
+    <string name="records_ai_consent_cloud">Онлайн-ИИ · %1$s</string>
+    <string name="records_ai_consent_not_now">Не сейчас</string>
+    <string name="records_ai_consent_apply_all">Применить ко всем ожидающим записям</string>
+    <string name="records_ai_consent_none_available">ИИ пока недоступен. Настройте ИИ на устройстве или добавьте провайдера ИИ в настройках.</string>
+    <string name="records_ai_status_local">Обработано на этом устройстве</string>
+    <string name="records_ai_status_cloud">Обработано онлайн-ИИ · %1$s</string>
+    <string name="records_ai_status_none">Не обработано ИИ</string>
+</resources>

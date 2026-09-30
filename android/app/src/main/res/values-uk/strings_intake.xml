@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Час їжі</string>
+    <string name="intake_eaten_at_same_as_log">Як і час запису</string>
+    <string name="intake_eaten_at_hint">Використовується для вашого вікна харчування та часу прийомів їжі</string>
+    <string name="intake_eaten_at_reset">Використати час запису</string>
+    <string name="intake_adherence_title">Останні 30 днів</string>
+    <string name="intake_adherence_none">За останні 30 днів ще немає запланованих доз.</string>
+    <string name="intake_adherence_pct">Прийнято %1$s%% доз (%2$d з %3$d)</string>
+    <string name="intake_adherence_adherent">За планом: прийнято 80%% доз або більше</string>
+    <string name="intake_adherence_below">Прийнято менше 80%% доз</string>
+    <string name="intake_adherence_on_time">Вчасно (протягом години)</string>
+    <string name="intake_adherence_median_delay">Типова затримка</string>
+    <string name="intake_adherence_streak">Серія</string>
+    <string name="intake_adherence_missed_by_weekday">Пропущені дози за днями тижня</string>
+    <string name="intake_minutes">%1$d хв</string>
+    <string name="intake_doses">Доз: %1$d</string>
+    <string name="intake_move_reminder">Перенести нагадування на %1$s?</string>
+    <string name="intake_move_reminder_body">Зазвичай ви приймаєте цю дозу пізніше за нагадування. Перенесення нагадування змінює лише його час; решта залишається без змін.</string>
+    <string name="intake_move_reminder_action">Перенести нагадування</string>
+    <string name="intake_supplement_above_upper">%1$s у середньому дає %2$s на день за інтервал прийому, що перевищує верхню межу споживання %3$s. Дотримуйтеся вказівок того, хто вам це призначив.</string>
+    <string name="intake_lab_links_title">Результати аналізів і харчування</string>
+    <string name="intake_lab_links_footer">На основі вашого журналу харчування та добавок за останні 30 днів і референтного діапазону, вказаного у вашому звіті. Не є медичною порадою.</string>
+    <string name="intake_lab_link_low_one">Ваш показник «%1$s» був нижчим за діапазон у звіті.</string>
+    <string name="intake_lab_link_low_many">Ваші показники %1$s були нижчими за діапазон у звіті.</string>
+    <string name="intake_lab_link_and">%1$s і %2$s</string>
+    <string name="intake_lab_link_intake">Ваше середнє споживання %1$s становить %2$d%% від референтного значення.</string>
+    <string name="intake_lab_link_intake_no_supplement">Ваше середнє споживання %1$s становить %2$d%% від референтного значення, і жодна з ваших добавок його не містить.</string>
+    <string name="intake_lab_link_doctor">Варто обговорити це з лікарем.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

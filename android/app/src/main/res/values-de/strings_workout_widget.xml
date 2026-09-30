@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo Training</string>
+    <string name="widget_workout_description">Training starten und steuern</string>
+    <string name="widget_workout_title">Training</string>
+    <string name="widget_workout_walk">Gehen</string>
+    <string name="widget_workout_run">Laufen</string>
+    <string name="widget_workout_cycle">Rad</string>
+    <string name="widget_workout_hike">Wandern</string>
+    <string name="widget_workout_strength">Kraft</string>
+    <string name="widget_workout_strength_title">Krafteinheit</string>
+    <string name="widget_workout_status_recording">Aufnahme</string>
+    <string name="widget_workout_status_paused">Pausiert</string>
+    <string name="widget_workout_status_saving">Speichern…</string>
+    <string name="widget_workout_status_recovery">Erholung</string>
+    <string name="widget_workout_status_strength">Läuft</string>
+    <string name="widget_workout_waiting_gps">Warte auf GPS</string>
+    <string name="widget_workout_distance">Distanz</string>
+    <string name="widget_workout_pace">Ø Tempo</string>
+    <string name="widget_workout_speed">Ø Geschw.</string>
+    <string name="widget_workout_pause">Pausieren</string>
+    <string name="widget_workout_resume">Fortsetzen</string>
+    <string name="widget_workout_lap">Runde</string>
+    <string name="widget_workout_end">Beenden</string>
+    <string name="widget_workout_skip">Überspringen</string>
+    <string name="widget_workout_finish">Abschließen</string>
+</resources>

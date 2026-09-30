@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Comment souhaitez-vous que l\'IA d\'Ayuvo traite vos dossiers de santé ?</string>
+    <string name="records_ai_mode_local">IA locale</string>
+    <string name="records_ai_mode_local_detail">Utilise le modèle sur l\'appareil. Le texte des dossiers reste sur ce téléphone pour le traitement par l\'IA.</string>
+    <string name="records_ai_mode_cloud">IA en ligne</string>
+    <string name="records_ai_mode_cloud_detail">Envoie le texte des pages (les images uniquement pour les pages sans texte) à votre fournisseur d\'IA.</string>
+    <string name="records_ai_mode_ask">Me demander si nécessaire</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo demande avant d\'utiliser l\'IA sur un dossier.</string>
+    <string name="records_ai_mode_off">Ignorer l\'IA pour l\'instant</string>
+    <string name="records_ai_mode_off_detail">Les détails sont trouvés sans IA. Vous pouvez modifier ce choix dans Réglages.</string>
+    <string name="records_ai_onboarding_note">Vous pouvez modifier ce choix à tout moment dans Réglages › Dossiers de santé.</string>
+    <string name="records_ai_chooser_title">Choisissez comment l\'IA vous aide avec vos dossiers</string>
+    <string name="records_ai_settings_title">Traitement par IA</string>
+    <string name="records_ai_local_unavailable">L\'IA sur l\'appareil n\'est pas configurée — détails trouvés sans IA.</string>
+    <string name="records_ai_set_up_local">Configurer l\'IA sur l\'appareil</string>
+    <string name="records_ai_no_cloud_provider">Ajoutez un fournisseur d\'IA pour utiliser l\'IA en ligne.</string>
+    <string name="records_ai_add_provider">Ajouter un fournisseur d\'IA</string>
+    <string name="records_ai_cloud_provider_note">L\'IA en ligne utilise %1$s.</string>
+    <string name="records_ai_consent_title">Utiliser l\'IA pour trouver plus de détails ?</string>
+    <string name="records_ai_consent_body">L\'IA peut trouver des détails que les règles ont manqués. Les résultats sont des suggestions que vous pouvez vérifier par rapport à l\'original.</string>
+    <string name="records_ai_consent_local">Sur cet appareil</string>
+    <string name="records_ai_consent_cloud">IA en ligne · %1$s</string>
+    <string name="records_ai_consent_not_now">Pas maintenant</string>
+    <string name="records_ai_consent_apply_all">Appliquer à tous les dossiers en attente</string>
+    <string name="records_ai_consent_none_available">Aucune IA n\'est encore disponible. Configurez l\'IA sur l\'appareil ou ajoutez un fournisseur d\'IA dans Réglages.</string>
+    <string name="records_ai_status_local">Traité sur cet appareil</string>
+    <string name="records_ai_status_cloud">Traité par une IA en ligne · %1$s</string>
+    <string name="records_ai_status_none">Non traité par l\'IA</string>
+</resources>

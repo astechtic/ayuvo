@@ -5,26 +5,29 @@ import Foundation
 extension HealthMetricRegistry {
     private static func Q(_ name: String) -> String { quantityPrefix + name }
     private static func C(_ name: String) -> String { categoryPrefix + name }
+    /// Display names are catalog keys: `englishName` keeps the English text (exports,
+    /// contract), `displayName` looks it up in `Localizable.xcstrings`.
+    private static func L(_ name: LocalizedStringResource) -> String { name.key }
 
     private static func quantity(
         _ id: String, _ category: HealthCategory, _ identifiers: [String], _ unit: String,
-        _ kind: HealthMetricKind, _ aggregation: HealthAggregation, _ name: String, exported: Bool = true,
+        _ kind: HealthMetricKind, _ aggregation: HealthAggregation, _ name: LocalizedStringResource, exported: Bool = true,
         dayAttribution: HealthDayAttribution = .start, hkUnit: String? = nil
     ) -> HealthMetricType {
         HealthMetricType(
             id: id, category: category, kind: kind, aggregation: aggregation, unit: unit, hkUnit: hkUnit,
-            dayAttribution: dayAttribution, hkIdentifiers: identifiers, objectKind: .quantity, exported: exported, englishName: name
+            dayAttribution: dayAttribution, hkIdentifiers: identifiers, objectKind: .quantity, exported: exported, englishName: name.key
         )
     }
 
     /// `identifier` nil = slug reserved in the contract without a verified HealthKit identifier.
     private static func category(
-        _ id: String, _ category: HealthCategory, _ identifier: String?, _ name: String,
+        _ id: String, _ category: HealthCategory, _ identifier: String?, _ name: LocalizedStringResource,
         aggregation: HealthAggregation = .count, unit: String = "count", dayAttribution: HealthDayAttribution = .start
     ) -> HealthMetricType {
         HealthMetricType(
             id: id, category: category, kind: .category, aggregation: aggregation, unit: unit,
-            dayAttribution: dayAttribution, hkIdentifiers: identifier.map { [$0] } ?? [], objectKind: .category, englishName: name
+            dayAttribution: dayAttribution, hkIdentifiers: identifier.map { [$0] } ?? [], objectKind: .category, englishName: name.key
         )
     }
 
@@ -32,29 +35,29 @@ extension HealthMetricRegistry {
     /// registry for parity, not yet read or synced (`typesVersion` 11 bump later).
     private static func reserved(
         _ id: String, _ category: HealthCategory, _ identifiers: [String], _ unit: String,
-        _ kind: HealthMetricKind, _ aggregation: HealthAggregation, _ name: String
+        _ kind: HealthMetricKind, _ aggregation: HealthAggregation, _ name: LocalizedStringResource
     ) -> HealthMetricType {
         HealthMetricType(
             id: id, category: category, kind: kind, aggregation: aggregation, unit: unit,
-            hkIdentifiers: identifiers, objectKind: .virtual, englishName: name
+            hkIdentifiers: identifiers, objectKind: .virtual, englishName: name.key
         )
     }
 
     private static func androidOnly(
         _ id: String, _ category: HealthCategory, _ unit: String, _ kind: HealthMetricKind,
-        _ aggregation: HealthAggregation, _ name: String, exported: Bool = true
+        _ aggregation: HealthAggregation, _ name: LocalizedStringResource, exported: Bool = true
     ) -> HealthMetricType {
         HealthMetricType(
             id: id, category: category, kind: kind, aggregation: aggregation, unit: unit,
-            hkIdentifiers: [], objectKind: .virtual, exported: exported, englishName: name
+            hkIdentifiers: [], objectKind: .virtual, exported: exported, englishName: name.key
         )
     }
 
-    private static func dietary(_ suffix: String, _ hkName: String, _ unit: String, _ name: String) -> HealthMetricType {
+    private static func dietary(_ suffix: String, _ hkName: String, _ unit: String, _ name: LocalizedStringResource) -> HealthMetricType {
         quantity("dietary_\(suffix)", .nutrition, [Q("Dietary\(hkName)")], unit, .cumulative, .sum, name, exported: false)
     }
 
-    private static func symptom(_ slug: String, _ hkName: String, _ name: String) -> HealthMetricType {
+    private static func symptom(_ slug: String, _ hkName: String, _ name: LocalizedStringResource) -> HealthMetricType {
         category("symptom_\(slug)", .symptoms, C(hkName), name)
     }
 
@@ -86,7 +89,7 @@ extension HealthMetricRegistry {
         category("low_cardio_fitness_event", .activity, C("LowCardioFitnessEvent"), "Low Cardio Fitness Notifications"),
         HealthMetricType(
             id: "workout", category: .activity, kind: .session, aggregation: .duration, unit: "s",
-            hkIdentifiers: [workoutIdentifier], objectKind: .workout, englishName: "Workouts"
+            hkIdentifiers: [workoutIdentifier], objectKind: .workout, englishName: L("Workouts")
         ),
         androidOnly("planned_workout", .activity, "s", .session, .count, "Planned Workouts"),
         androidOnly("activity_intensity", .activity, "s", .duration, .duration, "Activity Intensity"),
@@ -101,11 +104,11 @@ extension HealthMetricRegistry {
         quantity("physical_effort", .activity, [Q("PhysicalEffort")], "kcal/hr·kg", .discrete, .average, "Physical Effort"),
         HealthMetricType(
             id: "workout_effort_score", category: .activity, kind: .discrete, aggregation: .average, unit: "count", hkUnit: "appleEffortScore",
-            hkIdentifiers: [Q("WorkoutEffortScore")], objectKind: .quantity, englishName: "Workout Effort"
+            hkIdentifiers: [Q("WorkoutEffortScore")], objectKind: .quantity, englishName: L("Workout Effort")
         ),
         HealthMetricType(
             id: "estimated_workout_effort_score", category: .activity, kind: .discrete, aggregation: .average, unit: "count", hkUnit: "appleEffortScore",
-            hkIdentifiers: [Q("EstimatedWorkoutEffortScore")], objectKind: .quantity, englishName: "Estimated Workout Effort"
+            hkIdentifiers: [Q("EstimatedWorkoutEffortScore")], objectKind: .quantity, englishName: L("Estimated Workout Effort")
         ),
     ]
 
@@ -128,7 +131,7 @@ extension HealthMetricRegistry {
         quantity("hrv_sdnn", .heart, [Q("HeartRateVariabilitySDNN")], "ms", .discrete, .average, "Heart Rate Variability"),
         HealthMetricType(
             id: "blood_pressure", category: .heart, kind: .discrete, aggregation: .minMax, unit: "mmHg",
-            hkIdentifiers: [bloodPressureCorrelationIdentifier], objectKind: .correlation, englishName: "Blood Pressure"
+            hkIdentifiers: [bloodPressureCorrelationIdentifier], objectKind: .correlation, englishName: L("Blood Pressure")
         ),
         quantity("vo2_max", .heart, [Q("VO2Max")], "mL/min·kg", .discrete, .latest, "Cardio Fitness"),
         quantity("walking_heart_rate_average", .heart, [Q("WalkingHeartRateAverage")], "count/min", .discrete, .average, "Walking Heart Rate Average"),
@@ -144,7 +147,7 @@ extension HealthMetricRegistry {
     private static let sleep: [HealthMetricType] = [
         HealthMetricType(
             id: "sleep", category: .sleep, kind: .session, aggregation: .duration, unit: "s", dayAttribution: .end,
-            hkIdentifiers: [C("SleepAnalysis")], objectKind: .category, englishName: "Sleep"
+            hkIdentifiers: [C("SleepAnalysis")], objectKind: .category, englishName: L("Sleep")
         ),
         quantity("sleeping_wrist_temperature", .sleep, [Q("AppleSleepingWristTemperature")], "degC", .discrete, .average, "Wrist Temperature", dayAttribution: .end),
         quantity("sleeping_breathing_disturbances", .sleep, [Q("AppleSleepingBreathingDisturbances")], "count", .discrete, .average, "Breathing Disturbances", dayAttribution: .end),
@@ -215,7 +218,7 @@ extension HealthMetricRegistry {
         category("menstrual_flow", .cycleTracking, C("MenstrualFlow"), "Menstruation"),
         HealthMetricType(
             id: "menstruation_period", category: .cycleTracking, kind: .duration, aggregation: .duration, unit: "days",
-            dayAttribution: .span, hkIdentifiers: [], objectKind: .virtual, englishName: "Menstrual Period"
+            dayAttribution: .span, hkIdentifiers: [], objectKind: .virtual, englishName: L("Menstrual Period")
         ),
         category("intermenstrual_bleeding", .cycleTracking, C("IntermenstrualBleeding"), "Spotting"),
         category("ovulation_test", .cycleTracking, C("OvulationTestResult"), "Ovulation Test Result"),
@@ -239,11 +242,11 @@ extension HealthMetricRegistry {
     private static let mentalWellbeing: [HealthMetricType] = [
         HealthMetricType(
             id: "mindfulness_session", category: .mentalWellbeing, kind: .duration, aggregation: .duration, unit: "s",
-            hkIdentifiers: [C("MindfulSession")], objectKind: .category, englishName: "Mindful Minutes"
+            hkIdentifiers: [C("MindfulSession")], objectKind: .category, englishName: L("Mindful Minutes")
         ),
         HealthMetricType(
             id: "state_of_mind", category: .mentalWellbeing, kind: .category, aggregation: .count, unit: "none",
-            hkIdentifiers: [stateOfMindIdentifier], objectKind: .stateOfMind, englishName: "State of Mind"
+            hkIdentifiers: [stateOfMindIdentifier], objectKind: .stateOfMind, englishName: L("State of Mind")
         ),
         reserved("assessment_gad7", .mentalWellbeing, ["HKScoredAssessmentTypeIdentifierGAD7"], "count", .discrete, .latest, "Anxiety Risk (GAD-7)"),
         reserved("assessment_phq9", .mentalWellbeing, ["HKScoredAssessmentTypeIdentifierPHQ9"], "count", .discrete, .latest, "Depression Risk (PHQ-9)"),
@@ -324,7 +327,7 @@ extension HealthMetricRegistry {
         quantity("nike_fuel", .other, [Q("NikeFuel")], "count", .cumulative, .sum, "NikeFuel"),
         HealthMetricType(
             id: "activity_summary", category: .other, kind: .discrete, aggregation: .latest, unit: "kcal",
-            hkIdentifiers: [activitySummaryIdentifier], objectKind: .activitySummary, englishName: "Activity Rings"
+            hkIdentifiers: [activitySummaryIdentifier], objectKind: .activitySummary, englishName: L("Activity Rings")
         ),
         reserved("electrocardiogram", .other, ["HKDataTypeIdentifierElectrocardiogram"], "count/min", .discrete, .count, "Electrocardiograms (ECG)"),
         reserved("heartbeat_series", .other, ["HKDataTypeIdentifierHeartbeatSeries"], "count", .discrete, .count, "Beat-to-Beat Measurements"),

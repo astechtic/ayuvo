@@ -98,7 +98,7 @@ fun ExerciseDetailScreen(
             )
             if (onEdit != null) {
                 Text(
-                    "Edit",
+                    stringResource(R.string.summary_edit),
                     color = colors.accent,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -196,13 +196,14 @@ private fun Hero(item: ExerciseItem, visual: ExerciseVisual, showMetrics: Boolea
 
 @Composable
 private fun MetricGrid(item: ExerciseItem, modifier: Modifier = Modifier) {
+    val res = androidx.compose.ui.platform.LocalResources.current
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            MetricCard(stringResource(R.string.label_body_part), item.bodyPart, Icons.Filled.Tag, 1, 15.sp, Modifier.weight(1f))
-            MetricCard(stringResource(R.string.label_target), item.primaryMusclesTitle, Icons.Filled.GpsFixed, 1, 15.sp, Modifier.weight(1f))
+            MetricCard(stringResource(R.string.label_body_part), ExerciseLabels.label(res, item.bodyPart), Icons.Filled.Tag, 1, 15.sp, Modifier.weight(1f))
+            MetricCard(stringResource(R.string.label_target), ExerciseLabels.join(res, item.primaryMuscles), Icons.Filled.GpsFixed, 1, 15.sp, Modifier.weight(1f))
         }
-        MetricCard(stringResource(R.string.label_secondary), item.secondaryMusclesTitle, Icons.Filled.GpsFixed, 3, 13.sp, Modifier.fillMaxWidth())
-        MetricCard(stringResource(R.string.label_equipment), item.equipment, Icons.Filled.FitnessCenter, 2, 14.sp, Modifier.fillMaxWidth())
+        MetricCard(stringResource(R.string.label_secondary), ExerciseLabels.join(res, item.secondaryMuscles, item.secondaryMusclesTitle), Icons.Filled.GpsFixed, 3, 13.sp, Modifier.fillMaxWidth())
+        MetricCard(stringResource(R.string.label_equipment), ExerciseLabels.label(res, item.equipment), Icons.Filled.FitnessCenter, 2, 14.sp, Modifier.fillMaxWidth())
     }
 }
 

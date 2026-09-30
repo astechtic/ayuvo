@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">लक्ष्य</string>
+    <string name="sleep_time_asleep">सोने का समय</string>
+    <string name="sleep_avg_time_asleep">औसत सोने का समय</string>
+    <string name="sleep_in_bed">बिस्तर में</string>
+    <string name="sleep_time_in_bed">बिस्तर में समय</string>
+    <string name="sleep_unit_hour">घंटे</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">जागे हुए</string>
+    <string name="sleep_stage_rem">REM</string>
+    <string name="sleep_stage_core">कोर</string>
+    <string name="sleep_stage_deep">गहरी</string>
+    <string name="sleep_stage_asleep">सोए हुए</string>
+    <string name="sleep_chart_summary">नींद चार्ट, %1$d रातें, %2$s</string>
+    <string name="sleep_night_summary">नींद %1$s, सोए %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

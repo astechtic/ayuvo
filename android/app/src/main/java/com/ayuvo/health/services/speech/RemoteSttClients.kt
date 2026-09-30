@@ -24,13 +24,15 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 sealed class SttApiError(message: String) : Exception(message) {
-    object NoApiKey : SttApiError("No STT API key configured.")
-    class Network(cause: Throwable) : SttApiError("Network error: ${cause.localizedMessage}")
+    object NoApiKey : SttApiError(AppText.orEnglish("No STT API key configured.", R.string.core_stt_no_key))
+    class Network(cause: Throwable) : SttApiError(AppText.orEnglish("Network error: ${cause.localizedMessage}", R.string.core_stt_network, cause.localizedMessage.orEmpty()))
     class Api(msg: String) : SttApiError(msg)
-    object InvalidResponse : SttApiError("Could not understand the transcription response.")
-    object Timeout : SttApiError("Transcription timed out.")
+    object InvalidResponse : SttApiError(AppText.orEnglish("Could not understand the transcription response.", R.string.core_stt_invalid_response))
+    object Timeout : SttApiError(AppText.orEnglish("Transcription timed out.", R.string.core_stt_timeout))
 }
 
 /**
@@ -160,10 +162,10 @@ object GeminiAudioClient {
             client.newCall(startRequest).execute().use { response ->
                 val responseBody = response.body?.string().orEmpty()
                 if (!response.isSuccessful) {
-                    throw SttApiError.Api("STT HTTP ${response.code}: ${responseBody.take(200)}")
+                    throw SttApiError.Api(AppText.orEnglish("STT HTTP ${response.code}: ${responseBody.take(200)}", R.string.core_stt_http, response.code, responseBody.take(200)))
                 }
                 response.header("X-Goog-Upload-URL")
-                    ?: throw SttApiError.Api("Gemini upload URL was missing from the response.")
+                    ?: throw SttApiError.Api(AppText.orEnglish("Gemini upload URL was missing from the response.", R.string.core_stt_gemini_upload_url))
             }
         } catch (io: IOException) {
             throw SttApiError.Network(io)
@@ -279,7 +281,7 @@ object AssemblyAIClient {
             val pollJson = JSONObject(runRequestRaw(client, pollReq))
             when (pollJson.optString("status")) {
                 "completed" -> return@withContext pollJson.optString("text").orEmpty()
-                "error" -> throw SttApiError.Api(pollJson.optString("error", "AssemblyAI error"))
+                "error" -> throw SttApiError.Api(pollJson.optString("error", AppText.orEnglish("AssemblyAI error", R.string.core_stt_assemblyai_error)))
             }
         }
         throw SttApiError.Timeout
@@ -306,7 +308,7 @@ private suspend fun runRequestRaw(client: OkHttpClient, req: Request): String = 
     try {
         client.newCall(req).execute().use { resp ->
             val str = resp.body?.string().orEmpty()
-            if (!resp.isSuccessful) throw SttApiError.Api("STT HTTP ${resp.code}: ${str.take(200)}")
+            if (!resp.isSuccessful) throw SttApiError.Api(AppText.orEnglish("STT HTTP ${resp.code}: ${str.take(200)}", R.string.core_stt_http, resp.code, str.take(200)))
             str
         }
     } catch (io: IOException) {

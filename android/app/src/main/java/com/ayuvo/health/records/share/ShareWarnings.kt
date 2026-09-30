@@ -6,6 +6,8 @@ import com.ayuvo.health.records.model.RecordFileType
 import com.ayuvo.health.records.model.RecordField
 import com.ayuvo.health.records.model.RecordPage
 import com.ayuvo.health.records.processing.UnitsCatalog
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** One §34 warning shown before the final confirm. */
 data class ShareWarningItem(
@@ -48,11 +50,24 @@ object ShareWarnings {
             code = code,
             recordId = recordId,
             pageIndex = pageIndex,
-            text = fill(
-                TEMPLATES.getValue(code),
-                mapOf("title" to (title ?: ""), "page" to (pageIndex?.plus(1)?.toString() ?: ""))
-            )
+            text = if (AppText.resolver == null) {
+                fill(TEMPLATES.getValue(code), mapOf("title" to (title ?: ""), "page" to (pageIndex?.plus(1)?.toString() ?: "")))
+            } else {
+                localized(code, title.orEmpty(), pageIndex?.plus(1)?.toString().orEmpty())
+            }
         )
+
+    /** The shown text in the app's language; [TEMPLATES] stay the English contract (vectors). */
+    private fun localized(code: String, title: String, page: String): String = when (code) {
+        UNKNOWN_RECORD -> AppText.get(R.string.core_share_warn_unknown_record)
+        NO_ORIGINAL -> AppText.get(R.string.core_share_warn_no_original, title)
+        PAGE_MISSING -> AppText.get(R.string.core_share_warn_page_missing, page, title)
+        PAGE_NOT_REDACTABLE -> AppText.get(R.string.core_share_warn_page_not_redactable, page)
+        RECORD_NOT_REDACTABLE -> AppText.get(R.string.core_share_warn_record_not_redactable, title)
+        TEXT_LAYER_LOST -> AppText.get(R.string.core_share_warn_text_layer_lost)
+        REDACTED_TEXT_LAYER_LOST -> AppText.get(R.string.core_share_warn_redacted_text_layer_lost)
+        else -> AppText.get(R.string.core_share_warn_nothing)
+    }
 
     fun pageNotRedactable(recordId: String, pageIndex: Int): ShareWarningItem =
         warning(PAGE_NOT_REDACTABLE, recordId = recordId, pageIndex = pageIndex)

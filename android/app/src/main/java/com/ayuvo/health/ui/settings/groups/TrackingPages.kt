@@ -187,7 +187,7 @@ internal fun ActivityPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_training_split),
-                value = ui.workoutSplit.title,
+                value = stringResource(ui.workoutSplit.titleRes),
                 icon = Icons.Filled.FitnessCenter, iconTint = tint,
                 modifier = Modifier.settingsRow("trainingSplit"),
                 onClick = { state.sheet = SettingsSheet.WORKOUT_SPLIT }
@@ -196,7 +196,7 @@ internal fun ActivityPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_rpe_scale),
-                value = ui.workoutRpeScale.title,
+                value = stringResource(ui.workoutRpeScale.titleRes),
                 icon = Icons.Filled.Speed, iconTint = tint,
                 modifier = Modifier.settingsRow("rpeScale"),
                 onClick = { state.sheet = SettingsSheet.WORKOUT_RPE }
@@ -350,7 +350,7 @@ internal fun DerivedMetricsSettingsPage(ctx: SettingsPageContext) {
             for (metric in catalog.metricsIn(category)) {
                 row {
                     val on = metric.id !in disabled
-                    val dependents = catalog.dependentsOf(metric.id).map { it.title }
+                    val dependents = catalog.dependentsOf(metric.id).map { it.displayTitle(context) }
                     val subtitle = when {
                         !on && dependents.isNotEmpty() ->
                             stringResource(R.string.settings_derived_also_affects, dependents.joinToString(", "))
@@ -358,7 +358,7 @@ internal fun DerivedMetricsSettingsPage(ctx: SettingsPageContext) {
                         else -> null
                     }
                     GroupRow(
-                        title = metric.title,
+                        title = metric.displayTitle(context),
                         subtitle = subtitle,
                         modifier = Modifier.settingsRow("derived.${metric.id}"),
                         trailing = RowTrailing.Toggle(on, { v ->

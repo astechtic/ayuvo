@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">Objectif</string>
+    <string name="sleep_time_asleep">Temps de sommeil</string>
+    <string name="sleep_avg_time_asleep">Temps de sommeil moy.</string>
+    <string name="sleep_in_bed">Au lit</string>
+    <string name="sleep_time_in_bed">Temps au lit</string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">Éveillé</string>
+    <string name="sleep_stage_rem">Paradoxal</string>
+    <string name="sleep_stage_core">Léger</string>
+    <string name="sleep_stage_deep">Profond</string>
+    <string name="sleep_stage_asleep">Endormi</string>
+    <string name="sleep_chart_summary">Graphique du sommeil, %1$d nuits, %2$s</string>
+    <string name="sleep_night_summary">Sommeil %1$s, endormi %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

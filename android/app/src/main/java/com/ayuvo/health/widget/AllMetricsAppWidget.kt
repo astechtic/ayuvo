@@ -34,6 +34,7 @@ import com.ayuvo.health.R
 import com.ayuvo.health.data.PreferencesStore
 import com.ayuvo.health.models.WidgetSnapshot
 import kotlinx.coroutines.flow.first
+import androidx.glance.LocalContext
 
 /**
  * Single "all today's metrics" widget — calories ring + protein / carbs / fat together, so users
@@ -109,7 +110,7 @@ private fun AllMetricsWide(snapshot: WidgetSnapshot) {
             )
             Spacer(modifier = GlanceModifier.height(2.dp))
             Text(
-                text = "${snapshot.caloriesRemaining} left",
+                text = LocalContext.current.getString(R.string.core_widget_amount_left, snapshot.caloriesRemaining.toString()),
                 style = TextStyle(
                     color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                     fontWeight = FontWeight.Medium,
@@ -138,7 +139,7 @@ private fun AllMetricsTall(snapshot: WidgetSnapshot) {
     val barH = (contentH - 34f - gaugeW * 0.58f - 66f).toInt().coerceAtLeast(40)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = "Today", themeHex = snapshot.themeStartHex)
+        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = LocalContext.current.getString(R.string.widget_today_label), themeHex = snapshot.themeStartHex)
         Spacer(modifier = GlanceModifier.height(4.dp))
         Box(
             modifier = GlanceModifier.fillMaxWidth(),
@@ -158,7 +159,7 @@ private fun AllMetricsTall(snapshot: WidgetSnapshot) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "${snapshot.caloriesRemaining} kcal left",
+                text = LocalContext.current.getString(R.string.widget_kcal_left_format, snapshot.caloriesRemaining),
                 style = TextStyle(
                     color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                     fontWeight = FontWeight.Medium,

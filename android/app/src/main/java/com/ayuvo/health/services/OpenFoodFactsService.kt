@@ -25,6 +25,8 @@ import java.io.IOException
 import java.util.Locale
 import kotlin.math.round
 import kotlin.math.roundToInt
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 object OpenFoodFactsService {
     private val FIELDS = listOf(
@@ -307,7 +309,7 @@ object OpenFoodFactsService {
         if (primary != null && brand != null && !primary.lowercase(Locale.US).contains(brand.lowercase(Locale.US))) {
             return "$brand $primary"
         }
-        return primary ?: brand ?: "Barcode $barcode"
+        return primary ?: brand ?: AppText.orEnglish("Barcode $barcode", R.string.core_food_barcode_name, barcode)
     }
 
     private fun firstNonEmpty(vararg values: String?): String? =

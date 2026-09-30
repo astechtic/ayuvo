@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">الرؤى</string>
+    <string name="domain_nutrition">التغذية</string>
+    <string name="domain_hydration">الترطيب</string>
+    <string name="domain_fasting">الصيام</string>
+    <string name="domain_body">مقاييس الجسم</string>
+    <string name="domain_activity">النشاط</string>
+    <string name="domain_heart">القلب</string>
+    <string name="domain_sleep">النوم</string>
+    <string name="domain_vitals">العلامات الحيوية</string>
+    <string name="domain_respiratory">الجهاز التنفسي</string>
+    <string name="domain_cycle">تتبع الدورة</string>
+    <string name="domain_mindfulness">اليقظة الذهنية</string>
+    <string name="domain_mobility">الحركة</string>
+    <string name="domain_hearing">السمع</string>
+    <string name="domain_symptoms">الأعراض</string>
+    <string name="domain_medications">الأدوية</string>
+    <string name="domain_records">السجلات الصحية</string>
+    <string name="domain_other">بيانات أخرى</string>
+    <string name="design_back">رجوع</string>
+</resources>

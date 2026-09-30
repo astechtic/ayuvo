@@ -29,6 +29,9 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
                 defaultValue: "Gemma 4 E2B (On-Device)"
             )
         }
+        if self == .customOpenAI {
+            return String(localized: "Custom (OpenAI-compatible)", comment: "AI provider name for a user-configured endpoint")
+        }
         return rawValue
     }
 
@@ -396,8 +399,8 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
 
     var apiKeyPlaceholder: String {
         switch self {
-        case .appleIntelligence, .gemma4Local: "No key needed"
-        case .vertexAI: "Service account JSON"
+        case .appleIntelligence, .gemma4Local: String(localized: "No key needed", comment: "AI provider API key field placeholder")
+        case .vertexAI: String(localized: "Service account JSON", comment: "AI provider API key field placeholder")
         case .gemini: "AIza..."
         case .openai: "sk-..."
         case .anthropic: "sk-ant-..."
@@ -411,8 +414,8 @@ enum AIProvider: String, CaseIterable, Codable, Identifiable {
         case .mistral: "..."
         case .deepseek: "sk-..."
         case .cerebras: "csk-..."
-        case .ollama: "No key needed"
-        case .customOpenAI: "API key (or anything if endpoint doesn't need one)"
+        case .ollama: String(localized: "No key needed", comment: "AI provider API key field placeholder")
+        case .customOpenAI: String(localized: "API key (or anything if endpoint doesn't need one)", comment: "AI provider API key field placeholder")
         }
     }
 }

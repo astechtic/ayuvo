@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">المقاييس المشتقة</string>
+    <string name="settings_derived_enabled">المقاييس المشتقة</string>
+    <string name="settings_derived_enabled_sub">تقدير العلامات الحيوية التي لا تسجّلها أجهزتك</string>
+    <string name="settings_derived_footer">يقدّر Ayuvo العلامات الحيوية التي لا تسجّلها أجهزتك، مثل معدل ضربات القلب أثناء الراحة من معدل ضربات القلب دقيقة بدقيقة. عندما يحتوي Health Connect بالفعل على قيمة لليوم نفسه، تُعرض تلك القيمة بدلًا من ذلك. لا تُكتب التقديرات أبدًا إلى Health Connect.</string>
+    <string name="settings_derived_bmi_scheme">فئات BMI</string>
+    <string name="settings_derived_bmi_who">منظمة الصحة العالمية</string>
+    <string name="settings_derived_bmi_asian">آسيوي</string>
+    <string name="settings_derived_bmi_footer">الحدود الفاصلة الآسيوية (زيادة الوزن من 23، والسمنة من 27.5) تتبع مشاورة خبراء منظمة الصحة العالمية للسكان الآسيويين.</string>
+    <string name="settings_derived_native_wins">تُستخدم قيمة Health Connect عند توفّرها</string>
+    <string name="settings_derived_also_affects">يؤثر أيضًا في: %1$s</string>
+    <string name="derived_estimated_badge">تقدير Ayuvo</string>
+    <string name="derived_how_calculated">طريقة الحساب</string>
+    <string name="derived_source_label">المصدر</string>
+    <string name="derived_metric_toggle">حساب هذا المقياس</string>
+    <string name="derived_metric_toggle_off_footer">لا يحسب Ayuvo هذا المقياس. لا تزال القيم من Health Connect معروضة.</string>
+    <string name="derived_headline_highest">الأعلى</string>
+    <string name="derived_source_estimated">تقدير Ayuvo من بيانات Health Connect الخاصة بك</string>
+    <string name="derived_source_native">من Health Connect (%1$s)</string>
+    <string name="derived_source_native_generic">من Health Connect</string>
+    <string name="derived_source_mixed">قيم Health Connect حيثما سُجّلت؛ وتقدير Ayuvo في الأيام الأخرى</string>
+    <string name="derived_method">الطريقة</string>
+    <string name="derived_citation">المرجع</string>
+    <string name="derived_confidence">مستوى الثقة</string>
+    <string name="derived_confidence_high">مرتفع</string>
+    <string name="derived_confidence_medium">متوسط</string>
+    <string name="derived_confidence_low">منخفض</string>
+    <string name="derived_confidence_native">مقيس بواسطة جهازك</string>
+    <string name="derived_estimated_caption">%1$s · تقديري</string>
+    <string name="derived_master_off">المقاييس المشتقة متوقفة في الإعدادات.</string>
+</resources>

@@ -17,6 +17,9 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
         let icon: Icon
         let browseOrder: Int
         let target: String
+
+        /// Translated title (table "Contracts").
+        var displayTitle: String { ContractText.text("metric.domains.\(id).title", title) }
     }
 
     struct Unit: Decodable, Sendable {
@@ -52,6 +55,10 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
         let browseSection: String?
         let browseOrder: Int
         let about: String
+
+        /// Translated title and About text (table "Contracts").
+        var displayTitle: String { ContractText.text("metric.metrics.\(key).title", title) }
+        var displayAbout: String { ContractText.text("metric.metrics.\(key).about", about) }
     }
 
     /// `nutrient_metrics[]` (docs/ui-structure.md §4): parametric `nutrient:<key>` metrics.
@@ -97,6 +104,9 @@ nonisolated struct MetricCatalogData: Decodable, Sendable {
         let domain: String
         let order: Int
         let title: String
+
+        /// Translated title (table "Contracts").
+        var displayTitle: String { ContractText.text("metric.browse_sections.\(id).title", title) }
     }
 
     struct Ring: Decodable, Sendable {

@@ -214,9 +214,9 @@ enum HomeTopNutrient: String, CaseIterable, Identifiable {
         }
 
         switch self {
-        case .protein: return LocalizedDisplayText.text("Protein", polish: "Białko")
-        case .carbs: return LocalizedDisplayText.text("Carbs", polish: "Węglowodany")
-        case .fat: return LocalizedDisplayText.text("Fat", polish: "Tłuszcz")
+        case .protein: return String(localized: "Protein", comment: "Macro nutrient name on Home")
+        case .carbs: return String(localized: "Carbs", comment: "Macro nutrient name on Home")
+        case .fat: return String(localized: "Fat", comment: "Macro nutrient name on Home")
         case .fiber, .sugar, .addedSugar, .saturatedFat, .cholesterol, .caffeine, .sodium, .potassium,
              .transFat, .calcium, .iron, .magnesium, .zinc, .vitaminA, .vitaminC, .vitaminD,
              .vitaminB12, .vitaminE, .vitaminK, .folate, .omega3, .creatine, .betaAlanine,
@@ -564,7 +564,7 @@ struct MacroCard: View {
         if unit == "kcal" {
             return "\(Int(value.rounded()))"
         }
-        return MacroValueFormatter.string(value)
+        return MacroValueFormatter.display(value)
     }
 }
 
@@ -590,16 +590,18 @@ struct MacroVerticalBar: View {
     }
 
     private var statusText: String {
-        guard goal > 0 else { return "No goal" }
+        guard goal > 0 else { return String(localized: "No goal", comment: "Home macro bar status when no goal is set") }
         let difference = goal - current
-        if abs(difference) < 0.0001 { return "Goal reached" }
-        let amount = MacroValueFormatter.string(abs(difference))
-        return difference > 0 ? "\(amount)\(unit) left" : "\(amount)\(unit) over"
+        if abs(difference) < 0.0001 { return String(localized: "Goal reached", comment: "Home macro bar status") }
+        let amount = MacroValueFormatter.display(abs(difference))
+        return difference > 0
+            ? String(localized: "\(amount)\(unit) left", comment: "Home macro bar status, e.g. '12g left'")
+            : String(localized: "\(amount)\(unit) over", comment: "Home macro bar status, e.g. '12g over'")
     }
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(MacroValueFormatter.string(current))
+            Text(MacroValueFormatter.display(current))
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(
                     LinearGradient(colors: gradient, startPoint: .top, endPoint: .bottom)
@@ -621,7 +623,7 @@ struct MacroVerticalBar: View {
             }
 
             VStack(spacing: 1) {
-                Text(LocalizedDisplayText.text(label))
+                Text(label)
                     .font(.system(.caption, design: .rounded, weight: .semibold))
                     .foregroundStyle(.primary)
                 Text(statusText)

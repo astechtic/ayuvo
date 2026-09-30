@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">推定指標</string>
+    <string name="settings_derived_enabled">推定指標</string>
+    <string name="settings_derived_enabled_sub">デバイスが記録しないバイタルを推定</string>
+    <string name="settings_derived_footer">Ayuvoは、デバイスが記録しないバイタル（1分ごとの心拍数から算出する安静時心拍数など）を推定します。Health Connectに同じ日の値がすでにある場合は、そちらの値が表示されます。推定値がHealth Connectに書き込まれることはありません。</string>
+    <string name="settings_derived_bmi_scheme">BMIの区分</string>
+    <string name="settings_derived_bmi_who">WHO</string>
+    <string name="settings_derived_bmi_asian">アジア人</string>
+    <string name="settings_derived_bmi_footer">アジア人向けの基準値（23以上で過体重、27.5以上で肥満）は、アジア人集団に関するWHO専門家会議に基づいています。</string>
+    <string name="settings_derived_native_wins">利用可能な場合はHealth Connectの値を使用</string>
+    <string name="settings_derived_also_affects">影響する項目：%1$s</string>
+    <string name="derived_estimated_badge">Ayuvoによる推定</string>
+    <string name="derived_how_calculated">計算方法</string>
+    <string name="derived_source_label">出典</string>
+    <string name="derived_metric_toggle">この指標を計算</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvoはこの指標を計算していません。Health Connectの値は引き続き表示されます。</string>
+    <string name="derived_headline_highest">最高</string>
+    <string name="derived_source_estimated">Health ConnectのデータからAyuvoが推定</string>
+    <string name="derived_source_native">Health Connectから（%1$s）</string>
+    <string name="derived_source_native_generic">Health Connectから</string>
+    <string name="derived_source_mixed">記録がある日はHealth Connectの値、それ以外の日はAyuvoによる推定</string>
+    <string name="derived_method">方法</string>
+    <string name="derived_citation">参考文献</string>
+    <string name="derived_confidence">信頼度</string>
+    <string name="derived_confidence_high">高</string>
+    <string name="derived_confidence_medium">中</string>
+    <string name="derived_confidence_low">低</string>
+    <string name="derived_confidence_native">デバイスで測定</string>
+    <string name="derived_estimated_caption">%1$s · 推定</string>
+    <string name="derived_master_off">設定で推定指標がオフになっています。</string>
+</resources>

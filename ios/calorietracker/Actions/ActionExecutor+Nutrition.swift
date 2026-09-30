@@ -311,7 +311,7 @@ extension ActionExecutor {
         }
         broadcastFoodChange(store, added: entry)
         return ActionResult(actionID: v.actionID, fields: Self.foodFields(entry).merging(["value": .int(entry.calories)]) { a, _ in a },
-                            dialog: String(localized: "Logged \(entry.name): \(entry.calories) kcal, \(MacroValueFormatter.string(entry.protein)) g protein."))
+                            dialog: String(localized: "Logged \(entry.name): \(entry.calories) kcal, \(MacroValueFormatter.display(entry.protein)) g protein."))
     }
 
     /// Favourites first, then the diary (a recent entry id).

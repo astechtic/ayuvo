@@ -144,8 +144,8 @@ internal fun SettingsProfileHeader(
             )
             if (profile != null) {
                 val height = if (heightMetric) "${profile.heightCm.toInt()} cm" else feetInchesLabel(profile.heightCm.toInt())
-                val weight = if (weightMetric) String.format(Locale.US, "%.1f kg", profile.weightKg)
-                else String.format(Locale.US, "%.1f lbs", profile.weightKg * 2.20462)
+                val weight = if (weightMetric) String.format(Locale.getDefault(), "%.1f kg", profile.weightKg)
+                else String.format(Locale.getDefault(), "%.1f lbs", profile.weightKg * 2.20462)
                 Text(
                     stringResource(R.string.settings_profile_summary, profile.age, height, weight),
                     fontSize = 14.sp,

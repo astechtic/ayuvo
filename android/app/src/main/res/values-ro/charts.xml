@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">Obiectiv</string>
+    <string name="sleep_time_asleep">Timp de somn</string>
+    <string name="sleep_avg_time_asleep">Timp mediu de somn</string>
+    <string name="sleep_in_bed">În pat</string>
+    <string name="sleep_time_in_bed">Timp în pat</string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">Treaz</string>
+    <string name="sleep_stage_rem">REM</string>
+    <string name="sleep_stage_core">Somn ușor</string>
+    <string name="sleep_stage_deep">Profund</string>
+    <string name="sleep_stage_asleep">Somn</string>
+    <string name="sleep_chart_summary">Grafic de somn, %1$d nopți, %2$s</string>
+    <string name="sleep_night_summary">Somn %1$s, adormit %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

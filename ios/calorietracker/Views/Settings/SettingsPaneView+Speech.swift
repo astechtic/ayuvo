@@ -108,7 +108,7 @@ extension SettingsPaneView {
     @ViewBuilder
     var speechFallbackSettingsRows: some View {
         AISettingsSubsectionHeader(
-            title: "STT Fallback",
+            title: String(localized: "STT Fallback", comment: "Speech settings section header"),
             systemImage: "waveform.badge.plus",
             infoTopic: .speechFallback
         )

@@ -350,7 +350,7 @@ final class HealthDataStore {
                     let display = HealthUnitFormatting.display(value, type: type)
                     tile.valueText = display.value
                     tile.unitText = display.unit
-                } else if let text = latest.valueText {
+                } else if let text = latest.displayValueText {
                     tile.valueText = text
                     tile.unitText = ""
                 }

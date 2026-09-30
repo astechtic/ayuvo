@@ -1,0 +1,30 @@
+{
+  "files": [
+    "ios/calorietracker/Views/MuscleGlyphIcon.swift",
+    "ios/calorietracker/Views/Browse/BrowseFeatureCatalog.swift"
+  ],
+  "dirs": [],
+  "contains": [
+    "titleLabel.text = \"Ayuvo\"",
+    "{ return \"Ayuvo\" }",
+    "? \"Ayuvo\" : usage.source.name",
+    "[\"Unspecified\"] + catalog.availableRawEquipment",
+    "\"abs / core\": StrengthWorkoutSplitGroup",
+    "[\"Abductors\", \"Adductors\"]",
+    "var id: String { \"\\(page)-\\(box?.description",
+    "title: \"All Workouts\", muscles: []",
+    "title: \"Saved\", muscles: []",
+    "rings: Rings(eat: ring(0.62",
+    "Dose(name: \"Metformin\"",
+    "Row(title: \"Weight\", valueText: \"72.4 kg\"",
+    "Row(title: \"Workout today\"",
+    "name: \"Default Configuration\",",
+    "\"Ayuvo/\\(appVersion) (\\(siteURL.absoluteString))\"",
+    "\"Whisper Base · MIT\"",
+    "label == \"Calories\"",
+    "\"Analyze this image.\"",
+    "\"\\(filename ?? \"\")|",
+    "in Ayuvo\",",
+    "Text(\"Pending reminders\")"
+  ]
+}

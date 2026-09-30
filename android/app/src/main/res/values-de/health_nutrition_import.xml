@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Ernährungsverlauf importieren</string>
+    <string name="health_import_action">Importieren</string>
+    <string name="health_import_description">Übernimm Essenseinträge aus einer anderen App in dein Tagebuch. Sieh dir die verfügbaren Einträge in der Vorschau an und wähle dann eine Quell-App, damit geteilte Einträge nicht doppelt gezählt werden.</string>
+    <string name="health_import_from">Von (JJJJ-MM-TT)</string>
+    <string name="health_import_to">Bis (JJJJ-MM-TT)</string>
+    <string name="health_import_history_hint">Ohne Zugriff auf den Verlauf wähle Daten innerhalb der letzten 30 Tage. Ältere Einträge erfordern Zugriff auf den Verlauf auf einem unterstützten Gerät.</string>
+    <string name="health_import_grant">Zugriff auf Ernährung und Verlauf erlauben</string>
+    <string name="health_import_access_result">Zugriffseinstellungen aktualisiert. Öffne die Vorschau erneut, um verfügbare Einträge zu prüfen.</string>
+    <string name="health_import_access_needed">Erlaube in Health Connect Lesezugriff auf Ernährung und öffne dann die Vorschau erneut.</string>
+    <string name="health_import_invalid_dates">Gib gültige Daten im Format JJJJ-MM-TT ein. Das Enddatum muss am oder nach dem Startdatum und spätestens heute liegen.</string>
+    <string name="health_import_history_needed">Für diesen Zeitraum ist Zugriff auf den Verlauf nötig. Erlaube den Zugriff auf einem unterstützten Gerät oder wähle Daten innerhalb der letzten 30 Tage.</string>
+    <string name="health_import_preview">Verfügbare Einträge anzeigen</string>
+    <string name="health_import_failed">Der Import konnte nicht abgeschlossen werden. Prüfe den Health Connect-Zugriff und versuche es erneut.</string>
+    <string name="health_import_empty">In diesem Zeitraum wurden keine neuen Ernährungseinträge aus anderen Apps gefunden. Prüfe, ob deine Quell-App Ernährungsdaten mit Health Connect geteilt hat. Bereits importierte Einträge werden übersprungen, auch solche, die aus deinem Tagebuch entfernt wurden.</string>
+    <string name="health_import_count">%1$d neue Einträge · %2$d kcal</string>
+    <string name="health_import_unnamed">Importierte Mahlzeit</string>
+    <string name="health_import_local_only">Dies sind lokale Kopien. Änderungen und Löschungen bleiben in Ayuvo. Ein wiederholter Import überspringt bereits importierte Einträge; er aktualisiert sie nicht.</string>
+    <string name="health_import_done">%1$d Einträge in dein Tagebuch importiert.</string>
+    <string name="health_import_close">Schließen</string>
+</resources>

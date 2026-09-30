@@ -1,5 +1,7 @@
 package com.ayuvo.health.ui.insights
 
+import android.content.Context
+import com.ayuvo.health.R
 import com.ayuvo.health.insights.InsightsConfig
 import com.ayuvo.health.insights.InsightsSnapshot
 import java.time.LocalDate
@@ -22,87 +24,95 @@ data class MethodologyContent(
 object InsightMethodology {
     private fun pct(w: Double): String = InsightsFormat.number(w, if (w % 1.0 == 0.0) 0 else 1) + "%"
 
-    private fun disclaimers(cfg: InsightsConfig, vararg ids: String): List<String> = ids.mapNotNull { cfg.disclaimers[it] }
+    private fun disclaimers(context: Context, cfg: InsightsConfig, vararg ids: String): List<String> = ids.mapNotNull { InsightsText.disclaimer(context, cfg, it) }
 
-    fun recovery(cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
+    fun recovery(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
+        val res = context.resources
         val rc = cfg.recovery
-        val weights = rc.components.map { cfg.metric(it.metric).label to pct(it.weight) } +
-            ("Training load" to "${InsightsFormat.number(rc.loadHigh.toDouble())} / ${InsightsFormat.number(rc.loadVeryHigh.toDouble())} points")
+        val weights = rc.components.map { InsightsText.metricLabel(context, cfg.metric(it.metric)) to pct(it.weight) } +
+            (res.getString(R.string.ui_insights_training_load) to res.getString(R.string.ui_insights_load_points, InsightsFormat.number(rc.loadHigh.toDouble()), InsightsFormat.number(rc.loadVeryHigh.toDouble())))
         val inputs = snap?.recovery?.components?.map { c ->
             val m = cfg.metric(c.id)
+            val mLabel = InsightsText.metricLabel(context, m)
             when {
                 c.available -> InsightInput(
-                    m.label,
-                    InsightsFormat.metricValue(m.id, m.unit, c.value) + " · baseline " + InsightsFormat.metricValue(m.id, m.unit, c.baseline) +
-                        if (c.fallback) " · daily value" else ""
+                    mLabel,
+                    res.getString(
+                        if (c.fallback) R.string.ui_insights_value_baseline_daily else R.string.ui_insights_value_baseline,
+                        InsightsFormat.metricValue(m.id, m.unit, c.value), InsightsFormat.metricValue(m.id, m.unit, c.baseline)
+                    )
                 )
-                c.value == null -> InsightInput(m.label, "No reading last night", missing = true)
-                else -> InsightInput(m.label, "Learning (${c.baselineN}/${m.minPoints} nights)", missing = true)
+                c.value == null -> InsightInput(mLabel, res.getString(R.string.ui_insights_no_reading), missing = true)
+                else -> InsightInput(mLabel, res.getString(R.string.ui_insights_learning_nights, c.baselineN, m.minPoints), missing = true)
             }
-        }.orEmpty() + listOfNotNull(snap?.recovery?.load?.let { InsightInput("Yesterday's training", it.label) })
+        }.orEmpty() + listOfNotNull(snap?.recovery?.load?.let { InsightInput(res.getString(R.string.ui_insights_yesterday_training), InsightsText.trainingLoadLabel(context, it.category, it.label)) })
         return MethodologyContent(
             listOf("recovery", "baselines", "background"), weights, inputs,
-            listOf(rc.source, cfg.trainingLoad.source), disclaimers(cfg, "general", "background")
+            listOf(rc.source, cfg.trainingLoad.source), disclaimers(context, cfg, "general", "background")
         )
     }
 
-    fun healthAge(cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
+    fun healthAge(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
+        val res = context.resources
         val ha = cfg.healthAge
-        val weights = ha.markers.map { it.label to "${pct(it.weight)} · ±${InsightsFormat.number(it.capYears)} y" }
+        val weights = ha.markers.map { InsightsText.markerLabel(context, it) to res.getString(R.string.ui_insights_weight_cap, pct(it.weight), InsightsFormat.number(it.capYears)) }
         val inputs = ArrayList<InsightInput>()
         snap?.healthAge?.let { h ->
-            inputs += InsightInput("Actual age", h.actualAge?.let { InsightsFormat.number(it, 1) } ?: "Birthday missing", missing = h.actualAge == null)
+            inputs += InsightInput(res.getString(R.string.ui_insights_actual_age), h.actualAge?.let { InsightsFormat.number(it, 1) } ?: res.getString(R.string.ui_insights_birthday_missing), missing = h.actualAge == null)
             for (m in h.markers) {
-                val label = ha.markers.firstOrNull { it.id == m.id }?.label ?: m.id
+                val label = ha.markers.firstOrNull { it.id == m.id }?.let { InsightsText.markerLabel(context, it) } ?: m.id
                 inputs += if (m.available) {
-                    InsightInput(label, InsightsFormat.markerValue(m.id, m.basis, m.value, m.secondaryValue) + " · " + InsightsFormat.signed(m.contributionYears, 2) + " y")
+                    InsightInput(label, res.getString(R.string.ui_insights_value_years, InsightsFormat.markerValue(m.id, m.basis, m.value, m.secondaryValue, res = res), InsightsFormat.signed(m.contributionYears, 2)))
                 } else {
-                    InsightInput(label, "Not enough data (${m.days}/${m.neededDays} days)", missing = true)
+                    InsightInput(label, res.getString(R.string.ui_insights_not_enough_days, m.days, m.neededDays), missing = true)
                 }
             }
         }
         return MethodologyContent(
             listOf("health_age"), weights, inputs,
-            listOf(ha.source) + ha.markers.map { "${it.label}: ${it.source}" },
-            disclaimers(cfg, "health_age", "general")
+            listOf(ha.source) + ha.markers.map { "${InsightsText.markerLabel(context, it)}: ${it.source}" },
+            disclaimers(context, cfg, "health_age", "general")
         )
     }
 
-    fun dailyReview(cfg: InsightsConfig, snap: InsightsSnapshot?, day: LocalDate?): MethodologyContent {
+    fun dailyReview(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot?, day: LocalDate?): MethodologyContent {
+        val res = context.resources
         val rv = cfg.dailyReview
-        val weights = rv.areas.map { it.label to pct(it.weight) }
+        val weights = rv.areas.map { InsightsText.areaLabel(context, it) to pct(it.weight) }
         val review = day?.let { snap?.review(it) }
         val inputs = review?.areas?.mapNotNull { a ->
-            val label = rv.areas.firstOrNull { it.id == a.id }?.label ?: a.id
+            val label = rv.areas.firstOrNull { it.id == a.id }?.let { InsightsText.areaLabel(context, it) } ?: a.id
             when {
                 a.included -> InsightInput(label, "${a.score} / 100")
-                review.notLogged.any { it.params["area"] == a.id } -> InsightInput(label, "Not logged", missing = true)
+                review.notLogged.any { it.params["area"] == a.id } -> InsightInput(label, res.getString(R.string.ui_insights_not_logged), missing = true)
                 else -> null
             }
         }.orEmpty()
-        return MethodologyContent(listOf("daily_review"), weights, inputs, emptyList(), disclaimers(cfg, "general"))
+        return MethodologyContent(listOf("daily_review"), weights, inputs, emptyList(), disclaimers(context, cfg, "general"))
     }
 
-    fun patterns(cfg: InsightsConfig, snap: InsightsSnapshot?, label: (String) -> String): MethodologyContent {
+    fun patterns(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot?, label: (String) -> String): MethodologyContent {
+        val res = context.resources
         val pc = cfg.patterns
         val weights = listOf(
-            "Window" to "${pc.windowDays} days",
-            "Each group" to "≥ ${pc.minGroup} days",
-            "Welch t" to "|t| ≥ ${InsightsFormat.number(pc.minAbsT, 0)}",
-            "Cohen's d" to "|d| ≥ ${InsightsFormat.number(pc.minAbsD, 1)}"
+            res.getString(R.string.ui_insights_window) to res.getQuantityString(R.plurals.ui_insights_days, pc.windowDays, pc.windowDays),
+            res.getString(R.string.ui_insights_each_group) to res.getString(R.string.ui_insights_at_least_days, pc.minGroup),
+            res.getString(R.string.ui_insights_welch_t) to "|t| ≥ ${InsightsFormat.number(pc.minAbsT, 0)}",
+            res.getString(R.string.ui_insights_cohens_d) to "|d| ≥ ${InsightsFormat.number(pc.minAbsD, 1)}"
         )
-        val inputs = snap?.patterns?.map { p -> InsightInput(label(p.id), "${p.nExposed} vs ${p.nUnexposed} days", missing = p.status != "ok") }.orEmpty()
-        return MethodologyContent(listOf("patterns"), weights, inputs, listOf(pc.source), disclaimers(cfg, "patterns", "general"))
+        val inputs = snap?.patterns?.map { p -> InsightInput(label(p.id), res.getString(R.string.ui_insights_days_vs, p.nExposed, p.nUnexposed), missing = p.status != "ok") }.orEmpty()
+        return MethodologyContent(listOf("patterns"), weights, inputs, listOf(pc.source), disclaimers(context, cfg, "patterns", "general"))
     }
 
-    fun baselines(cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
-        val weights = cfg.metrics.values.filter { it.androidType != null }.map { it.label to "${it.windowDays} d · ≥ ${it.minPoints} readings" }
+    fun baselines(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
+        val res = context.resources
+        val weights = cfg.metrics.values.filter { it.androidType != null }.map { InsightsText.metricLabel(context, it) to res.getString(R.string.ui_insights_window_readings, it.windowDays, it.minPoints) }
         val inputs = snap?.baselines?.map { b ->
-            InsightInput(b.metric.label, if (b.baseline.ok) "${b.baseline.n} readings" else "${b.baseline.n}/${b.baseline.needed} readings", missing = !b.baseline.ok)
+            InsightInput(InsightsText.metricLabel(context, b.metric), if (b.baseline.ok) res.getQuantityString(R.plurals.ui_insights_readings, b.baseline.n, b.baseline.n) else res.getString(R.string.ui_insights_readings_of, b.baseline.n, b.baseline.needed), missing = !b.baseline.ok)
         }.orEmpty()
-        return MethodologyContent(listOf("baselines"), weights, inputs, emptyList(), disclaimers(cfg, "general"))
+        return MethodologyContent(listOf("baselines"), weights, inputs, emptyList(), disclaimers(context, cfg, "general"))
     }
 
-    fun hub(cfg: InsightsConfig): MethodologyContent =
-        MethodologyContent(listOf("background", "baselines"), emptyList(), emptyList(), emptyList(), disclaimers(cfg, "general", "background"))
+    fun hub(context: Context, cfg: InsightsConfig): MethodologyContent =
+        MethodologyContent(listOf("background", "baselines"), emptyList(), emptyList(), emptyList(), disclaimers(context, cfg, "general", "background"))
 }

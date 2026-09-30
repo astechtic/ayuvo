@@ -153,7 +153,7 @@ internal fun AllWeightHistorySheet(
     onDismiss: () -> Unit
 ) {
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val fmt = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US).withZone(ZoneId.systemDefault())
+    val fmt = DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM).withZone(ZoneId.systemDefault())
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val sheetSurface = AyuvoColors.sheetBackground()
     ModalBottomSheet(
@@ -216,7 +216,7 @@ internal fun AllBodyFatHistorySheet(
     onDismiss: () -> Unit
 ) {
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val fmt = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US).withZone(ZoneId.systemDefault())
+    val fmt = DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM).withZone(ZoneId.systemDefault())
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val sheetSurface = AyuvoColors.sheetBackground()
     ModalBottomSheet(
@@ -249,7 +249,7 @@ internal fun AllBodyFatHistorySheet(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(Modifier.weight(1f)) {
-                                Text(String.format(Locale.US, "%.1f%%", entry.bodyFatPercent), fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
+                                Text(String.format(Locale.getDefault(), "%.1f%%", entry.bodyFatPercent), fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
                                 Spacer(Modifier.height(2.dp))
                                 Text(fmt.format(entry.date), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
                             }
@@ -279,7 +279,7 @@ internal fun AllWorkoutHistorySheet(
     onDismiss: () -> Unit
 ) {
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val displayDate = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)
+    val displayDate = DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM)
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val sheetSurface = AyuvoColors.sheetBackground()
     ModalBottomSheet(
@@ -403,15 +403,15 @@ internal fun AddWeightDialog(
 }
 
 internal fun formatWeight(kg: Double, useMetric: Boolean): String =
-    if (useMetric) String.format(Locale.US, "%.1f kg", kg)
-    else String.format(Locale.US, "%.1f lbs", kg * 2.20462)
+    if (useMetric) String.format(Locale.getDefault(), "%.1f kg", kg)
+    else String.format(Locale.getDefault(), "%.1f lbs", kg * 2.20462)
 
 internal fun formatWeightChange(deltaKg: Double, useMetric: Boolean): String {
     val displayValue = if (useMetric) deltaKg else deltaKg * 2.20462
     val roundedValue = if (Math.abs(displayValue) < 0.05) 0.0 else displayValue
     val sign = if (roundedValue > 0) "+" else ""
     val unit = if (useMetric) "kg" else "lbs"
-    return String.format(Locale.US, "%s%.1f %s", sign, roundedValue, unit)
+    return String.format(Locale.getDefault(), "%s%.1f %s", sign, roundedValue, unit)
 }
 
 
@@ -451,14 +451,14 @@ internal fun AddBodyFatDialog(
 }
 
 internal fun formatPercent(fraction: Double): String =
-    String.format(Locale.US, "%.1f%%", fraction * 100)
+    String.format(Locale.getDefault(), "%.1f%%", fraction * 100)
 
 internal fun formatPercentValue(percent: Double): String =
-    String.format(Locale.US, "%.1f%%", percent)
+    String.format(Locale.getDefault(), "%.1f%%", percent)
 
 internal fun formatPercentChange(deltaPercent: Double): String {
     val roundedValue = if (Math.abs(deltaPercent) < 0.05) 0.0 else deltaPercent
     val sign = if (roundedValue > 0) "+" else ""
-    return String.format(Locale.US, "%s%.1f%%", sign, roundedValue)
+    return String.format(Locale.getDefault(), "%s%.1f%%", sign, roundedValue)
 }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Jak Ayuvo AI ma przetwarzać Twoją dokumentację zdrowotną?</string>
+    <string name="records_ai_mode_local">Lokalna AI</string>
+    <string name="records_ai_mode_local_detail">Używa modelu na urządzeniu. Tekst dokumentu zostaje na tym telefonie podczas przetwarzania przez AI.</string>
+    <string name="records_ai_mode_cloud">AI w chmurze</string>
+    <string name="records_ai_mode_cloud_detail">Wysyła tekst stron (obrazy tylko w przypadku stron bez tekstu) do Twojego dostawcy AI.</string>
+    <string name="records_ai_mode_ask">Pytaj mnie w razie potrzeby</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo pyta przed użyciem AI na rekordzie.</string>
+    <string name="records_ai_mode_off">Na razie pomiń AI</string>
+    <string name="records_ai_mode_off_detail">Szczegóły są wyszukiwane bez AI. Możesz to zmienić w Ustawieniach.</string>
+    <string name="records_ai_onboarding_note">Możesz to zmienić w dowolnej chwili w Ustawienia › Dokumentacja zdrowotna.</string>
+    <string name="records_ai_chooser_title">Wybierz, jak AI ma pomagać z dokumentami</string>
+    <string name="records_ai_settings_title">Przetwarzanie AI</string>
+    <string name="records_ai_local_unavailable">AI na urządzeniu nie jest skonfigurowana — szczegóły znaleziono bez AI.</string>
+    <string name="records_ai_set_up_local">Skonfiguruj AI na urządzeniu</string>
+    <string name="records_ai_no_cloud_provider">Dodaj dostawcę AI, aby korzystać z AI online.</string>
+    <string name="records_ai_add_provider">Dodaj dostawcę AI</string>
+    <string name="records_ai_cloud_provider_note">AI online korzysta z: %1$s.</string>
+    <string name="records_ai_consent_title">Użyć AI, aby znaleźć więcej szczegółów?</string>
+    <string name="records_ai_consent_body">AI może znaleźć szczegóły pominięte przez reguły. Wyniki to sugestie, które możesz porównać z oryginałem.</string>
+    <string name="records_ai_consent_local">Na tym urządzeniu</string>
+    <string name="records_ai_consent_cloud">AI online · %1$s</string>
+    <string name="records_ai_consent_not_now">Nie teraz</string>
+    <string name="records_ai_consent_apply_all">Zastosuj do wszystkich oczekujących dokumentów</string>
+    <string name="records_ai_consent_none_available">Żadna AI nie jest jeszcze dostępna. Skonfiguruj AI na urządzeniu lub dodaj dostawcę AI w Ustawieniach.</string>
+    <string name="records_ai_status_local">Przetworzone na tym urządzeniu</string>
+    <string name="records_ai_status_cloud">Przetworzone przez AI online · %1$s</string>
+    <string name="records_ai_status_none">Nieprzetworzone przez AI</string>
+</resources>

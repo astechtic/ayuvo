@@ -419,6 +419,24 @@ nonisolated struct RecordHighlight: Identifiable, Hashable, Sendable {
     var dismissed: Bool
     var position: Int
     var createdMs: Int64
+
+    /// `text` for display: deterministic highlights end in an English flag phrase (`RR.hlSuffix`, pinned by
+    /// the vectors and stored as is); that phrase is shown in the user's language.
+    @MainActor var displayText: String {
+        for (flag, suffix) in RR.hlSuffix where text.hasSuffix(" — " + suffix) {
+            return String(text.dropLast(suffix.count)) + Self.localizedSuffix(flag)
+        }
+        return text
+    }
+
+    private static func localizedSuffix(_ flag: String) -> String {
+        switch flag {
+        case "low": String(localized: "below the report reference range", comment: "Record highlight: why a lab result stands out")
+        case "high": String(localized: "above the report reference range", comment: "Record highlight: why a lab result stands out")
+        case "abnormal": String(localized: "marked abnormal on the report", comment: "Record highlight: why a lab result stands out")
+        default: String(localized: "marked critical on the report", comment: "Record highlight: why a lab result stands out")
+        }
+    }
 }
 
 /// One `processing_jobs` row.

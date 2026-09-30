@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Hoe wil je dat Ayuvo AI je gezondheidsdossiers verwerkt?</string>
+    <string name="records_ai_mode_local">Lokale AI</string>
+    <string name="records_ai_mode_local_detail">Gebruikt het model op het apparaat. De tekst van documenten blijft voor AI-verwerking op deze telefoon.</string>
+    <string name="records_ai_mode_cloud">Cloud-AI</string>
+    <string name="records_ai_mode_cloud_detail">Stuurt paginatekst (afbeeldingen alleen voor pagina\'s zonder tekst) naar je AI-provider.</string>
+    <string name="records_ai_mode_ask">Vraag het me wanneer nodig</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo vraagt het eerst voordat AI op een document wordt gebruikt.</string>
+    <string name="records_ai_mode_off">Sla AI voorlopig over</string>
+    <string name="records_ai_mode_off_detail">Gegevens worden zonder AI gevonden. Je kunt dit wijzigen in Instellingen.</string>
+    <string name="records_ai_onboarding_note">Je kunt dit altijd wijzigen in Instellingen › Gezondheidsdossiers.</string>
+    <string name="records_ai_chooser_title">Kies hoe AI helpt met je documenten</string>
+    <string name="records_ai_settings_title">AI-verwerking</string>
+    <string name="records_ai_local_unavailable">AI op het apparaat is niet ingesteld — gegevens zijn zonder AI gevonden.</string>
+    <string name="records_ai_set_up_local">Stel AI op het apparaat in</string>
+    <string name="records_ai_no_cloud_provider">Voeg een AI-provider toe om online AI te gebruiken.</string>
+    <string name="records_ai_add_provider">Voeg een AI-provider toe</string>
+    <string name="records_ai_cloud_provider_note">Online AI gebruikt %1$s.</string>
+    <string name="records_ai_consent_title">AI gebruiken om meer details te vinden?</string>
+    <string name="records_ai_consent_body">AI kan gegevens vinden die de regels hebben gemist. Resultaten zijn suggesties die je met het origineel kunt vergelijken.</string>
+    <string name="records_ai_consent_local">Op dit apparaat</string>
+    <string name="records_ai_consent_cloud">Online AI · %1$s</string>
+    <string name="records_ai_consent_not_now">Niet nu</string>
+    <string name="records_ai_consent_apply_all">Pas toe op alle wachtende documenten</string>
+    <string name="records_ai_consent_none_available">Er is nog geen AI beschikbaar. Stel AI op het apparaat in of voeg een AI-provider toe in Instellingen.</string>
+    <string name="records_ai_status_local">Verwerkt op dit apparaat</string>
+    <string name="records_ai_status_cloud">Verwerkt met online AI · %1$s</string>
+    <string name="records_ai_status_none">Niet door AI verwerkt</string>
+</resources>

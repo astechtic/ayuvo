@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">Objetivo</string>
+    <string name="sleep_time_asleep">Tiempo dormido</string>
+    <string name="sleep_avg_time_asleep">Tiempo dormido medio</string>
+    <string name="sleep_in_bed">En cama</string>
+    <string name="sleep_time_in_bed">Tiempo en cama</string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">Despierto</string>
+    <string name="sleep_stage_rem">REM</string>
+    <string name="sleep_stage_core">Principal</string>
+    <string name="sleep_stage_deep">Profundo</string>
+    <string name="sleep_stage_asleep">Dormido</string>
+    <string name="sleep_chart_summary">Gráfico de sueño, %1$d noches, %2$s</string>
+    <string name="sleep_night_summary">Sueño %1$s, dormido %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

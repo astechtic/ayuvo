@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AnalyzingView: View {
     let image: UIImage?
-    var message: String = "Analyzing your food..."
+    var message: LocalizedStringResource = LocalizedStringResource("Analyzing your food...", comment: "Progress message while a food photo is analyzed")
 
     var body: some View {
         VStack(spacing: 24) {

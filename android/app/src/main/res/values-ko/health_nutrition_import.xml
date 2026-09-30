@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">영양 기록 가져오기</string>
+    <string name="health_import_action">가져오기</string>
+    <string name="health_import_description">다른 앱의 음식 기록을 다이어리로 가져와요. 가져올 수 있는 기록을 미리 본 다음, 공유된 기록이 두 번 집계되지 않도록 소스 앱을 하나 선택하세요.</string>
+    <string name="health_import_from">시작(YYYY-MM-DD)</string>
+    <string name="health_import_to">종료(YYYY-MM-DD)</string>
+    <string name="health_import_history_hint">기록 접근 권한이 없으면 최근 30일 이내의 날짜를 선택하세요. 더 오래된 기록은 지원되는 기기에서 기록 접근 권한이 필요해요.</string>
+    <string name="health_import_grant">영양 및 기록 접근 허용</string>
+    <string name="health_import_access_result">접근 설정이 업데이트됐어요. 다시 미리 보기해서 가져올 수 있는 기록을 확인하세요.</string>
+    <string name="health_import_access_needed">Health Connect에서 영양 읽기 권한을 허용한 후 다시 미리 보기하세요.</string>
+    <string name="health_import_invalid_dates">올바른 날짜를 YYYY-MM-DD 형식으로 입력하세요. 종료일은 시작일과 같거나 이후여야 하며 오늘보다 늦을 수 없어요.</string>
+    <string name="health_import_history_needed">이 기간에는 기록 접근 권한이 필요해요. 지원되는 기기에서 권한을 허용하거나 최근 30일 이내의 날짜를 선택하세요.</string>
+    <string name="health_import_preview">가져올 수 있는 기록 미리 보기</string>
+    <string name="health_import_failed">가져오기를 완료할 수 없어요. Health Connect 접근 권한을 확인하고 다시 시도하세요.</string>
+    <string name="health_import_empty">이 기간에 다른 앱의 새로운 영양 기록이 없어요. 소스 앱이 Health Connect와 영양 데이터를 공유했는지 확인하세요. 이전에 가져온 기록은 다이어리에서 삭제한 것을 포함해 건너뛰어요.</string>
+    <string name="health_import_count">새 기록 %1$d개 · %2$dkcal</string>
+    <string name="health_import_unnamed">가져온 식사</string>
+    <string name="health_import_local_only">로컬 사본이에요. 편집과 삭제는 Ayuvo에만 적용돼요. 다시 가져오면 이전에 가져온 기록은 건너뛰고 업데이트하지 않아요.</string>
+    <string name="health_import_done">다이어리에 기록 %1$d개를 가져왔어요.</string>
+    <string name="health_import_close">닫기</string>
+</resources>

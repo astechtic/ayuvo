@@ -12,11 +12,11 @@ nonisolated enum HealthDetailRange: String, CaseIterable, Sendable, Identifiable
 
     var englishTitle: String {
         switch self {
-        case .day: return "Day"
-        case .week: return "Week"
-        case .month: return "Month"
-        case .sixMonths: return "6 Months"
-        case .year: return "Year"
+        case .day: return String(localized: "Day", comment: "Health chart range picker")
+        case .week: return String(localized: "Week", comment: "Health chart range picker")
+        case .month: return String(localized: "Month", comment: "Health chart range picker")
+        case .sixMonths: return String(localized: "6 Months", comment: "Health chart range picker")
+        case .year: return String(localized: "Year", comment: "Health chart range picker")
         }
     }
 

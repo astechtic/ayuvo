@@ -38,6 +38,11 @@ nonisolated struct DerivedMetricInfo: Sendable, Hashable, Identifiable, Decodabl
     var systemImage: String { icon.ios ?? "waveform.path.ecg" }
     /// Clock metrics store minutes after 12:00 of the day before the wake day.
     var isClock: Bool { unit == "clock" }
+
+    /// Translated display text (table "Contracts"); `title`/`about`/`method` stay the contract English for Coach and AI.
+    var displayTitle: String { ContractText.text("derived.metrics.\(id).title", title) }
+    var displayAbout: String { ContractText.text("derived.metrics.\(id).about", about) }
+    var displayMethod: String { ContractText.text("derived.metrics.\(id).method", method) }
 }
 
 nonisolated struct DerivedCatalog: Sendable {
@@ -58,6 +63,9 @@ nonisolated struct DerivedCatalog: Sendable {
     let disclaimer: String
     let metrics: [DerivedMetricInfo]
     let byID: [String: DerivedMetricInfo]
+
+    /// Translated disclaimer for display.
+    var displayDisclaimer: String { ContractText.text("derived.disclaimer", disclaimer) }
 
     static let shared: DerivedCatalog = load()
 
@@ -92,14 +100,14 @@ nonisolated struct DerivedCatalog: Sendable {
 
     static func categoryTitle(_ category: String) -> String {
         switch category {
-        case "heart": "Heart"
-        case "sleep": "Sleep"
-        case "activity": "Activity"
-        case "energy": "Energy"
-        case "mobility": "Mobility"
-        case "hearing": "Hearing"
-        case "body": "Body"
-        case "nutrition": "Nutrition"
+        case "heart": String(localized: "Heart", comment: "Estimated metrics group title")
+        case "sleep": String(localized: "Sleep", comment: "Estimated metrics group title")
+        case "activity": String(localized: "Activity", comment: "Estimated metrics group title")
+        case "energy": String(localized: "Energy", comment: "Estimated metrics group title")
+        case "mobility": String(localized: "Mobility", comment: "Estimated metrics group title")
+        case "hearing": String(localized: "Hearing", comment: "Estimated metrics group title")
+        case "body": String(localized: "Body", comment: "Estimated metrics group title")
+        case "nutrition": String(localized: "Nutrition", comment: "Estimated metrics group title")
         default: category.capitalized
         }
     }

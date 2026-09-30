@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo Məşq</string>
+    <string name="widget_workout_description">Məşqə başla və idarə et</string>
+    <string name="widget_workout_title">Məşq</string>
+    <string name="widget_workout_walk">Gəzinti</string>
+    <string name="widget_workout_run">Qaçış</string>
+    <string name="widget_workout_cycle">Velosiped</string>
+    <string name="widget_workout_hike">Yürüş</string>
+    <string name="widget_workout_strength">Güc</string>
+    <string name="widget_workout_strength_title">Güc sessiyası</string>
+    <string name="widget_workout_status_recording">Qeyd edilir</string>
+    <string name="widget_workout_status_paused">Fasilədə</string>
+    <string name="widget_workout_status_saving">Saxlanılır…</string>
+    <string name="widget_workout_status_recovery">Bərpa</string>
+    <string name="widget_workout_status_strength">Davam edir</string>
+    <string name="widget_workout_waiting_gps">GPS gözlənilir</string>
+    <string name="widget_workout_distance">Məsafə</string>
+    <string name="widget_workout_pace">Orta temp</string>
+    <string name="widget_workout_speed">Orta sürət</string>
+    <string name="widget_workout_pause">Fasilə ver</string>
+    <string name="widget_workout_resume">Davam et</string>
+    <string name="widget_workout_lap">Dövrə</string>
+    <string name="widget_workout_end">Bitir</string>
+    <string name="widget_workout_skip">Keç</string>
+    <string name="widget_workout_finish">Tamamla</string>
+</resources>

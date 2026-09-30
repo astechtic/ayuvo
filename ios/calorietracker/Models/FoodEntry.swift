@@ -233,6 +233,7 @@ struct FoodMeasurementSettings {
 }
 
 enum MacroValueFormatter {
+    /// Machine form ("12", "12.5"): edit fields that are parsed back, task ids. Not for display.
     static func string(_ value: Double) -> String {
         if abs(value.rounded() - value) < 0.0001 {
             return String(Int(value.rounded()))
@@ -240,8 +241,16 @@ enum MacroValueFormatter {
         return String(format: "%.1f", value)
     }
 
+    /// Display form in the user's locale ("12", "12,5").
+    static func display(_ value: Double) -> String {
+        if abs(value.rounded() - value) < 0.0001 {
+            return Int(value.rounded()).formatted()
+        }
+        return value.formatted(.number.precision(.fractionLength(1)))
+    }
+
     static func withUnit(_ value: Double) -> String {
-        "\(string(value))g"
+        "\(display(value))g"
     }
 }
 
@@ -836,9 +845,10 @@ extension FoodEntry {
 enum CombinedMeal {
     nonisolated static func combinedName(for entries: [FoodEntry]) -> String {
         let names = entries.map { $0.name.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
-        if names.isEmpty { return "Combined meal" }
+        if names.isEmpty { return String(localized: "Combined meal", comment: "Default name for foods merged into one entry") }
         if names.count <= 3 { return names.joined(separator: " + ") }
-        return names.prefix(2).joined(separator: " + ") + " + \(names.count - 2) more"
+        let firstTwo = names.prefix(2).joined(separator: " + ")
+        return String(localized: "\(firstTwo) + \(names.count - 2) more", comment: "Combined meal name: first two food names, then how many more")
     }
 
     nonisolated static func combine(_ entries: [FoodEntry]) -> FoodEntry {

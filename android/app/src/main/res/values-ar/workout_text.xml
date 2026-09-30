@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">وصف التمرين</string>
+    <string name="workout_text_intro">صف ما قمت به. راجع التفاصيل قبل إضافتها إلى مذكرات التمارين.</string>
+    <string name="workout_text_description">وصف التمرين</string>
+    <string name="workout_text_example">20 دقيقة من نط الحبل، ثم 3 مجموعات من 10 تكرارات ضغط على المقعد بوزن 40 kg</string>
+    <string name="workout_text_voice">الصوت</string>
+    <string name="workout_text_preparing">جارٍ البحث عن التمارين…</string>
+    <string name="workout_text_preview">تحليل</string>
+    <string name="workout_text_retry">إعادة المحاولة</string>
+    <string name="workout_text_review">مراجعة التمرين</string>
+    <string name="workout_text_date">التاريخ (YYYY-MM-DD)</string>
+    <string name="workout_text_custom">نشاط مخصص محدد بوقت · يستخدم تقدير السعرات معدلًا عامًا للنشاط</string>
+    <string name="workout_text_minutes">الدقائق</string>
+    <string name="workout_text_reps">التكرارات</string>
+    <string name="workout_text_remove">إزالة التمرين</string>
+    <string name="workout_text_calories_note">السعرات الحرارية تقديرية. استخدم «حساب» في المذكرات بعد إضافة تمرينك.</string>
+    <string name="workout_text_edit">تعديل الوصف</string>
+    <string name="workout_text_adding">جارٍ الإضافة…</string>
+    <string name="workout_text_add">إضافة إلى المذكرات</string>
+    <string name="workout_text_menu">نص</string>
+    <string name="workout_text_set_weight">المجموعة %1$d · %2$s</string>
+    <string name="workout_text_estimate">الحرق التقديري: %1$d kcal</string>
+    <string name="workout_text_effort">المجهود (متوسط إذا لم يُحدد)</string>
+    <string name="workout_text_light">فاتح</string>
+    <string name="workout_text_moderate">معتدل</string>
+    <string name="workout_text_vigorous">شديد</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">البدء من جديد</string>
+    <string name="workout_clarify_title">سؤال سريع</string>
+    <string name="workout_clarify_hint">انقر على تمرين لاختياره، أو اكتب إجابتك.</string>
+    <string name="workout_clarify_answer">إجابتك</string>
+    <string name="workout_clarify_voice">رد صوتي</string>
+    <string name="workout_text_repeat_error">تعذّر الإكمال بناءً على إجاباتك. أضف التفاصيل الناقصة إلى وصفك (مثل المجموعات والتكرارات) أو ابدأ من جديد.</string>
+</resources>

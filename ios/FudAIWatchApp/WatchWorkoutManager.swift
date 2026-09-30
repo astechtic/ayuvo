@@ -35,10 +35,10 @@ final class WatchWorkoutManager: NSObject {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .walk: return "Outdoor Walk"
-            case .run: return "Outdoor Run"
-            case .cycle: return "Outdoor Cycle"
-            case .hike: return "Hike"
+            case .walk: return String(localized: "Outdoor Walk", comment: "Apple Watch workout type")
+            case .run: return String(localized: "Outdoor Run", comment: "Apple Watch workout type")
+            case .cycle: return String(localized: "Outdoor Cycle", comment: "Apple Watch workout type")
+            case .hike: return String(localized: "Hike", comment: "Apple Watch workout type")
             }
         }
         var systemImage: String {
@@ -154,7 +154,7 @@ final class WatchWorkoutManager: NSObject {
             locationManager.distanceFilter = kCLDistanceFilterNone
             locationManager.startUpdatingLocation()
         } catch {
-            errorMessage = "Couldn't start the workout."
+            errorMessage = String(localized: "Couldn't start the workout.", comment: "Apple Watch workout error")
             session = nil
             builder = nil
         }
@@ -202,7 +202,7 @@ final class WatchWorkoutManager: NSObject {
                 _ = try? await routeBuilder.finishRoute(with: workout, metadata: nil)
             }
         } catch {
-            errorMessage = "The workout couldn't be saved to Health."
+            errorMessage = String(localized: "The workout couldn't be saved to Health.", comment: "Apple Watch workout error")
         }
         let elapsed = builder.elapsedTime(at: end)
         let summary = WatchWorkoutMessage(

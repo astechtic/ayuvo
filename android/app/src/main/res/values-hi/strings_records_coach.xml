@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">कोच को आपके स्वास्थ्य रिकॉर्ड पढ़ने दें?</string>
+    <string name="records_coach_consent_body">आपको जवाब देने के लिए कोच अपने द्वारा पढ़े गए रिकॉर्ड का विवरण — टेस्ट परिणाम, तिथियाँ, डॉक्टर और निदान — %1$s को भेजता है। रिकॉर्ड इसी डिवाइस पर संग्रहीत रहते हैं।</string>
+    <string name="records_coach_consent_body_on_device">कोच इस डिवाइस पर रिकॉर्ड पढ़ता है; कुछ भी ऑनलाइन नहीं भेजा जाता।</string>
+    <string name="records_coach_consent_allow">अनुमति दें</string>
+    <string name="records_coach_consent_not_now">अभी नहीं</string>
+    <string name="records_coach_settings_title">कोच</string>
+    <string name="records_coach_settings_toggle">कोच को मेरे स्वास्थ्य रिकॉर्ड का उपयोग करने दें</string>
+    <string name="records_coach_settings_subtitle">सवालों के जवाब देने के लिए कोच आपके रिकॉर्ड खोज और पढ़ सकता है। इसे बंद करने से एक्सेस तुरंत हट जाती है।</string>
+    <string name="records_coach_analyzing">विश्लेषण:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">%d रिकॉर्ड का विश्लेषण हो रहा है</item>
+        <item quantity="other">%d रिकॉर्ड का विश्लेषण हो रहा है</item>
+    </plurals>
+    <string name="records_coach_change_records">रिकॉर्ड बदलें</string>
+    <string name="records_coach_used_records">उपयोग किए गए रिकॉर्ड</string>
+    <string name="records_coach_picker_title">इस बातचीत के लिए रिकॉर्ड</string>
+    <string name="records_coach_picker_search">रिकॉर्ड खोजें</string>
+    <string name="records_coach_picker_limit">अधिकतम %d रिकॉर्ड चुनें।</string>
+    <string name="records_coach_picker_done">पूर्ण</string>
+    <string name="records_coach_picker_empty">कोई रिकॉर्ड नहीं मिला।</string>
+    <string name="records_coach_picker_selected">चयनित</string>
+    <string name="records_coach_picker_recent">हाल के रिकॉर्ड</string>
+    <string name="records_coach_picker_results">परिणाम</string>
+    <string name="records_coach_mode_title">रिकॉर्ड ऑनलाइन भेजें?</string>
+    <string name="records_coach_mode_body">कोच %1$s का उपयोग करता है। चुने गए रिकॉर्ड का विवरण ऑनलाइन भेजें?</string>
+    <string name="records_coach_mode_send">भेजें</string>
+    <string name="records_coach_mode_on_device">ऑन-डिवाइस कोच का उपयोग करें</string>
+    <string name="records_coach_ask_report">इस रिपोर्ट के बारे में पूछें</string>
+    <string name="records_coach_compare_previous">पिछली रिपोर्ट से तुलना करें</string>
+    <string name="records_coach_explain_trend">यह ट्रेंड समझाएँ</string>
+    <string name="records_coach_ask_coach">कोच से पूछें</string>
+    <string name="records_coach_prompt_report">यह रिपोर्ट समझाएँ: क्या खास दिखता है और मुझे अपने डॉक्टर से क्या पूछना चाहिए?</string>
+    <string name="records_coach_prompt_compare">इस रिपोर्ट की तुलना पिछली रिपोर्ट से करें। क्या बदला?</string>
+    <string name="records_coach_prompt_trend">समझाएँ कि समय के साथ मेरा %1$s कैसे बदला है।</string>
+    <string name="records_coach_chip_latest">मेरी नवीनतम ब्लड रिपोर्ट का विश्लेषण करें</string>
+    <string name="records_coach_chip_abnormal">असामान्य मान खोजें</string>
+    <string name="records_coach_chip_compare">पिछली रिपोर्ट से तुलना करें</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

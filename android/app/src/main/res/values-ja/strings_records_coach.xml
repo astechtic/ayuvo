@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">コーチに医療記録の読み取りを許可しますか？</string>
+    <string name="records_coach_consent_body">コーチは回答するために、読み取った記録の詳細（検査結果、日付、医師、診断）を%1$sに送信します。記録はこのデバイスに保存されたままです。</string>
+    <string name="records_coach_consent_body_on_device">コーチはこのデバイス上の記録を読み取ります。オンラインに送信されるものはありません。</string>
+    <string name="records_coach_consent_allow">許可</string>
+    <string name="records_coach_consent_not_now">今はしない</string>
+    <string name="records_coach_settings_title">コーチ</string>
+    <string name="records_coach_settings_toggle">コーチに医療記録の使用を許可</string>
+    <string name="records_coach_settings_subtitle">コーチは質問に答えるために記録を検索して読み取ることができます。オフにすると、すぐにアクセスが取り消されます。</string>
+    <string name="records_coach_analyzing">分析中：</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="other">%d件の記録を分析中</item>
+    </plurals>
+    <string name="records_coach_change_records">記録を変更</string>
+    <string name="records_coach_used_records">使用した記録</string>
+    <string name="records_coach_picker_title">この会話に使う記録</string>
+    <string name="records_coach_picker_search">記録を検索</string>
+    <string name="records_coach_picker_limit">最大%d件の記録を選んでください。</string>
+    <string name="records_coach_picker_done">完了</string>
+    <string name="records_coach_picker_empty">記録が見つかりません。</string>
+    <string name="records_coach_picker_selected">選択中</string>
+    <string name="records_coach_picker_recent">最近の記録</string>
+    <string name="records_coach_picker_results">結果</string>
+    <string name="records_coach_mode_title">記録をオンラインに送信しますか？</string>
+    <string name="records_coach_mode_body">コーチは%1$sを使用します。選択した記録の詳細をオンラインで送信しますか？</string>
+    <string name="records_coach_mode_send">送信</string>
+    <string name="records_coach_mode_on_device">オンデバイスのコーチを使用</string>
+    <string name="records_coach_ask_report">このレポートについて質問</string>
+    <string name="records_coach_compare_previous">前回のレポートと比較</string>
+    <string name="records_coach_explain_trend">このトレンドを説明</string>
+    <string name="records_coach_ask_coach">コーチに質問</string>
+    <string name="records_coach_prompt_report">このレポートについて説明してください：何が目立つか、医師に何を質問すべきか。</string>
+    <string name="records_coach_prompt_compare">このレポートを前回のものと比較してください。何が変わりましたか？</string>
+    <string name="records_coach_prompt_trend">私の%1$sが時間とともにどう変化したか説明してください。</string>
+    <string name="records_coach_chip_latest">最新の血液検査結果を分析</string>
+    <string name="records_coach_chip_abnormal">異常値を探す</string>
+    <string name="records_coach_chip_compare">前回のレポートと比較</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

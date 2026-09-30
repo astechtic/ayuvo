@@ -102,7 +102,8 @@ struct AllDataImportTests {
 
         let plan = try AllDataImport.plan(url: zip)
         #expect(plan.items.map(\.section) == [.foodDiary, .medications])
-        #expect(AllDataImport.countsText(plan.items[1].counts) == "1 medications")
+        // "1 medication" once the catalog has the plural variants; the bare key before that.
+        #expect(["1 medication", "1 medications"].contains(AllDataImport.countsText(plan.items[1].counts)))
 
         let reader = try ZipArchiveReader(url: zip)
         let out = directory.appendingPathComponent("m-out.json")

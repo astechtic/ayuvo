@@ -725,7 +725,7 @@ fun EditFoodEntrySheet(
                 )
             }
 
-            item { SheetSectionHeader("Actions") }
+            item { SheetSectionHeader(stringResource(R.string.ui_actions)) }
             item {
                 SheetPillCard {
                     Row(
@@ -743,7 +743,7 @@ fun EditFoodEntrySheet(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            if (isFavorite) "Remove from Favorites" else "Save to Favorites",
+                            stringResource(if (isFavorite) R.string.ui_remove_from_favorites else R.string.ui_save_to_favorites),
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Medium,
                             color = AppColors.Calorie
@@ -765,7 +765,7 @@ fun EditFoodEntrySheet(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            "Delete Food Log",
+                            stringResource(R.string.ui_delete_food_log),
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.error
@@ -842,9 +842,9 @@ fun EditFoodEntrySheet(
     }
     if (showDeleteConfirmation) {
         GlassDialog(onDismissRequest = { showDeleteConfirmation = false }) {
-            Text("Delete Food Log?", fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.ui_delete_food_log_q), fontSize = 21.sp, fontWeight = FontWeight.Bold)
             Text(
-                "This removes the food from your diary. Saved favorites are kept.",
+                stringResource(R.string.ui_delete_food_body),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f),
                 fontSize = 15.sp,
                 lineHeight = 21.sp

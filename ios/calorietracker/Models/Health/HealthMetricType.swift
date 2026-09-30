@@ -20,8 +20,11 @@ nonisolated enum HealthCategory: String, CaseIterable, Sendable, Hashable, Codab
     case vitals
     case other
 
-    /// English display name; a literal `Localizable.xcstrings` entry exists for each.
-    var englishName: String {
+    /// English display name (the catalog key); stable across languages.
+    var englishName: String { nameResource.key }
+
+    /// Localizable name; its literals are extracted by the compiler.
+    var nameResource: LocalizedStringResource {
         switch self {
         case .activity: return "Activity"
         case .body: return "Body Measurements"
@@ -40,7 +43,7 @@ nonisolated enum HealthCategory: String, CaseIterable, Sendable, Hashable, Codab
     }
 
     var displayName: String {
-        String(localized: String.LocalizationValue(englishName))
+        String(localized: nameResource)
     }
 
     var systemImage: String {

@@ -36,24 +36,24 @@ struct RecoveryView: View {
                     .foregroundStyle(.secondary)
             }
             ForEach(recovery.positives) { signal in
-                signalRow(signal, positive: true)
+                signalRow(signal, in: recovery, positive: true)
             }
             ForEach(recovery.negatives) { signal in
-                signalRow(signal, positive: false)
+                signalRow(signal, in: recovery, positive: false)
             }
         }
         .ayuvoCard()
         .accessibilityIdentifier("recovery.signals")
     }
 
-    private func signalRow(_ signal: RecoverySignal, positive: Bool) -> some View {
+    private func signalRow(_ signal: RecoverySignal, in recovery: RecoveryResult, positive: Bool) -> some View {
         HStack {
             Image(systemName: positive ? "arrow.up.circle.fill" : "arrow.down.circle.fill")
                 .foregroundStyle(positive ? AyuvoPalette.nutrition : AyuvoPalette.heart)
-            Text(signal.text)
+            Text(InsightsConfig.shared.signalText(signal, in: recovery))
                 .font(.system(.subheadline, design: .rounded))
             Spacer()
-            InsightsChip(text: InsightsFormat.signed(signal.impact, 1), tint: positive ? AyuvoPalette.nutrition : AyuvoPalette.heart)
+            InsightsChip(text: InsightsDisplayFormat.signed(signal.impact, 1), tint: positive ? AyuvoPalette.nutrition : AyuvoPalette.heart)
         }
         .accessibilityElement(children: .combine)
     }
@@ -87,7 +87,7 @@ struct RecoveryView: View {
                 Label("Yesterday's training", systemImage: "figure.run")
                     .font(.system(.subheadline, design: .rounded, weight: .medium))
                 Spacer()
-                InsightsChip(text: load.label, tint: load.category == "high" ? AyuvoPalette.heart : AyuvoPalette.activity)
+                InsightsChip(text: InsightsConfig.shared.trainingLoadLabel(load.category, english: load.label), tint: load.category == "high" ? AyuvoPalette.heart : AyuvoPalette.activity)
             }
             if load.modifier != 0 {
                 Text("High compared with your 28-day average, so \(abs(load.modifier)) points were taken off.")
@@ -120,7 +120,7 @@ struct RecoveryView: View {
     // MARK: Text
 
     static func label(_ id: String) -> String {
-        InsightsConfig.shared.metric(id)?.label ?? id
+        InsightsConfig.shared.metricLabel(id)
     }
 
     static func componentDetail(_ c: RecoveryComponent) -> String {
@@ -133,7 +133,7 @@ struct RecoveryView: View {
             parts.append(String(localized: "Baseline \(InsightsText.value(baseline, metric: c.id))"))
         }
         if let pct = c.pct { parts.append(InsightsText.percent(pct)) }
-        if let impact = c.impact { parts.append(String(localized: "\(InsightsFormat.signed(impact, 1)) points")) }
+        if let impact = c.impact { parts.append(String(localized: "\(InsightsDisplayFormat.signed(impact, 1)) points")) }
         if c.fallback { parts.append(String(localized: "daily value, no reading during sleep")) }
         if parts.isEmpty { return InsightsText.missing }
         return parts.joined(separator: " · ")
@@ -147,13 +147,13 @@ struct RecoveryView: View {
                 id: c.id, title: label(c.id),
                 value: c.available ? InsightsText.value(c.value, metric: c.id) : String(localized: "Missing"),
                 detail: c.available
-                    ? String(localized: "Baseline \(InsightsText.value(c.baseline, metric: c.id)) · weight \(c.weight.formatted()) · sub-score \(c.subscore.map { InsightsFormat.number($0) } ?? InsightsText.missing)")
+                    ? String(localized: "Baseline \(InsightsText.value(c.baseline, metric: c.id)) · weight \(c.weight.formatted()) · sub-score \(c.subscore.map { InsightsDisplayFormat.number($0) } ?? InsightsText.missing)")
                     : componentDetail(c),
                 missing: !c.available
             )
         }
         if let load = recovery.load {
-            rows.append(InsightsInputRow(id: "load", title: String(localized: "Yesterday's training load"), value: load.label,
+            rows.append(InsightsInputRow(id: "load", title: String(localized: "Yesterday's training load"), value: InsightsConfig.shared.trainingLoadLabel(load.category, english: load.label),
                                          detail: load.modifier == 0 ? nil : String(localized: "\(load.modifier) points")))
         }
         return rows
@@ -184,10 +184,10 @@ struct RecoveryHeaderCard: View {
             HStack(spacing: 18) {
                 InsightsScoreRing(score: recovery.score, tint: InsightsText.recoveryTint(recovery.label), size: 104, lineWidth: 12)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(recovery.labelText ?? InsightsText.missing)
+                    Text(InsightsConfig.shared.bandLabel(recovery.label, english: recovery.labelText) ?? InsightsText.missing)
                         .font(.system(.title3, design: .rounded, weight: .bold))
                         .foregroundStyle(InsightsText.recoveryTint(recovery.label))
-                    if let recommendation = recovery.recommendation {
+                    if let recommendation = InsightsConfig.shared.bandRecommendation(recovery.label, english: recovery.recommendation) {
                         Text(recommendation)
                             .font(.system(.subheadline, design: .rounded))
                     }

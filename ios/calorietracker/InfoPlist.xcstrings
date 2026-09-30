@@ -5,9 +5,111 @@
       "comment" : "Bundle display name",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo Debug"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Ayuvo Debug"
           }
         }
@@ -17,9 +119,111 @@
       "comment" : "Bundle name",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "calorietracker"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "calorietracker"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "calorietracker"
           }
         }
@@ -38,6 +242,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayuvo qida və ştrix-kodları skan etmək üçün kameradan istifadə edir."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo používá fotoaparát ke skenování jídla a čárových kódů."
           }
         },
         "de" : {
@@ -135,10 +345,112 @@
     "NSHealthShareUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يقرأ Ayuvo بيانات النشاط وقياسات الجسم والقلب والنوم والعلامات الحيوية والتنفس والحركة والسمع وتتبع الدورة واليقظة الذهنية والأعراض والتغذية لعرضها في مركز البيانات الصحية والحفاظ على مزامنة سجلك على هذا الـ iPhone. فقط إذا سمحت بذلك، يمكن للمدرب استخدام هذه البيانات للإجابة عن أسئلتك عبر مزوّد الذكاء الاصطناعي الخاص بك."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo fəaliyyət, bədən ölçüləri, ürək, yuxu, həyati göstəricilər, tənəffüs, hərəkətlilik, eşitmə, tsikl izləmə, düşüncəlilik, simptomlar və qidalanma məlumatlarınızı oxuyur ki, onları Sağlamlıq məlumatları mərkəzində göstərsin və bu iPhone-da tarixçənizi sinxron saxlasın. Yalnız siz icazə versəniz, Məşqçi suallarınızı Sİ provayderiniz vasitəsilə cavablandırmaq üçün bu məlumatlardan istifadə edə bilər."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo čte tvé údaje o aktivitě, tělesných mírách, srdci, spánku, vitálních funkcích, dýchání, pohyblivosti, sluchu, sledování cyklu, všímavosti, příznacích a výživě, aby je zobrazil v centru zdravotních dat a udržoval tvou historii synchronizovanou na tomto iPhonu. Pouze pokud to povolíš, může Kouč tato data použít k zodpovězení tvých otázek prostřednictvím tvého poskytovatele AI."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo liest deine Daten zu Aktivität, Körpermaßen, Herz, Schlaf, Vitalwerten, Atmung, Mobilität, Hören, Zyklusprotokoll, Achtsamkeit, Symptomen und Ernährung, um sie im Gesundheitsdaten-Bereich anzuzeigen und deinen Verlauf auf diesem iPhone synchron zu halten. Nur wenn du es erlaubst, kann Coach diese Daten verwenden, um deine Fragen über deinen KI-Anbieter zu beantworten."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayuvo reads your activity, body measurements, heart, sleep, vitals, respiratory, mobility, hearing, cycle tracking, mindfulness, symptoms and nutrition data to show them in the Health Data hub and keep your history in sync on this iPhone. Only if you allow it, Coach can use this data to answer your questions through your AI provider."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo lee tus datos de actividad, medidas corporales, corazón, sueño, constantes vitales, respiración, movilidad, audición, seguimiento del ciclo, mindfulness, síntomas y nutrición para mostrarlos en el centro de datos de salud y mantener tu historial sincronizado en este iPhone. Solo si lo permites, Coach puede usar estos datos para responder a tus preguntas a través de tu proveedor de IA."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo lit vos données d'activité, de mensurations, de cœur, de sommeil, de signes vitaux, de respiration, de mobilité, d'audition, de suivi du cycle, de pleine conscience, de symptômes et de nutrition pour les afficher dans le hub Données de santé et garder votre historique synchronisé sur cet iPhone. Uniquement si vous l'autorisez, le Coach peut utiliser ces données pour répondre à vos questions via votre fournisseur d'IA."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo आपकी गतिविधि, शरीर के माप, हृदय, नींद, वाइटल्स, श्वसन, गतिशीलता, सुनने की क्षमता, मासिक चक्र ट्रैकिंग, माइंडफ़ुलनेस, लक्षण और पोषण डेटा पढ़ता है, ताकि उन्हें हेल्थ डेटा हब में दिखा सके और इस iPhone पर आपका इतिहास सिंक रख सके। केवल आपकी अनुमति होने पर ही कोच आपके सवालों के जवाब देने के लिए आपके AI प्रदाता के ज़रिए इस डेटा का उपयोग कर सकता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo legge i tuoi dati su attività, misure corporee, cuore, sonno, parametri vitali, respirazione, mobilità, udito, monitoraggio del ciclo, consapevolezza, sintomi e alimentazione per mostrarli nell'hub Dati salute e mantenere la tua cronologia sincronizzata su questo iPhone. Solo se lo consenti, il Coach può usare questi dati per rispondere alle tue domande tramite il tuo provider IA."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvoは、アクティビティ、身体測定値、心臓、睡眠、バイタル、呼吸、移動能力、聴覚、周期記録、マインドフルネス、症状、栄養のデータを読み取り、ヘルスデータハブに表示して、このiPhoneで履歴を同期します。許可した場合に限り、コーチはこのデータを使って、AIプロバイダ経由であなたの質問に答えることができます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo는 활동, 신체 측정값, 심장, 수면, 활력 징후, 호흡, 이동성, 청각, 생리 주기 추적, 마음챙김, 증상 및 영양 데이터를 읽어 건강 데이터 허브에 표시하고 이 iPhone에서 기록을 동기화해요. 허용한 경우에만 코치가 이 데이터를 사용해 AI 제공업체를 통해 질문에 답할 수 있어요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo leest je gegevens over activiteit, lichaamsmetingen, hart, slaap, vitale functies, ademhaling, mobiliteit, gehoor, menstruatiecyclus, mindfulness, symptomen en voeding om ze te tonen in de hub Gezondheidsgegevens en je geschiedenis op deze iPhone gesynchroniseerd te houden. Alleen als je dat toestaat, kan Coach deze gegevens via je AI-provider gebruiken om je vragen te beantwoorden."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo odczytuje dane o aktywności, pomiarach ciała, sercu, śnie, parametrach życiowych, oddychaniu, mobilności, słuchu, cyklu, uważności, objawach i odżywianiu, aby wyświetlać je w centrum Dane zdrowotne i synchronizować historię na tym iPhonie. Tylko jeśli na to pozwolisz, Trener może używać tych danych, aby odpowiadać na Twoje pytania przez Twojego dostawcę AI."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Ayuvo lê seus dados de atividade, medidas corporais, coração, sono, sinais vitais, respiração, mobilidade, audição, ciclo menstrual, mindfulness, sintomas e nutrição para exibi-los na central de dados de saúde e manter seu histórico sincronizado neste iPhone. Somente se você permitir, o Coach pode usar esses dados para responder às suas perguntas por meio do seu provedor de IA."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo citește datele tale despre activitate, măsurători corporale, inimă, somn, semne vitale, respirație, mobilitate, auz, urmărirea ciclului, mindfulness, simptome și nutriție pentru a le afișa în centrul Date de sănătate și pentru a-ți păstra istoricul sincronizat pe acest iPhone. Doar dacă permiți, Antrenorul poate folosi aceste date pentru a-ți răspunde la întrebări prin furnizorul tău AI."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo считывает данные об активности, замерах тела, сердце, сне, жизненных показателях, дыхании, мобильности, слухе, цикле, осознанности, симптомах и питании, чтобы показывать их в разделе «Данные здоровья» и синхронизировать историю на этом iPhone. Только с вашего разрешения Тренер может использовать эти данные, чтобы отвечать на ваши вопросы через вашего провайдера ИИ."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo зчитує дані про вашу активність, вимірювання тіла, серце, сон, життєві показники, дихання, мобільність, слух, відстеження циклу, усвідомленість, симптоми та харчування, щоб показувати їх у розділі «Дані здоров'я» і синхронізувати вашу історію на цьому iPhone. Лише якщо ви дозволите, Тренер зможе використовувати ці дані, щоб відповідати на ваші запитання через вашого провайдера ШІ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo 会读取你的活动、身体测量、心脏、睡眠、生命体征、呼吸、行动能力、听力、周期跟踪、正念、症状和营养数据，以便在“健康数据”中心显示，并在这台 iPhone 上保持历史记录同步。只有在你允许的情况下，教练才能通过你的 AI 提供商使用这些数据来回答你的问题。"
           }
         }
       }
@@ -156,6 +468,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayuvo qeydlərinizi dəyişdirdikdə qidalanma, bədən ölçüləri və hesablanmış məşq kalorilərinizi yazır, yeniləyir və ya silir."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo zapisuje, aktualizuje nebo odstraňuje tvé údaje o výživě, tělesných mírách a vypočtených kaloriích z tréninků, když změníš své záznamy."
           }
         },
         "de" : {
@@ -254,10 +572,112 @@
       "comment" : "Privacy - Local Network Usage Description",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الاتصال بخادم Ollama يعمل على شبكتك المحلية."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Yerli şəbəkənizdə işləyən Ollama serverinə qoşulun."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Připojení k serveru Ollama běžícímu ve tvé místní síti."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mit einem Ollama-Server in deinem lokalen Netzwerk verbinden."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "Connect to an Ollama server running on your local network."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Conectar con un servidor Ollama que se ejecuta en tu red local."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Se connecter à un serveur Ollama sur votre réseau local."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "अपने लोकल नेटवर्क पर चल रहे Ollama सर्वर से कनेक्ट करें।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Connettiti a un server Ollama in esecuzione sulla tua rete locale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ローカルネットワーク上で動作しているOllamaサーバーに接続します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "로컬 네트워크에서 실행 중인 Ollama 서버에 연결해요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Maak verbinding met een Ollama-server op je lokale netwerk."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Połącz się z serwerem Ollama działającym w Twojej sieci lokalnej."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Conectar a um servidor Ollama em execução na sua rede local."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Conectează-te la un server Ollama care rulează în rețeaua ta locală."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Подключение к серверу Ollama в вашей локальной сети."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Підключення до сервера Ollama у вашій локальній мережі."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "连接到在你的本地网络上运行的 Ollama 服务器。"
           }
         }
       }
@@ -266,10 +686,112 @@
       "comment" : "Privacy - Location When In Use Usage Description",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يستخدم Ayuvo موقعك أثناء تسجيل المشي أو الجري أو ركوب الدراجة أو المشي لمسافات طويلة في الهواء الطلق لقياس المسافة والوتيرة والمقاطع ومسارك. يُستخدم الموقع فقط خلال التمرين الذي تبدؤه."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo açıq havada gəzinti, qaçış, velosiped sürüşü və ya yürüş qeyd edərkən məsafəni, tempi, hissələri və marşrutunuzu ölçmək üçün məkanınızdan istifadə edir. Məkan yalnız sizin başlatdığınız məşq zamanı istifadə olunur."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo používá tvou polohu při záznamu venkovní chůze, běhu, jízdy na kole nebo túry k měření vzdálenosti, tempa, úseků a trasy. Poloha se používá pouze během tréninku, který spustíš."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo verwendet deinen Standort, während du ein Outdoor-Training (Gehen, Laufen, Radfahren oder Wandern) aufzeichnest, um Distanz, Tempo, Splits und deine Route zu messen. Der Standort wird nur während eines von dir gestarteten Trainings verwendet."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "Ayuvo uses your location while you record an outdoor walk, run, ride or hike to measure distance, pace, splits and your route. Location is only used during a workout you start."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo usa tu ubicación mientras registras una caminata, carrera, salida en bici o ruta de senderismo al aire libre para medir la distancia, el ritmo, los parciales y tu ruta. La ubicación solo se usa durante un entrenamiento que tú inicias."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo utilise votre position pendant que vous enregistrez une marche, une course, une sortie à vélo ou une randonnée en extérieur pour mesurer la distance, l'allure, les temps intermédiaires et votre itinéraire. La position n'est utilisée que pendant un entraînement que vous démarrez."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "जब आप बाहर वॉक, रन, राइड या हाइक रिकॉर्ड करते हैं, तब दूरी, पेस, स्प्लिट्स और आपका रूट मापने के लिए Ayuvo आपकी लोकेशन का उपयोग करता है। लोकेशन का उपयोग केवल आपके द्वारा शुरू किए गए वर्कआउट के दौरान होता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo usa la tua posizione mentre registri una camminata, una corsa, un giro in bici o un'escursione all'aperto per misurare distanza, passo, parziali e percorso. La posizione viene usata solo durante un allenamento avviato da te."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvoは、屋外でのウォーキング、ランニング、サイクリング、ハイキングを記録している間、距離、ペース、スプリット、ルートを測定するために位置情報を使用します。位置情報は、あなたが開始したワークアウト中にのみ使用されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo는 야외 걷기, 달리기, 라이딩 또는 하이킹을 기록하는 동안 위치를 사용해 거리, 페이스, 구간 기록 및 경로를 측정해요. 위치는 직접 시작한 운동 중에만 사용돼요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo gebruikt je locatie terwijl je buiten wandelt, hardloopt, fietst of hiket om afstand, tempo, splits en je route te meten. Je locatie wordt alleen gebruikt tijdens een training die je zelf start."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo używa Twojej lokalizacji podczas nagrywania spaceru, biegu, jazdy na rowerze lub wędrówki na zewnątrz, aby mierzyć dystans, tempo, odcinki i trasę. Lokalizacja jest używana tylko podczas treningu, który sam rozpoczniesz."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Ayuvo usa sua localização enquanto você grava uma caminhada, corrida, pedalada ou trilha ao ar livre para medir distância, ritmo, parciais e sua rota. A localização só é usada durante um treino iniciado por você."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo folosește locația ta cât timp înregistrezi o plimbare, o alergare, o tură cu bicicleta sau o drumeție în aer liber, pentru a măsura distanța, ritmul, segmentele și traseul. Locația este folosită doar în timpul unui antrenament pornit de tine."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo использует вашу геопозицию во время записи прогулки, пробежки, велозаезда или похода на улице, чтобы измерять дистанцию, темп, отрезки и маршрут. Геопозиция используется только во время начатой вами тренировки."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo використовує вашу геопозицію, коли ви записуєте ходьбу, біг, велопоїздку чи похід на вулиці, щоб вимірювати відстань, темп, відрізки та маршрут. Геопозиція використовується лише під час тренування, яке ви почали."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "当你记录户外步行、跑步、骑行或徒步时，Ayuvo 会使用你的位置来测量距离、配速、分段和路线。位置信息仅在你开始的训练期间使用。"
           }
         }
       }
@@ -278,10 +800,112 @@
       "comment" : "Privacy - Microphone Usage Description",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يحتاج Ayuvo إلى الوصول إلى الميكروفون لتتمكن من تسجيل الطعام بالصوت."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Yeməyi səslə qeyd edə bilməyiniz üçün Ayuvo-ya mikrofon icazəsi lazımdır."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo potřebuje přístup k mikrofonu, abys mohl(a) zapisovat jídlo hlasem."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo benötigt Zugriff auf das Mikrofon, damit du Essen per Sprache erfassen kannst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "Ayuvo needs microphone access so you can log food by voice."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo necesita acceso al micrófono para que puedas registrar comida por voz."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo a besoin d'accéder au micro pour que vous puissiez enregistrer vos aliments à la voix."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo को माइक्रोफ़ोन की अनुमति चाहिए ताकि आप आवाज़ से भोजन लॉग कर सकें।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo ha bisogno dell'accesso al microfono per permetterti di registrare gli alimenti con la voce."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "音声で食事を記録するために、Ayuvoはマイクへのアクセスを必要とします。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "음성으로 음식을 기록하려면 Ayuvo에 마이크 접근 권한이 필요해요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo heeft toegang tot de microfoon nodig zodat je voeding met je stem kunt loggen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo potrzebuje dostępu do mikrofonu, aby umożliwić dodawanie jedzenia głosem."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Ayuvo precisa de acesso ao microfone para que você possa registrar alimentos por voz."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo are nevoie de acces la microfon ca să poți înregistra alimente prin voce."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo нужен доступ к микрофону, чтобы вы могли записывать еду голосом."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo потрібен доступ до мікрофона, щоб ви могли записувати їжу голосом."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo 需要访问麦克风，以便你通过语音记录饮食。"
           }
         }
       }
@@ -290,10 +914,112 @@
       "comment" : "Privacy - Motion Usage Description",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يستخدم Ayuvo البارومتر لقياس الصعود والنزول في الارتفاع أثناء التمارين في الهواء الطلق."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo açıq havada məşqlər zamanı hündürlük artımını və azalmasını ölçmək üçün barometrdən istifadə edir."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo používá barometr k měření stoupání a klesání během venkovních tréninků."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo verwendet das Barometer, um bei Outdoor-Trainings Anstieg und Abstieg zu messen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "Ayuvo uses the barometer to measure elevation gain and loss during outdoor workouts."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo usa el barómetro para medir el desnivel positivo y negativo durante los entrenamientos al aire libre."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo utilise le baromètre pour mesurer le dénivelé positif et négatif pendant les entraînements en extérieur."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo बाहरी वर्कआउट के दौरान ऊँचाई में बढ़त और गिरावट मापने के लिए बैरोमीटर का उपयोग करता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo usa il barometro per misurare il dislivello positivo e negativo durante gli allenamenti all'aperto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvoは、屋外ワークアウト中の上昇・下降の標高を測定するために気圧計を使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo는 기압계를 사용해 야외 운동 중 고도 상승 및 하강을 측정해요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo gebruikt de barometer om hoogtewinst en -verlies te meten tijdens buitentrainingen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo używa barometru do pomiaru przewyższeń w górę i w dół podczas treningów na zewnątrz."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Ayuvo usa o barômetro para medir o ganho e a perda de elevação durante treinos ao ar livre."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo folosește barometrul pentru a măsura urcarea și coborârea în timpul antrenamentelor în aer liber."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo использует барометр, чтобы измерять набор и сброс высоты во время тренировок на улице."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo використовує барометр, щоб вимірювати набір і втрату висоти під час тренувань на вулиці."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo 使用气压计测量户外训练中的海拔上升和下降。"
           }
         }
       }
@@ -311,6 +1037,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayuvo \"Yadda saxla\" düyməsinə toxunanda yemək şəkillərini foto kitabxananıza yadda saxlayır."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo ukládá fotky jídel do tvé knihovny fotek, když klepneš na Uložit."
           }
         },
         "de" : {
@@ -409,10 +1141,112 @@
       "comment" : "Privacy - Speech Recognition Usage Description",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يستخدم Ayuvo التعرّف على الكلام لتحويل صوتك إلى نص لتسجيل الطعام."
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo yemək qeydi üçün səsinizi mətnə çevirməkdən ötrü nitqin tanınmasından istifadə edir."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo používá rozpoznávání řeči k převodu tvého hlasu na text při zapisování jídla."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo verwendet die Spracherkennung, um deine Sprache für die Essenserfassung in Text umzuwandeln."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "Ayuvo uses speech recognition to convert your voice into text for food logging."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo usa el reconocimiento de voz para convertir tu voz en texto al registrar comida."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo utilise la reconnaissance vocale pour convertir votre voix en texte afin d'enregistrer vos aliments."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo भोजन लॉग करने के लिए आपकी आवाज़ को टेक्स्ट में बदलने हेतु स्पीच रिकग्निशन का उपयोग करता है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo usa il riconoscimento vocale per convertire la tua voce in testo per la registrazione degli alimenti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvoは、食事の記録のために音声をテキストに変換する音声認識を使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo는 음성 인식을 사용해 음성을 텍스트로 변환하여 음식을 기록해요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo gebruikt spraakherkenning om je stem om te zetten in tekst voor het loggen van voeding."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo używa rozpoznawania mowy, aby zamieniać Twój głos na tekst przy dodawaniu jedzenia."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Ayuvo usa o reconhecimento de fala para converter sua voz em texto ao registrar alimentos."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo folosește recunoașterea vorbirii pentru a-ți transforma vocea în text la înregistrarea alimentelor."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo использует распознавание речи, чтобы превращать ваш голос в текст для записи еды."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo використовує розпізнавання мовлення, щоб перетворювати ваш голос на текст для запису їжі."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ayuvo 使用语音识别将你的语音转换为文字，用于记录饮食。"
           }
         }
       }

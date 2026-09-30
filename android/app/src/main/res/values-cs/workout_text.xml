@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Popsat trénink</string>
+    <string name="workout_text_intro">Popiš, co jsi dělal(a). Před přidáním do tréninkového deníku zkontroluj údaje.</string>
+    <string name="workout_text_description">Popis tréninku</string>
+    <string name="workout_text_example">20 minut skákání přes švihadlo, pak 3 série po 10 opakováních bench pressu se 40 kg</string>
+    <string name="workout_text_voice">Hlasem</string>
+    <string name="workout_text_preparing">Hledají se cviky…</string>
+    <string name="workout_text_preview">Analyzovat</string>
+    <string name="workout_text_retry">Zkusit znovu</string>
+    <string name="workout_text_review">Zkontrolovat trénink</string>
+    <string name="workout_text_date">Datum (RRRR-MM-DD)</string>
+    <string name="workout_text_custom">Vlastní časovaná aktivita · odhad kalorií používá obecnou míru aktivity</string>
+    <string name="workout_text_minutes">Minuty</string>
+    <string name="workout_text_reps">Opakování</string>
+    <string name="workout_text_remove">Odebrat cvik</string>
+    <string name="workout_text_calories_note">Kalorie jsou odhady. Po přidání tréninku použij v deníku Vypočítat.</string>
+    <string name="workout_text_edit">Upravit popis</string>
+    <string name="workout_text_adding">Přidávání…</string>
+    <string name="workout_text_add">Přidat do deníku</string>
+    <string name="workout_text_menu">Text</string>
+    <string name="workout_text_set_weight">Série %1$d · %2$s</string>
+    <string name="workout_text_estimate">Odhadovaný výdej: %1$d kcal</string>
+    <string name="workout_text_effort">Úsilí (střední, pokud není uvedeno)</string>
+    <string name="workout_text_light">Světlý</string>
+    <string name="workout_text_moderate">Středně aktivní</string>
+    <string name="workout_text_vigorous">Intenzivní</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Začít znovu</string>
+    <string name="workout_clarify_title">Rychlá otázka</string>
+    <string name="workout_clarify_hint">Klepnutím na cvik ho vyber, nebo napiš svou odpověď.</string>
+    <string name="workout_clarify_answer">Tvoje odpověď</string>
+    <string name="workout_clarify_voice">Hlasová odpověď</string>
+    <string name="workout_text_repeat_error">Z tvých odpovědí se nepodařilo trénink dokončit. Doplň chybějící údaje do popisu (například série a opakování), nebo začni znovu.</string>
+</resources>

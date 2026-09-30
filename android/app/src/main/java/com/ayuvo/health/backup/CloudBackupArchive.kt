@@ -9,6 +9,8 @@ import java.security.MessageDigest
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 object CloudBackupPolicy {
     const val FORMAT = "ayuvo-cloud-backup"
@@ -191,11 +193,11 @@ object CloudBackupArchive {
                 }
             }
         }
-        val raw = payload ?: error("Backup is missing backup.json")
+        val raw = payload ?: error(AppText.orEnglish("Backup is missing backup.json", R.string.core_backup_missing_payload))
         val document = json.decodeFromString<CloudBackupDocument>(raw.toString(Charsets.UTF_8))
-        require(document.format == CloudBackupPolicy.FORMAT) { "Not an Ayuvo backup" }
+        require(document.format == CloudBackupPolicy.FORMAT) { AppText.orEnglish("Not an Ayuvo backup", R.string.core_backup_not_ayuvo) }
         require(document.format_version <= CloudBackupPolicy.VERSION) {
-            "This backup needs a newer Ayuvo"
+            AppText.orEnglish("This backup needs a newer Ayuvo", R.string.core_backup_needs_newer)
         }
         return CloudBackupUnpack(document, photos, chats)
     }

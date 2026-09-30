@@ -261,11 +261,14 @@ extension ActionExecutor {
         let updated = store.exercises(for: day).first(where: { $0.id == exercise.id }) ?? exercise
         let volume = todayVolume([updated])
         let kg = ActionMath.toCanonical(weight, family: massFamily, unit: v.string("unit"))
-        let load = weight > 0 ? String(localized: " at \(weightText(kg))") : ""
+        let setNumber = (index + 1).formatted()
+        let dialog = weight > 0
+            ? String(localized: "Logged set \(setNumber) of \(item.name): \(reps) reps at \(weightText(kg)).", comment: "Action result; set number, exercise, reps count, weight")
+            : String(localized: "Logged set \(setNumber) of \(item.name): \(reps) reps.", comment: "Action result; set number, exercise, reps count")
         return ActionResult(actionID: v.actionID, fields: [
             "exercise": .string(item.name), "set_number": .int(index + 1), "reps": .int(reps),
             "weight_kg": .number(ActionMath.roundTo(kg, 2)), "sets_today": .int(volume.sets), "volume_kg": .number(volume.volumeKg),
             "value": .number(volume.volumeKg), "unit": .string("kg"),
-        ], dialog: String(localized: "Logged set \(index + 1) of \(item.name): \(reps) reps\(load)."))
+        ], dialog: dialog)
     }
 }

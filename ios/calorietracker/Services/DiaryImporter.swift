@@ -31,21 +31,21 @@ enum DiaryImportError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .fileTooLarge:
-            return "This file is too large to import."
+            return String(localized: "This file is too large to import.", comment: "Food diary import error")
         case .invalidDocument:
-            return "This is not a valid Ayuvo food diary JSON file."
+            return String(localized: "This is not a valid Ayuvo food diary JSON file.", comment: "Food diary import error")
         case .unsupportedDocument:
-            return "This food diary format is not supported."
+            return String(localized: "This food diary format is not supported.", comment: "Food diary import error")
         case .noEntries:
-            return "The selected diary does not contain any food or water entries."
+            return String(localized: "The selected diary does not contain any food or water entries.", comment: "Food diary import error")
         case .invalidDate(let value):
-            return "The diary contains an invalid date or time: \(value)."
+            return String(localized: "The diary contains an invalid date or time: \(value).", comment: "Food diary import error; placeholder is the bad value")
         case .invalidMeal(let value):
-            return "The diary contains an unknown meal type: \(value)."
+            return String(localized: "The diary contains an unknown meal type: \(value).", comment: "Food diary import error; placeholder is the meal type")
         case .invalidWaterEntry:
-            return "The diary contains an invalid water entry."
+            return String(localized: "The diary contains an invalid water entry.", comment: "Food diary import error")
         case .invalidEntry(let value):
-            return "The diary contains an invalid food entry: \(value)."
+            return String(localized: "The diary contains an invalid food entry: \(value).", comment: "Food diary import error; placeholder is the food name")
         }
     }
 }
@@ -419,7 +419,7 @@ enum DiaryImporter {
         let supplements = item.supplemental_nutrients_g?.values ?? Dictionary<String, Double>().values
         guard !name.isEmpty, item.calories >= 0, required.allSatisfy(isNonNegative),
               optional.allSatisfy(isNonNegative), supplements.allSatisfy(isNonNegative) else {
-            throw DiaryImportError.invalidEntry(name.isEmpty ? "Unnamed food" : name)
+            throw DiaryImportError.invalidEntry(name.isEmpty ? String(localized: "Unnamed food", comment: "Placeholder food name in a diary import error") : name)
         }
     }
 

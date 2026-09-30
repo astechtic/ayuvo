@@ -9,7 +9,7 @@ struct Gemma4ModelSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                SettingsLabel(localized("gemma.name", "Gemma 4 E2B"), systemImage: "cpu", tint: SettingsTint.ai)
+                SettingsLabel(String(localized: "gemma.name", defaultValue: "Gemma 4 E2B", table: "LocalModels", comment: "Gemma 4 on-device model settings"), systemImage: "cpu", tint: SettingsTint.ai)
                     .font(.body.weight(.medium))
                 Spacer()
                 Text(statusLabel)
@@ -24,17 +24,17 @@ struct Gemma4ModelSettingsView: View {
             if let progress = modelManager.downloadProgress {
                 ProgressView(value: progress)
                     .tint(AppColors.calorie)
-                    .accessibilityLabel(localized("gemma.downloadProgress", "Gemma 4 download progress"))
+                    .accessibilityLabel(String(localized: "gemma.downloadProgress", defaultValue: "Gemma 4 download progress", table: "LocalModels", comment: "Gemma 4 on-device model settings"))
                     .accessibilityValue(Text(progress, format: .percent))
             } else if modelManager.state == .verifying {
                 ProgressView()
                     .tint(AppColors.calorie)
-                    .accessibilityLabel(localized("gemma.verifyingDownload", "Verifying Gemma 4 download"))
+                    .accessibilityLabel(String(localized: "gemma.verifyingDownload", defaultValue: "Verifying Gemma 4 download", table: "LocalModels", comment: "Gemma 4 on-device model settings"))
             }
 
             HStack {
                 if isDownloading {
-                    Button(localized("common.cancel", "Cancel"), role: .cancel) {
+                    Button(String(localized: "common.cancel", defaultValue: "Cancel", table: "LocalModels", comment: "On-device model settings"), role: .cancel) {
                         modelManager.cancelDownload()
                     }
                     .buttonStyle(.bordered)
@@ -58,7 +58,7 @@ struct Gemma4ModelSettingsView: View {
                 }
 
                 if modelManager.hasStoredData {
-                    Button(localized("common.delete", "Delete"), role: .destructive) {
+                    Button(String(localized: "common.delete", defaultValue: "Delete", table: "LocalModels", comment: "On-device model settings"), role: .destructive) {
                         showDeleteConfirmation = true
                     }
                     .buttonStyle(.bordered)
@@ -71,7 +71,7 @@ struct Gemma4ModelSettingsView: View {
                     .font(.caption2)
 
                 Link(destination: Gemma4LocalModelManager.sourceURL) {
-                    Label(localized("gemma.modelSource", "Model source"), systemImage: "arrow.up.right.square")
+                    Label(String(localized: "gemma.modelSource", defaultValue: "Model source", table: "LocalModels", comment: "Gemma 4 on-device model settings"), systemImage: "arrow.up.right.square")
                         .font(.caption2)
                 }
             }
@@ -82,43 +82,40 @@ struct Gemma4ModelSettingsView: View {
             onAvailabilityChange()
         }
         .confirmationDialog(
-            localized("gemma.deleteTitle", "Delete Gemma 4?"),
+            String(localized: "gemma.deleteTitle", defaultValue: "Delete Gemma 4?", table: "LocalModels", comment: "Gemma 4 on-device model settings"),
             isPresented: $showDeleteConfirmation,
             titleVisibility: .visible
         ) {
-            Button(localized("common.deleteModel", "Delete Model"), role: .destructive) {
+            Button(String(localized: "common.deleteModel", defaultValue: "Delete Model", table: "LocalModels", comment: "On-device model settings"), role: .destructive) {
                 deleteModel()
             }
-            Button(localized("common.cancel", "Cancel"), role: .cancel) { }
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", table: "LocalModels", comment: "On-device model settings"), role: .cancel) { }
         } message: {
-            Text(localized(
-                "gemma.deleteMessage",
-                "The downloaded model and its compiled cache will be removed from this iPhone. You can download it again later."
-            ))
+            Text(String(localized: "gemma.deleteMessage", defaultValue: "The downloaded model and its compiled cache will be removed from this iPhone. You can download it again later.", table: "LocalModels", comment: "Gemma 4 on-device model settings"))
         }
     }
 
     private var statusLabel: String {
         guard modelManager.isEligible else {
-            return localized("gemma.requires8GB", "Requires an 8 GB RAM device")
+            return String(localized: "gemma.requires8GB", defaultValue: "Requires an 8 GB RAM device", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         }
         switch modelManager.state {
         case .notDownloaded:
-            return localized("common.notDownloaded", "Not downloaded")
+            return String(localized: "common.notDownloaded", defaultValue: "Not downloaded", table: "LocalModels", comment: "On-device model settings")
         case .downloaded:
-            return localized("common.downloaded", "Downloaded")
+            return String(localized: "common.downloaded", defaultValue: "Downloaded", table: "LocalModels", comment: "On-device model settings")
         case .downloading(let progress):
-            return "\(Int(progress * 100))%"
+            return progress.formatted(.percent.precision(.fractionLength(0)))
         case .verifying:
-            return localized("common.verifying", "Verifying")
+            return String(localized: "common.verifying", defaultValue: "Verifying", table: "LocalModels", comment: "On-device model settings")
         case .preparing:
-            return localized("common.preparing", "Preparing")
+            return String(localized: "common.preparing", defaultValue: "Preparing", table: "LocalModels", comment: "On-device model settings")
         case .ready:
-            return localized("common.ready", "Ready")
+            return String(localized: "common.ready", defaultValue: "Ready", table: "LocalModels", comment: "On-device model settings")
         case .generating:
-            return localized("common.inUse", "In use")
+            return String(localized: "common.inUse", defaultValue: "In use", table: "LocalModels", comment: "On-device model settings")
         case .failed:
-            return localized("common.needsAttention", "Needs attention")
+            return String(localized: "common.needsAttention", defaultValue: "Needs attention", table: "LocalModels", comment: "On-device model settings")
         }
     }
 
@@ -136,52 +133,27 @@ struct Gemma4ModelSettingsView: View {
 
     private var statusDescription: String {
         guard modelManager.isEligible else {
-            return localized(
-                "gemma.unsupportedDescription",
-                "This on-device image and text model is available on iPhones with at least 8 GB of physical memory."
-            )
+            return String(localized: "gemma.unsupportedDescription", defaultValue: "This on-device image and text model is available on iPhones with at least 8 GB of physical memory.", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         }
 
         switch modelManager.state {
         case .notDownloaded:
-            return localized(
-                "gemma.downloadDescription",
-                "2.59 GB download. Ayuvo checks for an additional 1 GB of free installation headroom."
-            )
+            return String(localized: "gemma.downloadDescription", defaultValue: "2.59 GB download. Ayuvo checks for an additional 1 GB of free installation headroom.", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .downloaded:
             if let size = modelManager.installedSizeDescription {
-                return LocalModelStrings.format(
-                    "gemma.storedWithSize",
-                    defaultValue: "Verified and stored locally (%@). Tap Prepare now, or it will load on first use.",
-                    size
-                )
+                return String(localized: "gemma.storedWithSize", defaultValue: "Verified and stored locally (\(size)). Tap Prepare now, or it will load on first use.", table: "LocalModels", comment: "Gemma 4 on-device model settings")
             }
-            return localized(
-                "gemma.stored",
-                "Verified and stored locally. Tap Prepare now, or it will load on first use."
-            )
+            return String(localized: "gemma.stored", defaultValue: "Verified and stored locally. Tap Prepare now, or it will load on first use.", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .downloading:
-            return localized(
-                "gemma.downloading",
-                "Downloading the pinned Gemma 4 model… Keep Ayuvo open until it finishes."
-            )
+            return String(localized: "gemma.downloading", defaultValue: "Downloading the pinned Gemma 4 model… Keep Ayuvo open until it finishes.", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .verifying:
-            return localized(
-                "gemma.checking",
-                "Checking the exact file size and SHA-256 before installation…"
-            )
+            return String(localized: "gemma.checking", defaultValue: "Checking the exact file size and SHA-256 before installation…", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .preparing:
-            return localized(
-                "gemma.compiling",
-                "Compiling and loading the LiteRT-LM Metal runtime…"
-            )
+            return String(localized: "gemma.compiling", defaultValue: "Compiling and loading the LiteRT-LM Metal runtime…", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .ready:
-            return localized(
-                "gemma.readyDescription",
-                "Ready for private, offline food images and text."
-            )
+            return String(localized: "gemma.readyDescription", defaultValue: "Ready for private, offline food images and text.", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .generating:
-            return localized("gemma.generating", "Generating locally on this iPhone…")
+            return String(localized: "gemma.generating", defaultValue: "Generating locally on this iPhone…", table: "LocalModels", comment: "Gemma 4 on-device model settings")
         case .failed(let message):
             return message
         }
@@ -190,11 +162,11 @@ struct Gemma4ModelSettingsView: View {
     private var downloadButtonTitle: String {
         switch modelManager.state {
         case .ready:
-            return localized("common.ready", "Ready")
+            return String(localized: "common.ready", defaultValue: "Ready", table: "LocalModels", comment: "On-device model settings")
         default:
             return modelManager.isDownloaded
-                ? localized("common.prepare", "Prepare")
-                : localized("common.download", "Download")
+                ? String(localized: "common.prepare", defaultValue: "Prepare", table: "LocalModels", comment: "On-device model settings")
+                : String(localized: "common.download", defaultValue: "Download", table: "LocalModels", comment: "On-device model settings")
         }
     }
 
@@ -211,9 +183,5 @@ struct Gemma4ModelSettingsView: View {
         } catch {
             modelManager.refresh()
         }
-    }
-
-    private func localized(_ key: String, _ defaultValue: String) -> String {
-        LocalModelStrings.text(key, defaultValue: defaultValue)
     }
 }

@@ -27,8 +27,8 @@ object QuickActionShortcutManager {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
             ShortcutInfo.Builder(context, "quick_action_${index + 1}")
-                .setShortLabel(action.title)
-                .setLongLabel("Quick Action ${index + 1}: ${action.title}")
+                .setShortLabel(context.getString(action.labelRes))
+                .setLongLabel(context.getString(R.string.core_quick_action_long_label, index + 1, context.getString(action.labelRes)))
                 .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
                 .setIntent(intent)
                 .build()

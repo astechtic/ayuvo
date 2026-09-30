@@ -123,11 +123,11 @@ final class MetricDetailModel {
         case .day:
             return start.formatted(date: .abbreviated, time: .omitted)
         case .week:
-            return "\(start.formatted(.dateTime.month(.abbreviated).day())) – \(end.formatted(.dateTime.month(.abbreviated).day().year()))"
+            return String(localized: "\(start.formatted(.dateTime.month(.abbreviated).day())) – \(end.formatted(.dateTime.month(.abbreviated).day().year()))", comment: "Date range: start – end")
         case .month:
             return start.formatted(.dateTime.month(.wide).year())
         case .sixMonths:
-            return "\(start.formatted(.dateTime.month(.abbreviated))) – \(end.formatted(.dateTime.month(.abbreviated).year()))"
+            return String(localized: "\(start.formatted(.dateTime.month(.abbreviated))) – \(end.formatted(.dateTime.month(.abbreviated).year()))", comment: "Date range: start – end")
         case .year:
             return start.formatted(.dateTime.year())
         }

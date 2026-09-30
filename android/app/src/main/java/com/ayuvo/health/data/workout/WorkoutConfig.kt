@@ -1,5 +1,7 @@
 package com.ayuvo.health.data.workout
 
+import android.content.Context
+import com.ayuvo.health.l10n.ContractStrings
 import com.ayuvo.health.medications.logic.MedicationJson
 import com.ayuvo.health.medications.logic.MedicationJson.double
 import com.ayuvo.health.medications.logic.MedicationJson.int
@@ -25,7 +27,10 @@ class WorkoutConfig(val root: JsonObject) {
         val hcExercise: String?,
         val hkActivity: String?,
         val metItemId: String?
-    )
+    ) {
+        /** Translated [title] for the screen; [title] stays English for saved workout names and Health Connect. */
+        fun displayTitle(context: Context?): String = ContractStrings.text(context, "workout.sports.$id.title", title)
+    }
 
     data class Thresholds(
         val detectBpm: Double,
@@ -55,6 +60,9 @@ class WorkoutConfig(val root: JsonObject) {
     val algoVersion: Int = root.int("algo_version") ?: 0
     val configVersion: Int = root.int("config_version") ?: 0
     val disclaimer: String = root.str("disclaimer").orEmpty()
+    /** Translated [disclaimer] for the screen. */
+    fun displayDisclaimer(context: Context?): String = ContractStrings.text(context, "workout.disclaimer", disclaimer)
+
     val sources: Map<String, String> =
         root.objOrNull("sources")?.entries?.associate { it.key to (it.value as JsonPrimitive).content }.orEmpty()
     val sports: Map<String, Sport> = (root.objOrNull("sports") ?: error("config has no sports")).entries.associate { (id, v) ->

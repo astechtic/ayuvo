@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- fu_health_unit_days is a unit word shown next to a number the caller formats. -->
+    <issue id="ImpliedQuantity">
+        <ignore path="src/main/res/values-*/strings_l10n_android_followup.xml" />
+    </issue>
+</lint>

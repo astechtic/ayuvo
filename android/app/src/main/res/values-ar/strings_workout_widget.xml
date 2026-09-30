@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">تمرين Ayuvo</string>
+    <string name="widget_workout_description">ابدأ تمرينًا وتحكّم فيه</string>
+    <string name="widget_workout_title">التمرين</string>
+    <string name="widget_workout_walk">مشي</string>
+    <string name="widget_workout_run">جري</string>
+    <string name="widget_workout_cycle">دراجة</string>
+    <string name="widget_workout_hike">مشي طويل</string>
+    <string name="widget_workout_strength">القوة</string>
+    <string name="widget_workout_strength_title">جلسة قوة</string>
+    <string name="widget_workout_status_recording">جارٍ التسجيل</string>
+    <string name="widget_workout_status_paused">متوقف مؤقتًا</string>
+    <string name="widget_workout_status_saving">جارٍ الحفظ…</string>
+    <string name="widget_workout_status_recovery">التعافي</string>
+    <string name="widget_workout_status_strength">قيد التنفيذ</string>
+    <string name="widget_workout_waiting_gps">في انتظار GPS</string>
+    <string name="widget_workout_distance">المسافة</string>
+    <string name="widget_workout_pace">متوسط الوتيرة</string>
+    <string name="widget_workout_speed">متوسط السرعة</string>
+    <string name="widget_workout_pause">إيقاف مؤقت</string>
+    <string name="widget_workout_resume">استئناف</string>
+    <string name="widget_workout_lap">لفة</string>
+    <string name="widget_workout_end">إنهاء</string>
+    <string name="widget_workout_skip">تخطي</string>
+    <string name="widget_workout_finish">إنهاء</string>
+</resources>

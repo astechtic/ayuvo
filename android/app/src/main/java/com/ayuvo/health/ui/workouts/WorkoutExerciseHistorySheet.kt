@@ -1,5 +1,7 @@
 package com.ayuvo.health.ui.workouts
 
+import com.ayuvo.health.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,7 +63,7 @@ fun WorkoutExerciseHistorySheet(
             )
             if (history.isEmpty()) {
                 Text(
-                    "No lift history yet",
+                    stringResource(R.string.ui_workout_no_history),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -91,13 +93,14 @@ fun WorkoutExerciseHistorySheet(
     }
 }
 
+@Composable
 private fun dayTitle(dateKey: String, selectedDate: LocalDate): String {
     val date = WorkoutDate.parse(dateKey) ?: return dateKey
     val today = LocalDate.now()
     return when {
-        date == today -> "Today"
-        date == today.minusDays(1) -> "Yesterday"
-        date == selectedDate -> "Selected day"
+        date == today -> stringResource(R.string.ui_workout_today)
+        date == today.minusDays(1) -> stringResource(R.string.ui_workout_yesterday)
+        date == selectedDate -> stringResource(R.string.ui_workout_selected_day)
         else -> date.format(DateTimeFormatter.ofPattern("EEE, MMM d, yyyy", Locale.getDefault()))
     }
 }

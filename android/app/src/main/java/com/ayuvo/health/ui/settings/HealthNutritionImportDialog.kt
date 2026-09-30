@@ -122,7 +122,10 @@ internal fun HealthNutritionImportDialog(container: AppContainer, onDismiss: () 
                     if (selected.isNotEmpty()) {
                         Text(stringResource(R.string.health_import_count, selected.size, selected.sumOf { it.calories ?: 0.0 }.toInt()))
                         selected.take(5).forEach { record ->
-                            Text("${record.time.atZone(ZoneId.systemDefault()).toLocalDate()} · ${record.name?.takeIf { it.isNotBlank() } ?: resources.getString(R.string.health_import_unnamed)}", style = MaterialTheme.typography.bodySmall)
+                            val day = record.time.atZone(ZoneId.systemDefault()).toLocalDate()
+                                .format(java.time.format.DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM))
+                            val name = record.name?.takeIf { it.isNotBlank() } ?: resources.getString(R.string.health_import_unnamed)
+                            Text("$day · $name", style = MaterialTheme.typography.bodySmall)
                         }
                         Text(stringResource(R.string.health_import_local_only), style = MaterialTheme.typography.bodySmall)
                     }

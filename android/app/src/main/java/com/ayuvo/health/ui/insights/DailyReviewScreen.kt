@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +59,7 @@ fun DailyReviewScreen(vm: InsightsViewModel, onBack: () -> Unit, initialDay: Loc
         tag = "insights.review",
         onBack = onBack,
         onInfo = { info = true },
-        disclaimers = listOfNotNull(cfg.disclaimers["general"])
+        disclaimers = listOfNotNull(InsightsText.disclaimer(LocalContext.current, cfg, "general"))
     ) {
         if (!insightsGate(ui, "insights.review", needsHealth = false)) return@InsightsScaffold
         val s = snap ?: return@InsightsScaffold
@@ -76,7 +77,7 @@ fun DailyReviewScreen(vm: InsightsViewModel, onBack: () -> Unit, initialDay: Loc
             if (items.isEmpty()) continue
             item(key = "cat-$id") {
                 InsetGroup(header = stringResource(title), dividerInset = 16.dp, modifier = Modifier.testTag("insights.review.$id")) {
-                    items.forEach { i -> row { Text(i.text, fontSize = 15.sp, lineHeight = 20.sp, modifier = Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) } }
+                    items.forEach { i -> row { Text(InsightsText.reviewItem(LocalContext.current, cfg, i, snap?.patterns), fontSize = 15.sp, lineHeight = 20.sp, modifier = Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) } }
                 }
             }
         }
@@ -84,7 +85,7 @@ fun DailyReviewScreen(vm: InsightsViewModel, onBack: () -> Unit, initialDay: Loc
             item(key = "not-logged") {
                 InsetGroup(header = stringResource(R.string.insights_not_logged), dividerInset = 16.dp, modifier = Modifier.testTag("insights.review.notLogged")) {
                     review.notLogged.forEach { i ->
-                        row { Text(i.text, fontSize = 15.sp, color = AyuvoColors.secondaryLabel(), modifier = Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) }
+                        row { Text(InsightsText.reviewItem(LocalContext.current, cfg, i, snap?.patterns), fontSize = 15.sp, color = AyuvoColors.secondaryLabel(), modifier = Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) }
                     }
                 }
             }
@@ -94,14 +95,14 @@ fun DailyReviewScreen(vm: InsightsViewModel, onBack: () -> Unit, initialDay: Loc
                 ExplainSection(
                     state = ui.explanations[vm.explanationKey("daily_review", review.day)] ?: ExplainUi.Idle,
                     availability = ui.ai,
-                    disclaimer = cfg.disclaimers["ai"],
+                    disclaimer = InsightsText.disclaimer(LocalContext.current, cfg, "ai"),
                     tag = "insights.review",
                     onExplain = { vm.explain("daily_review", review.day) }
                 )
             }
         }
     }
-    if (info) InsightMethodologySheet(cfg, InsightMethodology.dailyReview(cfg, snap, day), onDismiss = { info = false })
+    if (info) InsightMethodologySheet(cfg, InsightMethodology.dailyReview(LocalContext.current, cfg, snap, day), onDismiss = { info = false })
 }
 
 @Composable
@@ -152,7 +153,7 @@ private fun AreasGroup(review: DailyReviewResult, cfg: InsightsConfig) {
     if (included.isEmpty()) return
     InsetGroup(header = stringResource(R.string.insights_areas), dividerInset = 16.dp, modifier = Modifier.testTag("insights.review.areas")) {
         included.forEach { a ->
-            row { KeyValueRow(cfg.dailyReview.areas.firstOrNull { it.id == a.id }?.label ?: a.id, "${a.score} / 100") }
+            row { KeyValueRow(cfg.dailyReview.areas.firstOrNull { it.id == a.id }?.let { InsightsText.areaLabel(LocalContext.current, it) } ?: a.id, "${a.score} / 100") }
         }
     }
 }

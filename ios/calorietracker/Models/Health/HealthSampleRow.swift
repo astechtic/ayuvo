@@ -1,4 +1,5 @@
 import Foundation
+import HealthKit
 
 /// Canonical sleep stage codes shared with Android (`health_samples.category_value`
 /// for `type_id = 'sleep'`).
@@ -18,6 +19,7 @@ nonisolated enum HealthSleepStage: Int, Sendable, CaseIterable {
         }
     }
 
+    /// Canonical English name; stored in `valueText`, so it never varies by language.
     var englishName: String {
         switch self {
         case .inBed: return "In Bed"
@@ -27,6 +29,44 @@ nonisolated enum HealthSleepStage: Int, Sendable, CaseIterable {
         case .deep: return "Deep"
         case .rem: return "REM"
         case .outOfBed: return "Out of Bed"
+        }
+    }
+
+    /// Localized stage name for display.
+    var displayName: String { String(localized: nameResource) }
+
+    var nameResource: LocalizedStringResource {
+        switch self {
+        case .inBed: return LocalizedStringResource("In Bed", comment: "Sleep stage")
+        case .asleepUnspecified: return LocalizedStringResource("Asleep", comment: "Sleep stage")
+        case .awake: return LocalizedStringResource("Awake", comment: "Sleep stage")
+        case .light: return LocalizedStringResource("sleep.stage.core", defaultValue: "Core", comment: "Sleep stage (Apple Health 'Core' sleep), not the muscle group")
+        case .deep: return LocalizedStringResource("Deep", comment: "Sleep stage")
+        case .rem: return LocalizedStringResource("REM", comment: "Sleep stage")
+        case .outOfBed: return LocalizedStringResource("Out of Bed", comment: "Sleep stage")
+        }
+    }
+}
+
+/// Display labels for the English category labels `HealthSampleMapper` stores in `valueText`.
+nonisolated enum HealthCategoryLabels {
+    static func severity(_ value: Int) -> String {
+        switch value {
+        case 1: String(localized: "Not Present", comment: "Symptom severity")
+        case 2: String(localized: "Mild", comment: "Symptom severity")
+        case 3: String(localized: "Moderate", comment: "Symptom severity")
+        case 4: String(localized: "Severe", comment: "Symptom severity")
+        default: String(localized: "Present", comment: "Symptom severity")
+        }
+    }
+
+    static func menstrualFlow(_ value: Int) -> String {
+        switch value {
+        case 2: String(localized: "Light", comment: "Menstrual flow")
+        case 3: String(localized: "Medium", comment: "Menstrual flow")
+        case 4: String(localized: "Heavy", comment: "Menstrual flow")
+        case 5: String(localized: "None", comment: "Menstrual flow")
+        default: String(localized: "Unspecified", comment: "Menstrual flow")
         }
     }
 }
@@ -179,4 +219,27 @@ nonisolated struct HealthCommitPage: Sendable {
     var sources: [HealthSourceRow] = []
     var syncState: HealthSyncStateRow?
     var rollups: [HealthDailyRollupRow] = []
+}
+
+nonisolated extension HealthSampleRow {
+    /// `valueText` for display: the English labels stored for sleep stages, menstrual flow and symptom severity
+    /// are shown in the user's language (the stored text stays English).
+    var displayValueText: String? {
+        guard let valueText else { return nil }
+        guard let code = categoryValue else { return valueText }
+        if typeID == "sleep" { return HealthSleepStage(rawValue: code)?.displayName ?? valueText }
+        if typeID == "menstrual_flow" { return HealthCategoryLabels.menstrualFlow(code) }
+        if typeID.hasPrefix("symptom_") { return HealthCategoryLabels.severity(code) }
+        return valueText
+    }
+
+    /// `title` for display: workout rows store the English activity name, shown in the user's language.
+    var displayTitle: String? {
+        guard let title else { return nil }
+        if typeID == "workout", let code = categoryValue, code >= 0,
+           let activity = HKWorkoutActivityType(rawValue: UInt(code)) {
+            return ImportedHealthWorkoutFormatting.localizedActivityTitle(for: activity)
+        }
+        return title
+    }
 }

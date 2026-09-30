@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">Valori derivate</string>
+    <string name="settings_derived_enabled">Valori derivate</string>
+    <string name="settings_derived_enabled_sub">Estimează semnele vitale pe care dispozitivele tale nu le înregistrează</string>
+    <string name="settings_derived_footer">Ayuvo estimează semnele vitale pe care dispozitivele tale nu le înregistrează, cum ar fi pulsul în repaus pe baza pulsului măsurat minut cu minut. Când Health Connect are deja o valoare pentru aceeași zi, se afișează acea valoare. Estimările nu sunt scrise niciodată în Health Connect.</string>
+    <string name="settings_derived_bmi_scheme">Categorii IMC</string>
+    <string name="settings_derived_bmi_who">OMS</string>
+    <string name="settings_derived_bmi_asian">Asiatic</string>
+    <string name="settings_derived_bmi_footer">Pragurile asiatice (supraponderal de la 23, obez de la 27,5) urmează consultarea experților OMS pentru populațiile asiatice.</string>
+    <string name="settings_derived_native_wins">Se folosește valoarea din Health Connect, când este disponibilă</string>
+    <string name="settings_derived_also_affects">Afectează și: %1$s</string>
+    <string name="derived_estimated_badge">Estimat de Ayuvo</string>
+    <string name="derived_how_calculated">Cum se calculează</string>
+    <string name="derived_source_label">Sursă</string>
+    <string name="derived_metric_toggle">Calculează acest indicator</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvo nu calculează această valoare. Valorile din Health Connect sunt afișate în continuare.</string>
+    <string name="derived_headline_highest">CEA MAI MARE</string>
+    <string name="derived_source_estimated">Estimat de Ayuvo pe baza datelor tale din Health Connect</string>
+    <string name="derived_source_native">Din Health Connect (%1$s)</string>
+    <string name="derived_source_native_generic">Din Health Connect</string>
+    <string name="derived_source_mixed">Valori din Health Connect acolo unde au fost înregistrate; estimate de Ayuvo în celelalte zile</string>
+    <string name="derived_method">Metodă</string>
+    <string name="derived_citation">Referință</string>
+    <string name="derived_confidence">Încredere</string>
+    <string name="derived_confidence_high">Ridicat</string>
+    <string name="derived_confidence_medium">Mediu</string>
+    <string name="derived_confidence_low">Scăzut</string>
+    <string name="derived_confidence_native">Măsurat de dispozitivul tău</string>
+    <string name="derived_estimated_caption">%1$s · Estimat</string>
+    <string name="derived_master_off">Valorile derivate sunt dezactivate în Setări.</string>
+</resources>

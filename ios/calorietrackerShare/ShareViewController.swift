@@ -47,9 +47,7 @@ class ShareViewController: UIViewController {
         titleLabel.textAlignment = .center
 
         let count = providers.count
-        detailLabel.text = count == 1
-            ? String(localized: "1 item")
-            : String(localized: "\(count) items")
+        detailLabel.text = String(localized: "\(count) items", comment: "Share extension: number of shared items")
         detailLabel.font = .preferredFont(forTextStyle: .subheadline)
         detailLabel.textColor = .secondaryLabel
         detailLabel.textAlignment = .center
@@ -217,13 +215,13 @@ class ShareViewController: UIViewController {
         }
     }
 
-    private func dismissWithError(message: String = "Unable to process the shared image.") {
+    private func dismissWithError(message: String = String(localized: "Unable to process the shared image.", comment: "Share extension error")) {
         let alert = UIAlertController(
-            title: "Error",
+            title: String(localized: "Error", comment: "Share extension error alert title"),
             message: message,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: String(localized: "OK", comment: "Share extension alert button"), style: .default) { [weak self] _ in
             self?.extensionContext?.cancelRequest(withError: NSError(domain: "ShareError", code: 1, userInfo: nil))
         })
         present(alert, animated: true)

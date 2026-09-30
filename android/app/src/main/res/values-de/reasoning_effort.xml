@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">OpenRouter-Denkaufwand</string>
+    <string name="settings_reasoning_effort_help">Gilt für alle OpenRouter-Anfragen. Die unterstützten Stufen variieren je nach Modell. Höherer Aufwand kann länger dauern und mehr kosten. „Auto“ behält die Standardeinstellung des Modells; unvollständige Antworten werden mit „Niedrig“ wiederholt.</string>
+    <string name="reasoning_effort_auto">Standard / Auto</string>
+    <string name="reasoning_effort_none">Keine</string>
+    <string name="reasoning_effort_minimal">Minimal</string>
+    <string name="reasoning_effort_low">Niedrig</string>
+    <string name="reasoning_effort_medium">Mittel</string>
+    <string name="reasoning_effort_high">Hoch</string>
+    <string name="reasoning_effort_xhigh">Sehr hoch</string>
+    <string name="reasoning_effort_max">Max.</string>
+</resources>

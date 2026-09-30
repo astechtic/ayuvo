@@ -121,7 +121,7 @@ struct BrowseView: View {
         switch category {
         case .insights:
             guard let recovery = insightsStore.recovery, recovery.isReady, let score = recovery.score else { return nil }
-            return String(localized: "Recovery \(score) · \(recovery.labelText ?? "")")
+            return String(localized: "Recovery \(score) · \(InsightsConfig.shared.bandLabel(recovery.label, english: recovery.labelText) ?? "")")
         case .nutrition:
             let kcal = foodStore.calories(for: .now)
             return kcal > 0 ? String(localized: "\(kcal.formatted()) kcal today") : nil
@@ -133,16 +133,16 @@ struct BrowseView: View {
             return fastingStore.activeSession == nil ? nil : String(localized: "Fasting now")
         case .medications:
             let active = medicationStore.activeCount
-            return active > 0 ? (active == 1 ? String(localized: "1 active medicine") : String(localized: "\(active) active medicines")) : nil
+            return active > 0 ? String(localized: "\(active) active medicines", comment: "Browse: medications subtitle") : nil
         case .records:
             let count = recordsStore.totalCount
             guard recordsStore.hasLoadedOnce, count > 0 else { return nil }
-            return count == 1 ? String(localized: "1 record") : String(localized: "\(count) records")
+            return String(localized: "\(count) records", comment: "Browse: records subtitle")
         default:
             guard let health = category.healthCategory else { return nil }
             let withData = store.types(in: health).filter { (store.summary(for: $0.id)?.count ?? 0) > 0 }.count
             if withData == 0 { return String(localized: "No data yet") }
-            return withData == 1 ? String(localized: "1 data type") : String(localized: "\(withData) data types")
+            return String(localized: "\(withData) data types", comment: "Browse: health data subtitle")
         }
     }
 

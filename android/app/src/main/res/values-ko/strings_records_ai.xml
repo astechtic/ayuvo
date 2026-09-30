@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Ayuvo AI가 건강 기록을 어떻게 처리하길 원하세요?</string>
+    <string name="records_ai_mode_local">로컬 AI</string>
+    <string name="records_ai_mode_local_detail">온디바이스 모델을 사용해요. AI 처리를 위한 기록 텍스트는 이 휴대폰에만 남아 있어요.</string>
+    <string name="records_ai_mode_cloud">클라우드 AI</string>
+    <string name="records_ai_mode_cloud_detail">페이지 텍스트(텍스트가 없는 페이지는 이미지만)를 AI 제공업체로 보내요.</string>
+    <string name="records_ai_mode_ask">필요할 때 묻기</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo가 기록에 AI를 사용하기 전에 물어봐요.</string>
+    <string name="records_ai_mode_off">지금은 AI 건너뛰기</string>
+    <string name="records_ai_mode_off_detail">AI 없이 정보를 찾아요. 설정에서 변경할 수 있어요.</string>
+    <string name="records_ai_onboarding_note">설정 › 건강 기록에서 언제든지 변경할 수 있어요.</string>
+    <string name="records_ai_chooser_title">AI가 기록을 어떻게 도울지 선택하세요</string>
+    <string name="records_ai_settings_title">AI 처리</string>
+    <string name="records_ai_local_unavailable">온디바이스 AI가 설정되지 않았어요 — AI 없이 정보를 찾았어요.</string>
+    <string name="records_ai_set_up_local">온디바이스 AI 설정</string>
+    <string name="records_ai_no_cloud_provider">온라인 AI를 사용하려면 AI 제공업체를 추가하세요.</string>
+    <string name="records_ai_add_provider">AI 제공업체 추가</string>
+    <string name="records_ai_cloud_provider_note">온라인 AI는 %1$s을(를) 사용해요.</string>
+    <string name="records_ai_consent_title">AI를 사용해 더 자세한 정보를 찾을까요?</string>
+    <string name="records_ai_consent_body">AI는 규칙이 놓친 정보를 찾을 수 있어요. 결과는 원본과 대조해 확인할 수 있는 제안이에요.</string>
+    <string name="records_ai_consent_local">이 기기에서</string>
+    <string name="records_ai_consent_cloud">온라인 AI · %1$s</string>
+    <string name="records_ai_consent_not_now">나중에</string>
+    <string name="records_ai_consent_apply_all">대기 중인 모든 기록에 적용</string>
+    <string name="records_ai_consent_none_available">아직 사용할 수 있는 AI가 없어요. 설정에서 온디바이스 AI를 설정하거나 AI 제공업체를 추가하세요.</string>
+    <string name="records_ai_status_local">이 기기에서 처리됨</string>
+    <string name="records_ai_status_cloud">온라인 AI로 처리됨 · %1$s</string>
+    <string name="records_ai_status_none">AI로 처리되지 않음</string>
+</resources>

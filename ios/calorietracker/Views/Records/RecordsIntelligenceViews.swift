@@ -48,7 +48,7 @@ struct RecordsProcessingStrip: View {
                 ProgressView()
                     .controlSize(.small)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(summary.activeRecords == 1 ? String(localized: "Processing 1 record") : String(localized: "Processing \(summary.activeRecords) records"))
+                    Text(String(localized: "Processing \(summary.activeRecords) records", comment: "Records processing status"))
                         .font(.system(.subheadline, design: .rounded, weight: .semibold))
                     if let progress = store.processingProgress, progress.total > 1 {
                         Text("Reading page \(progress.page) of \(progress.total)")

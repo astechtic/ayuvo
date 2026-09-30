@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo वर्कआउट</string>
+    <string name="widget_workout_description">वर्कआउट शुरू और नियंत्रित करें</string>
+    <string name="widget_workout_title">वर्कआउट</string>
+    <string name="widget_workout_walk">वॉक</string>
+    <string name="widget_workout_run">रन</string>
+    <string name="widget_workout_cycle">साइकलिंग</string>
+    <string name="widget_workout_hike">हाइक</string>
+    <string name="widget_workout_strength">स्ट्रेंथ</string>
+    <string name="widget_workout_strength_title">स्ट्रेंथ सेशन</string>
+    <string name="widget_workout_status_recording">रिकॉर्डिंग</string>
+    <string name="widget_workout_status_paused">रुका हुआ</string>
+    <string name="widget_workout_status_saving">सहेजा जा रहा है…</string>
+    <string name="widget_workout_status_recovery">रिकवरी</string>
+    <string name="widget_workout_status_strength">जारी है</string>
+    <string name="widget_workout_waiting_gps">GPS का इंतज़ार</string>
+    <string name="widget_workout_distance">दूरी</string>
+    <string name="widget_workout_pace">औसत पेस</string>
+    <string name="widget_workout_speed">औसत गति</string>
+    <string name="widget_workout_pause">रोकें</string>
+    <string name="widget_workout_resume">फिर से शुरू करें</string>
+    <string name="widget_workout_lap">लैप</string>
+    <string name="widget_workout_end">समाप्त करें</string>
+    <string name="widget_workout_skip">छोड़ें</string>
+    <string name="widget_workout_finish">पूरा करें</string>
+</resources>

@@ -2,6 +2,8 @@ package com.ayuvo.health.models
 
 import com.ayuvo.health.services.ai.FoodAnalysis
 import java.util.UUID
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** Map a diary food to one ingredient line (nested ingredients stay collapsed). */
 fun FoodEntry.toMealIngredient(): MealIngredient = MealIngredient(
@@ -46,9 +48,11 @@ fun FoodEntry.withIngredients(ingredients: List<MealIngredient>): FoodEntry {
 object CombinedMeal {
     fun combinedName(entries: List<FoodEntry>): String {
         val names = entries.map { it.name.trim() }.filter { it.isNotEmpty() }
-        if (names.isEmpty()) return "Combined meal"
+        if (names.isEmpty()) return AppText.orEnglish("Combined meal", R.string.core_combined_meal)
         if (names.size <= 3) return names.joinToString(" + ")
-        return names.take(2).joinToString(" + ") + " + ${names.size - 2} more"
+        val first = names.take(2).joinToString(" + ")
+        val more = names.size - 2
+        return if (AppText.resolver == null) "$first + $more more" else AppText.plural(R.plurals.core_combined_meal_more, more, first, more)
     }
 
     fun combineFoodEntries(entries: List<FoodEntry>): FoodEntry {

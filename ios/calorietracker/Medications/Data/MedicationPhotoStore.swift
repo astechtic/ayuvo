@@ -33,7 +33,7 @@ nonisolated struct MedicationPhotoStore: Sendable {
         try MedicationsLocation.prepareDirectory(directory, fileManager: fileManager)
         guard let image = Self.downsample(data, maxPixelSize: Self.maxPixelSize),
               let jpeg = image.jpegData(compressionQuality: Self.jpegQuality) else {
-            throw CocoaError(.fileWriteUnknown, userInfo: [NSLocalizedDescriptionKey: "The photo could not be decoded."])
+            throw CocoaError(.fileWriteUnknown, userInfo: [NSLocalizedDescriptionKey: String(localized: "The photo could not be decoded.", comment: "Medication photo save error")])
         }
         try jpeg.write(to: url(medicationID: medicationID), options: .atomic)
         if let thumbnail = Self.downsample(jpeg, maxPixelSize: Self.thumbnailMaxPixelSize),

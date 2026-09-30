@@ -39,7 +39,7 @@ struct SummaryHighlightsSection: View {
                             recordsStore.openRecordFromCoach(item.record.id)
                         } label: {
                             VStack(alignment: .leading, spacing: 6) {
-                                RecordHighlightRow(text: item.highlight.text)
+                                RecordHighlightRow(text: item.highlight.displayText)
                                 Text(item.record.title)
                                     .font(.system(.caption, design: .rounded))
                                     .foregroundStyle(.secondary)

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Разрешить Тренеру читать ваши медицинские записи?</string>
+    <string name="records_coach_consent_body">Чтобы ответить вам, Тренер отправляет в %1$s сведения из прочитанных записей — результаты анализов, даты, врачей и диагнозы. Записи по-прежнему хранятся на этом устройстве.</string>
+    <string name="records_coach_consent_body_on_device">Тренер читает записи на этом устройстве; ничего не отправляется в интернет.</string>
+    <string name="records_coach_consent_allow">Разрешить</string>
+    <string name="records_coach_consent_not_now">Не сейчас</string>
+    <string name="records_coach_settings_title">Тренер</string>
+    <string name="records_coach_settings_toggle">Разрешить Тренеру использовать мои медицинские записи</string>
+    <string name="records_coach_settings_subtitle">Тренер может искать и читать ваши записи, чтобы отвечать на вопросы. Если выключить, доступ сразу прекращается.</string>
+    <string name="records_coach_analyzing">Анализируется:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Анализ %d записи</item>
+        <item quantity="few">Анализ %d записей</item>
+        <item quantity="many">Анализ %d записей</item>
+        <item quantity="other">Анализ %d записи</item>
+    </plurals>
+    <string name="records_coach_change_records">Изменить записи</string>
+    <string name="records_coach_used_records">Использованные записи</string>
+    <string name="records_coach_picker_title">Записи для этой беседы</string>
+    <string name="records_coach_picker_search">Поиск записей</string>
+    <string name="records_coach_picker_limit">Выберите не более %d записей.</string>
+    <string name="records_coach_picker_done">Готово</string>
+    <string name="records_coach_picker_empty">Записи не найдены.</string>
+    <string name="records_coach_picker_selected">Выбрано</string>
+    <string name="records_coach_picker_recent">Недавние записи</string>
+    <string name="records_coach_picker_results">Результаты</string>
+    <string name="records_coach_mode_title">Отправить записи онлайн?</string>
+    <string name="records_coach_mode_body">Тренер использует %1$s. Отправить сведения из выбранных записей в интернет?</string>
+    <string name="records_coach_mode_send">Отправить</string>
+    <string name="records_coach_mode_on_device">Использовать Тренера на устройстве</string>
+    <string name="records_coach_ask_report">Спросить об этом отчёте</string>
+    <string name="records_coach_compare_previous">Сравнить с предыдущим отчётом</string>
+    <string name="records_coach_explain_trend">Объяснить этот тренд</string>
+    <string name="records_coach_ask_coach">Спросить Тренера</string>
+    <string name="records_coach_prompt_report">Объясни этот отчёт: что выделяется и что мне спросить у врача?</string>
+    <string name="records_coach_prompt_compare">Сравни этот отчёт с предыдущим. Что изменилось?</string>
+    <string name="records_coach_prompt_trend">Объясни, как со временем менялся мой показатель «%1$s».</string>
+    <string name="records_coach_chip_latest">Проанализируй мои последние анализы крови</string>
+    <string name="records_coach_chip_abnormal">Найти отклонения от нормы</string>
+    <string name="records_coach_chip_compare">Сравнить с предыдущим отчётом</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

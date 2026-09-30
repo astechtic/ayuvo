@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importa cronologia nutrizionale</string>
+    <string name="health_import_action">Importa</string>
+    <string name="health_import_description">Porta nel tuo diario i dati alimentari di un\'altra app. Visualizza in anteprima i dati disponibili, poi scegli una sola app di origine per evitare di contare due volte i dati condivisi.</string>
+    <string name="health_import_from">Dal (AAAA-MM-GG)</string>
+    <string name="health_import_to">Al (AAAA-MM-GG)</string>
+    <string name="health_import_history_hint">Senza accesso alla cronologia, scegli date negli ultimi 30 giorni. I dati meno recenti richiedono l\'accesso alla cronologia su un dispositivo supportato.</string>
+    <string name="health_import_grant">Consenti accesso a nutrizione e cronologia</string>
+    <string name="health_import_access_result">Impostazioni di accesso aggiornate. Visualizza di nuovo l\'anteprima per controllare i dati disponibili.</string>
+    <string name="health_import_access_needed">Consenti la lettura dei dati nutrizionali in Health Connect, poi visualizza di nuovo l\'anteprima.</string>
+    <string name="health_import_invalid_dates">Inserisci date valide nel formato AAAA-MM-GG. La data di fine deve essere uguale o successiva a quella di inizio e non successiva a oggi.</string>
+    <string name="health_import_history_needed">Questo intervallo richiede l\'accesso alla cronologia. Consenti l\'accesso su un dispositivo supportato oppure scegli date negli ultimi 30 giorni.</string>
+    <string name="health_import_preview">Anteprima dei dati disponibili</string>
+    <string name="health_import_failed">Impossibile completare l\'importazione. Controlla l\'accesso a Health Connect e riprova.</string>
+    <string name="health_import_empty">In questo intervallo non sono stati trovati nuovi dati nutrizionali da altre app. Verifica che l\'app di origine abbia condiviso i dati nutrizionali con Health Connect. I dati già importati vengono saltati, anche quelli rimossi dal diario.</string>
+    <string name="health_import_count">%1$d nuovi dati · %2$d kcal</string>
+    <string name="health_import_unnamed">Pasto importato</string>
+    <string name="health_import_local_only">Queste sono copie locali. Modifiche ed eliminazioni restano in Ayuvo. Ripetere un\'importazione salta i dati già importati; non li aggiorna.</string>
+    <string name="health_import_done">Importati %1$d dati nel tuo diario.</string>
+    <string name="health_import_close">Chiudi</string>
+</resources>

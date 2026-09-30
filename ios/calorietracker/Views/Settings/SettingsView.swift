@@ -69,15 +69,15 @@ struct SettingsProfileHeader: View {
     private var hasName: Bool { !(profile.name ?? "").trimmingCharacters(in: .whitespaces).isEmpty }
 
     private var heightText: String {
-        if heightUnitRaw == HeightUnit.cm.rawValue { return "\(Int(profile.heightCm.rounded())) cm" }
+        if heightUnitRaw == HeightUnit.cm.rawValue { return String(localized: "\(Int(profile.heightCm.rounded())) cm", comment: "Height in centimetres") }
         let inches = Int((profile.heightCm / 2.54).rounded())
         return "\(inches / 12)′\(inches % 12)″"
     }
 
     private var weightText: String {
         weightUnitRaw == WeightUnit.kg.rawValue
-            ? String(format: "%.1f kg", profile.weightKg)
-            : String(format: "%.1f lbs", profile.weightKg * 2.20462)
+            ? String(localized: "\(profile.weightKg.formatted(.number.precision(.fractionLength(1)))) kg", comment: "Weight in kilograms")
+            : String(localized: "\((profile.weightKg * 2.20462).formatted(.number.precision(.fractionLength(1)))) lbs", comment: "Weight in pounds")
     }
 
     var body: some View {

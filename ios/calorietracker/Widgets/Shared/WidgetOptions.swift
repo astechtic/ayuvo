@@ -329,7 +329,7 @@ struct OpenLogEntryIntent: AppIntent {
     static var openAppWhenRun = true
     static var isDiscoverable = false
 
-    @Parameter(title: "Action", default: .foodCamera)
+    @Parameter(title: LocalizedStringResource("Action", comment: "Quick Log widget intent parameter: which log action to open"), default: .foodCamera)
     var action: QuickLogAction
 
     init() {}

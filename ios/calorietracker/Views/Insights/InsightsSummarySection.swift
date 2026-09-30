@@ -92,10 +92,10 @@ struct InsightsSummarySection: View {
                     Text("Recovery")
                         .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(AyuvoPalette.insights)
-                    Text(recovery.isReady ? (recovery.labelText ?? "") : Self.waitingText(recovery))
+                    Text(recovery.isReady ? (InsightsConfig.shared.bandLabel(recovery.label, english: recovery.labelText) ?? "") : Self.waitingText(recovery))
                         .font(.system(.headline, design: .rounded))
                     ForEach(topSignals(recovery), id: \.id) { signal in
-                        Text(signal.text)
+                        Text(InsightsConfig.shared.signalText(signal, in: recovery))
                             .font(.system(.caption, design: .rounded))
                             .foregroundStyle(.secondary)
                             .lineLimit(1)

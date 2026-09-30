@@ -145,7 +145,7 @@ struct ShareRecordScreen: View {
             Text(record.title)
                 .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 .lineLimit(2)
-            Text("\(RecordFormatting.dateText(record)) · \(pageCount == 1 ? String(localized: "1 page") : String(localized: "\(pageCount) pages"))")
+            Text("\(RecordFormatting.dateText(record)) · \(String(localized: "\(pageCount) pages", comment: "Record page count"))")
                 .font(.system(.caption, design: .rounded))
                 .foregroundStyle(.secondary)
             if pageCount > 1 {

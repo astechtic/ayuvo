@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">允许教练读取你的健康档案？</string>
+    <string name="records_coach_consent_body">为了回答你的问题，教练会将其读取的档案详情——检测结果、日期、医生和诊断——发送给 %1$s。档案仍存储在此设备上。</string>
+    <string name="records_coach_consent_body_on_device">教练会在此设备上读取档案；不会在线发送任何内容。</string>
+    <string name="records_coach_consent_allow">允许</string>
+    <string name="records_coach_consent_not_now">以后再说</string>
+    <string name="records_coach_settings_title">教练</string>
+    <string name="records_coach_settings_toggle">允许教练使用我的健康档案</string>
+    <string name="records_coach_settings_subtitle">教练可以搜索和读取你的档案来回答问题。关闭此项会立即取消访问权限。</string>
+    <string name="records_coach_analyzing">正在分析：</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="other">正在分析 %d 条档案</item>
+    </plurals>
+    <string name="records_coach_change_records">更改档案</string>
+    <string name="records_coach_used_records">已使用的档案</string>
+    <string name="records_coach_picker_title">用于此对话的档案</string>
+    <string name="records_coach_picker_search">搜索记录</string>
+    <string name="records_coach_picker_limit">最多选择 %d 条档案。</string>
+    <string name="records_coach_picker_done">完成</string>
+    <string name="records_coach_picker_empty">未找到档案。</string>
+    <string name="records_coach_picker_selected">已选择</string>
+    <string name="records_coach_picker_recent">最近的记录</string>
+    <string name="records_coach_picker_results">结果</string>
+    <string name="records_coach_mode_title">要在线发送档案吗？</string>
+    <string name="records_coach_mode_body">教练使用 %1$s。要在线发送所选档案的详情吗？</string>
+    <string name="records_coach_mode_send">发送</string>
+    <string name="records_coach_mode_on_device">使用设备端教练</string>
+    <string name="records_coach_ask_report">询问此报告</string>
+    <string name="records_coach_compare_previous">与上一份报告比较</string>
+    <string name="records_coach_explain_trend">解释此趋势</string>
+    <string name="records_coach_ask_coach">询问教练</string>
+    <string name="records_coach_prompt_report">解释此报告：哪些内容值得注意，我应该问医生什么？</string>
+    <string name="records_coach_prompt_compare">将此报告与上一份进行比较。有哪些变化？</string>
+    <string name="records_coach_prompt_trend">解释我的%1$s随时间的变化。</string>
+    <string name="records_coach_chip_latest">分析我最新的血液报告</string>
+    <string name="records_coach_chip_abnormal">查找异常值</string>
+    <string name="records_coach_chip_compare">与上一份报告比较</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

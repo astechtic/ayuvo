@@ -39,29 +39,29 @@ enum AISettingsInfoTopic {
 
     var title: String {
         switch self {
-        case .primaryAI: "Primary AI"
-        case .textAI: "Text AI"
-        case .textFallback: "Text AI Fallback"
-        case .imageFallback: "Image AI Fallback"
-        case .speechToText: "Speech-to-Text"
-        case .speechFallback: "STT Fallback"
+        case .primaryAI: String(localized: "Primary AI", comment: "AI settings info alert title")
+        case .textAI: String(localized: "Text AI", comment: "AI settings info alert title")
+        case .textFallback: String(localized: "Text AI Fallback", comment: "AI settings info alert title")
+        case .imageFallback: String(localized: "Image AI Fallback", comment: "AI settings info alert title")
+        case .speechToText: String(localized: "Speech-to-Text", comment: "AI settings info alert title")
+        case .speechFallback: String(localized: "STT Fallback", comment: "AI settings info alert title")
         }
     }
 
     var message: String {
         switch self {
         case .primaryAI:
-            "Handles every request that includes a photo. It also handles text-only requests when Use Separate Text Provider is off. When that switch is on, Text AI handles text-only work instead."
+            String(localized: "Handles every request that includes a photo. It also handles text-only requests when Use Separate Text Provider is off. When that switch is on, Text AI handles text-only work instead.", comment: "AI settings info alert message")
         case .textAI:
-            "An optional provider for requests without photos, including typed food, Coach chat, voice transcripts, goals, and advice. When Use Separate Text Provider is off, Primary AI handles these requests."
+            String(localized: "An optional provider for requests without photos, including typed food, Coach chat, voice transcripts, goals, and advice. When Use Separate Text Provider is off, Primary AI handles these requests.", comment: "AI settings info alert message")
         case .textFallback:
-            "Retries a failed text-only request once. It backs up Text AI when the separate provider is enabled; otherwise it backs up Primary AI for text-only work. It never receives photos."
+            String(localized: "Retries a failed text-only request once. It backs up Text AI when the separate provider is enabled; otherwise it backs up Primary AI for text-only work. It never receives photos.", comment: "AI settings info alert message")
         case .imageFallback:
-            "Retries a failed request containing one or more photos. The first attempt always uses Primary AI. This fallback is never used for text-only requests. You may use the same provider with a different model."
+            String(localized: "Retries a failed request containing one or more photos. The first attempt always uses Primary AI. This fallback is never used for text-only requests. You may use the same provider with a different model.", comment: "AI settings info alert message")
         case .speechToText:
-            "Converts microphone audio into text only. The transcript then follows the normal text route: Text AI when enabled, otherwise Primary AI. Matching provider API keys are reused unless you save a separate STT key."
+            String(localized: "Converts microphone audio into text only. The transcript then follows the normal text route: Text AI when enabled, otherwise Primary AI. Matching provider API keys are reused unless you save a separate STT key.", comment: "AI settings info alert message")
         case .speechFallback:
-            "Retries transcription when the selected remote STT provider fails. It only produces a transcript; that transcript still follows the normal text AI route. Native iOS speech already uses Apple's offline and online recognition recovery, so a separate STT fallback is available only for remote providers."
+            String(localized: "Retries transcription when the selected remote STT provider fails. It only produces a transcript; that transcript still follows the normal text AI route. Native iOS speech already uses Apple's offline and online recognition recovery, so a separate STT fallback is available only for remote providers.", comment: "AI settings info alert message")
         }
     }
 }

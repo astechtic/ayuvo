@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">आप Ayuvo AI से अपने स्वास्थ्य रिकॉर्ड कैसे प्रोसेस करवाना चाहेंगे?</string>
+    <string name="records_ai_mode_local">लोकल AI</string>
+    <string name="records_ai_mode_local_detail">ऑन-डिवाइस मॉडल का उपयोग करता है। AI प्रोसेसिंग के लिए रिकॉर्ड का टेक्स्ट इसी फ़ोन पर रहता है।</string>
+    <string name="records_ai_mode_cloud">क्लाउड AI</string>
+    <string name="records_ai_mode_cloud_detail">पेज का टेक्स्ट (केवल बिना टेक्स्ट वाले पेजों के लिए इमेज) आपके AI प्रदाता को भेजता है।</string>
+    <string name="records_ai_mode_ask">ज़रूरत होने पर मुझसे पूछें</string>
+    <string name="records_ai_mode_ask_detail">किसी रिकॉर्ड पर AI का उपयोग करने से पहले Ayuvo पूछता है।</string>
+    <string name="records_ai_mode_off">अभी AI छोड़ें</string>
+    <string name="records_ai_mode_off_detail">विवरण AI के बिना खोजे जाते हैं। आप इसे सेटिंग्स में बदल सकते हैं।</string>
+    <string name="records_ai_onboarding_note">आप इसे कभी भी सेटिंग्स › स्वास्थ्य रिकॉर्ड में बदल सकते हैं।</string>
+    <string name="records_ai_chooser_title">चुनें कि AI आपके रिकॉर्ड में कैसे मदद करे</string>
+    <string name="records_ai_settings_title">AI प्रोसेसिंग</string>
+    <string name="records_ai_local_unavailable">ऑन-डिवाइस AI सेट नहीं है — विवरण AI के बिना खोजे गए।</string>
+    <string name="records_ai_set_up_local">ऑन-डिवाइस AI सेट करें</string>
+    <string name="records_ai_no_cloud_provider">ऑनलाइन AI का उपयोग करने के लिए एक AI प्रदाता जोड़ें।</string>
+    <string name="records_ai_add_provider">AI प्रदाता जोड़ें</string>
+    <string name="records_ai_cloud_provider_note">ऑनलाइन AI %1$s का उपयोग करता है।</string>
+    <string name="records_ai_consent_title">अधिक विवरण खोजने के लिए AI का उपयोग करें?</string>
+    <string name="records_ai_consent_body">AI वे विवरण खोज सकता है जो नियमों से छूट गए। परिणाम सुझाव हैं जिन्हें आप मूल से मिलाकर जाँच सकते हैं।</string>
+    <string name="records_ai_consent_local">इसी डिवाइस पर</string>
+    <string name="records_ai_consent_cloud">ऑनलाइन AI · %1$s</string>
+    <string name="records_ai_consent_not_now">अभी नहीं</string>
+    <string name="records_ai_consent_apply_all">सभी प्रतीक्षारत रिकॉर्ड पर लागू करें</string>
+    <string name="records_ai_consent_none_available">अभी कोई AI उपलब्ध नहीं है। सेटिंग्स में ऑन-डिवाइस AI सेट करें या कोई AI प्रदाता जोड़ें।</string>
+    <string name="records_ai_status_local">इसी डिवाइस पर प्रोसेस किया गया</string>
+    <string name="records_ai_status_cloud">ऑनलाइन AI से प्रोसेस किया गया · %1$s</string>
+    <string name="records_ai_status_none">AI द्वारा प्रोसेस नहीं किया गया</string>
+</resources>

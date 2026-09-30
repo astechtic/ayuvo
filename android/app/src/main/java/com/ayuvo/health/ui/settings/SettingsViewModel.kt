@@ -1621,8 +1621,8 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
                 }
                 _ui.value = _ui.value.copy(
                     recalculatingGoals = false,
-                    adaptiveGoalAlertTitle = "Couldn't Recalculate",
-                    adaptiveGoalAlertMessage = "Ayuvo couldn't reach your AI provider, so your goals are unchanged. Check your AI provider and API key in Settings, then try again. (${e.localizedMessage ?: "no response"})"
+                    adaptiveGoalAlertTitle = container.appContext.getString(R.string.ui_goals_recalc_failed_title),
+                    adaptiveGoalAlertMessage = container.appContext.getString(R.string.ui_goals_recalc_failed_message, e.localizedMessage ?: container.appContext.getString(R.string.ui_no_response))
                 )
                 return@launch
             }
@@ -1650,7 +1650,7 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
                 customCarbs = result.carbs,
                 customFat = result.fat
             )
-            val message = "Updated to ${result.calories} kcal." + (result.reason?.let { " $it" } ?: "")
+            val message = container.appContext.getString(R.string.ui_goals_updated, result.calories) + (result.reason?.let { " $it" } ?: "")
             container.profileRepository.save(next)
             // Goals are now fresh — capture this input baseline so the recalc nudge clears.
             lastRecalcSignature = next.goalInputSignature

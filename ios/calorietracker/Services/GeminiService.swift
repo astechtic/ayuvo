@@ -283,7 +283,7 @@ struct GeminiService {
                                library: [ExerciseLibraryItem], chosenExerciseIDs: [String] = [],
                                repeatedQuestion: String? = nil) async throws -> WorkoutTextDraft {
         guard !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, description.count <= 16000 else {
-            throw WorkoutTextError.invalid("The workout conversation is too long. Please start over.")
+            throw WorkoutTextError.invalid(String(localized: "The workout conversation is too long. Please start over.", comment: "Workout text logging error when the conversation is too long"))
         }
         let searchResponse = try await callAI(prompt: WorkoutTextDraft.searchPrompt(description: description), image: nil)
         let queries = WorkoutTextDraft.searchQueries(searchResponse, fallback: description)
@@ -1035,7 +1035,7 @@ struct GeminiService {
         }
         let finishReason = choice["finish_reason"] as? String
         if finishReason == "error" {
-            throw AnalysisError.apiError(errorMessage ?? "The AI provider returned an error.")
+            throw AnalysisError.apiError(errorMessage ?? String(localized: "The AI provider returned an error.", comment: "AI error: provider returned an error without a message"))
         }
         guard let message = choice["message"] as? [String: Any] else {
             throw AnalysisError.invalidResponse
@@ -1229,7 +1229,7 @@ struct GeminiService {
         // The "model is currently experiencing high demand" message is Google's global throttle on
         // the Gemini model, not a per-key rate limit, so a quick retry usually succeeds.
         let retryDelaysNs: [UInt64] = [1_000_000_000, 2_000_000_000, 4_000_000_000]
-        var lastError: AnalysisError = .apiError("Request failed")
+        var lastError: AnalysisError = .apiError(String(localized: "Request failed", comment: "AI error: generic request failure"))
 
         for attempt in 0...retryDelaysNs.count {
             let (data, response): (Data, URLResponse)

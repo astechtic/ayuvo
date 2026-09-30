@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDate
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** Settings › Health Records › Backup status (§35, §36). */
 data class RecordsBackupStatus(
@@ -77,7 +79,7 @@ class RecordsBackupCoordinator(
         try {
             context.contentResolver.openInputStream(uri)?.use { input ->
                 staged.outputStream().use { output -> input.copyTo(output, RecordsArchiveWriter.COPY_BUFFER) }
-            } ?: error("Couldn't open the archive")
+            } ?: error(AppText.get(R.string.core_records_open_archive_failed))
             importFile(staged, mode, onProgress)
         } finally {
             runCatching { staged.delete() }

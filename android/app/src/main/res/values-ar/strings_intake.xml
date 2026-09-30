@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">وقت التناول</string>
+    <string name="intake_eaten_at_same_as_log">مطابق لوقت التسجيل</string>
+    <string name="intake_eaten_at_hint">يُستخدم لنافذة الأكل وتوقيت الوجبات</string>
+    <string name="intake_eaten_at_reset">استخدام وقت التسجيل</string>
+    <string name="intake_adherence_title">آخر 30 يومًا</string>
+    <string name="intake_adherence_none">لا توجد جرعات مجدولة في آخر 30 يومًا بعد.</string>
+    <string name="intake_adherence_pct">تم تناول %1$s%% من الجرعات (%2$d من %3$d)</string>
+    <string name="intake_adherence_adherent">على المسار الصحيح: تم تناول 80%% أو أكثر من الجرعات</string>
+    <string name="intake_adherence_below">تم تناول أقل من 80%% من الجرعات</string>
+    <string name="intake_adherence_on_time">في الوقت المحدد (خلال ساعة)</string>
+    <string name="intake_adherence_median_delay">التأخير المعتاد</string>
+    <string name="intake_adherence_streak">سلسلة الأيام</string>
+    <string name="intake_adherence_missed_by_weekday">الجرعات الفائتة حسب يوم الأسبوع</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">الجرعات: %1$d</string>
+    <string name="intake_move_reminder">هل تريد نقل التذكير إلى %1$s؟</string>
+    <string name="intake_move_reminder_body">عادةً ما تتناول هذه الجرعة بعد موعد تذكيرها. نقل التذكير يغيّر وقته فقط؛ ويبقى كل شيء آخر كما هو.</string>
+    <string name="intake_move_reminder_action">نقل التذكير</string>
+    <string name="intake_supplement_above_upper">متوسط %1$s هو %2$s يوميًا خلال فترة الجرعات، وهو أعلى من الحد الأعلى للمدخول البالغ %3$s. اتبع تعليمات الطبيب الواصف.</string>
+    <string name="intake_lab_links_title">نتائج المختبر والتغذية</string>
+    <string name="intake_lab_links_footer">بناءً على سجل طعامك ومكمّلاتك خلال آخر 30 يومًا والنطاق المرجعي المطبوع في تقريرك. ليس نصيحة طبية.</string>
+    <string name="intake_lab_link_low_one">كان %1$s لديك أقل من النطاق المذكور في التقرير.</string>
+    <string name="intake_lab_link_low_many">كانت قيم %1$s لديك أقل من النطاق المذكور في التقرير.</string>
+    <string name="intake_lab_link_and">%1$s و%2$s</string>
+    <string name="intake_lab_link_intake">متوسط مدخولك من %1$s هو %2$d%% من القيمة المرجعية.</string>
+    <string name="intake_lab_link_intake_no_supplement">متوسط مدخولك من %1$s هو %2$d%% من القيمة المرجعية، ولا يحتوي أي من مكمّلاتك عليه.</string>
+    <string name="intake_lab_link_doctor">فكّر في مناقشة ذلك مع طبيبك.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">Calorii</string>
+    <string name="metric_protein">Proteine</string>
+    <string name="metric_carbs">Carbohidrați</string>
+    <string name="metric_fat">Grăsimi totale</string>
+    <string name="metric_fiber">Fibre</string>
+    <string name="metric_water">Apă</string>
+    <string name="metric_fasting">Post</string>
+    <string name="metric_weight">Greutate</string>
+    <string name="metric_body_fat">Procent de grăsime corporală</string>
+    <string name="metric_workouts">Antrenamente</string>
+    <string name="metric_workout_minutes">Timp de antrenament</string>
+    <string name="metric_workout_burn">Energie la antrenament</string>
+    <string name="metric_about_calories">Energia din alimentele pe care le înregistrezi în Ayuvo, adunată pe zile. Intervalele mai lungi arată media ta în zilele în care ai înregistrat alimente.</string>
+    <string name="metric_about_protein">Proteinele din alimentele pe care le înregistrezi în Ayuvo, adunate pe zile.</string>
+    <string name="metric_about_carbs">Carbohidrații din alimentele pe care le înregistrezi în Ayuvo, adunați pe zile.</string>
+    <string name="metric_about_fat">Grăsimile din alimentele pe care le înregistrezi în Ayuvo, adunate pe zile.</string>
+    <string name="metric_about_fiber">Fibrele alimentare din alimentele pe care le înregistrezi în Ayuvo, adunate pe zile. Alimentele fără informații despre fibre sunt omise.</string>
+    <string name="metric_about_water">Apa pe care o înregistrezi în Ayuvo, adunată pe zile.</string>
+    <string name="metric_about_fasting">Timpul de post pe zi. Un post care trece de miezul nopții se numără pentru fiecare zi pe care o acoperă.</string>
+    <string name="metric_about_weight">Greutățile pe care le înregistrezi în Ayuvo, inclusiv citirile importate din aplicațiile de sănătate conectate. Fiecare punct arată cea mai recentă citire din acea perioadă.</string>
+    <string name="metric_about_body_fat">Citirile de grăsime corporală pe care le înregistrezi în Ayuvo. Fiecare punct arată cea mai recentă citire din acea perioadă.</string>
+    <string name="metric_about_workouts">Antrenamentele pe care le finalizezi în Ayuvo, numărate în ziua în care au fost înregistrate.</string>
+    <string name="metric_about_workout_minutes">Timpul petrecut în antrenamentele pe care le finalizezi în Ayuvo.</string>
+    <string name="metric_about_workout_burn">Energia estimată arsă în antrenamentele pe care le finalizezi în Ayuvo. Antrenamentele fără estimare sunt omise.</string>
+    <string name="metric_add_to_favourites">Adaugă la favorite</string>
+    <string name="metric_about">Despre</string>
+    <string name="metric_log">Jurnal</string>
+    <string name="metric_log_weight">Adaugă date de greutate</string>
+    <string name="metric_log_body_fat">Adaugă date de grăsime corporală</string>
+    <string name="metric_add_water">Adaugă apă</string>
+    <string name="metric_add_water_quick">Adaugă %1$s</string>
+    <string name="metric_add_water_custom">Cantitate personalizată</string>
+    <string name="metric_open_food_diary">Deschide jurnalul de alimente</string>
+    <string name="metric_open_fasting">Deschide Post</string>
+    <string name="metric_open_workouts">Deschide Antrenamente</string>
+    <string name="metric_details">Afișează detaliile</string>
+    <string name="metric_goal_label">Obiectiv %1$s</string>
+    <string name="metric_no_rows">Nicio înregistrare în acest interval</string>
+    <string name="metric_row_logged_in_diary">Înregistrat în jurnalul de alimente</string>
+    <string name="metric_delete_entry">Șterge înregistrarea</string>
+    <string name="metric_delete_entry_body">Această înregistrare va fi eliminată din Ayuvo.</string>
+    <string name="metric_sources_app">Înregistrat în Ayuvo</string>
+</resources>

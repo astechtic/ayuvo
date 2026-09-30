@@ -30,7 +30,7 @@ struct WidgetNutrientValue: Codable, Equatable, Identifiable {
         if abs(value.rounded() - value) < 0.0001 {
             return "\(Int(value.rounded()))"
         }
-        return String(format: "%.1f", value)
+        return value.formatted(.number.precision(.fractionLength(1)))
     }
 }
 
@@ -128,9 +128,9 @@ struct WidgetSnapshot: Codable, Equatable {
             // Match iPhone Home: up to 3 selectable nutrients; water is injected
             // as the locked 4th pillar when tracking is enabled.
             homeNutrients: [
-                WidgetNutrientValue(id: "protein", label: "Protein", shortLabel: "P", unit: "g", iconName: "fork.knife", value: 84, goal: 150),
-                WidgetNutrientValue(id: "carbs", label: "Carbs", shortLabel: "C", unit: "g", iconName: "leaf", value: 132, goal: 220),
-                WidgetNutrientValue(id: "fat", label: "Fat", shortLabel: "F", unit: "g", iconName: "drop.fill", value: 42, goal: 70),
+                WidgetNutrientValue(id: "protein", label: String(localized: "Protein", comment: "Watch nutrient name"), shortLabel: "P", unit: "g", iconName: "fork.knife", value: 84, goal: 150),
+                WidgetNutrientValue(id: "carbs", label: String(localized: "Carbs", comment: "Watch nutrient name"), shortLabel: "C", unit: "g", iconName: "leaf", value: 132, goal: 220),
+                WidgetNutrientValue(id: "fat", label: String(localized: "Fat", comment: "Watch nutrient name"), shortLabel: "F", unit: "g", iconName: "drop.fill", value: 42, goal: 70),
             ],
             waterTrackingEnabled: true,
             waterCurrentMl: 1_250,
@@ -149,10 +149,10 @@ struct WidgetSnapshot: Codable, Equatable {
             carbs: 0, carbsGoal: 220,
             fat: 0, fatGoal: 70,
             homeNutrients: [
-                WidgetNutrientValue(id: "protein", label: "Protein", shortLabel: "P", unit: "g", iconName: "fork.knife", value: 0, goal: 150),
-                WidgetNutrientValue(id: "carbs", label: "Carbs", shortLabel: "C", unit: "g", iconName: "leaf", value: 0, goal: 220),
-                WidgetNutrientValue(id: "fat", label: "Fat", shortLabel: "F", unit: "g", iconName: "drop.fill", value: 0, goal: 70),
-                WidgetNutrientValue(id: "fiber", label: "Fiber", shortLabel: "Fi", unit: "g", iconName: "leaf.fill", value: 0, goal: 34),
+                WidgetNutrientValue(id: "protein", label: String(localized: "Protein", comment: "Watch nutrient name"), shortLabel: "P", unit: "g", iconName: "fork.knife", value: 0, goal: 150),
+                WidgetNutrientValue(id: "carbs", label: String(localized: "Carbs", comment: "Watch nutrient name"), shortLabel: "C", unit: "g", iconName: "leaf", value: 0, goal: 220),
+                WidgetNutrientValue(id: "fat", label: String(localized: "Fat", comment: "Watch nutrient name"), shortLabel: "F", unit: "g", iconName: "drop.fill", value: 0, goal: 70),
+                WidgetNutrientValue(id: "fiber", label: String(localized: "Fiber", comment: "Watch nutrient name"), shortLabel: String(localized: "Fi", comment: "Watch: short abbreviation for Fiber"), unit: "g", iconName: "leaf.fill", value: 0, goal: 34),
             ]
         )
     }
@@ -173,10 +173,10 @@ struct WidgetSnapshot: Codable, Equatable {
 
     private var defaultHomeNutrients: [WidgetNutrientValue] {
         [
-            WidgetNutrientValue(id: "protein", label: "Protein", shortLabel: "P", unit: "g", iconName: "fork.knife", value: protein, goal: Double(proteinGoal)),
-            WidgetNutrientValue(id: "carbs", label: "Carbs", shortLabel: "C", unit: "g", iconName: "leaf", value: carbs, goal: Double(carbsGoal)),
-            WidgetNutrientValue(id: "fat", label: "Fat", shortLabel: "F", unit: "g", iconName: "drop.fill", value: fat, goal: Double(fatGoal)),
-            WidgetNutrientValue(id: "fiber", label: "Fiber", shortLabel: "Fi", unit: "g", iconName: "leaf.fill", value: 0, goal: 34),
+            WidgetNutrientValue(id: "protein", label: String(localized: "Protein", comment: "Watch nutrient name"), shortLabel: "P", unit: "g", iconName: "fork.knife", value: protein, goal: Double(proteinGoal)),
+            WidgetNutrientValue(id: "carbs", label: String(localized: "Carbs", comment: "Watch nutrient name"), shortLabel: "C", unit: "g", iconName: "leaf", value: carbs, goal: Double(carbsGoal)),
+            WidgetNutrientValue(id: "fat", label: String(localized: "Fat", comment: "Watch nutrient name"), shortLabel: "F", unit: "g", iconName: "drop.fill", value: fat, goal: Double(fatGoal)),
+            WidgetNutrientValue(id: "fiber", label: String(localized: "Fiber", comment: "Watch nutrient name"), shortLabel: String(localized: "Fi", comment: "Watch: short abbreviation for Fiber"), unit: "g", iconName: "leaf.fill", value: 0, goal: 34),
         ]
     }
 
@@ -185,9 +185,9 @@ struct WidgetSnapshot: Codable, Equatable {
         let divisor = usesFluidOunces ? 29.5735295625 : 1
         return WidgetNutrientValue(
             id: "water",
-            label: "Water",
+            label: String(localized: "Water", comment: "Watch nutrient name"),
             shortLabel: "W",
-            unit: usesFluidOunces ? " fl oz" : "ml",
+            unit: usesFluidOunces ? " " + String(localized: "fl oz", comment: "Unit: US fluid ounces") : "ml",
             iconName: "drop.fill",
             value: Double(waterCurrent) / divisor,
             goal: Double(waterGoal) / divisor
@@ -204,16 +204,16 @@ struct WidgetSnapshot: Codable, Equatable {
     var waterProgress: Double { min(1, Double(waterCurrent) / Double(waterGoal)) }
 
     var waterUnitSymbol: String {
-        waterUnitRaw == "floz" ? "fl oz" : "mL"
+        waterUnitRaw == "floz" ? String(localized: "fl oz", comment: "Unit: US fluid ounces") : "mL"
     }
 
     func waterDisplayValue(_ milliliters: Int) -> String {
-        guard waterUnitRaw == "floz" else { return "\(milliliters)" }
+        guard waterUnitRaw == "floz" else { return milliliters.formatted() }
         let ounces = Double(milliliters) / 29.5735295625
         if abs(ounces.rounded() - ounces) < 0.05 {
             return "\(Int(ounces.rounded()))"
         }
-        return String(format: "%.1f", ounces)
+        return ounces.formatted(.number.precision(.fractionLength(1)))
     }
 
     var calorieProgress: Double {

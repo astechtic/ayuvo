@@ -35,6 +35,7 @@ import com.ayuvo.health.data.PreferencesStore
 import com.ayuvo.health.models.MacroValueFormatter
 import com.ayuvo.health.models.WidgetSnapshot
 import kotlinx.coroutines.flow.first
+import androidx.glance.LocalContext
 
 class ProteinAppWidget : AyuvoGlanceAppWidget() {
 
@@ -94,7 +95,7 @@ private fun ProteinSmall(snapshot: WidgetSnapshot) {
     val gaugeW = minOf(contentW, (contentH - 44f) / 0.58f).toInt().coerceAtLeast(80)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_bolt, label = nutrient.label, themeHex = snapshot.themeStartHex)
+        WidgetHeader(iconRes = R.drawable.ic_widget_bolt, label = nutrient.displayLabel(LocalContext.current), themeHex = snapshot.themeStartHex)
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
             contentAlignment = Alignment.Center
@@ -109,7 +110,7 @@ private fun ProteinSmall(snapshot: WidgetSnapshot) {
             )
         }
         Text(
-            text = "${MacroValueFormatter.string(remaining)}${nutrient.unit} left",
+            text = LocalContext.current.getString(R.string.core_widget_amount_left, "${MacroValueFormatter.string(remaining)}${nutrient.unit}"),
             style = TextStyle(
                 color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                 fontWeight = FontWeight.Medium,
@@ -143,7 +144,7 @@ private fun ProteinMedium(snapshot: WidgetSnapshot) {
             )
             Spacer(modifier = GlanceModifier.height(2.dp))
             Text(
-                text = "${MacroValueFormatter.string(remaining)}${nutrient.unit} left",
+                text = LocalContext.current.getString(R.string.core_widget_amount_left, "${MacroValueFormatter.string(remaining)}${nutrient.unit}"),
                 style = TextStyle(
                     color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                     fontWeight = FontWeight.Medium,

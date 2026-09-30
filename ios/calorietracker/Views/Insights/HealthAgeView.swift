@@ -95,7 +95,7 @@ struct HealthAgeView: View {
     // MARK: Text
 
     static func label(_ id: String) -> String {
-        InsightsConfig.shared.marker(id)?.label ?? id
+        InsightsConfig.shared.markerLabel(id)
     }
 
     static func markerValue(_ marker: HealthAgeMarker) -> String {

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">칼로리</string>
+    <string name="metric_protein">단백질</string>
+    <string name="metric_carbs">탄수화물</string>
+    <string name="metric_fat">총 지방</string>
+    <string name="metric_fiber">식이섬유</string>
+    <string name="metric_water">물</string>
+    <string name="metric_fasting">단식</string>
+    <string name="metric_weight">체중</string>
+    <string name="metric_body_fat">체지방률</string>
+    <string name="metric_workouts">운동</string>
+    <string name="metric_workout_minutes">운동 시간</string>
+    <string name="metric_workout_burn">운동 에너지</string>
+    <string name="metric_about_calories">Ayuvo에 기록한 음식의 에너지를 하루 단위로 합산해요. 긴 기간에서는 음식을 기록한 날의 평균이 표시돼요.</string>
+    <string name="metric_about_protein">Ayuvo에 기록한 음식의 단백질을 하루 단위로 합산해요.</string>
+    <string name="metric_about_carbs">Ayuvo에 기록한 음식의 탄수화물을 하루 단위로 합산해요.</string>
+    <string name="metric_about_fat">Ayuvo에 기록한 음식의 지방을 하루 단위로 합산해요.</string>
+    <string name="metric_about_fiber">Ayuvo에 기록한 음식의 식이섬유를 하루 단위로 합산해요. 식이섬유 정보가 없는 음식은 제외돼요.</string>
+    <string name="metric_about_water">Ayuvo에 기록한 물을 하루 단위로 합산해요.</string>
+    <string name="metric_about_fasting">하루 동안 단식한 시간이에요. 자정을 넘긴 단식은 해당하는 각 날짜에 나누어 집계돼요.</string>
+    <string name="metric_about_weight">연결된 건강 앱에서 가져온 측정값을 포함해 Ayuvo에 기록한 체중이에요. 각 포인트는 해당 기간의 최근 측정값을 보여 줘요.</string>
+    <string name="metric_about_body_fat">Ayuvo에 기록한 체지방 측정값이에요. 각 포인트는 해당 기간의 최근 측정값을 보여 줘요.</string>
+    <string name="metric_about_workouts">Ayuvo에서 완료한 운동을 기록한 날짜 기준으로 집계해요.</string>
+    <string name="metric_about_workout_minutes">Ayuvo에서 완료한 운동에 소요된 시간이에요.</string>
+    <string name="metric_about_workout_burn">Ayuvo에서 완료한 운동의 추정 소모 에너지예요. 추정치가 없는 운동은 제외돼요.</string>
+    <string name="metric_add_to_favourites">즐겨찾기에 추가</string>
+    <string name="metric_about">정보</string>
+    <string name="metric_log">기록</string>
+    <string name="metric_log_weight">체중 데이터 추가</string>
+    <string name="metric_log_body_fat">체지방 데이터 추가</string>
+    <string name="metric_add_water">물 추가</string>
+    <string name="metric_add_water_quick">%1$s 추가</string>
+    <string name="metric_add_water_custom">직접 입력</string>
+    <string name="metric_open_food_diary">음식 다이어리 열기</string>
+    <string name="metric_open_fasting">단식 열기</string>
+    <string name="metric_open_workouts">운동 열기</string>
+    <string name="metric_details">세부 정보 보기</string>
+    <string name="metric_goal_label">목표 %1$s</string>
+    <string name="metric_no_rows">이 기간에 항목이 없어요</string>
+    <string name="metric_row_logged_in_diary">음식 다이어리에 기록됨</string>
+    <string name="metric_delete_entry">항목 삭제</string>
+    <string name="metric_delete_entry_body">이 항목이 Ayuvo에서 삭제돼요.</string>
+    <string name="metric_sources_app">Ayuvo에서 기록됨</string>
+</resources>

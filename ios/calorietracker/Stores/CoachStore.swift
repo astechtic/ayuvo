@@ -260,7 +260,15 @@ final class CoachStore {
                 messages: messages.map(\.referenceValue),
                 attachments: attachments.map(\.referenceValue),
                 localDay: day,
-                provider: provider
+                provider: provider,
+                labels: CR.ExportLabels(
+                    newChat: String(localized: "New chat", comment: "Coach chat export: title of an untitled chat"),
+                    messageCount: { String(localized: "\($0) messages", comment: "Coach chat export header: number of messages") },
+                    coach: String(localized: "Coach", comment: "Coach chat export: speaker name of the assistant"),
+                    you: String(localized: "You", comment: "Coach chat export: speaker name of the user"),
+                    attached: String(localized: "Attached", comment: "Coach chat export: label before attachment file names"),
+                    usedRecords: String(localized: "Used records", comment: "Coach chat export: label before health records the answer used")
+                )
             )
             guard let text = result["text"].string, let name = result["filename"].string else { return nil }
             return CoachExportFile(filename: name, data: Data(text.utf8))

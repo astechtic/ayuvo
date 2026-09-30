@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">インサイト</string>
+    <string name="domain_nutrition">栄養</string>
+    <string name="domain_hydration">水分補給</string>
+    <string name="domain_fasting">断食</string>
+    <string name="domain_body">身体測定値</string>
+    <string name="domain_activity">アクティビティ</string>
+    <string name="domain_heart">心臓</string>
+    <string name="domain_sleep">睡眠</string>
+    <string name="domain_vitals">バイタル</string>
+    <string name="domain_respiratory">呼吸</string>
+    <string name="domain_cycle">周期記録</string>
+    <string name="domain_mindfulness">マインドフルネス</string>
+    <string name="domain_mobility">移動能力</string>
+    <string name="domain_hearing">聴覚</string>
+    <string name="domain_symptoms">症状</string>
+    <string name="domain_medications">服薬</string>
+    <string name="domain_records">医療記録</string>
+    <string name="domain_other">その他のデータ</string>
+    <string name="design_back">戻る</string>
+</resources>

@@ -68,16 +68,25 @@ object InsightsFormat {
     }
 
     /** Health Age marker value with its unit. */
-    fun markerValue(markerId: String, basis: String?, value: Double?, secondary: Double?, locale: Locale = Locale.getDefault()): String {
+    fun markerValue(
+        markerId: String,
+        basis: String?,
+        value: Double?,
+        secondary: Double?,
+        locale: Locale = Locale.getDefault(),
+        res: android.content.res.Resources? = null
+    ): String {
         if (value == null) return MISSING
         return when (markerId) {
             "vo2_max" -> "${number(value, 1, locale)} mL/kg/min"
             "resting_heart_rate" -> "${number(value, 0, locale)} bpm"
             "hrv" -> "${number(value, 0, locale)} ms"
-            "steps" -> "${number(value, 0, locale)} steps/day"
-            "sleep" -> duration(value * 60.0) + (secondary?.let { " · ±${number(it, 0, locale)} min" } ?: "")
-            "workouts" -> "${number(value, 0, locale)} min/week"
-            "body_composition" -> if (basis == "bmi") "BMI ${number(value, 1, locale)}" else "${number(value, 1, locale)}% body fat"
+            "steps" -> number(value, 0, locale).let { n -> res?.getString(com.ayuvo.health.R.string.ui_insights_marker_steps, n) ?: n }
+            "sleep" -> duration(value * 60.0).let { d -> secondary?.let { s -> res?.getString(com.ayuvo.health.R.string.ui_insights_marker_sleep_sd, d, number(s, 0, locale)) } ?: d }
+            "workouts" -> number(value, 0, locale).let { n -> res?.getString(com.ayuvo.health.R.string.ui_insights_marker_workouts, n) ?: n }
+            "body_composition" -> number(value, 1, locale).let { n ->
+                res?.getString(if (basis == "bmi") com.ayuvo.health.R.string.ui_insights_marker_bmi else com.ayuvo.health.R.string.ui_insights_marker_body_fat, n) ?: n
+            }
             else -> number(value, 1, locale)
         }
     }

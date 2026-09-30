@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">코치가 건강 기록을 읽도록 허용할까요?</string>
+    <string name="records_coach_consent_body">코치는 답변을 위해 읽은 기록의 세부 정보(검사 결과, 날짜, 의사, 진단)를 %1$s에 보내요. 기록은 이 기기에 저장된 상태로 유지돼요.</string>
+    <string name="records_coach_consent_body_on_device">코치는 이 기기에서 기록을 읽어요. 온라인으로 전송되는 것은 없어요.</string>
+    <string name="records_coach_consent_allow">허용</string>
+    <string name="records_coach_consent_not_now">나중에</string>
+    <string name="records_coach_settings_title">코치</string>
+    <string name="records_coach_settings_toggle">코치가 내 건강 기록을 사용하도록 허용</string>
+    <string name="records_coach_settings_subtitle">코치가 질문에 답하기 위해 기록을 검색하고 읽을 수 있어요. 끄면 즉시 접근이 차단돼요.</string>
+    <string name="records_coach_analyzing">분석 중:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="other">기록 %d개 분석 중</item>
+    </plurals>
+    <string name="records_coach_change_records">기록 변경</string>
+    <string name="records_coach_used_records">사용된 기록</string>
+    <string name="records_coach_picker_title">이 대화에 사용할 기록</string>
+    <string name="records_coach_picker_search">기록 검색</string>
+    <string name="records_coach_picker_limit">기록을 최대 %d개까지 선택하세요.</string>
+    <string name="records_coach_picker_done">완료</string>
+    <string name="records_coach_picker_empty">기록을 찾을 수 없어요.</string>
+    <string name="records_coach_picker_selected">선택됨</string>
+    <string name="records_coach_picker_recent">최근 기록</string>
+    <string name="records_coach_picker_results">결과</string>
+    <string name="records_coach_mode_title">기록을 온라인으로 보낼까요?</string>
+    <string name="records_coach_mode_body">코치가 %1$s을(를) 사용해요. 선택한 기록의 세부 정보를 온라인으로 보낼까요?</string>
+    <string name="records_coach_mode_send">보내기</string>
+    <string name="records_coach_mode_on_device">온디바이스 코치 사용</string>
+    <string name="records_coach_ask_report">이 결과지에 대해 질문하기</string>
+    <string name="records_coach_compare_previous">이전 결과지와 비교</string>
+    <string name="records_coach_explain_trend">이 추세 설명</string>
+    <string name="records_coach_ask_coach">코치에게 묻기</string>
+    <string name="records_coach_prompt_report">이 결과지를 설명해 줘: 눈에 띄는 것은 무엇이고 의사에게 무엇을 물어봐야 할까?</string>
+    <string name="records_coach_prompt_compare">이 결과지를 이전 결과지와 비교해 줘. 무엇이 바뀌었어?</string>
+    <string name="records_coach_prompt_trend">내 %1$s 수치가 시간에 따라 어떻게 변했는지 설명해 줘.</string>
+    <string name="records_coach_chip_latest">최근 혈액 검사 결과 분석</string>
+    <string name="records_coach_chip_abnormal">비정상 수치 찾기</string>
+    <string name="records_coach_chip_compare">이전 결과지와 비교</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

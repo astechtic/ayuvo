@@ -154,7 +154,7 @@ struct IngredientAddMenuButton: View {
             Task {
                 guard let data = try? await item.loadTransferable(type: Data.self),
                       let image = UIImage(data: data) else {
-                    errorMessage = "Couldn't load that photo."
+                    errorMessage = String(localized: "Couldn't load that photo.", comment: "Add ingredient from photo error")
                     return
                 }
                 runAnalysis(image: image) {

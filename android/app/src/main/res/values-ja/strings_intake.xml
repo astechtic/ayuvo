@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">食べた時刻</string>
+    <string name="intake_eaten_at_same_as_log">記録時刻と同じ</string>
+    <string name="intake_eaten_at_hint">食事時間帯と食事のタイミングに使用されます</string>
+    <string name="intake_eaten_at_reset">記録時刻を使用</string>
+    <string name="intake_adherence_title">過去30日間</string>
+    <string name="intake_adherence_none">過去30日間に予定された服用はまだありません。</string>
+    <string name="intake_adherence_pct">服用率%1$s%%（%3$d回中%2$d回）</string>
+    <string name="intake_adherence_adherent">順調：80%%以上服用</string>
+    <string name="intake_adherence_below">服用率80%%未満</string>
+    <string name="intake_adherence_on_time">時間どおり（1時間以内）</string>
+    <string name="intake_adherence_median_delay">通常の遅れ</string>
+    <string name="intake_adherence_streak">連続記録</string>
+    <string name="intake_adherence_missed_by_weekday">曜日別の飲み忘れ</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d回分</string>
+    <string name="intake_move_reminder">リマインダーを%1$sに移動しますか？</string>
+    <string name="intake_move_reminder_body">この服用は、いつもリマインダーより遅く服用しています。リマインダーを移動しても変わるのは時刻だけで、それ以外はそのままです。</string>
+    <string name="intake_move_reminder_action">リマインダーを移動</string>
+    <string name="intake_supplement_above_upper">%1$sは服用間隔で平均すると1日%2$sで、耐容上限量の%3$sを超えています。処方した医師の指示に従ってください。</string>
+    <string name="intake_lab_links_title">検査結果と栄養</string>
+    <string name="intake_lab_links_footer">過去30日間の食事記録とサプリメント、およびレポートに記載された基準範囲に基づいています。医学的なアドバイスではありません。</string>
+    <string name="intake_lab_link_low_one">%1$sは検査結果の基準範囲を下回っていました。</string>
+    <string name="intake_lab_link_low_many">%1$sは検査結果の基準範囲を下回っていました。</string>
+    <string name="intake_lab_link_and">%1$sと%2$s</string>
+    <string name="intake_lab_link_intake">%1$sの平均摂取量は基準値の%2$d%%です。</string>
+    <string name="intake_lab_link_intake_no_supplement">%1$sの平均摂取量は基準値の%2$d%%で、どのサプリメントにも含まれていません。</string>
+    <string name="intake_lab_link_doctor">医師に相談することを検討してください。</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

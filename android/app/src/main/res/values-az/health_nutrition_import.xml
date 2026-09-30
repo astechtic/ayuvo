@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Qidalanma tarixçəsini idxal et</string>
+    <string name="health_import_action">İdxal et</string>
+    <string name="health_import_description">Başqa tətbiqdən qida qeydlərini gündəliyinizə gətirin. Mövcud qeydlərə önizləmə ilə baxın, sonra paylaşılan qeydlərin iki dəfə sayılmaması üçün bir mənbə tətbiq seçin.</string>
+    <string name="health_import_from">Başlanğıc (YYYY-MM-DD)</string>
+    <string name="health_import_to">Son (YYYY-MM-DD)</string>
+    <string name="health_import_history_hint">Tarixçəyə giriş olmadan son 30 gün ərzində tarixlər seçin. Köhnə qeydlər dəstəklənən cihazda tarixçəyə giriş tələb edir.</string>
+    <string name="health_import_grant">Qidalanma və tarixçəyə giriş icazəsi ver</string>
+    <string name="health_import_access_result">Giriş parametrləri yeniləndi. Mövcud qeydləri yoxlamaq üçün yenidən önizləyin.</string>
+    <string name="health_import_access_needed">Health Connect-də qidalanma məlumatlarını oxumağa icazə verin, sonra yenidən önizləyin.</string>
+    <string name="health_import_invalid_dates">Etibarlı tarixləri YYYY-MM-DD formatında daxil edin. Son tarix başlanğıc tarixindən əvvəl və bu gündən sonra olmamalıdır.</string>
+    <string name="health_import_history_needed">Bu aralıq tarixçəyə giriş tələb edir. Dəstəklənən cihazda icazə verin və ya son 30 gün ərzində tarixlər seçin.</string>
+    <string name="health_import_preview">Mövcud qeydləri önizlə</string>
+    <string name="health_import_failed">İdxalı tamamlamaq mümkün olmadı. Health Connect girişini yoxlayın və yenidən cəhd edin.</string>
+    <string name="health_import_empty">Bu aralıqda digər tətbiqlərdən yeni qidalanma qeydi tapılmadı. Mənbə tətbiqinizin qidalanma məlumatlarını Health Connect ilə paylaşdığını yoxlayın. Əvvəllər idxal edilmiş qeydlər, o cümlədən gündəliyinizdən silinənlər, buraxılır.</string>
+    <string name="health_import_count">%1$d yeni qeyd · %2$d kcal</string>
+    <string name="health_import_unnamed">İdxal edilmiş yemək</string>
+    <string name="health_import_local_only">Bunlar yerli nüsxələrdir. Redaktə və silmələr Ayuvo-da qalır. İdxalı təkrarlamaq əvvəl idxal edilmiş qeydləri buraxır; onları yeniləmir.</string>
+    <string name="health_import_done">Gündəliyinizə %1$d qeyd idxal edildi.</string>
+    <string name="health_import_close">Bağla</string>
+</resources>

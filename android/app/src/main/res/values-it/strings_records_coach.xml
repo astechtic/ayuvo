@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Consentire al Coach di leggere i tuoi documenti sanitari?</string>
+    <string name="records_coach_consent_body">Il Coach invia i dettagli dei documenti che legge (risultati degli esami, date, medici e diagnosi) a %1$s per risponderti. I documenti restano archiviati su questo dispositivo.</string>
+    <string name="records_coach_consent_body_on_device">Il Coach legge i documenti su questo dispositivo; nulla viene inviato online.</string>
+    <string name="records_coach_consent_allow">Consenti</string>
+    <string name="records_coach_consent_not_now">Non ora</string>
+    <string name="records_coach_settings_title">Coach</string>
+    <string name="records_coach_settings_toggle">Consenti al Coach di usare i miei documenti sanitari</string>
+    <string name="records_coach_settings_subtitle">Il Coach può cercare e leggere i tuoi documenti per rispondere alle domande. Disattivando l\'opzione, l\'accesso viene rimosso subito.</string>
+    <string name="records_coach_analyzing">Analisi in corso:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Analisi di %d documento</item>
+        <item quantity="many">Analisi di %d documenti</item>
+        <item quantity="other">Analisi di %d documenti</item>
+    </plurals>
+    <string name="records_coach_change_records">Cambia documenti</string>
+    <string name="records_coach_used_records">Documenti utilizzati</string>
+    <string name="records_coach_picker_title">Documenti per questa conversazione</string>
+    <string name="records_coach_picker_search">Cerca documenti</string>
+    <string name="records_coach_picker_limit">Scegli fino a %d documenti.</string>
+    <string name="records_coach_picker_done">Fine</string>
+    <string name="records_coach_picker_empty">Nessun documento trovato.</string>
+    <string name="records_coach_picker_selected">Selezionato</string>
+    <string name="records_coach_picker_recent">Documenti recenti</string>
+    <string name="records_coach_picker_results">Risultati</string>
+    <string name="records_coach_mode_title">Inviare i documenti online?</string>
+    <string name="records_coach_mode_body">Il Coach usa %1$s. Inviare online i dettagli dei documenti selezionati?</string>
+    <string name="records_coach_mode_send">Invia</string>
+    <string name="records_coach_mode_on_device">Usa il Coach sul dispositivo</string>
+    <string name="records_coach_ask_report">Chiedi informazioni su questo referto</string>
+    <string name="records_coach_compare_previous">Confronta con il referto precedente</string>
+    <string name="records_coach_explain_trend">Spiega questo andamento</string>
+    <string name="records_coach_ask_coach">Chiedi al Coach</string>
+    <string name="records_coach_prompt_report">Spiega questo referto: cosa spicca e cosa dovrei chiedere al mio medico?</string>
+    <string name="records_coach_prompt_compare">Confronta questo referto con quello precedente. Cosa è cambiato?</string>
+    <string name="records_coach_prompt_trend">Spiega come è cambiato nel tempo il mio valore di %1$s.</string>
+    <string name="records_coach_chip_latest">Analizza i miei ultimi esami del sangue</string>
+    <string name="records_coach_chip_abnormal">Trova valori anomali</string>
+    <string name="records_coach_chip_compare">Confronta con il referto precedente</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

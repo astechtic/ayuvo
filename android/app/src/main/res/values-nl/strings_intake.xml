@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Gegeten om</string>
+    <string name="intake_eaten_at_same_as_log">Gelijk aan het logtijdstip</string>
+    <string name="intake_eaten_at_hint">Gebruikt voor je eetvenster en maaltijdtiming</string>
+    <string name="intake_eaten_at_reset">Gebruik het logtijdstip</string>
+    <string name="intake_adherence_title">Afgelopen 30 dagen</string>
+    <string name="intake_adherence_none">Nog geen geplande doses in de afgelopen 30 dagen.</string>
+    <string name="intake_adherence_pct">%1$s%% van de doses ingenomen (%2$d van %3$d)</string>
+    <string name="intake_adherence_adherent">Op schema: 80%% of meer van de doses ingenomen</string>
+    <string name="intake_adherence_below">Minder dan 80%% van de doses ingenomen</string>
+    <string name="intake_adherence_on_time">Op tijd (binnen een uur)</string>
+    <string name="intake_adherence_median_delay">Gebruikelijke vertraging</string>
+    <string name="intake_adherence_streak">Reeks</string>
+    <string name="intake_adherence_missed_by_weekday">Gemiste doses per weekdag</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d doses</string>
+    <string name="intake_move_reminder">Herinnering verplaatsen naar %1$s?</string>
+    <string name="intake_move_reminder_body">Je neemt deze dosis meestal later in dan de herinnering. Het verplaatsen van de herinnering wijzigt alleen de tijd; al het andere blijft hetzelfde.</string>
+    <string name="intake_move_reminder_action">Verplaats herinnering</string>
+    <string name="intake_supplement_above_upper">%1$s is gemiddeld %2$s per dag over het doseringsinterval, boven de bovengrens voor inname van %3$s. Volg het advies van je voorschrijver.</string>
+    <string name="intake_lab_links_title">Labuitslagen en voeding</string>
+    <string name="intake_lab_links_footer">Gebaseerd op je voedingslog en supplementen van de afgelopen 30 dagen en het referentiebereik op je rapport. Geen medisch advies.</string>
+    <string name="intake_lab_link_low_one">Je %1$s lag onder het bereik van het rapport.</string>
+    <string name="intake_lab_link_low_many">Je %1$s lagen onder het bereik van het rapport.</string>
+    <string name="intake_lab_link_and">%1$s en %2$s</string>
+    <string name="intake_lab_link_intake">Je gemiddelde inname van %1$s is %2$d%% van de referentie.</string>
+    <string name="intake_lab_link_intake_no_supplement">Je gemiddelde inname van %1$s is %2$d%% van de referentie, en geen van je supplementen bevat het.</string>
+    <string name="intake_lab_link_doctor">Overweeg dit met je arts te bespreken.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

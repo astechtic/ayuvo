@@ -68,7 +68,10 @@ enum WorkoutActivityStyle {
 
     static func distance(_ meters: Double?, metric: Bool) -> String {
         guard let meters else { return "--" }
-        return metric ? String(format: "%.2f km", meters / 1000) : String(format: "%.2f mi", meters / 1609.344)
+        let value = (metric ? meters / 1000 : meters / 1609.344).formatted(.number.precision(.fractionLength(2)))
+        return metric
+            ? String(localized: "\(value) km", comment: "Workout Live Activity distance in kilometres")
+            : String(localized: "\(value) mi", comment: "Workout Live Activity distance in miles")
     }
 
     static func pace(_ secondsPerKm: Double?, metric: Bool) -> String {
@@ -78,7 +81,10 @@ enum WorkoutActivityStyle {
 
     static func speed(_ mps: Double?, metric: Bool) -> String {
         guard let mps else { return "--" }
-        return metric ? String(format: "%.1f km/h", mps * 3.6) : String(format: "%.1f mph", mps * 2.236936)
+        let value = (metric ? mps * 3.6 : mps * 2.236936).formatted(.number.precision(.fractionLength(1)))
+        return metric
+            ? String(localized: "\(value) km/h", comment: "Workout Live Activity speed in km per hour")
+            : String(localized: "\(value) mph", comment: "Workout Live Activity speed in miles per hour")
     }
 }
 
@@ -108,14 +114,14 @@ private struct WorkoutMetricsRow: View {
                     metric("Pace", WorkoutActivityStyle.pace(state.paceSecondsPerKm, metric: useMetric))
                 }
             }
-            metric("Heart", state.heartRate.map { "\($0) bpm" } ?? "--")
+            metric("Heart", state.heartRate.map { String(localized: "\($0) bpm", comment: "Workout Live Activity heart rate value") } ?? "--")
             if state.source == "watch" {
                 Image(systemName: "applewatch").font(.caption).foregroundStyle(.secondary)
             }
         }
     }
 
-    private func metric(_ title: String, _ value: String) -> some View {
+    private func metric(_ title: LocalizedStringKey, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(title).font(.caption2).foregroundStyle(.secondary)
             Text(value).font(.subheadline.monospacedDigit().weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7)

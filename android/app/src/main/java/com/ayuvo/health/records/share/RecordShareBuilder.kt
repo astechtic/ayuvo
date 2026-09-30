@@ -22,6 +22,8 @@ import java.io.File
 import kotlin.coroutines.coroutineContext
 import kotlin.math.max
 import kotlin.math.roundToInt
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** One file the share sheet will carry. */
 data class ShareItem(
@@ -97,7 +99,8 @@ class RecordShareBuilder(
         }
 
     private fun summaryBaseName(records: List<HealthRecord>): String =
-        if (records.size == 1) "${records[0].title} summary" else "Health records summary"
+        if (records.size == 1) AppText.orEnglish("${records[0].title} summary", R.string.core_share_summary_file_one, records[0].title)
+        else AppText.orEnglish("Health records summary", R.string.core_share_summary_file_many)
 
     private fun original(
         plan: SharePlan,

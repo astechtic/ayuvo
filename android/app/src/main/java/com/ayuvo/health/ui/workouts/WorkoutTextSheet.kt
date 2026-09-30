@@ -56,6 +56,8 @@ internal fun WorkoutTextSheet(
     var error by rememberSaveable { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val couldNotFinish = stringResource(R.string.workout_text_repeat_error)
+    val couldNotPrepare = stringResource(R.string.ui_workout_text_prepare_error)
+    val couldNotSave = stringResource(R.string.ui_workout_text_save_error)
     val keyboard = androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
     var started by rememberSaveable { mutableStateOf(false) }
     val dismiss = { if (!saving) onDismiss() }
@@ -96,7 +98,7 @@ internal fun WorkoutTextSheet(
                 }
             }
             catch (e: Exception) {
-                if (generation == requestGeneration) error = e.localizedMessage ?: "Could not prepare the workout. Try again."
+                if (generation == requestGeneration) error = e.localizedMessage ?: couldNotPrepare
             }
             finally { if (generation == requestGeneration) busy = false }
         }
@@ -243,7 +245,7 @@ internal fun WorkoutTextSheet(
                                 saveWorkout(draft)
                                 onAdded(LocalDate.parse(draft.date))
                             } catch (e: CancellationException) { throw e }
-                            catch (e: Exception) { error = e.localizedMessage ?: "Could not save the workout. Try again." }
+                            catch (e: Exception) { error = e.localizedMessage ?: couldNotSave }
                             finally { saving = false }
                         }
                     }, enabled = !saving && draft.exercises.isNotEmpty()) { Text(stringResource(if (saving) R.string.workout_text_adding else R.string.workout_text_add)) }

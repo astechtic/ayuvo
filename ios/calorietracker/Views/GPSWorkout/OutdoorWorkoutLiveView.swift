@@ -102,7 +102,7 @@ struct OutdoorWorkoutLiveView: View {
         }
     }
 
-    private var stateTitle: String {
+    private var stateTitle: LocalizedStringKey {
         switch recorder.phase {
         case .recording: return "Recording"
         case .paused: return "Paused"
@@ -133,11 +133,11 @@ struct OutdoorWorkoutLiveView: View {
                      "stopwatch")
             }
             tile("Avg pace", WorkoutFormat.pace(secondsPerKm: live?.avgPaceSPerKm, useMetric: useMetric), "gauge.with.dots.needle.33percent")
-            tile("Heart rate", recorder.currentHeartRate.map { "\($0) bpm" } ?? "--", "heart.fill")
-            tile("Elevation", String(format: "+%.0f / −%.0f m", live?.elevationGainM ?? 0, live?.elevationLossM ?? 0),
+            tile("Heart rate", recorder.currentHeartRate.map { String(localized: "\($0) bpm", comment: "Live workout heart rate value") } ?? "--", "heart.fill")
+            tile("Elevation", String(localized: "+\((live?.elevationGainM ?? 0).formatted(.number.precision(.fractionLength(0)))) / −\((live?.elevationLossM ?? 0).formatted(.number.precision(.fractionLength(0)))) m", comment: "Live workout elevation gain / loss in metres"),
                  "mountain.2")
             if let split = recorder.currentSplit {
-                tile("Km \(split.index)", WorkoutFormat.duration(split.seconds) + String(format: " · %.0f m", max(0, split.meters)),
+                tile("Km \(split.index)", WorkoutFormat.duration(split.seconds) + " · " + String(localized: "\(max(0, split.meters).formatted(.number.precision(.fractionLength(0)))) m", comment: "Live workout split distance in metres"),
                      "flag.checkered")
             }
             if let lap = recorder.currentLap, !recorder.laps.isEmpty {
@@ -146,7 +146,7 @@ struct OutdoorWorkoutLiveView: View {
         }
     }
 
-    private func tile(_ title: String, _ value: String, _ icon: String) -> some View {
+    private func tile(_ title: LocalizedStringKey, _ value: String, _ icon: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Label(title, systemImage: icon)
                 .font(.caption)
@@ -226,7 +226,7 @@ struct OutdoorWorkoutLiveView: View {
         }
     }
 
-    private func controlButton(_ title: String, _ icon: String, _ color: Color, action: @escaping () -> Void) -> some View {
+    private func controlButton(_ title: LocalizedStringKey, _ icon: String, _ color: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 6) {
                 Image(systemName: icon).font(.title2.weight(.bold))
@@ -248,7 +248,7 @@ struct OutdoorWorkoutLiveView: View {
         return ScrollView {
             VStack(spacing: 16) {
                 HStack {
-                    Label(OutdoorSport(rawValue: m?.sport ?? "")?.title ?? "Workout", systemImage: "applewatch")
+                    Label(OutdoorSport(rawValue: m?.sport ?? "")?.title ?? String(localized: "Workout", comment: "Fallback title for a mirrored Apple Watch workout"), systemImage: "applewatch")
                         .font(.headline)
                     Spacer()
                     Text(m?.state == "paused" ? "Paused" : "On Apple Watch")
@@ -259,8 +259,8 @@ struct OutdoorWorkoutLiveView: View {
                     .font(.system(size: 64, weight: .bold, design: .rounded).monospacedDigit())
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     tile("Distance", WorkoutFormat.distance(m?.distance ?? 0, useMetric: useMetric), "map")
-                    tile("Heart rate", m?.heartRate.map { "\(Int($0.rounded())) bpm" } ?? "--", "heart.fill")
-                    tile("Energy", m?.energy.map { "\(Int($0.rounded())) kcal" } ?? "--", "flame.fill")
+                    tile("Heart rate", m?.heartRate.map { String(localized: "\(Int($0.rounded())) bpm", comment: "Live workout heart rate value") } ?? "--", "heart.fill")
+                    tile("Energy", m?.energy.map { String(localized: "\(Int($0.rounded())) kcal", comment: "Live workout energy value") } ?? "--", "flame.fill")
                     tile("Laps", "\(m?.laps ?? 0)", "flag.fill")
                 }
                 HStack(spacing: 12) {

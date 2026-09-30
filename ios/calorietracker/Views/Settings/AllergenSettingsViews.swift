@@ -154,7 +154,7 @@ struct AllergenSensitivitiesDetailView: View {
         )) {
             Button("OK", role: .cancel) { importErrorMessage = nil }
         } message: {
-            Text(importErrorMessage ?? "The lab report could not be read.")
+            Text(importErrorMessage ?? String(localized: "The lab report could not be read.", comment: "Allergen lab report import error"))
         }
     }
 
@@ -196,7 +196,7 @@ struct AllergenSensitivitiesDetailView: View {
     private func presentImportResults(_ names: [String]) {
         isImportingLabReport = false
         if names.isEmpty {
-            importErrorMessage = "No clearly positive or elevated sensitizations were found in this report."
+            importErrorMessage = String(localized: "No clearly positive or elevated sensitizations were found in this report.", comment: "Allergen lab report import result")
             return
         }
         selectedImportNames = Set(names)

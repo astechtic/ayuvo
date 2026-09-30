@@ -7,4 +7,6 @@
     <string name="error_barcode_service_unavailable">Open Food Facts müvəqqəti olaraq əlçatan deyil. Daha sonra yenidən cəhd edin.</string>
     <string name="error_barcode_unexpected_response">Open Food Facts gözlənilməz cavab qaytardı.</string>
     <string name="error_barcode_network">Open Food Facts ilə əlaqə qurmaq mümkün olmadı. Bağlantınızı yoxlayın və yenidən cəhd edin.</string>
+    <string name="error_barcode_offline">Deyəsən, oflaynsınız. Bağlantınızı yoxlayın və yenidən skan edin.</string>
+    <string name="error_barcode_timeout">Open Food Facts çox gec cavab verdi. Yenidən skan edin.</string>
 </resources>

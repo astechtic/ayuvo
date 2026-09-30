@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">Metriche derivate</string>
+    <string name="settings_derived_enabled">Metriche derivate</string>
+    <string name="settings_derived_enabled_sub">Stima i parametri vitali che i tuoi dispositivi non registrano</string>
+    <string name="settings_derived_footer">Ayuvo stima i parametri vitali che i tuoi dispositivi non registrano, come la frequenza cardiaca a riposo dalla frequenza cardiaca minuto per minuto. Quando Health Connect ha già un valore per lo stesso giorno, viene mostrato quel valore. Le stime non vengono mai scritte in Health Connect.</string>
+    <string name="settings_derived_bmi_scheme">Categorie IMC</string>
+    <string name="settings_derived_bmi_who">OMS</string>
+    <string name="settings_derived_bmi_asian">Asiatico</string>
+    <string name="settings_derived_bmi_footer">Le soglie asiatiche (sovrappeso da 23, obesità da 27,5) seguono la consultazione di esperti dell\'OMS per le popolazioni asiatiche.</string>
+    <string name="settings_derived_native_wins">Se disponibile, si usa il valore di Health Connect</string>
+    <string name="settings_derived_also_affects">Influisce anche su: %1$s</string>
+    <string name="derived_estimated_badge">Stimato da Ayuvo</string>
+    <string name="derived_how_calculated">Come viene calcolato</string>
+    <string name="derived_source_label">Fonte</string>
+    <string name="derived_metric_toggle">Calcola questa metrica</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvo non sta calcolando questa metrica. I valori di Health Connect vengono comunque mostrati.</string>
+    <string name="derived_headline_highest">MASSIMO</string>
+    <string name="derived_source_estimated">Stimato da Ayuvo dai tuoi dati di Health Connect</string>
+    <string name="derived_source_native">Da Health Connect (%1$s)</string>
+    <string name="derived_source_native_generic">Da Health Connect</string>
+    <string name="derived_source_mixed">Valori di Health Connect dove registrati; stimati da Ayuvo negli altri giorni</string>
+    <string name="derived_method">Metodo</string>
+    <string name="derived_citation">Riferimento</string>
+    <string name="derived_confidence">Affidabilità</string>
+    <string name="derived_confidence_high">Alto</string>
+    <string name="derived_confidence_medium">Medio</string>
+    <string name="derived_confidence_low">Basso</string>
+    <string name="derived_confidence_native">Misurato dal tuo dispositivo</string>
+    <string name="derived_estimated_caption">%1$s · Stimato</string>
+    <string name="derived_master_off">Le metriche derivate sono disattivate nelle Impostazioni.</string>
+</resources>

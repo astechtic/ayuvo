@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">你希望 Ayuvo AI 如何处理你的健康档案？</string>
+    <string name="records_ai_mode_local">本地 AI</string>
+    <string name="records_ai_mode_local_detail">使用设备端模型。档案文本保留在这部手机上进行 AI 处理。</string>
+    <string name="records_ai_mode_cloud">云端 AI</string>
+    <string name="records_ai_mode_cloud_detail">将页面文本（没有文本的页面则发送图片）发送给你的 AI 提供商。</string>
+    <string name="records_ai_mode_ask">需要时询问我</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo 在对档案使用 AI 前会先询问你。</string>
+    <string name="records_ai_mode_off">暂不使用 AI</string>
+    <string name="records_ai_mode_off_detail">不使用 AI 查找详情。你可以在“设置”中更改此项。</string>
+    <string name="records_ai_onboarding_note">你可以随时在“设置 › 健康档案”中更改此项。</string>
+    <string name="records_ai_chooser_title">选择 AI 如何帮助处理你的档案</string>
+    <string name="records_ai_settings_title">AI 处理</string>
+    <string name="records_ai_local_unavailable">设备端 AI 尚未设置——已在不使用 AI 的情况下查找详情。</string>
+    <string name="records_ai_set_up_local">设置设备端 AI</string>
+    <string name="records_ai_no_cloud_provider">添加 AI 提供商以使用在线 AI。</string>
+    <string name="records_ai_add_provider">添加 AI 提供商</string>
+    <string name="records_ai_cloud_provider_note">在线 AI 使用 %1$s。</string>
+    <string name="records_ai_consent_title">使用 AI 查找更多详情？</string>
+    <string name="records_ai_consent_body">AI 可以找到规则遗漏的详情。结果仅为建议，你可以对照原件核对。</string>
+    <string name="records_ai_consent_local">在这台设备上</string>
+    <string name="records_ai_consent_cloud">在线 AI · %1$s</string>
+    <string name="records_ai_consent_not_now">以后再说</string>
+    <string name="records_ai_consent_apply_all">应用于所有等待中的档案</string>
+    <string name="records_ai_consent_none_available">暂无可用的 AI。请在“设置”中设置设备端 AI 或添加 AI 提供商。</string>
+    <string name="records_ai_status_local">已在这台设备上处理</string>
+    <string name="records_ai_status_cloud">已使用在线 AI 处理 · %1$s</string>
+    <string name="records_ai_status_none">未经 AI 处理</string>
+</resources>

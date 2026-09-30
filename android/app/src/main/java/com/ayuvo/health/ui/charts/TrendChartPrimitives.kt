@@ -293,9 +293,9 @@ internal fun niceAxisTicks(min: Double, max: Double, count: Int): List<Double> {
 }
 
 internal fun formatTick(value: Double): String =
-    if (value >= 1000) String.format(Locale.US, "%,d", value.toInt())
-    else if (value == value.toInt().toDouble()) value.toInt().toString()
-    else String.format(Locale.US, "%.1f", value)
+    if (value >= 1000) String.format(Locale.getDefault(), "%,d", value.toInt())
+    else if (value == value.toInt().toDouble()) String.format(Locale.getDefault(), "%d", value.toInt())
+    else String.format(Locale.getDefault(), "%.1f", value)
 
 /** Pick at most [maxLabels] evenly-spaced bar indices for x-axis labelling. */
 internal fun pickXLabelIndices(n: Int, maxLabels: Int = 7): List<Int> {

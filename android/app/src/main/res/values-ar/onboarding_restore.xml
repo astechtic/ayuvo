@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">الاستعادة من نسخة احتياطية</string>
+    <string name="onboarding_restore_title">الاستعادة من نسخة احتياطية</string>
+    <string name="onboarding_restore_message">استرجع ملفك الشخصي وأهدافك وسجل الطعام والإعدادات من نسخة Ayuvo الاحتياطية. ستظل بحاجة إلى إعداد الإشعارات وHealth Connect والذكاء الاصطناعي على هذا الهاتف. لا تكون مفاتيح API ضمن النسخة الاحتياطية أبدًا.</string>
+    <string name="onboarding_restore_file">اختيار ملف نسخة احتياطية</string>
+    <string name="onboarding_restore_drive">الاستعادة من Google Drive</string>
+    <string name="onboarding_restore_busy">جارٍ استعادة نسختك الاحتياطية…</string>
+    <string name="onboarding_restore_error_no_drive">لم يتم العثور على نسخة Ayuvo احتياطية في Drive الخاص بحساب Google هذا.</string>
+    <string name="onboarding_restore_error_no_profile">لا تتضمن تلك النسخة الاحتياطية ملفًا شخصيًا. اختر نسخة احتياطية أخرى، أو تابع الإعداد هنا.</string>
+    <string name="onboarding_restore_error_failed">تعذّرت استعادة النسخة الاحتياطية: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">تعذّرت استعادة النسخة الاحتياطية.</string>
+</resources>

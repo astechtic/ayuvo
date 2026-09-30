@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Consumat la</string>
+    <string name="intake_eaten_at_same_as_log">La fel ca ora înregistrării</string>
+    <string name="intake_eaten_at_hint">Folosit pentru intervalul de alimentație și programul meselor</string>
+    <string name="intake_eaten_at_reset">Folosește ora înregistrării</string>
+    <string name="intake_adherence_title">Ultimele 30 de zile</string>
+    <string name="intake_adherence_none">Încă nu există doze programate în ultimele 30 de zile.</string>
+    <string name="intake_adherence_pct">%1$s%% din doze luate (%2$d din %3$d)</string>
+    <string name="intake_adherence_adherent">Pe drumul cel bun: 80%% sau mai mult din doze luate</string>
+    <string name="intake_adherence_below">Sub 80%% din doze luate</string>
+    <string name="intake_adherence_on_time">La timp (în decurs de o oră)</string>
+    <string name="intake_adherence_median_delay">Întârziere tipică</string>
+    <string name="intake_adherence_streak">Serie</string>
+    <string name="intake_adherence_missed_by_weekday">Doze ratate pe zile ale săptămânii</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d doze</string>
+    <string name="intake_move_reminder">Muți mementoul la %1$s?</string>
+    <string name="intake_move_reminder_body">De obicei iei această doză mai târziu decât mementoul. Mutarea mementoului schimbă doar ora lui; restul rămâne la fel.</string>
+    <string name="intake_move_reminder_action">Mută mementoul</string>
+    <string name="intake_supplement_above_upper">%1$s are o medie de %2$s pe zi pe durata intervalului de administrare, peste limita maximă de aport de %3$s. Urmează indicațiile medicului care ți l-a prescris.</string>
+    <string name="intake_lab_links_title">Rezultatele analizelor și nutriția</string>
+    <string name="intake_lab_links_footer">Pe baza jurnalului de alimente și a suplimentelor din ultimele 30 de zile și a intervalului de referință tipărit pe buletin. Nu este un sfat medical.</string>
+    <string name="intake_lab_link_low_one">Valoarea ta de %1$s a fost sub intervalul din buletin.</string>
+    <string name="intake_lab_link_low_many">Valorile tale de %1$s au fost sub intervalul din buletin.</string>
+    <string name="intake_lab_link_and">%1$s și %2$s</string>
+    <string name="intake_lab_link_intake">Aportul tău mediu de %1$s este %2$d%% din valoarea de referință.</string>
+    <string name="intake_lab_link_intake_no_supplement">Aportul tău mediu de %1$s este %2$d%% din valoarea de referință și niciunul dintre suplimentele tale nu îl conține.</string>
+    <string name="intake_lab_link_doctor">Ia în calcul să discuți acest lucru cu medicul tău.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

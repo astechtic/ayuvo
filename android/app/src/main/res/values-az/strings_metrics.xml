@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">Kalorilər</string>
+    <string name="metric_protein">Protein</string>
+    <string name="metric_carbs">Karbohidratlar</string>
+    <string name="metric_fat">Ümumi yağ</string>
+    <string name="metric_fiber">Lif</string>
+    <string name="metric_water">Su</string>
+    <string name="metric_fasting">Oruc</string>
+    <string name="metric_weight">Çəki</string>
+    <string name="metric_body_fat">Bədən yağı faizi</string>
+    <string name="metric_workouts">Məşqlər</string>
+    <string name="metric_workout_minutes">Məşq vaxtı</string>
+    <string name="metric_workout_burn">Məşq enerjisi</string>
+    <string name="metric_about_calories">Ayuvo-da qeyd etdiyiniz qidalardan gələn enerji, gün üzrə toplanıb. Daha uzun aralıqlar qida qeyd etdiyiniz günlər üzrə ortanı göstərir.</string>
+    <string name="metric_about_protein">Ayuvo-da qeyd etdiyiniz qidalardan gələn protein, gün üzrə toplanıb.</string>
+    <string name="metric_about_carbs">Ayuvo-da qeyd etdiyiniz qidalardan gələn karbohidratlar, gün üzrə toplanıb.</string>
+    <string name="metric_about_fat">Ayuvo-da qeyd etdiyiniz qidalardan gələn yağ, gün üzrə toplanıb.</string>
+    <string name="metric_about_fiber">Ayuvo-da qeyd etdiyiniz qidalardan gələn qida lifi, gün üzrə toplanıb. Lif məlumatı olmayan qidalar nəzərə alınmır.</string>
+    <string name="metric_about_water">Ayuvo-da qeyd etdiyiniz su, gün üzrə toplanıb.</string>
+    <string name="metric_about_fasting">Gün ərzində oruclu keçən vaxt. Gecə yarısını keçən oruc əhatə etdiyi hər günə hesablanır.</string>
+    <string name="metric_about_weight">Ayuvo-da qeyd etdiyiniz çəki qeydləri, o cümlədən qoşulmuş sağlamlıq tətbiqlərindən idxal edilən göstəricilər. Hər nöqtə həmin dövrün ən son göstəricisini göstərir.</string>
+    <string name="metric_about_body_fat">Ayuvo-da qeyd etdiyiniz bədən yağı göstəriciləri. Hər nöqtə həmin dövrün ən son göstəricisini göstərir.</string>
+    <string name="metric_about_workouts">Ayuvo-da tamamladığınız məşqlər, qeyd edildiyi gün üzrə sayılır.</string>
+    <string name="metric_about_workout_minutes">Ayuvo-da tamamladığınız məşqlərə sərf olunan vaxt.</string>
+    <string name="metric_about_workout_burn">Ayuvo-da tamamladığınız məşqlərdə yandırılan təxmini enerji. Təxmini olmayan məşqlər nəzərə alınmır.</string>
+    <string name="metric_add_to_favourites">Sevimlilərə əlavə et</string>
+    <string name="metric_about">Haqqında</string>
+    <string name="metric_log">Qeyd Et</string>
+    <string name="metric_log_weight">Çəki məlumatı əlavə et</string>
+    <string name="metric_log_body_fat">Bədən yağı məlumatı əlavə et</string>
+    <string name="metric_add_water">Su əlavə et</string>
+    <string name="metric_add_water_quick">%1$s əlavə et</string>
+    <string name="metric_add_water_custom">Fərdi miqdar</string>
+    <string name="metric_open_food_diary">Qida gündəliyini aç</string>
+    <string name="metric_open_fasting">Orucu aç</string>
+    <string name="metric_open_workouts">Məşqləri aç</string>
+    <string name="metric_details">Təfərrüatları göstər</string>
+    <string name="metric_goal_label">Hədəf %1$s</string>
+    <string name="metric_no_rows">Bu aralıqda qeyd yoxdur</string>
+    <string name="metric_row_logged_in_diary">Qida gündəliyində qeyd edilib</string>
+    <string name="metric_delete_entry">Qeydi sil</string>
+    <string name="metric_delete_entry_body">Bu qeyd Ayuvo-dan silinəcək.</string>
+    <string name="metric_sources_app">Ayuvo-da qeydə alınıb</string>
+</resources>

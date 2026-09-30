@@ -7,4 +7,6 @@
     <string name="error_barcode_service_unavailable">Open Food Facts를 일시적으로 사용할 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="error_barcode_unexpected_response">Open Food Facts에서 예상하지 못한 응답을 반환했습니다.</string>
     <string name="error_barcode_network">Open Food Facts에 연결할 수 없습니다. 연결을 확인하고 다시 시도해 주세요.</string>
+    <string name="error_barcode_offline">오프라인 상태인 것 같아요. 연결을 확인하고 다시 스캔해 보세요.</string>
+    <string name="error_barcode_timeout">Open Food Facts의 응답 시간이 너무 오래 걸렸어요. 다시 스캔해 보세요.</string>
 </resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Treino Ayuvo</string>
+    <string name="widget_workout_description">Inicie e controle um treino</string>
+    <string name="widget_workout_title">Treino</string>
+    <string name="widget_workout_walk">Caminhada</string>
+    <string name="widget_workout_run">Corrida</string>
+    <string name="widget_workout_cycle">Ciclismo</string>
+    <string name="widget_workout_hike">Trilha</string>
+    <string name="widget_workout_strength">Força</string>
+    <string name="widget_workout_strength_title">Sessão de força</string>
+    <string name="widget_workout_status_recording">Gravando</string>
+    <string name="widget_workout_status_paused">Pausado</string>
+    <string name="widget_workout_status_saving">Salvando…</string>
+    <string name="widget_workout_status_recovery">Recuperação</string>
+    <string name="widget_workout_status_strength">Em andamento</string>
+    <string name="widget_workout_waiting_gps">Aguardando GPS</string>
+    <string name="widget_workout_distance">Distância</string>
+    <string name="widget_workout_pace">Ritmo médio</string>
+    <string name="widget_workout_speed">Vel. média</string>
+    <string name="widget_workout_pause">Pausar</string>
+    <string name="widget_workout_resume">Retomar</string>
+    <string name="widget_workout_lap">Volta</string>
+    <string name="widget_workout_end">Encerrar</string>
+    <string name="widget_workout_skip">Pular</string>
+    <string name="widget_workout_finish">Finalizar</string>
+</resources>

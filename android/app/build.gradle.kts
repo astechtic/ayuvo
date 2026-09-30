@@ -118,10 +118,9 @@ android {
     }
 
     lint {
-        // The default resources intentionally provide English fallback copy while
-        // translated locales are updated incrementally. Keep all other release
-        // checks enabled; only the fallback-policy warning is excluded.
-        disable += "MissingTranslation"
+        // Every string must be translated into every locale in
+        // shared/l10n/l10n_config.json (docs/localization.md).
+        error += "MissingTranslation"
     }
 
     testOptions {

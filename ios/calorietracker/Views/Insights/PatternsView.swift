@@ -11,7 +11,7 @@ struct PatternsView: View {
     var body: some View {
         InsightsScreen(title: "Patterns", topic: .patterns, disclaimers: ["general", "patterns"],
                        inputs: { Self.inputRows(store.patterns) }) {
-            Label(InsightsConfig.shared.disclaimer("patterns"), systemImage: "info.circle")
+            Label(InsightsConfig.shared.displayDisclaimer("patterns"), systemImage: "info.circle")
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 4)
@@ -26,7 +26,7 @@ struct PatternsView: View {
                     Text(InsightsPatternText.title(pattern.id))
                         .font(.system(.caption, design: .rounded, weight: .semibold))
                         .foregroundStyle(AyuvoPalette.insights)
-                    Text(pattern.text ?? "")
+                    Text(InsightsConfig.shared.patternText(pattern) ?? "")
                         .font(.system(.subheadline, design: .rounded))
                         .fixedSize(horizontal: false, vertical: true)
                     Text("\(pattern.nExposed) vs \(pattern.nUnexposed) days")
@@ -67,7 +67,7 @@ struct PatternsView: View {
             InsightsInputRow(id: p.id, title: InsightsPatternText.title(p.id),
                              value: "\(p.nExposed) vs \(p.nUnexposed)",
                              detail: p.status == "ok"
-                                ? String(localized: "t \(p.t.map { InsightsFormat.number($0) } ?? InsightsText.missing) · d \(p.d.map { InsightsFormat.number($0) } ?? InsightsText.missing)")
+                                ? String(localized: "t \(p.t.map { InsightsDisplayFormat.number($0) } ?? InsightsText.missing) · d \(p.d.map { InsightsDisplayFormat.number($0) } ?? InsightsText.missing)")
                                 : status(p),
                              missing: p.status != "ok")
         }

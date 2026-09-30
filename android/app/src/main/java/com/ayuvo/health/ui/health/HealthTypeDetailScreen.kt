@@ -338,7 +338,7 @@ private fun selectedHeadline(ui: HealthDetailUiState, index: Int, zone: ZoneId, 
         val span = stringResource(R.string.sleep_time_span, ChartClock.offset(b.bedOffsetMin, is24), ChartClock.offset(b.wakeOffsetMin, is24))
         return MetricHeadlineUi(
             stringResource(if (daily) R.string.sleep_time_asleep else R.string.sleep_avg_time_asleep),
-            b.asleepS?.takeIf { it > 0 }?.let { HealthValueFormatter.duration(it) },
+            b.asleepS?.takeIf { it > 0 }?.let { HealthValueFormatter.duration(it, androidx.compose.ui.platform.LocalResources.current) },
             "",
             stringResource(R.string.chart_selected_on, date, span)
         )

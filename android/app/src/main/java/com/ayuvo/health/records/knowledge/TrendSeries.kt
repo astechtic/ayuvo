@@ -8,6 +8,8 @@ import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.pow
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** §21 trends, ported from the reference `trend_series`, `format_value` and `mini_trend`. Pure. */
 object TrendSeries {
@@ -109,7 +111,7 @@ object TrendSeries {
                 val sign = if (delta > 0) "+" else if (delta < 0) "−" else ""
                 var text = sign + String.format(Locale.US, "%.${d}f", abs(delta))
                 if (!s.unit.isNullOrEmpty()) text += " " + s.unit
-                return Mini(true, vals, vals.joinToString(" → "), s.unit, delta, prev.date, "$text since ${prev.date}")
+                return Mini(true, vals, vals.joinToString(" → "), s.unit, delta, prev.date, AppText.orEnglish("$text since ${prev.date}", R.string.core_trend_change_since, text, prev.date))
             }
         }
         return NONE

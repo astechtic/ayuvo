@@ -20,23 +20,23 @@ extension SettingsPaneView {
             .tint(.secondary)
             .onChange(of: profile.gender) { _, _ in saveProfile() }
 
-            ProfileInfoRow(icon: "birthday.cake.fill", tint: SettingsTint.body, label: "Birthday", value: birthdayDisplay) {
+            ProfileInfoRow(icon: "birthday.cake.fill", tint: SettingsTint.body, label: String(localized: "Birthday", comment: "Personal info settings row"), value: birthdayDisplay) {
                 activeSheet = .editBirthday
             }
 
-            ProfileInfoRow(icon: "ruler.fill", tint: SettingsTint.body, label: "Height", value: heightDisplay) {
+            ProfileInfoRow(icon: "ruler.fill", tint: SettingsTint.body, label: String(localized: "Height", comment: "Personal info settings row"), value: heightDisplay) {
                 activeSheet = .editHeight
             }
 
-            ProfileInfoRow(icon: "scalemass.fill", tint: SettingsTint.body, label: "Weight", value: weightDisplay) {
+            ProfileInfoRow(icon: "scalemass.fill", tint: SettingsTint.body, label: String(localized: "Weight", comment: "Personal info settings row"), value: weightDisplay) {
                 activeSheet = .editWeight
             }
 
             ProfileInfoRow(
                 icon: "percent",
                 tint: SettingsTint.body,
-                label: "Body Fat",
-                value: profile.bodyFatPercentage != nil ? "\(Int(profile.bodyFatPercentage! * 100))%" : "Not set"
+                label: String(localized: "Body Fat", comment: "Personal info settings row"),
+                value: profile.bodyFatPercentage.map { (Double(Int($0 * 100)) / 100).formatted(.percent) } ?? String(localized: "Not set", comment: "Settings value placeholder when nothing is set")
             ) {
                 activeSheet = .editBodyFat
             }
@@ -49,8 +49,8 @@ extension SettingsPaneView {
                 ProfileInfoRow(
                     icon: "target",
                     tint: SettingsTint.body,
-                    label: "Goal Body Fat",
-                    value: profile.goalBodyFatPercentage != nil ? "\(Int(profile.goalBodyFatPercentage! * 100))%" : "Not set"
+                    label: String(localized: "Goal Body Fat", comment: "Personal info settings row"),
+                    value: profile.goalBodyFatPercentage.map { (Double(Int($0 * 100)) / 100).formatted(.percent) } ?? String(localized: "Not set", comment: "Settings value placeholder when nothing is set")
                 ) {
                     activeSheet = .editGoalBodyFat
                 }
@@ -83,7 +83,7 @@ extension SettingsPaneView {
                     HStack {
                         Text("Allergen sensitivities")
                         Spacer()
-                        Text(allergenSummary.isEmpty ? "Not set" : allergenSummary)
+                        Text(allergenSummary.isEmpty ? String(localized: "Not set", comment: "Settings value placeholder when nothing is set") : allergenSummary)
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                     }

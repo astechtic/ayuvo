@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import android.content.Context
+import com.ayuvo.health.R
 
 /**
  * One user-selected Home nutrient carried in the widget snapshot. Mirrors the
@@ -18,6 +20,16 @@ data class WidgetNutrient(
     val goal: Double
 ) {
     val progress: Double get() = if (goal > 0) minOf(1.0, value / goal) else 0.0
+
+    /** [label] in the current language: resolved from [id] when it is a known nutrient or Water. */
+    fun displayLabel(context: Context): String = when (id) {
+        WATER_ID -> context.getString(R.string.widget_water)
+        else -> HomeTopNutrient.values().firstOrNull { it.storageKey == id }?.let { context.getString(it.displayNameRes) } ?: label
+    }
+
+    companion object {
+        const val WATER_ID = "water"
+    }
 }
 
 /**
@@ -71,15 +83,16 @@ data class WidgetSnapshot(
      */
     val displayedHomeNutrients: List<WidgetNutrient> get() {
         val selected = homeNutrients?.takeIf { it.isNotEmpty() } ?: listOf(
-            WidgetNutrient("protein", "Protein", "g", protein, proteinGoal.toDouble()),
-            WidgetNutrient("carbs", "Carbs", "g", carbs, carbsGoal.toDouble()),
-            WidgetNutrient("fat", "Fat", "g", fat, fatGoal.toDouble())
+            // Labels are resolved from the id at render time (displayLabel).
+            WidgetNutrient(HomeTopNutrient.PROTEIN.storageKey, "", "g", protein, proteinGoal.toDouble()),
+            WidgetNutrient(HomeTopNutrient.CARBS.storageKey, "", "g", carbs, carbsGoal.toDouble()),
+            WidgetNutrient(HomeTopNutrient.FAT.storageKey, "", "g", fat, fatGoal.toDouble())
         )
         val visible = selected.take(if (waterTrackingEnabled) 3 else 4)
         if (!waterTrackingEnabled) return visible
         val water = WidgetNutrient(
-            id = "water",
-            label = "Water",
+            id = WidgetNutrient.WATER_ID,
+            label = "",
             unit = if (waterUnit == WaterUnit.FLUID_OUNCES) " fl oz" else "ml",
             value = waterUnit.displayAmount(waterCurrentMl),
             goal = waterUnit.displayAmount(waterGoalMl)

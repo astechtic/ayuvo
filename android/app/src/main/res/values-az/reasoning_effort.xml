@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">OpenRouter düşünmə səyi</string>
+    <string name="settings_reasoning_effort_help">Bütün OpenRouter sorğularına aiddir. Dəstəklənən səviyyələr modeldən asılıdır. Daha yüksək səy daha uzun çəkə və daha baha başa gələ bilər. Avtomatik modelin standart ayarını saxlayır; yarımçıq cavablar Aşağı ilə təkrarlanır.</string>
+    <string name="reasoning_effort_auto">Standart / Avtomatik</string>
+    <string name="reasoning_effort_none">Heç biri</string>
+    <string name="reasoning_effort_minimal">Minimal</string>
+    <string name="reasoning_effort_low">Aşağı</string>
+    <string name="reasoning_effort_medium">Orta</string>
+    <string name="reasoning_effort_high">Yüksək</string>
+    <string name="reasoning_effort_xhigh">Çox yüksək</string>
+    <string name="reasoning_effort_max">Maks</string>
+</resources>

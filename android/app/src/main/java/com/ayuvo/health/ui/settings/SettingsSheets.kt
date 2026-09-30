@@ -580,14 +580,14 @@ internal fun SettingsSheets(
                 SettingsSheet.WORKOUT_SPLIT -> ListSheet(
                     title = stringResource(R.string.settings_training_split),
                     items = WorkoutSplit.SelectableValues,
-                    label = { it.title },
+                    label = { stringResource(it.titleRes) },
                     selected = { it == ui.workoutSplit },
                     onSelect = { vm.selectWorkoutSplit(it); onDismiss() }
                 )
                 SettingsSheet.WORKOUT_RPE -> ListSheet(
                     title = stringResource(R.string.settings_rpe_scale),
                     items = WorkoutRpeScale.entries,
-                    label = { it.title },
+                    label = { stringResource(it.titleRes) },
                     selected = { it == ui.workoutRpeScale },
                     onSelect = { vm.selectWorkoutRpeScale(it); onDismiss() },
                     subtitle = { it.inputPlaceholder }

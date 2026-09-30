@@ -240,7 +240,7 @@ struct OnboardingView: View {
 
     // MARK: - Continue Button
 
-    private func continueButton(_ title: String = "Continue", action: @escaping () -> Void = {}) -> some View {
+    private func continueButton(_ title: String = String(localized: "Continue", comment: "Onboarding continue button"), action: @escaping () -> Void = {}) -> some View {
         Button {
             action()
             withAnimation(.snappy) { step += 1 }
@@ -286,10 +286,10 @@ struct OnboardingView: View {
 
                 // Quick feature tour — everything is free and already unlocked.
                 VStack(alignment: .leading, spacing: 12) {
-                    welcomeFeatureRow(icon: "camera.fill", text: "Snap a meal — AI logs it")
-                    welcomeFeatureRow(icon: "bubble.left.and.bubble.right.fill", text: "Coach that knows your day")
-                    welcomeFeatureRow(icon: "heart.text.square.fill", text: "Every Apple Health metric in one hub")
-                    welcomeFeatureRow(icon: "dumbbell.fill", text: "1300+ exercises, widgets and Apple Watch")
+                    welcomeFeatureRow(icon: "camera.fill", text: String(localized: "Snap a meal — AI logs it", comment: "Onboarding screen"))
+                    welcomeFeatureRow(icon: "bubble.left.and.bubble.right.fill", text: String(localized: "Coach that knows your day", comment: "Onboarding screen"))
+                    welcomeFeatureRow(icon: "heart.text.square.fill", text: String(localized: "Every Apple Health metric in one hub", comment: "Onboarding screen"))
+                    welcomeFeatureRow(icon: "dumbbell.fill", text: String(localized: "1300+ exercises, widgets and Apple Watch", comment: "Onboarding screen"))
                 }
                 .padding(.top, 8)
             }
@@ -330,7 +330,7 @@ struct OnboardingView: View {
 
     private var genderStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            stepHeader(title: "What's your gender?", subtitle: "This helps us calculate your metabolism")
+            stepHeader(title: String(localized: "What's your gender?", comment: "Onboarding screen"), subtitle: String(localized: "This helps us calculate your metabolism", comment: "Onboarding screen"))
             Spacer()
             VStack(spacing: 12) {
                 ForEach(Gender.allCases, id: \.self) { g in
@@ -349,7 +349,7 @@ struct OnboardingView: View {
 
     private var birthdayStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            stepHeader(title: "When's your birthday?", subtitle: "Used to calculate your daily needs")
+            stepHeader(title: String(localized: "When's your birthday?", comment: "Onboarding screen"), subtitle: String(localized: "Used to calculate your daily needs", comment: "Onboarding screen"))
             Spacer()
             DatePicker("Birthday", selection: $birthday, in: ...Date(), displayedComponents: .date)
                 .datePickerStyle(.wheel)
@@ -364,7 +364,7 @@ struct OnboardingView: View {
 
     private var heightWeightStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            stepHeader(title: "Height & Weight", subtitle: "We'll keep this private")
+            stepHeader(title: String(localized: "Height & Weight", comment: "Onboarding screen"), subtitle: String(localized: "We'll keep this private", comment: "Onboarding screen"))
             Picker("Unit", selection: $isMetric) {
                 Text("Imperial").tag(false)
                 Text("Metric").tag(true)
@@ -410,7 +410,7 @@ struct OnboardingView: View {
                     }
                 }
                 VStack(spacing: 4) {
-                    Text(LocalizedDisplayText.text("Weight")).font(.system(.caption, design: .rounded, weight: .medium)).foregroundStyle(.secondary)
+                    Text(String(localized: "Weight", comment: "Onboarding plan field label")).font(.system(.caption, design: .rounded, weight: .medium)).foregroundStyle(.secondary)
                     if isWeightMetric {
                         decimalWeightWheel(whole: $weightKgWhole, tenth: $weightKgTenth, range: 30...250, unit: "kg")
                             .frame(height: 130)
@@ -429,13 +429,13 @@ struct OnboardingView: View {
 
     private var bodyFatStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            stepHeader(title: "Do you know your\nbody fat %?", subtitle: "Helps us calculate your metabolism more accurately")
+            stepHeader(title: String(localized: "Do you know your\nbody fat %?", comment: "Onboarding screen"), subtitle: String(localized: "Helps us calculate your metabolism more accurately", comment: "Onboarding screen"))
             Spacer()
             VStack(spacing: 12) {
-                selectionCard(icon: "checkmark.circle", title: "Yes", isSelected: knowsBodyFat) {
+                selectionCard(icon: "checkmark.circle", title: String(localized: "Yes", comment: "Onboarding screen"), isSelected: knowsBodyFat) {
                     withAnimation(.spring(response: 0.3)) { knowsBodyFat = true }
                 }
-                selectionCard(icon: "xmark.circle", title: "No", isSelected: !knowsBodyFat) {
+                selectionCard(icon: "xmark.circle", title: String(localized: "No", comment: "Onboarding screen"), isSelected: !knowsBodyFat) {
                     withAnimation(.spring(response: 0.3)) { knowsBodyFat = false }
                 }
             }
@@ -531,11 +531,8 @@ struct OnboardingView: View {
     private var activityStep: some View {
         VStack(alignment: .leading, spacing: 0) {
             stepHeader(
-                title: "How active are you?",
-                subtitle: LocalizedDisplayText.text(
-                    "Choose based on your average week, including work and exercise.",
-                    polish: "Wybierz na podstawie typowego tygodnia, uwzględniając pracę i ćwiczenia."
-                )
+                title: String(localized: "How active are you?", comment: "Onboarding screen"),
+                subtitle: String(localized: "Choose based on your average week, including work and exercise.", comment: "Onboarding activity step subtitle")
             )
             ScrollView {
                 VStack(spacing: 12) {
@@ -556,7 +553,7 @@ struct OnboardingView: View {
 
     private var goalStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            stepHeader(title: "What's your goal?", subtitle: "You can change this anytime")
+            stepHeader(title: String(localized: "What's your goal?", comment: "Onboarding screen"), subtitle: String(localized: "You can change this anytime", comment: "Onboarding screen"))
             Spacer()
             VStack(spacing: 12) {
                 ForEach(WeightGoal.allCases, id: \.self) { g in
@@ -595,7 +592,7 @@ struct OnboardingView: View {
 
     private var desiredWeightStep: some View {
         VStack(alignment: .leading, spacing: 0) {
-            stepHeader(title: "What's your\ndesired weight?", subtitle: goal.displayName)
+            stepHeader(title: String(localized: "What's your\ndesired weight?", comment: "Onboarding screen"), subtitle: goal.displayName)
             Spacer()
             if isWeightMetric {
                 decimalWeightWheel(whole: $targetWeightKgWhole, tenth: $targetWeightKgTenth, range: 30...250, unit: "kg")
@@ -643,6 +640,17 @@ struct OnboardingView: View {
 
     // MARK: - 8: Goal Speed
 
+    /// "You'll reach your goal in 42 days" as one translatable sentence, the day count highlighted.
+    private var goalReachText: AttributedString {
+        let days = String(localized: "\(estimatedDays) days", comment: "Onboarding goal estimate: number of days")
+        var text = AttributedString(String(localized: "You'll reach your goal in \(days)", comment: "Onboarding goal estimate; placeholder is the number of days, e.g. '42 days'"))
+        if let range = text.range(of: days) {
+            text[range].font = .system(.subheadline, design: .rounded, weight: .bold)
+            text[range].foregroundColor = AppColors.calorie
+        }
+        return text
+    }
+
     private var weeklyChangeKg: Double {
         switch goalSpeed { case 0: 0.25; case 2: 1.0; default: 0.5 }
     }
@@ -655,8 +663,12 @@ struct OnboardingView: View {
     private var goalSpeedStep: some View {
         VStack(alignment: .leading, spacing: 0) {
             stepHeader(
-                title: goal == .maintain ? "Your pace" : "How fast do you want\nto reach your goal?",
-                subtitle: goal == .maintain ? "We'll set a balanced plan" : "\(goal == .lose ? "Weight loss" : "Weight gain") speed per week"
+                title: goal == .maintain ? String(localized: "Your pace", comment: "Onboarding screen") : String(localized: "How fast do you want\nto reach your goal?", comment: "Onboarding screen"),
+                subtitle: goal == .maintain
+                    ? String(localized: "We'll set a balanced plan", comment: "Onboarding goal speed subtitle")
+                    : (goal == .lose
+                        ? String(localized: "Weight loss speed per week", comment: "Onboarding goal speed subtitle")
+                        : String(localized: "Weight gain speed per week", comment: "Onboarding goal speed subtitle"))
             )
             if goal == .maintain {
                 Spacer()
@@ -703,13 +715,8 @@ struct OnboardingView: View {
                         set: { goalSpeed = Int($0.rounded()) }
                     ), in: 0...2, step: 1).tint(AppColors.calorie).padding(.horizontal, 40)
                     VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 0) {
-                            Text("You'll reach your goal in ")
-                                .font(.system(.subheadline, design: .rounded, weight: .medium))
-                            Text("\(estimatedDays) days")
-                                .font(.system(.subheadline, design: .rounded, weight: .bold))
-                                .foregroundStyle(AppColors.calorie)
-                        }
+                        Text(goalReachText)
+                            .font(.system(.subheadline, design: .rounded, weight: .medium))
                         Text(goalSpeed == 1 ? "The most balanced pace, motivating and sustainable."
                              : goalSpeed == 0 ? "Gentle and sustainable. Great for long-term habits."
                              : "Aggressive but doable. Requires strong discipline.")
@@ -840,12 +847,12 @@ struct OnboardingView: View {
 
                 // Feature list
                 VStack(alignment: .leading, spacing: 12) {
-                    healthFeatureRow(icon: "fork.knife", label: "Nutrition Data")
-                    healthFeatureRow(icon: "scalemass.fill", label: "Weight Sync")
-                    healthFeatureRow(icon: "figure.stand", label: "Body Measurements")
-                    healthFeatureRow(icon: "flame.fill", label: "Activity & Steps")
-                    healthFeatureRow(icon: "heart.fill", label: "Heart, Sleep & Vitals")
-                    healthFeatureRow(icon: "applewatch", label: "Apple Watch Workouts")
+                    healthFeatureRow(icon: "fork.knife", label: String(localized: "Nutrition Data", comment: "Onboarding screen"))
+                    healthFeatureRow(icon: "scalemass.fill", label: String(localized: "Weight Sync", comment: "Onboarding screen"))
+                    healthFeatureRow(icon: "figure.stand", label: String(localized: "Body Measurements", comment: "Onboarding screen"))
+                    healthFeatureRow(icon: "flame.fill", label: String(localized: "Activity & Steps", comment: "Onboarding screen"))
+                    healthFeatureRow(icon: "heart.fill", label: String(localized: "Heart, Sleep & Vitals", comment: "Onboarding screen"))
+                    healthFeatureRow(icon: "applewatch", label: String(localized: "Apple Watch Workouts", comment: "Onboarding screen"))
                 }
                 .padding(.horizontal, 40)
             }
@@ -1121,17 +1128,17 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 10) {
                 aiNoticeRow(
                     icon: "lock.shield.fill",
-                    title: "Private",
+                    title: String(localized: "Private", comment: "Onboarding screen"),
                     text: String(localized: "Food photos and meals are analysed on this iPhone. No API key or account needed.")
                 )
                 aiNoticeRow(
                     icon: "wifi.slash",
-                    title: "Offline",
+                    title: String(localized: "Offline", comment: "Onboarding screen"),
                     text: String(localized: "Works without an internet connection once downloaded.")
                 )
                 aiNoticeRow(
                     icon: "arrow.down.circle.fill",
-                    title: "2.59 GB download",
+                    title: String(localized: "2.59 GB download", comment: "Onboarding screen"),
                     text: String(localized: "Needs an iPhone with 8 GB of RAM. You can finish setup while it downloads.")
                 )
             }
@@ -1197,14 +1204,14 @@ struct OnboardingView: View {
         VStack(alignment: .leading, spacing: 12) {
             aiNoticeRow(
                 icon: "photo.fill",
-                title: "AI analysis",
+                title: String(localized: "AI analysis", comment: "Onboarding screen"),
                 text: aiSetupMode == .onDevice
                     ? String(localized: "Food photos, voice transcripts, and typed meals are analysed on this iPhone and are not sent to an AI provider.")
                     : String(localized: "Food photos, voice transcripts, and typed meals are sent directly to your selected AI provider.")
             )
             aiNoticeRow(
                 icon: "lock.shield.fill",
-                title: "Local data",
+                title: String(localized: "Local data", comment: "Onboarding screen"),
                 text: String(localized: "Your food log, weight history, body-fat history, and BYOK API keys stay on this device.")
             )
         }
@@ -1432,9 +1439,9 @@ struct OnboardingView: View {
                 .frame(width: 24, height: 24)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(LocalizedDisplayText.text(title))
+                Text(title)
                     .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                Text(LocalizedDisplayText.text(text))
+                Text(text)
                     .font(.system(.caption, design: .rounded))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -1490,7 +1497,7 @@ struct OnboardingView: View {
 
     private var planReadyStep: some View {
         VStack(spacing: 0) {
-            stepHeader(title: "Your Plan", subtitle: "Tap any value to adjust")
+            stepHeader(title: String(localized: "Your Plan", comment: "Onboarding screen"), subtitle: String(localized: "Tap any value to adjust", comment: "Onboarding screen"))
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -1528,7 +1535,7 @@ struct OnboardingView: View {
                     .buttonStyle(.plain)
 
                     if editingField == .calories {
-                        Picker(LocalizedDisplayText.text("Calories"), selection: Binding(
+                        Picker(String(localized: "Calories", comment: "Onboarding plan field label"), selection: Binding(
                             get: { planCalories },
                             set: { newCal in
                                 editedCalories = newCal
@@ -1548,14 +1555,14 @@ struct OnboardingView: View {
 
                     // Macro cards - tappable
                     HStack(spacing: 12) {
-                        editableMacroCard(label: "Protein", value: planProtein, unit: "g", gradientColors: AppColors.proteinGradient, field: .protein)
-                        editableMacroCard(label: "Carbs", value: planCarbs, unit: "g", gradientColors: AppColors.carbsGradient, field: .carbs)
-                        editableMacroCard(label: "Fat", value: planFat, unit: "g", gradientColors: AppColors.fatGradient, field: .fat)
+                        editableMacroCard(label: String(localized: "Protein", comment: "Onboarding screen"), value: planProtein, unit: "g", gradientColors: AppColors.proteinGradient, field: .protein)
+                        editableMacroCard(label: String(localized: "Carbs", comment: "Onboarding screen"), value: planCarbs, unit: "g", gradientColors: AppColors.carbsGradient, field: .carbs)
+                        editableMacroCard(label: String(localized: "Fat", comment: "Onboarding screen"), value: planFat, unit: "g", gradientColors: AppColors.fatGradient, field: .fat)
                     }
                     .padding(.horizontal, 24)
 
                     if editingField == .protein {
-                        Picker(LocalizedDisplayText.text("Protein"), selection: Binding(
+                        Picker(String(localized: "Protein", comment: "Onboarding plan field label"), selection: Binding(
                             get: { planProtein },
                             set: { newProtein in
                                 editedProtein = newProtein
@@ -1572,7 +1579,7 @@ struct OnboardingView: View {
                     }
 
                     if editingField == .carbs {
-                        Picker(LocalizedDisplayText.text("Carbs"), selection: Binding(
+                        Picker(String(localized: "Carbs", comment: "Onboarding plan field label"), selection: Binding(
                             get: { planCarbs },
                             set: { newCarbs in
                                 editedCarbs = newCarbs
@@ -1589,7 +1596,7 @@ struct OnboardingView: View {
                     }
 
                     if editingField == .fat {
-                        Picker(LocalizedDisplayText.text("Fat"), selection: Binding(
+                        Picker(String(localized: "Fat", comment: "Onboarding plan field label"), selection: Binding(
                             get: { planFat },
                             set: { newFat in
                                 editedFat = newFat
@@ -1693,7 +1700,7 @@ struct OnboardingView: View {
             }
         } label: {
             VStack(spacing: 6) {
-                Text(LocalizedDisplayText.text(label))
+                Text(label)
                     .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(.secondary)
                 HStack(spacing: 2) {
@@ -1758,7 +1765,7 @@ struct OnboardingView: View {
     private func healthFeatureRow(icon: String, label: String) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon).font(.system(size: 18)).foregroundStyle(.secondary).frame(width: 28)
-            Text(LocalizedDisplayText.text(label)).font(.system(.body, design: .rounded)).foregroundStyle(.primary)
+            Text(label).font(.system(.body, design: .rounded)).foregroundStyle(.primary)
         }
     }
 
@@ -1774,7 +1781,7 @@ struct OnboardingView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(AppColors.calorie)
                 .frame(width: 26)
-            Text(LocalizedDisplayText.text(text))
+            Text(text)
                 .font(.system(.subheadline, design: .rounded, weight: .medium))
         }
     }
@@ -1796,11 +1803,11 @@ struct BuildingPlanStepView: View {
     @State private var animationDone = false
 
     private let items = [
-        ("Calories", "flame.fill"),
-        ("Carbs", "leaf.fill"),
-        ("Protein", "fish.fill"),
-        ("Fats", "drop.fill"),
-        ("Health Score", "heart.fill")
+        (String(localized: "Calories", comment: "Onboarding plan-building checklist item"), "flame.fill"),
+        (String(localized: "Carbs", comment: "Onboarding plan-building checklist item"), "leaf.fill"),
+        (String(localized: "Protein", comment: "Onboarding plan-building checklist item"), "fish.fill"),
+        (String(localized: "Fats", comment: "Onboarding plan-building checklist item"), "drop.fill"),
+        (String(localized: "Health Score", comment: "Onboarding plan-building checklist item"), "heart.fill")
     ]
 
     var body: some View {

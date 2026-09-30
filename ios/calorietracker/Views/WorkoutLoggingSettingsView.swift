@@ -23,13 +23,13 @@ struct WorkoutLoggingSettingsSection: View {
             }
 
             WorkoutSplitPickerRow(
-                title: "Training Split",
+                title: String(localized: "Training Split", comment: "Workout settings row"),
                 systemImage: "square.grid.2x2.fill",
                 selection: $draft.split
             )
 
             WorkoutRPEScalePickerRow(
-                title: "RPE Scale",
+                title: String(localized: "RPE Scale", comment: "Workout settings row"),
                 systemImage: "gauge.with.dots.needle.50percent",
                 selection: $draft.rpeScale
             )
@@ -67,10 +67,9 @@ struct WorkoutLoggingSettingsSection: View {
         .padding(.leading, 41)
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            "RPE scale guide. Strength 1 to 10 measures lifting effort by reps left. "
-                + "CR10 0 to 10 measures general effort from rest to maximum. "
-                + "Borg 6 to 20 measures endurance effort using breathing and heart rate."
-        )
+        .accessibilityLabel(Text(
+            "RPE scale guide. Strength 1 to 10 measures lifting effort by reps left. CR10 0 to 10 measures general effort from rest to maximum. Borg 6 to 20 measures endurance effort using breathing and heart rate.",
+            comment: "Accessibility label for the RPE scale guide in workout settings"
+        ))
     }
 }

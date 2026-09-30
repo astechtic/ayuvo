@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.time.Instant
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 data class CloudBackupUi(
     val enabled: Boolean = false,
@@ -137,7 +139,7 @@ class CloudBackupCoordinator(
             val token = requireToken()
             val fileId = prefs.cloudBackupFileId.first()
                 ?: drive.findBackupFileId(token)
-                ?: error("No Drive backup found")
+                ?: error(AppText.get(R.string.core_drive_no_backup))
             restoreFromDrive(token, fileId)
             refresh()
         }.also { busy(false) }
@@ -252,7 +254,7 @@ class CloudBackupCoordinator(
 
     private suspend fun requireToken(): String =
         accessToken ?: keyStore.cloudBackupAccessToken()?.also { accessToken = it }
-        ?: error("Sign in to Google Drive first")
+        ?: error(AppText.get(R.string.core_drive_sign_in_first))
 
     private fun busy(value: Boolean) {
         _ui.value = _ui.value.copy(busy = value, message = if (value) null else _ui.value.message)

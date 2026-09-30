@@ -55,7 +55,7 @@ struct CoachChartView: View {
                 .stroke(AppColors.calorie.opacity(0.12), lineWidth: 0.7)
         )
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(CR.chartAccessibilityText(spec)))
+        .accessibilityLabel(Text(Self.accessibilityText(spec)))
         .contextMenu {
             Button {
                 UIPasteboard.general.string = dataText
@@ -305,12 +305,53 @@ struct CoachChartView: View {
     }
 
     static func numberText(_ value: Double) -> String {
-        if value == value.rounded(), abs(value) < 1e15 { return String(Int(value)) }
-        return String(format: "%.2f", value)
+        if value == value.rounded(), abs(value) < 1e15 { return Int(value).formatted() }
+        return value.formatted(.number.precision(.fractionLength(2)))
     }
 
     static func valueText(_ value: Double, unit: String?) -> String {
         let text = numberText(value)
         return unit.map { "\(text) \($0)" } ?? text
+    }
+}
+
+extension CoachChartView {
+    /// One VoiceOver sentence for a parsed chart, in the user's language (`CR.chartAccessibilityText` is the
+    /// English reference form).
+    static func accessibilityText(_ spec: RJ) -> String {
+        var parts: [String] = [kindLabel(spec["type"].string)]
+        if let title = spec["title"].string { parts.append(title) }
+        var values: [Double] = []
+        for entry in spec["series"].array ?? [] {
+            for p in entry["points"].array ?? [] {
+                if let y = p["y"].double { values.append(y) }
+                if let y2 = p["y2"].double { values.append(y2) }
+            }
+        }
+        if let low = values.min(), let high = values.max() {
+            let lowText = low.formatted(.number.precision(.fractionLength(0...2)))
+            let highText = high.formatted(.number.precision(.fractionLength(0...2)))
+            if let unit = spec["unit"].string {
+                parts.append(String(localized: "\(lowText) to \(highText) \(unit)", comment: "Chart VoiceOver range; lowest value, highest value, unit"))
+            } else {
+                parts.append(String(localized: "\(lowText) to \(highText)", comment: "Chart VoiceOver range; lowest value, highest value"))
+            }
+        }
+        return parts.joined(separator: ", ")
+    }
+
+    private static func kindLabel(_ kind: String?) -> String {
+        switch kind {
+        case "bar": String(localized: "Bar chart", comment: "Chart type, VoiceOver")
+        case "grouped_bar": String(localized: "Grouped bar chart", comment: "Chart type, VoiceOver")
+        case "stacked_bar": String(localized: "Stacked bar chart", comment: "Chart type, VoiceOver")
+        case "line": String(localized: "Line chart", comment: "Chart type, VoiceOver")
+        case "area": String(localized: "Area chart", comment: "Chart type, VoiceOver")
+        case "pie": String(localized: "Pie chart", comment: "Chart type, VoiceOver")
+        case "scatter": String(localized: "Scatter chart", comment: "Chart type, VoiceOver")
+        case "range": String(localized: "Range chart", comment: "Chart type, VoiceOver")
+        case "progress": String(localized: "Progress chart", comment: "Chart type, VoiceOver")
+        default: String(localized: "Chart", comment: "Chart type, VoiceOver")
+        }
     }
 }

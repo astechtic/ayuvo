@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">مستوى استدلال OpenRouter</string>
+    <string name="settings_reasoning_effort_help">ينطبق على جميع طلبات OpenRouter. تختلف المستويات المدعومة حسب النموذج. قد يستغرق المجهود الأعلى وقتًا أطول ويكلّف أكثر. يحتفظ الوضع «تلقائي» بالإعداد الافتراضي للنموذج؛ وتُعاد محاولة الاستجابات غير المكتملة بمستوى «منخفض».</string>
+    <string name="reasoning_effort_auto">افتراضي / تلقائي</string>
+    <string name="reasoning_effort_none">لا شيء</string>
+    <string name="reasoning_effort_minimal">أدنى</string>
+    <string name="reasoning_effort_low">منخفض</string>
+    <string name="reasoning_effort_medium">متوسط</string>
+    <string name="reasoning_effort_high">مرتفع</string>
+    <string name="reasoning_effort_xhigh">مرتفع جدًا</string>
+    <string name="reasoning_effort_max">أقصى</string>
+</resources>

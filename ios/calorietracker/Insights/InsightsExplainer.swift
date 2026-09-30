@@ -13,9 +13,11 @@ nonisolated enum InsightsAIRoute: Equatable, Sendable {
     func statusLabel(config: InsightsConfig) -> String {
         switch self {
         case .appleIntelligence, .gemma:
-            return config.ai.statusLabels["local"] ?? "Explained on this device"
+            let english = config.ai.statusLabels["local"] ?? "Explained on this device"
+            return ContractText.text("insights.ai.status_labels.local", english)
         case .cloud(let provider):
-            return (config.ai.statusLabels["cloud"] ?? "Explained using online AI · {provider}")
+            let english = config.ai.statusLabels["cloud"] ?? "Explained using online AI · {provider}"
+            return ContractText.text("insights.ai.status_labels.cloud", english)
                 .replacingOccurrences(of: "{provider}", with: provider.displayName)
         }
     }

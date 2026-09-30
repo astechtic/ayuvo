@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">OpenRouter 추론 강도</string>
+    <string name="settings_reasoning_effort_help">모든 OpenRouter 요청에 적용돼요. 지원되는 수준은 모델마다 달라요. 노력 수준이 높을수록 시간이 더 걸리고 비용이 더 들 수 있어요. 자동은 모델 기본값을 유지하며, 응답이 불완전하면 낮음으로 다시 시도해요.</string>
+    <string name="reasoning_effort_auto">기본값 / 자동</string>
+    <string name="reasoning_effort_none">없음</string>
+    <string name="reasoning_effort_minimal">최소</string>
+    <string name="reasoning_effort_low">낮음</string>
+    <string name="reasoning_effort_medium">중간</string>
+    <string name="reasoning_effort_high">높음</string>
+    <string name="reasoning_effort_xhigh">매우 높음</string>
+    <string name="reasoning_effort_max">최대</string>
+</resources>

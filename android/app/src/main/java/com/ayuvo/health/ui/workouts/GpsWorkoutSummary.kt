@@ -321,7 +321,7 @@ private fun SummaryContent(session: WorkoutSession) {
         Section(stringResource(R.string.workout_summary_splits)) {
             gps.splits.forEach { s ->
                 Row(Modifier.fillMaxWidth().padding(vertical = 3.dp)) {
-                    Text("km ${s.km}", color = colors.mutedText, modifier = Modifier.width(64.dp))
+                    Text(stringResource(R.string.ui_gps_split_km, s.km), color = colors.mutedText, modifier = Modifier.width(64.dp))
                     Text(WorkoutFormat.pace(s.seconds), color = colors.charcoal, fontWeight = FontWeight.SemiBold)
                 }
             }

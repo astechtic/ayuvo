@@ -294,7 +294,7 @@ fun QuickActionsScreen(
                             val selected = ui.quickActions.getOrElse(slot) { QuickAction.Defaults[slot] }
                             SettingRow(
                                 stringResource(R.string.settings_quick_action_number, slot + 1),
-                                selected.title,
+                                stringResource(selected.labelRes),
                                 inlineMenu = true
                             ) { expandedSlot = slot }
                             Box(Modifier.align(Alignment.BottomEnd)) {
@@ -304,7 +304,7 @@ fun QuickActionsScreen(
                                 ) {
                                     QuickAction.entries.forEach { action ->
                                         DropdownMenuItem(
-                                            text = { Text(action.title) },
+                                            text = { Text(stringResource(action.labelRes)) },
                                             trailingIcon = if (action == selected) {
                                                 { Icon(Icons.Filled.Check, contentDescription = null, tint = AppColors.Calorie) }
                                             } else null,

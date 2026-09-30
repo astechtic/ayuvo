@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">Цель</string>
+    <string name="sleep_time_asleep">Время сна</string>
+    <string name="sleep_avg_time_asleep">Среднее время сна</string>
+    <string name="sleep_in_bed">В постели</string>
+    <string name="sleep_time_in_bed">Время в постели</string>
+    <string name="sleep_unit_hour">ч</string>
+    <string name="sleep_unit_minute">мин</string>
+    <string name="sleep_stage_awake">Бодрствование</string>
+    <string name="sleep_stage_rem">Быстрый сон</string>
+    <string name="sleep_stage_core">Основной</string>
+    <string name="sleep_stage_deep">Глубокий</string>
+    <string name="sleep_stage_asleep">Сон</string>
+    <string name="sleep_chart_summary">График сна, ночей: %1$d, %2$s</string>
+    <string name="sleep_night_summary">Сон %1$s, спали %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

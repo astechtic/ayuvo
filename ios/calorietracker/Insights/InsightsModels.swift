@@ -20,7 +20,7 @@ nonisolated enum InsightsParam: Codable, Equatable, Sendable {
         switch self {
         case .number(let x): InsightsFormat.number(x)
         case .text(let s): s
-        case .null: "None"
+        case .null: String(localized: "None", comment: "Insights: placeholder for a missing value")
         }
     }
 

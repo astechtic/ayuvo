@@ -43,7 +43,7 @@ private struct AppStoreLookupResult: Decodable {
 
 enum AppUpdateChecker {
     static var currentVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? String(localized: "Unknown", comment: "App version when it cannot be read")
     }
 
     static var currentVersionDisplay: String {

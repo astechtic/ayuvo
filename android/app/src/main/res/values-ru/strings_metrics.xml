@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">Калории</string>
+    <string name="metric_protein">Белки</string>
+    <string name="metric_carbs">Углеводы</string>
+    <string name="metric_fat">Общие жиры</string>
+    <string name="metric_fiber">Клетчатка</string>
+    <string name="metric_water">Вода</string>
+    <string name="metric_fasting">Голодание</string>
+    <string name="metric_weight">Вес</string>
+    <string name="metric_body_fat">Процент жира</string>
+    <string name="metric_workouts">Тренировки</string>
+    <string name="metric_workout_minutes">Время тренировок</string>
+    <string name="metric_workout_burn">Энергия на тренировках</string>
+    <string name="metric_about_calories">Энергия из еды, которую вы записываете в Ayuvo, суммарно за день. Для более длинных периодов показывается среднее за дни, когда вы записывали еду.</string>
+    <string name="metric_about_protein">Белки из еды, которую вы записываете в Ayuvo, суммарно за день.</string>
+    <string name="metric_about_carbs">Углеводы из еды, которую вы записываете в Ayuvo, суммарно за день.</string>
+    <string name="metric_about_fat">Жиры из еды, которую вы записываете в Ayuvo, суммарно за день.</string>
+    <string name="metric_about_fiber">Пищевые волокна из еды, которую вы записываете в Ayuvo, суммарно за день. Продукты без данных о клетчатке не учитываются.</string>
+    <string name="metric_about_water">Вода, которую вы записываете в Ayuvo, суммарно за день.</string>
+    <string name="metric_about_fasting">Время голодания за день. Голодание, переходящее через полночь, учитывается в каждом дне, который оно охватывает.</string>
+    <string name="metric_about_weight">Записи веса в Ayuvo, включая данные, импортированные из подключённых приложений здоровья. Каждая точка показывает последнее значение за этот период.</string>
+    <string name="metric_about_body_fat">Значения процента жира, которые вы записываете в Ayuvo. Каждая точка показывает последнее значение за этот период.</string>
+    <string name="metric_about_workouts">Тренировки, выполненные в Ayuvo, учитываются в день записи.</string>
+    <string name="metric_about_workout_minutes">Время тренировок, выполненных в Ayuvo.</string>
+    <string name="metric_about_workout_burn">Расчётная энергия, сожжённая на тренировках в Ayuvo. Тренировки без оценки не учитываются.</string>
+    <string name="metric_add_to_favourites">Добавить в избранное</string>
+    <string name="metric_about">О приложении</string>
+    <string name="metric_log">Журнал</string>
+    <string name="metric_log_weight">Добавить данные о весе</string>
+    <string name="metric_log_body_fat">Добавить данные о проценте жира</string>
+    <string name="metric_add_water">Добавить воду</string>
+    <string name="metric_add_water_quick">Добавить %1$s</string>
+    <string name="metric_add_water_custom">Другое количество</string>
+    <string name="metric_open_food_diary">Открыть дневник питания</string>
+    <string name="metric_open_fasting">Открыть голодание</string>
+    <string name="metric_open_workouts">Открыть тренировки</string>
+    <string name="metric_details">Подробнее</string>
+    <string name="metric_goal_label">Цель %1$s</string>
+    <string name="metric_no_rows">Нет записей за этот период</string>
+    <string name="metric_row_logged_in_diary">Записано в дневнике питания</string>
+    <string name="metric_delete_entry">Удалить запись</string>
+    <string name="metric_delete_entry_body">Эта запись будет удалена из Ayuvo.</string>
+    <string name="metric_sources_app">Записано в Ayuvo</string>
+</resources>

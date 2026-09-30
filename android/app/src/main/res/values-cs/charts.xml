@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">Cíl</string>
+    <string name="sleep_time_asleep">Doba spánku</string>
+    <string name="sleep_avg_time_asleep">Prům. doba spánku</string>
+    <string name="sleep_in_bed">V posteli</string>
+    <string name="sleep_time_in_bed">Čas v posteli</string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">Vzhůru</string>
+    <string name="sleep_stage_rem">REM</string>
+    <string name="sleep_stage_core">Střed těla</string>
+    <string name="sleep_stage_deep">Hluboký</string>
+    <string name="sleep_stage_asleep">Spánek</string>
+    <string name="sleep_chart_summary">Graf spánku, noci: %1$d, %2$s</string>
+    <string name="sleep_night_summary">Spánek %1$s, doba spánku %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

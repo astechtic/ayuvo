@@ -32,7 +32,7 @@ struct NutritionDetailView: View {
     private var homeTopNutrientNames: String {
         let nutrientNames = (waterTrackingEnabled ? Array(homeTopNutrients.prefix(3)) : homeTopNutrients)
             .map(\.displayName)
-        return (waterTrackingEnabled ? nutrientNames + ["Water"] : nutrientNames)
+        return (waterTrackingEnabled ? nutrientNames + [String(localized: "Water", comment: "Home nutrient cards summary item")] : nutrientNames)
             .joined(separator: ", ")
     }
 
@@ -65,7 +65,7 @@ struct NutritionDetailView: View {
                     Section {
                         NutritionDetailRow(
                             icon: "drop.fill",
-                            label: "Water",
+                            label: String(localized: "Water", comment: "Nutrition details row label"),
                             value: waterUnit.displayValue(forMilliliters: waterStore.total(on: date)),
                             unit: waterUnit.symbol,
                             goal: waterUnit.displayValue(forMilliliters: waterDailyGoal)
@@ -79,10 +79,10 @@ struct NutritionDetailView: View {
                 }
 
                 Section("Macros") {
-                    NutritionDetailRow(icon: "flame.fill", label: "Calories", value: "\(foodStore.calories(for: date))", unit: "kcal", goal: "\(userProfile.effectiveCalories)")
-                    NutritionDetailRow(icon: "p.circle.fill", label: "Protein", value: MacroValueFormatter.string(foodStore.protein(for: date)), unit: "g", goal: "\(userProfile.effectiveProtein)")
-                    NutritionDetailRow(icon: "c.circle.fill", label: "Carbs", value: MacroValueFormatter.string(foodStore.carbs(for: date)), unit: "g", goal: "\(userProfile.effectiveCarbs)")
-                    NutritionDetailRow(icon: "f.circle.fill", label: "Fat", value: MacroValueFormatter.string(foodStore.fat(for: date)), unit: "g", goal: "\(userProfile.effectiveFat)")
+                    NutritionDetailRow(icon: "flame.fill", label: String(localized: "Calories", comment: "Nutrition details row label"), value: "\(foodStore.calories(for: date))", unit: "kcal", goal: "\(userProfile.effectiveCalories)")
+                    NutritionDetailRow(icon: "p.circle.fill", label: String(localized: "Protein", comment: "Nutrition details row label"), value: MacroValueFormatter.display(foodStore.protein(for: date)), unit: "g", goal: "\(userProfile.effectiveProtein)")
+                    NutritionDetailRow(icon: "c.circle.fill", label: String(localized: "Carbs", comment: "Nutrition details row label"), value: MacroValueFormatter.display(foodStore.carbs(for: date)), unit: "g", goal: "\(userProfile.effectiveCarbs)")
+                    NutritionDetailRow(icon: "f.circle.fill", label: String(localized: "Fat", comment: "Nutrition details row label"), value: MacroValueFormatter.display(foodStore.fat(for: date)), unit: "g", goal: "\(userProfile.effectiveFat)")
                 }
                 .listRowBackground(AppColors.appCard)
 
@@ -171,7 +171,7 @@ struct NutritionDetailRow: View {
                     .frame(width: 24)
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(LocalizedDisplayText.text(label))
+                Text(label)
                     .font(.system(.body, design: .rounded))
                 if let subline {
                     Text(subline)

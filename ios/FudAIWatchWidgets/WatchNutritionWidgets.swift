@@ -13,7 +13,7 @@ private enum WatchWidgetFormat {
         if abs(value.rounded() - value) < 0.0001 {
             return "\(Int(value.rounded()))"
         }
-        return String(format: "%.1f", value)
+        return value.formatted(.number.precision(.fractionLength(1)))
     }
 }
 
@@ -127,17 +127,17 @@ private struct WatchProteinWidgetView: View {
         case .accessoryCircular:
             NutrientCircularView(
                 value: WatchWidgetFormat.macro(snapshot.protein),
-                label: "prot",
+                label: String(localized: "prot", comment: "Watch complication: short label for protein"),
                 progress: snapshot.proteinProgress,
                 color: WatchWidgetPalette.protein,
                 icon: "bolt.fill"
             )
         case .accessoryRectangular:
             NutrientRectangularView(
-                title: "Protein",
+                title: String(localized: "Protein", comment: "Watch complication title"),
                 value: "\(WatchWidgetFormat.macro(snapshot.protein))g",
-                subtitle: "of \(snapshot.proteinGoal)g",
-                footer: "\(WatchWidgetFormat.macro(snapshot.proteinRemaining))g left",
+                subtitle: String(localized: "of \(snapshot.proteinGoal)g", comment: "Watch complication: protein goal in grams"),
+                footer: String(localized: "\(WatchWidgetFormat.macro(snapshot.proteinRemaining))g left", comment: "Watch complication: protein grams left today"),
                 progress: snapshot.proteinProgress,
                 color: WatchWidgetPalette.protein,
                 icon: "bolt.fill"
@@ -154,7 +154,7 @@ private struct WatchProteinWidgetView: View {
         default:
             NutrientCircularView(
                 value: WatchWidgetFormat.macro(snapshot.protein),
-                label: "prot",
+                label: String(localized: "prot", comment: "Watch complication: short label for protein"),
                 progress: snapshot.proteinProgress,
                 color: WatchWidgetPalette.protein,
                 icon: "bolt.fill"
@@ -186,9 +186,9 @@ private struct CaloriesRectangularView: View {
 
     var body: some View {
         NutrientRectangularView(
-            title: "Calories",
+            title: String(localized: "Calories", comment: "Watch complication title"),
             value: "\(snapshot.calories)",
-            subtitle: "of \(snapshot.calorieGoal) kcal",
+            subtitle: String(localized: "of \(snapshot.calorieGoal) kcal", comment: "Watch complication: calorie goal"),
             footer: "P\(WatchWidgetFormat.macro(snapshot.protein)) C\(WatchWidgetFormat.macro(snapshot.carbs)) F\(WatchWidgetFormat.macro(snapshot.fat))",
             progress: snapshot.calorieProgress,
             color: WatchWidgetPalette.calories,

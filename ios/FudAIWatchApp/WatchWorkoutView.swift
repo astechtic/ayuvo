@@ -46,9 +46,9 @@ private struct WatchWorkoutLiveView: View {
                     Text(duration(manager.elapsed(at: context.date)))
                         .font(.system(.title, design: .rounded).monospacedDigit().weight(.semibold))
                         .foregroundStyle(manager.state == .paused ? .orange : .primary)
-                    Text(String(format: "%.2f km", manager.distance / 1000))
+                    Text("\((manager.distance / 1000).formatted(.number.precision(.fractionLength(2)))) km", comment: "Apple Watch live workout distance")
                         .font(.title3.monospacedDigit())
-                    Text(manager.heartRate.map { "\(Int($0.rounded())) bpm" } ?? "-- bpm")
+                    Text(manager.heartRate.map { String(localized: "\(Int($0.rounded())) bpm", comment: "Apple Watch live heart rate") } ?? String(localized: "-- bpm", comment: "Apple Watch heart rate with no reading"))
                         .font(.title3.monospacedDigit())
                         .foregroundStyle(.red)
                     Text("\(Int(manager.energy.rounded())) kcal")
@@ -77,7 +77,7 @@ private struct WatchWorkoutLiveView: View {
         .tabViewStyle(.verticalPage)
     }
 
-    private func controlButton(_ title: String, _ icon: String, _ color: Color, action: @escaping () -> Void) -> some View {
+    private func controlButton(_ title: LocalizedStringKey, _ icon: String, _ color: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 2) {
                 Image(systemName: icon)

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Povolit Kouči číst tvé zdravotní záznamy?</string>
+    <string name="records_coach_consent_body">Kouč odesílá údaje ze záznamů, které čte — výsledky testů, data, lékaře a diagnózy — do %1$s, aby ti mohl odpovědět. Záznamy zůstávají uložené v tomto zařízení.</string>
+    <string name="records_coach_consent_body_on_device">Kouč čte záznamy v tomto zařízení; nic se neodesílá online.</string>
+    <string name="records_coach_consent_allow">Povolit</string>
+    <string name="records_coach_consent_not_now">Teď ne</string>
+    <string name="records_coach_settings_title">Kouč</string>
+    <string name="records_coach_settings_toggle">Povolit Kouči používat moje zdravotní záznamy</string>
+    <string name="records_coach_settings_subtitle">Kouč může prohledávat a číst tvé záznamy, aby odpovídal na otázky. Vypnutím se přístup okamžitě odebere.</string>
+    <string name="records_coach_analyzing">Analyzuje se:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Analyzuji %d záznam</item>
+        <item quantity="few">Analyzuji %d záznamy</item>
+        <item quantity="many">Analyzuji %d záznamu</item>
+        <item quantity="other">Analyzuji %d záznamů</item>
+    </plurals>
+    <string name="records_coach_change_records">Změnit záznamy</string>
+    <string name="records_coach_used_records">Použité záznamy</string>
+    <string name="records_coach_picker_title">Záznamy pro tuto konverzaci</string>
+    <string name="records_coach_picker_search">Hledat záznamy</string>
+    <string name="records_coach_picker_limit">Vyber až %d záznamů.</string>
+    <string name="records_coach_picker_done">Hotovo</string>
+    <string name="records_coach_picker_empty">Nebyly nalezeny žádné záznamy.</string>
+    <string name="records_coach_picker_selected">Vybráno</string>
+    <string name="records_coach_picker_recent">Nedávné záznamy</string>
+    <string name="records_coach_picker_results">Výsledky</string>
+    <string name="records_coach_mode_title">Odeslat záznamy online?</string>
+    <string name="records_coach_mode_body">Kouč používá %1$s. Odeslat údaje z vybraných záznamů online?</string>
+    <string name="records_coach_mode_send">Odeslat</string>
+    <string name="records_coach_mode_on_device">Použít Kouče v zařízení</string>
+    <string name="records_coach_ask_report">Zeptat se na tuto zprávu</string>
+    <string name="records_coach_compare_previous">Porovnat s předchozí zprávou</string>
+    <string name="records_coach_explain_trend">Vysvětlit tento trend</string>
+    <string name="records_coach_ask_coach">Zeptat se Kouče</string>
+    <string name="records_coach_prompt_report">Vysvětli tuto zprávu: co vybočuje a na co se mám zeptat lékaře?</string>
+    <string name="records_coach_prompt_compare">Porovnej tuto zprávu s předchozí. Co se změnilo?</string>
+    <string name="records_coach_prompt_trend">Vysvětli, jak se můj ukazatel %1$s v čase měnil.</string>
+    <string name="records_coach_chip_latest">Analyzuj mé poslední krevní testy</string>
+    <string name="records_coach_chip_abnormal">Najít abnormální hodnoty</string>
+    <string name="records_coach_chip_compare">Porovnat s předchozí zprávou</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

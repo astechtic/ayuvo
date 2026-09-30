@@ -101,7 +101,7 @@ fun NutritionScreen(
             MetricCatalog.nutrientBrowseSections(catalog).forEach { (section, metrics) ->
                 item(key = "nutrition-section-${section.id}") {
                     Box(Modifier.padding(start = AyuvoSpacing.ScreenH, end = AyuvoSpacing.ScreenH, top = AyuvoSpacing.SectionGap)) {
-                        InsetGroup(header = MetricCatalog.browseSectionTitleRes(section.id)?.let { stringResource(it) } ?: section.title) {
+                        InsetGroup(header = MetricCatalog.browseSectionTitle(LocalContext.current, section)) {
                             metrics.forEach { m ->
                                 row {
                                     val key = MetricKey.Nutrient(m.key)

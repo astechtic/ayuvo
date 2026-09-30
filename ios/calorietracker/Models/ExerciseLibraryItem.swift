@@ -57,11 +57,11 @@ struct ExerciseLibraryItem: Identifiable, Hashable {
     }
 
     var primaryMusclesTitle: String {
-        primaryMuscles.isEmpty ? "Unspecified" : primaryMuscles.joined(separator: ", ")
+        ExerciseTermText.muscles(primaryMuscles)
     }
 
     var secondaryMusclesTitle: String {
-        secondaryMuscles.isEmpty ? "None" : secondaryMuscles.joined(separator: ", ")
+        secondaryMuscles.isEmpty ? String(localized: "None", comment: "Exercise has no secondary muscles") : secondaryMuscles.map(ExerciseTermText.muscle).joined(separator: ", ")
     }
 
     var isCardio: Bool { bodyPart.caseInsensitiveCompare("cardio") == .orderedSame }
@@ -127,7 +127,15 @@ enum ExerciseLibrarySort: String, CaseIterable, Identifiable, Codable, Hashable 
     var id: String { rawValue }
     // Sort titles share catalog keys with the filter-pill titles ("Name", "Target",
     // "Secondary", ...) so the results-header subtitle localizes like the rest of the UI.
-    var title: String { String(localized: String.LocalizationValue(rawValue)) }
+    var title: String {
+        switch self {
+        case .name: return String(localized: "Name")
+        case .bodyPart: return String(localized: "Body Part")
+        case .primaryMuscles: return String(localized: "Target")
+        case .secondaryMuscles: return String(localized: "Secondary")
+        case .rawEquipment: return String(localized: "Equipment")
+        }
+    }
 }
 
 private extension String {

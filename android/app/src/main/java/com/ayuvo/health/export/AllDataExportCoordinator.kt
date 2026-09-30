@@ -25,6 +25,8 @@ import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** The steps of one "Export All Data" run, in order (progress + the UI's step label). */
 enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, MEDICATIONS, HEALTH_RECORDS, COACH_CHATS, APP_BACKUP, PORTABLE, WRITING }
@@ -111,7 +113,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                     createdAt = Instant.now(),
                     appVersion = BuildConfig.VERSION_NAME
                 )
-            } ?: error("Couldn't open the destination file")
+            } ?: error(AppText.get(R.string.core_export_open_destination_failed))
             AllDataExportOutcome.Done(sections.size, skipped.keys.toList())
         } finally {
             runCatching { work.deleteRecursively() }

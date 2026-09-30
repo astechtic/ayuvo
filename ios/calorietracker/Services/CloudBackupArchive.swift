@@ -175,9 +175,9 @@ enum CloudBackupError: LocalizedError, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .missingPayload, .invalidFormat: return "This is not a Ayuvo backup."
-        case .needsNewerApp: return "This backup needs a newer Ayuvo."
-        case .otherPlatform: return "Settings from an Android export can't be applied on iPhone."
+        case .missingPayload, .invalidFormat: return String(localized: "This is not a Ayuvo backup.", comment: "Settings backup restore error")
+        case .needsNewerApp: return String(localized: "This backup needs a newer Ayuvo.", comment: "Settings backup restore error")
+        case .otherPlatform: return String(localized: "Settings from an Android export can't be applied on iPhone.", comment: "Settings backup restore error")
         }
     }
 }

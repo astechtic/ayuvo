@@ -9,8 +9,8 @@ struct OutdoorActivityDurationSheet: View {
 
         var title: String {
             switch self {
-            case .walking: return "Walking"
-            case .running: return "Running"
+            case .walking: return String(localized: "Walking", comment: "Quick outdoor activity name")
+            case .running: return String(localized: "Running", comment: "Quick outdoor activity name")
             }
         }
 

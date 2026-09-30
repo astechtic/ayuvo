@@ -231,7 +231,7 @@ fun SleepHypnogram(window: SleepWindow, rows: List<SleepRow>, zone: ZoneId, is24
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            stringResource(R.string.sleep_stage_callout, stageName(r.stage), HealthValueFormatter.duration((r.endMs - r.startMs) / 1000.0)),
+                            stringResource(R.string.sleep_stage_callout, stageName(r.stage), HealthValueFormatter.duration((r.endMs - r.startMs) / 1000.0, androidx.compose.ui.platform.LocalResources.current)),
                             fontSize = 12.sp, fontWeight = FontWeight.Bold, color = stageColor(r.stage), maxLines = 1
                         )
                         Text(
@@ -319,7 +319,7 @@ fun SleepStageList(window: SleepWindow, modifier: Modifier = Modifier) {
                 Box(Modifier.size(10.dp).clip(RoundedCornerShape(3.dp)).background(stageColor(code)))
                 Spacer(Modifier.width(8.dp))
                 Text(stageName(code), fontSize = 14.sp, modifier = Modifier.weight(1f))
-                val duration = HealthValueFormatter.duration(seconds.toDouble())
+                val duration = HealthValueFormatter.duration(seconds.toDouble(), androidx.compose.ui.platform.LocalResources.current)
                 Text(
                     if (pct != null) stringResource(R.string.sleep_stage_share, duration, pct) else duration,
                     fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
@@ -359,7 +359,7 @@ fun SleepRangeBars(
     val spanMin = (domain.max - domain.min).coerceAtLeast(1).toFloat()
     val insetPx = with(density) { ChartSpec.PlotTopInset.toPx() }
     val plotPx = with(density) { ChartSpec.PlotHeight.toPx() }
-    val summary = stringResource(R.string.sleep_chart_summary, series.headline.nights, series.headline.asleepS?.let { HealthValueFormatter.duration(it) } ?: "—")
+    val summary = stringResource(R.string.sleep_chart_summary, series.headline.nights, series.headline.asleepS?.let { HealthValueFormatter.duration(it, androidx.compose.ui.platform.LocalResources.current) } ?: "—")
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Column(modifier.semantics { contentDescription = summary }) {

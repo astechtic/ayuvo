@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">API açarı təyin edilməyib. Açarınızı Parametrlər → Sİ provayderi bölməsində əlavə edin.</string>
+    <string name="ai_error_image_conversion">Şəkli emal etmək alınmadı. Başqa foto yoxlayın.</string>
+    <string name="ai_error_invalid_response">Sİ cavabını anlamaq mümkün olmadı. Yenidən cəhd edin.</string>
+    <string name="ai_error_invalid_url">Yanlış API URL. Provayder parametrlərinizi yoxlayın.</string>
+    <string name="ai_error_offline">Deyəsən, oflaynsınız. Bağlantınızı yoxlayın və yenidən cəhd edin.</string>
+    <string name="ai_error_connection">Sİ provayderinə qoşulmaq mümkün olmadı. Bağlantınızı və provayder URL-ni yoxlayın, sonra yenidən cəhd edin.</string>
+    <string name="ai_error_timeout">Sİ çox gec cavab verdi. Yenidən cəhd edin və ya Parametrlər → Sİ provayderi bölməsində sorğu vaxt limitini artırın.</string>
+    <string name="ai_error_credits">Sİ hesabınızda kredit qalmayıb. Balansı artırın və ya Parametrlər → Sİ provayderi bölməsində provayderi dəyişin.</string>
+    <string name="ai_error_daily_quota">Sİ hesabınızın gündəlik limiti bitib. Sabah yenidən cəhd edin və ya Parametrlər → Sİ provayderi bölməsində provayderi dəyişin.</string>
+    <string name="ai_error_quota">Sİ hesabınızın istifadə limiti aşılıb. Provayderinizin limitlərini yoxlayın və ya Parametrlər → Sİ provayderi bölməsində provayderi dəyişin.</string>
+    <string name="ai_error_model">Seçilmiş model və ya API ünvanı əlçatan deyil. Parametrlər → Sİ provayderi bölməsində modeli və API URL-ni yoxlayın.</string>
+    <string name="ai_error_rate_limit">API açarınız sorğu limitinə çatıb. Bir dəqiqə gözləyin və ya Parametrlər → Sİ provayderi bölməsində provayderi dəyişin. Pulsuz plandan istifadə edirsinizsə, gündəlik limitin bitib-bitmədiyini yoxlayın.</string>
+    <string name="ai_error_key_rejected">API açarınız qəbul edilmədi. Parametrlər → Sİ provayderi bölməsini açın və etibarlı açarı yenidən yapışdırın.</string>
+    <string name="ai_error_overloaded">Sİ provayderi hazırda həddən artıq yüklənib. Bir neçə dəfə yenidən cəhd etdik — bir dəqiqədən sonra yenidən cəhd edin və ya Parametrlər → Sİ provayderi bölməsində provayderi/modeli dəyişin.</string>
+    <string name="ai_error_generic">Sİ sorğusu uğursuz oldu. Yenidən cəhd edin və ya Parametrlər → Sİ provayderi bölməsində provayderi dəyişin.</string>
+    <string name="ai_error_local_unavailable">Cihazdaxili Sİ mühiti əlçatan deyil. Parametrlər → Sİ provayderi bölməsində endirilmiş modeli yoxlayın.</string>
+    <string name="ai_error_truncated">Sİ cavabı iki dəfə yarımçıq kəsildi. Daha qısa mətn və ya başqa model yoxlayın.</string>
+    <string name="ai_error_both_failed">%1$s və ehtiyat %2$s uğursuz oldu. %3$s</string>
+</resources>

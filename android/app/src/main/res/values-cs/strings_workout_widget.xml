@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo Trénink</string>
+    <string name="widget_workout_description">Spusť a ovládej trénink</string>
+    <string name="widget_workout_title">Trénink</string>
+    <string name="widget_workout_walk">Chůze</string>
+    <string name="widget_workout_run">Běh</string>
+    <string name="widget_workout_cycle">Kolo</string>
+    <string name="widget_workout_hike">Turistika</string>
+    <string name="widget_workout_strength">Síla</string>
+    <string name="widget_workout_strength_title">Silový trénink</string>
+    <string name="widget_workout_status_recording">Záznam</string>
+    <string name="widget_workout_status_paused">Pozastaveno</string>
+    <string name="widget_workout_status_saving">Ukládání…</string>
+    <string name="widget_workout_status_recovery">Regenerace</string>
+    <string name="widget_workout_status_strength">Probíhá</string>
+    <string name="widget_workout_waiting_gps">Čekání na GPS</string>
+    <string name="widget_workout_distance">Vzdálenost</string>
+    <string name="widget_workout_pace">Prům. tempo</string>
+    <string name="widget_workout_speed">Prům. rychlost</string>
+    <string name="widget_workout_pause">Pozastavit</string>
+    <string name="widget_workout_resume">Pokračovat</string>
+    <string name="widget_workout_lap">Kolo</string>
+    <string name="widget_workout_end">Ukončit</string>
+    <string name="widget_workout_skip">Přeskočit</string>
+    <string name="widget_workout_finish">Dokončit</string>
+</resources>

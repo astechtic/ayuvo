@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">洞察</string>
+    <string name="domain_nutrition">营养</string>
+    <string name="domain_hydration">补水</string>
+    <string name="domain_fasting">禁食</string>
+    <string name="domain_body">身体测量</string>
+    <string name="domain_activity">活动</string>
+    <string name="domain_heart">心脏</string>
+    <string name="domain_sleep">睡眠</string>
+    <string name="domain_vitals">生命体征</string>
+    <string name="domain_respiratory">呼吸</string>
+    <string name="domain_cycle">周期跟踪</string>
+    <string name="domain_mindfulness">正念</string>
+    <string name="domain_mobility">行动能力</string>
+    <string name="domain_hearing">听力</string>
+    <string name="domain_symptoms">症状</string>
+    <string name="domain_medications">药物</string>
+    <string name="domain_records">健康档案</string>
+    <string name="domain_other">其他数据</string>
+    <string name="design_back">返回</string>
+</resources>

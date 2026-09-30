@@ -8,13 +8,13 @@ struct QuickLogIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Quick Log"
     static var description = IntentDescription("Choose four things to log from your Home Screen.")
 
-    @Parameter(title: "Action 1", default: .foodCamera)
+    @Parameter(title: LocalizedStringResource("Action 1", comment: "Quick Log widget setting: action slot 1"), default: .foodCamera)
     var action1: QuickLogAction
-    @Parameter(title: "Action 2", default: .water)
+    @Parameter(title: LocalizedStringResource("Action 2", comment: "Quick Log widget setting: action slot 2"), default: .water)
     var action2: QuickLogAction
-    @Parameter(title: "Action 3", default: .weight)
+    @Parameter(title: LocalizedStringResource("Action 3", comment: "Quick Log widget setting: action slot 3"), default: .weight)
     var action3: QuickLogAction
-    @Parameter(title: "Action 4", default: .workout)
+    @Parameter(title: LocalizedStringResource("Action 4", comment: "Quick Log widget setting: action slot 4"), default: .workout)
     var action4: QuickLogAction
 
     var actions: [QuickLogAction] { [action1, action2, action3, action4] }

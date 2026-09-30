@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Aucune clé API configurée. Ajoutez votre clé dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_image_conversion">Impossible de traiter l\'image. Essayez une autre photo.</string>
+    <string name="ai_error_invalid_response">Impossible de comprendre la réponse de l\'IA. Veuillez réessayer.</string>
+    <string name="ai_error_invalid_url">URL de l\'API non valide. Vérifiez les réglages de votre fournisseur.</string>
+    <string name="ai_error_offline">Vous semblez être hors ligne. Vérifiez votre connexion et réessayez.</string>
+    <string name="ai_error_connection">Impossible de se connecter au fournisseur d\'IA. Vérifiez votre connexion et l\'URL du fournisseur, puis réessayez.</string>
+    <string name="ai_error_timeout">L\'IA a mis trop de temps à répondre. Réessayez, ou augmentez le délai d\'attente dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_credits">Votre compte d\'IA n\'a plus de crédits. Rechargez-le, ou changez de fournisseur dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_daily_quota">Le quota quotidien de votre compte d\'IA est épuisé. Réessayez demain, ou changez de fournisseur dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_quota">Le quota d\'utilisation de votre compte d\'IA a été dépassé. Vérifiez les limites de votre fournisseur, ou changez de fournisseur dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_model">Le modèle ou le point d\'accès API sélectionné est indisponible. Vérifiez le modèle et l\'URL de l\'API dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_rate_limit">Limite de requêtes atteinte pour votre clé API. Patientez une minute, ou changez de fournisseur dans Réglages → Fournisseur d\'IA. Si vous utilisez une offre gratuite, vérifiez si son quota quotidien est épuisé.</string>
+    <string name="ai_error_key_rejected">Votre clé API a été refusée. Ouvrez Réglages → Fournisseur d\'IA et collez à nouveau une clé valide.</string>
+    <string name="ai_error_overloaded">Le fournisseur d\'IA est surchargé en ce moment. Nous avons réessayé plusieurs fois — réessayez dans une minute, ou changez de fournisseur/modèle dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_generic">La requête à l\'IA a échoué. Réessayez, ou changez de fournisseur dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_local_unavailable">Le moteur d\'IA sur l\'appareil est indisponible. Vérifiez le modèle téléchargé dans Réglages → Fournisseur d\'IA.</string>
+    <string name="ai_error_truncated">La réponse de l\'IA a été tronquée deux fois. Essayez une saisie plus courte ou un autre modèle.</string>
+    <string name="ai_error_both_failed">%1$s et le modèle de secours %2$s ont tous deux échoué. %3$s</string>
+</resources>

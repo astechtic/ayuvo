@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Jak má Ayuvo AI zpracovávat tvé zdravotní záznamy?</string>
+    <string name="records_ai_mode_local">Místní AI</string>
+    <string name="records_ai_mode_local_detail">Používá model v zařízení. Text záznamu zůstává pro zpracování AI v tomto telefonu.</string>
+    <string name="records_ai_mode_cloud">Cloudová AI</string>
+    <string name="records_ai_mode_cloud_detail">Odesílá text stránek (obrázky jen u stránek bez textu) tvému poskytovateli AI.</string>
+    <string name="records_ai_mode_ask">Zeptat se v případě potřeby</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo se zeptá, než na záznam použije AI.</string>
+    <string name="records_ai_mode_off">Zatím přeskočit AI</string>
+    <string name="records_ai_mode_off_detail">Podrobnosti se hledají bez AI. Můžeš to změnit v Nastavení.</string>
+    <string name="records_ai_onboarding_note">Kdykoli to můžeš změnit v Nastavení › Zdravotní záznamy.</string>
+    <string name="records_ai_chooser_title">Vyber, jak má AI pomáhat s tvými záznamy</string>
+    <string name="records_ai_settings_title">Zpracování AI</string>
+    <string name="records_ai_local_unavailable">AI v zařízení není nastavená — podrobnosti nalezeny bez AI.</string>
+    <string name="records_ai_set_up_local">Nastavit AI v zařízení</string>
+    <string name="records_ai_no_cloud_provider">Pro online AI přidej poskytovatele AI.</string>
+    <string name="records_ai_add_provider">Přidat poskytovatele AI</string>
+    <string name="records_ai_cloud_provider_note">Online AI používá %1$s.</string>
+    <string name="records_ai_consent_title">Použít AI k nalezení dalších podrobností?</string>
+    <string name="records_ai_consent_body">AI dokáže najít podrobnosti, které pravidla přehlédla. Výsledky jsou návrhy, které si můžeš ověřit podle originálu.</string>
+    <string name="records_ai_consent_local">V tomto zařízení</string>
+    <string name="records_ai_consent_cloud">Online AI · %1$s</string>
+    <string name="records_ai_consent_not_now">Teď ne</string>
+    <string name="records_ai_consent_apply_all">Použít na všechny čekající záznamy</string>
+    <string name="records_ai_consent_none_available">Zatím není k dispozici žádná AI. Nastav AI v zařízení nebo přidej poskytovatele AI v Nastavení.</string>
+    <string name="records_ai_status_local">Zpracováno v tomto zařízení</string>
+    <string name="records_ai_status_cloud">Zpracováno pomocí online AI · %1$s</string>
+    <string name="records_ai_status_none">Nezpracováno AI</string>
+</resources>

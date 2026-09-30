@@ -18,9 +18,12 @@ import java.security.MessageDigest
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.zip.ZipInputStream
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 enum class HealthImportMode { MERGE, REPLACE_ALL }
 
+/** [message] is localized (AppText): the import screens show it as is. */
 class HealthImportException(message: String) : IllegalArgumentException(message)
 
 data class HealthImportPreview(
@@ -55,7 +58,7 @@ class HealthDataImporter(
 ) {
 
     suspend fun preview(input: InputStream, sizeBytes: Long? = null): HealthImportPreview {
-        if (sizeBytes != null && sizeBytes > HealthExportFormat.MAX_FILE_BYTES) throw HealthImportException("This file is too large to import.")
+        if (sizeBytes != null && sizeBytes > HealthExportFormat.MAX_FILE_BYTES) throw HealthImportException(AppText.orEnglish("This file is too large to import.", R.string.core_import_file_too_large))
         var manifest: HealthExportManifest? = null
         var samples = 0L
         var series = 0L
@@ -95,7 +98,7 @@ class HealthDataImporter(
     }
 
     suspend fun apply(input: InputStream, mode: HealthImportMode, sizeBytes: Long? = null): HealthImportResult {
-        if (sizeBytes != null && sizeBytes > HealthExportFormat.MAX_FILE_BYTES) throw HealthImportException("This file is too large to import.")
+        if (sizeBytes != null && sizeBytes > HealthExportFormat.MAX_FILE_BYTES) throw HealthImportException(AppText.orEnglish("This file is too large to import.", R.string.core_import_file_too_large))
         val z = zone()
         var manifest: HealthExportManifest? = null
         var inserted = 0
@@ -249,28 +252,28 @@ class HealthDataImporter(
         val manifest = try {
             HealthExportFormat.json.decodeFromString(HealthExportManifest.serializer(), text)
         } catch (_: SerializationException) {
-            throw HealthImportException("This is not an Ayuvo health data export.")
+            throw HealthImportException(AppText.orEnglish("This is not an Ayuvo health data export.", R.string.core_health_import_not_export))
         } catch (_: IllegalArgumentException) {
-            throw HealthImportException("This is not an Ayuvo health data export.")
+            throw HealthImportException(AppText.orEnglish("This is not an Ayuvo health data export.", R.string.core_health_import_not_export))
         }
-        if (manifest.format != HealthExportFormat.FORMAT) throw HealthImportException("This is not an Ayuvo health data export.")
-        if (manifest.format_version > HealthExportFormat.VERSION) throw HealthImportException("This export needs a newer Ayuvo.")
+        if (manifest.format != HealthExportFormat.FORMAT) throw HealthImportException(AppText.orEnglish("This is not an Ayuvo health data export.", R.string.core_health_import_not_export))
+        if (manifest.format_version > HealthExportFormat.VERSION) throw HealthImportException(AppText.orEnglish("This export needs a newer Ayuvo.", R.string.core_health_import_needs_newer))
         return manifest
     }
 
     private fun requireManifest(manifest: HealthExportManifest?): HealthExportManifest =
-        manifest ?: throw HealthImportException("This is not an Ayuvo health data export.")
+        manifest ?: throw HealthImportException(AppText.orEnglish("This is not an Ayuvo health data export.", R.string.core_health_import_not_export))
 
     private fun checkLine(line: String) {
-        if (line.length > HealthExportFormat.MAX_LINE_BYTES) throw HealthImportException("The export contains an oversized record.")
+        if (line.length > HealthExportFormat.MAX_LINE_BYTES) throw HealthImportException(AppText.orEnglish("The export contains an oversized record.", R.string.core_health_import_oversized))
     }
 
     private fun decodeSample(line: String): HealthExportSample = try {
         HealthExportFormat.decodeSample(line)
     } catch (_: SerializationException) {
-        throw HealthImportException("The export contains an unreadable record.")
+        throw HealthImportException(AppText.orEnglish("The export contains an unreadable record.", R.string.core_health_import_unreadable))
     } catch (_: IllegalArgumentException) {
-        throw HealthImportException("The export contains an unreadable record.")
+        throw HealthImportException(AppText.orEnglish("The export contains an unreadable record.", R.string.core_health_import_unreadable))
     }
 
     private companion object {

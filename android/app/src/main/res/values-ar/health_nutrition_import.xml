@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">استيراد سجل التغذية</string>
+    <string name="health_import_action">استيراد</string>
+    <string name="health_import_description">انقل سجلات الطعام من تطبيق آخر إلى يومياتك. عاين السجلات المتاحة، ثم اختر تطبيقًا مصدرًا واحدًا لتجنّب احتساب السجلات المشتركة مرتين.</string>
+    <string name="health_import_from">من (YYYY-MM-DD)</string>
+    <string name="health_import_to">حتى (YYYY-MM-DD)</string>
+    <string name="health_import_history_hint">بدون الوصول إلى السجل، اختر تواريخ ضمن آخر 30 يومًا. تتطلب السجلات الأقدم الوصول إلى السجل على جهاز مدعوم.</string>
+    <string name="health_import_grant">منح الوصول إلى التغذية والسجل</string>
+    <string name="health_import_access_result">تم تحديث إعدادات الوصول. عاين مرة أخرى للتحقق من السجلات المتاحة.</string>
+    <string name="health_import_access_needed">اسمح بقراءة بيانات التغذية في Health Connect، ثم عاين مرة أخرى.</string>
+    <string name="health_import_invalid_dates">أدخل تواريخ صالحة بالتنسيق YYYY-MM-DD. يجب أن يكون تاريخ الانتهاء في تاريخ البدء أو بعده وألا يتجاوز اليوم.</string>
+    <string name="health_import_history_needed">يتطلب هذا النطاق الوصول إلى السجل. امنح الوصول على جهاز مدعوم، أو اختر تواريخ ضمن آخر 30 يومًا.</string>
+    <string name="health_import_preview">معاينة السجلات المتاحة</string>
+    <string name="health_import_failed">تعذّر إكمال الاستيراد. تحقّق من الوصول إلى Health Connect وحاول مرة أخرى.</string>
+    <string name="health_import_empty">لم يتم العثور على سجلات تغذية جديدة من تطبيقات أخرى في هذا النطاق. تحقّق من أن التطبيق المصدر قد شارك بيانات التغذية مع Health Connect. يتم تخطي السجلات المستوردة سابقًا، بما فيها تلك التي أُزيلت من يومياتك.</string>
+    <string name="health_import_count">%1$d سجلات جديدة · %2$d kcal</string>
+    <string name="health_import_unnamed">وجبة مستوردة</string>
+    <string name="health_import_local_only">هذه نسخ محلية. تبقى التعديلات وعمليات الحذف في Ayuvo. تكرار الاستيراد يتخطى السجلات المستوردة سابقًا؛ ولا يحدّثها.</string>
+    <string name="health_import_done">تم استيراد %1$d سجلات إلى يومياتك.</string>
+    <string name="health_import_close">إغلاق</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">Efort de raționament OpenRouter</string>
+    <string name="settings_reasoning_effort_help">Se aplică tuturor cererilor OpenRouter. Nivelurile acceptate diferă în funcție de model. Un efort mai mare poate dura mai mult și costa mai mult. Automat păstrează setarea implicită a modelului; răspunsurile incomplete se reîncearcă cu Redus.</string>
+    <string name="reasoning_effort_auto">Implicit / Automat</string>
+    <string name="reasoning_effort_none">Niciunul</string>
+    <string name="reasoning_effort_minimal">Minim</string>
+    <string name="reasoning_effort_low">Scăzut</string>
+    <string name="reasoning_effort_medium">Mediu</string>
+    <string name="reasoning_effort_high">Ridicat</string>
+    <string name="reasoning_effort_xhigh">Foarte ridicat</string>
+    <string name="reasoning_effort_max">Maxim</string>
+</resources>

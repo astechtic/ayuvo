@@ -33,7 +33,7 @@ struct WatchNutritionView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel("Add water")
-                        .accessibilityValue("\(nutrient.displayValue) of \(nutrient.displayGoal)\(nutrient.unit)")
+                        .accessibilityValue(Text("\(nutrient.displayValue) of \(nutrient.displayGoal)\(nutrient.unit)", comment: "Watch water accessibility value: amount of goal"))
                         .accessibilityHint("Opens quick water amounts")
                     } else {
                         WatchNutrientBar(nutrient: nutrient, gradient: themeGradient)
@@ -65,9 +65,9 @@ private struct WatchWaterLogView: View {
     let gradient: [Color]
 
     private let presets = [
-        Preset(milliliters: 250, label: "1 glass"),
-        Preset(milliliters: 500, label: "2 glasses"),
-        Preset(milliliters: 750, label: "3 glasses"),
+        Preset(milliliters: 250, label: String(localized: "1 glass", comment: "Watch water preset")),
+        Preset(milliliters: 500, label: String(localized: "2 glasses", comment: "Watch water preset")),
+        Preset(milliliters: 750, label: String(localized: "3 glasses", comment: "Watch water preset")),
     ]
 
     var body: some View {

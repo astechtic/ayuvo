@@ -29,13 +29,13 @@ struct InsightMethodologySheet: View {
         NavigationStack {
             List {
                 if let methodology {
-                    ForEach(methodology.sections, id: \.self) { section in
+                    ForEach(Array(methodology.sections.enumerated()), id: \.offset) { index, section in
                         Section {
-                            Text(section.body)
+                            Text(config.sectionBody(topic.rawValue, index, section))
                                 .font(.system(.subheadline, design: .rounded))
                                 .fixedSize(horizontal: false, vertical: true)
                         } header: {
-                            Text(section.heading)
+                            Text(config.sectionHeading(topic.rawValue, index, section))
                         }
                     }
                 }
@@ -88,29 +88,29 @@ struct InsightMethodologySheet: View {
 
                 if topic != .background, let background = config.methodology["background"] {
                     Section {
-                        ForEach(background.sections, id: \.self) { section in
+                        ForEach(Array(background.sections.enumerated()), id: \.offset) { index, section in
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(section.heading).font(.system(.subheadline, design: .rounded, weight: .semibold))
-                                Text(section.body)
+                                Text(config.sectionHeading("background", index, section)).font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                Text(config.sectionBody("background", index, section))
                                     .font(.system(.footnote, design: .rounded))
                                     .foregroundStyle(.secondary)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     } header: {
-                        Text(background.title)
+                        Text(config.methodologyTitle("background") ?? background.title)
                     }
                 }
 
                 Section {
                     ForEach(disclaimerKeys, id: \.self) { key in
-                        Text(config.disclaimer(key))
+                        Text(config.displayDisclaimer(key))
                             .font(.system(.footnote, design: .rounded))
                             .foregroundStyle(.secondary)
                     }
                 }
             }
-            .navigationTitle(methodology?.title ?? String(localized: "How we calculate this"))
+            .navigationTitle(config.methodologyTitle(topic.rawValue) ?? String(localized: "How we calculate this"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -146,16 +146,16 @@ struct InsightMethodologySheet: View {
         switch topic {
         case .recovery:
             return config.recovery.components.map { component in
-                (config.metric(component.metric)?.label ?? component.id, Self.percent(component.weight))
+                (config.metric(component.metric) != nil ? config.metricLabel(component.metric) : component.id, Self.percent(component.weight))
             }
         case .healthAge:
-            return config.healthAge.markers.map { ($0.label, Self.percent($0.weight)) }
+            return config.healthAge.markers.map { (config.markerLabel($0.id), Self.percent($0.weight)) }
         case .dailyReview:
-            return config.dailyReview.areas.map { ($0.label, Self.percent($0.weight)) }
+            return config.dailyReview.areas.map { (config.areaLabel($0.id), Self.percent($0.weight)) }
         case .baselines:
             return HealthAnalyticsEngine.trendMetrics.compactMap { id in
                 config.metric(id).map { metric in
-                    (metric.label, String(localized: "\(metric.windowDays) days · min \(metric.minPoints)"))
+                    (config.metricLabel(id), String(localized: "\(metric.windowDays) days · min \(metric.minPoints)"))
                 }
             }
         case .patterns:

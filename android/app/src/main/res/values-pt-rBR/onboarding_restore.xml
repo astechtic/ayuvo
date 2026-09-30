@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Restaurar de um backup</string>
+    <string name="onboarding_restore_title">Restaurar de um backup</string>
+    <string name="onboarding_restore_message">Recupere seu perfil, metas, registro alimentar e ajustes de um backup do Ayuvo. Você ainda vai configurar notificações, Health Connect e IA neste telefone. As chaves de API nunca ficam em um backup.</string>
+    <string name="onboarding_restore_file">Escolher um arquivo de backup</string>
+    <string name="onboarding_restore_drive">Restaurar do Google Drive</string>
+    <string name="onboarding_restore_busy">Restaurando seu backup…</string>
+    <string name="onboarding_restore_error_no_drive">Nenhum backup do Ayuvo foi encontrado no Drive dessa conta do Google.</string>
+    <string name="onboarding_restore_error_no_profile">Esse backup não inclui um perfil. Escolha outro backup ou continue a configuração aqui.</string>
+    <string name="onboarding_restore_error_failed">Não foi possível restaurar o backup: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Não foi possível restaurar o backup.</string>
+</resources>

@@ -140,8 +140,39 @@ nonisolated enum AllDataImport {
     static func countsText(_ counts: [String: Int]) -> String {
         counts.sorted { $0.key < $1.key }
             .filter { $0.value > 0 }
-            .map { "\($0.value.formatted()) \($0.key.replacingOccurrences(of: "_", with: " "))" }
+            .map { countText($0.key, $0.value) }
             .joined(separator: " · ")
+    }
+
+    /// One manifest count in the user's language; unknown keys (a newer exporter) keep the key words.
+    static func countText(_ key: String, _ n: Int) -> String {
+        switch key {
+        case "food_entries": String(localized: "\(n) food entries", comment: "Import preview: count of items in an export section")
+        case "water_entries": String(localized: "\(n) water entries", comment: "Import preview: count of items in an export section")
+        case "days": String(localized: "\(n) days", comment: "Import preview: count of items in an export section")
+        case "samples": String(localized: "\(n) samples", comment: "Import preview: count of items in an export section")
+        case "series_points": String(localized: "\(n) series points", comment: "Import preview: count of items in an export section")
+        case "types": String(localized: "\(n) types", comment: "Import preview: count of items in an export section")
+        case "medications": String(localized: "\(n) medications", comment: "Import preview: count of items in an export section")
+        case "schedules": String(localized: "\(n) schedules", comment: "Import preview: count of items in an export section")
+        case "dose_logs": String(localized: "\(n) dose logs", comment: "Import preview: count of items in an export section")
+        case "medication_nutrients": String(localized: "\(n) medication nutrients", comment: "Import preview: count of items in an export section")
+        case "records": String(localized: "\(n) records", comment: "Import preview: count of items in an export section")
+        case "files": String(localized: "\(n) files", comment: "Import preview: count of items in an export section")
+        case "conversations": String(localized: "\(n) conversations", comment: "Import preview: count of items in an export section")
+        case "messages": String(localized: "\(n) messages", comment: "Import preview: count of items in an export section")
+        case "attachments": String(localized: "\(n) attachments", comment: "Import preview: count of items in an export section")
+        case "settings": String(localized: "\(n) settings", comment: "Import preview: count of items in an export section")
+        case "settings_values": String(localized: "\(n) settings", comment: "Import preview: count of items in an export section")
+        case "meal_photos": String(localized: "\(n) meal photos", comment: "Import preview: count of items in an export section")
+        case "weights": String(localized: "\(n) weight entries", comment: "Import preview: count of items in an export section")
+        case "body_fat": String(localized: "\(n) body fat entries", comment: "Import preview: count of items in an export section")
+        case "body_measurements": String(localized: "\(n) body measurements", comment: "Import preview: count of items in an export section")
+        case "fasting_sessions": String(localized: "\(n) fasting sessions", comment: "Import preview: count of items in an export section")
+        case "workout_sessions": String(localized: "\(n) workout sessions", comment: "Import preview: count of items in an export section")
+        case "user_exercises": String(localized: "\(n) custom exercises", comment: "Import preview: count of items in an export section")
+        default: "\(n.formatted()) \(key.replacingOccurrences(of: "_", with: " "))"
+        }
     }
 
     /// Fresh temp directory for one import run; the caller deletes it when done.

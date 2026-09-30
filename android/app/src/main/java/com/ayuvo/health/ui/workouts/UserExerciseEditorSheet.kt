@@ -2,6 +2,8 @@
 
 package com.ayuvo.health.ui.workouts
 
+import com.ayuvo.health.R
+import androidx.compose.ui.res.stringResource
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -89,8 +91,8 @@ fun UserExerciseEditorSheet(
     var instructions by remember(existingItemId) {
         mutableStateOf(existingTemplate?.instructions?.joinToString("\n").orEmpty())
     }
-    var bodyPart by remember(existingItemId) { mutableStateOf(existingTemplate?.bodyPart ?: "Unspecified") }
-    var equipment by remember(existingItemId) { mutableStateOf(existingTemplate?.equipment ?: "Unspecified") }
+    var bodyPart by remember(existingItemId) { mutableStateOf(existingTemplate?.bodyPart ?: UNSPECIFIED) }
+    var equipment by remember(existingItemId) { mutableStateOf(existingTemplate?.equipment ?: UNSPECIFIED) }
     var primaryMuscles by remember(existingItemId) { mutableStateOf(existingTemplate?.primaryMuscles.orEmpty()) }
     var secondaryMuscles by remember(existingItemId) { mutableStateOf(existingTemplate?.secondaryMuscles.orEmpty()) }
     var photoBytes by remember(existingItemId) { mutableStateOf<ByteArray?>(null) }
@@ -135,9 +137,9 @@ fun UserExerciseEditorSheet(
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Delete this custom exercise?") },
+            title = { Text(stringResource(R.string.ui_exercise_delete_title)) },
             text = {
-                Text("This removes the exercise from your library. Logged workouts keep their history.")
+                Text(stringResource(R.string.ui_exercise_delete_body))
             },
             confirmButton = {
                 TextButton(onClick = {
@@ -148,12 +150,12 @@ fun UserExerciseEditorSheet(
                         onDismiss()
                     }
                 }) {
-                    Text("Delete", color = colors.accent)
+                    Text(stringResource(R.string.action_delete), color = colors.accent)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         )
@@ -174,7 +176,7 @@ fun UserExerciseEditorSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                if (existingItemId == null) "Create exercise" else "Edit exercise",
+                stringResource(if (existingItemId == null) R.string.workout_create_exercise else R.string.ui_exercise_edit),
                 color = colors.charcoal,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -202,7 +204,7 @@ fun UserExerciseEditorSheet(
                 } else {
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Icon(Icons.Filled.FitnessCenter, null, tint = colors.charcoal, modifier = Modifier.size(32.dp))
-                        Text("Add photo (optional)", color = colors.mutedText, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(R.string.ui_exercise_add_photo), color = colors.mutedText, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
@@ -217,13 +219,13 @@ fun UserExerciseEditorSheet(
                         isPhotoLoading = false
                     },
                     enabled = !isPhotoLoading
-                ) { Text("Remove photo", color = colors.accent) }
+                ) { Text(stringResource(R.string.ui_remove_photo), color = colors.accent) }
             }
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Name") },
+                label = { Text(stringResource(R.string.label_name)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -231,19 +233,19 @@ fun UserExerciseEditorSheet(
             OutlinedTextField(
                 value = instructions,
                 onValueChange = { instructions = it },
-                label = { Text("Instructions") },
+                label = { Text(stringResource(R.string.instructions)) },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
                 minLines = 4
             )
 
-            DropdownField("Body part", bodyPart, listOf("Unspecified") + catalog.availableBodyParts) { bodyPart = it }
-            DropdownField("Equipment", equipment, listOf("Unspecified") + catalog.availableEquipment) { equipment = it }
+            DropdownField(stringResource(R.string.ui_exercise_body_part), bodyPart, listOf(UNSPECIFIED) + catalog.availableBodyParts) { bodyPart = it }
+            DropdownField(stringResource(R.string.label_equipment), equipment, listOf(UNSPECIFIED) + catalog.availableEquipment) { equipment = it }
 
-            MuscleMultiSelect("Primary muscles", catalog.availablePrimaryMuscles, primaryMuscles) { primaryMuscles = it }
-            MuscleMultiSelect("Secondary muscles", catalog.availableSecondaryMuscles, secondaryMuscles) { secondaryMuscles = it }
+            MuscleMultiSelect(stringResource(R.string.ui_exercise_primary_muscles), catalog.availablePrimaryMuscles, primaryMuscles) { primaryMuscles = it }
+            MuscleMultiSelect(stringResource(R.string.ui_exercise_secondary_muscles), catalog.availableSecondaryMuscles, secondaryMuscles) { secondaryMuscles = it }
 
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                TextButton(onClick = onDismiss, modifier = Modifier.weight(1f)) { Text("Cancel") }
+                TextButton(onClick = onDismiss, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_cancel)) }
                 Button(
                     onClick = {
                         scope.launch {
@@ -264,7 +266,7 @@ fun UserExerciseEditorSheet(
                     },
                     enabled = name.trim().isNotEmpty() && !isPhotoLoading,
                     modifier = Modifier.weight(1f)
-                ) { Text("Save") }
+                ) { Text(stringResource(R.string.action_save)) }
             }
 
             if (existingItemId != null && UserExercise.isUserExercise(existingItemId)) {
@@ -272,7 +274,7 @@ fun UserExerciseEditorSheet(
                 TextButton(
                     onClick = { showDeleteConfirmation = true },
                     modifier = Modifier.fillMaxWidth()
-                ) { Text("Delete exercise", color = colors.accent) }
+                ) { Text(stringResource(R.string.ui_exercise_delete), color = colors.accent) }
             }
 
             Spacer(Modifier.size(12.dp))
@@ -280,12 +282,17 @@ fun UserExerciseEditorSheet(
     }
 }
 
+/** Stored body part / equipment when none is picked; shown localized. */
+private const val UNSPECIFIED = "Unspecified"
+
 @Composable
 private fun DropdownField(label: String, value: String, options: List<String>, onSelect: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
+    val res = androidx.compose.ui.platform.LocalResources.current
+    fun shown(option: String) = ExerciseLabels.label(res, option)
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
         OutlinedTextField(
-            value = value,
+            value = shown(value),
             onValueChange = {},
             readOnly = true,
             label = { Text(label) },
@@ -297,7 +304,7 @@ private fun DropdownField(label: String, value: String, options: List<String>, o
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = { Text(shown(option)) },
                     onClick = {
                         onSelect(option)
                         expanded = false
@@ -330,7 +337,7 @@ private fun MuscleMultiSelect(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(muscle, color = workoutsColors().charcoal, fontSize = 14.sp)
+                Text(ExerciseLabels.label(androidx.compose.ui.platform.LocalResources.current, muscle), color = workoutsColors().charcoal, fontSize = 14.sp)
                 if (isSelected) Text("✓", color = workoutsColors().accent, fontWeight = FontWeight.Bold)
             }
         }

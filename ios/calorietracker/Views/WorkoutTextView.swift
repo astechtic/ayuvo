@@ -35,9 +35,9 @@ struct WorkoutTextView: View {
                     VoiceInputView(onCancel: { dismiss() }, onSubmit: submit)
                 } else {
                     TextFoodInputView(onCancel: { dismiss() }, onSubmit: submit, placeholders: [
-                        "20 minutes of rope skipping",
-                        "3 sets of 10 bench presses at 40 kg",
-                        "Standing calf raise machine, 3 sets of 20, RPE 6"
+                        String(localized: "20 minutes of rope skipping", comment: "Example workout description shown as a placeholder"),
+                        String(localized: "3 sets of 10 bench presses at 40 kg", comment: "Example workout description shown as a placeholder"),
+                        String(localized: "Standing calf raise machine, 3 sets of 20, RPE 6", comment: "Example workout description shown as a placeholder")
                     ])
                 }
             } else {

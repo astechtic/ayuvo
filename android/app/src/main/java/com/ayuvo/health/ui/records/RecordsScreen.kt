@@ -441,7 +441,7 @@ private fun RecordsSearchFieldWithViewMode(
                         RecordsViewMode.LIST -> Icons.Filled.ViewList
                         RecordsViewMode.GRID -> Icons.Filled.GridView
                     },
-                    contentDescription = "View settings",
+                    contentDescription = stringResource(R.string.ui_records_view_settings),
                     tint = AppColors.Calorie
                 )
             }

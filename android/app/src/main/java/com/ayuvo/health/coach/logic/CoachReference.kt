@@ -19,6 +19,8 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Kotlin port of `scripts/coach_reference.py` (docs/coach.md). Every function is pure and is driven
@@ -889,15 +891,22 @@ object CoachReference {
         return obj("ok" to true, "spec" to spec)
     }
 
-    private val CHART_KIND_LABELS = mapOf(
-        "bar" to "Bar chart", "grouped_bar" to "Grouped bar chart", "stacked_bar" to "Stacked bar chart",
-        "line" to "Line chart", "area" to "Area chart", "pie" to "Pie chart", "scatter" to "Scatter chart",
-        "range" to "Range chart", "progress" to "Progress chart"
-    )
+    private fun chartKindLabel(type: String?): String = when (type) {
+        "bar" -> AppText.orEnglish("Bar chart", R.string.core_coach_chart_bar)
+        "grouped_bar" -> AppText.orEnglish("Grouped bar chart", R.string.core_coach_chart_grouped_bar)
+        "stacked_bar" -> AppText.orEnglish("Stacked bar chart", R.string.core_coach_chart_stacked_bar)
+        "line" -> AppText.orEnglish("Line chart", R.string.core_coach_chart_line)
+        "area" -> AppText.orEnglish("Area chart", R.string.core_coach_chart_area)
+        "pie" -> AppText.orEnglish("Pie chart", R.string.core_coach_chart_pie)
+        "scatter" -> AppText.orEnglish("Scatter chart", R.string.core_coach_chart_scatter)
+        "range" -> AppText.orEnglish("Range chart", R.string.core_coach_chart_range)
+        "progress" -> AppText.orEnglish("Progress chart", R.string.core_coach_chart_progress)
+        else -> AppText.orEnglish("Chart", R.string.core_coach_chart)
+    }
 
     /** One sentence describing a parsed chart, for TalkBack. */
     fun chartAccessibilityText(spec: JsonObject): String {
-        val parts = mutableListOf(CHART_KIND_LABELS[spec.str("type")] ?: "Chart")
+        val parts = mutableListOf(chartKindLabel(spec.str("type")))
         spec.str("title")?.let { parts += it }
         val values = mutableListOf<Double>()
         for (entry in spec.arr("series").orEmpty()) {
@@ -908,7 +917,9 @@ object CoachReference {
         }
         if (values.isNotEmpty()) {
             val unit = spec.str("unit")?.let { " $it" } ?: ""
-            parts += "${numText(num(values.min()))} to ${numText(num(values.max()))}$unit"
+            val low = numText(num(values.min()))
+            val high = numText(num(values.max())) + unit
+            parts += AppText.orEnglish("$low to $high", R.string.core_coach_chart_range_text, low, high)
         }
         return parts.joinToString(", ")
     }
@@ -1251,28 +1262,31 @@ object CoachReference {
         )
         val shown = latestVariants(rows)
 
-        val title = conversation?.str("title")?.ifEmpty { null } ?: "New chat"
-        val header = mutableListOf(localDay, "${shown.size} messages")
+        val title = conversation?.str("title")?.ifEmpty { null } ?: AppText.orEnglish("New chat", R.string.core_coach_new_chat)
+        val count = if (AppText.resolver == null) "${shown.size} messages" else AppText.plural(R.plurals.core_coach_export_messages, shown.size, shown.size)
+        val header = mutableListOf(localDay, count)
         if (provider != null) header += provider
         val lines = mutableListOf("# " + collapseWs(title), "", header.joinToString(" · "), "", "---")
 
         for (message in shown) {
             lines += ""
-            val speaker = if (message.str("role") == "assistant") "Coach" else "You"
+            val speaker = if (message.str("role") == "assistant") AppText.orEnglish("Coach", R.string.core_coach_export_coach)
+                else AppText.orEnglish("You", R.string.core_coach_export_you)
             lines += "**$speaker:** " + (message.str("content") ?: "")
             val names = MedicationJson.strings(message["attachment_ids"])
                 .map { byId[it]?.str("filename") ?: it }
             if (names.isNotEmpty()) {
                 lines += ""
-                lines += "Attached: " + names.joinToString(", ")
+                lines += names.joinToString(", ").let { AppText.orEnglish("Attached: $it", R.string.core_coach_export_attached, it) }
             }
             val refs = (message["record_refs"] as? JsonArray).orEmpty().filterIsInstance<JsonObject>()
             if (refs.isNotEmpty()) {
                 lines += ""
-                lines += "Used records: " + refs.joinToString("; ") { ref ->
+                val used = refs.joinToString("; ") { ref ->
                     val name = ref.str("title") ?: ref.str("record_id").orEmpty()
                     "$name — ${ref.str("date").orEmpty()}"
                 }
+                lines += AppText.orEnglish("Used records: $used", R.string.core_coach_export_used_records, used)
             }
         }
         return obj(
@@ -1297,7 +1311,7 @@ object CoachReference {
             "messages" to messages.filter { it.str("conversation_id") == id },
             "attachments" to attachments
         )
-        val title = conversation?.str("title")?.ifEmpty { null } ?: "New chat"
+        val title = conversation?.str("title")?.ifEmpty { null } ?: AppText.orEnglish("New chat", R.string.core_coach_new_chat)
         return obj(
             "archive" to chatArchive(snapshot),
             "filename" to "${exportSlug(title)}-$localDay.json"

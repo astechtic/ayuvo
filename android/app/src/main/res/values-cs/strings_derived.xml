@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_derived_metrics">Odvozené metriky</string>
+    <string name="settings_derived_enabled">Odvozené metriky</string>
+    <string name="settings_derived_enabled_sub">Odhaduj životní funkce, které tvoje zařízení nezaznamenávají</string>
+    <string name="settings_derived_footer">Ayuvo odhaduje životní funkce, které tvoje zařízení nezaznamenávají, například klidovou tepovou frekvenci z tepové frekvence měřené po minutách. Když už má Health Connect hodnotu pro stejný den, zobrazí se místo toho tato hodnota. Odhady se nikdy nezapisují do Health Connect.</string>
+    <string name="settings_derived_bmi_scheme">Kategorie BMI</string>
+    <string name="settings_derived_bmi_who">WHO</string>
+    <string name="settings_derived_bmi_asian">Asijské</string>
+    <string name="settings_derived_bmi_footer">Asijské hraniční hodnoty (nadváha od 23, obezita od 27,5) vycházejí z expertní konzultace WHO pro asijskou populaci.</string>
+    <string name="settings_derived_native_wins">Pokud je k dispozici, použije se hodnota z Health Connect</string>
+    <string name="settings_derived_also_affects">Ovlivní také: %1$s</string>
+    <string name="derived_estimated_badge">Odhad Ayuvo</string>
+    <string name="derived_how_calculated">Jak se to počítá</string>
+    <string name="derived_source_label">Zdroj</string>
+    <string name="derived_metric_toggle">Počítat tuto metriku</string>
+    <string name="derived_metric_toggle_off_footer">Ayuvo tuto metriku nepočítá. Hodnoty z Health Connect se stále zobrazují.</string>
+    <string name="derived_headline_highest">NEJVYŠŠÍ</string>
+    <string name="derived_source_estimated">Odhad Ayuvo z tvých dat v Health Connect</string>
+    <string name="derived_source_native">Z Health Connect (%1$s)</string>
+    <string name="derived_source_native_generic">Z Health Connect</string>
+    <string name="derived_source_mixed">Hodnoty z Health Connect tam, kde byly zaznamenány; v ostatních dnech odhad Ayuvo</string>
+    <string name="derived_method">Metoda</string>
+    <string name="derived_citation">Zdroj</string>
+    <string name="derived_confidence">Spolehlivost</string>
+    <string name="derived_confidence_high">Vysoká</string>
+    <string name="derived_confidence_medium">Střední</string>
+    <string name="derived_confidence_low">Nízká</string>
+    <string name="derived_confidence_native">Změřeno tvým zařízením</string>
+    <string name="derived_estimated_caption">%1$s · Odhad</string>
+    <string name="derived_master_off">Odvozené metriky jsou v Nastavení vypnuté.</string>
+</resources>

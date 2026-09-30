@@ -15,6 +15,8 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * The deterministic share summary of docs/health-records.md §34 (reference `share_summary_text`,
@@ -38,20 +40,24 @@ object ShareSummaryText {
     data class Result(val text: String?, val recordIds: List<String>)
 
     /** §34 `Dates:` labels, in printed order. */
-    private val DATE_LABELS: List<Pair<String, String>> = listOf(
-        FieldKey.COLLECTION_DATE to "Collected",
-        FieldKey.REPORT_DATE to "Reported",
-        FieldKey.VISIT_DATE to "Visit",
-        FieldKey.PRESCRIPTION_DATE to "Prescribed",
-        FieldKey.ADMISSION_DATE to "Admitted",
-        FieldKey.DISCHARGE_DATE to "Discharged",
-        FieldKey.FOLLOW_UP_DATE to "Follow-up"
+    private val DATE_LABELS: List<Pair<String, () -> String>> = listOf(
+        FieldKey.COLLECTION_DATE to { AppText.orEnglish("Collected", R.string.core_share_date_collected) },
+        FieldKey.REPORT_DATE to { AppText.orEnglish("Reported", R.string.core_share_date_reported) },
+        FieldKey.VISIT_DATE to { AppText.orEnglish("Visit", R.string.core_share_date_visit) },
+        FieldKey.PRESCRIPTION_DATE to { AppText.orEnglish("Prescribed", R.string.core_share_date_prescribed) },
+        FieldKey.ADMISSION_DATE to { AppText.orEnglish("Admitted", R.string.core_share_date_admitted) },
+        FieldKey.DISCHARGE_DATE to { AppText.orEnglish("Discharged", R.string.core_share_date_discharged) },
+        FieldKey.FOLLOW_UP_DATE to { AppText.orEnglish("Follow-up", R.string.core_share_date_follow_up) }
     )
 
-    private val FLAG_WORD = mapOf(
-        "low" to "low", "high" to "high", "critical_low" to "critical low",
-        "critical_high" to "critical high", "abnormal" to "abnormal"
-    )
+    private fun flagWord(flag: String): String? = when (flag) {
+        "low" -> AppText.orEnglish("low", R.string.core_share_flag_low)
+        "high" -> AppText.orEnglish("high", R.string.core_share_flag_high)
+        "critical_low" -> AppText.orEnglish("critical low", R.string.core_share_flag_critical_low)
+        "critical_high" -> AppText.orEnglish("critical high", R.string.core_share_flag_critical_high)
+        "abnormal" -> AppText.orEnglish("abnormal", R.string.core_share_flag_abnormal)
+        else -> null
+    }
 
     /** Medication parts appended after the name + strength, each prefixed by `, `. */
     private val MEDICATION_PARTS = listOf("dose", "frequency", "duration", "instructions")
@@ -68,7 +74,7 @@ object ShareSummaryText {
     ): Result {
         if (!plan.includeSummary || inputs.isEmpty()) return Result(null, emptyList())
         val blocks = inputs.map { block(it, plan, catalog, typeLabels) }
-        return Result(blocks.joinToString(SEPARATOR) + "\n" + FOOTER, inputs.map { it.record.id })
+        return Result(blocks.joinToString(SEPARATOR) + "\n" + AppText.orEnglish(FOOTER, R.string.core_share_summary_footer), inputs.map { it.record.id })
     }
 
     fun block(
@@ -85,18 +91,18 @@ object ShareSummaryText {
         lines += "${collapse(record.title).orEmpty()} — ${record.sortDate}"
 
         var head = typeLabels?.get(record.recordType.raw)?.takeIf { it.isNotEmpty() }
-            ?: RecordsCoach.TYPE_LABELS[record.recordType.raw] ?: "Record"
+            ?: RecordsCoach.TYPE_LABELS[record.recordType.raw] ?: AppText.orEnglish("Record", R.string.core_share_summary_record)
         if (SummaryField.FACILITY in selected) {
             collapse(best(rows, FieldKey.FACILITY))?.let { head += " · $it" }
         }
         lines += head
 
-        if (SummaryField.DOCTOR in selected) collapse(best(rows, FieldKey.DOCTOR_NAME))?.let { lines += "Doctor: $it" }
-        if (SummaryField.PATIENT_NAME in selected) collapse(best(rows, FieldKey.PATIENT_NAME))?.let { lines += "Patient: $it" }
+        if (SummaryField.DOCTOR in selected) collapse(best(rows, FieldKey.DOCTOR_NAME))?.let { lines += AppText.orEnglish("Doctor: $it", R.string.core_share_summary_doctor, it) }
+        if (SummaryField.PATIENT_NAME in selected) collapse(best(rows, FieldKey.PATIENT_NAME))?.let { lines += AppText.orEnglish("Patient: $it", R.string.core_share_summary_patient, it) }
 
         if (SummaryField.DATES in selected) {
-            val parts = DATE_LABELS.mapNotNull { (key, label) -> collapse(best(rows, key))?.let { "$label $it" } }
-            if (parts.isNotEmpty()) lines += "Dates: " + parts.joinToString(" · ")
+            val parts = DATE_LABELS.mapNotNull { (key, label) -> collapse(best(rows, key))?.let { "${label()} $it" } }
+            if (parts.isNotEmpty()) parts.joinToString(" · ").let { lines += AppText.orEnglish("Dates: $it", R.string.core_share_summary_dates, it) }
         }
 
         if (SummaryField.TEST_RESULTS in selected) {
@@ -106,7 +112,7 @@ object ShareSummaryText {
                 .map { resultItem(it.value) }
                 .filter { it.isNotEmpty() }
             if (items.isNotEmpty()) {
-                lines += "Results:"
+                lines += AppText.orEnglish("Results:", R.string.core_share_summary_results)
                 items.forEach { lines += "- $it" }
             }
         }
@@ -117,14 +123,14 @@ object ShareSummaryText {
                 .mapNotNull { if (key == FieldKey.MEDICATION) medicationItem(it) else collapse(it.valueText) }
                 .filter { it.isNotEmpty() }
             if (items.isEmpty()) continue
-            lines += "$label:"
+            lines += label().let { AppText.orEnglish("$it:", R.string.core_share_section_header, it) }
             items.forEach { lines += "- $it" }
         }
 
         if (plan.includeNotes) {
             val notes = notesLines(record.notes)
             if (notes.isNotEmpty()) {
-                lines += NOTES_HEADER
+                lines += AppText.orEnglish(NOTES_HEADER, R.string.core_share_summary_notes)
                 lines += notes
             }
         }
@@ -136,17 +142,17 @@ object ShareSummaryText {
                 .mapNotNull { collapse(it.text) }
                 .filter { it.isNotEmpty() }
             if (items.isNotEmpty()) {
-                lines += HIGHLIGHTS_HEADER
+                lines += AppText.orEnglish(HIGHLIGHTS_HEADER, R.string.core_share_summary_highlights)
                 items.forEach { lines += "- $it" }
             }
         }
         return lines.joinToString("\n")
     }
 
-    private val SECTIONS: List<Triple<String, String, SummaryField>> = listOf(
-        Triple("Medications", FieldKey.MEDICATION, SummaryField.MEDICATIONS),
-        Triple("Diagnoses", FieldKey.DIAGNOSIS, SummaryField.DIAGNOSES),
-        Triple("Recommendations", FieldKey.RECOMMENDATION, SummaryField.RECOMMENDATIONS)
+    private val SECTIONS: List<Triple<() -> String, String, SummaryField>> = listOf(
+        Triple({ AppText.orEnglish("Medications", R.string.core_share_section_medications) }, FieldKey.MEDICATION, SummaryField.MEDICATIONS),
+        Triple({ AppText.orEnglish("Diagnoses", R.string.core_share_section_diagnoses) }, FieldKey.DIAGNOSIS, SummaryField.DIAGNOSES),
+        Triple({ AppText.orEnglish("Recommendations", R.string.core_share_section_recommendations) }, FieldKey.RECOMMENDATION, SummaryField.RECOMMENDATIONS)
     )
 
     /**
@@ -158,8 +164,8 @@ object ShareSummaryText {
         val rest = listOfNotNull(collapse(primitive(result.value)), collapse(result.unit))
         var text = name + if (rest.isNotEmpty()) ": " + rest.joinToString(" ") else ""
         val inner = mutableListOf<String>()
-        FLAG_WORD[result.flag]?.let { inner += it }
-        stripRefBrackets(result.refText)?.let { inner += "ref $it" }
+        flagWord(result.flag)?.let { inner += it }
+        stripRefBrackets(result.refText)?.let { inner += AppText.orEnglish("ref $it", R.string.core_share_summary_ref, it) }
         if (inner.isNotEmpty()) text += " (" + inner.joinToString(", ") + ")"
         return text
     }

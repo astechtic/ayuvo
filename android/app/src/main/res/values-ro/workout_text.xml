@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Descrie antrenamentul</string>
+    <string name="workout_text_intro">Descrie ce ai făcut. Verifică detaliile înainte de a le adăuga în jurnalul de antrenament.</string>
+    <string name="workout_text_description">Descrierea antrenamentului</string>
+    <string name="workout_text_example">20 de minute de sărituri cu coarda, apoi 3 serii a câte 10 împinsături la piept cu 40 kg</string>
+    <string name="workout_text_voice">Voce</string>
+    <string name="workout_text_preparing">Se caută exercițiile…</string>
+    <string name="workout_text_preview">Analizează</string>
+    <string name="workout_text_retry">Reîncearcă</string>
+    <string name="workout_text_review">Verifică antrenamentul</string>
+    <string name="workout_text_date">Data (AAAA-LL-ZZ)</string>
+    <string name="workout_text_custom">Activitate personalizată cronometrată · estimarea caloriilor folosește o rată generală de activitate</string>
+    <string name="workout_text_minutes">Minute</string>
+    <string name="workout_text_reps">Repetări</string>
+    <string name="workout_text_remove">Elimină exercițiul</string>
+    <string name="workout_text_calories_note">Caloriile sunt estimări. Folosește Calculează în jurnal după ce adaugi antrenamentul.</string>
+    <string name="workout_text_edit">Editează descrierea</string>
+    <string name="workout_text_adding">Se adaugă…</string>
+    <string name="workout_text_add">Adaugă în jurnal</string>
+    <string name="workout_text_menu">Text</string>
+    <string name="workout_text_set_weight">Seria %1$d · %2$s</string>
+    <string name="workout_text_estimate">Calorii arse estimate: %1$d kcal</string>
+    <string name="workout_text_effort">Efort (moderat dacă nu e specificat)</string>
+    <string name="workout_text_light">Luminos</string>
+    <string name="workout_text_moderate">Moderat</string>
+    <string name="workout_text_vigorous">Viguros</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Ia-o de la capăt</string>
+    <string name="workout_clarify_title">O întrebare rapidă</string>
+    <string name="workout_clarify_hint">Atinge un exercițiu pentru a-l alege sau scrie răspunsul.</string>
+    <string name="workout_clarify_answer">Răspunsul tău</string>
+    <string name="workout_clarify_voice">Răspuns vocal</string>
+    <string name="workout_text_repeat_error">Nu am putut finaliza pe baza răspunsurilor tale. Adaugă detaliul care lipsește în descriere (de exemplu seriile și repetările) sau începe din nou.</string>
+</resources>

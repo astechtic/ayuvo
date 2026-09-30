@@ -112,7 +112,6 @@ struct ExerciseLibraryBrowserView: View {
 
             ResultsHeader(
                 count: pagedItems.totalCount,
-                noun: String(localized: "exercise"),
                 subtitle: selectedSort.title,
                 selectedSort: $selectedSort,
                 canReset: hasActiveFilters,
@@ -336,7 +335,7 @@ struct ExerciseLibraryBrowserView: View {
 
                     filterMenuPill(
                         title: String(localized: "Secondary"),
-                        value: selectionTitle(selectedSecondaryMuscles),
+                        value: selectionTitle(selectedSecondaryMuscles, display: ExerciseTermText.muscle),
                         systemImage: "scope",
                         isActive: !selectedSecondaryMuscles.isEmpty
                     ) {
@@ -360,7 +359,7 @@ struct ExerciseLibraryBrowserView: View {
                             selectedRawEquipment.removeAll()
                         }
                         ForEach(profileRawEquipmentOptions, id: \.self) { equipment in
-                            menuChoice(equipment, isSelected: selectedRawEquipment.contains(equipment)) {
+                            menuChoice(ExerciseTermText.equipment(equipment), isSelected: selectedRawEquipment.contains(equipment)) {
                                 selectedRawEquipment = [equipment]
                             }
                         }
@@ -368,13 +367,13 @@ struct ExerciseLibraryBrowserView: View {
 
                     filterMenuPill(
                         title: String(localized: "Body Part"),
-                        value: selectionTitle(selectedBodyParts),
+                        value: selectionTitle(selectedBodyParts, display: ExerciseTermText.bodyPart),
                         systemImage: "tag",
                         isActive: !selectedBodyParts.isEmpty
                     ) {
                         menuChoice(String(localized: "All Body Parts"), isSelected: selectedBodyParts.isEmpty) { selectedBodyParts.removeAll() }
                         ForEach(service.availableBodyPartCounts) { bodyPartCount in
-                            menuChoice(bodyPartCount.bodyPart, isSelected: selectedBodyParts.contains(bodyPartCount.bodyPart)) {
+                            menuChoice(ExerciseTermText.bodyPart(bodyPartCount.bodyPart), isSelected: selectedBodyParts.contains(bodyPartCount.bodyPart)) {
                                 selectedBodyParts = [bodyPartCount.bodyPart]
                             }
                         }
@@ -389,14 +388,14 @@ struct ExerciseLibraryBrowserView: View {
         if selectedRawEquipment.isEmpty {
             return String(localized: "All \(profileRawEquipmentOptions.count)")
         }
-        return selectionTitle(selectedRawEquipment)
+        return selectionTitle(selectedRawEquipment, display: ExerciseTermText.equipment)
     }
 
     private var primaryFilterTitle: String {
         if selectedPrimaryMuscles.isEmpty {
             return String(localized: "All \(primaryFilterOptions.count)")
         }
-        return selectionTitle(selectedPrimaryMuscles)
+        return selectionTitle(selectedPrimaryMuscles, display: ExerciseTermText.muscle)
     }
 
     private var allPrimaryMenuTitle: String {
@@ -498,9 +497,10 @@ struct ExerciseLibraryBrowserView: View {
         selectedRawEquipment = singleStoredSelection(selectedRawEquipment.intersection(validOptions))
     }
 
-    private func selectionTitle(_ selection: Set<String>) -> String {
-        if selection.isEmpty { return "All" }
-        if selection.count == 1 { return selection.first ?? "All" }
+    private func selectionTitle(_ selection: Set<String>, display: (String) -> String = { $0 }) -> String {
+        let all = String(localized: "All", comment: "Exercise library filter: no filter selected")
+        if selection.isEmpty { return all }
+        if selection.count == 1 { return selection.first.map(display) ?? all }
         return String(localized: "\(selection.count) selected")
     }
 
@@ -541,10 +541,11 @@ struct ExerciseLibraryBrowserView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
+            // `title` stays English for the glyph lookup; the label shows it translated.
             if isSelected {
-                Label(title, systemImage: "checkmark")
+                Label(ExerciseTermText.muscle(title), systemImage: "checkmark")
             } else {
-                Label(title, image: MuscleGlyphAsset.name(title: title, muscles: muscles))
+                Label(ExerciseTermText.muscle(title), image: MuscleGlyphAsset.name(title: title, muscles: muscles))
             }
         }
     }
@@ -643,7 +644,6 @@ private struct FilterMenuPill: View {
 
 private struct ResultsHeader: View {
     let count: Int
-    let noun: String
     let subtitle: String
     @Binding var selectedSort: ExerciseLibrarySort
     let canReset: Bool
@@ -652,7 +652,7 @@ private struct ResultsHeader: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(count) \(count == 1 ? noun : String(localized: "\(noun)s"))")
+                Text("\(count) exercises", comment: "Exercise library result count")
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(Color.workoutCharcoal)
                     .textCase(nil)
@@ -735,16 +735,16 @@ private struct ExerciseLibraryRow: View {
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) {
                         LibraryTag(title: item.primaryMusclesTitle, systemImage: "scope", tint: Color.workoutMutedText)
-                        LibraryTag(title: item.rawEquipment, systemImage: "dumbbell.fill", tint: Color.workoutMutedText)
+                        LibraryTag(title: ExerciseTermText.equipment(item.rawEquipment), systemImage: "dumbbell.fill", tint: Color.workoutMutedText)
                     }
 
                     VStack(alignment: .leading, spacing: 5) {
                         LibraryTag(title: item.primaryMusclesTitle, systemImage: "scope", tint: Color.workoutMutedText)
-                        LibraryTag(title: item.rawEquipment, systemImage: "dumbbell.fill", tint: Color.workoutMutedText)
+                        LibraryTag(title: ExerciseTermText.equipment(item.rawEquipment), systemImage: "dumbbell.fill", tint: Color.workoutMutedText)
                     }
                 }
 
-                Label(item.bodyPart, systemImage: "tag")
+                Label(ExerciseTermText.bodyPart(item.bodyPart), systemImage: "tag")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.workoutSecondaryAccent)
                     .lineLimit(1)
@@ -940,11 +940,11 @@ private struct ExerciseHeroMetricOverlay: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 6) {
-            metricButton(title: String(localized: "Body Part"), value: item.bodyPart, systemImage: "tag", compact: true)
+            metricButton(title: String(localized: "Body Part"), value: ExerciseTermText.bodyPart(item.bodyPart), systemImage: "tag", compact: true)
 
             metricButton(title: String(localized: "Target"), value: item.primaryMusclesTitle, systemImage: "scope", compact: false, valueLineLimit: 2)
             metricButton(title: String(localized: "Secondary"), value: item.secondaryMusclesTitle, systemImage: "scope", compact: false, valueLineLimit: 3)
-            metricButton(title: String(localized: "Equipment"), value: item.rawEquipment, systemImage: "dumbbell.fill", compact: false, valueLineLimit: 2)
+            metricButton(title: String(localized: "Equipment"), value: ExerciseTermText.equipment(item.rawEquipment), systemImage: "dumbbell.fill", compact: false, valueLineLimit: 2)
         }
         .frame(maxWidth: .infinity)
     }

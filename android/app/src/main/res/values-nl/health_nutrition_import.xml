@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importeer voedingsgeschiedenis</string>
+    <string name="health_import_action">Importeer</string>
+    <string name="health_import_description">Haal voedingsrecords uit een andere app naar je dagboek. Bekijk eerst de beschikbare records en kies dan één bron-app, zodat gedeelde records niet dubbel worden geteld.</string>
+    <string name="health_import_from">Van (JJJJ-MM-DD)</string>
+    <string name="health_import_to">Tot en met (JJJJ-MM-DD)</string>
+    <string name="health_import_history_hint">Zonder toegang tot geschiedenis kies je datums binnen de afgelopen 30 dagen. Voor oudere records is toegang tot geschiedenis nodig op een ondersteund apparaat.</string>
+    <string name="health_import_grant">Geef toegang tot voeding en geschiedenis</string>
+    <string name="health_import_access_result">Toegangsinstellingen bijgewerkt. Bekijk opnieuw om beschikbare records te controleren.</string>
+    <string name="health_import_access_needed">Sta leestoegang tot voeding toe in Health Connect en bekijk daarna opnieuw.</string>
+    <string name="health_import_invalid_dates">Voer geldige datums in als JJJJ-MM-DD. De einddatum moet op of na de begindatum liggen en niet later dan vandaag.</string>
+    <string name="health_import_history_needed">Voor deze periode is toegang tot geschiedenis nodig. Geef toegang op een ondersteund apparaat of kies datums binnen de afgelopen 30 dagen.</string>
+    <string name="health_import_preview">Bekijk beschikbare records</string>
+    <string name="health_import_failed">Kan de import niet voltooien. Controleer de toegang tot Health Connect en probeer het opnieuw.</string>
+    <string name="health_import_empty">Er zijn in deze periode geen nieuwe voedingsrecords van andere apps gevonden. Controleer of je bron-app voeding met Health Connect heeft gedeeld. Eerder geïmporteerde records worden overgeslagen, ook als ze uit je dagboek zijn verwijderd.</string>
+    <string name="health_import_count">%1$d nieuwe records · %2$d kcal</string>
+    <string name="health_import_unnamed">Geïmporteerde maaltijd</string>
+    <string name="health_import_local_only">Dit zijn lokale kopieën. Wijzigingen en verwijderingen blijven in Ayuvo. Bij een herhaalde import worden eerder geïmporteerde records overgeslagen; ze worden niet bijgewerkt.</string>
+    <string name="health_import_done">%1$d records in je dagboek geïmporteerd.</string>
+    <string name="health_import_close">Sluit</string>
+</resources>

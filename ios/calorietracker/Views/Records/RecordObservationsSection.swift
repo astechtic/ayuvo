@@ -250,7 +250,7 @@ struct RecordObservationEditSheet: View {
                         Toggle("Remember for “\(observation.rawName)”", isOn: $rememberAlias)
                             .accessibilityIdentifier("records.observationEdit.remember")
                         if rememberAlias, othersCount > 0 {
-                            Toggle(othersCount == 1 ? String(localized: "Also map 1 other value with this name") : String(localized: "Also map \(othersCount) other values with this name"), isOn: $applyToOthers)
+                            Toggle(String(localized: "Also map \(othersCount) other values with this name", comment: "Record observation mapping toggle"), isOn: $applyToOthers)
                         }
                     }
                 } header: {

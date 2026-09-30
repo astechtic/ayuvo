@@ -8,6 +8,7 @@ import androidx.core.graphics.drawable.IconCompat
 import com.ayuvo.health.MainActivity
 import com.ayuvo.health.R
 import java.util.Locale
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Pushes recently used actions as dynamic launcher shortcuts (docs/actions.md, Android). Labels
@@ -37,8 +38,10 @@ object ActionShortcutPublisher {
         }
         val qualifier = extras.filterKeys { it != ActionIntents.EXTRA_ACTION_ID }.values
             .joinToString(" · ") { it.removePrefix("app:").replace('_', ' ') }
-        val label = if (spec.id == "open.section") "Open ${qualifier.replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
-        else spec.title
+        val label = if (spec.id == "open.section") {
+            val section = qualifier.replaceFirstChar { it.titlecase(Locale.getDefault()) }
+            AppText.orEnglish("Open $section", R.string.core_action_shortcut_open, section)
+        } else spec.title
         val id = ID_PREFIX + (listOf(spec.id) + extras.filterKeys { it != ActionIntents.EXTRA_ACTION_ID }.values).joinToString("_")
         return ShortcutSpec(id, label.take(25), if (qualifier.isEmpty()) spec.title else "${spec.title} ($qualifier)", extras,
             (action.params["section"] as? String)?.takeIf { spec.id == "open.section" })

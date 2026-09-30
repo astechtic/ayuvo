@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">السعرات الحرارية</string>
+    <string name="metric_protein">البروتين</string>
+    <string name="metric_carbs">الكربوهيدرات</string>
+    <string name="metric_fat">إجمالي الدهون</string>
+    <string name="metric_fiber">الألياف</string>
+    <string name="metric_water">الماء</string>
+    <string name="metric_fasting">الصيام</string>
+    <string name="metric_weight">الوزن</string>
+    <string name="metric_body_fat">نسبة دهون الجسم</string>
+    <string name="metric_workouts">التمارين</string>
+    <string name="metric_workout_minutes">وقت التمرين</string>
+    <string name="metric_workout_burn">طاقة التمرين</string>
+    <string name="metric_about_calories">الطاقة من الطعام الذي تسجّله في Ayuvo، مجموعةً لكل يوم. تعرض النطاقات الأطول متوسطك في الأيام التي سجّلت فيها طعامًا.</string>
+    <string name="metric_about_protein">البروتين من الطعام الذي تسجّله في Ayuvo، مجموعًا لكل يوم.</string>
+    <string name="metric_about_carbs">الكربوهيدرات من الطعام الذي تسجّله في Ayuvo، مجموعةً لكل يوم.</string>
+    <string name="metric_about_fat">الدهون من الطعام الذي تسجّله في Ayuvo، مجموعةً لكل يوم.</string>
+    <string name="metric_about_fiber">الألياف الغذائية من الطعام الذي تسجّله في Ayuvo، مجموعةً لكل يوم. يتم تخطي الأطعمة التي لا تتوفر لها معلومات عن الألياف.</string>
+    <string name="metric_about_water">الماء الذي تسجّله في Ayuvo، مجموعًا لكل يوم.</string>
+    <string name="metric_about_fasting">الوقت الذي تقضيه صائمًا في كل يوم. يُحتسب الصيام الذي يمتد بعد منتصف الليل لكل يوم يشمله.</string>
+    <string name="metric_about_weight">إدخالات الوزن التي تسجّلها في Ayuvo، بما فيها القراءات المستوردة من تطبيقات الصحة المرتبطة. تعرض كل نقطة أحدث قراءة في تلك الفترة.</string>
+    <string name="metric_about_body_fat">قراءات دهون الجسم التي تسجّلها في Ayuvo. تعرض كل نقطة أحدث قراءة في تلك الفترة.</string>
+    <string name="metric_about_workouts">التمارين التي تكملها في Ayuvo، محتسبةً في يوم تسجيلها.</string>
+    <string name="metric_about_workout_minutes">الوقت الذي تقضيه في التمارين التي تكملها في Ayuvo.</string>
+    <string name="metric_about_workout_burn">الطاقة المقدّرة المحروقة في التمارين التي تكملها في Ayuvo. يتم تخطي التمارين التي لا يتوفر لها تقدير.</string>
+    <string name="metric_add_to_favourites">إضافة إلى المفضلة</string>
+    <string name="metric_about">حول</string>
+    <string name="metric_log">تسجيل</string>
+    <string name="metric_log_weight">إضافة بيانات الوزن</string>
+    <string name="metric_log_body_fat">إضافة بيانات دهون الجسم</string>
+    <string name="metric_add_water">إضافة ماء</string>
+    <string name="metric_add_water_quick">إضافة %1$s</string>
+    <string name="metric_add_water_custom">كمية مخصّصة</string>
+    <string name="metric_open_food_diary">فتح يوميات الطعام</string>
+    <string name="metric_open_fasting">فتح الصيام</string>
+    <string name="metric_open_workouts">فتح التمارين</string>
+    <string name="metric_details">إظهار التفاصيل</string>
+    <string name="metric_goal_label">الهدف %1$s</string>
+    <string name="metric_no_rows">لا توجد إدخالات في هذا النطاق</string>
+    <string name="metric_row_logged_in_diary">مسجّل في يوميات الطعام</string>
+    <string name="metric_delete_entry">حذف الإدخال</string>
+    <string name="metric_delete_entry_body">ستتم إزالة هذا الإدخال من Ayuvo.</string>
+    <string name="metric_sources_app">مسجّل في Ayuvo</string>
+</resources>

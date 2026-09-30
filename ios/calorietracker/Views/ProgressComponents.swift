@@ -182,7 +182,7 @@ struct WeightHistoryLink: View {
                     Text("Weight History")
                         .font(.system(.body, design: .rounded, weight: .medium))
                         .foregroundStyle(.primary)
-                    Text("\(totalCount) \(totalCount == 1 ? "entry" : "entries") · tap to view or delete")
+                    Text(String(localized: "\(totalCount) entries · tap to view or delete", comment: "Weight/body fat history link subtitle"))
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
@@ -273,10 +273,10 @@ private let weightHistoryFormatter: DateFormatter = {
 
 private func displayWeight(_ kg: Double, useMetric: Bool) -> String {
     if useMetric {
-        return String(format: "%.1f kg", kg)
+        return String(localized: "\(kg.formatted(.number.precision(.fractionLength(1)))) kg", comment: "Weight value in kilograms")
     }
     let lbs = kg * 2.20462
-    return String(format: "%.1f lb", lbs)
+    return String(localized: "\(lbs.formatted(.number.precision(.fractionLength(1)))) lb", comment: "Weight value in pounds")
 }
 
 // MARK: - Body Fat History (link + full list, mirroring Weight History)
@@ -296,7 +296,7 @@ struct BodyFatHistoryLink: View {
                     Text("Body Fat History")
                         .font(.system(.body, design: .rounded, weight: .medium))
                         .foregroundStyle(.primary)
-                    Text("\(totalCount) \(totalCount == 1 ? "entry" : "entries") · tap to view or delete")
+                    Text(String(localized: "\(totalCount) entries · tap to view or delete", comment: "Weight/body fat history link subtitle"))
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
@@ -376,7 +376,7 @@ struct AllBodyFatHistoryView: View {
 }
 
 private func displayBodyFat(_ fraction: Double) -> String {
-    String(format: "%.1f%%", fraction * 100)
+    fraction.formatted(.percent.precision(.fractionLength(1)))
 }
 
 // MARK: - Log Body Fat Sheet
@@ -462,21 +462,21 @@ private func emptyState(_ message: String) -> some View {
 
 /// cm → display string in the user's unit ("92.0 cm" / "36.2 in").
 private func displayLength(_ cm: Double, useMetric: Bool) -> String {
-    useMetric ? String(format: "%.1f cm", cm) : String(format: "%.1f in", cm / 2.54)
+    useMetric ? String(localized: "\(cm.formatted(.number.precision(.fractionLength(1)))) cm", comment: "Body measurement value with unit") : String(localized: "\((cm / 2.54).formatted(.number.precision(.fractionLength(1)))) in", comment: "Body measurement value with unit")
 }
 
 /// The logged sites in display order, skipping any that weren't entered.
 private func measurementSites(_ m: BodyMeasurement) -> [(label: String, cm: Double)] {
     var rows: [(String, Double)] = []
     func add(_ label: String, _ value: Double?) { if let value { rows.append((label, value)) } }
-    add("Neck", m.neckCm)
-    add("Waist", m.waistCm)
-    add("Hips", m.hipsCm)
-    add("Chest", m.chestCm)
-    add("Upper arm", m.upperArmCm)
-    add("Thigh", m.thighCm)
-    add("Calf", m.calfCm)
-    add("Wrist", m.wristCm)
+    add(String(localized: "Neck", comment: "Body measurement site"), m.neckCm)
+    add(String(localized: "Waist", comment: "Body measurement site"), m.waistCm)
+    add(String(localized: "Hips", comment: "Body measurement site"), m.hipsCm)
+    add(String(localized: "Chest", comment: "Body measurement site"), m.chestCm)
+    add(String(localized: "Upper arm", comment: "Body measurement site"), m.upperArmCm)
+    add(String(localized: "Thigh", comment: "Body measurement site"), m.thighCm)
+    add(String(localized: "Calf", comment: "Body measurement site"), m.calfCm)
+    add(String(localized: "Wrist", comment: "Body measurement site"), m.wristCm)
     return rows
 }
 
@@ -484,16 +484,16 @@ private func measurementSites(_ m: BodyMeasurement) -> [(label: String, cm: Doub
 private func derivedMetricChips(_ m: BodyMeasurement, gender: Gender, heightCm: Double) -> [(label: String, value: String)] {
     var chips: [(String, String)] = []
     if let whr = m.waistToHipRatio {
-        chips.append(("Waist-to-hip", String(format: "%.2f", whr)))
+        chips.append((String(localized: "Waist-to-hip", comment: "Derived body measurement chip"), whr.formatted(.number.precision(.fractionLength(2)))))
     }
     if let whtr = m.waistToHeightRatio(heightCm: heightCm) {
-        chips.append(("Waist-to-height", String(format: "%.2f", whtr)))
+        chips.append((String(localized: "Waist-to-height", comment: "Derived body measurement chip"), whtr.formatted(.number.precision(.fractionLength(2)))))
     }
     if let bf = m.usNavyBodyFatPercent(gender: gender, heightCm: heightCm) {
-        chips.append(("Body fat (Navy)", String(format: "%.0f%%", bf)))
+        chips.append((String(localized: "Body fat (Navy)", comment: "Derived body measurement chip"), (bf / 100).formatted(.percent.precision(.fractionLength(0)))))
     }
     if let frame = m.wristFrame(gender: gender, heightCm: heightCm) {
-        chips.append(("Frame", frame.label))
+        chips.append((String(localized: "Frame", comment: "Derived body measurement chip (wrist frame size)"), frame.label))
     }
     return chips
 }
@@ -516,8 +516,8 @@ struct BodyMeasurementsDetailView: View {
     private var unit: String { useMetric ? "cm" : "in" }
 
     private func displayValue(_ site: BodyMeasurement.Site) -> String {
-        guard let cm = latest?.value(for: site) else { return "Not set" }
-        return useMetric ? String(format: "%.0f cm", cm) : String(format: "%.0f in", cm / 2.54)
+        guard let cm = latest?.value(for: site) else { return String(localized: "Not set", comment: "Body measurement row with no value") }
+        return useMetric ? String(localized: "\(cm.formatted(.number.precision(.fractionLength(0)))) cm", comment: "Body measurement value with unit") : String(localized: "\((cm / 2.54).formatted(.number.precision(.fractionLength(0)))) in", comment: "Body measurement value with unit")
     }
 
     var body: some View {
@@ -678,7 +678,7 @@ private struct MeasurementEditSheet: View {
                 step: 1,
                 onSave: { value in onSave(useMetric ? Double(value) : Double(value) * 2.54) },
                 onResetToAuto: hasCurrent ? onClear : nil,
-                resetLabel: "Clear",
+                resetLabel: String(localized: "Clear", comment: "Body measurement picker: clear value button"),
                 onValueChange: { displayValue = $0 }
             )
             // Re-key so a unit flip rebuilds the wheel seeded with the value
@@ -752,7 +752,7 @@ struct AllBodyMeasurementsHistoryView: View {
     private func summary(_ m: BodyMeasurement) -> String {
         let sites = measurementSites(m).map { "\($0.label) \(displayLength($0.cm, useMetric: useMetric))" }
         if let bf = m.usNavyBodyFatPercent(gender: gender, heightCm: heightCm) {
-            return (sites + [String(format: "BF %.0f%%", bf)]).joined(separator: " · ")
+            return (sites + [String(localized: "BF \((bf / 100).formatted(.percent.precision(.fractionLength(0))))", comment: "Body fat percentage abbreviation in measurement history summary")]).joined(separator: " · ")
         }
         return sites.joined(separator: " · ")
     }

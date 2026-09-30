@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Coach je gezondheidsdossiers laten lezen?</string>
+    <string name="records_coach_consent_body">Coach stuurt de gegevens van de documenten die het leest — testuitslagen, datums, artsen en diagnoses — naar %1$s om je te antwoorden. De documenten blijven opgeslagen op dit apparaat.</string>
+    <string name="records_coach_consent_body_on_device">Coach leest de documenten op dit apparaat; er wordt niets online verstuurd.</string>
+    <string name="records_coach_consent_allow">Sta toe</string>
+    <string name="records_coach_consent_not_now">Niet nu</string>
+    <string name="records_coach_settings_title">Coach</string>
+    <string name="records_coach_settings_toggle">Laat Coach mijn gezondheidsdossiers gebruiken</string>
+    <string name="records_coach_settings_subtitle">Coach kan je documenten doorzoeken en lezen om vragen te beantwoorden. Als je dit uitzet, wordt de toegang direct ingetrokken.</string>
+    <string name="records_coach_analyzing">Analyseren:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">%d document analyseren</item>
+        <item quantity="other">%d documenten analyseren</item>
+    </plurals>
+    <string name="records_coach_change_records">Wijzig documenten</string>
+    <string name="records_coach_used_records">Gebruikte documenten</string>
+    <string name="records_coach_picker_title">Documenten voor dit gesprek</string>
+    <string name="records_coach_picker_search">Zoek documenten</string>
+    <string name="records_coach_picker_limit">Kies maximaal %d documenten.</string>
+    <string name="records_coach_picker_done">Klaar</string>
+    <string name="records_coach_picker_empty">Geen documenten gevonden.</string>
+    <string name="records_coach_picker_selected">Geselecteerd</string>
+    <string name="records_coach_picker_recent">Recente documenten</string>
+    <string name="records_coach_picker_results">Resultaten</string>
+    <string name="records_coach_mode_title">Documenten online versturen?</string>
+    <string name="records_coach_mode_body">Coach gebruikt %1$s. De gegevens van de geselecteerde documenten online versturen?</string>
+    <string name="records_coach_mode_send">Verstuur</string>
+    <string name="records_coach_mode_on_device">Gebruik Coach op apparaat</string>
+    <string name="records_coach_ask_report">Vraag over dit rapport</string>
+    <string name="records_coach_compare_previous">Vergelijk met vorig rapport</string>
+    <string name="records_coach_explain_trend">Leg deze trend uit</string>
+    <string name="records_coach_ask_coach">Vraag het Coach</string>
+    <string name="records_coach_prompt_report">Leg dit rapport uit: wat valt op en wat moet ik mijn arts vragen?</string>
+    <string name="records_coach_prompt_compare">Vergelijk dit rapport met het vorige. Wat is er veranderd?</string>
+    <string name="records_coach_prompt_trend">Leg uit hoe mijn %1$s in de loop van de tijd is veranderd.</string>
+    <string name="records_coach_chip_latest">Analyseer mijn laatste bloeduitslagen</string>
+    <string name="records_coach_chip_abnormal">Zoek afwijkende waarden</string>
+    <string name="records_coach_chip_compare">Vergelijk met vorig rapport</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

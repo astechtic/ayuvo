@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">Hədəf</string>
+    <string name="sleep_time_asleep">Yuxuda keçən vaxt</string>
+    <string name="sleep_avg_time_asleep">Orta yuxu müddəti</string>
+    <string name="sleep_in_bed">Yataqda</string>
+    <string name="sleep_time_in_bed">Yataqda keçən vaxt</string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">Oyaq</string>
+    <string name="sleep_stage_rem">REM</string>
+    <string name="sleep_stage_core">Əsas</string>
+    <string name="sleep_stage_deep">Dərin</string>
+    <string name="sleep_stage_asleep">Yuxuda</string>
+    <string name="sleep_chart_summary">Yuxu qrafiki, %1$d gecə, %2$s</string>
+    <string name="sleep_night_summary">Yuxu %1$s, yuxuda %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

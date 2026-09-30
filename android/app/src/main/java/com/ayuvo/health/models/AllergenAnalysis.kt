@@ -1,6 +1,8 @@
 package com.ayuvo.health.models
 
 import java.text.Normalizer
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 enum class AllergenAssessment {
     DECLARED_ALLERGEN_MATCH,
@@ -96,13 +98,17 @@ data class AllergenAnalysis(
     }
 }
 
-val AllergenAssessment.displayName: String
+val AllergenAssessment.labelRes: Int
     get() = when (this) {
-        AllergenAssessment.DECLARED_ALLERGEN_MATCH -> "Declared allergen match"
-        AllergenAssessment.MAY_CONTAIN -> "May contain"
-        AllergenAssessment.POSSIBLE_ALLERGEN -> "Possible allergen"
-        AllergenAssessment.UNABLE_TO_ASSESS -> "Unable to assess"
+        AllergenAssessment.DECLARED_ALLERGEN_MATCH -> R.string.core_allergen_declared_match
+        AllergenAssessment.MAY_CONTAIN -> R.string.core_allergen_may_contain
+        AllergenAssessment.POSSIBLE_ALLERGEN -> R.string.core_allergen_possible
+        AllergenAssessment.UNABLE_TO_ASSESS -> R.string.core_allergen_unable
     }
+
+/** Shown as is by the food sheets ([AllergenAnalysis.summary]). */
+val AllergenAssessment.displayName: String
+    get() = AppText.get(labelRes)
 
 fun FoodEntry.allergenAnalysis(sensitivities: List<String>): AllergenAnalysis =
     AllergenAnalysis.evaluate(this, sensitivities)

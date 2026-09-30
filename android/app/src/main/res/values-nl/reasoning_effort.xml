@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">Redeneerniveau OpenRouter</string>
+    <string name="settings_reasoning_effort_help">Geldt voor alle OpenRouter-verzoeken. Welke niveaus worden ondersteund, verschilt per model. Meer inspanning kan langer duren en meer kosten. Automatisch houdt de standaard van het model aan; onvolledige antwoorden worden opnieuw geprobeerd met Laag.</string>
+    <string name="reasoning_effort_auto">Standaard / Automatisch</string>
+    <string name="reasoning_effort_none">Geen</string>
+    <string name="reasoning_effort_minimal">Minimaal</string>
+    <string name="reasoning_effort_low">Laag</string>
+    <string name="reasoning_effort_medium">Gemiddeld</string>
+    <string name="reasoning_effort_high">Hoog</string>
+    <string name="reasoning_effort_xhigh">Extra hoog</string>
+    <string name="reasoning_effort_max">Max</string>
+</resources>

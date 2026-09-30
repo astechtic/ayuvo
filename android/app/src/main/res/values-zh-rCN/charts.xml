@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">目标</string>
+    <string name="sleep_time_asleep">睡眠时长</string>
+    <string name="sleep_avg_time_asleep">平均睡眠时长</string>
+    <string name="sleep_in_bed">卧床</string>
+    <string name="sleep_time_in_bed">卧床时间</string>
+    <string name="sleep_unit_hour">小时</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="sleep_stage_awake">清醒</string>
+    <string name="sleep_stage_rem">快速眼动</string>
+    <string name="sleep_stage_core">核心睡眠</string>
+    <string name="sleep_stage_deep">深度睡眠</string>
+    <string name="sleep_stage_asleep">睡眠</string>
+    <string name="sleep_chart_summary">睡眠图表，%1$d 晚，%2$s</string>
+    <string name="sleep_night_summary">睡眠 %1$s，入睡 %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

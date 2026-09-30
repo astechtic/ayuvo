@@ -10,35 +10,35 @@ struct WorkoutTextDraft: Codable {
         guard let day = StrengthWorkoutDate.date(for: date),
               StrengthWorkoutDate.key(for: day) == date,
               day <= Calendar.current.startOfDay(for: today) else {
-            throw WorkoutTextError.invalid("Choose today or an earlier date (YYYY-MM-DD).")
+            throw WorkoutTextError.invalid(String(localized: "Choose today or an earlier date (YYYY-MM-DD).", comment: "Workout-from-text validation error"))
         }
-        guard (1...30).contains(exercises.count) else { throw WorkoutTextError.invalid("Add between 1 and 30 exercises.") }
+        guard (1...30).contains(exercises.count) else { throw WorkoutTextError.invalid(String(localized: "Add between 1 and 30 exercises.", comment: "Workout-from-text validation error")) }
         return try exercises.map { entry in
             let item = library.first { $0.id == entry.exerciseID }
-            guard entry.exerciseID == nil || item != nil else { throw WorkoutTextError.invalid("Exercise not found. Describe the exercise again.") }
+            guard entry.exerciseID == nil || item != nil else { throw WorkoutTextError.invalid(String(localized: "Exercise not found. Describe the exercise again.", comment: "Workout-from-text validation error")) }
             guard !entry.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, entry.name.count <= 120 else {
-                throw WorkoutTextError.invalid("Enter an activity name.")
+                throw WorkoutTextError.invalid(String(localized: "Enter an activity name.", comment: "Workout-from-text validation error"))
             }
-            let minutes = try number(entry.minutes, range: Double.leastNonzeroMagnitude...1440, message: "Duration must be between 0 and 1,440 minutes.")
+            let minutes = try number(entry.minutes, range: Double.leastNonzeroMagnitude...1440, message: String(localized: "Duration must be between 0 and 1,440 minutes.", comment: "Workout-from-text validation error"))
             guard entry.sets.count <= 12, ["kg", "lbs"].contains(entry.unit) else {
-                throw WorkoutTextError.invalid("Use at most 12 sets per exercise and choose kg or lbs.")
+                throw WorkoutTextError.invalid(String(localized: "Use at most 12 sets per exercise and choose kg or lbs.", comment: "Workout-from-text validation error"))
             }
             guard let intensity = StrengthWorkoutIntensity(rawValue: entry.intensity) else {
-                throw WorkoutTextError.invalid("Choose light, moderate, or vigorous effort.")
+                throw WorkoutTextError.invalid(String(localized: "Choose light, moderate, or vigorous effort.", comment: "Workout-from-text validation error"))
             }
             let sets: [StrengthPlannedSet] = try entry.sets.map { set in
                 guard let reps = Int(set.reps) else {
                     throw Self.missingDetails(name: entry.name, item: item)
                 }
                 guard (1...999).contains(reps) else {
-                    throw WorkoutTextError.invalid("Enter 1–999 reps for each set.")
+                    throw WorkoutTextError.invalid(String(localized: "Enter 1–999 reps for each set.", comment: "Workout-from-text validation error"))
                 }
-                let weight = try number(set.weight, range: 0...1500, message: "Enter a valid weight between 0 and 1,500.")
+                let weight = try number(set.weight, range: 0...1500, message: String(localized: "Enter a valid weight between 0 and 1,500.", comment: "Workout-from-text validation error"))
                 var result = StrengthPlannedSet()
                 result.reps = String(reps)
                 result.weight = weight.map { String($0) } ?? ""
                 result.weightUnit = entry.unit
-                let rpe = try number(set.rpe, range: 1...10, message: "Enter an RPE from 1 to 10.")
+                let rpe = try number(set.rpe, range: 1...10, message: String(localized: "Enter an RPE from 1 to 10.", comment: "Workout-from-text validation error"))
                 result.rpe = rpe.map { String($0) } ?? ""
                 result.rpeScale = rpe == nil ? nil : .strength
                 return result
@@ -47,8 +47,8 @@ struct WorkoutTextDraft: Codable {
                 throw Self.missingDetails(name: entry.name, item: item)
             }
             guard item != nil || (minutes != nil && sets.isEmpty) else {
-                throw WorkoutClarification(question: "Which variation of \(entry.name) did you do?",
-                    options: ["Barbell", "Dumbbells", "Machine"])
+                throw WorkoutClarification(question: String(localized: "Which variation of \(entry.name) did you do?", comment: "Workout-from-text follow-up question; exercise name"),
+                    options: [String(localized: "Barbell", comment: "Exercise equipment answer option"), String(localized: "Dumbbells", comment: "Exercise equipment answer option"), String(localized: "Machine", comment: "Exercise equipment answer option")])
             }
             let resolved = item ?? ExerciseLibraryItem(id: "custom_activity_\(entry.id.uuidString)", name: entry.name, bodyPart: "cardio")
             var exercise = StrengthPlannedExercise(item: resolved)
@@ -64,11 +64,11 @@ struct WorkoutTextDraft: Codable {
 
     private static func missingDetails(name: String, item: ExerciseLibraryItem?) -> WorkoutClarification {
         let label = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let display = label.isEmpty ? "that exercise" : label
+        let display = label.isEmpty ? String(localized: "that exercise", comment: "Placeholder exercise name inside a follow-up question") : label
         if item?.isCardio == true {
-            return WorkoutClarification(question: "How many minutes of \(display) did you do?", options: ["10", "20", "30", "45"])
+            return WorkoutClarification(question: String(localized: "How many minutes of \(display) did you do?", comment: "Workout-from-text follow-up question; exercise name"), options: ["10", "20", "30", "45"])
         }
-        return WorkoutClarification(question: "How many sets and reps of \(display) did you do?", options: ["3x10", "3x8", "3x12"])
+        return WorkoutClarification(question: String(localized: "How many sets and reps of \(display) did you do?", comment: "Workout-from-text follow-up question; exercise name"), options: ["3x10", "3x8", "3x12"])
     }
 
     private func number(_ text: String, range: ClosedRange<Double>, message: String) throws -> Double? {
@@ -83,25 +83,25 @@ struct WorkoutTextDraft: Codable {
         guard let start = response.firstIndex(of: "{"), let end = response.lastIndex(of: "}"), start <= end,
               let data = String(response[start...end]).data(using: .utf8),
               let root = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw WorkoutTextError.invalid("Could not read the workout. Please try again.")
+            throw WorkoutTextError.invalid(String(localized: "Could not read the workout. Please try again.", comment: "Workout-from-text validation error"))
         }
         if let question = root["question"] as? String, !question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             throw WorkoutClarification(question: question, options: root["options"] as? [String] ?? [])
         }
         guard let date = root["date"] as? String, let rows = root["exercises"] as? [[String: Any]] else {
-            throw WorkoutTextError.invalid("Could not read the workout. Please try again.")
+            throw WorkoutTextError.invalid(String(localized: "Could not read the workout. Please try again.", comment: "Workout-from-text validation error"))
         }
         func field(_ value: Any?) throws -> String {
             if value == nil || value is NSNull { return "" }
             if let text = value as? String { return text }
             if let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID() { return number.stringValue }
-            throw WorkoutTextError.invalid("Could not read the workout. Please try again.")
+            throw WorkoutTextError.invalid(String(localized: "Could not read the workout. Please try again.", comment: "Workout-from-text validation error"))
         }
         let exercises = try rows.map { obj -> WorkoutTextExercise in
             let rawID = try field(obj["exercise_id"])
             let exerciseID = rawID.isEmpty ? nil : rawID
             let item = library.first { $0.id == exerciseID }
-            guard let sets = obj["sets"] as? [[String: Any]] else { throw WorkoutTextError.invalid("Could not read the workout sets.") }
+            guard let sets = obj["sets"] as? [[String: Any]] else { throw WorkoutTextError.invalid(String(localized: "Could not read the workout sets.", comment: "Workout-from-text validation error")) }
             return WorkoutTextExercise(exerciseID: exerciseID, name: try item?.name ?? field(obj["name"]),
                 minutes: try field(obj["minutes"]), unit: try field(obj["unit"]),
                 intensity: (try field(obj["intensity"])).isEmpty ? "moderate" : try field(obj["intensity"]),
@@ -243,8 +243,8 @@ struct WorkoutConversation: Codable {
 
     func answering(question: String, answer: String, exerciseID: String? = nil) throws -> Self {
         let reply = answer.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !reply.isEmpty, reply.count <= 500 else { throw WorkoutTextError.invalid("Reply in up to 500 characters.") }
-        guard turns.count < 6 else { throw WorkoutTextError.invalid("Please start over with the details gathered so far.") }
+        guard !reply.isEmpty, reply.count <= 500 else { throw WorkoutTextError.invalid(String(localized: "Reply in up to 500 characters.", comment: "Workout-from-text validation error")) }
+        guard turns.count < 6 else { throw WorkoutTextError.invalid(String(localized: "Please start over with the details gathered so far.", comment: "Workout-from-text validation error")) }
         var result = self
         result.turns.append(WorkoutFollowUp(question: String(question.prefix(500)), answer: reply, exerciseID: exerciseID))
         return result

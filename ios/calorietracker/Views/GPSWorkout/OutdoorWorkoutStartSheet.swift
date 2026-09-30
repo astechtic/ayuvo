@@ -75,7 +75,7 @@ struct OutdoorWorkoutStartSheet: View {
                                 if await onStartOnWatch(sport) {
                                     dismiss()
                                 } else {
-                                    watchError = "Couldn't open Ayuvo on your Apple Watch. Open it on the watch and start the workout there."
+                                    watchError = String(localized: "Couldn't open Ayuvo on your Apple Watch. Open it on the watch and start the workout there.", comment: "GPS workout start sheet error")
                                 }
                             }
                         } label: {

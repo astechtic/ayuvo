@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">导入营养历史</string>
+    <string name="health_import_action">导入</string>
+    <string name="health_import_description">将其他 App 中的饮食记录导入你的日记。请先预览可用记录，然后选择一个来源 App，以免共享的记录被重复计算。</string>
+    <string name="health_import_from">起始日期 (YYYY-MM-DD)</string>
+    <string name="health_import_to">截止日期 (YYYY-MM-DD)</string>
+    <string name="health_import_history_hint">没有历史数据访问权限时，请选择最近 30 天内的日期。更早的记录需要在受支持的设备上授予历史数据访问权限。</string>
+    <string name="health_import_grant">授予营养和历史数据访问权限</string>
+    <string name="health_import_access_result">访问设置已更新。请重新预览以查看可用记录。</string>
+    <string name="health_import_access_needed">请在 Health Connect 中允许读取营养数据，然后重新预览。</string>
+    <string name="health_import_invalid_dates">请按 YYYY-MM-DD 格式输入有效日期。结束日期不能早于开始日期，也不能晚于今天。</string>
+    <string name="health_import_history_needed">此范围需要历史数据访问权限。请在受支持的设备上授予权限，或选择最近 30 天内的日期。</string>
+    <string name="health_import_preview">预览可用记录</string>
+    <string name="health_import_failed">无法完成导入。请检查 Health Connect 访问权限后重试。</string>
+    <string name="health_import_empty">在此范围内没有找到来自其他 App 的新营养记录。请确认你的来源 App 已与 Health Connect 共享营养数据。之前导入过的记录会被跳过，包括已从你的日记中移除的记录。</string>
+    <string name="health_import_count">%1$d 条新记录 · %2$d kcal</string>
+    <string name="health_import_unnamed">导入的餐食</string>
+    <string name="health_import_local_only">这些是本地副本。编辑和删除仅在 Ayuvo 中生效。重复导入会跳过之前导入的记录，而不会更新它们。</string>
+    <string name="health_import_done">已将 %1$d 条记录导入你的日记。</string>
+    <string name="health_import_close">关闭</string>
+</resources>

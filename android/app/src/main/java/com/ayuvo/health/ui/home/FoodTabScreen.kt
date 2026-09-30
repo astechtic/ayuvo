@@ -955,16 +955,16 @@ fun FoodTabScreen(
             }
 
             pendingDiaryDeletion?.let { target ->
-                val title = when (target) {
-                    is HomeDiaryItem.Food -> "Delete Food Log?"
-                    is HomeDiaryItem.Water -> "Delete Water Log?"
-                    is HomeDiaryItem.Fasting -> "Delete Fasting Log?"
-                }
-                val message = when (target) {
-                    is HomeDiaryItem.Food -> "This removes the food from your diary. Saved favorites are kept."
-                    is HomeDiaryItem.Water -> "This removes the water entry from your diary."
-                    is HomeDiaryItem.Fasting -> "This removes the completed fast from your diary."
-                }
+                val title = stringResource(when (target) {
+                    is HomeDiaryItem.Food -> R.string.ui_delete_food_log_q
+                    is HomeDiaryItem.Water -> R.string.ui_delete_water_log_q
+                    is HomeDiaryItem.Fasting -> R.string.ui_delete_fasting_log_q
+                })
+                val message = stringResource(when (target) {
+                    is HomeDiaryItem.Food -> R.string.ui_delete_food_body
+                    is HomeDiaryItem.Water -> R.string.ui_delete_water_body
+                    is HomeDiaryItem.Fasting -> R.string.ui_delete_fasting_body
+                })
                 GlassDialog(onDismissRequest = { pendingDiaryDeletion = null }) {
                     Text(title, fontSize = 21.sp, fontWeight = FontWeight.Bold)
                     Text(

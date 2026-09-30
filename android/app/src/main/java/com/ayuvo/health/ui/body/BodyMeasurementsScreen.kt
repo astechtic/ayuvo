@@ -150,11 +150,11 @@ import kotlin.math.roundToInt
 // ── Body Measurements (optional tape-measure tracking) ──────────────────
 
 internal val measurementHistoryFmt: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US).withZone(ZoneId.systemDefault())
+    DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM).withZone(ZoneId.systemDefault())
 
 internal fun displayLengthCm(context: android.content.Context, cm: Double, useMetric: Boolean): String =
-    if (useMetric) String.format(Locale.US, "%.1f %s", cm, context.getString(R.string.unit_cm))
-    else String.format(Locale.US, "%.1f %s", cm / 2.54, context.getString(R.string.unit_in))
+    if (useMetric) String.format(Locale.getDefault(), "%.1f %s", cm, context.getString(R.string.unit_cm))
+    else String.format(Locale.getDefault(), "%.1f %s", cm / 2.54, context.getString(R.string.unit_in))
 
 /** Logged sites in display order, skipping any that weren't entered. */
 internal fun measurementSiteList(context: android.content.Context, m: BodyMeasurement): List<Pair<String, Double>> = buildList {
@@ -170,15 +170,15 @@ internal fun measurementSiteList(context: android.content.Context, m: BodyMeasur
 
 /** Derived metrics computable from this entry + profile, skipping any missing their inputs. */
 internal fun derivedMetricList(context: android.content.Context, m: BodyMeasurement, gender: Gender, heightCm: Double): List<Pair<String, String>> = buildList {
-    m.waistToHipRatio?.let { add(context.getString(R.string.derived_waist_to_hip) to String.format(Locale.US, "%.2f", it)) }
-    m.waistToHeightRatio(heightCm)?.let { add(context.getString(R.string.derived_waist_to_height) to String.format(Locale.US, "%.2f", it)) }
-    m.usNavyBodyFatPercent(gender, heightCm)?.let { add(context.getString(R.string.derived_body_fat) to String.format(Locale.US, "%.0f%%", it)) }
+    m.waistToHipRatio?.let { add(context.getString(R.string.derived_waist_to_hip) to String.format(Locale.getDefault(), "%.2f", it)) }
+    m.waistToHeightRatio(heightCm)?.let { add(context.getString(R.string.derived_waist_to_height) to String.format(Locale.getDefault(), "%.2f", it)) }
+    m.usNavyBodyFatPercent(gender, heightCm)?.let { add(context.getString(R.string.derived_body_fat) to String.format(Locale.getDefault(), "%.0f%%", it)) }
     m.wristFrame(gender, heightCm)?.let { add(context.getString(R.string.derived_frame) to context.getString(it.labelRes)) }
 }
 
 internal fun measurementHistorySummary(context: android.content.Context, m: BodyMeasurement, gender: Gender, heightCm: Double, useMetric: Boolean): String {
     val sites = measurementSiteList(context, m).map { "${it.first} ${displayLengthCm(context, it.second, useMetric)}" }
-    val bf = m.usNavyBodyFatPercent(gender, heightCm)?.let { "BF ${String.format(Locale.US, "%.0f%%", it)}" }
+    val bf = m.usNavyBodyFatPercent(gender, heightCm)?.let { context.getString(R.string.ui_body_fat_short, String.format(Locale.getDefault(), "%.0f%%", it)) }
     return (sites + listOfNotNull(bf)).joinToString(" · ")
 }
 
@@ -268,7 +268,7 @@ fun BodyMeasurementsScreen(container: AppContainer, onBack: () -> Unit) {
     val inUnit = stringResource(R.string.unit_in)
     fun displayValue(site: BodyMeasurement.Site): String {
         val cm = latest?.value(site) ?: return notSet
-        return if (heightMetric) String.format(Locale.US, "%.0f %s", cm, cmUnit) else String.format(Locale.US, "%.0f %s", cm / 2.54, inUnit)
+        return if (heightMetric) String.format(Locale.getDefault(), "%.0f %s", cm, cmUnit) else String.format(Locale.getDefault(), "%.0f %s", cm / 2.54, inUnit)
     }
 
     Scaffold(
@@ -288,7 +288,7 @@ fun BodyMeasurementsScreen(container: AppContainer, onBack: () -> Unit) {
         ) {
             item {
                 Text(
-                    "Optional. Ayuvo turns these into waist-to-hip, waist-to-height, body-fat %, and frame size, and reads them when it recalculates your goals and in Coach.",
+                    stringResource(R.string.ui_body_measurements_intro),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )

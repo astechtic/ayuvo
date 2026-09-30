@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.workouts
 
+import androidx.compose.ui.res.pluralStringResource
 import com.ayuvo.health.ui.navigation.BottomNavFabPadding
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -356,7 +357,7 @@ internal fun WorkoutDiaryScreen(
             if (state.exercises.isEmpty()) {
                 item(key = "workout-empty") {
                     WorkoutEmptyState(
-                        splitTitle = state.preferences.split.title,
+                        splitTitle = stringResource(state.preferences.split.titleRes),
                         onAdd = { addMenuExpanded = true },
                         modifier = Modifier.workoutDaySwipe(
                             selectedDate = state.selectedDate,
@@ -430,6 +431,7 @@ internal fun WorkoutDiaryScreen(
                 .navigationBarsPadding()
                 .padding(end = 24.dp, bottom = BottomNavFabPadding)
         ) {
+            val addWorkoutLabel = stringResource(R.string.ui_workout_add_workout)
             Box(
                 modifier = Modifier
                     .size(60.dp)
@@ -439,7 +441,7 @@ internal fun WorkoutDiaryScreen(
                         dismissKeyboard()
                         addMenuExpanded = true
                     }
-                    .semantics { contentDescription = "Add workout" },
+                    .semantics { contentDescription = addWorkoutLabel },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Filled.Add, contentDescription = null, tint = Color.White, modifier = Modifier.size(30.dp))
@@ -463,8 +465,8 @@ internal fun WorkoutDiaryScreen(
                 HorizontalDivider(color = workoutsColors().hairline.copy(alpha = 0.45f))
                 if (state.splitGroups.isEmpty()) {
                     SheetGlassDropdownMenuItem(
-                        label = "All exercises",
-                        leadingContent = { WorkoutMenuGlyph(workoutMenuGlyphAsset("All exercises", emptySet())) },
+                        label = stringResource(R.string.ui_workout_all_exercises),
+                        leadingContent = { WorkoutMenuGlyph(workoutMenuGlyphAsset(WorkoutPickerRequest.ALL_TITLE, emptySet())) },
                         onClick = {
                             addMenuExpanded = false
                             pickerRequest = WorkoutPickerRequest.all()
@@ -473,7 +475,7 @@ internal fun WorkoutDiaryScreen(
                 } else {
                     state.splitGroups.forEach { group ->
                         SheetGlassDropdownMenuItem(
-                            label = group.title,
+                            label = ExerciseLabels.groupLabel(androidx.compose.ui.platform.LocalResources.current, group),
                             leadingContent = {
                                 WorkoutMenuGlyph(workoutMenuGlyphAsset(group.title, group.muscles))
                             },
@@ -485,7 +487,7 @@ internal fun WorkoutDiaryScreen(
                     }
                 }
                 SheetGlassDropdownMenuItem(
-                    label = "Copy from day",
+                    label = stringResource(R.string.ui_workout_copy_from_day),
                     leadingIcon = Icons.Filled.ContentCopy,
                     onClick = {
                         addMenuExpanded = false
@@ -493,7 +495,7 @@ internal fun WorkoutDiaryScreen(
                     }
                 )
                 SheetGlassDropdownMenuItem(
-                    label = "Saved",
+                    label = stringResource(R.string.ui_workout_saved),
                     leadingIcon = Icons.Filled.Bookmark,
                     onClick = {
                         addMenuExpanded = false
@@ -519,7 +521,7 @@ internal fun WorkoutDiaryScreen(
                     )
                 }
                 SheetGlassDropdownMenuItem(
-                    label = "Create exercise",
+                    label = stringResource(R.string.workout_create_exercise),
                     leadingIcon = Icons.Filled.AddCircle,
                     onClick = {
                         addMenuExpanded = false
@@ -675,7 +677,7 @@ internal fun WorkoutDiaryScreen(
     }
 
     unfinished?.let { track ->
-        val title = runCatching { container.workoutConfig.sport(track.sport).title }.getOrDefault(track.sport)
+        val title = runCatching { container.workoutConfig.sport(track.sport).displayTitle(context) }.getOrDefault(track.sport)
         UnfinishedWorkoutDialog(
             sportTitle = title,
             onResume = {
@@ -717,7 +719,7 @@ internal fun WorkoutDiaryScreen(
     state.notice?.let { message ->
         GlassDialog(onDismissRequest = viewModel::dismissNotice) {
             Text(
-                text = "Log your workout first",
+                text = stringResource(R.string.ui_workout_log_first_title),
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -729,7 +731,7 @@ internal fun WorkoutDiaryScreen(
                 lineHeight = 21.sp
             )
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                GlassTextButton(text = "OK", onClick = viewModel::dismissNotice)
+                GlassTextButton(text = stringResource(R.string.action_ok), onClick = viewModel::dismissNotice)
             }
         }
     }
@@ -795,7 +797,7 @@ private fun WorkoutBurnHero(
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 WorkoutMetric(
-                    label = "Sets",
+                    label = stringResource(R.string.ui_workout_metric_sets),
                     value = state.performedSetCount.formattedWholeNumber(),
                     icon = Icons.Filled.Checklist,
                     active = state.performedSetCount > 0,
@@ -803,7 +805,7 @@ private fun WorkoutBurnHero(
                 )
                 MetricDivider()
                 WorkoutMetric(
-                    label = "Workouts",
+                    label = stringResource(R.string.ui_workout_metric_workouts),
                     value = state.exercises.size.formattedWholeNumber(),
                     icon = Icons.Filled.FitnessCenter,
                     active = state.exercises.isNotEmpty(),
@@ -811,7 +813,7 @@ private fun WorkoutBurnHero(
                 )
                 MetricDivider()
                 WorkoutMetric(
-                    label = "Reps",
+                    label = stringResource(R.string.ui_workout_metric_reps),
                     value = state.repCount.formattedWholeNumber(),
                     icon = Icons.Filled.Repeat,
                     active = state.repCount > 0,
@@ -819,8 +821,8 @@ private fun WorkoutBurnHero(
                 )
                 MetricDivider()
                 WorkoutMetric(
-                    label = "Burn",
-                    value = state.caloriesBurned?.let { "${it.formattedWholeNumber()} kcal" } ?: "-- kcal",
+                    label = stringResource(R.string.ui_workout_metric_burn),
+                    value = state.caloriesBurned?.let { stringResource(R.string.ui_workout_kcal_value, it.formattedWholeNumber()) } ?: stringResource(R.string.ui_workout_kcal_empty),
                     icon = Icons.Filled.LocalFireDepartment,
                     active = state.caloriesBurned != null,
                     modifier = Modifier.weight(1f)
@@ -843,6 +845,7 @@ private fun WorkoutLogBurnButton(
         animationSpec = tween(durationMillis = 120),
         label = "workout-burn-press"
     )
+    val burnLabel = stringResource(if (isCalculating) R.string.ui_workout_calculating_burn else R.string.ui_workout_calculate_burn)
     Box(
         modifier = modifier
             .size(176.dp)
@@ -855,11 +858,7 @@ private fun WorkoutLogBurnButton(
                 onClick = onCalculate
             )
             .semantics {
-                contentDescription = if (isCalculating) {
-                    "Calculating calorie burn"
-                } else {
-                    "Calculate calorie burn"
-                }
+                contentDescription = burnLabel
             },
         contentAlignment = Alignment.Center
     ) {
@@ -889,14 +888,14 @@ private fun WorkoutLogBurnButton(
             }
             Spacer(Modifier.height(5.dp))
             Text(
-                text = if (isCalculating) "Calculating…" else "Calculate",
+                text = stringResource(if (isCalculating) R.string.ui_workout_calculating else R.string.ui_workout_calculate),
                 color = Color.White,
                 fontSize = if (isCalculating) 18.sp else 22.sp,
                 fontWeight = FontWeight.Black,
                 maxLines = 1
             )
             Text(
-                text = "CALORIE BURN",
+                text = stringResource(R.string.ui_workout_calorie_burn_caps),
                 color = Color.White.copy(alpha = 0.9f),
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Black,
@@ -977,7 +976,7 @@ private fun WorkoutDayHeader(
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = "$workoutCount ${if (workoutCount == 1) "workout" else "workouts"}",
+            text = pluralStringResource(R.plurals.ui_workout_count, workoutCount, workoutCount),
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
@@ -1002,13 +1001,13 @@ private fun WorkoutEmptyState(
             Icon(Icons.Filled.Add, contentDescription = null, tint = AppColors.Calorie, modifier = Modifier.size(28.dp))
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
-                    "No workouts logged",
+                    stringResource(R.string.ui_workout_no_workouts),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    "Use + to pick $splitTitle exercises for this day",
+                    stringResource(R.string.ui_workout_empty_hint, splitTitle),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium
@@ -1084,11 +1083,11 @@ private fun BoxScope.WorkoutExerciseSwipeBackground(offsetPx: Float, isSaved: Bo
         isSaved -> Icons.Filled.Bookmark
         else -> Icons.Filled.Save
     }
-    val label = when {
-        trailing -> "Delete"
-        isSaved -> "Unsave"
-        else -> "Save"
-    }
+    val label = stringResource(when {
+        trailing -> R.string.action_delete
+        isSaved -> R.string.ui_workout_unsave
+        else -> R.string.action_save
+    })
 
     Box(Modifier.matchParentSize().clip(RoundedCornerShape(24.dp))) {
         Box(
@@ -1171,11 +1170,12 @@ private fun WorkoutExerciseCard(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
+                    val res = androidx.compose.ui.platform.LocalResources.current
                     Text(
                         buildString {
-                            append(exercise.primaryMuscles.joinToString().ifBlank { "Unspecified" })
+                            append(ExerciseLabels.join(res, exercise.primaryMuscles.filter { it.isNotBlank() }))
                             append(" · ")
-                            append(exercise.equipment)
+                            append(ExerciseLabels.label(res, exercise.equipment))
                         },
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.57f),
                         fontSize = 12.sp,
@@ -1186,7 +1186,7 @@ private fun WorkoutExerciseCard(
                 }
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Open exercise instructions",
+                    contentDescription = stringResource(R.string.ui_workout_open_instructions),
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.34f),
                     modifier = Modifier.size(20.dp)
                 )
@@ -1200,7 +1200,7 @@ private fun WorkoutExerciseCard(
                 ) {
                     if (!lastTimeSummary.isNullOrBlank()) {
                         Text(
-                            "Last time: $lastTimeSummary",
+                            stringResource(R.string.ui_workout_last_time, lastTimeSummary),
                             modifier = Modifier.weight(1f),
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f),
                             fontSize = 12.sp,
@@ -1212,7 +1212,7 @@ private fun WorkoutExerciseCard(
                         Spacer(modifier = Modifier.weight(1f))
                     }
                     Text(
-                        "History",
+                        stringResource(R.string.ui_workout_history),
                         modifier = Modifier.clickable(onClick = onShowHistory),
                         color = AppColors.Calorie,
                         fontSize = 12.sp,
@@ -1233,10 +1233,10 @@ private fun WorkoutExerciseCard(
                         enabled = exercise.sets.size > 1,
                         modifier = Modifier.size(34.dp)
                     ) {
-                        Icon(Icons.Filled.Remove, contentDescription = "Remove set", modifier = Modifier.size(18.dp))
+                        Icon(Icons.Filled.Remove, contentDescription = stringResource(R.string.ui_workout_remove_set), modifier = Modifier.size(18.dp))
                     }
                     Text(
-                        "${exercise.sets.size} ${if (exercise.sets.size == 1) "set" else "sets"}",
+                        pluralStringResource(R.plurals.ui_workout_set_count, exercise.sets.size, exercise.sets.size),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
@@ -1248,17 +1248,17 @@ private fun WorkoutExerciseCard(
                         enabled = exercise.sets.size < 12,
                         modifier = Modifier.size(34.dp)
                     ) {
-                        Icon(Icons.Filled.Add, contentDescription = "Add blank set", modifier = Modifier.size(18.dp))
+                        Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.ui_workout_add_blank_set), modifier = Modifier.size(18.dp))
                     }
                 } else {
-                    Text("Timed activity", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f), fontSize = 12.sp)
+                    Text(stringResource(R.string.ui_workout_timed_activity), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f), fontSize = 12.sp)
                     Spacer(Modifier.weight(1f))
                 }
                 WorkoutExerciseTimer(exercise, onTimerAction)
                 IconButton(onClick = onToggleSaved, modifier = Modifier.size(36.dp)) {
                     Icon(
                         if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
-                        contentDescription = if (isSaved) "Unsave exercise" else "Save exercise",
+                        contentDescription = stringResource(if (isSaved) R.string.ui_workout_unsave_exercise else R.string.ui_workout_save_exercise),
                         tint = if (isSaved) AppColors.Calorie else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.48f),
                         modifier = Modifier.size(19.dp)
                     )
@@ -1266,7 +1266,7 @@ private fun WorkoutExerciseCard(
                 IconButton(onClick = onRemove, modifier = Modifier.size(36.dp)) {
                     Icon(
                         Icons.Filled.DeleteOutline,
-                        contentDescription = "Remove exercise",
+                        contentDescription = stringResource(R.string.ui_workout_remove_exercise),
                         tint = MaterialTheme.colorScheme.error.copy(alpha = 0.82f),
                         modifier = Modifier.size(19.dp)
                     )
@@ -1317,9 +1317,9 @@ private fun WorkoutExerciseTimer(
     }
     val elapsed = (timer?.elapsedSeconds(now) ?: 0.0).toLong()
     val time = if (elapsed >= 3_600) {
-        String.format(Locale.US, "%d:%02d:%02d", elapsed / 3_600, elapsed / 60 % 60, elapsed % 60)
+        String.format(Locale.getDefault(), "%d:%02d:%02d", elapsed / 3_600, elapsed / 60 % 60, elapsed % 60)
     } else {
-        String.format(Locale.US, "%02d:%02d", elapsed / 60, elapsed % 60)
+        String.format(Locale.getDefault(), "%02d:%02d", elapsed / 60, elapsed % 60)
     }
     Box {
         IconButton(
@@ -1329,7 +1329,7 @@ private fun WorkoutExerciseTimer(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     Icons.Filled.Timer,
-                    contentDescription = if (timer == null) "Start timer for ${exercise.name}" else "Timer options for ${exercise.name}, $time, ${if (timer.isRunning) "running" else if (timer.isSaved) "saved" else "paused"}",
+                    contentDescription = if (timer == null) stringResource(R.string.ui_workout_timer_start, exercise.name) else stringResource(if (timer.isRunning) R.string.ui_workout_timer_options_running else if (timer.isSaved) R.string.ui_workout_timer_options_saved else R.string.ui_workout_timer_options_paused, exercise.name, time),
                     tint = if (timer == null) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.48f) else AppColors.Calorie,
                     modifier = Modifier.size(19.dp)
                 )
@@ -1337,19 +1337,19 @@ private fun WorkoutExerciseTimer(
             }
         }
         SheetGlassDropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }, menuWidth = 200.dp) {
-            SheetGlassDropdownMenuItem(label = if (timer?.isRunning == true) "Pause" else "Resume", onClick = {
+            SheetGlassDropdownMenuItem(label = stringResource(if (timer?.isRunning == true) R.string.workout_action_pause else R.string.workout_action_resume), onClick = {
                 menuExpanded = false
                 onAction(if (timer?.isRunning == true) ExerciseTimerAction.PAUSE else ExerciseTimerAction.RESUME)
             })
-            if (timer?.isSaved != true) SheetGlassDropdownMenuItem(label = "Stop & save", onClick = {
+            if (timer?.isSaved != true) SheetGlassDropdownMenuItem(label = stringResource(R.string.ui_workout_timer_stop_save), onClick = {
                 menuExpanded = false
                 onAction(ExerciseTimerAction.STOP)
             })
-            SheetGlassDropdownMenuItem(label = "Restart timer", onClick = {
+            SheetGlassDropdownMenuItem(label = stringResource(R.string.ui_workout_timer_restart), onClick = {
                 menuExpanded = false
                 pendingAction = ExerciseTimerAction.RESTART
             })
-            SheetGlassDropdownMenuItem(label = "Discard timer", onClick = {
+            SheetGlassDropdownMenuItem(label = stringResource(R.string.ui_workout_timer_discard), onClick = {
                 menuExpanded = false
                 pendingAction = ExerciseTimerAction.DISCARD
             })
@@ -1358,15 +1358,15 @@ private fun WorkoutExerciseTimer(
     pendingAction?.let { action ->
         GlassDialog(onDismissRequest = { pendingAction = null }) {
             Text(
-                if (action == ExerciseTimerAction.RESTART) "Restart timer?" else "Discard timer?",
+                stringResource(if (action == ExerciseTimerAction.RESTART) R.string.ui_workout_timer_restart_q else R.string.ui_workout_timer_discard_q),
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            Text("This clears the recorded time for ${exercise.name}.", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f))
+            Text(stringResource(R.string.ui_workout_timer_clear_body, exercise.name), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                GlassTextButton(text = "Cancel", onClick = { pendingAction = null })
-                GlassTextButton(text = if (action == ExerciseTimerAction.RESTART) "Restart" else "Discard", onClick = {
+                GlassTextButton(text = stringResource(R.string.action_cancel), onClick = { pendingAction = null })
+                GlassTextButton(text = stringResource(if (action == ExerciseTimerAction.RESTART) R.string.ui_workout_restart else R.string.action_discard), onClick = {
                     pendingAction = null
                     onAction(action)
                 })
@@ -1392,7 +1392,7 @@ internal fun WorkoutSetRow(
         horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         Text(
-            "Set ${index + 1}",
+            stringResource(R.string.ui_workout_set_n, index + 1),
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f),
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
@@ -1412,7 +1412,7 @@ internal fun WorkoutSetRow(
             value = set.reps,
             sanitize = { proposed, _ -> WorkoutSetInput.reps(proposed) },
             onValueChange = onReps,
-            placeholder = "Reps",
+            placeholder = stringResource(R.string.ui_workout_metric_reps),
             keyboardType = KeyboardType.Number,
             modifier = Modifier.weight(1f)
         )
@@ -1426,7 +1426,7 @@ internal fun WorkoutSetRow(
             editingKey = rpeScale,
             sanitize = rpeScale::sanitize,
             onValueChange = onRpe,
-            placeholder = "RPE",
+            placeholder = stringResource(R.string.ui_workout_rpe),
             keyboardType = if (rpeScale.allowsDecimalInput) KeyboardType.Decimal else KeyboardType.Number,
             modifier = Modifier.weight(1f).semantics { contentDescription = rpeHelp },
             imeAction = ImeAction.Done,
@@ -1636,9 +1636,10 @@ private fun startOfWeek(date: LocalDate, firstDay: DayOfWeek): LocalDate {
     return date.minusDays(daysBack.toLong())
 }
 
+@Composable
 internal fun selectedDateTitle(date: LocalDate, today: LocalDate = LocalDate.now()): String = when (date) {
-    today -> "Today"
-    today.plusDays(1) -> "Tomorrow"
-    today.minusDays(1) -> "Yesterday"
+    today -> stringResource(R.string.ui_workout_today)
+    today.plusDays(1) -> stringResource(R.string.ui_workout_tomorrow)
+    today.minusDays(1) -> stringResource(R.string.ui_workout_yesterday)
     else -> date.format(DateTimeFormatter.ofPattern("EEEE, MMM d", Locale.getDefault()))
 }

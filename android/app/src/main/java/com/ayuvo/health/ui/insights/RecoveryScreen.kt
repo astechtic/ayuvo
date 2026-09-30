@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,7 @@ fun RecoveryScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         tag = "insights.recovery",
         onBack = onBack,
         onInfo = { info = true },
-        disclaimers = listOfNotNull(cfg.disclaimers["general"], cfg.disclaimers["background"])
+        disclaimers = listOfNotNull(InsightsText.disclaimer(LocalContext.current, cfg, "general"), InsightsText.disclaimer(LocalContext.current, cfg, "background"))
     ) {
         val snap = ui.snapshot
         if (!insightsGate(ui, "insights.recovery")) return@InsightsScaffold
@@ -67,7 +68,7 @@ fun RecoveryScreen(vm: InsightsViewModel, onBack: () -> Unit) {
                     InsetGroup(header = stringResource(R.string.insights_training_load), dividerInset = 16.dp) {
                         row {
                             KeyValueRow(
-                                load.label,
+                                InsightsText.trainingLoadLabel(LocalContext.current, load.category, load.label),
                                 stringResource(R.string.insights_training_load_value, InsightsFormat.number(load.load), InsightsFormat.number(load.mean28d))
                             )
                         }
@@ -78,7 +79,7 @@ fun RecoveryScreen(vm: InsightsViewModel, onBack: () -> Unit) {
                 ExplainSection(
                     state = ui.explanations[vm.explanationKey("recovery")] ?: ExplainUi.Idle,
                     availability = ui.ai,
-                    disclaimer = cfg.disclaimers["ai"],
+                    disclaimer = InsightsText.disclaimer(LocalContext.current, cfg, "ai"),
                     tag = "insights.recovery",
                     onExplain = { vm.explain("recovery") }
                 )
@@ -86,7 +87,7 @@ fun RecoveryScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         }
         item(key = "chart") { RecoveryChart(snap) }
     }
-    if (info) InsightMethodologySheet(cfg, InsightMethodology.recovery(cfg, ui.snapshot), onDismiss = { info = false })
+    if (info) InsightMethodologySheet(cfg, InsightMethodology.recovery(LocalContext.current, cfg, ui.snapshot), onDismiss = { info = false })
 }
 
 /** Shared "off / health not connected / loading" states; false when the screen has nothing else to show. */
@@ -124,8 +125,8 @@ private fun RecoveryHero(r: RecoveryResult, cfg: InsightsConfig) {
                 ScoreRing(r.score, color, "/ 100")
                 Spacer(Modifier.width(16.dp))
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(r.labelText.orEmpty(), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = color)
-                    Text(stringResource(R.string.insights_recommendation) + ": " + r.recommendation.orEmpty(), fontSize = 15.sp)
+                    Text(InsightsText.bandLabel(LocalContext.current, r.label, r.labelText), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = color)
+                    Text(stringResource(R.string.insights_recommendation) + ": " + InsightsText.bandRecommendation(LocalContext.current, r.label, r.recommendation), fontSize = 15.sp)
                     r.confidence?.let { Chip(stringResource(R.string.insights_confidence, confidenceText(it)), AyuvoColors.secondaryLabel()) }
                 }
             }
@@ -144,17 +145,18 @@ internal fun confidenceText(c: String): String = stringResource(
 
 @Composable
 private fun SignalsCard(r: RecoveryResult) {
+    val context = LocalContext.current
     SurfaceCard(modifier = Modifier.testTag("insights.recovery.signals"), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (r.positives.isEmpty() && r.negatives.isEmpty()) {
             Text(stringResource(R.string.insights_signals_none), fontSize = 15.sp, color = AyuvoColors.secondaryLabel())
         }
         if (r.positives.isNotEmpty()) {
             Text(stringResource(R.string.insights_signals_positive), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = AyuvoColors.secondaryLabel())
-            r.positives.forEach { SignalRow(it.text, InsightsFormat.signed(it.impact), AyuvoPalette.Success) }
+            r.positives.forEach { SignalRow(InsightsText.signal(context, InsightsConfig.active, r, it), InsightsFormat.signed(it.impact), AyuvoPalette.Success) }
         }
         if (r.negatives.isNotEmpty()) {
             Text(stringResource(R.string.insights_signals_negative), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = AyuvoColors.secondaryLabel())
-            r.negatives.forEach { SignalRow(it.text, InsightsFormat.signed(it.impact), AyuvoPalette.Warning) }
+            r.negatives.forEach { SignalRow(InsightsText.signal(context, InsightsConfig.active, r, it), InsightsFormat.signed(it.impact), AyuvoPalette.Warning) }
         }
     }
 }
@@ -181,7 +183,7 @@ private fun ComponentsGroup(r: RecoveryResult, cfg: InsightsConfig) {
                     c.value == null -> null
                     else -> stringResource(R.string.insights_learning_nights, c.baselineN, m.minPoints)
                 }
-                ValueWithBaselineRow(m.label, today, secondary, dimmed = !c.available)
+                ValueWithBaselineRow(InsightsText.metricLabel(LocalContext.current, m), today, secondary, dimmed = !c.available)
             }
         }
     }

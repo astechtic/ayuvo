@@ -69,6 +69,20 @@ enum NutrientCatalog {
         switch key {
         case "monounsaturated_fat": return String(localized: "Monounsaturated Fat")
         case "polyunsaturated_fat": return String(localized: "Polyunsaturated Fat")
+        case "phosphorus": return String(localized: "Phosphorus", comment: "Nutrient name")
+        case "chloride": return String(localized: "Chloride", comment: "Nutrient name")
+        case "copper": return String(localized: "Copper", comment: "Nutrient name")
+        case "manganese": return String(localized: "Manganese", comment: "Nutrient name")
+        case "selenium": return String(localized: "Selenium", comment: "Nutrient name")
+        case "chromium": return String(localized: "Chromium", comment: "Nutrient name")
+        case "molybdenum": return String(localized: "Molybdenum", comment: "Nutrient name")
+        case "iodine": return String(localized: "Iodine", comment: "Nutrient name")
+        case "vitamin_b6": return String(localized: "Vitamin B6", comment: "Nutrient name")
+        case "thiamin": return String(localized: "Thiamin", comment: "Nutrient name")
+        case "riboflavin": return String(localized: "Riboflavin", comment: "Nutrient name")
+        case "niacin": return String(localized: "Niacin", comment: "Nutrient name")
+        case "biotin": return String(localized: "Biotin", comment: "Nutrient name")
+        case "pantothenic_acid": return String(localized: "Pantothenic Acid", comment: "Nutrient name")
         default: return NutrientsReference.byKey[key]?.name ?? key
         }
     }

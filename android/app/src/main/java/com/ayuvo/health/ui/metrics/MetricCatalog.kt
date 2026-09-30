@@ -20,6 +20,7 @@ import com.ayuvo.health.data.metrics.MetricRange
 import com.ayuvo.health.data.metrics.MetricsReference
 import com.ayuvo.health.data.metrics.RegistryFacts
 import com.ayuvo.health.data.metrics.ResolvedMetric
+import com.ayuvo.health.l10n.ContractStrings
 import com.ayuvo.health.models.HealthCategory
 import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.models.UserProfile
@@ -100,7 +101,7 @@ object MetricCatalog {
         is MetricKey.App -> context.getString(titleRes(key.id))
         is MetricKey.Nutrient -> NutrientFields.displayName(context, key.key)
         is MetricKey.Health -> HealthCategoryStyle.typeName(context, key.typeId)
-        is MetricKey.Derived -> DerivedCatalog.get(context).byId[key.id]?.title ?: key.id
+        is MetricKey.Derived -> DerivedCatalog.get(context).byId[key.id]?.displayTitle(context) ?: key.id
     }
 
     /** The catalog's `nutrient_metrics` entry of [key]; null for a key the catalog does not list. */
@@ -130,6 +131,11 @@ object MetricCatalog {
         "nutrition.supplements" -> R.string.browse_section_nutrition_supplements
         else -> null
     }
+
+    /** Display title of a browse section: the app resource when known, else the translated catalog title. */
+    fun browseSectionTitle(context: Context, section: CatalogBrowseSection): String =
+        browseSectionTitleRes(section.id)?.let(context::getString)
+            ?: ContractStrings.text(context, "metric.browse_sections.${section.id}.title", section.title)
 
     fun ranges(catalog: MetricCatalogData, key: MetricKey.Nutrient): List<HealthChartRange> =
         (nutrientSpec(catalog, key)?.ranges ?: listOf("D", "W", "M", "6M", "Y")).map { HealthChartRange.of(MetricRange.fromRaw(it)) }

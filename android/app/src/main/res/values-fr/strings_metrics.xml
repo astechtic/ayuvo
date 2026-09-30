@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">Calories</string>
+    <string name="metric_protein">Protéines</string>
+    <string name="metric_carbs">Glucides</string>
+    <string name="metric_fat">Lipides totaux</string>
+    <string name="metric_fiber">Fibres</string>
+    <string name="metric_water">Eau</string>
+    <string name="metric_fasting">Jeûne</string>
+    <string name="metric_weight">Poids</string>
+    <string name="metric_body_fat">Pourcentage de masse grasse</string>
+    <string name="metric_workouts">Entraînements</string>
+    <string name="metric_workout_minutes">Durée d\'entraînement</string>
+    <string name="metric_workout_burn">Énergie d\'entraînement</string>
+    <string name="metric_about_calories">L\'énergie des aliments que vous enregistrez dans Ayuvo, additionnée par jour. Les périodes plus longues affichent votre moyenne sur les jours où vous avez enregistré des aliments.</string>
+    <string name="metric_about_protein">Les protéines des aliments que vous enregistrez dans Ayuvo, additionnées par jour.</string>
+    <string name="metric_about_carbs">Les glucides des aliments que vous enregistrez dans Ayuvo, additionnés par jour.</string>
+    <string name="metric_about_fat">Les lipides des aliments que vous enregistrez dans Ayuvo, additionnés par jour.</string>
+    <string name="metric_about_fiber">Les fibres alimentaires des aliments que vous enregistrez dans Ayuvo, additionnées par jour. Les aliments sans information sur les fibres sont ignorés.</string>
+    <string name="metric_about_water">L\'eau que vous enregistrez dans Ayuvo, additionnée par jour.</string>
+    <string name="metric_about_fasting">Le temps passé à jeûner par jour. Un jeûne qui passe minuit compte pour chaque jour qu\'il couvre.</string>
+    <string name="metric_about_weight">Les pesées que vous enregistrez dans Ayuvo, y compris les mesures importées depuis des apps de santé connectées. Chaque point indique la dernière mesure de la période.</string>
+    <string name="metric_about_body_fat">Les mesures de masse grasse que vous enregistrez dans Ayuvo. Chaque point indique la dernière mesure de la période.</string>
+    <string name="metric_about_workouts">Les entraînements que vous terminez dans Ayuvo, comptés le jour de leur enregistrement.</string>
+    <string name="metric_about_workout_minutes">Le temps passé dans les entraînements que vous terminez dans Ayuvo.</string>
+    <string name="metric_about_workout_burn">L\'énergie estimée brûlée pendant les entraînements que vous terminez dans Ayuvo. Les entraînements sans estimation sont ignorés.</string>
+    <string name="metric_add_to_favourites">Ajouter aux favoris</string>
+    <string name="metric_about">À propos</string>
+    <string name="metric_log">Journal</string>
+    <string name="metric_log_weight">Ajouter des données de poids</string>
+    <string name="metric_log_body_fat">Ajouter des données de masse grasse</string>
+    <string name="metric_add_water">Ajouter de l\'eau</string>
+    <string name="metric_add_water_quick">Ajouter %1$s</string>
+    <string name="metric_add_water_custom">Quantité personnalisée</string>
+    <string name="metric_open_food_diary">Ouvrir le journal alimentaire</string>
+    <string name="metric_open_fasting">Ouvrir Jeûne</string>
+    <string name="metric_open_workouts">Ouvrir Entraînements</string>
+    <string name="metric_details">Afficher les détails</string>
+    <string name="metric_goal_label">Objectif %1$s</string>
+    <string name="metric_no_rows">Aucune entrée sur cette période</string>
+    <string name="metric_row_logged_in_diary">Enregistré dans le journal alimentaire</string>
+    <string name="metric_delete_entry">Supprimer l\'entrée</string>
+    <string name="metric_delete_entry_body">Cette entrée sera supprimée d\'Ayuvo.</string>
+    <string name="metric_sources_app">Enregistré dans Ayuvo</string>
+</resources>

@@ -390,7 +390,7 @@ private fun BrowseSearchResults(
         .filter { !it.reserved && (if (it.isVirtualDietary) it.id in withData else it.sdkAvailable || it.id in withData) }
         .filter { HealthCategoryStyle.typeName(context, it.id).contains(query, ignoreCase = true) }
         .sortedByDescending { it.id in withData }
-    val derivedMatches = derived.filter { it.info.title.contains(query, ignoreCase = true) }
+    val derivedMatches = derived.filter { it.info.displayTitle(context).contains(query, ignoreCase = true) }
     if (features.isEmpty() && matchedDomains.isEmpty() && appMatches.isEmpty() && healthMatches.isEmpty() && derivedMatches.isEmpty()) {
         Text(
             stringResource(R.string.browse_search_empty, query),

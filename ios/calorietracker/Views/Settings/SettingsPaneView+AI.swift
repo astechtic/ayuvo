@@ -13,7 +13,7 @@ extension SettingsPaneView {
         }
         Section {
                 AISettingsSubsectionHeader(
-                    title: "Primary AI",
+                    title: String(localized: "Primary AI", comment: "AI settings section header"),
                     systemImage: "sparkles",
                     infoTopic: .primaryAI
                 )
@@ -208,10 +208,7 @@ extension SettingsPaneView {
                 }
 
                 Label(
-                    LocalModelStrings.text(
-                        "settings.onDeviceModel",
-                        defaultValue: "On-Device Model"
-                    ),
+                    String(localized: "settings.onDeviceModel", defaultValue: "On-Device Model", table: "LocalModels", comment: "AI settings section label"),
                     systemImage: "iphone.gen3.radiowaves.left.and.right"
                 )
                     .font(.system(.subheadline, design: .rounded, weight: .bold))
@@ -241,7 +238,7 @@ extension SettingsPaneView {
                 }
 
                 AISettingsSubsectionHeader(
-                    title: "Text AI",
+                    title: String(localized: "Text AI", comment: "AI settings section header"),
                     systemImage: "text.bubble.fill",
                     infoTopic: .textAI
                 )
@@ -409,14 +406,14 @@ extension SettingsPaneView {
             }
 
                 AISettingsSubsectionHeader(
-                    title: "Text AI Fallback",
+                    title: String(localized: "Text AI Fallback", comment: "AI settings section header"),
                     systemImage: "text.bubble.fill",
                     infoTopic: .textFallback
                 )
                 textFallbackSettingsRows
 
                 AISettingsSubsectionHeader(
-                    title: "Image AI Fallback",
+                    title: String(localized: "Image AI Fallback", comment: "AI settings section header"),
                     systemImage: "photo.badge.arrow.down",
                     infoTopic: .imageFallback
                 )
@@ -673,7 +670,7 @@ extension SettingsPaneView {
             onEditingChanged: { _ in },
             keyboardType: .numberPad,
             placeholder: "180",
-            accessibilityLabel: "Request Timeout"
+            accessibilityLabel: String(localized: "Request Timeout", comment: "AI settings request timeout field")
         )
             .frame(width: 70)
             .onChange(of: requestTimeoutSecondsText) { _, newValue in
@@ -840,7 +837,7 @@ extension SettingsPaneView {
                 SettingsIcon(available ? "checkmark.circle.fill" : "exclamationmark.triangle.fill", tint: available ? SettingsTint.success : SettingsTint.warning)
             }
             #else
-            SettingsLabel("Apple Intelligence is unavailable in this build", systemImage: "exclamationmark.triangle.fill", tint: SettingsTint.warning)
+            SettingsLabel(String(localized: "Apple Intelligence is unavailable in this build", comment: "AI settings warning"), systemImage: "exclamationmark.triangle.fill", tint: SettingsTint.warning)
                 .foregroundStyle(.secondary)
             #endif
         } else {
@@ -856,7 +853,7 @@ extension SettingsPaneView {
             onEditingChanged: { _ in },
             keyboardType: .numberPad,
             placeholder: "1024",
-            accessibilityLabel: "Max Response Tokens"
+            accessibilityLabel: String(localized: "Max Response Tokens", comment: "AI settings max tokens field")
         )
             .frame(width: 90)
             .onChange(of: maxResponseTokensText) { _, newValue in
@@ -916,28 +913,32 @@ extension SettingsPaneView {
         return selectedTextFallbackProvider.textModels.filter { $0 != primaryModel }
     }
 
+    static func modelPlaceholder(_ example: String) -> String {
+        String(localized: "e.g. \(example)", comment: "Model name field placeholder; argument is an example model ID")
+    }
+
     var primaryModelPlaceholder: String {
         selectedProvider == .openrouter
-            ? "e.g. anthropic/claude-sonnet-4"
-            : "e.g. gpt-4o-mini"
+            ? Self.modelPlaceholder("anthropic/claude-sonnet-4")
+            : Self.modelPlaceholder("gpt-4o-mini")
     }
 
     var textModelPlaceholder: String {
         selectedTextProvider == .openrouter
-            ? "e.g. openai/gpt-oss-120b"
-            : "e.g. llama3.2"
+            ? Self.modelPlaceholder("openai/gpt-oss-120b")
+            : Self.modelPlaceholder("llama3.2")
     }
 
     var fallbackModelPlaceholder: String {
         selectedFallbackProvider == .openrouter
-            ? "e.g. anthropic/claude-sonnet-4"
-            : "e.g. gpt-4o-mini"
+            ? Self.modelPlaceholder("anthropic/claude-sonnet-4")
+            : Self.modelPlaceholder("gpt-4o-mini")
     }
 
     var textFallbackModelPlaceholder: String {
         selectedTextFallbackProvider == .openrouter
-            ? "e.g. openai/gpt-oss-120b"
-            : "e.g. llama3.2"
+            ? Self.modelPlaceholder("openai/gpt-oss-120b")
+            : Self.modelPlaceholder("llama3.2")
     }
 
     func selectFallbackProvider(_ newProvider: AIProvider) {

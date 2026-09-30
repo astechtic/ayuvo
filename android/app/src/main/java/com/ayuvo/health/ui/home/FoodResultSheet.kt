@@ -1019,9 +1019,9 @@ private fun WhatIfMealImpactDialog(
                 SheetPillCard {
                     WhatIfImpactRow(
                         label = stringResource(R.string.nutrition_label_calories),
-                        added = "+${entry.calories} kcal",
-                        total = profile?.let { "${after.calories} / ${it.effectiveCalories} kcal" }
-                            ?: "${after.calories} kcal"
+                        added = stringResource(R.string.ui_kcal_added, entry.calories),
+                        total = profile?.let { stringResource(R.string.ui_kcal_of_goal, after.calories, it.effectiveCalories) }
+                            ?: stringResource(R.string.ui_kcal_amount, after.calories)
                     )
                     SheetHairline()
                     WhatIfImpactRow(

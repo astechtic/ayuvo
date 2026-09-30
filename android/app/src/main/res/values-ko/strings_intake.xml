@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">먹은 시간</string>
+    <string name="intake_eaten_at_same_as_log">기록 시간과 동일</string>
+    <string name="intake_eaten_at_hint">식사 시간대와 식사 타이밍에 사용돼요</string>
+    <string name="intake_eaten_at_reset">기록 시간 사용</string>
+    <string name="intake_adherence_title">지난 30일</string>
+    <string name="intake_adherence_none">최근 30일 동안 예정된 복용이 아직 없어요.</string>
+    <string name="intake_adherence_pct">복용률 %1$s%%(%3$d회 중 %2$d회)</string>
+    <string name="intake_adherence_adherent">순조로움: 80%% 이상 복용</string>
+    <string name="intake_adherence_below">복용률 80%% 미만</string>
+    <string name="intake_adherence_on_time">제시간(1시간 이내)</string>
+    <string name="intake_adherence_median_delay">일반적인 지연 시간</string>
+    <string name="intake_adherence_streak">연속 기록</string>
+    <string name="intake_adherence_missed_by_weekday">요일별 놓친 복용</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d회분</string>
+    <string name="intake_move_reminder">알림을 %1$s(으)로 옮길까요?</string>
+    <string name="intake_move_reminder_body">보통 알림보다 늦게 이 약을 복용하고 있어요. 알림을 옮기면 시간만 변경되고 나머지는 그대로 유지돼요.</string>
+    <string name="intake_move_reminder_action">알림 옮기기</string>
+    <string name="intake_supplement_above_upper">%1$s은(는) 복용 간격 기준 하루 평균 %2$s으로, 상한 섭취량 %3$s을 초과해요. 처방한 의료진의 지시를 따르세요.</string>
+    <string name="intake_lab_links_title">검사 결과와 영양</string>
+    <string name="intake_lab_links_footer">최근 30일간의 음식 기록과 보충제, 검사 결과지에 인쇄된 참고 범위를 기반으로 해요. 의학적 조언이 아니에요.</string>
+    <string name="intake_lab_link_low_one">%1$s 수치가 검사 결과지의 참고 범위보다 낮았어요.</string>
+    <string name="intake_lab_link_low_many">%1$s 수치가 검사 결과지의 참고 범위보다 낮았어요.</string>
+    <string name="intake_lab_link_and">%1$s 및 %2$s</string>
+    <string name="intake_lab_link_intake">평균 %1$s 섭취량은 기준치의 %2$d%%예요.</string>
+    <string name="intake_lab_link_intake_no_supplement">평균 %1$s 섭취량은 기준치의 %2$d%%이며, 복용 중인 보충제 중 이 성분이 들어 있는 것은 없어요.</string>
+    <string name="intake_lab_link_doctor">이에 대해 의사와 상의해 보세요.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

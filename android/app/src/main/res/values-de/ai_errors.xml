@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Kein API-Schlüssel eingerichtet. Füge deinen Schlüssel unter Einstellungen → KI-Anbieter hinzu.</string>
+    <string name="ai_error_image_conversion">Das Bild konnte nicht verarbeitet werden. Versuche es mit einem anderen Foto.</string>
+    <string name="ai_error_invalid_response">Die KI-Antwort konnte nicht verstanden werden. Bitte versuche es erneut.</string>
+    <string name="ai_error_invalid_url">Ungültige API-URL. Prüfe deine Anbietereinstellungen.</string>
+    <string name="ai_error_offline">Du scheinst offline zu sein. Prüfe deine Verbindung und versuche es erneut.</string>
+    <string name="ai_error_connection">Verbindung zum KI-Anbieter nicht möglich. Prüfe deine Verbindung und die Anbieter-URL und versuche es dann erneut.</string>
+    <string name="ai_error_timeout">Die KI hat zu lange für die Antwort gebraucht. Versuche es erneut oder erhöhe das Anfrage-Timeout unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_credits">Dein KI-Konto hat kein Guthaben mehr. Lade es auf oder wechsle den Anbieter unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_daily_quota">Das Tageskontingent deines KI-Kontos ist aufgebraucht. Versuche es morgen erneut oder wechsle den Anbieter unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_quota">Das Nutzungskontingent deines KI-Kontos wurde überschritten. Prüfe die Limits deines Anbieters oder wechsle den Anbieter unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_model">Das gewählte Modell oder der API-Endpunkt ist nicht verfügbar. Prüfe Modell und API-URL unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_rate_limit">Anfragelimit für deinen API-Schlüssel erreicht. Warte eine Minute oder wechsle den Anbieter unter Einstellungen → KI-Anbieter. Wenn du einen kostenlosen Tarif nutzt, prüfe, ob das Tageskontingent aufgebraucht ist.</string>
+    <string name="ai_error_key_rejected">Dein API-Schlüssel wurde abgelehnt. Öffne Einstellungen → KI-Anbieter und füge einen gültigen Schlüssel erneut ein.</string>
+    <string name="ai_error_overloaded">Der KI-Anbieter ist gerade überlastet. Wir haben es mehrmals versucht – versuche es in einer Minute erneut oder wechsle Anbieter/Modell unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_generic">Die KI-Anfrage ist fehlgeschlagen. Versuche es erneut oder wechsle den Anbieter unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_local_unavailable">Die KI-Laufzeit auf dem Gerät ist nicht verfügbar. Prüfe das heruntergeladene Modell unter Einstellungen → KI-Anbieter.</string>
+    <string name="ai_error_truncated">Die KI-Antwort wurde zweimal abgeschnitten. Versuche eine kürzere Eingabe oder ein anderes Modell.</string>
+    <string name="ai_error_both_failed">%1$s und das Ersatzmodell %2$s sind beide fehlgeschlagen. %3$s</string>
+</resources>

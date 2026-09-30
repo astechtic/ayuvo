@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.zip.ZipInputStream
+import com.ayuvo.health.R
 
 /** What happened to one section of an Import All Data run. */
 sealed interface AllDataImportOutcome {
@@ -95,7 +96,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
     private fun readPlan(uri: Uri): AllDataImportPlan.Result {
         val entries = LinkedHashSet<String>()
         var manifest: String? = null
-        val input = container.appContext.contentResolver.openInputStream(uri) ?: error("Couldn't open the file")
+        val input = container.appContext.contentResolver.openInputStream(uri) ?: error(container.appContext.getString(R.string.core_import_open_failed))
         ZipInputStream(input.buffered()).use { zip ->
             while (true) {
                 val entry = zip.nextEntry ?: break
@@ -160,7 +161,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
     private fun extract(uri: Uri, wanted: List<AllDataImportPlan.Section>, work: File): Map<String, File> {
         val byEntry = wanted.associateBy { it.entry }
         val out = HashMap<String, File>()
-        val input = container.appContext.contentResolver.openInputStream(uri) ?: error("Couldn't open the file")
+        val input = container.appContext.contentResolver.openInputStream(uri) ?: error(container.appContext.getString(R.string.core_import_open_failed))
         ZipInputStream(input.buffered()).use { zip ->
             while (out.size < byEntry.size) {
                 val entry = zip.nextEntry ?: break
@@ -181,7 +182,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             1L
         }
         AllDataExportCoordinator.SECTION_PORTABLE -> {
-            require(file.length() <= PortableFormat.MAX_FILE_BYTES) { "This file is too large to import." }
+            require(file.length() <= PortableFormat.MAX_FILE_BYTES) { container.appContext.getString(R.string.core_import_file_too_large) }
             // Profile, goals, units and logs merge in; the profile is written last and nothing reaches Health Connect.
             val store = PreferencesPortableStore(
                 container.prefs, container.weightRepository, container.bodyFatRepository, container.workoutRepository
@@ -189,7 +190,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             PortableDataImporter(store).import(file.readText()).total
         }
         AllDataExportCoordinator.SECTION_FOOD_DIARY -> {
-            require(file.length() <= DiaryImporter.MAXIMUM_FILE_SIZE) { "This file is too large to import." }
+            require(file.length() <= DiaryImporter.MAXIMUM_FILE_SIZE) { container.appContext.getString(R.string.core_import_file_too_large) }
             val preview = DiaryImporter.parse(file.readText())
             val current = container.foodRepository.entries.first()
             val updated = withContext(Dispatchers.Default) {
@@ -211,7 +212,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
         AllDataExportCoordinator.SECTION_MEDICATIONS -> {
             val archive = MedicationsArchive.read(file.readBytes())
             val result = container.medicationsStore.importArchive(archive, System.currentTimeMillis())
-            check(result.ok) { result.error ?: "Couldn't import medications" }
+            check(result.ok) { result.error ?: container.appContext.getString(R.string.core_import_medications_failed) }
             container.medicationReminders.replanAsync()
             (result.inserted + result.updated).toLong()
         }
@@ -224,13 +225,13 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             check(result.ok) { importErrorMessage(result.error) }
             result.imported.toLong()
         }
-        else -> error("Unknown section")
+        else -> error(container.appContext.getString(R.string.core_import_unknown_section))
     }
 
     /** The two refusals the archive reader can return, in the user's words. */
     private fun importErrorMessage(error: String?): String = when (error) {
-        "newer_version" -> "This file was made by a newer version of Ayuvo"
-        else -> "Couldn't import chats"
+        "newer_version" -> container.appContext.getString(R.string.core_import_newer_version)
+        else -> container.appContext.getString(R.string.core_import_chats_failed)
     }
 
     private fun ZipInputStream.readNBytesCompat(limit: Int): ByteArray {

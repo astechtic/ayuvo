@@ -102,7 +102,8 @@ data class RecoveryComponent(
     val consistencySubscore: Double?
 )
 
-data class RecoverySignal(val id: String, val impact: Double, val text: String)
+/** [params] fill the contributor template again for translated display text (not serialised). */
+data class RecoverySignal(val id: String, val impact: Double, val text: String, val params: Map<String, Any?> = emptyMap())
 
 data class RecoveryLoad(
     val day: LocalDate,
@@ -218,5 +219,7 @@ data class PatternResult(
     val d: Double?,
     val surfaced: Boolean,
     val text: String?,
-    val reviewCategory: String?
+    val reviewCategory: String?,
+    /** The params [text] was filled with, for translated display text (not serialised). */
+    val params: Map<String, Any?> = emptyMap()
 )

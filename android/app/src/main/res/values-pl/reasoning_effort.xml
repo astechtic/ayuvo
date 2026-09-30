@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">Poziom rozumowania OpenRouter</string>
+    <string name="settings_reasoning_effort_help">Dotyczy wszystkich zapytań OpenRouter. Obsługiwane poziomy zależą od modelu. Większy wysiłek może trwać dłużej i kosztować więcej. Auto zachowuje domyślne ustawienie modelu; niepełne odpowiedzi są ponawiane z poziomem Niski.</string>
+    <string name="reasoning_effort_auto">Domyślny / Auto</string>
+    <string name="reasoning_effort_none">Brak</string>
+    <string name="reasoning_effort_minimal">Minimalny</string>
+    <string name="reasoning_effort_low">Niski</string>
+    <string name="reasoning_effort_medium">Średni</string>
+    <string name="reasoning_effort_high">Wysoki</string>
+    <string name="reasoning_effort_xhigh">Bardzo wysoki</string>
+    <string name="reasoning_effort_max">Maks.</string>
+</resources>

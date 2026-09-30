@@ -133,7 +133,7 @@ struct RecordDetailIntelligenceSections: View {
                     Button {
                         if let page = highlight.sourcePage { onSource(RecordSourceTarget(page: page, box: nil, label: highlight.text)) }
                     } label: {
-                        RecordHighlightRow(text: highlight.text)
+                        RecordHighlightRow(text: highlight.displayText)
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("records.detail.highlight")

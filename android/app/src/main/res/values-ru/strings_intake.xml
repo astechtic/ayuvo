@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Время еды</string>
+    <string name="intake_eaten_at_same_as_log">Совпадает со временем записи</string>
+    <string name="intake_eaten_at_hint">Используется для окна питания и времени приёмов пищи</string>
+    <string name="intake_eaten_at_reset">Использовать время записи</string>
+    <string name="intake_adherence_title">Последние 30 дней</string>
+    <string name="intake_adherence_none">За последние 30 дней запланированных доз пока нет.</string>
+    <string name="intake_adherence_pct">Принято %1$s%% доз (%2$d из %3$d)</string>
+    <string name="intake_adherence_adherent">В норме: принято 80%% доз или больше</string>
+    <string name="intake_adherence_below">Принято меньше 80%% доз</string>
+    <string name="intake_adherence_on_time">Вовремя (в пределах часа)</string>
+    <string name="intake_adherence_median_delay">Типичная задержка</string>
+    <string name="intake_adherence_streak">Серия</string>
+    <string name="intake_adherence_missed_by_weekday">Пропущенные дозы по дням недели</string>
+    <string name="intake_minutes">%1$d мин</string>
+    <string name="intake_doses">Доз: %1$d</string>
+    <string name="intake_move_reminder">Перенести напоминание на %1$s?</string>
+    <string name="intake_move_reminder_body">Обычно вы принимаете эту дозу позже напоминания. Перенос напоминания меняет только его время; всё остальное остаётся прежним.</string>
+    <string name="intake_move_reminder_action">Перенести напоминание</string>
+    <string name="intake_supplement_above_upper">%1$s: в среднем %2$s в день за интервал приёма, что выше верхнего допустимого уровня %3$s. Следуйте указаниям врача, назначившего препарат.</string>
+    <string name="intake_lab_links_title">Результаты анализов и питание</string>
+    <string name="intake_lab_links_footer">На основе дневника питания и добавок за последние 30 дней и референсного диапазона, указанного в анализах. Не является медицинской рекомендацией.</string>
+    <string name="intake_lab_link_low_one">Ваш показатель «%1$s» был ниже диапазона, указанного в анализах.</string>
+    <string name="intake_lab_link_low_many">Ваши показатели %1$s были ниже диапазона, указанного в анализах.</string>
+    <string name="intake_lab_link_and">%1$s и %2$s</string>
+    <string name="intake_lab_link_intake">Ваше среднее потребление нутриента «%1$s» составляет %2$d%% от нормы.</string>
+    <string name="intake_lab_link_intake_no_supplement">Ваше среднее потребление нутриента «%1$s» составляет %2$d%% от нормы, и ни одна из ваших добавок его не содержит.</string>
+    <string name="intake_lab_link_doctor">Рекомендуем обсудить это с врачом.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">栄養の履歴をインポート</string>
+    <string name="health_import_action">インポート</string>
+    <string name="health_import_description">別のアプリの食事記録を日誌に取り込みます。利用可能な記録をプレビューしてから、共有された記録を二重に数えないよう、ソースアプリを1つ選んでください。</string>
+    <string name="health_import_from">開始日（YYYY-MM-DD）</string>
+    <string name="health_import_to">終了日（YYYY-MM-DD）</string>
+    <string name="health_import_history_hint">履歴へのアクセスがない場合は、過去30日以内の日付を選んでください。それより古い記録には、対応端末での履歴へのアクセスが必要です。</string>
+    <string name="health_import_grant">栄養と履歴へのアクセスを許可</string>
+    <string name="health_import_access_result">アクセス設定を更新しました。もう一度プレビューして、利用可能な記録を確認してください。</string>
+    <string name="health_import_access_needed">Health Connectで栄養の読み取りを許可してから、もう一度プレビューしてください。</string>
+    <string name="health_import_invalid_dates">有効な日付をYYYY-MM-DD形式で入力してください。終了日は開始日以降かつ今日以前である必要があります。</string>
+    <string name="health_import_history_needed">この期間には履歴へのアクセスが必要です。対応端末でアクセスを許可するか、過去30日以内の日付を選んでください。</string>
+    <string name="health_import_preview">利用可能な記録をプレビュー</string>
+    <string name="health_import_failed">インポートを完了できませんでした。Health Connectへのアクセスを確認して、もう一度お試しください。</string>
+    <string name="health_import_empty">この期間に、他のアプリからの新しい栄養記録は見つかりませんでした。ソースアプリがHealth Connectと栄養データを共有しているか確認してください。以前にインポートした記録は、日誌から削除したものも含めてスキップされます。</string>
+    <string name="health_import_count">新しい記録%1$d件 · %2$d kcal</string>
+    <string name="health_import_unnamed">インポートした食事</string>
+    <string name="health_import_local_only">これらはローカルのコピーです。編集や削除はAyuvo内にとどまります。インポートを繰り返すと、以前にインポートした記録はスキップされ、更新はされません。</string>
+    <string name="health_import_done">%1$d件の記録を日誌にインポートしました。</string>
+    <string name="health_import_close">閉じる</string>
+</resources>

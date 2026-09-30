@@ -110,21 +110,24 @@ struct HealthAllDataView: View {
             return HealthUnitFormatting.bloodPressureText(systolic: row.value, diastolic: row.value2) + " mmHg"
         }
         if type.isSleep {
-            return "\(row.valueText ?? "") · \(HealthUnitFormatting.durationText(seconds: row.durationSeconds))"
+            let stage = row.displayValueText ?? ""
+            return "\(stage) · \(HealthUnitFormatting.durationText(seconds: row.durationSeconds))"
         }
         if type.id == "workout" {
-            return "\(row.title ?? "Workout") · \(HealthUnitFormatting.durationText(seconds: row.durationSeconds))"
+            let title = row.displayTitle ?? String(localized: "Workout", comment: "Fallback name of a Health workout sample")
+            return "\(title) · \(HealthUnitFormatting.durationText(seconds: row.durationSeconds))"
         }
         if type.kind == .category {
-            return row.valueText ?? row.title ?? String(localized: "Logged")
+            return row.displayValueText ?? row.displayTitle ?? String(localized: "Logged")
         }
         if let value = row.value {
             if row.count > 1, let low = row.value2, let high = row.value3 {
-                return "\(HealthUnitFormatting.display(value, type: type).text) (\(HealthUnitFormatting.display(low, type: type).value)–\(HealthUnitFormatting.display(high, type: type).value))"
+                let lowText = HealthUnitFormatting.display(low, type: type).value, highText = HealthUnitFormatting.display(high, type: type).value
+                return String(localized: "\(HealthUnitFormatting.display(value, type: type).text) (\(lowText)–\(highText))", comment: "Health sample value with its low–high range")
             }
             return HealthUnitFormatting.display(value, type: type).text
         }
-        return row.valueText ?? "—"
+        return row.displayValueText ?? "—"
     }
 
     private func dateText(_ row: HealthSampleRow) -> String {
@@ -157,10 +160,10 @@ struct HealthRecordDetailSheet: View {
             List {
                 Section {
                     LabeledContent("Value", value: valueText)
-                    if let text = row.valueText, !(type.kind == .category) {
+                    if let text = row.displayValueText, !(type.kind == .category) {
                         LabeledContent("Label", value: text)
                     }
-                    if let title = row.title {
+                    if let title = row.displayTitle {
                         LabeledContent("Title", value: title)
                     }
                     LabeledContent("Start", value: row.startDate.formatted(date: .abbreviated, time: .shortened))
@@ -218,7 +221,7 @@ struct HealthRecordDetailSheet: View {
             return HealthUnitFormatting.durationText(seconds: row.value ?? row.durationSeconds)
         }
         if type.kind == .category {
-            return row.valueText ?? row.categoryValue.map(String.init) ?? "—"
+            return row.displayValueText ?? row.categoryValue.map(String.init) ?? "—"
         }
         return HealthUnitFormatting.text(row.value, type: type)
     }

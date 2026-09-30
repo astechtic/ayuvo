@@ -77,10 +77,10 @@ struct DerivedMetricsSettingsSection: View {
                 DerivedMetricsService.shared.settingsDidChange()
             }
         )
-        let dependents = catalog.dependents(of: metric.id).map(\.title)
+        let dependents = catalog.dependents(of: metric.id).map(\.displayTitle)
         return Toggle(isOn: binding) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(metric.title)
+                Text(metric.displayTitle)
                 if metric.nativeTypeID != nil {
                     Text("Apple Health value is used when available")
                         .font(.caption)

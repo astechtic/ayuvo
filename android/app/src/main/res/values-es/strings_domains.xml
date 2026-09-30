@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Análisis</string>
+    <string name="domain_nutrition">Nutrición</string>
+    <string name="domain_hydration">Hidratación</string>
+    <string name="domain_fasting">Ayuno</string>
+    <string name="domain_body">Medidas corporales</string>
+    <string name="domain_activity">Actividad</string>
+    <string name="domain_heart">Corazón</string>
+    <string name="domain_sleep">Sueño</string>
+    <string name="domain_vitals">Constantes vitales</string>
+    <string name="domain_respiratory">Respiratorio</string>
+    <string name="domain_cycle">Seguimiento del ciclo</string>
+    <string name="domain_mindfulness">Mindfulness</string>
+    <string name="domain_mobility">Movilidad</string>
+    <string name="domain_hearing">Audición</string>
+    <string name="domain_symptoms">Síntomas</string>
+    <string name="domain_medications">Medicamentos</string>
+    <string name="domain_records">Registros de salud</string>
+    <string name="domain_other">Otros datos</string>
+    <string name="design_back">Atrás</string>
+</resources>

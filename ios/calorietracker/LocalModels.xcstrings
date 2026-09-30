@@ -16,6 +16,12 @@
             "value" : "Ləğv et"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zrušit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -121,6 +127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sil"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Smazat"
           }
         },
         "de" : {
@@ -230,6 +242,12 @@
             "value" : "Modeli sil"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Smazat model"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -335,6 +353,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endir"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stáhnout"
           }
         },
         "de" : {
@@ -444,6 +468,12 @@
             "value" : "Endirilib"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Staženo"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -549,6 +579,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İstifadədədir"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Používá se"
           }
         },
         "de" : {
@@ -658,6 +694,12 @@
             "value" : "Diqqət tələb edir"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vyžaduje pozornost"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -763,6 +805,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endirilməyib"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nestaženo"
           }
         },
         "de" : {
@@ -872,6 +920,12 @@
             "value" : "Hazırla"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Připravit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -977,6 +1031,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hazırlanır"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Připravuje se"
           }
         },
         "de" : {
@@ -1086,6 +1146,12 @@
             "value" : "Hazırdır"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Připraveno"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1191,6 +1257,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yoxlanılır"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ověřuje se"
           }
         },
         "de" : {
@@ -1300,6 +1372,12 @@
             "value" : "Quraşdırmadan əvvəl dəqiq fayl ölçüsü və SHA-256 yoxlanılır…"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kontroluje se přesná velikost souboru a SHA-256 před instalací…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1405,6 +1483,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "LiteRT-LM Metal icra mühiti tərtib edilir və yüklənir…"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kompiluje se a načítá běhové prostředí LiteRT-LM Metal…"
           }
         },
         "de" : {
@@ -1514,6 +1598,12 @@
             "value" : "Endirilmiş model və onun tərtib edilmiş keş yaddaşı bu iPhone-dan silinəcək. Onu daha sonra yenidən endirə bilərsiniz."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stažený model a jeho zkompilovaná mezipaměť budou z tohoto iPhonu odstraněny. Později ho můžeš stáhnout znovu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1594,8 +1684,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Завантаженная модель и её скомпільований кеш будут видалені з цього iPhone. Позже модель можно будет загрузить снова."
+            "state" : "needs_review",
+            "value" : "Завантажену модель і її скомпільований кеш буде видалено з цього iPhone. Ви зможете завантажити її знову пізніше."
           }
         },
         "zh-Hans" : {
@@ -1619,6 +1709,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gemma 4 silinsin?"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Smazat Gemma 4?"
           }
         },
         "de" : {
@@ -1719,19 +1815,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "أعاد خادم النموذج حالة HTTP ‏%@."
+            "value" : "أعاد خادم النموذج حالة HTTP ‏%⁠@."
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Model serveri HTTP %@ qaytardı."
+            "value" : "Model serveri HTTP %⁠@ qaytardı."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Server modelu vrátil HTTP %⁠@."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Modellserver hat HTTP %@ zurückgegeben."
+            "value" : "Der Modellserver hat HTTP %⁠@ zurückgegeben."
           }
         },
         "en" : {
@@ -1743,79 +1845,79 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El servidor del modelo devolvió HTTP %@."
+            "value" : "El servidor del modelo devolvió HTTP %⁠@."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le serveur du modèle a renvoyé HTTP %@."
+            "value" : "Le serveur du modèle a renvoyé HTTP %⁠@."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "मॉडल सर्वर ने HTTP %@ लौटाया।"
+            "value" : "मॉडल सर्वर ने HTTP %⁠@ लौटाया।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il server del modello ha restituito HTTP %@."
+            "value" : "Il server del modello ha restituito HTTP %⁠@."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "モデルサーバーから HTTP %@ が返されました。"
+            "value" : "モデルサーバーから HTTP %⁠@ が返されました。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "모델 서버가 HTTP %@을(를) 반환했습니다."
+            "value" : "모델 서버가 HTTP %⁠@을(를) 반환했습니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De modelserver gaf HTTP %@ terug."
+            "value" : "De modelserver gaf HTTP %⁠@ terug."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Serwer modelu zwrócił HTTP %@."
+            "value" : "Serwer modelu zwrócił HTTP %⁠@."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O servidor do modelo retornou HTTP %@."
+            "value" : "O servidor do modelo retornou HTTP %⁠@."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Serverul modelului a returnat HTTP %@."
+            "value" : "Serverul modelului a returnat HTTP %⁠@."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сервер модели вернул HTTP %@."
+            "value" : "Сервер модели вернул HTTP %⁠@."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сервер модели вернул HTTP %@."
+            "value" : "Сервер модели вернул HTTP %⁠@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模型服务器返回了 HTTP %@。"
+            "value" : "模型服务器返回了 HTTP %⁠@。"
           }
         }
       }
@@ -1833,6 +1935,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Model serveri etibarsız cavab qaytardı."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Server modelu vrátil neplatnou odpověď."
           }
         },
         "de" : {
@@ -1942,6 +2050,12 @@
             "value" : "Model endirməsi fayl olmadan tamamlandı."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stahování modelu skončilo bez souboru."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2049,6 +2163,12 @@
             "value" : "Endirmə ölçüsü 2,59 GB-dır. Ayuvo quraşdırma üçün əlavə 1 GB boş yerin olmasını yoxlayır."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stažení 2,59 GB. Ayuvo ověří, že je k dispozici další 1 GB volného místa pro instalaci."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2129,8 +2249,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Розмір завантаження — 2,59 ГБ. Ayuvo перевірет наличие ещё 1 ГБ вільного місця для установки."
+            "state" : "needs_review",
+            "value" : "Розмір завантаження — 2,59 ГБ. Ayuvo перевіряє, чи є ще 1 ГБ вільного місця для встановлення."
           }
         },
         "zh-Hans" : {
@@ -2154,6 +2274,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sabitlənmiş Gemma 4 modeli endirilir… Tamamlanana qədər Ayuvo-ni açıq saxlayın."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stahuje se určený model Gemma 4… Nech Ayuvo otevřené, dokud stahování neskončí."
           }
         },
         "de" : {
@@ -2263,6 +2389,12 @@
             "value" : "Gemma 4 endirmə gedişatı"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Průběh stahování Gemma 4"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2368,6 +2500,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gemma 4 artıq məşğuldur. Cari əməliyyat bitənədək gözləyin."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gemma 4 je už zaneprázdněná. Počkej prosím, až se dokončí aktuální operace."
           }
         },
         "de" : {
@@ -2477,6 +2615,12 @@
             "value" : "Gemma 4 boş cavab qaytardı. Yenidən cəhd edin."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gemma 4 vrátila prázdnou odpověď. Zkus to prosím znovu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2575,19 +2719,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "يحتاج Gemma 4 إلى مساحة خالية قدرها %@، بما في ذلك المساحة الإضافية للتثبيت. يتوفر حاليًا على هذا الـ iPhone مقدار %@."
+            "value" : "يحتاج Gemma 4 إلى مساحة خالية قدرها %⁠@، بما في ذلك المساحة الإضافية للتثبيت. يتوفر حاليًا على هذا الـ iPhone مقدار %⁠@."
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quraşdırma üçün əlavə yer daxil olmaqla Gemma 4 modelinə %@ boş yer lazımdır. Hazırda bu iPhone-da %@ mövcuddur."
+            "value" : "Quraşdırma üçün əlavə yer daxil olmaqla Gemma 4 modelinə %⁠@ boş yer lazımdır. Hazırda bu iPhone-da %⁠@ mövcuddur."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gemma 4 potřebuje %⁠@ volného místa včetně rezervy pro instalaci. Tento iPhone má momentálně k dispozici %⁠@."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 benötigt %@ freien Speicher einschließlich Installationsreserve. Auf diesem iPhone sind derzeit %@ verfügbar."
+            "value" : "Gemma 4 benötigt %⁠@ freien Speicher einschließlich Installationsreserve. Auf diesem iPhone sind derzeit %⁠@ verfügbar."
           }
         },
         "en" : {
@@ -2599,79 +2749,79 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 necesita %@ libres, incluido el espacio adicional para la instalación. Este iPhone tiene actualmente %@ disponibles."
+            "value" : "Gemma 4 necesita %⁠@ libres, incluido el espacio adicional para la instalación. Este iPhone tiene actualmente %⁠@ disponibles."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 nécessite %@ d’espace libre, marge d’installation comprise. Cet iPhone dispose actuellement de %@."
+            "value" : "Gemma 4 nécessite %⁠@ d’espace libre, marge d’installation comprise. Cet iPhone dispose actuellement de %⁠@."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 को इंस्टॉलेशन की अतिरिक्त जगह सहित %@ खाली स्थान चाहिए। इस iPhone पर अभी %@ उपलब्ध है।"
+            "value" : "Gemma 4 को इंस्टॉलेशन की अतिरिक्त जगह सहित %⁠@ खाली स्थान चाहिए। इस iPhone पर अभी %⁠@ उपलब्ध है।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 richiede %@ di spazio libero, incluso il margine per l’installazione. Su questo iPhone sono attualmente disponibili %@."
+            "value" : "Gemma 4 richiede %⁠@ di spazio libero, incluso il margine per l’installazione. Su questo iPhone sono attualmente disponibili %⁠@."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 には、インストール用の余裕を含めて %@ の空き容量が必要です。この iPhone で現在利用できる容量は %@ です。"
+            "value" : "Gemma 4 には、インストール用の余裕を含めて %⁠@ の空き容量が必要です。この iPhone で現在利用できる容量は %⁠@ です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4에는 설치 여유 공간을 포함해 %@의 빈 공간이 필요합니다. 현재 이 iPhone에서 사용 가능한 공간은 %@입니다."
+            "value" : "Gemma 4에는 설치 여유 공간을 포함해 %⁠@의 빈 공간이 필요합니다. 현재 이 iPhone에서 사용 가능한 공간은 %⁠@입니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 heeft %@ vrije ruimte nodig, inclusief installatieruimte. Op deze iPhone is momenteel %@ beschikbaar."
+            "value" : "Gemma 4 heeft %⁠@ vrije ruimte nodig, inclusief installatieruimte. Op deze iPhone is momenteel %⁠@ beschikbaar."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 potrzebuje %@ wolnego miejsca, w tym zapasu na instalację. Na tym iPhonie jest obecnie dostępne %@."
+            "value" : "Gemma 4 potrzebuje %⁠@ wolnego miejsca, w tym zapasu na instalację. Na tym iPhonie jest obecnie dostępne %⁠@."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O Gemma 4 precisa de %@ livres, incluindo a margem para instalação. Este iPhone tem %@ disponíveis no momento."
+            "value" : "O Gemma 4 precisa de %⁠@ livres, incluindo a margem para instalação. Este iPhone tem %⁠@ disponíveis no momento."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 necesită %@ spațiu liber, inclusiv rezerva pentru instalare. Acest iPhone are momentan %@ disponibili."
+            "value" : "Gemma 4 necesită %⁠@ spațiu liber, inclusiv rezerva pentru instalare. Acest iPhone are momentan %⁠@ disponibili."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Для Gemma 4 требуется %@ свободного места с учётом запаса для установки. Сейчас на этом iPhone доступно %@."
+            "value" : "Для Gemma 4 требуется %⁠@ свободного места с учётом запаса для установки. Сейчас на этом iPhone доступно %⁠@."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Для Gemma 4 потрібен %@ вільного місця с учётом запаса для установки. Сейчас на цьому iPhone доступно %@."
+            "state" : "needs_review",
+            "value" : "Для Gemma 4 потрібно %⁠@ вільного місця з урахуванням запасу для встановлення. Зараз на цьому iPhone доступно %⁠@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 需要 %@ 可用空间（包括安装余量）。此 iPhone 当前有 %@ 可用。"
+            "value" : "Gemma 4 需要 %⁠@ 可用空间（包括安装余量）。此 iPhone 当前有 %⁠@ 可用。"
           }
         }
       }
@@ -2682,19 +2832,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تعذّر التحقق من تنزيل Gemma 4 ‏(%@). يُرجى المحاولة مرة أخرى."
+            "value" : "تعذّر التحقق من تنزيل Gemma 4 ‏(%⁠@). يُرجى المحاولة مرة أخرى."
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 endirməsini yoxlamaq mümkün olmadı (%@). Yenidən cəhd edin."
+            "value" : "Gemma 4 endirməsini yoxlamaq mümkün olmadı (%⁠@). Yenidən cəhd edin."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stažený model Gemma 4 se nepodařilo ověřit (%⁠@). Zkus to prosím znovu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Gemma-4-Download konnte nicht überprüft werden (%@). Bitte versuche es erneut."
+            "value" : "Der Gemma-4-Download konnte nicht überprüft werden (%⁠@). Bitte versuche es erneut."
           }
         },
         "en" : {
@@ -2706,79 +2862,79 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se pudo verificar la descarga de Gemma 4 (%@). Inténtalo de nuevo."
+            "value" : "No se pudo verificar la descarga de Gemma 4 (%⁠@). Inténtalo de nuevo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le téléchargement de Gemma 4 n’a pas pu être vérifié (%@). Veuillez réessayer."
+            "value" : "Le téléchargement de Gemma 4 n’a pas pu être vérifié (%⁠@). Veuillez réessayer."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 डाउनलोड की पुष्टि नहीं की जा सकी (%@)। कृपया फिर से प्रयास करें।"
+            "value" : "Gemma 4 डाउनलोड की पुष्टि नहीं की जा सकी (%⁠@)। कृपया फिर से प्रयास करें।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Non è stato possibile verificare il download di Gemma 4 (%@). Riprova."
+            "value" : "Non è stato possibile verificare il download di Gemma 4 (%⁠@). Riprova."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 のダウンロードを検証できませんでした（%@）。もう一度お試しください。"
+            "value" : "Gemma 4 のダウンロードを検証できませんでした（%⁠@）。もう一度お試しください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemma 4 다운로드를 확인할 수 없습니다(%@). 다시 시도해 주세요."
+            "value" : "Gemma 4 다운로드를 확인할 수 없습니다(%⁠@). 다시 시도해 주세요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De Gemma 4-download kon niet worden geverifieerd (%@). Probeer het opnieuw."
+            "value" : "De Gemma 4-download kon niet worden geverifieerd (%⁠@). Probeer het opnieuw."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie udało się zweryfikować pobranego modelu Gemma 4 (%@). Spróbuj ponownie."
+            "value" : "Nie udało się zweryfikować pobranego modelu Gemma 4 (%⁠@). Spróbuj ponownie."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não foi possível verificar o download do Gemma 4 (%@). Tente novamente."
+            "value" : "Não foi possível verificar o download do Gemma 4 (%⁠@). Tente novamente."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Descărcarea Gemma 4 nu a putut fi verificată (%@). Încercați din nou."
+            "value" : "Descărcarea Gemma 4 nu a putut fi verificată (%⁠@). Încercați din nou."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Не удалось проверить загрузку Gemma 4 (%@). Повторите попытку."
+            "value" : "Не удалось проверить загрузку Gemma 4 (%⁠@). Повторите попытку."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Не вдалося проверить загрузку Gemma 4 (%@). Спробуйте знову."
+            "value" : "Не вдалося проверить загрузку Gemma 4 (%⁠@). Спробуйте знову."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法验证 Gemma 4 下载内容（%@）。请重试。"
+            "value" : "无法验证 Gemma 4 下载内容（%⁠@）。请重试。"
           }
         }
       }
@@ -2796,6 +2952,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gemma 4 endirilməyib. Onu Parametrlər → Süni intellekt təminatçıları bölməsindən endirin."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gemma 4 není stažená. Stáhni ji v Nastavení → Poskytovatelé AI."
           }
         },
         "de" : {
@@ -2878,8 +3040,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemma 4 не завантажена. Загрузите её в разделе «Налаштування → Провайдери ШІ»."
+            "state" : "needs_review",
+            "value" : "Gemma 4 не завантажено. Завантажте її в Налаштування → Постачальники ШІ."
           }
         },
         "zh-Hans" : {
@@ -2903,6 +3065,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mövcud yaddaşı yoxlamaq mümkün olmadığından böyük modelin endirilməsi başlamadı."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Dostupné úložiště se nepodařilo zkontrolovat, proto stahování velkého modelu nebylo zahájeno."
           }
         },
         "de" : {
@@ -3012,6 +3180,12 @@
             "value" : "Gemma 4 üçün ən azı 8 GB yaddaşa malik iPhone tələb olunur."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gemma 4 vyžaduje iPhone s alespoň 8 GB paměti."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3117,6 +3291,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu iPhone-da yerli olaraq yaradılır…"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Generuje se lokálně na tomto iPhonu…"
           }
         },
         "de" : {
@@ -3226,6 +3406,12 @@
             "value" : "Modelin mənbəyi"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zdroj modelu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3330,6 +3516,12 @@
         "az" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Gemma 4 E2B"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Gemma 4 E2B"
           }
         },
@@ -3440,6 +3632,12 @@
             "value" : "Gemma 4 E2B (cihazda)"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gemma 4 E2B (v zařízení)"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3545,6 +3743,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Məxfi, oflayn yemək şəkilləri və mətn emalı üçün hazırdır."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Připraveno pro soukromé offline zpracování obrázků jídla a textu."
           }
         },
         "de" : {
@@ -3654,6 +3858,12 @@
             "value" : "8 GB RAM tələb olunur"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vyžaduje zařízení s 8 GB RAM"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3761,6 +3971,12 @@
             "value" : "Yoxlanılıb və yerli olaraq saxlanılıb. İndi Hazırla seçiminə toxunun, əks halda ilk istifadədə yüklənəcək."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ověřeno a uloženo lokálně. Klepni teď na Připravit, nebo se model načte při prvním použití."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3859,19 +4075,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تم التحقق منه وتخزينه محليًا (%@). اضغط على «تحضير» الآن، وإلا فسيتم تحميله عند أول استخدام."
+            "value" : "تم التحقق منه وتخزينه محليًا (%⁠@). اضغط على «تحضير» الآن، وإلا فسيتم تحميله عند أول استخدام."
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yoxlanılıb və yerli olaraq saxlanılıb (%@). İndi Hazırla seçiminə toxunun, əks halda ilk istifadədə yüklənəcək."
+            "value" : "Yoxlanılıb və yerli olaraq saxlanılıb (%⁠@). İndi Hazırla seçiminə toxunun, əks halda ilk istifadədə yüklənəcək."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ověřeno a uloženo lokálně (%⁠@). Klepni teď na Připravit, nebo se model načte při prvním použití."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Überprüft und lokal gespeichert (%@). Tippe jetzt auf „Vorbereiten“, andernfalls wird das Modell bei der ersten Verwendung geladen."
+            "value" : "Überprüft und lokal gespeichert (%⁠@). Tippe jetzt auf „Vorbereiten“, andernfalls wird das Modell bei der ersten Verwendung geladen."
           }
         },
         "en" : {
@@ -3883,79 +4105,79 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verificado y almacenado localmente (%@). Toca Preparar ahora; de lo contrario, se cargará la primera vez que se use."
+            "value" : "Verificado y almacenado localmente (%⁠@). Toca Preparar ahora; de lo contrario, se cargará la primera vez que se use."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vérifié et stocké localement (%@). Touchez Préparer maintenant, sinon il se chargera lors de la première utilisation."
+            "value" : "Vérifié et stocké localement (%⁠@). Touchez Préparer maintenant, sinon il se chargera lors de la première utilisation."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "पुष्टि करके स्थानीय रूप से स्टोर किया गया (%@)। अभी तैयार करें पर टैप करें, नहीं तो यह पहली बार उपयोग करने पर लोड होगा।"
+            "value" : "पुष्टि करके स्थानीय रूप से स्टोर किया गया (%⁠@)। अभी तैयार करें पर टैप करें, नहीं तो यह पहली बार उपयोग करने पर लोड होगा।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verificato e archiviato localmente (%@). Tocca Prepara ora, altrimenti verrà caricato al primo utilizzo."
+            "value" : "Verificato e archiviato localmente (%⁠@). Tocca Prepara ora, altrimenti verrà caricato al primo utilizzo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "検証され、ローカルに保存されています（%@）。今すぐ「準備」をタップしてください。操作しない場合は初回使用時に読み込まれます。"
+            "value" : "検証され、ローカルに保存されています（%⁠@）。今すぐ「準備」をタップしてください。操作しない場合は初回使用時に読み込まれます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "확인 후 로컬에 저장됨(%@). 지금 준비를 탭하세요. 그렇지 않으면 처음 사용할 때 불러옵니다."
+            "value" : "확인 후 로컬에 저장됨(%⁠@). 지금 준비를 탭하세요. 그렇지 않으면 처음 사용할 때 불러옵니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geverifieerd en lokaal opgeslagen (%@). Tik nu op Voorbereiden, anders wordt het model bij het eerste gebruik geladen."
+            "value" : "Geverifieerd en lokaal opgeslagen (%⁠@). Tik nu op Voorbereiden, anders wordt het model bij het eerste gebruik geladen."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zweryfikowano i zapisano lokalnie (%@). Stuknij teraz Przygotuj, w przeciwnym razie model zostanie wczytany przy pierwszym użyciu."
+            "value" : "Zweryfikowano i zapisano lokalnie (%⁠@). Stuknij teraz Przygotuj, w przeciwnym razie model zostanie wczytany przy pierwszym użyciu."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verificado e armazenado localmente (%@). Toque em Preparar agora; caso contrário, ele será carregado no primeiro uso."
+            "value" : "Verificado e armazenado localmente (%⁠@). Toque em Preparar agora; caso contrário, ele será carregado no primeiro uso."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verificat și stocat local (%@). Atingeți Pregătește acum; altfel, se va încărca la prima utilizare."
+            "value" : "Verificat și stocat local (%⁠@). Atingeți Pregătește acum; altfel, se va încărca la prima utilizare."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Проверено и сохранено локально (%@). Нажмите «Подготовить» сейчас, иначе модель загрузится при первом использовании."
+            "value" : "Проверено и сохранено локально (%⁠@). Нажмите «Подготовить» сейчас, иначе модель загрузится при первом использовании."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перевірено та збережено локально (%@). Натисніть «Підготувати» сейчас, иначе модель завантажиться під час першого використання."
+            "value" : "Перевірено та збережено локально (%⁠@). Натисніть «Підготувати» сейчас, иначе модель завантажиться під час першого використання."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已验证并存储在本地（%@）。现在轻点“准备”，否则将在首次使用时加载。"
+            "value" : "已验证并存储在本地（%⁠@）。现在轻点“准备”，否则将在首次使用时加载。"
           }
         }
       }
@@ -3973,6 +4195,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu cihazdaxili şəkil və mətn modeli ən azı 8 GB fiziki yaddaşa malik iPhone-larda əlçatandır."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Tento model pro obrázky a text v zařízení je dostupný na iPhonech s alespoň 8 GB fyzické paměti."
           }
         },
         "de" : {
@@ -4082,6 +4310,12 @@
             "value" : "SHA-256 uyğun gəlmir"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Neshoda SHA-256"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4180,19 +4414,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "المتوقع %@ بايت، وتم استلام %@"
+            "value" : "المتوقع %⁠@ بايت، وتم استلام %⁠@"
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ bayt gözlənilirdi, %@ alındı"
+            "value" : "%⁠@ bayt gözlənilirdi, %⁠@ alındı"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "očekáváno %⁠@ bajtů, přijato %⁠@"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ Byte erwartet, %@ empfangen"
+            "value" : "%⁠@ Byte erwartet, %⁠@ empfangen"
           }
         },
         "en" : {
@@ -4204,79 +4444,79 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "se esperaban %@ bytes, se recibieron %@"
+            "value" : "se esperaban %⁠@ bytes, se recibieron %⁠@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ octets attendus, %@ reçus"
+            "value" : "%⁠@ octets attendus, %⁠@ reçus"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ बाइट अपेक्षित थे, %@ मिले"
+            "value" : "%⁠@ बाइट अपेक्षित थे, %⁠@ मिले"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "previsti %@ byte, ricevuti %@"
+            "value" : "previsti %⁠@ byte, ricevuti %⁠@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "想定 %@ バイト、受信 %@"
+            "value" : "想定 %⁠@ バイト、受信 %⁠@"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "예상 크기: %@바이트, 수신 크기: %@"
+            "value" : "예상 크기: %⁠@바이트, 수신 크기: %⁠@"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ bytes verwacht, %@ ontvangen"
+            "value" : "%⁠@ bytes verwacht, %⁠@ ontvangen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "oczekiwano %@ bajtów, otrzymano %@"
+            "value" : "oczekiwano %⁠@ bajtów, otrzymano %⁠@"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "esperados %@ bytes, recebidos %@"
+            "value" : "esperados %⁠@ bytes, recebidos %⁠@"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "se așteptau %@ octeți, s-au primit %@"
+            "value" : "se așteptau %⁠@ octeți, s-au primit %⁠@"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ожидалось %@ байт, получено %@"
+            "value" : "ожидалось %⁠@ байт, получено %⁠@"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ожидалось %@ байт, получено %@"
+            "value" : "ожидалось %⁠@ байт, получено %⁠@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "预期 %@ 字节，收到 %@"
+            "value" : "预期 %⁠@ 字节，收到 %⁠@"
           }
         }
       }
@@ -4294,6 +4534,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gemma 4 endirməsi yoxlanılır"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ověřuje se stažený model Gemma 4"
           }
         },
         "de" : {
@@ -4403,6 +4649,12 @@
             "value" : "LiteRT-LM üçün üçüncü tərəf bildirişləri"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Oznámení třetích stran pro LiteRT-LM"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4508,6 +4760,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tətbiqə daxil edilmiş bildiriş faylı tapılmadı."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Přibalený soubor s oznámeními nebyl nalezen."
           }
         },
         "de" : {
@@ -4617,6 +4875,12 @@
             "value" : "Tətbiqə daxil edilmiş bildiriş faylını açmaq mümkün olmadı."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Přibalený soubor s oznámeními se nepodařilo otevřít."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4722,6 +4986,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "LiteRT-LM üçün üçüncü tərəf bildirişləri"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Oznámení třetích stran pro LiteRT-LM"
           }
         },
         "de" : {
@@ -4831,6 +5101,12 @@
             "value" : "Bildirişlər yüklənir…"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Načítají se oznámení…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4936,6 +5212,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "LiteRT-LM bildirişləri"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Oznámení LiteRT-LM"
           }
         },
         "de" : {
@@ -5045,6 +5327,12 @@
             "value" : "Bildirişlər əlçatan deyil"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Oznámení nejsou k dispozici"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5150,6 +5438,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cihazdaxili model"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Model v zařízení"
           }
         },
         "de" : {
@@ -5259,6 +5553,12 @@
             "value" : "Təxminən 147 MB. Endirildikdən sonra tamamilə cihazda işləyir."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Asi 147 MB. Po stažení běží zcela v zařízení."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5339,8 +5639,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Около 147 МБ. После загрузки полностью работает на устройстве."
+            "state" : "needs_review",
+            "value" : "Близько 147 МБ. Після завантаження працює повністю на пристрої."
           }
         },
         "zh-Hans" : {
@@ -5364,6 +5664,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endirilmiş model bu iPhone-dan silinəcək. Onu daha sonra yenidən endirə bilərsiniz."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stažený model bude z tohoto iPhonu odstraněn. Později ho můžeš stáhnout znovu."
           }
         },
         "de" : {
@@ -5446,8 +5752,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Завантаженная модель будет удалена з цього iPhone. Позже её можно будет загрузить снова."
+            "state" : "needs_review",
+            "value" : "Завантажену модель буде видалено з цього iPhone. Ви зможете завантажити її знову пізніше."
           }
         },
         "zh-Hans" : {
@@ -5471,6 +5777,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Whisper Base silinsin?"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Smazat Whisper Base?"
           }
         },
         "de" : {
@@ -5580,6 +5892,12 @@
             "value" : "Çoxdilli Core ML modeli endirilir…"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stahuje se vícejazyčný model Core ML…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5685,6 +6003,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Whisper Base endirmə gedişatı"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Průběh stahování Whisper Base"
           }
         },
         "de" : {
@@ -5794,6 +6118,12 @@
             "value" : "Whisper Base artıq məşğuldur. Cari əməliyyat bitənədək gözləyin."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Whisper Base je už zaneprázdněný. Počkej prosím, až se dokončí aktuální operace."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5899,6 +6229,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Whisper Base bu yazıda heç bir nitq aşkarlaya bilmədi."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Whisper Base v této nahrávce nerozpoznal žádnou řeč."
           }
         },
         "de" : {
@@ -6008,6 +6344,12 @@
             "value" : "Whisper Base endirilməyib. Onu Parametrlər → Nitqdən mətnə bölməsindən endirin."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Whisper Base není stažený. Stáhni ho v Nastavení → Převod řeči na text."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6112,6 +6454,12 @@
         "az" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Whisper Base"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Whisper Base"
           }
         },
@@ -6222,6 +6570,12 @@
             "value" : "Model bu iPhone üçün optimallaşdırılır…"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Optimalizuje se model pro tento iPhone…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6327,6 +6681,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çoxdilli Whisper Base tamamilə bu iPhone-da işləyir. Məxfi oflayn transkripsiya üçün onu bir dəfə endirin."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vícejazyčný Whisper Base běžící zcela na tomto iPhonu. Stáhni jednou pro soukromý offline přepis."
           }
         },
         "de" : {
@@ -6436,6 +6796,12 @@
             "value" : "Whisper Base (cihazda)"
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Whisper Base (v zařízení)"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6543,6 +6909,12 @@
             "value" : "Yerli olaraq saxlanılıb. Heç bir audio bu iPhone-dan kənara çıxmır."
           }
         },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Uloženo lokálně. Žádný zvuk neopouští tento iPhone."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6641,19 +7013,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مخزّن محليًا (%@). لا تغادر أي تسجيلات صوتية هذا الـ iPhone."
+            "value" : "مخزّن محليًا (%⁠@). لا تغادر أي تسجيلات صوتية هذا الـ iPhone."
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yerli olaraq saxlanılıb (%@). Heç bir audio bu iPhone-dan kənara çıxmır."
+            "value" : "Yerli olaraq saxlanılıb (%⁠@). Heç bir audio bu iPhone-dan kənara çıxmır."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Uloženo lokálně (%⁠@). Žádný zvuk neopouští tento iPhone."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lokal gespeichert (%@). Keine Audiodaten verlassen dieses iPhone."
+            "value" : "Lokal gespeichert (%⁠@). Keine Audiodaten verlassen dieses iPhone."
           }
         },
         "en" : {
@@ -6665,79 +7043,79 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Almacenado localmente (%@). Ningún audio sale de este iPhone."
+            "value" : "Almacenado localmente (%⁠@). Ningún audio sale de este iPhone."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stocké localement (%@). Aucun contenu audio ne quitte cet iPhone."
+            "value" : "Stocké localement (%⁠@). Aucun contenu audio ne quitte cet iPhone."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "स्थानीय रूप से स्टोर किया गया (%@)। कोई भी ऑडियो इस iPhone से बाहर नहीं जाता।"
+            "value" : "स्थानीय रूप से स्टोर किया गया (%⁠@)। कोई भी ऑडियो इस iPhone से बाहर नहीं जाता।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Archiviato localmente (%@). Nessun audio lascia questo iPhone."
+            "value" : "Archiviato localmente (%⁠@). Nessun audio lascia questo iPhone."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ローカルに保存されています（%@）。音声がこの iPhone の外部に送信されることはありません。"
+            "value" : "ローカルに保存されています（%⁠@）。音声がこの iPhone の外部に送信されることはありません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "로컬에 저장됨(%@). 오디오가 이 iPhone 외부로 전송되지 않습니다."
+            "value" : "로컬에 저장됨(%⁠@). 오디오가 이 iPhone 외부로 전송되지 않습니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lokaal opgeslagen (%@). Geen audio verlaat deze iPhone."
+            "value" : "Lokaal opgeslagen (%⁠@). Geen audio verlaat deze iPhone."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapisano lokalnie (%@). Żadne nagranie nie opuszcza tego iPhone’a."
+            "value" : "Zapisano lokalnie (%⁠@). Żadne nagranie nie opuszcza tego iPhone’a."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Armazenado localmente (%@). Nenhum áudio sai deste iPhone."
+            "value" : "Armazenado localmente (%⁠@). Nenhum áudio sai deste iPhone."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stocat local (%@). Nicio înregistrare audio nu părăsește acest iPhone."
+            "value" : "Stocat local (%⁠@). Nicio înregistrare audio nu părăsește acest iPhone."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сохранено локально (%@). Аудио не покидает этот iPhone."
+            "value" : "Сохранено локально (%⁠@). Аудио не покидает этот iPhone."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сохранено локально (%@). Аудио не покидает етот iPhone."
+            "value" : "Сохранено локально (%⁠@). Аудио не покидает етот iPhone."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已存储在本地（%@）。任何音频都不会离开此 iPhone。"
+            "value" : "已存储在本地（%⁠@）。任何音频都不会离开此 iPhone。"
           }
         }
       }
@@ -6755,6 +7133,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yerli olaraq transkripsiya edilir…"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Přepisuje se lokálně…"
           }
         },
         "de" : {

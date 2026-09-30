@@ -62,7 +62,7 @@ struct ManualEntryView: View {
             }
 
             numberField(
-                label: "\(LocalizedDisplayText.text("Fiber", polish: "Błonnik")) (g)",
+                label: "Fiber (g)",
                 text: $fiber,
                 focus: .fiber
             )
@@ -120,9 +120,9 @@ struct ManualEntryView: View {
     }
 
     @ViewBuilder
-    private func field(label: String, text: Binding<String>, placeholder: String, keyboard: UIKeyboardType, focus: Field) -> some View {
+    private func field(label: LocalizedStringKey, text: Binding<String>, placeholder: LocalizedStringKey, keyboard: UIKeyboardType, focus: Field) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(LocalizedDisplayText.text(label))
+            Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
             TextField(placeholder, text: text)
@@ -136,9 +136,9 @@ struct ManualEntryView: View {
     }
 
     @ViewBuilder
-    private func numberField(label: String, text: Binding<String>, focus: Field) -> some View {
+    private func numberField(label: LocalizedStringKey, text: Binding<String>, focus: Field) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(LocalizedDisplayText.text(label))
+            Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
             TextField("0", text: text)

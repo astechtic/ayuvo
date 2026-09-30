@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Opisz trening</string>
+    <string name="workout_text_intro">Opisz, co zrobiłeś. Sprawdź szczegóły przed dodaniem ich do dziennika treningów.</string>
+    <string name="workout_text_description">Opis treningu</string>
+    <string name="workout_text_example">20 minut skakania na skakance, potem 3 serie po 10 wyciskań na ławce z 40 kg</string>
+    <string name="workout_text_voice">Głos</string>
+    <string name="workout_text_preparing">Wyszukiwanie ćwiczeń…</string>
+    <string name="workout_text_preview">Analizuj</string>
+    <string name="workout_text_retry">Ponów</string>
+    <string name="workout_text_review">Sprawdź trening</string>
+    <string name="workout_text_date">Data (RRRR-MM-DD)</string>
+    <string name="workout_text_custom">Własna aktywność na czas · szacunek kalorii korzysta z ogólnego wskaźnika aktywności</string>
+    <string name="workout_text_minutes">Minuty</string>
+    <string name="workout_text_reps">Powtórzenia</string>
+    <string name="workout_text_remove">Usuń ćwiczenie</string>
+    <string name="workout_text_calories_note">Kalorie są szacunkowe. Po dodaniu treningu użyj opcji Oblicz w dzienniku.</string>
+    <string name="workout_text_edit">Edytuj opis</string>
+    <string name="workout_text_adding">Dodawanie…</string>
+    <string name="workout_text_add">Dodaj do dziennika</string>
+    <string name="workout_text_menu">Tekst</string>
+    <string name="workout_text_set_weight">Seria %1$d · %2$s</string>
+    <string name="workout_text_estimate">Szacowane spalanie: %1$d kcal</string>
+    <string name="workout_text_effort">Wysiłek (umiarkowany, jeśli nie podano)</string>
+    <string name="workout_text_light">Lekka</string>
+    <string name="workout_text_moderate">Umiarkowana</string>
+    <string name="workout_text_vigorous">Intensywna</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Zacznij od nowa</string>
+    <string name="workout_clarify_title">Krótkie pytanie</string>
+    <string name="workout_clarify_hint">Stuknij ćwiczenie, aby je wybrać, lub wpisz odpowiedź.</string>
+    <string name="workout_clarify_answer">Twoja odpowiedź</string>
+    <string name="workout_clarify_voice">Odpowiedź głosowa</string>
+    <string name="workout_text_repeat_error">Nie udało się dokończyć na podstawie Twoich odpowiedzi. Dodaj brakujące szczegóły do opisu (np. serie i powtórzenia) lub zacznij od nowa.</string>
+</resources>

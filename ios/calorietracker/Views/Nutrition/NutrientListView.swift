@@ -24,7 +24,7 @@ struct NutrientListView: View {
             .sorted { $0.order < $1.order }
             .compactMap { section in
                 let keys = visible.filter { $0.browseSection == section.id }.sorted { $0.browseOrder < $1.browseOrder }.map(\.key)
-                return keys.isEmpty ? nil : Group(id: section.id, title: String(localized: String.LocalizationValue(section.title)), keys: keys)
+                return keys.isEmpty ? nil : Group(id: section.id, title: section.displayTitle, keys: keys)
             }
     }
 

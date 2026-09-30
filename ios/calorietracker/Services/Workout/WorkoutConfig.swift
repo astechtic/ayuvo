@@ -30,6 +30,9 @@ nonisolated struct WorkoutConfig: Decodable, Sendable {
         }
     }
 
+    /// Translated disclaimer for display (table "Contracts").
+    var displayDisclaimer: String { ContractText.text("workout.disclaimer", disclaimer) }
+
     struct Thresholds: Decodable, Sendable {
         let detectBpm: Double
         let detectHrr: Double

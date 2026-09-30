@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Gegessen um</string>
+    <string name="intake_eaten_at_same_as_log">Wie Erfassungszeit</string>
+    <string name="intake_eaten_at_hint">Wird für dein Essensfenster und das Timing deiner Mahlzeiten verwendet</string>
+    <string name="intake_eaten_at_reset">Erfassungszeit verwenden</string>
+    <string name="intake_adherence_title">Letzte 30 Tage</string>
+    <string name="intake_adherence_none">Noch keine geplanten Dosen in den letzten 30 Tagen.</string>
+    <string name="intake_adherence_pct">%1$s %% der Dosen eingenommen (%2$d von %3$d)</string>
+    <string name="intake_adherence_adherent">Im Plan: 80 %% oder mehr der Dosen eingenommen</string>
+    <string name="intake_adherence_below">Unter 80 %% der Dosen eingenommen</string>
+    <string name="intake_adherence_on_time">Pünktlich (innerhalb einer Stunde)</string>
+    <string name="intake_adherence_median_delay">Typische Verzögerung</string>
+    <string name="intake_adherence_streak">Serie</string>
+    <string name="intake_adherence_missed_by_weekday">Verpasste Dosen nach Wochentag</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d Dosen</string>
+    <string name="intake_move_reminder">Erinnerung auf %1$s verschieben?</string>
+    <string name="intake_move_reminder_body">Du nimmst diese Dosis meist später als zur Erinnerungszeit ein. Beim Verschieben der Erinnerung ändert sich nur ihre Uhrzeit; alles andere bleibt gleich.</string>
+    <string name="intake_move_reminder_action">Erinnerung verschieben</string>
+    <string name="intake_supplement_above_upper">%1$s liegt über das Dosierungsintervall gemittelt bei %2$s pro Tag und damit über der oberen Zufuhrgrenze von %3$s. Halte dich an die Anweisungen deiner verschreibenden Ärztin oder deines verschreibenden Arztes.</string>
+    <string name="intake_lab_links_title">Laborergebnisse und Ernährung</string>
+    <string name="intake_lab_links_footer">Basierend auf deinem Ernährungsprotokoll und deinen Nahrungsergänzungsmitteln der letzten 30 Tage sowie dem auf deinem Befund angegebenen Referenzbereich. Keine medizinische Beratung.</string>
+    <string name="intake_lab_link_low_one">Dein Wert für %1$s lag unter dem Bereich des Befunds.</string>
+    <string name="intake_lab_link_low_many">Deine Werte für %1$s lagen unter dem Bereich des Befunds.</string>
+    <string name="intake_lab_link_and">%1$s und %2$s</string>
+    <string name="intake_lab_link_intake">Deine durchschnittliche Aufnahme von %1$s beträgt %2$d %% des Referenzwerts.</string>
+    <string name="intake_lab_link_intake_no_supplement">Deine durchschnittliche Aufnahme von %1$s beträgt %2$d %% des Referenzwerts, und keines deiner Nahrungsergänzungsmittel enthält es.</string>
+    <string name="intake_lab_link_doctor">Sprich ggf. mit deiner Ärztin oder deinem Arzt darüber.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

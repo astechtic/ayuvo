@@ -12,6 +12,8 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Pure thermodynamic / statistical forecast of where the user's weight is heading based on
@@ -93,7 +95,7 @@ object AdaptiveGoalService {
                 profile = profile,
                 changed = false,
                 updatedCalories = null,
-                message = "Adaptive Goals is on. It needs at least $MINIMUM_FOOD_DAYS logged food days and $MINIMUM_WEIGHT_ENTRIES recent weight entries — or Health Connect energy data — before making a correction."
+                message = AppText.orEnglish("Adaptive Goals is on. It needs at least $MINIMUM_FOOD_DAYS logged food days and $MINIMUM_WEIGHT_ENTRIES recent weight entries — or Health Connect energy data — before making a correction.", R.string.core_adaptive_needs_data, MINIMUM_FOOD_DAYS, MINIMUM_WEIGHT_ENTRIES)
             )
         }
 
@@ -102,7 +104,7 @@ object AdaptiveGoalService {
                 profile = profile,
                 changed = false,
                 updatedCalories = null,
-                message = "Your recent trend is close to your selected goal pace, so Adaptive Goals did not change calories this week."
+                message = AppText.orEnglish("Your recent trend is close to your selected goal pace, so Adaptive Goals did not change calories this week.", R.string.core_adaptive_close_to_pace)
             )
         }
 
@@ -111,7 +113,7 @@ object AdaptiveGoalService {
                 profile = profile,
                 changed = false,
                 updatedCalories = null,
-                message = "Adaptive Goals did not lower calories because your current target is already at the safety floor."
+                message = AppText.orEnglish("Adaptive Goals did not lower calories because your current target is already at the safety floor.", R.string.core_adaptive_at_floor)
             )
         }
         if (limitedAdjustment > 0 && currentCalories >= safetyCeiling) {
@@ -119,7 +121,7 @@ object AdaptiveGoalService {
                 profile = profile,
                 changed = false,
                 updatedCalories = null,
-                message = "Adaptive Goals did not raise calories because your current target is already at the safety ceiling."
+                message = AppText.orEnglish("Adaptive Goals did not raise calories because your current target is already at the safety ceiling.", R.string.core_adaptive_at_ceiling)
             )
         }
 
@@ -135,19 +137,23 @@ object AdaptiveGoalService {
                 profile = profile,
                 changed = false,
                 updatedCalories = null,
-                message = "Adaptive Goals checked your trend, but calorie guardrails kept this week's target unchanged."
+                message = AppText.orEnglish("Adaptive Goals checked your trend, but calorie guardrails kept this week's target unchanged.", R.string.core_adaptive_guardrails)
             )
         }
 
         val nextProfile = profile.copy(customCalories = adjustedCalories)
         val signedAdjustment = adjustedCalories - currentCalories
         val sign = if (signedAdjustment > 0) "+" else ""
-        val basis = if (hasWeightTrend) "your recent weight trend" else "your Health Connect energy burn"
+        val signed = "$sign$signedAdjustment"
         return AdaptiveGoalResult(
             profile = nextProfile,
             changed = true,
             updatedCalories = adjustedCalories,
-            message = "Adaptive Goals adjusted calories by $sign$signedAdjustment kcal to $adjustedCalories kcal based on $basis. Pinned macros stay pinned; unlocked macros auto-balance."
+            message = if (hasWeightTrend) {
+                AppText.orEnglish("Adaptive Goals adjusted calories by $signed kcal to $adjustedCalories kcal based on your recent weight trend. Pinned macros stay pinned; unlocked macros auto-balance.", R.string.core_adaptive_adjusted_weight, signed, adjustedCalories)
+            } else {
+                AppText.orEnglish("Adaptive Goals adjusted calories by $signed kcal to $adjustedCalories kcal based on your Health Connect energy burn. Pinned macros stay pinned; unlocked macros auto-balance.", R.string.core_adaptive_adjusted_energy, signed, adjustedCalories)
+            }
         )
     }
 

@@ -21,12 +21,14 @@ import com.ayuvo.health.models.WorkoutSession
 import kotlinx.coroutines.flow.first
 import java.time.ZoneId
 import kotlin.math.abs
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** Thrown for a file that is turned away before anything is written; the message is shown to the user. */
 class PortableRefusedException(val reason: PortableRefusal) : Exception(
     when (reason) {
-        PortableRefusal.NEWER_VERSION -> "This file was made by a newer version of Ayuvo"
-        PortableRefusal.WRONG_FORMAT, PortableRefusal.NOT_JSON -> "This isn't an Ayuvo profile and logs file"
+        PortableRefusal.NEWER_VERSION -> AppText.orEnglish("This file was made by a newer version of Ayuvo", R.string.core_import_newer_version)
+        PortableRefusal.WRONG_FORMAT, PortableRefusal.NOT_JSON -> AppText.orEnglish("This isn't an Ayuvo profile and logs file", R.string.core_portable_wrong_format)
     }
 )
 

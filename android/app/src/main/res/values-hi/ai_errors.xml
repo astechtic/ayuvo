@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">कोई API कुंजी सेट नहीं है। सेटिंग्स → AI प्रदाता में अपनी कुंजी जोड़ें।</string>
+    <string name="ai_error_image_conversion">इमेज प्रोसेस नहीं हो सकी। कोई दूसरी फ़ोटो आज़माएँ।</string>
+    <string name="ai_error_invalid_response">AI का जवाब समझ नहीं आया। कृपया फिर से कोशिश करें।</string>
+    <string name="ai_error_invalid_url">अमान्य API URL। अपनी प्रदाता सेटिंग्स जाँचें।</string>
+    <string name="ai_error_offline">लगता है आप ऑफ़लाइन हैं। अपना कनेक्शन जाँचें और फिर से कोशिश करें।</string>
+    <string name="ai_error_connection">AI प्रदाता से कनेक्ट नहीं हो सका। अपना कनेक्शन और प्रदाता URL जाँचें, फिर से कोशिश करें।</string>
+    <string name="ai_error_timeout">AI ने जवाब देने में बहुत देर लगाई। फिर से कोशिश करें, या सेटिंग्स → AI प्रदाता में अनुरोध टाइमआउट बढ़ाएँ।</string>
+    <string name="ai_error_credits">आपके AI खाते में क्रेडिट खत्म हो गए हैं। टॉप अप करें, या सेटिंग्स → AI प्रदाता में प्रदाता बदलें।</string>
+    <string name="ai_error_daily_quota">आपके AI खाते का दैनिक कोटा खत्म हो गया है। कल फिर कोशिश करें, या सेटिंग्स → AI प्रदाता में प्रदाता बदलें।</string>
+    <string name="ai_error_quota">आपके AI खाते का उपयोग कोटा पार हो गया है। अपने प्रदाता की सीमाएँ जाँचें, या सेटिंग्स → AI प्रदाता में प्रदाता बदलें।</string>
+    <string name="ai_error_model">चुना गया मॉडल या API एंडपॉइंट उपलब्ध नहीं है। सेटिंग्स → AI प्रदाता में मॉडल और API URL जाँचें।</string>
+    <string name="ai_error_rate_limit">आपकी API कुंजी की रेट लिमिट पूरी हो गई। एक मिनट रुकें, या सेटिंग्स → AI प्रदाता में प्रदाता बदलें। अगर आप फ़्री टियर इस्तेमाल करते हैं, तो जाँचें कि उसका दैनिक कोटा खत्म तो नहीं हुआ।</string>
+    <string name="ai_error_key_rejected">आपकी API कुंजी अस्वीकार कर दी गई। सेटिंग्स → AI प्रदाता खोलें और एक मान्य कुंजी फिर से पेस्ट करें।</string>
+    <string name="ai_error_overloaded">AI प्रदाता पर अभी बहुत लोड है। हमने कुछ बार फिर से कोशिश की — एक मिनट में फिर कोशिश करें, या सेटिंग्स → AI प्रदाता में प्रदाता/मॉडल बदलें।</string>
+    <string name="ai_error_generic">AI अनुरोध विफल रहा। फिर से कोशिश करें, या सेटिंग्स → AI प्रदाता में प्रदाता बदलें।</string>
+    <string name="ai_error_local_unavailable">ऑन-डिवाइस AI रनटाइम उपलब्ध नहीं है। सेटिंग्स → AI प्रदाता में डाउनलोड किया गया मॉडल जाँचें।</string>
+    <string name="ai_error_truncated">AI का जवाब दो बार अधूरा रह गया। छोटा इनपुट या कोई दूसरा मॉडल आज़माएँ।</string>
+    <string name="ai_error_both_failed">%1$s और फ़ॉलबैक %2$s दोनों विफल रहे। %3$s</string>
+</resources>

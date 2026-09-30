@@ -25,6 +25,8 @@ import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 sealed interface LocalModelInstallStatus {
     data object NotInstalled : LocalModelInstallStatus
@@ -150,7 +152,7 @@ class LocalModelManager(
             val available = StatFs(modelDir.absolutePath).availableBytes
             val reserve = maxOf(256L * 1024L * 1024L, descriptor.expectedBytes / 10L)
             require(available >= descriptor.expectedBytes + reserve) {
-                "Not enough free storage for ${descriptor.displayName}."
+                AppText.get(R.string.core_model_no_storage, descriptor.displayName)
             }
             part.delete()
             val request = Request.Builder().url(descriptor.downloadUrl).get().apply {
@@ -158,9 +160,8 @@ class LocalModelManager(
                     val token = huggingFaceToken()
                         ?: throw IllegalStateException(
                             descriptor.repositoryUrl?.let {
-                                "${descriptor.displayName} is gated. Add a Hugging Face token in " +
-                                    "Settings, and accept its terms at $it with the same account."
-                            } ?: "${descriptor.displayName} needs a Hugging Face token. Add one in Settings."
+                                AppText.get(R.string.core_model_gated, descriptor.displayName, it)
+                            } ?: AppText.get(R.string.core_model_needs_token, descriptor.displayName)
                         )
                     addHeader("Authorization", "Bearer $token")
                 }
@@ -180,22 +181,18 @@ class LocalModelManager(
                         val page = descriptor.repositoryUrl
                         error(
                             if (page != null) {
-                                "Hugging Face refused the download (HTTP ${response.code}). Open " +
-                                    "$page, accept the model's terms with the account your token " +
-                                    "belongs to, then try again."
+                                AppText.get(R.string.core_model_refused_page, response.code, page)
                             } else {
-                                "Hugging Face refused the download (HTTP ${response.code}). Check " +
-                                    "the token in Settings and that its account has accepted this " +
-                                    "model's terms."
+                                AppText.get(R.string.core_model_refused, response.code)
                             }
                         )
                     }
-                    error("Download failed (HTTP ${response.code}).")
+                    error(AppText.get(R.string.core_model_download_failed_http, response.code))
                 }
-                val body = response.body ?: error("The download response was empty.")
+                val body = response.body ?: error(AppText.get(R.string.core_model_empty_response))
                 val declaredLength = body.contentLength()
                 if (declaredLength >= 0L && declaredLength != descriptor.expectedBytes) {
-                    error("The model download size did not match the published artifact.")
+                    error(AppText.get(R.string.core_model_size_mismatch))
                 }
                 var copied = 0L
                 var lastPublished = 0L
@@ -217,21 +214,21 @@ class LocalModelManager(
                     }
                     output.fd.sync()
                 }
-                if (copied != descriptor.expectedBytes) error("The model download was incomplete.")
+                if (copied != descriptor.expectedBytes) error(AppText.get(R.string.core_model_incomplete))
                 val actualHash = digest.digest().joinToString("") { "%02x".format(it) }
                 if (!actualHash.equals(descriptor.sha256, ignoreCase = true)) {
-                    error("The model download failed integrity verification.")
+                    error(AppText.get(R.string.core_model_integrity))
                 }
             }
 
             val destination = modelFile(id)
             destination.delete()
-            check(part.renameTo(destination)) { "The verified model could not be installed." }
+            check(part.renameTo(destination)) { AppText.get(R.string.core_model_install_failed) }
             val marker = markerFile(descriptor)
             val markerPart = File(marker.parentFile, "${marker.name}.part")
             markerPart.writeText(descriptor.sha256)
             marker.delete()
-            check(markerPart.renameTo(marker)) { "The verification marker could not be installed." }
+            check(markerPart.renameTo(marker)) { AppText.get(R.string.core_model_marker_failed) }
             update(id, LocalModelInstallStatus.Installed)
         } catch (cancelled: CancellationException) {
             part.delete()
@@ -243,7 +240,7 @@ class LocalModelManager(
                 update(id, LocalModelInstallStatus.NotInstalled)
                 throw CancellationException("Model download cancelled.").also { it.initCause(error) }
             }
-            update(id, LocalModelInstallStatus.Failed(error.message ?: "Model download failed."))
+            update(id, LocalModelInstallStatus.Failed(error.message ?: AppText.get(R.string.core_model_download_failed)))
         } finally {
             activeCalls.remove(id)
             jobs.remove(id)

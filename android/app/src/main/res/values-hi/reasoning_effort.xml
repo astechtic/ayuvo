@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">OpenRouter रीज़निंग प्रयास</string>
+    <string name="settings_reasoning_effort_help">सभी OpenRouter अनुरोधों पर लागू होता है। समर्थित स्तर मॉडल के अनुसार अलग होते हैं। अधिक प्रयास में ज़्यादा समय और खर्च लग सकता है। \"ऑटो\" मॉडल का डिफ़ॉल्ट रखता है; अधूरे जवाब \"कम\" के साथ फिर से आज़माए जाते हैं।</string>
+    <string name="reasoning_effort_auto">डिफ़ॉल्ट / ऑटो</string>
+    <string name="reasoning_effort_none">कोई नहीं</string>
+    <string name="reasoning_effort_minimal">न्यूनतम</string>
+    <string name="reasoning_effort_low">कम</string>
+    <string name="reasoning_effort_medium">मध्यम</string>
+    <string name="reasoning_effort_high">उच्च</string>
+    <string name="reasoning_effort_xhigh">बहुत अधिक</string>
+    <string name="reasoning_effort_max">अधिकतम</string>
+</resources>

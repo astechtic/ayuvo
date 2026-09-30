@@ -8,7 +8,7 @@ enum OnDeviceAIError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unavailable(let reason):
-            "Apple Intelligence is unavailable: \(reason)"
+            String(localized: "Apple Intelligence is unavailable: \(reason)", comment: "Error; placeholder is the reason Apple Intelligence cannot be used")
         }
     }
 }
@@ -27,13 +27,13 @@ struct OnDeviceAIService {
     static var availabilityDescription: String {
         switch SystemLanguageModel.default.availability {
         case .available:
-            "Available on this iPhone"
+            String(localized: "Available on this iPhone", comment: "Apple Intelligence availability status")
         case .unavailable(.deviceNotEligible):
-            "This iPhone does not support Apple Intelligence"
+            String(localized: "This iPhone does not support Apple Intelligence", comment: "Apple Intelligence availability status")
         case .unavailable(.appleIntelligenceNotEnabled):
-            "Enable Apple Intelligence in iPhone Settings"
+            String(localized: "Enable Apple Intelligence in iPhone Settings", comment: "Apple Intelligence availability status")
         case .unavailable(.modelNotReady):
-            "The on-device model is still downloading"
+            String(localized: "The on-device model is still downloading", comment: "Apple Intelligence availability status")
         }
     }
 

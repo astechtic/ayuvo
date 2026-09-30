@@ -77,7 +77,7 @@ struct CameraView: UIViewControllerRepresentable {
         shutterOuter.addSubview(shutterButton)
 
         let cancelButton = UIButton(type: .system)
-        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.setTitle(String(localized: "Cancel", comment: "Camera capture cancel button"), for: .normal)
         cancelButton.setTitleColor(.white, for: .normal)
         cancelButton.titleLabel?.font = .systemFont(ofSize: 17)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false

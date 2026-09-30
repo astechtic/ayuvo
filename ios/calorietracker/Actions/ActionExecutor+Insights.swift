@@ -40,7 +40,10 @@ extension ActionExecutor {
         let dialog: String
         switch r.status {
         case "ok":
-            dialog = String(localized: "Your Recovery is \(r.score ?? 0), \(r.labelText ?? ""). \(r.recommendation ?? "").")
+            let config = InsightsConfig.shared
+            let band = config.bandLabel(r.label, english: r.labelText) ?? ""
+            let advice = config.bandRecommendation(r.label, english: r.recommendation) ?? ""
+            dialog = String(localized: "Your Recovery is \(r.score ?? 0), \(band). \(advice).")
         case "collecting":
             dialog = String(localized: "Ayuvo is still learning your baseline (\(r.collecting?.have ?? 0)/\(r.collecting?.need ?? 14) nights).")
         case "no_sleep":

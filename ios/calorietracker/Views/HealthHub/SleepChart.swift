@@ -55,7 +55,7 @@ struct SleepChart: View {
             switch self {
             case .awake: return String(localized: "Awake")
             case .rem: return String(localized: "REM")
-            case .core: return String(localized: "Core")
+            case .core: return String(localized: "sleep.stage.core", defaultValue: "Core", comment: "Sleep stage (Apple Health 'Core' sleep), not the muscle group")
             case .deep: return String(localized: "Deep")
             }
         }
@@ -74,7 +74,7 @@ struct SleepChart: View {
 
     static func stageTitle(_ code: Int?) -> String {
         guard let code, let stage = HealthSleepStage(rawValue: code) else { return String(localized: "Asleep") }
-        return String(localized: String.LocalizationValue(stage.englishName))
+        return stage.displayName
     }
 }
 
@@ -181,7 +181,7 @@ private struct SleepHypnogram: View {
             ) { point in
                 ChartCallout(
                     value: "\(SleepChart.stageTitle(point.stage)) · \(HealthUnitFormatting.durationText(seconds: point.end.timeIntervalSince(point.start)))",
-                    caption: "\(point.start.formatted(.dateTime.hour().minute())) – \(point.end.formatted(.dateTime.hour().minute()))"
+                    caption: String(localized: "\(point.start.formatted(.dateTime.hour().minute())) – \(point.end.formatted(.dateTime.hour().minute()))", comment: "Time range: start – end")
                 )
             }
         }

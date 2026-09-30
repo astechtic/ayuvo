@@ -7,4 +7,6 @@
     <string name="error_barcode_service_unavailable">Open Food Facts временно недоступен. Повторите попытку позже.</string>
     <string name="error_barcode_unexpected_response">Open Food Facts вернул неожиданный ответ.</string>
     <string name="error_barcode_network">Не удалось подключиться к Open Food Facts. Проверьте подключение и повторите попытку.</string>
+    <string name="error_barcode_offline">Похоже, нет подключения к интернету. Проверьте соединение и попробуйте отсканировать ещё раз.</string>
+    <string name="error_barcode_timeout">Open Food Facts отвечал слишком долго. Попробуйте отсканировать ещё раз.</string>
 </resources>

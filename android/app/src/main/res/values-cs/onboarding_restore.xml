@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Obnovit ze zálohy</string>
+    <string name="onboarding_restore_title">Obnovit ze zálohy</string>
+    <string name="onboarding_restore_message">Obnov svůj profil, cíle, deník jídla a nastavení ze zálohy Ayuvo. Oznámení, Health Connect a AI si v tomto telefonu nastavíš i tak. API klíče nikdy nejsou součástí zálohy.</string>
+    <string name="onboarding_restore_file">Vybrat soubor zálohy</string>
+    <string name="onboarding_restore_drive">Obnovit z Google Drive</string>
+    <string name="onboarding_restore_busy">Obnovování zálohy…</string>
+    <string name="onboarding_restore_error_no_drive">Na Drive tohoto účtu Google nebyla nalezena žádná záloha Ayuvo.</string>
+    <string name="onboarding_restore_error_no_profile">Tato záloha neobsahuje profil. Vyber jinou zálohu, nebo pokračuj v nastavení tady.</string>
+    <string name="onboarding_restore_error_failed">Zálohu se nepodařilo obnovit: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Zálohu se nepodařilo obnovit.</string>
+</resources>

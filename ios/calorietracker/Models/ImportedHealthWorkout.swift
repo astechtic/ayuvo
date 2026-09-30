@@ -19,6 +19,12 @@ struct ImportedHealthWorkout: Identifiable, Codable, Equatable, Hashable {
 
     var durationMinutes: Int { max(1, Int(ceil(Double(durationSeconds) / 60))) }
 
+    /// Localized activity name for display; `activityTitle` keeps the stored English title.
+    var displayActivityTitle: String {
+        guard let type = HKWorkoutActivityType(rawValue: activityTypeRaw) else { return activityTitle }
+        return ImportedHealthWorkoutFormatting.localizedActivityTitle(for: type)
+    }
+
     var calendarDiaryDate: Date {
         StrengthWorkoutDate.date(for: diaryDateKey) ?? Calendar.current.startOfDay(for: startedAt)
     }
@@ -78,7 +84,18 @@ struct ImportedHealthWorkout: Identifiable, Codable, Equatable, Hashable {
 /// `nonisolated`: the Health Data hub's sample mapper titles workouts from a detached
 /// sync task, and these helpers are pure.
 nonisolated enum ImportedHealthWorkoutFormatting {
+    /// Canonical English title. It is persisted (diary sessions, Health Data rows),
+    /// so it must not depend on the device language; use `localizedActivityTitle` for display.
     static func activityTitle(for activityType: HKWorkoutActivityType) -> String {
+        activityTitleResource(for: activityType).key
+    }
+
+    /// Activity title in the user's language, for display only.
+    static func localizedActivityTitle(for activityType: HKWorkoutActivityType) -> String {
+        String(localized: activityTitleResource(for: activityType))
+    }
+
+    static func activityTitleResource(for activityType: HKWorkoutActivityType) -> LocalizedStringResource {
         switch activityType {
         case .americanFootball: return "American Football"
         case .archery: return "Archery"
@@ -166,6 +183,6 @@ nonisolated enum ImportedHealthWorkoutFormatting {
 
     static func durationText(seconds: Int) -> String {
         let minutes = max(1, Int(ceil(Double(seconds) / 60)))
-        return "\(minutes) min"
+        return String(localized: "\(minutes) min", comment: "Workout duration in minutes")
     }
 }

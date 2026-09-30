@@ -8,6 +8,9 @@ import com.ayuvo.health.medications.logic.MedicationJson.objOrNull
 import com.ayuvo.health.medications.logic.MedicationJson.str
 import com.ayuvo.health.medications.logic.MedicationJson.truthy
 import kotlinx.serialization.json.JsonObject
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
+import com.ayuvo.health.l10n.ContractStrings
 
 /**
  * The derived-metric catalog from `assets/derived/derived_config.json` (docs/derived-metrics.md §2): what each
@@ -36,6 +39,13 @@ data class DerivedMetricInfo(
 ) {
     /** Clock metrics store minutes after 12:00 of the day before the wake day. */
     val isClock: Boolean get() = unit == "clock"
+
+    /** Translated [title] for the screen; [title] itself stays English for Coach and tests. */
+    fun displayTitle(context: Context?): String = ContractStrings.text(context, "derived.metrics.$id.title", title)
+
+    fun displayAbout(context: Context?): String = ContractStrings.text(context, "derived.metrics.$id.about", about)
+
+    fun displayMethod(context: Context?): String = ContractStrings.text(context, "derived.metrics.$id.method", method)
 }
 
 class DerivedCatalog(
@@ -45,6 +55,9 @@ class DerivedCatalog(
     val metrics: List<DerivedMetricInfo>
 ) {
     val byId: Map<String, DerivedMetricInfo> = metrics.associateBy { it.id }
+
+    /** Translated [disclaimer] for the screen. */
+    fun displayDisclaimer(context: Context?): String = ContractStrings.text(context, "derived.disclaimer", disclaimer)
 
     fun metricsIn(category: String): List<DerivedMetricInfo> = metrics.filter { it.category == category }
 
@@ -120,14 +133,14 @@ class DerivedCatalog(
         }
 
         fun categoryTitle(category: String): String = when (category) {
-            "heart" -> "Heart"
-            "sleep" -> "Sleep"
-            "activity" -> "Activity"
-            "energy" -> "Energy"
-            "mobility" -> "Mobility"
-            "hearing" -> "Hearing"
-            "body" -> "Body"
-            "nutrition" -> "Nutrition"
+            "heart" -> AppText.orEnglish("Heart", R.string.core_derived_category_heart)
+            "sleep" -> AppText.orEnglish("Sleep", R.string.core_derived_category_sleep)
+            "activity" -> AppText.orEnglish("Activity", R.string.core_derived_category_activity)
+            "energy" -> AppText.orEnglish("Energy", R.string.core_derived_category_energy)
+            "mobility" -> AppText.orEnglish("Mobility", R.string.core_derived_category_mobility)
+            "hearing" -> AppText.orEnglish("Hearing", R.string.core_derived_category_hearing)
+            "body" -> AppText.orEnglish("Body", R.string.core_derived_category_body)
+            "nutrition" -> AppText.orEnglish("Nutrition", R.string.core_derived_category_nutrition)
             else -> category.replaceFirstChar { it.uppercase() }
         }
     }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">Není nastaven žádný API klíč. Přidej svůj klíč v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_image_conversion">Obrázek se nepodařilo zpracovat. Zkus jinou fotku.</string>
+    <string name="ai_error_invalid_response">Odpovědi AI se nepodařilo porozumět. Zkus to prosím znovu.</string>
+    <string name="ai_error_invalid_url">Neplatná API URL. Zkontroluj nastavení poskytovatele.</string>
+    <string name="ai_error_offline">Zdá se, že jsi offline. Zkontroluj připojení a zkus to znovu.</string>
+    <string name="ai_error_connection">Nepodařilo se připojit k poskytovateli AI. Zkontroluj připojení a URL poskytovatele a zkus to znovu.</string>
+    <string name="ai_error_timeout">Odpověď AI trvala příliš dlouho. Zkus to znovu, nebo prodluž časový limit požadavku v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_credits">Tvůj účet AI nemá žádný kredit. Dobij ho, nebo změň poskytovatele v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_daily_quota">Denní kvóta tvého účtu AI je vyčerpaná. Zkus to znovu zítra, nebo změň poskytovatele v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_quota">Kvóta využití tvého účtu AI byla překročena. Zkontroluj limity poskytovatele, nebo změň poskytovatele v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_model">Vybraný model nebo API endpoint není dostupný. Zkontroluj model a API URL v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_rate_limit">Byl dosažen limit požadavků pro tvůj API klíč. Počkej minutu, nebo změň poskytovatele v Nastavení → Poskytovatel AI. Pokud používáš bezplatný tarif, zkontroluj, zda není vyčerpaná jeho denní kvóta.</string>
+    <string name="ai_error_key_rejected">Tvůj API klíč byl odmítnut. Otevři Nastavení → Poskytovatel AI a znovu vlož platný klíč.</string>
+    <string name="ai_error_overloaded">Poskytovatel AI je právě přetížený. Několikrát jsme to zkusili znovu — zkus to za minutu, nebo změň poskytovatele/model v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_generic">Požadavek na AI selhal. Zkus to znovu, nebo změň poskytovatele v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_local_unavailable">Běhové prostředí AI v zařízení není dostupné. Zkontroluj stažený model v Nastavení → Poskytovatel AI.</string>
+    <string name="ai_error_truncated">Odpověď AI byla dvakrát zkrácena. Zkus kratší vstup nebo jiný model.</string>
+    <string name="ai_error_both_failed">%1$s i záložní %2$s selhaly. %3$s</string>
+</resources>

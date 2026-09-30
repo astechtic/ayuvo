@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importă istoricul nutrițional</string>
+    <string name="health_import_action">Importă</string>
+    <string name="health_import_description">Adu înregistrările de alimente din altă aplicație în jurnalul tău. Previzualizează înregistrările disponibile, apoi alege o singură aplicație sursă pentru a evita numărarea de două ori a înregistrărilor partajate.</string>
+    <string name="health_import_from">De la (AAAA-LL-ZZ)</string>
+    <string name="health_import_to">Până la (AAAA-LL-ZZ)</string>
+    <string name="health_import_history_hint">Fără acces la istoric, alege date din ultimele 30 de zile. Înregistrările mai vechi necesită acces la istoric pe un dispozitiv compatibil.</string>
+    <string name="health_import_grant">Acordă acces la nutriție și la istoric</string>
+    <string name="health_import_access_result">Setările de acces au fost actualizate. Previzualizează din nou pentru a verifica înregistrările disponibile.</string>
+    <string name="health_import_access_needed">Permite accesul de citire la nutriție în Health Connect, apoi previzualizează din nou.</string>
+    <string name="health_import_invalid_dates">Introdu date valide în formatul AAAA-LL-ZZ. Data de sfârșit trebuie să fie egală cu sau după data de început și nu mai târziu de azi.</string>
+    <string name="health_import_history_needed">Acest interval necesită acces la istoric. Acordă accesul pe un dispozitiv compatibil sau alege date din ultimele 30 de zile.</string>
+    <string name="health_import_preview">Previzualizează înregistrările disponibile</string>
+    <string name="health_import_failed">Importul nu a putut fi finalizat. Verifică accesul Health Connect și încearcă din nou.</string>
+    <string name="health_import_empty">Nu s-au găsit înregistrări nutriționale noi din alte aplicații în acest interval. Verifică dacă aplicația sursă a partajat datele de nutriție cu Health Connect. Înregistrările importate anterior sunt omise, inclusiv cele eliminate din jurnal.</string>
+    <string name="health_import_count">%1$d înregistrări noi · %2$d kcal</string>
+    <string name="health_import_unnamed">Masă importată</string>
+    <string name="health_import_local_only">Acestea sunt copii locale. Editările și ștergerile rămân în Ayuvo. Repetarea unui import omite înregistrările importate anterior; nu le actualizează.</string>
+    <string name="health_import_done">Au fost importate %1$d înregistrări în jurnal.</string>
+    <string name="health_import_close">Închide</string>
+</resources>

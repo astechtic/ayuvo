@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">Przywróć z kopii zapasowej</string>
+    <string name="onboarding_restore_title">Przywróć z kopii zapasowej</string>
+    <string name="onboarding_restore_message">Przywróć profil, cele, dziennik jedzenia i ustawienia z kopii zapasowej Ayuvo. Powiadomienia, Health Connect i AI nadal skonfigurujesz na tym telefonie. Klucze API nigdy nie trafiają do kopii zapasowej.</string>
+    <string name="onboarding_restore_file">Wybierz plik kopii zapasowej</string>
+    <string name="onboarding_restore_drive">Przywróć z Google Drive</string>
+    <string name="onboarding_restore_busy">Przywracanie kopii zapasowej…</string>
+    <string name="onboarding_restore_error_no_drive">Na Dysku tego konta Google nie znaleziono kopii zapasowej Ayuvo.</string>
+    <string name="onboarding_restore_error_no_profile">Ta kopia zapasowa nie zawiera profilu. Wybierz inną kopię lub kontynuuj konfigurację tutaj.</string>
+    <string name="onboarding_restore_error_failed">Nie udało się przywrócić kopii zapasowej: %1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">Nie udało się przywrócić kopii zapasowej.</string>
+</resources>

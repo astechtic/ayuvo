@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Ayuvo Тренировка</string>
+    <string name="widget_workout_description">Запуск и управление тренировкой</string>
+    <string name="widget_workout_title">Тренировка</string>
+    <string name="widget_workout_walk">Ходьба</string>
+    <string name="widget_workout_run">Бег</string>
+    <string name="widget_workout_cycle">Велосипед</string>
+    <string name="widget_workout_hike">Поход</string>
+    <string name="widget_workout_strength">Силовая</string>
+    <string name="widget_workout_strength_title">Силовая</string>
+    <string name="widget_workout_status_recording">Запись</string>
+    <string name="widget_workout_status_paused">Пауза</string>
+    <string name="widget_workout_status_saving">Сохранение…</string>
+    <string name="widget_workout_status_recovery">Восстановление</string>
+    <string name="widget_workout_status_strength">Идёт</string>
+    <string name="widget_workout_waiting_gps">Ожидание GPS</string>
+    <string name="widget_workout_distance">Дистанция</string>
+    <string name="widget_workout_pace">Ср. темп</string>
+    <string name="widget_workout_speed">Ср. скорость</string>
+    <string name="widget_workout_pause">Пауза</string>
+    <string name="widget_workout_resume">Продолжить</string>
+    <string name="widget_workout_lap">Круг</string>
+    <string name="widget_workout_end">Завершить</string>
+    <string name="widget_workout_skip">Пропустить</string>
+    <string name="widget_workout_finish">Завершить</string>
+</resources>

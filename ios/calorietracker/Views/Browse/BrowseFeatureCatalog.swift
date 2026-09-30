@@ -223,11 +223,11 @@ enum BrowseFeatureCatalog {
     static func derivedFeatures(_ infos: [DerivedMetricInfo]) -> [BrowseFeature] {
         infos.map { info in
             let category = DerivedCatalog.categoryTitle(info.category)
-            var keywords = [info.title.lowercased(), category.lowercased(), "estimated", "estimate", "derived", "ayuvo"]
+            var keywords = [info.title.lowercased(), info.displayTitle.lowercased(), category.lowercased(), "estimated", "estimate", "derived", "ayuvo"]
             keywords += synonyms[info.id] ?? []
             return BrowseFeature(
-                id: "derived.\(info.id)", title: String(localized: String.LocalizationValue(info.title)),
-                subtitle: String(localized: "Estimated by Ayuvo · \(String(localized: String.LocalizationValue(category)))"),
+                id: "derived.\(info.id)", title: info.displayTitle,
+                subtitle: String(localized: "Estimated by Ayuvo · \(category)", comment: "Browse search result subtitle; placeholder is the estimated-metric group"),
                 systemImage: info.systemImage, domain: DerivedMetricSeries.domainID(for: info.category),
                 keywords: keywords, destination: .metric(.derived(info.id))
             )

@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.workouts
 
+import com.ayuvo.health.R
 import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.getValue
@@ -426,7 +427,7 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
         if (diaryUiState.isCalculatingBurn) return
         if (diaryUiState.exercises.none { it.hasCalculableWork }) {
             diaryUiState = diaryUiState.copy(
-                notice = "Stop and save an exercise timer, or enter reps for at least one set, before calculating workout calories."
+                notice = getApplication<Application>().getString(R.string.ui_workout_burn_needs_work)
             )
             return
         }
@@ -491,7 +492,7 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
         diaryUiState = diaryUiState.copy(
             isCalculatingBurn = false,
             notice = if (saved == null) {
-                "Stop and save an exercise timer, or enter reps for at least one set, before calculating workout calories."
+                getApplication<Application>().getString(R.string.ui_workout_burn_needs_work)
             } else null
         )
     }
@@ -514,7 +515,7 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
             }.getOrNull()
             diaryUiState = diaryUiState.copy(
                 isCalculatingBurn = false,
-                notice = if (saved == null) "Log at least one set with reps (or save an exercise timer), then tap Finish." else null
+                notice = if (saved == null) getApplication<Application>().getString(R.string.ui_workout_finish_needs_work) else null
             )
         }
     }

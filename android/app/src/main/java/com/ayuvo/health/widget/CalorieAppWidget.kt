@@ -41,6 +41,7 @@ import com.ayuvo.health.models.MacroValueFormatter
 import com.ayuvo.health.models.WidgetNutrient
 import com.ayuvo.health.models.WidgetSnapshot
 import kotlinx.coroutines.flow.first
+import androidx.glance.LocalContext
 
 class CalorieAppWidget : AyuvoGlanceAppWidget() {
 
@@ -101,7 +102,7 @@ private fun CalorieSmall(snapshot: WidgetSnapshot) {
     val gaugeW = minOf(contentW, (contentH - 44f) / 0.58f).toInt().coerceAtLeast(80)
 
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = "Today", themeHex = snapshot.themeStartHex)
+        WidgetHeader(iconRes = R.drawable.ic_widget_flame, label = LocalContext.current.getString(R.string.widget_today_label), themeHex = snapshot.themeStartHex)
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
             contentAlignment = Alignment.Center
@@ -116,7 +117,7 @@ private fun CalorieSmall(snapshot: WidgetSnapshot) {
             )
         }
         Text(
-            text = "${snapshot.caloriesRemaining} kcal left",
+            text = LocalContext.current.getString(R.string.widget_kcal_left_format, snapshot.caloriesRemaining),
             style = TextStyle(
                 color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                 fontWeight = FontWeight.Medium,
@@ -148,7 +149,7 @@ private fun CalorieMedium(snapshot: WidgetSnapshot) {
             )
             Spacer(modifier = GlanceModifier.height(2.dp))
             Text(
-                text = "${snapshot.caloriesRemaining} kcal left",
+                text = LocalContext.current.getString(R.string.widget_kcal_left_format, snapshot.caloriesRemaining),
                 style = TextStyle(
                     color = WidgetTheme.themeTextProvider(snapshot.themeStartHex),
                     fontWeight = FontWeight.Medium,
@@ -336,7 +337,7 @@ internal fun VerticalNutrientBarCell(
         )
         Spacer(modifier = GlanceModifier.height(3.dp))
         Text(
-            text = nutrient.label,
+            text = nutrient.displayLabel(LocalContext.current),
             style = TextStyle(
                 color = WidgetTheme.primaryTextProvider,
                 fontWeight = FontWeight.Medium,

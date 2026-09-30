@@ -275,7 +275,7 @@ internal fun WorkoutModeToggleButton(
     ) {
         Icon(
             imageVector = if (mode == WorkoutTabMode.LOG) Icons.Filled.FitnessCenter else Icons.Filled.SportsGymnastics,
-            contentDescription = if (mode == WorkoutTabMode.LOG) "Show exercise library" else "Show workout log",
+            contentDescription = stringResource(if (mode == WorkoutTabMode.LOG) R.string.ui_workout_show_library else R.string.ui_workout_show_log),
             tint = AppColors.Calorie,
             modifier = Modifier.size(24.dp)
         )
@@ -466,12 +466,14 @@ private fun FilterRow(repo: ExerciseRepository, vm: WorkoutsViewModel) {
         horizontalArrangement = Arrangement.spacedBy(9.dp)
     ) {
         val allLabel = stringResource(R.string.filter_all)
+        val res = androidx.compose.ui.platform.LocalResources.current
         FilterPill(
-            title = "Split",
+            title = stringResource(R.string.ui_workout_filter_split),
             icon = Icons.Filled.GridView,
             selected = vm.splitGroupTitles,
             emptyDisplay = allLabel,
             options = vm.diaryUiState.splitGroups.map { it.title },
+            labelFor = { t -> vm.diaryUiState.splitGroups.firstOrNull { it.title == t }?.let { ExerciseLabels.groupLabel(res, it) } ?: ExerciseLabels.label(res, t) },
             onSelect = { vm.splitGroupTitles = it }
         )
         val hidePrimary = vm.diaryUiState.preferences.split == com.ayuvo.health.models.WorkoutSplit.FULL_BODY &&
@@ -529,12 +531,15 @@ internal fun FilterPill(
     emptyDisplay: String,
     options: List<String>,
     glyphFor: ((String) -> String)? = null,
+    labelFor: ((String) -> String)? = null,
     onSelect: (Set<String>) -> Unit
 ) {
     val colors = workoutsColors()
+    val res = androidx.compose.ui.platform.LocalResources.current
+    val shown: (String) -> String = labelFor ?: { ExerciseLabels.label(res, it) }
     var expanded by remember { mutableStateOf(false) }
     val active = selected.isNotEmpty()
-    val value = if (active) selected.first() else emptyDisplay
+    val value = if (active) shown(selected.first()) else emptyDisplay
     val clearLabel = "${stringResource(R.string.filter_all)} $title"
 
     Box {
@@ -578,7 +583,7 @@ internal fun FilterPill(
             options.forEach { option ->
                 val isSel = selected.contains(option)
                 DropdownMenuItem(
-                    text = { Text(option, color = if (isSel) colors.accent else colors.charcoal, fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal) },
+                    text = { Text(shown(option), color = if (isSel) colors.accent else colors.charcoal, fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal) },
                     onClick = { onSelect(setOf(option)); expanded = false },
                     leadingIcon = glyphFor?.let { fn ->
                         {
@@ -711,12 +716,13 @@ internal fun ExerciseRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Tag(item.primaryMusclesTitle, Icons.Filled.GpsFixed)
-                Tag(item.equipment, Icons.Filled.FitnessCenter)
+                val res = androidx.compose.ui.platform.LocalResources.current
+                Tag(ExerciseLabels.join(res, item.primaryMuscles), Icons.Filled.GpsFixed)
+                Tag(ExerciseLabels.label(res, item.equipment), Icons.Filled.FitnessCenter)
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 Icon(Icons.Filled.Tag, null, tint = colors.secondaryAccent, modifier = Modifier.size(13.dp))
-                Text(item.bodyPart, color = colors.secondaryAccent, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(ExerciseLabels.label(androidx.compose.ui.platform.LocalResources.current, item.bodyPart), color = colors.secondaryAccent, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
         trailingContent()

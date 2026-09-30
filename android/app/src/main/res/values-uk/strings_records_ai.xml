@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">Як ШІ Ayuvo має обробляти ваші медичні записи?</string>
+    <string name="records_ai_mode_local">Локальний ШІ</string>
+    <string name="records_ai_mode_local_detail">Використовує модель на пристрої. Текст записів залишається на цьому телефоні для обробки ШІ.</string>
+    <string name="records_ai_mode_cloud">Хмарний ШІ</string>
+    <string name="records_ai_mode_cloud_detail">Надсилає текст сторінок (зображення — лише для сторінок без тексту) вашому провайдеру ШІ.</string>
+    <string name="records_ai_mode_ask">Питати мене за потреби</string>
+    <string name="records_ai_mode_ask_detail">Ayuvo запитує перед використанням ШІ для запису.</string>
+    <string name="records_ai_mode_off">Поки без ШІ</string>
+    <string name="records_ai_mode_off_detail">Дані знаходяться без ШІ. Це можна змінити в Налаштуваннях.</string>
+    <string name="records_ai_onboarding_note">Це можна будь-коли змінити в Налаштування › Медичні записи.</string>
+    <string name="records_ai_chooser_title">Виберіть, як ШІ допомагатиме з вашими записами</string>
+    <string name="records_ai_settings_title">Обробка ШІ</string>
+    <string name="records_ai_local_unavailable">ШІ на пристрої не налаштовано — дані знайдено без ШІ.</string>
+    <string name="records_ai_set_up_local">Налаштувати ШІ на пристрої</string>
+    <string name="records_ai_no_cloud_provider">Додайте провайдера ШІ, щоб користуватися онлайн-ШІ.</string>
+    <string name="records_ai_add_provider">Додати провайдера ШІ</string>
+    <string name="records_ai_cloud_provider_note">Онлайн-ШІ використовує %1$s.</string>
+    <string name="records_ai_consent_title">Використати ШІ, щоб знайти більше даних?</string>
+    <string name="records_ai_consent_body">ШІ може знайти дані, які пропустили правила. Результати — це пропозиції, які можна звірити з оригіналом.</string>
+    <string name="records_ai_consent_local">На цьому пристрої</string>
+    <string name="records_ai_consent_cloud">Онлайн-ШІ · %1$s</string>
+    <string name="records_ai_consent_not_now">Не зараз</string>
+    <string name="records_ai_consent_apply_all">Застосувати до всіх записів в очікуванні</string>
+    <string name="records_ai_consent_none_available">ШІ поки недоступний. Налаштуйте ШІ на пристрої або додайте провайдера ШІ в Налаштуваннях.</string>
+    <string name="records_ai_status_local">Оброблено на цьому пристрої</string>
+    <string name="records_ai_status_cloud">Оброблено онлайн-ШІ · %1$s</string>
+    <string name="records_ai_status_none">Не оброблено ШІ</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Bedtime
 import androidx.compose.material.icons.outlined.Checklist
@@ -41,7 +42,7 @@ fun InsightsHubScreen(vm: InsightsViewModel, onBack: () -> Unit, destinations: I
         tag = "insights.hub",
         onBack = onBack,
         onInfo = { info = true },
-        disclaimers = listOfNotNull(cfg.disclaimers["general"], cfg.disclaimers["health_age"])
+        disclaimers = listOfNotNull(InsightsText.disclaimer(LocalContext.current, cfg, "general"), InsightsText.disclaimer(LocalContext.current, cfg, "health_age"))
     ) {
         val snap = ui.snapshot
         if (!ui.enabled) {
@@ -112,5 +113,5 @@ fun InsightsHubScreen(vm: InsightsViewModel, onBack: () -> Unit, destinations: I
             }
         }
     }
-    if (info) InsightMethodologySheet(cfg, InsightMethodology.hub(cfg), onDismiss = { info = false })
+    if (info) InsightMethodologySheet(cfg, InsightMethodology.hub(LocalContext.current, cfg), onDismiss = { info = false })
 }

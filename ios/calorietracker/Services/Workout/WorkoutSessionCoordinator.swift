@@ -27,7 +27,7 @@ final class WorkoutSessionCoordinator {
         installLiveActivityHandler()
         // Re-adopt the strength Live Activity after a relaunch.
         if let active = store.activeSession, !recorder.isActive {
-            WorkoutLiveActivityController.shared.start(title: "Strength session", state: strengthState(active))
+            WorkoutLiveActivityController.shared.start(title: String(localized: "Strength session", comment: "Workout Live Activity title for a strength session"), state: strengthState(active))
         }
         WatchWorkoutMirror.shared.install()
         if pendingWidgetStrengthStart {
@@ -122,7 +122,7 @@ final class WorkoutSessionCoordinator {
     func startStrengthSession(on date: Date = .now) {
         guard let store, store.activeSession == nil, store.startSession(on: date), let active = store.activeSession else { return }
         if !OutdoorWorkoutRecorder.shared.isActive {
-            WorkoutLiveActivityController.shared.start(title: "Strength session", state: strengthState(active))
+            WorkoutLiveActivityController.shared.start(title: String(localized: "Strength session", comment: "Workout Live Activity title for a strength session"), state: strengthState(active))
         }
     }
 

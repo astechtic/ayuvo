@@ -1,5 +1,6 @@
 package com.ayuvo.health
 
+import com.ayuvo.health.R
 import android.app.Application
 import android.util.Log
 import com.ayuvo.health.data.BodyFatRepository
@@ -108,6 +109,7 @@ import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Application-scoped singleton wiring. Manual DI (no Hilt) — repositories and
@@ -129,6 +131,7 @@ class AyuvoApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppText.install(this)
         container = AppContainer(this, appScope)
         container.notifications.createChannels()
         MedicationNotifications.createChannel(this)
@@ -762,7 +765,8 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
             call = { route, prompt, tokens -> foodAnalysis.callInsightsAi(route, prompt, tokens) },
             config = { insightsConfig },
             prompts = { insightsPrompts },
-            providerName = { appContext.getString(it.displayNameRes) }
+            providerName = { appContext.getString(it.displayNameRes) },
+            statusText = { key, english -> com.ayuvo.health.l10n.ContractStrings.text(appContext, key, english) }
         )
     }
 
@@ -1111,7 +1115,7 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
                 profile = next,
                 changed = true,
                 updatedCalories = result.calories,
-                message = "Updated to ${result.calories} kcal from your latest data." + (result.reason?.let { " $it" } ?: "")
+                message = appContext.getString(R.string.ui_goals_updated_latest, result.calories) + (result.reason?.let { " $it" } ?: "")
             )
         } finally {
             adaptiveGoalsRefreshInFlight = false

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Entraînement Ayuvo</string>
+    <string name="widget_workout_description">Lancez et pilotez un entraînement</string>
+    <string name="widget_workout_title">Entraînement</string>
+    <string name="widget_workout_walk">Marche</string>
+    <string name="widget_workout_run">Course</string>
+    <string name="widget_workout_cycle">Vélo</string>
+    <string name="widget_workout_hike">Rando</string>
+    <string name="widget_workout_strength">Musculation</string>
+    <string name="widget_workout_strength_title">Musculation</string>
+    <string name="widget_workout_status_recording">Enregistrement</string>
+    <string name="widget_workout_status_paused">En pause</string>
+    <string name="widget_workout_status_saving">Enregistrement…</string>
+    <string name="widget_workout_status_recovery">Récupération</string>
+    <string name="widget_workout_status_strength">En cours</string>
+    <string name="widget_workout_waiting_gps">Attente du GPS</string>
+    <string name="widget_workout_distance">Distance</string>
+    <string name="widget_workout_pace">Allure moy.</string>
+    <string name="widget_workout_speed">Vitesse moy.</string>
+    <string name="widget_workout_pause">Pause</string>
+    <string name="widget_workout_resume">Reprendre</string>
+    <string name="widget_workout_lap">Tour</string>
+    <string name="widget_workout_end">Terminer</string>
+    <string name="widget_workout_skip">Ignorer</string>
+    <string name="widget_workout_finish">Terminer</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Імпортувати історію харчування</string>
+    <string name="health_import_action">Імпортувати</string>
+    <string name="health_import_description">Перенесіть записи про їжу з іншого застосунку у свій щоденник. Перегляньте доступні записи, а потім виберіть один застосунок-джерело, щоб спільні записи не рахувалися двічі.</string>
+    <string name="health_import_from">З (РРРР-ММ-ДД)</string>
+    <string name="health_import_to">До (РРРР-ММ-ДД)</string>
+    <string name="health_import_history_hint">Без доступу до історії виберіть дати в межах останніх 30 днів. Для давніших записів потрібен доступ до історії на підтримуваному пристрої.</string>
+    <string name="health_import_grant">Надати доступ до харчування та історії</string>
+    <string name="health_import_access_result">Налаштування доступу оновлено. Перегляньте знову, щоб перевірити доступні записи.</string>
+    <string name="health_import_access_needed">Дозвольте читання даних харчування в Health Connect, а потім перегляньте знову.</string>
+    <string name="health_import_invalid_dates">Введіть правильні дати у форматі РРРР-ММ-ДД. Кінцева дата має бути не раніше за початкову й не пізніше за сьогодні.</string>
+    <string name="health_import_history_needed">Для цього періоду потрібен доступ до історії. Надайте доступ на підтримуваному пристрої або виберіть дати в межах останніх 30 днів.</string>
+    <string name="health_import_preview">Переглянути доступні записи</string>
+    <string name="health_import_failed">Не вдалося завершити імпорт. Перевірте доступ до Health Connect і спробуйте знову.</string>
+    <string name="health_import_empty">У цьому періоді не знайдено нових записів про харчування з інших застосунків. Перевірте, чи ваш застосунок-джерело передає дані харчування в Health Connect. Раніше імпортовані записи пропускаються, зокрема ті, що ви видалили зі щоденника.</string>
+    <string name="health_import_count">Нових записів: %1$d · %2$d ккал</string>
+    <string name="health_import_unnamed">Імпортований прийом їжі</string>
+    <string name="health_import_local_only">Це локальні копії. Зміни й видалення залишаються в Ayuvo. Повторний імпорт пропускає раніше імпортовані записи, а не оновлює їх.</string>
+    <string name="health_import_done">Імпортовано записів у щоденник: %1$d.</string>
+    <string name="health_import_close">Закрити</string>
+</resources>

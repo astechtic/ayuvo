@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importer l\'historique nutritionnel</string>
+    <string name="health_import_action">Importer</string>
+    <string name="health_import_description">Importez dans votre journal les aliments enregistrés par une autre app. Prévisualisez les enregistrements disponibles, puis choisissez une seule app source pour éviter de compter deux fois les enregistrements partagés.</string>
+    <string name="health_import_from">Du (AAAA-MM-JJ)</string>
+    <string name="health_import_to">Au (AAAA-MM-JJ)</string>
+    <string name="health_import_history_hint">Sans accès à l\'historique, choisissez des dates dans les 30 derniers jours. Les enregistrements plus anciens nécessitent l\'accès à l\'historique sur un appareil compatible.</string>
+    <string name="health_import_grant">Autoriser l\'accès à la nutrition et à l\'historique</string>
+    <string name="health_import_access_result">Autorisations mises à jour. Prévisualisez de nouveau pour vérifier les enregistrements disponibles.</string>
+    <string name="health_import_access_needed">Autorisez la lecture de la nutrition dans Health Connect, puis prévisualisez de nouveau.</string>
+    <string name="health_import_invalid_dates">Saisissez des dates valides au format AAAA-MM-JJ. La date de fin doit être égale ou postérieure à la date de début, et pas après aujourd\'hui.</string>
+    <string name="health_import_history_needed">Cette période nécessite l\'accès à l\'historique. Autorisez l\'accès sur un appareil compatible, ou choisissez des dates dans les 30 derniers jours.</string>
+    <string name="health_import_preview">Prévisualiser les enregistrements disponibles</string>
+    <string name="health_import_failed">L\'importation n\'a pas pu aboutir. Vérifiez l\'accès à Health Connect et réessayez.</string>
+    <string name="health_import_empty">Aucun nouvel enregistrement nutritionnel provenant d\'autres apps n\'a été trouvé sur cette période. Vérifiez que votre app source a partagé la nutrition avec Health Connect. Les enregistrements déjà importés sont ignorés, y compris ceux supprimés de votre journal.</string>
+    <string name="health_import_count">%1$d nouveaux enregistrements · %2$d kcal</string>
+    <string name="health_import_unnamed">Repas importé</string>
+    <string name="health_import_local_only">Ce sont des copies locales. Les modifications et suppressions restent dans Ayuvo. Répéter une importation ignore les enregistrements déjà importés ; elle ne les met pas à jour.</string>
+    <string name="health_import_done">%1$d enregistrements importés dans votre journal.</string>
+    <string name="health_import_close">Fermer</string>
+</resources>

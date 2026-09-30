@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Permiți Antrenorului să-ți citească dosarele medicale?</string>
+    <string name="records_coach_consent_body">Antrenorul trimite detaliile înregistrărilor pe care le citește — rezultate ale analizelor, date, medici și diagnostice — către %1$s pentru a-ți răspunde. Înregistrările rămân stocate pe acest dispozitiv.</string>
+    <string name="records_coach_consent_body_on_device">Antrenorul citește înregistrările de pe acest dispozitiv; nu se trimite nimic online.</string>
+    <string name="records_coach_consent_allow">Permite</string>
+    <string name="records_coach_consent_not_now">Nu acum</string>
+    <string name="records_coach_settings_title">Antrenor</string>
+    <string name="records_coach_settings_toggle">Permite Antrenorului să-mi folosească dosarele medicale</string>
+    <string name="records_coach_settings_subtitle">Antrenorul îți poate căuta și citi dosarele pentru a răspunde la întrebări. Dezactivarea elimină imediat accesul.</string>
+    <string name="records_coach_analyzing">Se analizează:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Se analizează %d dosar</item>
+        <item quantity="few">Se analizează %d dosare</item>
+        <item quantity="other">Se analizează %d de dosare</item>
+    </plurals>
+    <string name="records_coach_change_records">Schimbă înregistrările</string>
+    <string name="records_coach_used_records">Dosare folosite</string>
+    <string name="records_coach_picker_title">Dosare pentru această conversație</string>
+    <string name="records_coach_picker_search">Caută înregistrări</string>
+    <string name="records_coach_picker_limit">Alege cel mult %d dosare.</string>
+    <string name="records_coach_picker_done">Gata</string>
+    <string name="records_coach_picker_empty">Nu s-au găsit dosare.</string>
+    <string name="records_coach_picker_selected">Selectat</string>
+    <string name="records_coach_picker_recent">Înregistrări recente</string>
+    <string name="records_coach_picker_results">Rezultate</string>
+    <string name="records_coach_mode_title">Trimiți dosarele online?</string>
+    <string name="records_coach_mode_body">Antrenorul folosește %1$s. Trimiți online detaliile înregistrărilor selectate?</string>
+    <string name="records_coach_mode_send">Trimite</string>
+    <string name="records_coach_mode_on_device">Folosește Antrenorul de pe dispozitiv</string>
+    <string name="records_coach_ask_report">Întreabă despre acest buletin</string>
+    <string name="records_coach_compare_previous">Compară cu buletinul anterior</string>
+    <string name="records_coach_explain_trend">Explică această tendință</string>
+    <string name="records_coach_ask_coach">Întreabă Antrenorul</string>
+    <string name="records_coach_prompt_report">Explică acest buletin: ce iese în evidență și ce ar trebui să-l întreb pe medic?</string>
+    <string name="records_coach_prompt_compare">Compară acest buletin cu cel anterior. Ce s-a schimbat?</string>
+    <string name="records_coach_prompt_trend">Explică cum s-a schimbat în timp %1$s.</string>
+    <string name="records_coach_chip_latest">Analizează cele mai recente analize de sânge</string>
+    <string name="records_coach_chip_abnormal">Găsește valorile anormale</string>
+    <string name="records_coach_chip_compare">Compară cu buletinul anterior</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

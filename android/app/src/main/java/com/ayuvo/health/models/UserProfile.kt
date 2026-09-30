@@ -5,6 +5,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 object GoalEnergyMath {
     /** Shared approximation for requested weight-change and observed-trend energy math. */
@@ -45,7 +47,7 @@ data class UserProfile(
      *  back-compat. Cleared by Recalculate and the Adaptive auto-run. */
     val lockedMacros: Set<AutoBalanceMacro> = emptySet()
 ) {
-    val displayName: String get() = name?.takeIf { it.isNotEmpty() } ?: "User"
+    val displayName: String get() = name?.takeIf { it.isNotEmpty() } ?: AppText.orEnglish("User", R.string.core_profile_default_name)
 
     val initials: String get() {
         val parts = displayName.split(" ")

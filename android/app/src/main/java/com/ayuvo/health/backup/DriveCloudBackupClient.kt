@@ -22,6 +22,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.TimeUnit
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /**
  * Google Drive appData folder client. OAuth is requested only when the user
@@ -41,7 +43,7 @@ class DriveCloudBackupClient(
     }
 
     /** Thrown when Drive returns HTTP 401 — the stored access token has expired. */
-    class DriveTokenExpiredException : Exception("Google Drive sign-in expired. Please sign in again.")
+    class DriveTokenExpiredException : Exception(AppText.get(R.string.core_drive_sign_in_expired))
 
     /** Always shows every Google account on the device (not Continue for the last one). */
     fun accountPickerIntent(): Intent {
@@ -94,7 +96,7 @@ class DriveCloudBackupClient(
         return if (pending != null) {
             AuthOutcome.Resolution(pending.intentSender)
         } else {
-            val token = result.accessToken ?: error("Google did not return an access token")
+            val token = result.accessToken ?: error(AppText.get(R.string.core_drive_no_access_token))
             AuthOutcome.Token(token)
         }
     }
@@ -125,7 +127,7 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive list failed (${response.code})")
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_list_failed, response.code))
             val body = response.body?.string() ?: return@use null
             val files = JSONObject(body).optJSONArray("files") ?: return@use null
             if (files.length() == 0) null else files.getJSONObject(0).optString("id").takeIf { it.isNotBlank() }
@@ -171,7 +173,7 @@ class DriveCloudBackupClient(
                     response.isSuccessful -> {
                         val body = response.body?.string().orEmpty()
                         val id = runCatching { JSONObject(body).optString("id") }.getOrNull()?.takeIf { it.isNotBlank() }
-                        (id ?: existingFileId ?: error("Drive resumable upload returned no id")) to total
+                        (id ?: existingFileId ?: error(AppText.get(R.string.core_drive_upload_no_id))) to total
                     }
                     // 308 Resume Incomplete: continue after the last byte Drive confirmed.
                     response.code == 308 -> {
@@ -184,7 +186,7 @@ class DriveCloudBackupClient(
                         attempts++
                         null to offset
                     }
-                    else -> error("Drive records upload failed (${response.code})")
+                    else -> error(AppText.get(R.string.core_drive_records_upload_failed, response.code))
                 }
             }
             offset = next
@@ -192,7 +194,7 @@ class DriveCloudBackupClient(
             if (done != null) return@withContext done
         }
         // A zero-byte archive still needs an id.
-        existingFileId ?: findFileId(accessToken, name) ?: error("Drive records upload returned no id")
+        existingFileId ?: findFileId(accessToken, name) ?: error(AppText.get(R.string.core_drive_records_upload_no_id))
     }
 
     /** Starts the resumable session and returns its upload URL. */
@@ -215,8 +217,8 @@ class DriveCloudBackupClient(
         val request = if (existingFileId == null) builder.post(body).build() else builder.patch(body).build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive resumable session failed (${response.code})")
-            return response.header("Location") ?: error("Drive returned no resumable session URL")
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_session_failed, response.code))
+            return response.header("Location") ?: error(AppText.get(R.string.core_drive_no_session_url))
         }
     }
 
@@ -254,7 +256,7 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive list failed (${response.code})")
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_list_failed, response.code))
             val body = response.body?.string() ?: return@use null
             val fileList = JSONObject(body).optJSONArray("files") ?: return@use null
             if (fileList.length() == 0) null else fileList.getJSONObject(0).optString("id").takeIf { it.isNotBlank() }
@@ -270,8 +272,8 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive download failed (${response.code})")
-            val source = response.body?.byteStream() ?: error("Empty backup file")
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_download_failed, response.code))
+            val source = response.body?.byteStream() ?: error(AppText.get(R.string.core_drive_empty_backup))
             target.parentFile?.mkdirs()
             target.outputStream().use { out -> source.copyTo(out, 64 * 1024) }
         }
@@ -285,8 +287,8 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive download failed (${response.code})")
-            response.body?.bytes() ?: error("Empty backup file")
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_download_failed, response.code))
+            response.body?.bytes() ?: error(AppText.get(R.string.core_drive_empty_backup))
         }
     }
 
@@ -298,7 +300,7 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (!response.isSuccessful && response.code != 404) {
-                error("Drive delete failed (${response.code})")
+                error(AppText.get(R.string.core_drive_delete_failed, response.code))
             }
         }
     }
@@ -310,7 +312,7 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (!response.isSuccessful && response.code != 400) {
-                error("Google token revoke failed (${response.code})")
+                error(AppText.get(R.string.core_drive_revoke_failed, response.code))
             }
         }
     }
@@ -340,8 +342,8 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive upload failed (${response.code})")
-            val json = JSONObject(response.body?.string() ?: error("Empty Drive create response"))
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_upload_failed, response.code))
+            val json = JSONObject(response.body?.string() ?: error(AppText.get(R.string.core_drive_empty_create)))
             return json.getString("id")
         }
     }
@@ -354,7 +356,7 @@ class DriveCloudBackupClient(
             .build()
         http.newCall(request).execute().use { response ->
             if (response.code == 401) throw DriveTokenExpiredException()
-            if (!response.isSuccessful) error("Drive update failed (${response.code})")
+            if (!response.isSuccessful) error(AppText.get(R.string.core_drive_update_failed, response.code))
         }
     }
 

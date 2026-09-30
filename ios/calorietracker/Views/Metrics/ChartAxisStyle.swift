@@ -88,11 +88,11 @@ enum ChartAxisStyle {
     static func bucketTitle(_ point: HealthChartPoint, range: HealthDetailRange) -> String {
         switch range {
         case .day:
-            return "\(point.start.formatted(.dateTime.hour().minute())) – \(point.end.formatted(.dateTime.hour().minute()))"
+            return String(localized: "\(point.start.formatted(.dateTime.hour().minute())) – \(point.end.formatted(.dateTime.hour().minute()))", comment: "Time range: start – end")
         case .week, .month:
             return point.start.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())
         case .sixMonths:
-            return "\(point.start.formatted(.dateTime.month(.abbreviated).day())) – \(point.end.addingTimeInterval(-1).formatted(.dateTime.month(.abbreviated).day()))"
+            return String(localized: "\(point.start.formatted(.dateTime.month(.abbreviated).day())) – \(point.end.addingTimeInterval(-1).formatted(.dateTime.month(.abbreviated).day()))", comment: "Date range: start – end")
         case .year:
             return point.start.formatted(.dateTime.month(.wide).year())
         }

@@ -83,7 +83,7 @@ private fun rings(context: Context, s: WidgetDashboardSnapshot?, nowMs: Long): L
             context.getString(R.string.widget_ring_eat), DashboardColors.EAT,
             DashboardRender.progress(eat, s.eat.goal),
             WidgetFormat.integer(eat) ?: dash,
-            WidgetFormat.integer(s.eat.goal)?.let { "$it kcal" }
+            WidgetFormat.integer(s.eat.goal)?.let { context.getString(R.string.core_widget_kcal_value, it) }
         )
     )
     val steps = s.move.steps.takeIf { fresh }

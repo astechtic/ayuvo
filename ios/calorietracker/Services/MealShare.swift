@@ -7,9 +7,12 @@ enum MealShare {
     /// Human-readable summary — the text put on the share sheet.
     nonisolated static func shareText(for entries: [FoodEntry]) -> String {
         entries.map { e -> String in
-            let macros = "\(Int(e.protein.rounded()))P · \(Int(e.carbs.rounded()))C · \(Int(e.fat.rounded()))F"
+            let macros = String(
+                localized: "\(Int(e.protein.rounded()))P · \(Int(e.carbs.rounded()))C · \(Int(e.fat.rounded()))F",
+                comment: "Shared meal text: protein, carbs and fat grams with P/C/F abbreviations"
+            )
             let prefix = e.emoji.map { "\($0) " } ?? ""
-            return "\(prefix)\(e.name) — \(e.calories) kcal · \(macros)"
+            return prefix + String(localized: "\(e.name) — \(e.calories) kcal · \(macros)", comment: "Shared meal text: food name, calories and macros")
         }.joined(separator: "\n")
     }
 

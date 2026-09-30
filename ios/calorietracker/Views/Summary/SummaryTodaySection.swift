@@ -15,14 +15,12 @@ struct SummaryTodaySection: View {
         if let sessions {
             let exercises = sessions.exercises.count
             let burn = sessions.caloriesBurned
-            var parts = [exercises == 1 ? String(localized: "1 exercise") : String(localized: "\(exercises) exercises")]
+            var parts = [String(localized: "\(exercises) exercises", comment: "Summary today: exercises in the latest workout session")]
             if let burn { parts.append(String(localized: "\(burn.formatted()) kcal")) }
             return parts.joined(separator: " · ")
         }
         if !imported.isEmpty {
-            return imported.count == 1
-                ? String(localized: "1 workout from Apple Health")
-                : String(localized: "\(imported.count) workouts from Apple Health")
+            return String(localized: "\(imported.count) workouts from Apple Health", comment: "Summary today: workouts imported from Apple Health")
         }
         return nil
     }

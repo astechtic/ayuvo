@@ -20,7 +20,7 @@ struct InsightsTrendsView: View {
 
     static func inputRows(_ rows: [InsightsMetricBaseline]) -> [InsightsInputRow] {
         rows.map { row in
-            InsightsInputRow(id: row.id, title: row.label,
+            InsightsInputRow(id: row.id, title: InsightsConfig.shared.metricLabel(row.id),
                              value: "\(row.baseline.n)/\(row.baseline.needed)",
                              detail: String(localized: "Readings in the last 60 days"),
                              missing: !row.baseline.isReady)
@@ -36,7 +36,7 @@ struct BaselineRowCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(row.label)
+                Text(InsightsConfig.shared.metricLabel(row.id))
                     .font(.system(.headline, design: .rounded))
                 Spacer()
                 trendChip

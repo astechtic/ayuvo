@@ -10,7 +10,7 @@ enum BrowseCategory: String, CaseIterable, Identifiable, Hashable {
     private var domain: MetricCatalogData.Domain? { MetricCatalogData.shared.domain(rawValue) }
 
     var title: String {
-        String(localized: String.LocalizationValue(domain?.title ?? rawValue.capitalized))
+        domain?.displayTitle ?? rawValue.capitalized
     }
 
     var systemImage: String { domain?.icon.ios ?? "square.grid.2x2.fill" }
@@ -93,14 +93,14 @@ enum MetricCatalog {
             let entry = MetricCatalogData.shared.appMetricsByKey[metric.key]
             return MetricDescriptor(
                 key: key,
-                title: String(localized: String.LocalizationValue(entry?.title ?? metric.rawValue)),
+                title: entry?.displayTitle ?? metric.rawValue,
                 domainID: resolved.domain,
                 systemImage: resolved.iconIOS,
                 unitLabel: appUnitLabel(metric),
                 chartKind: chart,
                 aggregation: aggregation,
                 ranges: (entry?.ranges ?? ["W", "M", "6M", "Y"]).compactMap(HealthDetailRange.init(rawValue:)),
-                about: String(localized: String.LocalizationValue(entry?.about ?? "")),
+                about: entry?.displayAbout ?? "",
                 goalSource: resolved.goalSource,
                 browseHidden: false,
                 decimals: entry?.unit.decimals ?? 0
@@ -136,14 +136,14 @@ enum MetricCatalog {
             }
             return MetricDescriptor(
                 key: key,
-                title: String(localized: String.LocalizationValue(info.title)),
+                title: info.displayTitle,
                 domainID: DerivedMetricSeries.domainID(for: info.category),
                 systemImage: info.systemImage,
                 unitLabel: DerivedMetricFormat.unitLabel(info),
                 chartKind: DerivedMetricSeries.chartKind(info),
                 aggregation: DerivedMetricSeries.aggregation(info),
                 ranges: DerivedMetricSeries.ranges,
-                about: String(localized: String.LocalizationValue(info.about)),
+                about: info.displayAbout,
                 goalSource: "",
                 browseHidden: false,
                 decimals: info.decimals

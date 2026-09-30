@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">カロリー</string>
+    <string name="metric_protein">タンパク質</string>
+    <string name="metric_carbs">炭水化物</string>
+    <string name="metric_fat">総脂質</string>
+    <string name="metric_fiber">食物繊維</string>
+    <string name="metric_water">水分</string>
+    <string name="metric_fasting">断食</string>
+    <string name="metric_weight">体重</string>
+    <string name="metric_body_fat">体脂肪率</string>
+    <string name="metric_workouts">ワークアウト</string>
+    <string name="metric_workout_minutes">ワークアウト時間</string>
+    <string name="metric_workout_burn">ワークアウトのエネルギー</string>
+    <string name="metric_about_calories">Ayuvoで記録した食事のエネルギーを1日ごとに合計したものです。長い期間では、食事を記録した日の平均が表示されます。</string>
+    <string name="metric_about_protein">Ayuvoで記録した食事のタンパク質を1日ごとに合計したものです。</string>
+    <string name="metric_about_carbs">Ayuvoで記録した食事の炭水化物を1日ごとに合計したものです。</string>
+    <string name="metric_about_fat">Ayuvoで記録した食事の脂質を1日ごとに合計したものです。</string>
+    <string name="metric_about_fiber">Ayuvoで記録した食事の食物繊維を1日ごとに合計したものです。食物繊維の情報がない食品は除外されます。</string>
+    <string name="metric_about_water">Ayuvoで記録した水分を1日ごとに合計したものです。</string>
+    <string name="metric_about_fasting">1日あたりの断食時間です。日付をまたぐ断食は、それぞれの日にカウントされます。</string>
+    <string name="metric_about_weight">Ayuvoで記録した体重（接続した健康アプリからインポートした測定値を含む）です。各ポイントはその期間の最新の測定値を示します。</string>
+    <string name="metric_about_body_fat">Ayuvoで記録した体脂肪率の測定値です。各ポイントはその期間の最新の測定値を示します。</string>
+    <string name="metric_about_workouts">Ayuvoで完了したワークアウトを、記録した日にカウントしたものです。</string>
+    <string name="metric_about_workout_minutes">Ayuvoで完了したワークアウトに費やした時間です。</string>
+    <string name="metric_about_workout_burn">Ayuvoで完了したワークアウトの推定消費エネルギーです。推定値のないワークアウトは除外されます。</string>
+    <string name="metric_add_to_favourites">お気に入りに追加</string>
+    <string name="metric_about">情報</string>
+    <string name="metric_log">記録</string>
+    <string name="metric_log_weight">体重データを追加</string>
+    <string name="metric_log_body_fat">体脂肪率データを追加</string>
+    <string name="metric_add_water">水分を追加</string>
+    <string name="metric_add_water_quick">%1$sを追加</string>
+    <string name="metric_add_water_custom">カスタム量</string>
+    <string name="metric_open_food_diary">食事日誌を開く</string>
+    <string name="metric_open_fasting">断食を開く</string>
+    <string name="metric_open_workouts">ワークアウトを開く</string>
+    <string name="metric_details">詳細を表示</string>
+    <string name="metric_goal_label">目標 %1$s</string>
+    <string name="metric_no_rows">この期間の記録はありません</string>
+    <string name="metric_row_logged_in_diary">食事日誌で記録</string>
+    <string name="metric_delete_entry">記録を削除</string>
+    <string name="metric_delete_entry_body">この記録はAyuvoから削除されます。</string>
+    <string name="metric_sources_app">Ayuvoで記録</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_restore_action">从备份恢复</string>
+    <string name="onboarding_restore_title">从备份恢复</string>
+    <string name="onboarding_restore_message">从 Ayuvo 备份中恢复你的个人资料、目标、饮食记录和设置。你仍需在这部手机上设置通知、Health Connect 和 AI。备份中绝不包含 API 密钥。</string>
+    <string name="onboarding_restore_file">选择备份文件</string>
+    <string name="onboarding_restore_drive">从 Google Drive 恢复</string>
+    <string name="onboarding_restore_busy">正在恢复你的备份…</string>
+    <string name="onboarding_restore_error_no_drive">在该 Google 账号的 Drive 中没有找到 Ayuvo 备份。</string>
+    <string name="onboarding_restore_error_no_profile">该备份不包含个人资料。请选择其他备份，或继续在此设置。</string>
+    <string name="onboarding_restore_error_failed">无法恢复备份：%1$s</string>
+    <string name="onboarding_restore_error_failed_unknown">无法恢复备份。</string>
+</resources>

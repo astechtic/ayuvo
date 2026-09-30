@@ -248,7 +248,7 @@ struct MetricDetailView: View {
             guard let window = series.sleepWindow else {
                 return (String(localized: "Time Asleep"), "—", model.rangeTitle(calendar: calendar))
             }
-            let span = "\(ChartAxisStyle.date(window.bedtimeMs).formatted(time)) – \(ChartAxisStyle.date(window.wakeMs).formatted(time))"
+            let span = String(localized: "\(ChartAxisStyle.date(window.bedtimeMs).formatted(time)) – \(ChartAxisStyle.date(window.wakeMs).formatted(time))", comment: "Time range: bedtime – wake time")
             if window.asleepS > 0 {
                 return (String(localized: "Time Asleep"), HealthUnitFormatting.durationText(seconds: Double(window.asleepS)), span)
             }
@@ -452,37 +452,37 @@ struct MetricDetailView: View {
         if let type = healthType {
             switch type.kind {
             case .cumulative, .duration, .session:
-                StatBadge(label: "Total", value: valueText(highlights.total))
+                StatBadge(label: String(localized: "Total", comment: "Metric detail stat badge"), value: valueText(highlights.total))
                 // Past D the health average is the total over days with a value: for a nutrient that is the
                 // same "Average per logged day" the nutrient charts show (docs/nutrients.md §5a).
                 if referenceNutrientKey != nil, model.range != .day {
-                    StatBadge(label: "Average per logged day", value: valueText(highlights.average))
+                    StatBadge(label: String(localized: "Average per logged day", comment: "Metric detail stat badge"), value: valueText(highlights.average))
                         .accessibilityIdentifier("metric.nutrient.loggedDayAverage")
                 } else {
-                    StatBadge(label: "Average", value: valueText(highlights.average))
+                    StatBadge(label: String(localized: "Average", comment: "Metric detail stat badge"), value: valueText(highlights.average))
                 }
-                StatBadge(label: "Latest", value: valueText(highlights.latest))
+                StatBadge(label: String(localized: "Latest", comment: "Metric detail stat badge"), value: valueText(highlights.latest))
             case .discrete, .series:
-                StatBadge(label: "Average", value: valueText(highlights.average))
-                StatBadge(label: "Range", value: rangeText(highlights))
-                StatBadge(label: "Latest", value: type.isBloodPressure ? bloodPressureLatest : valueText(highlights.latest))
+                StatBadge(label: String(localized: "Average", comment: "Metric detail stat badge"), value: valueText(highlights.average))
+                StatBadge(label: String(localized: "Range", comment: "Metric detail stat badge"), value: rangeText(highlights))
+                StatBadge(label: String(localized: "Latest", comment: "Metric detail stat badge"), value: type.isBloodPressure ? bloodPressureLatest : valueText(highlights.latest))
             case .category:
-                StatBadge(label: "Entries", value: "\(highlights.count)")
-                StatBadge(label: "Latest", value: healthStore.summary(for: type.id)?.latest.map { HealthUnitFormatting.relativeText($0.endDate) } ?? "—")
+                StatBadge(label: String(localized: "Entries", comment: "Metric detail stat badge"), value: "\(highlights.count)")
+                StatBadge(label: String(localized: "Latest", comment: "Metric detail stat badge"), value: healthStore.summary(for: type.id)?.latest.map { HealthUnitFormatting.relativeText($0.endDate) } ?? "—")
             }
         } else if nutrientKey != nil {
-            StatBadge(label: "Total", value: valueText(highlights.total))
-            StatBadge(label: "Average per logged day", value: valueText(model.nutrientExtras?.average.average))
+            StatBadge(label: String(localized: "Total", comment: "Metric detail stat badge"), value: valueText(highlights.total))
+            StatBadge(label: String(localized: "Average per logged day", comment: "Metric detail stat badge"), value: valueText(model.nutrientExtras?.average.average))
                 .accessibilityIdentifier("metric.nutrient.loggedDayAverage")
-            StatBadge(label: "Latest", value: valueText(highlights.latest))
+            StatBadge(label: String(localized: "Latest", comment: "Metric detail stat badge"), value: valueText(highlights.latest))
         } else if isSummed {
-            StatBadge(label: "Total", value: valueText(highlights.total))
-            StatBadge(label: "Average", value: valueText(highlights.average))
-            StatBadge(label: "Latest", value: valueText(highlights.latest))
+            StatBadge(label: String(localized: "Total", comment: "Metric detail stat badge"), value: valueText(highlights.total))
+            StatBadge(label: String(localized: "Average", comment: "Metric detail stat badge"), value: valueText(highlights.average))
+            StatBadge(label: String(localized: "Latest", comment: "Metric detail stat badge"), value: valueText(highlights.latest))
         } else {
-            StatBadge(label: "Average", value: valueText(highlights.average))
-            StatBadge(label: "Range", value: rangeText(highlights))
-            StatBadge(label: "Latest", value: valueText(highlights.latest))
+            StatBadge(label: String(localized: "Average", comment: "Metric detail stat badge"), value: valueText(highlights.average))
+            StatBadge(label: String(localized: "Range", comment: "Metric detail stat badge"), value: rangeText(highlights))
+            StatBadge(label: String(localized: "Latest", comment: "Metric detail stat badge"), value: valueText(highlights.latest))
         }
     }
 
@@ -638,7 +638,7 @@ struct MetricDetailView: View {
                 Text("Off: Ayuvo does not calculate this metric and its estimates are deleted. Values from Apple Health still show.")
                 let dependents = DerivedCatalog.shared.dependents(of: id)
                 if !dependents.isEmpty {
-                    Text("Also affects: \(dependents.map { String(localized: String.LocalizationValue($0.title)) }.joined(separator: ", "))")
+                    Text("Also affects: \(dependents.map(\.displayTitle).joined(separator: ", "))")
                         .accessibilityIdentifier("metric.derived.dependents")
                 }
             } else {
@@ -652,7 +652,7 @@ struct MetricDetailView: View {
         let latestEstimate = model.derivedDays.last { !$0.isNative }
         return Section {
             VStack(alignment: .leading, spacing: 10) {
-                Text(String(localized: String.LocalizationValue(info.method)))
+                Text(info.displayMethod)
                     .font(.system(.subheadline, design: .rounded))
                     .accessibilityIdentifier("metric.derived.method")
                 LabeledContent("Confidence", value: DerivedMetricFormat.confidenceText(latestEstimate?.quality))
@@ -672,7 +672,7 @@ struct MetricDetailView: View {
         } header: {
             Text("How it's calculated")
         } footer: {
-            Text(String(localized: String.LocalizationValue(DerivedCatalog.shared.disclaimer)))
+            Text(DerivedCatalog.shared.displayDisclaimer)
                 .accessibilityIdentifier("metric.derived.disclaimer")
         }
     }

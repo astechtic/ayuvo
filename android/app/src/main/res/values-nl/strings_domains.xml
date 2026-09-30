@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Inzichten</string>
+    <string name="domain_nutrition">Voeding</string>
+    <string name="domain_hydration">Hydratatie</string>
+    <string name="domain_fasting">Vasten</string>
+    <string name="domain_body">Lichaamsmetingen</string>
+    <string name="domain_activity">Activiteit</string>
+    <string name="domain_heart">Hart</string>
+    <string name="domain_sleep">Slaap</string>
+    <string name="domain_vitals">Vitale functies</string>
+    <string name="domain_respiratory">Ademhaling</string>
+    <string name="domain_cycle">Menstruatiecyclus</string>
+    <string name="domain_mindfulness">Mindfulness</string>
+    <string name="domain_mobility">Mobiliteit</string>
+    <string name="domain_hearing">Gehoor</string>
+    <string name="domain_symptoms">Symptomen</string>
+    <string name="domain_medications">Medicatie</string>
+    <string name="domain_records">Gezondheidsdossiers</string>
+    <string name="domain_other">Overige gegevens</string>
+    <string name="design_back">Terug</string>
+</resources>

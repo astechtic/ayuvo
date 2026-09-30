@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import com.ayuvo.health.R
 
 sealed class SttEvent {
     data class Partial(val text: String) : SttEvent()
@@ -93,18 +94,18 @@ class NativeSpeechRecognizer(private val context: Context) {
     }
 
     private fun describeError(code: Int): String = when (code) {
-        SpeechRecognizer.ERROR_AUDIO -> "Audio capture failed"
-        SpeechRecognizer.ERROR_CLIENT -> "Client error"
-        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Missing microphone permission"
-        SpeechRecognizer.ERROR_NETWORK -> "Network error"
-        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-        SpeechRecognizer.ERROR_NO_MATCH -> "No speech recognized"
-        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer busy"
-        SpeechRecognizer.ERROR_SERVER -> "Server error"
-        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
-        ERROR_SERVER_DISCONNECTED -> "Speech service disconnected"
-        ERROR_LANGUAGE_NOT_SUPPORTED -> "Speech language is not supported on this device"
-        ERROR_LANGUAGE_UNAVAILABLE -> "Speech language is unavailable on this device"
-        else -> "Speech error ($code)"
+        SpeechRecognizer.ERROR_AUDIO -> context.getString(R.string.core_speech_error_audio)
+        SpeechRecognizer.ERROR_CLIENT -> context.getString(R.string.core_speech_error_client)
+        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> context.getString(R.string.core_speech_error_permission)
+        SpeechRecognizer.ERROR_NETWORK -> context.getString(R.string.core_speech_error_network)
+        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> context.getString(R.string.core_speech_error_network_timeout)
+        SpeechRecognizer.ERROR_NO_MATCH -> context.getString(R.string.core_speech_error_no_match)
+        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> context.getString(R.string.core_speech_error_busy)
+        SpeechRecognizer.ERROR_SERVER -> context.getString(R.string.core_speech_error_server)
+        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> context.getString(R.string.core_speech_error_speech_timeout)
+        ERROR_SERVER_DISCONNECTED -> context.getString(R.string.core_speech_error_disconnected)
+        ERROR_LANGUAGE_NOT_SUPPORTED -> context.getString(R.string.core_speech_error_language_not_supported)
+        ERROR_LANGUAGE_UNAVAILABLE -> context.getString(R.string.core_speech_error_language_unavailable)
+        else -> context.getString(R.string.core_speech_error_other, code)
     }
 }

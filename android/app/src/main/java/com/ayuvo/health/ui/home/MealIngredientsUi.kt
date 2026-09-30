@@ -105,7 +105,7 @@ internal fun MealIngredientsCard(
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            "${MacroValueFormatter.string(ingredient.grams)}g · ${ingredient.calories} kcal",
+                            stringResource(R.string.ui_ingredient_grams_kcal, MacroValueFormatter.string(ingredient.grams), ingredient.calories),
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f)
                         )

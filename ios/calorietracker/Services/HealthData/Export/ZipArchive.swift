@@ -24,12 +24,12 @@ nonisolated enum ZipArchiveError: LocalizedError, Sendable, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .notAnArchive: return "This file is not a zip archive."
-        case .truncated: return "The archive is incomplete."
-        case .unsupportedMethod(let method): return "Unsupported zip compression method \(method)."
-        case .badEntry(let name): return "The archive entry “\(name)” is damaged."
-        case .decompressionFailed(let name): return "Could not decompress “\(name)”."
-        case .tooLarge: return "The archive is too large."
+        case .notAnArchive: return String(localized: "This file is not a zip archive.", comment: "Archive import error")
+        case .truncated: return String(localized: "The archive is incomplete.", comment: "Archive import error")
+        case .unsupportedMethod(let method): return String(localized: "Unsupported zip compression method \(method).", comment: "Archive import error; placeholder is a compression method number")
+        case .badEntry(let name): return String(localized: "The archive entry “\(name)” is damaged.", comment: "Archive import error; placeholder is a file name inside the archive")
+        case .decompressionFailed(let name): return String(localized: "Could not decompress “\(name)”.", comment: "Archive import error; placeholder is a file name inside the archive")
+        case .tooLarge: return String(localized: "The archive is too large.", comment: "Archive import error")
         }
     }
 }

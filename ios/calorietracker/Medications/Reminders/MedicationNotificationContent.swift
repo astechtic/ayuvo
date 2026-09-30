@@ -23,11 +23,27 @@ nonisolated enum MedicationNotificationContent {
         if abs(quantity - 0.5) < 0.0001 {
             amount = "½"
         } else if quantity == quantity.rounded(), abs(quantity) < 1_000_000 {
+            if let counted = countedDoseText(Int(quantity), unit: unit) { return counted }
             amount = String(Int(quantity))
         } else {
             amount = quantity.formatted(.number.precision(.fractionLength(0...2)))
         }
         return "\(amount) \(unitLabel(unit, quantity: quantity))"
+    }
+
+    /// Whole-number doses of countable units, as plural-aware catalog entries ("1 tablet", "2 tablets").
+    private static func countedDoseText(_ n: Int, unit: DoseUnit) -> String? {
+        switch unit {
+        case .tablet: return String(localized: "\(n) tablets", comment: "Medication dose in a reminder; number of tablets")
+        case .capsule: return String(localized: "\(n) capsules", comment: "Medication dose in a reminder; number of capsules")
+        case .drop: return String(localized: "\(n) drops", comment: "Medication dose in a reminder; number of drops")
+        case .puff: return String(localized: "\(n) puffs", comment: "Medication dose in a reminder; number of inhaler puffs")
+        case .unit: return String(localized: "\(n) units", comment: "Medication dose in a reminder; number of units (e.g. insulin)")
+        case .sachet: return String(localized: "\(n) sachets", comment: "Medication dose in a reminder; number of sachets")
+        case .application: return String(localized: "\(n) applications", comment: "Medication dose in a reminder; number of applications (creams)")
+        case .other: return String(localized: "\(n) doses", comment: "Medication dose in a reminder; number of doses")
+        case .ml, .mg, .g, .mcg: return nil
+        }
     }
 
     private static func unitLabel(_ unit: DoseUnit, quantity: Double) -> String {

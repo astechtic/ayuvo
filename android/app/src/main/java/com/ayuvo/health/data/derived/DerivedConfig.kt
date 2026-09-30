@@ -1,5 +1,7 @@
 package com.ayuvo.health.data.derived
 
+import android.content.Context
+import com.ayuvo.health.l10n.ContractStrings
 import com.ayuvo.health.medications.logic.MedicationJson
 import com.ayuvo.health.medications.logic.MedicationJson.double
 import com.ayuvo.health.medications.logic.MedicationJson.int
@@ -98,6 +100,10 @@ class DerivedConfig(val root: JsonObject) {
     val categories: List<String> = MedicationJson.strings(root["categories"])
     val labels: Map<String, List<String>> =
         root.objOrNull("labels")?.entries?.associate { it.key to MedicationJson.strings(it.value) }.orEmpty()
+    /** [labels] translated for the screen (`derived.labels.<name>.<index>`); engines keep the English. */
+    fun displayLabels(context: Context?): Map<String, List<String>> =
+        labels.mapValues { (name, list) -> list.mapIndexed { i, text -> ContractStrings.text(context, "derived.labels.$name.$i", text) } }
+
     val thresholds: Thresholds = thresholds(root.objOrNull("thresholds") ?: error("config has no thresholds"))
 
     companion object {

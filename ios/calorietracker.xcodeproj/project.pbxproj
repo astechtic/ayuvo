@@ -524,6 +524,7 @@
 				"pt-BR",
 				ro,
 				ru,
+				uk,
 				"zh-Hans",
 				Base,
 			);

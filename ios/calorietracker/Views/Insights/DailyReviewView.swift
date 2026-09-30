@@ -31,7 +31,7 @@ struct DailyReviewView: View {
                 if !review.notLogged.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(review.notLogged, id: \.text) { item in
-                            Label(item.text, systemImage: "minus.circle")
+                            Label(InsightsConfig.shared.reviewText(item, patterns: store.patterns), systemImage: "minus.circle")
                                 .font(.system(.subheadline, design: .rounded))
                                 .foregroundStyle(.secondary)
                         }
@@ -106,7 +106,7 @@ struct DailyReviewView: View {
             }
             .font(.system(.headline, design: .rounded))
             ForEach(items, id: \.text) { item in
-                Text(item.text)
+                Text(InsightsConfig.shared.reviewText(item, patterns: store.patterns))
                     .font(.system(.subheadline, design: .rounded))
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -117,7 +117,7 @@ struct DailyReviewView: View {
     }
 
     static func areaLabel(_ id: String) -> String {
-        InsightsConfig.shared.dailyReview.areas.first { $0.id == id }?.label ?? id
+        InsightsConfig.shared.areaLabel(id)
     }
 
     static func inputRows(_ review: DailyReviewResult?) -> [InsightsInputRow] {

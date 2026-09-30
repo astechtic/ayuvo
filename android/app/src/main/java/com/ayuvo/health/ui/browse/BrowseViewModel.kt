@@ -100,7 +100,7 @@ class BrowseViewModel(private val container: AppContainer) : ViewModel() {
         val source = DerivedTileSource(
             catalog = container.derivedCatalog,
             enabled = enabled,
-            labels = runCatching { container.derivedConfig.labels }.getOrDefault(emptyMap()),
+            labels = runCatching { container.derivedConfig.displayLabels(container.appContext) }.getOrDefault(emptyMap()),
             is24 = android.text.format.DateFormat.is24HourFormat(container.appContext)
         )
         return container.derivedCatalog.metrics

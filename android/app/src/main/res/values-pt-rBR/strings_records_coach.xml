@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_coach_consent_title">Permitir que o Coach leia seus registros de saúde?</string>
+    <string name="records_coach_consent_body">O Coach envia os detalhes dos registros que lê — resultados de exames, datas, médicos e diagnósticos — para %1$s para responder a você. Os registros continuam armazenados neste dispositivo.</string>
+    <string name="records_coach_consent_body_on_device">O Coach lê os registros neste dispositivo; nada é enviado online.</string>
+    <string name="records_coach_consent_allow">Permitir</string>
+    <string name="records_coach_consent_not_now">Agora não</string>
+    <string name="records_coach_settings_title">Coach</string>
+    <string name="records_coach_settings_toggle">Permitir que o Coach use meus registros de saúde</string>
+    <string name="records_coach_settings_subtitle">O Coach pode buscar e ler seus registros para responder perguntas. Desativar remove o acesso imediatamente.</string>
+    <string name="records_coach_analyzing">Analisando:</string>
+    <plurals name="records_coach_analyzing_count">
+        <item quantity="one">Analisando %d registro</item>
+        <item quantity="many">Analisando %d registros</item>
+        <item quantity="other">Analisando %d registros</item>
+    </plurals>
+    <string name="records_coach_change_records">Alterar registros</string>
+    <string name="records_coach_used_records">Registros usados</string>
+    <string name="records_coach_picker_title">Registros para esta conversa</string>
+    <string name="records_coach_picker_search">Pesquisar registros</string>
+    <string name="records_coach_picker_limit">Escolha até %d registros.</string>
+    <string name="records_coach_picker_done">Concluído</string>
+    <string name="records_coach_picker_empty">Nenhum registro encontrado.</string>
+    <string name="records_coach_picker_selected">Selecionado</string>
+    <string name="records_coach_picker_recent">Registros recentes</string>
+    <string name="records_coach_picker_results">Resultados</string>
+    <string name="records_coach_mode_title">Enviar registros online?</string>
+    <string name="records_coach_mode_body">O Coach usa %1$s. Enviar online os detalhes dos registros selecionados?</string>
+    <string name="records_coach_mode_send">Enviar</string>
+    <string name="records_coach_mode_on_device">Usar Coach no dispositivo</string>
+    <string name="records_coach_ask_report">Perguntar sobre este exame</string>
+    <string name="records_coach_compare_previous">Comparar com o exame anterior</string>
+    <string name="records_coach_explain_trend">Explicar esta tendência</string>
+    <string name="records_coach_ask_coach">Perguntar ao Coach</string>
+    <string name="records_coach_prompt_report">Explique este exame: o que se destaca e o que devo perguntar ao meu médico?</string>
+    <string name="records_coach_prompt_compare">Compare este exame com o anterior. O que mudou?</string>
+    <string name="records_coach_prompt_trend">Explique como meu %1$s mudou ao longo do tempo.</string>
+    <string name="records_coach_chip_latest">Analise meus exames de sangue mais recentes</string>
+    <string name="records_coach_chip_abnormal">Encontrar valores anormais</string>
+    <string name="records_coach_chip_compare">Comparar com o exame anterior</string>
+    <string name="records_coach_record_chip">%1$s — %2$s</string>
+</resources>

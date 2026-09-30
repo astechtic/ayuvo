@@ -220,7 +220,7 @@ final class StrengthWorkoutStore {
     func addTextWorkout(_ draft: WorkoutTextDraft, library: [ExerciseLibraryItem]) throws {
         guard !isPersistenceBlocked else { throw WorkoutTextError.invalid(Self.persistenceBlockedMessage) }
         let additions = try draft.planned(library: library)
-        guard let date = Self.date(for: draft.date) else { throw WorkoutTextError.invalid("Choose a valid date.") }
+        guard let date = Self.date(for: draft.date) else { throw WorkoutTextError.invalid(String(localized: "Choose a valid date.", comment: "Workout-from-text validation error")) }
         let known = Set(customActivities.map(\.itemID))
         let newActivities = additions.filter {
             $0.itemID.hasPrefix("custom_activity_") && !known.contains($0.itemID)
@@ -968,7 +968,7 @@ final class StrengthWorkoutStore {
     }
 
     static let persistenceBlockedMessage =
-        "Your saved workout history is being protected and can't be changed right now. Update Ayuvo to the latest version or restart the app and try again."
+        String(localized: "Your saved workout history is being protected and can't be changed right now. Update Ayuvo to the latest version or restart the app and try again.", comment: "Error when workout history cannot be saved")
 
     /// Applies `mutate` to memory and persists the result as one unit.
     ///

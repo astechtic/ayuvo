@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Yemə vaxtı</string>
+    <string name="intake_eaten_at_same_as_log">Qeyd vaxtı ilə eyni</string>
+    <string name="intake_eaten_at_hint">Yemək pəncərəniz və yemək vaxtlarınız üçün istifadə olunur</string>
+    <string name="intake_eaten_at_reset">Qeyd vaxtından istifadə et</string>
+    <string name="intake_adherence_title">Son 30 gün</string>
+    <string name="intake_adherence_none">Son 30 gündə hələ planlaşdırılmış doza yoxdur.</string>
+    <string name="intake_adherence_pct">Dozaların %1$s%%-i qəbul edilib (%3$d dozadan %2$d)</string>
+    <string name="intake_adherence_adherent">Qaydasındadır: dozaların 80%%-i və ya daha çoxu qəbul edilib</string>
+    <string name="intake_adherence_on_time">Vaxtında (bir saat ərzində)</string>
+    <string name="intake_adherence_median_delay">Tipik gecikmə</string>
+    <string name="intake_adherence_streak">Ardıcıllıq</string>
+    <string name="intake_adherence_missed_by_weekday">Həftənin günlərinə görə qaçırılmış dozalar</string>
+    <string name="intake_minutes">%1$d dəq</string>
+    <string name="intake_doses">%1$d doza</string>
+    <string name="intake_move_reminder">Xatırlatma %1$s vaxtına keçirilsin?</string>
+    <string name="intake_move_reminder_body">Adətən bu dozanı xatırlatmadan gec qəbul edirsiniz. Xatırlatmanı köçürmək yalnız onun vaxtını dəyişir; qalan hər şey eyni qalır.</string>
+    <string name="intake_move_reminder_action">Xatırlatmanı köçür</string>
+    <string name="intake_supplement_above_upper">%1$s qəbul intervalı ərzində gündə orta hesabla %2$s təşkil edir, bu, %3$s yuxarı qəbul həddindən yüksəkdir. Resept yazan həkiminizin göstərişlərinə əməl edin.</string>
+    <string name="intake_lab_links_title">Laboratoriya nəticələri və qidalanma</string>
+    <string name="intake_lab_links_footer">Son 30 gün ərzindəki qida qeydləriniz və əlavələriniz, həmçinin hesabatınızda göstərilən istinad aralığı əsasında. Tibbi məsləhət deyil.</string>
+    <string name="intake_lab_link_low_one">%1$s göstəriciniz hesabatdakı aralıqdan aşağı idi.</string>
+    <string name="intake_lab_link_low_many">%1$s göstəriciləriniz hesabatdakı aralıqdan aşağı idi.</string>
+    <string name="intake_lab_link_and">%1$s və %2$s</string>
+    <string name="intake_lab_link_intake">Orta %1$s qəbulunuz istinad dəyərinin %2$d%%-ni təşkil edir.</string>
+    <string name="intake_lab_link_intake_no_supplement">Orta %1$s qəbulunuz istinad dəyərinin %2$d%%-ni təşkil edir və əlavələrinizin heç birində bu yoxdur.</string>
+    <string name="intake_lab_link_doctor">Bunu həkiminizlə müzakirə etməyi düşünün.</string>
+    <string name="intake_adherence_below">Dozaların 80%%-dən azı qəbul edilib</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

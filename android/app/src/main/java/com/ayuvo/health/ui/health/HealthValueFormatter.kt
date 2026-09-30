@@ -1,6 +1,10 @@
 package com.ayuvo.health.ui.health
 
+import android.content.res.Resources
+import androidx.annotation.StringRes
+import com.ayuvo.health.R
 import com.ayuvo.health.data.health.HealthSleepCodes
+import com.ayuvo.health.l10n.AppText
 import com.ayuvo.health.models.HealthDataType
 import java.util.Locale
 import kotlin.math.abs
@@ -22,15 +26,19 @@ data class FormattedHealthValue(val number: String, val unit: String) {
 
 /**
  * Pure value formatting for the hub, Home tiles and Coach summaries. Canonical storage units
- * (see HealthDataType.canonicalUnits) → display units per [HealthUnitPrefs]. No Android imports
- * so it is unit-tested on the JVM; unit *symbols* are literals, not translated copy.
+ * (see HealthDataType.canonicalUnits) → display units per [HealthUnitPrefs]. Unit *symbols* are
+ * literals; words (days, durations, category names) come from [res] when given, else from
+ * [AppText] (the app's resources, English on the JVM).
  */
 object HealthValueFormatter {
+    private fun text(res: Resources?, @StringRes id: Int, english: String, vararg args: Any): String =
+        res?.getString(id, *args) ?: AppText.orEnglish(english, id, *args)
+
     const val LB_PER_KG = 2.20462
     const val IN_PER_M = 39.3701
     const val MGDL_PER_MMOL = 18.0182
 
-    fun format(typeId: String, value: Double?, prefs: HealthUnitPrefs = HealthUnitPrefs(), locale: Locale = Locale.US, unitOverride: String? = null): FormattedHealthValue {
+    fun format(typeId: String, value: Double?, prefs: HealthUnitPrefs = HealthUnitPrefs(), locale: Locale = Locale.getDefault(), unitOverride: String? = null, res: Resources? = null): FormattedHealthValue {
         if (value == null || value.isNaN() || value.isInfinite()) return FormattedHealthValue("—", "")
         val type = HealthDataType.byId(typeId)
         val unit = unitOverride ?: type?.unit ?: "none"
@@ -54,7 +62,7 @@ object HealthValueFormatter {
                         else FormattedHealthValue(decimal(value, 1, locale), "mmol/L")
             "degC" -> if (prefs.fahrenheit) FormattedHealthValue(decimal(value * 9.0 / 5.0 + 32.0, 1, locale), "°F")
                       else FormattedHealthValue(decimal(value, 1, locale), "°C")
-            "s" -> FormattedHealthValue(duration(value), "")
+            "s" -> FormattedHealthValue(duration(value, res), "")
             "mL" -> if (abs(value) >= 1000) FormattedHealthValue(decimal(value / 1000.0, 2, locale), "L")
                     else FormattedHealthValue(integer(value, locale), "mL")
             "L" -> FormattedHealthValue(decimal(value, 2, locale), "L")
@@ -70,36 +78,43 @@ object HealthValueFormatter {
             "kcal/hr·kg" -> FormattedHealthValue(decimal(value, 1, locale), "kcal/kg·h")
             "IU" -> FormattedHealthValue(decimal(value, 1, locale), "IU")
             "mcS" -> FormattedHealthValue(decimal(value, 2, locale), "µS")
-            "days" -> FormattedHealthValue(integer(value, locale), if (value.roundToInt() == 1) "day" else "days")
+            "days" -> FormattedHealthValue(integer(value, locale), days(value.roundToInt(), res))
             else -> FormattedHealthValue(decimal(value, 1, locale), "")
         }
     }
 
     /** "121/79 mmHg" for blood pressure. */
-    fun formatBloodPressure(systolic: Double?, diastolic: Double?, locale: Locale = Locale.US): FormattedHealthValue {
+    fun formatBloodPressure(systolic: Double?, diastolic: Double?, locale: Locale = Locale.getDefault()): FormattedHealthValue {
         if (systolic == null) return FormattedHealthValue("—", "")
         val d = diastolic?.let { integer(it, locale) } ?: "—"
         return FormattedHealthValue("${integer(systolic, locale)}/$d", "mmHg")
     }
 
+    /** Unit word after a whole number of days. */
+    private fun days(n: Int, res: Resources?): String =
+        res?.getQuantityString(R.plurals.fu_health_unit_days, n)
+            ?: AppText.resolver?.plural(R.plurals.fu_health_unit_days, n, emptyArray())
+            ?: if (n == 1) "day" else "days"
+
     /** Category label for a `category_value` code, falling back to the code itself. */
-    fun categoryLabel(typeId: String, code: Int?): String {
+    fun categoryLabel(typeId: String, code: Int?, res: Resources? = null): String {
         if (code == null) return "—"
-        if (typeId == HealthDataType.SLEEP.id) return HealthSleepCodes.label(code).replace('_', ' ')
-        val type = HealthDataType.byId(typeId)
-        return type?.categoryCodes?.get(code)?.replace('_', ' ') ?: code.toString()
+        val raw = if (typeId == HealthDataType.SLEEP.id) HealthSleepCodes.label(code) else HealthDataType.byId(typeId)?.categoryCodes?.get(code)
+        raw ?: return code.toString()
+        val english = raw.replace('_', ' ')
+        return HealthCodeLabels.labelRes(raw)?.let { text(res, it, english) } ?: english
     }
 
     /** "7h 32m", "45 min", "30 s". */
-    fun duration(seconds: Double): String {
+    fun duration(seconds: Double, res: Resources? = null): String {
         val total = seconds.roundToLong().coerceAtLeast(0L)
         val h = total / 3600
         val m = (total % 3600) / 60
         val s = total % 60
         return when {
-            h > 0 -> if (m > 0) "${h}h ${m}m" else "${h}h"
-            m > 0 -> "$m min"
-            else -> "$s s"
+            h > 0 -> if (m > 0) text(res, R.string.fu_duration_h_m, "${h}h ${m}m", h, m) else text(res, R.string.fu_duration_h, "${h}h", h)
+            m > 0 -> text(res, R.string.fu_duration_min, "$m min", m)
+            else -> text(res, R.string.fu_duration_s, "$s s", s)
         }
     }
 
@@ -127,15 +142,15 @@ object HealthValueFormatter {
         }
     }
 
-    fun integer(value: Double, locale: Locale = Locale.US): String = String.format(locale, "%,d", value.roundToLong())
+    fun integer(value: Double, locale: Locale = Locale.getDefault()): String = String.format(locale, "%,d", value.roundToLong())
 
     /** ≥ 100 → whole, ≥ 10 → 1 decimal, else up to 2 decimals (trailing zeros trimmed). */
-    fun amount(value: Double, locale: Locale = Locale.US): String {
+    fun amount(value: Double, locale: Locale = Locale.getDefault()): String {
         val a = abs(value)
         return decimal(value, if (a >= 100) 0 else if (a >= 10) 1 else 2, locale)
     }
 
-    fun decimal(value: Double, digits: Int, locale: Locale = Locale.US): String {
+    fun decimal(value: Double, digits: Int, locale: Locale = Locale.getDefault()): String {
         if (digits <= 0) return integer(value, locale)
         val text = String.format(locale, "%,.${digits}f", value)
         // Trim "80.0" → "80" but keep "80.5".
@@ -147,7 +162,7 @@ object HealthValueFormatter {
     }
 
     /** Human-readable byte count for the "Storage used" line. */
-    fun bytes(bytes: Long, locale: Locale = Locale.US): String = when {
+    fun bytes(bytes: Long, locale: Locale = Locale.getDefault()): String = when {
         bytes >= 1_048_576L -> String.format(locale, "%.1f MB", bytes / 1_048_576.0)
         bytes >= 1024L -> String.format(locale, "%d KB", bytes / 1024)
         else -> String.format(locale, "%d B", bytes)

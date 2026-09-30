@@ -185,7 +185,7 @@ enum RecordFormatting {
         switch record.fileType {
         case .pdf:
             if record.pageCount > 0 {
-                parts.append(record.pageCount == 1 ? String(localized: "1 page") : String(localized: "\(record.pageCount) pages"))
+                parts.append(String(localized: "\(record.pageCount) pages", comment: "Record page count"))
             } else {
                 parts.append("PDF")
             }

@@ -377,9 +377,9 @@ internal fun LocalModelRow(
 }
 
 internal fun formatModelBytes(bytes: Long): String = if (bytes >= 1_000_000_000L) {
-    String.format(Locale.US, "%.1f GB", bytes / 1_000_000_000.0)
+    String.format(Locale.getDefault(), "%.1f GB", bytes / 1_000_000_000.0)
 } else {
-    String.format(Locale.US, "%.0f MB", bytes / 1_000_000.0)
+    String.format(Locale.getDefault(), "%.0f MB", bytes / 1_000_000.0)
 }
 
 @Composable

@@ -41,7 +41,7 @@ struct MedicationIntakeCard: View {
             if let delay = a.medianDelayMin {
                 row(String(localized: "Typical delay"), delayText(delay))
             }
-            row(String(localized: "Streak"), a.streak == 1 ? String(localized: "1 dose") : String(localized: "\(a.streak) doses"))
+            row(String(localized: "Streak"), String(localized: "\(a.streak) doses", comment: "Number of medication doses"))
             if a.missedByWeekday.contains(where: { $0 > 0 }) {
                 row(String(localized: "Missed by day"), missedText(a.missedByWeekday))
             }
@@ -108,7 +108,7 @@ struct MedicationIntakeCard: View {
     // MARK: Formatting
 
     private func percent(_ value: Double) -> String {
-        value == value.rounded() ? "\(Int(value))%" : String(format: "%.1f%%", value)
+        (value / 100).formatted(.percent.precision(.fractionLength(0...1)))
     }
 
     private func delayText(_ minutes: Double) -> String {

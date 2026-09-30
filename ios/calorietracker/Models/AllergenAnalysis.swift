@@ -27,7 +27,7 @@ struct AllergenAnalysis: Equatable, Sendable {
 
     var summary: String {
         guard !matchedSensitivities.isEmpty else { return assessment.displayName }
-        return "\(assessment.displayName): \(matchedSensitivities.joined(separator: ", "))"
+        return String(localized: "\(assessment.displayName): \(matchedSensitivities.joined(separator: ", "))", comment: "Allergen summary: assessment, then the matched allergens")
     }
 
     static func evaluate(entry: FoodEntry, sensitivities: [String]) -> AllergenAnalysis {

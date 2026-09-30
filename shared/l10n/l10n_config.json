@@ -1,0 +1,205 @@
+{
+  "format": "ayuvo-l10n-config",
+  "version": 1,
+  "_doc": "docs/localization.md. Read by scripts/l10n/*.py, LocalizationCoverageTests (iOS) and LocalizationCoverageTest (Android).",
+  "source_language": "en",
+  "languages": [
+    {
+      "ios": "ar",
+      "android": "ar"
+    },
+    {
+      "ios": "az",
+      "android": "az"
+    },
+    {
+      "ios": "cs",
+      "android": "cs"
+    },
+    {
+      "ios": "de",
+      "android": "de"
+    },
+    {
+      "ios": "es",
+      "android": "es"
+    },
+    {
+      "ios": "fr",
+      "android": "fr"
+    },
+    {
+      "ios": "hi",
+      "android": "hi"
+    },
+    {
+      "ios": "it",
+      "android": "it"
+    },
+    {
+      "ios": "ja",
+      "android": "ja"
+    },
+    {
+      "ios": "ko",
+      "android": "ko"
+    },
+    {
+      "ios": "nl",
+      "android": "nl"
+    },
+    {
+      "ios": "pl",
+      "android": "pl"
+    },
+    {
+      "ios": "pt-BR",
+      "android": "pt-rBR"
+    },
+    {
+      "ios": "ro",
+      "android": "ro"
+    },
+    {
+      "ios": "ru",
+      "android": "ru"
+    },
+    {
+      "ios": "uk",
+      "android": "uk"
+    },
+    {
+      "ios": "zh-Hans",
+      "android": "zh-rCN"
+    }
+  ],
+  "plural_categories": {
+    "en": [
+      "one",
+      "other"
+    ],
+    "ar": [
+      "zero",
+      "one",
+      "two",
+      "few",
+      "many",
+      "other"
+    ],
+    "az": [
+      "one",
+      "other"
+    ],
+    "cs": [
+      "one",
+      "few",
+      "many",
+      "other"
+    ],
+    "de": [
+      "one",
+      "other"
+    ],
+    "es": [
+      "one",
+      "many",
+      "other"
+    ],
+    "fr": [
+      "one",
+      "many",
+      "other"
+    ],
+    "hi": [
+      "one",
+      "other"
+    ],
+    "it": [
+      "one",
+      "many",
+      "other"
+    ],
+    "ja": [
+      "other"
+    ],
+    "ko": [
+      "other"
+    ],
+    "nl": [
+      "one",
+      "other"
+    ],
+    "pl": [
+      "one",
+      "few",
+      "many",
+      "other"
+    ],
+    "pt-BR": [
+      "one",
+      "many",
+      "other"
+    ],
+    "ro": [
+      "one",
+      "few",
+      "other"
+    ],
+    "ru": [
+      "one",
+      "few",
+      "many",
+      "other"
+    ],
+    "uk": [
+      "one",
+      "few",
+      "many",
+      "other"
+    ],
+    "zh-Hans": [
+      "other"
+    ]
+  },
+  "do_not_translate": [
+    "Anthropic",
+    "Apple Health",
+    "Apple Maps",
+    "Ayuvo",
+    "BMI",
+    "CSV",
+    "Claude",
+    "Deepgram",
+    "ElevenLabs",
+    "Gemini",
+    "Gemma",
+    "Google Drive",
+    "Groq",
+    "HRV",
+    "Health Connect",
+    "HealthKit",
+    "JSON",
+    "MedGemma",
+    "Ollama",
+    "Open Food Facts",
+    "OpenAI",
+    "OpenRouter",
+    "OpenStreetMap",
+    "PDF",
+    "TRIMP",
+    "USDA",
+    "VO₂max"
+  ],
+  "ios_catalog_folders": [
+    "calorietracker",
+    "FudAIWidgets",
+    "FudAIWatchApp",
+    "FudAIWatchWidgets",
+    "calorietrackerShare"
+  ],
+  "translate_separately": [
+    "android:medications_field_strength",
+    "android:settings_meal_time_edit_format"
+  ],
+  "_translate_separately_doc": "Keys whose English matches another string with a different meaning; they get their own translation instead of the shared one."
+}

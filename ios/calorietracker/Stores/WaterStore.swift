@@ -21,9 +21,9 @@ enum WaterUnit: String, CaseIterable, Identifiable {
     static let millilitersPerFluidOunce = 29.5735295625
 
     var id: String { rawValue }
-    var title: String { self == .milliliters ? "Milliliters" : "Fluid Ounces" }
+    var title: String { self == .milliliters ? String(localized: "Milliliters", comment: "Water unit name") : String(localized: "Fluid Ounces", comment: "Water unit name") }
     var symbol: String { self == .milliliters ? "ml" : "fl oz" }
-    var accessibilityName: String { self == .milliliters ? "milliliters" : "fluid ounces" }
+    var accessibilityName: String { self == .milliliters ? String(localized: "milliliters", comment: "Water unit, spoken by VoiceOver") : String(localized: "fluid ounces", comment: "Water unit, spoken by VoiceOver") }
 
     func displayAmount(forMilliliters milliliters: Int) -> Double {
         self == .milliliters

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">Importuj historię odżywiania</string>
+    <string name="health_import_action">Importuj</string>
+    <string name="health_import_description">Przenieś wpisy jedzenia z innej aplikacji do swojego dziennika. Przejrzyj dostępne rekordy, a następnie wybierz jedną aplikację źródłową, aby nie liczyć wspólnych rekordów dwukrotnie.</string>
+    <string name="health_import_from">Od (RRRR-MM-DD)</string>
+    <string name="health_import_to">Do (RRRR-MM-DD)</string>
+    <string name="health_import_history_hint">Bez dostępu do historii wybierz daty z ostatnich 30 dni. Starsze rekordy wymagają dostępu do historii na obsługiwanym urządzeniu.</string>
+    <string name="health_import_grant">Przyznaj dostęp do odżywiania i historii</string>
+    <string name="health_import_access_result">Zaktualizowano ustawienia dostępu. Wyświetl podgląd ponownie, aby sprawdzić dostępne rekordy.</string>
+    <string name="health_import_access_needed">Zezwól na odczyt danych o odżywianiu w Health Connect, a następnie ponownie wyświetl podgląd.</string>
+    <string name="health_import_invalid_dates">Wpisz prawidłowe daty w formacie RRRR-MM-DD. Data końcowa musi być taka sama lub późniejsza niż data początkowa i nie późniejsza niż dziś.</string>
+    <string name="health_import_history_needed">Ten zakres wymaga dostępu do historii. Przyznaj dostęp na obsługiwanym urządzeniu lub wybierz daty z ostatnich 30 dni.</string>
+    <string name="health_import_preview">Podgląd dostępnych rekordów</string>
+    <string name="health_import_failed">Nie udało się ukończyć importu. Sprawdź dostęp Health Connect i spróbuj ponownie.</string>
+    <string name="health_import_empty">W tym zakresie nie znaleziono nowych rekordów odżywiania z innych aplikacji. Sprawdź, czy aplikacja źródłowa udostępnia dane o odżywianiu w Health Connect. Wcześniej zaimportowane rekordy są pomijane, także te usunięte z dziennika.</string>
+    <string name="health_import_count">Nowe rekordy: %1$d · %2$d kcal</string>
+    <string name="health_import_unnamed">Zaimportowany posiłek</string>
+    <string name="health_import_local_only">To lokalne kopie. Zmiany i usunięcia pozostają w Ayuvo. Ponowny import pomija wcześniej zaimportowane rekordy; nie aktualizuje ich.</string>
+    <string name="health_import_done">Zaimportowano do dziennika rekordy: %1$d.</string>
+    <string name="health_import_close">Zamknij</string>
+</resources>

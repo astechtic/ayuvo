@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Describir entrenamiento</string>
+    <string name="workout_text_intro">Describe lo que hiciste. Revisa los datos antes de añadirlos a tu diario de entrenamiento.</string>
+    <string name="workout_text_description">Descripción del entrenamiento</string>
+    <string name="workout_text_example">20 minutos de saltar la comba y luego 3 series de 10 press de banca con 40 kg</string>
+    <string name="workout_text_voice">Voz</string>
+    <string name="workout_text_preparing">Buscando ejercicios…</string>
+    <string name="workout_text_preview">Analizar</string>
+    <string name="workout_text_retry">Reintentar</string>
+    <string name="workout_text_review">Revisar entrenamiento</string>
+    <string name="workout_text_date">Fecha (AAAA-MM-DD)</string>
+    <string name="workout_text_custom">Actividad cronometrada personalizada · la estimación de calorías usa un ritmo de actividad general</string>
+    <string name="workout_text_minutes">Minutos</string>
+    <string name="workout_text_reps">Reps</string>
+    <string name="workout_text_remove">Quitar ejercicio</string>
+    <string name="workout_text_calories_note">Las calorías son estimaciones. Usa Calcular en el diario después de añadir tu entrenamiento.</string>
+    <string name="workout_text_edit">Editar descripción</string>
+    <string name="workout_text_adding">Añadiendo…</string>
+    <string name="workout_text_add">Añadir al diario</string>
+    <string name="workout_text_menu">Texto</string>
+    <string name="workout_text_set_weight">Serie %1$d · %2$s</string>
+    <string name="workout_text_estimate">Calorías quemadas estimadas: %1$d kcal</string>
+    <string name="workout_text_effort">Esfuerzo (moderado si no se indica)</string>
+    <string name="workout_text_light">Claro</string>
+    <string name="workout_text_moderate">Moderado</string>
+    <string name="workout_text_vigorous">Vigorosa</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Empezar de nuevo</string>
+    <string name="workout_clarify_title">Una pregunta rápida</string>
+    <string name="workout_clarify_hint">Toca un ejercicio para elegirlo o escribe tu respuesta.</string>
+    <string name="workout_clarify_answer">Tu respuesta</string>
+    <string name="workout_clarify_voice">Responder por voz</string>
+    <string name="workout_text_repeat_error">No se pudo completar con tus respuestas. Añade el dato que falta a tu descripción (por ejemplo, series y reps) o empieza de nuevo.</string>
+</resources>

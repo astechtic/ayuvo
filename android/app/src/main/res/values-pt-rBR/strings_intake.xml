@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Consumido às</string>
+    <string name="intake_eaten_at_same_as_log">Igual ao horário do registro</string>
+    <string name="intake_eaten_at_hint">Usado para sua janela de alimentação e horários das refeições</string>
+    <string name="intake_eaten_at_reset">Usar o horário do registro</string>
+    <string name="intake_adherence_title">Últimos 30 dias</string>
+    <string name="intake_adherence_none">Ainda não há doses programadas nos últimos 30 dias.</string>
+    <string name="intake_adherence_pct">%1$s%% das doses tomadas (%2$d de %3$d)</string>
+    <string name="intake_adherence_adherent">No caminho certo: 80%% ou mais das doses tomadas</string>
+    <string name="intake_adherence_below">Abaixo de 80%% das doses tomadas</string>
+    <string name="intake_adherence_on_time">No horário (dentro de uma hora)</string>
+    <string name="intake_adherence_median_delay">Atraso típico</string>
+    <string name="intake_adherence_streak">Sequência</string>
+    <string name="intake_adherence_missed_by_weekday">Doses esquecidas por dia da semana</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d doses</string>
+    <string name="intake_move_reminder">Mover o lembrete para %1$s?</string>
+    <string name="intake_move_reminder_body">Você costuma tomar esta dose mais tarde que o lembrete. Mover o lembrete altera apenas o horário dele; todo o resto continua igual.</string>
+    <string name="intake_move_reminder_action">Mover lembrete</string>
+    <string name="intake_supplement_above_upper">%1$s tem média de %2$s por dia no intervalo entre doses, acima do limite superior de ingestão de %3$s. Siga a orientação de quem prescreveu.</string>
+    <string name="intake_lab_links_title">Resultados de exames e nutrição</string>
+    <string name="intake_lab_links_footer">Com base no seu registro alimentar e suplementos dos últimos 30 dias e na faixa de referência impressa no seu exame. Não é conselho médico.</string>
+    <string name="intake_lab_link_low_one">Seu resultado de %1$s ficou abaixo da faixa do exame.</string>
+    <string name="intake_lab_link_low_many">Seus resultados de %1$s ficaram abaixo da faixa do exame.</string>
+    <string name="intake_lab_link_and">%1$s e %2$s</string>
+    <string name="intake_lab_link_intake">Sua ingestão média de %1$s é %2$d%% da referência.</string>
+    <string name="intake_lab_link_intake_no_supplement">Sua ingestão média de %1$s é %2$d%% da referência, e nenhum dos seus suplementos o contém.</string>
+    <string name="intake_lab_link_doctor">Considere conversar sobre isso com seu médico.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

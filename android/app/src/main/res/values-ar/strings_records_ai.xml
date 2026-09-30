@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_ai_question">كيف تريد أن يعالج الذكاء الاصطناعي في Ayuvo سجلاتك الصحية؟</string>
+    <string name="records_ai_mode_local">ذكاء اصطناعي محلي</string>
+    <string name="records_ai_mode_local_detail">يستخدم النموذج الموجود على الجهاز. يبقى نص السجل على هذا الهاتف للمعالجة بالذكاء الاصطناعي.</string>
+    <string name="records_ai_mode_cloud">الذكاء الاصطناعي السحابي</string>
+    <string name="records_ai_mode_cloud_detail">يرسل نص الصفحات (والصور فقط للصفحات التي لا تحتوي على نص) إلى مزوّد الذكاء الاصطناعي.</string>
+    <string name="records_ai_mode_ask">اسألني عند الحاجة</string>
+    <string name="records_ai_mode_ask_detail">يسأل Ayuvo قبل استخدام الذكاء الاصطناعي على أي سجل.</string>
+    <string name="records_ai_mode_off">تخطي الذكاء الاصطناعي حاليًا</string>
+    <string name="records_ai_mode_off_detail">يتم العثور على التفاصيل دون ذكاء اصطناعي. يمكنك تغيير ذلك في الإعدادات.</string>
+    <string name="records_ai_onboarding_note">يمكنك تغيير هذا في أي وقت من الإعدادات ‹ السجلات الصحية.</string>
+    <string name="records_ai_chooser_title">اختر كيف يساعدك الذكاء الاصطناعي في سجلاتك</string>
+    <string name="records_ai_settings_title">المعالجة بالذكاء الاصطناعي</string>
+    <string name="records_ai_local_unavailable">لم يتم إعداد الذكاء الاصطناعي على الجهاز — تم العثور على التفاصيل دون ذكاء اصطناعي.</string>
+    <string name="records_ai_set_up_local">إعداد الذكاء الاصطناعي على الجهاز</string>
+    <string name="records_ai_no_cloud_provider">أضف مزوّد ذكاء اصطناعي لاستخدام الذكاء الاصطناعي عبر الإنترنت.</string>
+    <string name="records_ai_add_provider">إضافة مزوّد ذكاء اصطناعي</string>
+    <string name="records_ai_cloud_provider_note">يستخدم الذكاء الاصطناعي عبر الإنترنت %1$s.</string>
+    <string name="records_ai_consent_title">استخدام الذكاء الاصطناعي للعثور على مزيد من التفاصيل؟</string>
+    <string name="records_ai_consent_body">يمكن للذكاء الاصطناعي العثور على تفاصيل فاتت القواعد. النتائج اقتراحات يمكنك مقارنتها بالأصل.</string>
+    <string name="records_ai_consent_local">على هذا الجهاز</string>
+    <string name="records_ai_consent_cloud">ذكاء اصطناعي عبر الإنترنت · %1$s</string>
+    <string name="records_ai_consent_not_now">ليس الآن</string>
+    <string name="records_ai_consent_apply_all">التطبيق على جميع السجلات المنتظرة</string>
+    <string name="records_ai_consent_none_available">لا يتوفر ذكاء اصطناعي بعد. أعدّ الذكاء الاصطناعي على الجهاز أو أضف مزوّد ذكاء اصطناعي في الإعدادات.</string>
+    <string name="records_ai_status_local">تمت المعالجة على هذا الجهاز</string>
+    <string name="records_ai_status_cloud">تمت المعالجة باستخدام الذكاء الاصطناعي عبر الإنترنت · %1$s</string>
+    <string name="records_ai_status_none">لم تتم معالجته بالذكاء الاصطناعي</string>
+</resources>

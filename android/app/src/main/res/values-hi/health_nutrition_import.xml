@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_import_title">पोषण इतिहास इम्पोर्ट करें</string>
+    <string name="health_import_action">इम्पोर्ट करें</string>
+    <string name="health_import_description">किसी दूसरे ऐप से भोजन रिकॉर्ड अपनी डायरी में लाएँ। उपलब्ध रिकॉर्ड का प्रीव्यू देखें, फिर शेयर किए गए रिकॉर्ड को दो बार गिनने से बचने के लिए एक स्रोत ऐप चुनें।</string>
+    <string name="health_import_from">से (YYYY-MM-DD)</string>
+    <string name="health_import_to">तक (YYYY-MM-DD)</string>
+    <string name="health_import_history_hint">इतिहास की एक्सेस के बिना, पिछले 30 दिनों के भीतर की तारीखें चुनें। पुराने रिकॉर्ड के लिए किसी समर्थित डिवाइस पर इतिहास की एक्सेस ज़रूरी है।</string>
+    <string name="health_import_grant">पोषण और इतिहास की एक्सेस दें</string>
+    <string name="health_import_access_result">एक्सेस सेटिंग्स अपडेट हो गईं। उपलब्ध रिकॉर्ड जाँचने के लिए फिर से प्रीव्यू देखें।</string>
+    <string name="health_import_access_needed">Health Connect में पोषण पढ़ने की एक्सेस दें, फिर से प्रीव्यू देखें।</string>
+    <string name="health_import_invalid_dates">मान्य तारीखें YYYY-MM-DD के रूप में डालें। अंतिम तारीख शुरुआती तारीख के दिन या उसके बाद और आज से बाद की नहीं होनी चाहिए।</string>
+    <string name="health_import_history_needed">इस सीमा के लिए इतिहास की एक्सेस ज़रूरी है। किसी समर्थित डिवाइस पर एक्सेस दें, या पिछले 30 दिनों के भीतर की तारीखें चुनें।</string>
+    <string name="health_import_preview">उपलब्ध रिकॉर्ड का प्रीव्यू देखें</string>
+    <string name="health_import_failed">इम्पोर्ट पूरा नहीं हो सका। Health Connect एक्सेस जाँचें और फिर से कोशिश करें।</string>
+    <string name="health_import_empty">इस सीमा में दूसरे ऐप से कोई नया पोषण रिकॉर्ड नहीं मिला। जाँचें कि आपके स्रोत ऐप ने Health Connect के साथ पोषण शेयर किया है। पहले इम्पोर्ट किए गए रिकॉर्ड छोड़ दिए जाते हैं, जिनमें आपकी डायरी से हटाए गए रिकॉर्ड भी शामिल हैं।</string>
+    <string name="health_import_count">%1$d नए रिकॉर्ड · %2$d kcal</string>
+    <string name="health_import_unnamed">इम्पोर्ट किया गया भोजन</string>
+    <string name="health_import_local_only">ये लोकल कॉपी हैं। संपादन और हटाना Ayuvo में ही रहता है। इम्पोर्ट दोहराने पर पहले इम्पोर्ट किए गए रिकॉर्ड छोड़ दिए जाते हैं; उन्हें अपडेट नहीं किया जाता।</string>
+    <string name="health_import_done">आपकी डायरी में %1$d रिकॉर्ड इम्पोर्ट किए गए।</string>
+    <string name="health_import_close">बंद करें</string>
+</resources>

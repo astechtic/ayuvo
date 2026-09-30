@@ -98,8 +98,8 @@ internal fun PersonalInfoPage(ctx: SettingsPageContext) {
         row {
             GroupRow(
                 title = stringResource(R.string.settings_weight),
-                value = if (ui.weightMetric) String.format(Locale.US, "%.1f kg", p.weightKg)
-                else String.format(Locale.US, "%.1f lbs", p.weightKg * 2.20462),
+                value = if (ui.weightMetric) String.format(Locale.getDefault(), "%.1f kg", p.weightKg)
+                else String.format(Locale.getDefault(), "%.1f lbs", p.weightKg * 2.20462),
                 icon = Icons.Filled.MonitorWeight, iconTint = SettingsTint.Body,
                 modifier = Modifier.settingsRow("weight"),
                 onClick = { state.sheet = SettingsSheet.WEIGHT }
@@ -179,8 +179,8 @@ internal fun GoalsTargetsPage(ctx: SettingsPageContext) {
                 GroupRow(
                     title = stringResource(R.string.settings_goal_weight),
                     value = p.goalWeightKg?.let {
-                        if (ui.weightMetric) String.format(Locale.US, "%.1f kg", it)
-                        else String.format(Locale.US, "%.1f lbs", it * 2.20462)
+                        if (ui.weightMetric) String.format(Locale.getDefault(), "%.1f kg", it)
+                        else String.format(Locale.getDefault(), "%.1f lbs", it * 2.20462)
                     } ?: stringResource(R.string.settings_not_set),
                     icon = Icons.AutoMirrored.Filled.TrendingUp, iconTint = SettingsTint.Body,
                     modifier = Modifier.settingsRow("goalWeight"),

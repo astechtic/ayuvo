@@ -1,5 +1,6 @@
 package com.ayuvo.health.ui.insights
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,7 @@ fun InsightsTrendsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         tag = "insights.trends",
         onBack = onBack,
         onInfo = { info = true },
-        disclaimers = listOfNotNull(cfg.disclaimers["general"])
+        disclaimers = listOfNotNull(InsightsText.disclaimer(LocalContext.current, cfg, "general"))
     ) {
         if (!insightsGate(ui, "insights.trends", needsHealth = false)) return@InsightsScaffold
         val snap = ui.snapshot ?: return@InsightsScaffold
@@ -53,7 +54,7 @@ fun InsightsTrendsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
             }
         }
     }
-    if (info) InsightMethodologySheet(cfg, InsightMethodology.baselines(cfg, ui.snapshot), onDismiss = { info = false })
+    if (info) InsightMethodologySheet(cfg, InsightMethodology.baselines(LocalContext.current, cfg, ui.snapshot), onDismiss = { info = false })
 }
 
 @Composable
@@ -62,7 +63,7 @@ private fun TrendRow(m: MetricInsight) {
     val metric = m.metric
     Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 11.dp).testTag("insights.trends.${metric.id}"), verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
-            Text(metric.label, fontSize = 16.sp)
+            Text(InsightsText.metricLabel(LocalContext.current, metric), fontSize = 16.sp)
             if (!b.ok) {
                 Text(stringResource(R.string.insights_trends_learning, b.n, b.needed), fontSize = 13.sp, color = AyuvoColors.secondaryLabel())
             } else {

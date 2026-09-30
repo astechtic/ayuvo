@@ -33,11 +33,11 @@ enum VertexAuth {
         var errorDescription: String? {
             switch self {
             case .badServiceAccount:
-                return "That does not look like a Google service-account JSON file."
+                return String(localized: "That does not look like a Google service-account JSON file.", comment: "Vertex AI service-account error")
             case .signingFailed:
-                return "The service account's private key could not be used to sign a request."
+                return String(localized: "The service account's private key could not be used to sign a request.", comment: "Vertex AI service-account error")
             case .exchangeFailed(let message):
-                return "Google rejected the service account: \(message)"
+                return String(localized: "Google rejected the service account: \(message)", comment: "Vertex AI service-account error; placeholder is Google's message")
             }
         }
     }
@@ -81,7 +81,7 @@ enum VertexAuth {
               let token = parsed["access_token"].string else {
             let detail = RJ.parse(String(data: data, encoding: .utf8) ?? "")?["error_description"].string
                 ?? RJ.parse(String(data: data, encoding: .utf8) ?? "")?["error"].string
-                ?? "no access token in the reply"
+                ?? String(localized: "no access token in the reply", comment: "Vertex AI service-account error detail when Google gives no reason")
             throw AuthError.exchangeFailed(detail)
         }
         let lifetime = parsed["expires_in"].double ?? 3600

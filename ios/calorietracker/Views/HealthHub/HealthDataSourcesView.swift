@@ -68,14 +68,14 @@ struct HealthDataSourcesView: View {
 /// "Manage Apple Health access": opens the Health app (Sharing › Apps › Ayuvo lives there);
 /// falls back to this app's page in Settings when the Health URL scheme cannot open.
 struct OpenHealthAppButton: View {
-    var title: LocalizedStringKey = "Manage Apple Health Access"
+    var title: LocalizedStringResource = LocalizedStringResource("Manage Apple Health Access", comment: "Button that opens the Health app to manage access")
     @Environment(\.openURL) private var openURL
 
     var body: some View {
         Button {
             open()
         } label: {
-            Label(title, systemImage: "heart.text.square")
+            Label { Text(title) } icon: { Image(systemName: "heart.text.square") }
                 .font(.system(.body, design: .rounded, weight: .medium))
                 .foregroundStyle(AppColors.calorie)
         }

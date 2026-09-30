@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">खाने का समय</string>
+    <string name="intake_eaten_at_same_as_log">लॉग समय के समान</string>
+    <string name="intake_eaten_at_hint">आपकी खाने की समय अवधि और भोजन के समय के लिए उपयोग होता है</string>
+    <string name="intake_eaten_at_reset">लॉग समय का उपयोग करें</string>
+    <string name="intake_adherence_title">पिछले 30 दिन</string>
+    <string name="intake_adherence_none">पिछले 30 दिनों में अभी तक कोई निर्धारित खुराक नहीं।</string>
+    <string name="intake_adherence_pct">%1$s%% खुराकें ली गईं (%3$d में से %2$d)</string>
+    <string name="intake_adherence_adherent">सही राह पर: 80%% या अधिक खुराकें ली गईं</string>
+    <string name="intake_adherence_below">80%% से कम खुराकें ली गईं</string>
+    <string name="intake_adherence_on_time">समय पर (एक घंटे के भीतर)</string>
+    <string name="intake_adherence_median_delay">सामान्य देरी</string>
+    <string name="intake_adherence_streak">स्ट्रीक</string>
+    <string name="intake_adherence_missed_by_weekday">सप्ताह के दिन के अनुसार छूटी खुराकें</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d खुराकें</string>
+    <string name="intake_move_reminder">रिमाइंडर %1$s पर ले जाएँ?</string>
+    <string name="intake_move_reminder_body">आप आमतौर पर यह खुराक उसके रिमाइंडर के बाद लेते हैं। रिमाइंडर खिसकाने से केवल उसका समय बदलता है; बाकी सब वैसा ही रहता है।</string>
+    <string name="intake_move_reminder_action">रिमाइंडर खिसकाएँ</string>
+    <string name="intake_supplement_above_upper">%1$s अपनी खुराक अंतराल में औसतन %2$s प्रतिदिन है, जो %3$s की ऊपरी सेवन सीमा से अधिक है। अपने प्रिस्क्राइबर के निर्देशों का पालन करें।</string>
+    <string name="intake_lab_links_title">लैब परिणाम और पोषण</string>
+    <string name="intake_lab_links_footer">पिछले 30 दिनों के आपके भोजन लॉग और सप्लीमेंट, और आपकी रिपोर्ट पर छपी संदर्भ सीमा पर आधारित। यह चिकित्सीय सलाह नहीं है।</string>
+    <string name="intake_lab_link_low_one">आपका %1$s रिपोर्ट की सीमा से कम था।</string>
+    <string name="intake_lab_link_low_many">आपके %1$s रिपोर्ट की सीमा से कम थे।</string>
+    <string name="intake_lab_link_and">%1$s और %2$s</string>
+    <string name="intake_lab_link_intake">आपका औसत %1$s सेवन संदर्भ का %2$d%% है।</string>
+    <string name="intake_lab_link_intake_no_supplement">आपका औसत %1$s सेवन संदर्भ का %2$d%% है, और आपके किसी भी सप्लीमेंट में यह नहीं है।</string>
+    <string name="intake_lab_link_doctor">इस बारे में अपने डॉक्टर से बात करने पर विचार करें।</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

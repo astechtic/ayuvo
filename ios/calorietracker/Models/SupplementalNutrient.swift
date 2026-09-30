@@ -27,14 +27,14 @@ enum SupplementalNutrient: String, CaseIterable, Identifiable, Codable {
 
     var displayName: String {
         switch self {
-        case .creatine: "Creatine"
-        case .betaAlanine: "Beta-Alanine"
-        case .lCitrulline: "L-Citrulline"
-        case .lCarnitine: "L-Carnitine"
-        case .lArginine: "L-Arginine"
-        case .taurine: "Taurine"
-        case .betaine: "Betaine"
-        case .hmb: "HMB"
+        case .creatine: String(localized: "Creatine", comment: "Sports supplement nutrient name")
+        case .betaAlanine: String(localized: "Beta-Alanine", comment: "Sports supplement nutrient name")
+        case .lCitrulline: String(localized: "L-Citrulline", comment: "Sports supplement nutrient name")
+        case .lCarnitine: String(localized: "L-Carnitine", comment: "Sports supplement nutrient name")
+        case .lArginine: String(localized: "L-Arginine", comment: "Sports supplement nutrient name")
+        case .taurine: String(localized: "Taurine", comment: "Sports supplement nutrient name")
+        case .betaine: String(localized: "Betaine", comment: "Sports supplement nutrient name")
+        case .hmb: String(localized: "HMB", comment: "Sports supplement nutrient name")
         }
     }
 

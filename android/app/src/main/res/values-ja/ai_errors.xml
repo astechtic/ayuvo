@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_error_no_key">APIキーが設定されていません。設定 → AIプロバイダでキーを追加してください。</string>
+    <string name="ai_error_image_conversion">画像を処理できませんでした。別の写真をお試しください。</string>
+    <string name="ai_error_invalid_response">AIの応答を理解できませんでした。もう一度お試しください。</string>
+    <string name="ai_error_invalid_url">API URLが無効です。プロバイダの設定を確認してください。</string>
+    <string name="ai_error_offline">オフラインのようです。接続を確認して、もう一度お試しください。</string>
+    <string name="ai_error_connection">AIプロバイダに接続できませんでした。接続とプロバイダのURLを確認して、もう一度お試しください。</string>
+    <string name="ai_error_timeout">AIの応答に時間がかかりすぎました。もう一度お試しいただくか、設定 → AIプロバイダでリクエストのタイムアウトを延ばしてください。</string>
+    <string name="ai_error_credits">AIアカウントのクレジットが不足しています。チャージするか、設定 → AIプロバイダでプロバイダを切り替えてください。</string>
+    <string name="ai_error_daily_quota">AIアカウントの1日の利用上限に達しました。明日もう一度お試しいただくか、設定 → AIプロバイダでプロバイダを切り替えてください。</string>
+    <string name="ai_error_quota">AIアカウントの利用上限を超えました。プロバイダの制限を確認するか、設定 → AIプロバイダでプロバイダを切り替えてください。</string>
+    <string name="ai_error_model">選択したモデルまたはAPIエンドポイントを利用できません。設定 → AIプロバイダでモデルとAPI URLを確認してください。</string>
+    <string name="ai_error_rate_limit">APIキーのレート制限に達しました。1分ほど待つか、設定 → AIプロバイダでプロバイダを切り替えてください。無料プランを利用している場合は、1日の上限に達していないか確認してください。</string>
+    <string name="ai_error_key_rejected">APIキーが拒否されました。設定 → AIプロバイダを開き、有効なキーを貼り付け直してください。</string>
+    <string name="ai_error_overloaded">AIプロバイダが現在混み合っています。何度か再試行しました — 1分後にもう一度お試しいただくか、設定 → AIプロバイダでプロバイダ/モデルを切り替えてください。</string>
+    <string name="ai_error_generic">AIリクエストに失敗しました。もう一度お試しいただくか、設定 → AIプロバイダでプロバイダを切り替えてください。</string>
+    <string name="ai_error_local_unavailable">デバイス上のAIランタイムを利用できません。設定 → AIプロバイダでダウンロード済みのモデルを確認してください。</string>
+    <string name="ai_error_truncated">AIの応答が2回途中で切れました。入力を短くするか、別のモデルをお試しください。</string>
+    <string name="ai_error_both_failed">%1$sとフォールバックの%2$sの両方が失敗しました。%3$s</string>
+</resources>

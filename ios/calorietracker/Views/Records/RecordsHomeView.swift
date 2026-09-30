@@ -299,7 +299,7 @@ struct RecordsHomeView: View {
                     Button {
                         Task { await store.openFirstNearDuplicate() }
                     } label: {
-                        Label(store.nearDuplicateCount == 1 ? String(localized: "1 possible duplicate to check") : String(localized: "\(store.nearDuplicateCount) possible duplicates to check"), systemImage: "doc.on.doc")
+                        Label(String(localized: "\(store.nearDuplicateCount) possible duplicates to check", comment: "Records home: near-duplicate banner"), systemImage: "doc.on.doc")
                             .font(.system(.subheadline, design: .rounded, weight: .semibold))
                     }
                     .accessibilityIdentifier("records.nearDuplicates")
@@ -357,7 +357,7 @@ struct RecordsHomeView: View {
                     NavigationLink(value: RecordsRoute.detail(item.record.id)) {
                         HStack(spacing: 8) {
                             VStack(alignment: .leading, spacing: 3) {
-                                RecordHighlightRow(text: item.highlight.text)
+                                RecordHighlightRow(text: item.highlight.displayText)
                                 Text("\(item.record.title) · \(RecordFormatting.dateText(item.record))")
                                     .font(.system(.caption, design: .rounded))
                                     .foregroundStyle(.secondary)

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="domain_insights">Аналітика</string>
+    <string name="domain_nutrition">Харчування</string>
+    <string name="domain_hydration">Гідратація</string>
+    <string name="domain_fasting">Голодування</string>
+    <string name="domain_body">Вимірювання тіла</string>
+    <string name="domain_activity">Активність</string>
+    <string name="domain_heart">Серце</string>
+    <string name="domain_sleep">Сон</string>
+    <string name="domain_vitals">Життєві показники</string>
+    <string name="domain_respiratory">Дихання</string>
+    <string name="domain_cycle">Відстеження циклу</string>
+    <string name="domain_mindfulness">Усвідомленість</string>
+    <string name="domain_mobility">Мобільність</string>
+    <string name="domain_hearing">Слух</string>
+    <string name="domain_symptoms">Симптоми</string>
+    <string name="domain_medications">Ліки</string>
+    <string name="domain_records">Медичні записи</string>
+    <string name="domain_other">Інші дані</string>
+    <string name="design_back">Назад</string>
+</resources>

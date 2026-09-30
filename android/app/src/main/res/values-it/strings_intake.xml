@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Mangiato alle</string>
+    <string name="intake_eaten_at_same_as_log">Uguale all\'orario di registrazione</string>
+    <string name="intake_eaten_at_hint">Usato per la tua finestra alimentare e gli orari dei pasti</string>
+    <string name="intake_eaten_at_reset">Usa l\'orario di registrazione</string>
+    <string name="intake_adherence_title">Ultimi 30 giorni</string>
+    <string name="intake_adherence_none">Ancora nessuna dose programmata negli ultimi 30 giorni.</string>
+    <string name="intake_adherence_pct">%1$s%% delle dosi assunte (%2$d di %3$d)</string>
+    <string name="intake_adherence_adherent">In linea: 80%% o più delle dosi assunte</string>
+    <string name="intake_adherence_below">Meno dell\'80%% delle dosi assunte</string>
+    <string name="intake_adherence_on_time">Puntuale (entro un\'ora)</string>
+    <string name="intake_adherence_median_delay">Ritardo tipico</string>
+    <string name="intake_adherence_streak">Serie</string>
+    <string name="intake_adherence_missed_by_weekday">Dosi dimenticate per giorno della settimana</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">%1$d dosi</string>
+    <string name="intake_move_reminder">Spostare il promemoria alle %1$s?</string>
+    <string name="intake_move_reminder_body">Di solito prendi questa dose più tardi del promemoria. Spostare il promemoria ne cambia solo l\'orario; tutto il resto rimane uguale.</string>
+    <string name="intake_move_reminder_action">Sposta promemoria</string>
+    <string name="intake_supplement_above_upper">%1$s ha una media di %2$s al giorno nell\'intervallo di assunzione, sopra il limite massimo di assunzione di %3$s. Segui le indicazioni di chi te lo ha prescritto.</string>
+    <string name="intake_lab_links_title">Risultati di laboratorio e nutrizione</string>
+    <string name="intake_lab_links_footer">Basato sul diario alimentare e sugli integratori degli ultimi 30 giorni e sull\'intervallo di riferimento stampato sul referto. Non è un consiglio medico.</string>
+    <string name="intake_lab_link_low_one">Il tuo valore di %1$s era sotto l\'intervallo del referto.</string>
+    <string name="intake_lab_link_low_many">I tuoi valori di %1$s erano sotto l\'intervallo del referto.</string>
+    <string name="intake_lab_link_and">%1$s e %2$s</string>
+    <string name="intake_lab_link_intake">La tua assunzione media di %1$s è il %2$d%% del riferimento.</string>
+    <string name="intake_lab_link_intake_no_supplement">La tua assunzione media di %1$s è il %2$d%% del riferimento e nessuno dei tuoi integratori lo contiene.</string>
+    <string name="intake_lab_link_doctor">Valuta di parlarne con il tuo medico.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

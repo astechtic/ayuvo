@@ -5,11 +5,8 @@ struct LiteRTLMNoticesView: View {
     var body: some View {
         BundledNoticesView(
             url: Self.noticesURL(in: .main),
-            title: LocalModelStrings.text("notices.title", defaultValue: "LiteRT-LM Notices"),
-            accessibilityLabel: LocalModelStrings.text(
-                "notices.accessibilityLabel",
-                defaultValue: "LiteRT-LM third-party notices"
-            )
+            title: String(localized: "notices.title", defaultValue: "LiteRT-LM Notices", table: "LocalModels", comment: "Third-party notices screen"),
+            accessibilityLabel: String(localized: "notices.accessibilityLabel", defaultValue: "LiteRT-LM third-party notices", table: "LocalModels", comment: "Third-party notices screen")
         )
     }
 
@@ -55,13 +52,13 @@ struct BundledNoticesView: View {
         Group {
             switch loadState {
             case .loading:
-                ProgressView(localized("notices.loading", "Loading notices…"))
+                ProgressView(String(localized: "notices.loading", defaultValue: "Loading notices…", table: "LocalModels", comment: "Third-party notices screen"))
             case .loaded(let text):
                 SelectableNoticeTextView(text: text)
                     .accessibilityLabel(accessibilityLabel)
             case .failed(let message):
                 ContentUnavailableView(
-                    localized("notices.unavailable", "Notices Unavailable"),
+                    String(localized: "notices.unavailable", defaultValue: "Notices Unavailable", table: "LocalModels", comment: "Third-party notices screen"),
                     systemImage: "doc.text.magnifyingglass",
                     description: Text(message)
                 )
@@ -75,10 +72,7 @@ struct BundledNoticesView: View {
     private func loadNotices() async {
         guard case .loading = loadState else { return }
         guard let url else {
-            loadState = .failed(localized(
-                "notices.fileMissing",
-                "The bundled notice file could not be found."
-            ))
+            loadState = .failed(String(localized: "notices.fileMissing", defaultValue: "The bundled notice file could not be found.", table: "LocalModels", comment: "Third-party notices screen"))
             return
         }
 
@@ -88,15 +82,8 @@ struct BundledNoticesView: View {
             }.value
             loadState = .loaded(text)
         } catch {
-            loadState = .failed(localized(
-                "notices.fileOpenFailed",
-                "The bundled notice file could not be opened."
-            ))
+            loadState = .failed(String(localized: "notices.fileOpenFailed", defaultValue: "The bundled notice file could not be opened.", table: "LocalModels", comment: "Third-party notices screen"))
         }
-    }
-
-    private func localized(_ key: String, _ defaultValue: String) -> String {
-        LocalModelStrings.text(key, defaultValue: defaultValue)
     }
 }
 

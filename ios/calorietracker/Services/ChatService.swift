@@ -35,17 +35,17 @@ struct ChatService {
         var errorDescription: String? {
             switch self {
             case .noAPIKey:
-                return "No API key configured. Add your key in Settings → AI Provider."
+                return String(localized: "No API key configured. Add your key in Settings → AI Provider.", comment: "Coach error when no AI provider key is set")
             case .modelUnavailable(let reason):
                 return reason
             case .networkError(let err):
-                return "Network error: \(err.localizedDescription)"
+                return String(localized: "Network error: \(err.localizedDescription)", comment: "Coach error; placeholder is the system network error")
             case .apiError(let msg):
-                return "API error: \(msg)"
+                return String(localized: "API error: \(msg)", comment: "Coach error; placeholder is the provider's error message")
             case .invalidResponse:
-                return "Could not understand the AI response. Please try again."
+                return String(localized: "Could not understand the AI response. Please try again.", comment: "Coach error when the AI reply cannot be parsed")
             case .recordsSwitchToOnDevice:
-                return "Switching this conversation to the on-device Coach."
+                return String(localized: "Switching this conversation to the on-device Coach.", comment: "Coach notice when switching to the on-device model")
             }
         }
     }
@@ -262,7 +262,7 @@ struct ChatService {
         images: [Data]
     ) async throws -> String {
         guard images.isEmpty else {
-            throw ChatError.apiError("Apple Intelligence is available for text-only conversations.")
+            throw ChatError.apiError(String(localized: "Apple Intelligence is available for text-only conversations.", comment: "Coach error: on-device model cannot read images"))
         }
 
         #if canImport(FoundationModels)
@@ -287,7 +287,7 @@ struct ChatService {
         }
         #endif
 
-        throw ChatError.apiError("Apple Intelligence requires iOS 26 or later on a supported iPhone.")
+        throw ChatError.apiError(String(localized: "Apple Intelligence requires iOS 26 or later on a supported iPhone.", comment: "Coach error: on-device model unavailable on this OS/device"))
     }
 
     // MARK: - Health context helpers
@@ -531,7 +531,7 @@ struct ChatService {
 
     static func callOpenAICompatible(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], provider: AIProvider, tools: CoachTools) async throws -> String {
         guard let url = URL(string: "\(baseURL)/chat/completions") else {
-            throw ChatError.apiError("Invalid API URL.")
+            throw ChatError.apiError(String(localized: "Invalid API URL.", comment: "Coach error: provider URL is malformed"))
         }
 
         var messages: [[String: Any]] = [["role": "system", "content": systemPrompt]]
@@ -575,7 +575,7 @@ struct ChatService {
                     throw ChatError.invalidResponse
                 }
                 if (choice["finish_reason"] as? String) == "error" {
-                    throw ChatError.apiError(errorMessage ?? "The AI provider returned an error.")
+                    throw ChatError.apiError(errorMessage ?? String(localized: "The AI provider returned an error.", comment: "Coach error: provider returned an error without a message"))
                 }
                 guard let message = choice["message"] as? [String: Any]
                 else { throw ChatError.invalidResponse }
@@ -591,7 +591,7 @@ struct ChatService {
             if (choice["finish_reason"] as? String) == "length" || (!hasToolCalls && !hasContent && hasReasoning) {
                 (choice, message) = try await request(compactRetry: true)
                 if (choice["finish_reason"] as? String) == "length" {
-                    throw ChatError.apiError("The AI response was truncated twice. Try a shorter question or another model.")
+                    throw ChatError.apiError(String(localized: "The AI response was truncated twice. Try a shorter question or another model.", comment: "Coach error: AI reply was cut off twice"))
                 }
             }
 
@@ -622,7 +622,7 @@ struct ChatService {
             }
             throw ChatError.invalidResponse
         }
-        throw ChatError.apiError("Coach exceeded the tool-call round limit. Try rephrasing your question.")
+        throw ChatError.apiError(String(localized: "Coach exceeded the tool-call round limit. Try rephrasing your question.", comment: "Coach error: too many tool calls in one reply"))
     }
 
     private static func openAIUserContent(text: String, images: [Data]) -> [[String: Any]] {
@@ -693,7 +693,7 @@ struct ChatService {
     private static func callAnthropic(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools, vertex: VertexCall? = nil) async throws -> String {
         guard vertex != nil || apiKey != nil else { throw ChatError.noAPIKey }
         guard let url = vertex?.url ?? URL(string: "\(baseURL)/messages") else {
-            throw ChatError.apiError("Invalid API URL.")
+            throw ChatError.apiError(String(localized: "Invalid API URL.", comment: "Coach error: provider URL is malformed"))
         }
         var messages: [[String: Any]] = []
         for msg in history {
@@ -763,7 +763,7 @@ struct ChatService {
             }
             throw ChatError.invalidResponse
         }
-        throw ChatError.apiError("Coach exceeded the tool-call round limit. Try rephrasing your question.")
+        throw ChatError.apiError(String(localized: "Coach exceeded the tool-call round limit. Try rephrasing your question.", comment: "Coach error: too many tool calls in one reply"))
     }
 
     private static func anthropicUserContent(text: String, images: [Data]) -> [[String: Any]] {
@@ -815,7 +815,7 @@ struct ChatService {
     private static func callGemini(baseURL: String, model: String, apiKey: String?, systemPrompt: String, history: [ChatMessage], newUserMessage: String, images: [Data], tools: CoachTools, vertex: VertexCall? = nil) async throws -> String {
         guard vertex != nil || apiKey != nil else { throw ChatError.noAPIKey }
         guard let url = vertex?.url ?? URL(string: "\(baseURL)/models/\(model):generateContent") else {
-            throw ChatError.apiError("Invalid API URL.")
+            throw ChatError.apiError(String(localized: "Invalid API URL.", comment: "Coach error: provider URL is malformed"))
         }
 
         var contents: [[String: Any]] = []
@@ -879,7 +879,7 @@ struct ChatService {
             }
             throw ChatError.invalidResponse
         }
-        throw ChatError.apiError("Coach exceeded the tool-call round limit. Try rephrasing your question.")
+        throw ChatError.apiError(String(localized: "Coach exceeded the tool-call round limit. Try rephrasing your question.", comment: "Coach error: too many tool calls in one reply"))
     }
 
     private static func geminiUserParts(text: String, images: [Data]) -> [[String: Any]] {
@@ -913,7 +913,7 @@ struct ChatService {
 
         // Retry transient overload responses (503/429/529) with exponential backoff: 1s, 2s, 4s.
         let retryDelaysNs: [UInt64] = [1_000_000_000, 2_000_000_000, 4_000_000_000]
-        var lastError: ChatError = .apiError("Request failed")
+        var lastError: ChatError = .apiError(String(localized: "Request failed", comment: "Coach error: generic request failure"))
 
         for attempt in 0...retryDelaysNs.count {
             let (data, response): (Data, URLResponse)
@@ -955,7 +955,7 @@ struct ChatService {
     }
 
     private static func friendlyMessage(for status: Int, raw: String) -> String {
-        let keyRejected = "Your API key was rejected. Open Settings → AI Provider and re-paste a valid key."
+        let keyRejected = String(localized: "Your API key was rejected. Open Settings → AI Provider and re-paste a valid key.", comment: "Coach error: provider rejected the API key")
         // A bad/expired Gemini key comes back as HTTP 400 (INVALID_ARGUMENT), not 401/403, so
         // match the key-invalid markers in the provider message (mirrors Android #99/#113).
         let hasKeyInvalidMarker = raw.range(of: "api key not valid", options: .caseInsensitive) != nil
@@ -964,9 +964,9 @@ struct ChatService {
             || raw.range(of: "api_key_expired", options: .caseInsensitive) != nil
         switch status {
         case 503, 529:
-            return "The AI provider is overloaded right now. We retried a few times — please try again in a minute, or switch to a different provider/model in Settings → AI Provider."
+            return String(localized: "The AI provider is overloaded right now. We retried a few times — please try again in a minute, or switch to a different provider/model in Settings → AI Provider.", comment: "Coach error: provider overloaded (HTTP 503/529)")
         case 429:
-            return "Rate limit hit on your API key. Wait a minute, or switch to another provider in Settings → AI Provider."
+            return String(localized: "Rate limit hit on your API key. Wait a minute, or switch to another provider in Settings → AI Provider.", comment: "Coach error: provider rate limit (HTTP 429)")
         case 400 where hasKeyInvalidMarker:
             return keyRejected
         case 401, 403:

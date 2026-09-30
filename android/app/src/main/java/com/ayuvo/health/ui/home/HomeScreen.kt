@@ -677,10 +677,10 @@ internal fun CalorieHero(
         }
     }
     val statusText = when {
-        goal <= 0 -> "No goal"
-        current < goal -> "${(goal - current).formattedWholeNumber()} left"
-        current > goal -> "${(current - goal).formattedWholeNumber()} over"
-        else -> "Goal reached"
+        goal <= 0 -> stringResource(R.string.ui_no_goal)
+        current < goal -> stringResource(R.string.home_kcal_left_format, (goal - current).formattedWholeNumber())
+        current > goal -> stringResource(R.string.ui_amount_over, (current - goal).formattedWholeNumber())
+        else -> stringResource(R.string.ui_goal_reached)
     }
     val gradientColors = listOf(AppColors.CalorieStart, AppColors.CalorieEnd)
     val trackColor = AppColors.Calorie.copy(alpha = 0.12f)
@@ -1375,7 +1375,7 @@ private fun WaterLogRow(
     val ctx = LocalContext.current
     val time = remember(entry.date, ctx) {
         DateTimeFormatter
-            .ofPattern(clockTimePattern(ctx), Locale.US)
+            .ofPattern(clockTimePattern(ctx), Locale.getDefault())
             .withZone(ZoneId.systemDefault())
             .format(entry.date)
     }
@@ -1446,7 +1446,7 @@ private fun FoodRow(
     selected: Boolean = false
 ) {
     val ctx = LocalContext.current
-    val timeFmt = DateTimeFormatter.ofPattern(clockTimePattern(ctx), Locale.US).withZone(ZoneId.systemDefault())
+    val timeFmt = DateTimeFormatter.ofPattern(clockTimePattern(ctx), Locale.getDefault()).withZone(ZoneId.systemDefault())
     val container = (ctx.applicationContext as com.ayuvo.health.AyuvoApp).container
     val scope = rememberCoroutineScope()
     val hasPhotos = entry.allImageFilenames.isNotEmpty()
@@ -1677,7 +1677,7 @@ internal fun CopyFromDaySheet(
     var sourceDate by remember(targetDate) { mutableStateOf(targetDate.minusDays(1)) }
     var showDatePicker by remember { mutableStateOf(false) }
     val zone = ZoneId.systemDefault()
-    val dateFmt = remember { DateTimeFormatter.ofPattern("MMM d", Locale.US) }
+    val dateFmt = remember { DateTimeFormatter.ofPattern("MMM d", Locale.getDefault()) }
     val sourceEntries = remember(allEntries, sourceDate) {
         allEntries
             .filter { it.timestamp.atZone(zone).toLocalDate() == sourceDate }
@@ -1719,7 +1719,7 @@ internal fun CopyFromDaySheet(
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Foods will be copied to $targetText. Original entries stay unchanged.",
+                        stringResource(R.string.ui_copy_foods_note, targetText),
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
                         modifier = Modifier.padding(horizontal = 18.dp)

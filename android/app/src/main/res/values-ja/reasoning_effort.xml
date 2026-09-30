@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">OpenRouterの推論レベル</string>
+    <string name="settings_reasoning_effort_help">すべてのOpenRouterリクエストに適用されます。対応レベルはモデルによって異なります。レベルを上げると時間とコストがかかる場合があります。「自動」はモデルのデフォルトを維持し、不完全な応答は「低」で再試行します。</string>
+    <string name="reasoning_effort_auto">デフォルト / 自動</string>
+    <string name="reasoning_effort_none">なし</string>
+    <string name="reasoning_effort_minimal">最小</string>
+    <string name="reasoning_effort_low">低</string>
+    <string name="reasoning_effort_medium">中</string>
+    <string name="reasoning_effort_high">高</string>
+    <string name="reasoning_effort_xhigh">最高</string>
+    <string name="reasoning_effort_max">最大</string>
+</resources>

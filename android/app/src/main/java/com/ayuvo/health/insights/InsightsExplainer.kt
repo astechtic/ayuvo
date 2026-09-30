@@ -16,7 +16,9 @@ class InsightsExplainer(
     private val call: suspend (AIRoleResolver.Route, String, Int) -> String,
     private val config: () -> InsightsConfig,
     private val prompts: () -> InsightsAi.Prompts,
-    private val providerName: (AIProvider) -> String
+    private val providerName: (AIProvider) -> String,
+    /** Translated status label: key (`insights.ai.status_labels.<local|cloud>`) and its English. */
+    private val statusText: (String, String) -> String = { _, english -> english }
 ) {
     sealed interface Availability {
         /** No usable text model: the button shows "Set up AI in Settings". */
@@ -56,7 +58,11 @@ class InsightsExplainer(
         }
         val v = InsightsAi.validate(text, payload, cfg)
         val output = v.output ?: return Result.Rejected(v.errors)
-        val status = if (local) cfg.ai.statusLocal else cfg.ai.statusCloud.replace("{provider}", providerName(r.provider))
+        val status = if (local) {
+            statusText("insights.ai.status_labels.local", cfg.ai.statusLocal)
+        } else {
+            statusText("insights.ai.status_labels.cloud", cfg.ai.statusCloud).replace("{provider}", providerName(r.provider))
+        }
         return Result.Explained(output, status)
     }
 }

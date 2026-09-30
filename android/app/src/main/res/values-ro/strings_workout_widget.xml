@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_workout_picker_label">Antrenament Ayuvo</string>
+    <string name="widget_workout_description">Pornește și controlează un antrenament</string>
+    <string name="widget_workout_title">Antrenament</string>
+    <string name="widget_workout_walk">Mers</string>
+    <string name="widget_workout_run">Alergare</string>
+    <string name="widget_workout_cycle">Ciclism</string>
+    <string name="widget_workout_hike">Drumeție</string>
+    <string name="widget_workout_strength">Forță</string>
+    <string name="widget_workout_strength_title">Sesiune de forță</string>
+    <string name="widget_workout_status_recording">Se înregistrează</string>
+    <string name="widget_workout_status_paused">Întrerupt</string>
+    <string name="widget_workout_status_saving">Se salvează…</string>
+    <string name="widget_workout_status_recovery">Recuperare</string>
+    <string name="widget_workout_status_strength">În desfășurare</string>
+    <string name="widget_workout_waiting_gps">Se așteaptă GPS</string>
+    <string name="widget_workout_distance">Distanță</string>
+    <string name="widget_workout_pace">Ritm mediu</string>
+    <string name="widget_workout_speed">Viteză medie</string>
+    <string name="widget_workout_pause">Pauză</string>
+    <string name="widget_workout_resume">Reia</string>
+    <string name="widget_workout_lap">Tură</string>
+    <string name="widget_workout_end">Încheie</string>
+    <string name="widget_workout_skip">Omite</string>
+    <string name="widget_workout_finish">Termină</string>
+</resources>

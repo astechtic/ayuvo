@@ -197,8 +197,10 @@ final class ActionExecutor {
             return String(localized: "Log \(Self.number(v.double("servings") ?? 1, digits: 1)) serving of a saved food")
         case "workout.set.log":
             let weight = v.double("weight") ?? 0
-            let load = weight > 0 ? " × \(unitAmount("weight", "unit"))" : ""
-            return String(localized: "Log a set: \(v.int("reps") ?? 0) reps\(load)")
+            let reps = v.int("reps") ?? 0
+            return weight > 0
+                ? String(localized: "Log a set: \(reps) reps × \(unitAmount("weight", "unit"))", comment: "Action confirmation; reps count, weight with unit")
+                : String(localized: "Log a set: \(reps) reps", comment: "Action confirmation; reps count")
         case "medication.dose.mark":
             switch v.string("action") {
             case "taken": return String(localized: "Mark this dose as taken")

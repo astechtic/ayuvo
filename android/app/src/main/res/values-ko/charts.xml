@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chart_goal">목표</string>
+    <string name="sleep_time_asleep">수면 시간</string>
+    <string name="sleep_avg_time_asleep">평균 수면 시간</string>
+    <string name="sleep_in_bed">침대에 있음</string>
+    <string name="sleep_time_in_bed">침대에 있던 시간</string>
+    <string name="sleep_unit_hour">시간</string>
+    <string name="sleep_unit_minute">분</string>
+    <string name="sleep_stage_awake">깨어 있음</string>
+    <string name="sleep_stage_rem">REM</string>
+    <string name="sleep_stage_core">코어</string>
+    <string name="sleep_stage_deep">깊은 수면</string>
+    <string name="sleep_stage_asleep">수면 중</string>
+    <string name="sleep_chart_summary">수면 차트, %1$d박, %2$s</string>
+    <string name="sleep_night_summary">수면 %1$s, 잠든 시간 %2$s</string>
+    <string name="sleep_time_span">%1$s – %2$s</string>
+    <string name="sleep_stage_share">%1$s · %2$d%%</string>
+    <string name="sleep_stage_callout">%1$s · %2$s</string>
+    <string name="chart_selected_on">%1$s · %2$s</string>
+</resources>

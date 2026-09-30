@@ -7,6 +7,8 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.longOrNull
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 /** A row of an archive entry: the entry's columns in schema order, NULLs omitted. */
 typealias ArchiveRow = JsonObject
@@ -345,8 +347,44 @@ object RecordsArchiveFormat {
 
     data class ArchiveWarning(val code: String, val entry: String?, val text: String)
 
-    fun warning(code: String, values: Map<String, String> = emptyMap()): ArchiveWarning =
-        ArchiveWarning(code, values["entry"], fill(READ_WARNINGS.getValue(code), values))
+    /** [ArchiveWarning.text] is shown to the user: localized in the app, the English contract text without a resolver (vectors). */
+    fun warning(code: String, values: Map<String, String> = emptyMap()): ArchiveWarning {
+        val english = fill(READ_WARNINGS.getValue(code), values)
+        val text = if (AppText.resolver == null) english else localizedWarning(code, values) ?: english
+        return ArchiveWarning(code, values["entry"], text)
+    }
+
+    /** The user-facing text of a [READ_ERRORS] code (English contract text without a resolver). */
+    fun readErrorText(code: String): String {
+        val english = READ_ERRORS.getValue(code)
+        if (AppText.resolver == null) return english
+        return when (code) {
+            "unsupported_version" -> AppText.get(R.string.core_records_archive_newer)
+            else -> AppText.get(R.string.core_records_archive_not_archive)
+        }
+    }
+
+    private fun localizedWarning(code: String, values: Map<String, String>): String? {
+        val entry = values["entry"].orEmpty()
+        return when (code) {
+            "checksums_missing" -> AppText.get(R.string.core_records_archive_checksums_missing)
+            "checksum_mismatch" -> AppText.get(R.string.core_records_archive_checksum_mismatch, entry)
+            "checksum_unlisted" -> AppText.get(R.string.core_records_archive_checksum_unlisted, entry)
+            "file_unlisted" -> AppText.get(R.string.core_records_archive_file_unlisted, entry)
+            "entry_missing" -> AppText.get(R.string.core_records_archive_entry_missing, entry)
+            "entry_order" -> AppText.get(R.string.core_records_archive_entry_order)
+            "unknown_entry" -> AppText.get(R.string.core_records_archive_unknown_entry, entry)
+            "bad_row" -> values["count"]?.toIntOrNull()?.let { AppText.plural(R.plurals.core_records_archive_bad_row, it, entry, it) }
+            "unknown_columns" -> AppText.get(R.string.core_records_archive_unknown_columns, entry, values["columns"].orEmpty())
+            "record_count_mismatch" -> {
+                val expected = values["expected"]?.toIntOrNull()
+                val actual = values["actual"]?.toIntOrNull()
+                if (expected == null || actual == null) null
+                else AppText.plural(R.plurals.core_records_archive_count_mismatch, expected, expected, actual)
+            }
+            else -> null
+        }
+    }
 
     /** One zip entry as the reader sees it. */
     data class Entry(
@@ -378,14 +416,14 @@ object RecordsArchiveFormat {
 
         val manifest = byName[MANIFEST]?.json
         if (manifest == null) {
-            return ReadResult(false, "manifest_missing", READ_ERRORS.getValue("manifest_missing"), null, emptyMap(), emptyMap(), warnings, emptyMap())
+            return ReadResult(false, "manifest_missing", readErrorText("manifest_missing"), null, emptyMap(), emptyMap(), warnings, emptyMap())
         }
         if (str(manifest, "format") != FORMAT) {
-            return ReadResult(false, "bad_format", READ_ERRORS.getValue("bad_format"), null, emptyMap(), emptyMap(), warnings, emptyMap())
+            return ReadResult(false, "bad_format", readErrorText("bad_format"), null, emptyMap(), emptyMap(), warnings, emptyMap())
         }
         val version = (manifest["format_version"] as? JsonPrimitive)?.takeIf { !it.isString }?.longOrNull
         if (version == null || version > FORMAT_VERSION) {
-            return ReadResult(false, "unsupported_version", READ_ERRORS.getValue("unsupported_version"), manifest, emptyMap(), emptyMap(), warnings, emptyMap())
+            return ReadResult(false, "unsupported_version", readErrorText("unsupported_version"), manifest, emptyMap(), emptyMap(), warnings, emptyMap())
         }
 
         val checksums: Map<String, String>? = byName[CHECKSUMS]?.json?.mapValues { (_, v) ->

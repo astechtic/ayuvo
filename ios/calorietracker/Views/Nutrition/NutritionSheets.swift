@@ -14,7 +14,7 @@ import UniformTypeIdentifiers
 struct SiriPhrasesSettingsView: View {
     private let groups: [SiriPhraseGroup] = [
         SiriPhraseGroup(
-            title: "Log Food",
+            title: String(localized: "Log Food", comment: "Siri phrases settings section title"),
             icon: "fork.knife",
             phrases: [
                 "Log food in Ayuvo",
@@ -23,7 +23,7 @@ struct SiriPhrasesSettingsView: View {
             ]
         ),
         SiriPhraseGroup(
-            title: "Today's Calories",
+            title: String(localized: "Today's Calories", comment: "Siri phrases settings section title"),
             icon: "chart.bar.fill",
             phrases: [
                 "Calories today in Ayuvo",
@@ -32,7 +32,7 @@ struct SiriPhrasesSettingsView: View {
             ]
         ),
         SiriPhraseGroup(
-            title: "Log Weight",
+            title: String(localized: "Log Weight", comment: "Siri phrases settings section title"),
             icon: "scalemass.fill",
             phrases: [
                 "Log my weight in Ayuvo",
@@ -104,7 +104,7 @@ struct CopyFromDaySheet: View {
 
     private var targetDateText: String {
         if Calendar.current.isDateInToday(targetDate) {
-            return "today"
+            return String(localized: "today", comment: "Copy from day footer: target date when it is today, e.g. '3 foods will be added to today.'")
         }
         return targetDate.formatted(.dateTime.month(.abbreviated).day())
     }
@@ -144,7 +144,7 @@ struct CopyFromDaySheet: View {
                         }
                         .tint(AppColors.calorie)
                     } footer: {
-                        Text("\(sourceEntries.count) food\(sourceEntries.count == 1 ? "" : "s") will be added to \(targetDateText).")
+                        Text("\(sourceEntries.count) foods will be added to \(targetDateText).", comment: "Copy from day footer; count of foods and target day")
                     }
                     .listRowBackground(AppColors.appCard)
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intake_eaten_at">Pora jedzenia</string>
+    <string name="intake_eaten_at_same_as_log">Taka sama jak godzina wpisu</string>
+    <string name="intake_eaten_at_hint">Używane do okna jedzenia i pory posiłków</string>
+    <string name="intake_eaten_at_reset">Użyj godziny wpisu</string>
+    <string name="intake_adherence_title">Ostatnie 30 dni</string>
+    <string name="intake_adherence_none">Brak zaplanowanych dawek w ciągu ostatnich 30 dni.</string>
+    <string name="intake_adherence_pct">Przyjęto %1$s%% dawek (%2$d z %3$d)</string>
+    <string name="intake_adherence_adherent">Zgodnie z planem: przyjęto co najmniej 80%% dawek</string>
+    <string name="intake_adherence_below">Przyjęto mniej niż 80%% dawek</string>
+    <string name="intake_adherence_on_time">Na czas (w ciągu godziny)</string>
+    <string name="intake_adherence_median_delay">Typowe opóźnienie</string>
+    <string name="intake_adherence_streak">Seria</string>
+    <string name="intake_adherence_missed_by_weekday">Opuszczone dawki według dni tygodnia</string>
+    <string name="intake_minutes">%1$d min</string>
+    <string name="intake_doses">Dawki: %1$d</string>
+    <string name="intake_move_reminder">Przesunąć przypomnienie na %1$s?</string>
+    <string name="intake_move_reminder_body">Zwykle przyjmujesz tę dawkę później niż przypomnienie. Przesunięcie przypomnienia zmienia tylko jego godzinę; wszystko inne pozostaje bez zmian.</string>
+    <string name="intake_move_reminder_action">Przesuń przypomnienie</string>
+    <string name="intake_supplement_above_upper">%1$s: średnio %2$s dziennie w okresie dawkowania, powyżej górnego limitu spożycia wynoszącego %3$s. Postępuj zgodnie z zaleceniami lekarza.</string>
+    <string name="intake_lab_links_title">Wyniki badań i odżywianie</string>
+    <string name="intake_lab_links_footer">Na podstawie dziennika jedzenia i suplementów z ostatnich 30 dni oraz zakresu referencyjnego podanego w wyniku. To nie jest porada medyczna.</string>
+    <string name="intake_lab_link_low_one">Twój wynik %1$s był poniżej zakresu z raportu.</string>
+    <string name="intake_lab_link_low_many">Twoje wyniki %1$s były poniżej zakresu z raportu.</string>
+    <string name="intake_lab_link_and">%1$s i %2$s</string>
+    <string name="intake_lab_link_intake">Twoje średnie spożycie składnika %1$s to %2$d%% wartości referencyjnej.</string>
+    <string name="intake_lab_link_intake_no_supplement">Twoje średnie spożycie składnika %1$s to %2$d%% wartości referencyjnej i żaden z Twoich suplementów go nie zawiera.</string>
+    <string name="intake_lab_link_doctor">Rozważ omówienie tego z lekarzem.</string>
+    <string name="intake_percent">%1$s%%</string>
+</resources>

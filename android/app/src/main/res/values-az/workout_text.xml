@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">Məşqi təsvir et</string>
+    <string name="workout_text_intro">Nə etdiyinizi təsvir edin. Məşq gündəliyinizə əlavə etməzdən əvvəl məlumatları yoxlayın.</string>
+    <string name="workout_text_description">Məşqin təsviri</string>
+    <string name="workout_text_example">20 dəqiqə ip atlama, sonra 40 kq ilə 3 dəst 10 dəfə skamyada press</string>
+    <string name="workout_text_voice">Səs</string>
+    <string name="workout_text_preparing">Hərəkətlər axtarılır…</string>
+    <string name="workout_text_preview">Təhlil Et</string>
+    <string name="workout_text_retry">Yenidən cəhd et</string>
+    <string name="workout_text_review">Məşqi nəzərdən keçir</string>
+    <string name="workout_text_date">Tarix (İİİİ-AA-GG)</string>
+    <string name="workout_text_custom">Fərdi vaxtlı fəaliyyət · kalori təxmini ümumi fəaliyyət dərəcəsindən istifadə edir</string>
+    <string name="workout_text_minutes">Dəqiqə</string>
+    <string name="workout_text_reps">Təkrar</string>
+    <string name="workout_text_remove">Hərəkəti sil</string>
+    <string name="workout_text_calories_note">Kalorilər təxminidir. Məşqinizi əlavə etdikdən sonra gündəlikdə Hesabla funksiyasından istifadə edin.</string>
+    <string name="workout_text_edit">Təsviri redaktə et</string>
+    <string name="workout_text_adding">Əlavə edilir…</string>
+    <string name="workout_text_add">Gündəliyə əlavə et</string>
+    <string name="workout_text_menu">Mətn</string>
+    <string name="workout_text_set_weight">Dəst %1$d · %2$s</string>
+    <string name="workout_text_estimate">Təxmini yandırma: %1$d kcal</string>
+    <string name="workout_text_effort">Səy (göstərilməyibsə orta)</string>
+    <string name="workout_text_light">İşıqlı</string>
+    <string name="workout_text_moderate">Orta</string>
+    <string name="workout_text_vigorous">Güclü</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">Yenidən başla</string>
+    <string name="workout_clarify_title">Qısa sual</string>
+    <string name="workout_clarify_hint">Seçmək üçün hərəkətə toxunun və ya cavabınızı yazın.</string>
+    <string name="workout_clarify_answer">Cavabınız</string>
+    <string name="workout_clarify_voice">Səsli cavab</string>
+    <string name="workout_text_repeat_error">Cavablarınızla tamamlamaq mümkün olmadı. Təsvirinizə çatışmayan məlumatı əlavə edin (məsələn, dəstlər və təkrarlar) və ya yenidən başlayın.</string>
+</resources>

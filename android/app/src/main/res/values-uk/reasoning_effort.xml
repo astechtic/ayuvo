@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_reasoning_effort">Рівень міркувань OpenRouter</string>
+    <string name="settings_reasoning_effort_help">Застосовується до всіх запитів OpenRouter. Підтримувані рівні залежать від моделі. Вищі зусилля можуть займати більше часу й коштувати дорожче. «Авто» залишає типове значення моделі; неповні відповіді повторюються з рівнем «Низький».</string>
+    <string name="reasoning_effort_auto">Типово / Авто</string>
+    <string name="reasoning_effort_none">Немає</string>
+    <string name="reasoning_effort_minimal">Мінімальний</string>
+    <string name="reasoning_effort_low">Низький</string>
+    <string name="reasoning_effort_medium">Середня</string>
+    <string name="reasoning_effort_high">Високий</string>
+    <string name="reasoning_effort_xhigh">Дуже високий</string>
+    <string name="reasoning_effort_max">Максимальний</string>
+</resources>

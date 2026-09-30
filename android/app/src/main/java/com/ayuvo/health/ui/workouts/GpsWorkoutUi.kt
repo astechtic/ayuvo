@@ -258,7 +258,7 @@ internal fun GpsSportPickerDialog(config: WorkoutConfig, onStart: (String, Boole
             ) {
                 Icon(sportIcon(s.id), contentDescription = null, tint = AppColors.Calorie, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(12.dp))
-                Text(s.title, color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp, modifier = Modifier.weight(1f))
+                Text(s.displayTitle(LocalContext.current), color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp, modifier = Modifier.weight(1f))
                 RadioButton(selected = s.id == selected, onClick = { selected = s.id })
             }
         }
@@ -550,8 +550,11 @@ internal fun StrengthSessionBar(
                 state.sessionInterval != null -> {
                     val (s, e) = state.sessionInterval
                     Text(
-                        stringResource(R.string.workout_session_times, fmt.format(s.atZone(zone)), fmt.format(e.atZone(zone))) +
-                            " · ${java.time.Duration.between(s, e).toMinutes()} min",
+                        stringResource(
+                            R.string.ui_gps_session_duration,
+                            stringResource(R.string.workout_session_times, fmt.format(s.atZone(zone)), fmt.format(e.atZone(zone))),
+                            java.time.Duration.between(s, e).toMinutes().toInt()
+                        ),
                         color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f)
                     )
                 }
@@ -622,9 +625,9 @@ private fun TimeStepper(label: String, value: String, onStep: (Int) -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Text(label, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f), modifier = Modifier.width(56.dp))
         IconButton(onClick = { onStep(-5) }) { Text("−5", color = AppColors.Calorie, fontWeight = FontWeight.SemiBold) }
-        IconButton(onClick = { onStep(-1) }) { Icon(Icons.Filled.Remove, contentDescription = "−1 min", tint = AppColors.Calorie) }
+        IconButton(onClick = { onStep(-1) }) { Icon(Icons.Filled.Remove, contentDescription = stringResource(R.string.ui_minus_one_min), tint = AppColors.Calorie) }
         Text(value, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
-        IconButton(onClick = { onStep(1) }) { Icon(Icons.Filled.Add, contentDescription = "+1 min", tint = AppColors.Calorie) }
+        IconButton(onClick = { onStep(1) }) { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.ui_plus_one_min), tint = AppColors.Calorie) }
         IconButton(onClick = { onStep(5) }) { Text("+5", color = AppColors.Calorie, fontWeight = FontWeight.SemiBold) }
     }
 }

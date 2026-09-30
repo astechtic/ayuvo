@@ -7,4 +7,6 @@
     <string name="error_barcode_service_unavailable">Open Food Facts अभी अस्थायी रूप से उपलब्ध नहीं है। बाद में फिर प्रयास करें।</string>
     <string name="error_barcode_unexpected_response">Open Food Facts से अनपेक्षित प्रतिक्रिया मिली।</string>
     <string name="error_barcode_network">Open Food Facts से कनेक्ट नहीं हो सका। अपना कनेक्शन जाँचें और फिर प्रयास करें।</string>
+    <string name="error_barcode_offline">लगता है आप ऑफ़लाइन हैं। अपना कनेक्शन जाँचें और फिर से स्कैन करें।</string>
+    <string name="error_barcode_timeout">Open Food Facts ने जवाब देने में बहुत देर लगाई। फिर से स्कैन करें।</string>
 </resources>

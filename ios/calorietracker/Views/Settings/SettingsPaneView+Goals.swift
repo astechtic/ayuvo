@@ -66,9 +66,9 @@ extension SettingsPaneView {
                     get: { profile.weeklyChangeKg ?? 0.5 },
                     set: { profile.weeklyChangeKg = $0; saveProfile() }
                 )) {
-                    Text("Slow (\(WeightDisplayFormatter.weeklyChange(kilograms: 0.25, useMetric: weightMetric, period: "wk")))").tag(0.25)
-                    Text("Moderate (\(WeightDisplayFormatter.weeklyChange(kilograms: 0.5, useMetric: weightMetric, period: "wk")))").tag(0.5)
-                    Text("Fast (\(WeightDisplayFormatter.weeklyChange(kilograms: 1.0, useMetric: weightMetric, period: "wk")))").tag(1.0)
+                    Text("Slow (\(WeightDisplayFormatter.weeklyChange(kilograms: 0.25, useMetric: weightMetric, short: true)))").tag(0.25)
+                    Text("Moderate (\(WeightDisplayFormatter.weeklyChange(kilograms: 0.5, useMetric: weightMetric, short: true)))").tag(0.5)
+                    Text("Fast (\(WeightDisplayFormatter.weeklyChange(kilograms: 1.0, useMetric: weightMetric, short: true)))").tag(1.0)
                 } label: {
                     Label {
                         Text("Weekly Change")
@@ -82,7 +82,7 @@ extension SettingsPaneView {
                 ProfileInfoRow(
                     icon: "flag.checkered",
                     tint: SettingsTint.body,
-                    label: "Goal Weight",
+                    label: String(localized: "Goal Weight", comment: "Goals settings"),
                     value: goalWeightDisplay
                 ) {
                     activeSheet = .editGoalWeight
@@ -156,15 +156,15 @@ extension SettingsPaneView {
             lockableGoalRow(
                 icon: "flame.fill",
                 tint: SettingsTint.nutrition,
-                label: "Calories",
-                valueText: "\(profile.effectiveCalories.formatted()) kcal",
+                label: String(localized: "Calories", comment: "Goals settings"),
+                valueText: String(localized: "\(profile.effectiveCalories.formatted()) kcal", comment: "Daily calorie goal value"),
                 macro: nil,
                 sheet: .editCalories
             )
 
-            lockableGoalRow(icon: "p.circle.fill", tint: AppColors.protein, label: "Protein", valueText: "\(profile.effectiveProtein)g", macro: .protein, sheet: .editProtein)
-            lockableGoalRow(icon: "c.circle.fill", tint: AppColors.carbs, label: "Carbs", valueText: "\(profile.effectiveCarbs)g", macro: .carbs, sheet: .editCarbs)
-            lockableGoalRow(icon: "f.circle.fill", tint: AppColors.fat, label: "Fat", valueText: "\(profile.effectiveFat)g", macro: .fat, sheet: .editFat)
+            lockableGoalRow(icon: "p.circle.fill", tint: AppColors.protein, label: String(localized: "Protein", comment: "Goals settings"), valueText: String(localized: "\(profile.effectiveProtein)g", comment: "Daily macro goal value in grams"), macro: .protein, sheet: .editProtein)
+            lockableGoalRow(icon: "c.circle.fill", tint: AppColors.carbs, label: String(localized: "Carbs", comment: "Goals settings"), valueText: String(localized: "\(profile.effectiveCarbs)g", comment: "Daily macro goal value in grams"), macro: .carbs, sheet: .editCarbs)
+            lockableGoalRow(icon: "f.circle.fill", tint: AppColors.fat, label: String(localized: "Fat", comment: "Goals settings"), valueText: String(localized: "\(profile.effectiveFat)g", comment: "Daily macro goal value in grams"), macro: .fat, sheet: .editFat)
 
             NavigationLink {
                 OptionalNutrientGoalsSettingsView(profile: profile)
@@ -271,8 +271,8 @@ extension SettingsPaneView {
     /// Explain why the goals section is read-only while Adaptive Goals owns the targets.
     func showAdaptiveGoalsLockHint() {
         showAdaptiveGoalAlert(
-            title: "Adaptive Goals Is On",
-            message: "Turn off Adaptive Goals to lock or set your own calories and macros. While it's on, Ayuvo recalculates them for you each week."
+            title: String(localized: "Adaptive Goals Is On", comment: "Adaptive goals alert"),
+            message: String(localized: "Turn off Adaptive Goals to lock or set your own calories and macros. While it's on, Ayuvo recalculates them for you each week.", comment: "Adaptive goals alert")
         )
     }
 
@@ -381,8 +381,8 @@ extension SettingsPaneView {
             // Goals are AI-only now — no formula fallback. Leave the existing goals
             // untouched and tell the user so they can fix their provider/key and retry.
             showAdaptiveGoalAlert(
-                title: "Couldn't Recalculate",
-                message: "Ayuvo couldn't reach your AI provider, so your goals are unchanged. Check your AI provider and API key in Settings, then try Recalculate again."
+                title: String(localized: "Couldn't Recalculate", comment: "Adaptive goals alert"),
+                message: String(localized: "Ayuvo couldn't reach your AI provider, so your goals are unchanged. Check your AI provider and API key in Settings, then try Recalculate again.", comment: "Adaptive goals alert")
             )
             return
         }
@@ -440,14 +440,14 @@ extension SettingsPaneView {
             guard healthKitEnabled else {
                 energyBurnToggleReverting = true
                 energyBurnEnabled = false
-                showAdaptiveGoalAlert(title: "Apple Health Needed", message: "Energy Burn uses your measured calories burned from Apple Health. Connect Apple Health first, then turn Energy Burn on.")
+                showAdaptiveGoalAlert(title: String(localized: "Apple Health Needed", comment: "Adaptive goals alert"), message: String(localized: "Energy Burn uses your measured calories burned from Apple Health. Connect Apple Health first, then turn Energy Burn on.", comment: "Adaptive goals alert"))
                 return
             }
             Task {
                 if await healthKitManager.fetchRecentEnergySummary(days: 14) == nil {
                     energyBurnToggleReverting = true
                     energyBurnEnabled = false
-                    showAdaptiveGoalAlert(title: "Not Enough Health Data", message: "Ayuvo needs at least 3 recent days of Apple Health energy data before it can use your measured burn.")
+                    showAdaptiveGoalAlert(title: String(localized: "Not Enough Health Data", comment: "Adaptive goals alert"), message: String(localized: "Ayuvo needs at least 3 recent days of Apple Health energy data before it can use your measured burn.", comment: "Adaptive goals alert"))
                     return
                 }
                 await recalculateGoalsWithAI()
@@ -541,7 +541,7 @@ extension SettingsPaneView {
             markGoalsRecalculated()
             AdaptiveGoalSettings.markCheckedToday()
             if showAlert {
-                showAdaptiveGoalAlert(title: "Adaptive Goals", message: "Updated to \(result.calories) kcal from your latest data." + (result.reason.map { " \($0)" } ?? ""))
+                showAdaptiveGoalAlert(title: String(localized: "Adaptive Goals", comment: "Adaptive goals alert"), message: String(localized: "Updated to \(result.calories) kcal from your latest data.", comment: "Adaptive goals alert message") + (result.reason.map { " \($0)" } ?? ""))
             }
         } catch {
             guard adaptiveGoalsEnabled,
@@ -552,7 +552,7 @@ extension SettingsPaneView {
             // misconfigured provider on every app open; the user can still Recalculate manually.
             AdaptiveGoalSettings.markCheckedToday()
             if showAlert {
-                showAdaptiveGoalAlert(title: "Adaptive Goals", message: "Couldn't reach your AI provider — your goals are unchanged. Check your AI provider and API key in Settings.")
+                showAdaptiveGoalAlert(title: String(localized: "Adaptive Goals", comment: "Adaptive goals alert"), message: String(localized: "Couldn't reach your AI provider — your goals are unchanged. Check your AI provider and API key in Settings.", comment: "Adaptive goals alert"))
             }
         }
     }

@@ -22,17 +22,17 @@ enum StrengthWorkoutRPEScale: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .strength: return "Strength 1–10"
-        case .cr10: return "CR10 0–10"
-        case .borg: return "Borg 6–20"
+        case .strength: return String(localized: "Strength 1–10", comment: "RPE scale name")
+        case .cr10: return String(localized: "CR10 0–10", comment: "RPE scale name")
+        case .borg: return String(localized: "Borg 6–20", comment: "RPE scale name")
         }
     }
 
     var subtitle: String {
         switch self {
-        case .strength: return "1–10 effort, with 10 as maximum"
-        case .cr10: return "0–10 perceived exertion, decimals allowed"
-        case .borg: return "6–20 perceived exertion, whole numbers"
+        case .strength: return String(localized: "1–10 effort, with 10 as maximum", comment: "RPE scale description")
+        case .cr10: return String(localized: "0–10 perceived exertion, decimals allowed", comment: "RPE scale description")
+        case .borg: return String(localized: "6–20 perceived exertion, whole numbers", comment: "RPE scale description")
         }
     }
 
@@ -40,7 +40,7 @@ enum StrengthWorkoutRPEScale: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .strength: return "1–10"
         case .cr10: return "CR10"
-        case .borg: return "Borg"
+        case .borg: return String(localized: "Borg", comment: "Short RPE scale name")
         }
     }
 
@@ -123,15 +123,15 @@ enum StrengthWorkoutSplit: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .pushPullLegs: return "Push / Pull / Legs"
-        case .upperLower: return "Upper / Lower"
-        case .broSplit: return "Body-part split"
-        case .arnold: return "Arnold split"
-        case .pushPull: return "Push / Pull"
-        case .antagonistSplit: return "Antagonist split"
-        case .hybridSplit: return "Hybrid split"
-        case .fullBody: return "Full body"
-        case .custom: return "Custom"
+        case .pushPullLegs: return String(localized: "Push / Pull / Legs", comment: "Workout split name")
+        case .upperLower: return String(localized: "Upper / Lower", comment: "Workout split name")
+        case .broSplit: return String(localized: "Body-part split", comment: "Workout split name")
+        case .arnold: return String(localized: "Arnold split", comment: "Workout split name")
+        case .pushPull: return String(localized: "Push / Pull", comment: "Workout split name")
+        case .antagonistSplit: return String(localized: "Antagonist split", comment: "Workout split name")
+        case .hybridSplit: return String(localized: "Hybrid split", comment: "Workout split name")
+        case .fullBody: return String(localized: "Full body", comment: "Workout split name")
+        case .custom: return String(localized: "Custom", comment: "Workout split name")
         }
     }
 }
@@ -144,7 +144,7 @@ enum StrengthWorkoutDuration: Int, Codable, CaseIterable, Identifiable {
     case ninety = 90
 
     var id: Int { rawValue }
-    var title: String { "\(rawValue) min" }
+    var title: String { String(localized: "\(rawValue) min", comment: "Workout duration option") }
 }
 
 enum StrengthWorkoutIssue: String, Codable, CaseIterable, Identifiable {
@@ -158,6 +158,20 @@ enum StrengthWorkoutIssue: String, Codable, CaseIterable, Identifiable {
     case other = "Other"
 
     var id: String { rawValue }
+
+    /// Localized label for pickers and chips; `rawValue` stays the persisted value.
+    var displayName: String {
+        switch self {
+        case .shoulder: return String(localized: "Shoulder", comment: "Workout injury/issue option")
+        case .elbow: return String(localized: "Elbow", comment: "Workout injury/issue option")
+        case .wrist: return String(localized: "Wrist", comment: "Workout injury/issue option")
+        case .lowerBack: return String(localized: "Lower back", comment: "Workout injury/issue option")
+        case .hip: return String(localized: "Hip", comment: "Workout injury/issue option")
+        case .knee: return String(localized: "Knee", comment: "Workout injury/issue option")
+        case .ankle: return String(localized: "Ankle", comment: "Workout injury/issue option")
+        case .other: return String(localized: "Other", comment: "Workout injury/issue option")
+        }
+    }
 }
 
 struct StrengthWorkoutNumbers: Codable, Equatable {
@@ -456,8 +470,8 @@ struct StrengthWorkoutSession: Identifiable, Codable, Equatable, Hashable {
     var displayTitle: String {
         let calendar = Calendar.current
         if let outdoor { return outdoor.sportTitle }
-        if calendar.isDateInToday(calendarDiaryDate) { return "Today Workout" }
-        return "\(calendarDiaryDate.formatted(.dateTime.weekday(.wide))) Workout"
+        if calendar.isDateInToday(calendarDiaryDate) { return String(localized: "Today Workout", comment: "Strength session title for today") }
+        return String(localized: "\(calendarDiaryDate.formatted(.dateTime.weekday(.wide))) Workout", comment: "Strength session title; weekday name")
     }
 }
 
@@ -651,54 +665,54 @@ struct StrengthWorkoutSplitGroup: Identifiable, Hashable {
         switch split {
         case .pushPullLegs:
             return [
-                .init(title: "Push", muscles: matching(V.chest, V.shoulders, V.triceps)),
-                .init(title: "Pull", muscles: matching(V.biceps, V.forearms, V.back, V.traps, V.neck)),
-                .init(title: "Legs", muscles: matching(V.hips, V.calves, V.posteriorLegs, V.lowerBack, V.quads)),
-                .init(title: "Core", muscles: matching(V.core)),
-                .init(title: "Cardio", muscles: matching(V.cardio))
+                .init(title: String(localized: "Push", comment: "Workout split muscle group"), muscles: matching(V.chest, V.shoulders, V.triceps)),
+                .init(title: String(localized: "Pull", comment: "Workout split muscle group"), muscles: matching(V.biceps, V.forearms, V.back, V.traps, V.neck)),
+                .init(title: String(localized: "Legs", comment: "Workout split muscle group"), muscles: matching(V.hips, V.calves, V.posteriorLegs, V.lowerBack, V.quads)),
+                .init(title: String(localized: "muscle.core", defaultValue: "Core", comment: "Workout split muscle group (abdominal/trunk muscles), not the sleep stage"), muscles: matching(V.core)),
+                .init(title: String(localized: "Cardio", comment: "Workout split muscle group"), muscles: matching(V.cardio))
             ]
         case .upperLower:
             return [
-                .init(title: "Upper", muscles: matching(V.biceps, V.chest, V.forearms, V.back, V.neck, V.shoulders, V.traps, V.triceps)),
-                .init(title: "Lower", muscles: matching(V.hips, V.calves, V.posteriorLegs, V.lowerBack, V.quads)),
-                .init(title: "Core", muscles: matching(V.core)),
-                .init(title: "Cardio", muscles: matching(V.cardio))
+                .init(title: String(localized: "Upper", comment: "Workout split muscle group"), muscles: matching(V.biceps, V.chest, V.forearms, V.back, V.neck, V.shoulders, V.traps, V.triceps)),
+                .init(title: String(localized: "Lower", comment: "Workout split muscle group"), muscles: matching(V.hips, V.calves, V.posteriorLegs, V.lowerBack, V.quads)),
+                .init(title: String(localized: "muscle.core", defaultValue: "Core", comment: "Workout split muscle group (abdominal/trunk muscles), not the sleep stage"), muscles: matching(V.core)),
+                .init(title: String(localized: "Cardio", comment: "Workout split muscle group"), muscles: matching(V.cardio))
             ]
         case .broSplit:
             return [
-                .init(title: "Chest", muscles: matching(V.chest)),
-                .init(title: "Back", muscles: matching(V.back, V.lowerBack, V.traps)),
-                .init(title: "Shoulders", muscles: matching(V.shoulders, V.traps)),
-                .init(title: "Arms", muscles: matching(V.biceps, V.triceps, V.forearms)),
-                .init(title: "Legs", muscles: matching(V.hips, V.calves, V.posteriorLegs, V.quads)),
-                .init(title: "Core", muscles: matching(V.core)),
-                .init(title: "Cardio", muscles: matching(V.cardio))
+                .init(title: String(localized: "Chest", comment: "Workout split muscle group"), muscles: matching(V.chest)),
+                .init(title: String(localized: "Back", comment: "Workout split muscle group"), muscles: matching(V.back, V.lowerBack, V.traps)),
+                .init(title: String(localized: "Shoulders", comment: "Workout split muscle group"), muscles: matching(V.shoulders, V.traps)),
+                .init(title: String(localized: "Arms", comment: "Workout split muscle group"), muscles: matching(V.biceps, V.triceps, V.forearms)),
+                .init(title: String(localized: "Legs", comment: "Workout split muscle group"), muscles: matching(V.hips, V.calves, V.posteriorLegs, V.quads)),
+                .init(title: String(localized: "muscle.core", defaultValue: "Core", comment: "Workout split muscle group (abdominal/trunk muscles), not the sleep stage"), muscles: matching(V.core)),
+                .init(title: String(localized: "Cardio", comment: "Workout split muscle group"), muscles: matching(V.cardio))
             ]
         case .arnold:
             return [
-                .init(title: "Chest + Back", muscles: matching(V.chest, V.back, V.lowerBack, V.traps)),
-                .init(title: "Shoulders + Arms", muscles: matching(V.shoulders, V.biceps, V.triceps, V.forearms, V.neck)),
-                .init(title: "Legs", muscles: matching(V.hips, V.calves, V.posteriorLegs, V.quads)),
-                .init(title: "Core", muscles: matching(V.core))
+                .init(title: String(localized: "Chest + Back", comment: "Workout split muscle group"), muscles: matching(V.chest, V.back, V.lowerBack, V.traps)),
+                .init(title: String(localized: "Shoulders + Arms", comment: "Workout split muscle group"), muscles: matching(V.shoulders, V.biceps, V.triceps, V.forearms, V.neck)),
+                .init(title: String(localized: "Legs", comment: "Workout split muscle group"), muscles: matching(V.hips, V.calves, V.posteriorLegs, V.quads)),
+                .init(title: String(localized: "muscle.core", defaultValue: "Core", comment: "Workout split muscle group (abdominal/trunk muscles), not the sleep stage"), muscles: matching(V.core))
             ]
         case .pushPull:
             return [
-                .init(title: "Push", muscles: matching(V.chest, V.shoulders, V.triceps, V.quads, V.calves)),
-                .init(title: "Pull", muscles: matching(V.biceps, V.forearms, V.back, V.traps, V.posteriorLegs, V.lowerBack)),
-                .init(title: "Accessory/Core", muscles: matching(V.core, V.hips, V.neck))
+                .init(title: String(localized: "Push", comment: "Workout split muscle group"), muscles: matching(V.chest, V.shoulders, V.triceps, V.quads, V.calves)),
+                .init(title: String(localized: "Pull", comment: "Workout split muscle group"), muscles: matching(V.biceps, V.forearms, V.back, V.traps, V.posteriorLegs, V.lowerBack)),
+                .init(title: String(localized: "Accessory/Core", comment: "Workout split muscle group"), muscles: matching(V.core, V.hips, V.neck))
             ]
         case .antagonistSplit:
             return [
-                .init(title: "Chest + Back", muscles: matching(V.chest, V.back, V.lowerBack, V.traps)),
-                .init(title: "Biceps + Triceps", muscles: matching(V.biceps, V.triceps, V.forearms)),
-                .init(title: "Quads + Hamstrings/Glutes", muscles: matching(V.quads, V.posteriorLegs)),
-                .init(title: "Shoulders + Lats/Traps", muscles: matching(V.shoulders, ["Lats"], V.traps)),
-                .init(title: "Core/Accessory", muscles: matching(V.core, V.hips, V.calves, V.neck))
+                .init(title: String(localized: "Chest + Back", comment: "Workout split muscle group"), muscles: matching(V.chest, V.back, V.lowerBack, V.traps)),
+                .init(title: String(localized: "Biceps + Triceps", comment: "Workout split muscle group"), muscles: matching(V.biceps, V.triceps, V.forearms)),
+                .init(title: String(localized: "Quads + Hamstrings/Glutes", comment: "Workout split muscle group"), muscles: matching(V.quads, V.posteriorLegs)),
+                .init(title: String(localized: "Shoulders + Lats/Traps", comment: "Workout split muscle group"), muscles: matching(V.shoulders, ["Lats"], V.traps)),
+                .init(title: String(localized: "Core/Accessory", comment: "Workout split muscle group"), muscles: matching(V.core, V.hips, V.calves, V.neck))
             ]
         case .hybridSplit:
             return [
-                .init(title: "Strength/Compound", muscles: matching(V.chest, V.back, V.lowerBack, V.posteriorLegs, V.quads, V.shoulders, V.traps)),
-                .init(title: "Accessory/Hypertrophy", muscles: matching(V.biceps, V.triceps, V.forearms, V.calves, V.hips, V.core, V.neck))
+                .init(title: String(localized: "Strength/Compound", comment: "Workout split muscle group"), muscles: matching(V.chest, V.back, V.lowerBack, V.posteriorLegs, V.quads, V.shoulders, V.traps)),
+                .init(title: String(localized: "Accessory/Hypertrophy", comment: "Workout split muscle group"), muscles: matching(V.biceps, V.triceps, V.forearms, V.calves, V.hips, V.core, V.neck))
             ]
         case .fullBody, .custom:
             return []

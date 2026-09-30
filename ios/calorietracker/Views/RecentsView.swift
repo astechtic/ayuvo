@@ -84,7 +84,7 @@ struct RecentsView: View {
                     } else {
                         Section {
                             ForEach(frequentItems) { group in
-                                SavedMealRow(entry: group.template, isFavorite: foodStore.isFavorite(group.template), subtitle: "\(group.count)× logged")
+                                SavedMealRow(entry: group.template, isFavorite: foodStore.isFavorite(group.template), subtitle: String(localized: "\(group.count)× logged", comment: "Frequent foods row: how many times the food was logged"))
                                     .listRowBackground(AppColors.appCard)
                                     .contentShape(Rectangle())
                                     .onTapGesture { logEntry(group.template) }
@@ -163,7 +163,7 @@ struct RecentsView: View {
         }
     }
 
-    private func emptySection(icon: String, message: String) -> some View {
+    private func emptySection(icon: String, message: LocalizedStringKey) -> some View {
         Section {
             VStack(spacing: 12) {
                 Image(systemName: icon)

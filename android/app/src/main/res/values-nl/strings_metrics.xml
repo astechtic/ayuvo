@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="metric_calories">Calorieën</string>
+    <string name="metric_protein">Eiwit</string>
+    <string name="metric_carbs">Koolhydraten</string>
+    <string name="metric_fat">Totaal vet</string>
+    <string name="metric_fiber">Vezels</string>
+    <string name="metric_water">Water</string>
+    <string name="metric_fasting">Vasten</string>
+    <string name="metric_weight">Gewicht</string>
+    <string name="metric_body_fat">Vetpercentage</string>
+    <string name="metric_workouts">Trainingen</string>
+    <string name="metric_workout_minutes">Trainingstijd</string>
+    <string name="metric_workout_burn">Trainingsenergie</string>
+    <string name="metric_about_calories">Energie uit het eten dat je in Ayuvo logt, opgeteld per dag. Langere periodes tonen je gemiddelde op dagen waarop je eten hebt gelogd.</string>
+    <string name="metric_about_protein">Eiwit uit het eten dat je in Ayuvo logt, opgeteld per dag.</string>
+    <string name="metric_about_carbs">Koolhydraten uit het eten dat je in Ayuvo logt, opgeteld per dag.</string>
+    <string name="metric_about_fat">Vet uit het eten dat je in Ayuvo logt, opgeteld per dag.</string>
+    <string name="metric_about_fiber">Voedingsvezels uit het eten dat je in Ayuvo logt, opgeteld per dag. Voedingsmiddelen zonder vezelinformatie worden overgeslagen.</string>
+    <string name="metric_about_water">Water dat je in Ayuvo logt, opgeteld per dag.</string>
+    <string name="metric_about_fasting">Tijd die je per dag vast. Een vasten dat over middernacht loopt, telt mee voor elke dag die het beslaat.</string>
+    <string name="metric_about_weight">Gewichtsmetingen die je in Ayuvo logt, inclusief metingen die zijn geïmporteerd uit gekoppelde gezondheidsapps. Elk punt toont de laatste meting van die periode.</string>
+    <string name="metric_about_body_fat">Lichaamsvetmetingen die je in Ayuvo logt. Elk punt toont de laatste meting van die periode.</string>
+    <string name="metric_about_workouts">Trainingen die je in Ayuvo voltooit, geteld op de dag waarop ze zijn gelogd.</string>
+    <string name="metric_about_workout_minutes">Tijd besteed aan trainingen die je in Ayuvo voltooit.</string>
+    <string name="metric_about_workout_burn">Geschatte energie verbrand tijdens trainingen die je in Ayuvo voltooit. Trainingen zonder schatting worden overgeslagen.</string>
+    <string name="metric_add_to_favourites">Voeg toe aan favorieten</string>
+    <string name="metric_about">Over</string>
+    <string name="metric_log">Log</string>
+    <string name="metric_log_weight">Voeg gewichtsgegevens toe</string>
+    <string name="metric_log_body_fat">Voeg lichaamsvetgegevens toe</string>
+    <string name="metric_add_water">Voeg water toe</string>
+    <string name="metric_add_water_quick">Voeg %1$s toe</string>
+    <string name="metric_add_water_custom">Aangepaste hoeveelheid</string>
+    <string name="metric_open_food_diary">Open voedingsdagboek</string>
+    <string name="metric_open_fasting">Open Vasten</string>
+    <string name="metric_open_workouts">Open Trainingen</string>
+    <string name="metric_details">Toon details</string>
+    <string name="metric_goal_label">Doel %1$s</string>
+    <string name="metric_no_rows">Geen items in deze periode</string>
+    <string name="metric_row_logged_in_diary">Gelogd in het voedingsdagboek</string>
+    <string name="metric_delete_entry">Verwijder item</string>
+    <string name="metric_delete_entry_body">Dit item wordt uit Ayuvo verwijderd.</string>
+    <string name="metric_sources_app">Geregistreerd in Ayuvo</string>
+</resources>

@@ -52,7 +52,7 @@ struct WorkoutIssueMultiSelectRow: View {
             return String(localized: "None")
         }
         if selectedOptions.count <= 2 {
-            return selectedOptions.map(\.rawValue).joined(separator: ", ")
+            return selectedOptions.map(\.displayName).joined(separator: ", ")
         }
         return String(localized: "\(selectedOptions.count) selected")
     }
@@ -66,9 +66,9 @@ struct WorkoutIssueMultiSelectRow: View {
                             toggle(option)
                         } label: {
                             if selection.contains(option) {
-                                Label(option.rawValue, systemImage: "checkmark")
+                                Label(option.displayName, systemImage: "checkmark")
                             } else {
-                                Text(option.rawValue)
+                                Text(option.displayName)
                             }
                         }
                     }
@@ -82,7 +82,7 @@ struct WorkoutIssueMultiSelectRow: View {
             }
 
             if !selectedOptions.isEmpty {
-                WorkoutPreferenceChipRail(titles: selectedOptions.map(\.rawValue))
+                WorkoutPreferenceChipRail(titles: selectedOptions.map(\.displayName))
             }
         }
     }
@@ -919,7 +919,7 @@ struct WorkoutTargetMuscleSelectorRow: View {
             )
 
             if !selectedGroups.isEmpty {
-                WorkoutPreferenceChipRail(titles: selectedGroups.map(\.title))
+                WorkoutPreferenceChipRail(titles: selectedGroups.map(\.displayTitle))
             }
         }
     }
@@ -1033,6 +1033,30 @@ private struct WorkoutTargetMuscleGroup: Identifiable, Hashable {
     let systemImage: String
     let muscles: [String]
 
+    /// `title` also matches stored English values in `normalized`, so it stays English; this is shown.
+    var displayTitle: String {
+        switch id {
+        case "chest": String(localized: "Chest", comment: "Target muscle group")
+        case "shoulders": String(localized: "Shoulders", comment: "Target muscle group")
+        case "abdominals": String(localized: "Abdominals", comment: "Target muscle group")
+        case "biceps": String(localized: "Biceps", comment: "Target muscle group")
+        case "triceps": String(localized: "Triceps", comment: "Target muscle group")
+        case "forearms": String(localized: "Forearms", comment: "Target muscle group")
+        case "lats": String(localized: "Lats", comment: "Target muscle group")
+        case "middle_back": String(localized: "Middle Back", comment: "Target muscle group")
+        case "lower_back": String(localized: "Lower Back", comment: "Target muscle group")
+        case "traps": String(localized: "Traps", comment: "Target muscle group")
+        case "quadriceps": String(localized: "Quadriceps", comment: "Target muscle group")
+        case "hamstrings": String(localized: "Hamstrings", comment: "Target muscle group")
+        case "glutes": String(localized: "Glutes", comment: "Target muscle group")
+        case "calves": String(localized: "Calves", comment: "Target muscle group")
+        case "abductors": String(localized: "Abductors", comment: "Target muscle group")
+        case "adductors": String(localized: "Adductors", comment: "Target muscle group")
+        case "neck": String(localized: "Neck", comment: "Target muscle group")
+        default: title
+        }
+    }
+
     nonisolated func availableMuscles(allowedValues: [String]) -> [String] {
         muscles.filter(allowedValues.contains)
     }
@@ -1123,7 +1147,7 @@ private struct WorkoutTargetMuscleGroup: Identifiable, Hashable {
     }
 
     static func summary(selection: Set<String>, allowedValues: [String]) -> String {
-        let titles = selectedGroups(selection: selection, allowedValues: allowedValues).map(\.title)
+        let titles = selectedGroups(selection: selection, allowedValues: allowedValues).map(\.displayTitle)
         if titles.isEmpty {
             return String(localized: "None")
         }
@@ -1159,7 +1183,7 @@ private struct WorkoutTargetMuscleSection: Identifiable {
         .init(id: "upper", title: String(localized: "Upper Body"), groupIDs: ["chest", "shoulders"]),
         .init(id: "back", title: String(localized: "Back"), groupIDs: ["lats", "middle_back", "lower_back", "traps"]),
         .init(id: "arms", title: String(localized: "Arms"), groupIDs: ["biceps", "triceps", "forearms"]),
-        .init(id: "core", title: String(localized: "Core"), groupIDs: ["abdominals"]),
+        .init(id: "core", title: String(localized: "muscle.core", defaultValue: "Core", comment: "Target muscle section (abdominal/trunk muscles), not the sleep stage"), groupIDs: ["abdominals"]),
         .init(id: "legs", title: String(localized: "Legs / Hips"), groupIDs: ["quadriceps", "hamstrings", "glutes", "calves", "abductors", "adductors"]),
         .init(id: "neck", title: String(localized: "Neck"), groupIDs: ["neck"])
     ]
@@ -1198,7 +1222,7 @@ private struct WorkoutTargetMuscleCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(group.title)
+                    Text(group.displayTitle)
                         .font(.headline.weight(.heavy))
                         .foregroundStyle(Color.workoutCharcoal)
                         .lineLimit(1)
@@ -1229,7 +1253,7 @@ private struct WorkoutTargetMuscleCard: View {
         .buttonStyle(.plain)
         .workoutPressable()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(group.title), \(group.detail)")
+        .accessibilityLabel("\(group.displayTitle), \(group.detail)")
         .accessibilityValue(isSelected ? "Selected" : "Not selected")
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : [.isButton])
     }

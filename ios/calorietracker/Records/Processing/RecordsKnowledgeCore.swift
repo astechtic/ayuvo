@@ -187,7 +187,8 @@ nonisolated enum RecordTrendBuilder {
             let sign = delta > 0 ? "+" : (delta < 0 ? "−" : "")
             let unit = mini["unit"].string.map { $0.isEmpty ? "" : " \($0)" } ?? ""
             let date = RecordDates.date(fromDay: since)?.formatted(.dateTime.month(.abbreviated).day()) ?? since
-            change = String(localized: "\(sign)\(String(format: "%.\(decimals)f", abs(delta)))\(unit) since \(date)")
+            let amount = abs(delta).formatted(.number.precision(.fractionLength(decimals)))
+            change = String(localized: "\(sign)\(amount)\(unit) since \(date)", comment: "Lab result mini trend: signed change, unit and start date")
         }
         return RecordMiniTrend(analyteID: analyteID, text: text, change: change, pointCount: (mini["values"].array ?? []).count)
     }

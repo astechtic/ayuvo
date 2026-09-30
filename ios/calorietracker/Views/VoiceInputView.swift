@@ -29,7 +29,7 @@ struct VoiceInputView: View {
     private var provider: SpeechProvider { SpeechSettings.selectedProvider }
     private var isNative: Bool { provider == .nativeIOS }
 
-    private var analyzeButtonLabel: String { "Analyze" }
+    private var analyzeButtonLabel: String { String(localized: "Analyze", comment: "Voice food input button") }
 
     private var analyzeButtonDisabled: Bool {
         // Native: one-tap — allow Analyze while recording (live transcription is already visible).
@@ -176,7 +176,7 @@ struct VoiceInputView: View {
             startNativeRecording()
         } else {
             if provider.requiresAPIKey && SpeechSettings.apiKey(for: provider) == nil {
-                permissionError = "No API key configured for \(provider.displayName). Add one in Settings → Speech-to-Text."
+                permissionError = String(localized: "No API key configured for \(provider.displayName). Add one in Settings → Speech-to-Text.", comment: "Voice food input error")
                 return
             }
             startRemoteRecording()
@@ -196,12 +196,12 @@ struct VoiceInputView: View {
     private func startNativeRecording() {
         SFSpeechRecognizer.requestAuthorization { authStatus in
             guard authStatus == .authorized else {
-                permissionError = "Speech recognition permission denied. Enable it in Settings."
+                permissionError = String(localized: "Speech recognition permission denied. Enable it in Settings.", comment: "Voice food input error")
                 return
             }
             AVAudioApplication.requestRecordPermission { allowed in
                 guard allowed else {
-                    permissionError = "Microphone permission denied. Enable it in Settings."
+                    permissionError = String(localized: "Microphone permission denied. Enable it in Settings.", comment: "Voice food input error")
                     return
                 }
                 beginNativeAudioSession()
@@ -212,7 +212,7 @@ struct VoiceInputView: View {
     private func beginNativeAudioSession() {
         speechRecognizer = Self.makeNativeSpeechRecognizer(for: SpeechSettings.selectedLanguage(for: .nativeIOS))
         guard let speechRecognizer, speechRecognizer.isAvailable else {
-            permissionError = "Native speech recognition unavailable on this device."
+            permissionError = String(localized: "Native speech recognition unavailable on this device.", comment: "Voice food input error")
             return
         }
 
@@ -229,7 +229,7 @@ struct VoiceInputView: View {
             try session.setCategory(.record, mode: .measurement, options: .duckOthers)
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            permissionError = "Failed to set up audio session."
+            permissionError = String(localized: "Failed to set up audio session.", comment: "Voice food input error")
             return
         }
 
@@ -245,7 +245,7 @@ struct VoiceInputView: View {
             try audioEngine.start()
             isRecording = true
         } catch {
-            permissionError = "Failed to start audio engine."
+            permissionError = String(localized: "Failed to start audio engine.", comment: "Voice food input error")
             return
         }
 
@@ -296,7 +296,7 @@ struct VoiceInputView: View {
     private func startRemoteRecording() {
         AVAudioApplication.requestRecordPermission { allowed in
             guard allowed else {
-                permissionError = "Microphone permission denied. Enable it in Settings."
+                permissionError = String(localized: "Microphone permission denied. Enable it in Settings.", comment: "Voice food input error")
                 return
             }
             beginRemoteRecording()
@@ -309,7 +309,7 @@ struct VoiceInputView: View {
             try session.setCategory(.record, mode: .default, options: .duckOthers)
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            permissionError = "Failed to set up audio session."
+            permissionError = String(localized: "Failed to set up audio session.", comment: "Voice food input error")
             return
         }
 
@@ -327,7 +327,7 @@ struct VoiceInputView: View {
             audioRecorder?.record()
             isRecording = true
         } catch {
-            permissionError = "Failed to start recording: \(error.localizedDescription)"
+            permissionError = String(localized: "Failed to start recording: \(error.localizedDescription)", comment: "Voice food input error")
         }
     }
 

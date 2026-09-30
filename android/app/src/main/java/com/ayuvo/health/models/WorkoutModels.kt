@@ -9,6 +9,9 @@ import java.util.Locale
 import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.roundToInt
+import androidx.annotation.StringRes
+import com.ayuvo.health.R
+import com.ayuvo.health.l10n.AppText
 
 @Serializable
 enum class WorkoutTabMode {
@@ -51,6 +54,23 @@ enum class WorkoutRpeScale {
             STRENGTH -> "Strength 1–10"
             CR10 -> "CR10 0–10"
             BORG -> "Borg 6–20"
+        }
+
+    /** Localized [title]; [title] stays English for Coach and exports. */
+    @get:StringRes
+    val titleRes: Int
+        get() = when (this) {
+            STRENGTH -> R.string.core_workout_rpe_strength
+            CR10 -> R.string.core_workout_rpe_cr10
+            BORG -> R.string.core_workout_rpe_borg
+        }
+
+    @get:StringRes
+    val shortTitleRes: Int
+        get() = when (this) {
+            STRENGTH -> R.string.core_workout_rpe_short_strength
+            CR10 -> R.string.core_workout_rpe_short_cr10
+            BORG -> R.string.core_workout_rpe_short_borg
         }
 
     val shortTitle: String
@@ -146,6 +166,21 @@ enum class WorkoutSplit {
             CUSTOM -> "Custom"
         }
 
+    /** Localized [title]; [title] stays English for Coach. */
+    @get:StringRes
+    val titleRes: Int
+        get() = when (this) {
+            PUSH_PULL_LEGS -> R.string.core_workout_split_push_pull_legs
+            UPPER_LOWER -> R.string.core_workout_split_upper_lower
+            BODY_PART -> R.string.core_workout_split_body_part
+            ARNOLD -> R.string.core_workout_split_arnold
+            PUSH_PULL -> R.string.core_workout_split_push_pull
+            ANTAGONIST -> R.string.core_workout_split_antagonist
+            HYBRID -> R.string.core_workout_split_hybrid
+            FULL_BODY -> R.string.core_workout_split_full_body
+            CUSTOM -> R.string.core_workout_split_custom
+        }
+
     companion object {
         val SelectableValues: List<WorkoutSplit> = listOf(
             FULL_BODY,
@@ -161,15 +196,16 @@ enum class WorkoutSplit {
 }
 
 @Serializable
-enum class WorkoutIssue(val title: String) {
-    SHOULDER("Shoulder"),
-    ELBOW("Elbow"),
-    WRIST("Wrist"),
-    LOWER_BACK("Lower back"),
-    HIP("Hip"),
-    KNEE("Knee"),
-    ANKLE("Ankle"),
-    OTHER("Other")
+/** [title] is English (Coach, storage); show [titleRes]. */
+enum class WorkoutIssue(val title: String, @StringRes val titleRes: Int) {
+    SHOULDER("Shoulder", R.string.core_workout_issue_shoulder),
+    ELBOW("Elbow", R.string.core_workout_issue_elbow),
+    WRIST("Wrist", R.string.core_workout_issue_wrist),
+    LOWER_BACK("Lower back", R.string.core_workout_issue_lower_back),
+    HIP("Hip", R.string.core_workout_issue_hip),
+    KNEE("Knee", R.string.core_workout_issue_knee),
+    ANKLE("Ankle", R.string.core_workout_issue_ankle),
+    OTHER("Other", R.string.core_workout_issue_other)
 }
 
 @Serializable
@@ -255,8 +291,11 @@ data class PlannedSet(
 }
 
 @Serializable
-enum class WorkoutIntensity(val title: String) {
-    LIGHT("Light"), MODERATE("Moderate"), VIGOROUS("Vigorous")
+/** [title] is English (Coach, storage); show [titleRes]. */
+enum class WorkoutIntensity(val title: String, @StringRes val titleRes: Int) {
+    LIGHT("Light", R.string.core_workout_intensity_light),
+    MODERATE("Moderate", R.string.core_workout_intensity_moderate),
+    VIGOROUS("Vigorous", R.string.core_workout_intensity_vigorous)
 }
 
 /** Persist only transitions; wall-clock anchors keep timers alive across process death. */
@@ -672,9 +711,11 @@ object WorkoutBurnEstimator {
     }
 }
 
+/** [title] is the English key (saved selections, Coach); show [titleRes] when set, else [title] (a muscle name). */
 data class WorkoutSplitGroup(
     val title: String,
-    val muscles: Set<String>
+    val muscles: Set<String>,
+    @StringRes val titleRes: Int? = null
 ) {
     companion object {
         // Muscle vocabulary of the exercises-dataset catalogue (target + secondary muscles).
@@ -699,50 +740,52 @@ data class WorkoutSplitGroup(
             fun matching(vararg candidates: Array<String>): Set<String> =
                 candidates.flatMap { it.asList() }.mapNotNull { namesByLowercase[it.lowercase()] }.toSet()
 
+            fun group(title: String, @StringRes titleRes: Int, muscles: Set<String>) = WorkoutSplitGroup(title, muscles, titleRes)
+
             return when (split) {
                 WorkoutSplit.PUSH_PULL_LEGS -> listOf(
-                    WorkoutSplitGroup("Push", matching(chest, shoulders, triceps)),
-                    WorkoutSplitGroup("Pull", matching(biceps, forearms, back, traps, neck)),
-                    WorkoutSplitGroup("Legs", matching(hips, calves, posteriorLegs, lowerBack, quads)),
-                    WorkoutSplitGroup("Core", matching(core)),
-                    WorkoutSplitGroup("Cardio", matching(cardio))
+                    group("Push", R.string.core_workout_group_push, matching(chest, shoulders, triceps)),
+                    group("Pull", R.string.core_workout_group_pull, matching(biceps, forearms, back, traps, neck)),
+                    group("Legs", R.string.core_workout_group_legs, matching(hips, calves, posteriorLegs, lowerBack, quads)),
+                    group("Core", R.string.core_workout_group_core, matching(core)),
+                    group("Cardio", R.string.core_workout_group_cardio, matching(cardio))
                 )
                 WorkoutSplit.UPPER_LOWER -> listOf(
-                    WorkoutSplitGroup("Upper", matching(biceps, chest, forearms, back, neck, shoulders, traps, triceps)),
-                    WorkoutSplitGroup("Lower", matching(hips, calves, posteriorLegs, lowerBack, quads)),
-                    WorkoutSplitGroup("Core", matching(core)),
-                    WorkoutSplitGroup("Cardio", matching(cardio))
+                    group("Upper", R.string.core_workout_group_upper, matching(biceps, chest, forearms, back, neck, shoulders, traps, triceps)),
+                    group("Lower", R.string.core_workout_group_lower, matching(hips, calves, posteriorLegs, lowerBack, quads)),
+                    group("Core", R.string.core_workout_group_core, matching(core)),
+                    group("Cardio", R.string.core_workout_group_cardio, matching(cardio))
                 )
                 WorkoutSplit.BODY_PART -> listOf(
-                    WorkoutSplitGroup("Chest", matching(chest)),
-                    WorkoutSplitGroup("Back", matching(back, lowerBack, traps)),
-                    WorkoutSplitGroup("Shoulders", matching(shoulders, traps)),
-                    WorkoutSplitGroup("Arms", matching(biceps, triceps, forearms)),
-                    WorkoutSplitGroup("Legs", matching(hips, calves, posteriorLegs, quads)),
-                    WorkoutSplitGroup("Core", matching(core)),
-                    WorkoutSplitGroup("Cardio", matching(cardio))
+                    group("Chest", R.string.core_workout_group_chest, matching(chest)),
+                    group("Back", R.string.core_workout_group_back, matching(back, lowerBack, traps)),
+                    group("Shoulders", R.string.core_workout_group_shoulders, matching(shoulders, traps)),
+                    group("Arms", R.string.core_workout_group_arms, matching(biceps, triceps, forearms)),
+                    group("Legs", R.string.core_workout_group_legs, matching(hips, calves, posteriorLegs, quads)),
+                    group("Core", R.string.core_workout_group_core, matching(core)),
+                    group("Cardio", R.string.core_workout_group_cardio, matching(cardio))
                 )
                 WorkoutSplit.ARNOLD -> listOf(
-                    WorkoutSplitGroup("Chest + Back", matching(chest, back, lowerBack, traps)),
-                    WorkoutSplitGroup("Shoulders + Arms", matching(shoulders, biceps, triceps, forearms, neck)),
-                    WorkoutSplitGroup("Legs", matching(hips, calves, posteriorLegs, quads)),
-                    WorkoutSplitGroup("Core", matching(core))
+                    group("Chest + Back", R.string.core_workout_group_chest_back, matching(chest, back, lowerBack, traps)),
+                    group("Shoulders + Arms", R.string.core_workout_group_shoulders_arms, matching(shoulders, biceps, triceps, forearms, neck)),
+                    group("Legs", R.string.core_workout_group_legs, matching(hips, calves, posteriorLegs, quads)),
+                    group("Core", R.string.core_workout_group_core, matching(core))
                 )
                 WorkoutSplit.PUSH_PULL -> listOf(
-                    WorkoutSplitGroup("Push", matching(chest, shoulders, triceps, quads, calves)),
-                    WorkoutSplitGroup("Pull", matching(biceps, forearms, back, traps, posteriorLegs, lowerBack)),
-                    WorkoutSplitGroup("Accessory/Core", matching(core, hips, neck))
+                    group("Push", R.string.core_workout_group_push, matching(chest, shoulders, triceps, quads, calves)),
+                    group("Pull", R.string.core_workout_group_pull, matching(biceps, forearms, back, traps, posteriorLegs, lowerBack)),
+                    group("Accessory/Core", R.string.core_workout_group_accessory_core, matching(core, hips, neck))
                 )
                 WorkoutSplit.ANTAGONIST -> listOf(
-                    WorkoutSplitGroup("Chest + Back", matching(chest, back, lowerBack, traps)),
-                    WorkoutSplitGroup("Biceps + Triceps", matching(biceps, triceps, forearms)),
-                    WorkoutSplitGroup("Quads + Hamstrings/Glutes", matching(quads, posteriorLegs)),
-                    WorkoutSplitGroup("Shoulders + Lats/Traps", matching(shoulders, arrayOf("Lats"), traps)),
-                    WorkoutSplitGroup("Core/Accessory", matching(core, hips, calves, neck))
+                    group("Chest + Back", R.string.core_workout_group_chest_back, matching(chest, back, lowerBack, traps)),
+                    group("Biceps + Triceps", R.string.core_workout_group_biceps_triceps, matching(biceps, triceps, forearms)),
+                    group("Quads + Hamstrings/Glutes", R.string.core_workout_group_quads_hamstrings_glutes, matching(quads, posteriorLegs)),
+                    group("Shoulders + Lats/Traps", R.string.core_workout_group_shoulders_lats_traps, matching(shoulders, arrayOf("Lats"), traps)),
+                    group("Core/Accessory", R.string.core_workout_group_core_accessory, matching(core, hips, calves, neck))
                 )
                 WorkoutSplit.HYBRID -> listOf(
-                    WorkoutSplitGroup("Strength/Compound", matching(chest, back, lowerBack, posteriorLegs, quads, shoulders, traps)),
-                    WorkoutSplitGroup("Accessory/Hypertrophy", matching(biceps, triceps, forearms, calves, hips, core, neck))
+                    group("Strength/Compound", R.string.core_workout_group_strength_compound, matching(chest, back, lowerBack, posteriorLegs, quads, shoulders, traps)),
+                    group("Accessory/Hypertrophy", R.string.core_workout_group_accessory_hypertrophy, matching(biceps, triceps, forearms, calves, hips, core, neck))
                 )
                 WorkoutSplit.FULL_BODY, WorkoutSplit.CUSTOM -> emptyList()
             }
@@ -793,9 +836,10 @@ object ExerciseLiftHistory {
 
     fun formatSetLine(set: ExerciseLiftSet, displayUnit: WorkoutWeightUnit): String {
         if (set.reps.isEmpty()) return ""
-        if (set.weight.isEmpty()) return "${set.reps} reps"
+        if (set.weight.isEmpty()) return AppText.orEnglish("${set.reps} reps", R.string.core_workout_set_reps_only, set.reps)
         val planned = PlannedSet(weight = set.weight, weightUnit = set.weightUnit, reps = set.reps)
-        return "${planned.displayWeight(displayUnit)} ${displayUnit.storageValue} × ${set.reps}"
+        val weight = planned.displayWeight(displayUnit)
+        return AppText.orEnglish("$weight ${displayUnit.storageValue} × ${set.reps}", R.string.fu_workout_set_line, weight, displayUnit.storageValue, set.reps)
     }
 
     fun formatSummary(sets: List<ExerciseLiftSet>, displayUnit: WorkoutWeightUnit): String =

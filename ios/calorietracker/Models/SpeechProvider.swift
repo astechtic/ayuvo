@@ -83,13 +83,13 @@ enum SpeechProvider: String, CaseIterable, Codable, Identifiable {
 
     var apiKeyPlaceholder: String {
         switch self {
-        case .nativeIOS, .whisperBase: "Not needed"
+        case .nativeIOS, .whisperBase: String(localized: "Not needed", comment: "Speech provider API key field placeholder")
         case .gemini: "AIza..."
         case .openai: "sk-..."
         case .groq: "gsk_..."
-        case .mistral: "Your Mistral API key"
-        case .deepgram: "Token your-deepgram-key"
-        case .assemblyai: "Your AssemblyAI key"
+        case .mistral: String(localized: "Your Mistral API key", comment: "Speech provider API key field placeholder")
+        case .deepgram: String(localized: "Token your-deepgram-key", comment: "Deepgram API key placeholder; keep the word Token, it is part of the key format")
+        case .assemblyai: String(localized: "Your AssemblyAI key", comment: "Speech provider API key field placeholder")
         }
     }
 
@@ -110,45 +110,24 @@ enum SpeechProvider: String, CaseIterable, Codable, Identifiable {
     var description: String {
         switch self {
         case .nativeIOS:
-            LocalizedDisplayText.text(
-                "Apple's on-device speech recognition. Free, works offline on modern iPhones, real-time partial results. Recommended default.",
-                polish: "Rozpoznawanie mowy Apple na urządzeniu. Bezpłatne, działa offline na nowoczesnych iPhone'ach, pokazuje częściowe wyniki w czasie rzeczywistym. Zalecane domyślnie."
-            )
+            LocalizedDisplayText.text("Apple's on-device speech recognition. Free, works offline on modern iPhones, real-time partial results. Recommended default.", polish: "Rozpoznawanie mowy Apple na urządzeniu. Bezpłatne, działa offline na nowoczesnych iPhone'ach, pokazuje częściowe wyniki w czasie rzeczywistym. Zalecane domyślnie.")
         case .whisperBase:
             LocalModelStrings.text(
                 "whisper.providerDescription",
                 defaultValue: "Multilingual Whisper Base running entirely on this iPhone. Download once for private offline transcription."
             )
         case .gemini:
-            LocalizedDisplayText.text(
-                "Gemini 3.5 Transcribe for accurate batch transcription with automatic language detection.",
-                polish: "Gemini 3.5 Transcribe do dokładnej transkrypcji wsadowej z automatycznym wykrywaniem języka."
-            )
+            LocalizedDisplayText.text("Gemini 3.5 Transcribe for accurate batch transcription with automatic language detection.", polish: "Gemini 3.5 Transcribe do dokładnej transkrypcji wsadowej z automatycznym wykrywaniem języka.")
         case .openai:
-            LocalizedDisplayText.text(
-                "OpenAI GPT-Transcribe, the current high-accuracy model for recorded audio.",
-                polish: "OpenAI GPT-Transcribe, aktualny model o wysokiej dokładności do nagranego dźwięku."
-            )
+            LocalizedDisplayText.text("OpenAI GPT-Transcribe, the current high-accuracy model for recorded audio.", polish: "OpenAI GPT-Transcribe, aktualny model o wysokiej dokładności do nagranego dźwięku.")
         case .groq:
-            LocalizedDisplayText.text(
-                "Groq-hosted Whisper Large v3. Very fast inference, has a free tier.",
-                polish: "Whisper Large v3 hostowany przez Groq. Bardzo szybkie wnioskowanie, dostępny darmowy limit."
-            )
+            LocalizedDisplayText.text("Groq-hosted Whisper Large v3. Very fast inference, has a free tier.", polish: "Whisper Large v3 hostowany przez Groq. Bardzo szybkie wnioskowanie, dostępny darmowy limit.")
         case .mistral:
-            LocalizedDisplayText.text(
-                "Voxtral Mini Transcribe 2 for accurate multilingual batch transcription.",
-                polish: "Voxtral Mini Transcribe 2 do dokładnej wielojęzycznej transkrypcji wsadowej."
-            )
+            LocalizedDisplayText.text("Voxtral Mini Transcribe 2 for accurate multilingual batch transcription.", polish: "Voxtral Mini Transcribe 2 do dokładnej wielojęzycznej transkrypcji wsadowej.")
         case .deepgram:
-            LocalizedDisplayText.text(
-                "Deepgram Nova. Real-time and batch modes, fast and accurate.",
-                polish: "Deepgram Nova. Tryb czasu rzeczywistego i wsadowy, szybki i dokładny."
-            )
+            LocalizedDisplayText.text("Deepgram Nova. Real-time and batch modes, fast and accurate.", polish: "Deepgram Nova. Tryb czasu rzeczywistego i wsadowy, szybki i dokładny.")
         case .assemblyai:
-            LocalizedDisplayText.text(
-                "AssemblyAI Universal-3 Pro with Universal-2 fallback for broader language support.",
-                polish: "AssemblyAI Universal-3 Pro z modelem Universal-2 jako rezerwowym dla szerszej obsługi języków."
-            )
+            LocalizedDisplayText.text("AssemblyAI Universal-3 Pro with Universal-2 fallback for broader language support.", polish: "AssemblyAI Universal-3 Pro z modelem Universal-2 jako rezerwowym dla szerszej obsługi języków.")
         }
     }
 }

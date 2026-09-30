@@ -8,13 +8,13 @@ struct MyMetricsIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "My Metrics"
     static var description = IntentDescription("Choose four metrics to keep on your Home Screen.")
 
-    @Parameter(title: "Metric 1", default: .calories)
+    @Parameter(title: LocalizedStringResource("Metric 1", comment: "My Metrics widget setting: metric slot 1"), default: .calories)
     var metric1: WidgetMetricOption
-    @Parameter(title: "Metric 2", default: .steps)
+    @Parameter(title: LocalizedStringResource("Metric 2", comment: "My Metrics widget setting: metric slot 2"), default: .steps)
     var metric2: WidgetMetricOption
-    @Parameter(title: "Metric 3", default: .water)
+    @Parameter(title: LocalizedStringResource("Metric 3", comment: "My Metrics widget setting: metric slot 3"), default: .water)
     var metric3: WidgetMetricOption
-    @Parameter(title: "Metric 4", default: .weight)
+    @Parameter(title: LocalizedStringResource("Metric 4", comment: "My Metrics widget setting: metric slot 4"), default: .weight)
     var metric4: WidgetMetricOption
 
     var options: [WidgetMetricOption] { [metric1, metric2, metric3, metric4] }

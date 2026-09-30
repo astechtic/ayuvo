@@ -30,12 +30,12 @@ struct HealthMetricRow: View {
             return HealthUnitFormatting.bloodPressureText(systolic: latest.value, diastolic: latest.value2) + " mmHg"
         }
         if type.kind == .category, type.isSleep == false {
-            return latest.valueText ?? String(localized: "Logged")
+            return latest.displayValueText ?? String(localized: "Logged")
         }
         if let value = latest.value {
             return HealthUnitFormatting.display(value, type: type).text
         }
-        return latest.valueText ?? "—"
+        return latest.displayValueText ?? "—"
     }
 
     private var captionText: String? {

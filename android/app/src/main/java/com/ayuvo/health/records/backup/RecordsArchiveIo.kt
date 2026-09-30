@@ -332,7 +332,7 @@ class RecordsArchiveReader(
                         }
 
                         name in RecordsArchiveFormat.ENTRY_TABLE -> {
-                            require(manifest != null) { "manifest_missing" }
+                            require(manifest != null) { RecordsArchiveFormat.readErrorText("manifest_missing") }
                             readEntry(db, name, counted, mode, existingIds, existingChecksums, existingAliases, imported, skipped, entityAliases, warnings)
                         }
 
@@ -347,7 +347,7 @@ class RecordsArchiveReader(
                     entry = zip.getNextEntry()
                 }
             }
-            if (manifest == null) throw RecordsArchiveFormat.UnsupportedArchive("manifest_missing")
+            if (manifest == null) throw RecordsArchiveFormat.UnsupportedArchive(RecordsArchiveFormat.readErrorText("manifest_missing"))
             if (!sawChecksums) {
                 warnings += RecordsArchiveFormat.warning("checksums_missing")
             } else {
@@ -376,14 +376,14 @@ class RecordsArchiveReader(
     }
 
     private fun validate(manifest: JsonObject?) {
-        if (manifest == null) throw RecordsArchiveFormat.UnsupportedArchive("manifest_missing")
+        if (manifest == null) throw RecordsArchiveFormat.UnsupportedArchive(RecordsArchiveFormat.readErrorText("manifest_missing"))
         val format = (manifest["format"] as? JsonPrimitive)?.content
         if (format != RecordsArchiveFormat.FORMAT) {
-            throw RecordsArchiveFormat.UnsupportedArchive(RecordsArchiveFormat.READ_ERRORS.getValue("bad_format"))
+            throw RecordsArchiveFormat.UnsupportedArchive(RecordsArchiveFormat.readErrorText("bad_format"))
         }
         val version = (manifest["format_version"] as? JsonPrimitive)?.takeIf { !it.isString }?.content?.toIntOrNull()
         if (version == null || version > RecordsArchiveFormat.FORMAT_VERSION) {
-            throw RecordsArchiveFormat.UnsupportedArchive(RecordsArchiveFormat.READ_ERRORS.getValue("unsupported_version"))
+            throw RecordsArchiveFormat.UnsupportedArchive(RecordsArchiveFormat.readErrorText("unsupported_version"))
         }
     }
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_text_title">운동 설명</string>
+    <string name="workout_text_intro">한 운동을 설명하세요. 운동 일지에 추가하기 전에 세부 정보를 검토하세요.</string>
+    <string name="workout_text_description">운동 설명</string>
+    <string name="workout_text_example">줄넘기 20분, 그다음 40 kg로 벤치 프레스 10회 3세트</string>
+    <string name="workout_text_voice">음성</string>
+    <string name="workout_text_preparing">운동 종목 찾는 중…</string>
+    <string name="workout_text_preview">분석</string>
+    <string name="workout_text_retry">다시 시도</string>
+    <string name="workout_text_review">운동 검토</string>
+    <string name="workout_text_date">날짜 (YYYY-MM-DD)</string>
+    <string name="workout_text_custom">사용자 지정 시간 활동 · 칼로리 추정에 일반 활동 기준을 사용해요</string>
+    <string name="workout_text_minutes">분</string>
+    <string name="workout_text_reps">반복 횟수</string>
+    <string name="workout_text_remove">운동 종목 삭제</string>
+    <string name="workout_text_calories_note">칼로리는 추정치예요. 운동을 추가한 후 일지에서 계산을 사용하세요.</string>
+    <string name="workout_text_edit">설명 편집</string>
+    <string name="workout_text_adding">추가 중…</string>
+    <string name="workout_text_add">일지에 추가</string>
+    <string name="workout_text_menu">텍스트</string>
+    <string name="workout_text_set_weight">%1$d세트 · %2$s</string>
+    <string name="workout_text_estimate">추정 소모량: %1$d kcal</string>
+    <string name="workout_text_effort">강도 (지정하지 않으면 보통)</string>
+    <string name="workout_text_light">라이트</string>
+    <string name="workout_text_moderate">보통</string>
+    <string name="workout_text_vigorous">격렬함</string>
+    <string name="workout_text_rpe">RPE 1–10</string>
+    <string name="workout_text_start_over">처음부터 다시</string>
+    <string name="workout_clarify_title">간단한 질문</string>
+    <string name="workout_clarify_hint">운동 종목을 탭해 선택하거나 답을 입력하세요.</string>
+    <string name="workout_clarify_answer">내 답변</string>
+    <string name="workout_clarify_voice">음성으로 답하기</string>
+    <string name="workout_text_repeat_error">답변만으로는 완료할 수 없어요. 설명에 빠진 세부 정보(예: 세트와 반복 횟수)를 추가하거나 처음부터 다시 시작하세요.</string>
+</resources>

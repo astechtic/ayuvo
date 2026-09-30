@@ -185,7 +185,7 @@ struct EditFoodEntryView: View {
         if value == value.rounded() {
             return String(Int(value))
         }
-        return String(format: "%.1f", value)
+        return value.formatted(.number.precision(.fractionLength(1)).grouping(.never))
     }
 
     private func applyIngredientChanges(_ displayedIngredients: [MealIngredient]) {
@@ -352,10 +352,10 @@ struct EditFoodEntryView: View {
                     }
 
                     Section("Nutrition") {
-                        NutritionDisplayRow(label: "Calories", value: "\(scaledCalories)", unit: "kcal")
-                        NutritionDisplayRow(label: "Protein", value: MacroValueFormatter.string(scaledProtein), unit: "g")
-                        NutritionDisplayRow(label: "Carbs", value: MacroValueFormatter.string(scaledCarbs), unit: "g")
-                        NutritionDisplayRow(label: "Fat", value: MacroValueFormatter.string(scaledFat), unit: "g")
+                        NutritionDisplayRow(label: String(localized: "Calories", comment: "Nutrient row label on the edit food screen"), value: "\(scaledCalories)", unit: "kcal")
+                        NutritionDisplayRow(label: String(localized: "Protein", comment: "Nutrient row label on the edit food screen"), value: MacroValueFormatter.display(scaledProtein), unit: "g")
+                        NutritionDisplayRow(label: String(localized: "Carbs", comment: "Nutrient row label on the edit food screen"), value: MacroValueFormatter.display(scaledCarbs), unit: "g")
+                        NutritionDisplayRow(label: String(localized: "Fat", comment: "Nutrient row label on the edit food screen"), value: MacroValueFormatter.display(scaledFat), unit: "g")
                     }
 
                     MealIngredientsSection(
@@ -380,29 +380,29 @@ struct EditFoodEntryView: View {
 
                     Section {
                         DisclosureGroup("More Nutrition") {
-                            OptionalNutritionDisplayRow(label: "Sugar", value: scaledSugar, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Added Sugar", value: scaledAddedSugar, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Fiber", value: scaledFiber, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Saturated Fat", value: scaledSaturatedFat, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Mono Fat", value: scaledMonounsaturatedFat, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Poly Fat", value: scaledPolyunsaturatedFat, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Cholesterol", value: scaledCholesterol, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Caffeine", value: scaledCaffeine, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Sodium", value: scaledSodium, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Potassium", value: scaledPotassium, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Trans Fat", value: scaledTransFat, unit: "g")
-                            OptionalNutritionDisplayRow(label: "Calcium", value: scaledCalcium, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Iron", value: scaledIron, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Magnesium", value: scaledMagnesium, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Zinc", value: scaledZinc, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Vitamin A", value: scaledVitaminA, unit: "mcg")
-                            OptionalNutritionDisplayRow(label: "Vitamin C", value: scaledVitaminC, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Vitamin D", value: scaledVitaminD, unit: "mcg")
-                            OptionalNutritionDisplayRow(label: "Vitamin B12", value: scaledVitaminB12, unit: "mcg")
-                            OptionalNutritionDisplayRow(label: "Vitamin E", value: scaledVitaminE, unit: "mg")
-                            OptionalNutritionDisplayRow(label: "Vitamin K", value: scaledVitaminK, unit: "mcg")
-                            OptionalNutritionDisplayRow(label: "Folate", value: scaledFolate, unit: "mcg")
-                            OptionalNutritionDisplayRow(label: "Omega-3", value: scaledOmega3, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Sugar", comment: "Nutrient row label on the edit food screen"), value: scaledSugar, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Added Sugar", comment: "Nutrient row label on the edit food screen"), value: scaledAddedSugar, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Fiber", comment: "Nutrient row label on the edit food screen"), value: scaledFiber, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Saturated Fat", comment: "Nutrient row label on the edit food screen"), value: scaledSaturatedFat, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Mono Fat", comment: "Nutrient row label on the edit food screen"), value: scaledMonounsaturatedFat, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Poly Fat", comment: "Nutrient row label on the edit food screen"), value: scaledPolyunsaturatedFat, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Cholesterol", comment: "Nutrient row label on the edit food screen"), value: scaledCholesterol, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Caffeine", comment: "Nutrient row label on the edit food screen"), value: scaledCaffeine, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Sodium", comment: "Nutrient row label on the edit food screen"), value: scaledSodium, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Potassium", comment: "Nutrient row label on the edit food screen"), value: scaledPotassium, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Trans Fat", comment: "Nutrient row label on the edit food screen"), value: scaledTransFat, unit: "g")
+                            OptionalNutritionDisplayRow(label: String(localized: "Calcium", comment: "Nutrient row label on the edit food screen"), value: scaledCalcium, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Iron", comment: "Nutrient row label on the edit food screen"), value: scaledIron, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Magnesium", comment: "Nutrient row label on the edit food screen"), value: scaledMagnesium, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Zinc", comment: "Nutrient row label on the edit food screen"), value: scaledZinc, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Vitamin A", comment: "Nutrient row label on the edit food screen"), value: scaledVitaminA, unit: "mcg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Vitamin C", comment: "Nutrient row label on the edit food screen"), value: scaledVitaminC, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Vitamin D", comment: "Nutrient row label on the edit food screen"), value: scaledVitaminD, unit: "mcg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Vitamin B12", comment: "Nutrient row label on the edit food screen"), value: scaledVitaminB12, unit: "mcg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Vitamin E", comment: "Nutrient row label on the edit food screen"), value: scaledVitaminE, unit: "mg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Vitamin K", comment: "Nutrient row label on the edit food screen"), value: scaledVitaminK, unit: "mcg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Folate", comment: "Nutrient row label on the edit food screen"), value: scaledFolate, unit: "mcg")
+                            OptionalNutritionDisplayRow(label: String(localized: "Omega-3", comment: "Nutrient row label on the edit food screen"), value: scaledOmega3, unit: "g")
                             ForEach(SupplementalNutrient.allCases) { nutrient in
                                 OptionalNutritionDisplayRow(
                                     label: nutrient.displayName,
