@@ -100,7 +100,8 @@ object HealthRollupMath {
             if (row.deleted || row.typeId != HealthDataType.NUTRITION_RECORD.id) continue
             val extra = parseExtra(row.extraJson) ?: continue
             for ((type, key) in HealthDataType.dietaryExtraKeys) {
-                val value = (extra[key] as? JsonPrimitive)?.doubleOrNull ?: continue
+                // Health Connect rows key by the bare nutrient; Google Health rows by the dietary slug.
+                val value = ((extra[key] ?: extra[type.id]) as? JsonPrimitive)?.doubleOrNull ?: continue
                 val acc = out.getOrPut(type) { mutableMapOf() }.getOrPut(row.localDay) { Accumulator() }
                 acc.add(HealthTypeDescriptor.of(type), row.copy(value = value, value2 = null, value3 = null, count = 1))
             }

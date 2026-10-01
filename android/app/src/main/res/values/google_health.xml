@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Google Health API source (docs/google-health.md §5). "Google Health" is a product name. -->
+<resources>
+    <string name="google_health_title">Google Health</string>
+
+    <!-- Registry v2 Google-only data types (shared/health/metric_registry.json). -->
+    <string name="health_type_active_zone_minutes">Active Zone Minutes</string>
+    <string name="health_type_activity_level">Activity Level</string>
+    <string name="health_type_sedentary_period">Sedentary Time</string>
+    <string name="health_type_calories_in_hr_zone">Calories in Heart Rate Zones</string>
+    <string name="health_type_swim_lengths">Swim Lengths</string>
+    <string name="health_type_daily_hrv">Daily Heart Rate Variability</string>
+    <string name="health_type_daily_blood_oxygen">Daily Blood Oxygen</string>
+    <string name="health_type_nightly_temperature_deviation">Nightly Temperature</string>
+    <string name="health_type_ecg_recording">ECG Recordings</string>
+
+    <!-- Data groups; each maps to Google OAuth scopes. -->
+    <string name="google_health_group_body_vitals">Body &amp; vitals</string>
+    <string name="google_health_group_activity">Activity &amp; workouts</string>
+    <string name="google_health_group_sleep">Sleep</string>
+    <string name="google_health_group_nutrition">Nutrition</string>
+    <string name="google_health_group_heart_rhythm">ECG &amp; irregular rhythm</string>
+
+    <!-- Settings page -->
+    <string name="google_health_connect">Connect Google Health</string>
+    <string name="google_health_connect_subtitle">Fitbit and Pixel Watch data from your Google account</string>
+    <string name="google_health_disconnected_footer">Ayuvo reads your data directly from Google and keeps it on this device. There is no Ayuvo server.</string>
+    <string name="google_health_account">Account</string>
+    <string name="google_health_last_synced">Last synced</string>
+    <string name="google_health_sync_now">Sync now</string>
+    <string name="google_health_auto_sync">Auto-sync on app open</string>
+    <string name="google_health_auto_sync_subtitle">At most every 6 hours</string>
+    <string name="google_health_write_back">Write to Health Connect</string>
+    <string name="google_health_write_back_subtitle">Copies Google Health data into Health Connect for other apps</string>
+    <string name="google_health_manage">Manage data types</string>
+    <string name="google_health_reconnect">Reconnect</string>
+    <string name="google_health_reconnect_subtitle">Google needs you to sign in again</string>
+    <string name="google_health_disconnect">Disconnect</string>
+    <string name="google_health_groups_header">Data</string>
+    <string name="google_health_connected_footer">Data stays on this device. Disconnecting does not remove records already written to Health Connect.</string>
+    <string name="google_health_status_ok">Synced</string>
+    <string name="google_health_status_not_granted">Not allowed</string>
+    <string name="google_health_status_error">Sync failed</string>
+    <string name="google_health_status_off">Off</string>
+    <string name="google_health_status_waiting">Not synced yet</string>
+    <string name="google_health_status_reconnect">Reconnect needed</string>
+    <string name="google_health_disconnect_title">Disconnect Google Health?</string>
+    <string name="google_health_disconnect_message">Ayuvo stops reading from Google and forgets its sign-in. Records already written to Health Connect stay there.</string>
+    <string name="google_health_disconnect_keep">Disconnect, keep data</string>
+    <string name="google_health_disconnect_delete">Disconnect, delete data</string>
+
+    <!-- Setup flow -->
+    <string name="google_health_setup_step">Step %1$d of %2$d</string>
+    <string name="google_health_setup_intro_title">Bring in your Fitbit and Pixel Watch data</string>
+    <string name="google_health_setup_intro_body">Ayuvo can read activity, heart, sleep, body and nutrition data from your Google account through the Google Health API.</string>
+    <string name="google_health_setup_privacy_local">Your data is stored only on this device.</string>
+    <string name="google_health_setup_privacy_direct">Requests go straight to Google. There is no Ayuvo server.</string>
+    <string name="google_health_setup_privacy_control">Nothing syncs in the background unless you turn on auto-sync.</string>
+    <string name="google_health_setup_choose_title">Choose what to read</string>
+    <string name="google_health_setup_choose_body">You can change this later.</string>
+    <string name="google_health_setup_advanced">Advanced</string>
+    <string name="google_health_setup_custom_client">Use my own Google Cloud client ID</string>
+    <string name="google_health_setup_custom_body">Create a Desktop OAuth client in a Google Cloud project with the Google Health API enabled, then paste its ID and secret.</string>
+    <string name="google_health_setup_client_id">Client ID</string>
+    <string name="google_health_setup_client_secret">Client secret</string>
+    <string name="google_health_setup_how_to">How to create one</string>
+    <string name="google_health_setup_consent_title">Sign in with Google</string>
+    <string name="google_health_setup_consent_body">Google asks you to allow access. You can allow only some data types.</string>
+    <string name="google_health_setup_consent_button">Continue with Google</string>
+    <string name="google_health_setup_consent_done">Connected as %1$s</string>
+    <string name="google_health_setup_consent_done_no_email">Connected</string>
+    <string name="google_health_setup_consent_partial">Not allowed: %1$s</string>
+    <string name="google_health_setup_consent_failed">Google sign-in did not finish. Try again.</string>
+    <string name="google_health_setup_write_title">Health Connect and first sync</string>
+    <string name="google_health_setup_write_body">Allow Ayuvo to write Google Health data to Health Connect, then import the last 90 days.</string>
+    <string name="google_health_setup_write_button">Allow Health Connect access</string>
+    <string name="google_health_setup_write_granted">Health Connect access allowed</string>
+    <string name="google_health_setup_sync_button">Start first sync</string>
+    <string name="google_health_setup_syncing">Importing… %1$d/%2$d</string>
+    <string name="google_health_setup_sync_done">Import finished</string>
+    <string name="google_health_setup_sync_failed">The first sync could not finish. You can use Sync now later.</string>
+</resources>

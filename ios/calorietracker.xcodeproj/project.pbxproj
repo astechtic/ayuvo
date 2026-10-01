@@ -16,6 +16,7 @@
 		F00D59000000000000000011 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = F00D59000000000000000012 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt */; };
 		F00D5A000000000000000011 /* THIRD_PARTY_NOTICES_WhisperBase.txt in Resources */ = {isa = PBXBuildFile; fileRef = F00D5A000000000000000012 /* THIRD_PARTY_NOTICES_WhisperBase.txt */; };
 		F00D61000000000000000011 /* exercises.json in Resources */ = {isa = PBXBuildFile; fileRef = F00D61000000000000000012 /* exercises.json */; };
+		F00D63000000000000000011 /* google_health_map.json in Resources */ = {isa = PBXBuildFile; fileRef = F00D63000000000000000012 /* google_health_map.json */; };
 		F1BE00000000000000000011 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F1BE00000000000000000013 /* FirebaseCore */; };
 /* End PBXBuildFile section */
 
@@ -112,6 +113,8 @@
 		F00D59000000000000000012 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt; path = "../local-models/legal/THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt"; sourceTree = "<group>"; };
 		F00D5A000000000000000012 /* THIRD_PARTY_NOTICES_WhisperBase.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = THIRD_PARTY_NOTICES_WhisperBase.txt; path = "../local-models/legal/THIRD_PARTY_NOTICES_WhisperBase.txt"; sourceTree = "<group>"; };
 		F00D61000000000000000012 /* exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = exercises.json; path = ../shared/exercises/exercises.json; sourceTree = "<group>"; };
+		F00D63000000000000000012 /* google_health_map.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = google_health_map.json; path = ../shared/health/google_health_map.json; sourceTree = "<group>"; };
+		F00D63000000000000000022 /* GoogleHealth.defaults.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = GoogleHealth.defaults.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -274,6 +277,8 @@
 			children = (
 				BA8E0DF52F33F197007DD537 /* calorietracker */,
 				F00D61000000000000000012 /* exercises.json */,
+				F00D63000000000000000012 /* google_health_map.json */,
+				F00D63000000000000000022 /* GoogleHealth.defaults.xcconfig */,
 				F00D59000000000000000012 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt */,
 				F00D5A000000000000000012 /* THIRD_PARTY_NOTICES_WhisperBase.txt */,
 				BA8E0E252F33F198007DD537 /* FudAIWidgets */,
@@ -557,6 +562,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F00D61000000000000000011 /* exercises.json in Resources */,
+				F00D63000000000000000011 /* google_health_map.json in Resources */,
 				F00D59000000000000000011 /* THIRD_PARTY_NOTICES_LiteRTLM_v0.16.0.txt in Resources */,
 				F00D5A000000000000000011 /* THIRD_PARTY_NOTICES_WhisperBase.txt in Resources */,
 			);
@@ -695,6 +701,7 @@
 /* Begin XCBuildConfiguration section */
 		BA8E0E1B2F33F198007DD537 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F00D63000000000000000022 /* GoogleHealth.defaults.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = "Ayuvo Debug";
 				APP_GROUP_IDENTIFIER = group.com.ayuvo.health.debug;
@@ -754,6 +761,7 @@
 		};
 		BA8E0E1C2F33F198007DD537 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F00D63000000000000000022 /* GoogleHealth.defaults.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = Ayuvo;
 				APP_GROUP_IDENTIFIER = group.com.ayuvo.health;

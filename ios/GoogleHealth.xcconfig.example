@@ -1,0 +1,4 @@
+// Copy to ios/GoogleHealth.xcconfig (gitignored) and fill in the iOS OAuth client created for
+// bundle id com.ayuvo.health in the Google Cloud project that has the Google Health API
+// enabled (docs/google-health.md §2). It reaches Info.plist as GH_IOS_CLIENT_ID.
+GH_IOS_CLIENT_ID = 000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com

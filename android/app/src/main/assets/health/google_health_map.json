@@ -1,0 +1,273 @@
+{
+  "map_version": 1,
+  "api": {
+    "base_url": "https://health.googleapis.com/v4",
+    "list_path": "/users/me/dataTypes/{gh_type}/dataPoints",
+    "auth_url": "https://accounts.google.com/o/oauth2/v2/auth",
+    "token_url": "https://oauth2.googleapis.com/token",
+    "revoke_url": "https://oauth2.googleapis.com/revoke",
+    "userinfo_url": "https://openidconnect.googleapis.com/v1/userinfo",
+    "scope_prefix": "https://www.googleapis.com/auth/googlehealth.",
+    "identity_scopes": ["openid", "email"],
+    "initial_backfill_days": 90,
+    "overlap_days": 2,
+    "max_concurrent_types": 3,
+    "auto_sync_min_interval_s": 21600,
+    "manual_sync_min_interval_s": 30
+  },
+  "filter_placeholders": {
+    "{from_rfc3339}": "UTC instant, RFC-3339 with Z and no fraction, e.g. 2026-07-03T00:00:00Z",
+    "{from_civil}": "device-local civil time, ISO-8601 without offset, e.g. 2026-07-03T00:00:00",
+    "{from_date}": "device-local date yyyy-MM-dd"
+  },
+  "scope_groups": [
+    {"id": "body_vitals", "scopes": ["health_metrics_and_measurements.readonly"], "display_name": "Body & vitals"},
+    {"id": "activity", "scopes": ["activity_and_fitness.readonly"], "display_name": "Activity & workouts"},
+    {"id": "sleep", "scopes": ["sleep.readonly"], "display_name": "Sleep"},
+    {"id": "nutrition", "scopes": ["nutrition.readonly"], "display_name": "Nutrition"},
+    {"id": "heart_rhythm", "scopes": ["ecg.readonly", "irn.readonly"], "display_name": "ECG & irregular rhythm"}
+  ],
+  "time_kinds": {
+    "sample": "point.<union>.sampleTime {physicalTime, utcOffset}; start_ms = end_ms = physicalTime",
+    "interval": "point.<union>.interval {startTime, startUtcOffset, endTime, endUtcOffset}",
+    "date": "point.<union>.date {year, month, day}; start = local midnight, end = next local midnight - 1 ms",
+    "session": "point.<union>.sessionStartTime / sessionEndTime (offsets from interval when present)"
+  },
+  "row_rules": {
+    "id": "\"gh:\" + the last path segment of point.name",
+    "origin": 3,
+    "source_id": "\"google_health:\" + (dataSource.application.packageName ?? dataSource.dataSourceFamily ?? \"unknown\")",
+    "device": "dataSource.device.manufacturer + \" \" + dataSource.device.model (trimmed, null when both absent)",
+    "recording_method": "ACTIVELY_RECORDED -> 1, PASSIVELY_RECORDED -> 2, else 0",
+    "updated_ms": "sync wall-clock time of the page (the API exposes no lastModified); a re-fetched point only overwrites when any value column differs",
+    "client_record_id": "\"ayuvo_gh_\" + id-without-prefix (the value written to Health Connect / HealthKit metadata ayuvo_ghealth_id)",
+    "extra_json": "always includes {\"gh\": {\"type\": gh_type, \"platform\": dataSource.platform}} plus the per-type keys below"
+  },
+  "echo_guard": {
+    "skip_mirror_when_package_in": ["com.google.android.apps.healthdata", "com.apple.health"],
+    "skip_mirror_when_platform_and_same_os": false,
+    "duplicate_window_ms": 60000,
+    "duplicate_value_epsilon_ratio": 0.01
+  },
+  "types": [
+    {"gh_type": "steps", "union": "steps", "scope_group": "activity", "time": "interval",
+     "filter": "steps.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "steps", "value": {"path": "count"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierStepCount", "unit": "count"},
+     "hc": {"record": "StepsRecord", "write_permission": "android.permission.health.WRITE_STEPS"}},
+
+    {"gh_type": "distance", "union": "distance", "scope_group": "activity", "time": "interval",
+     "filter": "distance.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "distance", "value": {"path": "meters"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierDistanceWalkingRunning", "unit": "m"},
+     "hc": {"record": "DistanceRecord", "write_permission": "android.permission.health.WRITE_DISTANCE"}},
+
+    {"gh_type": "floors", "union": "floors", "scope_group": "activity", "time": "interval",
+     "filter": "floors.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "floors_climbed", "value": {"path": "floor"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierFlightsClimbed", "unit": "count"},
+     "hc": {"record": "FloorsClimbedRecord", "write_permission": "android.permission.health.WRITE_FLOORS_CLIMBED"}},
+
+    {"gh_type": "altitude", "union": "altitude", "scope_group": "activity", "time": "interval",
+     "filter": "altitude.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "elevation_gained", "value": {"path": "gainMillimeters", "scale": 0.001},
+     "hk": null,
+     "hc": {"record": "ElevationGainedRecord", "write_permission": "android.permission.health.WRITE_ELEVATION_GAINED"}},
+
+    {"gh_type": "active-energy-burned", "union": "activeEnergyBurned", "scope_group": "activity", "time": "interval",
+     "filter": "active_energy_burned.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "active_energy", "value": {"path": "kcal"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierActiveEnergyBurned", "unit": "kcal"},
+     "hc": {"record": "ActiveCaloriesBurnedRecord", "write_permission": "android.permission.health.WRITE_ACTIVE_CALORIES_BURNED"}},
+
+    {"gh_type": "basal-energy-burned", "union": "basalEnergyBurned", "optional": true, "scope_group": "activity", "time": "interval",
+     "filter": "basal_energy_burned.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "resting_energy", "value": {"path": "kcal"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierBasalEnergyBurned", "unit": "kcal"},
+     "hc": null},
+
+    {"gh_type": "total-calories", "union": "totalCalories", "optional": true, "scope_group": "activity", "time": "interval",
+     "filter": "total_calories.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "total_energy", "value": {"path": "kcal"},
+     "hk": null,
+     "hc": {"record": "TotalCaloriesBurnedRecord", "write_permission": "android.permission.health.WRITE_TOTAL_CALORIES_BURNED"}},
+
+    {"gh_type": "calories-in-heart-rate-zone", "union": "caloriesInHeartRateZone", "optional": true, "scope_group": "activity", "time": "interval",
+     "filter": "calories_in_heart_rate_zone.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "calories_in_hr_zone", "value": {"path": "kcal"},
+     "category": {"path": "heartRateZone", "map": {"FAT_BURN": 1, "CARDIO": 2, "PEAK": 3}, "default": 0},
+     "hk": null, "hc": null},
+
+    {"gh_type": "active-zone-minutes", "union": "activeZoneMinutes", "scope_group": "activity", "time": "interval",
+     "filter": "active_zone_minutes.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "active_zone_minutes", "value": {"path": "activeZoneMinutes", "scale": 60},
+     "category": {"path": "heartRateZone", "map": {"FAT_BURN": 1, "CARDIO": 2, "PEAK": 3}, "default": 0},
+     "hk": null, "hc": null},
+
+    {"gh_type": "activity-level", "union": "activityLevel", "scope_group": "activity", "time": "interval",
+     "filter": "activity_level.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "activity_level", "value": null,
+     "category": {"path": "activityLevelType", "map": {"SEDENTARY": 1, "LIGHTLY_ACTIVE": 2, "MODERATELY_ACTIVE": 3, "VERY_ACTIVE": 4}, "default": 0},
+     "hk": null, "hc": null},
+
+    {"gh_type": "sedentary-period", "union": "sedentaryPeriod", "scope_group": "activity", "time": "interval",
+     "filter": "sedentary_period.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "sedentary_period", "value": {"path": "duration", "converter": "duration_seconds"},
+     "hk": null, "hc": null},
+
+    {"gh_type": "swim-lengths-data", "union": "swimLengthsData", "scope_group": "activity", "time": "interval",
+     "filter": "swim_lengths_data.interval.civil_start_time >= \"{from_civil}\"", "page_size": 10000,
+     "type_id": "swim_lengths", "value": {"path": "lengths"},
+     "extra": {"stroke": "swimStrokeType"},
+     "hk": null, "hc": null},
+
+    {"gh_type": "exercise", "union": "exercise", "scope_group": "activity", "time": "session",
+     "filter": "exercise.interval.civil_start_time >= \"{from_civil}\"", "page_size": 25,
+     "type_id": "workout", "converter": "exercise",
+     "hk": {"identifier": "HKWorkoutTypeIdentifier", "unit": "s"},
+     "hc": {"record": "ExerciseSessionRecord", "write_permission": "android.permission.health.WRITE_EXERCISE"}},
+
+    {"gh_type": "heart-rate", "union": "heartRate", "scope_group": "body_vitals", "time": "sample",
+     "filter": "heart_rate.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "heart_rate", "value": {"path": "beatsPerMinute"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierHeartRate", "unit": "count/min"},
+     "hc": {"record": "HeartRateRecord", "write_permission": "android.permission.health.WRITE_HEART_RATE"}},
+
+    {"gh_type": "daily-resting-heart-rate", "union": "dailyRestingHeartRate", "scope_group": "body_vitals", "time": "date",
+     "filter": "daily_resting_heart_rate.date >= \"{from_date}\"", "page_size": 1000,
+     "type_id": "resting_heart_rate", "value": {"path": "beatsPerMinute"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierRestingHeartRate", "unit": "count/min"},
+     "hc": {"record": "RestingHeartRateRecord", "write_permission": "android.permission.health.WRITE_RESTING_HEART_RATE"}},
+
+    {"gh_type": "heart-rate-variability", "union": "heartRateVariability", "scope_group": "body_vitals", "time": "sample",
+     "filter": "heart_rate_variability.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "hrv_rmssd", "value": {"path": "heartRateVariabilityMilliseconds"},
+     "hk": null,
+     "hc": {"record": "HeartRateVariabilityRmssdRecord", "write_permission": "android.permission.health.WRITE_HEART_RATE_VARIABILITY"}},
+
+    {"gh_type": "daily-heart-rate-variability", "union": "dailyHeartRateVariability", "scope_group": "body_vitals", "time": "date",
+     "filter": "daily_heart_rate_variability.date >= \"{from_date}\"", "page_size": 1000,
+     "type_id": "daily_hrv", "value": {"path": "averageHeartRateVariabilityMilliseconds"},
+     "extra": {"non_rem_bpm": "nonRemHeartRateBeatsPerMinute", "entropy": "entropy", "deep_sleep_rmssd_ms": "deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds"},
+     "hk": null, "hc": null},
+
+    {"gh_type": "oxygen-saturation", "union": "oxygenSaturation", "scope_group": "body_vitals", "time": "sample",
+     "filter": "oxygen_saturation.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "blood_oxygen", "value": {"path": "percentage"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierOxygenSaturation", "unit": "%"},
+     "hc": {"record": "OxygenSaturationRecord", "write_permission": "android.permission.health.WRITE_OXYGEN_SATURATION"}},
+
+    {"gh_type": "daily-oxygen-saturation", "union": "dailyOxygenSaturation", "scope_group": "body_vitals", "time": "date",
+     "filter": "daily_oxygen_saturation.date >= \"{from_date}\"", "page_size": 1000,
+     "type_id": "daily_blood_oxygen", "value": {"path": "averagePercentage"},
+     "value2": {"path": "lowerBoundPercentage"}, "value3": {"path": "upperBoundPercentage"},
+     "hk": null, "hc": null},
+
+    {"gh_type": "weight", "union": "weight", "scope_group": "body_vitals", "time": "sample",
+     "filter": "weight.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "weight", "value": {"path": "weightQuantity", "converter": "weight_quantity_kg"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierBodyMass", "unit": "kg"},
+     "hc": {"record": "WeightRecord", "write_permission": "android.permission.health.WRITE_WEIGHT"}},
+
+    {"gh_type": "height", "union": "height", "scope_group": "body_vitals", "time": "sample",
+     "filter": "height.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000, "optional": true,
+     "type_id": "height", "value": {"path": "heightQuantity", "converter": "length_quantity_m"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierHeight", "unit": "m"},
+     "hc": {"record": "HeightRecord", "write_permission": "android.permission.health.WRITE_HEIGHT"}},
+
+    {"gh_type": "body-fat", "union": "bodyFat", "scope_group": "body_vitals", "time": "sample",
+     "filter": "body_fat.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "body_fat", "value": {"path": "percentage"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierBodyFatPercentage", "unit": "%"},
+     "hc": {"record": "BodyFatRecord", "write_permission": "android.permission.health.WRITE_BODY_FAT"}},
+
+    {"gh_type": "blood-glucose", "union": "bloodGlucose", "scope_group": "body_vitals", "time": "sample",
+     "filter": "blood_glucose.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "blood_glucose", "value": {"path": "bloodGlucoseMilligramsPerDeciliter", "scale": 0.0555084},
+     "category": {"path": "specimen", "map": {"INTERSTITIAL_FLUID": 1, "CAPILLARY_BLOOD": 2, "PLASMA": 3, "SERUM": 4, "TEARS": 5, "WHOLE_BLOOD": 6}, "default": 0},
+     "extra": {"meal_type": "mealType", "measurement_timing": "measurementTiming", "measurement_source": "measurementSource"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierBloodGlucose", "unit": "mmol/L"},
+     "hc": {"record": "BloodGlucoseRecord", "write_permission": "android.permission.health.WRITE_BLOOD_GLUCOSE"}},
+
+    {"gh_type": "core-body-temperature", "union": "coreBodyTemperature", "scope_group": "body_vitals", "time": "sample",
+     "filter": "core_body_temperature.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "body_temperature", "value": {"path": "temperatureCelsius"},
+     "extra": {"measurement_location": "measurementLocation"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierBodyTemperature", "unit": "degC"},
+     "hc": {"record": "BodyTemperatureRecord", "write_permission": "android.permission.health.WRITE_BODY_TEMPERATURE"}},
+
+    {"gh_type": "vo2-max", "union": "vo2Max", "scope_group": "body_vitals", "time": "sample",
+     "filter": "vo2_max.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "vo2_max", "value": {"path": "vo2Max"},
+     "extra": {"measurement_method": "measurementMethod"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierVO2Max", "unit": "mL/(kg*min)"},
+     "hc": {"record": "Vo2MaxRecord", "write_permission": "android.permission.health.WRITE_VO2_MAX"}},
+
+    {"gh_type": "run-vo2-max", "union": "runVo2Max", "scope_group": "activity", "time": "date",
+     "filter": "run_vo2_max.date >= \"{from_date}\"", "page_size": 1000,
+     "type_id": "vo2_max", "value": {"path": "vo2Max"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierVO2Max", "unit": "mL/(kg*min)"},
+     "hc": {"record": "Vo2MaxRecord", "write_permission": "android.permission.health.WRITE_VO2_MAX"}},
+
+    {"gh_type": "daily-respiratory-rate", "union": "dailyRespiratoryRate", "scope_group": "body_vitals", "time": "date",
+     "filter": "daily_respiratory_rate.date >= \"{from_date}\"", "page_size": 1000, "optional": true,
+     "type_id": "respiratory_rate", "value": {"path": "breathsPerMinute"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierRespiratoryRate", "unit": "count/min"},
+     "hc": {"record": "RespiratoryRateRecord", "write_permission": "android.permission.health.WRITE_RESPIRATORY_RATE"}},
+
+    {"gh_type": "sleep", "union": "sleep", "scope_group": "sleep", "time": "session",
+     "filter": "sleep.interval.civil_end_time >= \"{from_civil}\"", "page_size": 25,
+     "type_id": "sleep", "converter": "sleep",
+     "stage_map": {"AWAKE": 2, "LIGHT": 3, "DEEP": 4, "REM": 5, "OUT_OF_BED": 6, "SLEEP_STAGE_TYPE_UNSPECIFIED": 1},
+     "hk": {"identifier": "HKCategoryTypeIdentifierSleepAnalysis", "unit": null},
+     "hc": {"record": "SleepSessionRecord", "write_permission": "android.permission.health.WRITE_SLEEP"}},
+
+    {"gh_type": "daily-sleep-temperature-derivations", "union": "dailySleepTemperatureDerivations", "scope_group": "sleep", "time": "date",
+     "filter": "daily_sleep_temperature_derivations.date >= \"{from_date}\"", "page_size": 1000,
+     "type_id": "nightly_temperature_deviation", "value": {"path": "nightlyTemperatureCelsius"},
+     "extra": {"baseline_c": "baselineTemperatureCelsius", "stddev_30d_c": "relativeNightlyStddev30dCelsius"},
+     "hk": null, "hc": null},
+
+    {"gh_type": "nutrition-log", "union": "nutritionLog", "scope_group": "nutrition", "time": "sample",
+     "filter": "nutrition_log.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000,
+     "type_id": "nutrition", "converter": "nutrition_log",
+     "meal_map": {"BREAKFAST": 1, "LUNCH": 2, "DINNER": 3, "SNACK": 4},
+     "hk": {"identifier": "HKCorrelationTypeIdentifierFood", "unit": "kcal"},
+     "hc": {"record": "NutritionRecord", "write_permission": "android.permission.health.WRITE_NUTRITION"}},
+
+    {"gh_type": "hydration-log", "union": "hydrationLog", "scope_group": "nutrition", "time": "sample",
+     "filter": "hydration_log.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 10000, "optional": true,
+     "type_id": "hydration", "value": {"path": "volumeQuantity", "converter": "volume_quantity_ml"},
+     "hk": {"identifier": "HKQuantityTypeIdentifierDietaryWater", "unit": "mL"},
+     "hc": {"record": "HydrationRecord", "write_permission": "android.permission.health.WRITE_HYDRATION"}},
+
+    {"gh_type": "electrocardiogram", "union": "electrocardiogram", "scope_group": "heart_rhythm", "time": "sample",
+     "filter": "electrocardiogram.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 1000,
+     "type_id": "ecg_recording", "value": null,
+     "category": {"path": "resultClassification", "map": {"NORMAL": 1, "UNRECOGNIZED": 2, "INCONCLUSIVE": 3, "UNCONFIRMED_AFIB": 4}, "default": 0},
+     "extra": {"sampling_frequency_hz": "samplingFrequencyHz"},
+     "drop_fields": ["ecgWaveformSamples"],
+     "hk": null, "hc": null},
+
+    {"gh_type": "irregular-rhythm-notification", "union": "irregularRhythmNotification", "scope_group": "heart_rhythm", "time": "sample",
+     "filter": "irregular_rhythm_notification.sample_time.physical_time >= \"{from_rfc3339}\"", "page_size": 1000,
+     "type_id": "irregular_heart_rhythm_event", "value": null,
+     "category": {"path": null, "map": {}, "default": 0},
+     "extra": {"alert_windows": "alertWindows"},
+     "drop_fields": ["heartBeats"],
+     "hk": null, "hc": null}
+  ],
+  "not_synced": {
+    "food": "User food catalog, not a time series; nutrition-log already carries consumed foods.",
+    "food-measurement-unit": "Reference data for nutrition-log servings."
+  },
+  "converters": {
+    "duration_seconds": "protobuf Duration JSON string \"123.5s\" -> 123.5",
+    "weight_quantity_kg": "{value, unit}: KILOGRAM -> value, POUND -> value * 0.45359237, unspecified -> value",
+    "length_quantity_m": "{value, unit}: METER -> value, CENTIMETER -> value / 100, INCH -> value * 0.0254, FOOT -> value * 0.3048, unspecified -> value",
+    "volume_quantity_ml": "{value, unit}: MILLILITER -> value, LITER -> value * 1000, US_FLUID_OUNCE -> value * 29.5735295625, US_CUP -> value * 236.5882365, unspecified -> value",
+    "exercise": "one workout row per point: start/end = sessionStartTime/sessionEndTime, value = (end - start) s, title = exerciseType, extra_json = {activity_type: exerciseType, energy_kcal: exerciseMetadata.totalCaloriesKcal, distance_m: exerciseMetadata.totalDistanceMeters, avg_hr_bpm, max_hr_bpm, elevation_gain_m, active_time_s, segments: null, laps: splitSummaries.length, has_route: false, platform: \"google_health\"}; category_value = 0 (platform code unknown; mirror writers map exerciseType -> HKWorkoutActivityType / ExerciseSessionRecord.EXERCISE_TYPE_* by name)",
+    "sleep": "Android-style layout (docs/health-data.md section 5): one session row id \"gh:<id>\" category_value 0, value = session seconds, title = sleepType; one stage row per sleepStages[n] with id \"gh:<id>:<n>\" and extra_json.session_id; a session with no stages gets one code-1 row \"gh:<id>:0\" spanning the session; outOfBedSegments become code-6 stage rows",
+    "nutrition_log": "value = totalEnergyQuantity in kcal (KILOCALORIE -> value, KILOJOULE -> value / 4.184), value2 = protein g, value3 = carbohydrate g, category_value = meal_map(mealType), title = first foodConsumed name, extra_json = every nutrients[] entry keyed by its dietary_* slug in the slug's canonical unit"
+  }
+}

@@ -77,6 +77,8 @@ class HealthRecordMapper(
     fun map(record: Record, nowMs: Long): HealthMapped? {
         val type = typeOf(record) ?: return null
         val meta = record.metadata
+        // Google Health write-back (docs/google-health.md §4): the origin-3 row is the canonical copy.
+        if (isGoogleHealthMirror(meta.clientRecordId)) return null
         val base = baseFor(record, type, meta, nowMs)
         val mapped = mapRecord(record, base, meta, nowMs) ?: return null
         // Every row (not only sessions/series) reports its origin app for the sources table.
@@ -432,6 +434,12 @@ class HealthRecordMapper(
 
     companion object {
         private const val DAY_MS = 86_400_000L
+
+        /** clientRecordId prefix of records GoogleHealthMirrorWriter puts into Health Connect. */
+        const val GOOGLE_HEALTH_MIRROR_PREFIX = "ayuvo_gh_"
+
+        fun isGoogleHealthMirror(clientRecordId: String?): Boolean =
+            clientRecordId?.startsWith(GOOGLE_HEALTH_MIRROR_PREFIX) == true
 
         /** Registry type for a record instance (class simple name lookup). */
         fun typeOf(record: Record): HealthDataType? = typeOfRecordClass(record.javaClass.simpleName)

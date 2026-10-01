@@ -9,6 +9,14 @@ nonisolated enum HealthSampleMapper {
         .distanceWalkingRunning, .distanceCycling, .distanceSwimming, .distanceWheelchair, .distanceDownhillSnowSports,
     ]
 
+    /// Metadata key on every sample `GoogleHealthMirrorWriter` saves. The mirror skips those
+    /// samples: the origin-3 row is already the canonical copy (docs/google-health.md §4).
+    static let googleHealthMetadataKey = "ayuvo_ghealth_id"
+
+    static func isGoogleHealthMirror(_ sample: HKSample) -> Bool {
+        sample.metadata?[googleHealthMetadataKey] != nil
+    }
+
     static func rows(from samples: [HKSample], type: HealthMetricType, calendar: Calendar, nowMs: Int64) -> [HealthSampleRow] {
         samples.compactMap { row(from: $0, type: type, calendar: calendar, nowMs: nowMs) }
     }
@@ -19,7 +27,7 @@ nonisolated enum HealthSampleMapper {
 
     static func sources(from samples: [HKSample], nowMs: Int64) -> [HealthSourceRow] {
         var byID: [String: HealthSourceRow] = [:]
-        for sample in samples {
+        for sample in samples where !isGoogleHealthMirror(sample) {
             let source = sample.sourceRevision.source
             let id = source.bundleIdentifier
             var row = byID[id] ?? HealthSourceRow(id: id, name: source.name, deviceModel: nil, deviceType: nil, lastSeenMs: nil)
@@ -36,6 +44,7 @@ nonisolated enum HealthSampleMapper {
     // MARK: - One sample
 
     static func row(from sample: HKSample, type: HealthMetricType, calendar: Calendar, nowMs: Int64) -> HealthSampleRow? {
+        guard !isGoogleHealthMirror(sample) else { return nil }
         let startMs = ms(sample.startDate)
         let endMs = ms(sample.endDate)
         let zone = (sample.metadata?[HKMetadataKeyTimeZone] as? String).flatMap(TimeZone.init(identifier:)) ?? calendar.timeZone

@@ -140,7 +140,10 @@ class HealthKitManager {
     /// v11: workouts, workout routes and walking/running + cycling distance joined
     /// the share set: strength sessions with a real start/end and GPS workouts are
     /// saved as HKWorkouts (with their route) instead of a 12:00 energy sample.
-    private let typesVersion = 11
+    /// v12: Google Health write-back (docs/google-health.md §4): while Google Health is
+    /// connected, the share set also holds every type `GoogleHealthMirrorWriter` saves. They
+    /// are first requested in step 4 of the Google Health setup, never by the Apple Health toggle.
+    private let typesVersion = 12
     private let typesVersionKey = "healthKitTypesVersion"
 
     /// Active-energy samples written for the workout diary are deliberately
@@ -218,7 +221,34 @@ class HealthKitManager {
             HKSeriesType.workoutRoute(),
         ]
         types.formUnion(dietaryShareTypes)
+        if GoogleHealthSettings.isConnected() {
+            types.formUnion(googleHealthShareTypes)
+        }
         return types
+    }
+
+    /// Everything the Google Health write-back saves (`google_health_map.json` `hk` targets).
+    var googleHealthShareTypes: Set<HKSampleType> {
+        GoogleHealthMap.bundled.map(GoogleHealthMirrorWriter.shareTypes(map:)) ?? []
+    }
+
+    /// Step 4 of the Google Health setup: asks for write access to the write-back types only.
+    /// Works whether or not the Apple Health toggle is on.
+    func requestGoogleHealthWriteAuthorization() async -> Bool {
+        guard HKHealthStore.isHealthDataAvailable() else { return false }
+        let types = googleHealthShareTypes
+        guard !types.isEmpty else { return false }
+        do {
+            try await healthStore.requestAuthorization(toShare: types, read: [])
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /// True when at least one write-back type may be written.
+    var hasGoogleHealthWriteAccess: Bool {
+        googleHealthShareTypes.contains { healthStore.authorizationStatus(for: $0) == .sharingAuthorized }
     }
 
     private let nutritionBackfillVersionKey = "healthKitNutritionBackfillVersion"

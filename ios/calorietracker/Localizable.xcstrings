@@ -447243,6 +447243,228 @@
           }
         }
       }
+    },
+    "Google no longer accepts this sign-in. Reconnect Google Health." : {
+      "comment" : "Google Health sync error"
+    },
+    "Google Health sent a response Ayuvo could not read." : {
+      "comment" : "Google Health sync error"
+    },
+    "Google refused access to this data type." : {
+      "comment" : "Google Health sync error"
+    },
+    "Google Health returned error %lld." : {
+      "comment" : "Google Health sync error; placeholder is the HTTP status"
+    },
+    "Disconnect Google Health?" : {
+
+    },
+    "Disconnect and Delete Google Data" : {
+
+    },
+    "Disconnect and Keep Data" : {
+
+    },
+    "Ayuvo stops syncing and revokes its Google access. Records already written to Apple Health stay there; remove them in the Health app if you want." : {
+
+    },
+    "Google Health" : {
+
+    },
+    "Google sign-in was cancelled." : {
+      "comment" : "Google Health connect error"
+    },
+    "Google sign-in returned an unexpected response. Please try again." : {
+      "comment" : "Google Health connect error (OAuth state mismatch)"
+    },
+    "This build has no Google Health client ID. Add your own under Advanced." : {
+      "comment" : "Google Health connect error"
+    },
+    "That is not an iOS OAuth client ID (it should end in .apps.googleusercontent.com)." : {
+      "comment" : "Google Health connect error"
+    },
+    "Google Health is not connected." : {
+      "comment" : "Google Health error"
+    },
+    "Google access has expired or was removed. Reconnect to keep syncing." : {
+      "comment" : "Google Health error"
+    },
+    "Google rejected the sign-in: %@" : {
+      "comment" : "Google Health connect error; placeholder is Google's message"
+    },
+    "Could not reach Google: %@" : {
+      "comment" : "Google Health network error; placeholder is the system message"
+    },
+    "Reconnect needed" : {
+      "comment" : "Google Health status line"
+    },
+    "Last sync failed" : {
+      "comment" : "Google Health status line"
+    },
+    "Active Zone Minutes" : {
+
+    },
+    "Sedentary Time" : {
+
+    },
+    "Calories in Heart Rate Zones" : {
+
+    },
+    "Swim Lengths" : {
+
+    },
+    "Daily Heart Rate Variability" : {
+
+    },
+    "Daily Blood Oxygen" : {
+
+    },
+    "Nightly Temperature" : {
+
+    },
+    "ECG Recordings" : {
+
+    },
+    "Syncing Google Health…" : {
+      "comment" : "Health hub status while the Google Health step of Sync Now runs"
+    },
+    "Connect Google Health" : {
+      "comment" : "Google Health setup step 1 title"
+    },
+    "Brings Fitbit and Pixel Watch data from your Google account into Ayuvo, and can copy it into Apple Health. Ayuvo talks to Google directly from this iPhone; there is no Ayuvo server, and the data stays on this iPhone." : {
+
+    },
+    "Account" : {
+
+    },
+    "Google account" : {
+      "comment" : "Google Health account row when the email is unknown"
+    },
+    "Writing to Apple Health… %lld" : {
+      "comment" : "Google Health progress; placeholder is the number of records written"
+    },
+    "%lld of %lld data types" : {
+      "comment" : "Google Health sync progress"
+    },
+    "Reconnect" : {
+
+    },
+    "Auto-sync on app open" : {
+
+    },
+    "Write to Apple Health" : {
+
+    },
+    "Manage Data Types" : {
+
+    },
+    "Disconnect" : {
+
+    },
+    "Auto-sync runs at most every 6 hours when you open Ayuvo. Write to Apple Health copies the types Apple Health supports, tagged so they are never read back twice; Google-only types such as Active Zone Minutes and ECG stay in Ayuvo. %lld Google records are stored on this iPhone, %lld written to Apple Health." : {
+
+    },
+    "Not allowed" : {
+      "comment" : "Google Health data group whose scope was not granted"
+    },
+    "Waiting for sync" : {
+      "comment" : "Google Health data group not synced yet"
+    },
+    "No data in this account" : {
+      "comment" : "Google Health data group whose types are unsupported for the account"
+    },
+    "Synced" : {
+      "comment" : "Google Health data group status"
+    },
+    "Fitbit and Pixel Watch data, in Ayuvo" : {
+      "comment" : "Google Health setup step 1 subtitle"
+    },
+    "Steps, heart rate, sleep, workouts, weight, nutrition and more from your Google account." : {
+      "comment" : "Google Health setup intro"
+    },
+    "The data is saved on this iPhone and shown in Browse, Summary and Coach like your Apple Health data." : {
+      "comment" : "Google Health setup intro"
+    },
+    "Ayuvo talks to Google directly. There is no Ayuvo server, and nothing syncs in the background unless you turn on Auto-sync." : {
+      "comment" : "Google Health setup intro"
+    },
+    "Optionally, Ayuvo copies the data into Apple Health." : {
+      "comment" : "Google Health setup intro"
+    },
+    "Body & vitals" : {
+      "comment" : "Google Health data group"
+    },
+    "Activity & workouts" : {
+      "comment" : "Google Health data group"
+    },
+    "ECG & irregular rhythm" : {
+      "comment" : "Google Health data group"
+    },
+    "Choose your data" : {
+      "comment" : "Google Health setup step 2 title"
+    },
+    "Google asks you to allow each group. You can change this later." : {
+      "comment" : "Google Health setup step 2 subtitle"
+    },
+    "Use my own Google Cloud client ID" : {
+      "comment" : "Google Health setup advanced option"
+    },
+    "123456-abc.apps.googleusercontent.com" : {
+      "comment" : "Placeholder for a Google OAuth iOS client id"
+    },
+    "Create an iOS OAuth client with bundle ID %@ in a Google Cloud project that has the Google Health API enabled." : {
+      "comment" : "Google Health custom client id help; placeholder is the app bundle id"
+    },
+    "This build has no built-in Google client, so a client ID is required." : {
+      "comment" : "Google Health setup when the bundled client id is missing"
+    },
+    "How to create one" : {
+
+    },
+    "Advanced" : {
+      "comment" : "Google Health setup disclosure"
+    },
+    "Continue with Google" : {
+      "comment" : "Google Health setup consent button"
+    },
+    "Sign in with Google" : {
+      "comment" : "Google Health setup step 3 title"
+    },
+    "Choose your Google account and allow the data you picked." : {
+      "comment" : "Google Health setup step 3 subtitle"
+    },
+    "Some data was not allowed. Ayuvo skips it; use Manage Data Types to allow it later." : {
+      "comment" : "Google Health partial consent note"
+    },
+    "No data was allowed. Try again and tick at least one group on Google's page." : {
+      "comment" : "Google Health consent with no data scopes"
+    },
+    "Start Sync" : {
+      "comment" : "Google Health setup start first sync"
+    },
+    "First sync" : {
+      "comment" : "Google Health setup step 4 title"
+    },
+    "Ayuvo reads the last 90 days. Later syncs only fetch what is new." : {
+      "comment" : "Google Health setup step 4 subtitle"
+    },
+    "Also write to Apple Health" : {
+      "comment" : "Google Health setup write-back toggle"
+    },
+    "Apple Health asks which types Ayuvo may write." : {
+      "comment" : "Google Health setup write-back toggle subtitle"
+    },
+    "Done — %lld records synced." : {
+      "comment" : "Google Health first sync finished; placeholder is the record count"
+    },
+    "Done." : {
+      "comment" : "Google Health first sync finished"
+    },
+    "%lld of %lld data types · %lld records" : {
+      "comment" : "Google Health first sync progress"
+    },
+    "Starting…" : {
+      "comment" : "Google Health first sync starting"
     }
   },
   "version" : "1.1"

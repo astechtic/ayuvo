@@ -111,7 +111,17 @@ object HealthCategoryStyle {
         "exercise_minutes" to R.string.health_type_exercise_minutes,
         "stand_minutes" to R.string.health_type_stand_minutes,
         "bmi" to R.string.health_type_bmi,
-        "walking_heart_rate_average" to R.string.health_type_walking_heart_rate_average
+        "walking_heart_rate_average" to R.string.health_type_walking_heart_rate_average,
+        // Google Health API only (registry v2).
+        "active_zone_minutes" to R.string.health_type_active_zone_minutes,
+        "activity_level" to R.string.health_type_activity_level,
+        "sedentary_period" to R.string.health_type_sedentary_period,
+        "calories_in_hr_zone" to R.string.health_type_calories_in_hr_zone,
+        "swim_lengths" to R.string.health_type_swim_lengths,
+        "daily_hrv" to R.string.health_type_daily_hrv,
+        "daily_blood_oxygen" to R.string.health_type_daily_blood_oxygen,
+        "nightly_temperature_deviation" to R.string.health_type_nightly_temperature_deviation,
+        "ecg_recording" to R.string.health_type_ecg_recording
     )
 
     /** Display name for a registry slug or raw id; imported/iOS-only ids fall back to a humanised slug. */

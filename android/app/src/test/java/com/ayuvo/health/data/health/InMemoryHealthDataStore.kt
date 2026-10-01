@@ -20,6 +20,8 @@ class InMemoryHealthDataStore : HealthDataStore {
     val typeMetas = LinkedHashMap<String, HealthTypeMeta>()
     val metas = LinkedHashMap<String, String>()
     val commits = mutableListOf<HealthPageCommit>()
+    val googleStates = LinkedHashMap<String, GoogleHealthSyncState>()
+    val googleMirror = LinkedHashMap<String, GoogleHealthMirrorEntry>()
     var closed = false
 
     private fun bump() { _revision.value = _revision.value + 1 }
@@ -57,8 +59,42 @@ class InMemoryHealthDataStore : HealthDataStore {
             )
         }
         page.syncStates.forEach { states[it.typeId] = it }
+        page.googleStates.forEach { googleStates[it.ghType] = it }
+        page.googleMirror.filter { it.sampleId in samples }.forEach { googleMirror[it.sampleId] = it }
         bump()
         return HealthPageCommitResult(inserted, updated, tombstoned)
+    }
+
+    override suspend fun googleSyncStates(): List<GoogleHealthSyncState> = googleStates.values.toList()
+
+    override suspend fun putGoogleSyncStates(states: List<GoogleHealthSyncState>) {
+        states.forEach { googleStates[it.ghType] = it }
+    }
+
+    override suspend fun googleMirrorEntries(status: String, limit: Int): List<Pair<GoogleHealthMirrorEntry, HealthSampleRow>> =
+        googleMirror.values.filter { it.mirrorStatus == status }
+            .mapNotNull { e -> samples[e.sampleId]?.takeIf { !it.deleted }?.let { e to it } }
+            .sortedWith(compareBy<Pair<GoogleHealthMirrorEntry, HealthSampleRow>> { it.second.startMs }.thenBy { it.second.id })
+            .take(limit)
+
+    override suspend fun updateGoogleMirror(entries: List<GoogleHealthMirrorEntry>) {
+        entries.filter { it.sampleId in samples }.forEach { googleMirror[it.sampleId] = it }
+    }
+
+    override suspend fun moveGoogleMirrorStatus(from: String, to: String): Int {
+        val moving = googleMirror.values.filter { it.mirrorStatus == from }
+        moving.forEach { googleMirror[it.sampleId] = it.copy(mirrorStatus = to, attempts = 0, lastError = null) }
+        return moving.size
+    }
+
+    override suspend fun googleMirrorCounts(): Map<String, Int> = googleMirror.values.groupingBy { it.mirrorStatus }.eachCount()
+
+    override suspend fun clearGoogleHealth(deleteRows: Boolean): Map<String, Set<String>> {
+        googleStates.clear()
+        if (!deleteRows) return emptyMap()
+        val rows = samples.values.filter { it.origin == HealthSampleRow.ORIGIN_GOOGLE_HEALTH }
+        rows.forEach { samples.remove(it.id); googleMirror.remove(it.id) }
+        return rows.groupBy { it.typeId }.mapValues { (_, r) -> r.map { it.localDay }.toSet() }
     }
 
     override suspend fun samplesBetween(typeId: String, fromMs: Long, toMs: Long, includeDeleted: Boolean): List<HealthSampleRow> =

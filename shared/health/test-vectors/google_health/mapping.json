@@ -1,0 +1,585 @@
+{
+  "description": "Google Health API dataPoint -> health_samples rows (shared/health/google_health_map.json). Rows omit updated_ms (sync clock). Numbers compare with 1e-6 tolerance. Default zone Asia/Kolkata.",
+  "zone": "Asia/Kolkata",
+  "mapping": [
+    {
+      "name": "steps_interval",
+      "gh_type": "steps",
+      "point": {
+        "name": "users/me/dataTypes/steps/dataPoints/st1",
+        "dataSource": {
+          "name": "Pixel Watch 3",
+          "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+          "platform": "ANDROID",
+          "recordingMethod": "PASSIVELY_RECORDED",
+          "application": {
+            "packageName": "com.google.android.apps.fitness"
+          },
+          "device": {
+            "manufacturer": "Google",
+            "model": "Pixel Watch 3",
+            "formFactor": "WATCH"
+          }
+        },
+        "steps": {
+          "interval": {
+            "startTime": "2026-03-04T01:30:00Z",
+            "startUtcOffset": "19800s",
+            "endTime": "2026-03-04T01:45:00Z",
+            "endUtcOffset": "19800s"
+          },
+          "count": "412"
+        }
+      },
+      "expected_rows": [
+        {
+          "id": "gh:st1",
+          "type_id": "steps",
+          "start_ms": 1772587800000,
+          "end_ms": 1772588700000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-04",
+          "value": 412,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "count",
+          "category_value": null,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "steps",
+              "platform": "ANDROID"
+            }
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": "ayuvo_gh_st1",
+          "origin": 3,
+          "deleted": 0
+        }
+      ]
+    },
+    {
+      "name": "weight_pounds",
+      "gh_type": "weight",
+      "point": {
+        "name": "users/me/dataTypes/weight/dataPoints/w1",
+        "dataSource": {
+          "name": "Pixel Watch 3",
+          "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+          "platform": "ANDROID",
+          "recordingMethod": "PASSIVELY_RECORDED",
+          "application": {
+            "packageName": "com.google.android.apps.fitness"
+          },
+          "device": {
+            "manufacturer": "Google",
+            "model": "Pixel Watch 3",
+            "formFactor": "WATCH"
+          }
+        },
+        "weight": {
+          "sampleTime": {
+            "physicalTime": "2026-03-04T02:00:00Z",
+            "utcOffset": "19800s"
+          },
+          "weightQuantity": {
+            "value": 150,
+            "unit": "POUND"
+          }
+        }
+      },
+      "expected_rows": [
+        {
+          "id": "gh:w1",
+          "type_id": "weight",
+          "start_ms": 1772589600000,
+          "end_ms": 1772589600000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-04",
+          "value": 68.038855,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "kg",
+          "category_value": null,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "weight",
+              "platform": "ANDROID"
+            }
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": "ayuvo_gh_w1",
+          "origin": 3,
+          "deleted": 0
+        }
+      ]
+    },
+    {
+      "name": "blood_glucose_mgdl",
+      "gh_type": "blood-glucose",
+      "point": {
+        "name": "users/me/dataTypes/blood-glucose/dataPoints/g1",
+        "dataSource": {
+          "name": "Pixel Watch 3",
+          "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+          "platform": "ANDROID",
+          "recordingMethod": "PASSIVELY_RECORDED",
+          "application": {
+            "packageName": "com.google.android.apps.fitness"
+          },
+          "device": {
+            "manufacturer": "Google",
+            "model": "Pixel Watch 3",
+            "formFactor": "WATCH"
+          }
+        },
+        "bloodGlucose": {
+          "sampleTime": {
+            "physicalTime": "2026-03-04T03:00:00Z",
+            "utcOffset": "19800s"
+          },
+          "bloodGlucoseMilligramsPerDeciliter": 100,
+          "specimen": "CAPILLARY_BLOOD",
+          "mealType": "BREAKFAST",
+          "measurementTiming": "AFTER_MEAL"
+        }
+      },
+      "expected_rows": [
+        {
+          "id": "gh:g1",
+          "type_id": "blood_glucose",
+          "start_ms": 1772593200000,
+          "end_ms": 1772593200000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-04",
+          "value": 5.55084,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "mmol/L",
+          "category_value": 2,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "blood-glucose",
+              "platform": "ANDROID"
+            },
+            "meal_type": "BREAKFAST",
+            "measurement_timing": "AFTER_MEAL"
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": "ayuvo_gh_g1",
+          "origin": 3,
+          "deleted": 0
+        }
+      ]
+    },
+    {
+      "name": "daily_resting_hr_date",
+      "gh_type": "daily-resting-heart-rate",
+      "zone": "Asia/Kolkata",
+      "point": {
+        "name": "users/me/dataTypes/daily-resting-heart-rate/dataPoints/r1",
+        "dataSource": {
+          "name": "Pixel Watch 3",
+          "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+          "platform": "ANDROID",
+          "recordingMethod": "PASSIVELY_RECORDED",
+          "application": {
+            "packageName": "com.google.android.apps.fitness"
+          },
+          "device": {
+            "manufacturer": "Google",
+            "model": "Pixel Watch 3",
+            "formFactor": "WATCH"
+          }
+        },
+        "dailyRestingHeartRate": {
+          "date": {
+            "year": 2026,
+            "month": 3,
+            "day": 7
+          },
+          "beatsPerMinute": "57"
+        }
+      },
+      "expected_rows": [
+        {
+          "id": "gh:r1",
+          "type_id": "resting_heart_rate",
+          "start_ms": 1772821800000,
+          "end_ms": 1772908199999,
+          "start_offset_s": null,
+          "end_offset_s": null,
+          "local_day": "2026-03-07",
+          "value": 57,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "count/min",
+          "category_value": null,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "daily-resting-heart-rate",
+              "platform": "ANDROID"
+            }
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": "ayuvo_gh_r1",
+          "origin": 3,
+          "deleted": 0
+        }
+      ]
+    },
+    {
+      "name": "sleep_with_stages",
+      "gh_type": "sleep",
+      "point": {
+        "name": "users/me/dataTypes/sleep/dataPoints/s1",
+        "dataSource": {
+          "name": "Pixel Watch 3",
+          "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+          "platform": "ANDROID",
+          "recordingMethod": "PASSIVELY_RECORDED",
+          "application": {
+            "packageName": "com.google.android.apps.fitness"
+          },
+          "device": {
+            "manufacturer": "Google",
+            "model": "Pixel Watch 3",
+            "formFactor": "WATCH"
+          }
+        },
+        "sleep": {
+          "interval": {
+            "startTime": "2026-03-06T17:34:00Z",
+            "startUtcOffset": "19800s",
+            "endTime": "2026-03-07T01:21:00Z",
+            "endUtcOffset": "19800s"
+          },
+          "sessionStartTime": "2026-03-06T17:34:00Z",
+          "sessionEndTime": "2026-03-07T01:21:00Z",
+          "sleepType": "MAIN_SLEEP",
+          "sleepStages": [
+            {
+              "startTime": "2026-03-06T17:34:00Z",
+              "endTime": "2026-03-06T19:34:00Z",
+              "stage": "LIGHT"
+            },
+            {
+              "startTime": "2026-03-06T19:34:00Z",
+              "endTime": "2026-03-06T21:04:00Z",
+              "stage": "DEEP"
+            },
+            {
+              "startTime": "2026-03-06T21:04:00Z",
+              "endTime": "2026-03-06T22:49:00Z",
+              "stage": "REM"
+            },
+            {
+              "startTime": "2026-03-06T22:49:00Z",
+              "endTime": "2026-03-06T23:21:00Z",
+              "stage": "AWAKE"
+            },
+            {
+              "startTime": "2026-03-06T23:21:00Z",
+              "endTime": "2026-03-07T01:21:00Z",
+              "stage": "LIGHT"
+            }
+          ],
+          "sleepMetadata": {
+            "stagesState": "STAGES_AVAILABLE"
+          }
+        }
+      },
+      "expected_rows": [
+        {
+          "id": "gh:s1",
+          "type_id": "sleep",
+          "start_ms": 1772818440000,
+          "end_ms": 1772846460000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-07",
+          "value": 28020,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "s",
+          "category_value": 0,
+          "title": "MAIN_SLEEP",
+          "extra_json": {
+            "gh": {
+              "type": "sleep",
+              "platform": "ANDROID"
+            }
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": "ayuvo_gh_s1",
+          "origin": 3,
+          "deleted": 0
+        },
+        {
+          "id": "gh:s1:0",
+          "type_id": "sleep",
+          "start_ms": 1772818440000,
+          "end_ms": 1772825640000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-07",
+          "value": 7200,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "s",
+          "category_value": 3,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "sleep",
+              "platform": "ANDROID"
+            },
+            "session_id": "gh:s1"
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": null,
+          "origin": 3,
+          "deleted": 0
+        },
+        {
+          "id": "gh:s1:1",
+          "type_id": "sleep",
+          "start_ms": 1772825640000,
+          "end_ms": 1772831040000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-07",
+          "value": 5400,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "s",
+          "category_value": 4,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "sleep",
+              "platform": "ANDROID"
+            },
+            "session_id": "gh:s1"
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": null,
+          "origin": 3,
+          "deleted": 0
+        },
+        {
+          "id": "gh:s1:2",
+          "type_id": "sleep",
+          "start_ms": 1772831040000,
+          "end_ms": 1772837340000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-07",
+          "value": 6300,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "s",
+          "category_value": 5,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "sleep",
+              "platform": "ANDROID"
+            },
+            "session_id": "gh:s1"
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": null,
+          "origin": 3,
+          "deleted": 0
+        },
+        {
+          "id": "gh:s1:3",
+          "type_id": "sleep",
+          "start_ms": 1772837340000,
+          "end_ms": 1772839260000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-07",
+          "value": 1920,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "s",
+          "category_value": 2,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "sleep",
+              "platform": "ANDROID"
+            },
+            "session_id": "gh:s1"
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": null,
+          "origin": 3,
+          "deleted": 0
+        },
+        {
+          "id": "gh:s1:4",
+          "type_id": "sleep",
+          "start_ms": 1772839260000,
+          "end_ms": 1772846460000,
+          "start_offset_s": 19800,
+          "end_offset_s": 19800,
+          "local_day": "2026-03-07",
+          "value": 7200,
+          "value2": null,
+          "value3": null,
+          "value_text": null,
+          "unit": "s",
+          "category_value": 3,
+          "title": null,
+          "extra_json": {
+            "gh": {
+              "type": "sleep",
+              "platform": "ANDROID"
+            },
+            "session_id": "gh:s1"
+          },
+          "count": 1,
+          "source_id": "google_health:com.google.android.apps.fitness",
+          "device": "Google Pixel Watch 3",
+          "recording_method": 2,
+          "client_record_id": null,
+          "origin": 3,
+          "deleted": 0
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "gh_type": "heart-rate",
+      "from_ms": 1783036800000,
+      "zone": "Asia/Kolkata",
+      "expected": "heart_rate.sample_time.physical_time >= \"2026-07-03T00:00:00Z\""
+    },
+    {
+      "gh_type": "steps",
+      "from_ms": 1783036800000,
+      "zone": "Asia/Kolkata",
+      "expected": "steps.interval.civil_start_time >= \"2026-07-03T05:30:00\""
+    },
+    {
+      "gh_type": "daily-resting-heart-rate",
+      "from_ms": 1783036800000,
+      "zone": "Asia/Kolkata",
+      "expected": "daily_resting_heart_rate.date >= \"2026-07-03\""
+    },
+    {
+      "gh_type": "sleep",
+      "from_ms": 1783036800000,
+      "zone": "Asia/Kolkata",
+      "expected": "sleep.interval.civil_end_time >= \"2026-07-03T05:30:00\""
+    }
+  ],
+  "echo_guard": [
+    {
+      "name": "health_connect_origin_not_mirrored_on_android",
+      "platform": "android",
+      "dataSource": {
+        "platform": "ANDROID",
+        "application": {
+          "packageName": "com.google.android.apps.healthdata"
+        }
+      },
+      "mirror": false
+    },
+    {
+      "name": "apple_health_origin_not_mirrored_on_ios",
+      "platform": "ios",
+      "dataSource": {
+        "platform": "IOS",
+        "application": {
+          "packageName": "com.apple.health"
+        }
+      },
+      "mirror": false
+    },
+    {
+      "name": "watch_data_mirrored",
+      "platform": "ios",
+      "dataSource": {
+        "name": "Pixel Watch 3",
+        "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+        "platform": "ANDROID",
+        "recordingMethod": "PASSIVELY_RECORDED",
+        "application": {
+          "packageName": "com.google.android.apps.fitness"
+        },
+        "device": {
+          "manufacturer": "Google",
+          "model": "Pixel Watch 3",
+          "formFactor": "WATCH"
+        }
+      },
+      "mirror": true
+    },
+    {
+      "name": "pixel_watch_on_android_mirrored",
+      "platform": "android",
+      "dataSource": {
+        "name": "Pixel Watch 3",
+        "dataSourceFamily": "users/me/dataSourceFamilies/google-wearables",
+        "platform": "ANDROID",
+        "recordingMethod": "PASSIVELY_RECORDED",
+        "application": {
+          "packageName": "com.google.android.apps.fitness"
+        },
+        "device": {
+          "manufacturer": "Google",
+          "model": "Pixel Watch 3",
+          "formFactor": "WATCH"
+        }
+      },
+      "mirror": true
+    }
+  ]
+}

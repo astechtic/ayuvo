@@ -518,6 +518,63 @@ class PreferencesStore(
         ds.edit { it[Keys.PENDING_NUTRITION_HEALTH_WRITES] = ids.joinToString(",") }
     }
 
+    // -- Google Health (docs/google-health.md §3) ---------------------------
+    //
+    // Device-local (CloudBackupPolicy.excludedKeys): the account label, connected time, client
+    // mode, granted scopes, chosen data groups and toggles. Tokens live only in [KeyStore]; health
+    // values only in ayuvo_health.db.
+
+    val googleHealthAccount: Flow<com.ayuvo.health.services.googlehealth.GoogleHealthAccount?> = ds.data.map { p ->
+        val connectedAt = p[Keys.GOOGLE_HEALTH_CONNECTED_AT]?.toLongOrNull() ?: return@map null
+        com.ayuvo.health.services.googlehealth.GoogleHealthAccount(
+            email = p[Keys.GOOGLE_HEALTH_EMAIL],
+            connectedAtMs = connectedAt,
+            clientMode = com.ayuvo.health.services.googlehealth.GoogleHealthClientMode.fromRaw(p[Keys.GOOGLE_HEALTH_CLIENT_MODE]),
+            grantedScopes = p[Keys.GOOGLE_HEALTH_SCOPES].splitSet(' '),
+            groups = p[Keys.GOOGLE_HEALTH_GROUPS].splitSet(','),
+            customClientId = p[Keys.GOOGLE_HEALTH_CUSTOM_CLIENT_ID]
+        )
+    }
+
+    suspend fun setGoogleHealthAccount(account: com.ayuvo.health.services.googlehealth.GoogleHealthAccount?) {
+        ds.edit {
+            if (account == null) {
+                listOf(
+                    Keys.GOOGLE_HEALTH_CONNECTED_AT, Keys.GOOGLE_HEALTH_EMAIL, Keys.GOOGLE_HEALTH_CLIENT_MODE,
+                    Keys.GOOGLE_HEALTH_SCOPES, Keys.GOOGLE_HEALTH_GROUPS, Keys.GOOGLE_HEALTH_CUSTOM_CLIENT_ID,
+                    Keys.GOOGLE_HEALTH_LAST_AUTO_SYNC_AT
+                ).forEach { key -> it.remove(key) }
+                it.remove(Keys.GOOGLE_HEALTH_NEEDS_RECONNECT)
+                return@edit
+            }
+            it[Keys.GOOGLE_HEALTH_CONNECTED_AT] = account.connectedAtMs.toString()
+            if (account.email == null) it.remove(Keys.GOOGLE_HEALTH_EMAIL) else it[Keys.GOOGLE_HEALTH_EMAIL] = account.email
+            it[Keys.GOOGLE_HEALTH_CLIENT_MODE] = account.clientMode.raw
+            it[Keys.GOOGLE_HEALTH_SCOPES] = account.grantedScopes.sorted().joinToString(" ")
+            it[Keys.GOOGLE_HEALTH_GROUPS] = account.groups.sorted().joinToString(",")
+            if (account.customClientId == null) it.remove(Keys.GOOGLE_HEALTH_CUSTOM_CLIENT_ID)
+            else it[Keys.GOOGLE_HEALTH_CUSTOM_CLIENT_ID] = account.customClientId
+        }
+    }
+
+    /** Auto-sync on app open (opt-in, off by default, throttled to `auto_sync_min_interval_s`). */
+    val googleHealthAutoSync: Flow<Boolean> = ds.data.map { it[Keys.GOOGLE_HEALTH_AUTO_SYNC] ?: false }
+    suspend fun setGoogleHealthAutoSync(v: Boolean) { ds.edit { it[Keys.GOOGLE_HEALTH_AUTO_SYNC] = v } }
+
+    /** "Also write to Health Connect" (on by default). */
+    val googleHealthWriteBack: Flow<Boolean> = ds.data.map { it[Keys.GOOGLE_HEALTH_WRITE_BACK] ?: true }
+    suspend fun setGoogleHealthWriteBack(v: Boolean) { ds.edit { it[Keys.GOOGLE_HEALTH_WRITE_BACK] = v } }
+
+    /** Consent was lost during a silent token refresh; Settings shows Reconnect. */
+    val googleHealthNeedsReconnect: Flow<Boolean> = ds.data.map { it[Keys.GOOGLE_HEALTH_NEEDS_RECONNECT] ?: false }
+    suspend fun setGoogleHealthNeedsReconnect(v: Boolean) { ds.edit { it[Keys.GOOGLE_HEALTH_NEEDS_RECONNECT] = v } }
+
+    suspend fun googleHealthLastAutoSyncMs(): Long? = ds.data.first()[Keys.GOOGLE_HEALTH_LAST_AUTO_SYNC_AT]?.toLongOrNull()
+    suspend fun setGoogleHealthLastAutoSyncMs(ms: Long) { ds.edit { it[Keys.GOOGLE_HEALTH_LAST_AUTO_SYNC_AT] = ms.toString() } }
+
+    private fun String?.splitSet(separator: Char): Set<String> =
+        this?.split(separator)?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet() ?: emptySet()
+
     val cloudBackupEnabled: Flow<Boolean> = ds.data.map { it[Keys.CLOUD_BACKUP_ENABLED] ?: false }
     suspend fun setCloudBackupEnabled(v: Boolean) { ds.edit { it[Keys.CLOUD_BACKUP_ENABLED] = v } }
 
@@ -2173,6 +2230,16 @@ class PreferencesStore(
         val HEALTH_HUB_LAST_SYNC_AT = stringPreferencesKey("healthHubLastSyncAt")
         val HEALTH_HUB_RATE_LIMITED_UNTIL = stringPreferencesKey("healthHubRateLimitedUntil")
         val PENDING_NUTRITION_HEALTH_WRITES = stringPreferencesKey("pendingNutritionHealthWrites")
+        val GOOGLE_HEALTH_CONNECTED_AT = stringPreferencesKey("googleHealthConnectedAt")
+        val GOOGLE_HEALTH_EMAIL = stringPreferencesKey("googleHealthAccountEmail")
+        val GOOGLE_HEALTH_CLIENT_MODE = stringPreferencesKey("googleHealthClientMode")
+        val GOOGLE_HEALTH_SCOPES = stringPreferencesKey("googleHealthGrantedScopes")
+        val GOOGLE_HEALTH_GROUPS = stringPreferencesKey("googleHealthGroups")
+        val GOOGLE_HEALTH_CUSTOM_CLIENT_ID = stringPreferencesKey("googleHealthCustomClientId")
+        val GOOGLE_HEALTH_AUTO_SYNC = booleanPreferencesKey("googleHealthAutoSync")
+        val GOOGLE_HEALTH_WRITE_BACK = booleanPreferencesKey("googleHealthWriteBack")
+        val GOOGLE_HEALTH_NEEDS_RECONNECT = booleanPreferencesKey("googleHealthNeedsReconnect")
+        val GOOGLE_HEALTH_LAST_AUTO_SYNC_AT = stringPreferencesKey("googleHealthLastAutoSyncAt")
         val CLOUD_BACKUP_ENABLED = booleanPreferencesKey("cloudBackupEnabled")
         val CLOUD_BACKUP_LAST_AT = stringPreferencesKey("cloudBackupLastAt")
         val CLOUD_BACKUP_LAST_HASH = stringPreferencesKey("cloudBackupLastHash")

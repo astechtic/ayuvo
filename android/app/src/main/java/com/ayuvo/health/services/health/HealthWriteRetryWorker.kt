@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit
 class HealthWriteRetryWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         val kind = inputData.getString("kind") ?: return Result.failure()
+        if (kind == KIND_GOOGLE_HEALTH) return retryGoogleHealth()
         val id = runCatching { UUID.fromString(inputData.getString("id")) }.getOrNull()
             ?: return Result.failure()
         val prefs = PreferencesStore(applicationContext)
@@ -58,7 +59,30 @@ class HealthWriteRetryWorker(context: Context, params: WorkerParameters) : Corou
         return Result.failure()
     }
 
+    /** Google Health write-back (docs/google-health.md §4): re-flushes whatever is still pending. */
+    private suspend fun retryGoogleHealth(): Result {
+        val container = (applicationContext as? com.ayuvo.health.AyuvoApp)?.container ?: return Result.failure()
+        val result = container.googleHealth.flushMirror() ?: return if (runAttemptCount < 5) Result.retry() else Result.failure()
+        if (!result.deferred) return Result.success()
+        return if (runAttemptCount < 5) Result.retry() else Result.failure()
+    }
+
     companion object {
+        private const val KIND_GOOGLE_HEALTH = "googleHealth"
+        /** One serial queue for the whole Google Health write-back (it is keyed by rows, not entries). */
+        private val GOOGLE_HEALTH_ID: UUID = UUID.fromString("6f1c5d2e-9a4b-4c3d-8e7f-0a1b2c3d4e5f")
+
+        fun enqueueGoogleHealth(context: Context) {
+            val request = OneTimeWorkRequestBuilder<HealthWriteRetryWorker>()
+                .setInputData(workDataOf("kind" to KIND_GOOGLE_HEALTH, "id" to GOOGLE_HEALTH_ID.toString(), "delete" to false))
+                .setInitialDelay(60, TimeUnit.SECONDS)
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 60, TimeUnit.SECONDS)
+                .build()
+            WorkManager.getInstance(context.applicationContext).enqueueUniqueWork(
+                "health_write_${KIND_GOOGLE_HEALTH}", ExistingWorkPolicy.KEEP, request
+            )
+        }
+
         fun enqueue(context: Context, kind: String, id: UUID, delete: Boolean) {
             val request = OneTimeWorkRequestBuilder<HealthWriteRetryWorker>()
                 .setInputData(workDataOf("kind" to kind, "id" to id.toString(), "delete" to delete))

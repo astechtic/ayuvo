@@ -55,6 +55,21 @@ interface HealthDataStore {
     suspend fun putSyncState(state: HealthSyncState)
     suspend fun clearSyncState(typeIds: Collection<String>)
 
+    // -- Google Health (docs/google-health.md §3) ---------------------------
+    suspend fun googleSyncStates(): List<GoogleHealthSyncState> = emptyList()
+    suspend fun putGoogleSyncStates(states: List<GoogleHealthSyncState>) {}
+    /** Oldest-first mirror entries in [status] joined with their (non-deleted) sample rows. */
+    suspend fun googleMirrorEntries(status: String, limit: Int): List<Pair<GoogleHealthMirrorEntry, HealthSampleRow>> = emptyList()
+    suspend fun updateGoogleMirror(entries: List<GoogleHealthMirrorEntry>) {}
+    /** Moves every mirror entry in [from] to [to] (write-back toggled); returns how many moved. */
+    suspend fun moveGoogleMirrorStatus(from: String, to: String): Int = 0
+    suspend fun googleMirrorCounts(): Map<String, Int> = emptyMap()
+    /**
+     * Disconnect: drops every `google_health_sync_state` row and, when [deleteRows], the origin-3
+     * samples (their mirror entries cascade). Returns `type_id` → local days whose rows were deleted.
+     */
+    suspend fun clearGoogleHealth(deleteRows: Boolean): Map<String, Set<String>> = emptyMap()
+
     // -- Sources / meta ----------------------------------------------------
     suspend fun sources(): List<HealthSourceRow>
     suspend fun upsertSources(sources: List<HealthSourceRow>)

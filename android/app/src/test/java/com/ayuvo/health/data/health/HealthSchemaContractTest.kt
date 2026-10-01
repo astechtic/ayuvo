@@ -17,11 +17,14 @@ class HealthSchemaContractTest {
     fun embeddedDdlCreatesEveryTableAndIndex() {
         val ddl = HealthDatabase.SCHEMA_SQL
         for (table in HealthDatabase.TABLES) assertTrue("missing $table", ddl.contains("CREATE TABLE $table"))
-        for (index in listOf("idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t")) {
+        for (index in listOf("idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status")) {
             assertTrue("missing $index", ddl.contains("CREATE INDEX $index"))
         }
         assertTrue(ddl.contains("REFERENCES health_samples(id) ON DELETE CASCADE"))
         assertEquals(HealthDatabase.SCHEMA_STATEMENTS.size, normalise(ddl).size)
+        assertEquals(3, HealthDatabase.VERSION)
+        assertEquals("2", HealthDatabase.REGISTRY_VERSION)
+        assertEquals(com.ayuvo.health.models.HealthDataType.REGISTRY_VERSION.toString(), HealthDatabase.REGISTRY_VERSION)
     }
 
     @Test

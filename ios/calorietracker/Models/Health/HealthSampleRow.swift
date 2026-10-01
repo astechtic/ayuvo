@@ -75,6 +75,8 @@ nonisolated enum HealthRowOrigin: Int, Sendable {
     case platform = 0
     case fileImport = 1
     case localAdapter = 2
+    /// Google Health API (docs/google-health.md); never tombstoned by platform deletions.
+    case googleHealth = 3
 }
 
 /// One `health_samples` row. Field names follow the shared DDL exactly so the SQL
@@ -236,6 +238,11 @@ nonisolated extension HealthSampleRow {
     /// `title` for display: workout rows store the English activity name, shown in the user's language.
     var displayTitle: String? {
         guard let title else { return nil }
+        // Google Health workouts keep category 0 and the API's `exerciseType` name as the title.
+        if typeID == "workout", origin == HealthRowOrigin.googleHealth.rawValue {
+            return GoogleHealthWorkoutTypes.activityType(forExerciseType: title)
+                .map { ImportedHealthWorkoutFormatting.localizedActivityTitle(for: $0) } ?? title
+        }
         if typeID == "workout", let code = categoryValue, code >= 0,
            let activity = HKWorkoutActivityType(rawValue: UInt(code)) {
             return ImportedHealthWorkoutFormatting.localizedActivityTitle(for: activity)

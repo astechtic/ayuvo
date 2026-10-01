@@ -41,6 +41,7 @@ internal object SettingsTint {
     val Units = Orange
     val Notifications = Red
     val HealthSync = Vitals
+    val GoogleHealth = Blue
     val Backup = Blue
     val Destructive = AyuvoPalette.Destructive
     val Warning = AyuvoPalette.Warning

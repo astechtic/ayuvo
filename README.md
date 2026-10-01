@@ -37,6 +37,7 @@ Everything is stored on the device. Data leaves only when the user acts, and onl
 | Exercise media | plain GET | raw.githubusercontent.com (© Gym visual) | browsing Workouts |
 | Model download | plain GET | Hugging Face | tapping Download |
 | Cloud backup (Android) | archive without health DB / chat | user's own Google Drive | toggle on |
+| Google Health | OAuth sign-in; read-only health data downloaded | Google (`accounts.google.com`, `oauth2.googleapis.com`, `openidconnect.googleapis.com`, `health.googleapis.com`); Android custom-client mode also opens a one-shot `127.0.0.1` listener during consent | connect, Sync now, app open if auto-sync on |
 | Update check / review | none (public metadata) | Apple / Google | app open |
 | OS backups | per OS settings; health DB and chat excluded | Apple / Google | — |
 

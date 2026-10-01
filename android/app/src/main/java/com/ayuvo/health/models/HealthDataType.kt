@@ -753,7 +753,21 @@ enum class HealthDataType(
         hkIdentifiers = listOf("HKDataTypeIdentifierHeartbeatSeries")),
     AUDIOGRAM("audiogram", HealthCategory.OTHER, HealthKind.DISCRETE, HealthAggregation.COUNT, "count",
         reserved = true,
-        hkIdentifiers = listOf("HKDataTypeIdentifierAudiogram"));
+        hkIdentifiers = listOf("HKDataTypeIdentifierAudiogram")),
+
+    // -- Google Health API only (registry v2, origin 3; never read from / written to Health Connect) --
+    ACTIVE_ZONE_MINUTES("active_zone_minutes", HealthCategory.ACTIVITY, HealthKind.DURATION, HealthAggregation.SUM, "s"),
+    ACTIVITY_LEVEL("activity_level", HealthCategory.ACTIVITY, HealthKind.CATEGORY, HealthAggregation.COUNT, "count",
+        categoryCodes = mapOf(0 to "unknown", 1 to "sedentary", 2 to "lightly_active", 3 to "moderately_active", 4 to "very_active")),
+    SEDENTARY_PERIOD("sedentary_period", HealthCategory.ACTIVITY, HealthKind.DURATION, HealthAggregation.DURATION, "s"),
+    CALORIES_IN_HR_ZONE("calories_in_hr_zone", HealthCategory.ACTIVITY, HealthKind.CUMULATIVE, HealthAggregation.SUM, "kcal"),
+    SWIM_LENGTHS("swim_lengths", HealthCategory.ACTIVITY, HealthKind.CUMULATIVE, HealthAggregation.SUM, "count"),
+    DAILY_HRV("daily_hrv", HealthCategory.HEART, HealthKind.DISCRETE, HealthAggregation.AVERAGE, "ms"),
+    DAILY_BLOOD_OXYGEN("daily_blood_oxygen", HealthCategory.RESPIRATORY, HealthKind.DISCRETE, HealthAggregation.AVERAGE, "%"),
+    NIGHTLY_TEMPERATURE_DEVIATION("nightly_temperature_deviation", HealthCategory.SLEEP, HealthKind.DISCRETE, HealthAggregation.AVERAGE, "degC",
+        dayAttribution = HealthDayAttribution.END),
+    ECG_RECORDING("ecg_recording", HealthCategory.HEART, HealthKind.CATEGORY, HealthAggregation.COUNT, "count",
+        categoryCodes = mapOf(0 to "unspecified", 1 to "normal", 2 to "unrecognized", 3 to "inconclusive", 4 to "unconfirmed_afib"));
 
     /** True when connect-client 1.1.0 can read this type on Android (reserved types are not). */
     val sdkAvailable: Boolean get() = hcRecord != null && hcPermission != null && !reserved
@@ -776,7 +790,7 @@ enum class HealthDataType(
     fun displayFallback(): String = humanise(id)
 
     companion object {
-        const val REGISTRY_VERSION = 1
+        const val REGISTRY_VERSION = 2
 
         val canonicalUnits: Set<String> = setOf(
             "count", "m", "kcal", "kcal/d", "count/min", "ms", "%", "degC", "mmHg", "mmol/L", "kg", "s", "L",

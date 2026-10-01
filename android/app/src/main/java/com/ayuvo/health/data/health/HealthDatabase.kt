@@ -7,7 +7,7 @@ import java.io.File
 import java.time.ZoneId
 
 /**
- * `ayuvo_health.db` — the local mirror of Health Connect. Framework SQLite (no Room/KSP),
+ * `ayuvo_health.db` — the local mirror of Health Connect (plus Google Health API rows, origin 3). Framework SQLite (no Room/KSP),
  * WAL journal, foreign keys on. The DDL below is embedded verbatim from
  * `shared/health/schema.sql`; HealthSchemaContractTest keeps the two in step and the
  * instrumented SchemaParityTest checks the live `PRAGMA table_info`.
@@ -25,7 +25,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
     override fun onCreate(db: SQLiteDatabase) {
         SCHEMA_STATEMENTS.forEach(db::execSQL)
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('schema_version', ?)", arrayOf(VERSION.toString()))
-        db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('registry_version', '1')")
+        db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('registry_version', ?)", arrayOf(REGISTRY_VERSION))
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('rollup_rule_version', '1')")
         db.execSQL(
             "INSERT OR REPLACE INTO health_meta(key, value) VALUES ('rollups_tz', ?)",
@@ -41,6 +41,10 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) db.execSQL(DERIVED_DAILY_VALUES)
+        if (oldVersion < 3) {
+            GOOGLE_HEALTH_STATEMENTS.forEach(db::execSQL)
+            db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('registry_version', ?)", arrayOf(REGISTRY_VERSION))
+        }
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('schema_version', ?)", arrayOf(newVersion.toString()))
     }
 
@@ -48,7 +52,8 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
 
     companion object {
         const val NAME = "ayuvo_health.db"
-        const val VERSION = 2
+        const val VERSION = 3
+        const val REGISTRY_VERSION = "2"
 
         /** v2: on-device derived metrics (docs/derived-metrics.md); never exported, rebuilt on demand. */
         const val DERIVED_DAILY_VALUES = """CREATE TABLE derived_daily_values (
@@ -56,6 +61,23 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   value REAL, value2 REAL, value3 REAL,
   quality REAL, source_kind TEXT NOT NULL DEFAULT 'derived',
   algo_version INTEGER NOT NULL, computed_ms INTEGER NOT NULL, PRIMARY KEY (metric_id, day))"""
+
+        /** v3: Google Health API source (docs/google-health.md §3). */
+        val GOOGLE_HEALTH_STATEMENTS: List<String> = listOf(
+            """CREATE TABLE google_health_sync_state (
+  gh_type TEXT PRIMARY KEY NOT NULL,
+  cursor_ms INTEGER,
+  page_token TEXT,
+  last_sync_ms INTEGER, backfill_floor_ms INTEGER,
+  status TEXT NOT NULL DEFAULT 'idle',
+  last_error TEXT, last_error_ms INTEGER)""",
+            """CREATE TABLE google_health_mirror (
+  sample_id TEXT PRIMARY KEY NOT NULL REFERENCES health_samples(id) ON DELETE CASCADE,
+  platform_id TEXT,
+  mirror_status TEXT NOT NULL DEFAULT 'pending',
+  mirrored_ms INTEGER, attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT)""",
+            "CREATE INDEX idx_ghm_status ON google_health_mirror(mirror_status)"
+        )
 
         /** Verbatim `shared/health/schema.sql`, one statement per entry. */
         val SCHEMA_STATEMENTS: List<String> = listOf(
@@ -101,13 +123,14 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   aggregation TEXT NOT NULL, unit TEXT NOT NULL, display_name TEXT, platform TEXT, native_id TEXT)""",
             "CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT)",
             DERIVED_DAILY_VALUES
-        )
+        ) + GOOGLE_HEALTH_STATEMENTS
 
         val SCHEMA_SQL: String get() = SCHEMA_STATEMENTS.joinToString(";\n", postfix = ";\n")
 
         val TABLES: List<String> = listOf(
             "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
-            "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values"
+            "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
+            "google_health_sync_state", "google_health_mirror"
         )
 
         fun databaseFiles(context: Context): List<File> {

@@ -44,7 +44,7 @@ class SchemaParityTest {
         db.rawQuery("SELECT name FROM sqlite_master WHERE type = 'index' AND name LIKE 'idx_%'", null).use { c ->
             while (c.moveToNext()) indexes += c.getString(0)
         }
-        assertEquals(setOf("idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t"), indexes)
+        assertEquals(setOf("idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status"), indexes)
         db.rawQuery("PRAGMA foreign_keys", null).use { c -> c.moveToFirst(); assertEquals(1, c.getInt(0)) }
         db.rawQuery("PRAGMA journal_mode", null).use { c -> c.moveToFirst(); assertEquals("wal", c.getString(0).lowercase()) }
         assertTrue(helper.files().first().exists())

@@ -7,3 +7,9 @@
 #
 # Web client ID is used by AuthorizationClient.requestOfflineAccess.
 cloud.backup.web.client.id=
+
+# Google Health API (docs/google-health.md §2). Enable the Google Health API in the same
+# Cloud project, add the googlehealth.* read scopes plus openid/email to the consent screen,
+# and register the Android clients above for package + SHA-1. The web client id is optional;
+# when set it is passed to AuthorizationClient.requestOfflineAccess.
+google.health.web.client.id=

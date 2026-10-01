@@ -53,6 +53,18 @@ object CloudBackupPolicy {
         "healthRecordsAiMode",
         "healthRecordsCoachAccessEnabled",
         "healthRecordsCoachConsentedAt",
+        // Google Health account and toggles are device-local (docs/google-health.md §3); tokens never
+        // leave KeyStore.
+        "googleHealthConnectedAt",
+        "googleHealthAccountEmail",
+        "googleHealthClientMode",
+        "googleHealthGrantedScopes",
+        "googleHealthGroups",
+        "googleHealthCustomClientId",
+        "googleHealthAutoSync",
+        "googleHealthWriteBack",
+        "googleHealthNeedsReconnect",
+        "googleHealthLastAutoSyncAt",
     )
 
     private val photoName = Regex("^[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp)$", RegexOption.IGNORE_CASE)

@@ -36,6 +36,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>GH_IOS_CLIENT_ID</key>
+	<string>$(GH_IOS_CLIENT_ID)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

@@ -1,0 +1,6 @@
+// Google Health API client (docs/google-health.md §2). Committed default: no bundled client,
+// so Settings › Google Health asks for a custom client ID. Maintainers put the real id in the
+// gitignored GoogleHealth.xcconfig next to this file (copy GoogleHealth.xcconfig.example).
+GH_IOS_CLIENT_ID =
+
+#include? "GoogleHealth.xcconfig"

@@ -77,12 +77,15 @@ actor HealthDatabase {
         }
     }
 
-    /// Idempotent: creates missing tables/indexes and stamps the version rows.
+    /// Idempotent: creates missing tables/indexes and stamps the version rows. Every
+    /// migration so far only adds tables (v2 `derived_daily_values`, v3 the Google Health
+    /// tables), so `CREATE … IF NOT EXISTS` is the whole upgrade path.
     func applySchema() throws {
         try connection.inTransaction {
             try connection.exec(HealthSchema.idempotentDDL)
             try setMetaInTransaction("schema_version", "\(HealthSchema.schemaVersion)")
-            if try metaValue("registry_version") == nil {
+            // Registry versions only grow (v2 added the Google-only slugs).
+            if try (metaValue("registry_version").flatMap(Int.init) ?? 0) < HealthSchema.registryVersion {
                 try setMetaInTransaction("registry_version", "\(HealthSchema.registryVersion)")
             }
             if try metaValue("rollup_rule_version") == nil {
@@ -198,6 +201,7 @@ actor HealthDatabase {
             DELETE FROM health_sources;
             DELETE FROM health_type_meta;
             DELETE FROM derived_daily_values;
+            DELETE FROM google_health_sync_state;
             UPDATE health_sync_state SET cursor=NULL, cursor_issued_ms=NULL, last_sync_ms=NULL, backfill_done=0, status='idle', last_error=NULL, last_error_ms=NULL;
             """)
         }

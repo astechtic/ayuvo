@@ -24,7 +24,7 @@ CREATE TABLE health_samples (
   count INTEGER NOT NULL DEFAULT 1,    -- samples condensed into this row
   source_id TEXT NOT NULL,             -- package name | bundle id
   device TEXT, device_type INTEGER, recording_method INTEGER, client_record_id TEXT,
-  origin INTEGER NOT NULL DEFAULT 0,   -- 0 platform, 1 file import, 2 local app adapter
+  origin INTEGER NOT NULL DEFAULT 0,   -- 0 platform, 1 file import, 2 local app adapter, 3 Google Health API
   deleted INTEGER NOT NULL DEFAULT 0,  -- tombstone; always wins over imports
   updated_ms INTEGER NOT NULL);        -- platform lastModified; newer wins
 CREATE INDEX idx_hs_type_end   ON health_samples(type_id, end_ms DESC);
@@ -59,3 +59,16 @@ CREATE TABLE derived_daily_values (   -- on-device derived metrics (docs/derived
   value REAL, value2 REAL, value3 REAL,
   quality REAL, source_kind TEXT NOT NULL DEFAULT 'derived',   -- 'derived' only; native readings stay in health_samples
   algo_version INTEGER NOT NULL, computed_ms INTEGER NOT NULL, PRIMARY KEY (metric_id, day));
+CREATE TABLE google_health_sync_state (   -- v3: per Google Health API data type (shared/health/google_health_map.json gh_type)
+  gh_type TEXT PRIMARY KEY NOT NULL,
+  cursor_ms INTEGER,                   -- newest point end seen; next sync starts at cursor_ms - overlap_days
+  page_token TEXT,                     -- non-NULL only while a paged fetch is interrupted mid-way
+  last_sync_ms INTEGER, backfill_floor_ms INTEGER,
+  status TEXT NOT NULL DEFAULT 'idle', -- idle|syncing|unsupported|error:scope|error:<code>
+  last_error TEXT, last_error_ms INTEGER);
+CREATE TABLE google_health_mirror (       -- v3: write-back of origin-3 rows to HealthKit / Health Connect
+  sample_id TEXT PRIMARY KEY NOT NULL REFERENCES health_samples(id) ON DELETE CASCADE,
+  platform_id TEXT,                    -- HK uuid | HC Metadata.id once written
+  mirror_status TEXT NOT NULL DEFAULT 'pending',  -- pending|mirrored|skipped_dup|unsupported|disabled|error
+  mirrored_ms INTEGER, attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT);
+CREATE INDEX idx_ghm_status ON google_health_mirror(mirror_status);

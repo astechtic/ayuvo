@@ -26,6 +26,7 @@ struct calorietrackerApp: App {
     @State private var importedHealthWorkoutStore = ImportedHealthWorkoutStore()
     @State private var appBackupService = AppBackupService()
     @State private var healthDataStore = HealthDataStore()
+    @State private var googleHealthStore = GoogleHealthStore()
     @State private var recordsStore = RecordsStore()
     @State private var medicationStore = MedicationStore()
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -82,6 +83,7 @@ struct calorietrackerApp: App {
                         .environment(importedHealthWorkoutStore)
                         .environment(appBackupService)
                         .environment(healthDataStore)
+                        .environment(googleHealthStore)
                         .environment(recordsStore)
                         .environment(medicationStore)
                 } else {
@@ -107,6 +109,8 @@ struct calorietrackerApp: App {
             .preferredColorScheme(colorScheme)
             .onAppear {
                 AppThemeColor.applyAppIconIfNeeded(for: AppThemeColor.color(for: appThemeColorRaw))
+                // Sync Now on the Apple Health mirror also runs Google Health (docs/google-health.md §1).
+                googleHealthStore.attach(to: healthDataStore)
             }
             .onChange(of: appThemeColorRaw) { _, newValue in
                 AppThemeColor.applyAppIconIfNeeded(for: AppThemeColor.color(for: newValue))
@@ -228,6 +232,8 @@ struct calorietrackerApp: App {
                 }
                 if hasCompletedOnboarding {
                     wireUpHealthKit()
+                    // Google Health: opt-in app-open sync, throttled to auto_sync_min_interval_s.
+                    googleHealthStore.syncIfNeeded()
                     // Re-wire on every scene-active so the widget refresh callback
                     // is connected for users who completed onboarding before this
                     // hook existed (the .onChange(hasCompletedOnboarding) branch

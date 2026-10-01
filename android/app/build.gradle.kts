@@ -63,6 +63,16 @@ android {
             "CLOUD_BACKUP_WEB_CLIENT_ID",
             "\"${webClientId.replace("\"", "\\\"")}\""
         )
+        // Google Health API (docs/google-health.md §2): optional server client id for the bundled
+        // Identity AuthorizationClient flow; blank builds still connect with the package/SHA-1 client.
+        val googleHealthClientId = oauthProps.getProperty("google.health.web.client.id")
+            ?: localProperties.getProperty("google.health.web.client.id")
+            ?: ""
+        buildConfigField(
+            "String",
+            "GOOGLE_HEALTH_WEB_CLIENT_ID",
+            "\"${googleHealthClientId.replace("\"", "\\\"")}\""
+        )
     }
 
     signingConfigs {

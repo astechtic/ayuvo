@@ -6,18 +6,18 @@ import UIKit
 @Suite(.serialized)
 struct AIRequestConfigurationTests {
     @Test func settingsPanesFollowThePlanGroups() {
-        #expect(SettingsPane.allCases.count == 22)
-        #expect(Set(SettingsPane.allCases.map(\.rawValue)).count == 22)
+        #expect(SettingsPane.allCases.count == 23)
+        #expect(Set(SettingsPane.allCases.map(\.rawValue)).count == 23)
         #expect(SettingsGroup.healthProfile.panes == [.personalInfo, .goalsNutrition, .units])
         #expect(SettingsGroup.tracking.panes == [.nutritionTracking, .hydration, .fasting, .activity, .medications, .insights, .derivedMetrics])
         #expect(SettingsGroup.notifications.panes == [.notifications])
-        #expect(SettingsGroup.dataPrivacy.panes == [.healthData, .healthRecords, .dataManagement, .deleteData])
+        #expect(SettingsGroup.dataPrivacy.panes == [.healthData, .googleHealth, .healthRecords, .dataManagement, .deleteData])
         #expect(SettingsGroup.aiSpeech.panes == [.aiProviders, .speechToText, .customInstructions])
         #expect(SettingsGroup.appearance.panes == [.appearance])
         #expect(SettingsGroup.about.panes == [.appUpdates, .helpSupport, .legal])
         #expect(SettingsPane.allCases.compactMap(\.aboutCategory).count == 3)
         // Raw values back the `settings.category.<rawValue>` ids the UI tests use.
-        for raw in ["appUpdates", "helpSupport", "legal", "dataManagement", "healthRecords", "aiProviders", "speechToText"] {
+        for raw in ["appUpdates", "helpSupport", "legal", "dataManagement", "healthRecords", "aiProviders", "speechToText", "googleHealth"] {
             #expect(SettingsPane(rawValue: raw) != nil, "missing settings pane \(raw)")
         }
     }

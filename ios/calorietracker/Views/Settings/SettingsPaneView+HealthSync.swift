@@ -60,6 +60,24 @@ extension SettingsPaneView {
             .buttonStyle(.plain)
             .disabled(!healthKitEnabled || healthDataStore.isSyncing)
 
+            // Sync Now also runs Google Health when it is connected (docs/google-health.md §1).
+            if googleHealthStore.isConnected {
+                NavigationLink(value: SettingsPane.googleHealth) {
+                    HStack {
+                        Label {
+                            Text("Google Health")
+                        } icon: {
+                            SettingsIcon(SettingsPane.googleHealth.systemImage, tint: SettingsPane.googleHealth.tint)
+                        }
+                        Spacer()
+                        Text(googleHealthStore.statusLine)
+                            .font(.system(.subheadline, design: .rounded))
+                            .foregroundStyle(googleHealthStore.needsReconnect ? Color.orange : Color.secondary)
+                    }
+                }
+                .accessibilityIdentifier("settings.row.healthSync.googleHealthStatus")
+            }
+
             // Summary Favourites replaced the old "Health tiles on Home" toggle.
             NavigationLink(value: MetricRoute.favourites) {
                 Label {

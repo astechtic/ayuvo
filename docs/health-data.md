@@ -10,6 +10,7 @@ Files:
 | `shared/health/schema.sql` | SQLite DDL, embedded verbatim on both platforms | `SchemaParityTest` (Android instrumented), `HealthDatabaseTests` (iOS) |
 | `docs/health-data.md` | This page: conventions, rollup/sleep rules, Coach tools, privacy, accessibility ids | humans, reviewers |
 | `docs/health-data-export.md` | The `ayuvo-health-data` v1 zip format | exporter/importer on both platforms |
+| `shared/health/google_health_map.json` | Google Health API type → slug / HealthKit / Health Connect mapping (`docs/google-health.md`) | `GoogleHealthMapContractTest.kt`, `GoogleHealthMapTests.swift`, vectors in `shared/health/test-vectors/google_health/` |
 
 ## 1. Registry conventions
 
@@ -89,7 +90,8 @@ DDL: `shared/health/schema.sql` (embedded verbatim; do not restate it here). Tab
 - Pragmas on both: `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=5000`, `foreign_keys=ON`.
 - `health_meta` keys: `schema_version` (1), `registry_version`, `rollup_rule_version` (1), `rollups_tz` (IANA zone the rollups were built in; a change triggers a full rebuild).
 - Row ids: HC `Metadata.id`; HK `uuid.uuidString.lowercased()`; HC sleep stage rows `<record_id>:<n>`; local adapter rows `local:<uuid>`; iOS activity summaries `activity_summary:yyyy-MM-dd`.
-- `origin`: `0` platform, `1` file import, `2` local app adapter (Ayuvo's own weight/body-fat/height entries; `source_id` = own package/bundle id, label "Ayuvo").
+- `origin`: `0` platform, `1` file import, `2` local app adapter (Ayuvo's own weight/body-fat/height entries; `source_id` = own package/bundle id, label "Ayuvo"), `3` Google Health API (`docs/google-health.md`; `id` = `gh:<point id>`, `source_id` = `google_health:<package>`; never tombstoned by platform deletions).
+- Schema v3 adds `google_health_sync_state` and `google_health_mirror` (`docs/google-health.md` §3).
 - Show All Data pages by keyset `(end_ms DESC, id DESC)`, never `OFFSET`.
 
 ### 2.1 Upsert and tombstone rules (both platforms)
@@ -372,8 +374,9 @@ The metric detail and Summary identifiers are shared with app metrics and define
 
 | Constant | Value | Where |
 |---|---|---|
-| `registry_version` | 1 | registry JSON, `health_meta`, export manifest |
-| `schema_version` | 1 | `health_meta` |
+| `registry_version` | 2 (v2: Google-only slugs, `docs/google-health.md`) | registry JSON, `health_meta`, export manifest |
+| `schema_version` | 3 (v2 `derived_daily_values`, v3 Google Health tables) | `health_meta` |
+| Google map `map_version` | 1 | `shared/health/google_health_map.json` |
 | `rollup_rule_version` | 1 | `health_meta` (bump → full rollup rebuild) |
 | `percent_convention` | `0-100` | registry JSON, export manifest |
 | Export `format` / `format_version` | `ayuvo-health-data` / 1 | `docs/health-data-export.md` |

@@ -299,6 +299,20 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     }
     val healthRepository: HealthDataRepository by lazy { HealthDataRepository(healthStore) }
 
+    // -- Google Health API (docs/google-health.md) ----------------------------
+    // Origin-3 rows land in the same mirror; nothing runs until the user connects in Settings.
+    val googleHealth: com.ayuvo.health.services.googlehealth.GoogleHealthCoordinator by lazy {
+        com.ayuvo.health.services.googlehealth.GoogleHealthCoordinator(
+            context = app,
+            prefs = prefs,
+            keyStore = keyStore,
+            health = health,
+            store = { healthStore },
+            scope = scope,
+            webClientId = BuildConfig.GOOGLE_HEALTH_WEB_CLIENT_ID
+        )
+    }
+
     // -- Health Records (docs/health-records.md) ------------------------------
     // Lazily opened like the health mirror: nothing touches ayuvo_records.db until the Records
     // tab, an import or a share intent needs it.
@@ -863,17 +877,32 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
      * pull-to-refresh await the outcome and always clear its spinner.
      */
     fun requestHealthSync(trigger: HealthSyncTrigger): Deferred<HealthSyncOutcome> = scope.async {
+        val outcome = platformHealthSync(trigger)
+        // Google Health runs after the platform sync and never changes its outcome (docs/google-health.md §1).
+        val googleTrigger = when (trigger) {
+            HealthSyncTrigger.MANUAL_REFRESH -> com.ayuvo.health.services.googlehealth.GoogleHealthTrigger.MANUAL
+            HealthSyncTrigger.APP_OPEN -> com.ayuvo.health.services.googlehealth.GoogleHealthTrigger.APP_OPEN
+            else -> null
+        }
+        if (googleTrigger != null) {
+            runCatching { googleHealth.sync(googleTrigger) }
+                .onFailure { Log.w("AyuvoHealth", "Google Health sync failed: ${it.javaClass.simpleName}") }
+        }
+        outcome
+    }
+
+    private suspend fun platformHealthSync(trigger: HealthSyncTrigger): HealthSyncOutcome {
         runCatching { syncHealthConnectReads() }
             .onFailure { Log.w("AyuvoHealth", "Legacy Health Connect sync failed: ${it.javaClass.simpleName}") }
         if (!prefs.healthHubEnabled.first()) {
-            return@async HealthSyncOutcome.Skipped(HealthSyncOutcome.Skipped.Reason.HUB_DISABLED)
+            return HealthSyncOutcome.Skipped(HealthSyncOutcome.Skipped.Reason.HUB_DISABLED)
         }
         if (!health.isAvailable()) {
-            return@async HealthSyncOutcome.Skipped(HealthSyncOutcome.Skipped.Reason.PROBE_FAILED)
+            return HealthSyncOutcome.Skipped(HealthSyncOutcome.Skipped.Reason.PROBE_FAILED)
         }
         // One permission probe per run; null means the probe failed and nothing may change.
         val grants = health.capabilitiesOrNull()?.let { HealthGrants(it.hubReadTypes, it.historyRead) }
-        runCatching { healthSync.sync(trigger, grants) }
+        return runCatching { healthSync.sync(trigger, grants) }
             .onFailure { Log.e("AyuvoHealth", "Health Data sync failed: ${it.javaClass.simpleName}", it) }
             .getOrDefault(HealthSyncOutcome.Skipped(HealthSyncOutcome.Skipped.Reason.PROBE_FAILED))
     }

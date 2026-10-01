@@ -900,6 +900,18 @@ fun AppNavHost(
                         com.ayuvo.health.ui.records.RecordsStorageScreen(container = container, onBack = { nav.popBackStack() })
                     }
                 }
+                composable(
+                    AppRoutes.GOOGLE_HEALTH_SETUP,
+                    arguments = listOf(navArgument(AppRoutes.GOOGLE_HEALTH_START_ARG) { type = NavType.IntType; defaultValue = 1 })
+                ) { entry ->
+                    TabInset {
+                        com.ayuvo.health.ui.settings.GoogleHealthSetupScreen(
+                            container = container,
+                            startStep = entry.arguments?.getInt(AppRoutes.GOOGLE_HEALTH_START_ARG) ?: 1,
+                            onClose = { nav.popBackStack() }
+                        )
+                    }
+                }
                 composable(AppRoutes.HEALTH_RECORDS_BACKUP) {
                     TabInset {
                         com.ayuvo.health.ui.records.RecordsBackupScreen(container = container, onBack = { nav.popBackStack() })

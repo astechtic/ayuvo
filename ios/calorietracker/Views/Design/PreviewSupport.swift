@@ -18,6 +18,7 @@ private struct AyuvoPreviewEnvironment: ViewModifier {
     @State private var importedHealthWorkoutStore = ImportedHealthWorkoutStore()
     @State private var appBackupService = AppBackupService()
     @State private var healthDataStore = HealthDataStore()
+    @State private var googleHealthStore = GoogleHealthStore()
     @State private var recordsStore = RecordsStore()
     @State private var medicationStore = MedicationStore()
 
@@ -37,6 +38,7 @@ private struct AyuvoPreviewEnvironment: ViewModifier {
             .environment(importedHealthWorkoutStore)
             .environment(appBackupService)
             .environment(healthDataStore)
+            .environment(googleHealthStore)
             .environment(recordsStore)
             .environment(medicationStore)
             .environment(InsightsStore.shared)

@@ -22,6 +22,8 @@ nonisolated struct HealthSyncProgress: Sendable, Equatable {
     var rowsCommitted = 0
     var importing = false
     var currentTypeID: String?
+    /// The Google Health step that follows a manual sync (docs/google-health.md §1).
+    var googleHealth = false
 
     var fraction: Double {
         guard typesTotal > 0 else { return 0 }

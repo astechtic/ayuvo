@@ -20,6 +20,7 @@ ayuvo_screenshots/
 # Local configuration
 ios/Local.xcconfig
 android/oauth.properties
+ios/GoogleHealth.xcconfig
 .DS_Store
 
 # Claude Code runtime

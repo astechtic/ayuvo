@@ -68,6 +68,11 @@ final class HealthDataStore {
     private var syncTask: Task<HealthSyncOutcome, Never>?
     private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
 
+    /// Installed by `GoogleHealthStore.attach(to:)`: the Google Health sync + Apple Health
+    /// write-back that follows a manual Sync Now inside the same background task
+    /// (docs/google-health.md §1). Its result never changes `lastOutcome`.
+    var afterManualSync: (() async -> Void)?
+
     init(runtime: HealthDataRuntime = .shared, defaults: UserDefaults = .standard, calendar: Calendar = .current) {
         self.runtime = runtime
         self.defaults = defaults
@@ -191,6 +196,10 @@ final class HealthDataStore {
         syncTask = task
         let outcome = await task.value
         syncTask = nil
+        if trigger == .manual, outcome != .cancelled, let afterManualSync {
+            progress = HealthSyncProgress(googleHealth: true)
+            await afterManualSync()
+        }
         isSyncing = false
         progress = nil
         lastOutcome = outcome

@@ -53,6 +53,18 @@ extension HealthMetricRegistry {
         )
     }
 
+    /// Registry v2: Google Health API-only slugs (origin 3, docs/google-health.md). Nothing to
+    /// read from or write to HealthKit, so like `androidOnly` they never join the anchored sync.
+    private static func googleOnly(
+        _ id: String, _ category: HealthCategory, _ unit: String, _ kind: HealthMetricKind,
+        _ aggregation: HealthAggregation, _ name: LocalizedStringResource, dayAttribution: HealthDayAttribution = .start
+    ) -> HealthMetricType {
+        HealthMetricType(
+            id: id, category: category, kind: kind, aggregation: aggregation, unit: unit,
+            dayAttribution: dayAttribution, hkIdentifiers: [], objectKind: .virtual, englishName: name.key
+        )
+    }
+
     private static func dietary(_ suffix: String, _ hkName: String, _ unit: String, _ name: LocalizedStringResource) -> HealthMetricType {
         quantity("dietary_\(suffix)", .nutrition, [Q("Dietary\(hkName)")], unit, .cumulative, .sum, name, exported: false)
     }
@@ -62,7 +74,7 @@ extension HealthMetricRegistry {
     }
 
     static let entries: [HealthMetricType] = activity + body + heart + sleep + vitals + respiratory + nutrition
-        + cycleTracking + mentalWellbeing + mobility + hearing + symptoms + other
+        + cycleTracking + mentalWellbeing + mobility + hearing + symptoms + other + googleHealth
 
     private static let activity: [HealthMetricType] = [
         quantity("steps", .activity, [Q("StepCount")], "count", .cumulative, .sum, "Steps"),
@@ -332,5 +344,17 @@ extension HealthMetricRegistry {
         reserved("electrocardiogram", .other, ["HKDataTypeIdentifierElectrocardiogram"], "count/min", .discrete, .count, "Electrocardiograms (ECG)"),
         reserved("heartbeat_series", .other, ["HKDataTypeIdentifierHeartbeatSeries"], "count", .discrete, .count, "Beat-to-Beat Measurements"),
         reserved("audiogram", .other, ["HKDataTypeIdentifierAudiogram"], "count", .discrete, .count, "Audiograms"),
+    ]
+
+    private static let googleHealth: [HealthMetricType] = [
+        googleOnly("active_zone_minutes", .activity, "s", .duration, .sum, "Active Zone Minutes"),
+        googleOnly("activity_level", .activity, "count", .category, .count, "Activity Level"),
+        googleOnly("sedentary_period", .activity, "s", .duration, .duration, "Sedentary Time"),
+        googleOnly("calories_in_hr_zone", .activity, "kcal", .cumulative, .sum, "Calories in Heart Rate Zones"),
+        googleOnly("swim_lengths", .activity, "count", .cumulative, .sum, "Swim Lengths"),
+        googleOnly("daily_hrv", .heart, "ms", .discrete, .average, "Daily Heart Rate Variability"),
+        googleOnly("daily_blood_oxygen", .respiratory, "%", .discrete, .average, "Daily Blood Oxygen"),
+        googleOnly("nightly_temperature_deviation", .sleep, "degC", .discrete, .average, "Nightly Temperature", dayAttribution: .end),
+        googleOnly("ecg_recording", .heart, "count", .category, .count, "ECG Recordings"),
     ]
 }

@@ -123,6 +123,7 @@ fun SettingsScreen(
         when (state.selectedPage) {
             SettingsPage.BACKUP_EXPORT -> container.cloudBackup.refresh()
             SettingsPage.HEALTH_SYNC -> container.healthSync.refreshStatus()
+            SettingsPage.GOOGLE_HEALTH -> container.googleHealth.refreshStatus()
             else -> Unit
         }
     }

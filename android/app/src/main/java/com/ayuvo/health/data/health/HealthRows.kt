@@ -37,6 +37,8 @@ data class HealthSampleRow(
         const val ORIGIN_PLATFORM = 0
         const val ORIGIN_IMPORT = 1
         const val ORIGIN_LOCAL_APP = 2
+        /** Google Health API (docs/google-health.md); never tombstoned by platform deletions. */
+        const val ORIGIN_GOOGLE_HEALTH = 3
     }
 }
 
@@ -160,10 +162,54 @@ data class HealthPageCommit(
      * Which row origins a deletion may tombstone. Platform deletions touch only `origin=0`
      * (imported rows are immune); the local-app adapter passes `{2}` for its own rows.
      */
-    val deleteOrigins: Set<Int> = setOf(HealthSampleRow.ORIGIN_PLATFORM)
+    val deleteOrigins: Set<Int> = setOf(HealthSampleRow.ORIGIN_PLATFORM),
+    /** Google Health cursors committed with the page they acknowledge (docs/google-health.md §3). */
+    val googleStates: List<GoogleHealthSyncState> = emptyList(),
+    /** Write-back bookkeeping for the origin-3 rows of this page (replaces any existing entry). */
+    val googleMirror: List<GoogleHealthMirrorEntry> = emptyList()
 ) {
     val isEmpty: Boolean
-        get() = rows.isEmpty() && seriesPoints.isEmpty() && sources.isEmpty() && syncStates.isEmpty() && deletedIds.isEmpty()
+        get() = rows.isEmpty() && seriesPoints.isEmpty() && sources.isEmpty() && syncStates.isEmpty() && deletedIds.isEmpty() &&
+            googleStates.isEmpty() && googleMirror.isEmpty()
+}
+
+/** One `google_health_sync_state` row: per Google Health API data type (`gh_type`). */
+data class GoogleHealthSyncState(
+    val ghType: String,
+    val cursorMs: Long? = null,
+    val pageToken: String? = null,
+    val lastSyncMs: Long? = null,
+    val backfillFloorMs: Long? = null,
+    val status: String = STATUS_IDLE,
+    val lastError: String? = null,
+    val lastErrorMs: Long? = null
+) {
+    companion object {
+        const val STATUS_IDLE = "idle"
+        const val STATUS_SYNCING = "syncing"
+        const val STATUS_UNSUPPORTED = "unsupported"
+        const val STATUS_ERROR_SCOPE = "error:scope"
+        const val STATUS_ERROR_PREFIX = "error:"
+    }
+}
+
+/** One `google_health_mirror` row: write-back state of an origin-3 sample. */
+data class GoogleHealthMirrorEntry(
+    val sampleId: String,
+    val platformId: String? = null,
+    val mirrorStatus: String = STATUS_PENDING,
+    val mirroredMs: Long? = null,
+    val attempts: Int = 0,
+    val lastError: String? = null
+) {
+    companion object {
+        const val STATUS_PENDING = "pending"
+        const val STATUS_MIRRORED = "mirrored"
+        const val STATUS_SKIPPED_DUP = "skipped_dup"
+        const val STATUS_UNSUPPORTED = "unsupported"
+        const val STATUS_DISABLED = "disabled"
+        const val STATUS_ERROR = "error"
+    }
 }
 
 data class HealthPageCommitResult(

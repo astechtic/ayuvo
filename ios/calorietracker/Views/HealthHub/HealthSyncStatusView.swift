@@ -85,6 +85,9 @@ struct HealthSyncStatusView: View {
             return String(localized: "Unlock your iPhone to sync Health data")
         }
         if store.isSyncing, let progress = store.progress {
+            if progress.googleHealth {
+                return String(localized: "Syncing Google Health…", comment: "Health hub status while the Google Health step of Sync Now runs")
+            }
             if progress.importing {
                 return String(localized: "Importing history… \(progress.typesDone) of \(progress.typesTotal) types")
             }

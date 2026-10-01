@@ -116,6 +116,8 @@ class SqliteHealthDataStore(private val helper: HealthDatabase) : HealthDataStor
             }
             upsertSourcesIn(database, page.sources)
             page.syncStates.forEach { putSyncStateIn(database, it) }
+            page.googleStates.forEach { putGoogleStateIn(database, it) }
+            putGoogleMirrorIn(database, page.googleMirror)
             HealthPageCommitResult(inserted, updated, tombstoned)
         }
     }
@@ -514,6 +516,129 @@ class SqliteHealthDataStore(private val helper: HealthDatabase) : HealthDataStor
         }
     }
 
+    // -- Google Health ------------------------------------------------------
+
+    override suspend fun googleSyncStates(): List<GoogleHealthSyncState> = withContext(Dispatchers.IO) {
+        db.rawQuery(
+            "SELECT gh_type, cursor_ms, page_token, last_sync_ms, backfill_floor_ms, status, last_error, last_error_ms FROM google_health_sync_state",
+            null
+        ).use { c ->
+            c.readAll {
+                GoogleHealthSyncState(
+                    ghType = it.getString(0),
+                    cursorMs = it.getLongOrNull(1),
+                    pageToken = it.getStringOrNull(2),
+                    lastSyncMs = it.getLongOrNull(3),
+                    backfillFloorMs = it.getLongOrNull(4),
+                    status = it.getString(5),
+                    lastError = it.getStringOrNull(6),
+                    lastErrorMs = it.getLongOrNull(7)
+                )
+            }
+        }
+    }
+
+    override suspend fun putGoogleSyncStates(states: List<GoogleHealthSyncState>) = withContext(Dispatchers.IO) {
+        if (states.isEmpty()) return@withContext
+        write { database -> states.forEach { putGoogleStateIn(database, it) } }
+        Unit
+    }
+
+    private fun putGoogleStateIn(database: SQLiteDatabase, state: GoogleHealthSyncState) {
+        database.compileStatement(
+            "INSERT OR REPLACE INTO google_health_sync_state(gh_type, cursor_ms, page_token, last_sync_ms, backfill_floor_ms, status, last_error, last_error_ms) VALUES (?,?,?,?,?,?,?,?)"
+        ).use { s ->
+            s.bindString(1, state.ghType)
+            s.bindLongOrNull(2, state.cursorMs)
+            s.bindStringOrNull(3, state.pageToken)
+            s.bindLongOrNull(4, state.lastSyncMs)
+            s.bindLongOrNull(5, state.backfillFloorMs)
+            s.bindString(6, state.status)
+            s.bindStringOrNull(7, state.lastError)
+            s.bindLongOrNull(8, state.lastErrorMs)
+            s.executeInsert()
+        }
+    }
+
+    /** Mirror entries reference their sample (FK), so entries whose row is missing are skipped. */
+    private fun putGoogleMirrorIn(database: SQLiteDatabase, entries: List<GoogleHealthMirrorEntry>) {
+        if (entries.isEmpty()) return
+        val exists = database.compileStatement("SELECT COUNT(*) FROM health_samples WHERE id = ?")
+        val insert = database.compileStatement(
+            "INSERT OR REPLACE INTO google_health_mirror(sample_id, platform_id, mirror_status, mirrored_ms, attempts, last_error) VALUES (?,?,?,?,?,?)"
+        )
+        for (e in entries) {
+            exists.bindString(1, e.sampleId)
+            if (exists.simpleQueryForLong() == 0L) continue
+            insert.clearBindings()
+            insert.bindString(1, e.sampleId)
+            insert.bindStringOrNull(2, e.platformId)
+            insert.bindString(3, e.mirrorStatus)
+            insert.bindLongOrNull(4, e.mirroredMs)
+            insert.bindLong(5, e.attempts.toLong())
+            insert.bindStringOrNull(6, e.lastError)
+            insert.executeInsert()
+        }
+    }
+
+    override suspend fun googleMirrorEntries(status: String, limit: Int): List<Pair<GoogleHealthMirrorEntry, HealthSampleRow>> =
+        withContext(Dispatchers.IO) {
+            val columns = SAMPLE_COLUMNS.split(", ").joinToString(", ") { "s.$it" }
+            db.rawQuery(
+                "SELECT m.sample_id, m.platform_id, m.mirror_status, m.mirrored_ms, m.attempts, m.last_error, $columns FROM google_health_mirror m JOIN health_samples s ON s.id = m.sample_id WHERE m.mirror_status = ? AND s.deleted = 0 ORDER BY s.start_ms ASC, s.id ASC LIMIT ?",
+                arrayOf(status, limit.toString())
+            ).use { c ->
+                c.readAll {
+                    GoogleHealthMirrorEntry(
+                        sampleId = it.getString(0),
+                        platformId = it.getStringOrNull(1),
+                        mirrorStatus = it.getString(2),
+                        mirroredMs = it.getLongOrNull(3),
+                        attempts = it.getInt(4),
+                        lastError = it.getStringOrNull(5)
+                    ) to readSampleAt(it, 6)
+                }
+            }
+        }
+
+    override suspend fun updateGoogleMirror(entries: List<GoogleHealthMirrorEntry>) = withContext(Dispatchers.IO) {
+        if (entries.isEmpty()) return@withContext
+        write { database -> putGoogleMirrorIn(database, entries) }
+        Unit
+    }
+
+    override suspend fun moveGoogleMirrorStatus(from: String, to: String): Int = withContext(Dispatchers.IO) {
+        write { database ->
+            database.compileStatement("UPDATE google_health_mirror SET mirror_status = ?, attempts = 0, last_error = NULL WHERE mirror_status = ?").use {
+                it.bindString(1, to)
+                it.bindString(2, from)
+                it.executeUpdateDelete()
+            }
+        }
+    }
+
+    override suspend fun googleMirrorCounts(): Map<String, Int> = withContext(Dispatchers.IO) {
+        val out = LinkedHashMap<String, Int>()
+        db.rawQuery("SELECT mirror_status, COUNT(*) FROM google_health_mirror GROUP BY mirror_status", null).use { c ->
+            while (c.moveToNext()) out[c.getString(0)] = c.getInt(1)
+        }
+        out
+    }
+
+    override suspend fun clearGoogleHealth(deleteRows: Boolean): Map<String, Set<String>> = withContext(Dispatchers.IO) {
+        write { database ->
+            database.delete("google_health_sync_state", null, null)
+            if (!deleteRows) return@write emptyMap<String, Set<String>>()
+            val origin = HealthSampleRow.ORIGIN_GOOGLE_HEALTH.toString()
+            val days = LinkedHashMap<String, MutableSet<String>>()
+            database.rawQuery("SELECT DISTINCT type_id, local_day FROM health_samples WHERE origin = ?", arrayOf(origin)).use { c ->
+                while (c.moveToNext()) days.getOrPut(c.getString(0)) { LinkedHashSet() } += c.getString(1)
+            }
+            database.delete("health_samples", "origin = ?", arrayOf(origin))
+            days
+        }
+    }
+
     // -- Sources / meta ----------------------------------------------------
 
     override suspend fun sources(): List<HealthSourceRow> = withContext(Dispatchers.IO) {
@@ -676,31 +801,34 @@ class SqliteHealthDataStore(private val helper: HealthDatabase) : HealthDataStor
         s.bindLong(24, row.updatedMs)
     }
 
-    private fun readSample(c: Cursor): HealthSampleRow = HealthSampleRow(
-        id = c.getString(0),
-        typeId = c.getString(1),
-        startMs = c.getLong(2),
-        endMs = c.getLong(3),
-        startOffsetS = c.getIntOrNull(4),
-        endOffsetS = c.getIntOrNull(5),
-        localDay = c.getString(6),
-        value = c.getDoubleOrNull(7),
-        value2 = c.getDoubleOrNull(8),
-        value3 = c.getDoubleOrNull(9),
-        valueText = c.getStringOrNull(10),
-        unit = c.getString(11),
-        categoryValue = c.getIntOrNull(12),
-        title = c.getStringOrNull(13),
-        extraJson = c.getStringOrNull(14),
-        count = c.getInt(15),
-        sourceId = c.getString(16),
-        device = c.getStringOrNull(17),
-        deviceType = c.getIntOrNull(18),
-        recordingMethod = c.getIntOrNull(19),
-        clientRecordId = c.getStringOrNull(20),
-        origin = c.getInt(21),
-        deleted = c.getInt(22) == 1,
-        updatedMs = c.getLong(23)
+    private fun readSample(c: Cursor): HealthSampleRow = readSampleAt(c, 0)
+
+    /** [offset]: index of the `id` column when the sample columns follow other columns (joins). */
+    private fun readSampleAt(c: Cursor, offset: Int): HealthSampleRow = HealthSampleRow(
+        id = c.getString(offset),
+        typeId = c.getString(offset + 1),
+        startMs = c.getLong(offset + 2),
+        endMs = c.getLong(offset + 3),
+        startOffsetS = c.getIntOrNull(offset + 4),
+        endOffsetS = c.getIntOrNull(offset + 5),
+        localDay = c.getString(offset + 6),
+        value = c.getDoubleOrNull(offset + 7),
+        value2 = c.getDoubleOrNull(offset + 8),
+        value3 = c.getDoubleOrNull(offset + 9),
+        valueText = c.getStringOrNull(offset + 10),
+        unit = c.getString(offset + 11),
+        categoryValue = c.getIntOrNull(offset + 12),
+        title = c.getStringOrNull(offset + 13),
+        extraJson = c.getStringOrNull(offset + 14),
+        count = c.getInt(offset + 15),
+        sourceId = c.getString(offset + 16),
+        device = c.getStringOrNull(offset + 17),
+        deviceType = c.getIntOrNull(offset + 18),
+        recordingMethod = c.getIntOrNull(offset + 19),
+        clientRecordId = c.getStringOrNull(offset + 20),
+        origin = c.getInt(offset + 21),
+        deleted = c.getInt(offset + 22) == 1,
+        updatedMs = c.getLong(offset + 23)
     )
 
     private fun readSyncState(c: Cursor): HealthSyncState = HealthSyncState(

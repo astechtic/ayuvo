@@ -24,6 +24,7 @@ class SettingsTintTest {
             SettingsPage.DERIVED_METRICS to "#E08A00",
             SettingsPage.NOTIFICATIONS to "#FF3B30",
             SettingsPage.HEALTH_SYNC to "#FF2D55",
+            SettingsPage.GOOGLE_HEALTH to "#007AFF",
             SettingsPage.HEALTH_RECORDS to "#5856D6",
             SettingsPage.BACKUP_EXPORT to "#007AFF",
             SettingsPage.DELETE_DATA to "#FF3B30",

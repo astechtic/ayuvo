@@ -47,6 +47,9 @@ object AppRoutes {
     /** Settings › Health Records › Storage (§37) and Backup & restore (§35, §36). */
     const val HEALTH_RECORDS_STORAGE = "settings/health-records/storage"
     const val HEALTH_RECORDS_BACKUP = "settings/health-records/backup"
+    const val GOOGLE_HEALTH_START_ARG = "start"
+    /** Settings › Google Health setup (docs/google-health.md §5); `start` 2 = Manage data types, 3 = Reconnect. */
+    const val GOOGLE_HEALTH_SETUP = "settings/google-health/setup?$GOOGLE_HEALTH_START_ARG={$GOOGLE_HEALTH_START_ARG}"
 
     // Workouts (log shell and exercise library) and Medications are shared destinations: they keep
     // the tab of the screen that opened them selected (Browse when opened from nowhere).
@@ -77,6 +80,7 @@ object AppRoutes {
     fun insightsReview(day: java.time.LocalDate? = null): String =
         if (day == null) "insights/review" else "insights/review?$INSIGHTS_DAY_ARG=$day"
 
+    fun googleHealthSetup(start: Int = 1): String = "settings/google-health/setup?$GOOGLE_HEALTH_START_ARG=$start"
     fun browseCategory(categoryId: String): String = "browse/category/$categoryId"
     fun healthType(typeKey: String): String = "health/type/$typeKey"
     fun metric(key: MetricKey): String = "metric/" + URLEncoder.encode(key.storageId, "UTF-8").replace("+", "%20")

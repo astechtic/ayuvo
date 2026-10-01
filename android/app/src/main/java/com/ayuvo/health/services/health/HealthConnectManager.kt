@@ -212,6 +212,44 @@ class HealthConnectManager(
     /** GPS workouts: session, route, distance, energy and heart rate. */
     val gpsWorkoutPermissions: Set<String> = setOf(exerciseWrite, exerciseRouteWrite, distanceWrite, activeEnergyWrite, heartRateRead)
 
+    /**
+     * Google Health write-back (docs/google-health.md §4): requested only in step 4 of the Google
+     * Health setup, never with the legacy set, so CURRENT_TYPES_VERSION stays untouched. Must equal
+     * the `hc.write_permission` values of shared/health/google_health_map.json (GoogleHealthMapContractTest).
+     */
+    val googleHealthWritePermissions: Set<String> = setOf(
+        HealthPermission.getWritePermission(StepsRecord::class),
+        distanceWrite,
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.FloorsClimbedRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.ElevationGainedRecord::class),
+        activeEnergyWrite,
+        HealthPermission.getWritePermission(TotalCaloriesBurnedRecord::class),
+        HealthPermission.getWritePermission(HeartRateRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.RestingHeartRateRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.OxygenSaturationRecord::class),
+        weightWrite,
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.HeightRecord::class),
+        bodyFatWrite,
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.BloodGlucoseRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.BodyTemperatureRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.Vo2MaxRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.RespiratoryRateRecord::class),
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.SleepSessionRecord::class),
+        exerciseWrite,
+        nutritionWrite,
+        HealthPermission.getWritePermission(androidx.health.connect.client.records.HydrationRecord::class)
+    )
+
+    /** Granted permissions, or null when the probe failed (the Google Health write-back waits then). */
+    suspend fun grantedPermissionsOrNull(): Set<String>? = grantedOrNull()
+
+    /** Inserts Google Health write-back records; returns their Health Connect ids in order. Throws on failure. */
+    suspend fun insertGoogleHealthRecords(records: List<androidx.health.connect.client.records.Record>): List<String> {
+        val c = client ?: throw IllegalStateException("Health Connect unavailable")
+        return c.insertRecords(records).recordIdsList
+    }
+
     /** Which of [wanted] are not granted, or null when the permission probe failed. */
     suspend fun missingPermissions(wanted: Set<String>): Set<String>? = grantedOrNull()?.let { wanted - it }
 
@@ -485,6 +523,8 @@ class HealthConnectManager(
                 )
             }.getOrNull() ?: break
             response.records.forEach {
+                // Google Health write-back rows already live in the mirror as origin 3.
+                if (HealthRecordMapper.isGoogleHealthMirror(it.metadata.clientRecordId)) return@forEach
                 out.add(
                     ExternalWeight(
                         time = it.time,
@@ -542,6 +582,7 @@ class HealthConnectManager(
                 )
             }.getOrNull() ?: break
             response.records.forEach {
+                if (HealthRecordMapper.isGoogleHealthMirror(it.metadata.clientRecordId)) return@forEach
                 out.add(
                     ExternalBodyFat(
                         time = it.time,

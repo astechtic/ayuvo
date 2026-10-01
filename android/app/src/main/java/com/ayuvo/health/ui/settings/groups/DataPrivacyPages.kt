@@ -81,6 +81,7 @@ import java.time.format.FormatStyle
 internal fun HealthSyncPage(ctx: SettingsPageContext) {
     val ui = ctx.ui
     val sync = ctx.healthSync
+    val googleHealth by ctx.container.googleHealth.ui.collectAsState()
     val tint = SettingsPage.HEALTH_SYNC.tint
     InsetGroup(footer = stringResource(R.string.settings_health_sync_footer)) {
         row {
@@ -126,6 +127,18 @@ internal fun HealthSyncPage(ctx: SettingsPageContext) {
                 },
                 onClick = ctx.actions.syncHealthNow
             )
+        }
+        // Google Health status line (docs/google-health.md §5): its own row, never the platform status.
+        if (googleHealth.connected) {
+            row {
+                GroupRow(
+                    title = stringResource(R.string.google_health_title),
+                    value = googleHealthStatusText(googleHealth),
+                    icon = SettingsPage.GOOGLE_HEALTH.icon, iconTint = SettingsPage.GOOGLE_HEALTH.tint,
+                    modifier = Modifier.settingsRow("googleHealth.status"),
+                    onClick = { ctx.actions.openPage(SettingsPage.GOOGLE_HEALTH) }
+                )
+            }
         }
         row {
             GroupRow(

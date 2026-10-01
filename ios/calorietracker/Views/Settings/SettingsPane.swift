@@ -28,7 +28,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     case personalInfo, goalsNutrition, units
     case nutritionTracking, hydration, fasting, activity, medications, insights, derivedMetrics
     case notifications
-    case healthData, healthRecords, dataManagement, deleteData
+    case healthData, googleHealth, healthRecords, dataManagement, deleteData
     case aiProviders, speechToText, customInstructions
     case appearance
     case appUpdates, helpSupport, legal
@@ -40,7 +40,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .personalInfo, .goalsNutrition, .units: .healthProfile
         case .nutritionTracking, .hydration, .fasting, .activity, .medications, .insights, .derivedMetrics: .tracking
         case .notifications: .notifications
-        case .healthData, .healthRecords, .dataManagement, .deleteData: .dataPrivacy
+        case .healthData, .googleHealth, .healthRecords, .dataManagement, .deleteData: .dataPrivacy
         case .aiProviders, .speechToText, .customInstructions: .aiSpeech
         case .appearance: .appearance
         case .appUpdates, .helpSupport, .legal: .about
@@ -61,6 +61,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .derivedMetrics: "Derived Metrics"
         case .notifications: "Notifications"
         case .healthData: "Health Sync"
+        case .googleHealth: "Google Health"
         case .healthRecords: "Health Records"
         case .dataManagement: "Backup & Export"
         case .deleteData: "Delete All Data"
@@ -88,6 +89,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .derivedMetrics: "function"
         case .notifications: "bell.badge.fill"
         case .healthData: "heart.fill"
+        case .googleHealth: "g.circle.fill"
         case .healthRecords: "doc.text.fill"
         case .dataManagement: "externaldrive.fill"
         case .deleteData: "trash.fill"
@@ -117,6 +119,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .derivedMetrics: SettingsTint.insights
         case .notifications: SettingsTint.notifications
         case .healthData: SettingsTint.vitals
+        case .googleHealth: SettingsTint.privacy
         case .healthRecords: SettingsTint.records
         case .dataManagement: SettingsTint.backup
         case .deleteData: SettingsTint.destructive

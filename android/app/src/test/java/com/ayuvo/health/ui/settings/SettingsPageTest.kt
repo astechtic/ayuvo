@@ -35,7 +35,7 @@ class SettingsPageTest {
         )
         assertEquals(listOf(SettingsPage.NOTIFICATIONS), SettingsGroup.NOTIFICATIONS.pages)
         assertEquals(
-            listOf(SettingsPage.HEALTH_SYNC, SettingsPage.HEALTH_RECORDS, SettingsPage.BACKUP_EXPORT, SettingsPage.DELETE_DATA),
+            listOf(SettingsPage.HEALTH_SYNC, SettingsPage.GOOGLE_HEALTH, SettingsPage.HEALTH_RECORDS, SettingsPage.BACKUP_EXPORT, SettingsPage.DELETE_DATA),
             SettingsGroup.DATA_PRIVACY.pages
         )
         assertEquals(
@@ -52,13 +52,14 @@ class SettingsPageTest {
         assertEquals(
             listOf(
                 "personalInfo", "goalsNutrition", "units", "nutritionTracking", "hydration", "fasting", "activity",
-                "medications", "insights", "derivedMetrics", "notifications", "healthData", "healthRecords", "dataManagement", "deleteData",
+                "medications", "insights", "derivedMetrics", "notifications", "healthData", "googleHealth", "healthRecords", "dataManagement", "deleteData",
                 "aiProviders", "speechToText", "customInstructions", "appearance", "appUpdates", "helpSupport", "legal"
             ),
             SettingsPage.entries.map { it.rawValue }
         )
         assertEquals(SettingsPage.entries.size, SettingsPage.entries.map { it.titleRes }.toSet().size)
         assertEquals("settings.category.healthData", SettingsPage.HEALTH_SYNC.testTag)
+        assertEquals("settings.category.googleHealth", SettingsPage.GOOGLE_HEALTH.testTag)
     }
 
     @Test

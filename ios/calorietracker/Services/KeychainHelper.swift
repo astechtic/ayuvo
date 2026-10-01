@@ -1,7 +1,9 @@
 import Foundation
 import Security
 
-struct KeychainHelper {
+/// Security-framework calls only, so it is usable from any isolation (Google Health tokens are
+/// read on the sync task).
+nonisolated struct KeychainHelper {
     private static let service = "com.ayuvo.health"
 
     static func save(key: String, value: String) {

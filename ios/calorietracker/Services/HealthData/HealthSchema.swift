@@ -4,16 +4,17 @@ import Foundation
 /// tables this DDL creates against the shared file (`PRAGMA table_info`), so the two
 /// must stay identical column-for-column.
 nonisolated enum HealthSchema {
-    static let schemaVersion = 2
-    static let registryVersion = 1
+    static let schemaVersion = 3
+    static let registryVersion = 2
     static let rollupRuleVersion = 1
 
     static let tableNames: [String] = [
         "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
         "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
+        "google_health_sync_state", "google_health_mirror",
     ]
 
-    static let indexNames: [String] = ["idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t"]
+    static let indexNames: [String] = ["idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status"]
 
     static let ddl = """
     CREATE TABLE health_samples (
@@ -27,7 +28,7 @@ nonisolated enum HealthSchema {
       count INTEGER NOT NULL DEFAULT 1,    -- samples condensed into this row
       source_id TEXT NOT NULL,             -- package name | bundle id
       device TEXT, device_type INTEGER, recording_method INTEGER, client_record_id TEXT,
-      origin INTEGER NOT NULL DEFAULT 0,   -- 0 platform, 1 file import, 2 local app adapter
+      origin INTEGER NOT NULL DEFAULT 0,   -- 0 platform, 1 file import, 2 local app adapter, 3 Google Health API
       deleted INTEGER NOT NULL DEFAULT 0,  -- tombstone; always wins over imports
       updated_ms INTEGER NOT NULL);        -- platform lastModified; newer wins
     CREATE INDEX idx_hs_type_end   ON health_samples(type_id, end_ms DESC);
@@ -62,6 +63,19 @@ nonisolated enum HealthSchema {
       value REAL, value2 REAL, value3 REAL,
       quality REAL, source_kind TEXT NOT NULL DEFAULT 'derived',   -- 'derived' only; native readings stay in health_samples
       algo_version INTEGER NOT NULL, computed_ms INTEGER NOT NULL, PRIMARY KEY (metric_id, day));
+    CREATE TABLE google_health_sync_state (   -- v3: per Google Health API data type (shared/health/google_health_map.json gh_type)
+      gh_type TEXT PRIMARY KEY NOT NULL,
+      cursor_ms INTEGER,                   -- newest point end seen; next sync starts at cursor_ms - overlap_days
+      page_token TEXT,                     -- non-NULL only while a paged fetch is interrupted mid-way
+      last_sync_ms INTEGER, backfill_floor_ms INTEGER,
+      status TEXT NOT NULL DEFAULT 'idle', -- idle|syncing|unsupported|error:scope|error:<code>
+      last_error TEXT, last_error_ms INTEGER);
+    CREATE TABLE google_health_mirror (       -- v3: write-back of origin-3 rows to HealthKit / Health Connect
+      sample_id TEXT PRIMARY KEY NOT NULL REFERENCES health_samples(id) ON DELETE CASCADE,
+      platform_id TEXT,                    -- HK uuid | HC Metadata.id once written
+      mirror_status TEXT NOT NULL DEFAULT 'pending',  -- pending|mirrored|skipped_dup|unsupported|disabled|error
+      mirrored_ms INTEGER, attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT);
+    CREATE INDEX idx_ghm_status ON google_health_mirror(mirror_status);
     """
 
     /// The same DDL made re-runnable (`IF NOT EXISTS`) for `applySchema()`.

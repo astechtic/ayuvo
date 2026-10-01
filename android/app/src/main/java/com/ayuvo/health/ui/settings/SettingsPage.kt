@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FormatQuote
@@ -67,6 +68,7 @@ enum class SettingsPage(
     DERIVED_METRICS("derivedMetrics", R.string.settings_derived_metrics, SettingsGroup.TRACKING, Icons.Filled.Functions, SettingsTint.Insights),
     NOTIFICATIONS("notifications", R.string.settings_notifications, SettingsGroup.NOTIFICATIONS, Icons.Filled.Notifications, SettingsTint.Notifications),
     HEALTH_SYNC("healthData", R.string.settings_page_health_sync, SettingsGroup.DATA_PRIVACY, Icons.Filled.Favorite, SettingsTint.HealthSync),
+    GOOGLE_HEALTH("googleHealth", R.string.google_health_title, SettingsGroup.DATA_PRIVACY, Icons.Filled.CloudSync, SettingsTint.GoogleHealth),
     HEALTH_RECORDS("healthRecords", R.string.settings_section_health_records, SettingsGroup.DATA_PRIVACY, Icons.Filled.Description, SettingsTint.Records),
     BACKUP_EXPORT("dataManagement", R.string.settings_page_backup_export, SettingsGroup.DATA_PRIVACY, Icons.Filled.Storage, SettingsTint.Backup),
     DELETE_DATA("deleteData", R.string.settings_delete_all_data, SettingsGroup.DATA_PRIVACY, Icons.Filled.Delete, SettingsTint.Destructive),

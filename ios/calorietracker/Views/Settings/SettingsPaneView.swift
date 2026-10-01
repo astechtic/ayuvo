@@ -27,6 +27,7 @@ struct SettingsPaneView: View {
     @Environment(NotificationManager.self) var notificationManager
     @Environment(HealthKitManager.self) var healthKitManager
     @Environment(HealthDataStore.self) var healthDataStore
+    @Environment(GoogleHealthStore.self) var googleHealthStore
     @Environment(RecordsStore.self) var recordsStore
     @Environment(MedicationStore.self) var medicationStore
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
@@ -85,6 +86,10 @@ struct SettingsPaneView: View {
     @State var showExportAllData = false
     @State var showImportAllData = false
     @State var showClearHealthDataConfirmation = false
+    /// Google Health setup sheet; `googleHealthSetupStep` 2 = Manage data types.
+    @State var showGoogleHealthSetup = false
+    @State var googleHealthSetupStep = 1
+    @State var showGoogleHealthDisconnect = false
     @State var showDeleteConfirmation = false
     @State var showClearFoodLogConfirmation = false
     @State var showCalculationMethods = false
@@ -212,6 +217,20 @@ struct SettingsPaneView: View {
             }
             .sheet(isPresented: $showImportAllData) {
                 ImportAllDataView()
+            }
+            .sheet(isPresented: $showGoogleHealthSetup) {
+                GoogleHealthSetupView(startStep: googleHealthSetupStep)
+            }
+            .confirmationDialog("Disconnect Google Health?", isPresented: $showGoogleHealthDisconnect, titleVisibility: .visible) {
+                Button("Disconnect and Delete Google Data", role: .destructive) {
+                    Task { await googleHealthStore.disconnect(deleteLocalData: true) }
+                }
+                Button("Disconnect and Keep Data") {
+                    Task { await googleHealthStore.disconnect(deleteLocalData: false) }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Ayuvo stops syncing and revokes its Google access. Records already written to Apple Health stay there; remove them in the Health app if you want.")
             }
             .alert("Clear synced health data from this iPhone?", isPresented: $showClearHealthDataConfirmation) {
                 Button("Cancel", role: .cancel) { }
@@ -449,6 +468,8 @@ struct SettingsPaneView: View {
                         // Health mirror: cancel sync → close the SQLite connections → remove the
                         // files (+ -wal/-shm) before the preference domain goes.
                         await healthDataStore.deleteAllData()
+                        // Google Health: tokens (Keychain) and account metadata; nothing is revoked.
+                        await googleHealthStore.deleteAllData()
                         // Health Records: database (+ sidecars), originals, caches and the share inbox.
                         await recordsStore.deleteAllData()
                         // Medications: database, photos and pending dose reminders.
@@ -487,6 +508,7 @@ struct SettingsPaneView: View {
         case .derivedMetrics: derivedMetricsPane
         case .notifications: EmptyView() // the hub pushes NotificationSettingsView
         case .healthData: healthSyncPane
+        case .googleHealth: googleHealthPane
         case .healthRecords: healthRecordsPane
         case .dataManagement: backupExportPane
         case .deleteData: deleteDataPane

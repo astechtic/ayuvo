@@ -11,7 +11,10 @@ Guide for building, testing and releasing Ayuvo. The code is open source
   `calorietracker` target and its extensions (`DEVELOPMENT_TEAM` placeholder `AYUVO_TEAM_ID`).
 - **Android:** Android Studio Narwhal+, JDK 17. `ANDROID_HOME=~/Library/Android/sdk`. Copy
   `android/oauth.properties.example` → `android/oauth.properties` for Drive backup (new OAuth clients for
-  `com.ayuvo.health` / `.debug`).
+  `com.ayuvo.health` / `.debug`) and Google Health (`google.health.web.client.id`).
+- **Google Health (optional):** enable the Google Health API in your Cloud project and create the clients
+  (docs/google-health.md §2). iOS: copy `ios/GoogleHealth.xcconfig.example` → `ios/GoogleHealth.xcconfig`
+  and set `GH_IOS_CLIENT_ID`. Without it the Connect row still offers "Use my own client ID".
 - **AI key for testing:** Settings → AI Providers → Google Gemini → `gemini-3.5-flash-lite` → paste a key.
 - **Python tooling:** `pip install -r scripts/brand/requirements.txt` (Pillow).
 

@@ -77,6 +77,23 @@
     <uses-permission android:name="android.permission.health.READ_SPEED" />
     <uses-permission android:name="android.permission.health.READ_VO2_MAX" />
     <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES" />
+    <!-- Google Health write-back (docs/google-health.md §4): requested only in step 4 of the
+         Google Health setup. WRITE_WEIGHT/BODY_FAT/NUTRITION/ACTIVE_CALORIES_BURNED/EXERCISE/DISTANCE are above. -->
+    <uses-permission android:name="android.permission.health.WRITE_STEPS" />
+    <uses-permission android:name="android.permission.health.WRITE_FLOORS_CLIMBED" />
+    <uses-permission android:name="android.permission.health.WRITE_ELEVATION_GAINED" />
+    <uses-permission android:name="android.permission.health.WRITE_TOTAL_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_RESTING_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE_VARIABILITY" />
+    <uses-permission android:name="android.permission.health.WRITE_OXYGEN_SATURATION" />
+    <uses-permission android:name="android.permission.health.WRITE_HEIGHT" />
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.WRITE_BODY_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.WRITE_VO2_MAX" />
+    <uses-permission android:name="android.permission.health.WRITE_RESPIRATORY_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_SLEEP" />
+    <uses-permission android:name="android.permission.health.WRITE_HYDRATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
