@@ -441,10 +441,11 @@ def render(page: Page, css_v: str, js_v: str) -> str:
         f'<meta name="twitter:description" content="{esc(page.description)}">',
         f'<meta name="twitter:image" content="{og_url}">',
         f'<meta name="twitter:image:alt" content="{esc(og_alt)}">',
-        # Google Search needs a raster icon of at least 48 px; the 192 px tile also reads well on dark results pages
-        f'<link rel="icon" href="{asset("/assets/brand/logo-192.png")}" sizes="192x192" type="image/png">',
-        f'<link rel="icon" href="{asset("/assets/brand/favicon.svg")}" type="image/svg+xml">',
-        f'<link rel="icon" href="{asset("/assets/brand/favicon.ico")}" sizes="16x16 32x32 48x48">',
+        # Google Search needs a raster icon of at least 48 px; the 192 px tile also reads well on dark results pages.
+        # Icon URLs stay unversioned: Google wants a stable favicon URL and re-queues the icon whenever it changes.
+        '<link rel="icon" href="/assets/brand/logo-192.png" sizes="192x192" type="image/png">',
+        '<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">',
+        '<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">',
         f'<link rel="apple-touch-icon" href="{asset("/assets/brand/apple-touch-icon.png")}">',
         '<link rel="manifest" href="/manifest.webmanifest">',
         '<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/manrope-latin.woff2" crossorigin>',
