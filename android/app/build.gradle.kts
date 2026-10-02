@@ -157,7 +157,9 @@ android {
                 "src/androidTest/assets",
                 "../../shared/records/fixtures",
                 // docs/camera-vitals.md §7.2: the camera-vitals-sample export section.
-                "../../shared/vitals/fixtures"
+                "../../shared/vitals/fixtures",
+                // docs/cycle-tracking.md §7: the cycle-sample export section.
+                "../../shared/cycle/fixtures"
             )
         }
     }

@@ -7,6 +7,7 @@ import com.ayuvo.health.coach.export.CoachChatArchiveReader
 import com.ayuvo.health.medications.export.MedicationsArchive
 import com.ayuvo.health.records.backup.RecordsArchiveFormat
 import com.ayuvo.health.vitals.storage.CameraVitalsArchive
+import com.ayuvo.health.cycle.data.CycleArchive
 import com.ayuvo.health.services.health.HealthSyncTrigger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -160,7 +161,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
 
     /**
      * One streaming pass over the zip, copying each wanted entry to its own temp file. A multi-file section
-     * (camera_vitals) gets a folder holding its entries by base name.
+     * (camera_vitals, cycle) gets a folder holding its entries by base name.
      */
     private fun extract(uri: Uri, wanted: List<AllDataImportPlan.Section>, work: File): Map<String, File> {
         val byEntry = HashMap<String, AllDataImportPlan.Section>()
@@ -233,6 +234,15 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             )
             container.vitalScans.importArchive(bundle).total
         }
+        AllDataExportCoordinator.SECTION_CYCLE -> {
+            // docs/cycle-tracking.md §7 merge: insert missing, newer updated_ms wins, nothing deleted outright.
+            fun text(name: String): String? = File(file, name.substringAfterLast('/')).takeIf { it.isFile }?.let {
+                require(it.length() <= CYCLE_MAX_BYTES) { container.appContext.getString(R.string.core_import_file_too_large) }
+                it.readText()
+            }
+            val bundle = CycleArchive.read(text(CycleArchive.PERIODS), text(CycleArchive.DAY_LOGS), text(CycleArchive.SETTINGS))
+            container.cycleRepository.importArchive(bundle).total
+        }
         AllDataExportCoordinator.SECTION_MEDICATIONS -> {
             val archive = MedicationsArchive.read(file.readBytes())
             val result = container.medicationsStore.importArchive(archive, System.currentTimeMillis())
@@ -274,5 +284,6 @@ class AllDataImportCoordinator(private val container: AppContainer) {
         private const val BUFFER = 64 * 1024
         private const val MAX_MANIFEST_BYTES = 1024 * 1024
         private const val CAMERA_VITALS_MAX_BYTES = 512L * 1024 * 1024
+        private const val CYCLE_MAX_BYTES = 64L * 1024 * 1024
     }
 }

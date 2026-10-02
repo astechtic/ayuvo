@@ -41,7 +41,10 @@
     "ios/calorietracker/Records/Data/RecordsLocation.swift",
     "ios/calorietracker/Records/Data/RecordsSchema.swift",
     "ios/calorietracker/Vitals/Storage/VitalsReadings.swift",
-    "ios/calorietracker/Services/HealthData/HealthDatabase+Vitals.swift"
+    "ios/calorietracker/Services/HealthData/HealthDatabase+Vitals.swift",
+    "ios/calorietracker/Cycle/Data/CycleDatabase.swift",
+    "ios/calorietracker/Cycle/Data/CycleLocation.swift",
+    "ios/calorietracker/Cycle/Coach/CoachCycleContext.swift"
   ],
   "dirs": [],
   "contains": [
@@ -80,6 +83,7 @@
     "static let archiveApp = \"Ayuvo\"",
     "\\(s.formatted())/\\(d.formatted()) mmHg",
     "\"\\(num(\"loa_low\")) … \\(num(\"loa_high\"))\"",
-    "return \"\\(name): \\(mae.formatted("
+    "return \"\\(name): \\(mae.formatted(",
+    "static func title() -> String { \"Ayuvo\" }"
   ]
 }

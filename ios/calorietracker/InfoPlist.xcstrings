@@ -460,110 +460,110 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "يكتب Ayuvo بيانات التغذية وقياسات الجسم وسعرات التمارين المحسوبة أو يحدّثها أو يزيلها عندما تغيّر سجلاتك."
+            "state" : "needs_review",
+            "value" : "يكتب Ayuvo أو يحدّث أو يزيل بيانات التغذية وقياسات الجسم والتمارين مع مساراتها وسعرات التمارين المحسوبة، وكذلك دوراتك الشهرية وغزارتها وأعراض الدورة إذا فعّلت مزامنة الدورة، عندما تغيّر سجلاتك."
           }
         },
         "az" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo qeydlərinizi dəyişdirdikdə qidalanma, bədən ölçüləri və hesablanmış məşq kalorilərinizi yazır, yeniləyir və ya silir."
+            "state" : "needs_review",
+            "value" : "Qeydlərinizi dəyişdirdikdə Ayuvo qidalanma, bədən ölçüləri, marşrutları ilə birlikdə məşqlər, hesablanmış məşq kaloriləri və dövr sinxronizasiyasını aktiv etsəniz, aybaşı, axın və dövr simptomları məlumatlarınızı yazır, yeniləyir və ya silir."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Ayuvo zapisuje, aktualizuje nebo odstraňuje tvé údaje o výživě, tělesných mírách a vypočtených kaloriích z tréninků, když změníš své záznamy."
+            "value" : "Ayuvo zapisuje, aktualizuje nebo odstraňuje tvé údaje o výživě, tělesných mírách, trénincích včetně tras, vypočtených kaloriích z tréninků a – pokud zapneš synchronizaci cyklu – o menstruaci, krvácení a příznacích cyklu, když změníš své záznamy."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo schreibt, aktualisiert oder entfernt deine Ernährungsdaten, Körpermaße und berechneten Trainingskalorien, wenn du deine Einträge änderst."
+            "state" : "needs_review",
+            "value" : "Ayuvo schreibt, aktualisiert oder entfernt deine Ernährungsdaten, Körpermaße, Trainings samt Routen, berechneten Trainingskalorien und – wenn du die Zyklussynchronisierung einschaltest – deine Perioden, Blutungsstärke und Zyklussymptome, wenn du deine Einträge änderst."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ayuvo writes, updates or removes your nutrition, body measurements and calculated workout calories when you change your logs."
+            "value" : "Ayuvo writes, updates or removes your nutrition, body measurements, workouts with their routes, calculated workout calories and, if you turn on cycle sync, your periods, flow and cycle symptoms when you change your logs."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo escribe, actualiza o elimina tus datos de nutrición, medidas corporales y calorías de entrenamiento calculadas cuando cambias tus registros."
+            "state" : "needs_review",
+            "value" : "Ayuvo escribe, actualiza o elimina tus datos de nutrición, medidas corporales, entrenamientos con sus rutas, calorías de entrenamiento calculadas y, si activas la sincronización del ciclo, tus periodos, flujo y síntomas del ciclo cuando cambias tus registros."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo écrit, met à jour ou supprime vos données de nutrition, vos mensurations et vos calories d’entraînement calculées lorsque vous modifiez vos journaux."
+            "state" : "needs_review",
+            "value" : "Ayuvo écrit, met à jour ou supprime vos données de nutrition, vos mensurations, vos entraînements avec leurs itinéraires, vos calories d’entraînement calculées et, si vous activez la synchronisation du cycle, vos règles, leur flux et vos symptômes du cycle lorsque vous modifiez vos journaux."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "जब आप अपने लॉग बदलते हैं, तो Ayuvo आपके पोषण, शरीर माप और गणना की गई वर्कआउट कैलोरी को लिखता, अपडेट करता या हटाता है।"
+            "state" : "needs_review",
+            "value" : "जब आप अपने लॉग बदलते हैं, तब Ayuvo आपका पोषण, शरीर के माप, रूट सहित वर्कआउट, गणना की गई वर्कआउट कैलोरी और, अगर आप चक्र सिंक चालू करते हैं, तो आपके पीरियड, फ़्लो और चक्र के लक्षण लिखता, अपडेट करता या हटाता है।"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo scrive, aggiorna o rimuove i tuoi dati di nutrizione, le misure corporee e le calorie di allenamento calcolate quando modifichi i tuoi diari."
+            "state" : "needs_review",
+            "value" : "Quando modifichi le tue registrazioni, Ayuvo scrive, aggiorna o rimuove alimentazione, misure corporee, allenamenti con i relativi percorsi, calorie calcolate degli allenamenti e, se attivi la sincronizzazione del ciclo, mestruazioni, flusso e sintomi del ciclo."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvoは、ログを変更すると栄養、身体測定、算出したワークアウトのカロリーを書き込み、更新、または削除します。"
+            "state" : "needs_review",
+            "value" : "記録を変更すると、Ayuvoは栄養、体の測定値、ルートを含むワークアウト、計算されたワークアウトの消費カロリー、そして周期の同期をオンにした場合は生理、経血量、周期の症状を書き込み、更新、または削除します。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo는 기록을 변경하면 영양, 신체 측정 및 계산된 운동 칼로리를 기록, 업데이트 또는 제거합니다."
+            "state" : "needs_review",
+            "value" : "기록을 변경하면 Ayuvo가 영양, 신체 치수, 경로가 포함된 운동, 계산된 운동 칼로리, 그리고 주기 동기화를 켠 경우 생리, 생리량, 주기 증상을 기록, 업데이트 또는 삭제해요."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo schrijft, werkt bij of verwijdert je voeding, lichaamsmaten en berekende trainingscalorieën wanneer je je logboek wijzigt."
+            "state" : "needs_review",
+            "value" : "Ayuvo schrijft, wijzigt of verwijdert je voeding, lichaamsmetingen, trainingen met hun routes, berekende trainingscalorieën en, als je cyclussynchronisatie inschakelt, je menstruaties, bloeding en cyclussymptomen wanneer je je registraties wijzigt."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo zapisuje, aktualizuje lub usuwa dane o odżywianiu, pomiary ciała i obliczone kalorie treningu, gdy zmieniasz swoje wpisy."
+            "state" : "needs_review",
+            "value" : "Gdy zmieniasz swoje wpisy, Ayuvo zapisuje, aktualizuje lub usuwa dane o odżywianiu, pomiary ciała, treningi wraz z trasami, obliczone kalorie z treningów oraz — jeśli włączysz synchronizację cyklu — miesiączki, krwawienie i objawy cyklu."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Ayuvo grava, atualiza ou remove sua nutrição, medidas corporais e calorias de treino calculadas quando você altera seus registros."
+            "state" : "needs_review",
+            "value" : "O Ayuvo grava, atualiza ou remove sua nutrição, medidas corporais, treinos com seus trajetos, calorias de treino calculadas e, se você ativar a sincronização do ciclo, suas menstruações, fluxo e sintomas do ciclo quando você altera seus registros."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo scrie, actualizează sau elimină datele tale de nutriție, măsurătorile corporale și caloriile de antrenament calculate atunci când îți modifici jurnalele."
+            "state" : "needs_review",
+            "value" : "Ayuvo scrie, actualizează sau elimină datele despre nutriție, măsurătorile corporale, antrenamentele cu traseele lor, caloriile calculate ale antrenamentelor și, dacă activezi sincronizarea ciclului, menstruațiile, fluxul și simptomele ciclului atunci când îți modifici înregistrările."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo записывает, обновляет или удаляет данные о питании, измерения тела и рассчитанные калории тренировок, когда вы меняете свои записи."
+            "state" : "needs_review",
+            "value" : "Ayuvo записывает, обновляет или удаляет данные о питании, параметрах тела, тренировках с маршрутами, рассчитанных калориях тренировок, а если включена синхронизация цикла — о менструациях, выделениях и симптомах цикла, когда вы меняете свои записи."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayuvo записує, оновлює або видаляє дані про харчування, вимірювання тіла та розраховані калорії тренувань, коли ви змінюєте свої записи."
+            "state" : "needs_review",
+            "value" : "Ayuvo записує, оновлює або видаляє дані про харчування, параметри тіла, тренування з маршрутами, розраховані калорії тренувань, а якщо ввімкнено синхронізацію циклу — про менструації, виділення та симптоми циклу, коли ви змінюєте свої записи."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "当你更改日志时，Ayuvo 会写入、更新或删除你的营养、身体测量和计算得出的锻炼卡路里。"
+            "state" : "needs_review",
+            "value" : "当你更改记录时，Ayuvo 会写入、更新或移除你的营养、身体测量、带路线的体能训练、计算出的训练卡路里；如果你开启了周期同步，还包括你的经期、经量和周期症状。"
           }
         }
       }

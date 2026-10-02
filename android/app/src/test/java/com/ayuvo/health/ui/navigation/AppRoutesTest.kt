@@ -142,4 +142,17 @@ class AppRoutesTest {
         assertFalse(AppRoutes.isRecordsChildRoute(AppRoutes.RECORDS))
         assertNull(AppRoutes.selectedBottomTab("recordsx"))
     }
+
+    @Test
+    fun cycleRoutesAreSharedDestinations() {
+        // docs/cycle-tracking.md §5: opened from Summary, Browse and metric detail; they keep the opening tab.
+        for (route in listOf(AppRoutes.CYCLE_HOME, AppRoutes.CYCLE_SETUP, AppRoutes.CYCLE_CALENDAR, AppRoutes.CYCLE_HISTORY,
+            AppRoutes.CYCLE_INSIGHTS, AppRoutes.CYCLE_DETAIL, AppRoutes.cycleDetail("2026-09-05"))) {
+            assertTrue(route, AppRoutes.isSharedRoute(route))
+        }
+        assertEquals("cycle/cycle/2026-09-05", AppRoutes.cycleDetail("2026-09-05"))
+        assertEquals(AppRoutes.SUMMARY, AppRoutes.selectedBottomTab(AppRoutes.CYCLE_CALENDAR, listOf(AppRoutes.CYCLE_HOME, AppRoutes.SUMMARY)))
+        assertEquals(AppRoutes.BROWSE, AppRoutes.selectedBottomTab(AppRoutes.CYCLE_HOME))
+        assertFalse(AppRoutes.isImmersiveRoute(AppRoutes.CYCLE_HOME))
+    }
 }

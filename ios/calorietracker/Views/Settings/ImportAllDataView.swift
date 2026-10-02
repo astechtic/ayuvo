@@ -229,6 +229,7 @@ struct ImportAllDataView: View {
         case .foodDiary: "Food diary"
         case .healthData: "Health data"
         case .cameraVitals: "Camera measurements"
+        case .cycle: "Cycle tracking"
         case .medications: "Medications"
         case .healthRecords: "Health Records"
         case .coachChats: "Coach chats"
@@ -242,6 +243,7 @@ struct ImportAllDataView: View {
         case .foodDiary: "fork.knife"
         case .healthData: "heart.text.square.fill"
         case .cameraVitals: "waveform.path.ecg"
+        case .cycle: "drop.circle.fill"
         case .medications: "pills.fill"
         case .healthRecords: "doc.text.fill"
         case .coachChats: "bubble.left.and.bubble.right.fill"
@@ -255,6 +257,7 @@ struct ImportAllDataView: View {
         case .foodDiary: AyuvoPalette.nutrition
         case .healthData: AyuvoPalette.vitals
         case .cameraVitals: AyuvoPalette.heart
+        case .cycle: AyuvoPalette.cycle
         case .medications: AyuvoPalette.medications
         case .healthRecords: AyuvoPalette.records
         case .coachChats: AyuvoPalette.other
@@ -278,6 +281,8 @@ struct ImportAllDataView: View {
             String(localized: "Adds new samples and updates matching ones. Nothing is deleted.")
         case (.cameraVitals, _):
             String(localized: "Adds scans and calibrations that aren't on this iPhone. A scan you deleted here stays deleted. Nothing is written to Apple Health.")
+        case (.cycle, _):
+            String(localized: "Adds periods and day logs that aren't on this iPhone and keeps the newer copy of each. Nothing is deleted.")
         case (.medications, _):
             String(localized: "Adds new medications, schedules and doses and keeps the newer copy of each. Nothing is deleted.")
         case (.healthRecords, _):
@@ -359,9 +364,11 @@ struct ImportAllDataView: View {
                     done.append(SectionResult(section: item.section, outcome: .skipped(reason)))
                     continue
                 }
-                if item.section == .cameraVitals {
+                if item.section == .cameraVitals || item.section == .cycle {
                     do {
-                        let text = try await importCameraVitals(item, reader: reader)
+                        let text = item.section == .cycle
+                            ? try await importCycle(item, reader: reader)
+                            : try await importCameraVitals(item, reader: reader)
                         done.append(SectionResult(section: item.section, outcome: .imported(text)))
                     } catch {
                         done.append(SectionResult(section: item.section, outcome: .failed(failureText(error))))
@@ -410,6 +417,19 @@ struct ImportAllDataView: View {
         return String(localized: "\(result.scansAdded) scans added, \(result.scansSkipped) already here.")
     }
 
+    /// Cycle tracking: every `cycle/` entry, merged by id / day (docs/cycle-tracking.md §7).
+    private func importCycle(_ item: AllDataImport.Item, reader: ZipArchiveReader) async throws -> String {
+        var entries: [String: Data] = [:]
+        for name in item.entryNames.isEmpty ? [item.entryName] : item.entryNames {
+            guard let entry = reader.entry(named: name) else { throw AllDataImport.ImportError.damaged }
+            entries[name] = try reader.data(for: entry)
+        }
+        guard await CycleRuntime.shared.openIfNeeded(), let db = CycleRuntime.shared.database else { throw AllDataImport.ImportError.damaged }
+        let result = try await CycleArchive.importEntries(entries, into: db)
+        NotificationCenter.default.post(name: .cycleDataDidChange, object: nil)
+        return String(localized: "\(result.periodsAdded) periods added, \(result.periodsUpdated) updated.")
+    }
+
     /// Runs one part through its existing importer and describes the outcome.
     private func importPart(_ section: AllDataImport.Section, file: URL) async throws -> String {
         switch section {
@@ -436,7 +456,7 @@ struct ImportAllDataView: View {
             }
             return String(localized: "Merged \(preview.entryCount) food and \(preview.waterEntries.count) water entries.")
 
-        case .cameraVitals:
+        case .cameraVitals, .cycle:
             throw AllDataImport.ImportError.damaged  // imported from its entries in `run`
 
         case .healthData:

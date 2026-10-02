@@ -318,6 +318,10 @@ class PreferencesPortableStore(
         settings.vitalsKeepSignals?.let { prefs.setVitalsKeepSignals(it) }
         settings.vitalsExperimentalEnabled?.let { prefs.setVitalsExperimentalEnabled(it) }
         settings.vitalsResearchEnabled?.let { prefs.setVitalsResearchEnabled(it) }
+        settings.cycleEnabled?.let { prefs.setCycleEnabled(it) }
+        settings.cycleShowFertility?.let { prefs.setCycleShowFertility(it) }
+        // Consent never travels: an imported `true` is ignored, an imported `false` turns Coach access off.
+        if (settings.coachCycleEnabled == false) prefs.setCoachCycleEnabled(false)
         if (settings.optionalNutrientGoals.isNotEmpty()) {
             prefs.setOptionalNutrientGoals(mergedGoals(prefs.optionalNutrientGoals.first(), settings.optionalNutrientGoals))
         }

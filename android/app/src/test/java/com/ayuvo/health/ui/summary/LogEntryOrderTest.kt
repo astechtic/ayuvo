@@ -9,7 +9,7 @@ class LogEntryOrderTest {
     fun entriesFollowTheDocumentedOrder() {
         assertEquals(
             listOf(
-                "food", "water", "fasting", "weight", "bodyFat", "bloodGlucose", "bodyTemperature", "workout", "medication", "record",
+                "food", "water", "fasting", "weight", "bodyFat", "bloodGlucose", "bodyTemperature", "period", "workout", "medication", "record",
                 "fingerScan", "faceScan", "compareScan"
             ),
             LogEntry.entries.map { it.tag }

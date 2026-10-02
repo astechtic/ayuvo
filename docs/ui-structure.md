@@ -29,11 +29,11 @@ Tabs: Summary · Browse · Records · Coach · Settings
 Summary
  ├─ Rings card (Eat · Move · Drink) ─ ring tap → Metric detail
  ├─ Insights cards: Recovery · Health Age · Daily Review (or one "Learning your baseline" card) → Insights screens (docs/insights.md)
- ├─ Today cards: Medications · Fasting (active only) · Workout (only if logged today)
+ ├─ Today cards: Medications · Cycle (after cycle setup) · Fasting (active only) · Workout (only if logged today)
  ├─ Favourites grid ─ tile → Metric detail · "Edit" → Favourites editor
  ├─ Highlights (≤ 3: record highlight · weight trend · latest workout)
  ├─ Get More From Ayuvo checklist
- └─ toolbar "+" → Log sheet (§8), including the Measure group (Finger scan · Face scan · Compare) → camera scan flow (docs/camera-vitals.md §7.1)
+ └─ toolbar "+" → Log sheet (§8), including Period in the Body group (when cycle tracking is shown) and the Measure group (Finger scan · Face scan · Compare) → camera scan flow (docs/camera-vitals.md §7.1)
 
 Browse (search over app metrics + health types)
  ├─ one row per domain (§3), in browse_order; target decides the destination:
@@ -47,6 +47,7 @@ Browse (search over app metrics + health types)
  │    screen:medications → Medications home and every medications/* screen
  │    tab:records        → switches to the Records tab
  ├─ Camera measurements → Vitals home (scan history, baselines, compare, validation, calibration)
+ ├─ Period tracker → Cycle dashboard (setup the first time; calendar, day log, history, insights) — hidden when "Show cycle tracking" is off (docs/cycle-tracking.md §5)
  └─ footer: health sync status → Settings › Data & Privacy › Health Sync
 
 Metric detail → All Data · Data Sources & Access (health only) · Unit
@@ -56,7 +57,7 @@ Settings: profile header + groups Health Profile · Tracking · Notifications ·
 
 The old Health tab segments map as: Food → Browse › Nutrition; Progress → `app:weight`, `app:body_fat`, `app:calories` … details; Health Data → Browse; Workouts → Browse › Activity › Workouts; Meds → Browse › Medications.
 
-Android routes: `summary`, `browse`, `browse/nutrition`, `browse/nutrition/nutrients`, `browse/fasting`, `browse/body`, `browse/body/measurements`, `browse/activity`, `browse/category/{categoryId}`, `metric/{metricKey}` (URL-encoded), `workouts/log`, `workouts/library`, `medications` + `medications/*`, `measure/home`, `measure/scan/{mode}?session=`, `measure/detail/{scanId}`. `health/type/{typeKey}` stays as an alias of `metric/{typeKey}`. iOS: `BrowseRoute`, `MetricRoute`, `HealthRoute` (without `.hub`), `MedicationRoute`, `RecordsRoute`.
+Android routes: `summary`, `browse`, `browse/nutrition`, `browse/nutrition/nutrients`, `browse/fasting`, `browse/body`, `browse/body/measurements`, `browse/activity`, `browse/category/{categoryId}`, `metric/{metricKey}` (URL-encoded), `workouts/log`, `workouts/library`, `medications` + `medications/*`, `measure/home`, `measure/scan/{mode}?session=`, `measure/detail/{scanId}`, `cycle/home`, `cycle/setup`, `cycle/calendar`, `cycle/history`, `cycle/insights`, `cycle/cycle/{start}`. `health/type/{typeKey}` stays as an alias of `metric/{typeKey}`. iOS: `BrowseRoute`, `MetricRoute`, `HealthRoute` (without `.hub`), `MedicationRoute`, `RecordsRoute`.
 
 Shared destinations (metric, workouts, medications) keep the tab that opened them selected.
 

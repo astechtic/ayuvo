@@ -326,7 +326,8 @@ fun AppNavHost(
         openWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) },
         openNutrientGoals = { nav.navigate(AppRoutes.OPTIONAL_NUTRIENT_GOALS) },
         openMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
-        openCameraScan = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id)) }
+        openCameraScan = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id)) },
+        openCycle = { nav.navigate(AppRoutes.CYCLE_HOME) }
     )
 
     // Food quick actions (widget taps, app shortcuts, notification actions) land on
@@ -517,7 +518,9 @@ fun AppNavHost(
                                 openHealthAge = { nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE) },
                                 openDailyReview = { nav.navigate(AppRoutes.insightsReview()) },
                                 openScan = { mode -> nav.navigate(AppRoutes.measureScan(mode.id)) },
-                                openCompare = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id, java.util.UUID.randomUUID().toString())) }
+                                openCompare = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id, java.util.UUID.randomUUID().toString())) },
+                                openCycle = { nav.navigate(AppRoutes.CYCLE_HOME) },
+                                logPeriod = { nav.navigate(AppRoutes.CYCLE_LOG) }
                             ),
                             logRequest = summaryLogRequest,
                             onLogRequestHandled = { id -> if (summaryLogRequest?.id == id) summaryLogRequest = null }
@@ -537,6 +540,7 @@ fun AppNavHost(
                                     target == "screen:medications" -> nav.navigate(AppRoutes.MEDICATIONS)
                                     target == "screen:insights" -> nav.navigate(AppRoutes.INSIGHTS)
                                     target == "screen:vitals" -> nav.navigate(AppRoutes.MEASURE_HOME)
+                                    target == "screen:cycle" -> nav.navigate(AppRoutes.CYCLE_HOME)
                                     target == "tab:records" -> navigateToTab(AppRoutes.RECORDS)
                                     target.startsWith("metric:") ->
                                         MetricKey.parse(target.removePrefix("metric:"))?.let { nav.navigate(AppRoutes.metric(it)) }
@@ -569,6 +573,7 @@ fun AppNavHost(
                                     "healthAge" -> nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE)
                                     "dailyReview" -> nav.navigate(AppRoutes.insightsReview())
                                     "cameraMeasurements" -> nav.navigate(AppRoutes.MEASURE_HOME)
+                                    "cycleTracking" -> nav.navigate(AppRoutes.CYCLE_HOME)
                                 }
                             }
                         )
@@ -815,6 +820,67 @@ fun AppNavHost(
                             onOpenCompare = { session -> nav.navigate(AppRoutes.measureCompare(session)) }
                         )
                     }
+                }
+                // Cycle tracking (docs/cycle-tracking.md §5).
+                composable(AppRoutes.CYCLE_HOME) {
+                    TabInset {
+                        com.ayuvo.health.ui.cycle.CycleHomeScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenCalendar = { nav.navigate(AppRoutes.CYCLE_CALENDAR) },
+                            onOpenHistory = { nav.navigate(AppRoutes.CYCLE_HISTORY) },
+                            onOpenInsights = { nav.navigate(AppRoutes.CYCLE_INSIGHTS) },
+                            onOpenSettings = { openSettingsPage(SettingsPage.CYCLE) }
+                        )
+                    }
+                }
+                composable(AppRoutes.CYCLE_LOG) {
+                    TabInset {
+                        com.ayuvo.health.ui.cycle.CycleHomeScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenCalendar = { nav.navigate(AppRoutes.CYCLE_CALENDAR) },
+                            onOpenHistory = { nav.navigate(AppRoutes.CYCLE_HISTORY) },
+                            onOpenInsights = { nav.navigate(AppRoutes.CYCLE_INSIGHTS) },
+                            onOpenSettings = { openSettingsPage(SettingsPage.CYCLE) },
+                            startWithPeriodSheet = true
+                        )
+                    }
+                }
+                composable(AppRoutes.CYCLE_SETUP) {
+                    TabInset {
+                        com.ayuvo.health.ui.cycle.CycleHomeScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenCalendar = { nav.navigate(AppRoutes.CYCLE_CALENDAR) },
+                            onOpenHistory = { nav.navigate(AppRoutes.CYCLE_HISTORY) },
+                            onOpenInsights = { nav.navigate(AppRoutes.CYCLE_INSIGHTS) },
+                            onOpenSettings = { openSettingsPage(SettingsPage.CYCLE) },
+                            forceSetup = true
+                        )
+                    }
+                }
+                composable(AppRoutes.CYCLE_CALENDAR) {
+                    TabInset { com.ayuvo.health.ui.cycle.CycleCalendarScreen(container = container, onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.CYCLE_HISTORY) {
+                    TabInset {
+                        com.ayuvo.health.ui.cycle.CycleHistoryScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onOpenCycle = { start -> nav.navigate(AppRoutes.cycleDetail(start)) }
+                        )
+                    }
+                }
+                composable(AppRoutes.CYCLE_INSIGHTS) {
+                    TabInset { com.ayuvo.health.ui.cycle.CycleInsightsScreen(container = container, onBack = { nav.popBackStack() }) }
+                }
+                composable(
+                    AppRoutes.CYCLE_DETAIL,
+                    arguments = listOf(navArgument(AppRoutes.CYCLE_START_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val start = entry.arguments?.getString(AppRoutes.CYCLE_START_ARG) ?: return@composable
+                    TabInset { com.ayuvo.health.ui.cycle.CycleDetailScreen(container = container, start = start, onBack = { nav.popBackStack() }) }
                 }
                 composable(AppRoutes.MEDICATIONS) {
                     TabInset {

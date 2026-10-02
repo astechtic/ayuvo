@@ -1,0 +1,372 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "duration": 5,
+        "errors": [],
+        "merged": null,
+        "ok": true,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-24",
+          "start": "2026-09-20"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "ok"
+    },
+    {
+      "expected": {
+        "duration": null,
+        "errors": [],
+        "merged": null,
+        "ok": true,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": null,
+          "start": "2026-09-30"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "ok_open"
+    },
+    {
+      "expected": {
+        "duration": null,
+        "errors": [
+          "future_start"
+        ],
+        "merged": null,
+        "ok": false,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": null,
+          "start": "2026-10-05"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "future_start"
+    },
+    {
+      "expected": {
+        "duration": 5,
+        "errors": [
+          "future_end"
+        ],
+        "merged": null,
+        "ok": false,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-10-04",
+          "start": "2026-09-30"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "future_end"
+    },
+    {
+      "expected": {
+        "duration": null,
+        "errors": [
+          "end_before_start"
+        ],
+        "merged": null,
+        "ok": false,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-18",
+          "start": "2026-09-20"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "end_before_start"
+    },
+    {
+      "expected": {
+        "duration": 20,
+        "errors": [
+          "too_long"
+        ],
+        "merged": null,
+        "ok": false,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-08-20",
+          "start": "2026-08-01"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "too_long"
+    },
+    {
+      "expected": {
+        "duration": 5,
+        "errors": [
+          "overlap"
+        ],
+        "merged": [
+          "2026-09-01",
+          "2026-09-10"
+        ],
+        "ok": false,
+        "overlaps": [
+          "a",
+          "b"
+        ]
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-08",
+          "start": "2026-09-04"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "overlap"
+    },
+    {
+      "expected": {
+        "duration": 5,
+        "errors": [],
+        "merged": null,
+        "ok": true,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-04",
+          "id": "a",
+          "start": "2026-08-31"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "edit_self_no_overlap"
+    },
+    {
+      "expected": {
+        "duration": 2,
+        "errors": [
+          "overlap"
+        ],
+        "merged": [
+          "2026-09-07",
+          "2026-09-12"
+        ],
+        "ok": false,
+        "overlaps": [
+          "b"
+        ]
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-12",
+          "start": "2026-09-11"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "adjacent_counts"
+    },
+    {
+      "expected": {
+        "duration": null,
+        "errors": [
+          "open_not_latest"
+        ],
+        "merged": null,
+        "ok": false,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": null,
+          "start": "2026-08-20"
+        },
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "open_not_latest"
+    },
+    {
+      "expected": {
+        "duration": 3,
+        "errors": [
+          "overlap"
+        ],
+        "merged": [
+          "2026-09-27",
+          null
+        ],
+        "ok": false,
+        "overlaps": [
+          "o"
+        ]
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-29",
+          "start": "2026-09-27"
+        },
+        "periods": [
+          {
+            "end": null,
+            "id": "o",
+            "start": "2026-09-29"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "overlap_with_open"
+    },
+    {
+      "expected": {
+        "duration": 4,
+        "errors": [],
+        "merged": null,
+        "ok": true,
+        "overlaps": []
+      },
+      "input": {
+        "candidate": {
+          "end": "2026-09-02",
+          "start": "2026-08-30"
+        },
+        "periods": [],
+        "today": "2026-10-02"
+      },
+      "name": "month_boundary"
+    }
+  ],
+  "format": "ayuvo-cycle-vectors",
+  "function": "validate_period",
+  "version": 1
+}

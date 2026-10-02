@@ -1,0 +1,472 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 29,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-05-12"
+          },
+          {
+            "cycle_length": 28,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-06-10"
+          },
+          {
+            "cycle_length": 30,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-07-08"
+          },
+          {
+            "cycle_length": 29,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-08-07"
+          },
+          {
+            "cycle_length": null,
+            "cycle_valid": false,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-09-05"
+          }
+        ],
+        "stats": {
+          "cycle_count": 4,
+          "cycle_lengths": [
+            29,
+            28,
+            30,
+            29
+          ],
+          "cycle_mean": 29.0,
+          "cycle_median": 29.0,
+          "cycle_range": [
+            28,
+            30
+          ],
+          "cycle_sd": 0.82,
+          "period_count": 5,
+          "period_median": 5.0,
+          "variability": "regular"
+        }
+      },
+      "input": {
+        "periods": [
+          {
+            "end": "2026-05-16",
+            "id": "p0",
+            "start": "2026-05-12"
+          },
+          {
+            "end": "2026-06-14",
+            "id": "p1",
+            "start": "2026-06-10"
+          },
+          {
+            "end": "2026-07-12",
+            "id": "p2",
+            "start": "2026-07-08"
+          },
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "regular"
+    },
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 28,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-03-01"
+          },
+          {
+            "cycle_length": 103,
+            "cycle_valid": false,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-03-29"
+          },
+          {
+            "cycle_length": 29,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-07-10"
+          },
+          {
+            "cycle_length": null,
+            "cycle_valid": false,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-08-08"
+          }
+        ],
+        "stats": {
+          "cycle_count": 2,
+          "cycle_lengths": [
+            28,
+            29
+          ],
+          "cycle_mean": 28.5,
+          "cycle_median": 28.5,
+          "cycle_range": [
+            28,
+            29
+          ],
+          "cycle_sd": 0.71,
+          "period_count": 4,
+          "period_median": 5.0,
+          "variability": "insufficient"
+        }
+      },
+      "input": {
+        "periods": [
+          {
+            "end": "2026-03-05",
+            "id": "p0",
+            "start": "2026-03-01"
+          },
+          {
+            "end": "2026-04-02",
+            "id": "p1",
+            "start": "2026-03-29"
+          },
+          {
+            "end": "2026-07-14",
+            "id": "p2",
+            "start": "2026-07-10"
+          },
+          {
+            "end": "2026-08-12",
+            "id": "p3",
+            "start": "2026-08-08"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "long_gap_excluded"
+    },
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 10,
+            "cycle_valid": false,
+            "period_length": 3,
+            "period_valid": true,
+            "start": "2026-08-01"
+          },
+          {
+            "cycle_length": 28,
+            "cycle_valid": true,
+            "period_length": 3,
+            "period_valid": true,
+            "start": "2026-08-11"
+          },
+          {
+            "cycle_length": null,
+            "cycle_valid": false,
+            "period_length": 3,
+            "period_valid": true,
+            "start": "2026-09-08"
+          }
+        ],
+        "stats": {
+          "cycle_count": 1,
+          "cycle_lengths": [
+            28
+          ],
+          "cycle_mean": 28.0,
+          "cycle_median": 28.0,
+          "cycle_range": [
+            28,
+            28
+          ],
+          "cycle_sd": null,
+          "period_count": 3,
+          "period_median": 3.0,
+          "variability": "insufficient"
+        }
+      },
+      "input": {
+        "periods": [
+          {
+            "end": "2026-08-03",
+            "id": "p0",
+            "start": "2026-08-01"
+          },
+          {
+            "end": "2026-08-13",
+            "id": "p1",
+            "start": "2026-08-11"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "p2",
+            "start": "2026-09-08"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "too_short_excluded"
+    },
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 24,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-04-05"
+          },
+          {
+            "cycle_length": 38,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-04-29"
+          },
+          {
+            "cycle_length": 27,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-06-06"
+          },
+          {
+            "cycle_length": 41,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-07-03"
+          },
+          {
+            "cycle_length": 30,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-08-13"
+          },
+          {
+            "cycle_length": null,
+            "cycle_valid": false,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-09-12"
+          }
+        ],
+        "stats": {
+          "cycle_count": 5,
+          "cycle_lengths": [
+            24,
+            38,
+            27,
+            41,
+            30
+          ],
+          "cycle_mean": 32.0,
+          "cycle_median": 30.0,
+          "cycle_range": [
+            27,
+            38
+          ],
+          "cycle_sd": 7.25,
+          "period_count": 6,
+          "period_median": 5.0,
+          "variability": "high"
+        }
+      },
+      "input": {
+        "periods": [
+          {
+            "end": "2026-04-09",
+            "id": "p0",
+            "start": "2026-04-05"
+          },
+          {
+            "end": "2026-05-03",
+            "id": "p1",
+            "start": "2026-04-29"
+          },
+          {
+            "end": "2026-06-10",
+            "id": "p2",
+            "start": "2026-06-06"
+          },
+          {
+            "end": "2026-07-07",
+            "id": "p3",
+            "start": "2026-07-03"
+          },
+          {
+            "end": "2026-08-17",
+            "id": "p4",
+            "start": "2026-08-13"
+          },
+          {
+            "end": "2026-09-16",
+            "id": "p5",
+            "start": "2026-09-12"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "trimmed"
+    },
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 30,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-01-02"
+          },
+          {
+            "cycle_length": 28,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-02-01"
+          },
+          {
+            "cycle_length": 29,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-03-01"
+          },
+          {
+            "cycle_length": 31,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-03-30"
+          },
+          {
+            "cycle_length": 27,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-04-30"
+          },
+          {
+            "cycle_length": 28,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-05-27"
+          },
+          {
+            "cycle_length": 30,
+            "cycle_valid": true,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-06-24"
+          },
+          {
+            "cycle_length": null,
+            "cycle_valid": false,
+            "period_length": 5,
+            "period_valid": true,
+            "start": "2026-07-24"
+          }
+        ],
+        "stats": {
+          "cycle_count": 6,
+          "cycle_lengths": [
+            28,
+            29,
+            31,
+            27,
+            28,
+            30
+          ],
+          "cycle_mean": 28.8,
+          "cycle_median": 28.5,
+          "cycle_range": [
+            28,
+            30
+          ],
+          "cycle_sd": 1.47,
+          "period_count": 6,
+          "period_median": 5.0,
+          "variability": "regular"
+        }
+      },
+      "input": {
+        "periods": [
+          {
+            "end": "2026-01-06",
+            "id": "p0",
+            "start": "2026-01-02"
+          },
+          {
+            "end": "2026-02-05",
+            "id": "p1",
+            "start": "2026-02-01"
+          },
+          {
+            "end": "2026-03-05",
+            "id": "p2",
+            "start": "2026-03-01"
+          },
+          {
+            "end": "2026-04-03",
+            "id": "p3",
+            "start": "2026-03-30"
+          },
+          {
+            "end": "2026-05-04",
+            "id": "p4",
+            "start": "2026-04-30"
+          },
+          {
+            "end": "2026-05-31",
+            "id": "p5",
+            "start": "2026-05-27"
+          },
+          {
+            "end": "2026-06-28",
+            "id": "p6",
+            "start": "2026-06-24"
+          },
+          {
+            "end": "2026-07-28",
+            "id": "p7",
+            "start": "2026-07-24"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "seven_cycles_window"
+    }
+  ],
+  "format": "ayuvo-cycle-vectors",
+  "function": "cycles",
+  "version": 1
+}

@@ -15,7 +15,7 @@ struct BrowseFeatureCatalogTests {
             "workouts", "workoutLog", "exerciseLibrary", "nutrition", "logFood", "water", "fasting",
             "bodyMeasurements", "logWeight", "logBodyFat", "medications", "addMedication", "records",
             "addRecord", "coach", "settings", "insights", "recovery", "healthAge", "dailyReview", "patterns",
-            "cameraMeasurements",
+            "cameraMeasurements", "cycleTracking",
         ])
         #expect(BrowseFeatureCatalog.all.first?.accessibilityID == "browse.feature.workouts")
     }

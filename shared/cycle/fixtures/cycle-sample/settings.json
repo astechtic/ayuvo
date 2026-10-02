@@ -1,0 +1,19 @@
+{
+  "cycle_length": 29,
+  "luteal_length": null,
+  "period_length": 5,
+  "settings": {
+    "health_sync": false,
+    "reminders": {
+      "daily": false,
+      "days_before": 2,
+      "lock_screen_details": false,
+      "period_end": true,
+      "period_soon": true,
+      "time": "09:00"
+    },
+    "show_fertility": true
+  },
+  "setup_done": 1,
+  "updated_ms": 1781049600000
+}

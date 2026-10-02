@@ -100,6 +100,10 @@ data class PortableSettings(
     val vitalsKeepSignals: Boolean? = null,
     val vitalsExperimentalEnabled: Boolean? = null,
     val vitalsResearchEnabled: Boolean? = null,
+    /** Cycle tracking (docs/cycle-tracking.md §7). `coachCycleEnabled` is exported but only `false` is applied. */
+    val cycleEnabled: Boolean? = null,
+    val cycleShowFertility: Boolean? = null,
+    val coachCycleEnabled: Boolean? = null,
     val optionalNutrientGoals: Map<OptionalNutrient, Int> = emptyMap(),
     val waterTrackingEnabled: Boolean? = null,
     val waterDailyGoalMl: Int? = null,
@@ -114,6 +118,7 @@ data class PortableSettings(
             appThemeColor, adaptiveGoalsEnabled, preferGramsByDefault, mealSchedule, summaryFavourites,
             insightsEnabled, derivedMetricsEnabled, derivedMetricsDisabled, derivedBmiScheme,
             vitalsKeepSignals, vitalsExperimentalEnabled, vitalsResearchEnabled,
+            cycleEnabled, cycleShowFertility, coachCycleEnabled,
             waterTrackingEnabled, waterDailyGoalMl, fastingTrackingEnabled, fastingDefaultGoalMinutes,
             fastingGoalNotificationEnabled
         ).size + if (optionalNutrientGoals.isEmpty()) 0 else 1
@@ -138,6 +143,9 @@ data class PortableSettings(
             vitalsKeepSignals = true,
             vitalsExperimentalEnabled = false,
             vitalsResearchEnabled = false,
+            cycleEnabled = true,
+            cycleShowFertility = true,
+            coachCycleEnabled = false,
             waterTrackingEnabled = false,
             waterDailyGoalMl = 2_000,
             fastingTrackingEnabled = false,
@@ -381,6 +389,9 @@ object PortableFormat {
             opt("vitals_keep_signals", s.vitalsKeepSignals)
             opt("vitals_experimental_enabled", s.vitalsExperimentalEnabled)
             opt("vitals_research_enabled", s.vitalsResearchEnabled)
+            opt("cycle_enabled", s.cycleEnabled)
+            opt("cycle_show_fertility", s.cycleShowFertility)
+            opt("coach_cycle_enabled", s.coachCycleEnabled)
             if (s.optionalNutrientGoals.isNotEmpty()) {
                 put("optional_nutrient_goals", buildJsonObject {
                     s.optionalNutrientGoals.entries.sortedBy { it.key.ordinal }.forEach { (nutrient, value) ->
@@ -667,6 +678,9 @@ object PortableFormat {
             vitalsKeepSignals = prefs?.bool("vitals_keep_signals"),
             vitalsExperimentalEnabled = prefs?.bool("vitals_experimental_enabled"),
             vitalsResearchEnabled = prefs?.bool("vitals_research_enabled"),
+            cycleEnabled = prefs?.bool("cycle_enabled"),
+            cycleShowFertility = prefs?.bool("cycle_show_fertility"),
+            coachCycleEnabled = prefs?.bool("coach_cycle_enabled"),
             optionalNutrientGoals = prefs?.obj("optional_nutrient_goals")?.let(::nutrientGoalsFrom).orEmpty(),
             waterTrackingEnabled = water?.bool("tracking_enabled"),
             waterDailyGoalMl = water?.int("daily_goal_ml")?.takeIf { it in 100..20_000 },

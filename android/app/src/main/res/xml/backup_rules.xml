@@ -28,6 +28,11 @@
     <exclude domain="database" path="ayuvo_coach.db-shm" />
     <exclude domain="database" path="ayuvo_coach.db-journal" />
     <exclude domain="file" path="ayuvo-coach/" />
+    <!-- Cycle tracking (docs/cycle-tracking.md): periods, symptoms and notes stay on device. -->
+    <exclude domain="database" path="ayuvo_cycle.db" />
+    <exclude domain="database" path="ayuvo_cycle.db-wal" />
+    <exclude domain="database" path="ayuvo_cycle.db-shm" />
+    <exclude domain="database" path="ayuvo_cycle.db-journal" />
     <!-- Recorded GPS routes (docs/workouts-gps.md) are location history. -->
     <exclude domain="file" path="workouts/" />
 </full-backup-content>

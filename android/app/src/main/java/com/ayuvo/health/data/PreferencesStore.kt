@@ -261,6 +261,25 @@ class PreferencesStore(
     val vitalsResearchEnabled: Flow<Boolean> = ds.data.map { it[Keys.VITALS_RESEARCH_ENABLED] ?: false }
     suspend fun setVitalsResearchEnabled(v: Boolean) { ds.edit { it[Keys.VITALS_RESEARCH_ENABLED] = v } }
 
+    /** Cycle tracking (docs/cycle-tracking.md §1, §7): listed everywhere (default) or hidden; fertility marks shown. */
+    val cycleEnabled: Flow<Boolean> = ds.data.map { it[Keys.CYCLE_ENABLED] ?: true }
+    suspend fun setCycleEnabled(v: Boolean) { ds.edit { it[Keys.CYCLE_ENABLED] = v } }
+    val cycleShowFertility: Flow<Boolean> = ds.data.map { it[Keys.CYCLE_SHOW_FERTILITY] ?: true }
+    suspend fun setCycleShowFertility(v: Boolean) { ds.edit { it[Keys.CYCLE_SHOW_FERTILITY] = v } }
+
+    /**
+     * Coach may read the cycle summary (docs/cycle-tracking.md §8). Default **false**, set only through the
+     * consent dialog; notes are never sent.
+     */
+    val coachCycleEnabled: Flow<Boolean> = ds.data.map { it[Keys.COACH_CYCLE_ENABLED] ?: false }
+    suspend fun setCoachCycleEnabled(v: Boolean) {
+        ds.edit {
+            it[Keys.COACH_CYCLE_ENABLED] = v
+            if (v) it[Keys.COACH_CYCLE_CONSENTED_AT] = java.time.Instant.now().toString()
+            else it.remove(Keys.COACH_CYCLE_CONSENTED_AT)
+        }
+    }
+
     /** Opt-in "Your recovery is ready" morning notification (no values). */
     val insightsMorningNotification: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_MORNING_NOTIFICATION] ?: false }
     suspend fun setInsightsMorningNotification(v: Boolean) { ds.edit { it[Keys.INSIGHTS_MORNING_NOTIFICATION] = v } }
@@ -2195,6 +2214,10 @@ class PreferencesStore(
         val VITALS_KEEP_SIGNALS = booleanPreferencesKey("vitalsKeepSignals")
         val VITALS_EXPERIMENTAL_ENABLED = booleanPreferencesKey("vitalsExperimentalEnabled")
         val VITALS_RESEARCH_ENABLED = booleanPreferencesKey("vitalsResearchEnabled")
+        val CYCLE_ENABLED = booleanPreferencesKey("cycleEnabled")
+        val CYCLE_SHOW_FERTILITY = booleanPreferencesKey("cycleShowFertility")
+        val COACH_CYCLE_ENABLED = booleanPreferencesKey("coachCycleEnabled")
+        val COACH_CYCLE_CONSENTED_AT = stringPreferencesKey("coachCycleConsentedAt")
         val DERIVED_METRICS_DISABLED = stringPreferencesKey("derivedMetricsDisabled")
         val DERIVED_BMI_SCHEME = stringPreferencesKey("derivedBMIScheme")
         val INSIGHTS_MORNING_NOTIFICATION = booleanPreferencesKey("insightsMorningNotification")

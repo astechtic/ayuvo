@@ -14,6 +14,8 @@ nonisolated enum AllDataImport {
         case healthData = "health_data"
         /// Camera scans (docs/camera-vitals.md §7.2): after Health data, from either platform.
         case cameraVitals = "camera_vitals"
+        /// Cycle tracking (docs/cycle-tracking.md §7): from either platform, merged by id / day.
+        case cycle
         case medications
         case healthRecords = "health_records"
         case coachChats = "coach_chats"
@@ -36,7 +38,7 @@ nonisolated enum AllDataImport {
         var format: String
         var counts: [String: Int]
         var disposition: Disposition
-        /// Every zip entry of a multi-file section (`camera_vitals`: `camera-vitals/…`); empty otherwise.
+        /// Every zip entry of a multi-file section (`camera_vitals`: `camera-vitals/…`, `cycle`: `cycle/…`); empty otherwise.
         var entryNames: [String] = []
     }
 
@@ -111,15 +113,24 @@ nonisolated enum AllDataImport {
             case .portableData, .foodDiary: disposition = sameAppBackup ? .coveredByAppBackup : .importIt
             default: disposition = .importIt
             }
-            if section == .cameraVitals {
-                // The listed file(s) plus every other `camera-vitals/` entry, however the exporter listed them.
-                let names = entryNames.filter { $0.hasPrefix(VitalsArchive.directory) && RecordsArchiveFormat.isSafeEntryName($0) }.sorted()
+            if let directory = multiFileDirectory(section) {
+                // The listed file(s) plus every other entry of the section's folder, however the exporter listed them.
+                let names = entryNames.filter { $0.hasPrefix(directory) && RecordsArchiveFormat.isSafeEntryName($0) }.sorted()
                 return Item(section: section, entryName: file.name, format: file.format, counts: sectionCounts[section] ?? file.counts,
                             disposition: disposition, entryNames: names)
             }
             return Item(section: section, entryName: file.name, format: file.format, counts: file.counts, disposition: disposition)
         }
         return Plan(manifest: manifest, items: items)
+    }
+
+    /// The zip folder of a section exported as several files, or nil for single-file sections.
+    static func multiFileDirectory(_ section: Section) -> String? {
+        switch section {
+        case .cameraVitals: VitalsArchive.directory
+        case .cycle: CycleArchive.directory
+        default: nil
+        }
     }
 
     /// Reads the manifest and entry names of the zip at `url`.
@@ -188,6 +199,8 @@ nonisolated enum AllDataImport {
         case "signals": String(localized: "\(n) scan signals", comment: "Import preview: count of items in an export section")
         case "calibrations": String(localized: "\(n) calibrations", comment: "Import preview: count of items in an export section")
         case "device_profiles": String(localized: "\(n) camera profiles", comment: "Import preview: count of items in an export section")
+        case "periods": String(localized: "\(n) periods", comment: "Import preview: count of items in an export section")
+        case "day_logs": String(localized: "\(n) cycle day logs", comment: "Import preview: count of items in an export section")
         default: "\(n.formatted()) \(key.replacingOccurrences(of: "_", with: " "))"
         }
     }

@@ -184,6 +184,8 @@ Canonical codes are stored in `category_value`; the platform's raw value is mapp
 
 **Menstrual flow (`menstrual_flow`)** — canonical (= HealthKit) `1 unspecified, 2 light, 3 medium, 4 heavy, 5 none`. Health Connect: `FLOW_UNKNOWN → 1`, `FLOW_LIGHT → 2`, `FLOW_MEDIUM → 3`, `FLOW_HEAVY → 4`.
 
+Cycle tracking (docs/cycle-tracking.md §4) reads `menstruation_period` and `menstrual_flow` rows from this table as platform periods and **writes** its own periods, flow, spotting (`intermenstrual_bleeding`) and symptoms back to HealthKit / Health Connect when its own "Sync with Apple Health / Health Connect" switch is on. Those written samples come back through the normal sync like any other sample; the cycle tracker skips them (own bundle id / `clientRecordId` prefix `ayuvo:cycle:`, `ayuvo:flow:`), so nothing is counted twice. The tracker's own rows live in a separate database (`shared/cycle/schema.sql`), not in `health_samples`.
+
 **Ovulation test (`ovulation_test`)** — canonical (= HealthKit) `1 negative, 2 positive (LH surge), 3 indeterminate, 4 estrogen_surge`. Health Connect: `RESULT_INCONCLUSIVE → 3`, `RESULT_POSITIVE → 2`, `RESULT_HIGH → 4`, `RESULT_NEGATIVE → 1`.
 
 **Cervical mucus (`cervical_mucus`)** — canonical `0 unknown, 1 dry, 2 sticky, 3 creamy, 4 watery, 5 egg_white, 6 unusual`. HealthKit values 1–5 map 1:1; Health Connect appearance values map 1:1 (`APPEARANCE_UNKNOWN → 0`, `APPEARANCE_UNUSUAL → 6`), HC `sensation` → `extra_json.sensation` (`light|medium|heavy`).

@@ -223,7 +223,15 @@ enum BrowseFeatureCatalog {
                            "face", "ppg", "rppg", "breathing", "respiratory rate", "vitals"],
                 destination: .browse([.vitals])
             ),
-        ]
+            BrowseFeature(
+                id: "cycleTracking", title: String(localized: "Period tracker"),
+                subtitle: String(localized: "Periods, symptoms and calendar-based estimates"),
+                systemImage: "calendar.circle.fill", domain: "cycle",
+                keywords: ["period", "periods", "period tracker", "menstrual", "menstruation", "cycle", "ovulation", "fertile",
+                           "fertility", "pms", "cramps", "flow", "spotting", "calendar"],
+                destination: .browse([.cycle])
+            ),
+        ].filter { $0.id != "cycleTracking" || CycleSettings.enabled() }
     }
 
     /// Derived metrics that are switched on and have values (docs/derived-metrics.md), as "Go to" results that open

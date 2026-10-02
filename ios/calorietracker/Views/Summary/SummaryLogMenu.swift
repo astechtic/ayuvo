@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// The Summary "+" menu (docs/ui-structure.md §8): the user's food methods first, then water,
-/// body, activity, camera measurements, medications and records. Every entry opens an existing flow.
+/// body (with Period when cycle tracking is shown), activity, camera measurements, medications and records. Every entry opens an existing flow.
 struct SummaryLogMenu: View {
     @Environment(AppNavigator.self) private var navigator
     @Environment(WaterStore.self) private var waterStore
@@ -14,6 +14,7 @@ struct SummaryLogMenu: View {
     @AppStorage(WaterSettings.enabledKey) private var waterTrackingEnabled = false
     @AppStorage(WaterSettings.unitKey) private var waterUnitRaw = WaterUnit.defaultUnit.rawValue
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
+    @AppStorage(CycleSettings.enabledKey) private var cycleEnabled = true
 
     @State private var showLogWeight = false
     @State private var showLogBodyFat = false
@@ -21,6 +22,8 @@ struct SummaryLogMenu: View {
     @State private var manualEntryKind: ManualHealthKind?
     @State private var scanMode: VitalsMode?
     @State private var showCompare = false
+    @State private var showCyclePeriod = false
+    @State private var showCycleSetup = false
 
     private var waterUnit: WaterUnit { WaterUnit(rawValue: waterUnitRaw) ?? .defaultUnit }
     private var addMenu: AddMenuConfig { AddMenuSettings.load() }
@@ -79,6 +82,19 @@ struct SummaryLogMenu: View {
                     Label("Body Temperature", systemImage: "thermometer")
                 }
                 .accessibilityIdentifier("log.entry.bodyTemperature")
+                // Cycle tracking (docs/cycle-tracking.md §5): the period sheet, or setup the first time.
+                if cycleEnabled {
+                    Button {
+                        Task {
+                            let store = CycleStore.shared
+                            if !store.hasLoaded { await store.reload() }
+                            if store.isSetUp { showCyclePeriod = true } else { showCycleSetup = true }
+                        }
+                    } label: {
+                        Label("Period", systemImage: "calendar.circle")
+                    }
+                    .accessibilityIdentifier("log.entry.period")
+                }
             }
             Section(String(localized: "Activity")) {
                 Button {
@@ -164,6 +180,19 @@ struct SummaryLogMenu: View {
         .fullScreenCover(isPresented: $showCompare) {
             CompareFlowView { saved in
                 if saved { navigator.openBrowse([.vitals]) }
+            }
+        }
+        .sheet(isPresented: $showCyclePeriod) {
+            CyclePeriodSheet(period: CycleStore.shared.ongoingPeriod)
+        }
+        .sheet(isPresented: $showCycleSetup) {
+            NavigationStack {
+                CycleSetupView(onDone: { showCycleSetup = false })
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { showCycleSetup = false }
+                        }
+                    }
             }
         }
         .sheet(isPresented: $showCustomWater) {

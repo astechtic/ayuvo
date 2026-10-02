@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.filled.Functions
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MonitorHeart
@@ -68,6 +69,7 @@ enum class SettingsPage(
     INSIGHTS("insights", R.string.settings_insights, SettingsGroup.TRACKING, Icons.Filled.Insights, SettingsTint.Insights),
     DERIVED_METRICS("derivedMetrics", R.string.settings_derived_metrics, SettingsGroup.TRACKING, Icons.Filled.Functions, SettingsTint.Insights),
     CAMERA_MEASUREMENTS("cameraMeasurements", R.string.camvitals_title, SettingsGroup.TRACKING, Icons.Filled.MonitorHeart, SettingsTint.Vitals),
+    CYCLE("cycleTracking", R.string.cycle_title, SettingsGroup.TRACKING, Icons.Filled.Loop, SettingsTint.Cycle),
     NOTIFICATIONS("notifications", R.string.settings_notifications, SettingsGroup.NOTIFICATIONS, Icons.Filled.Notifications, SettingsTint.Notifications),
     HEALTH_SYNC("healthData", R.string.settings_page_health_sync, SettingsGroup.DATA_PRIVACY, Icons.Filled.Favorite, SettingsTint.HealthSync),
     GOOGLE_HEALTH("googleHealth", R.string.google_health_title, SettingsGroup.DATA_PRIVACY, Icons.Filled.CloudSync, SettingsTint.GoogleHealth),

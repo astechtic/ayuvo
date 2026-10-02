@@ -45,6 +45,11 @@ CONTRACTS = [
         "disclaimer", "classifications.*.label", "classifications.*.about", "guidance.*", "reasons.*",
         "metrics[*].title", "quality.grades[*].label", "indicator.bands[*].label",
     ]),
+    ("cycle", "cycle/cycle_config.json", [
+        "disclaimer", "fertility_note", "flow_levels[*].title", "symptoms[*].title", "symptom_groups[*].title",
+        "moods[*].title", "pain_locations[*].title", "phases[*].title", "basis[*].title", "basis[*].about",
+        "insights[*].template",
+    ]),
     ("metric", "metrics/metric_catalog.json", [
         "metrics[*].title", "metrics[*].about", "browse_sections[*].title", "domains[*].title",
     ]),

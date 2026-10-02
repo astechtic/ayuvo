@@ -100,6 +100,8 @@ class NotificationService(private val context: Context) {
         ).apply { description = context.getString(R.string.notif_channel_insights_desc) }
 
         mgr.createNotificationChannels(listOf(streak, daily, goal, weight, bodyFat, appUpdate, water, insights))
+        // Cycle tracking reminders: private on the lock screen (docs/cycle-tracking.md §6).
+        com.ayuvo.health.cycle.reminders.CycleReminderAlarms.createChannel(context)
     }
 
     fun canPostNotifications(): Boolean {

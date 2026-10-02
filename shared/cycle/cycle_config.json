@@ -1,0 +1,127 @@
+{
+  "format": "ayuvo-cycle-config",
+  "config_version": 1,
+  "algo_version": "cycle-1",
+  "defaults": {
+    "cycle_length": 28,
+    "period_length": 5,
+    "luteal_length": 14,
+    "reminder_days_before": 2,
+    "reminder_time": "09:00"
+  },
+  "limits": {
+    "cycle_min": 15,
+    "cycle_max": 90,
+    "period_min": 1,
+    "period_max": 15,
+    "setting_cycle_min": 15,
+    "setting_cycle_max": 60,
+    "setting_period_min": 1,
+    "setting_period_max": 12,
+    "luteal_min": 10,
+    "luteal_max": 16,
+    "pain_max": 10,
+    "note_max_chars": 2000
+  },
+  "prediction": {
+    "history_window": 6,
+    "history_min_cycles": 3,
+    "trimmed_range_min_cycles": 5,
+    "default_range_days": 3,
+    "project_cycles": 3,
+    "open_period_extra_days": 3
+  },
+  "variability": {
+    "min_cycles": 3,
+    "high_range_days": 8,
+    "high_sd_days": 4.0
+  },
+  "fertile": {
+    "days_before_ovulation": 5,
+    "days_after_ovulation": 1
+  },
+  "insight_rules": {
+    "recent_cycles": 3,
+    "typical_cycle_low": 21,
+    "typical_cycle_high": 35,
+    "out_of_range_min_count": 2,
+    "late_days": 7,
+    "long_period_days": 8,
+    "severe_pain": 7.0
+  },
+  "flow_levels": [
+    {"key": "spotting", "title": "Spotting", "rank": 1, "period": false, "healthkit": "intermenstrual_bleeding", "health_connect": null},
+    {"key": "light", "title": "Light", "rank": 2, "period": true, "healthkit": "light", "health_connect": "light"},
+    {"key": "medium", "title": "Medium", "rank": 3, "period": true, "healthkit": "medium", "health_connect": "medium"},
+    {"key": "heavy", "title": "Heavy", "rank": 4, "period": true, "healthkit": "heavy", "health_connect": "heavy"},
+    {"key": "very_heavy", "title": "Very heavy", "rank": 5, "period": true, "healthkit": "heavy", "health_connect": "heavy"}
+  ],
+  "symptoms": [
+    {"key": "cramps", "group": "physical", "title": "Cramps", "healthkit": "abdominalCramps"},
+    {"key": "headache", "group": "physical", "title": "Headache", "healthkit": "headache"},
+    {"key": "backache", "group": "physical", "title": "Backache", "healthkit": "lowerBackPain"},
+    {"key": "bloating", "group": "physical", "title": "Bloating", "healthkit": "bloating"},
+    {"key": "breast_tenderness", "group": "physical", "title": "Breast tenderness", "healthkit": "breastPain"},
+    {"key": "acne", "group": "physical", "title": "Acne", "healthkit": "acne"},
+    {"key": "fatigue", "group": "physical", "title": "Fatigue", "healthkit": "fatigue"},
+    {"key": "nausea", "group": "physical", "title": "Nausea", "healthkit": "nausea"},
+    {"key": "constipation", "group": "physical", "title": "Constipation", "healthkit": "constipation"},
+    {"key": "diarrhea", "group": "physical", "title": "Diarrhea", "healthkit": "diarrhea"},
+    {"key": "pelvic_pain", "group": "physical", "title": "Pelvic pain", "healthkit": "pelvicPain"},
+    {"key": "body_ache", "group": "physical", "title": "Body ache", "healthkit": "generalizedBodyAche"},
+    {"key": "dizziness", "group": "other", "title": "Dizziness", "healthkit": "dizziness"},
+    {"key": "appetite_changes", "group": "other", "title": "Appetite changes", "healthkit": "appetiteChanges"},
+    {"key": "cravings", "group": "other", "title": "Food cravings", "healthkit": null},
+    {"key": "sleep_changes", "group": "other", "title": "Sleep changes", "healthkit": "sleepChanges"}
+  ],
+  "symptom_groups": [
+    {"key": "physical", "title": "Physical"},
+    {"key": "other", "title": "Other"}
+  ],
+  "moods": [
+    {"key": "happy", "title": "Happy"},
+    {"key": "calm", "title": "Calm"},
+    {"key": "energetic", "title": "Energetic"},
+    {"key": "neutral", "title": "Neutral"},
+    {"key": "irritated", "title": "Irritated"},
+    {"key": "sad", "title": "Sad"},
+    {"key": "anxious", "title": "Anxious"},
+    {"key": "low_energy", "title": "Low energy"}
+  ],
+  "pain_locations": [
+    {"key": "lower_abdomen", "title": "Lower abdomen"},
+    {"key": "lower_back", "title": "Lower back"},
+    {"key": "head", "title": "Head"},
+    {"key": "breast", "title": "Breast"},
+    {"key": "pelvic", "title": "Pelvic area"},
+    {"key": "other", "title": "Other"}
+  ],
+  "phases": [
+    {"key": "period", "title": "Period"},
+    {"key": "predicted_period", "title": "Estimated period"},
+    {"key": "follicular", "title": "Follicular phase"},
+    {"key": "fertile", "title": "Likely fertile window"},
+    {"key": "ovulation", "title": "Estimated ovulation"},
+    {"key": "luteal", "title": "Luteal phase"},
+    {"key": "late", "title": "Period expected"},
+    {"key": "unknown", "title": "No estimate yet"}
+  ],
+  "basis": [
+    {"key": "none", "title": "No estimate", "about": "Log the start of a period to see estimates."},
+    {"key": "default", "title": "Based on your settings", "about": "Estimates use the cycle length you entered until you log a full cycle."},
+    {"key": "limited", "title": "Limited history", "about": "Estimates combine your settings with the few cycles logged so far."},
+    {"key": "history", "title": "Based on your history", "about": "Estimates use the median of your recent cycles."}
+  ],
+  "insights": [
+    {"key": "recent_range", "template": "Your last {count} cycles were {low}–{high} days long.", "professional": false},
+    {"key": "recent_same", "template": "Your last {count} cycles were each {low} days long.", "professional": false},
+    {"key": "variable", "template": "Your cycles have varied more than usual recently, so estimates may be less precise.", "professional": false},
+    {"key": "late", "template": "Your period is {days} days later than estimated. Cycles can shift for many reasons; consider talking with a healthcare professional if this keeps happening or worries you.", "professional": true},
+    {"key": "out_of_range", "template": "{count} of your last {total} cycles were shorter than {low} or longer than {high} days. There are many possible reasons; consider discussing this pattern with a healthcare professional if it continues.", "professional": true},
+    {"key": "long_period", "template": "Your last period lasted {days} days. If long periods continue or concern you, consider discussing them with a healthcare professional.", "professional": true},
+    {"key": "severe_pain", "template": "You logged severe pain in recent cycles. Consider discussing it with a healthcare professional, especially if it affects daily life.", "professional": true},
+    {"key": "few_cycles", "template": "Log a few more periods to personalize your estimates.", "professional": false}
+  ],
+  "disclaimer": "Cycle estimates are calendar-based and can be wrong, especially when cycles vary. They are not a medical measurement or diagnosis, not a form of birth control, and not a way to plan or prevent pregnancy.",
+  "fertility_note": "The fertile window and ovulation day are calendar estimates from your cycle history. Ovulation can happen earlier or later than estimated."
+}

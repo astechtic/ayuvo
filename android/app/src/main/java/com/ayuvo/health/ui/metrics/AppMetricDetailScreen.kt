@@ -65,7 +65,9 @@ data class AppMetricDestinations(
     /** Another metric's detail (a health nutrition type links to its `nutrient:<key>` chart). */
     val openMetric: (MetricKey) -> Unit = {},
     /** "Measure with camera" on heart rate, resting HR, HRV and respiratory rate (docs/camera-vitals.md §7.1). */
-    val openCameraScan: () -> Unit = {}
+    val openCameraScan: () -> Unit = {},
+    /** "Open cycle tracking" on menstruation period / flow (docs/cycle-tracking.md §5). */
+    val openCycle: () -> Unit = {}
 )
 
 private val FOOD_METRICS = setOf(AppMetricId.CALORIES, AppMetricId.PROTEIN, AppMetricId.CARBS, AppMetricId.FAT, AppMetricId.FIBER)

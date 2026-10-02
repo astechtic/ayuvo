@@ -91,6 +91,20 @@ object AppRoutes {
     const val MEASURE_VALIDATION = "measure/validation"
     const val MEASURE_CALIBRATION = "measure/calibration"
 
+    // Cycle tracking (docs/cycle-tracking.md §5): shared destinations opened from Summary, Browse and metric detail.
+    const val CYCLE_HOME = "cycle/home"
+    const val CYCLE_SETUP = "cycle/setup"
+    /** Summary "+" → Period: the dashboard with the period sheet open (setup first when needed). */
+    const val CYCLE_LOG = "cycle/log"
+    const val CYCLE_CALENDAR = "cycle/calendar"
+    const val CYCLE_HISTORY = "cycle/history"
+    const val CYCLE_INSIGHTS = "cycle/insights"
+    const val CYCLE_START_ARG = "start"
+    /** One cycle by the first day of its period (`yyyy-MM-dd`). */
+    const val CYCLE_DETAIL = "cycle/cycle/{$CYCLE_START_ARG}"
+
+    fun cycleDetail(start: String): String = "cycle/cycle/$start"
+
     fun measureScan(mode: String, sessionId: String? = null): String =
         if (sessionId == null) "measure/scan/$mode" else "measure/scan/$mode?$MEASURE_SESSION_ARG=" + URLEncoder.encode(sessionId, "UTF-8")
     fun measureDetail(scanId: String): String = "measure/detail/" + URLEncoder.encode(scanId, "UTF-8").replace("+", "%20")
@@ -127,12 +141,12 @@ object AppRoutes {
 
     val bottomTabs = listOf(SUMMARY, BROWSE, RECORDS, COACH, SETTINGS)
 
-    /** Destinations reachable from several tabs: metric/health details, workouts, medications, camera measurements. */
+    /** Destinations reachable from several tabs: metric/health details, workouts, medications, camera measurements, cycle. */
     fun isSharedRoute(route: String?): Boolean = route != null && (
         route.startsWith("metric/") || route.startsWith("health/") ||
             route == MEDICATIONS || route.startsWith("medications/") ||
             route == INSIGHTS || route.startsWith("insights/") ||
-            route.startsWith("workouts/") || route.startsWith("measure/")
+            route.startsWith("workouts/") || route.startsWith("measure/") || route.startsWith("cycle/")
         )
 
     /** The tab that owns [route] by itself; null for shared destinations and unknown routes. */

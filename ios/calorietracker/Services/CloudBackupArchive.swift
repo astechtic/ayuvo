@@ -42,6 +42,9 @@ enum CloudBackupPolicy {
         // medications database lives in the backup-excluded `Application Support/Ayuvo/Medications/`
         // and has its own portable `ayuvo-medications` export (docs/medications.md §2, §14).
         if key.hasPrefix("medication") { return false }
+        // Cycle tracking preferences stay on the device; the cycle database lives in the backup-excluded
+        // `Application Support/Ayuvo/Cycle/` and has its own Export All Data section (docs/cycle-tracking.md §7).
+        if key.hasPrefix("cycle") || key == "coachCycleEnabled" { return false }
         // Google Health account metadata and toggles are device-local (docs/google-health.md §3);
         // the tokens live in the Keychain and the rows in the backup-excluded health mirror.
         if key.hasPrefix("googleHealth") { return false }

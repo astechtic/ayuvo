@@ -565,6 +565,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
             askMode(initialProvider)
         }
 
+        val cycle = cycleCoachContext(plainText)
         suspend fun attempt(): ChatService.CoachReply {
             val provider = providerOverride ?: container.chatService.coachProvider(imageBytes != null)
             return container.chatService.send(
@@ -591,7 +592,9 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                 providerOverride = providerOverride,
                 profileOverride = modelOverride.profileId,
                 actions = CoachActionTools(container.actions),
-                cameraScanLines = cameraScanLines()
+                cameraScanLines = cameraScanLines(),
+                cycleLines = cycle.first,
+                cycleOnDeviceBlock = cycle.second
             )
         }
 
@@ -616,6 +619,27 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
             scans, now, container.prefs.vitalsExperimentalEnabled.first(), container.prefs.vitalsResearchEnabled.first(), container.vitalsConfig
         )
     }.getOrDefault(emptyList())
+
+    /**
+     * Cycle summary + guardrails and the on-device block (docs/cycle-tracking.md §8) when Coach access is on and
+     * setup is done; otherwise the "not available" line when the message asks about cycles. Never creates the
+     * cycle database and never includes notes.
+     */
+    private suspend fun cycleCoachContext(message: String): Pair<List<String>, String?> = runCatching {
+        val coach = container.cycleCoach
+        val on = container.prefs.coachCycleEnabled.first() && container.prefs.cycleEnabled.first() && container.cycleDatabaseExists()
+        if (!on) return@runCatching coach.notAvailableLines(message) to null
+        val repo = container.cycleRepository
+        if (!repo.settings().setupDone) return@runCatching coach.notAvailableLines(message) to null
+        val state = repo.state(java.time.LocalDate.now().toString())
+        val engine = container.cycleEngine
+        val snapshot = engine.snapshot(state)
+        val trends = engine.trends(state)
+        val fertility = container.prefs.cycleShowFertility.first()
+        val lines = coach.promptLines(snapshot, trends, container.cycleConfig, fertility)
+        if (lines.isEmpty()) coach.notAvailableLines(message) to null
+        else lines to coach.onDeviceBlock(snapshot, trends, container.cycleConfig, fertility)
+    }.getOrDefault(emptyList<String>() to null)
 
     /** Built per turn; null when the user has no medicines or has not turned the source on. */
     private suspend fun medicationsContext(): CoachMedicationsContext? {

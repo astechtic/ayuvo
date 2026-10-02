@@ -1139,6 +1139,7 @@ struct NotificationSettingsView: View {
                                 // `cancelAllNotifications()` below also drops the medication
                                 // requests, so turning the master switch back on re-plans them.
                                 await MedicationReminderRuntime.shared.replan()
+                                await CycleReminderRuntime.shared.replan()
                             }
                         }
                     } else {

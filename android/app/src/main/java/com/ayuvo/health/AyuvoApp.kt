@@ -190,6 +190,8 @@ class AyuvoApp : Application() {
                 container.medicationReminders.start()
                 MedicationMaintenanceWorker.onAppStarted(this@AyuvoApp)
             }
+            // Cycle tracking (docs/cycle-tracking.md §6): re-plan reminders and retry Health Connect writes.
+            if (container.cycleDatabaseExists()) container.cycleCoordinator.start()
             if (container.prefs.fastingTrackingEnabled.first()) {
                 container.notifications.ensureFastingChannel()
             }
@@ -325,6 +327,60 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     val vitalScans: com.ayuvo.health.vitals.storage.VitalScanRepository by lazy {
         com.ayuvo.health.vitals.storage.VitalScanRepository(healthDatabase)
     }
+
+    // -- Cycle tracking (docs/cycle-tracking.md): engine config and the separate ayuvo_cycle.db --------
+    // Lazily opened: nothing creates the database until the user opens the tracker or an import needs it.
+    val cycleConfig: com.ayuvo.health.cycle.engine.CycleConfig by lazy {
+        com.ayuvo.health.cycle.engine.CycleConfig.parse(
+            app.assets.open(com.ayuvo.health.cycle.engine.CycleConfig.ASSET_PATH).bufferedReader().use { it.readText() }
+        )
+    }
+    val cycleEngine: com.ayuvo.health.cycle.engine.CycleEngine by lazy { com.ayuvo.health.cycle.engine.CycleEngine(cycleConfig) }
+    private val cycleDatabaseLazy = lazy { com.ayuvo.health.cycle.data.CycleDatabase(app) }
+    val cycleRepository: com.ayuvo.health.cycle.data.CycleRepository by lazy {
+        com.ayuvo.health.cycle.data.CycleRepository(
+            helper = cycleDatabaseLazy.value,
+            // Health Connect periods come from the mirror only when the hub was ever set up.
+            healthDatabase = { if (app.getDatabasePath(HealthDatabase.NAME).exists()) healthDatabase else null },
+            ownPackage = app.packageName
+        )
+    }
+
+    /** Coach cycle summary (docs/cycle-tracking.md §8), from assets/cycle/coach.json. */
+    val cycleCoach: com.ayuvo.health.cycle.coach.CoachCycleContext by lazy {
+        com.ayuvo.health.cycle.coach.CoachCycleContext(
+            com.ayuvo.health.cycle.coach.CoachCycleContext.Coach.parse(
+                app.assets.open(com.ayuvo.health.cycle.engine.CycleConfig.COACH_ASSET_PATH).bufferedReader().use { it.readText() }
+            )
+        )
+    }
+
+    /** Health Connect write-back of app periods and flow days (docs/cycle-tracking.md §4). */
+    val cycleHealthWriter: com.ayuvo.health.cycle.health.CycleHealthConnectWriter by lazy {
+        com.ayuvo.health.cycle.health.CycleHealthConnectWriter(
+            client = { if (health.isAvailable()) health.clientOrNull() else null },
+            grantedPermissions = { health.grantedPermissionsOrNull() },
+            repository = cycleRepository,
+            config = cycleConfig
+        )
+    }
+
+    /** Reminders + Health Connect sync after every cycle write (docs/cycle-tracking.md §6). */
+    val cycleCoordinator: com.ayuvo.health.cycle.CycleCoordinator by lazy {
+        com.ayuvo.health.cycle.CycleCoordinator(
+            context = appContext,
+            repository = { cycleRepository },
+            engine = { cycleEngine },
+            prefs = prefs,
+            writer = { cycleHealthWriter },
+            canPostNotifications = { notifications.canPostNotifications() },
+            scope = scope
+        )
+    }
+
+    /** Whether a cycle database exists (export and reminders never create one). */
+    fun cycleDatabaseExists(): Boolean =
+        cycleDatabaseLazy.isInitialized() || com.ayuvo.health.cycle.data.CycleDatabase.exists(appContext)
 
     // -- Google Health API (docs/google-health.md) ----------------------------
     // Origin-3 rows land in the same mirror; nothing runs until the user connects in Settings.

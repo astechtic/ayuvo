@@ -72,6 +72,13 @@ and `Medications/Stores/MedicationStore+Coach.swift`; Android `medications/coach
 with the executor on `CoachTools.executeMedications`. Both build the context from the archive
 snapshot, so a tool result and the app's own adherence screen read the same rows.
 
+**Cycle tracking** has no tools: when `coachCycleEnabled` is on (default **false**, set only through a consent
+sheet stating that cycle lengths, estimates, symptoms, moods and pain levels — never notes — are sent to the AI
+provider), the system prompt gets the summary block and guardrails from `shared/cycle/coach.json`
+(docs/cycle-tracking.md §8); otherwise a message that mentions one of its `mentions_words` gets the
+`not_available_line`. Implementations: iOS `Cycle/Coach/CoachCycleContext.swift`, Android
+`cycle/coach/CoachCycleContext.kt`.
+
 Whether the user *asked* about medicines — which decides if the "not available" line is worth the
 tokens — is `prompt.mentions_words` in `shared/medications/coach_tools.json`, folded and matched
 whole-word on both platforms, so the two can never drift.

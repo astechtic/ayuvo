@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorHeart
+import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Restaurant
@@ -142,6 +143,7 @@ fun BrowseScreen(
     }
 
     val domains = remember(catalog) { catalog.domains.sortedBy { it.browseOrder } }
+    val cycleShown by container.prefs.cycleEnabled.collectAsState(initial = true)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -271,6 +273,18 @@ fun BrowseScreen(
                                 onClick = { onOpenTarget("screen:vitals") }
                             )
                         }
+                        // Cycle tracking (docs/cycle-tracking.md §5): listed for everyone unless hidden in Settings.
+                        if (cycleShown) {
+                            row {
+                                GroupRow(
+                                    title = stringResource(R.string.cycle_browse_title),
+                                    subtitle = stringResource(R.string.cycle_browse_sub),
+                                    modifier = Modifier.testTag("browse.row.cycleTracking"),
+                                    leading = { CategoryIcon(Icons.Filled.Loop, AyuvoPalette.Cycle) },
+                                    onClick = { onOpenTarget("screen:cycle") }
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -397,7 +411,11 @@ private fun BrowseSearchResults(
     val context = LocalContext.current
     val catalog = container.metricCatalog
     val res = LocalResources.current
-    val features = remember(query, res) { BrowseFeatures.search(query) { res.getString(it.titleRes) } }
+    // Cycle tracking can be hidden everywhere (docs/cycle-tracking.md §1).
+    val cycleEnabled by container.prefs.cycleEnabled.collectAsState(initial = true)
+    val features = remember(query, res, cycleEnabled) {
+        BrowseFeatures.search(query) { res.getString(it.titleRes) }.filter { cycleEnabled || it.id != "cycleTracking" }
+    }
     val matchedDomains = domains.filter { res.getString(domainTitleRes(it.id)).contains(query, ignoreCase = true) }
     val appMatches = AppMetricId.entries.filter { res.getString(MetricCatalog.titleRes(it)).contains(query, ignoreCase = true) }
     val withData = hub.categories.flatMap { it.rows }.filter { it.count > 0 }.map { it.typeId }.toSet()
@@ -515,6 +533,7 @@ private fun featureIcon(id: String): ImageVector = when (id) {
     "addRecord" -> Icons.AutoMirrored.Filled.NoteAdd
     "insights", "recovery", "healthAge", "dailyReview" -> Icons.Filled.Insights
     "cameraMeasurements" -> Icons.Filled.MonitorHeart
+    "cycleTracking" -> Icons.Filled.Loop
     "coach" -> Icons.AutoMirrored.Filled.Chat
     "settings" -> Icons.Filled.Settings
     else -> Icons.Filled.Search
@@ -530,6 +549,7 @@ private fun featureColor(domain: BrowseFeatureDomain): Color = when (domain) {
     BrowseFeatureDomain.RECORDS -> AyuvoPalette.Records
     BrowseFeatureDomain.INSIGHTS -> com.ayuvo.health.ui.insights.InsightsFormat.Insights
     BrowseFeatureDomain.VITALS -> AyuvoPalette.Heart
+    BrowseFeatureDomain.CYCLE -> AyuvoPalette.Cycle
     BrowseFeatureDomain.COACH -> AyuvoPalette.Mindfulness
     BrowseFeatureDomain.SETTINGS -> AyuvoPalette.Other
 }

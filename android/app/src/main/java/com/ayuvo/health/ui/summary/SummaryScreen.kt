@@ -92,7 +92,10 @@ data class SummaryDestinations(
     /** Camera measurements scan flow (docs/camera-vitals.md §7.1). */
     val openScan: (com.ayuvo.health.vitals.camera.VitalsMode) -> Unit = {},
     /** Compare finger & face: a finger scan with a new compare session id (docs/camera-vitals.md §6). */
-    val openCompare: () -> Unit = {}
+    val openCompare: () -> Unit = {},
+    /** Cycle tracking (docs/cycle-tracking.md §5): the dashboard, and "+" → Period. */
+    val openCycle: () -> Unit = {},
+    val logPeriod: () -> Unit = {}
 )
 
 /** A Summary "+" entry requested from outside the screen (Quick Log widget), consumed once. */
@@ -134,6 +137,9 @@ fun SummaryScreen(
     var editFavourites by remember { mutableStateOf<List<MetricKey>?>(null) }
     val dateFormatter = remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.getDefault()) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    // Cycle card (docs/cycle-tracking.md §5): only after setup and while cycle tracking is shown.
+    val cycle = com.ayuvo.health.ui.cycle.rememberCycleSummary(container, ui)
+    val cycleShown by container.prefs.cycleEnabled.collectAsState(initial = true)
 
     fun openEditor() {
         scope.launch { editFavourites = vm.favouriteKeys() }
@@ -155,6 +161,7 @@ fun SummaryScreen(
             LogEntry.FINGER_SCAN -> destinations.openScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER)
             LogEntry.FACE_SCAN -> destinations.openScan(com.ayuvo.health.vitals.camera.VitalsMode.FACE)
             LogEntry.COMPARE_SCAN -> destinations.openCompare()
+            LogEntry.PERIOD -> destinations.logPeriod()
         }
     }
 
@@ -241,9 +248,10 @@ fun SummaryScreen(
             val medications = ui.medications.takeIf { ui.showMedications }
             val fast = ui.activeFast.takeIf { ui.fastingTracking || it != null }
             val workouts = ui.workoutsToday
-            if (medications != null || fast != null || workouts.isNotEmpty()) {
+            if (medications != null || fast != null || workouts.isNotEmpty() || cycle != null) {
                 item(key = "today-header") { SectionHeader(stringResource(R.string.summary_today)) }
                 if (medications != null) item(key = "today-meds") { MedicationsTodayCard(medications, destinations.openMedications) }
+                if (cycle != null) item(key = "today-cycle") { com.ayuvo.health.ui.cycle.CycleTodayCard(cycle, destinations.openCycle) }
                 if (fast != null) item(key = "today-fast") { FastingTodayCard(fast, destinations.openFasting) }
                 if (workouts.isNotEmpty()) item(key = "today-workouts") { WorkoutTodayCard(workouts, destinations.openWorkouts) }
             }
@@ -331,6 +339,7 @@ fun SummaryScreen(
     if (showLog) {
         SummaryLogSheet(
             waterTracking = ui.waterTracking,
+            cycleShown = cycleShown,
             canStartFast = ui.fastingTracking && ui.activeFast == null,
             onEntry = { entry ->
                 showLog = false

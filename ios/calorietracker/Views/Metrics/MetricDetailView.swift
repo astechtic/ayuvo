@@ -15,6 +15,8 @@ struct MetricDetailView: View {
     @Environment(ImportedHealthWorkoutStore.self) private var importedWorkoutStore
     @Environment(ProfileStore.self) private var profileStore
     @Environment(MedicationStore.self) private var medicationStore
+    @Environment(AppNavigator.self) private var navigator
+    @AppStorage(CycleSettings.enabledKey) private var cycleEnabled = true
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage(OptionalNutrientGoals.storageKey) private var optionalNutrientGoalsData = Data()
     @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.lbs.rawValue
@@ -550,6 +552,12 @@ struct MetricDetailView: View {
                         Label("Measure with camera", systemImage: VitalsMode.finger.systemImage)
                     }
                     .accessibilityIdentifier("metric.measureWithCamera")
+                }
+                if cycleEnabled, id == "menstruation_period" || id == "menstrual_flow" {
+                    Button { navigator.openBrowse([.cycle]) } label: {
+                        Label("Open Period tracker", systemImage: "calendar.circle")
+                    }
+                    .accessibilityIdentifier("metric.openCycle")
                 }
                 if let kind = ManualHealthKind(typeID: id) {
                     Button { manualEntryKind = kind } label: {

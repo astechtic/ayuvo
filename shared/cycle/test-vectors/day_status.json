@@ -1,0 +1,1484 @@
+{
+  "cases": [
+    {
+      "expected": [
+        {
+          "cycle_day": 26,
+          "day": "2026-09-01",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 27,
+          "day": "2026-09-02",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 28,
+          "day": "2026-09-03",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 29,
+          "day": "2026-09-04",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-09-05",
+          "estimated": false,
+          "period_day": 1,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-09-06",
+          "estimated": false,
+          "period_day": 2,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-09-07",
+          "estimated": false,
+          "period_day": 3,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 4,
+          "day": "2026-09-08",
+          "estimated": false,
+          "period_day": 4,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 5,
+          "day": "2026-09-09",
+          "estimated": false,
+          "period_day": 5,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 6,
+          "day": "2026-09-10",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 7,
+          "day": "2026-09-11",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 8,
+          "day": "2026-09-12",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 9,
+          "day": "2026-09-13",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 10,
+          "day": "2026-09-14",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 11,
+          "day": "2026-09-15",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 12,
+          "day": "2026-09-16",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 13,
+          "day": "2026-09-17",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 14,
+          "day": "2026-09-18",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 15,
+          "day": "2026-09-19",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 16,
+          "day": "2026-09-20",
+          "estimated": true,
+          "period_day": null,
+          "phase": "ovulation"
+        },
+        {
+          "cycle_day": 17,
+          "day": "2026-09-21",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 18,
+          "day": "2026-09-22",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 19,
+          "day": "2026-09-23",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 20,
+          "day": "2026-09-24",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 21,
+          "day": "2026-09-25",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 22,
+          "day": "2026-09-26",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 23,
+          "day": "2026-09-27",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 24,
+          "day": "2026-09-28",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 25,
+          "day": "2026-09-29",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 26,
+          "day": "2026-09-30",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 27,
+          "day": "2026-10-01",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 28,
+          "day": "2026-10-02",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 29,
+          "day": "2026-10-03",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-10-04",
+          "estimated": true,
+          "period_day": 1,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-10-05",
+          "estimated": true,
+          "period_day": 2,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-10-06",
+          "estimated": true,
+          "period_day": 3,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 4,
+          "day": "2026-10-07",
+          "estimated": true,
+          "period_day": 4,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 5,
+          "day": "2026-10-08",
+          "estimated": true,
+          "period_day": 5,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 6,
+          "day": "2026-10-09",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 7,
+          "day": "2026-10-10",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 8,
+          "day": "2026-10-11",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 9,
+          "day": "2026-10-12",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 10,
+          "day": "2026-10-13",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 11,
+          "day": "2026-10-14",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 12,
+          "day": "2026-10-15",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 13,
+          "day": "2026-10-16",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 14,
+          "day": "2026-10-17",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 15,
+          "day": "2026-10-18",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 16,
+          "day": "2026-10-19",
+          "estimated": true,
+          "period_day": null,
+          "phase": "ovulation"
+        },
+        {
+          "cycle_day": 17,
+          "day": "2026-10-20",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 18,
+          "day": "2026-10-21",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 19,
+          "day": "2026-10-22",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 20,
+          "day": "2026-10-23",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 21,
+          "day": "2026-10-24",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 22,
+          "day": "2026-10-25",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 23,
+          "day": "2026-10-26",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 24,
+          "day": "2026-10-27",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 25,
+          "day": "2026-10-28",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 26,
+          "day": "2026-10-29",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 27,
+          "day": "2026-10-30",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 28,
+          "day": "2026-10-31",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        }
+      ],
+      "input": {
+        "from": "2026-09-01",
+        "periods": [
+          {
+            "end": "2026-05-16",
+            "id": "p0",
+            "start": "2026-05-12"
+          },
+          {
+            "end": "2026-06-14",
+            "id": "p1",
+            "start": "2026-06-10"
+          },
+          {
+            "end": "2026-07-12",
+            "id": "p2",
+            "start": "2026-07-08"
+          },
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          }
+        ],
+        "to": "2026-10-31",
+        "today": "2026-10-02"
+      },
+      "name": "regular_month"
+    },
+    {
+      "expected": [
+        {
+          "cycle_day": 29,
+          "day": "2026-11-01",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-11-02",
+          "estimated": true,
+          "period_day": 1,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-11-03",
+          "estimated": true,
+          "period_day": 2,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-11-04",
+          "estimated": true,
+          "period_day": 3,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 4,
+          "day": "2026-11-05",
+          "estimated": true,
+          "period_day": 4,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 5,
+          "day": "2026-11-06",
+          "estimated": true,
+          "period_day": 5,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 6,
+          "day": "2026-11-07",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 7,
+          "day": "2026-11-08",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 8,
+          "day": "2026-11-09",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 9,
+          "day": "2026-11-10",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 10,
+          "day": "2026-11-11",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 11,
+          "day": "2026-11-12",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 12,
+          "day": "2026-11-13",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 13,
+          "day": "2026-11-14",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 14,
+          "day": "2026-11-15",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 15,
+          "day": "2026-11-16",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 16,
+          "day": "2026-11-17",
+          "estimated": true,
+          "period_day": null,
+          "phase": "ovulation"
+        },
+        {
+          "cycle_day": 17,
+          "day": "2026-11-18",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 18,
+          "day": "2026-11-19",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 19,
+          "day": "2026-11-20",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 20,
+          "day": "2026-11-21",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 21,
+          "day": "2026-11-22",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 22,
+          "day": "2026-11-23",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 23,
+          "day": "2026-11-24",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 24,
+          "day": "2026-11-25",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 25,
+          "day": "2026-11-26",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 26,
+          "day": "2026-11-27",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 27,
+          "day": "2026-11-28",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 28,
+          "day": "2026-11-29",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 29,
+          "day": "2026-11-30",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-12-01",
+          "estimated": true,
+          "period_day": 1,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-12-02",
+          "estimated": true,
+          "period_day": 2,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-12-03",
+          "estimated": true,
+          "period_day": 3,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 4,
+          "day": "2026-12-04",
+          "estimated": true,
+          "period_day": 4,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 5,
+          "day": "2026-12-05",
+          "estimated": true,
+          "period_day": 5,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 6,
+          "day": "2026-12-06",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 7,
+          "day": "2026-12-07",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 8,
+          "day": "2026-12-08",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 9,
+          "day": "2026-12-09",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 10,
+          "day": "2026-12-10",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 11,
+          "day": "2026-12-11",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 12,
+          "day": "2026-12-12",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 13,
+          "day": "2026-12-13",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 14,
+          "day": "2026-12-14",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 15,
+          "day": "2026-12-15",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 16,
+          "day": "2026-12-16",
+          "estimated": true,
+          "period_day": null,
+          "phase": "ovulation"
+        },
+        {
+          "cycle_day": 17,
+          "day": "2026-12-17",
+          "estimated": true,
+          "period_day": null,
+          "phase": "fertile"
+        },
+        {
+          "cycle_day": 18,
+          "day": "2026-12-18",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 19,
+          "day": "2026-12-19",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 20,
+          "day": "2026-12-20",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 21,
+          "day": "2026-12-21",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 22,
+          "day": "2026-12-22",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 23,
+          "day": "2026-12-23",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 24,
+          "day": "2026-12-24",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 25,
+          "day": "2026-12-25",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 26,
+          "day": "2026-12-26",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 27,
+          "day": "2026-12-27",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 28,
+          "day": "2026-12-28",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 29,
+          "day": "2026-12-29",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-12-30",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-12-31",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-01",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-02",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-03",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-04",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-05",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-06",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-07",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-08",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-09",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-10",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-11",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-12",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-13",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-14",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2027-01-15",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        }
+      ],
+      "input": {
+        "from": "2026-11-01",
+        "periods": [
+          {
+            "end": "2026-05-16",
+            "id": "p0",
+            "start": "2026-05-12"
+          },
+          {
+            "end": "2026-06-14",
+            "id": "p1",
+            "start": "2026-06-10"
+          },
+          {
+            "end": "2026-07-12",
+            "id": "p2",
+            "start": "2026-07-08"
+          },
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          }
+        ],
+        "to": "2027-01-15",
+        "today": "2026-10-02"
+      },
+      "name": "projected_months"
+    },
+    {
+      "expected": [
+        {
+          "cycle_day": 27,
+          "day": "2026-10-01",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 28,
+          "day": "2026-10-02",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 29,
+          "day": "2026-10-03",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 30,
+          "day": "2026-10-04",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 31,
+          "day": "2026-10-05",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 32,
+          "day": "2026-10-06",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 33,
+          "day": "2026-10-07",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 34,
+          "day": "2026-10-08",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 35,
+          "day": "2026-10-09",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 36,
+          "day": "2026-10-10",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 37,
+          "day": "2026-10-11",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 38,
+          "day": "2026-10-12",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 39,
+          "day": "2026-10-13",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 40,
+          "day": "2026-10-14",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 41,
+          "day": "2026-10-15",
+          "estimated": true,
+          "period_day": null,
+          "phase": "late"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-10-16",
+          "estimated": true,
+          "period_day": 1,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-10-17",
+          "estimated": true,
+          "period_day": 2,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-10-18",
+          "estimated": true,
+          "period_day": 3,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 4,
+          "day": "2026-10-19",
+          "estimated": true,
+          "period_day": 4,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 5,
+          "day": "2026-10-20",
+          "estimated": true,
+          "period_day": 5,
+          "phase": "predicted_period"
+        }
+      ],
+      "input": {
+        "from": "2026-10-01",
+        "periods": [
+          {
+            "end": "2026-05-16",
+            "id": "p0",
+            "start": "2026-05-12"
+          },
+          {
+            "end": "2026-06-14",
+            "id": "p1",
+            "start": "2026-06-10"
+          },
+          {
+            "end": "2026-07-12",
+            "id": "p2",
+            "start": "2026-07-08"
+          },
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          }
+        ],
+        "to": "2026-10-20",
+        "today": "2026-10-15"
+      },
+      "name": "late_days"
+    },
+    {
+      "expected": [
+        {
+          "cycle_day": 24,
+          "day": "2026-09-28",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 25,
+          "day": "2026-09-29",
+          "estimated": true,
+          "period_day": null,
+          "phase": "luteal"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-09-30",
+          "estimated": false,
+          "period_day": 1,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-10-01",
+          "estimated": false,
+          "period_day": 2,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-10-02",
+          "estimated": false,
+          "period_day": 3,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 4,
+          "day": "2026-10-03",
+          "estimated": true,
+          "period_day": 4,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 5,
+          "day": "2026-10-04",
+          "estimated": true,
+          "period_day": 5,
+          "phase": "predicted_period"
+        },
+        {
+          "cycle_day": 6,
+          "day": "2026-10-05",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 7,
+          "day": "2026-10-06",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 8,
+          "day": "2026-10-07",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        },
+        {
+          "cycle_day": 9,
+          "day": "2026-10-08",
+          "estimated": true,
+          "period_day": null,
+          "phase": "follicular"
+        }
+      ],
+      "input": {
+        "from": "2026-09-28",
+        "periods": [
+          {
+            "end": "2026-05-16",
+            "id": "p0",
+            "start": "2026-05-12"
+          },
+          {
+            "end": "2026-06-14",
+            "id": "p1",
+            "start": "2026-06-10"
+          },
+          {
+            "end": "2026-07-12",
+            "id": "p2",
+            "start": "2026-07-08"
+          },
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          },
+          {
+            "end": null,
+            "id": "p5",
+            "start": "2026-09-30"
+          }
+        ],
+        "to": "2026-10-08",
+        "today": "2026-10-02"
+      },
+      "name": "ongoing"
+    },
+    {
+      "expected": [
+        {
+          "cycle_day": null,
+          "day": "2026-10-01",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-10-02",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-10-03",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        }
+      ],
+      "input": {
+        "from": "2026-10-01",
+        "periods": [],
+        "to": "2026-10-03",
+        "today": "2026-10-02"
+      },
+      "name": "no_data"
+    },
+    {
+      "expected": [
+        {
+          "cycle_day": null,
+          "day": "2026-09-15",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-09-16",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-09-17",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-09-18",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": null,
+          "day": "2026-09-19",
+          "estimated": false,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": 1,
+          "day": "2026-09-20",
+          "estimated": false,
+          "period_day": 1,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 2,
+          "day": "2026-09-21",
+          "estimated": false,
+          "period_day": 2,
+          "phase": "period"
+        },
+        {
+          "cycle_day": 3,
+          "day": "2026-09-22",
+          "estimated": false,
+          "period_day": 3,
+          "phase": "period"
+        }
+      ],
+      "input": {
+        "from": "2026-09-15",
+        "periods": [
+          {
+            "end": "2026-09-24",
+            "id": "a",
+            "start": "2026-09-20"
+          }
+        ],
+        "to": "2026-09-22",
+        "today": "2026-10-02"
+      },
+      "name": "before_first"
+    },
+    {
+      "expected": [
+        {
+          "cycle_day": 32,
+          "day": "2026-04-01",
+          "estimated": true,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": 33,
+          "day": "2026-04-02",
+          "estimated": true,
+          "period_day": null,
+          "phase": "unknown"
+        },
+        {
+          "cycle_day": 34,
+          "day": "2026-04-03",
+          "estimated": true,
+          "period_day": null,
+          "phase": "unknown"
+        }
+      ],
+      "input": {
+        "from": "2026-04-01",
+        "periods": [
+          {
+            "end": "2026-03-05",
+            "id": "p0",
+            "start": "2026-03-01"
+          },
+          {
+            "end": "2026-07-14",
+            "id": "p1",
+            "start": "2026-07-10"
+          }
+        ],
+        "to": "2026-04-03",
+        "today": "2026-10-02"
+      },
+      "name": "long_gap_no_estimate"
+    }
+  ],
+  "format": "ayuvo-cycle-vectors",
+  "function": "day_status",
+  "version": 1
+}

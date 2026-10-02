@@ -474,6 +474,8 @@ struct SettingsPaneView: View {
                         await recordsStore.deleteAllData()
                         // Medications: database, photos and pending dose reminders.
                         await medicationStore.deleteAllData()
+                        // Cycle tracking: its database (+ sidecars).
+                        try? await CycleRuntime.shared.deleteAllData()
                         let domain = Bundle.main.bundleIdentifier ?? ""
                         UserDefaults.standard.removePersistentDomain(forName: domain)
                         AIProviderSettings.deleteAllData()
@@ -504,6 +506,7 @@ struct SettingsPaneView: View {
         case .fasting: fastingPane
         case .activity: activityPane
         case .medications: medicationsPane
+        case .cycleTracking: cyclePane
         case .insights: insightsPane
         case .derivedMetrics: derivedMetricsPane
         case .notifications: EmptyView() // the hub pushes NotificationSettingsView

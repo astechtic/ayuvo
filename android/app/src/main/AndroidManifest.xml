@@ -64,6 +64,8 @@
     <uses-permission android:name="android.permission.health.READ_INTERMENSTRUAL_BLEEDING" />
     <uses-permission android:name="android.permission.health.READ_LEAN_BODY_MASS" />
     <uses-permission android:name="android.permission.health.READ_MENSTRUATION" />
+    <!-- Cycle tracking writes its own periods and flow days (docs/cycle-tracking.md §4). -->
+    <uses-permission android:name="android.permission.health.WRITE_MENSTRUATION" />
     <uses-permission android:name="android.permission.health.READ_MINDFULNESS" />
     <uses-permission android:name="android.permission.health.READ_OVULATION_TEST" />
     <uses-permission android:name="android.permission.health.READ_OXYGEN_SATURATION" />
@@ -549,6 +551,23 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Cycle tracking reminders (docs/cycle-tracking.md §6): inexact alarms, re-armed after boot / time changes. -->
+        <receiver
+            android:name=".cycle.reminders.CycleReminderReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".cycle.reminders.CycleSystemEventReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
 

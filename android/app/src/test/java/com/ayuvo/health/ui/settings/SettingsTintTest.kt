@@ -23,6 +23,7 @@ class SettingsTintTest {
             SettingsPage.INSIGHTS to "#E08A00",
             SettingsPage.DERIVED_METRICS to "#E08A00",
             SettingsPage.CAMERA_MEASUREMENTS to "#FF2D55",
+            SettingsPage.CYCLE to "#FF2D55",
             SettingsPage.NOTIFICATIONS to "#FF3B30",
             SettingsPage.HEALTH_SYNC to "#FF2D55",
             SettingsPage.GOOGLE_HEALTH to "#007AFF",

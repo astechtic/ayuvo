@@ -78,6 +78,8 @@ struct ChatService {
         health: CoachHealthContext? = nil,
         records: CoachRecordsContext? = nil,
         medications: CoachMedicationsContext? = nil,
+        /// Cycle tracking summary, only when the user allowed Coach access (docs/cycle-tracking.md §8).
+        cycle: CoachCycleContext? = nil,
         /// The conversation's data switches (docs/coach.md §8); they only ever narrow.
         sources: CoachDataSwitches = .allOn,
         providerOverride: AIProvider? = nil,
@@ -90,6 +92,7 @@ struct ChatService {
         let health = sources.isOn(.health) ? health : nil
         let records = sources.isOn(.records) ? records : nil
         let medications = sources.isOn(.medications) ? medications : nil
+        let cycle = sources.isOn(.health) ? cycle : nil
         let workoutAccessEnabled = workoutAccessEnabled && sources.isOn(.food)
         let systemPrompt = buildSystemPrompt(
             profile: profile,
@@ -106,6 +109,7 @@ struct ChatService {
             health: health,
             records: records,
             medications: medications,
+            cycle: cycle,
             newUserMessage: newUserMessage
         )
         let tools = CoachTools(
@@ -329,6 +333,17 @@ struct ChatService {
         return lines
     }
 
+    /// Cycle summary and guardrails (docs/cycle-tracking.md §8). Without access, the "not available" line is only
+    /// added when the user asked about periods or cycles. Notes are never part of the context.
+    static func cyclePromptLines(_ cycle: CoachCycleContext?, newUserMessage: String) -> [String] {
+        guard let cycle else {
+            guard CoachCycleContext.mentionsCycle(newUserMessage) else { return [] }
+            let line = CoachCycleContext.notAvailableLine
+            return line.isEmpty ? [] : ["- " + line]
+        }
+        return cycle.promptLines
+    }
+
     /// Records lines of `## Data available`, the guardrails block and the selected records (§26).
     static func recordsPromptLines(_ records: CoachRecordsContext?, newUserMessage: String) -> [String] {
         guard let records else { return [] }
@@ -371,6 +386,7 @@ struct ChatService {
         health: CoachHealthContext? = nil,
         records: CoachRecordsContext? = nil,
         medications: CoachMedicationsContext? = nil,
+        cycle: CoachCycleContext? = nil,
         newUserMessage: String = ""
     ) -> String {
         let forecast = WeightAnalysisService.compute(weights: weights, foods: foods, profile: profile)
@@ -495,6 +511,7 @@ struct ChatService {
         }
         lines.append(contentsOf: recordsPromptLines(records, newUserMessage: newUserMessage))
         lines.append(contentsOf: medicationsPromptLines(medications, newUserMessage: newUserMessage))
+        lines.append(contentsOf: cyclePromptLines(cycle, newUserMessage: newUserMessage))
         if !CoachCatalog.chartsPromptSection.isEmpty {
             lines.append("")
             lines.append(CoachCatalog.chartsPromptSection)

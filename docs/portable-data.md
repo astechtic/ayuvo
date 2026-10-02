@@ -1,6 +1,6 @@
 # Portable data section (`ayuvo-portable-data`), the cross-platform part of Export All Data
 
-Export All Data (`ayuvo-all-data`, docs/cloud-backup.md) already moves the food diary, health data, medications, Health Records and Coach chats between iPhone and Android. The **app backup** part (`app-backup/ayuvo-backup.zip`) restores profile, settings and logs, but only on the platform that made it: preference keys, date encodings and workout enums differ. The portable section closes that gap: **one JSON file both platforms write and read**, carrying what a person expects to survive a phone change across platforms.
+Export All Data (`ayuvo-all-data`, docs/cloud-backup.md) already moves the food diary, health data, medications, cycle tracking (docs/cycle-tracking.md §7), Health Records and Coach chats between iPhone and Android. The **app backup** part (`app-backup/ayuvo-backup.zip`) restores profile, settings and logs, but only on the platform that made it: preference keys, date encodings and workout enums differ. The portable section closes that gap: **one JSON file both platforms write and read**, carrying what a person expects to survive a phone change across platforms.
 
 This file is the contract. `shared/portable/fixtures/portable-sample.json` is the canonical sample; both platforms have a unit test that imports it and asserts the resulting native values, and a round-trip test (own export → own import).
 
@@ -102,6 +102,9 @@ Import **replaces** the device profile when `profile` is present. Not carried: t
 | `vitals_keep_signals` | bool | `vitalsKeepSignals` (docs/camera-vitals.md) |
 | `vitals_experimental_enabled` | bool | `vitalsExperimentalEnabled` |
 | `vitals_research_enabled` | bool | `vitalsResearchEnabled` |
+| `cycle_enabled` | bool | `cycleEnabled` — Cycle tracking shown (docs/cycle-tracking.md §7) |
+| `cycle_show_fertility` | bool | `cycleShowFertility` (Android; iOS takes it from the `cycle` section) |
+| `coach_cycle_enabled` | bool | `coachCycleEnabled` — exported, but an imported `true` is ignored: consent never travels |
 
 Out of range or unknown values are ignored one by one. **Never carried:** notification and reminder switches and times (they differ per platform and need an OS grant), health-sync flags, AI provider/model/keys, speech provider, quick actions and Add-menu layout (different method sets), Records/medication/Coach preferences, onboarding state, widgets.
 

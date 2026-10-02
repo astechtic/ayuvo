@@ -583,6 +583,258 @@
   "source": "d4ef52870aed",
   "state": "needs_review"
  },
+ "c_cycle_basis_default_about": {
+  "source": "e0f74b573ac5",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_default_title": {
+  "source": "365bb7c2b2ad",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_history_about": {
+  "source": "63e9bfd31b72",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_history_title": {
+  "source": "23f4e898df84",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_limited_about": {
+  "source": "f5abb4ca3191",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_limited_title": {
+  "source": "b8d22d75594c",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_none_about": {
+  "source": "0216b6df0763",
+  "state": "needs_review"
+ },
+ "c_cycle_basis_none_title": {
+  "source": "3c3704fb7bb9",
+  "state": "needs_review"
+ },
+ "c_cycle_disclaimer": {
+  "source": "fac209182102",
+  "state": "needs_review"
+ },
+ "c_cycle_fertility_note": {
+  "source": "3f391470a3ac",
+  "state": "needs_review"
+ },
+ "c_cycle_flow_levels_heavy_title": {
+  "source": "33e0b66368fc",
+  "state": "needs_review"
+ },
+ "c_cycle_flow_levels_light_title": {
+  "source": "5170ad83b2a3",
+  "state": "needs_review"
+ },
+ "c_cycle_flow_levels_medium_title": {
+  "source": "1213b077ee0a",
+  "state": "needs_review"
+ },
+ "c_cycle_flow_levels_spotting_title": {
+  "source": "67bbb7f8e344",
+  "state": "needs_review"
+ },
+ "c_cycle_flow_levels_very_heavy_title": {
+  "source": "74c0b0b30a43",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_few_cycles_template": {
+  "source": "7175f2a3240e",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_late_template": {
+  "source": "d6d657267721",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_long_period_template": {
+  "source": "c0a44401b344",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_out_of_range_template": {
+  "source": "bc3ab2be4e84",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_recent_range_template": {
+  "source": "903a7208caec",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_recent_same_template": {
+  "source": "955e197fb258",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_severe_pain_template": {
+  "source": "3546db4d3080",
+  "state": "needs_review"
+ },
+ "c_cycle_insights_variable_template": {
+  "source": "7fcc076134ea",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_anxious_title": {
+  "source": "b2a993dfdc51",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_calm_title": {
+  "source": "5b1d0b3060d3",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_energetic_title": {
+  "source": "cc00b1ee6e62",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_happy_title": {
+  "source": "24f2862a38f6",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_irritated_title": {
+  "source": "ca76627aff2f",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_low_energy_title": {
+  "source": "645395e80575",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_neutral_title": {
+  "source": "cd3110977065",
+  "state": "needs_review"
+ },
+ "c_cycle_moods_sad_title": {
+  "source": "d2b0df59bb01",
+  "state": "needs_review"
+ },
+ "c_cycle_pain_locations_breast_title": {
+  "source": "1da5494cb53e",
+  "state": "needs_review"
+ },
+ "c_cycle_pain_locations_head_title": {
+  "source": "e13f5609762e",
+  "state": "needs_review"
+ },
+ "c_cycle_pain_locations_lower_abdomen_title": {
+  "source": "4341f3d67e68",
+  "state": "needs_review"
+ },
+ "c_cycle_pain_locations_lower_back_title": {
+  "source": "12f56e5d5308",
+  "state": "needs_review"
+ },
+ "c_cycle_pain_locations_other_title": {
+  "source": "77e6700098d9",
+  "state": "needs_review"
+ },
+ "c_cycle_pain_locations_pelvic_title": {
+  "source": "ebfa0c6e89e4",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_fertile_title": {
+  "source": "ec1cad779b65",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_follicular_title": {
+  "source": "43873facff09",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_late_title": {
+  "source": "130116688d69",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_luteal_title": {
+  "source": "85c13af0d447",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_ovulation_title": {
+  "source": "8c391e6f11f1",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_period_title": {
+  "source": "23adfa609184",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_predicted_period_title": {
+  "source": "7afb5af828b3",
+  "state": "needs_review"
+ },
+ "c_cycle_phases_unknown_title": {
+  "source": "ef1986ea2cd9",
+  "state": "needs_review"
+ },
+ "c_cycle_symptom_groups_other_title": {
+  "source": "77e6700098d9",
+  "state": "needs_review"
+ },
+ "c_cycle_symptom_groups_physical_title": {
+  "source": "5248e022f6f4",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_acne_title": {
+  "source": "abf68ac09d36",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_appetite_changes_title": {
+  "source": "d0910d675b1f",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_backache_title": {
+  "source": "496c77e7c7ca",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_bloating_title": {
+  "source": "261bcd6c757f",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_body_ache_title": {
+  "source": "f09376b363e8",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_breast_tenderness_title": {
+  "source": "1885cfd52d94",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_constipation_title": {
+  "source": "95daf68a14a8",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_cramps_title": {
+  "source": "5fecc5dd1261",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_cravings_title": {
+  "source": "4645afb71212",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_diarrhea_title": {
+  "source": "e363eaa9822b",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_dizziness_title": {
+  "source": "74c9ce35ae0a",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_fatigue_title": {
+  "source": "374c297e59d0",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_headache_title": {
+  "source": "e50163548829",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_nausea_title": {
+  "source": "2d698b2b6ae6",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_pelvic_pain_title": {
+  "source": "bfd5fefb0de6",
+  "state": "needs_review"
+ },
+ "c_cycle_symptoms_sleep_changes_title": {
+  "source": "e008779e5174",
+  "state": "needs_review"
+ },
  "c_derived_disclaimer": {
   "source": "8bf23c913e33",
   "state": "needs_review"
@@ -4973,6 +5225,566 @@
  },
  "core_workout_text_which_variation": {
   "source": "4068b020d312",
+  "state": "needs_review"
+ },
+ "cycle_a11y_logged": {
+  "source": "84ce1c03d93f",
+  "state": "needs_review"
+ },
+ "cycle_a11y_period_day": {
+  "source": "0a8061875b2d",
+  "state": "needs_review"
+ },
+ "cycle_about_estimates": {
+  "source": "e3e43fc452d1",
+  "state": "needs_review"
+ },
+ "cycle_adjust": {
+  "source": "c2a499281e97",
+  "state": "needs_review"
+ },
+ "cycle_avg_cycle": {
+  "source": "b67b15f183df",
+  "state": "needs_review"
+ },
+ "cycle_avg_period": {
+  "source": "dfd428110b98",
+  "state": "needs_review"
+ },
+ "cycle_badge_variable": {
+  "source": "04d611939445",
+  "state": "needs_review"
+ },
+ "cycle_bbt": {
+  "source": "e89dcae92895",
+  "state": "needs_review"
+ },
+ "cycle_browse_sub": {
+  "source": "c49e40e75777",
+  "state": "needs_review"
+ },
+ "cycle_browse_title": {
+  "source": "56dcc1ff1649",
+  "state": "needs_review"
+ },
+ "cycle_calendar": {
+  "source": "24108aa72cd7",
+  "state": "needs_review"
+ },
+ "cycle_card_period_day": {
+  "source": "2bddd6dab9d6",
+  "state": "needs_review"
+ },
+ "cycle_card_title": {
+  "source": "d65327f55eee",
+  "state": "needs_review"
+ },
+ "cycle_change_date": {
+  "source": "b62ba62a0a37",
+  "state": "needs_review"
+ },
+ "cycle_chart_cycle_length": {
+  "source": "b64b5a902a55",
+  "state": "needs_review"
+ },
+ "cycle_chart_empty": {
+  "source": "721ab545003b",
+  "state": "needs_review"
+ },
+ "cycle_chart_flow": {
+  "source": "0cb674bedf8a",
+  "state": "needs_review"
+ },
+ "cycle_chart_flow_footer": {
+  "source": "0edeb6624257",
+  "state": "needs_review"
+ },
+ "cycle_chart_median_line": {
+  "source": "bf227ea35a97",
+  "state": "needs_review"
+ },
+ "cycle_chart_pain": {
+  "source": "b54c30758dd7",
+  "state": "needs_review"
+ },
+ "cycle_chart_period_length": {
+  "source": "609cf3f209e4",
+  "state": "needs_review"
+ },
+ "cycle_chart_symptoms": {
+  "source": "2f66ddda6807",
+  "state": "needs_review"
+ },
+ "cycle_clear_day": {
+  "source": "5e80e46f1ff4",
+  "state": "needs_review"
+ },
+ "cycle_clear_pain": {
+  "source": "5b7c8068bdae",
+  "state": "needs_review"
+ },
+ "cycle_coach": {
+  "source": "609741b2c5f8",
+  "state": "needs_review"
+ },
+ "cycle_coach_consent_allow": {
+  "source": "56f76c072939",
+  "state": "needs_review"
+ },
+ "cycle_coach_consent_body": {
+  "source": "d6df3e0e5c5f",
+  "state": "needs_review"
+ },
+ "cycle_coach_consent_title": {
+  "source": "80c15ecbf988",
+  "state": "needs_review"
+ },
+ "cycle_coach_sub": {
+  "source": "9d6dda6c96f7",
+  "state": "needs_review"
+ },
+ "cycle_current_cycle": {
+  "source": "9efdcf63a1f2",
+  "state": "needs_review"
+ },
+ "cycle_cycle_length_value": {
+  "source": "6c26f127fde7",
+  "state": "needs_review"
+ },
+ "cycle_day_label": {
+  "source": "c733f45f596e",
+  "state": "needs_review"
+ },
+ "cycle_day_logs": {
+  "source": "cc96a5bb9490",
+  "state": "needs_review"
+ },
+ "cycle_day_n": {
+  "source": "c9ae2c36dc55",
+  "state": "needs_review"
+ },
+ "cycle_days": {
+  "source": "c9dd009508ac",
+  "state": "needs_review"
+ },
+ "cycle_decrease": {
+  "source": "e11c590df0cc",
+  "state": "needs_review"
+ },
+ "cycle_delete_all": {
+  "source": "4837767edcf4",
+  "state": "needs_review"
+ },
+ "cycle_delete_all_body": {
+  "source": "d76e90d82406",
+  "state": "needs_review"
+ },
+ "cycle_delete_all_title": {
+  "source": "550101464d94",
+  "state": "needs_review"
+ },
+ "cycle_delete_period": {
+  "source": "4e05da237b23",
+  "state": "needs_review"
+ },
+ "cycle_delete_period_body": {
+  "source": "f095e8025bbb",
+  "state": "needs_review"
+ },
+ "cycle_deleted": {
+  "source": "f1e2bdf8705c",
+  "state": "needs_review"
+ },
+ "cycle_duration_label": {
+  "source": "14961e3fe6ee",
+  "state": "needs_review"
+ },
+ "cycle_edit_period": {
+  "source": "36dcdd49e2a3",
+  "state": "needs_review"
+ },
+ "cycle_end": {
+  "source": "54f02e3549b7",
+  "state": "needs_review"
+ },
+ "cycle_end_ongoing": {
+  "source": "c96795b2463f",
+  "state": "needs_review"
+ },
+ "cycle_err_end_before": {
+  "source": "dabe20bb2268",
+  "state": "needs_review"
+ },
+ "cycle_err_future": {
+  "source": "ed0f490862b5",
+  "state": "needs_review"
+ },
+ "cycle_err_open_not_latest": {
+  "source": "c74b8aa5f496",
+  "state": "needs_review"
+ },
+ "cycle_err_overlap": {
+  "source": "8b4dc149fb9a",
+  "state": "needs_review"
+ },
+ "cycle_err_overlap_short": {
+  "source": "72f5f5993b55",
+  "state": "needs_review"
+ },
+ "cycle_err_too_long": {
+  "source": "5c4e62723d1e",
+  "state": "needs_review"
+ },
+ "cycle_flow": {
+  "source": "4d98b4a8ae73",
+  "state": "needs_review"
+ },
+ "cycle_from_health": {
+  "source": "76a26ec5ddcf",
+  "state": "needs_review"
+ },
+ "cycle_future_day": {
+  "source": "d21fcd16fc91",
+  "state": "needs_review"
+ },
+ "cycle_health_sync": {
+  "source": "8743c1a52035",
+  "state": "needs_review"
+ },
+ "cycle_health_sync_sub": {
+  "source": "b5aa53c52d18",
+  "state": "needs_review"
+ },
+ "cycle_history": {
+  "source": "a62150b4cc1c",
+  "state": "needs_review"
+ },
+ "cycle_history_empty_body": {
+  "source": "e5c345dbc881",
+  "state": "needs_review"
+ },
+ "cycle_history_empty_title": {
+  "source": "756b4968201a",
+  "state": "needs_review"
+ },
+ "cycle_increase": {
+  "source": "bcc603e0ec6d",
+  "state": "needs_review"
+ },
+ "cycle_insights": {
+  "source": "30001b1bc9e8",
+  "state": "needs_review"
+ },
+ "cycle_lengths_header": {
+  "source": "97372d7a6cd8",
+  "state": "needs_review"
+ },
+ "cycle_log_period": {
+  "source": "23adfa609184",
+  "state": "needs_review"
+ },
+ "cycle_log_today": {
+  "source": "2286383e2a79",
+  "state": "needs_review"
+ },
+ "cycle_luteal": {
+  "source": "85c13af0d447",
+  "state": "needs_review"
+ },
+ "cycle_max_pain": {
+  "source": "86f75dc8a6ec",
+  "state": "needs_review"
+ },
+ "cycle_merge": {
+  "source": "1280b4d4e93d",
+  "state": "needs_review"
+ },
+ "cycle_mood": {
+  "source": "7592cf389bb3",
+  "state": "needs_review"
+ },
+ "cycle_next_month": {
+  "source": "8b97c1c48bb3",
+  "state": "needs_review"
+ },
+ "cycle_no_data_title": {
+  "source": "fd4831664807",
+  "state": "needs_review"
+ },
+ "cycle_not_logged": {
+  "source": "a4b7c0389ed5",
+  "state": "needs_review"
+ },
+ "cycle_not_synced": {
+  "source": "eb23e069112f",
+  "state": "needs_review"
+ },
+ "cycle_note": {
+  "source": "035703b5fdd4",
+  "state": "needs_review"
+ },
+ "cycle_note_hint": {
+  "source": "413622bb9051",
+  "state": "needs_review"
+ },
+ "cycle_notes_header": {
+  "source": "526cf4ae3d5f",
+  "state": "needs_review"
+ },
+ "cycle_notif_channel": {
+  "source": "2bcf2cf0c3b2",
+  "state": "needs_review"
+ },
+ "cycle_notif_channel_desc": {
+  "source": "f83cb9c4cd5b",
+  "state": "needs_review"
+ },
+ "cycle_notif_daily": {
+  "source": "994444ac27a3",
+  "state": "needs_review"
+ },
+ "cycle_notif_discreet": {
+  "source": "c76fc5dc9009",
+  "state": "needs_review"
+ },
+ "cycle_notif_period_end": {
+  "source": "3d3587571dba",
+  "state": "needs_review"
+ },
+ "cycle_notif_period_soon": {
+  "source": "20fb64a3c6c1",
+  "state": "needs_review"
+ },
+ "cycle_ongoing": {
+  "source": "c3bf2c978af9",
+  "state": "needs_review"
+ },
+ "cycle_open_tracker": {
+  "source": "470efb352dd4",
+  "state": "needs_review"
+ },
+ "cycle_ovulation_estrogen": {
+  "source": "23f34990d620",
+  "state": "needs_review"
+ },
+ "cycle_ovulation_indeterminate": {
+  "source": "cb396212c120",
+  "state": "needs_review"
+ },
+ "cycle_ovulation_negative": {
+  "source": "3eec322932d5",
+  "state": "needs_review"
+ },
+ "cycle_ovulation_positive": {
+  "source": "22948229f3a8",
+  "state": "needs_review"
+ },
+ "cycle_ovulation_test": {
+  "source": "47c2386d0fda",
+  "state": "needs_review"
+ },
+ "cycle_pain": {
+  "source": "0ecfc05efa8f",
+  "state": "needs_review"
+ },
+ "cycle_pain_locations": {
+  "source": "e91b03b7b8b6",
+  "state": "needs_review"
+ },
+ "cycle_pain_none": {
+  "source": "30804b9cbd5f",
+  "state": "needs_review"
+ },
+ "cycle_pain_severe": {
+  "source": "84b9dd3f030c",
+  "state": "needs_review"
+ },
+ "cycle_pain_value": {
+  "source": "13fa162d7df1",
+  "state": "needs_review"
+ },
+ "cycle_period_add_title": {
+  "source": "255d499e548e",
+  "state": "needs_review"
+ },
+ "cycle_period_day": {
+  "source": "d792f85419da",
+  "state": "needs_review"
+ },
+ "cycle_period_edit_title": {
+  "source": "36dcdd49e2a3",
+  "state": "needs_review"
+ },
+ "cycle_period_ended": {
+  "source": "9e4ed2f54674",
+  "state": "needs_review"
+ },
+ "cycle_period_length_value": {
+  "source": "1b3524abc8f7",
+  "state": "needs_review"
+ },
+ "cycle_period_started": {
+  "source": "6a57c004b2a1",
+  "state": "needs_review"
+ },
+ "cycle_prev_month": {
+  "source": "8a4fa041e04f",
+  "state": "needs_review"
+ },
+ "cycle_privacy_note": {
+  "source": "7e145df8c0a4",
+  "state": "needs_review"
+ },
+ "cycle_rem_daily": {
+  "source": "f787eed73ddf",
+  "state": "needs_review"
+ },
+ "cycle_rem_days_before_title": {
+  "source": "409e037e1312",
+  "state": "needs_review"
+ },
+ "cycle_rem_discreet_footer": {
+  "source": "44ff4fbe5421",
+  "state": "needs_review"
+ },
+ "cycle_rem_lock_details": {
+  "source": "20ab94337579",
+  "state": "needs_review"
+ },
+ "cycle_rem_lock_details_sub": {
+  "source": "886ac3ad636b",
+  "state": "needs_review"
+ },
+ "cycle_rem_notifications_off": {
+  "source": "ada8e641c9b1",
+  "state": "needs_review"
+ },
+ "cycle_rem_period_end": {
+  "source": "1d06a49fa3b2",
+  "state": "needs_review"
+ },
+ "cycle_rem_period_end_sub": {
+  "source": "05c62ee49c11",
+  "state": "needs_review"
+ },
+ "cycle_rem_period_soon": {
+  "source": "8615be7121ef",
+  "state": "needs_review"
+ },
+ "cycle_rem_time": {
+  "source": "9d7e7206844f",
+  "state": "needs_review"
+ },
+ "cycle_reminders_header": {
+  "source": "5093facccf1b",
+  "state": "needs_review"
+ },
+ "cycle_ring_desc": {
+  "source": "e874d5ca8328",
+  "state": "needs_review"
+ },
+ "cycle_settings": {
+  "source": "68b1e32fa66c",
+  "state": "needs_review"
+ },
+ "cycle_setup_cycle_length": {
+  "source": "b39ed42e2b04",
+  "state": "needs_review"
+ },
+ "cycle_setup_done": {
+  "source": "f001a989f782",
+  "state": "needs_review"
+ },
+ "cycle_setup_dont_remember": {
+  "source": "67aa72e873d1",
+  "state": "needs_review"
+ },
+ "cycle_setup_intro": {
+  "source": "efbd0af94abf",
+  "state": "needs_review"
+ },
+ "cycle_setup_last_start": {
+  "source": "30240f445a30",
+  "state": "needs_review"
+ },
+ "cycle_setup_lengths_footer": {
+  "source": "9838bec2aac3",
+  "state": "needs_review"
+ },
+ "cycle_setup_not_sure": {
+  "source": "afbeb2452eac",
+  "state": "needs_review"
+ },
+ "cycle_setup_period_length": {
+  "source": "cfaeab79bcd5",
+  "state": "needs_review"
+ },
+ "cycle_setup_title": {
+  "source": "18af50913fd6",
+  "state": "needs_review"
+ },
+ "cycle_show": {
+  "source": "c1e10988a597",
+  "state": "needs_review"
+ },
+ "cycle_show_fertility": {
+  "source": "640615183d9f",
+  "state": "needs_review"
+ },
+ "cycle_show_fertility_sub": {
+  "source": "9e5f887d7943",
+  "state": "needs_review"
+ },
+ "cycle_show_sub": {
+  "source": "1e849deccd61",
+  "state": "needs_review"
+ },
+ "cycle_start": {
+  "source": "d0d8ef2df968",
+  "state": "needs_review"
+ },
+ "cycle_stats_footer": {
+  "source": "f38aa84c2fe1",
+  "state": "needs_review"
+ },
+ "cycle_status_late": {
+  "source": "fa3f9f9f8119",
+  "state": "needs_review"
+ },
+ "cycle_status_next": {
+  "source": "f5cb1dd07fe3",
+  "state": "needs_review"
+ },
+ "cycle_status_ongoing": {
+  "source": "87622ae5a929",
+  "state": "needs_review"
+ },
+ "cycle_status_range": {
+  "source": "b9a02fe1a636",
+  "state": "needs_review"
+ },
+ "cycle_status_today": {
+  "source": "1b5db780e223",
+  "state": "needs_review"
+ },
+ "cycle_symptom_cycles": {
+  "source": "61532d1b646b",
+  "state": "needs_review"
+ },
+ "cycle_symptoms": {
+  "source": "96c8f96a9c14",
+  "state": "needs_review"
+ },
+ "cycle_title": {
+  "source": "2bcf2cf0c3b2",
+  "state": "needs_review"
+ },
+ "cycle_today": {
+  "source": "6b1be5a6a0be",
+  "state": "needs_review"
+ },
+ "cycle_typical_range": {
+  "source": "64c683c13bdc",
   "state": "needs_review"
  },
  "derived_citation": {

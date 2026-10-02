@@ -23,13 +23,14 @@ struct ExportAllDataView: View {
     @State private var errorMessage: String?
 
     enum Step: Int, CaseIterable {
-        case foodDiary, healthData, cameraVitals, medications, healthRecords, coachChats, appBackup, portableData, packing
+        case foodDiary, healthData, cameraVitals, cycle, medications, healthRecords, coachChats, appBackup, portableData, packing
 
         var title: LocalizedStringResource {
             switch self {
             case .foodDiary: "Food diary"
             case .healthData: "Health data"
             case .cameraVitals: "Camera measurements"
+            case .cycle: "Cycle tracking"
             case .medications: "Medications"
             case .healthRecords: "Health Records"
             case .coachChats: "Coach chats"
@@ -51,6 +52,7 @@ struct ExportAllDataView: View {
                     contentRow("fork.knife", AyuvoPalette.nutrition, "Food diary", "Meals, nutrition and water (JSON)")
                     contentRow("heart.text.square.fill", AyuvoPalette.vitals, "Health data", "Synced Apple Health samples")
                     contentRow("waveform.path.ecg", AyuvoPalette.heart, "Camera measurements", "Finger and face scans, their signals and calibrations")
+                    contentRow("drop.circle.fill", AyuvoPalette.cycle, "Cycle tracking", "Periods, day logs and cycle settings")
                     contentRow("pills.fill", AyuvoPalette.medications, "Medications", "Medications, schedules and dose log")
                     contentRow("doc.text.fill", AyuvoPalette.records, "Health Records", "Records and their details")
                     contentRow("gearshape.fill", AyuvoPalette.other, "Settings, profile & logs", "Profile, goals, workouts, weight, fasting, meal photos")
@@ -242,6 +244,28 @@ struct ExportAllDataView: View {
                 }
             } else {
                 skipped.append(VitalsArchive.sectionID)
+            }
+
+            // 2c. Cycle tracking — `cycle/` (docs/cycle-tracking.md §7). The database is in no app backup.
+            advance(.cycle)
+            if CycleRuntime.shared.databaseExists, await CycleRuntime.shared.openIfNeeded(), let db = CycleRuntime.shared.database {
+                let cycle = try await CycleArchive.export(from: db)
+                if cycle.isEmpty {
+                    skipped.append(CycleArchive.sectionID)
+                } else {
+                    let folder = parts.appendingPathComponent("cycle", isDirectory: true)
+                    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                    for entry in cycle.entries {
+                        let url = folder.appendingPathComponent((entry.name as NSString).lastPathComponent)
+                        try entry.data.write(to: url, options: .atomic)
+                        included.append(.init(
+                            section: CycleArchive.sectionID, format: CycleArchive.format, name: entry.name, fileURL: url,
+                            counts: entry.name == CycleArchive.manifestEntry ? cycle.counts : [:]
+                        ))
+                    }
+                }
+            } else {
+                skipped.append(CycleArchive.sectionID)
             }
 
             // 3. Medications — the `ayuvo-medications.json` archive.

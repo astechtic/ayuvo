@@ -32,6 +32,8 @@ enum MedicationBackgroundRefresh {
         schedule()
         let work = Task { @MainActor in
             await MedicationReminderRuntime.shared.replan()
+            // Cycle reminders share this refresh (docs/cycle-tracking.md §6).
+            await CycleReminderRuntime.shared.replan()
         }
         task.expirationHandler = { work.cancel() }
         await work.value

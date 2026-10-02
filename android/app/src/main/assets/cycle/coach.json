@@ -1,0 +1,28 @@
+{
+  "format": "ayuvo-cycle-coach",
+  "version": 1,
+  "notes": "Cycle tracking context for the Coach (docs/cycle-tracking.md §9, docs/coach.md). Only sent when the user turned on Coach access to cycle data. Both platforms embed this file byte-identically.",
+  "mentions_words": ["period", "periods", "cycle", "cycles", "menstrual", "menstruation", "pms", "cramps", "ovulation", "fertile", "spotting", "flow"],
+  "never_shared": ["notes", "individual day logs older than the history window"],
+  "header": "Cycle tracking (user-logged in Ayuvo; calendar-based estimates, not measurements):",
+  "not_available_line": "No cycle data is available: the user has not set up cycle tracking, or has turned off Coach access to it.",
+  "lines": {
+    "cycles": "Recent cycle lengths (oldest to newest): {lengths} days. Median {median} days, typical range {low}–{high} days, variability {variability}.",
+    "no_cycles": "Fewer than one full cycle logged so far.",
+    "period": "Typical period length: {days} days.",
+    "current": "Today is cycle day {day}; estimated phase: {phase}.",
+    "next": "Next period estimated around {date} (range {low} to {high}); this is an estimate.",
+    "late": "The period is {days} days later than the estimate.",
+    "symptoms": "Most logged symptoms over the last {cycles} cycles: {list}.",
+    "moods": "Most logged moods over the last {cycles} cycles: {list}.",
+    "pain": "Highest pain logged per recent cycle (0–10): {list}."
+  },
+  "prompt": [
+    "Cycle guardrails:",
+    "- Never diagnose and never name a condition (for example PCOS, endometriosis, thyroid or hormonal disorders) as the cause of a pattern.",
+    "- Predictions, the fertile window and ovulation are calendar estimates; always call them estimates and never present them as certain.",
+    "- Cycle estimates are not birth control and cannot be used to plan or prevent pregnancy; say so if asked.",
+    "- You may summarize patterns in the user's own data and suggest questions to bring to a healthcare professional when a change persists or worries them.",
+    "- Use only the cycle data provided; never invent dates, lengths or symptoms."
+  ]
+}

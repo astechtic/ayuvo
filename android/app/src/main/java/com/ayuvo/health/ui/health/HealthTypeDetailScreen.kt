@@ -229,6 +229,16 @@ fun HealthTypeDetailScreen(
                     )
                 }
             }
+            // Cycle tracking (docs/cycle-tracking.md §5): period and flow types link to the tracker.
+            if (typeKey in CYCLE_TYPES) {
+                row {
+                    GroupRow(
+                        title = stringResource(R.string.cycle_open_tracker),
+                        modifier = Modifier.testTag("metric.openCycle"),
+                        onClick = destinations.openCycle
+                    )
+                }
+            }
             row {
                 GroupRow(
                     title = stringResource(R.string.health_detail_export_csv),
@@ -380,6 +390,9 @@ fun HealthTypeDetailScreen(
 
 /** Health types whose detail offers "Measure with camera" (HRV is RMSSD on Android, matching `hrv_kind`). */
 internal val CAMERA_MEASURABLE_TYPES = setOf("heart_rate", "resting_heart_rate", "hrv_rmssd", "respiratory_rate")
+
+/** Health types whose detail links to cycle tracking (docs/cycle-tracking.md §5). */
+internal val CYCLE_TYPES = setOf("menstruation_period", "menstrual_flow")
 
 /** Headline for the selected bucket: its value and date (Apple Health behaviour). */
 @Composable

@@ -1,0 +1,449 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-20",
+            "op": "insert",
+            "start": "2026-09-20"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "insert_past"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": null,
+            "op": "insert",
+            "start": "2026-10-02"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-10-02",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "insert_today_open"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-11",
+            "id": "b",
+            "op": "update",
+            "start": "2026-09-07"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-11",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "extend_end"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "op": "update",
+            "start": "2026-08-31"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-08-31",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "extend_start"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-10",
+            "id": "a",
+            "op": "update",
+            "start": "2026-09-01"
+          },
+          {
+            "id": "b",
+            "op": "delete"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-06",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "bridge_gap"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": []
+      },
+      "input": {
+        "day": "2026-09-03",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "already_on"
+    },
+    {
+      "expected": {
+        "error": "future",
+        "ops": []
+      },
+      "input": {
+        "day": "2026-10-03",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "future"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "id": "c",
+            "op": "delete"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-20",
+        "on": false,
+        "periods": [
+          {
+            "end": "2026-09-20",
+            "id": "c",
+            "start": "2026-09-20"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_single_delete"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "op": "update",
+            "start": "2026-09-02"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-01",
+        "on": false,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_first_day"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-02",
+            "id": "a",
+            "op": "update",
+            "start": "2026-09-01"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-03",
+        "on": false,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_middle_truncate"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-04",
+            "id": "a",
+            "op": "update",
+            "start": "2026-09-01"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-09-05",
+        "on": false,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_last_day"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": []
+      },
+      "input": {
+        "day": "2026-09-25",
+        "on": false,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "a",
+            "start": "2026-09-01"
+          },
+          {
+            "end": "2026-09-10",
+            "id": "b",
+            "start": "2026-09-07"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_not_period"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "id": "o",
+            "op": "delete"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-10-02",
+        "on": false,
+        "periods": [
+          {
+            "end": null,
+            "id": "o",
+            "start": "2026-10-02"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_open_today"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": "2026-09-30",
+            "id": "o",
+            "op": "update",
+            "start": "2026-09-29"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-10-01",
+        "on": false,
+        "periods": [
+          {
+            "end": null,
+            "id": "o",
+            "start": "2026-09-29"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "off_open_truncate"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": [
+          {
+            "end": null,
+            "id": "y",
+            "op": "update",
+            "start": "2026-09-29"
+          }
+        ]
+      },
+      "input": {
+        "day": "2026-10-02",
+        "on": true,
+        "periods": [
+          {
+            "end": "2026-10-01",
+            "id": "y",
+            "start": "2026-09-29"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "extend_to_today_opens"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ops": []
+      },
+      "input": {
+        "day": "2026-09-03",
+        "on": false,
+        "periods": [
+          {
+            "end": "2026-09-05",
+            "id": "hk",
+            "source": "healthkit",
+            "start": "2026-09-01"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "platform_ignored"
+    }
+  ],
+  "format": "ayuvo-cycle-vectors",
+  "function": "apply_period_day",
+  "version": 1
+}

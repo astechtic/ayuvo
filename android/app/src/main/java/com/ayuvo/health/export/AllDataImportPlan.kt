@@ -2,6 +2,7 @@ package com.ayuvo.health.export
 
 import com.ayuvo.health.backup.CloudBackupPolicy
 import com.ayuvo.health.coach.export.CoachChatArchiveFormat
+import com.ayuvo.health.cycle.data.CycleArchive
 import com.ayuvo.health.medications.logic.MedicationConstants
 import com.ayuvo.health.records.backup.RecordsArchiveFormat
 import com.ayuvo.health.vitals.storage.CameraVitalsArchive
@@ -24,13 +25,15 @@ object AllDataImportPlan {
         AllDataExportCoordinator.SECTION_HEALTH_DATA,
         // docs/camera-vitals.md §7.2: after health_data, from either platform (scans are in no app backup).
         AllDataExportCoordinator.SECTION_CAMERA_VITALS,
+        // docs/cycle-tracking.md §7: merged by id/day, newer updated_ms wins; in no app backup.
+        AllDataExportCoordinator.SECTION_CYCLE,
         AllDataExportCoordinator.SECTION_MEDICATIONS,
         AllDataExportCoordinator.SECTION_HEALTH_RECORDS,
         AllDataExportCoordinator.SECTION_COACH_CHATS
     )
 
     /** Sections written as several entries; every other section is exactly one file. */
-    val MULTI_FILE_SECTIONS = setOf(AllDataExportCoordinator.SECTION_CAMERA_VITALS)
+    val MULTI_FILE_SECTIONS = setOf(AllDataExportCoordinator.SECTION_CAMERA_VITALS, AllDataExportCoordinator.SECTION_CYCLE)
 
     /** The format each section's file must be in. */
     val EXPECTED_FORMAT = mapOf(
@@ -39,9 +42,16 @@ object AllDataImportPlan {
         AllDataExportCoordinator.SECTION_FOOD_DIARY to FOOD_DIARY_FORMAT,
         AllDataExportCoordinator.SECTION_HEALTH_DATA to HealthExportFormat.FORMAT,
         AllDataExportCoordinator.SECTION_CAMERA_VITALS to CameraVitalsArchive.FORMAT,
+        AllDataExportCoordinator.SECTION_CYCLE to CycleArchive.FORMAT,
         AllDataExportCoordinator.SECTION_MEDICATIONS to MedicationConstants.ARCHIVE_FORMAT,
         AllDataExportCoordinator.SECTION_HEALTH_RECORDS to RecordsArchiveFormat.FORMAT,
         AllDataExportCoordinator.SECTION_COACH_CHATS to CoachChatArchiveFormat.FORMAT
+    )
+
+    /** The entry a multi-file section cannot be imported without. */
+    private val LEAD_ENTRY = mapOf(
+        AllDataExportCoordinator.SECTION_CAMERA_VITALS to CameraVitalsArchive.SCANS,
+        AllDataExportCoordinator.SECTION_CYCLE to CycleArchive.PERIODS
     )
 
     enum class Invalid { NOT_AYUVO, NEWER_VERSION }
@@ -111,11 +121,12 @@ object AllDataImportPlan {
         var appBackupApplied = false
         val sections = ORDER.mapNotNull { id ->
             val files = byId[id] ?: return@mapNotNull null
-            // camera_vitals: scans.ndjson leads; the other entries are optional.
-            val file = files.firstOrNull { it.name == CameraVitalsArchive.SCANS } ?: files.first()
+            // camera_vitals: scans.ndjson leads; cycle: periods.ndjson leads; the other entries are optional.
+            val lead = LEAD_ENTRY[id]
+            val file = files.firstOrNull { it.name == lead } ?: files.first()
             val skip = when {
                 files.any { it.format != EXPECTED_FORMAT[id] } -> SkipReason.UNSUPPORTED
-                id == AllDataExportCoordinator.SECTION_CAMERA_VITALS && files.none { it.name == CameraVitalsArchive.SCANS } -> SkipReason.UNSUPPORTED
+                lead != null && files.none { it.name == lead } -> SkipReason.UNSUPPORTED
                 id == AllDataExportCoordinator.SECTION_APP_BACKUP && manifest.platform != platform -> SkipReason.OTHER_PLATFORM
                 // The portable part is what makes an iPhone zip restore here, so it is never an OTHER_PLATFORM skip.
                 id == AllDataExportCoordinator.SECTION_PORTABLE && appBackupApplied -> SkipReason.IN_APP_BACKUP

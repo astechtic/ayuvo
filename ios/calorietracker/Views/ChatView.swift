@@ -1291,6 +1291,7 @@ struct ChatView: View {
                     health: health,
                     records: records,
                     medications: await medicationStore.coachContext(),
+                    cycle: await CoachCycleContext.current(),
                     sources: chatStore.dataSwitches,
                     providerOverride: chatStore.providerOverride,
                     profileOverride: chatStore.modelOverride.profileID,

@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// "Today" cards: medications, an active fast and a logged workout. Each hides itself when empty.
+/// "Today" cards: medications, cycle tracking (after setup), an active fast and a logged workout. Each hides itself
+/// when empty.
 struct SummaryTodaySection: View {
     @Environment(AppNavigator.self) private var navigator
     @Environment(MedicationStore.self) private var medicationStore
@@ -34,6 +35,8 @@ struct SummaryTodaySection: View {
             }
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("summary.card.medications")
+
+            CycleSummaryCard()
 
             if fastingTrackingEnabled, let active = fastingStore.activeSession {
                 Button {

@@ -82,6 +82,9 @@ struct ContentView: View {
             .onReceive(NotificationCenter.default.publisher(for: .medicationRouteRequested)) { _ in
                 consumePendingLaunchRoutes()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .cycleOpenRequested)) { _ in
+                consumePendingLaunchRoutes()
+            }
             .onReceive(NotificationCenter.default.publisher(for: .foodLogMethodRequested)) { _ in
                 consumePendingLaunchRoutes()
             }
@@ -97,6 +100,8 @@ struct ContentView: View {
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {
                     consumePendingLaunchRoutes()
+                    // Cycle tracking: retry pending Apple Health writes (docs/cycle-tracking.md §4).
+                    if CycleRuntime.shared.databaseExists { CycleHealthSync.shared.syncSoon() }
                     InsightsBackgroundRefresh.schedule()
                     // Derived metrics (docs/derived-metrics.md): recompute on launch and on returning after a while
                     // (sync commits schedule their own pass).
@@ -146,6 +151,10 @@ struct ContentView: View {
     /// Medication beats a widget route beats quick action beats log method beats a shared image,
     /// each consumed in turn so a lower-priority request is never thrown away (`LaunchRouteResolver`).
     private func consumePendingLaunchRoutes() {
+        if CycleRouteCoordinator.consumePending() {
+            navigator.openBrowse([.cycle])
+            return
+        }
         if let pending = MedicationCoordinator.consumePending() {
             navigator.apply(LaunchRouteResolver.resolve(medication: pending, action: nil, method: nil) ?? .medications(detailID: pending), medicationStore: medicationStore)
             return

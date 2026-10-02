@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Loop
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Percent
@@ -45,7 +46,7 @@ import com.ayuvo.health.ui.design.InsetGroup
 /** Entries of the Summary "+" sheet, in the order of docs/ui-structure.md §8. */
 enum class LogEntry(val tag: String) {
     FOOD("food"), WATER("water"), FASTING("fasting"), WEIGHT("weight"), BODY_FAT("bodyFat"),
-    BLOOD_GLUCOSE("bloodGlucose"), BODY_TEMPERATURE("bodyTemperature"),
+    BLOOD_GLUCOSE("bloodGlucose"), BODY_TEMPERATURE("bodyTemperature"), PERIOD("period"),
     WORKOUT("workout"), MEDICATION("medication"), RECORD("record"),
     FINGER_SCAN("fingerScan"), FACE_SCAN("faceScan"), COMPARE_SCAN("compareScan");
 
@@ -60,6 +61,8 @@ enum class LogEntry(val tag: String) {
 @Composable
 internal fun SummaryLogSheet(
     waterTracking: Boolean,
+    /** Cycle tracking shown (docs/cycle-tracking.md §1): lists Body › Period. */
+    cycleShown: Boolean = true,
     /** True when the Fasting entry starts a fast right here (tracking on, none active). */
     canStartFast: Boolean,
     onEntry: (LogEntry) -> Unit,
@@ -100,6 +103,7 @@ internal fun SummaryLogSheet(
                 row { Entry(LogEntry.BODY_FAT, R.string.summary_log_body_fat, Icons.Filled.Percent, AyuvoPalette.Body, onEntry) }
                 row { Entry(LogEntry.BLOOD_GLUCOSE, R.string.summary_log_blood_glucose, Icons.Filled.Bloodtype, AyuvoPalette.Body, onEntry) }
                 row { Entry(LogEntry.BODY_TEMPERATURE, R.string.summary_log_body_temperature, Icons.Filled.Thermostat, AyuvoPalette.Body, onEntry) }
+                if (cycleShown) row { Entry(LogEntry.PERIOD, R.string.cycle_log_period, Icons.Filled.Loop, AyuvoPalette.Cycle, onEntry) }
             }
             InsetGroup(header = stringResource(R.string.domain_activity)) {
                 row { Entry(LogEntry.WORKOUT, R.string.summary_log_workout, Icons.Filled.FitnessCenter, AyuvoPalette.Activity, onEntry) }

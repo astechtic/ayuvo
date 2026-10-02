@@ -23,6 +23,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         InsightsBackgroundRefresh.schedule()
         InsightsBackgroundRefresh.startSleepObserver()
         MedicationReminderRuntime.shared.start()
+        CycleReminderRuntime.shared.start()
         QuickActionSettings.registerApplicationShortcuts()
         WatchSnapshotSync.shared.activate()
         // Before launch completes so a workout mirrored from Apple Watch is delivered.
@@ -78,6 +79,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     ) async {
         if await MedicationActionHandler.handle(response) { return }
         let userInfo = response.notification.request.content.userInfo
+        if userInfo[CycleReminderPlanner.routeKey] != nil {
+            await MainActor.run { CycleRouteCoordinator.request() }
+            return
+        }
         if let route = InsightsNotifications.route(from: userInfo) {
             await MainActor.run { ActionRouteCoordinator.request(route) }
             return

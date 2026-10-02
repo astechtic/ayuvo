@@ -1,0 +1,6 @@
+{"day": "2026-09-05", "deleted": 0, "flow": "medium", "moods": ["low_energy"], "note": "Sample note", "pain": 6, "pain_locations": ["lower_abdomen"], "symptoms": ["cramps", "fatigue"], "updated_ms": 1788566400000}
+{"day": "2026-09-06", "deleted": 0, "flow": "heavy", "moods": [], "note": null, "pain": 5, "pain_locations": ["lower_abdomen", "lower_back"], "symptoms": ["cramps"], "updated_ms": 1788652800000}
+{"day": "2026-09-07", "deleted": 0, "flow": "heavy", "moods": ["calm"], "note": null, "pain": 3, "pain_locations": [], "symptoms": ["bloating"], "updated_ms": 1788739200000}
+{"day": "2026-09-08", "deleted": 0, "flow": "medium", "moods": [], "note": null, "pain": 1, "pain_locations": [], "symptoms": [], "updated_ms": 1788825600000}
+{"day": "2026-09-09", "deleted": 0, "flow": "light", "moods": ["happy"], "note": null, "pain": 0, "pain_locations": [], "symptoms": [], "updated_ms": 1788912000000}
+{"day": "2026-09-20", "deleted": 1, "flow": null, "moods": [], "note": null, "pain": null, "pain_locations": [], "symptoms": [], "updated_ms": 1789862400000}

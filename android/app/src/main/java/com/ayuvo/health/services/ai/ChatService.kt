@@ -178,7 +178,11 @@ class ChatService(
         /** Catalog action tools (docs/actions.md); null keeps Coach's own tools only. */
         actions: com.ayuvo.health.actions.CoachActionTools? = null,
         /** Recent camera scans (docs/camera-vitals.md §7, [com.ayuvo.health.vitals.session.CoachCameraScans]); part of the health source. */
-        cameraScanLines: List<String> = emptyList()
+        cameraScanLines: List<String> = emptyList(),
+        /** Cycle tracking summary + guardrails (docs/cycle-tracking.md §8), or the "not available" line; own consent. */
+        cycleLines: List<String> = emptyList(),
+        /** The ≤ 12-line cycle block for providers without tool calling; null when Coach access is off. */
+        cycleOnDeviceBlock: String? = null
     ): CoachReply {
         // A switch that is off removes the source before the prompt or the tools see it, so nothing
         // downstream has to remember to check again.
@@ -203,6 +207,7 @@ class ChatService(
                 + medicationsDataLines(medications, newUserMessage)
                 + chartPromptLines()
                 + cameraLines
+                + cycleLines
         )
         val userContext = prefs.userContext.first()
         val systemPrompt = if (userContext.isNotBlank())
@@ -226,9 +231,10 @@ class ChatService(
             withDigest + "\n\n" + onDeviceRecordsTail(block, records.guardrails)
         } ?: withDigest
         // docs/coach.md §3: names and schedules only, never a dose recommendation.
-        val localSystemPrompt = medications?.takeIf { it.toolsAvailable }?.onDeviceBlock()?.let { block ->
+        val localNoCycle = medications?.takeIf { it.toolsAvailable }?.onDeviceBlock()?.let { block ->
             withRecords + "\n\n" + block
         } ?: withRecords
+        val localSystemPrompt = cycleOnDeviceBlock?.takeIf { it.isNotBlank() }?.let { "$localNoCycle\n\n$it" } ?: localNoCycle
         val tools = CoachTools(
             medications = medications,
             sources = sources,

@@ -1,0 +1,16 @@
+{
+  "counts": {
+    "day_logs": 6,
+    "periods": 4
+  },
+  "expected": {
+    "basis": "history",
+    "cycle_length": 29,
+    "live_day_logs": 5,
+    "next_start": "2026-10-04",
+    "today": "2026-10-02",
+    "today_phase": "luteal"
+  },
+  "format": "ayuvo-cycle",
+  "format_version": 1
+}

@@ -1,0 +1,68 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "cycle_length": 28,
+        "luteal_length": 14,
+        "period_length": 5,
+        "reminders": {
+          "daily": false,
+          "days_before": 2,
+          "period_end": true,
+          "period_soon": true
+        }
+      },
+      "input": {},
+      "name": "defaults"
+    },
+    {
+      "expected": {
+        "cycle_length": 60,
+        "luteal_length": 10,
+        "period_length": 12,
+        "reminders": {
+          "daily": true,
+          "days_before": 3,
+          "period_end": true,
+          "period_soon": false
+        }
+      },
+      "input": {
+        "settings": {
+          "cycle_length": 99,
+          "luteal_length": 5,
+          "period_length": 30,
+          "reminders": {
+            "daily": true,
+            "days_before": 9,
+            "period_soon": false
+          }
+        }
+      },
+      "name": "clamped"
+    },
+    {
+      "expected": {
+        "cycle_length": 15,
+        "luteal_length": 14,
+        "period_length": 12,
+        "reminders": {
+          "daily": false,
+          "days_before": 2,
+          "period_end": true,
+          "period_soon": true
+        }
+      },
+      "input": {
+        "settings": {
+          "cycle_length": 15,
+          "period_length": 12
+        }
+      },
+      "name": "short_cycle_period_fits"
+    }
+  ],
+  "format": "ayuvo-cycle-vectors",
+  "function": "settings",
+  "version": 1
+}

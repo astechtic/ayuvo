@@ -533,6 +533,8 @@ private fun countLabelRes(key: String): Int? = when (key) {
     "signals" -> R.string.import_all_count_signals
     "calibrations" -> R.string.import_all_count_calibrations
     "device_profiles" -> R.string.import_all_count_device_profiles
+    "periods" -> R.string.import_all_count_periods
+    "day_logs" -> R.string.import_all_count_day_logs
     else -> null
 }
 
@@ -540,6 +542,7 @@ private fun importSectionTitleRes(section: String): Int = when (section) {
     AllDataExportCoordinator.SECTION_PORTABLE -> R.string.import_all_section_portable
     AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.import_all_section_coach_chats
     AllDataExportCoordinator.SECTION_CAMERA_VITALS -> R.string.import_all_section_camera_vitals
+    AllDataExportCoordinator.SECTION_CYCLE -> R.string.import_all_section_cycle
     AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.import_all_section_food_diary
     AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.import_all_section_health_data
     AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.import_all_section_medications
@@ -551,6 +554,7 @@ private fun importEffectRes(section: String): Int = when (section) {
     AllDataExportCoordinator.SECTION_PORTABLE -> R.string.import_all_effect_portable
     AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.import_all_effect_coach_chats
     AllDataExportCoordinator.SECTION_CAMERA_VITALS -> R.string.import_all_effect_camera_vitals
+    AllDataExportCoordinator.SECTION_CYCLE -> R.string.import_all_effect_cycle
     AllDataExportCoordinator.SECTION_FOOD_DIARY -> R.string.import_all_effect_food_diary
     AllDataExportCoordinator.SECTION_HEALTH_DATA -> R.string.import_all_effect_health_data
     AllDataExportCoordinator.SECTION_MEDICATIONS -> R.string.import_all_effect_medications
@@ -581,6 +585,7 @@ private val AllDataExportStep.labelRes: Int
         AllDataExportStep.FOOD_DIARY -> R.string.export_all_step_food_diary
         AllDataExportStep.HEALTH_DATA -> R.string.export_all_step_health_data
         AllDataExportStep.CAMERA_VITALS -> R.string.export_all_step_camera_vitals
+        AllDataExportStep.CYCLE -> R.string.export_all_step_cycle
         AllDataExportStep.MEDICATIONS -> R.string.export_all_step_medications
         AllDataExportStep.HEALTH_RECORDS -> R.string.export_all_step_health_records
         AllDataExportStep.COACH_CHATS -> R.string.export_all_step_coach_chats
@@ -596,6 +601,7 @@ private fun sectionLabelRes(section: String): Int = when (section) {
     AllDataExportCoordinator.SECTION_HEALTH_RECORDS -> R.string.export_all_step_health_records
     AllDataExportCoordinator.SECTION_COACH_CHATS -> R.string.export_all_step_coach_chats
     AllDataExportCoordinator.SECTION_CAMERA_VITALS -> R.string.export_all_step_camera_vitals
+    AllDataExportCoordinator.SECTION_CYCLE -> R.string.export_all_step_cycle
     AllDataExportCoordinator.SECTION_PORTABLE -> R.string.export_all_step_portable
     else -> R.string.export_all_step_app_backup
 }

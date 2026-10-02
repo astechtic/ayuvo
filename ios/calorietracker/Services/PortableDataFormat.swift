@@ -137,6 +137,9 @@ enum PortableData {
         Setting(group: .preferences, json: "vitals_keep_signals", native: VitalsSettings.keepSignalsKey, kind: .bool),
         Setting(group: .preferences, json: "vitals_experimental_enabled", native: VitalsSettings.experimentalKey, kind: .bool),
         Setting(group: .preferences, json: "vitals_research_enabled", native: VitalsSettings.researchKey, kind: .bool),
+        // Cycle tracking visibility (docs/cycle-tracking.md §7). Fertility display travels in the `cycle` section's
+        // settings; Coach access is never turned on by an import (it needs the consent sheet on this device).
+        Setting(group: .preferences, json: "cycle_enabled", native: CycleSettings.enabledKey, kind: .bool),
         Setting(group: .water, json: "tracking_enabled", native: WaterSettings.enabledKey, kind: .bool),
         Setting(group: .water, json: "daily_goal_ml", native: WaterSettings.dailyGoalKey, kind: .int(100...20_000)),
         Setting(group: .fasting, json: "tracking_enabled", native: FastingSettings.enabledKey, kind: .bool),

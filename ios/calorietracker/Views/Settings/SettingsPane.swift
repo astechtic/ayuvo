@@ -26,7 +26,7 @@ enum SettingsGroup: CaseIterable, Identifiable {
 /// `speechToText`, `dataManagement`, `healthRecords`, `appUpdates`, `helpSupport`, `legal`) are kept.
 enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     case personalInfo, goalsNutrition, units
-    case nutritionTracking, hydration, fasting, activity, medications, insights, derivedMetrics
+    case nutritionTracking, hydration, fasting, activity, medications, cycleTracking, insights, derivedMetrics
     case notifications
     case healthData, googleHealth, healthRecords, dataManagement, deleteData
     case aiProviders, speechToText, customInstructions
@@ -38,7 +38,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     var group: SettingsGroup {
         switch self {
         case .personalInfo, .goalsNutrition, .units: .healthProfile
-        case .nutritionTracking, .hydration, .fasting, .activity, .medications, .insights, .derivedMetrics: .tracking
+        case .nutritionTracking, .hydration, .fasting, .activity, .medications, .cycleTracking, .insights, .derivedMetrics: .tracking
         case .notifications: .notifications
         case .healthData, .googleHealth, .healthRecords, .dataManagement, .deleteData: .dataPrivacy
         case .aiProviders, .speechToText, .customInstructions: .aiSpeech
@@ -57,6 +57,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .fasting: "Fasting"
         case .activity: "Activity"
         case .medications: "Medications"
+        case .cycleTracking: "Period Tracker"
         case .insights: "Insights"
         case .derivedMetrics: "Derived Metrics"
         case .notifications: "Notifications"
@@ -85,6 +86,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .fasting: "timer"
         case .activity: "figure.walk"
         case .medications: "pills.fill"
+        case .cycleTracking: "calendar.circle.fill"
         case .insights: "gauge.with.dots.needle.67percent"
         case .derivedMetrics: "function"
         case .notifications: "bell.badge.fill"
@@ -115,6 +117,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .fasting: SettingsTint.fasting
         case .activity: SettingsTint.activity
         case .medications: SettingsTint.medications
+        case .cycleTracking: SettingsTint.cycle
         case .insights: SettingsTint.insights
         case .derivedMetrics: SettingsTint.insights
         case .notifications: SettingsTint.notifications

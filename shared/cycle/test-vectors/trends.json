@@ -1,0 +1,704 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 29,
+            "flow": [
+              "medium",
+              "heavy",
+              "heavy",
+              "medium",
+              "light"
+            ],
+            "mood_days": {
+              "anxious": 1,
+              "irritated": 1,
+              "low_energy": 1
+            },
+            "pain_max": 6,
+            "pain_mean": 3.0,
+            "period_length": 5,
+            "start": "2026-05-12",
+            "symptom_days": {
+              "acne": 1,
+              "bloating": 3,
+              "cramps": 2,
+              "fatigue": 2,
+              "headache": 1
+            }
+          },
+          {
+            "cycle_length": 28,
+            "flow": [
+              "medium",
+              "heavy",
+              "heavy",
+              "medium",
+              "light"
+            ],
+            "mood_days": {
+              "anxious": 1,
+              "irritated": 1,
+              "low_energy": 1
+            },
+            "pain_max": 6,
+            "pain_mean": 3.0,
+            "period_length": 5,
+            "start": "2026-06-10",
+            "symptom_days": {
+              "acne": 1,
+              "bloating": 3,
+              "cramps": 2,
+              "fatigue": 2,
+              "headache": 1
+            }
+          },
+          {
+            "cycle_length": 30,
+            "flow": [
+              "medium",
+              "heavy",
+              "heavy",
+              "medium",
+              "light"
+            ],
+            "mood_days": {
+              "anxious": 1,
+              "irritated": 1,
+              "low_energy": 1
+            },
+            "pain_max": 6,
+            "pain_mean": 3.0,
+            "period_length": 5,
+            "start": "2026-07-08",
+            "symptom_days": {
+              "acne": 1,
+              "bloating": 3,
+              "cramps": 2,
+              "fatigue": 2,
+              "headache": 1
+            }
+          },
+          {
+            "cycle_length": 29,
+            "flow": [
+              "medium",
+              "heavy",
+              "heavy",
+              "medium",
+              "light"
+            ],
+            "mood_days": {
+              "anxious": 1,
+              "irritated": 1,
+              "low_energy": 1
+            },
+            "pain_max": 6,
+            "pain_mean": 3.0,
+            "period_length": 5,
+            "start": "2026-08-07",
+            "symptom_days": {
+              "acne": 1,
+              "bloating": 3,
+              "cramps": 2,
+              "fatigue": 2,
+              "headache": 1
+            }
+          },
+          {
+            "cycle_length": null,
+            "flow": [
+              "medium",
+              "heavy",
+              "heavy",
+              "medium",
+              "light"
+            ],
+            "mood_days": {
+              "anxious": 1,
+              "irritated": 1,
+              "low_energy": 1
+            },
+            "pain_max": 6,
+            "pain_mean": 3.0,
+            "period_length": 5,
+            "start": "2026-09-05",
+            "symptom_days": {
+              "acne": 1,
+              "bloating": 3,
+              "cramps": 2,
+              "fatigue": 2,
+              "headache": 1
+            }
+          }
+        ],
+        "flow_pattern": [
+          3.0,
+          4.0,
+          4.0,
+          3.0,
+          2.0
+        ],
+        "mood_frequency": [
+          {
+            "cycles": 5,
+            "key": "irritated"
+          },
+          {
+            "cycles": 5,
+            "key": "anxious"
+          },
+          {
+            "cycles": 5,
+            "key": "low_energy"
+          }
+        ],
+        "symptom_frequency": [
+          {
+            "cycles": 5,
+            "key": "cramps"
+          },
+          {
+            "cycles": 5,
+            "key": "headache"
+          },
+          {
+            "cycles": 5,
+            "key": "bloating"
+          },
+          {
+            "cycles": 5,
+            "key": "acne"
+          },
+          {
+            "cycles": 5,
+            "key": "fatigue"
+          }
+        ],
+        "window_cycles": 5
+      },
+      "input": {
+        "logs": [
+          {
+            "day": "2026-05-12",
+            "flow": "medium",
+            "moods": [
+              "low_energy"
+            ],
+            "pain": 6,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-05-13",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 5,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-05-14",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 3,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-05-15",
+            "flow": "medium",
+            "moods": [],
+            "pain": 1,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-05-16",
+            "flow": "light",
+            "moods": [],
+            "pain": 0,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-06-01",
+            "flow": "spotting",
+            "moods": [
+              "irritated",
+              "anxious"
+            ],
+            "pain": null,
+            "symptoms": [
+              "acne",
+              "headache"
+            ]
+          },
+          {
+            "day": "2026-06-10",
+            "flow": "medium",
+            "moods": [
+              "low_energy"
+            ],
+            "pain": 6,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-06-11",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 5,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-06-12",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 3,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-06-13",
+            "flow": "medium",
+            "moods": [],
+            "pain": 1,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-06-14",
+            "flow": "light",
+            "moods": [],
+            "pain": 0,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-06-30",
+            "flow": "spotting",
+            "moods": [
+              "irritated",
+              "anxious"
+            ],
+            "pain": null,
+            "symptoms": [
+              "acne",
+              "headache"
+            ]
+          },
+          {
+            "day": "2026-07-08",
+            "flow": "medium",
+            "moods": [
+              "low_energy"
+            ],
+            "pain": 6,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-07-09",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 5,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-07-10",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 3,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-07-11",
+            "flow": "medium",
+            "moods": [],
+            "pain": 1,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-07-12",
+            "flow": "light",
+            "moods": [],
+            "pain": 0,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-07-28",
+            "flow": "spotting",
+            "moods": [
+              "irritated",
+              "anxious"
+            ],
+            "pain": null,
+            "symptoms": [
+              "acne",
+              "headache"
+            ]
+          },
+          {
+            "day": "2026-08-07",
+            "flow": "medium",
+            "moods": [
+              "low_energy"
+            ],
+            "pain": 6,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-08-08",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 5,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-08-09",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 3,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-08-10",
+            "flow": "medium",
+            "moods": [],
+            "pain": 1,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-08-11",
+            "flow": "light",
+            "moods": [],
+            "pain": 0,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-08-27",
+            "flow": "spotting",
+            "moods": [
+              "irritated",
+              "anxious"
+            ],
+            "pain": null,
+            "symptoms": [
+              "acne",
+              "headache"
+            ]
+          },
+          {
+            "day": "2026-09-05",
+            "flow": "medium",
+            "moods": [
+              "low_energy"
+            ],
+            "pain": 6,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-09-06",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 5,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "cramps",
+              "fatigue"
+            ]
+          },
+          {
+            "day": "2026-09-07",
+            "flow": "heavy",
+            "moods": [],
+            "pain": 3,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-09-08",
+            "flow": "medium",
+            "moods": [],
+            "pain": 1,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-09-09",
+            "flow": "light",
+            "moods": [],
+            "pain": 0,
+            "pain_locations": [
+              "lower_abdomen"
+            ],
+            "symptoms": [
+              "bloating"
+            ]
+          },
+          {
+            "day": "2026-09-25",
+            "flow": "spotting",
+            "moods": [
+              "irritated",
+              "anxious"
+            ],
+            "pain": null,
+            "symptoms": [
+              "acne",
+              "headache"
+            ]
+          }
+        ],
+        "periods": [
+          {
+            "end": "2026-05-16",
+            "id": "p0",
+            "start": "2026-05-12"
+          },
+          {
+            "end": "2026-06-14",
+            "id": "p1",
+            "start": "2026-06-10"
+          },
+          {
+            "end": "2026-07-12",
+            "id": "p2",
+            "start": "2026-07-08"
+          },
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "full"
+    },
+    {
+      "expected": {
+        "cycles": [],
+        "flow_pattern": [],
+        "mood_frequency": [],
+        "symptom_frequency": [],
+        "window_cycles": 0
+      },
+      "input": {
+        "logs": [],
+        "periods": [],
+        "today": "2026-10-02"
+      },
+      "name": "empty"
+    },
+    {
+      "expected": {
+        "cycles": [
+          {
+            "cycle_length": 29,
+            "flow": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "mood_days": {},
+            "pain_max": null,
+            "pain_mean": null,
+            "period_length": 5,
+            "start": "2026-08-07",
+            "symptom_days": {}
+          },
+          {
+            "cycle_length": null,
+            "flow": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "mood_days": {
+              "calm": 1
+            },
+            "pain_max": 4,
+            "pain_mean": 4.0,
+            "period_length": 5,
+            "start": "2026-09-05",
+            "symptom_days": {
+              "headache": 1
+            }
+          }
+        ],
+        "flow_pattern": [],
+        "mood_frequency": [
+          {
+            "cycles": 1,
+            "key": "calm"
+          }
+        ],
+        "symptom_frequency": [
+          {
+            "cycles": 1,
+            "key": "headache"
+          }
+        ],
+        "window_cycles": 2
+      },
+      "input": {
+        "logs": [
+          {
+            "day": "2026-09-05",
+            "moods": [
+              "calm"
+            ],
+            "pain": 4,
+            "symptoms": [
+              "headache"
+            ]
+          }
+        ],
+        "periods": [
+          {
+            "end": "2026-08-11",
+            "id": "p3",
+            "start": "2026-08-07"
+          },
+          {
+            "end": "2026-09-09",
+            "id": "p4",
+            "start": "2026-09-05"
+          }
+        ],
+        "today": "2026-10-02"
+      },
+      "name": "logs_without_flow"
+    }
+  ],
+  "format": "ayuvo-cycle-vectors",
+  "function": "trends",
+  "version": 1
+}

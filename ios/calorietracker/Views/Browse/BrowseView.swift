@@ -16,6 +16,7 @@ struct BrowseView: View {
     @Environment(InsightsStore.self) private var insightsStore
     @AppStorage(WaterSettings.enabledKey) private var waterTrackingEnabled = false
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
+    @AppStorage(CycleSettings.enabledKey) private var cycleEnabled = true
 
     @State private var query = ""
     private var derivedStore: DerivedMetricStore { DerivedMetricStore.shared }
@@ -63,6 +64,15 @@ struct BrowseView: View {
                                       title: String(localized: "Camera measurements"), subtitle: vitalsSubtitle)
                         }
                         .accessibilityIdentifier("browse.row.cameraMeasurements")
+                        // Cycle tracking (docs/cycle-tracking.md §5): hidden while "Show cycle tracking" is off.
+                        if cycleEnabled {
+                            NavigationLink(value: BrowseRoute.cycle) {
+                                MetricRow(systemImage: "calendar.circle.fill", tint: AyuvoPalette.cycle,
+                                          title: String(localized: "Period tracker"),
+                                          subtitle: CycleSummaryCard.subtitle(CycleStore.shared) ?? String(localized: "Periods, symptoms and calendar-based estimates"))
+                            }
+                            .accessibilityIdentifier("browse.row.cycleTracking")
+                        }
                     }
 
                     Section {
@@ -105,6 +115,7 @@ struct BrowseView: View {
             }
             .task {
                 if !VitalsStore.shared.hasLoaded { await VitalsStore.shared.reload() }
+                if cycleEnabled, CycleRuntime.shared.databaseExists { await CycleStore.shared.refreshIfDayChanged() }
                 if store.isEnabled, store.needsGrant == nil {
                     await store.refreshAuthorizationStatus()
                 }
