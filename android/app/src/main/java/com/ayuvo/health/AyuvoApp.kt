@@ -299,6 +299,22 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     }
     val healthRepository: HealthDataRepository by lazy { HealthDataRepository(healthStore) }
 
+    /** Manual blood glucose / body temperature (docs/health-data.md §2.2): origin-2 rows, mirrored to Health Connect. */
+    val manualVitals: com.ayuvo.health.data.health.ManualVitalsRepository by lazy {
+        com.ayuvo.health.data.health.ManualVitalsRepository(
+            store = { healthStore },
+            packageName = app.packageName,
+            platform = object : com.ayuvo.health.data.health.ManualVitalsPlatform {
+                override suspend fun upsert(type: com.ayuvo.health.data.health.ManualVitalType, row: com.ayuvo.health.data.health.HealthSampleRow): Boolean =
+                    prefs.healthConnectEnabled.first() && health.isAvailable() && health.writeManualVital(type, row)
+
+                // A delete always reaches Health Connect when it is there, like the retry worker's delete path.
+                override suspend fun delete(type: com.ayuvo.health.data.health.ManualVitalType, uuid: java.util.UUID): Boolean =
+                    health.isAvailable() && health.deleteManualVital(type, uuid)
+            }
+        )
+    }
+
     // -- Google Health API (docs/google-health.md) ----------------------------
     // Origin-3 rows land in the same mirror; nothing runs until the user connects in Settings.
     val googleHealth: com.ayuvo.health.services.googlehealth.GoogleHealthCoordinator by lazy {

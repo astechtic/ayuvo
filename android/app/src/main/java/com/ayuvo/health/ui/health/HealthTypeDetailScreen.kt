@@ -53,6 +53,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
 import com.ayuvo.health.data.health.HealthSampleRow
+import com.ayuvo.health.data.health.ManualVitalType
+import com.ayuvo.health.ui.body.ManualVitalLogHost
 import com.ayuvo.health.ui.charts.HealthBucketChart
 import com.ayuvo.health.ui.charts.HealthChartStyle
 import com.ayuvo.health.ui.charts.IosStyleSegmentedControl
@@ -118,6 +120,8 @@ fun HealthTypeDetailScreen(
     val name = HealthCategoryStyle.typeName(context, typeKey, ui.displayNameHint)
     val tint = HealthCategoryStyle.tintFor(typeKey)
     var selectedRecord by remember { mutableStateOf<HealthRecordUi?>(null) }
+    var showLog by remember { mutableStateOf(false) }
+    var confirmDelete by remember { mutableStateOf<HealthSampleRow?>(null) }
     val zone = remember { ZoneId.systemDefault() }
     val dateFmt = remember { DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.getDefault()) }
     val exportTitle = stringResource(R.string.health_detail_export_csv)
@@ -202,6 +206,18 @@ fun HealthTypeDetailScreen(
                 }
             }
             row { Box(Modifier.testTag("metric.unit")) { UnitOptionRow(ui, vm) } }
+            // Manual entry (docs/health-data.md §2.2): blood glucose and body temperature only.
+            vm.manualType?.let { manual ->
+                row {
+                    GroupRow(
+                        title = stringResource(
+                            if (manual == ManualVitalType.BLOOD_GLUCOSE) R.string.vitals_log_glucose_title else R.string.vitals_log_temperature_title
+                        ),
+                        modifier = Modifier.testTag("metric.log"),
+                        onClick = { showLog = true }
+                    )
+                }
+            }
             row {
                 GroupRow(
                     title = stringResource(R.string.health_detail_export_csv),
@@ -322,8 +338,32 @@ fun HealthTypeDetailScreen(
                 Text(stringResource(R.string.health_record_origin_import), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
             }
             RecordField(stringResource(R.string.health_record_id), row.id)
+            if (vm.canDelete(row)) {
+                GlassTextButton(
+                    text = stringResource(R.string.vitals_delete_entry),
+                    onClick = { confirmDelete = row; selectedRecord = null },
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.testTag("metric.record.delete")
+                )
+            }
             GlassDialogActions(primaryText = stringResource(R.string.action_done), onPrimary = { selectedRecord = null })
         }
+    }
+    confirmDelete?.let { row ->
+        GlassDialog(onDismissRequest = { confirmDelete = null }) {
+            Text(stringResource(R.string.vitals_delete_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.vitals_delete_body), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.68f))
+            GlassDialogActions(
+                primaryText = stringResource(R.string.action_delete),
+                onPrimary = { vm.deleteManual(row); confirmDelete = null },
+                dismissText = stringResource(R.string.action_cancel),
+                onDismiss = { confirmDelete = null },
+                destructive = true
+            )
+        }
+    }
+    vm.manualType?.takeIf { showLog }?.let { manual ->
+        ManualVitalLogHost(container, manual) { showLog = false; vm.onManualEntrySaved() }
     }
 }
 

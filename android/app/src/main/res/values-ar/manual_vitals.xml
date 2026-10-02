@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">جلوكوز الدم</string>
+    <string name="summary_log_body_temperature">درجة حرارة الجسم</string>
+    <string name="vitals_log_glucose_title">تسجيل سكر الدم</string>
+    <string name="vitals_log_temperature_title">تسجيل درجة حرارة الجسم</string>
+    <string name="vitals_log_value">القيمة</string>
+    <string name="vitals_log_range">النطاق المسموح: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">التاريخ والوقت</string>
+    <string name="vitals_log_relation">العلاقة بالوجبة</string>
+    <string name="vitals_relation_general">عام</string>
+    <string name="vitals_relation_fasting">الصيام</string>
+    <string name="vitals_relation_before_meal">قبل الوجبة</string>
+    <string name="vitals_relation_after_meal">بعد الوجبة</string>
+    <string name="vitals_log_specimen">العينة</string>
+    <string name="vitals_specimen_capillary">دم شعري</string>
+    <string name="vitals_specimen_interstitial">سائل خلالي</string>
+    <string name="vitals_specimen_plasma">بلازما</string>
+    <string name="vitals_specimen_whole_blood">دم كامل</string>
+    <string name="vitals_log_location">مكان القياس</string>
+    <string name="vitals_location_none">غير محدد</string>
+    <string name="vitals_location_armpit">الإبط</string>
+    <string name="vitals_location_finger">الإصبع</string>
+    <string name="vitals_location_forehead">الجبهة</string>
+    <string name="vitals_location_mouth">الفم</string>
+    <string name="vitals_location_rectum">المستقيم</string>
+    <string name="vitals_location_temporal_artery">الشريان الصدغي</string>
+    <string name="vitals_location_toe">إصبع القدم</string>
+    <string name="vitals_location_ear">الأذن</string>
+    <string name="vitals_location_wrist">المعصم</string>
+    <string name="vitals_location_vagina">المهبل</string>
+    <string name="vitals_delete_entry">حذف الإدخال</string>
+    <string name="vitals_delete_title">حذف هذا الإدخال؟</string>
+    <string name="vitals_delete_body">ستتم إزالته من Ayuvo ومن Health Connect.</string>
+</resources>

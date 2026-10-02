@@ -21,6 +21,7 @@ class HealthWriteRetryWorker(context: Context, params: WorkerParameters) : Corou
         if (kind == KIND_GOOGLE_HEALTH) return retryGoogleHealth()
         val id = runCatching { UUID.fromString(inputData.getString("id")) }.getOrNull()
             ?: return Result.failure()
+        com.ayuvo.health.data.health.ManualVitalType.byRetryKind(kind)?.let { return retryManualVital(it, id) }
         val prefs = PreferencesStore(applicationContext)
         val health = HealthConnectManager(applicationContext, scheduleRetries = false)
         val enabled = prefs.healthConnectEnabled.first()
@@ -57,6 +58,25 @@ class HealthWriteRetryWorker(context: Context, params: WorkerParameters) : Corou
         if (runAttemptCount < 5) return Result.retry()
         Log.w("AyuvoHealth", "Health Connect write retries exhausted ($kind)")
         return Result.failure()
+    }
+
+    /** Manual glucose / temperature (docs/health-data.md §2.2): the health_samples row is the latest value. */
+    private suspend fun retryManualVital(type: com.ayuvo.health.data.health.ManualVitalType, id: UUID): Result {
+        val container = (applicationContext as? com.ayuvo.health.AyuvoApp)?.container ?: return Result.failure()
+        val health = HealthConnectManager(applicationContext, scheduleRetries = false)
+        val enabled = container.prefs.healthConnectEnabled.first()
+        val deletionRequested = inputData.getBoolean("delete", false)
+        if (!enabled && !deletionRequested) return Result.success()
+        if (!health.isAvailable()) return if (runAttemptCount < 5) Result.retry() else Result.failure()
+        val success = retryLatestHealthEntry(
+            enabled, deletionRequested,
+            permitted = { health.hasManualVitalWrite(type) },
+            latest = { container.manualVitals.liveRow(id) },
+            upsert = { health.writeManualVital(type, it) },
+            delete = { health.deleteManualVital(type, id) }
+        )
+        if (success) return Result.success()
+        return if (runAttemptCount < 5) Result.retry() else Result.failure()
     }
 
     /** Google Health write-back (docs/google-health.md §4): re-flushes whatever is still pending. */

@@ -170,6 +170,22 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
     private val dietaryKey: String? = type?.let { HealthDataType.dietaryExtraKeys[it] }
     private val listTypeId: String = if (dietaryKey != null) HealthDataType.NUTRITION_RECORD.id else typeId
     private var rawCursor: Pair<Long, String>? = null
+    /** Set after a manual add/delete so the next recompute re-reads the first page of Show All Data. */
+    @Volatile private var listDirty = false
+
+    /** Manual-entry type of this screen (docs/health-data.md §2.2), or null for read-only types. */
+    val manualType: com.ayuvo.health.data.health.ManualVitalType? = com.ayuvo.health.data.health.ManualVitalType.byTypeId(typeId)
+
+    fun canDelete(row: HealthSampleRow): Boolean = manualType != null && com.ayuvo.health.data.health.ManualVitals.isDeletable(row)
+
+    /** A new manual entry was saved: reload the record list with the next revision. */
+    fun onManualEntrySaved() { listDirty = true }
+
+    fun deleteManual(row: HealthSampleRow) {
+        if (!canDelete(row)) return
+        listDirty = true
+        container.scope.launch { runCatching { container.manualVitals.delete(row.id) } }
+    }
 
     private fun asListRows(rows: List<HealthSampleRow>): List<HealthSampleRow> {
         val key = dietaryKey ?: return rows
@@ -295,7 +311,11 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
         val computed = withContext(Dispatchers.Default) { compute(range, anchor, units, descriptor) }
         val previous = _ui.value
         // The record list survives range changes and unit changes re-format it in place.
-        val firstPage = if (previous.allData.isEmpty() || previous.loading) repo.samplesPage(listTypeId, null, null, PAGE) else null
+        // A manual add/delete changes the count; reload the first page then (docs/health-data.md §2.2).
+        val count = repo.count(typeId)
+        val reload = manualType != null && (listDirty || (!previous.loading && count != previous.count))
+        listDirty = false
+        val firstPage = if (reload || previous.allData.isEmpty() || previous.loading) repo.samplesPage(listTypeId, null, null, PAGE) else null
         firstPage?.lastOrNull()?.let { rawCursor = it.endMs to it.id }
         val counts = repo.sourceCounts(listTypeId)
         val listRows = withContext(Dispatchers.Default) {
@@ -310,7 +330,7 @@ class HealthTypeDetailViewModel(private val container: AppContainer, private val
             allDataEnd = if (firstPage != null) firstPage.size < PAGE else previous.allDataEnd,
             loadingMore = false,
             sources = sources,
-            count = repo.count(typeId),
+            count = count,
             displayNameHint = typeMeta?.displayName ?: typeMeta?.nativeId,
             descriptor = descriptor,
             historyLimitedBeforeMs = repo.syncStates()[typeId]?.let { s -> if (!s.backfillWithHistory) s.backfillFloorMs else null },

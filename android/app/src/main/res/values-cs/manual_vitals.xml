@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Glukóza v krvi</string>
+    <string name="summary_log_body_temperature">Tělesná teplota</string>
+    <string name="vitals_log_glucose_title">Zaznamenat glukózu v krvi</string>
+    <string name="vitals_log_temperature_title">Zaznamenat tělesnou teplotu</string>
+    <string name="vitals_log_value">Hodnota</string>
+    <string name="vitals_log_range">Povolený rozsah: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Datum a čas</string>
+    <string name="vitals_log_relation">Vztah k jídlu</string>
+    <string name="vitals_relation_general">Obecně</string>
+    <string name="vitals_relation_fasting">Půst</string>
+    <string name="vitals_relation_before_meal">Před jídlem</string>
+    <string name="vitals_relation_after_meal">Po jídle</string>
+    <string name="vitals_log_specimen">Vzorek</string>
+    <string name="vitals_specimen_capillary">Kapilární krev</string>
+    <string name="vitals_specimen_interstitial">Intersticiální tekutina</string>
+    <string name="vitals_specimen_plasma">Plazma</string>
+    <string name="vitals_specimen_whole_blood">Plná krev</string>
+    <string name="vitals_log_location">Místo měření</string>
+    <string name="vitals_location_none">Neuvedeno</string>
+    <string name="vitals_location_armpit">Podpaží</string>
+    <string name="vitals_location_finger">Prst</string>
+    <string name="vitals_location_forehead">Čelo</string>
+    <string name="vitals_location_mouth">Ústa</string>
+    <string name="vitals_location_rectum">Konečník</string>
+    <string name="vitals_location_temporal_artery">Spánková tepna</string>
+    <string name="vitals_location_toe">Prst u nohy</string>
+    <string name="vitals_location_ear">Ucho</string>
+    <string name="vitals_location_wrist">Zápěstí</string>
+    <string name="vitals_location_vagina">Pochva</string>
+    <string name="vitals_delete_entry">Smazat záznam</string>
+    <string name="vitals_delete_title">Smazat tento záznam?</string>
+    <string name="vitals_delete_body">Bude odstraněn z Ayuvo i z Health Connect.</string>
+</resources>

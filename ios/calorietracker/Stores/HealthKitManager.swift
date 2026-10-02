@@ -426,6 +426,42 @@ class HealthKitManager {
         healthStore.deleteObjects(of: HKQuantityType(.bodyFatPercentage), predicate: predicate) { _, _, _ in }
     }
 
+    // MARK: - Manual health entries (docs/health-data.md §2.2)
+
+    /// Saves a manual glucose / temperature reading to Apple Health while sync is on. Write access
+    /// is asked in context for just this type (`typesVersion` is unchanged); a denial keeps the
+    /// local entry. Returns true when the sample was saved.
+    @discardableResult
+    func writeManualHealthEntry(_ entry: ManualHealthEntry, timeZone: TimeZone = .current) async -> Bool {
+        guard UserDefaults.standard.bool(forKey: "healthKitEnabled"), HKHealthStore.isHealthDataAvailable() else { return false }
+        let type = HKQuantityType(entry.kind.quantityTypeIdentifier)
+        if healthStore.authorizationStatus(for: type) == .notDetermined {
+            do {
+                try await healthStore.requestAuthorization(toShare: [type], read: [])
+            } catch {
+                return false
+            }
+        }
+        guard healthStore.authorizationStatus(for: type) == .sharingAuthorized else { return false }
+        let sample = ManualHealthEntryService.healthKitSample(for: entry, timeZone: timeZone)
+        do {
+            try await healthStore.save(sample)
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /// Deletes the Apple Health copy tagged with `ayuvo_manual_id`. Bypasses `healthKitEnabled`
+    /// so an entry written while sync was on is still cleaned up (same policy as `deleteWeight`).
+    func deleteManualHealthEntry(kind: ManualHealthKind, tag: String) {
+        guard HKHealthStore.isHealthDataAvailable() else { return }
+        let predicate = HKQuery.predicateForObjects(
+            withMetadataKey: ManualHealthEntryService.metadataKey, operatorType: .equalTo, value: tag
+        )
+        healthStore.deleteObjects(of: HKQuantityType(kind.quantityTypeIdentifier), predicate: predicate) { _, _, _ in }
+    }
+
     // MARK: - Workout Burn
 
     /// Replaces the Apple Health active-energy sample for a calculated diary

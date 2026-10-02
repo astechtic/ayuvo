@@ -8,7 +8,8 @@ nonisolated struct HealthKitPage: Sendable {
     var sources: [HealthSourceRow] = []
     /// Archived `HKQueryAnchor` to persist as `health_sync_state.cursor` (base64 on write).
     var anchor: Data?
-    /// Added samples dropped because Ayuvo wrote them from Google Health (`ayuvo_ghealth_id`).
+    /// Added samples dropped because Ayuvo wrote them from Google Health (`ayuvo_ghealth_id`)
+    /// or as a manual entry (`ayuvo_manual_id`).
     /// A page of only those is not the end of the stream.
     var skippedCount = 0
 
@@ -57,7 +58,7 @@ nonisolated final class LiveHealthKitReader: HealthKitReading, @unchecked Sendab
             page.rows = HealthSampleMapper.rows(from: result.added, type: type, calendar: calendar, nowMs: nowMs)
             page.deletedIDs = HealthSampleMapper.deletedIDs(result.deleted)
             page.sources = HealthSampleMapper.sources(from: result.added, nowMs: nowMs)
-            page.skippedCount = result.added.filter(HealthSampleMapper.isGoogleHealthMirror).count
+            page.skippedCount = result.added.filter(HealthSampleMapper.isSkippedOwnWrite).count
         }
         page.anchor = result.anchor.flatMap(Self.archiveAnchor) ?? anchor
         return page

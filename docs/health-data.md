@@ -90,7 +90,7 @@ DDL: `shared/health/schema.sql` (embedded verbatim; do not restate it here). Tab
 - Pragmas on both: `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=5000`, `foreign_keys=ON`.
 - `health_meta` keys: `schema_version` (1), `registry_version`, `rollup_rule_version` (1), `rollups_tz` (IANA zone the rollups were built in; a change triggers a full rebuild).
 - Row ids: HC `Metadata.id`; HK `uuid.uuidString.lowercased()`; HC sleep stage rows `<record_id>:<n>`; local adapter rows `local:<uuid>`; iOS activity summaries `activity_summary:yyyy-MM-dd`.
-- `origin`: `0` platform, `1` file import, `2` local app adapter (Ayuvo's own weight/body-fat/height entries; `source_id` = own package/bundle id, label "Ayuvo"), `3` Google Health API (`docs/google-health.md`; `id` = `gh:<point id>`, `source_id` = `google_health:<package>`; never tombstoned by platform deletions).
+- `origin`: `0` platform, `1` file import, `2` local app adapter (Ayuvo's own weight/body-fat/height entries and manual health entries, §2.2; `source_id` = own package/bundle id, label "Ayuvo"), `3` Google Health API (`docs/google-health.md`; `id` = `gh:<point id>`, `source_id` = `google_health:<package>`; never tombstoned by platform deletions).
 - Schema v3 adds `google_health_sync_state` and `google_health_mirror` (`docs/google-health.md` §3).
 - Show All Data pages by keyset `(end_ms DESC, id DESC)`, never `OFFSET`.
 
@@ -102,6 +102,47 @@ DDL: `shared/health/schema.sql` (embedded verbatim; do not restate it here). Tab
 4. A tombstone always wins: an import or a re-read never resurrects a `deleted = 1` row (the UPDATE predicate `deleted = 0` plus an INSERT guarded by existence).
 5. Imported rows (`origin = 1`) are immune to platform deletions and never carry a platform cursor; the sync engine only touches `origin = 0`.
 6. Each page of platform results is committed with its cursor (HC changes token / archived `HKQueryAnchor`) and `last_sync_ms` in **one** transaction; `last_sync_ms` is never stamped on failure.
+
+### 2.2 Manual health entries (blood glucose, body temperature)
+
+The user can log `blood_glucose` and `body_temperature` by hand. The entry points are the Summary "+" sheet and the `metric.log` row on those two metric detail screens.
+
+**Storage.** The database row is the only copy. These values are never kept in UserDefaults or DataStore.
+- Each entry is one `health_samples` row:
+  - `origin = 2`, `id = "local:<uuid>"`, `source_id` = the own bundle id or package name;
+  - `recording_method = 3` (manual), `start_ms = end_ms` = the chosen time, offsets from the device zone, `updated_ms = now`.
+- The row is committed in one transaction. Rollups for the touched day are rebuilt.
+- **`blood_glucose`:**
+  - `value` in mmol/L (mg/dL ÷ 18.0182);
+  - `category_value` = specimen code (§5; default `2` capillary_blood);
+  - `extra_json = {"relation_to_meal": 0-4, "meal_type": 0-4}`, using HC codes (relation: 0 unknown, 1 general, 2 fasting, 3 before meal, 4 after meal; meal: 0 unknown, 1 breakfast, 2 lunch, 3 dinner, 4 snack).
+  - Allowed range: 1.0–33.3 mmol/L (18–600 mg/dL).
+- **`body_temperature`:**
+  - `value` in °C;
+  - `category_value = 0`;
+  - `extra_json = {"measurement_location": 0-10}`, using HC `BodyTemperatureMeasurementLocation` codes (0 unknown, 1 armpit, 2 finger, 3 forehead, 4 mouth, 5 rectum, 6 temporal artery, 7 toe, 8 ear, 9 wrist, 10 vagina).
+  - Allowed range: 34.0–42.0 °C (93.2–107.6 °F).
+- **Range checks** use the unit the user typed in, so 18 mg/dL is accepted even though it converts to 0.999 mmol/L.
+- **Defaults:** relation to meal is General (1). The sheet has no meal-type field, so `meal_type` is 0.
+- **Time:** defaults to now and cannot be in the future. A 60 s allowance covers clock skew.
+- **Sync off:** entries are still saved locally; only the platform write is skipped.
+- **Clear synced health data** deletes the whole database, so it also removes manual entries.
+
+**Write to Apple Health / Health Connect.** The write happens only when health sync is on. The write permission for the type is requested in context on the first save; if the user denies it, the entry is still saved locally.
+- **iOS:** `HKQuantitySample` with metadata:
+  - `ayuvo_manual_id = <uuid>` and `HKMetadataKeyWasUserEntered = true`;
+  - glucose: `HKMetadataKeyBloodGlucoseMealTime` (relation 3 → preprandial, 4 → postprandial, otherwise omitted);
+  - temperature: `HKMetadataKeyBodyTemperatureSensorLocation` (armpit, finger, forehead, mouth, rectum, temporal artery, toe, ear; anything else → other);
+  - `HKMetadataKeyTimeZone`.
+  - Authorization goes through a separate in-context `requestAuthorization(toShare:read:)` for the type, so `typesVersion` does not change.
+- **Android:** `BloodGlucoseRecord` / `BodyTemperatureRecord` with `Metadata.manualEntry(clientRecordId = "ayuvo_m_<uuid>", clientRecordVersion)`, through `writeWithRetry`.
+- **No duplicates:** the platform readers skip records tagged with `ayuvo_manual_id` or `ayuvo_m_`, because the origin-2 row is already the canonical copy.
+
+**Delete.** Origin-2 manual rows can be deleted from Show All Data on those two types. A delete:
+1. sets `deleted = 1, updated_ms = now`;
+2. rebuilds the day's rollups;
+3. deletes the platform record by its tag (iOS metadata predicate; Android `clientRecordIdsList`).
+Rows from other origins stay read-only.
 
 ## 3. Sync state
 

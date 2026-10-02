@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Qanda qlükoza</string>
+    <string name="summary_log_body_temperature">Bədən temperaturu</string>
+    <string name="vitals_log_glucose_title">Qanda qlükozanı qeyd et</string>
+    <string name="vitals_log_temperature_title">Bədən temperaturunu qeyd et</string>
+    <string name="vitals_log_value">Dəyər</string>
+    <string name="vitals_log_range">İcazə verilən aralıq: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Tarix və vaxt</string>
+    <string name="vitals_log_relation">Yeməklə əlaqə</string>
+    <string name="vitals_relation_general">Ümumi</string>
+    <string name="vitals_relation_fasting">Oruc</string>
+    <string name="vitals_relation_before_meal">Yeməkdən əvvəl</string>
+    <string name="vitals_relation_after_meal">Yeməkdən sonra</string>
+    <string name="vitals_log_specimen">Nümunə</string>
+    <string name="vitals_specimen_capillary">Kapilyar qan</string>
+    <string name="vitals_specimen_interstitial">İnterstisial maye</string>
+    <string name="vitals_specimen_plasma">Plazma</string>
+    <string name="vitals_specimen_whole_blood">Tam qan</string>
+    <string name="vitals_log_location">Ölçmə yeri</string>
+    <string name="vitals_location_none">Göstərilməyib</string>
+    <string name="vitals_location_armpit">Qoltuqaltı</string>
+    <string name="vitals_location_finger">Barmaq</string>
+    <string name="vitals_location_forehead">Alın</string>
+    <string name="vitals_location_mouth">Ağız</string>
+    <string name="vitals_location_rectum">Düz bağırsaq</string>
+    <string name="vitals_location_temporal_artery">Gicgah arteriyası</string>
+    <string name="vitals_location_toe">Ayaq barmağı</string>
+    <string name="vitals_location_ear">Qulaq</string>
+    <string name="vitals_location_wrist">Bilək</string>
+    <string name="vitals_location_vagina">Vagina</string>
+    <string name="vitals_delete_entry">Qeydi sil</string>
+    <string name="vitals_delete_title">Bu qeyd silinsin?</string>
+    <string name="vitals_delete_body">O, Ayuvo və Health Connect-dən silinəcək.</string>
+</resources>

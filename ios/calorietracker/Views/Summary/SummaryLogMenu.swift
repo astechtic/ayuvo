@@ -9,6 +9,8 @@ struct SummaryLogMenu: View {
     @Environment(BodyFatStore.self) private var bodyFatStore
     @Environment(ProfileStore.self) private var profileStore
     @Environment(RecordsStore.self) private var recordsStore
+    @Environment(HealthDataStore.self) private var healthDataStore
+    @Environment(HealthKitManager.self) private var healthKitManager
     @AppStorage(WaterSettings.enabledKey) private var waterTrackingEnabled = false
     @AppStorage(WaterSettings.unitKey) private var waterUnitRaw = WaterUnit.defaultUnit.rawValue
     @AppStorage(FastingSettings.enabledKey) private var fastingTrackingEnabled = false
@@ -16,6 +18,7 @@ struct SummaryLogMenu: View {
     @State private var showLogWeight = false
     @State private var showLogBodyFat = false
     @State private var showCustomWater = false
+    @State private var manualEntryKind: ManualHealthKind?
 
     private var waterUnit: WaterUnit { WaterUnit(rawValue: waterUnitRaw) ?? .defaultUnit }
     private var addMenu: AddMenuConfig { AddMenuSettings.load() }
@@ -62,6 +65,18 @@ struct SummaryLogMenu: View {
                     Label("Body Fat", systemImage: "percent")
                 }
                 .accessibilityIdentifier("log.entry.bodyFat")
+                Button {
+                    manualEntryKind = .bloodGlucose
+                } label: {
+                    Label("Blood Glucose", systemImage: "drop.fill")
+                }
+                .accessibilityIdentifier("log.entry.bloodGlucose")
+                Button {
+                    manualEntryKind = .bodyTemperature
+                } label: {
+                    Label("Body Temperature", systemImage: "thermometer")
+                }
+                .accessibilityIdentifier("log.entry.bodyTemperature")
             }
             Section(String(localized: "Activity")) {
                 Button {
@@ -109,6 +124,11 @@ struct SummaryLogMenu: View {
             let seed = bodyFatStore.latestEntry?.bodyFatFraction ?? profileStore.profile.bodyFatPercentage ?? 0.20
             LogBodyFatSheet(currentFraction: seed) { fraction in
                 bodyFatStore.addEntry(BodyFatEntry(bodyFatFraction: fraction))
+            }
+        }
+        .sheet(item: $manualEntryKind) { kind in
+            ManualHealthEntrySheet(kind: kind) { entry in
+                Task { await healthDataStore.saveManualEntry(entry, healthKit: healthKitManager) }
             }
         }
         .sheet(isPresented: $showCustomWater) {

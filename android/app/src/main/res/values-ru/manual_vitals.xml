@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Глюкоза в крови</string>
+    <string name="summary_log_body_temperature">Температура тела</string>
+    <string name="vitals_log_glucose_title">Записать уровень глюкозы</string>
+    <string name="vitals_log_temperature_title">Записать температуру тела</string>
+    <string name="vitals_log_value">Значение</string>
+    <string name="vitals_log_range">Допустимый диапазон: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Дата и время</string>
+    <string name="vitals_log_relation">Относительно приёма пищи</string>
+    <string name="vitals_relation_general">Общее</string>
+    <string name="vitals_relation_fasting">Голодание</string>
+    <string name="vitals_relation_before_meal">До еды</string>
+    <string name="vitals_relation_after_meal">После еды</string>
+    <string name="vitals_log_specimen">Образец</string>
+    <string name="vitals_specimen_capillary">Капиллярная кровь</string>
+    <string name="vitals_specimen_interstitial">Межклеточная жидкость</string>
+    <string name="vitals_specimen_plasma">Плазма</string>
+    <string name="vitals_specimen_whole_blood">Цельная кровь</string>
+    <string name="vitals_log_location">Место измерения</string>
+    <string name="vitals_location_none">Не указано</string>
+    <string name="vitals_location_armpit">Подмышка</string>
+    <string name="vitals_location_finger">Палец</string>
+    <string name="vitals_location_forehead">Лоб</string>
+    <string name="vitals_location_mouth">Рот</string>
+    <string name="vitals_location_rectum">Прямая кишка</string>
+    <string name="vitals_location_temporal_artery">Височная артерия</string>
+    <string name="vitals_location_toe">Палец ноги</string>
+    <string name="vitals_location_ear">Ухо</string>
+    <string name="vitals_location_wrist">Запястье</string>
+    <string name="vitals_location_vagina">Влагалище</string>
+    <string name="vitals_delete_entry">Удалить запись</string>
+    <string name="vitals_delete_title">Удалить эту запись?</string>
+    <string name="vitals_delete_body">Она будет удалена из Ayuvo и Health Connect.</string>
+</resources>

@@ -49,6 +49,8 @@ import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.ui.body.AddBodyFatDialog
 import com.ayuvo.health.ui.body.AddWeightDialog
 import com.ayuvo.health.ui.body.BodyLogViewModel
+import com.ayuvo.health.ui.body.ManualVitalLogHost
+import com.ayuvo.health.data.health.ManualVitalType
 import com.ayuvo.health.ui.browse.tileCaption
 import com.ayuvo.health.ui.components.GlassDialog
 import com.ayuvo.health.ui.components.GlassDialogActions
@@ -124,6 +126,7 @@ fun SummaryScreen(
     var showFastStart by rememberSaveable { mutableStateOf(false) }
     var showWeight by rememberSaveable { mutableStateOf(false) }
     var showBodyFat by rememberSaveable { mutableStateOf(false) }
+    var showVital by rememberSaveable { mutableStateOf<ManualVitalType?>(null) }
     var editFavourites by remember { mutableStateOf<List<MetricKey>?>(null) }
     val dateFormatter = remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.getDefault()) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -140,6 +143,8 @@ fun SummaryScreen(
             LogEntry.FASTING -> if (!fastActive && fastingTracking) showFastStart = true else destinations.openFasting()
             LogEntry.WEIGHT -> showWeight = true
             LogEntry.BODY_FAT -> showBodyFat = true
+            LogEntry.BLOOD_GLUCOSE -> showVital = ManualVitalType.BLOOD_GLUCOSE
+            LogEntry.BODY_TEMPERATURE -> showVital = ManualVitalType.BODY_TEMPERATURE
             LogEntry.WORKOUT -> destinations.openWorkouts()
             LogEntry.MEDICATION -> destinations.openMedications()
             LogEntry.RECORD -> destinations.addRecord()
@@ -354,6 +359,7 @@ fun SummaryScreen(
             onDismiss = { showBodyFat = false }
         ) { fraction -> bodyVm.addBodyFat(fraction); showBodyFat = false }
     }
+    showVital?.let { type -> ManualVitalLogHost(container, type) { showVital = null } }
     if (body.goalReached) {
         GlassDialog(onDismissRequest = bodyVm::dismissGoalReached) {
             Text(stringResource(R.string.progress_goal_reached_title), fontSize = 21.sp, fontWeight = FontWeight.Bold)

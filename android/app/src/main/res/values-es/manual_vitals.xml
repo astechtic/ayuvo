@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Glucosa en sangre</string>
+    <string name="summary_log_body_temperature">Temperatura corporal</string>
+    <string name="vitals_log_glucose_title">Registrar glucosa en sangre</string>
+    <string name="vitals_log_temperature_title">Registrar temperatura corporal</string>
+    <string name="vitals_log_value">Valor</string>
+    <string name="vitals_log_range">Rango permitido: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Fecha y hora</string>
+    <string name="vitals_log_relation">Relación con la comida</string>
+    <string name="vitals_relation_general">General</string>
+    <string name="vitals_relation_fasting">Ayuno</string>
+    <string name="vitals_relation_before_meal">Antes de comer</string>
+    <string name="vitals_relation_after_meal">Después de comer</string>
+    <string name="vitals_log_specimen">Muestra</string>
+    <string name="vitals_specimen_capillary">Sangre capilar</string>
+    <string name="vitals_specimen_interstitial">Líquido intersticial</string>
+    <string name="vitals_specimen_plasma">Plasma</string>
+    <string name="vitals_specimen_whole_blood">Sangre total</string>
+    <string name="vitals_log_location">Medida en</string>
+    <string name="vitals_location_none">Sin especificar</string>
+    <string name="vitals_location_armpit">Axila</string>
+    <string name="vitals_location_finger">Dedo</string>
+    <string name="vitals_location_forehead">Frente</string>
+    <string name="vitals_location_mouth">Boca</string>
+    <string name="vitals_location_rectum">Recto</string>
+    <string name="vitals_location_temporal_artery">Arteria temporal</string>
+    <string name="vitals_location_toe">Dedo del pie</string>
+    <string name="vitals_location_ear">Oído</string>
+    <string name="vitals_location_wrist">Muñeca</string>
+    <string name="vitals_location_vagina">Vagina</string>
+    <string name="vitals_delete_entry">Eliminar entrada</string>
+    <string name="vitals_delete_title">¿Eliminar esta entrada?</string>
+    <string name="vitals_delete_body">Se elimina de Ayuvo y de Health Connect.</string>
+</resources>

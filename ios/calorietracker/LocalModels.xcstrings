@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "common.cancel" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -115,7 +115,7 @@
       }
     },
     "common.delete" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -228,7 +228,7 @@
       }
     },
     "common.deleteModel" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -341,7 +341,7 @@
       }
     },
     "common.download" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -454,7 +454,7 @@
       }
     },
     "common.downloaded" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -567,7 +567,7 @@
       }
     },
     "common.inUse" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -680,7 +680,7 @@
       }
     },
     "common.needsAttention" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -793,7 +793,7 @@
       }
     },
     "common.notDownloaded" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -906,7 +906,7 @@
       }
     },
     "common.prepare" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1019,7 +1019,7 @@
       }
     },
     "common.preparing" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1132,7 +1132,7 @@
       }
     },
     "common.ready" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1245,7 +1245,7 @@
       }
     },
     "common.verifying" : {
-      "extractionState" : "stale",
+      "comment" : "On-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1358,7 +1358,7 @@
       }
     },
     "gemma.checking" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1471,7 +1471,7 @@
       }
     },
     "gemma.compiling" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1584,7 +1584,7 @@
       }
     },
     "gemma.deleteMessage" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1697,7 +1697,7 @@
       }
     },
     "gemma.deleteTitle" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2149,7 +2149,7 @@
       }
     },
     "gemma.downloadDescription" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2262,7 +2262,7 @@
       }
     },
     "gemma.downloading" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2375,7 +2375,7 @@
       }
     },
     "gemma.downloadProgress" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3279,7 +3279,7 @@
       }
     },
     "gemma.generating" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3392,7 +3392,7 @@
       }
     },
     "gemma.modelSource" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3505,7 +3505,7 @@
       }
     },
     "gemma.name" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3731,7 +3731,7 @@
       }
     },
     "gemma.readyDescription" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3844,7 +3844,7 @@
       }
     },
     "gemma.requires8GB" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3957,7 +3957,7 @@
       }
     },
     "gemma.stored" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4070,7 +4070,7 @@
       }
     },
     "gemma.storedWithSize" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4183,7 +4183,7 @@
       }
     },
     "gemma.unsupportedDescription" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4522,7 +4522,7 @@
       }
     },
     "gemma.verifyingDownload" : {
-      "extractionState" : "stale",
+      "comment" : "Gemma 4 on-device model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4635,7 +4635,7 @@
       }
     },
     "notices.accessibilityLabel" : {
-      "extractionState" : "stale",
+      "comment" : "Third-party notices screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4748,7 +4748,7 @@
       }
     },
     "notices.fileMissing" : {
-      "extractionState" : "stale",
+      "comment" : "Third-party notices screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4861,7 +4861,7 @@
       }
     },
     "notices.fileOpenFailed" : {
-      "extractionState" : "stale",
+      "comment" : "Third-party notices screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5087,7 +5087,7 @@
       }
     },
     "notices.loading" : {
-      "extractionState" : "stale",
+      "comment" : "Third-party notices screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5200,7 +5200,7 @@
       }
     },
     "notices.title" : {
-      "extractionState" : "stale",
+      "comment" : "Third-party notices screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5313,7 +5313,7 @@
       }
     },
     "notices.unavailable" : {
-      "extractionState" : "stale",
+      "comment" : "Third-party notices screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5426,7 +5426,7 @@
       }
     },
     "settings.onDeviceModel" : {
-      "extractionState" : "stale",
+      "comment" : "AI settings section label",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5539,7 +5539,7 @@
       }
     },
     "whisper.about" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5652,7 +5652,7 @@
       }
     },
     "whisper.deleteMessage" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5765,7 +5765,7 @@
       }
     },
     "whisper.deleteTitle" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5878,7 +5878,7 @@
       }
     },
     "whisper.downloading" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5991,7 +5991,7 @@
       }
     },
     "whisper.downloadProgress" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6443,7 +6443,7 @@
       }
     },
     "whisper.name" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6556,7 +6556,7 @@
       }
     },
     "whisper.optimizing" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6895,7 +6895,7 @@
       }
     },
     "whisper.stored" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -7008,7 +7008,7 @@
       }
     },
     "whisper.storedWithSize" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -7121,7 +7121,7 @@
       }
     },
     "whisper.transcribing" : {
-      "extractionState" : "stale",
+      "comment" : "Whisper Base on-device speech model settings",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

@@ -181,7 +181,7 @@ Every bucket is returned. An empty bucket has `value: null, count: 0` (never 0).
 
 ## 6. Metric detail anatomy
 
-Top to bottom: title bar (metric title) · range picker D/W/M/6M/Y (only the metric's `ranges`) · headline (§7.4: kind label, value + unit, date span) · ‹ interval title › (forward disabled when `can_go_forward` is false) · chart card (bars/line/range in the domain colour; dashed goal rule when `goal_source` resolves to a value; scrub marker in the theme accent) · Options (Add to Favourites; Show All Data; Data Sources & Access — health only; Unit — weight, water, glucose and health unit types; Log — app metrics) · About (`about` text, or the registry description for health types; for a resolved `nutrient_key` the nutrient About and Learn more, docs/nutrients.md §5a). A chart whose buckets are all null shows an empty state ("No data in this range").
+Top to bottom: title bar (metric title) · range picker D/W/M/6M/Y (only the metric's `ranges`) · headline (§7.4: kind label, value + unit, date span) · ‹ interval title › (forward disabled when `can_go_forward` is false) · chart card (bars/line/range in the domain colour; dashed goal rule when `goal_source` resolves to a value; scrub marker in the theme accent) · Options (Add to Favourites; Show All Data; Data Sources & Access — health only; Unit — weight, water, glucose and health unit types; Log — app metrics, plus `blood_glucose` and `body_temperature` (`docs/health-data.md` §2.2)) · About (`about` text, or the registry description for health types; for a resolved `nutrient_key` the nutrient About and Learn more, docs/nutrients.md §5a). A chart whose buckets are all null shows an empty state ("No data in this range").
 
 ## 7. Reference functions and vector shapes
 
@@ -252,7 +252,9 @@ Order and visibility:
 5. **Highlights** — at most 3, each only with real data: newest important record highlight; weight trend (only when the weight analysis has enough data); latest workout.
 6. **Get More From Ayuvo** — rows: Connect Health (done when health sync is on), Turn on reminders (notifications on and permitted), Add a record (any record exists), Add medications (any medication exists). Done rows disappear; the card hides when all are done or when `summaryChecklistDismissed` is true.
 
-**"+" log sheet**, in order: Food (the user's `+ Menu` food methods, in their order) · Water (only when water tracking is on) · Fasting · Weight · Body Fat · Workout · Medication dose · Health Record. Each entry opens the existing flow; accessibility id `log.entry.<food|water|fasting|weight|bodyFat|workout|medication|record>`.
+**"+" log sheet**, in order: Food (the user's `+ Menu` food methods, in their order) · Water (only when water tracking is on) · Fasting · Weight · Body Fat · Blood Glucose · Body Temperature · Workout · Medication dose · Health Record. Each entry opens the existing flow; accessibility id `log.entry.<food|water|fasting|weight|bodyFat|bloodGlucose|bodyTemperature|workout|medication|record>`.
+
+**Glucose / temperature log sheet** (`docs/health-data.md` §2.2): value field with a unit toggle (mmol/L | mg/dL from the glucose unit setting, and switching it saves that setting; °C | °F starts from the app's temperature unit — iOS height unit, Android `useMetric` — and switching it applies to that entry only), date and time, glucose: "Relation to meal" (General, Fasting, Before meal, After meal) and "Sample" (Capillary blood default, Interstitial fluid, Plasma, Whole blood), temperature: "Measured at" (optional location). Save is disabled until the value is in range. Ids: `log.glucose.value`, `log.glucose.unit`, `log.glucose.relation`, `log.glucose.specimen`, `log.temperature.value`, `log.temperature.unit`, `log.temperature.location`, `log.time`, `log.save`.
 
 ## 9. Accessibility identifiers
 

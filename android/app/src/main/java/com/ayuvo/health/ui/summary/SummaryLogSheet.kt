@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bloodtype
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +42,7 @@ import com.ayuvo.health.ui.design.InsetGroup
 /** Entries of the Summary "+" sheet, in the order of docs/ui-structure.md §8. */
 enum class LogEntry(val tag: String) {
     FOOD("food"), WATER("water"), FASTING("fasting"), WEIGHT("weight"), BODY_FAT("bodyFat"),
+    BLOOD_GLUCOSE("bloodGlucose"), BODY_TEMPERATURE("bodyTemperature"),
     WORKOUT("workout"), MEDICATION("medication"), RECORD("record")
 }
 
@@ -86,6 +89,8 @@ internal fun SummaryLogSheet(
             InsetGroup(header = stringResource(R.string.domain_body)) {
                 row { Entry(LogEntry.WEIGHT, R.string.summary_log_weight, Icons.Filled.MonitorWeight, AyuvoPalette.Body, onEntry) }
                 row { Entry(LogEntry.BODY_FAT, R.string.summary_log_body_fat, Icons.Filled.Percent, AyuvoPalette.Body, onEntry) }
+                row { Entry(LogEntry.BLOOD_GLUCOSE, R.string.summary_log_blood_glucose, Icons.Filled.Bloodtype, AyuvoPalette.Body, onEntry) }
+                row { Entry(LogEntry.BODY_TEMPERATURE, R.string.summary_log_body_temperature, Icons.Filled.Thermostat, AyuvoPalette.Body, onEntry) }
             }
             InsetGroup(header = stringResource(R.string.domain_activity)) {
                 row { Entry(LogEntry.WORKOUT, R.string.summary_log_workout, Icons.Filled.FitnessCenter, AyuvoPalette.Activity, onEntry) }

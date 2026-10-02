@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Глюкоза в крові</string>
+    <string name="summary_log_body_temperature">Температура тіла</string>
+    <string name="vitals_log_glucose_title">Записати рівень глюкози</string>
+    <string name="vitals_log_temperature_title">Записати температуру тіла</string>
+    <string name="vitals_log_value">Значення</string>
+    <string name="vitals_log_range">Допустимий діапазон: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Дата й час</string>
+    <string name="vitals_log_relation">Відносно прийому їжі</string>
+    <string name="vitals_relation_general">Загальне</string>
+    <string name="vitals_relation_fasting">Голодування</string>
+    <string name="vitals_relation_before_meal">До їжі</string>
+    <string name="vitals_relation_after_meal">Після їжі</string>
+    <string name="vitals_log_specimen">Зразок</string>
+    <string name="vitals_specimen_capillary">Капілярна кров</string>
+    <string name="vitals_specimen_interstitial">Міжклітинна рідина</string>
+    <string name="vitals_specimen_plasma">Плазма</string>
+    <string name="vitals_specimen_whole_blood">Цільна кров</string>
+    <string name="vitals_log_location">Місце вимірювання</string>
+    <string name="vitals_location_none">Не вказано</string>
+    <string name="vitals_location_armpit">Пахва</string>
+    <string name="vitals_location_finger">Палець</string>
+    <string name="vitals_location_forehead">Чоло</string>
+    <string name="vitals_location_mouth">Рот</string>
+    <string name="vitals_location_rectum">Пряма кишка</string>
+    <string name="vitals_location_temporal_artery">Скронева артерія</string>
+    <string name="vitals_location_toe">Палець ноги</string>
+    <string name="vitals_location_ear">Вухо</string>
+    <string name="vitals_location_wrist">Зап\'ястя</string>
+    <string name="vitals_location_vagina">Піхва</string>
+    <string name="vitals_delete_entry">Видалити запис</string>
+    <string name="vitals_delete_title">Видалити цей запис?</string>
+    <string name="vitals_delete_body">Його буде видалено з Ayuvo і Health Connect.</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">血糖値</string>
+    <string name="summary_log_body_temperature">体温</string>
+    <string name="vitals_log_glucose_title">血糖値を記録</string>
+    <string name="vitals_log_temperature_title">体温を記録</string>
+    <string name="vitals_log_value">値</string>
+    <string name="vitals_log_range">許容範囲: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">日時</string>
+    <string name="vitals_log_relation">食事との関係</string>
+    <string name="vitals_relation_general">一般</string>
+    <string name="vitals_relation_fasting">断食</string>
+    <string name="vitals_relation_before_meal">食前</string>
+    <string name="vitals_relation_after_meal">食後</string>
+    <string name="vitals_log_specimen">検体</string>
+    <string name="vitals_specimen_capillary">毛細血管血</string>
+    <string name="vitals_specimen_interstitial">間質液</string>
+    <string name="vitals_specimen_plasma">血漿</string>
+    <string name="vitals_specimen_whole_blood">全血</string>
+    <string name="vitals_log_location">測定部位</string>
+    <string name="vitals_location_none">指定なし</string>
+    <string name="vitals_location_armpit">脇の下</string>
+    <string name="vitals_location_finger">指</string>
+    <string name="vitals_location_forehead">額</string>
+    <string name="vitals_location_mouth">口</string>
+    <string name="vitals_location_rectum">直腸</string>
+    <string name="vitals_location_temporal_artery">側頭動脈</string>
+    <string name="vitals_location_toe">足の指</string>
+    <string name="vitals_location_ear">耳</string>
+    <string name="vitals_location_wrist">手首</string>
+    <string name="vitals_location_vagina">膣</string>
+    <string name="vitals_delete_entry">記録を削除</string>
+    <string name="vitals_delete_title">この記録を削除しますか？</string>
+    <string name="vitals_delete_body">Ayuvo と Health Connect の両方から削除されます。</string>
+</resources>

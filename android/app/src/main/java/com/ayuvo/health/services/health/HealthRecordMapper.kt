@@ -79,6 +79,8 @@ class HealthRecordMapper(
         val meta = record.metadata
         // Google Health write-back (docs/google-health.md §4): the origin-3 row is the canonical copy.
         if (isGoogleHealthMirror(meta.clientRecordId)) return null
+        // Manual glucose / temperature entries (docs/health-data.md §2.2): the origin-2 row is canonical.
+        if (isManualEntry(meta.clientRecordId)) return null
         val base = baseFor(record, type, meta, nowMs)
         val mapped = mapRecord(record, base, meta, nowMs) ?: return null
         // Every row (not only sessions/series) reports its origin app for the sources table.
@@ -440,6 +442,12 @@ class HealthRecordMapper(
 
         fun isGoogleHealthMirror(clientRecordId: String?): Boolean =
             clientRecordId?.startsWith(GOOGLE_HEALTH_MIRROR_PREFIX) == true
+
+        /** clientRecordId prefix of manual entries written by ManualVitalsRepository. */
+        const val MANUAL_ENTRY_PREFIX = com.ayuvo.health.data.health.ManualVitals.CLIENT_PREFIX
+
+        fun isManualEntry(clientRecordId: String?): Boolean =
+            clientRecordId?.startsWith(MANUAL_ENTRY_PREFIX) == true
 
         /** Registry type for a record instance (class simple name lookup). */
         fun typeOf(record: Record): HealthDataType? = typeOfRecordClass(record.javaClass.simpleName)

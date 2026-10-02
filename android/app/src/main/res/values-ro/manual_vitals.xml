@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Glicemie</string>
+    <string name="summary_log_body_temperature">Temperatura corpului</string>
+    <string name="vitals_log_glucose_title">Înregistrează glicemia</string>
+    <string name="vitals_log_temperature_title">Înregistrează temperatura corporală</string>
+    <string name="vitals_log_value">Valoare</string>
+    <string name="vitals_log_range">Interval permis: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Data și ora</string>
+    <string name="vitals_log_relation">Raportat la masă</string>
+    <string name="vitals_relation_general">General</string>
+    <string name="vitals_relation_fasting">Post</string>
+    <string name="vitals_relation_before_meal">Înainte de masă</string>
+    <string name="vitals_relation_after_meal">După masă</string>
+    <string name="vitals_log_specimen">Probă</string>
+    <string name="vitals_specimen_capillary">Sânge capilar</string>
+    <string name="vitals_specimen_interstitial">Lichid interstițial</string>
+    <string name="vitals_specimen_plasma">Plasmă</string>
+    <string name="vitals_specimen_whole_blood">Sânge integral</string>
+    <string name="vitals_log_location">Măsurată la</string>
+    <string name="vitals_location_none">Nespecificat</string>
+    <string name="vitals_location_armpit">Axilă</string>
+    <string name="vitals_location_finger">Deget</string>
+    <string name="vitals_location_forehead">Frunte</string>
+    <string name="vitals_location_mouth">Gură</string>
+    <string name="vitals_location_rectum">Rect</string>
+    <string name="vitals_location_temporal_artery">Artera temporală</string>
+    <string name="vitals_location_toe">Deget de la picior</string>
+    <string name="vitals_location_ear">Ureche</string>
+    <string name="vitals_location_wrist">Încheietura mâinii</string>
+    <string name="vitals_location_vagina">Vagin</string>
+    <string name="vitals_delete_entry">Șterge înregistrarea</string>
+    <string name="vitals_delete_title">Ștergi această înregistrare?</string>
+    <string name="vitals_delete_body">Va fi eliminată din Ayuvo și din Health Connect.</string>
+</resources>

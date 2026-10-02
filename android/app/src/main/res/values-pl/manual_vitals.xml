@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Glukoza we krwi</string>
+    <string name="summary_log_body_temperature">Temperatura ciała</string>
+    <string name="vitals_log_glucose_title">Zapisz glukozę we krwi</string>
+    <string name="vitals_log_temperature_title">Zapisz temperaturę ciała</string>
+    <string name="vitals_log_value">Wartość</string>
+    <string name="vitals_log_range">Dozwolony zakres: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Data i godzina</string>
+    <string name="vitals_log_relation">Względem posiłku</string>
+    <string name="vitals_relation_general">Ogólnie</string>
+    <string name="vitals_relation_fasting">Post</string>
+    <string name="vitals_relation_before_meal">Przed posiłkiem</string>
+    <string name="vitals_relation_after_meal">Po posiłku</string>
+    <string name="vitals_log_specimen">Próbka</string>
+    <string name="vitals_specimen_capillary">Krew włośniczkowa</string>
+    <string name="vitals_specimen_interstitial">Płyn śródmiąższowy</string>
+    <string name="vitals_specimen_plasma">Osocze</string>
+    <string name="vitals_specimen_whole_blood">Krew pełna</string>
+    <string name="vitals_log_location">Miejsce pomiaru</string>
+    <string name="vitals_location_none">Nie określono</string>
+    <string name="vitals_location_armpit">Pacha</string>
+    <string name="vitals_location_finger">Palec</string>
+    <string name="vitals_location_forehead">Czoło</string>
+    <string name="vitals_location_mouth">Usta</string>
+    <string name="vitals_location_rectum">Odbyt</string>
+    <string name="vitals_location_temporal_artery">Tętnica skroniowa</string>
+    <string name="vitals_location_toe">Palec u stopy</string>
+    <string name="vitals_location_ear">Ucho</string>
+    <string name="vitals_location_wrist">Nadgarstek</string>
+    <string name="vitals_location_vagina">Pochwa</string>
+    <string name="vitals_delete_entry">Usuń wpis</string>
+    <string name="vitals_delete_title">Usunąć ten wpis?</string>
+    <string name="vitals_delete_body">Zostanie usunięty z Ayuvo i z Health Connect.</string>
+</resources>

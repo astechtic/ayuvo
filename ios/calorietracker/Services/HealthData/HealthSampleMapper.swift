@@ -17,6 +17,19 @@ nonisolated enum HealthSampleMapper {
         sample.metadata?[googleHealthMetadataKey] != nil
     }
 
+    /// Metadata key on every manual glucose / temperature sample Ayuvo saves. The origin-2
+    /// `local:<uuid>` row is already the canonical copy (docs/health-data.md §2.2).
+    static let manualEntryMetadataKey = "ayuvo_manual_id"
+
+    static func isAyuvoManualEntry(_ sample: HKSample) -> Bool {
+        sample.metadata?[manualEntryMetadataKey] != nil
+    }
+
+    /// Samples the readers drop because Ayuvo already holds the canonical row.
+    static func isSkippedOwnWrite(_ sample: HKSample) -> Bool {
+        isGoogleHealthMirror(sample) || isAyuvoManualEntry(sample)
+    }
+
     static func rows(from samples: [HKSample], type: HealthMetricType, calendar: Calendar, nowMs: Int64) -> [HealthSampleRow] {
         samples.compactMap { row(from: $0, type: type, calendar: calendar, nowMs: nowMs) }
     }
@@ -27,7 +40,7 @@ nonisolated enum HealthSampleMapper {
 
     static func sources(from samples: [HKSample], nowMs: Int64) -> [HealthSourceRow] {
         var byID: [String: HealthSourceRow] = [:]
-        for sample in samples where !isGoogleHealthMirror(sample) {
+        for sample in samples where !isSkippedOwnWrite(sample) {
             let source = sample.sourceRevision.source
             let id = source.bundleIdentifier
             var row = byID[id] ?? HealthSourceRow(id: id, name: source.name, deviceModel: nil, deviceType: nil, lastSeenMs: nil)
@@ -44,7 +57,7 @@ nonisolated enum HealthSampleMapper {
     // MARK: - One sample
 
     static func row(from sample: HKSample, type: HealthMetricType, calendar: Calendar, nowMs: Int64) -> HealthSampleRow? {
-        guard !isGoogleHealthMirror(sample) else { return nil }
+        guard !isSkippedOwnWrite(sample) else { return nil }
         let startMs = ms(sample.startDate)
         let endMs = ms(sample.endDate)
         let zone = (sample.metadata?[HKMetadataKeyTimeZone] as? String).flatMap(TimeZone.init(identifier:)) ?? calendar.timeZone

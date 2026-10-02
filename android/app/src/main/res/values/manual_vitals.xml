@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Manual blood glucose / body temperature logging (docs/health-data.md §2.2, docs/ui-structure.md §8). -->
+<resources>
+    <string name="summary_log_blood_glucose">Blood Glucose</string>
+    <string name="summary_log_body_temperature">Body Temperature</string>
+    <string name="vitals_log_glucose_title">Log Blood Glucose</string>
+    <string name="vitals_log_temperature_title">Log Body Temperature</string>
+    <!-- Label of the reading's number field. -->
+    <string name="vitals_log_value">Value</string>
+    <!-- Below the value field: %1$s lowest, %2$s highest allowed value, %3$s unit (e.g. mmol/L). -->
+    <string name="vitals_log_range">Allowed range: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Date and time</string>
+    <string name="vitals_log_relation">Relation to meal</string>
+    <string name="vitals_relation_general">General</string>
+    <string name="vitals_relation_fasting">Fasting</string>
+    <string name="vitals_relation_before_meal">Before meal</string>
+    <string name="vitals_relation_after_meal">After meal</string>
+    <!-- Which kind of sample the glucose was measured in. -->
+    <string name="vitals_log_specimen">Sample</string>
+    <string name="vitals_specimen_capillary">Capillary blood</string>
+    <string name="vitals_specimen_interstitial">Interstitial fluid</string>
+    <string name="vitals_specimen_plasma">Plasma</string>
+    <string name="vitals_specimen_whole_blood">Whole blood</string>
+    <!-- Where on the body the temperature was taken. -->
+    <string name="vitals_log_location">Measured at</string>
+    <string name="vitals_location_none">Not specified</string>
+    <string name="vitals_location_armpit">Armpit</string>
+    <string name="vitals_location_finger">Finger</string>
+    <string name="vitals_location_forehead">Forehead</string>
+    <string name="vitals_location_mouth">Mouth</string>
+    <string name="vitals_location_rectum">Rectum</string>
+    <string name="vitals_location_temporal_artery">Temporal artery</string>
+    <string name="vitals_location_toe">Toe</string>
+    <string name="vitals_location_ear">Ear</string>
+    <string name="vitals_location_wrist">Wrist</string>
+    <string name="vitals_location_vagina">Vagina</string>
+    <!-- Show All Data: removes a reading the user logged in Ayuvo. -->
+    <string name="vitals_delete_entry">Delete Entry</string>
+    <string name="vitals_delete_title">Delete this entry?</string>
+    <string name="vitals_delete_body">It is removed from Ayuvo and from Health Connect.</string>
+</resources>

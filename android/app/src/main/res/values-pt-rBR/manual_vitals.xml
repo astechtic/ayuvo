@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Glicose no sangue</string>
+    <string name="summary_log_body_temperature">Temperatura corporal</string>
+    <string name="vitals_log_glucose_title">Registrar glicemia</string>
+    <string name="vitals_log_temperature_title">Registrar temperatura corporal</string>
+    <string name="vitals_log_value">Valor</string>
+    <string name="vitals_log_range">Faixa permitida: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Data e hora</string>
+    <string name="vitals_log_relation">Relação com a refeição</string>
+    <string name="vitals_relation_general">Geral</string>
+    <string name="vitals_relation_fasting">Jejum</string>
+    <string name="vitals_relation_before_meal">Antes da refeição</string>
+    <string name="vitals_relation_after_meal">Depois da refeição</string>
+    <string name="vitals_log_specimen">Amostra</string>
+    <string name="vitals_specimen_capillary">Sangue capilar</string>
+    <string name="vitals_specimen_interstitial">Fluido intersticial</string>
+    <string name="vitals_specimen_plasma">Plasma</string>
+    <string name="vitals_specimen_whole_blood">Sangue total</string>
+    <string name="vitals_log_location">Medida em</string>
+    <string name="vitals_location_none">Não especificado</string>
+    <string name="vitals_location_armpit">Axila</string>
+    <string name="vitals_location_finger">Dedo</string>
+    <string name="vitals_location_forehead">Testa</string>
+    <string name="vitals_location_mouth">Boca</string>
+    <string name="vitals_location_rectum">Reto</string>
+    <string name="vitals_location_temporal_artery">Artéria temporal</string>
+    <string name="vitals_location_toe">Dedo do pé</string>
+    <string name="vitals_location_ear">Ouvido</string>
+    <string name="vitals_location_wrist">Pulso</string>
+    <string name="vitals_location_vagina">Vagina</string>
+    <string name="vitals_delete_entry">Apagar registro</string>
+    <string name="vitals_delete_title">Excluir este registro?</string>
+    <string name="vitals_delete_body">Ele será removido do Ayuvo e do Health Connect.</string>
+</resources>

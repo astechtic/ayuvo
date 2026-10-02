@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">ब्लड ग्लूकोज़</string>
+    <string name="summary_log_body_temperature">शरीर का तापमान</string>
+    <string name="vitals_log_glucose_title">ब्लड ग्लूकोज़ दर्ज करें</string>
+    <string name="vitals_log_temperature_title">शरीर का तापमान दर्ज करें</string>
+    <string name="vitals_log_value">मान</string>
+    <string name="vitals_log_range">अनुमत सीमा: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">तारीख और समय</string>
+    <string name="vitals_log_relation">भोजन से संबंध</string>
+    <string name="vitals_relation_general">सामान्य</string>
+    <string name="vitals_relation_fasting">उपवास</string>
+    <string name="vitals_relation_before_meal">भोजन से पहले</string>
+    <string name="vitals_relation_after_meal">भोजन के बाद</string>
+    <string name="vitals_log_specimen">नमूना</string>
+    <string name="vitals_specimen_capillary">केशिका रक्त</string>
+    <string name="vitals_specimen_interstitial">अंतरालीय द्रव</string>
+    <string name="vitals_specimen_plasma">प्लाज़्मा</string>
+    <string name="vitals_specimen_whole_blood">संपूर्ण रक्त</string>
+    <string name="vitals_log_location">कहाँ मापा गया</string>
+    <string name="vitals_location_none">निर्दिष्ट नहीं</string>
+    <string name="vitals_location_armpit">बगल</string>
+    <string name="vitals_location_finger">उंगली</string>
+    <string name="vitals_location_forehead">माथा</string>
+    <string name="vitals_location_mouth">मुँह</string>
+    <string name="vitals_location_rectum">मलाशय</string>
+    <string name="vitals_location_temporal_artery">टेम्पोरल धमनी</string>
+    <string name="vitals_location_toe">पैर की उंगली</string>
+    <string name="vitals_location_ear">कान</string>
+    <string name="vitals_location_wrist">कलाई</string>
+    <string name="vitals_location_vagina">योनि</string>
+    <string name="vitals_delete_entry">एंट्री हटाएं</string>
+    <string name="vitals_delete_title">यह प्रविष्टि हटाएँ?</string>
+    <string name="vitals_delete_body">इसे Ayuvo और Health Connect दोनों से हटा दिया जाएगा।</string>
+</resources>

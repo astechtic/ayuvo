@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">혈당</string>
+    <string name="summary_log_body_temperature">체온</string>
+    <string name="vitals_log_glucose_title">혈당 기록</string>
+    <string name="vitals_log_temperature_title">체온 기록</string>
+    <string name="vitals_log_value">값</string>
+    <string name="vitals_log_range">허용 범위: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">날짜 및 시간</string>
+    <string name="vitals_log_relation">식사와의 관계</string>
+    <string name="vitals_relation_general">일반</string>
+    <string name="vitals_relation_fasting">단식</string>
+    <string name="vitals_relation_before_meal">식전</string>
+    <string name="vitals_relation_after_meal">식후</string>
+    <string name="vitals_log_specimen">검체</string>
+    <string name="vitals_specimen_capillary">모세혈</string>
+    <string name="vitals_specimen_interstitial">간질액</string>
+    <string name="vitals_specimen_plasma">혈장</string>
+    <string name="vitals_specimen_whole_blood">전혈</string>
+    <string name="vitals_log_location">측정 부위</string>
+    <string name="vitals_location_none">지정 안 함</string>
+    <string name="vitals_location_armpit">겨드랑이</string>
+    <string name="vitals_location_finger">손가락</string>
+    <string name="vitals_location_forehead">이마</string>
+    <string name="vitals_location_mouth">입</string>
+    <string name="vitals_location_rectum">직장</string>
+    <string name="vitals_location_temporal_artery">측두 동맥</string>
+    <string name="vitals_location_toe">발가락</string>
+    <string name="vitals_location_ear">귀</string>
+    <string name="vitals_location_wrist">손목</string>
+    <string name="vitals_location_vagina">질</string>
+    <string name="vitals_delete_entry">항목 삭제</string>
+    <string name="vitals_delete_title">이 기록을 삭제할까요?</string>
+    <string name="vitals_delete_body">Ayuvo와 Health Connect에서 모두 삭제됩니다.</string>
+</resources>

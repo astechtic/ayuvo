@@ -241,6 +241,44 @@ class HealthConnectManager(
         HealthPermission.getWritePermission(androidx.health.connect.client.records.HydrationRecord::class)
     )
 
+    /**
+     * Manual blood glucose / body temperature entries (docs/health-data.md §2.2): requested in context
+     * on the first save of that type only, never with the legacy set, so CURRENT_TYPES_VERSION stays.
+     */
+    fun manualVitalWritePermission(type: com.ayuvo.health.data.health.ManualVitalType): String =
+        HealthPermission.getWritePermission(ManualVitalsRecordFactory.recordClass(type))
+
+    val manualVitalsWritePermissions: Set<String>
+        get() = com.ayuvo.health.data.health.ManualVitalType.entries.mapTo(LinkedHashSet(), ::manualVitalWritePermission)
+
+    /**
+     * Upserts the Health Connect copy of a manual entry. Skips (false) when the write permission is
+     * known to be missing; a failed permission probe still attempts the write so an outage retries.
+     */
+    suspend fun writeManualVital(type: com.ayuvo.health.data.health.ManualVitalType, row: com.ayuvo.health.data.health.HealthSampleRow): Boolean {
+        val c = client ?: return false
+        val uuid = com.ayuvo.health.data.health.ManualVitals.uuidOf(row.id) ?: return false
+        val granted = grantedOrNull()
+        if (granted != null && manualVitalWritePermission(type) !in granted) return false
+        val record = runCatching { ManualVitalsRecordFactory.build(row) }.getOrNull() ?: return false
+        return writeWithRetry(type.retryKind, uuid) { c.insertRecords(listOf(record)) }
+    }
+
+    /** Deletes the Health Connect copy of a manual entry by its `ayuvo_m_<uuid>` tag. */
+    suspend fun deleteManualVital(type: com.ayuvo.health.data.health.ManualVitalType, uuid: UUID): Boolean {
+        val c = client ?: return false
+        return writeWithRetry(type.retryKind, uuid, delete = true) {
+            c.deleteRecords(
+                recordType = ManualVitalsRecordFactory.recordClass(type),
+                recordIdsList = emptyList(),
+                clientRecordIdsList = listOf(com.ayuvo.health.data.health.ManualVitals.clientRecordId(uuid))
+            )
+        }
+    }
+
+    suspend fun hasManualVitalWrite(type: com.ayuvo.health.data.health.ManualVitalType): Boolean =
+        manualVitalWritePermission(type) in granted()
+
     /** Granted permissions, or null when the probe failed (the Google Health write-back waits then). */
     suspend fun grantedPermissionsOrNull(): Set<String>? = grantedOrNull()
 
@@ -403,7 +441,9 @@ class HealthConnectManager(
     }
 
     /** True for records Ayuvo itself wrote, so read-sync can tell them apart from
-     *  external sources (change-token consumers skip them; the restore path keeps them). */
+     *  external sources (change-token consumers skip them; the restore path keeps them).
+     *  Manual vitals (`ayuvo_m_<uuid>`) also match; [ownRecordId] returns null for them, so the
+     *  weight/body-fat restore never adopts one (they are glucose/temperature records anyway). */
     fun isOwnRecord(clientRecordId: String?): Boolean =
         clientRecordId?.startsWith(CLIENT_PREFIX) == true
 

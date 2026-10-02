@@ -26,6 +26,8 @@ struct MetricDetailView: View {
     @State private var showLogBodyFat = false
     @State private var showAllWeights = false
     @State private var showAllBodyFat = false
+    @State private var manualEntryKind: ManualHealthKind?
+    @Environment(HealthKitManager.self) private var healthKitManager
     /// Bumped when the "Calculate this metric" switch changes (UserDefaults is not observed).
     @State private var derivedSwitchRevision = 0
 
@@ -162,6 +164,11 @@ struct MetricDetailView: View {
             let seed = bodyFatStore.latestEntry?.bodyFatFraction ?? profileStore.profile.bodyFatPercentage ?? 0.20
             LogBodyFatSheet(currentFraction: seed) { fraction in
                 bodyFatStore.addEntry(BodyFatEntry(bodyFatFraction: fraction))
+            }
+        }
+        .sheet(item: $manualEntryKind) { kind in
+            ManualHealthEntrySheet(kind: kind) { entry in
+                Task { await healthStore.saveManualEntry(entry, healthKit: healthKitManager) }
             }
         }
         .sheet(isPresented: $showAllWeights) {
@@ -530,6 +537,12 @@ struct MetricDetailView: View {
                     }
                     .accessibilityIdentifier("metric.unit")
                 }
+                if let kind = ManualHealthKind(typeID: id) {
+                    Button { manualEntryKind = kind } label: {
+                        Label(kind == .bloodGlucose ? LocalizedStringKey("Log Blood Glucose") : LocalizedStringKey("Log Body Temperature"), systemImage: "plus.circle")
+                    }
+                    .accessibilityIdentifier("metric.log")
+                }
             }
 
             if case .app(let metric) = key {
@@ -541,7 +554,9 @@ struct MetricDetailView: View {
         } footer: {
             if case .health(let id) = key {
                 VStack(alignment: .leading, spacing: 6) {
-                    if let summary = healthStore.summary(for: id) {
+                    if ManualHealthKind(typeID: id) != nil {
+                        Text("Entries you log in Ayuvo can be deleted in Show All Data. Records from other apps are read-only here — edit or delete them in the Health app.")
+                    } else if let summary = healthStore.summary(for: id) {
                         Text("\(summary.count) records mirrored from Apple Health. Read-only here — edit or delete them in the Health app.")
                     }
                     if let limited = healthStore.limitedHistoryBefore(id) {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summary_log_blood_glucose">Bloedglucose</string>
+    <string name="summary_log_body_temperature">Lichaamstemperatuur</string>
+    <string name="vitals_log_glucose_title">Bloedglucose vastleggen</string>
+    <string name="vitals_log_temperature_title">Lichaamstemperatuur vastleggen</string>
+    <string name="vitals_log_value">Waarde</string>
+    <string name="vitals_log_range">Toegestaan bereik: %1$s–%2$s %3$s</string>
+    <string name="vitals_log_time">Datum en tijd</string>
+    <string name="vitals_log_relation">Ten opzichte van maaltijd</string>
+    <string name="vitals_relation_general">Algemeen</string>
+    <string name="vitals_relation_fasting">Vasten</string>
+    <string name="vitals_relation_before_meal">Voor de maaltijd</string>
+    <string name="vitals_relation_after_meal">Na de maaltijd</string>
+    <string name="vitals_log_specimen">Monster</string>
+    <string name="vitals_specimen_capillary">Capillair bloed</string>
+    <string name="vitals_specimen_interstitial">Interstitieel vocht</string>
+    <string name="vitals_specimen_plasma">Plasma</string>
+    <string name="vitals_specimen_whole_blood">Volbloed</string>
+    <string name="vitals_log_location">Gemeten bij</string>
+    <string name="vitals_location_none">Niet opgegeven</string>
+    <string name="vitals_location_armpit">Oksel</string>
+    <string name="vitals_location_finger">Vinger</string>
+    <string name="vitals_location_forehead">Voorhoofd</string>
+    <string name="vitals_location_mouth">Mond</string>
+    <string name="vitals_location_rectum">Rectum</string>
+    <string name="vitals_location_temporal_artery">Slaapslagader</string>
+    <string name="vitals_location_toe">Teen</string>
+    <string name="vitals_location_ear">Oor</string>
+    <string name="vitals_location_wrist">Pols</string>
+    <string name="vitals_location_vagina">Vagina</string>
+    <string name="vitals_delete_entry">Verwijder item</string>
+    <string name="vitals_delete_title">Deze invoer verwijderen?</string>
+    <string name="vitals_delete_body">Deze wordt verwijderd uit Ayuvo en uit Health Connect.</string>
+</resources>

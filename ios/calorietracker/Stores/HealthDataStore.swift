@@ -417,6 +417,43 @@ final class HealthDataStore {
         return HealthSleepAnalysis.nights(rows: rows, calendar: calendar).filter { $0.nightOf >= first }
     }
 
+    // MARK: - Manual entries (docs/health-data.md §2.2)
+
+    /// Saves a manual glucose / temperature reading as an origin-2 row (works with sync off),
+    /// refreshes the snapshots, then writes the Apple Health copy when sync is on.
+    @discardableResult
+    func saveManualEntry(_ entry: ManualHealthEntry, healthKit: HealthKitManager? = nil) async -> Bool {
+        guard await runtime.openIfNeeded(), let writer = runtime.writer else { return false }
+        let bundleID = Bundle.main.bundleIdentifier ?? ""
+        do {
+            try await ManualHealthEntryService.save(entry, database: writer, calendar: calendar, ownBundleID: bundleID)
+        } catch {
+            return false
+        }
+        await refreshSnapshots()
+        if isEnabled {
+            let manager = healthKit ?? HealthKitManager()
+            let zone = calendar.timeZone
+            Task { await manager.writeManualHealthEntry(entry, timeZone: zone) }
+        }
+        return true
+    }
+
+    /// Tombstones an origin-2 manual row, rebuilds its day and deletes the Apple Health copy by tag.
+    @discardableResult
+    func deleteManualEntry(_ row: HealthSampleRow, healthKit: HealthKitManager? = nil) async -> Bool {
+        guard ManualHealthEntryService.isDeletable(row),
+              await runtime.openIfNeeded(), let writer = runtime.writer else { return false }
+        let bundleID = Bundle.main.bundleIdentifier ?? ""
+        guard let deleted = try? await ManualHealthEntryService.delete(rowID: row.id, database: writer, calendar: calendar, ownBundleID: bundleID)
+        else { return false }
+        await refreshSnapshots()
+        if let kind = ManualHealthKind(typeID: deleted.typeID), let tag = ManualHealthEntryService.tag(fromRowID: deleted.id) {
+            (healthKit ?? HealthKitManager()).deleteManualHealthEntry(kind: kind, tag: tag)
+        }
+        return true
+    }
+
     // MARK: - Maintenance
 
     func rebuildRollups() async {

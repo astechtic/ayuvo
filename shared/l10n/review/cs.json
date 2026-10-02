@@ -11289,8 +11289,16 @@
   "source": "0709819876ea",
   "state": "needs_review"
  },
+ "summary_log_blood_glucose": {
+  "source": "0af6fb01020b",
+  "state": "needs_review"
+ },
  "summary_log_body_fat": {
   "source": "e17e47918e0d",
+  "state": "needs_review"
+ },
+ "summary_log_body_temperature": {
+  "source": "9013b22bd08a",
   "state": "needs_review"
  },
  "summary_log_fasting_active": {
@@ -12071,6 +12079,126 @@
  },
  "unit_ml": {
   "source": "50ae304b8114",
+  "state": "needs_review"
+ },
+ "vitals_delete_body": {
+  "source": "0567fc34aff3",
+  "state": "needs_review"
+ },
+ "vitals_delete_entry": {
+  "source": "ac403b9b8bf1",
+  "state": "needs_review"
+ },
+ "vitals_delete_title": {
+  "source": "846ba192da1a",
+  "state": "needs_review"
+ },
+ "vitals_location_armpit": {
+  "source": "3fda3d8c1613",
+  "state": "needs_review"
+ },
+ "vitals_location_ear": {
+  "source": "d638c97676ea",
+  "state": "needs_review"
+ },
+ "vitals_location_finger": {
+  "source": "64e98dad2e63",
+  "state": "needs_review"
+ },
+ "vitals_location_forehead": {
+  "source": "b53066cde6b8",
+  "state": "needs_review"
+ },
+ "vitals_location_mouth": {
+  "source": "20615f4f7fdf",
+  "state": "needs_review"
+ },
+ "vitals_location_none": {
+  "source": "5adbcd321d08",
+  "state": "needs_review"
+ },
+ "vitals_location_rectum": {
+  "source": "1b91e2367714",
+  "state": "needs_review"
+ },
+ "vitals_location_temporal_artery": {
+  "source": "8b0c6d6433d6",
+  "state": "needs_review"
+ },
+ "vitals_location_toe": {
+  "source": "588864f8eacd",
+  "state": "needs_review"
+ },
+ "vitals_location_vagina": {
+  "source": "4ee27606b5c5",
+  "state": "needs_review"
+ },
+ "vitals_location_wrist": {
+  "source": "f65396f04fce",
+  "state": "needs_review"
+ },
+ "vitals_log_glucose_title": {
+  "source": "cfd29d580cbc",
+  "state": "needs_review"
+ },
+ "vitals_log_location": {
+  "source": "82020b4570b2",
+  "state": "needs_review"
+ },
+ "vitals_log_range": {
+  "source": "6522848aa393",
+  "state": "needs_review"
+ },
+ "vitals_log_relation": {
+  "source": "b99f3214320d",
+  "state": "needs_review"
+ },
+ "vitals_log_specimen": {
+  "source": "6cd9cebc6007",
+  "state": "needs_review"
+ },
+ "vitals_log_temperature_title": {
+  "source": "ea2a554b31bd",
+  "state": "needs_review"
+ },
+ "vitals_log_time": {
+  "source": "32980cc9a6ca",
+  "state": "needs_review"
+ },
+ "vitals_log_value": {
+  "source": "c68bac832e2c",
+  "state": "needs_review"
+ },
+ "vitals_relation_after_meal": {
+  "source": "6bbd78827b35",
+  "state": "needs_review"
+ },
+ "vitals_relation_before_meal": {
+  "source": "13395b5e8015",
+  "state": "needs_review"
+ },
+ "vitals_relation_fasting": {
+  "source": "f858e8fccd6f",
+  "state": "needs_review"
+ },
+ "vitals_relation_general": {
+  "source": "dea51335890a",
+  "state": "needs_review"
+ },
+ "vitals_specimen_capillary": {
+  "source": "a3f8727e29db",
+  "state": "needs_review"
+ },
+ "vitals_specimen_interstitial": {
+  "source": "f6d7e2246e85",
+  "state": "needs_review"
+ },
+ "vitals_specimen_plasma": {
+  "source": "8d4e93ea0588",
+  "state": "needs_review"
+ },
+ "vitals_specimen_whole_blood": {
+  "source": "8f39850594fb",
   "state": "needs_review"
  },
  "voice_recording_saved": {

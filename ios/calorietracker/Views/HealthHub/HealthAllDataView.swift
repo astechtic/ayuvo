@@ -10,6 +10,8 @@ struct HealthAllDataView: View {
     @State private var reachedEnd = false
     @State private var selectedRow: HealthSampleRow?
     @State private var sourceNames: [String: String] = [:]
+    @State private var pendingDeletion: HealthSampleRow?
+    @Environment(HealthKitManager.self) private var healthKitManager
 
     private var type: HealthMetricType { store.metricType(for: typeID) }
     private let pageSize = 5
@@ -45,6 +47,16 @@ struct HealthAllDataView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .swipeActions(edge: .trailing) {
+                    // Only Ayuvo's own manual glucose / temperature rows (docs/health-data.md §2.2).
+                    if ManualHealthEntryService.isDeletable(row) {
+                        Button(role: .destructive) {
+                            pendingDeletion = row
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                }
             }
             if isLoading {
                 HStack {
@@ -83,6 +95,27 @@ struct HealthAllDataView: View {
         .sheet(item: $selectedRow) { row in
             HealthRecordDetailSheet(row: row, type: type, sourceName: sourceName(row.sourceID))
         }
+        .alert("Delete Entry", isPresented: Binding(
+            get: { pendingDeletion != nil },
+            set: { if !$0 { pendingDeletion = nil } }
+        )) {
+            Button("Cancel", role: .cancel) { pendingDeletion = nil }
+            Button("Delete", role: .destructive) {
+                if let row = pendingDeletion {
+                    Task { await delete(row) }
+                }
+                pendingDeletion = nil
+            }
+        } message: {
+            if let row = pendingDeletion {
+                Text("Remove \(valueText(row)) logged \(dateText(row))? This also deletes the matching sample from Apple Health.")
+            }
+        }
+    }
+
+    private func delete(_ row: HealthSampleRow) async {
+        guard await store.deleteManualEntry(row, healthKit: healthKitManager) else { return }
+        rows.removeAll { $0.id == row.id }
     }
 
     private func loadSources() async {
