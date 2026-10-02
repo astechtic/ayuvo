@@ -1,0 +1,179 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "14d": {
+          "mad": 1.0,
+          "median": 67.0,
+          "n": 5
+        },
+        "30d": {
+          "mad": 2.0,
+          "median": 68.0,
+          "n": 10
+        },
+        "7d": {
+          "mad": 1.5,
+          "median": 67.0,
+          "n": 4
+        },
+        "all": {
+          "mad": 2.0,
+          "median": 68.0,
+          "n": 10
+        }
+      },
+      "input": {
+        "now_ms": 2592000000,
+        "values": [
+          {
+            "t_ms": 86400000,
+            "value": 70
+          },
+          {
+            "t_ms": 259200000,
+            "value": 68
+          },
+          {
+            "t_ms": 691200000,
+            "value": 66
+          },
+          {
+            "t_ms": 864000000,
+            "value": 69
+          },
+          {
+            "t_ms": 1296000000,
+            "value": 72
+          },
+          {
+            "t_ms": 1728000000,
+            "value": 67
+          },
+          {
+            "t_ms": 2073600000,
+            "value": 65
+          },
+          {
+            "t_ms": 2246400000,
+            "value": 70
+          },
+          {
+            "t_ms": 2332800000,
+            "value": 66
+          },
+          {
+            "t_ms": 2505600000,
+            "value": 68
+          }
+        ],
+        "windows_days": [
+          7,
+          14,
+          30,
+          null
+        ]
+      },
+      "name": "mixed_windows"
+    },
+    {
+      "expected": {
+        "14d": null,
+        "30d": null,
+        "7d": null,
+        "all": null
+      },
+      "input": {
+        "now_ms": 2592000000,
+        "values": [
+          {
+            "t_ms": 86400000,
+            "value": 70
+          },
+          {
+            "t_ms": 259200000,
+            "value": 68
+          }
+        ],
+        "windows_days": [
+          7,
+          14,
+          30,
+          null
+        ]
+      },
+      "name": "sparse"
+    },
+    {
+      "expected": {
+        "7d": {
+          "mad": 1.5,
+          "median": 67.0,
+          "n": 4
+        },
+        "all": {
+          "mad": 2.0,
+          "median": 68.0,
+          "n": 10
+        }
+      },
+      "input": {
+        "now_ms": 2592000000,
+        "values": [
+          {
+            "t_ms": 86400000,
+            "value": 70
+          },
+          {
+            "t_ms": 259200000,
+            "value": 68
+          },
+          {
+            "t_ms": 691200000,
+            "value": 66
+          },
+          {
+            "t_ms": 864000000,
+            "value": 69
+          },
+          {
+            "t_ms": 1296000000,
+            "value": 72
+          },
+          {
+            "t_ms": 1728000000,
+            "value": 67
+          },
+          {
+            "t_ms": 2073600000,
+            "value": 65
+          },
+          {
+            "t_ms": 2246400000,
+            "value": 70
+          },
+          {
+            "t_ms": 2332800000,
+            "value": 66
+          },
+          {
+            "t_ms": 2505600000,
+            "value": 68
+          },
+          {
+            "t_ms": 3456000000,
+            "value": 99
+          }
+        ],
+        "windows_days": [
+          7,
+          null
+        ]
+      },
+      "name": "future_ignored"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "baselines",
+  "version": 1
+}

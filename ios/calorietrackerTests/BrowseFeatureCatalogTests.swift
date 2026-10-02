@@ -15,6 +15,7 @@ struct BrowseFeatureCatalogTests {
             "workouts", "workoutLog", "exerciseLibrary", "nutrition", "logFood", "water", "fasting",
             "bodyMeasurements", "logWeight", "logBodyFat", "medications", "addMedication", "records",
             "addRecord", "coach", "settings", "insights", "recovery", "healthAge", "dailyReview", "patterns",
+            "cameraMeasurements",
         ])
         #expect(BrowseFeatureCatalog.all.first?.accessibilityID == "browse.feature.workouts")
     }
@@ -81,6 +82,7 @@ struct BrowseFeatureCatalogTests {
         #expect(byID["water"] == .metric(.app(.water)))
         #expect(byID["addRecord"] == .addRecord)
         #expect(byID["addMedication"] == .addMedication)
+        #expect(byID["cameraMeasurements"] == .browse([.vitals]))
     }
 
     @MainActor

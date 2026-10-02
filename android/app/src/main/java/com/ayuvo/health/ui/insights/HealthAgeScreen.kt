@@ -61,7 +61,12 @@ fun HealthAgeScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         val h = snap.healthAge
         item(key = "hero") { HealthAgeHero(h, snap.pace, cfg) }
         if (h.status == "ok" || h.status == "collecting") {
-            item(key = "markers") { MarkersGroup(h, cfg) }
+            item(key = "markers") {
+                // docs/camera-vitals.md §7: markers whose window includes days filled from a finger camera scan.
+                val from = snap.today.minusDays(cfg.healthAge.windowDays.toLong())
+                val fromScan = snap.scanFallback.filterValues { days -> days.any { it.isAfter(from) && !it.isAfter(snap.today) } }.keys
+                MarkersGroup(h, cfg, fromScan)
+            }
         }
         if (h.ok) {
             item(key = "quality") {
@@ -135,7 +140,7 @@ private fun HealthAgeHero(h: HealthAgeResult, pace: HealthAgePace, cfg: Insights
 }
 
 @Composable
-private fun MarkersGroup(h: HealthAgeResult, cfg: InsightsConfig) {
+private fun MarkersGroup(h: HealthAgeResult, cfg: InsightsConfig, fromScan: Set<String> = emptySet()) {
     InsetGroup(header = stringResource(R.string.insights_markers), dividerInset = 16.dp, modifier = Modifier.testTag("insights.healthAge.markers")) {
         h.markers.forEach { m ->
             val spec = cfg.healthAge.markers.firstOrNull { it.id == m.id }
@@ -149,6 +154,14 @@ private fun MarkersGroup(h: HealthAgeResult, cfg: InsightsConfig) {
                             fontSize = 13.sp,
                             color = AyuvoColors.secondaryLabel()
                         )
+                        if (m.available && m.id in fromScan) {
+                            Text(
+                                stringResource(R.string.camvitals_insights_scan_footnote),
+                                fontSize = 12.sp,
+                                color = AyuvoColors.secondaryLabel(),
+                                modifier = Modifier.testTag("insights.healthAge.scanFallback.${m.id}")
+                            )
+                        }
                     }
                     if (m.available) {
                         val c = m.contributionYears ?: 0.0

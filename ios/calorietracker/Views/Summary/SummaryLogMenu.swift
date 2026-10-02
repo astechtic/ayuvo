@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// The Summary "+" menu (docs/ui-structure.md §8): the user's food methods first, then water,
-/// body, activity, medications and records. Every entry opens an existing flow.
+/// body, activity, camera measurements, medications and records. Every entry opens an existing flow.
 struct SummaryLogMenu: View {
     @Environment(AppNavigator.self) private var navigator
     @Environment(WaterStore.self) private var waterStore
@@ -19,6 +19,8 @@ struct SummaryLogMenu: View {
     @State private var showLogBodyFat = false
     @State private var showCustomWater = false
     @State private var manualEntryKind: ManualHealthKind?
+    @State private var scanMode: VitalsMode?
+    @State private var showCompare = false
 
     private var waterUnit: WaterUnit { WaterUnit(rawValue: waterUnitRaw) ?? .defaultUnit }
     private var addMenu: AddMenuConfig { AddMenuSettings.load() }
@@ -86,6 +88,27 @@ struct SummaryLogMenu: View {
                 }
                 .accessibilityIdentifier("log.entry.workout")
             }
+            // Camera measurements (docs/camera-vitals.md §7.1).
+            Section(String(localized: "Measure")) {
+                Button {
+                    scanMode = .finger
+                } label: {
+                    Label("Finger scan", systemImage: VitalsMode.finger.systemImage)
+                }
+                .accessibilityIdentifier("log.entry.fingerScan")
+                Button {
+                    scanMode = .face
+                } label: {
+                    Label("Face scan", systemImage: VitalsMode.face.systemImage)
+                }
+                .accessibilityIdentifier("log.entry.faceScan")
+                Button {
+                    showCompare = true
+                } label: {
+                    Label("Compare finger & face", systemImage: "rectangle.on.rectangle")
+                }
+                .accessibilityIdentifier("log.entry.compareScan")
+            }
             Section(String(localized: "More")) {
                 Button {
                     navigator.openMedications()
@@ -129,6 +152,18 @@ struct SummaryLogMenu: View {
         .sheet(item: $manualEntryKind) { kind in
             ManualHealthEntrySheet(kind: kind) { entry in
                 Task { await healthDataStore.saveManualEntry(entry, healthKit: healthKitManager) }
+            }
+        }
+        .fullScreenCover(item: $scanMode) { mode in
+            // Labelled: a trailing closure would bind to the last closure parameter (`onNext`, compare flow only).
+            ScanFlowView(mode: mode, onFinished: { saved in
+                // A saved scan lands on Camera measurements, where its history and trend live.
+                if saved != nil { navigator.openBrowse([.vitals]) }
+            })
+        }
+        .fullScreenCover(isPresented: $showCompare) {
+            CompareFlowView { saved in
+                if saved { navigator.openBrowse([.vitals]) }
             }
         }
         .sheet(isPresented: $showCustomWater) {

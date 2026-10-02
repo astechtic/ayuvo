@@ -234,13 +234,13 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "يستخدم Ayuvo الكاميرا لمسح الطعام والرموز الشريطية."
           }
         },
         "az" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo qida və ştrix-kodları skan etmək üçün kameradan istifadə edir."
           }
         },
@@ -252,91 +252,91 @@
         },
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo verwendet die Kamera, um Lebensmittel und Barcodes zu scannen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ayuvo uses the camera to scan food and barcodes."
+            "value" : "Ayuvo uses the camera to scan food and barcodes, and to measure your pulse from your fingertip or face. Camera frames are processed on this device and are not saved."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo usa la cámara para escanear alimentos y códigos de barras."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo utilise l’appareil photo pour scanner les aliments et les codes-barres."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo भोजन और बारकोड स्कैन करने के लिए कैमरे का उपयोग करता है।"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo usa la fotocamera per scansionare alimenti e codici a barre."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvoは、食品やバーコードのスキャンにカメラを使用します。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo는 음식과 바코드를 스캔하기 위해 카메라를 사용합니다."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo gebruikt de camera om voedsel en barcodes te scannen."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo używa aparatu do skanowania żywności i kodów kreskowych."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "O Ayuvo usa a câmera para escanear alimentos e códigos de barras."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo folosește camera pentru a scana alimente și coduri de bare."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo использует камеру для сканирования продуктов и штрихкодов."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo використовує камеру для сканування продуктів и штрихкодов."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ayuvo 使用相机扫描食物和条形码。"
           }
         }

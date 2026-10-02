@@ -99,6 +99,9 @@ Import **replaces** the device profile when `profile` is present. Not carried: t
 | `derived_metrics_enabled` | bool | `derivedMetricsEnabled` (docs/derived-metrics.md) |
 | `derived_metrics_disabled` | string[] of derived metric ids, sorted, max 200 (unknown ids are kept and ignored) | `derivedMetricsDisabled` (iOS: array, Android: comma-separated) |
 | `derived_bmi_scheme` | `who` \| `asian` | `derivedBMIScheme` |
+| `vitals_keep_signals` | bool | `vitalsKeepSignals` (docs/camera-vitals.md) |
+| `vitals_experimental_enabled` | bool | `vitalsExperimentalEnabled` |
+| `vitals_research_enabled` | bool | `vitalsResearchEnabled` |
 
 Out of range or unknown values are ignored one by one. **Never carried:** notification and reminder switches and times (they differ per platform and need an OS grant), health-sync flags, AI provider/model/keys, speech provider, quick actions and Add-menu layout (different method sets), Records/medication/Coach preferences, onboarding state, widgets.
 

@@ -1,0 +1,2764 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.96,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [
+            885.9,
+            877.6,
+            856.6,
+            820.5,
+            860.7,
+            850.9,
+            881.9,
+            870.8,
+            845.6,
+            826.2,
+            869.6,
+            890.0,
+            848.7,
+            859.4,
+            826.4,
+            853.0,
+            890.7,
+            873.9,
+            827.0,
+            831.8,
+            863.9,
+            885.5,
+            852.9,
+            849.5,
+            828.0,
+            870.9,
+            879.2,
+            860.8,
+            832.0,
+            838.3,
+            866.4,
+            891.7,
+            865.4,
+            823.2,
+            818.0,
+            884.6,
+            870.1,
+            888.5,
+            826.2,
+            834.0,
+            870.2,
+            867.1,
+            871.7,
+            842.4,
+            827.9,
+            861.0,
+            881.2,
+            878.9,
+            818.4,
+            842.1,
+            876.5,
+            882.9,
+            882.1,
+            814.3,
+            846.0,
+            871.0,
+            885.3,
+            837.2,
+            840.9,
+            826.0,
+            891.0,
+            869.6,
+            851.6,
+            838.0,
+            847.9,
+            854.7,
+            897.0,
+            864.7,
+            824.9
+          ],
+          "ibi_quality": [
+            0.0,
+            0.95,
+            0.95,
+            0.95,
+            0.95,
+            0.96,
+            0.95,
+            0.93,
+            0.93,
+            0.95,
+            0.98,
+            0.9,
+            0.9,
+            0.88,
+            0.88,
+            0.86,
+            0.86,
+            0.86,
+            0.85,
+            0.85,
+            0.98,
+            0.93,
+            0.86,
+            0.86,
+            0.89,
+            0.89,
+            0.96,
+            0.93,
+            0.93,
+            0.97,
+            0.97,
+            0.96,
+            0.95,
+            0.95,
+            0.9,
+            0.9,
+            0.93,
+            0.84,
+            0.84,
+            0.85,
+            0.88,
+            0.88,
+            0.85,
+            0.85,
+            0.86,
+            0.86,
+            0.85,
+            0.83,
+            0.83,
+            0.94,
+            0.92,
+            0.9,
+            0.9,
+            0.94,
+            0.94,
+            0.96,
+            0.96,
+            0.97,
+            0.91,
+            0.91,
+            0.94,
+            0.94,
+            0.96,
+            0.96,
+            0.93,
+            0.93,
+            0.96,
+            0.91,
+            0.88
+          ],
+          "ibi_t_ms": [
+            1147.1,
+            2024.8,
+            2881.4,
+            3701.8,
+            4562.6,
+            5413.4,
+            6295.3,
+            7166.2,
+            8011.8,
+            8838.0,
+            9707.6,
+            10597.6,
+            11446.2,
+            12305.6,
+            13132.0,
+            13984.9,
+            14875.6,
+            15749.5,
+            16576.5,
+            17408.3,
+            18272.2,
+            19157.7,
+            20010.6,
+            20860.0,
+            21688.0,
+            22558.9,
+            23438.1,
+            24298.9,
+            25130.9,
+            25969.2,
+            26835.6,
+            27727.4,
+            28592.7,
+            29415.9,
+            30233.9,
+            31118.5,
+            31988.5,
+            32877.1,
+            33703.3,
+            34537.3,
+            35407.4,
+            36274.6,
+            37146.2,
+            37988.6,
+            38816.5,
+            39677.5,
+            40558.7,
+            41437.7,
+            42256.1,
+            43098.2,
+            43974.7,
+            44857.6,
+            45739.7,
+            46554.0,
+            47400.0,
+            48270.9,
+            49156.2,
+            49993.4,
+            50834.3,
+            51660.3,
+            52551.3,
+            53420.8,
+            54272.4,
+            55110.5,
+            55958.4,
+            56813.0,
+            57710.0,
+            58574.8,
+            59399.7
+          ]
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "research_off",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": 0.93,
+            "confidence_label": "high",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "bpm",
+            "value": 70.0
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "hf_nu": null,
+            "lf_nu": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.91,
+            "confidence_label": "high",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "%",
+            "value": 7.5
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.91,
+            "confidence_label": "high",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 30.5
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.91,
+            "confidence_label": "high",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 22.8
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.91,
+            "confidence_label": "high",
+            "count": 68,
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 856.7
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": 0.67,
+            "confidence_label": "medium",
+            "estimates": [
+              17.2,
+              14.1
+            ],
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "/min",
+            "value": 15.6
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "beats": 70,
+          "components": {
+            "agreement": 0.998,
+            "ibi": 0.986,
+            "motion": 1.0,
+            "signal": 1.0,
+            "snr": 0.692,
+            "template": 0.931
+          },
+          "gates": {},
+          "grade": "excellent",
+          "hr_beats_bpm": 70.0,
+          "hr_spectral_bpm": 70.1,
+          "masked_fraction": 0.0,
+          "method": "pca",
+          "method_snr_db": {
+            "chin": {
+              "chrom": -2.63,
+              "green": 0.6,
+              "ica": 1.3,
+              "normalized": -2.6,
+              "pca": 1.28,
+              "pos": -3.28
+            },
+            "forehead": {
+              "chrom": -8.45,
+              "green": -0.12,
+              "ica": -1.48,
+              "normalized": -7.52,
+              "pca": 1.36,
+              "pos": -7.63
+            },
+            "left_cheek": {
+              "chrom": -8.28,
+              "green": -0.22,
+              "ica": -0.71,
+              "normalized": -3.71,
+              "pca": 1.21,
+              "pos": -4.12
+            },
+            "nose": {
+              "chrom": -3.53,
+              "green": -0.05,
+              "ica": -0.65,
+              "normalized": -3.53,
+              "pca": 1.66,
+              "pos": -4.23
+            },
+            "right_cheek": {
+              "chrom": -8.45,
+              "green": -0.42,
+              "ica": 0.62,
+              "normalized": -3.11,
+              "pca": 1.42,
+              "pos": -3.46
+            }
+          },
+          "roi_weights": {
+            "chin": 0.195,
+            "forehead": 0.199,
+            "left_cheek": 0.192,
+            "nose": 0.213,
+            "right_cheek": 0.202
+          },
+          "rois": [
+            "chin",
+            "forehead",
+            "left_cheek",
+            "nose",
+            "right_cheek"
+          ],
+          "score": 92.6,
+          "snr_db": 4.92
+        },
+        "reject_reason": null
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "fs": 30,
+          "hr_bpm": 70,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 14,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 30,
+          "seed": 11
+        }
+      },
+      "name": "still_70"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.96,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [
+            1035.7,
+            1085.5,
+            1054.2,
+            1016.2,
+            991.6,
+            1029.2,
+            1046.5,
+            1065.5,
+            1060.2,
+            1000.5,
+            981.4,
+            1044.0,
+            1057.3,
+            1078.3,
+            1026.2,
+            1004.0,
+            1001.6,
+            1042.0,
+            1064.6,
+            1076.8,
+            1010.3,
+            1006.6,
+            1005.5,
+            1034.9,
+            1056.6,
+            1078.8,
+            1017.3,
+            1000.5,
+            1187.3,
+            3195.0,
+            818.4,
+            1014.6,
+            1002.0,
+            1039.1,
+            1071.3,
+            1062.0,
+            1011.3,
+            1001.5,
+            1035.1,
+            1039.6,
+            1083.1,
+            1037.9,
+            1013.2,
+            975.4,
+            1343.2,
+            740.9,
+            1088.9,
+            1035.6,
+            995.5,
+            998.3,
+            1037.7,
+            1062.7,
+            1071.0,
+            1019.2,
+            994.2
+          ],
+          "ibi_quality": [
+            0.87,
+            0.94,
+            0.93,
+            0.87,
+            0.87,
+            0.93,
+            0.93,
+            0.88,
+            0.88,
+            0.94,
+            0.89,
+            0.89,
+            0.95,
+            0.95,
+            0.96,
+            0.96,
+            0.91,
+            0.91,
+            0.91,
+            0.97,
+            0.95,
+            0.95,
+            0.93,
+            0.93,
+            0.93,
+            0.89,
+            0.89,
+            0.9,
+            0.0,
+            0.0,
+            0.0,
+            0.92,
+            0.93,
+            0.93,
+            0.96,
+            0.95,
+            0.95,
+            0.94,
+            0.93,
+            0.93,
+            0.85,
+            0.85,
+            0.88,
+            0.88,
+            0.0,
+            0.0,
+            0.95,
+            0.94,
+            0.94,
+            0.92,
+            0.92,
+            0.92,
+            0.91,
+            0.91,
+            0.94
+          ],
+          "ibi_t_ms": [
+            1336.9,
+            2422.4,
+            3476.6,
+            4492.9,
+            5484.5,
+            6513.7,
+            7560.2,
+            8625.8,
+            9686.0,
+            10686.5,
+            11667.9,
+            12711.9,
+            13769.3,
+            14847.6,
+            15873.9,
+            16877.9,
+            17879.5,
+            18921.5,
+            19986.1,
+            21062.9,
+            22073.2,
+            23079.7,
+            24085.2,
+            25120.1,
+            26176.7,
+            27255.4,
+            28272.8,
+            29273.3,
+            30460.6,
+            33655.6,
+            34473.9,
+            35488.5,
+            36490.6,
+            37529.6,
+            38600.9,
+            39662.9,
+            40674.3,
+            41675.8,
+            42710.9,
+            43750.6,
+            44833.7,
+            45871.6,
+            46884.8,
+            47860.2,
+            49203.4,
+            49944.3,
+            51033.2,
+            52068.7,
+            53064.2,
+            54062.6,
+            55100.3,
+            56163.0,
+            57234.0,
+            58253.2,
+            59247.4
+          ]
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "research_off",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": 0.8,
+            "confidence_label": "high",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "bpm",
+            "value": 58.1
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "hf_nu": null,
+            "lf_nu": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.74,
+            "confidence_label": "medium",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "%",
+            "value": 17.0
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.74,
+            "confidence_label": "medium",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 34.0
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.74,
+            "confidence_label": "medium",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 30.5
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.74,
+            "confidence_label": "medium",
+            "count": 50,
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 1033.2
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": 0.53,
+            "confidence_label": "low",
+            "estimates": [
+              6.0,
+              9.9
+            ],
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "/min",
+            "value": 7.9
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "beats": 56,
+          "components": {
+            "agreement": 0.978,
+            "ibi": 0.909,
+            "motion": 0.776,
+            "signal": 0.934,
+            "snr": 0.438,
+            "template": 0.931
+          },
+          "gates": {
+            "hold_still": 119
+          },
+          "grade": "good",
+          "hr_beats_bpm": 58.1,
+          "hr_spectral_bpm": 57.9,
+          "masked_fraction": 0.067,
+          "method": "pca",
+          "method_snr_db": {
+            "chin": {
+              "chrom": -4.39,
+              "green": -1.5,
+              "ica": -2.33,
+              "normalized": -4.43,
+              "pca": -0.24,
+              "pos": -8.85
+            },
+            "forehead": {
+              "chrom": -2.5,
+              "green": -0.33,
+              "ica": 0.29,
+              "normalized": -2.78,
+              "pca": 0.82,
+              "pos": -9.18
+            },
+            "left_cheek": {
+              "chrom": -8.15,
+              "green": -1.61,
+              "ica": -0.51,
+              "normalized": -8.32,
+              "pca": -0.18,
+              "pos": -8.44
+            },
+            "nose": {
+              "chrom": -2.88,
+              "green": -0.78,
+              "ica": -0.87,
+              "normalized": -2.52,
+              "pca": -0.3,
+              "pos": -3.17
+            },
+            "right_cheek": {
+              "chrom": -2.56,
+              "green": 0.16,
+              "ica": -1.35,
+              "normalized": -3.01,
+              "pca": 0.76,
+              "pos": -7.51
+            }
+          },
+          "roi_weights": {
+            "chin": 0.181,
+            "forehead": 0.231,
+            "left_cheek": 0.183,
+            "nose": 0.178,
+            "right_cheek": 0.227
+          },
+          "rois": [
+            "chin",
+            "forehead",
+            "left_cheek",
+            "nose",
+            "right_cheek"
+          ],
+          "score": 81.3,
+          "snr_db": 2.38
+        },
+        "reject_reason": null
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "events": [
+            {
+              "amp": 0.05,
+              "end_s": 34,
+              "kind": "motion",
+              "start_s": 30
+            }
+          ],
+          "fs": 30,
+          "hr_bpm": 58,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 10,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 40,
+          "seed": 13
+        }
+      },
+      "name": "brief_motion_masked"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.96,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [],
+          "ibi_quality": [],
+          "ibi_t_ms": []
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "motion",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "components": {
+            "signal": 0.5
+          },
+          "gates": {
+            "hold_still": 900
+          },
+          "grade": "poor",
+          "masked_fraction": 1.0,
+          "score": 0.0
+        },
+        "reject_reason": "motion"
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "events": [
+            {
+              "amp": 0.05,
+              "end_s": 40,
+              "kind": "motion",
+              "start_s": 10
+            }
+          ],
+          "fs": 30,
+          "hr_bpm": 80,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 14,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 20,
+          "seed": 12
+        }
+      },
+      "name": "motion_rejected"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.96,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [
+            1123.5,
+            681.1,
+            604.8,
+            892.4,
+            943.5,
+            924.6,
+            1158.8,
+            1179.7,
+            585.1,
+            1584.4,
+            748.4,
+            846.1,
+            867.7,
+            818.3,
+            777.3,
+            1418.9,
+            857.1,
+            1022.6,
+            683.9,
+            792.3,
+            844.9,
+            1350.2,
+            849.1,
+            595.7,
+            1288.7,
+            693.7,
+            734.7,
+            712.3,
+            724.1,
+            979.5,
+            1092.2,
+            611.1,
+            550.9,
+            908.1,
+            1322.6,
+            514.4,
+            489.6,
+            516.6,
+            1536.5,
+            1120.8,
+            974.4,
+            1089.1,
+            1185.4,
+            845.2,
+            1240.2,
+            731.9,
+            1028.2,
+            542.0,
+            1582.7,
+            875.2,
+            1840.5,
+            1193.1,
+            538.3,
+            777.0,
+            2384.0,
+            859.0,
+            701.9,
+            912.8,
+            1106.5,
+            803.3,
+            950.4,
+            963.5
+          ],
+          "ibi_quality": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ibi_t_ms": [
+            1369.7,
+            2050.9,
+            2655.7,
+            3548.1,
+            4491.6,
+            5416.2,
+            6574.9,
+            7754.6,
+            8339.7,
+            9924.1,
+            10672.6,
+            11518.7,
+            12386.4,
+            13204.6,
+            13981.9,
+            15400.8,
+            16257.9,
+            17280.5,
+            17964.4,
+            18756.7,
+            19601.7,
+            20951.9,
+            21801.0,
+            22396.7,
+            23685.4,
+            24379.1,
+            25113.8,
+            25826.1,
+            26550.2,
+            27529.7,
+            28621.9,
+            29233.0,
+            29783.9,
+            30692.0,
+            32014.6,
+            32529.0,
+            33018.6,
+            33535.2,
+            35071.7,
+            36192.6,
+            37166.9,
+            38256.0,
+            39441.4,
+            40286.6,
+            41526.8,
+            42258.7,
+            43287.0,
+            43828.9,
+            45411.6,
+            46286.8,
+            48127.4,
+            49320.5,
+            49858.8,
+            50635.8,
+            53019.8,
+            53878.8,
+            54580.7,
+            55493.5,
+            56600.1,
+            57403.4,
+            58353.8,
+            59317.3
+          ]
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "research_off",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "hf_nu": null,
+            "lf_nu": null,
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "count": 0,
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "estimates": [],
+            "reason": "low_quality",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "beats": 63,
+          "components": {
+            "agreement": 0.0,
+            "ibi": 0.0,
+            "motion": 1.0,
+            "signal": 1.0,
+            "snr": 0.0,
+            "template": 0.68
+          },
+          "gates": {},
+          "grade": "poor",
+          "hr_beats_bpm": null,
+          "hr_spectral_bpm": 75.1,
+          "masked_fraction": 0.0,
+          "method": "ica",
+          "method_snr_db": {
+            "chin": {
+              "chrom": -3.71,
+              "green": -3.22,
+              "ica": -2.78,
+              "normalized": -3.65,
+              "pca": -3.24,
+              "pos": -4.38
+            },
+            "forehead": {
+              "chrom": -4.84,
+              "green": -4.54,
+              "ica": -2.85,
+              "normalized": -8.84,
+              "pca": -4.08,
+              "pos": -4.49
+            },
+            "left_cheek": {
+              "chrom": -3.27,
+              "green": -3.03,
+              "ica": -3.07,
+              "normalized": -3.08,
+              "pca": -3.18,
+              "pos": -4.02
+            },
+            "nose": {
+              "chrom": -4.64,
+              "green": -8.7,
+              "ica": -2.73,
+              "normalized": -4.28,
+              "pca": -3.52,
+              "pos": -8.01
+            },
+            "right_cheek": {
+              "chrom": -8.81,
+              "green": -3.67,
+              "ica": -2.93,
+              "normalized": -8.91,
+              "pca": -2.48,
+              "pos": -4.06
+            }
+          },
+          "roi_weights": {
+            "chin": 0.252,
+            "forehead": 0.248,
+            "nose": 0.255,
+            "right_cheek": 0.244
+          },
+          "rois": [
+            "chin",
+            "forehead",
+            "nose",
+            "right_cheek"
+          ],
+          "score": 45.2,
+          "snr_db": -3.3
+        },
+        "reject_reason": null
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "fs": 30,
+          "hr_bpm": 75,
+          "illum": 0.02,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 16,
+          "rois": {
+            "chin": {
+              "ac": 0.0015,
+              "noise": 0.004
+            },
+            "forehead": {
+              "ac": 0.0015,
+              "noise": 0.004
+            },
+            "left_cheek": {
+              "ac": 0.0015,
+              "noise": 0.004
+            },
+            "nose": {
+              "ac": 0.0015,
+              "noise": 0.004
+            },
+            "right_cheek": {
+              "ac": 0.0015,
+              "noise": 0.004
+            }
+          },
+          "rsa_ms": 20,
+          "seed": 14
+        }
+      },
+      "name": "weak_signal"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.96,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [],
+          "ibi_quality": [],
+          "ibi_t_ms": []
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "components": {
+            "signal": 0.5
+          },
+          "gates": {
+            "face_multiple": 900
+          },
+          "grade": "poor",
+          "masked_fraction": 1.0,
+          "score": 0.0
+        },
+        "reject_reason": "no_face"
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "events": [
+            {
+              "amp": 0,
+              "end_s": 30,
+              "kind": "second_face",
+              "start_s": 0
+            }
+          ],
+          "fs": 30,
+          "hr_bpm": 70,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 14,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 30,
+          "seed": 15
+        }
+      },
+      "name": "second_face_rejected"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.96,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [],
+          "ibi_quality": [],
+          "ibi_t_ms": []
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "lighting",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "components": {
+            "signal": 0.417
+          },
+          "gates": {
+            "light_dark": 1050
+          },
+          "grade": "poor",
+          "masked_fraction": 0.585,
+          "score": 0.0
+        },
+        "reject_reason": "lighting"
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "events": [
+            {
+              "amp": 0,
+              "end_s": 40,
+              "kind": "dark",
+              "start_s": 5
+            }
+          ],
+          "fs": 30,
+          "hr_bpm": 70,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 14,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 30,
+          "seed": 16
+        }
+      },
+      "name": "dark_rejected"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.97,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [],
+          "ibi_quality": [],
+          "ibi_t_ms": []
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "no_face",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "components": {
+            "signal": 0.417
+          },
+          "gates": {
+            "face_angle": 1050
+          },
+          "grade": "poor",
+          "masked_fraction": 0.584,
+          "score": 0.0
+        },
+        "reject_reason": "no_face"
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "events": [
+            {
+              "amp": 0,
+              "end_s": 35,
+              "kind": "turn",
+              "start_s": 0
+            }
+          ],
+          "fs": 30,
+          "hr_bpm": 70,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 14,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 30,
+          "seed": 17
+        }
+      },
+      "name": "head_turned_rejected"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 59.97,
+        "frames": 1800,
+        "ibi": {
+          "ibi_ms": [
+            664.5,
+            616.2,
+            629.5,
+            641.5,
+            645.0,
+            601.1,
+            884.8,
+            396.6,
+            654.7,
+            791.0,
+            448.1,
+            1311.1,
+            733.5,
+            481.3,
+            637.1,
+            631.0,
+            602.0,
+            668.3,
+            635.4,
+            620.7,
+            724.5,
+            795.7,
+            383.6,
+            630.9,
+            632.2,
+            622.4,
+            633.2,
+            1262.4,
+            614.2,
+            644.9,
+            635.6,
+            603.2,
+            660.6,
+            622.0,
+            658.6,
+            767.8,
+            493.2,
+            602.6,
+            625.5,
+            649.6,
+            641.7,
+            613.0,
+            674.9,
+            576.4,
+            640.1,
+            633.9,
+            682.7,
+            611.8,
+            623.5,
+            609.7,
+            642.4,
+            628.2,
+            656.1,
+            638.3,
+            604.4,
+            610.6,
+            636.2,
+            651.7,
+            622.5,
+            639.7,
+            635.1,
+            651.9,
+            583.4,
+            653.3,
+            648.1,
+            609.0,
+            615.9,
+            606.0,
+            694.5,
+            652.8,
+            594.5,
+            623.7,
+            634.9,
+            640.6,
+            607.8,
+            641.4,
+            603.3,
+            651.5,
+            660.3,
+            635.9,
+            637.8,
+            591.9,
+            645.8,
+            647.1,
+            618.7,
+            637.7,
+            585.5,
+            680.8,
+            598.9,
+            666.1,
+            754.6,
+            781.6
+          ],
+          "ibi_quality": [
+            0.0,
+            0.0,
+            0.87,
+            0.86,
+            0.86,
+            0.9,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.84,
+            0.84,
+            0.88,
+            0.92,
+            0.87,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.88,
+            0.0,
+            0.0,
+            0.0,
+            0.86,
+            0.8,
+            0.8,
+            0.82,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.95,
+            0.88,
+            0.84,
+            0.83,
+            0.0,
+            0.0,
+            0.91,
+            0.81,
+            0.81,
+            0.89,
+            0.0,
+            0.0,
+            0.82,
+            0.0,
+            0.0,
+            0.97,
+            0.95,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.81,
+            0.81,
+            0.81,
+            0.0,
+            0.0,
+            0.89,
+            0.85,
+            0.85,
+            0.88,
+            0.0,
+            0.0,
+            0.91,
+            0.0,
+            0.0,
+            0.89,
+            0.88,
+            0.83,
+            0.83,
+            0.9,
+            0.8,
+            0.8,
+            0.83,
+            0.87,
+            0.87,
+            0.0,
+            0.0,
+            0.88,
+            0.0,
+            0.0,
+            0.92,
+            0.84,
+            0.8
+          ],
+          "ibi_t_ms": [
+            863.5,
+            1479.7,
+            2109.1,
+            2750.6,
+            3395.6,
+            3996.7,
+            4881.4,
+            5278.0,
+            5932.7,
+            6723.7,
+            7171.9,
+            8482.9,
+            9216.4,
+            9697.7,
+            10334.8,
+            10965.8,
+            11567.8,
+            12236.1,
+            12871.5,
+            13492.2,
+            14216.7,
+            15012.4,
+            15396.0,
+            16026.9,
+            16659.1,
+            17281.5,
+            17914.7,
+            19177.1,
+            19791.3,
+            20436.2,
+            21071.8,
+            21674.9,
+            22335.5,
+            22957.5,
+            23616.1,
+            24383.9,
+            24877.1,
+            25479.7,
+            26105.2,
+            26754.8,
+            27396.5,
+            28009.4,
+            28684.3,
+            29260.8,
+            29900.9,
+            30534.7,
+            31217.4,
+            31829.2,
+            32452.7,
+            33062.5,
+            33704.9,
+            34333.1,
+            34989.2,
+            35627.5,
+            36231.9,
+            36842.5,
+            37478.8,
+            38130.5,
+            38753.0,
+            39392.7,
+            40027.8,
+            40679.7,
+            41263.1,
+            41916.4,
+            42564.4,
+            43173.5,
+            43789.3,
+            44395.4,
+            45089.9,
+            45742.7,
+            46337.2,
+            46960.9,
+            47595.9,
+            48236.5,
+            48844.3,
+            49485.7,
+            50089.0,
+            50740.4,
+            51400.7,
+            52036.6,
+            52674.4,
+            53266.3,
+            53912.2,
+            54559.2,
+            55177.9,
+            55815.6,
+            56401.1,
+            57081.9,
+            57680.8,
+            58346.9,
+            59101.5,
+            59883.1
+          ]
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "research_off",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": 0.72,
+            "confidence_label": "medium",
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "bpm",
+            "value": 94.2
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "hf_nu": null,
+            "lf_nu": null,
+            "reason": "few_beats",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "few_beats",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "few_beats",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "few_beats",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": 0.39,
+            "confidence_label": "low",
+            "count": 47,
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "ms",
+            "value": 636.7
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": 0.59,
+            "confidence_label": "low",
+            "estimates": [
+              9.4,
+              11.9
+            ],
+            "reason": null,
+            "source": "face_rppg",
+            "status": "valid",
+            "unit": "/min",
+            "value": 10.7
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "beats": 93,
+          "components": {
+            "agreement": 0.884,
+            "ibi": 0.511,
+            "motion": 1.0,
+            "signal": 1.0,
+            "snr": 0.412,
+            "template": 0.836
+          },
+          "gates": {},
+          "grade": "good",
+          "hr_beats_bpm": 94.2,
+          "hr_spectral_bpm": 94.9,
+          "masked_fraction": 0.0,
+          "method": "pca",
+          "method_snr_db": {
+            "chin": {
+              "chrom": -3.14,
+              "green": -8.32,
+              "ica": -3.44,
+              "normalized": -2.99,
+              "pca": -2.47,
+              "pos": -9.41
+            },
+            "forehead": {
+              "chrom": -4.83,
+              "green": -1.19,
+              "ica": -1.47,
+              "normalized": -4.78,
+              "pca": -0.02,
+              "pos": -3.84
+            },
+            "left_cheek": {
+              "chrom": -5.95,
+              "green": -1.5,
+              "ica": -0.81,
+              "normalized": -6.01,
+              "pca": -0.54,
+              "pos": -4.59
+            },
+            "nose": {
+              "chrom": -4.28,
+              "green": -4.02,
+              "ica": -3.19,
+              "normalized": -4.65,
+              "pca": -3.13,
+              "pos": -5.65
+            },
+            "right_cheek": {
+              "chrom": -7.88,
+              "green": -2.85,
+              "ica": -2.0,
+              "normalized": -8.51,
+              "pca": -0.56,
+              "pos": -5.7
+            }
+          },
+          "roi_weights": {
+            "chin": 0.17,
+            "forehead": 0.3,
+            "left_cheek": 0.266,
+            "right_cheek": 0.264
+          },
+          "rois": [
+            "chin",
+            "forehead",
+            "left_cheek",
+            "right_cheek"
+          ],
+          "score": 76.7,
+          "snr_db": 2.12
+        },
+        "reject_reason": null
+      },
+      "input": {
+        "synth": {
+          "duration_s": 60,
+          "fs": 30,
+          "hr_bpm": 95,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 18,
+          "rois": {
+            "chin": {
+              "ac": 0.0005,
+              "noise": 0.008
+            },
+            "forehead": {
+              "ac": 0.005,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.001,
+              "noise": 0.006
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 10,
+          "seed": 18
+        }
+      },
+      "name": "uneven_rois_fast_95"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 19.96,
+        "frames": 600,
+        "ibi": {
+          "ibi_ms": [],
+          "ibi_quality": [],
+          "ibi_t_ms": []
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "components": {
+            "signal": 1.0
+          },
+          "gates": {},
+          "grade": "poor",
+          "masked_fraction": 0.0,
+          "score": 0.0
+        },
+        "reject_reason": "duration_short"
+      },
+      "input": {
+        "synth": {
+          "duration_s": 20,
+          "fs": 30,
+          "hr_bpm": 70,
+          "illum": 0.01,
+          "illum_hz": 0.3,
+          "jitter_ms": 4,
+          "resp_bpm": 14,
+          "rois": {
+            "chin": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "forehead": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "left_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "nose": {
+              "ac": 0.004,
+              "noise": 0.002
+            },
+            "right_cheek": {
+              "ac": 0.004,
+              "noise": 0.002
+            }
+          },
+          "rsa_ms": 30,
+          "seed": 19
+        }
+      },
+      "name": "short_20s"
+    },
+    {
+      "expected": {
+        "algorithm_version": 1,
+        "duration_s": 0.0,
+        "frames": 0,
+        "ibi": {
+          "ibi_ms": [],
+          "ibi_quality": [],
+          "ibi_t_ms": []
+        },
+        "metrics": {
+          "blood_pressure": {
+            "algorithm_version": 1,
+            "classification": "research",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "mmHg",
+            "value": null
+          },
+          "heart_rate": {
+            "algorithm_version": 1,
+            "classification": "measured",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "bpm",
+            "value": null
+          },
+          "hrv_lf_hf": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ratio",
+            "value": null
+          },
+          "hrv_pnn50": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          },
+          "hrv_rmssd": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "hrv_sdnn": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "ibi_mean": {
+            "algorithm_version": 1,
+            "classification": "calculated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "ms",
+            "value": null
+          },
+          "respiratory_rate": {
+            "algorithm_version": 1,
+            "classification": "estimated",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "duration_short",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "/min",
+            "value": null
+          },
+          "spo2": {
+            "algorithm_version": 1,
+            "classification": "experimental",
+            "confidence": null,
+            "confidence_label": null,
+            "reason": "face_not_supported",
+            "source": "face_rppg",
+            "status": "unavailable",
+            "unit": "%",
+            "value": null
+          }
+        },
+        "mode": "face_rppg",
+        "quality": {
+          "components": {
+            "signal": 0.0
+          },
+          "grade": "poor",
+          "masked_fraction": 0.0,
+          "score": 0.0
+        },
+        "reject_reason": "duration_short"
+      },
+      "input": {
+        "face": {
+          "face_count": [],
+          "face_fraction": [],
+          "luma": [],
+          "motion": [],
+          "pitch": [],
+          "rois": {},
+          "t_ms": [],
+          "yaw": []
+        }
+      },
+      "name": "no_frames"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "analyze_face",
+  "version": 1
+}

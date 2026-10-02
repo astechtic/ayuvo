@@ -1,0 +1,70 @@
+{
+  "cases": [
+    {
+      "expected": [
+        "ok",
+        "no_finger",
+        "pressure",
+        "no_finger",
+        "no_finger",
+        "no_finger"
+      ],
+      "input": {
+        "frames": [
+          [
+            0,
+            210,
+            60,
+            25,
+            8,
+            0.02
+          ],
+          [
+            33,
+            60,
+            55,
+            50,
+            45,
+            0.0
+          ],
+          [
+            66,
+            255,
+            80,
+            30,
+            6,
+            0.6
+          ],
+          [
+            99,
+            85,
+            30,
+            20,
+            8,
+            0.0
+          ],
+          [
+            133,
+            180,
+            110,
+            40,
+            8,
+            0.0
+          ],
+          [
+            166,
+            200,
+            70,
+            30,
+            50,
+            0.0
+          ]
+        ]
+      },
+      "name": "states"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "finger_detect",
+  "version": 1
+}

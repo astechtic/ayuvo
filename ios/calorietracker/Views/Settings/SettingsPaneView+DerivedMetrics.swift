@@ -6,6 +6,7 @@ extension SettingsPaneView {
     @ViewBuilder
     var derivedMetricsPane: some View {
         DerivedMetricsSettingsSection()
+        CameraMeasurementsSettingsSection()
     }
 }
 

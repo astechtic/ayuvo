@@ -253,6 +253,14 @@ class PreferencesStore(
     val derivedBmiScheme: Flow<String> = ds.data.map { if (it[Keys.DERIVED_BMI_SCHEME] == "asian") "asian" else "who" }
     suspend fun setDerivedBmiScheme(v: String) { ds.edit { it[Keys.DERIVED_BMI_SCHEME] = if (v == "asian") "asian" else "who" } }
 
+    /** Camera measurements (docs/camera-vitals.md §7.1 Settings): keep raw signals, experimental SpO₂, research BP. */
+    val vitalsKeepSignals: Flow<Boolean> = ds.data.map { it[Keys.VITALS_KEEP_SIGNALS] ?: true }
+    suspend fun setVitalsKeepSignals(v: Boolean) { ds.edit { it[Keys.VITALS_KEEP_SIGNALS] = v } }
+    val vitalsExperimentalEnabled: Flow<Boolean> = ds.data.map { it[Keys.VITALS_EXPERIMENTAL_ENABLED] ?: false }
+    suspend fun setVitalsExperimentalEnabled(v: Boolean) { ds.edit { it[Keys.VITALS_EXPERIMENTAL_ENABLED] = v } }
+    val vitalsResearchEnabled: Flow<Boolean> = ds.data.map { it[Keys.VITALS_RESEARCH_ENABLED] ?: false }
+    suspend fun setVitalsResearchEnabled(v: Boolean) { ds.edit { it[Keys.VITALS_RESEARCH_ENABLED] = v } }
+
     /** Opt-in "Your recovery is ready" morning notification (no values). */
     val insightsMorningNotification: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_MORNING_NOTIFICATION] ?: false }
     suspend fun setInsightsMorningNotification(v: Boolean) { ds.edit { it[Keys.INSIGHTS_MORNING_NOTIFICATION] = v } }
@@ -2184,6 +2192,9 @@ class PreferencesStore(
         val DAILY_MINUTE = intPreferencesKey("dailySummaryMinute")
         val INSIGHTS_ENABLED = booleanPreferencesKey("insightsEnabled")
         val DERIVED_METRICS_ENABLED = booleanPreferencesKey("derivedMetricsEnabled")
+        val VITALS_KEEP_SIGNALS = booleanPreferencesKey("vitalsKeepSignals")
+        val VITALS_EXPERIMENTAL_ENABLED = booleanPreferencesKey("vitalsExperimentalEnabled")
+        val VITALS_RESEARCH_ENABLED = booleanPreferencesKey("vitalsResearchEnabled")
         val DERIVED_METRICS_DISABLED = stringPreferencesKey("derivedMetricsDisabled")
         val DERIVED_BMI_SCHEME = stringPreferencesKey("derivedBMIScheme")
         val INSIGHTS_MORNING_NOTIFICATION = booleanPreferencesKey("insightsMorningNotification")

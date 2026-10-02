@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "action": "continue"
+      },
+      "input": {
+        "elapsed_s": 12,
+        "quality": null
+      },
+      "name": "early"
+    },
+    {
+      "expected": {
+        "action": "finish"
+      },
+      "input": {
+        "elapsed_s": 60,
+        "quality": 82
+      },
+      "name": "target_good"
+    },
+    {
+      "expected": {
+        "action": "extend"
+      },
+      "input": {
+        "elapsed_s": 61,
+        "quality": 55
+      },
+      "name": "target_poor_extend"
+    },
+    {
+      "expected": {
+        "action": "extend"
+      },
+      "input": {
+        "elapsed_s": 60,
+        "quality": null
+      },
+      "name": "target_unknown_extend"
+    },
+    {
+      "expected": {
+        "action": "finish"
+      },
+      "input": {
+        "elapsed_s": 90,
+        "quality": 40
+      },
+      "name": "max_reached"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "scan_control",
+  "version": 1
+}

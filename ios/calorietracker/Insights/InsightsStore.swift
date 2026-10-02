@@ -14,6 +14,8 @@ final class InsightsStore {
     private(set) var isLoading = false
     /// Health sync is on and Insights is enabled (the Summary section hides otherwise).
     private(set) var isAvailable = false
+    /// series → days filled from a finger camera scan (docs/camera-vitals.md §7), for the screens' footnotes.
+    private(set) var scanFallback: [String: Set<String>] = [:]
 
     @ObservationIgnored private var source: InsightsDataSource?
     @ObservationIgnored private var cachedKey: String?
@@ -40,6 +42,14 @@ final class InsightsStore {
     var patterns: [PatternResult] { report?.patterns ?? [] }
     var baselines: [InsightsMetricBaseline] { report?.baselines ?? [] }
 
+    /// Whether `series` took `day`'s value from a finger camera scan.
+    func isFromScan(_ series: String, day: String) -> Bool { scanFallback[series]?.contains(day) == true }
+
+    /// Days of `series` in `firstDay…lastDay` that came from a finger camera scan.
+    func scanDays(_ series: String, from firstDay: String, through lastDay: String) -> Int {
+        (scanFallback[series] ?? []).filter { $0 >= firstDay && $0 <= lastDay }.count
+    }
+
     func review(for day: String) -> DailyReviewResult? { report?.reviews[day] }
 
     /// Review days, newest first (today … 6 days ago).
@@ -54,6 +64,7 @@ final class InsightsStore {
         isAvailable = source.healthSyncEnabled && source.insightsEnabled
         guard isAvailable else {
             report = nil
+            scanFallback = [:]
             cachedKey = nil
             return
         }
@@ -74,6 +85,7 @@ final class InsightsStore {
                 HealthAnalyticsEngine.report(inputs: inputs, today: today, profile: profile, config: config)
             }.value
             self.report = report
+            self.scanFallback = inputs.scanFallback
             self.profile = profile
             self.cachedKey = key
         }
@@ -85,6 +97,7 @@ final class InsightsStore {
     /// Drops the cache (Insights switched off, data deleted).
     func invalidate() {
         report = nil
+        scanFallback = [:]
         cachedKey = nil
     }
 

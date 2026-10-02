@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Medication
+import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Restaurant
@@ -254,6 +255,21 @@ fun BrowseScreen(
                                     onClick = { onOpenTarget(domain.target) }
                                 )
                             }
+                        }
+                    }
+                }
+
+                // Camera measurements (docs/camera-vitals.md §7.1): Ayuvo's own scans, never Health Connect data.
+                item(key = "vitals") {
+                    InsetGroup {
+                        row {
+                            GroupRow(
+                                title = stringResource(R.string.camvitals_title),
+                                subtitle = stringResource(R.string.camvitals_browse_sub),
+                                modifier = Modifier.testTag("browse.row.cameraMeasurements"),
+                                leading = { CategoryIcon(Icons.Filled.MonitorHeart, AyuvoPalette.Heart) },
+                                onClick = { onOpenTarget("screen:vitals") }
+                            )
                         }
                     }
                 }
@@ -498,6 +514,7 @@ private fun featureIcon(id: String): ImageVector = when (id) {
     "records" -> Icons.Filled.Description
     "addRecord" -> Icons.AutoMirrored.Filled.NoteAdd
     "insights", "recovery", "healthAge", "dailyReview" -> Icons.Filled.Insights
+    "cameraMeasurements" -> Icons.Filled.MonitorHeart
     "coach" -> Icons.AutoMirrored.Filled.Chat
     "settings" -> Icons.Filled.Settings
     else -> Icons.Filled.Search
@@ -512,6 +529,7 @@ private fun featureColor(domain: BrowseFeatureDomain): Color = when (domain) {
     BrowseFeatureDomain.MEDICATIONS -> AyuvoPalette.Medications
     BrowseFeatureDomain.RECORDS -> AyuvoPalette.Records
     BrowseFeatureDomain.INSIGHTS -> com.ayuvo.health.ui.insights.InsightsFormat.Insights
+    BrowseFeatureDomain.VITALS -> AyuvoPalette.Heart
     BrowseFeatureDomain.COACH -> AyuvoPalette.Mindfulness
     BrowseFeatureDomain.SETTINGS -> AyuvoPalette.Other
 }

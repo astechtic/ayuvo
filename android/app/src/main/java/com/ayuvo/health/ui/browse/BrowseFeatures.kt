@@ -6,7 +6,7 @@ import java.text.Normalizer
 import java.util.Locale
 
 /** Colour family of a Browse feature result (matches the domain rows). */
-enum class BrowseFeatureDomain { ACTIVITY, NUTRITION, HYDRATION, FASTING, BODY, MEDICATIONS, RECORDS, INSIGHTS, COACH, SETTINGS }
+enum class BrowseFeatureDomain { ACTIVITY, NUTRITION, HYDRATION, FASTING, BODY, MEDICATIONS, RECORDS, INSIGHTS, VITALS, COACH, SETTINGS }
 
 /**
  * A place or action Browse search can open directly ("Features" section above the trends).
@@ -67,6 +67,9 @@ object BrowseFeatures {
             INSIGHTS + listOf("health age", "age", "vo2", "vo2 max", "fitness", "longevity", "pace")),
         BrowseFeature("dailyReview", R.string.browse_feature_daily_review, R.string.browse_feature_daily_review_sub, BrowseFeatureDomain.INSIGHTS,
             INSIGHTS + listOf("daily review", "review", "day score", "score", "summary", "reflection")),
+        // Camera measurements (docs/camera-vitals.md §7.1): finger PPG and face rPPG scans.
+        BrowseFeature("cameraMeasurements", R.string.camvitals_title, R.string.camvitals_browse_sub, BrowseFeatureDomain.VITALS,
+            listOf("camera", "measure", "measurement", "measurements", "pulse", "heart rate", "hrv", "ppg", "rppg", "finger", "face", "scan", "breathing", "respiratory")),
         BrowseFeature("coach", R.string.browse_feature_coach, R.string.browse_feature_coach_sub, BrowseFeatureDomain.COACH,
             listOf("coach", "ai", "chat", "ask", "assistant", "advice", "question", "questions", "help")),
         BrowseFeature("settings", R.string.browse_feature_settings, R.string.browse_feature_settings_sub, BrowseFeatureDomain.SETTINGS,

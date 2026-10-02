@@ -2287,6 +2287,226 @@
   "source": "089e1587f11b",
   "state": "needs_review"
  },
+ "c_vitals_classifications_calculated_about": {
+  "source": "2cd45196f93f",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_calculated_label": {
+  "source": "f0c43a07d1e8",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_estimated_about": {
+  "source": "b95075b66d09",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_estimated_label": {
+  "source": "aa910b41f65d",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_experimental_about": {
+  "source": "e0f184a699dc",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_experimental_label": {
+  "source": "0b287d59e49a",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_measured_about": {
+  "source": "64277c97b2a0",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_measured_label": {
+  "source": "ffc9e2697507",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_research_about": {
+  "source": "75f4a34577c0",
+  "state": "needs_review"
+ },
+ "c_vitals_classifications_research_label": {
+  "source": "8b37335cb34b",
+  "state": "needs_review"
+ },
+ "c_vitals_disclaimer": {
+  "source": "3c5920bcc5f8",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_face_angle": {
+  "source": "619aacbe8f6b",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_face_far": {
+  "source": "57ae7b93f6c5",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_face_multiple": {
+  "source": "c5973ce761fc",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_face_near": {
+  "source": "04e52ed90916",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_face_none": {
+  "source": "c7c5bc10e628",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_hold_still": {
+  "source": "2947e3e42399",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_light_bright": {
+  "source": "474b007a5a28",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_light_dark": {
+  "source": "4a59228a1b7e",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_no_finger": {
+  "source": "526f4b29d3e6",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_ok": {
+  "source": "797b6254402b",
+  "state": "needs_review"
+ },
+ "c_vitals_guidance_pressure": {
+  "source": "b154ad0354ed",
+  "state": "needs_review"
+ },
+ "c_vitals_indicator_bands_high_label": {
+  "source": "ea8643920df6",
+  "state": "needs_review"
+ },
+ "c_vitals_indicator_bands_low_label": {
+  "source": "b2c94190b68a",
+  "state": "needs_review"
+ },
+ "c_vitals_indicator_bands_typical_label": {
+  "source": "e1076361e1dc",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_blood_pressure_title": {
+  "source": "6d6ecdada3f4",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_heart_rate_title": {
+  "source": "1ca12393ee7f",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_hrv_lf_hf_title": {
+  "source": "7b97fe6181b3",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_hrv_pnn50_title": {
+  "source": "4c79b350838f",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_hrv_rmssd_title": {
+  "source": "96f6710517f3",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_hrv_sdnn_title": {
+  "source": "ca016322ab22",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_ibi_mean_title": {
+  "source": "468e5a9d34e0",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_recovery_indicator_title": {
+  "source": "ca9fca1889c4",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_respiratory_rate_title": {
+  "source": "826b0b7b9037",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_spo2_title": {
+  "source": "57c84c155ae9",
+  "state": "needs_review"
+ },
+ "c_vitals_metrics_stress_indicator_title": {
+  "source": "3b99b052392e",
+  "state": "needs_review"
+ },
+ "c_vitals_quality_grades_excellent_label": {
+  "source": "de54f6ff7973",
+  "state": "needs_review"
+ },
+ "c_vitals_quality_grades_fair_label": {
+  "source": "fb65a5c1a299",
+  "state": "needs_review"
+ },
+ "c_vitals_quality_grades_good_label": {
+  "source": "9463aeba4cea",
+  "state": "needs_review"
+ },
+ "c_vitals_quality_grades_poor_label": {
+  "source": "b597f09c91db",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_duration_short": {
+  "source": "a036f7bbd40b",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_experimental_off": {
+  "source": "9fc3af7e4f10",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_face_not_supported": {
+  "source": "9171f37bce3f",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_few_beats": {
+  "source": "621979289e94",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_lighting": {
+  "source": "37ef252a22c4",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_low_quality": {
+  "source": "aa38c9d355d4",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_motion": {
+  "source": "35d800f940b7",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_needs_calibration": {
+  "source": "d6738462a43f",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_no_face": {
+  "source": "b9fa80f85016",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_no_finger": {
+  "source": "6e28544d70fa",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_outside_calibration": {
+  "source": "8d3b3b70fd47",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_pressure": {
+  "source": "f80be6b4adfd",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_research_off": {
+  "source": "7b7a8917714c",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_resp_disagree": {
+  "source": "70e778beda68",
+  "state": "needs_review"
+ },
+ "c_vitals_reasons_short_history": {
+  "source": "96d0b3426616",
+  "state": "needs_review"
+ },
  "c_workout_disclaimer": {
   "source": "bb6d7616043e",
   "state": "needs_review"
@@ -2317,6 +2537,714 @@
  },
  "camera_error_save": {
   "source": "0df8be46ae65",
+  "state": "needs_review"
+ },
+ "camvitals_add_reference": {
+  "source": "1e1c294ed829",
+  "state": "needs_review"
+ },
+ "camvitals_analysing": {
+  "source": "e54b61314505",
+  "state": "needs_review"
+ },
+ "camvitals_baseline_14d": {
+  "source": "cec164067587",
+  "state": "needs_review"
+ },
+ "camvitals_baseline_30d": {
+  "source": "8d3184c100cd",
+  "state": "needs_review"
+ },
+ "camvitals_baseline_7d": {
+  "source": "c9a8e6e642dc",
+  "state": "needs_review"
+ },
+ "camvitals_baseline_all": {
+  "source": "9bf88b3e87d5",
+  "state": "needs_review"
+ },
+ "camvitals_baseline_hr": {
+  "source": "1ca12393ee7f",
+  "state": "needs_review"
+ },
+ "camvitals_baseline_rmssd": {
+  "source": "96f6710517f3",
+  "state": "needs_review"
+ },
+ "camvitals_baselines": {
+  "source": "ee72488e524c",
+  "state": "needs_review"
+ },
+ "camvitals_baselines_footer": {
+  "source": "649629fd7cd7",
+  "state": "needs_review"
+ },
+ "camvitals_browse_sub": {
+  "source": "9d4ec2f2e22a",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_bp_footer": {
+  "source": "bd98a09273b4",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_bp_header": {
+  "source": "0f27680fec2d",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_bp_off": {
+  "source": "a79355c68f7d",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_bp_row": {
+  "source": "66c5188208c3",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_delete_body": {
+  "source": "8ac5112a7496",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_delete_title": {
+  "source": "2373561c849c",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_expired": {
+  "source": "a28a51388869",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_gap": {
+  "source": "413058447b8b",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_how": {
+  "source": "a9940eb36717",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_intro": {
+  "source": "7e71cb5fdac2",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_none": {
+  "source": "546bf9e7dc3e",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_spo2_footer": {
+  "source": "99dcc5e77729",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_spo2_header": {
+  "source": "bb27e947051d",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_spo2_off": {
+  "source": "c734a6b60c85",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_spo2_row": {
+  "source": "a3ff2336a673",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_sub": {
+  "source": "e4369724e50f",
+  "state": "needs_review"
+ },
+ "camvitals_calibration_title": {
+  "source": "6df65649f653",
+  "state": "needs_review"
+ },
+ "camvitals_camera_error": {
+  "source": "9609db5d9aac",
+  "state": "needs_review"
+ },
+ "camvitals_cancel": {
+  "source": "ef133eb749a9",
+  "state": "needs_review"
+ },
+ "camvitals_compare": {
+  "source": "7c119fcb49d7",
+  "state": "needs_review"
+ },
+ "camvitals_compare_consistent": {
+  "source": "2a563ae521b4",
+  "state": "needs_review"
+ },
+ "camvitals_compare_detail_sub": {
+  "source": "e5c1e6394d36",
+  "state": "needs_review"
+ },
+ "camvitals_compare_difference": {
+  "source": "192ec137c557",
+  "state": "needs_review"
+ },
+ "camvitals_compare_footer": {
+  "source": "ec744b645b0e",
+  "state": "needs_review"
+ },
+ "camvitals_compare_incomplete": {
+  "source": "ed1ba0257420",
+  "state": "needs_review"
+ },
+ "camvitals_compare_inconsistent": {
+  "source": "beab8cf22572",
+  "state": "needs_review"
+ },
+ "camvitals_compare_intro_face": {
+  "source": "17474c17db46",
+  "state": "needs_review"
+ },
+ "camvitals_compare_intro_finger": {
+  "source": "b6098f005ff9",
+  "state": "needs_review"
+ },
+ "camvitals_compare_repeat": {
+  "source": "6d94bbf529a1",
+  "state": "needs_review"
+ },
+ "camvitals_compare_scans": {
+  "source": "590216aa9387",
+  "state": "needs_review"
+ },
+ "camvitals_compare_sub": {
+  "source": "6d580d9f240d",
+  "state": "needs_review"
+ },
+ "camvitals_compare_title": {
+  "source": "7c119fcb49d7",
+  "state": "needs_review"
+ },
+ "camvitals_compare_unlinked": {
+  "source": "f3acb4d533e8",
+  "state": "needs_review"
+ },
+ "camvitals_component_agreement": {
+  "source": "2ec7deac6f60",
+  "state": "needs_review"
+ },
+ "camvitals_component_ibi": {
+  "source": "3a37bc72f403",
+  "state": "needs_review"
+ },
+ "camvitals_component_motion": {
+  "source": "b26c0e97d3b9",
+  "state": "needs_review"
+ },
+ "camvitals_component_signal": {
+  "source": "d0fa11026089",
+  "state": "needs_review"
+ },
+ "camvitals_component_snr": {
+  "source": "0841a3e11e73",
+  "state": "needs_review"
+ },
+ "camvitals_component_template": {
+  "source": "d06b3540d9c7",
+  "state": "needs_review"
+ },
+ "camvitals_confidence_high": {
+  "source": "e8f4f46207c2",
+  "state": "needs_review"
+ },
+ "camvitals_confidence_low": {
+  "source": "6fbcbb9e8355",
+  "state": "needs_review"
+ },
+ "camvitals_confidence_medium": {
+  "source": "f83569c7ac50",
+  "state": "needs_review"
+ },
+ "camvitals_context": {
+  "source": "5ddbfa4ca2a8",
+  "state": "needs_review"
+ },
+ "camvitals_context_after_activity": {
+  "source": "15ca039832c1",
+  "state": "needs_review"
+ },
+ "camvitals_context_other": {
+  "source": "77e6700098d9",
+  "state": "needs_review"
+ },
+ "camvitals_context_resting": {
+  "source": "01f4ac46008d",
+  "state": "needs_review"
+ },
+ "camvitals_delete_all": {
+  "source": "ad3b942f6e13",
+  "state": "needs_review"
+ },
+ "camvitals_delete_all_body": {
+  "source": "2172c0cd0315",
+  "state": "needs_review"
+ },
+ "camvitals_delete_all_done": {
+  "source": "ed757dd5e551",
+  "state": "needs_review"
+ },
+ "camvitals_delete_all_title": {
+  "source": "20295ae5a612",
+  "state": "needs_review"
+ },
+ "camvitals_delete_scan": {
+  "source": "046fdf2aa1ac",
+  "state": "needs_review"
+ },
+ "camvitals_delete_scan_body": {
+  "source": "356a53a46a44",
+  "state": "needs_review"
+ },
+ "camvitals_delete_scan_title": {
+  "source": "92631c03b6aa",
+  "state": "needs_review"
+ },
+ "camvitals_details": {
+  "source": "e32297d7d620",
+  "state": "needs_review"
+ },
+ "camvitals_device": {
+  "source": "3d7cd1d8f41c",
+  "state": "needs_review"
+ },
+ "camvitals_discard": {
+  "source": "39fab6b4b49d",
+  "state": "needs_review"
+ },
+ "camvitals_done": {
+  "source": "d2cc2f560fe7",
+  "state": "needs_review"
+ },
+ "camvitals_duration": {
+  "source": "14961e3fe6ee",
+  "state": "needs_review"
+ },
+ "camvitals_edit_reference": {
+  "source": "b59d412242ab",
+  "state": "needs_review"
+ },
+ "camvitals_experimental": {
+  "source": "b46d8ffb0db1",
+  "state": "needs_review"
+ },
+ "camvitals_experimental_sub": {
+  "source": "689ba065d8d5",
+  "state": "needs_review"
+ },
+ "camvitals_extending": {
+  "source": "3f38cec74865",
+  "state": "needs_review"
+ },
+ "camvitals_face_scan": {
+  "source": "b4d90a89d91e",
+  "state": "needs_review"
+ },
+ "camvitals_face_step_1": {
+  "source": "27f5de5426fa",
+  "state": "needs_review"
+ },
+ "camvitals_face_step_2": {
+  "source": "99045e9d266a",
+  "state": "needs_review"
+ },
+ "camvitals_face_step_3": {
+  "source": "611639009f8e",
+  "state": "needs_review"
+ },
+ "camvitals_face_step_4": {
+  "source": "b387442186ee",
+  "state": "needs_review"
+ },
+ "camvitals_face_step_5": {
+  "source": "ff9f75a1c41a",
+  "state": "needs_review"
+ },
+ "camvitals_face_sub": {
+  "source": "8eee9fac656e",
+  "state": "needs_review"
+ },
+ "camvitals_finger_scan": {
+  "source": "f161a063356b",
+  "state": "needs_review"
+ },
+ "camvitals_finger_step_1": {
+  "source": "ccbcdfcd59a8",
+  "state": "needs_review"
+ },
+ "camvitals_finger_step_2": {
+  "source": "29f35358273c",
+  "state": "needs_review"
+ },
+ "camvitals_finger_step_3": {
+  "source": "cd189465796f",
+  "state": "needs_review"
+ },
+ "camvitals_finger_sub": {
+  "source": "75b139a6af09",
+  "state": "needs_review"
+ },
+ "camvitals_getting_ready": {
+  "source": "707c51907d70",
+  "state": "needs_review"
+ },
+ "camvitals_hide_details": {
+  "source": "5a8ff1d953a7",
+  "state": "needs_review"
+ },
+ "camvitals_history": {
+  "source": "a62150b4cc1c",
+  "state": "needs_review"
+ },
+ "camvitals_hr_trend": {
+  "source": "19d12bce7fe6",
+  "state": "needs_review"
+ },
+ "camvitals_hr_trend_footer": {
+  "source": "31e7095b8044",
+  "state": "needs_review"
+ },
+ "camvitals_indicator_footer": {
+  "source": "1fb953a166d1",
+  "state": "needs_review"
+ },
+ "camvitals_insights_scan_footnote": {
+  "source": "d83e55ce4fb4",
+  "state": "needs_review"
+ },
+ "camvitals_keep_signals": {
+  "source": "728d684909dd",
+  "state": "needs_review"
+ },
+ "camvitals_keep_signals_sub": {
+  "source": "3d40d73e8069",
+  "state": "needs_review"
+ },
+ "camvitals_latest": {
+  "source": "68b789929fc3",
+  "state": "needs_review"
+ },
+ "camvitals_measure": {
+  "source": "7be3cc2aa434",
+  "state": "needs_review"
+ },
+ "camvitals_measure_with_camera": {
+  "source": "81fbaf531677",
+  "state": "needs_review"
+ },
+ "camvitals_measure_with_camera_sub": {
+  "source": "0d59736c77d6",
+  "state": "needs_review"
+ },
+ "camvitals_metrics": {
+  "source": "b655587986da",
+  "state": "needs_review"
+ },
+ "camvitals_mode": {
+  "source": "b8cf854811fa",
+  "state": "needs_review"
+ },
+ "camvitals_mode_face": {
+  "source": "098a73190f30",
+  "state": "needs_review"
+ },
+ "camvitals_mode_finger": {
+  "source": "64e98dad2e63",
+  "state": "needs_review"
+ },
+ "camvitals_next_face_scan": {
+  "source": "fbaf449c9ca4",
+  "state": "needs_review"
+ },
+ "camvitals_no_scans_body": {
+  "source": "f2ac3f6a5ece",
+  "state": "needs_review"
+ },
+ "camvitals_no_scans_title": {
+  "source": "c9cb7ba61af3",
+  "state": "needs_review"
+ },
+ "camvitals_open_compare": {
+  "source": "48c402986e7b",
+  "state": "needs_review"
+ },
+ "camvitals_open_settings": {
+  "source": "9cad8cc0af6f",
+  "state": "needs_review"
+ },
+ "camvitals_paused": {
+  "source": "b2dcf48cdb75",
+  "state": "needs_review"
+ },
+ "camvitals_permission_body": {
+  "source": "51589d64b96a",
+  "state": "needs_review"
+ },
+ "camvitals_permission_title": {
+  "source": "7f539d197726",
+  "state": "needs_review"
+ },
+ "camvitals_privacy_note": {
+  "source": "2c8c1cba30b6",
+  "state": "needs_review"
+ },
+ "camvitals_reference_body": {
+  "source": "39f0d707b3ed",
+  "state": "needs_review"
+ },
+ "camvitals_reference_bp": {
+  "source": "6d6ecdada3f4",
+  "state": "needs_review"
+ },
+ "camvitals_reference_device": {
+  "source": "8dfd591b295c",
+  "state": "needs_review"
+ },
+ "camvitals_reference_device_hint": {
+  "source": "63c08b1b25c5",
+  "state": "needs_review"
+ },
+ "camvitals_reference_dia": {
+  "source": "e93b8dcfad7e",
+  "state": "needs_review"
+ },
+ "camvitals_reference_header": {
+  "source": "7e8bafc0f666",
+  "state": "needs_review"
+ },
+ "camvitals_reference_hr": {
+  "source": "1ca12393ee7f",
+  "state": "needs_review"
+ },
+ "camvitals_reference_invalid": {
+  "source": "12105703fdae",
+  "state": "needs_review"
+ },
+ "camvitals_reference_resp": {
+  "source": "826b0b7b9037",
+  "state": "needs_review"
+ },
+ "camvitals_reference_rmssd": {
+  "source": "96f6710517f3",
+  "state": "needs_review"
+ },
+ "camvitals_reference_spo2": {
+  "source": "57c84c155ae9",
+  "state": "needs_review"
+ },
+ "camvitals_reference_sys": {
+  "source": "e728a951ef94",
+  "state": "needs_review"
+ },
+ "camvitals_reference_title": {
+  "source": "7e8bafc0f666",
+  "state": "needs_review"
+ },
+ "camvitals_rejected_title": {
+  "source": "280781692a2f",
+  "state": "needs_review"
+ },
+ "camvitals_replay_note": {
+  "source": "4e9b7a568a0b",
+  "state": "needs_review"
+ },
+ "camvitals_research": {
+  "source": "ff5490bd30b2",
+  "state": "needs_review"
+ },
+ "camvitals_research_sub": {
+  "source": "5f03da191a0d",
+  "state": "needs_review"
+ },
+ "camvitals_results": {
+  "source": "a948051e2e33",
+  "state": "needs_review"
+ },
+ "camvitals_save": {
+  "source": "f9ad2294804e",
+  "state": "needs_review"
+ },
+ "camvitals_saved": {
+  "source": "d5854fe02617",
+  "state": "needs_review"
+ },
+ "camvitals_saved_next_face": {
+  "source": "c514ec461f96",
+  "state": "needs_review"
+ },
+ "camvitals_scan": {
+  "source": "de8836696109",
+  "state": "needs_review"
+ },
+ "camvitals_scan_gap_min": {
+  "source": "43cf99997f5f",
+  "state": "needs_review"
+ },
+ "camvitals_scan_missing": {
+  "source": "0bdaf321b50e",
+  "state": "needs_review"
+ },
+ "camvitals_score": {
+  "source": "0037cc486a3a",
+  "state": "needs_review"
+ },
+ "camvitals_seconds": {
+  "source": "730fc6bb655e",
+  "state": "needs_review"
+ },
+ "camvitals_settings_footer": {
+  "source": "838d295d4a56",
+  "state": "needs_review"
+ },
+ "camvitals_show_details": {
+  "source": "bce4763a8f35",
+  "state": "needs_review"
+ },
+ "camvitals_signal_chip": {
+  "source": "f4ef8e2d9ef8",
+  "state": "needs_review"
+ },
+ "camvitals_signal_quality": {
+  "source": "66e9df56a8ee",
+  "state": "needs_review"
+ },
+ "camvitals_start": {
+  "source": "edb270adf170",
+  "state": "needs_review"
+ },
+ "camvitals_title": {
+  "source": "f67e5622a156",
+  "state": "needs_review"
+ },
+ "camvitals_tools": {
+  "source": "bad4b6a5a7ee",
+  "state": "needs_review"
+ },
+ "camvitals_try_again": {
+  "source": "454b12ef6ba4",
+  "state": "needs_review"
+ },
+ "camvitals_unavailable": {
+  "source": "464e11f72196",
+  "state": "needs_review"
+ },
+ "camvitals_unit_bpm": {
+  "source": "005db40972bf",
+  "state": "needs_review"
+ },
+ "camvitals_unit_min": {
+  "source": "dedf2e6be8f2",
+  "state": "needs_review"
+ },
+ "camvitals_unit_mmhg": {
+  "source": "0a653de83bd2",
+  "state": "needs_review"
+ },
+ "camvitals_unit_ms": {
+  "source": "449f1a494714",
+  "state": "needs_review"
+ },
+ "camvitals_unit_per_min": {
+  "source": "2d2730784e5f",
+  "state": "needs_review"
+ },
+ "camvitals_use_bp_calibration": {
+  "source": "0efa909b97ee",
+  "state": "needs_review"
+ },
+ "camvitals_use_bp_calibration_sub": {
+  "source": "82fd291a77ce",
+  "state": "needs_review"
+ },
+ "camvitals_use_spo2_calibration": {
+  "source": "df791ad4eb9f",
+  "state": "needs_review"
+ },
+ "camvitals_use_spo2_calibration_sub": {
+  "source": "c6f8bad24c6e",
+  "state": "needs_review"
+ },
+ "camvitals_validation_bias": {
+  "source": "d0f02da7c414",
+  "state": "needs_review"
+ },
+ "camvitals_validation_bp_systolic": {
+  "source": "6c6d7989fc91",
+  "state": "needs_review"
+ },
+ "camvitals_validation_by_confidence": {
+  "source": "c8666daf72fe",
+  "state": "needs_review"
+ },
+ "camvitals_validation_conf_value": {
+  "source": "3c67822b2c51",
+  "state": "needs_review"
+ },
+ "camvitals_validation_confidence_unknown": {
+  "source": "5f6b0d151494",
+  "state": "needs_review"
+ },
+ "camvitals_validation_empty_body": {
+  "source": "990558bd8d14",
+  "state": "needs_review"
+ },
+ "camvitals_validation_empty_title": {
+  "source": "1fa4447ed553",
+  "state": "needs_review"
+ },
+ "camvitals_validation_export": {
+  "source": "c4b00ed70204",
+  "state": "needs_review"
+ },
+ "camvitals_validation_export_failed": {
+  "source": "70478f13e492",
+  "state": "needs_review"
+ },
+ "camvitals_validation_export_footer": {
+  "source": "42bf9ab2d647",
+  "state": "needs_review"
+ },
+ "camvitals_validation_failure": {
+  "source": "0e9e7c03c012",
+  "state": "needs_review"
+ },
+ "camvitals_validation_intro": {
+  "source": "07972261f357",
+  "state": "needs_review"
+ },
+ "camvitals_validation_loa": {
+  "source": "061174e7f64e",
+  "state": "needs_review"
+ },
+ "camvitals_validation_mae": {
+  "source": "efa0da7b44a4",
+  "state": "needs_review"
+ },
+ "camvitals_validation_n": {
+  "source": "6b886b3af811",
+  "state": "needs_review"
+ },
+ "camvitals_validation_r": {
+  "source": "dc4a6b7f9cff",
+  "state": "needs_review"
+ },
+ "camvitals_validation_rmse": {
+  "source": "873c70094bcd",
+  "state": "needs_review"
+ },
+ "camvitals_validation_sub": {
+  "source": "14e54ed1ec64",
+  "state": "needs_review"
+ },
+ "camvitals_validation_title": {
+  "source": "b8b16f7fd9fa",
+  "state": "needs_review"
+ },
+ "camvitals_validation_units": {
+  "source": "a41c141b8bc6",
+  "state": "needs_review"
+ },
+ "camvitals_waveform": {
+  "source": "3ffda13aaa58",
+  "state": "needs_review"
+ },
+ "camvitals_waveform_footer": {
+  "source": "90771c9e212f",
   "state": "needs_review"
  },
  "cd_add_food": {
@@ -4447,6 +5375,10 @@
   "source": "29d371af0e71",
   "state": "needs_review"
  },
+ "export_all_step_camera_vitals": {
+  "source": "f67e5622a156",
+  "state": "needs_review"
+ },
  "export_all_step_coach_chats": {
   "source": "91396c9d721d",
   "state": "needs_review"
@@ -6159,8 +7091,16 @@
   "source": "b655587986da",
   "state": "needs_review"
  },
+ "import_all_count_calibrations": {
+  "source": "e66a87d119f7",
+  "state": "needs_review"
+ },
  "import_all_count_days": {
   "source": "3ad5af0ee356",
+  "state": "needs_review"
+ },
+ "import_all_count_device_profiles": {
+  "source": "447ad80f0311",
   "state": "needs_review"
  },
  "import_all_count_dose_logs": {
@@ -6195,6 +7135,10 @@
   "source": "75efabdc3b5d",
   "state": "needs_review"
  },
+ "import_all_count_scans": {
+  "source": "590216aa9387",
+  "state": "needs_review"
+ },
  "import_all_count_schedules": {
   "source": "7eca8de47384",
   "state": "needs_review"
@@ -6205,6 +7149,10 @@
  },
  "import_all_count_settings": {
   "source": "1dfb67011cd3",
+  "state": "needs_review"
+ },
+ "import_all_count_signals": {
+  "source": "bf3699d4c8db",
   "state": "needs_review"
  },
  "import_all_count_types": {
@@ -6233,6 +7181,10 @@
  },
  "import_all_effect_app_backup": {
   "source": "a5ea6eb73603",
+  "state": "needs_review"
+ },
+ "import_all_effect_camera_vitals": {
+  "source": "72c231479aa1",
   "state": "needs_review"
  },
  "import_all_effect_coach_chats": {
@@ -6313,6 +7265,10 @@
  },
  "import_all_section_app_backup": {
   "source": "e6918fe2862b",
+  "state": "needs_review"
+ },
+ "import_all_section_camera_vitals": {
+  "source": "f67e5622a156",
   "state": "needs_review"
  },
  "import_all_section_coach_chats": {

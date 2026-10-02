@@ -1,0 +1,114 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "bias": 1.5,
+        "by_confidence": {
+          "high": {
+            "mae": 0.75,
+            "n": 4
+          },
+          "low": {
+            "mae": 6.0,
+            "n": 1
+          },
+          "medium": {
+            "mae": 2.0,
+            "n": 1
+          }
+        },
+        "failure_rate": 0.25,
+        "loa_high": 6.26,
+        "loa_low": -3.26,
+        "mae": 1.83,
+        "n": 6,
+        "r": 0.984,
+        "rmse": 2.68,
+        "sd": 2.43
+      },
+      "input": {
+        "failures": 2,
+        "pairs": [
+          {
+            "confidence": 0.92,
+            "measured": 67,
+            "reference": 66
+          },
+          {
+            "confidence": 0.88,
+            "measured": 71,
+            "reference": 70
+          },
+          {
+            "confidence": 0.55,
+            "measured": 80,
+            "reference": 74
+          },
+          {
+            "confidence": 0.81,
+            "measured": 62,
+            "reference": 63
+          },
+          {
+            "confidence": 0.7,
+            "measured": 90,
+            "reference": 88
+          },
+          {
+            "confidence": 0.95,
+            "measured": 58,
+            "reference": 58
+          }
+        ]
+      },
+      "name": "hr_pairs"
+    },
+    {
+      "expected": {
+        "bias": null,
+        "by_confidence": {},
+        "failure_rate": 0.0,
+        "loa_high": null,
+        "loa_low": null,
+        "mae": null,
+        "n": 1,
+        "r": null,
+        "rmse": null,
+        "sd": null
+      },
+      "input": {
+        "failures": 0,
+        "pairs": [
+          {
+            "confidence": 0.92,
+            "measured": 67,
+            "reference": 66
+          }
+        ]
+      },
+      "name": "single_pair"
+    },
+    {
+      "expected": {
+        "bias": null,
+        "by_confidence": {},
+        "failure_rate": null,
+        "loa_high": null,
+        "loa_low": null,
+        "mae": null,
+        "n": 0,
+        "r": null,
+        "rmse": null,
+        "sd": null
+      },
+      "input": {
+        "failures": 0,
+        "pairs": []
+      },
+      "name": "none"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "validation_stats",
+  "version": 1
+}

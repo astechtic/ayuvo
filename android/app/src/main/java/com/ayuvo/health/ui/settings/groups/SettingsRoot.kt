@@ -175,6 +175,7 @@ internal fun SettingsPageContent(ctx: SettingsPageContext, page: SettingsPage) {
         SettingsPage.ACTIVITY -> ActivityPage(ctx)
         SettingsPage.INSIGHTS -> InsightsSettingsPage(ctx)
         SettingsPage.DERIVED_METRICS -> DerivedMetricsSettingsPage(ctx)
+        SettingsPage.CAMERA_MEASUREMENTS -> CameraMeasurementsSettingsPage(ctx)
         SettingsPage.MEDICATIONS -> MedicationsSettingsPage(ctx)
         SettingsPage.NOTIFICATIONS -> NotificationsPage(ctx)
         SettingsPage.HEALTH_SYNC -> HealthSyncPage(ctx)

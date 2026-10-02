@@ -176,13 +176,16 @@ class ChatService(
         /** The saved model this conversation is pinned to (docs/ai-models.md §8). */
         profileOverride: String? = null,
         /** Catalog action tools (docs/actions.md); null keeps Coach's own tools only. */
-        actions: com.ayuvo.health.actions.CoachActionTools? = null
+        actions: com.ayuvo.health.actions.CoachActionTools? = null,
+        /** Recent camera scans (docs/camera-vitals.md §7, [com.ayuvo.health.vitals.session.CoachCameraScans]); part of the health source. */
+        cameraScanLines: List<String> = emptyList()
     ): CoachReply {
         // A switch that is off removes the source before the prompt or the tools see it, so nothing
         // downstream has to remember to check again.
         @Suppress("NAME_SHADOWING") val records = records?.takeIf { sources.isOn(CoachSource.RECORDS) }
         @Suppress("NAME_SHADOWING") val medications = medications?.takeIf { sources.isOn(CoachSource.MEDICATIONS) }
         @Suppress("NAME_SHADOWING") val healthSnapshot = healthSnapshot?.takeIf { sources.isOn(CoachSource.HEALTH) }
+        val cameraLines = if (sources.isOn(CoachSource.HEALTH)) cameraScanLines else emptyList()
         val baseSystemPrompt = buildSystemPrompt(
             profile = profile,
             weights = weights,
@@ -199,6 +202,7 @@ class ChatService(
             recordsLines = records?.let(::recordsDataLines).orEmpty()
                 + medicationsDataLines(medications, newUserMessage)
                 + chartPromptLines()
+                + cameraLines
         )
         val userContext = prefs.userContext.first()
         val systemPrompt = if (userContext.isNotBlank())
@@ -211,7 +215,7 @@ class ChatService(
                 profile = profile, weights = weights, bodyFats = bodyFats, measurements = measurements, foods = foods,
                 fastingSessions = fastingSessions, heightMetric = heightMetric, weightMetric = weightMetric,
                 workoutSessions = workoutSessions, workoutPlans = workoutPlans, healthSnapshot = healthSnapshot,
-                healthHubEnabled = healthHubEnabled
+                healthHubEnabled = healthHubEnabled, recordsLines = cameraLines
             )
             if (userContext.isNotBlank()) "$base\n\n## User-provided context\n$userContext" else base
         }

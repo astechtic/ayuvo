@@ -1,0 +1,199 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "confidence": 0.91,
+        "reason": null,
+        "value": 96.7
+      },
+      "input": {
+        "calibrations": [
+          {
+            "ratio": 0.6,
+            "spo2": 99
+          },
+          {
+            "ratio": 0.63,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.66,
+            "spo2": 97
+          },
+          {
+            "ratio": 0.69,
+            "spo2": 96
+          },
+          {
+            "ratio": 0.72,
+            "spo2": 95
+          },
+          {
+            "ratio": 0.75,
+            "spo2": 94.5
+          }
+        ],
+        "quality": 95,
+        "ratio": 0.67
+      },
+      "name": "calibrated"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "reason": "needs_calibration",
+        "value": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "ratio": 0.6,
+            "spo2": 99
+          },
+          {
+            "ratio": 0.63,
+            "spo2": 98
+          }
+        ],
+        "quality": 95,
+        "ratio": 0.67
+      },
+      "name": "needs_calibration"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "reason": "outside_calibration",
+        "value": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "ratio": 0.6,
+            "spo2": 99
+          },
+          {
+            "ratio": 0.63,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.66,
+            "spo2": 97
+          },
+          {
+            "ratio": 0.69,
+            "spo2": 96
+          },
+          {
+            "ratio": 0.72,
+            "spo2": 95
+          },
+          {
+            "ratio": 0.75,
+            "spo2": 94.5
+          }
+        ],
+        "quality": 95,
+        "ratio": 0.95
+      },
+      "name": "outside_range"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "reason": "low_quality",
+        "value": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "ratio": 0.6,
+            "spo2": 99
+          },
+          {
+            "ratio": 0.63,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.66,
+            "spo2": 97
+          },
+          {
+            "ratio": 0.69,
+            "spo2": 96
+          },
+          {
+            "ratio": 0.72,
+            "spo2": 95
+          },
+          {
+            "ratio": 0.75,
+            "spo2": 94.5
+          }
+        ],
+        "quality": 40,
+        "ratio": null
+      },
+      "name": "no_ratio"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "reason": "needs_calibration",
+        "value": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "ratio": 0.6,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.6,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.6,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.6,
+            "spo2": 98
+          }
+        ],
+        "quality": 95,
+        "ratio": 0.6
+      },
+      "name": "flat_calibration"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "reason": "low_quality",
+        "value": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "ratio": 0.6,
+            "spo2": 99
+          },
+          {
+            "ratio": 0.63,
+            "spo2": 98
+          },
+          {
+            "ratio": 0.66,
+            "spo2": 97
+          }
+        ],
+        "quality": 90,
+        "ratio": 0.64
+      },
+      "name": "few_calibrations_low_confidence"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "spo2_estimate",
+  "version": 1
+}

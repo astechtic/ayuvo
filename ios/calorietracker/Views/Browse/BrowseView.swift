@@ -56,6 +56,15 @@ struct BrowseView: View {
                         }
                     }
 
+                    // Camera measurements (docs/camera-vitals.md §7.1): Ayuvo's own scans, next to the domains.
+                    Section {
+                        NavigationLink(value: BrowseRoute.vitals) {
+                            MetricRow(systemImage: "waveform.path.ecg", tint: AyuvoPalette.heart,
+                                      title: String(localized: "Camera measurements"), subtitle: vitalsSubtitle)
+                        }
+                        .accessibilityIdentifier("browse.row.cameraMeasurements")
+                    }
+
                     Section {
                         BrowseHealthStatusRow()
                     } footer: {
@@ -95,6 +104,7 @@ struct BrowseView: View {
                 await derivedStore.refresh(pinned: store.pinnedTypeIDs, calendar: store.calendar)
             }
             .task {
+                if !VitalsStore.shared.hasLoaded { await VitalsStore.shared.reload() }
                 if store.isEnabled, store.needsGrant == nil {
                     await store.refreshAuthorizationStatus()
                 }
@@ -144,6 +154,16 @@ struct BrowseView: View {
             if withData == 0 { return String(localized: "No data yet") }
             return String(localized: "\(withData) data types", comment: "Browse: health data subtitle")
         }
+    }
+
+    /// The latest scan's heart rate, or what the screen does.
+    private var vitalsSubtitle: String {
+        let store = VitalsStore.shared
+        if let latest = store.scans.first, let hr = VitalsTrend.validValue(latest, "heart_rate") {
+            let date = Date(timeIntervalSince1970: Double(latest.startMs) / 1000)
+            return String(localized: "\(Int(hr.rounded())) bpm · \(date.formatted(.relative(presentation: .named)))")
+        }
+        return String(localized: "Measure your pulse with your fingertip or face")
     }
 
     // MARK: Search

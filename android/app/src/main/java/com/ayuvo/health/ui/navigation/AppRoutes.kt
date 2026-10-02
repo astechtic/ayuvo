@@ -77,6 +77,28 @@ object AppRoutes {
     const val INSIGHTS_TRENDS = "insights/trends"
     const val INSIGHTS_PATTERNS = "insights/patterns"
 
+    // Camera measurements (docs/camera-vitals.md §7.1): shared destinations opened from Summary, Browse and metric detail.
+    const val MEASURE_HOME = "measure/home"
+    const val MEASURE_MODE_ARG = "mode"
+    const val MEASURE_SESSION_ARG = "session"
+    /** One scan flow; `mode` = finger | face, optional `session` links a compare pair. */
+    const val MEASURE_SCAN = "measure/scan/{$MEASURE_MODE_ARG}?$MEASURE_SESSION_ARG={$MEASURE_SESSION_ARG}"
+    const val MEASURE_SCAN_ID_ARG = "scanId"
+    /** A saved scan; the id (`local:<uuid>`) is URL-encoded. */
+    const val MEASURE_DETAIL = "measure/detail/{$MEASURE_SCAN_ID_ARG}"
+    /** Compare screen of a finger + face pair (docs/camera-vitals.md §6); `session` is the shared session id. */
+    const val MEASURE_COMPARE = "measure/compare/{$MEASURE_SESSION_ARG}"
+    const val MEASURE_VALIDATION = "measure/validation"
+    const val MEASURE_CALIBRATION = "measure/calibration"
+
+    fun measureScan(mode: String, sessionId: String? = null): String =
+        if (sessionId == null) "measure/scan/$mode" else "measure/scan/$mode?$MEASURE_SESSION_ARG=" + URLEncoder.encode(sessionId, "UTF-8")
+    fun measureDetail(scanId: String): String = "measure/detail/" + URLEncoder.encode(scanId, "UTF-8").replace("+", "%20")
+    fun measureCompare(sessionId: String): String = "measure/compare/" + URLEncoder.encode(sessionId, "UTF-8").replace("+", "%20")
+
+    /** Full-screen flows that hide the tab bar (the live camera scan). */
+    fun isImmersiveRoute(route: String?): Boolean = route?.startsWith("measure/scan/") == true
+
     fun insightsReview(day: java.time.LocalDate? = null): String =
         if (day == null) "insights/review" else "insights/review?$INSIGHTS_DAY_ARG=$day"
 
@@ -105,12 +127,12 @@ object AppRoutes {
 
     val bottomTabs = listOf(SUMMARY, BROWSE, RECORDS, COACH, SETTINGS)
 
-    /** Destinations reachable from several tabs: metric/health details, workouts, medications. */
+    /** Destinations reachable from several tabs: metric/health details, workouts, medications, camera measurements. */
     fun isSharedRoute(route: String?): Boolean = route != null && (
         route.startsWith("metric/") || route.startsWith("health/") ||
             route == MEDICATIONS || route.startsWith("medications/") ||
             route == INSIGHTS || route.startsWith("insights/") ||
-            route.startsWith("workouts/")
+            route.startsWith("workouts/") || route.startsWith("measure/")
         )
 
     /** The tab that owns [route] by itself; null for shared destinations and unknown routes. */

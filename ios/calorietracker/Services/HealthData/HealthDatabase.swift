@@ -79,7 +79,7 @@ actor HealthDatabase {
 
     /// Idempotent: creates missing tables/indexes and stamps the version rows. Every
     /// migration so far only adds tables (v2 `derived_daily_values`, v3 the Google Health
-    /// tables), so `CREATE … IF NOT EXISTS` is the whole upgrade path.
+    /// tables, v4 the camera-vitals tables), so `CREATE … IF NOT EXISTS` is the whole upgrade path.
     func applySchema() throws {
         try connection.inTransaction {
             try connection.exec(HealthSchema.idempotentDDL)

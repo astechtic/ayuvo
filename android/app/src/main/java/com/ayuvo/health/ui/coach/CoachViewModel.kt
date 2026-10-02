@@ -590,7 +590,8 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                 sources = _ui.value.dataSwitches,
                 providerOverride = providerOverride,
                 profileOverride = modelOverride.profileId,
-                actions = CoachActionTools(container.actions)
+                actions = CoachActionTools(container.actions),
+                cameraScanLines = cameraScanLines()
             )
         }
 
@@ -602,6 +603,19 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     // -- Attachments and data sources (docs/coach.md §3, §6, §8) ----------------------------------
+
+    /**
+     * Recent valid camera scans for the prompt (docs/camera-vitals.md §7): last 7 days, at most 5; SpO₂ / BP only
+     * while their estimate toggles are on, always labelled. Never opens the health database just to look.
+     */
+    private suspend fun cameraScanLines(): List<String> = runCatching {
+        if (!container.appContext.getDatabasePath(com.ayuvo.health.data.health.HealthDatabase.NAME).exists()) return@runCatching emptyList()
+        val now = System.currentTimeMillis()
+        val scans = container.vitalScans.scans(null, now - com.ayuvo.health.vitals.session.CoachCameraScans.WINDOW_DAYS * 86_400_000L, now + 1)
+        com.ayuvo.health.vitals.session.CoachCameraScans.promptLines(
+            scans, now, container.prefs.vitalsExperimentalEnabled.first(), container.prefs.vitalsResearchEnabled.first(), container.vitalsConfig
+        )
+    }.getOrDefault(emptyList())
 
     /** Built per turn; null when the user has no medicines or has not turned the source on. */
     private suspend fun medicationsContext(): CoachMedicationsContext? {

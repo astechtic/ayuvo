@@ -1,0 +1,202 @@
+{
+  "algo_version": 1,
+  "classifications": {
+    "calculated": {"label": "Calculated", "about": "Mathematically derived from the measured pulse signal."},
+    "estimated": {"label": "Estimated", "about": "Derived by an algorithm from the pulse signal."},
+    "experimental": {"label": "Experimental", "about": "Not sufficiently validated. Treat as a rough camera estimate."},
+    "measured": {"label": "Measured", "about": "Obtained directly from the camera pulse signal."},
+    "research": {"label": "Research", "about": "Research model that needs your own calibration against a validated device. Not a measurement."}
+  },
+  "baseline": {
+    "min_n": 3,
+    "windows_days": [7, 14, 30, null]
+  },
+  "compare": {
+    "max_hr_diff_bpm": 5,
+    "max_rmssd_diff_ms": 15,
+    "max_session_gap_s": 180
+  },
+  "config_version": 1,
+  "device_overrides": {},
+  "disclaimer": "Camera measurements are for general wellness. They are not a medical measurement or diagnosis.",
+  "face": {
+    "gates": {
+      "luma_max": 235,
+      "luma_min": 40,
+      "max_masked_fraction": 0.3,
+      "max_motion": 0.04,
+      "max_pitch_deg": 20,
+      "max_yaw_deg": 20,
+      "max_face_fraction": 0.75,
+      "min_face_fraction": 0.2,
+      "min_skin_fraction": 0.5
+    },
+    "methods": ["green", "normalized", "chrom", "pos", "pca", "ica"],
+    "min_roi_snr_db": -3.0,
+    "pos_window_s": 1.6,
+    "rois": ["forehead", "left_cheek", "right_cheek", "nose", "chin"]
+  },
+  "finger": {
+    "max_masked_fraction": 0.2,
+    "max_saturated_fraction": 0.35,
+    "max_spatial_std": 40,
+    "min_red": 90,
+    "min_red_green_ratio": 1.8,
+    "step_jump_fraction": 0.08
+  },
+  "format": "ayuvo-vitals-config",
+  "guidance": {
+    "face_angle": "Face the camera straight on.",
+    "face_far": "Move a little closer.",
+    "face_multiple": "Make sure only one face is in view.",
+    "face_near": "Move a little further away.",
+    "face_none": "Position your face inside the oval.",
+    "hold_still": "Hold still and avoid talking.",
+    "light_bright": "The light is too bright. Avoid direct sunlight on your face.",
+    "light_dark": "Find brighter, even lighting.",
+    "no_finger": "Cover the rear camera and flash completely with your fingertip.",
+    "ok": "Good signal. Keep still.",
+    "pressure": "Press more lightly. Your fingertip is pressing too hard."
+  },
+  "hrv": {
+    "freq_grid_step_hz": 0.005,
+    "freq_min_s": 120,
+    "hf_band": [0.15, 0.4],
+    "lf_band": [0.04, 0.15],
+    "min_accepted_fraction": 0.8,
+    "min_beats": 30,
+    "min_quality": {"face_rppg": 75, "finger_ppg": 65},
+    "min_s": 55
+  },
+  "insights_fallback": {
+    "contexts": ["resting"],
+    "min_quality": 70,
+    "mode": "finger_ppg"
+  },
+  "ibi": {
+    "max_ms": 2000,
+    "max_rel_deviation": 0.2,
+    "median_window": 5,
+    "min_ms": 300,
+    "min_template_corr": 0.8
+  },
+  "indicator": {
+    "bands": [
+      {"id": "low", "label": "Below your usual", "min": 0},
+      {"id": "typical", "label": "Within your usual range", "min": 35},
+      {"id": "high", "label": "Above your usual", "min": 65}
+    ],
+    "hr_weight": 0.4,
+    "hrv_weight": 0.6,
+    "min_history": 5,
+    "min_spread_hr": 2.0,
+    "min_spread_ln_rmssd": 0.1,
+    "scale": 15,
+    "window_days": 30
+  },
+  "metrics": [
+    {"classification": "measured", "id": "heart_rate", "title": "Heart rate", "unit": "bpm"},
+    {"classification": "calculated", "id": "ibi_mean", "title": "Mean pulse interval", "unit": "ms"},
+    {"classification": "calculated", "id": "hrv_rmssd", "title": "HRV (RMSSD)", "unit": "ms"},
+    {"classification": "calculated", "id": "hrv_sdnn", "title": "HRV (SDNN)", "unit": "ms"},
+    {"classification": "calculated", "id": "hrv_pnn50", "title": "pNN50", "unit": "%"},
+    {"classification": "experimental", "id": "hrv_lf_hf", "title": "LF/HF ratio", "unit": "ratio"},
+    {"classification": "estimated", "id": "respiratory_rate", "title": "Respiratory rate", "unit": "/min"},
+    {"classification": "experimental", "id": "spo2", "title": "SpO₂", "unit": "%"},
+    {"classification": "research", "id": "blood_pressure", "title": "Blood pressure", "unit": "mmHg"},
+    {"classification": "estimated", "id": "recovery_indicator", "title": "Recovery indicator", "unit": "score"},
+    {"classification": "estimated", "id": "stress_indicator", "title": "Physiological stress indicator", "unit": "score"}
+  ],
+  "quality": {
+    "grades": [
+      {"id": "poor", "label": "Poor", "min": 0},
+      {"id": "fair", "label": "Fair", "min": 50},
+      {"id": "good", "label": "Good", "min": 70},
+      {"id": "excellent", "label": "Excellent", "min": 85}
+    ],
+    "hr_agreement_bpm": 6,
+    "min_hr_quality": 45,
+    "min_resp_quality": 60,
+    "snr_db_high": 8.0,
+    "snr_db_low": -2.0,
+    "weights": {
+      "agreement": 0.15,
+      "ibi": 0.15,
+      "motion": 0.15,
+      "signal": 0.2,
+      "snr": 0.2,
+      "template": 0.15
+    }
+  },
+  "reasons": {
+    "duration_short": "The recording was too short for this value.",
+    "experimental_off": "Experimental estimates are turned off in Settings.",
+    "face_not_supported": "Face scans can't estimate this value.",
+    "few_beats": "Not enough clean pulse beats were detected.",
+    "lighting": "The lighting was not suitable.",
+    "low_quality": "Signal quality was too low.",
+    "motion": "There was too much movement.",
+    "needs_calibration": "Needs your own calibration against a validated device first.",
+    "no_face": "A single face was not detected for long enough.",
+    "no_finger": "The fingertip did not cover the camera for long enough.",
+    "outside_calibration": "The signal is outside the range you calibrated.",
+    "pressure": "The fingertip pressed too hard, so the camera was overexposed.",
+    "research_off": "Research estimates are turned off in Settings.",
+    "resp_disagree": "The breathing signals did not agree.",
+    "short_history": "Needs at least 5 earlier scans of the same type."
+  },
+  "research": {
+    "bp_calibration_max_age_days": 30,
+    "bp_calibration_max_gap_min": 5,
+    "bp_max_abs_z": 3.0,
+    "bp_features":["rise_ms", "decay_ms", "width50_ms", "width25_ms", "hr"],
+    "bp_min_calibrations": 3,
+    "bp_ridge_lambda": 1.0,
+    "spo2_channels": ["r", "g"],
+    "spo2_max_r_margin": 0.1,
+    "spo2_min_calibrations": 3,
+    "spo2_min_quality": 70,
+    "spo2_range": [80, 100]
+  },
+  "respiration": {
+    "agreement_per_min": 4.0,
+    "band_hz": [0.1, 0.5],
+    "grid_step_hz": 0.005,
+    "min_s": 30,
+    "resample_hz": 4
+  },
+  "scan": {
+    "extend_below_quality": 70,
+    "max_s": 90,
+    "min_s": 30,
+    "target_s": 60
+  },
+  "signal": {
+    "artifact_rms_factor": 2.5,
+    "artifact_window_s": 2.0,
+    "detrend_window_s": 1.5,
+    "fs": 30,
+    "hr_band_hz": [0.7, 3.5],
+    "max_gap_ms": 250,
+    "peak_refractory_s": 0.33,
+    "peak_window_s": 0.111,
+    "refractory_fraction": 0.6,
+    "beat_window_s": 0.667,
+    "peak_offset": 0.02,
+    "spectrum_step_hz": 0.0166667,
+    "welch_segment_s": 10,
+    "welch_overlap": 0.5
+  },
+  "sources": {
+    "chrom": "de Haan G, Jeanne V. Robust pulse rate from chrominance-based rPPG. IEEE Trans Biomed Eng 2013;60:2878-2886.",
+    "elgendi": "Elgendi M et al. Systolic peak detection in acceleration photoplethysmograms measured from emergency responders in tropical conditions. PLoS One 2013;8:e76585.",
+    "hrv": "Task Force of the ESC and NASPE. Heart rate variability: standards of measurement. Circulation 1996;93:1043-1065; Shaffer F, Ginsberg JP. Front Public Health 2017;5:258 (ultra-short-term HRV).",
+    "ica": "Poh MZ, McDuff DJ, Picard RW. Non-contact, automated cardiac pulse measurements using video imaging and blind source separation. Opt Express 2010;18:10762-10774.",
+    "lomb": "Lomb NR 1976; Scargle JD 1982; Clifford GD, Tarassenko L. Quantifying errors in spectral estimates of HRV due to beat replacement and resampling. IEEE Trans Biomed Eng 2005;52:630-638.",
+    "pca": "Lewandowska M et al. Measuring pulse rate with a webcam: a non-contact method for evaluating cardiac activity. FedCSIS 2011:405-410.",
+    "pos": "Wang W, den Brinker AC, Stuijk S, de Haan G. Algorithmic principles of remote PPG. IEEE Trans Biomed Eng 2017;64:1479-1491.",
+    "resp": "Karlen W et al. Multiparameter respiratory rate estimation from the photoplethysmogram. IEEE Trans Biomed Eng 2013;60:1946-1953 (RIIV/RIAV/RIFV smart fusion).",
+    "spo2": "Ratio-of-ratios pulse oximetry principle; smartphone camera feasibility: Scully CG et al. IEEE Trans Biomed Eng 2012;59:303-306. Camera SpO2 is not clinically validated.",
+    "sqi": "Elgendi M. Optimal signal quality index for photoplethysmogram signals. Bioengineering 2016;3:21; Orphanidou C et al. IEEE J Biomed Health Inform 2015;19:832-838 (template matching)."
+  }
+}

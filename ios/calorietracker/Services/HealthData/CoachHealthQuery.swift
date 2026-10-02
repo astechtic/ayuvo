@@ -249,6 +249,9 @@ nonisolated struct HealthCoachContext: Sendable, Equatable {
     var lastSync: Date?
     /// ≤12 lines for on-device / LiteRT modes that cannot call tools.
     var sevenDayLines: [String]
+    /// Recent Ayuvo camera scans with their classifications (`VitalsCoachSummary`, docs/camera-vitals.md §7);
+    /// in the prompt for every provider.
+    var cameraScanLines: [String] = []
 }
 
 /// The single optional parameter threaded through `ChatService`.

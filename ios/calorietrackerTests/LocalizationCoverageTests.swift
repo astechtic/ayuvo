@@ -83,7 +83,9 @@ struct LocalizationCoverageTests {
                         if value.trimmingCharacters(in: .whitespaces).isEmpty { problems.append("empty: \(where_)") }
                         if unit["state"] as? String == "new" { problems.append("state new: \(where_)") }
                         // Plain text (contract text included): a "%" is just a percent sign.
-                        if isFormat && signature(value) != signature(english) {
+                        // A reordered translation uses positional specifiers (%2$lld, written by l10n_apply.py), so
+                        // compare the specifiers as a multiset: same types, any order.
+                        if isFormat && signature(value).sorted() != signature(english).sorted() {
                             problems.append("placeholders: \(where_)")
                         }
                     } else if let plural = (loc["variations"] as? [String: Any])?["plural"] as? [String: [String: Any]] {

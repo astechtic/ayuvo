@@ -228,6 +228,7 @@ struct ImportAllDataView: View {
         case .portableData: "Profile, goals & logs"
         case .foodDiary: "Food diary"
         case .healthData: "Health data"
+        case .cameraVitals: "Camera measurements"
         case .medications: "Medications"
         case .healthRecords: "Health Records"
         case .coachChats: "Coach chats"
@@ -240,6 +241,7 @@ struct ImportAllDataView: View {
         case .portableData: "person.crop.circle.fill"
         case .foodDiary: "fork.knife"
         case .healthData: "heart.text.square.fill"
+        case .cameraVitals: "waveform.path.ecg"
         case .medications: "pills.fill"
         case .healthRecords: "doc.text.fill"
         case .coachChats: "bubble.left.and.bubble.right.fill"
@@ -252,6 +254,7 @@ struct ImportAllDataView: View {
         case .portableData: AyuvoPalette.other
         case .foodDiary: AyuvoPalette.nutrition
         case .healthData: AyuvoPalette.vitals
+        case .cameraVitals: AyuvoPalette.heart
         case .medications: AyuvoPalette.medications
         case .healthRecords: AyuvoPalette.records
         case .coachChats: AyuvoPalette.other
@@ -273,6 +276,8 @@ struct ImportAllDataView: View {
             String(localized: "Adds entries that aren't on this iPhone and updates matching ones. Nothing is deleted.")
         case (.healthData, _):
             String(localized: "Adds new samples and updates matching ones. Nothing is deleted.")
+        case (.cameraVitals, _):
+            String(localized: "Adds scans and calibrations that aren't on this iPhone. A scan you deleted here stays deleted. Nothing is written to Apple Health.")
         case (.medications, _):
             String(localized: "Adds new medications, schedules and doses and keeps the newer copy of each. Nothing is deleted.")
         case (.healthRecords, _):
@@ -354,6 +359,15 @@ struct ImportAllDataView: View {
                     done.append(SectionResult(section: item.section, outcome: .skipped(reason)))
                     continue
                 }
+                if item.section == .cameraVitals {
+                    do {
+                        let text = try await importCameraVitals(item, reader: reader)
+                        done.append(SectionResult(section: item.section, outcome: .imported(text)))
+                    } catch {
+                        done.append(SectionResult(section: item.section, outcome: .failed(failureText(error))))
+                    }
+                    continue
+                }
                 let file = workDirectory.appendingPathComponent("part-\(item.section.rawValue)-\((item.entryName as NSString).lastPathComponent)")
                 do {
                     try await Task.detached(priority: .userInitiated) {
@@ -383,6 +397,19 @@ struct ImportAllDataView: View {
         return (error as? LocalizedError)?.errorDescription ?? String(localized: "Couldn't import this part.")
     }
 
+    /// Camera measurements: every `camera-vitals/` entry, merged by id (docs/camera-vitals.md §7.2).
+    private func importCameraVitals(_ item: AllDataImport.Item, reader: ZipArchiveReader) async throws -> String {
+        var entries: [String: Data] = [:]
+        for name in item.entryNames.isEmpty ? [item.entryName] : item.entryNames {
+            guard let entry = reader.entry(named: name) else { throw AllDataImport.ImportError.damaged }
+            entries[name] = try reader.data(for: entry)
+        }
+        guard let db = await VitalsStore.shared.database() else { throw AllDataImport.ImportError.damaged }
+        let result = try await VitalsArchive.importEntries(entries, into: db)
+        await VitalsStore.shared.didImport()
+        return String(localized: "\(result.scansAdded) scans added, \(result.scansSkipped) already here.")
+    }
+
     /// Runs one part through its existing importer and describes the outcome.
     private func importPart(_ section: AllDataImport.Section, file: URL) async throws -> String {
         switch section {
@@ -408,6 +435,9 @@ struct ImportAllDataView: View {
                 waterStore.replaceEntriesFromImport(DiaryImporter.applyingWater(preview, to: waterStore.entries, mode: .merge))
             }
             return String(localized: "Merged \(preview.entryCount) food and \(preview.waterEntries.count) water entries.")
+
+        case .cameraVitals:
+            throw AllDataImport.ImportError.damaged  // imported from its entries in `run`
 
         case .healthData:
             let preview = try HealthImporter.preview(url: file)

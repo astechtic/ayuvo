@@ -161,7 +161,7 @@ fun AppNavHost(
 
     // Shared destinations (metric, workouts, medications) keep the tab that opened them selected.
     val selectedTabRoute = remember(backStack) { tabNow() }
-    val showTabs = selectedTabRoute != null && !analyzing
+    val showTabs = selectedTabRoute != null && !analyzing && !AppRoutes.isImmersiveRoute(currentRoute)
     // Bumped when the Settings tab is re-tapped so SettingsScreen can pop back to the hub
     // (matches iOS TabView + NavigationStack reselect → root behavior).
     var settingsPopToRootTick by remember { mutableIntStateOf(0) }
@@ -325,7 +325,8 @@ fun AppNavHost(
         openFasting = { openBrowsePlace(AppRoutes.BROWSE_FASTING) },
         openWorkouts = { nav.navigate(AppRoutes.WORKOUTS_LOG) },
         openNutrientGoals = { nav.navigate(AppRoutes.OPTIONAL_NUTRIENT_GOALS) },
-        openMetric = { key -> nav.navigate(AppRoutes.metric(key)) }
+        openMetric = { key -> nav.navigate(AppRoutes.metric(key)) },
+        openCameraScan = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id)) }
     )
 
     // Food quick actions (widget taps, app shortcuts, notification actions) land on
@@ -514,7 +515,9 @@ fun AppNavHost(
                                 openSettingsPage = { page -> openSettingsPage(page) },
                                 openRecovery = { nav.navigate(AppRoutes.INSIGHTS_RECOVERY) },
                                 openHealthAge = { nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE) },
-                                openDailyReview = { nav.navigate(AppRoutes.insightsReview()) }
+                                openDailyReview = { nav.navigate(AppRoutes.insightsReview()) },
+                                openScan = { mode -> nav.navigate(AppRoutes.measureScan(mode.id)) },
+                                openCompare = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id, java.util.UUID.randomUUID().toString())) }
                             ),
                             logRequest = summaryLogRequest,
                             onLogRequestHandled = { id -> if (summaryLogRequest?.id == id) summaryLogRequest = null }
@@ -533,6 +536,7 @@ fun AppNavHost(
                                     target == "screen:activity" -> nav.navigate(AppRoutes.BROWSE_ACTIVITY)
                                     target == "screen:medications" -> nav.navigate(AppRoutes.MEDICATIONS)
                                     target == "screen:insights" -> nav.navigate(AppRoutes.INSIGHTS)
+                                    target == "screen:vitals" -> nav.navigate(AppRoutes.MEASURE_HOME)
                                     target == "tab:records" -> navigateToTab(AppRoutes.RECORDS)
                                     target.startsWith("metric:") ->
                                         MetricKey.parse(target.removePrefix("metric:"))?.let { nav.navigate(AppRoutes.metric(it)) }
@@ -564,6 +568,7 @@ fun AppNavHost(
                                     "recovery" -> nav.navigate(AppRoutes.INSIGHTS_RECOVERY)
                                     "healthAge" -> nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE)
                                     "dailyReview" -> nav.navigate(AppRoutes.insightsReview())
+                                    "cameraMeasurements" -> nav.navigate(AppRoutes.MEASURE_HOME)
                                 }
                             }
                         )
@@ -725,6 +730,91 @@ fun AppNavHost(
                 }
                 composable(AppRoutes.INSIGHTS_PATTERNS) {
                     TabInset { PatternsScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.MEASURE_HOME) {
+                    TabInset {
+                        com.ayuvo.health.ui.vitals.VitalsHomeScreen(
+                            container = container,
+                            onBack = { nav.popBackStack() },
+                            onStartScan = { mode -> nav.navigate(AppRoutes.measureScan(mode.id)) },
+                            onOpenScan = { id -> nav.navigate(AppRoutes.measureDetail(id)) },
+                            onStartCompare = {
+                                nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id, java.util.UUID.randomUUID().toString()))
+                            },
+                            onOpenValidation = { nav.navigate(AppRoutes.MEASURE_VALIDATION) },
+                            onOpenCalibration = { nav.navigate(AppRoutes.MEASURE_CALIBRATION) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.MEASURE_SCAN,
+                    arguments = listOf(
+                        navArgument(AppRoutes.MEASURE_MODE_ARG) { type = NavType.StringType },
+                        navArgument(AppRoutes.MEASURE_SESSION_ARG) { type = NavType.StringType; nullable = true; defaultValue = null }
+                    )
+                ) { entry ->
+                    val mode = com.ayuvo.health.vitals.camera.VitalsMode.fromId(entry.arguments?.getString(AppRoutes.MEASURE_MODE_ARG)) ?: return@composable
+                    val sessionId = entry.arguments?.getString(AppRoutes.MEASURE_SESSION_ARG)
+                    com.ayuvo.health.ui.vitals.ScanFlowScreen(
+                        container = container,
+                        mode = mode,
+                        sessionId = sessionId,
+                        onFinished = { savedId ->
+                            // A saved scan lands on Camera measurements (its history); discard and cancel go back.
+                            if (savedId != null && !nav.popBackStack(AppRoutes.MEASURE_HOME, inclusive = false)) {
+                                nav.navigate(AppRoutes.MEASURE_HOME) { popUpTo(AppRoutes.MEASURE_SCAN) { inclusive = true } }
+                            }
+                        },
+                        onBack = { nav.popBackStack() },
+                        // Compare (docs/camera-vitals.md §6): the face leg replaces the finger leg, the compare screen replaces the face leg.
+                        onNextFaceScan = { session ->
+                            nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FACE.id, session)) {
+                                popUpTo(AppRoutes.MEASURE_SCAN) { inclusive = true }
+                            }
+                        },
+                        onOpenCompare = { session ->
+                            nav.navigate(AppRoutes.measureCompare(session)) { popUpTo(AppRoutes.MEASURE_SCAN) { inclusive = true } }
+                        }
+                    )
+                }
+                composable(
+                    AppRoutes.MEASURE_COMPARE,
+                    arguments = listOf(navArgument(AppRoutes.MEASURE_SESSION_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val session = entry.arguments?.getString(AppRoutes.MEASURE_SESSION_ARG)
+                        ?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: return@composable
+                    TabInset {
+                        com.ayuvo.health.ui.vitals.CompareScreen(
+                            container = container,
+                            sessionId = session,
+                            onBack = { nav.popBackStack() },
+                            onOpenScan = { id -> nav.navigate(AppRoutes.measureDetail(id)) },
+                            onRepeat = {
+                                nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id, java.util.UUID.randomUUID().toString())) {
+                                    popUpTo(AppRoutes.MEASURE_COMPARE) { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+                }
+                composable(AppRoutes.MEASURE_VALIDATION) {
+                    TabInset { com.ayuvo.health.ui.vitals.ValidationScreen(container = container, onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.MEASURE_CALIBRATION) {
+                    TabInset { com.ayuvo.health.ui.vitals.CalibrationScreen(container = container, onBack = { nav.popBackStack() }) }
+                }
+                composable(
+                    AppRoutes.MEASURE_DETAIL,
+                    arguments = listOf(navArgument(AppRoutes.MEASURE_SCAN_ID_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val scanId = entry.arguments?.getString(AppRoutes.MEASURE_SCAN_ID_ARG)
+                        ?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: return@composable
+                    TabInset {
+                        com.ayuvo.health.ui.vitals.ScanDetailScreen(
+                            container = container, scanId = scanId, onBack = { nav.popBackStack() },
+                            onOpenCompare = { session -> nav.navigate(AppRoutes.measureCompare(session)) }
+                        )
+                    }
                 }
                 composable(AppRoutes.MEDICATIONS) {
                     TabInset {

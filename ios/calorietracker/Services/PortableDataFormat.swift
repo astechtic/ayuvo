@@ -133,6 +133,10 @@ enum PortableData {
         Setting(group: .preferences, json: "insights_enabled", native: InsightsSettings.enabledKey, kind: .bool),
         Setting(group: .preferences, json: "derived_metrics_enabled", native: DerivedSettings.enabledKey, kind: .bool),
         Setting(group: .preferences, json: "derived_bmi_scheme", native: DerivedSettings.bmiSchemeKey, kind: .choice(["who", "asian"])),
+        // Camera measurements (docs/camera-vitals.md §7.2).
+        Setting(group: .preferences, json: "vitals_keep_signals", native: VitalsSettings.keepSignalsKey, kind: .bool),
+        Setting(group: .preferences, json: "vitals_experimental_enabled", native: VitalsSettings.experimentalKey, kind: .bool),
+        Setting(group: .preferences, json: "vitals_research_enabled", native: VitalsSettings.researchKey, kind: .bool),
         Setting(group: .water, json: "tracking_enabled", native: WaterSettings.enabledKey, kind: .bool),
         Setting(group: .water, json: "daily_goal_ml", native: WaterSettings.dailyGoalKey, kind: .int(100...20_000)),
         Setting(group: .fasting, json: "tracking_enabled", native: FastingSettings.enabledKey, kind: .bool),

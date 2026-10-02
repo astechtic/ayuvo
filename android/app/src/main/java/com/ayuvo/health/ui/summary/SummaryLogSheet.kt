@@ -9,7 +9,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bloodtype
+import androidx.compose.material.icons.filled.CompareArrows
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorWeight
@@ -43,7 +46,13 @@ import com.ayuvo.health.ui.design.InsetGroup
 enum class LogEntry(val tag: String) {
     FOOD("food"), WATER("water"), FASTING("fasting"), WEIGHT("weight"), BODY_FAT("bodyFat"),
     BLOOD_GLUCOSE("bloodGlucose"), BODY_TEMPERATURE("bodyTemperature"),
-    WORKOUT("workout"), MEDICATION("medication"), RECORD("record")
+    WORKOUT("workout"), MEDICATION("medication"), RECORD("record"),
+    FINGER_SCAN("fingerScan"), FACE_SCAN("faceScan"), COMPARE_SCAN("compareScan");
+
+    companion object {
+        /** "Compare finger & face" chains a finger scan into a face scan (docs/camera-vitals.md §6). */
+        const val COMPARE_AVAILABLE = true
+    }
 }
 
 /** The Summary "+" log sheet; every entry hands off to the existing flow through [onEntry]. */
@@ -100,6 +109,14 @@ internal fun SummaryLogSheet(
             }
             InsetGroup(header = stringResource(R.string.domain_records)) {
                 row { Entry(LogEntry.RECORD, R.string.summary_log_record, Icons.Filled.Description, AyuvoPalette.Records, onEntry) }
+            }
+            // Camera measurements (docs/camera-vitals.md §7.1 "Entry points").
+            InsetGroup(header = stringResource(R.string.camvitals_measure)) {
+                row { Entry(LogEntry.FINGER_SCAN, R.string.camvitals_finger_scan, Icons.Filled.Fingerprint, AyuvoPalette.Heart, onEntry) }
+                row { Entry(LogEntry.FACE_SCAN, R.string.camvitals_face_scan, Icons.Filled.Face, AyuvoPalette.Heart, onEntry) }
+                if (LogEntry.COMPARE_AVAILABLE) {
+                    row { Entry(LogEntry.COMPARE_SCAN, R.string.camvitals_compare, Icons.Filled.CompareArrows, AyuvoPalette.Heart, onEntry) }
+                }
             }
         }
     }

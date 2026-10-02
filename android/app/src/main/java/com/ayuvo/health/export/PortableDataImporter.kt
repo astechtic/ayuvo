@@ -315,6 +315,9 @@ class PreferencesPortableStore(
         settings.derivedMetricsEnabled?.let { prefs.setDerivedMetricsEnabled(it) }
         settings.derivedMetricsDisabled?.let { prefs.setDerivedMetricsDisabled(it.toSet()) }
         settings.derivedBmiScheme?.let { prefs.setDerivedBmiScheme(it) }
+        settings.vitalsKeepSignals?.let { prefs.setVitalsKeepSignals(it) }
+        settings.vitalsExperimentalEnabled?.let { prefs.setVitalsExperimentalEnabled(it) }
+        settings.vitalsResearchEnabled?.let { prefs.setVitalsResearchEnabled(it) }
         if (settings.optionalNutrientGoals.isNotEmpty()) {
             prefs.setOptionalNutrientGoals(mergedGoals(prefs.optionalNutrientGoals.first(), settings.optionalNutrientGoals))
         }

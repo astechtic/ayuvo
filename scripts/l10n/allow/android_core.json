@@ -51,14 +51,17 @@
     "android/app/src/main/java/com/ayuvo/health/models/BodyMeasurement.kt",
     "android/app/src/main/java/com/ayuvo/health/models/WorkoutModels.kt",
     "android/app/src/main/java/com/ayuvo/health/export/DiaryExporter.kt",
-    "android/app/src/main/java/com/ayuvo/health/export/AllDataExportCoordinator.kt"
+    "android/app/src/main/java/com/ayuvo/health/export/AllDataExportCoordinator.kt",
+    "android/app/src/main/java/com/ayuvo/health/vitals/session/CoachCameraScans.kt"
   ],
   "dirs": [
     "android/app/src/main/java/com/ayuvo/health/records/processing",
     "android/app/src/main/java/com/ayuvo/health/records/analytes",
     "android/app/src/main/java/com/ayuvo/health/records/data",
     "android/app/src/main/java/com/ayuvo/health/coach/data",
-    "android/app/src/main/java/com/ayuvo/health/medications/data"
+    "android/app/src/main/java/com/ayuvo/health/medications/data",
+    "android/app/src/main/java/com/ayuvo/health/vitals/storage",
+    "android/app/src/main/java/com/ayuvo/health/vitals/engine"
   ],
   "contains": [
     "AppText.orEnglish(",

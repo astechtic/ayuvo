@@ -1,0 +1,14 @@
+{
+  "counts": {
+    "calibrations": 1,
+    "device_profiles": 1,
+    "scans": 2,
+    "signals": 4
+  },
+  "expected": {
+    "scan1_heart_rate": 64.0,
+    "scan1_reprocessed_heart_rate_from_frame_stats": "must equal scan1_heart_rate within 0.5 bpm (float32 rounding of frame_stats)"
+  },
+  "format": "ayuvo-camera-vitals",
+  "format_version": 1
+}

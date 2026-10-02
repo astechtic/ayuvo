@@ -200,6 +200,9 @@ nonisolated struct InsightsInputs: Equatable, Sendable {
     var sleep: [String: InsightsNight] = [:]
     var workouts: [InsightsWorkout] = []
     var overnightFallback: [String] = []
+    /// series → days whose value came from a finger camera scan (docs/camera-vitals.md §7, `scan_fallback`). The
+    /// engines never read it; the Recovery and Health Age screens use it for their footnotes.
+    var scanFallback: [String: Set<String>] = [:]
     var tracking = InsightsTracking()
     var targets = InsightsTargets()
     var nutrition: [String: InsightsNutritionDay] = [:]

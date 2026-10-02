@@ -485,6 +485,11 @@ struct ChatService {
             lines.append("- Never add Ayuvo workout burn on top of Apple Health active energy: get_health_summary's own_sum is Ayuvo's own tagged burn already inside the total — subtract it instead of adding workout estimates.")
             lines.append("- Use the diary tools (get_calorie_totals, get_food_entries) for food intake, never the dietary_* health types.")
             lines.append("- Never diagnose from heart rate, blood pressure or glucose; suggest a clinician when readings look concerning.")
+            if !health.context.cameraScanLines.isEmpty {
+                lines.append("")
+                lines.append("## Camera scans (last 7 days)")
+                lines.append(contentsOf: health.context.cameraScanLines)
+            }
         } else {
             lines.append("- No health data is available (Apple Health sync or Coach health access is off).")
         }

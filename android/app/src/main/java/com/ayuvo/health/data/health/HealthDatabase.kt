@@ -45,6 +45,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
             GOOGLE_HEALTH_STATEMENTS.forEach(db::execSQL)
             db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('registry_version', ?)", arrayOf(REGISTRY_VERSION))
         }
+        if (oldVersion < 4) VITAL_STATEMENTS.forEach(db::execSQL)
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('schema_version', ?)", arrayOf(newVersion.toString()))
     }
 
@@ -52,7 +53,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
 
     companion object {
         const val NAME = "ayuvo_health.db"
-        const val VERSION = 3
+        const val VERSION = 4
         const val REGISTRY_VERSION = "2"
 
         /** v2: on-device derived metrics (docs/derived-metrics.md); never exported, rebuilt on demand. */
@@ -78,6 +79,46 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   mirrored_ms INTEGER, attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT)""",
             "CREATE INDEX idx_ghm_status ON google_health_mirror(mirror_status)"
         )
+
+        /**
+         * v4: camera finger PPG / face rPPG scans (docs/camera-vitals.md §7). Never written to `health_samples` or
+         * Health Connect; signals are float32 LE + raw deflate, no images and no video.
+         */
+        val VITAL_STATEMENTS: List<String> = listOf(
+            """CREATE TABLE vital_scans (
+  id TEXT PRIMARY KEY NOT NULL,
+  mode TEXT NOT NULL,
+  session_id TEXT,
+  start_ms INTEGER NOT NULL, end_ms INTEGER NOT NULL, tz_offset_s INTEGER NOT NULL, local_day TEXT NOT NULL,
+  duration_ms INTEGER NOT NULL, platform TEXT NOT NULL, device_model TEXT NOT NULL,
+  camera_json TEXT NOT NULL,
+  context TEXT NOT NULL DEFAULT 'resting',
+  quality_score REAL, reject_reason TEXT,
+  quality_json TEXT NOT NULL,
+  results_json TEXT NOT NULL,
+  algo_version INTEGER NOT NULL,
+  reference_json TEXT,
+  deleted INTEGER NOT NULL DEFAULT 0, updated_ms INTEGER NOT NULL)""",
+            "CREATE INDEX idx_vs_mode_start ON vital_scans(mode, start_ms)",
+            "CREATE INDEX idx_vs_day ON vital_scans(local_day)",
+            """CREATE TABLE vital_scan_signals (
+  scan_id TEXT NOT NULL REFERENCES vital_scans(id) ON DELETE CASCADE,
+  kind TEXT NOT NULL,
+  sample_rate REAL, encoding TEXT NOT NULL,
+  data BLOB NOT NULL, meta_json TEXT, PRIMARY KEY (scan_id, kind))""",
+            """CREATE TABLE vital_calibrations (
+  id TEXT PRIMARY KEY NOT NULL, kind TEXT NOT NULL,
+  device_model TEXT NOT NULL, scan_id TEXT, t_ms INTEGER NOT NULL,
+  reference_json TEXT NOT NULL,
+  features_json TEXT NOT NULL,
+  deleted INTEGER NOT NULL DEFAULT 0, updated_ms INTEGER NOT NULL)""",
+            """CREATE TABLE vital_device_profiles (
+  device_model TEXT NOT NULL, camera_position TEXT NOT NULL,
+  capability_json TEXT NOT NULL, updated_ms INTEGER NOT NULL, PRIMARY KEY (device_model, camera_position))"""
+        )
+
+        /** User-owned camera scan tables; "Clear synced health data" (deleteAll) leaves them alone. */
+        val VITAL_TABLES: List<String> = listOf("vital_scans", "vital_scan_signals", "vital_calibrations", "vital_device_profiles")
 
         /** Verbatim `shared/health/schema.sql`, one statement per entry. */
         val SCHEMA_STATEMENTS: List<String> = listOf(
@@ -123,7 +164,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   aggregation TEXT NOT NULL, unit TEXT NOT NULL, display_name TEXT, platform TEXT, native_id TEXT)""",
             "CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT)",
             DERIVED_DAILY_VALUES
-        ) + GOOGLE_HEALTH_STATEMENTS
+        ) + GOOGLE_HEALTH_STATEMENTS + VITAL_STATEMENTS
 
         val SCHEMA_SQL: String get() = SCHEMA_STATEMENTS.joinToString(";\n", postfix = ";\n")
 
@@ -131,7 +172,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
             "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
             "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
             "google_health_sync_state", "google_health_mirror"
-        )
+        ) + VITAL_TABLES
 
         fun databaseFiles(context: Context): List<File> {
             val base = context.getDatabasePath(NAME)

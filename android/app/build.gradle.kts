@@ -155,7 +155,9 @@ android {
         getByName("androidTest") {
             assets.srcDirs(
                 "src/androidTest/assets",
-                "../../shared/records/fixtures"
+                "../../shared/records/fixtures",
+                // docs/camera-vitals.md §7.2: the camera-vitals-sample export section.
+                "../../shared/vitals/fixtures"
             )
         }
     }
@@ -210,6 +212,8 @@ dependencies {
     // Health Records: GMS document scanner (Phase 1) and bundled Latin text recognition (used from Phase 2).
     implementation(libs.play.services.mlkit.document.scanner)
     implementation(libs.mlkit.text.recognition)
+    // Camera vitals face rPPG (docs/camera-vitals.md): bundled, on-device face contours + tracking.
+    implementation(libs.mlkit.face.detection)
     implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)

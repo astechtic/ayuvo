@@ -12,6 +12,8 @@ nonisolated enum AllDataImport {
         case portableData = "portable_data"
         case foodDiary = "food_diary"
         case healthData = "health_data"
+        /// Camera scans (docs/camera-vitals.md §7.2): after Health data, from either platform.
+        case cameraVitals = "camera_vitals"
         case medications
         case healthRecords = "health_records"
         case coachChats = "coach_chats"
@@ -34,6 +36,8 @@ nonisolated enum AllDataImport {
         var format: String
         var counts: [String: Int]
         var disposition: Disposition
+        /// Every zip entry of a multi-file section (`camera_vitals`: `camera-vitals/…`); empty otherwise.
+        var entryNames: [String] = []
     }
 
     struct Plan: Equatable, Sendable {
@@ -86,6 +90,7 @@ nonisolated enum AllDataImport {
         }
 
         var bySection: [Section: AllDataExport.Manifest.File] = [:]
+        var sectionCounts: [Section: [String: Int]] = [:]
         for file in manifest.files {
             guard let section = Section(rawValue: file.section) else { continue }
             guard RecordsArchiveFormat.isSafeEntryName(file.name),
@@ -93,6 +98,8 @@ nonisolated enum AllDataImport {
                   entryNames.contains(file.name)
             else { throw ImportError.damaged }
             if bySection[section] == nil { bySection[section] = file }
+            // A multi-file section may list each file with its own counts.
+            for (key, n) in file.counts { sectionCounts[section, default: [:]][key, default: 0] += n }
         }
 
         let sameAppBackup = bySection[.appBackup] != nil && manifest.platform == platform
@@ -103,6 +110,12 @@ nonisolated enum AllDataImport {
             case .appBackup: disposition = sameAppBackup ? .importIt : .otherPlatform
             case .portableData, .foodDiary: disposition = sameAppBackup ? .coveredByAppBackup : .importIt
             default: disposition = .importIt
+            }
+            if section == .cameraVitals {
+                // The listed file(s) plus every other `camera-vitals/` entry, however the exporter listed them.
+                let names = entryNames.filter { $0.hasPrefix(VitalsArchive.directory) && RecordsArchiveFormat.isSafeEntryName($0) }.sorted()
+                return Item(section: section, entryName: file.name, format: file.format, counts: sectionCounts[section] ?? file.counts,
+                            disposition: disposition, entryNames: names)
             }
             return Item(section: section, entryName: file.name, format: file.format, counts: file.counts, disposition: disposition)
         }
@@ -171,6 +184,10 @@ nonisolated enum AllDataImport {
         case "fasting_sessions": String(localized: "\(n) fasting sessions", comment: "Import preview: count of items in an export section")
         case "workout_sessions": String(localized: "\(n) workout sessions", comment: "Import preview: count of items in an export section")
         case "user_exercises": String(localized: "\(n) custom exercises", comment: "Import preview: count of items in an export section")
+        case "scans": String(localized: "\(n) camera scans", comment: "Import preview: count of items in an export section")
+        case "signals": String(localized: "\(n) scan signals", comment: "Import preview: count of items in an export section")
+        case "calibrations": String(localized: "\(n) calibrations", comment: "Import preview: count of items in an export section")
+        case "device_profiles": String(localized: "\(n) camera profiles", comment: "Import preview: count of items in an export section")
         default: "\(n.formatted()) \(key.replacingOccurrences(of: "_", with: " "))"
         }
     }

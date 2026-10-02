@@ -546,11 +546,16 @@ final class HealthDataStore {
         }
         let query = CoachHealthQuery.live(reader: reader, calendar: calendar, typeMeta: typeMeta)
         let lines = await HealthCoachPromptSummary.lines(query: query, calendar: calendar)
+        let since = Int64(Date().addingTimeInterval(-Double(VitalsCoachSummary.days) * 86_400).timeIntervalSince1970 * 1000)
+        let scans = (try? await reader.scans(from: since)) ?? []
         let context = HealthCoachContext(
             enabled: true,
             typeCount: typeCountWithData,
             lastSync: lastSyncAt,
-            sevenDayLines: lines
+            sevenDayLines: lines,
+            cameraScanLines: VitalsCoachSummary.lines(scans: scans, now: Date(),
+                                                      experimentalEnabled: VitalsSettings.experimentalEnabled(defaults),
+                                                      researchEnabled: VitalsSettings.researchEnabled(defaults))
         )
         return CoachHealthContext(query: query, context: context)
     }

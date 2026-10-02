@@ -215,6 +215,14 @@ enum BrowseFeatureCatalog {
                 keywords: ["patterns", "pattern", "correlation", "association", "trends", "habits"],
                 destination: .insights(.patterns)
             ),
+            BrowseFeature(
+                id: "cameraMeasurements", title: String(localized: "Camera measurements"),
+                subtitle: String(localized: "Measure your pulse with your fingertip or face"),
+                systemImage: "waveform.path.ecg", domain: "vitals",
+                keywords: ["camera", "measure", "measurement", "pulse", "heart rate", "hrv", "scan", "finger", "fingertip",
+                           "face", "ppg", "rppg", "breathing", "respiratory rate", "vitals"],
+                destination: .browse([.vitals])
+            ),
         ]
     }
 

@@ -64,6 +64,13 @@ class MainActivity : ComponentActivity() {
         intent?.action = null
     }
 
+    /** docs/camera-vitals.md §7.1 "Replay source": debuggable builds only (VitalsReplay ignores release builds). */
+    private fun handleVitalsReplayIntent(intent: Intent?) {
+        val value = intent?.getStringExtra(com.ayuvo.health.vitals.camera.VitalsReplay.EXTRA) ?: return
+        com.ayuvo.health.vitals.camera.VitalsReplay.apply(this, value)
+        intent.removeExtra(com.ayuvo.health.vitals.camera.VitalsReplay.EXTRA)
+    }
+
     /** A medication reminder tap: open the Meds segment (and the medicine when the intent names one). */
     private fun handleMedicationIntent(intent: Intent?) {
         val request = MedicationIntents.requestFrom(intent) ?: return
@@ -149,6 +156,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        handleVitalsReplayIntent(intent)
         handleActionIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)
@@ -216,6 +224,8 @@ class MainActivity : ComponentActivity() {
             intent.removeExtra("reset_onboarding")
         }
 
+        // Debug builds: `--es vitals_replay finger|face|off` switches camera vitals to the synthetic replay source.
+        handleVitalsReplayIntent(intent)
         if (savedInstanceState == null) handleActionIntent(intent)
         handleQuickActionIntent(intent)
         handleMedicationIntent(intent)

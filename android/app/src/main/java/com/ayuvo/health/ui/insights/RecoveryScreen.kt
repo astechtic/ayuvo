@@ -62,7 +62,11 @@ fun RecoveryScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         item(key = "score") { RecoveryHero(r, cfg) }
         if (r.ok) {
             item(key = "signals") { SignalsCard(r) }
-            item(key = "components") { ComponentsGroup(r, cfg) }
+            item(key = "components") {
+                // docs/camera-vitals.md §7: metrics of this day that came from a finger camera scan.
+                val fromScan = snap.scanFallback.filterValues { r.day in it }.keys
+                ComponentsGroup(r, cfg, fromScan)
+            }
             r.load?.let { load ->
                 item(key = "load") {
                     InsetGroup(header = stringResource(R.string.insights_training_load), dividerInset = 16.dp) {
@@ -170,8 +174,9 @@ private fun SignalRow(text: String, chip: String, color: androidx.compose.ui.gra
 }
 
 @Composable
-private fun ComponentsGroup(r: RecoveryResult, cfg: InsightsConfig) {
+private fun ComponentsGroup(r: RecoveryResult, cfg: InsightsConfig, fromScan: Set<String> = emptySet()) {
     val usedDaily = stringResource(R.string.insights_daily_value_used)
+    val usedScan = stringResource(R.string.camvitals_insights_scan_footnote)
     InsetGroup(header = stringResource(R.string.insights_components), dividerInset = 16.dp, modifier = Modifier.testTag("insights.recovery.components")) {
         r.components.forEach { c ->
             val m = cfg.metric(c.id)
@@ -179,7 +184,8 @@ private fun ComponentsGroup(r: RecoveryResult, cfg: InsightsConfig) {
                 val today = InsightsFormat.metricValue(m.id, m.unit, c.value)
                 val secondary = when {
                     c.available -> stringResource(R.string.insights_baseline_value, InsightsFormat.metricValue(m.id, m.unit, c.baseline)) +
-                        (if (c.fallback) " · $usedDaily" else "")
+                        (if (c.fallback) " · $usedDaily" else "") +
+                        (if (componentMetric(cfg, c.id) in fromScan) " · $usedScan" else "")
                     c.value == null -> null
                     else -> stringResource(R.string.insights_learning_nights, c.baselineN, m.minPoints)
                 }
@@ -215,3 +221,7 @@ private fun RecoveryChart(snap: InsightsSnapshot) {
         )
     }
 }
+
+/** The insights series a Recovery component reads (its `metric`, else its id). */
+private fun componentMetric(cfg: InsightsConfig, componentId: String): String =
+    cfg.recovery.components.firstOrNull { it.id == componentId }?.metric ?: componentId

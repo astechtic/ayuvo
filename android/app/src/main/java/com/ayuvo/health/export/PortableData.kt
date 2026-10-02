@@ -96,6 +96,10 @@ data class PortableSettings(
     val derivedMetricsEnabled: Boolean? = null,
     val derivedMetricsDisabled: List<String>? = null,
     val derivedBmiScheme: String? = null,
+    /** Camera measurements (docs/camera-vitals.md §7.2 "Preferences"). */
+    val vitalsKeepSignals: Boolean? = null,
+    val vitalsExperimentalEnabled: Boolean? = null,
+    val vitalsResearchEnabled: Boolean? = null,
     val optionalNutrientGoals: Map<OptionalNutrient, Int> = emptyMap(),
     val waterTrackingEnabled: Boolean? = null,
     val waterDailyGoalMl: Int? = null,
@@ -109,6 +113,7 @@ data class PortableSettings(
             heightUnit, weightUnit, waterUnit, glucoseUnit, weekStartsOnMonday, dailyStepGoal, appearanceMode,
             appThemeColor, adaptiveGoalsEnabled, preferGramsByDefault, mealSchedule, summaryFavourites,
             insightsEnabled, derivedMetricsEnabled, derivedMetricsDisabled, derivedBmiScheme,
+            vitalsKeepSignals, vitalsExperimentalEnabled, vitalsResearchEnabled,
             waterTrackingEnabled, waterDailyGoalMl, fastingTrackingEnabled, fastingDefaultGoalMinutes,
             fastingGoalNotificationEnabled
         ).size + if (optionalNutrientGoals.isEmpty()) 0 else 1
@@ -130,6 +135,9 @@ data class PortableSettings(
             derivedMetricsEnabled = true,
             derivedMetricsDisabled = emptyList(),
             derivedBmiScheme = "who",
+            vitalsKeepSignals = true,
+            vitalsExperimentalEnabled = false,
+            vitalsResearchEnabled = false,
             waterTrackingEnabled = false,
             waterDailyGoalMl = 2_000,
             fastingTrackingEnabled = false,
@@ -370,6 +378,9 @@ object PortableFormat {
             opt("derived_metrics_enabled", s.derivedMetricsEnabled)
             s.derivedMetricsDisabled?.let { put("derived_metrics_disabled", strings(it.distinct().sorted().take(MAX_DERIVED_DISABLED))) }
             opt("derived_bmi_scheme", s.derivedBmiScheme)
+            opt("vitals_keep_signals", s.vitalsKeepSignals)
+            opt("vitals_experimental_enabled", s.vitalsExperimentalEnabled)
+            opt("vitals_research_enabled", s.vitalsResearchEnabled)
             if (s.optionalNutrientGoals.isNotEmpty()) {
                 put("optional_nutrient_goals", buildJsonObject {
                     s.optionalNutrientGoals.entries.sortedBy { it.key.ordinal }.forEach { (nutrient, value) ->
@@ -653,6 +664,9 @@ object PortableFormat {
                 ?.filter { it.isNotEmpty() && ',' !in it }
                 ?.distinct()?.sorted()?.take(MAX_DERIVED_DISABLED),
             derivedBmiScheme = canonical(listOf("who", "asian"), prefs?.str("derived_bmi_scheme")),
+            vitalsKeepSignals = prefs?.bool("vitals_keep_signals"),
+            vitalsExperimentalEnabled = prefs?.bool("vitals_experimental_enabled"),
+            vitalsResearchEnabled = prefs?.bool("vitals_research_enabled"),
             optionalNutrientGoals = prefs?.obj("optional_nutrient_goals")?.let(::nutrientGoalsFrom).orEmpty(),
             waterTrackingEnabled = water?.bool("tracking_enabled"),
             waterDailyGoalMl = water?.int("daily_goal_ml")?.takeIf { it in 100..20_000 },

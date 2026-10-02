@@ -88,7 +88,11 @@ data class SummaryDestinations(
     val openSettingsPage: (SettingsPage) -> Unit = {},
     val openRecovery: () -> Unit = {},
     val openHealthAge: () -> Unit = {},
-    val openDailyReview: () -> Unit = {}
+    val openDailyReview: () -> Unit = {},
+    /** Camera measurements scan flow (docs/camera-vitals.md §7.1). */
+    val openScan: (com.ayuvo.health.vitals.camera.VitalsMode) -> Unit = {},
+    /** Compare finger & face: a finger scan with a new compare session id (docs/camera-vitals.md §6). */
+    val openCompare: () -> Unit = {}
 )
 
 /** A Summary "+" entry requested from outside the screen (Quick Log widget), consumed once. */
@@ -148,6 +152,9 @@ fun SummaryScreen(
             LogEntry.WORKOUT -> destinations.openWorkouts()
             LogEntry.MEDICATION -> destinations.openMedications()
             LogEntry.RECORD -> destinations.addRecord()
+            LogEntry.FINGER_SCAN -> destinations.openScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER)
+            LogEntry.FACE_SCAN -> destinations.openScan(com.ayuvo.health.vitals.camera.VitalsMode.FACE)
+            LogEntry.COMPARE_SCAN -> destinations.openCompare()
         }
     }
 

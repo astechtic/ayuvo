@@ -14,6 +14,10 @@ import com.ayuvo.health.models.OptionalNutrientGoals
 import com.ayuvo.health.nutrients.NutrientFields
 import com.ayuvo.health.nutrients.SupplementSnapshot
 import com.ayuvo.health.models.UserProfile
+import com.ayuvo.health.vitals.engine.VitalsConfig
+import com.ayuvo.health.vitals.engine.VitalsEngine
+import com.ayuvo.health.vitals.session.metricsJson
+import com.ayuvo.health.vitals.storage.VitalScanRecord
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -36,7 +40,12 @@ data class InsightsBundle(
     val inputs: InsightsInputs,
     val profile: InsightsProfile,
     val fallbackByDay: Map<LocalDate, Set<String>>,
-    val healthEnabled: Boolean
+    val healthEnabled: Boolean,
+    /**
+     * Days filled from a finger camera scan (docs/camera-vitals.md §7 "Insights"), by series id
+     * (`resting_heart_rate`, `hrv`, `respiratory_rate`). Shown like the overnight fallback; never a platform day.
+     */
+    val scanFallback: Map<String, Set<LocalDate>> = emptyMap()
 ) {
     fun inputsFor(day: LocalDate): InsightsInputs = inputs.copy(overnightFallback = fallbackByDay[day].orEmpty())
 }
@@ -56,7 +65,10 @@ class InsightsDataSource(
      * are on, their stored estimates fill the days the platform has no resting heart rate / VO2 max for.
      */
     private val derivedEnabled: suspend () -> Set<String> = { emptySet() },
-    private val healthRepository: () -> HealthDataRepository?
+    private val healthRepository: () -> HealthDataRepository?,
+    /** Live camera scans whose start is in `[fromMs, toMs)` (docs/camera-vitals.md §7); empty when there are none. */
+    private val cameraScans: suspend (fromMs: Long, toMs: Long) -> List<VitalScanRecord> = { _, _ -> emptyList() },
+    private val vitalsConfig: () -> VitalsConfig? = { null }
 ) {
     /** [hubOn]: the Health Data hub is enabled; without it only the app's own logs are read. */
     suspend fun build(
@@ -100,6 +112,15 @@ class InsightsDataSource(
             for (row in health.samples(HealthDataType.WORKOUT.id, from.minusDays(1), today)) {
                 if (!row.deleted && row.endMs > row.startMs) workouts += WorkoutInput(row.startMs, row.endMs, null)
             }
+        }
+        // Finger camera scans fill resting HR / HRV (RMSSD) / respiratory rate days that have no platform value.
+        var scanFallback: Map<String, Set<LocalDate>> = emptyMap()
+        val vcfg = vitalsConfig()
+        if (vcfg != null) {
+            val fromMs = from.minusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
+            val toMs = today.plusDays(2).atStartOfDay(zone).toInstant().toEpochMilli()
+            val scans = runCatching { cameraScans(fromMs, toMs) }.getOrDefault(emptyList())
+            if (scans.isNotEmpty()) scanFallback = withScanFallback(series, scans, vcfg, from, today)
         }
         // Ayuvo strength sessions join the health workouts; overlaps are merged by the engine.
         for (w in snap.workouts) {
@@ -152,7 +173,7 @@ class InsightsDataSource(
             fastingHours = fasting,
             strengthVolume = strength
         )
-        return InsightsBundle(today, inputs, profileOf(p, zone), fallback, health != null)
+        return InsightsBundle(today, inputs, profileOf(p, zone), fallback, health != null, scanFallback)
     }
 
     companion object {
@@ -172,6 +193,49 @@ class InsightsDataSource(
             val out = java.util.TreeMap<LocalDate, Double>(native)
             for ((day, v) in derived) if (day !in out) out[day] = v
             return LinkedHashMap(out)
+        }
+
+        /** Insights series a finger camera scan may fill (docs/camera-vitals.md §7, `insights_fallback`). */
+        val SCAN_FALLBACK_SERIES: List<String> = VitalsEngine.INSIGHTS_FALLBACK_SERIES
+
+        /**
+         * Runs `insights_fallback` with `platform_days` = the days [series] already has for resting_heart_rate / hrv /
+         * respiratory_rate and hrv_kind `rmssd`, then adds the scan values on the missing days only. Face scans,
+         * rejected scans, non-resting scans and low-quality scans never count (the engine's rules). Returns the
+         * filled days per series.
+         */
+        fun withScanFallback(
+            series: MutableMap<String, Map<LocalDate, Double>>,
+            scans: List<VitalScanRecord>,
+            cfg: VitalsConfig,
+            from: LocalDate,
+            to: LocalDate
+        ): Map<String, Set<LocalDate>> {
+            val platformDays = SCAN_FALLBACK_SERIES.associateWith { id -> series[id].orEmpty().keys.map { it.toString() } }
+            val inputs = scans.filter { !it.deleted }.map { r ->
+                VitalsEngine.FallbackScan(
+                    localDay = r.localDay, mode = r.mode, context = r.context, qualityScore = r.qualityScore,
+                    rejectReason = r.rejectReason,
+                    metrics = r.metricsJson().mapNotNull { (k, v) -> (v as? kotlinx.serialization.json.JsonObject)?.let { k to it } }.toMap()
+                )
+            }
+            val filled = VitalsEngine.insightsFallback(platformDays, inputs, "rmssd", cfg)
+            val flagged = LinkedHashMap<String, Set<LocalDate>>()
+            for ((id, days) in filled) {
+                val add = days.mapNotNull { (d, v) -> runCatching { LocalDate.parse(d) }.getOrNull()?.let { it to v } }
+                    .filter { (d, _) -> !d.isBefore(from) && !d.isAfter(to) }
+                if (add.isEmpty()) continue
+                val merged = java.util.TreeMap<LocalDate, Double>(series[id].orEmpty())
+                val used = HashSet<LocalDate>()
+                for ((d, v) in add) if (d !in merged) {
+                    merged[d] = v
+                    used += d
+                }
+                if (used.isEmpty()) continue
+                series[id] = LinkedHashMap(merged)
+                flagged[id] = used
+            }
+            return flagged
         }
 
         /** Overnight metrics and their Android health types (`hrv_kind` = RMSSD). */

@@ -27,6 +27,7 @@ struct MetricDetailView: View {
     @State private var showAllWeights = false
     @State private var showAllBodyFat = false
     @State private var manualEntryKind: ManualHealthKind?
+    @State private var showFingerScan = false
     @Environment(HealthKitManager.self) private var healthKitManager
     /// Bumped when the "Calculate this metric" switch changes (UserDefaults is not observed).
     @State private var derivedSwitchRevision = 0
@@ -97,6 +98,10 @@ struct MetricDetailView: View {
     private var loadKey: String {
         "\(model.loadKey(sources: sources, calendar: calendar))|\(weightUnitRaw)|\(waterUnitRaw)|\(weekStartsOnMonday)"
     }
+
+    /// Health types a finger scan also measures (docs/camera-vitals.md §7.1). Scan results stay in Camera
+    /// measurements; they are never written to Apple Health or this chart.
+    static let cameraMeasurableTypeIDs: Set<String> = ["heart_rate", "resting_heart_rate", "hrv_sdnn", "hrv_rmssd", "respiratory_rate"]
 
     private var hasHealthUnitPicker: Bool {
         guard case .health(let id) = key else { return false }
@@ -170,6 +175,9 @@ struct MetricDetailView: View {
             ManualHealthEntrySheet(kind: kind) { entry in
                 Task { await healthStore.saveManualEntry(entry, healthKit: healthKitManager) }
             }
+        }
+        .fullScreenCover(isPresented: $showFingerScan) {
+            ScanFlowView(mode: .finger)
         }
         .sheet(isPresented: $showAllWeights) {
             AllWeightHistoryView(
@@ -536,6 +544,12 @@ struct MetricDetailView: View {
                         }
                     }
                     .accessibilityIdentifier("metric.unit")
+                }
+                if Self.cameraMeasurableTypeIDs.contains(id) {
+                    Button { showFingerScan = true } label: {
+                        Label("Measure with camera", systemImage: VitalsMode.finger.systemImage)
+                    }
+                    .accessibilityIdentifier("metric.measureWithCamera")
                 }
                 if let kind = ManualHealthKind(typeID: id) {
                     Button { manualEntryKind = kind } label: {

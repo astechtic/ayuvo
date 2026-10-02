@@ -92,6 +92,7 @@ DDL: `shared/health/schema.sql` (embedded verbatim; do not restate it here). Tab
 - Row ids: HC `Metadata.id`; HK `uuid.uuidString.lowercased()`; HC sleep stage rows `<record_id>:<n>`; local adapter rows `local:<uuid>`; iOS activity summaries `activity_summary:yyyy-MM-dd`.
 - `origin`: `0` platform, `1` file import, `2` local app adapter (Ayuvo's own weight/body-fat/height entries and manual health entries, §2.2; `source_id` = own package/bundle id, label "Ayuvo"), `3` Google Health API (`docs/google-health.md`; `id` = `gh:<point id>`, `source_id` = `google_health:<package>`; never tombstoned by platform deletions).
 - Schema v3 adds `google_health_sync_state` and `google_health_mirror` (`docs/google-health.md` §3).
+- Schema v4 adds `vital_scans`, `vital_scan_signals`, `vital_calibrations` and `vital_device_profiles` for camera finger/face scans (`docs/camera-vitals.md` §7). Scans are never written to `health_samples`, HealthKit or Health Connect. "Clear synced health data" and the pre-import wipe keep them; deleting all app data removes them.
 - Show All Data pages by keyset `(end_ms DESC, id DESC)`, never `OFFSET`.
 
 ### 2.1 Upsert and tombstone rules (both platforms)
@@ -416,7 +417,7 @@ The metric detail and Summary identifiers are shared with app metrics and define
 | Constant | Value | Where |
 |---|---|---|
 | `registry_version` | 2 (v2: Google-only slugs, `docs/google-health.md`) | registry JSON, `health_meta`, export manifest |
-| `schema_version` | 3 (v2 `derived_daily_values`, v3 Google Health tables) | `health_meta` |
+| `schema_version` | 4 (v2 `derived_daily_values`, v3 Google Health tables, v4 camera vitals tables) | `health_meta` |
 | Google map `map_version` | 1 | `shared/health/google_health_map.json` |
 | `rollup_rule_version` | 1 | `health_meta` (bump → full rollup rebuild) |
 | `percent_convention` | `0-100` | registry JSON, export manifest |

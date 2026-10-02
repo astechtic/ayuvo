@@ -34,9 +34,14 @@ class AllDataImportPlanTest {
         file("app_backup", "app-backup/ayuvo-backup.zip"),
         file("portable_data", "portable-data/ayuvo-portable-data.json"),
         file("health_data", "health-data/h.zip"),
-        file("coach_chats", "coach-chats/ayuvo-coach-chats.zip")
+        file("coach_chats", "coach-chats/ayuvo-coach-chats.zip"),
+        file("camera_vitals", "camera-vitals/scans.ndjson"),
+        file("camera_vitals", "camera-vitals/signals.ndjson"),
+        file("camera_vitals", "camera-vitals/calibrations.ndjson"),
+        file("camera_vitals", "camera-vitals/device_profiles.ndjson")
     )
     private val entries = setOf(
+        "camera-vitals/scans.ndjson", "camera-vitals/signals.ndjson", "camera-vitals/calibrations.ndjson", "camera-vitals/device_profiles.ndjson",
         "manifest.json", "health-records/r.zip", "medications/ayuvo-medications.json",
         "food-diary/d.json", "app-backup/ayuvo-backup.zip", "portable-data/ayuvo-portable-data.json", "health-data/h.zip",
         "coach-chats/ayuvo-coach-chats.zip"
@@ -53,14 +58,14 @@ class AllDataImportPlanTest {
         assertEquals(SkipReason.IN_APP_BACKUP, plan.sections[1].skip)
         assertEquals(SkipReason.IN_APP_BACKUP, plan.sections[2].skip)
         assertTrue(plan.sections.drop(3).all { it.imports })
-        assertEquals(5, plan.importCount)
+        assertEquals(6, plan.importCount)
         assertEquals(mapOf("records" to 2L), plan.sections[5].counts)
     }
 
     @Test
     fun theOrderPutsPortableDataRightAfterTheAppBackup() {
         assertEquals(
-            listOf("app_backup", "portable_data", "food_diary", "health_data", "medications", "health_records", "coach_chats"),
+            listOf("app_backup", "portable_data", "food_diary", "health_data", "camera_vitals", "medications", "health_records", "coach_chats"),
             AllDataImportPlan.ORDER
         )
         assertEquals("ayuvo-portable-data", AllDataImportPlan.EXPECTED_FORMAT.getValue("portable_data"))
@@ -73,7 +78,7 @@ class AllDataImportPlanTest {
         assertTrue(plan.sections.first { it.id == "food_diary" }.imports)
         // The portable part is what restores the profile and logs from the other platform.
         assertTrue(plan.sections.first { it.id == "portable_data" }.imports)
-        assertEquals(6, plan.importCount)
+        assertEquals(7, plan.importCount)
     }
 
     @Test
@@ -192,5 +197,45 @@ class AllDataImportPlanTest {
         val plan = ok(AllDataImportPlan.plan(ios, setOf("manifest.json", "food-diary/Ayuvo.json")))
         assertEquals("ios", plan.manifest.platform)
         assertTrue(plan.sections.single().imports)
+    }
+
+    // -- camera_vitals (docs/camera-vitals.md §7.2) ----------------------------------------------------------------
+
+    private fun cv(name: String, counts: String) =
+        """{"name":"camera-vitals/$name","section":"camera_vitals","format":"ayuvo-camera-vitals","bytes":10,"counts":{$counts}}"""
+
+    @Test
+    fun cameraVitalsIsOneSectionOfFourEntriesImportedAfterHealthDataFromEitherPlatform() {
+        val files = listOf(
+            cv("device_profiles.ndjson", "\"device_profiles\":1"),
+            cv("scans.ndjson", "\"scans\":2"),
+            cv("signals.ndjson", "\"signals\":4"),
+            cv("calibrations.ndjson", "\"calibrations\":1"),
+            file("health_data", "health-data/h.zip")
+        )
+        for (platform in listOf("ios", "android")) {
+            val plan = ok(AllDataImportPlan.plan(manifest(files, platform = platform), entries))
+            assertEquals(listOf("health_data", "camera_vitals"), plan.sections.map { it.id })
+            val section = plan.sections[1]
+            assertTrue(platform, section.imports)
+            assertEquals("camera-vitals/scans.ndjson", section.entry)
+            assertEquals(
+                listOf("camera-vitals/scans.ndjson", "camera-vitals/device_profiles.ndjson", "camera-vitals/signals.ndjson", "camera-vitals/calibrations.ndjson"),
+                section.entries
+            )
+            assertEquals(mapOf("device_profiles" to 1L, "scans" to 2L, "signals" to 4L, "calibrations" to 1L), section.counts)
+        }
+    }
+
+    @Test
+    fun cameraVitalsWithoutScansOrInAnotherFormatIsUnsupportedAndDuplicatesAreInvalid() {
+        val noScans = ok(AllDataImportPlan.plan(manifest(listOf(cv("signals.ndjson", ""))), entries))
+        assertEquals(SkipReason.UNSUPPORTED, noScans.sections.single().skip)
+        val wrong = listOf(cv("scans.ndjson", ""), cv("signals.ndjson", "").replace("ayuvo-camera-vitals", "ayuvo-camera-vitals-v9"))
+        assertEquals(SkipReason.UNSUPPORTED, ok(AllDataImportPlan.plan(manifest(wrong), entries)).sections.single().skip)
+        val twice = listOf(cv("scans.ndjson", ""), cv("scans.ndjson", ""))
+        assertEquals(Invalid.NOT_AYUVO, failed(AllDataImportPlan.plan(manifest(twice), entries)))
+        val missing = listOf(cv("scans.ndjson", ""), cv("gone.ndjson", ""))
+        assertEquals(Invalid.NOT_AYUVO, failed(AllDataImportPlan.plan(manifest(missing), entries)))
     }
 }

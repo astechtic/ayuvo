@@ -1,0 +1,555 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "confidence": 0.36800000000000005,
+        "dbp": 77.0,
+        "reason": null,
+        "sbp": 120.0
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 660,
+              "hr": 70,
+              "rise_ms": 170,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 118,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 80,
+            "features": {
+              "decay_ms": 600,
+              "hr": 78,
+              "rise_ms": 160,
+              "width25_ms": 400,
+              "width50_ms": 280
+            },
+            "sbp": 124,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 74,
+            "features": {
+              "decay_ms": 700,
+              "hr": 66,
+              "rise_ms": 180,
+              "width25_ms": 450,
+              "width50_ms": 320
+            },
+            "sbp": 114,
+            "scan_gap_min": 3,
+            "t_ms": 432000000
+          },
+          {
+            "dbp": 78,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 165,
+              "width25_ms": 420,
+              "width50_ms": 295
+            },
+            "sbp": 121,
+            "scan_gap_min": 1,
+            "t_ms": 518400000
+          }
+        ],
+        "features": {
+          "decay_ms": 640,
+          "hr": 73,
+          "rise_ms": 168,
+          "width25_ms": 425,
+          "width50_ms": 298
+        },
+        "now_ms": 864000000,
+        "quality": 92
+      },
+      "name": "calibrated"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "dbp": null,
+        "reason": "needs_calibration",
+        "sbp": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 660,
+              "hr": 70,
+              "rise_ms": 170,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 118,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 80,
+            "features": {
+              "decay_ms": 600,
+              "hr": 78,
+              "rise_ms": 160,
+              "width25_ms": 400,
+              "width50_ms": 280
+            },
+            "sbp": 124,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          }
+        ],
+        "features": {
+          "decay_ms": 640,
+          "hr": 73,
+          "rise_ms": 168,
+          "width25_ms": 425,
+          "width50_ms": 298
+        },
+        "now_ms": 864000000,
+        "quality": 92
+      },
+      "name": "needs_calibration"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "dbp": null,
+        "reason": "needs_calibration",
+        "sbp": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 660,
+              "hr": 70,
+              "rise_ms": 170,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 118,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 80,
+            "features": {
+              "decay_ms": 600,
+              "hr": 78,
+              "rise_ms": 160,
+              "width25_ms": 400,
+              "width50_ms": 280
+            },
+            "sbp": 124,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 74,
+            "features": {
+              "decay_ms": 700,
+              "hr": 66,
+              "rise_ms": 180,
+              "width25_ms": 450,
+              "width50_ms": 320
+            },
+            "sbp": 114,
+            "scan_gap_min": 3,
+            "t_ms": 432000000
+          },
+          {
+            "dbp": 78,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 165,
+              "width25_ms": 420,
+              "width50_ms": 295
+            },
+            "sbp": 121,
+            "scan_gap_min": 1,
+            "t_ms": 518400000
+          }
+        ],
+        "features": {
+          "decay_ms": 640,
+          "hr": 73,
+          "rise_ms": 168,
+          "width25_ms": 425,
+          "width50_ms": 298
+        },
+        "now_ms": 3456000000,
+        "quality": 92
+      },
+      "name": "calibrations_expired"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "dbp": null,
+        "reason": "needs_calibration",
+        "sbp": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 660,
+              "hr": 70,
+              "rise_ms": 170,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 118,
+            "scan_gap_min": 10,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 80,
+            "features": {
+              "decay_ms": 600,
+              "hr": 78,
+              "rise_ms": 160,
+              "width25_ms": 400,
+              "width50_ms": 280
+            },
+            "sbp": 124,
+            "scan_gap_min": 10,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 74,
+            "features": {
+              "decay_ms": 700,
+              "hr": 66,
+              "rise_ms": 180,
+              "width25_ms": 450,
+              "width50_ms": 320
+            },
+            "sbp": 114,
+            "scan_gap_min": 10,
+            "t_ms": 432000000
+          },
+          {
+            "dbp": 78,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 165,
+              "width25_ms": 420,
+              "width50_ms": 295
+            },
+            "sbp": 121,
+            "scan_gap_min": 10,
+            "t_ms": 518400000
+          }
+        ],
+        "features": {
+          "decay_ms": 640,
+          "hr": 73,
+          "rise_ms": 168,
+          "width25_ms": 425,
+          "width50_ms": 298
+        },
+        "now_ms": 864000000,
+        "quality": 92
+      },
+      "name": "gap_too_long"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "dbp": null,
+        "reason": "outside_calibration",
+        "sbp": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 660,
+              "hr": 70,
+              "rise_ms": 170,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 118,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 80,
+            "features": {
+              "decay_ms": 600,
+              "hr": 78,
+              "rise_ms": 160,
+              "width25_ms": 400,
+              "width50_ms": 280
+            },
+            "sbp": 124,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 74,
+            "features": {
+              "decay_ms": 700,
+              "hr": 66,
+              "rise_ms": 180,
+              "width25_ms": 450,
+              "width50_ms": 320
+            },
+            "sbp": 114,
+            "scan_gap_min": 3,
+            "t_ms": 432000000
+          },
+          {
+            "dbp": 78,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 165,
+              "width25_ms": 420,
+              "width50_ms": 295
+            },
+            "sbp": 121,
+            "scan_gap_min": 1,
+            "t_ms": 518400000
+          }
+        ],
+        "features": {
+          "decay_ms": 640,
+          "hr": 73,
+          "rise_ms": 240,
+          "width25_ms": 425,
+          "width50_ms": 298
+        },
+        "now_ms": 864000000,
+        "quality": 92
+      },
+      "name": "extrapolation"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "dbp": null,
+        "reason": "few_beats",
+        "sbp": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 660,
+              "hr": 70,
+              "rise_ms": 170,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 118,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 80,
+            "features": {
+              "decay_ms": 600,
+              "hr": 78,
+              "rise_ms": 160,
+              "width25_ms": 400,
+              "width50_ms": 280
+            },
+            "sbp": 124,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 74,
+            "features": {
+              "decay_ms": 700,
+              "hr": 66,
+              "rise_ms": 180,
+              "width25_ms": 450,
+              "width50_ms": 320
+            },
+            "sbp": 114,
+            "scan_gap_min": 3,
+            "t_ms": 432000000
+          },
+          {
+            "dbp": 78,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 165,
+              "width25_ms": 420,
+              "width50_ms": 295
+            },
+            "sbp": 121,
+            "scan_gap_min": 1,
+            "t_ms": 518400000
+          }
+        ],
+        "features": null,
+        "now_ms": 864000000,
+        "quality": 92
+      },
+      "name": "no_features"
+    },
+    {
+      "expected": {
+        "confidence": 0.27,
+        "dbp": 76.0,
+        "reason": null,
+        "sbp": 120.0
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 640,
+              "hr": 71,
+              "rise_ms": 171,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 119,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 172,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 120,
+            "scan_gap_min": 2,
+            "t_ms": 172800000
+          },
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 640,
+              "hr": 73,
+              "rise_ms": 173,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 121,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 77,
+            "features": {
+              "rise_ms": 170
+            },
+            "sbp": 120,
+            "scan_gap_min": 2,
+            "t_ms": 345600000
+          }
+        ],
+        "features": {
+          "decay_ms": 640,
+          "hr": 72,
+          "rise_ms": 172,
+          "width25_ms": 430,
+          "width50_ms": 300
+        },
+        "now_ms": 864000000,
+        "quality": 90
+      },
+      "name": "incomplete_calibration_features_skipped"
+    },
+    {
+      "expected": {
+        "confidence": null,
+        "dbp": null,
+        "reason": "few_beats",
+        "sbp": null
+      },
+      "input": {
+        "calibrations": [
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 640,
+              "hr": 71,
+              "rise_ms": 171,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 119,
+            "scan_gap_min": 2,
+            "t_ms": 86400000
+          },
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 640,
+              "hr": 72,
+              "rise_ms": 172,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 120,
+            "scan_gap_min": 2,
+            "t_ms": 172800000
+          },
+          {
+            "dbp": 76,
+            "features": {
+              "decay_ms": 640,
+              "hr": 73,
+              "rise_ms": 173,
+              "width25_ms": 430,
+              "width50_ms": 300
+            },
+            "sbp": 121,
+            "scan_gap_min": 2,
+            "t_ms": 259200000
+          },
+          {
+            "dbp": 77,
+            "features": {
+              "rise_ms": 170
+            },
+            "sbp": 120,
+            "scan_gap_min": 2,
+            "t_ms": 345600000
+          }
+        ],
+        "features": {
+          "rise_ms": 172
+        },
+        "now_ms": 864000000,
+        "quality": 90
+      },
+      "name": "incomplete_current_features"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "bp_research",
+  "version": 1
+}

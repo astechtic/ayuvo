@@ -1,0 +1,99 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "hr_diff": 1.2,
+        "ibi_mean_diff": 15.9,
+        "rmssd_diff": 6.5,
+        "status": "consistent"
+      },
+      "input": {
+        "face": {
+          "hr": 68.4,
+          "ibi_mean": 877.1,
+          "quality": 89,
+          "rmssd": 48.5
+        },
+        "finger": {
+          "hr": 67.2,
+          "ibi_mean": 893.0,
+          "quality": 96,
+          "rmssd": 42.0
+        }
+      },
+      "name": "consistent"
+    },
+    {
+      "expected": {
+        "hr_diff": 14.0,
+        "ibi_mean_diff": 155.0,
+        "rmssd_diff": null,
+        "status": "inconsistent"
+      },
+      "input": {
+        "face": {
+          "hr": 81.0,
+          "ibi_mean": 740.0,
+          "quality": 60,
+          "rmssd": null
+        },
+        "finger": {
+          "hr": 67.0,
+          "ibi_mean": 895.0,
+          "quality": 96,
+          "rmssd": null
+        }
+      },
+      "name": "hr_inconsistent"
+    },
+    {
+      "expected": {
+        "hr_diff": 2.0,
+        "ibi_mean_diff": 25.0,
+        "rmssd_diff": 30.0,
+        "status": "inconsistent"
+      },
+      "input": {
+        "face": {
+          "hr": 69.0,
+          "ibi_mean": 870.0,
+          "quality": 80,
+          "rmssd": 60.0
+        },
+        "finger": {
+          "hr": 67.0,
+          "ibi_mean": 895.0,
+          "quality": 96,
+          "rmssd": 30.0
+        }
+      },
+      "name": "hrv_inconsistent"
+    },
+    {
+      "expected": {
+        "hr_diff": null,
+        "ibi_mean_diff": null,
+        "rmssd_diff": null,
+        "status": "incomplete"
+      },
+      "input": {
+        "face": {
+          "hr": null,
+          "ibi_mean": null,
+          "quality": 30,
+          "rmssd": null
+        },
+        "finger": {
+          "hr": 67.0,
+          "ibi_mean": 895.0,
+          "quality": 96,
+          "rmssd": 30.0
+        }
+      },
+      "name": "face_missing"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "compare",
+  "version": 1
+}

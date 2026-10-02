@@ -50,6 +50,8 @@ struct InsightsDataSource {
     var dailyTotals: (_ typeID: String, _ from: Date, _ to: Date) async -> [String: Double]?
     /// Contributions of taken supplement doses (docs/nutrients.md §6); empty without a medications database.
     var supplementEntries: () async -> [NutrientsReference.SupplementEntry] = { [] }
+    /// Ayuvo's own camera scans (docs/camera-vitals.md §7), read whether or not Health sync is on.
+    var vitalScans: (_ fromMs: Int64) async -> [VitalScanRecord] = { _ in [] }
 
     // MARK: Live
 
@@ -73,6 +75,11 @@ struct InsightsDataSource {
                 let runtime = MedicationsRuntime.shared
                 guard runtime.databaseExists || runtime.isOpen, await runtime.openIfNeeded(), let repository = runtime.repository else { return [] }
                 return (try? await repository.supplementData().entries) ?? []
+            },
+            vitalScans: { fromMs in
+                let runtime = HealthDataRuntime.shared
+                guard await runtime.openIfNeeded(), let db = runtime.reader ?? runtime.writer else { return [] }
+                return (try? await db.scans(mode: VitalsMode.finger.rawValue, from: fromMs)) ?? []
             }
         )
     }
@@ -113,6 +120,8 @@ struct InsightsDataSource {
             // Derived fallbacks (resting heart rate, VO2 max) change with their switches and each derived pass.
             Self.derivedFallbacks.map(\.derivedID).filter { DerivedSettings.isEnabled($0, defaults: defaults) }.joined(separator: ","),
             "\(DerivedMetricsService.shared.revision)",
+            // Camera scans feed the fallback (saves, deletes, imports).
+            "\(VitalsStore.shared.revision)",
         ].joined(separator: "|")
     }
 
@@ -146,6 +155,11 @@ struct InsightsDataSource {
                     inputs.series[id] = totals
                 }
             }
+        }
+        // Finger-scan fallback after every platform series is resolved: only days without a value are filled.
+        if let start = InsightsDay.date(InsightsDay.add(from, -1), calendar: calendar) {
+            let scans = await vitalScans(Self.ms(start))
+            VitalsInsightsFallback.apply(into: &inputs, scans: scans, from: from, through: today)
         }
         return inputs
     }

@@ -69,7 +69,8 @@ struct GoogleHealthMapTests {
             #expect(!syncable.contains(slug), Comment(rawValue: slug))
         }
         #expect(HealthSchema.registryVersion == 2)
-        #expect(HealthSchema.schemaVersion == 3)
+        // v3 added the Google Health tables; later versions only add tables.
+        #expect(HealthSchema.schemaVersion >= 3)
     }
 
     @Test func accountMetadataStaysOutOfTheCloudBackup() {

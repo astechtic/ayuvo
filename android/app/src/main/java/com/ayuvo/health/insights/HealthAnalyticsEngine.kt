@@ -23,7 +23,9 @@ data class InsightsSnapshot(
     val reviews: List<DailyReviewResult>,
     val patterns: List<PatternResult>,
     val baselines: List<MetricInsight>,
-    val profile: InsightsProfile
+    val profile: InsightsProfile,
+    /** Days filled from a finger camera scan, by series id (docs/camera-vitals.md §7); UI footnotes only. */
+    val scanFallback: Map<String, Set<LocalDate>> = emptyMap()
 ) {
     fun review(day: LocalDate): DailyReviewResult? = reviews.firstOrNull { it.day == day }
 
@@ -75,7 +77,8 @@ object HealthAnalyticsEngine {
             reviews = reviews,
             patterns = patterns,
             baselines = baselines(bundle, today, cfg),
-            profile = bundle.profile
+            profile = bundle.profile,
+            scanFallback = bundle.scanFallback
         )
     }
 

@@ -107,6 +107,30 @@ class AppRoutesTest {
     }
 
     @Test
+    fun measureRoutesAreSharedAndScanIsImmersive() {
+        assertEquals("measure/home", AppRoutes.MEASURE_HOME)
+        assertEquals("measure/scan/finger", AppRoutes.measureScan("finger"))
+        assertEquals("measure/scan/face?session=s-1", AppRoutes.measureScan("face", "s-1"))
+        assertEquals("measure/detail/local%3Aabc-1", AppRoutes.measureDetail("local:abc-1"))
+        assertEquals("measure/compare/s-1", AppRoutes.measureCompare("s-1"))
+        for (route in listOf(
+            AppRoutes.MEASURE_HOME, AppRoutes.MEASURE_SCAN, AppRoutes.MEASURE_DETAIL, AppRoutes.measureScan("finger"),
+            AppRoutes.MEASURE_COMPARE, AppRoutes.MEASURE_VALIDATION, AppRoutes.MEASURE_CALIBRATION
+        )) {
+            assertTrue(route, AppRoutes.isSharedRoute(route))
+        }
+        // Opened from Summary (+ sheet): Summary stays selected; from Browse: Browse.
+        assertEquals(AppRoutes.SUMMARY, AppRoutes.selectedBottomTab(AppRoutes.MEASURE_SCAN, listOf(AppRoutes.SUMMARY)))
+        assertEquals(AppRoutes.BROWSE, AppRoutes.selectedBottomTab(AppRoutes.MEASURE_DETAIL, listOf(AppRoutes.MEASURE_HOME, AppRoutes.BROWSE)))
+        assertEquals(AppRoutes.BROWSE, AppRoutes.selectedBottomTab(AppRoutes.MEASURE_HOME))
+        assertTrue(AppRoutes.isImmersiveRoute(AppRoutes.MEASURE_SCAN))
+        assertFalse(AppRoutes.isImmersiveRoute(AppRoutes.MEASURE_HOME))
+        assertFalse(AppRoutes.isImmersiveRoute(AppRoutes.MEASURE_COMPARE))
+        assertFalse(AppRoutes.isImmersiveRoute(AppRoutes.SUMMARY))
+        assertNull(AppRoutes.selectedBottomTab("measurex"))
+    }
+
+    @Test
     fun recordRoutesKeepRecordsSelected() {
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORDS))
         assertEquals(AppRoutes.RECORDS, AppRoutes.selectedBottomTab(AppRoutes.RECORD_DETAIL))

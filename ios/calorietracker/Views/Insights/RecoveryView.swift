@@ -74,6 +74,13 @@ struct RecoveryView: View {
                     Text(Self.componentDetail(component))
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
+                    if component.value != nil, store.isFromScan(Self.series(component.id), day: recovery.day) {
+                        // Shown the way the overnight fallback is: a note on the component (docs/camera-vitals.md §7).
+                        Label("From a finger camera scan", systemImage: VitalsMode.finger.systemImage)
+                            .font(.system(.caption2, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("recovery.scanFallback.\(component.id)")
+                    }
                 }
                 .accessibilityElement(children: .combine)
             }
@@ -121,6 +128,11 @@ struct RecoveryView: View {
 
     static func label(_ id: String) -> String {
         InsightsConfig.shared.metricLabel(id)
+    }
+
+    /// The insights series behind a component.
+    static func series(_ componentID: String) -> String {
+        InsightsConfig.shared.recovery.components.first { $0.id == componentID }?.metric ?? componentID
     }
 
     static func componentDetail(_ c: RecoveryComponent) -> String {

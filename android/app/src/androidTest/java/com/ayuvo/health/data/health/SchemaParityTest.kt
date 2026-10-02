@@ -44,10 +44,40 @@ class SchemaParityTest {
         db.rawQuery("SELECT name FROM sqlite_master WHERE type = 'index' AND name LIKE 'idx_%'", null).use { c ->
             while (c.moveToNext()) indexes += c.getString(0)
         }
-        assertEquals(setOf("idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status"), indexes)
+        assertEquals(
+            setOf("idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status", "idx_vs_mode_start", "idx_vs_day"),
+            indexes
+        )
         db.rawQuery("PRAGMA foreign_keys", null).use { c -> c.moveToFirst(); assertEquals(1, c.getInt(0)) }
         db.rawQuery("PRAGMA journal_mode", null).use { c -> c.moveToFirst(); assertEquals("wal", c.getString(0).lowercase()) }
+        assertEquals(HealthDatabase.VERSION, db.version)
         assertTrue(helper.files().first().exists())
+    }
+
+    /** A v3 database (no vitals tables) upgrades additively to v4 and keeps its rows. */
+    @Test
+    fun upgradeFromV3AddsTheVitalsTables() {
+        val db = helper.writableDatabase
+        db.execSQL(
+            "INSERT INTO health_samples(id, type_id, start_ms, end_ms, local_day, unit, source_id, updated_ms) " +
+                "VALUES ('a', 'steps', 1, 2, '2026-10-01', 'count', 'src', 3)"
+        )
+        for (table in HealthDatabase.VITAL_TABLES.reversed()) db.execSQL("DROP TABLE $table")
+        db.version = 3
+        helper.close()
+
+        helper = HealthDatabase(context)
+        val upgraded = helper.readableDatabase
+        assertEquals(4, upgraded.version)
+        val tables = mutableSetOf<String>()
+        upgraded.rawQuery("SELECT name FROM sqlite_master WHERE type = 'table'", null).use { c ->
+            while (c.moveToNext()) tables += c.getString(0)
+        }
+        assertTrue(tables.containsAll(HealthDatabase.VITAL_TABLES))
+        upgraded.rawQuery("SELECT COUNT(*) FROM health_samples", null).use { c -> c.moveToFirst(); assertEquals(1, c.getInt(0)) }
+        upgraded.rawQuery("SELECT value FROM health_meta WHERE key = 'schema_version'", null).use { c ->
+            c.moveToFirst(); assertEquals("4", c.getString(0))
+        }
     }
 
     /** Column names per table parsed from the CREATE TABLE statements (first token of each column def). */

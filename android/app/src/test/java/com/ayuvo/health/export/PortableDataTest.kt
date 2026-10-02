@@ -693,6 +693,31 @@ class PortableDataTest {
     }
 
     @Test
+    fun cameraVitalsPreferencesTravelBothWays() {
+        // docs/camera-vitals.md §7.2 "Preferences": the three vitals_* keys are written and read like any other preference.
+        val text = """{"format":"ayuvo-portable-data","format_version":1,
+          "preferences":{"vitals_keep_signals":false,"vitals_experimental_enabled":true,"vitals_research_enabled":true}}"""
+        val store = FakePortableStore()
+        importInto(store, text)
+        val s = store.settings!!
+        assertEquals(false, s.vitalsKeepSignals)
+        assertEquals(true, s.vitalsExperimentalEnabled)
+        assertEquals(true, s.vitalsResearchEnabled)
+
+        val export = PortableDataExporter.build(document(settings = PortableSettings.Defaults.copy(vitalsResearchEnabled = true)), zone)!!
+        val prefs = (Json.parseToJsonElement(export.json) as JsonObject)["preferences"] as JsonObject
+        assertEquals("true", (prefs["vitals_keep_signals"] as JsonPrimitive).content)
+        assertEquals("false", (prefs["vitals_experimental_enabled"] as JsonPrimitive).content)
+        assertEquals("true", (prefs["vitals_research_enabled"] as JsonPrimitive).content)
+        val back = (PortableFormat.parse(export.json, zone) as PortableParse.Ok).document.settings
+        assertEquals(true, back.vitalsKeepSignals)
+        assertEquals(false, back.vitalsExperimentalEnabled)
+        assertEquals(true, back.vitalsResearchEnabled)
+        // Untouched vitals defaults alone are nothing to carry.
+        assertNull(PortableDataExporter.build(document(settings = PortableSettings.Defaults.copy(vitalsKeepSignals = true)), zone))
+    }
+
+    @Test
     fun anIncompleteProfileIsIgnoredNotGuessed() {
         val text = """{"format":"ayuvo-portable-data","format_version":1,"profile":{"name":"X","gender":"female","height_cm":170,"weight_kg":60}}"""
         val store = FakePortableStore()

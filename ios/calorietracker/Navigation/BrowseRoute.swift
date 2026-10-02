@@ -7,6 +7,8 @@ enum BrowseRoute: Hashable {
     case insights
     /// Body › Body Measurements (also reached from Browse search).
     case bodyMeasurements
+    /// Camera measurements (finger / face pulse scans, docs/camera-vitals.md §7.1).
+    case vitals
 }
 
 struct BrowseRouteDestination: View {
@@ -40,6 +42,8 @@ struct BrowseRouteDestination: View {
             InsightsHubView()
         case .bodyMeasurements:
             BodyMeasurementsDetailView(gender: profileStore.profile.gender, heightCm: profileStore.profile.heightCm)
+        case .vitals:
+            VitalsHomeView()
         }
     }
 }

@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "device_model": "Pixel 7",
+        "overridden": [
+          "finger",
+          "signal"
+        ],
+        "sections": {
+          "finger": {
+            "max_masked_fraction": 0.2,
+            "max_saturated_fraction": 0.35,
+            "max_spatial_std": 40,
+            "min_red": 70,
+            "min_red_green_ratio": 1.8,
+            "step_jump_fraction": 0.08
+          },
+          "signal": {
+            "artifact_rms_factor": 3.0,
+            "artifact_window_s": 2.0,
+            "beat_window_s": 0.667,
+            "detrend_window_s": 1.5,
+            "fs": 30,
+            "hr_band_hz": [
+              0.7,
+              3.5
+            ],
+            "max_gap_ms": 250,
+            "peak_offset": 0.02,
+            "peak_refractory_s": 0.33,
+            "peak_window_s": 0.111,
+            "refractory_fraction": 0.6,
+            "spectrum_step_hz": 0.0166667,
+            "welch_overlap": 0.5,
+            "welch_segment_s": 10
+          }
+        }
+      },
+      "input": {
+        "device_model": "Pixel 7",
+        "device_overrides": {
+          "Pixel 7": {
+            "finger": {
+              "min_red": 70
+            },
+            "signal": {
+              "artifact_rms_factor": 3.0
+            }
+          }
+        }
+      },
+      "name": "override_applies"
+    },
+    {
+      "expected": {
+        "device_model": "iPhone15,2",
+        "overridden": []
+      },
+      "input": {
+        "device_model": "iPhone15,2",
+        "device_overrides": {
+          "Pixel 7": {
+            "finger": {
+              "min_red": 70
+            }
+          }
+        }
+      },
+      "name": "no_override"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "effective_config",
+  "version": 1
+}

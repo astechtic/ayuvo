@@ -80,7 +80,7 @@ class InsightsDataSourceTest {
 
     private fun build(hubOn: Boolean = true): InsightsBundle = runBlocking {
         val repo = HealthDataRepository(store()) { zone }
-        InsightsDataSource { repo }.build(today, zone, snapshot, settings, profile, hubOn, cfg)
+        InsightsDataSource(healthRepository = { repo }).build(today, zone, snapshot, settings, profile, hubOn, cfg)
     }
 
     @Test
@@ -151,5 +151,33 @@ class InsightsDataSourceTest {
         assertEquals(1200.0, b.inputs.nutrition[today]!!["calories"]!!, 0.0)
         val snap = HealthAnalyticsEngine.snapshot(b, cfg)
         assertEquals("collecting", snap.recovery.status)
+    }
+
+    @Test
+    fun fingerScansFillOnlyDaysWithoutAPlatformValueAndFaceScansAreIgnored() = runBlocking {
+        val repo = HealthDataRepository(store()) { zone }
+        fun scan(id: String, day: String, mode: String, hr: Double, rmssd: Double) = com.ayuvo.health.vitals.storage.VitalScanRecord(
+            id = id, mode = mode, startMs = ms("${day}T08:00"), endMs = ms("${day}T08:01"), tzOffsetS = 0, localDay = day, durationMs = 60_000,
+            platform = "android", deviceModel = "Test", cameraJson = "{}", qualityScore = 88.0, rejectReason = null, qualityJson = "{}",
+            algoVersion = 1, updatedMs = 1L,
+            resultsJson = """{"metrics":{"heart_rate":{"status":"valid","value":$hr},"hrv_rmssd":{"status":"valid","value":$rmssd},""" +
+                """"respiratory_rate":{"status":"unavailable","value":null}}}"""
+        )
+        val scans = listOf(
+            scan("f1", "2026-09-20", com.ayuvo.health.vitals.storage.VitalScanRecord.MODE_FINGER, 59.0, 70.0),
+            scan("x1", "2026-09-18", com.ayuvo.health.vitals.storage.VitalScanRecord.MODE_FACE, 66.0, 30.0)
+        )
+        val b = InsightsDataSource(
+            healthRepository = { repo },
+            cameraScans = { _, _ -> scans },
+            vitalsConfig = { com.ayuvo.health.vitals.VitalsTestFiles.config }
+        ).build(today, zone, snapshot, settings, profile, true, cfg)
+        // The platform HRV of the 20th (overnight mean of 40 and 50) is untouched; resting HR had none, so the scan fills it.
+        assertEquals(45.0, b.inputs.series("hrv")[today]!!, 1e-9)
+        assertEquals(59.0, b.inputs.series("resting_heart_rate")[today]!!, 1e-9)
+        assertEquals(mapOf("resting_heart_rate" to setOf(today)), b.scanFallback)
+        // The face scan on the 18th is never used.
+        assertNull(b.inputs.series("resting_heart_rate")[today.minusDays(2)])
+        assertNull(b.inputs.series("hrv")[today.minusDays(2)])
     }
 }

@@ -43,6 +43,15 @@ struct HealthAgeView: View {
                     Text(Self.markerDetail(marker))
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
+                    if marker.available, let today = store.report?.today {
+                        let days = scanDays(marker.id, asOf: today)
+                        if days > 0 {
+                            Label("\(days) days from a finger camera scan", systemImage: VitalsMode.finger.systemImage)
+                                .font(.system(.caption2, design: .rounded))
+                                .foregroundStyle(.secondary)
+                                .accessibilityIdentifier("healthAge.scanFallback.\(marker.id)")
+                        }
+                    }
                 }
                 .accessibilityElement(children: .combine)
             }
@@ -90,6 +99,13 @@ struct HealthAgeView: View {
             }
         }
         .ayuvoCard()
+    }
+
+    /// Days of a marker's window whose value came from a finger camera scan (docs/camera-vitals.md §7).
+    private func scanDays(_ markerID: String, asOf today: String) -> Int {
+        let config = InsightsConfig.shared
+        let series = config.marker(markerID).map { $0.series ?? $0.id } ?? markerID
+        return store.scanDays(series, from: InsightsDay.add(today, -(config.healthAge.windowDays - 1)), through: today)
     }
 
     // MARK: Text

@@ -53,6 +53,7 @@ Existing sources (health mirror, food/water/fasting stores, strength workouts, w
 ### 3.1 Inputs the adapter must build
 - `series.hrv` is SDNN on iOS and RMSSD on Android (`hrv_kind`), never compared across platforms. `blood_oxygen` is 0–100 on both.
 - HRV, resting heart rate, blood oxygen and breathing rate use `overnight_value(samples, night, fallback)`: the mean of samples inside last night's sleep window, otherwise the daily rollup with `fallback: true`; list fallback metrics in `overnight_fallback`.
+- Camera scans: after the series are resolved, days that still have no `resting_heart_rate`, `hrv` or `respiratory_rate` value are filled from **finger** camera scans by `insights_fallback` in the vitals contract (`docs/camera-vitals.md` §7). Only valid scans taken at rest with quality of at least 70 count. Face scans are never used. The screens mark such components "From a finger camera scan". The insights contract itself is unchanged.
 - Steps and active energy come from the de-duplicating statistics path (the same one the Summary rings use), never from summing mirror rows.
 - `workouts` holds health workouts and Ayuvo strength sessions together; overlapping ones are merged by the engine. `effort` is the 1–10 effort score when the platform has one, else null.
 - A missing value is simply absent. Never fill 0 for "no data".

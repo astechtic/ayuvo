@@ -4,7 +4,7 @@ import Foundation
 /// tables this DDL creates against the shared file (`PRAGMA table_info`), so the two
 /// must stay identical column-for-column.
 nonisolated enum HealthSchema {
-    static let schemaVersion = 3
+    static let schemaVersion = 4
     static let registryVersion = 2
     static let rollupRuleVersion = 1
 
@@ -12,9 +12,13 @@ nonisolated enum HealthSchema {
         "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
         "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
         "google_health_sync_state", "google_health_mirror",
+        "vital_scans", "vital_scan_signals", "vital_calibrations", "vital_device_profiles",
     ]
 
-    static let indexNames: [String] = ["idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status"]
+    static let indexNames: [String] = [
+        "idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status",
+        "idx_vs_mode_start", "idx_vs_day",
+    ]
 
     static let ddl = """
     CREATE TABLE health_samples (
@@ -76,6 +80,36 @@ nonisolated enum HealthSchema {
       mirror_status TEXT NOT NULL DEFAULT 'pending',  -- pending|mirrored|skipped_dup|unsupported|disabled|error
       mirrored_ms INTEGER, attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT);
     CREATE INDEX idx_ghm_status ON google_health_mirror(mirror_status);
+    CREATE TABLE vital_scans (                -- v4: camera finger PPG / face rPPG scans (docs/camera-vitals.md); never written to Health
+      id TEXT PRIMARY KEY NOT NULL,            -- local:<uuid>
+      mode TEXT NOT NULL,                      -- finger_ppg|face_rppg
+      session_id TEXT,                         -- shared by a finger + face compare pair
+      start_ms INTEGER NOT NULL, end_ms INTEGER NOT NULL, tz_offset_s INTEGER NOT NULL, local_day TEXT NOT NULL,
+      duration_ms INTEGER NOT NULL, platform TEXT NOT NULL, device_model TEXT NOT NULL,
+      camera_json TEXT NOT NULL,               -- lens, position, resolution, target/achieved fps, exposure, ISO, WB, torch
+      context TEXT NOT NULL DEFAULT 'resting', -- resting|after_activity|other
+      quality_score REAL, reject_reason TEXT,
+      quality_json TEXT NOT NULL,              -- engine quality object (components kept)
+      results_json TEXT NOT NULL,              -- {metric_id: envelope} plus ibi arrays and indicators
+      algo_version INTEGER NOT NULL,
+      reference_json TEXT,                     -- user-entered reference readings (chest strap / ECG / oximeter / cuff)
+      deleted INTEGER NOT NULL DEFAULT 0, updated_ms INTEGER NOT NULL);
+    CREATE INDEX idx_vs_mode_start ON vital_scans(mode, start_ms);
+    CREATE INDEX idx_vs_day ON vital_scans(local_day);
+    CREATE TABLE vital_scan_signals (         -- v4: per-scan signals for reprocessing; no images, no video
+      scan_id TEXT NOT NULL REFERENCES vital_scans(id) ON DELETE CASCADE,
+      kind TEXT NOT NULL,                      -- frame_stats|processed|mask|beats
+      sample_rate REAL, encoding TEXT NOT NULL,-- f32le+deflate (row-major, meta_json.columns)
+      data BLOB NOT NULL, meta_json TEXT, PRIMARY KEY (scan_id, kind));
+    CREATE TABLE vital_calibrations (         -- v4: personal SpO2 / BP calibration pairs (experimental / research)
+      id TEXT PRIMARY KEY NOT NULL, kind TEXT NOT NULL,     -- spo2|bp
+      device_model TEXT NOT NULL, scan_id TEXT, t_ms INTEGER NOT NULL,
+      reference_json TEXT NOT NULL,            -- {"spo2": 98} | {"sbp": 118, "dbp": 76, "scan_gap_min": 2}
+      features_json TEXT NOT NULL,             -- {"ratio": 0.66} | bp_features
+      deleted INTEGER NOT NULL DEFAULT 0, updated_ms INTEGER NOT NULL);
+    CREATE TABLE vital_device_profiles (      -- v4: camera capability profile per device model and camera position
+      device_model TEXT NOT NULL, camera_position TEXT NOT NULL,   -- back|front
+      capability_json TEXT NOT NULL, updated_ms INTEGER NOT NULL, PRIMARY KEY (device_model, camera_position));
     """
 
     /// The same DDL made re-runnable (`IF NOT EXISTS`) for `applySchema()`.

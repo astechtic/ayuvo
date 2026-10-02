@@ -1,0 +1,472 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "hrv": {
+          "2026-10-01": 42.0,
+          "2026-10-02": 45.0
+        },
+        "respiratory_rate": {
+          "2026-10-01": 14.0,
+          "2026-10-02": 14.0
+        },
+        "resting_heart_rate": {
+          "2026-10-01": 64.0,
+          "2026-10-06": 64.0
+        }
+      },
+      "input": {
+        "hrv_kind": "rmssd",
+        "platform_days": {
+          "resting_heart_rate": [
+            "2026-10-02"
+          ]
+        },
+        "scans": [
+          {
+            "context": "resting",
+            "local_day": "2026-10-01",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 62
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-01",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 66
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 39
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-02",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 70
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-02",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 99
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "face_rppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "after_activity",
+            "local_day": "2026-10-03",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 95
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-04",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 80
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 60,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-05",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 62
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 0,
+            "reject_reason": "motion"
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-06",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 64
+              },
+              "hrv_rmssd": {
+                "status": "unavailable",
+                "value": null
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "unavailable",
+                "value": null
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          }
+        ]
+      },
+      "name": "rmssd_kind_mixed_filters"
+    },
+    {
+      "expected": {
+        "hrv": {
+          "2026-10-01": 40.0,
+          "2026-10-02": 40.0,
+          "2026-10-06": 40.0
+        },
+        "respiratory_rate": {
+          "2026-10-01": 14.0,
+          "2026-10-02": 14.0
+        },
+        "resting_heart_rate": {
+          "2026-10-01": 64.0,
+          "2026-10-02": 70.0,
+          "2026-10-06": 64.0
+        }
+      },
+      "input": {
+        "hrv_kind": "sdnn",
+        "platform_days": {},
+        "scans": [
+          {
+            "context": "resting",
+            "local_day": "2026-10-01",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 62
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-01",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 66
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 39
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-02",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 70
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-02",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 99
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "face_rppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "after_activity",
+            "local_day": "2026-10-03",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 95
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-04",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 80
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 60,
+            "reject_reason": null
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-05",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 62
+              },
+              "hrv_rmssd": {
+                "status": "valid",
+                "value": 45
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "valid",
+                "value": 14
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 0,
+            "reject_reason": "motion"
+          },
+          {
+            "context": "resting",
+            "local_day": "2026-10-06",
+            "metrics": {
+              "heart_rate": {
+                "status": "valid",
+                "value": 64
+              },
+              "hrv_rmssd": {
+                "status": "unavailable",
+                "value": null
+              },
+              "hrv_sdnn": {
+                "status": "valid",
+                "value": 40
+              },
+              "respiratory_rate": {
+                "status": "unavailable",
+                "value": null
+              }
+            },
+            "mode": "finger_ppg",
+            "quality_score": 85,
+            "reject_reason": null
+          }
+        ]
+      },
+      "name": "sdnn_kind_no_platform"
+    },
+    {
+      "expected": {
+        "hrv": {},
+        "respiratory_rate": {},
+        "resting_heart_rate": {}
+      },
+      "input": {
+        "hrv_kind": "rmssd",
+        "platform_days": {},
+        "scans": []
+      },
+      "name": "no_scans"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "insights_fallback",
+  "version": 1
+}

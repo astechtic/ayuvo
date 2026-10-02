@@ -6,6 +6,7 @@ import com.ayuvo.health.AppContainer
 import com.ayuvo.health.coach.export.CoachChatArchiveReader
 import com.ayuvo.health.medications.export.MedicationsArchive
 import com.ayuvo.health.records.backup.RecordsArchiveFormat
+import com.ayuvo.health.vitals.storage.CameraVitalsArchive
 import com.ayuvo.health.services.health.HealthSyncTrigger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -143,7 +144,7 @@ class AllDataImportCoordinator(private val container: AppContainer) {
                     runCatching { AllDataImportOutcome.Imported(section.id, import(section.id, file)) }
                         .onFailure { Log.w(TAG, "Section ${section.id} failed: ${it.javaClass.simpleName}") }
                         .getOrElse { AllDataImportOutcome.Failed(section.id, it.localizedMessage) }
-                        .also { runCatching { file.delete() } }
+                        .also { runCatching { file.deleteRecursively() } }
                 }
                 if (section.id == AllDataExportCoordinator.SECTION_APP_BACKUP && outcome is AllDataImportOutcome.Failed) appBackupFailed = true
                 outcomes += outcome
@@ -157,19 +158,30 @@ class AllDataImportCoordinator(private val container: AppContainer) {
     private val AllDataImportPlan.Section.isPortableCoveredByAppBackup: Boolean
         get() = id == AllDataExportCoordinator.SECTION_PORTABLE && skip == AllDataImportPlan.SkipReason.IN_APP_BACKUP
 
-    /** One streaming pass over the zip, copying each wanted entry to its own temp file. */
+    /**
+     * One streaming pass over the zip, copying each wanted entry to its own temp file. A multi-file section
+     * (camera_vitals) gets a folder holding its entries by base name.
+     */
     private fun extract(uri: Uri, wanted: List<AllDataImportPlan.Section>, work: File): Map<String, File> {
-        val byEntry = wanted.associateBy { it.entry }
+        val byEntry = HashMap<String, AllDataImportPlan.Section>()
+        for (section in wanted) for (name in section.entries) byEntry[name] = section
         val out = HashMap<String, File>()
+        val done = HashSet<String>()
         val input = container.appContext.contentResolver.openInputStream(uri) ?: error(container.appContext.getString(R.string.core_import_open_failed))
         ZipInputStream(input.buffered()).use { zip ->
-            while (out.size < byEntry.size) {
+            while (done.size < byEntry.size) {
                 val entry = zip.nextEntry ?: break
                 val section = byEntry[entry.name] ?: continue
-                if (section.id in out) continue
-                val file = File(work, section.id)
-                file.outputStream().use { zip.copyTo(it, BUFFER) }
-                out[section.id] = file
+                if (!done.add(entry.name)) continue
+                if (section.id in AllDataImportPlan.MULTI_FILE_SECTIONS) {
+                    val dir = File(work, section.id).apply { mkdirs() }
+                    File(dir, entry.name.substringAfterLast('/')).outputStream().use { zip.copyTo(it, BUFFER) }
+                    out[section.id] = dir
+                } else {
+                    val file = File(work, section.id)
+                    file.outputStream().use { zip.copyTo(it, BUFFER) }
+                    out[section.id] = file
+                }
             }
         }
         return out
@@ -208,6 +220,18 @@ class AllDataImportCoordinator(private val container: AppContainer) {
             }
             container.requestHealthSync(HealthSyncTrigger.IMPORT_COMPLETED)
             (result.inserted + result.updated).toLong()
+        }
+        AllDataExportCoordinator.SECTION_CAMERA_VITALS -> {
+            // §7.2 merge: insert by id, local ids (live or deleted) win, newer device profile wins; nothing reaches Health.
+            fun text(name: String): String? = File(file, name.substringAfterLast('/')).takeIf { it.isFile }?.let {
+                require(it.length() <= CAMERA_VITALS_MAX_BYTES) { container.appContext.getString(R.string.core_import_file_too_large) }
+                it.readText()
+            }
+            val bundle = CameraVitalsArchive.read(
+                text(CameraVitalsArchive.SCANS), text(CameraVitalsArchive.SIGNALS),
+                text(CameraVitalsArchive.CALIBRATIONS), text(CameraVitalsArchive.DEVICE_PROFILES)
+            )
+            container.vitalScans.importArchive(bundle).total
         }
         AllDataExportCoordinator.SECTION_MEDICATIONS -> {
             val archive = MedicationsArchive.read(file.readBytes())
@@ -249,5 +273,6 @@ class AllDataImportCoordinator(private val container: AppContainer) {
         private const val TAG = "AyuvoImportAll"
         private const val BUFFER = 64 * 1024
         private const val MAX_MANIFEST_BYTES = 1024 * 1024
+        private const val CAMERA_VITALS_MAX_BYTES = 512L * 1024 * 1024
     }
 }

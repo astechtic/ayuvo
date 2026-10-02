@@ -13,6 +13,7 @@ import com.ayuvo.health.medications.export.MedicationsArchive
 import com.ayuvo.health.medications.logic.MedicationConstants
 import com.ayuvo.health.records.backup.RecordsArchiveFormat
 import com.ayuvo.health.records.backup.RecordsBackupCoordinator
+import com.ayuvo.health.vitals.storage.CameraVitalsArchive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +30,7 @@ import com.ayuvo.health.R
 import com.ayuvo.health.l10n.AppText
 
 /** The steps of one "Export All Data" run, in order (progress + the UI's step label). */
-enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, MEDICATIONS, HEALTH_RECORDS, COACH_CHATS, APP_BACKUP, PORTABLE, WRITING }
+enum class AllDataExportStep { FOOD_DIARY, HEALTH_DATA, CAMERA_VITALS, MEDICATIONS, HEALTH_RECORDS, COACH_CHATS, APP_BACKUP, PORTABLE, WRITING }
 
 sealed interface AllDataExportOutcome {
     data class Done(val fileCount: Int, val skippedSections: List<String>) : AllDataExportOutcome
@@ -91,12 +92,14 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                     SectionResult.Skip(AllDataExportArchive.REASON_FAILED)
                 }) {
                     is SectionResult.Ok -> sections += r.section
+                    is SectionResult.Many -> sections += r.sections
                     is SectionResult.Skip -> skipped[id] = r.reason
                 }
             }
 
             section(SECTION_FOOD_DIARY, AllDataExportStep.FOOD_DIARY) { foodDiary(work) }
             section(SECTION_HEALTH_DATA, AllDataExportStep.HEALTH_DATA) { healthData(work) }
+            section(SECTION_CAMERA_VITALS, AllDataExportStep.CAMERA_VITALS) { cameraVitals(work) }
             section(SECTION_MEDICATIONS, AllDataExportStep.MEDICATIONS) { medications(work) }
             section(SECTION_HEALTH_RECORDS, AllDataExportStep.HEALTH_RECORDS) { records(work) }
             section(SECTION_COACH_CHATS, AllDataExportStep.COACH_CHATS) { coachChats(work) }
@@ -123,6 +126,8 @@ class AllDataExportCoordinator(private val container: AppContainer) {
     private sealed interface SectionResult {
         data class Ok(val section: AllDataExportArchive.Section) : SectionResult
         data class Skip(val reason: String) : SectionResult
+        /** One section written as several entries (camera_vitals). */
+        data class Many(val sections: List<AllDataExportArchive.Section>) : SectionResult
     }
 
     /** Food diary: the "All time" diary JSON (read back by Import All Data and DiaryImporter). */
@@ -168,6 +173,36 @@ class AllDataExportCoordinator(private val container: AppContainer) {
                 counts = mapOf("samples" to result.sampleCount, "series_points" to result.seriesCount, "types" to result.typeCount.toLong()),
                 source = file
             )
+        )
+    }
+
+    /**
+     * Camera measurements (docs/camera-vitals.md §7.2): four NDJSON entries under `camera-vitals/`, each with its own
+     * manifest count. Deleted scans and calibrations are left out; with *Keep raw signals* off `signals.ndjson` is empty.
+     */
+    private suspend fun cameraVitals(work: File): SectionResult {
+        if (!container.appContext.getDatabasePath(HealthDatabase.NAME).exists()) {
+            return SectionResult.Skip(AllDataExportArchive.REASON_NOT_SET_UP)
+        }
+        val keepSignals = container.prefs.vitalsKeepSignals.first()
+        val bundle = container.vitalScans.exportBundle(includeSignals = keepSignals)
+        if (bundle.scans.isEmpty() && bundle.calibrations.isEmpty()) return SectionResult.Skip(AllDataExportArchive.REASON_EMPTY)
+        val dir = File(work, CameraVitalsArchive.DIR).apply { mkdirs() }
+        val texts = CameraVitalsArchive.encode(bundle)
+        val description = "Camera measurements: finger and face scans with their stored signals, personal calibrations and camera profiles " +
+            "(ayuvo-camera-vitals NDJSON). Import with Settings › Backup & Export › Import All Data."
+        return SectionResult.Many(
+            texts.map { (path, entry) ->
+                val file = File(dir, path.substringAfterLast('/')).apply { writeText(entry.first) }
+                AllDataExportArchive.Section(
+                    id = SECTION_CAMERA_VITALS,
+                    format = CameraVitalsArchive.FORMAT,
+                    path = path,
+                    description = description,
+                    counts = mapOf(entry.second to entry.third.toLong()),
+                    source = file
+                )
+            }
         )
     }
 
@@ -297,6 +332,7 @@ class AllDataExportCoordinator(private val container: AppContainer) {
         private const val TAG = "AyuvoExportAll"
         const val SECTION_FOOD_DIARY = "food_diary"
         const val SECTION_HEALTH_DATA = "health_data"
+        const val SECTION_CAMERA_VITALS = CameraVitalsArchive.SECTION
         const val SECTION_MEDICATIONS = "medications"
         const val SECTION_HEALTH_RECORDS = "health_records"
         const val SECTION_COACH_CHATS = "coach_chats"

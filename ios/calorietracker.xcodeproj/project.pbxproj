@@ -722,7 +722,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Ayuvo Debug";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Ayuvo uses the camera to scan food and barcodes.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Ayuvo uses the camera to scan food and barcodes, and to measure your pulse from your fingertip or face. Camera frames are processed on this device and are not saved.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ayuvo reads your activity, body measurements, heart, sleep, vitals, respiratory, mobility, hearing, cycle tracking, mindfulness, symptoms and nutrition data to show them in the Health Data hub and keep your history in sync on this iPhone. Only if you allow it, Coach can use this data to answer your questions through your AI provider.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ayuvo writes, updates or removes your nutrition, body measurements, workouts with their routes, and calculated workout calories when you change your logs.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connect to an Ollama server running on your local network.";
@@ -782,7 +782,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Ayuvo Debug";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Ayuvo uses the camera to scan food and barcodes.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Ayuvo uses the camera to scan food and barcodes, and to measure your pulse from your fingertip or face. Camera frames are processed on this device and are not saved.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ayuvo reads your activity, body measurements, heart, sleep, vitals, respiratory, mobility, hearing, cycle tracking, mindfulness, symptoms and nutrition data to show them in the Health Data hub and keep your history in sync on this iPhone. Only if you allow it, Coach can use this data to answer your questions through your AI provider.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ayuvo writes, updates or removes your nutrition, body measurements, workouts with their routes, and calculated workout calories when you change your logs.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connect to an Ollama server running on your local network.";

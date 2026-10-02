@@ -218,6 +218,17 @@ fun HealthTypeDetailScreen(
                     )
                 }
             }
+            // Camera measurements (docs/camera-vitals.md §7.1): a finger scan, saved in Ayuvo only (never Health Connect).
+            if (typeKey in CAMERA_MEASURABLE_TYPES) {
+                row {
+                    GroupRow(
+                        title = stringResource(R.string.camvitals_measure_with_camera),
+                        subtitle = stringResource(R.string.camvitals_measure_with_camera_sub),
+                        modifier = Modifier.testTag("metric.measureCamera"),
+                        onClick = destinations.openCameraScan
+                    )
+                }
+            }
             row {
                 GroupRow(
                     title = stringResource(R.string.health_detail_export_csv),
@@ -366,6 +377,9 @@ fun HealthTypeDetailScreen(
         ManualVitalLogHost(container, manual) { showLog = false; vm.onManualEntrySaved() }
     }
 }
+
+/** Health types whose detail offers "Measure with camera" (HRV is RMSSD on Android, matching `hrv_kind`). */
+internal val CAMERA_MEASURABLE_TYPES = setOf("heart_rate", "resting_heart_rate", "hrv_rmssd", "respiratory_rate")
 
 /** Headline for the selected bucket: its value and date (Apple Health behaviour). */
 @Composable

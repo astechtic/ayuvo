@@ -1,0 +1,329 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "band": "typical",
+        "confidence": 0.45,
+        "n": 7,
+        "reason": null,
+        "recovery": 50.0,
+        "stress": 50.0,
+        "z_hr": 0.0,
+        "z_ln_rmssd": 0.0
+      },
+      "input": {
+        "current": {
+          "hr": 66,
+          "rmssd": 41
+        },
+        "history": [
+          {
+            "hr": 66,
+            "rmssd": 42,
+            "t_ms": 86400000
+          },
+          {
+            "hr": 68,
+            "rmssd": 38,
+            "t_ms": 259200000
+          },
+          {
+            "hr": 64,
+            "rmssd": 47,
+            "t_ms": 432000000
+          },
+          {
+            "hr": 67,
+            "rmssd": 40,
+            "t_ms": 691200000
+          },
+          {
+            "hr": 65,
+            "rmssd": 44,
+            "t_ms": 864000000
+          },
+          {
+            "hr": 69,
+            "rmssd": 36,
+            "t_ms": 1036800000
+          },
+          {
+            "hr": 66,
+            "rmssd": 41,
+            "t_ms": 1209600000
+          }
+        ],
+        "now_ms": 1296000000,
+        "quality": 90
+      },
+      "name": "typical"
+    },
+    {
+      "expected": {
+        "band": "high",
+        "confidence": 0.48,
+        "n": 7,
+        "reason": null,
+        "recovery": 100.0,
+        "stress": 0.0,
+        "z_hr": -3.0,
+        "z_ln_rmssd": 3.95
+      },
+      "input": {
+        "current": {
+          "hr": 60,
+          "rmssd": 62
+        },
+        "history": [
+          {
+            "hr": 66,
+            "rmssd": 42,
+            "t_ms": 86400000
+          },
+          {
+            "hr": 68,
+            "rmssd": 38,
+            "t_ms": 259200000
+          },
+          {
+            "hr": 64,
+            "rmssd": 47,
+            "t_ms": 432000000
+          },
+          {
+            "hr": 67,
+            "rmssd": 40,
+            "t_ms": 691200000
+          },
+          {
+            "hr": 65,
+            "rmssd": 44,
+            "t_ms": 864000000
+          },
+          {
+            "hr": 69,
+            "rmssd": 36,
+            "t_ms": 1036800000
+          },
+          {
+            "hr": 66,
+            "rmssd": 41,
+            "t_ms": 1209600000
+          }
+        ],
+        "now_ms": 1296000000,
+        "quality": 95
+      },
+      "name": "high_recovery"
+    },
+    {
+      "expected": {
+        "band": "low",
+        "confidence": 0.43,
+        "n": 7,
+        "reason": null,
+        "recovery": 0.0,
+        "stress": 100.0,
+        "z_hr": 6.0,
+        "z_ln_rmssd": -5.95
+      },
+      "input": {
+        "current": {
+          "hr": 78,
+          "rmssd": 22
+        },
+        "history": [
+          {
+            "hr": 66,
+            "rmssd": 42,
+            "t_ms": 86400000
+          },
+          {
+            "hr": 68,
+            "rmssd": 38,
+            "t_ms": 259200000
+          },
+          {
+            "hr": 64,
+            "rmssd": 47,
+            "t_ms": 432000000
+          },
+          {
+            "hr": 67,
+            "rmssd": 40,
+            "t_ms": 691200000
+          },
+          {
+            "hr": 65,
+            "rmssd": 44,
+            "t_ms": 864000000
+          },
+          {
+            "hr": 69,
+            "rmssd": 36,
+            "t_ms": 1036800000
+          },
+          {
+            "hr": 66,
+            "rmssd": 41,
+            "t_ms": 1209600000
+          }
+        ],
+        "now_ms": 1296000000,
+        "quality": 85
+      },
+      "name": "low_recovery"
+    },
+    {
+      "expected": {
+        "band": null,
+        "confidence": null,
+        "n": 3,
+        "reason": "short_history",
+        "recovery": null,
+        "stress": null
+      },
+      "input": {
+        "current": {
+          "hr": 66,
+          "rmssd": 41
+        },
+        "history": [
+          {
+            "hr": 66,
+            "rmssd": 42,
+            "t_ms": 86400000
+          },
+          {
+            "hr": 68,
+            "rmssd": 38,
+            "t_ms": 259200000
+          },
+          {
+            "hr": 64,
+            "rmssd": 47,
+            "t_ms": 432000000
+          }
+        ],
+        "now_ms": 1296000000,
+        "quality": 90
+      },
+      "name": "short_history"
+    },
+    {
+      "expected": {
+        "band": null,
+        "confidence": null,
+        "n": 7,
+        "reason": "few_beats",
+        "recovery": null,
+        "stress": null
+      },
+      "input": {
+        "current": {
+          "hr": 66,
+          "rmssd": null
+        },
+        "history": [
+          {
+            "hr": 66,
+            "rmssd": 42,
+            "t_ms": 86400000
+          },
+          {
+            "hr": 68,
+            "rmssd": 38,
+            "t_ms": 259200000
+          },
+          {
+            "hr": 64,
+            "rmssd": 47,
+            "t_ms": 432000000
+          },
+          {
+            "hr": 67,
+            "rmssd": 40,
+            "t_ms": 691200000
+          },
+          {
+            "hr": 65,
+            "rmssd": 44,
+            "t_ms": 864000000
+          },
+          {
+            "hr": 69,
+            "rmssd": 36,
+            "t_ms": 1036800000
+          },
+          {
+            "hr": 66,
+            "rmssd": 41,
+            "t_ms": 1209600000
+          }
+        ],
+        "now_ms": 1296000000,
+        "quality": 90
+      },
+      "name": "no_hrv"
+    },
+    {
+      "expected": {
+        "band": null,
+        "confidence": null,
+        "n": 0,
+        "reason": "short_history",
+        "recovery": null,
+        "stress": null
+      },
+      "input": {
+        "current": {
+          "hr": 66,
+          "rmssd": 41
+        },
+        "history": [
+          {
+            "hr": 66,
+            "rmssd": 42,
+            "t_ms": 86400000
+          },
+          {
+            "hr": 68,
+            "rmssd": 38,
+            "t_ms": 259200000
+          },
+          {
+            "hr": 64,
+            "rmssd": 47,
+            "t_ms": 432000000
+          },
+          {
+            "hr": 67,
+            "rmssd": 40,
+            "t_ms": 691200000
+          },
+          {
+            "hr": 65,
+            "rmssd": 44,
+            "t_ms": 864000000
+          },
+          {
+            "hr": 69,
+            "rmssd": 36,
+            "t_ms": 1036800000
+          },
+          {
+            "hr": 66,
+            "rmssd": 41,
+            "t_ms": 1209600000
+          }
+        ],
+        "now_ms": 5184000000,
+        "quality": 90
+      },
+      "name": "old_history_ignored"
+    }
+  ],
+  "format": "ayuvo-vitals-vectors",
+  "function": "scan_indicator",
+  "version": 1
+}

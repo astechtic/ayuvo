@@ -41,6 +41,10 @@ CONTRACTS = [
         "disclaimer", "labels.*[*]", "metrics[*].title", "metrics[*].about", "metrics[*].method",
     ]),
     ("workout", "workout/workout_config.json", ["disclaimer", "sports.*.title"]),
+    ("vitals", "vitals/vitals_config.json", [
+        "disclaimer", "classifications.*.label", "classifications.*.about", "guidance.*", "reasons.*",
+        "metrics[*].title", "quality.grades[*].label", "indicator.bands[*].label",
+    ]),
     ("metric", "metrics/metric_catalog.json", [
         "metrics[*].title", "metrics[*].about", "browse_sections[*].title", "domains[*].title",
     ]),

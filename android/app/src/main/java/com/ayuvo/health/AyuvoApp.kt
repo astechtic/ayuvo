@@ -315,6 +315,17 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         )
     }
 
+    // -- Camera vitals (docs/camera-vitals.md): engine config and scan storage (health DB v4) ----------
+    // Scans stay in the vital_* tables: never health_samples, never Health Connect.
+    val vitalsConfig: com.ayuvo.health.vitals.engine.VitalsConfig by lazy {
+        com.ayuvo.health.vitals.engine.VitalsConfig.parse(
+            app.assets.open(com.ayuvo.health.vitals.engine.VitalsConfig.ASSET_PATH).bufferedReader().use { it.readText() }
+        ).also { com.ayuvo.health.vitals.engine.VitalsConfig.active = it }
+    }
+    val vitalScans: com.ayuvo.health.vitals.storage.VitalScanRepository by lazy {
+        com.ayuvo.health.vitals.storage.VitalScanRepository(healthDatabase)
+    }
+
     // -- Google Health API (docs/google-health.md) ----------------------------
     // Origin-3 rows land in the same mirror; nothing runs until the user connects in Settings.
     val googleHealth: com.ayuvo.health.services.googlehealth.GoogleHealthCoordinator by lazy {
@@ -763,8 +774,17 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         com.ayuvo.health.insights.InsightsRepository(
             config = { insightsConfig },
             // Derived resting heart rate / VO2 max fill days without a native reading (docs/derived-metrics.md §1).
-            source = com.ayuvo.health.insights.InsightsDataSource(derivedEnabled = { derivedEnabledIds() }) { healthRepository },
+            // Finger camera scans fill resting HR / HRV / respiratory rate days without a wearable value (docs/camera-vitals.md §7).
+            source = com.ayuvo.health.insights.InsightsDataSource(
+                derivedEnabled = { derivedEnabledIds() },
+                healthRepository = { healthRepository },
+                cameraScans = { fromMs, toMs ->
+                    if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) vitalScans.scans(null, fromMs, toMs) else emptyList()
+                },
+                vitalsConfig = { vitalsConfig }
+            ),
             healthRevision = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.revision.value else -1L },
+            vitalsRevision = { vitalScans.revision.value },
             derivedRevision = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) healthRepository.derivedRevision.value else -1L },
             hubEnabled = { prefs.healthHubEnabled.first() && appContext.getDatabasePath(HealthDatabase.NAME).exists() },
             appSnapshot = { appMetrics.snapshot() },
@@ -786,7 +806,8 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         appMetrics.revision,
         profileRepository.profile,
         insightsSettings,
-        prefs.healthHubEnabled
+        prefs.healthHubEnabled,
+        vitalScans.revision
     )
 
     val insightsExplainer: com.ayuvo.health.insights.InsightsExplainer by lazy {

@@ -23,12 +23,13 @@ struct ExportAllDataView: View {
     @State private var errorMessage: String?
 
     enum Step: Int, CaseIterable {
-        case foodDiary, healthData, medications, healthRecords, coachChats, appBackup, portableData, packing
+        case foodDiary, healthData, cameraVitals, medications, healthRecords, coachChats, appBackup, portableData, packing
 
         var title: LocalizedStringResource {
             switch self {
             case .foodDiary: "Food diary"
             case .healthData: "Health data"
+            case .cameraVitals: "Camera measurements"
             case .medications: "Medications"
             case .healthRecords: "Health Records"
             case .coachChats: "Coach chats"
@@ -49,6 +50,7 @@ struct ExportAllDataView: View {
                 Section {
                     contentRow("fork.knife", AyuvoPalette.nutrition, "Food diary", "Meals, nutrition and water (JSON)")
                     contentRow("heart.text.square.fill", AyuvoPalette.vitals, "Health data", "Synced Apple Health samples")
+                    contentRow("waveform.path.ecg", AyuvoPalette.heart, "Camera measurements", "Finger and face scans, their signals and calibrations")
                     contentRow("pills.fill", AyuvoPalette.medications, "Medications", "Medications, schedules and dose log")
                     contentRow("doc.text.fill", AyuvoPalette.records, "Health Records", "Records and their details")
                     contentRow("gearshape.fill", AyuvoPalette.other, "Settings, profile & logs", "Profile, goals, workouts, weight, fasting, meal photos")
@@ -217,6 +219,29 @@ struct ExportAllDataView: View {
                 }
             } else {
                 skipped.append("health_data")
+            }
+
+            // 2b. Camera measurements — `camera-vitals/` (docs/camera-vitals.md §7.2). Scans are in no app backup.
+            advance(.cameraVitals)
+            if let db = await VitalsStore.shared.database() {
+                let vitals = try await VitalsArchive.export(from: db, keepSignals: VitalsSettings.keepSignals())
+                if vitals.isEmpty {
+                    skipped.append(VitalsArchive.sectionID)
+                } else {
+                    let folder = parts.appendingPathComponent("camera-vitals", isDirectory: true)
+                    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                    for entry in vitals.entries {
+                        let url = folder.appendingPathComponent((entry.name as NSString).lastPathComponent)
+                        try entry.data.write(to: url, options: .atomic)
+                        // The section manifest carries the counts; the data files are listed so every entry is described.
+                        included.append(.init(
+                            section: VitalsArchive.sectionID, format: VitalsArchive.format, name: entry.name, fileURL: url,
+                            counts: entry.name == VitalsArchive.manifestEntry ? vitals.counts : [:]
+                        ))
+                    }
+                }
+            } else {
+                skipped.append(VitalsArchive.sectionID)
             }
 
             // 3. Medications — the `ayuvo-medications.json` archive.

@@ -732,8 +732,10 @@ class SqliteHealthDataStore(private val helper: HealthDatabase) : HealthDataStor
 
     override suspend fun deleteAll() = withContext(Dispatchers.IO) {
         write { database ->
+            // Camera scans are the user's own measurements, not synced data: "Delete all data" removes the file,
+            // the camera-measurements setting deletes scans; this clear leaves them.
             HealthDatabase.TABLES.forEach { table ->
-                if (table != "health_meta") database.delete(table, null, null)
+                if (table != "health_meta" && table !in HealthDatabase.VITAL_TABLES) database.delete(table, null, null)
             }
         }
         Unit

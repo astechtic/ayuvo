@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Camera vitals UI (docs/camera-vitals.md §7.1). Contract text (metric titles, reasons, guidance, classifications,
+     grades, bands, disclaimer) comes from ContractStrings under the "vitals." prefix, not from this file. -->
+<resources>
+    <!-- Entry points -->
+    <string name="camvitals_title">Camera measurements</string>
+    <string name="camvitals_measure">Measure</string>
+    <string name="camvitals_finger_scan">Finger scan</string>
+    <string name="camvitals_face_scan">Face scan</string>
+    <string name="camvitals_compare">Compare finger &amp; face</string>
+    <string name="camvitals_measure_with_camera">Measure with camera</string>
+    <string name="camvitals_measure_with_camera_sub">Finger scan with the rear camera and flash</string>
+    <string name="camvitals_browse_sub">Heart rate, HRV and breathing from your phone camera</string>
+    <string name="camvitals_finger_sub">Rear camera and flash</string>
+    <string name="camvitals_face_sub">Front camera</string>
+    <string name="camvitals_mode_finger">Finger</string>
+    <string name="camvitals_mode_face">Face</string>
+
+    <!-- Vitals home -->
+    <string name="camvitals_latest">Latest</string>
+    <string name="camvitals_hr_trend">Heart rate trend</string>
+    <string name="camvitals_hr_trend_footer">Daily average of valid scans over the last 30 days.</string>
+    <string name="camvitals_baselines">Your usual values</string>
+    <string name="camvitals_baselines_footer">Median of valid scans of the same type. Each window needs at least 3 scans.</string>
+    <string name="camvitals_baseline_7d">7 days</string>
+    <string name="camvitals_baseline_14d">14 days</string>
+    <string name="camvitals_baseline_30d">30 days</string>
+    <string name="camvitals_baseline_all">All time</string>
+    <string name="camvitals_baseline_hr">Heart rate</string>
+    <string name="camvitals_baseline_rmssd">HRV (RMSSD)</string>
+    <string name="camvitals_history">History</string>
+    <string name="camvitals_no_scans_title">No scans yet</string>
+    <string name="camvitals_no_scans_body">Take a finger or face scan to see your results here.</string>
+    <string name="camvitals_dash">—</string>
+    <string name="camvitals_row_subtitle">%1$s · %2$s</string>
+
+    <!-- Scan flow: intro -->
+    <string name="camvitals_finger_step_1">Cover the rear camera and the flash completely with a fingertip.</string>
+    <string name="camvitals_finger_step_2">Press lightly. Pressing hard squeezes out the pulse.</string>
+    <string name="camvitals_finger_step_3">Rest your hand and stay still for about a minute.</string>
+    <string name="camvitals_face_step_1">Sit still and face the camera.</string>
+    <string name="camvitals_face_step_2">Use even lighting, without strong light from behind you.</string>
+    <string name="camvitals_face_step_3">Avoid talking during the scan.</string>
+    <string name="camvitals_face_step_4">Keep your whole face inside the oval.</string>
+    <string name="camvitals_face_step_5">Where possible, remove anything that hides your forehead or cheeks.</string>
+    <string name="camvitals_privacy_note">Only colour statistics are measured. No images or video are stored.</string>
+    <string name="camvitals_context">Context</string>
+    <string name="camvitals_context_resting">Resting</string>
+    <string name="camvitals_context_after_activity">After activity</string>
+    <string name="camvitals_context_other">Other</string>
+    <string name="camvitals_start">Start scan</string>
+    <string name="camvitals_replay_note">Debug replay: synthetic frames, no camera.</string>
+
+    <!-- Scan flow: permission -->
+    <string name="camvitals_permission_title">Camera access needed</string>
+    <string name="camvitals_permission_body">Ayuvo uses the camera only to measure small colour changes of your skin. No images or video are stored. Allow camera access in Settings to take a scan.</string>
+    <string name="camvitals_open_settings">Open Settings</string>
+    <string name="camvitals_try_again">Try again</string>
+
+    <!-- Scan flow: live -->
+    <string name="camvitals_cancel">Cancel</string>
+    <string name="camvitals_seconds">%1$d s</string>
+    <string name="camvitals_getting_ready">Getting ready…</string>
+    <string name="camvitals_paused">Paused</string>
+    <string name="camvitals_extending">Extending to improve the signal</string>
+    <string name="camvitals_signal_chip">Signal %1$d%%</string>
+    <string name="camvitals_camera_error">The camera could not be started.</string>
+    <string name="camvitals_analysing">Analysing your scan…</string>
+
+    <!-- Results -->
+    <string name="camvitals_results">Results</string>
+    <string name="camvitals_signal_quality">Signal quality</string>
+    <string name="camvitals_score">Score %1$s</string>
+    <string name="camvitals_show_details">Show details</string>
+    <string name="camvitals_hide_details">Hide details</string>
+    <string name="camvitals_component_snr">Spectral signal-to-noise</string>
+    <string name="camvitals_component_template">Beat shape consistency</string>
+    <string name="camvitals_component_ibi">Accepted pulse intervals</string>
+    <string name="camvitals_component_agreement">Heart rate agreement</string>
+    <string name="camvitals_component_motion">Steadiness</string>
+    <string name="camvitals_component_signal">Frames passing the checks</string>
+    <string name="camvitals_rejected_title">This scan could not be measured</string>
+    <string name="camvitals_metrics">Measurements</string>
+    <string name="camvitals_unavailable">Unavailable</string>
+    <string name="camvitals_confidence_high">High confidence</string>
+    <string name="camvitals_confidence_medium">Medium confidence</string>
+    <string name="camvitals_confidence_low">Low confidence</string>
+    <string name="camvitals_indicator_footer">Recovery and physiological stress indicators compare this scan with your own earlier scans of the same type. They are not a measurement of stress.</string>
+    <string name="camvitals_waveform">Pulse waveform</string>
+    <string name="camvitals_waveform_footer">Processed pulse signal. Dots mark detected beats; shaded parts were excluded.</string>
+    <string name="camvitals_save">Save</string>
+    <string name="camvitals_discard">Discard</string>
+    <string name="camvitals_unit_bpm">bpm</string>
+    <string name="camvitals_unit_ms">ms</string>
+    <string name="camvitals_unit_per_min">/min</string>
+    <string name="camvitals_unit_percent" formatted="false">%</string>
+    <string name="camvitals_unit_mmhg">mmHg</string>
+    <string name="camvitals_unit_score">/100</string>
+
+    <!-- Scan detail -->
+    <string name="camvitals_scan">Scan</string>
+    <string name="camvitals_details">Details</string>
+    <string name="camvitals_mode">Type</string>
+    <string name="camvitals_duration">Duration</string>
+    <string name="camvitals_device">Device</string>
+    <string name="camvitals_delete_scan">Delete scan</string>
+    <string name="camvitals_delete_scan_title">Delete this scan?</string>
+    <string name="camvitals_delete_scan_body">The scan and its stored signals are removed from this device.</string>
+    <string name="camvitals_scan_missing">This scan is no longer available.</string>
+
+    <!-- Settings › Camera measurements -->
+    <string name="camvitals_settings_footer">Camera measurements stay in Ayuvo. They are never written to Health Connect and never appear as wearable data.</string>
+    <string name="camvitals_keep_signals">Keep raw signals</string>
+    <string name="camvitals_keep_signals_sub">Store per-frame colour statistics and the processed pulse signal so scans can be reprocessed later. Images and video are never stored.</string>
+    <string name="camvitals_experimental">Experimental estimates</string>
+    <string name="camvitals_experimental_sub">SpO₂ from finger scans. Needs your own calibration against a pulse oximeter.</string>
+    <string name="camvitals_research">Research estimates</string>
+    <string name="camvitals_research_sub">Blood pressure research model. Needs cuff calibrations. Not a blood pressure measurement.</string>
+    <string name="camvitals_delete_all">Delete all camera scans</string>
+    <string name="camvitals_delete_all_title">Delete all camera scans?</string>
+    <string name="camvitals_delete_all_body">This removes every finger and face scan and its stored signals from this device. This can\'t be undone.</string>
+    <string name="camvitals_delete_all_done">Camera scans deleted</string>
+
+    <!-- Compare, reference readings, validation and calibration (docs/camera-vitals.md §6, §7.1) -->
+    <string name="camvitals_compare_sub">Finger scan, then a face scan</string>
+    <string name="camvitals_compare_title">Compare finger &amp; face</string>
+    <string name="camvitals_compare_intro_finger">Compare: start with this finger scan. After saving it, take a face scan within %1$d minutes.</string>
+    <string name="camvitals_compare_intro_face">Compare: this face scan is paired with the finger scan you just saved.</string>
+    <string name="camvitals_compare_unlinked">More than %1$d minutes passed since the finger scan, so this face scan is not linked to it. It is saved as a separate scan.</string>
+    <string name="camvitals_compare_consistent">The two measurements agree.</string>
+    <string name="camvitals_compare_inconsistent">The measurements are inconsistent. Please repeat the measurement.</string>
+    <string name="camvitals_compare_incomplete">One of the scans has no value to compare.</string>
+    <string name="camvitals_compare_difference">Difference</string>
+    <string name="camvitals_compare_footer">Finger and face scans measure in different ways, and neither is preferred. They agree when heart rate differs by at most %1$d bpm and RMSSD by at most %2$d ms.</string>
+    <string name="camvitals_compare_scans">Scans</string>
+    <string name="camvitals_compare_repeat">Repeat the comparison</string>
+    <string name="camvitals_compare_detail_sub">This scan is part of a finger and face pair</string>
+    <string name="camvitals_open_compare">Compare</string>
+    <string name="camvitals_next_face_scan">Next: face scan</string>
+    <string name="camvitals_done">Done</string>
+    <string name="camvitals_saved">Saved. You can add a reading from another device to compare.</string>
+    <string name="camvitals_saved_next_face">Saved. Continue with the face scan within %1$d minutes.</string>
+    <string name="camvitals_add_reference">Add reference reading</string>
+    <string name="camvitals_edit_reference">Edit reference reading</string>
+    <string name="camvitals_reference_header">Reference reading</string>
+    <string name="camvitals_reference_title">Reference reading</string>
+    <string name="camvitals_reference_body">Enter what a chest strap, ECG, pulse oximeter or cuff measured at the same time. Leave fields empty that you did not measure.</string>
+    <string name="camvitals_reference_hr">Heart rate</string>
+    <string name="camvitals_reference_rmssd">HRV (RMSSD)</string>
+    <string name="camvitals_reference_resp">Respiratory rate</string>
+    <string name="camvitals_reference_spo2">SpO₂</string>
+    <string name="camvitals_reference_sys">Systolic</string>
+    <string name="camvitals_reference_dia">Diastolic</string>
+    <string name="camvitals_reference_bp">Blood pressure</string>
+    <string name="camvitals_reference_device">Reference device</string>
+    <string name="camvitals_reference_device_hint">For example Polar H10</string>
+    <string name="camvitals_reference_invalid">A value is outside the plausible range.</string>
+    <string name="camvitals_use_spo2_calibration">Use as SpO₂ calibration</string>
+    <string name="camvitals_use_spo2_calibration_sub">Pairs this scan with the oximeter reading for this phone model.</string>
+    <string name="camvitals_use_bp_calibration">Use as BP calibration</string>
+    <string name="camvitals_use_bp_calibration_sub">Pairs this scan with the cuff reading. Research estimate, not a blood pressure measurement.</string>
+    <string name="camvitals_scan_gap_min">Minutes between cuff and scan</string>
+    <string name="camvitals_unit_min">min</string>
+    <string name="camvitals_tools">Accuracy</string>
+    <string name="camvitals_validation_title">Validation</string>
+    <string name="camvitals_validation_sub">Compare your scans with reference readings</string>
+    <string name="camvitals_validation_intro">Accuracy of your own scans against the reference readings you entered (%1$d scans with a reference). Differences are scan minus reference.</string>
+    <string name="camvitals_validation_empty_title">No reference readings yet</string>
+    <string name="camvitals_validation_empty_body">Add a reference reading to a scan from a chest strap, ECG, oximeter or cuff to see how close your scans are.</string>
+    <string name="camvitals_validation_bp_systolic">Blood pressure (systolic)</string>
+    <string name="camvitals_validation_n">Pairs</string>
+    <string name="camvitals_validation_mae">Mean absolute error</string>
+    <string name="camvitals_validation_rmse">RMSE</string>
+    <string name="camvitals_validation_bias">Bias</string>
+    <string name="camvitals_validation_loa">Limits of agreement</string>
+    <string name="camvitals_validation_r">Correlation (r)</string>
+    <string name="camvitals_validation_failure">Failure rate</string>
+    <string name="camvitals_validation_by_confidence">Mean absolute error by confidence</string>
+    <string name="camvitals_validation_conf_value">%1$s (n %2$d)</string>
+    <string name="camvitals_validation_confidence_unknown">No confidence</string>
+    <string name="camvitals_validation_units">Values in %1$s. Failure rate counts scans with a reference but no value.</string>
+    <string name="camvitals_validation_export">Export validation dataset</string>
+    <string name="camvitals_validation_export_footer">Writes ayuvo-vitals-validation.json with only the scans that have a reference, for offline analysis with scripts/vitals_eval.py.</string>
+    <string name="camvitals_validation_export_failed">The validation dataset could not be exported.</string>
+    <string name="camvitals_calibration_title">Calibration</string>
+    <string name="camvitals_calibration_sub">Personal SpO₂ and blood pressure calibrations</string>
+    <string name="camvitals_calibration_intro">Experimental and research estimates need your own calibration against a validated device. Add one from the reference reading of a finger scan.</string>
+    <string name="camvitals_calibration_spo2_header">SpO₂ (experimental)</string>
+    <string name="camvitals_calibration_spo2_footer">SpO₂ needs at least %1$d pulse oximeter readings paired with finger scans on this phone model (%2$s, %3$d so far). Healthy readings cluster between 95 and 99 %%, so the calibration rarely covers low values; values outside it stay unavailable.</string>
+    <string name="camvitals_calibration_spo2_off">Experimental estimates are off in Settings.</string>
+    <string name="camvitals_calibration_spo2_row">SpO₂ %1$s %%</string>
+    <string name="camvitals_calibration_bp_header">Blood pressure (research)</string>
+    <string name="camvitals_calibration_bp_footer">Needs at least %1$d cuff readings, each taken within %2$d minutes of a finger scan. Calibrations expire after %3$d days (%4$d usable now). Research estimate, not a blood pressure measurement.</string>
+    <string name="camvitals_calibration_bp_off">Research estimates are off in Settings.</string>
+    <string name="camvitals_calibration_bp_row">%1$s mmHg</string>
+    <string name="camvitals_calibration_gap">%1$s min from the scan</string>
+    <string name="camvitals_calibration_expired">expired</string>
+    <string name="camvitals_calibration_none">No calibrations yet</string>
+    <string name="camvitals_calibration_how">Tap a calibration to delete it. Calibrations stay on this device and travel with Export All Data.</string>
+    <string name="camvitals_calibration_delete_title">Delete this calibration?</string>
+    <string name="camvitals_calibration_delete_body">Estimates will no longer use this reading.</string>
+
+    <!-- Export All Data section and insights (docs/camera-vitals.md §7, §7.2) -->
+    <string name="export_all_step_camera_vitals">Camera measurements</string>
+    <string name="import_all_section_camera_vitals">Camera measurements</string>
+    <string name="import_all_effect_camera_vitals">Adds finger and face scans, their signals and calibrations that are not here yet. Scans you deleted stay deleted.</string>
+    <string name="import_all_count_scans">Scans</string>
+    <string name="import_all_count_signals">Signals</string>
+    <string name="import_all_count_calibrations">Calibrations</string>
+    <string name="import_all_count_device_profiles">Camera profiles</string>
+    <string name="camvitals_insights_scan_footnote">From a finger camera scan</string>
+</resources>
