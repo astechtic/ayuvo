@@ -102,6 +102,7 @@ interface ActionEnvironment {
     /** Adds [item] to the day's plan when it is not there yet (never toggles it off). */
     suspend fun ensurePlanned(item: ExerciseItem, dateKey: String)
     suspend fun setSetCount(count: Int, exerciseId: java.util.UUID, dateKey: String)
+    /** Logs a set the user did: writes its values and ticks it. */
     suspend fun updateSet(exerciseId: java.util.UUID, setId: java.util.UUID, dateKey: String, weight: String, unit: WorkoutWeightUnit, reps: String, rpe: String?)
     suspend fun finishWorkout(dateKey: String): WorkoutSession?
 

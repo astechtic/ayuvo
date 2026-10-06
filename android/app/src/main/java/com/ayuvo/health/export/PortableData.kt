@@ -508,6 +508,7 @@ object PortableFormat {
                 put("reps", set.reps)
                 put("rpe", set.rpe)
                 opt("rpe_scale", set.rpeScale?.let(::rpeScaleWire))
+                put("completed", set.isCompleted)
             }
         })
     }
@@ -537,6 +538,7 @@ object PortableFormat {
                         put("reps", set.reps)
                         put("rpe", set.rpe)
                         opt("rpe_scale", set.rpeScale?.let(::rpeScaleWire))
+                        put("completed", set.completed != false)
                     }
                 })
             }
@@ -822,7 +824,9 @@ object PortableFormat {
         weightUnit = weightUnitFromWire(o.str("weight_unit")),
         reps = o.text("reps").orEmpty(),
         rpe = o.text("rpe").orEmpty(),
-        rpeScale = rpeScaleFromWire(o.str("rpe_scale"))
+        rpeScale = rpeScaleFromWire(o.str("rpe_scale")),
+        // Archives from before set ticks have no "completed": a set with reps counted as done then.
+        completed = o.bool("completed")
     )
 
     private fun sessionFrom(o: JsonObject): WorkoutSession? {
@@ -855,7 +859,9 @@ object PortableFormat {
                 weightUnit = unit,
                 reps = row.text("reps").orEmpty(),
                 rpe = row.text("rpe").orEmpty(),
-                rpeScale = rpeScaleFromWire(row.str("rpe_scale"))
+                rpeScale = rpeScaleFromWire(row.str("rpe_scale")),
+                // Older archives have no "completed"; their sets keep counting as before.
+                completed = row.bool("completed")
             )
         }
         return CompletedExercise(

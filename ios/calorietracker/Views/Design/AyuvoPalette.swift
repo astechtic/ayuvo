@@ -48,6 +48,23 @@ nonisolated enum AyuvoPalette {
         }
     }
 
+    /// Sleep › D hypnogram lanes (docs/charts.md): soft colours, lighter in dark mode.
+    static let hypnogramAwake = dynamic(0xF2668F, 0xFF9AB8)
+    static let hypnogramREM = dynamic(0x6EC3F2, 0xBDE6FF)
+    static let hypnogramLight = dynamic(0x6F9BF2, 0x92B8FF)
+    static let hypnogramDeep = dynamic(0x7A4FC0, 0x8E5FCB)
+
+    /// Hypnogram colour of a stage code; "asleep" without a stage shares the Core lane's colour.
+    static func hypnogramStage(_ code: Int?) -> Color {
+        switch code {
+        case 0: sleepInBed
+        case 2: hypnogramAwake
+        case 4: hypnogramDeep
+        case 5: hypnogramREM
+        default: hypnogramLight
+        }
+    }
+
     static let screenBackground = Color(uiColor: .systemGroupedBackground)
     static let card = Color(uiColor: .secondarySystemGroupedBackground)
     static let panel = Color(uiColor: .tertiarySystemGroupedBackground)

@@ -152,13 +152,13 @@ struct WorkoutLogView: View {
     }
 
     private var completedSetCount: Int {
-        // Match Delts: a set counts once reps are entered. Weight/RPE alone is
-        // still a planned, incomplete set.
-        selectedExercises.flatMap(\.sets).filter { !$0.reps.isEmpty }.count
+        // A set counts once it is ticked and has reps. Weight/RPE alone, or an
+        // unticked prefill, is still a planned, incomplete set.
+        selectedExercises.flatMap(\.sets).filter { $0.isCompleted && !$0.reps.isEmpty }.count
     }
 
     private var completedRepCount: Int {
-        selectedExercises.flatMap(\.sets).reduce(0) { $0 + (Int($1.reps) ?? 0) }
+        selectedExercises.flatMap(\.sets).filter(\.isCompleted).reduce(0) { $0 + (Int($1.reps) ?? 0) }
     }
 
     private var currentBodyWeightKg: Double {
@@ -370,6 +370,14 @@ struct WorkoutLogView: View {
                                             setID: setID,
                                             on: selectedDate,
                                             rpe: value
+                                        )
+                                    },
+                                    updateDone: { setID, done in
+                                        workoutStore.updateSet(
+                                            exerciseID: exercise.id,
+                                            setID: setID,
+                                            on: selectedDate,
+                                            completed: done
                                         )
                                     }
                                 )
@@ -1178,6 +1186,7 @@ private struct WorkoutLogExerciseCard: View {
     let updateWeight: (UUID, String) -> Void
     let updateReps: (UUID, String) -> Void
     let updateRPE: (UUID, String) -> Void
+    let updateDone: (UUID, Bool) -> Void
     @Environment(\.colorScheme) private var colorScheme
 
     private var isCardio: Bool { exercise.isCardio }
@@ -1324,7 +1333,8 @@ private struct WorkoutLogExerciseCard: View {
                                 focusedField: focusedField,
                                 updateWeight: { updateWeight(set.id, $0) },
                                 updateReps: { updateReps(set.id, $0) },
-                                updateRPE: { updateRPE(set.id, $0) }
+                                updateRPE: { updateRPE(set.id, $0) },
+                                updateDone: { updateDone(set.id, $0) }
                             )
 
                             if index < exercise.sets.count - 1 {
@@ -1428,15 +1438,28 @@ private struct WorkoutLogSetRow: View {
     let updateWeight: (String) -> Void
     let updateReps: (String) -> Void
     let updateRPE: (String) -> Void
+    let updateDone: (Bool) -> Void
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
+            fields
+                // Unticked rows (including copied prefills) read as not done yet.
+                .opacity(set.isCompleted ? 1 : 0.62)
+                .contentShape(Rectangle())
+                .accessibilityHint("Opens set weight, reps and RPE input")
+            WorkoutLogSetDoneButton(setNumber: setIndex + 1, isDone: set.isCompleted, toggle: { updateDone(!set.isCompleted) })
+        }
+        .padding(.vertical, 7)
+    }
+
+    private var fields: some View {
+        HStack(spacing: 6) {
             Text("Set \(setIndex + 1)")
                 .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.workoutMutedText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)
-                .frame(width: 46, alignment: .leading)
+                .frame(width: 42, alignment: .leading)
 
             WorkoutLogSetValueField(
                 placeholder: weightUnit.rawValue,
@@ -1465,9 +1488,40 @@ private struct WorkoutLogSetRow: View {
             )
             .frame(maxWidth: .infinity)
         }
-        .padding(.vertical, 7)
-        .contentShape(Rectangle())
-        .accessibilityHint("Opens set weight, reps and RPE input")
+    }
+}
+
+/// The set row's ✓: filled accent when the set is done. Only ticked sets count toward the workout.
+private struct WorkoutLogSetDoneButton: View {
+    let setNumber: Int
+    let isDone: Bool
+    let toggle: () -> Void
+
+    var body: some View {
+        Button {
+            UIImpactFeedbackGenerator(style: isDone ? .light : .medium).impactOccurred()
+            toggle()
+        } label: {
+            Image(systemName: "checkmark")
+                .font(.system(size: 14, weight: .heavy))
+                .foregroundStyle(isDone ? Color.white : Color.workoutMutedText)
+                .frame(width: 32, height: 32)
+                .background(
+                    isDone ? Color.workoutAccent : Color.workoutCard.opacity(0.74),
+                    in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(isDone ? Color.clear : Color.workoutHairline.opacity(0.6), lineWidth: 0.8)
+                }
+                .frame(width: 36, height: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("Mark set \(setNumber) done", comment: "Workout set row check button"))
+        .accessibilityValue(isDone ? Text("Done") : Text(""))
+        .accessibilityAddTraits(isDone ? .isSelected : [])
+        .accessibilityIdentifier("workout.set.done.\(setNumber)")
     }
 }
 
@@ -1492,7 +1546,8 @@ private struct WorkoutLogSetValueField: View {
                 baseTextField
             }
         }
-        .padding(.horizontal, 10)
+        // Narrow inset so a load like "132.28" still fits next to the ✓.
+        .padding(.horizontal, 4)
         .frame(height: 36)
         .background(Color.workoutCard.opacity(0.74), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         .overlay {

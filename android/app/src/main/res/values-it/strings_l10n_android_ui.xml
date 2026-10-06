@@ -178,4 +178,6 @@
     <string name="ui_flash_auto">Flash automatico</string>
     <string name="ui_flash_off">Flash disattivato</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">Segna la serie %1$d come completata</string>
+    <string name="ui_workout_set_done">Fatto</string>
 </resources>

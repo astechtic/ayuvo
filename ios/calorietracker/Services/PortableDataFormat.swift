@@ -411,9 +411,11 @@ enum PortableData {
         var json: JSON = ["id": id(set.id), "weight": set.weight, "reps": set.reps, "rpe": set.rpe]
         json["weight_unit"] = set.weightUnit
         json["rpe_scale"] = set.rpeScale?.rawValue
+        json["completed"] = set.isCompleted
         return json
     }
 
+    /// Archives from before set ticks have no "completed": a set with reps counted as done then.
     static func plannedSet(from json: JSON) -> StrengthPlannedSet {
         StrengthPlannedSet(
             id: uuid(json["id"] as? String) ?? UUID(),
@@ -421,7 +423,8 @@ enum PortableData {
             weightUnit: (json["weight_unit"] as? String).flatMap { ["kg", "lbs"].contains($0) ? $0 : nil },
             reps: text(json["reps"]) ?? "",
             rpe: text(json["rpe"]) ?? "",
-            rpeScale: (json["rpe_scale"] as? String).flatMap(StrengthWorkoutRPEScale.init(rawValue:))
+            rpeScale: (json["rpe_scale"] as? String).flatMap(StrengthWorkoutRPEScale.init(rawValue:)),
+            completed: json["completed"] as? Bool
         )
     }
 
@@ -492,6 +495,7 @@ enum PortableData {
                     "weight_unit": set.weightUnit, "reps": set.reps, "rpe": set.rpe,
                 ]
                 setJSON["rpe_scale"] = set.rpeScale?.rawValue
+                setJSON["completed"] = set.completed != false
                 return setJSON
             },
         ]
@@ -534,7 +538,9 @@ enum PortableData {
                 weightUnit: (set["weight_unit"] as? String).flatMap { ["kg", "lbs"].contains($0) ? $0 : nil } ?? "kg",
                 reps: text(set["reps"]) ?? "",
                 rpe: text(set["rpe"]) ?? "",
-                rpeScale: (set["rpe_scale"] as? String).flatMap(StrengthWorkoutRPEScale.init(rawValue:))
+                rpeScale: (set["rpe_scale"] as? String).flatMap(StrengthWorkoutRPEScale.init(rawValue:)),
+                // Older archives have no "completed"; their sets keep counting as before.
+                completed: set["completed"] as? Bool
             )
         } ?? []
         return StrengthCompletedExercise(

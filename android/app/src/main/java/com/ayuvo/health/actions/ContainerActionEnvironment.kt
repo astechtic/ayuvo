@@ -121,7 +121,7 @@ class ContainerActionEnvironment(private val container: AppContainer) : ActionEn
         container.workoutRepository.setSetCount(count, exerciseId, dateKey)
 
     override suspend fun updateSet(exerciseId: UUID, setId: UUID, dateKey: String, weight: String, unit: WorkoutWeightUnit, reps: String, rpe: String?) =
-        container.workoutRepository.updateSet(exerciseId, setId, dateKey, weight = weight, weightUnit = unit, reps = reps, rpe = rpe)
+        container.workoutRepository.updateSet(exerciseId, setId, dateKey, weight = weight, weightUnit = unit, reps = reps, rpe = rpe, completed = true)
 
     override suspend fun finishWorkout(dateKey: String): WorkoutSession? {
         val profile = profile()

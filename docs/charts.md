@@ -41,15 +41,16 @@ Nights come from the existing nights analysis: one source per wake day, overlaps
 **D: the night that woke up on the anchor day** (`sleep_night_window`)
 - **Domain:** bedtime floored to the hour → wake ceiled to the hour, at least 4 h. For example, 22:40 → 06:55 plots 22:00 → 07:00. It never runs midnight to midnight.
 - **Ticks:** every hour, or every 2 h when the domain is longer than 8 h.
-- **Chart:** a hypnogram with four equal lanes, Awake, REM, Core, Deep from top to bottom. It copies Apple Health's Sleep > D chart:
-  - **No filled background.** The plot is transparent, with a hairline separator between lanes and a hairline baseline. The in-bed span is not drawn as a band; it lives in the header.
-  - **Lane titles** sit inside the plot on the **leading** side, at the top of their lane, in the secondary colour. They are never clipped or placed on the trailing side.
-  - **Stage capsules:** height ≈ 40% of the lane, centred in it, fully rounded (radius = half the height), in the stage colour. A segment shorter than 2 pt/dp still draws at 2 pt/dp so short stages stay visible.
-  - **Transition stems:** at each stage change, a 3 pt/dp fully rounded vertical bar from the centre of the lane being left to the centre of the lane being entered, filled with a vertical gradient between the two stage colours at 55% opacity, drawn behind the capsules. This is what gives the Apple "waterfall" look; plain grey connectors are wrong.
-  - **Time axis:** dashed vertical gridlines at the ticks, running the full plot height, with the labels **leading-aligned to their gridline** under the plot. Stride: 3 h for a night (span > 8 h), 2 h for 4–8 h, 1 h below that.
-  - "Asleep" without stages uses the Core lane in the asleep colour. An in-bed-only night draws nothing in the lanes and shows the empty state text under the header.
+- **Chart:** a lane hypnogram (Google Health style), drawn from bedtime to the time out of bed (`bedtime_ms` → `wake_ms`, widened to cover every stage row); the hour domain above only feeds the hour marks.
+  - **Four lanes**, Awake, REM, Core, Deep from top to bottom. Each lane is a title row, `<stage> · <total>` (the Core lane total includes unstaged asleep), above a full-width pill track in a faint neutral grey.
+  - **Segments** fill the full track height in the hypnogram palette (Awake pink, REM pale cyan, Core blue, Deep purple; lighter variants in dark mode). Corners are rounded, except the corner facing a stage change, which is square on the side of the lane being left or entered. A segment narrower than 4 pt/dp still draws at 4 pt/dp.
+  - **Transition stems:** at each stage change (gap ≤ 60 s, different lane), a 2 pt/dp vertical bar from the centre of one track to the centre of the other, a vertical gradient between the two stage colours at 50% opacity, drawn behind the segments and across any lanes in between.
+  - **Scale and scrolling:** a fixed 1.8 pt/dp per minute, at least the available width. A long night scrolls horizontally; the lane titles stay pinned and the hour marks (small, leading-aligned at each tick) scroll with the plot.
+  - **Footer:** the bedtime, the midpoint and the out-of-bed time, with "Time that you went to bed" under the first and "Time out of bed" under the last.
+  - **Selection:** a tap selects the segment under the finger (tap again to clear); Android also scrubs with a long press then drag. iOS has no drag gesture on the plot, because SwiftUI lets it block the horizontal ScrollView. The selected stage, its duration and its time span show above the lanes in a row that keeps its height when empty, and the other segments fade to 40%.
+  - An in-bed-only night draws empty tracks and shows the empty state text under the header.
 - **Headline:** TIME IN BED and TIME ASLEEP side by side, each `8 hr 32 min` with the units in a smaller, secondary style, and the date underneath (Apple's layout). A night with no asleep data shows TIME IN BED only; no asleep time is invented.
-- **Below the chart:** the stage list (Awake / REM / Core / Deep: duration and share of asleep). The Total / Average / Latest badges are hidden on sleep D, where all three would repeat the headline.
+- **Below the chart:** the stage list (Awake / REM / Core / Deep: duration and share of asleep), its dots in the hypnogram palette. The Total / Average / Latest badges are hidden on sleep D, where all three would repeat the headline.
 
 **W / M**
 - One floating bar per night on a clock axis, from bedtime to wake. Evening is at the top and morning at the bottom.

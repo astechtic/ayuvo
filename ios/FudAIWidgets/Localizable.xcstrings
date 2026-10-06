@@ -3658,6 +3658,7 @@
       }
     },
     "Distance" : {
+      "comment" : "Workout Live Activity metric title",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5781,6 +5782,7 @@
       }
     },
     "Heart" : {
+      "comment" : "Workout Live Activity metric title",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6311,6 +6313,7 @@
       }
     },
     "Lap %lld" : {
+      "comment" : "Workout Live Activity map: number of the lap in progress\nWorkout Live Activity: time of the last completed lap, by its number",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -8966,6 +8969,7 @@
       }
     },
     "Pace" : {
+      "comment" : "Workout Live Activity metric title",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -9284,6 +9288,7 @@
       }
     },
     "Paused" : {
+      "comment" : "Workout Live Activity badge while the workout is paused",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -10238,6 +10243,9 @@
         }
       }
     },
+    "Route map" : {
+      "comment" : "Workout Live Activity: accessibility label of the route drawing"
+    },
     "Run" : {
       "localizations" : {
         "ar" : {
@@ -10875,6 +10883,7 @@
       }
     },
     "Speed" : {
+      "comment" : "Workout Live Activity metric title",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

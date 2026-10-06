@@ -58,7 +58,13 @@ data class HealthCoachSnapshot(
     val zoneId: String,
     val platform: String = "Health Connect",
     /** Enabled derived metrics with values; empty when Derived Metrics are off. */
-    val derived: List<HealthCoachDerivedMetric> = emptyList()
+    val derived: List<HealthCoachDerivedMetric> = emptyList(),
+    /**
+     * Daily `dietary_*` rollups of the nutrients the Ayuvo food log does not record (copper, B6, …), for
+     * `get_nutrient_totals` only; never listed by the health tools. Food-log nutrients are left out because
+     * Health Connect may hold Ayuvo's own nutrition writes (double counting).
+     */
+    val dietaryDaily: Map<String, List<HealthDailyRollup>> = emptyMap()
 ) {
     val isEmpty: Boolean get() = types.isEmpty() && derived.isEmpty()
 
@@ -120,7 +126,13 @@ data class HealthCoachSnapshot(
                     days = days
                 )
             }
-            return HealthCoachSnapshot(lastSyncMs, types, daily, samples, nights, zone.id, derived = derived)
+            val dietaryTypes = com.ayuvo.health.nutrients.NutrientReference.active?.nutrients.orEmpty()
+                .filter { !it.appTracked }.mapNotNull { it.healthType }
+            val dietaryDaily = if (summaries.none { it.typeId == HealthDataType.NUTRITION_RECORD.id }) emptyMap() else
+                dietaryTypes.associateWith { type ->
+                    repo.daily(type, today.minusDays((MAX_DAILY_ROWS - 1).toLong()), today).filter { it.count > 0 && it.sum != null }
+                }.filterValues { it.isNotEmpty() }
+            return HealthCoachSnapshot(lastSyncMs, types, daily, samples, nights, zone.id, derived = derived, dietaryDaily = dietaryDaily)
         }
     }
 }

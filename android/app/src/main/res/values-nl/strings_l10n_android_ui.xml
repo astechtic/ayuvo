@@ -173,4 +173,6 @@
     <string name="ui_flash_auto">Flits automatisch</string>
     <string name="ui_flash_off">Flits uit</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">Set %1$d als klaar markeren</string>
+    <string name="ui_workout_set_done">Klaar</string>
 </resources>

@@ -168,4 +168,6 @@
     <string name="ui_flash_auto">闪光灯自动</string>
     <string name="ui_flash_off">闪光灯关</string>
     <string name="ui_gps_split_km">第 %1$d 公里</string>
+    <string name="ui_workout_set_mark_done">将第 %1$d 组标记为完成</string>
+    <string name="ui_workout_set_done">完成</string>
 </resources>

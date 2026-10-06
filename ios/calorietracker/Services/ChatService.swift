@@ -127,7 +127,9 @@ struct ChatService {
             records: records,
             medications: medications,
             sources: sources,
-            actionProposals: actionProposals
+            actionProposals: actionProposals,
+            nutrientProfile: NutrientCatalog.profile(profile),
+            nutrientCustomGoals: coachNutrientCustomGoals(profile)
         )
 
         // Tool-less modes cannot call the health tools; give them a short 7-day digest instead,
@@ -344,6 +346,20 @@ struct ChatService {
         return cycle.promptLines
     }
 
+    /// The user's custom nutrient goals by nutrient key, for `get_nutrient_totals` (same rule as the charts:
+    /// a stored value equal to the old fixed default is not a custom goal).
+    static func coachNutrientCustomGoals(_ profile: UserProfile) -> [String: Double] {
+        let goals = OptionalNutrientGoals.current
+        let nutrientProfile = NutrientCatalog.profile(profile)
+        var out: [String: Double] = [:]
+        for key in NutrientsReference.trackedByKey.keys {
+            if let nutrient = NutrientCatalog.optionalNutrient(key), let goal = goals.customGoal(for: nutrient, profile: nutrientProfile) {
+                out[key] = Double(goal)
+            }
+        }
+        return out
+    }
+
     /// Records lines of `## Data available`, the guardrails block and the selected records (§26).
     static func recordsPromptLines(_ records: CoachRecordsContext?, newUserMessage: String) -> [String] {
         guard let records else { return [] }
@@ -428,6 +444,7 @@ struct ChatService {
         lines.append("You have access to functions that fetch the user's history on demand. The user profile + formulas + forecast below cover what's needed for most questions. Call a tool ONLY when the user asks about specific past dates, longer time ranges, individual meals, or trends that need raw data. Examples:")
         lines.append("- \"How was my weight in March?\" → call get_weight_history(from, to)")
         lines.append("- \"What did I eat last Tuesday?\" → call get_food_entries(from, to)")
+        lines.append("- \"How much calcium / magnesium / iron / vitamin D did I get?\", \"my complete nutrition today / this week\", vitamins, minerals or micronutrients → call get_nutrient_totals(from, to). It covers food, taken supplements and every nutrient with data, with the user's recommended amounts. Report each nutrient it returns; list no_data_logged and not_tracked_by_food_log as not logged (unknown, never zero or deficient). Lab reports measure blood levels, not intake — they never replace this tool and may only be mentioned as a complement.")
         lines.append("- \"How consistent has my fasting been?\" → call get_fasting_history(from, to)")
         lines.append("- \"What's my data range?\" → call get_data_summary")
         if workoutAccessEnabled {
@@ -499,7 +516,7 @@ struct ChatService {
             let lastSync = health.context.lastSync.map(relativeSyncText) ?? "never"
             lines.append("- \(health.context.typeCount) health data types synced from Apple Health, last synced \(lastSync). Call get_health_data_types for the exact data_type keys, units and date ranges.")
             lines.append("- Never add Ayuvo workout burn on top of Apple Health active energy: get_health_summary's own_sum is Ayuvo's own tagged burn already inside the total — subtract it instead of adding workout estimates.")
-            lines.append("- Use the diary tools (get_calorie_totals, get_food_entries) for food intake, never the dietary_* health types.")
+            lines.append("- Use the diary tools (get_calorie_totals, get_food_entries, get_nutrient_totals) for food intake, never the dietary_* health types.")
             lines.append("- Never diagnose from heart rate, blood pressure or glucose; suggest a clinician when readings look concerning.")
             if !health.context.cameraScanLines.isEmpty {
                 lines.append("")

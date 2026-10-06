@@ -80,160 +80,210 @@ struct SleepChart: View {
 
 // MARK: - Day
 
-/// Apple Health's Sleep › D chart (docs/charts.md): four equal lanes (Awake, REM, Core, Deep from
-/// the top) over the night's own window, lane titles inside on the leading edge, stage capsules
-/// centred in their lane and gradient "waterfall" stems at every stage change. No filled background.
+/// Sleep › D (docs/charts.md): four stage lanes (Awake, REM, Core, Deep from the top), each a grey
+/// pill track under a "<stage> · <total>" title. Segments fill their track, the corner facing a
+/// stage change is squared off and a thin gradient stem joins the two lanes. The night runs from
+/// bedtime to the time out of bed at a fixed scale per minute, so short stages stay readable and a
+/// long night scrolls sideways under pinned lane titles. Tap a segment to read it; no drag gesture
+/// sits on the plot, because one (even simultaneous) stops the ScrollView from panning.
 private struct SleepHypnogram: View {
     let window: MetricsReference.SleepWindow
     let stages: [HealthChartPoint]
     @State private var inspected: HealthChartPoint?
 
-    private static let laneSeparator = 0.14
-    /// Leaves room above each capsule for the lane title, which sits at the top of the band.
-    private static let capsuleRatio = 0.36
-    private static let stemWidth: CGFloat = 4
+    private static let titleHeight: CGFloat = 26
+    private static let trackHeight: CGFloat = 34
+    private static let laneGap: CGFloat = 8
+    private static let hourRowHeight: CGFloat = 18
+    private static let pointsPerMinute: CGFloat = 1.8
+    private static let minSegmentWidth: CGFloat = 4
+    private static let stemWidth: CGFloat = 2
+    private static var plotHeight: CGFloat { (titleHeight + trackHeight) * 4 + laneGap * 3 }
 
     private var lanes: [SleepChart.Lane] { SleepChart.Lane.allCases }
-    private var laneTitles: [String] { lanes.map(\.title) }
     private var staged: [HealthChartPoint] { stages.filter { SleepChart.Lane(stage: $0.stage) != nil }.sorted { $0.start < $1.start } }
     private var inBed: [HealthChartPoint] { stages.filter { $0.stage == HealthSleepStage.inBed.rawValue } }
 
-    private var domain: ClosedRange<Date> {
-        ChartAxisStyle.date(window.domainStartMs)...ChartAxisStyle.date(window.domainEndMs)
+    private var start: Date { min(ChartAxisStyle.date(window.bedtimeMs), staged.first?.start ?? .distantFuture) }
+    private var end: Date {
+        max(ChartAxisStyle.date(window.wakeMs), staged.map(\.end).max() ?? .distantPast, start.addingTimeInterval(60))
     }
 
-    /// A stage shorter than this would draw thinner than ~2 pt, so it is widened to stay visible.
-    private var minDuration: TimeInterval {
-        max(60, domain.lowerBound.distance(to: domain.upperBound) / 170)
-    }
-
-    private struct Stem: Identifiable {
-        let id: Int
-        let at: Date
-        let from: Int
-        let to: Int
-        let fromColor: Color
-        let toColor: Color
-    }
-
-    /// One stem per stage change, at the boundary between the two segments.
-    private var stems: [Stem] {
-        var out: [Stem] = []
-        for (index, pair) in zip(staged, staged.dropFirst()).enumerated() {
-            guard let a = SleepChart.laneIndex(pair.0.stage), let b = SleepChart.laneIndex(pair.1.stage), a != b,
-                  pair.1.start.timeIntervalSince(pair.0.end) < 300 else { continue }
-            let at = pair.0.end.addingTimeInterval(pair.1.start.timeIntervalSince(pair.0.end) / 2)
-            out.append(Stem(id: index, at: at, from: a, to: b,
-                            fromColor: AyuvoPalette.sleepStage(pair.0.stage), toColor: AyuvoPalette.sleepStage(pair.1.stage)))
+    private func seconds(_ lane: SleepChart.Lane) -> Int64 {
+        switch lane {
+        case .awake: return window.stages["awake"] ?? 0
+        case .rem: return window.stages["rem"] ?? 0
+        case .core: return (window.stages["core"] ?? 0) + (window.stages["unspecified"] ?? 0)
+        case .deep: return window.stages["deep"] ?? 0
         }
-        return out
     }
+
+    /// True when `b` follows `a` without a gap in another lane, so a stem joins them.
+    private static func joins(_ a: HealthChartPoint?, _ b: HealthChartPoint?) -> Bool {
+        guard let a, let b, let la = SleepChart.laneIndex(a.stage), let lb = SleepChart.laneIndex(b.stage) else { return false }
+        return la != lb && b.start.timeIntervalSince(a.end) <= 60
+    }
+
+    private static func trackTop(_ lane: Int) -> CGFloat {
+        (titleHeight + trackHeight + laneGap) * CGFloat(lane) + titleHeight
+    }
+
+    private func point(at x: CGFloat, width: CGFloat) -> HealthChartPoint? {
+        let t = start.addingTimeInterval(Double(min(max(x / width, 0), 1)) * end.timeIntervalSince(start))
+        return staged.last { $0.start <= t && t < $0.end } ?? inBed.first { $0.start <= t && t < $0.end }
+    }
+
+    private func time(_ date: Date) -> String { date.formatted(.dateTime.hour().minute()) }
 
     var body: some View {
-        Chart {
-            ForEach(staged) { point in
-                BarMark(
-                    xStart: .value("Start", point.start),
-                    xEnd: .value("End", max(point.end, point.start.addingTimeInterval(minDuration))),
-                    y: .value("Stage", SleepChart.Lane(stage: point.stage)?.title ?? ""),
-                    height: .ratio(Self.capsuleRatio)
-                )
-                .foregroundStyle(AyuvoPalette.sleepStage(point.stage))
-                .clipShape(Capsule())
-                .opacity(inspected == nil || inspected == point ? 1 : ChartAxisStyle.fadedOpacity)
-                .accessibilityLabel(Text(SleepChart.stageTitle(point.stage)))
-                .accessibilityValue(Text("\(point.start.formatted(.dateTime.hour().minute())) – \(point.end.formatted(.dateTime.hour().minute()))"))
-            }
-            if let inspected {
-                RuleMark(x: .value("Selected", inspected.start.addingTimeInterval(inspected.end.timeIntervalSince(inspected.start) / 2)))
-                    .foregroundStyle(Color.primary.opacity(0.28))
-                    .lineStyle(StrokeStyle(lineWidth: 1))
-            }
-        }
-        .chartXScale(domain: domain)
-        .chartYScale(domain: laneTitles)
-        .chartXAxis {
-            AxisMarks(values: window.ticks.map { ChartAxisStyle.date($0) }) { value in
-                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [2, 3]))
-                    .foregroundStyle(Color.primary.opacity(ChartAxisStyle.gridOpacity))
-                // Apple leading-aligns each label to its gridline; the last tick would overflow the
-                // trailing edge, so only that one is anchored inward.
-                AxisValueLabel(format: .dateTime.hour(),
-                               anchor: value.index == value.count - 1 ? .topTrailing : .topLeading,
-                               collisionResolution: .disabled)
-                    .foregroundStyle(Color.secondary)
-            }
-        }
-        .chartYAxis(.hidden)
-        .chartBackground { proxy in
-            GeometryReader { geometry in
-                if let plot = proxy.plotFrame {
-                    laneScaffold(frame: geometry[plot], proxy: proxy)
+        VStack(alignment: .leading, spacing: 0) {
+            // The readout row keeps its height when empty, so selecting never shifts the chart.
+            HStack(spacing: 8) {
+                if let inspected {
+                    Text(verbatim: "\(SleepChart.stageTitle(inspected.stage)) · \(HealthUnitFormatting.durationText(seconds: inspected.end.timeIntervalSince(inspected.start)))")
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
+                        .foregroundStyle(AyuvoPalette.hypnogramStage(inspected.stage))
+                    Text("\(time(inspected.start)) – \(time(inspected.end))", comment: "Time range: start – end")
+                        .font(.system(.footnote, design: .rounded))
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text(verbatim: " ").font(.system(.subheadline, design: .rounded, weight: .bold))
                 }
             }
-        }
-        .chartOverlay { proxy in
-            ChartScrubOverlay(
-                proxy: proxy, points: staged,
-                date: { $0.start.addingTimeInterval($0.end.timeIntervalSince($0.start) / 2) },
-                selected: $inspected, persistent: true,
-                match: { at in staged.first { $0.start <= at && at < $0.end } ?? inBed.first { $0.start <= at && at < $0.end } }
-            ) { point in
-                ChartCallout(
-                    value: "\(SleepChart.stageTitle(point.stage)) · \(HealthUnitFormatting.durationText(seconds: point.end.timeIntervalSince(point.start)))",
-                    caption: String(localized: "\(point.start.formatted(.dateTime.hour().minute())) – \(point.end.formatted(.dateTime.hour().minute()))", comment: "Time range: start – end")
-                )
+            .lineLimit(1)
+            .padding(.bottom, 6)
+            GeometryReader { geometry in
+                let width = max(geometry.size.width, CGFloat(end.timeIntervalSince(start) / 60) * Self.pointsPerMinute)
+                ZStack(alignment: .topLeading) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            plot(width: width)
+                            hourRow(width: width)
+                        }
+                    }
+                    laneTitles
+                }
             }
+            .frame(height: Self.plotHeight + Self.hourRowHeight)
+            footer
         }
-        .animation(ChartAxisStyle.revealAnimation, value: window)
-        .frame(height: ChartAxisStyle.plotHeight)
+        .sensoryFeedback(.selection, trigger: inspected)
         .padding(.top, 8)
+        .accessibilityElement(children: .ignore)
         .accessibilityIdentifier("sleep.hypnogram")
         .accessibilityLabel(Text("Sleep stages"))
+        .accessibilityValue(Text(verbatim: lanes.map { "\($0.title) \(HealthUnitFormatting.durationText(seconds: Double(seconds($0))))" }.joined(separator: ", ")))
     }
 
-    /// Lane separators, the leading axis line, the gradient stems and the lane titles.
-    @ViewBuilder
-    private func laneScaffold(frame: CGRect, proxy: ChartProxy) -> some View {
-        let band = frame.height / CGFloat(lanes.count)
-        let center: (Int) -> CGFloat = { frame.minY + band * (CGFloat($0) + 0.5) }
-        ZStack(alignment: .topLeading) {
-            Path { path in
-                for index in 0...lanes.count {
-                    let y = frame.minY + band * CGFloat(index)
-                    path.move(to: CGPoint(x: frame.minX, y: y))
-                    path.addLine(to: CGPoint(x: frame.maxX, y: y))
-                }
-                path.move(to: CGPoint(x: frame.minX, y: frame.minY))
-                path.addLine(to: CGPoint(x: frame.minX, y: frame.maxY))
+    private func plot(width: CGFloat) -> some View {
+        let staged = staged
+        let selected = inspected
+        let span = end.timeIntervalSince(start)
+        let start = start
+        return Canvas { context, size in
+            let xOf: (Date) -> CGFloat = { CGFloat($0.timeIntervalSince(start) / span) * size.width }
+            let radius = Self.trackHeight / 2
+            for lane in 0..<4 {
+                let rect = CGRect(x: 0, y: Self.trackTop(lane), width: size.width, height: Self.trackHeight)
+                context.fill(Path(roundedRect: rect, cornerRadius: radius), with: .color(Color.primary.opacity(0.08)))
             }
-            .stroke(Color.primary.opacity(Self.laneSeparator), lineWidth: 0.5)
-            ForEach(stems) { stem in
-                if let x = proxy.position(forX: stem.at) {
-                    let top = min(center(stem.from), center(stem.to))
-                    let bottom = max(center(stem.from), center(stem.to))
-                    let upper = stem.from < stem.to ? stem.fromColor : stem.toColor
-                    let lower = stem.from < stem.to ? stem.toColor : stem.fromColor
-                    // Apple's trail: bright where it leaves each capsule, dim in between.
-                    Capsule()
-                        .fill(LinearGradient(stops: [
-                            .init(color: upper.opacity(0.9), location: 0),
-                            .init(color: upper.opacity(0.45), location: 0.35),
-                            .init(color: lower.opacity(0.45), location: 0.65),
-                            .init(color: lower.opacity(0.9), location: 1)
-                        ], startPoint: .top, endPoint: .bottom))
-                        .frame(width: Self.stemWidth, height: bottom - top)
-                        .position(x: frame.minX + x, y: (top + bottom) / 2)
-                }
+            // Stems: centre of one track to the centre of the other, under the segments.
+            for (a, b) in zip(staged, staged.dropFirst()) where Self.joins(a, b) {
+                guard let la = SleepChart.laneIndex(a.stage), let lb = SleepChart.laneIndex(b.stage) else { continue }
+                let ya = Self.trackTop(la) + radius, yb = Self.trackTop(lb) + radius
+                let upper = AyuvoPalette.hypnogramStage(la < lb ? a.stage : b.stage).opacity(0.5)
+                let lower = AyuvoPalette.hypnogramStage(la < lb ? b.stage : a.stage).opacity(0.5)
+                let x = xOf(b.start)
+                let rect = CGRect(x: x - Self.stemWidth / 2, y: min(ya, yb), width: Self.stemWidth, height: abs(yb - ya))
+                context.fill(Path(rect), with: .linearGradient(Gradient(colors: [upper, lower]),
+                                                               startPoint: CGPoint(x: x, y: rect.minY), endPoint: CGPoint(x: x, y: rect.maxY)))
             }
-            ForEach(Array(lanes.enumerated()), id: \.offset) { index, lane in
-                Text(lane.title)
-                    .font(.system(.caption2, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .offset(x: frame.minX + 6, y: frame.minY + band * CGFloat(index) + 2)
+            for (index, point) in staged.enumerated() {
+                guard let lane = SleepChart.laneIndex(point.stage) else { continue }
+                let x0 = xOf(point.start)
+                let x1 = max(xOf(point.end), x0 + Self.minSegmentWidth)
+                let corner = min(radius, (x1 - x0) / 2)
+                let prev = index > 0 && Self.joins(staged[index - 1], point) ? SleepChart.laneIndex(staged[index - 1].stage) : nil
+                let next = index + 1 < staged.count && Self.joins(point, staged[index + 1]) ? SleepChart.laneIndex(staged[index + 1].stage) : nil
+                let radii = RectangleCornerRadii(
+                    topLeading: (prev ?? 99) < lane ? 0 : corner,
+                    bottomLeading: (prev ?? -1) > lane ? 0 : corner,
+                    bottomTrailing: (next ?? -1) > lane ? 0 : corner,
+                    topTrailing: (next ?? 99) < lane ? 0 : corner
+                )
+                let rect = CGRect(x: x0, y: Self.trackTop(lane), width: x1 - x0, height: Self.trackHeight)
+                let faded = selected != nil && selected != point
+                context.fill(Path(roundedRect: rect, cornerRadii: radii),
+                             with: .color(AyuvoPalette.hypnogramStage(point.stage).opacity(faded ? ChartAxisStyle.fadedOpacity : 1)))
+            }
+            if let selected {
+                let x = xOf(selected.start.addingTimeInterval(selected.end.timeIntervalSince(selected.start) / 2))
+                context.fill(Path(CGRect(x: x - 0.5, y: 0, width: 1, height: size.height)), with: .color(Color.primary.opacity(0.28)))
             }
         }
-        .accessibilityHidden(true)
+        .frame(width: width, height: Self.plotHeight)
+        .contentShape(Rectangle())
+        .onTapGesture { location in
+            let hit = point(at: location.x, width: width)
+            inspected = hit == inspected ? nil : hit
+        }
+    }
+
+    /// Hour marks under the lanes; they scroll with the plot.
+    private func hourRow(width: CGFloat) -> some View {
+        let span = end.timeIntervalSince(start)
+        let ticks = window.ticks.map { ChartAxisStyle.date($0) }.filter { $0 >= start && $0 < end }
+        return ZStack(alignment: .topLeading) {
+            ForEach(ticks, id: \.self) { tick in
+                let x = CGFloat(tick.timeIntervalSince(start) / span) * width
+                if x < width - 40 {
+                    Text(tick.formatted(.dateTime.hour()))
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundStyle(.secondary)
+                        .offset(x: x, y: 2)
+                }
+            }
+        }
+        .frame(width: width, height: Self.hourRowHeight, alignment: .topLeading)
+    }
+
+    /// Lane titles stay pinned while the night scrolls underneath.
+    private var laneTitles: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(lanes.enumerated()), id: \.offset) { index, lane in
+                Text(verbatim: "\(lane.title) · \(HealthUnitFormatting.durationText(seconds: Double(seconds(lane))))")
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
+                    .foregroundStyle(.primary.opacity(0.85))
+                    .lineLimit(1)
+                    .frame(height: Self.titleHeight, alignment: .leading)
+                Spacer().frame(height: Self.trackHeight + (index < lanes.count - 1 ? Self.laneGap : 0))
+            }
+        }
+        .allowsHitTesting(false)
+    }
+
+    private var footer: some View {
+        VStack(spacing: 2) {
+            HStack {
+                Text(time(start))
+                Spacer()
+                Text(time(start.addingTimeInterval(end.timeIntervalSince(start) / 2)))
+                Spacer()
+                Text(time(end))
+            }
+            .font(.system(.subheadline, design: .rounded))
+            .foregroundStyle(.secondary)
+            HStack(alignment: .top) {
+                Text("Time that you went to bed", comment: "Sleep D chart: caption under the bedtime at the start of the night")
+                Spacer(minLength: 12)
+                Text("Time out of bed", comment: "Sleep D chart: caption under the time the night ended")
+                    .multilineTextAlignment(.trailing)
+            }
+            .font(.system(.footnote, design: .rounded, weight: .semibold))
+            .foregroundStyle(.secondary)
+        }
+        .monospacedDigit()
+        .padding(.top, 8)
     }
 }
 
@@ -312,7 +362,7 @@ private struct SleepStageBreakdown: View {
                     let seconds = window.stages[row.key] ?? 0
                     HStack(spacing: 10) {
                         Circle()
-                            .fill(AyuvoPalette.sleepStage(row.code))
+                            .fill(AyuvoPalette.hypnogramStage(row.code))
                             .frame(width: 10, height: 10)
                         Text(SleepChart.stageTitle(row.code))
                             .font(.system(.subheadline, design: .rounded))

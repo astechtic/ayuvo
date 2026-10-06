@@ -168,4 +168,6 @@
     <string name="ui_flash_auto">フラッシュ 自動</string>
     <string name="ui_flash_off">フラッシュ オフ</string>
     <string name="ui_gps_split_km">%1$d km目</string>
+    <string name="ui_workout_set_mark_done">セット%1$dを完了にする</string>
+    <string name="ui_workout_set_done">完了</string>
 </resources>

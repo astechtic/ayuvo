@@ -116,7 +116,7 @@ class FakeActionEnvironment(
         val plan = workoutPlan(dateKey)
         plans[dateKey] = plan.copy(exercises = plan.exercises.map { e ->
             if (e.id != exerciseId) e else e.copy(sets = e.sets.map { s ->
-                if (s.id != setId) s else s.copy(weight = weight, weightUnit = unit, reps = reps, rpe = rpe ?: "")
+                if (s.id != setId) s else s.copy(weight = weight, weightUnit = unit, reps = reps, rpe = rpe ?: "", completed = true)
             })
         })
     }

@@ -183,4 +183,6 @@
     <string name="ui_flash_auto">Спалах авто</string>
     <string name="ui_flash_off">Спалах вимкнено</string>
     <string name="ui_gps_split_km">Км %1$d</string>
+    <string name="ui_workout_set_mark_done">Позначити підхід %1$d як виконаний</string>
+    <string name="ui_workout_set_done">Готово</string>
 </resources>

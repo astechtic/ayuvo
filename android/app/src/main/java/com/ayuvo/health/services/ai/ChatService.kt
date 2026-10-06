@@ -248,7 +248,9 @@ class ChatService(
             workoutPlanWeightUnit = workoutPlanWeightUnit,
             healthSnapshot = healthSnapshot,
             records = records?.tools,
-            actions = actions
+            actions = actions,
+            nutrientProfile = com.ayuvo.health.nutrients.NutrientFields.profile(profile),
+            nutrientCustomGoals = coachNutrientCustomGoals(prefs.optionalNutrientGoals.first())
         )
 
         // A conversation pinned to a saved model resolves through the resolver, so its guards apply
@@ -512,6 +514,7 @@ class ChatService(
         lines.add("You have access to functions that fetch the user's history on demand. The user profile + formulas + forecast below cover what's needed for most questions. Call a tool ONLY when the user asks about specific past dates, longer time ranges, individual meals, or trends that need raw data. Examples:")
         lines.add("- \"How was my weight in March?\" → call get_weight_history(from, to)")
         lines.add("- \"What did I eat last Tuesday?\" → call get_food_entries(from, to)")
+        lines.add("- \"How much calcium / magnesium / iron / vitamin D did I get?\", \"my complete nutrition today / this week\", vitamins, minerals or micronutrients → call get_nutrient_totals(from, to). It covers food, taken supplements and every nutrient with data, with the user's recommended amounts. Report each nutrient it returns; list no_data_logged and not_tracked_by_food_log as not logged (unknown, never zero or deficient). Lab reports measure blood levels, not intake — they never replace this tool and may only be mentioned as a complement.")
         lines.add("- \"How consistent has my fasting been?\" → call get_fasting_history(from, to)")
         lines.add("- \"What's my data range?\" → call get_data_summary")
         lines.add("- \"How is my training progressing?\" → call get_training_summary(from, to), then get_workout_history only if individual sets are needed")
@@ -574,7 +577,7 @@ class ChatService(
                 val lastSync = healthSnapshot.lastSyncMs?.let { Instant.ofEpochMilli(it).atZone(zone).toLocalDateTime().withNano(0).toString() } ?: "never"
                 lines.add("- ${healthSnapshot.types.size} health data types synced from ${healthSnapshot.platform} (last synced $lastSync). Call get_health_data_types first to learn the exact data_type keys.")
                 lines.add("- Platform active energy already includes Ayuvo's own workout estimates (reported as own_sum). Never add Ayuvo workout burn on top of platform active energy; subtract own_sum when you need external burn only.")
-                lines.add("- Use the diary tools (get_calorie_totals, get_food_entries) for intake, never dietary_* health types.")
+                lines.add("- Use the diary tools (get_calorie_totals, get_food_entries, get_nutrient_totals) for intake, never dietary_* health types.")
                 lines.add("- Never diagnose from heart rate, blood pressure, or glucose values: describe patterns plainly and suggest a clinician for anything concerning.")
             }
             healthHubEnabled -> lines.add("- Health data from Health Connect is not available to Coach (the user turned Coach access off in Settings › Health & Data).")
@@ -981,6 +984,14 @@ class ChatService(
     private val dateFmt: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d").withZone(ZoneId.systemDefault())
 
     companion object {
+        /**
+         * The user's custom nutrient goals by nutrient key, for `get_nutrient_totals` (same rule as the charts: a
+         * stored value equal to the old fixed default is not a custom goal).
+         */
+        fun coachNutrientCustomGoals(goals: com.ayuvo.health.models.OptionalNutrientGoals): Map<String, Double> =
+            com.ayuvo.health.models.OptionalNutrient.entries.mapNotNull { nutrient ->
+                goals.customGoal(nutrient)?.let { nutrient.referenceKey to it.toDouble() }
+            }.toMap()
         /**
          * §32 layout of the records part of `## Data available` (appended after its last list item):
          * `- <available_line>`, a blank line, the guardrails; with a selection a blank line, then

@@ -295,8 +295,9 @@ class WorkoutRepository(
         weight: String? = null,
         weightUnit: WorkoutWeightUnit? = null,
         reps: String? = null,
-        rpe: String? = null
-    ) = updateSet(exerciseId, setId, WorkoutDate.key(date), weight, weightUnit, reps, rpe)
+        rpe: String? = null,
+        completed: Boolean? = null
+    ) = updateSet(exerciseId, setId, WorkoutDate.key(date), weight, weightUnit, reps, rpe, completed)
 
     suspend fun updateSet(
         exerciseId: UUID,
@@ -305,7 +306,8 @@ class WorkoutRepository(
         weight: String? = null,
         weightUnit: WorkoutWeightUnit? = null,
         reps: String? = null,
-        rpe: String? = null
+        rpe: String? = null,
+        completed: Boolean? = null
     ) {
         val key = WorkoutDate.requireKey(dateKey)
         updatePlanWithPreferences(key) { plan, preferences ->
@@ -316,6 +318,8 @@ class WorkoutRepository(
             if (setIndex < 0) return@updatePlanWithPreferences plan
 
             var changedSet = exercise.sets[setIndex]
+            // Pin an unset ✓ so editing the reps never flips it on its own.
+            changedSet = changedSet.copy(completed = completed ?: changedSet.isCompleted)
             if (weight != null) {
                 changedSet = changedSet.copy(
                     weight = com.ayuvo.health.models.WorkoutSetInput.weight(weight),
@@ -1034,7 +1038,8 @@ class WorkoutRepository(
                     weightUnit = set.weightUnit ?: weightUnit,
                     reps = set.reps.trim(),
                     rpe = set.rpe.trim(),
-                    rpeScale = set.rpeScale ?: preferences.rpeScale
+                    rpeScale = set.rpeScale ?: preferences.rpeScale,
+                    completed = set.isCompleted
                 )
             }
         )

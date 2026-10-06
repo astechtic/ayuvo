@@ -56,10 +56,36 @@ belongs to that source's own contract.
 
 | Source | Tools | Contract | Consent flag |
 |---|---|---|---|
-| `food` | `get_data_summary`, `get_weight_history`, `get_body_fat_history`, `get_calorie_totals`, `get_food_entries`, `get_fasting_history`, and the five workout tools when the user has logged any | this document | none — the app's own diary |
+| `food` | `get_data_summary`, `get_weight_history`, `get_body_fat_history`, `get_calorie_totals`, `get_food_entries`, `get_nutrient_totals`, `get_fasting_history`, and the five workout tools when the user has logged any | this document | none — the app's own diary |
 | `health` | `get_health_data_types`, `get_health_summary`, `get_health_samples`, `get_sleep_history` | `docs/health-data.md` §7 | `coachHealthDataEnabled` |
 | `medications` | `get_medications`, `get_dose_history`, `get_medication_adherence` | `shared/medications/coach_tools.json` | `coachMedicationsEnabled` |
 | `records` | `records_search`, `records_get`, `records_observation_series` | `docs/health-records.md` §26–§30 | `healthRecordsCoachAccessEnabled` |
+
+### `get_nutrient_totals`
+
+Complete nutrition over `from`…`to` (inclusive local days, at most 366; same date defaults as the other diary
+tools). Built only from the shared nutrient paths — `day_totals`, `logged_day_average` and `reference_lines`
+(docs/nutrients.md §4) — by `CoachNutrientReport` on both platforms, with the same payload:
+
+- `from`, `to`, `days_in_range`, `logged_days` (days with a food entry or a taken dose), `food_entries`,
+  `profile {sex, age_band}`.
+- `macros`: `calories_kcal`, `protein_g`, `carbs_g`, `fat_g` → `{total, average_per_logged_day}`, food only.
+- `nutrients`: every reference nutrient and sports supplement with data, in reference order:
+  `key, name, unit, category, food_tracked, food, supplements, total, average_per_logged_day, logged_days`,
+  optional `health_other_apps`, and the reference values `recommended` + `recommended_kind` (`RDA`, `AI` or
+  `custom_goal`) + `percent_of_recommended`, `limit` + `limit_kind` + `above_limit`, `upper_limit` +
+  `upper_limit_scope` + `upper_limit_note` + `above_upper_limit` (a `supplements_only` / `folic_acid_only` UL is
+  compared with the supplement part only).
+- `no_data_logged` (food-log nutrients nothing recorded) and `not_tracked_by_food_log` (copper, B6, … with no
+  supplement or Health value): unknown, never zero.
+- `days` (`{date, food_entries, totals}`) for ranges up to 31 days, else `days_omitted`; `notes` (fixed strings).
+
+`supplements` needs the Medications source (taken doses only, averaged over the dosing interval).
+`health_other_apps` needs the Health source and is read only for nutrients the food log does not record, from
+their `dietary_*` type: food-log nutrients may already be in Health as Ayuvo's own writes. Lab results stay in
+the records tools; the prompt tells the model to use this tool for intake questions and to mention labs only as
+a complement.
+
 
 `coachMedicationsEnabled` (default **false**, plus `coachMedicationsConsentedAt`) is new. It is set
 only by an affirmative act: the first time the user turns Medications on in the composer's data

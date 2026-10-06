@@ -47,7 +47,9 @@ extension MedicationStore {
             timeZone: TimeZone.current.identifier,
             nowMs: nowMs,
             count: rows.count,
-            activeCount: rows.filter { $0["status"].string == "active" }.count
+            activeCount: rows.filter { $0["status"].string == "active" }.count,
+            supplementEntries: supplementEntries,
+            takenDoseMs: takenDoseMs
         )
     }
 }

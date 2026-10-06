@@ -183,4 +183,6 @@
     <string name="ui_flash_auto">Blesk automaticky</string>
     <string name="ui_flash_off">Blesk vypnutý</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">Označit sérii %1$d jako hotovou</string>
+    <string name="ui_workout_set_done">Hotovo</string>
 </resources>

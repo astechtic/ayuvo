@@ -52,6 +52,12 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.ui.platform.testTag
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.DeleteOutline
@@ -400,6 +406,7 @@ internal fun WorkoutDiaryScreen(
                             onWeight = { setId, value -> viewModel.updateWeight(exercise.id, setId, value) },
                             onReps = { setId, value -> viewModel.updateReps(exercise.id, setId, value) },
                             onRpe = { setId, value -> viewModel.updateRpe(exercise.id, setId, value) },
+                            onDone = { setId, done -> viewModel.setDone(exercise.id, setId, done) },
                             onTimerAction = { viewModel.updateTimer(exercise.id, it) }
                         )
                     }
@@ -1130,6 +1137,7 @@ private fun WorkoutExerciseCard(
     onWeight: (UUID, String) -> Unit,
     onReps: (UUID, String) -> Unit,
     onRpe: (UUID, String) -> Unit,
+    onDone: (UUID, Boolean) -> Unit,
     onTimerAction: (ExerciseTimerAction) -> Unit
 ) {
     GlassSurface(
@@ -1283,7 +1291,8 @@ private fun WorkoutExerciseCard(
                             rpeScale = set.rpeScale ?: rpeScale,
                             onWeight = { onWeight(set.id, it) },
                             onReps = { onReps(set.id, it) },
-                            onRpe = { onRpe(set.id, it) }
+                            onRpe = { onRpe(set.id, it) },
+                            onDone = { onDone(set.id, it) }
                         )
                     }
                     if (index < exercise.sets.lastIndex) {
@@ -1383,13 +1392,16 @@ internal fun WorkoutSetRow(
     rpeScale: WorkoutRpeScale,
     onWeight: (String) -> Unit,
     onReps: (String) -> Unit,
-    onRpe: (String) -> Unit
+    onRpe: (String) -> Unit,
+    onDone: (Boolean) -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
+    // Unticked rows (including copied prefills) read as not done yet; the ✓ stays at full strength.
+    val fieldAlpha = if (set.isCompleted) 1f else 0.62f
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(7.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Text(
             stringResource(R.string.ui_workout_set_n, index + 1),
@@ -1397,7 +1409,7 @@ internal fun WorkoutSetRow(
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
-            modifier = Modifier.width(47.dp)
+            modifier = Modifier.width(42.dp).alpha(fieldAlpha)
         )
         WorkoutSetField(
             value = set.displayWeight(weightUnit),
@@ -1406,7 +1418,7 @@ internal fun WorkoutSetRow(
             onValueChange = onWeight,
             placeholder = weightUnit.storageValue,
             keyboardType = KeyboardType.Decimal,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).alpha(fieldAlpha)
         )
         WorkoutSetField(
             value = set.reps,
@@ -1414,7 +1426,7 @@ internal fun WorkoutSetRow(
             onValueChange = onReps,
             placeholder = stringResource(R.string.ui_workout_metric_reps),
             keyboardType = KeyboardType.Number,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).alpha(fieldAlpha)
         )
         val rpeHelp = stringResource(when (rpeScale) {
             WorkoutRpeScale.STRENGTH -> R.string.workout_rpe_help_strength
@@ -1428,9 +1440,43 @@ internal fun WorkoutSetRow(
             onValueChange = onRpe,
             placeholder = stringResource(R.string.ui_workout_rpe),
             keyboardType = if (rpeScale.allowsDecimalInput) KeyboardType.Decimal else KeyboardType.Number,
-            modifier = Modifier.weight(1f).semantics { contentDescription = rpeHelp },
+            modifier = Modifier.weight(1f).alpha(fieldAlpha).semantics { contentDescription = rpeHelp },
             imeAction = ImeAction.Done,
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+        )
+        WorkoutSetDoneButton(setNumber = index + 1, done = set.isCompleted, onDone = onDone)
+    }
+}
+
+/** The set row's ✓: filled accent when the set is done. Only ticked sets count toward the workout. */
+@Composable
+private fun WorkoutSetDoneButton(setNumber: Int, done: Boolean, onDone: (Boolean) -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    val label = stringResource(R.string.ui_workout_set_mark_done, setNumber)
+    val doneState = stringResource(R.string.ui_workout_set_done)
+    val shape = RoundedCornerShape(10.dp)
+    Box(
+        modifier = Modifier
+            .size(width = 34.dp, height = 36.dp)
+            .clip(shape)
+            .background(if (done) AppColors.Calorie else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.74f), shape)
+            .border(0.8.dp, if (done) Color.Transparent else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f), shape)
+            .toggleable(value = done, role = Role.Checkbox) {
+                haptic.performHapticFeedback(if (it) HapticFeedbackType.ToggleOn else HapticFeedbackType.ToggleOff)
+                onDone(it)
+            }
+            .semantics {
+                contentDescription = label
+                stateDescription = if (done) doneState else ""
+            }
+            .testTag("workout.set.done.$setNumber"),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Check,
+            contentDescription = null,
+            tint = if (done) Color.White else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.58f),
+            modifier = Modifier.size(18.dp)
         )
     }
 }

@@ -108,7 +108,7 @@ extension ActionExecutor {
     private func todayVolume(_ exercises: [StrengthPlannedExercise]) -> ActionMath.SetVolume {
         let sets = exercises.flatMap { exercise in
             exercise.sets.compactMap { set -> (weightKg: Double, reps: Int)? in
-                guard let reps = Int(set.reps), reps > 0 else { return nil }
+                guard set.isCompleted, let reps = Int(set.reps), reps > 0 else { return nil }
                 return (Self.kilograms(set.weight, unit: set.weightUnit, fallback: storedWeightUnit), reps)
             }
         }
@@ -238,9 +238,9 @@ extension ActionExecutor {
         guard var exercise = store.exercises(for: day).first(where: { $0.itemID == item.id }) else {
             throw ActionError.unavailable(String(localized: "Ayuvo couldn't add the exercise to today's workout."))
         }
-        var index = exercise.sets.firstIndex { $0.reps.trimmingCharacters(in: .whitespaces).isEmpty }
+        var index = exercise.sets.firstIndex { !$0.isCompleted }
         if index == nil {
-            // Every set is logged: append one (the store copies the previous set's values into it).
+            // Every set is ticked: append one (the store copies the previous set's values into it).
             let count = exercise.sets.count
             store.setSetCount(count + 1, exerciseID: exercise.id, on: day)
             exercise = store.exercises(for: day).first(where: { $0.id == exercise.id }) ?? exercise
@@ -255,7 +255,8 @@ extension ActionExecutor {
         store.updateSet(
             exerciseID: exercise.id, setID: exercise.sets[index].id, on: day,
             weight: weight > 0 ? Self.plain(weight) : "",
-            weightUnit: unit, reps: String(reps), rpe: v.double("rpe").map { Self.plain($0) }
+            weightUnit: unit, reps: String(reps), rpe: v.double("rpe").map { Self.plain($0) },
+            completed: true
         )
         if env.sideEffects { StrengthWorkoutStore.postExternalChangeNotification() }
         let updated = store.exercises(for: day).first(where: { $0.id == exercise.id }) ?? exercise

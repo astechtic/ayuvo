@@ -40,7 +40,9 @@ data class WorkoutTextDraft(val date: String, val exercises: List<WorkoutTextExe
                 require(set.rpe.isBlank() || (rpe != null && rpe.isFinite() && rpe in 1.0..10.0)) { AppText.orEnglish("Enter an RPE from 1 to 10.", R.string.core_workout_text_rpe) }
                 PlannedSet(weight = weight?.toString().orEmpty(), reps = reps.toString(),
                     rpe = rpe?.toString().orEmpty(), rpeScale = rpe?.let { WorkoutRpeScale.STRENGTH },
-                    weightUnit = WorkoutWeightUnit.fromStorage(entry.unit))
+                    weightUnit = WorkoutWeightUnit.fromStorage(entry.unit),
+                    // Text logging describes work already done.
+                    completed = true)
             }
             if (minutes == null && sets.isEmpty()) throw missingDetails(entry, item)
             if (item == null && (minutes == null || sets.isNotEmpty())) {

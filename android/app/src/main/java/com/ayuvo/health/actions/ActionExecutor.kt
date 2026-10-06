@@ -429,7 +429,7 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
 
     private suspend fun workoutDay(dateKey: String): Map<String, Any?> {
         val plan = env.workoutPlan(dateKey)
-        val done = plan.exercises.flatMap { e -> e.sets.filter { it.reps.isNotBlank() } }
+        val done = plan.exercises.flatMap { e -> e.sets.filter { it.isCompleted && it.reps.isNotBlank() } }
         val prefUnit = env.prefs().workoutWeightUnit
         val volume = ActionMath.setVolume(done.map { setWork(it.weight, it.weightUnit ?: prefUnit, it.reps) })
         return linkedMapOf(
@@ -619,12 +619,13 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
         fun planned(plan: com.ayuvo.health.models.WorkoutDayPlan): PlannedExercise =
             plan.exercises.firstOrNull { it.itemId == item.id } ?: throw ActionException(ActionErrorCode.NOT_FOUND, "exercise")
         var exercise = planned(env.workoutPlan(key))
-        var index = exercise.sets.indexOfFirst { it.reps.isBlank() }
+        // The first set not ticked yet (a copied prefill counts as open); else append one.
+        var index = exercise.sets.indexOfFirst { !it.isCompleted }
         if (index < 0) {
             if (exercise.sets.size >= MAX_SETS) throw ActionException(ActionErrorCode.CONFLICT, detail = "max_sets")
             env.setSetCount(exercise.sets.size + 1, exercise.id, key)
             exercise = planned(env.workoutPlan(key))
-            index = exercise.sets.indexOfFirst { it.reps.isBlank() }
+            index = exercise.sets.indexOfFirst { !it.isCompleted }
             if (index < 0) throw ActionException(ActionErrorCode.CONFLICT, detail = "max_sets")
         }
         val unitRaw = a.string("unit") ?: "kg"

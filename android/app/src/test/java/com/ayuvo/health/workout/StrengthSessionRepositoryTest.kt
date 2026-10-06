@@ -34,7 +34,7 @@ class StrengthSessionRepositoryTest {
         val repo = WorkoutRepository(store, health)
         repo.toggleExercise(bench(), day)
         val exercise = repo.planNow(day).exercises.single()
-        repo.updateSet(exercise.id, exercise.sets.single().id, day, weight = "60", weightUnit = WorkoutWeightUnit.KG, reps = "8")
+        repo.updateSet(exercise.id, exercise.sets.single().id, day, weight = "60", weightUnit = WorkoutWeightUnit.KG, reps = "8", completed = true)
         return repo to store
     }
 

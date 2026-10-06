@@ -193,4 +193,6 @@
     <string name="ui_flash_auto">الفلاش تلقائي</string>
     <string name="ui_flash_off">الفلاش متوقف</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">وضع علامة على المجموعة %1$d كمكتملة</string>
+    <string name="ui_workout_set_done">تم</string>
 </resources>

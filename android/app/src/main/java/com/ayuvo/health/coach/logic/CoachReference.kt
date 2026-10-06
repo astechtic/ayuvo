@@ -102,7 +102,7 @@ object CoachReference {
 
     val SOURCES = listOf("food", "health", "medications", "records")
     val FOOD_TOOLS = listOf("get_data_summary", "get_weight_history", "get_body_fat_history",
-                            "get_calorie_totals", "get_food_entries", "get_fasting_history")
+                            "get_calorie_totals", "get_food_entries", "get_nutrient_totals", "get_fasting_history")
     val WORKOUT_TOOLS = listOf("get_workout_history", "get_workout_plans", "get_workout_preferences",
                                "get_training_summary", "get_exercise_lift_history")
     val HEALTH_TOOLS = listOf("get_health_data_types", "get_health_summary", "get_health_samples",

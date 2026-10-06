@@ -47,6 +47,9 @@ struct StrengthSessionCard: View {
                         Button("Discard") { confirmDiscard = true }
                             .font(.caption.weight(.semibold))
                             .tint(.secondary)
+                            // The card is a List row: an automatic-style button there only
+                            // fires through the row's own tap handling, which never reaches it.
+                            .buttonStyle(.borderless)
                         Button {
                             Task { await coordinator.finishStrengthSession() }
                         } label: {

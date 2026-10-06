@@ -281,7 +281,8 @@ internal class DebugDemoDataSeeder(private val application: AyuvoApp) {
                         weightUnit = WorkoutWeightUnit.KG,
                         reps = (seed.reps - if (setNumber == 3) 1 else 0).toString(),
                         rpe = String.format(Locale.US, "%.1f", 7.0 + setNumber * 0.4),
-                        rpeScale = WorkoutRpeScale.STRENGTH
+                        rpeScale = WorkoutRpeScale.STRENGTH,
+                        completed = true
                     )
                 }
             )
@@ -317,7 +318,8 @@ internal class DebugDemoDataSeeder(private val application: AyuvoApp) {
                         weightUnit = set.weightUnit,
                         reps = set.reps,
                         rpe = set.rpe,
-                        rpeScale = set.rpeScale
+                        rpeScale = set.rpeScale,
+                        completed = true
                     )
                 }
             )

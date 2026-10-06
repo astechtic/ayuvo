@@ -11,7 +11,7 @@ struct WorkoutSessionIntervalTests {
         store.toggleExercise(WorkoutTestFixture.exercise(id: "squat", name: "Back Squat"), on: date)
         let exercise = try #require(store.exercises(for: date).first)
         let set = try #require(exercise.sets.first)
-        store.updateSet(exerciseID: exercise.id, setID: set.id, on: date, weight: "100", weightUnit: .kg, reps: "8", rpe: "8")
+        store.updateSet(exerciseID: exercise.id, setID: set.id, on: date, weight: "100", weightUnit: .kg, reps: "8", rpe: "8", completed: true)
         return store
     }
 

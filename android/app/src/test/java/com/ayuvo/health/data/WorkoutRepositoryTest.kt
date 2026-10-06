@@ -10,6 +10,8 @@ import com.ayuvo.health.models.WorkoutPersistedState
 import com.ayuvo.health.models.WorkoutSession
 import com.ayuvo.health.models.WorkoutTabMode
 import com.ayuvo.health.models.WorkoutWeightUnit
+import com.ayuvo.health.models.WorkoutRpeScale
+import com.ayuvo.health.models.WorkoutBurnEstimator
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -86,7 +88,8 @@ class WorkoutRepositoryTest {
             weight = "82,5 kg",
             weightUnit = WorkoutWeightUnit.KG,
             reps = "8 reps",
-            rpe = "7.5"
+            rpe = "7.5",
+            completed = true
         )
         repository.setSetCount(99, sourceExercise.id, source)
 
@@ -123,7 +126,7 @@ class WorkoutRepositoryTest {
         repository.toggleExercise(item, source)
         val exercise = repository.planNow(source).exercises.single()
         val set = exercise.sets.single()
-        repository.updateSet(exercise.id, set.id, source, "40", WorkoutWeightUnit.KG, "10", "8")
+        repository.updateSet(exercise.id, set.id, source, "40", WorkoutWeightUnit.KG, "10", "8", completed = true)
         repository.setSetCount(2, exercise.id, source)
 
         repository.copyPlan(source, target, includeSetDetails = true)
@@ -135,6 +138,63 @@ class WorkoutRepositoryTest {
         assertEquals("8", copied.sets.first().rpe)
         assertNotEquals(exercise.id, copied.id)
         assertNotEquals(set.id, copied.sets.first().id)
+        // Copied details are a prefill for the new day: nothing is ticked yet.
+        assertTrue(copied.sets.none { it.isCompleted })
+    }
+
+    @Test
+    fun onlyTickedSetsCountAndCopiedPrefillsStartUnticked() = runBlocking {
+        val repository = WorkoutRepository(FakeWorkoutStateStore())
+        val date = LocalDate.of(2026, 7, 21)
+        repository.toggleExercise(exerciseItem(), date)
+        val exercise = repository.planNow(date).exercises.single()
+        val first = exercise.sets.single()
+        assertFalse(first.isCompleted)
+
+        repository.updateSet(exercise.id, first.id, date, weight = "50", weightUnit = WorkoutWeightUnit.KG, reps = "10")
+        assertEquals(false, repository.planNow(date).exercises.single().sets.single().completed)
+        // Typing reps alone never ticks the set, so there is nothing to calculate yet.
+        assertNull(repository.upsertCalculatedWorkout(date, 100, WorkoutWeightUnit.KG))
+
+        repository.updateSet(exercise.id, first.id, date, completed = true)
+        repository.setSetCount(3, exercise.id, date)
+        val sets = repository.planNow(date).exercises.single().sets
+        assertEquals(listOf(true, false, false), sets.map { it.isCompleted })
+        assertEquals(listOf("10", "10", "10"), sets.map { it.reps })
+
+        repository.updateSet(exercise.id, sets[2].id, date, completed = true)
+        val ticked = WorkoutBurnEstimator.estimate(repository.planNow(date).exercises, 80.0, WorkoutWeightUnit.KG, WorkoutRpeScale.STRENGTH)!!
+        assertEquals(2, ticked.performedSetCount)
+        assertEquals(20, ticked.repCount)
+        val session = repository.upsertCalculatedWorkout(date, ticked.calories, WorkoutWeightUnit.KG)!!
+        assertEquals(2, session.performedSetCount)
+        assertEquals(20, session.repCount)
+        assertEquals(listOf(true, false, true), session.exercises.single().sets.map { it.isPerformed })
+
+        repository.updateSet(exercise.id, sets[0].id, date, completed = false)
+        repository.updateSet(exercise.id, sets[2].id, date, completed = false)
+        assertNull(WorkoutBurnEstimator.estimate(repository.planNow(date).exercises, 80.0, WorkoutWeightUnit.KG, WorkoutRpeScale.STRENGTH))
+    }
+
+    @Test
+    fun setsSavedBeforeTicksKeepCountingAsBefore() {
+        val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+        // Planned sets: reps alone made a set done.
+        val planned = json.decodeFromString<List<PlannedSet>>(
+            """[{"id":"00000000-0000-0000-0000-000000000001","weight":"60","reps":"8","rpe":""},
+               {"id":"00000000-0000-0000-0000-000000000002","weight":"60","reps":"","rpe":"8"}]"""
+        )
+        assertEquals(listOf(null, null), planned.map { it.completed })
+        assertEquals(listOf(true, false), planned.map { it.isCompleted })
+        // Saved session sets: every set with reps stays performed.
+        val saved = json.decodeFromString<List<CompletedSet>>(
+            """[{"id":"00000000-0000-0000-0000-000000000003","setNumber":1,"weight":"60","weightUnit":"KG","reps":"8","rpe":""},
+               {"id":"00000000-0000-0000-0000-000000000004","setNumber":2,"weight":"60","weightUnit":"KG","reps":"","rpe":""}]"""
+        )
+        assertEquals(listOf(true, false), saved.map { it.isPerformed })
+        // A round trip keeps the tick.
+        val again = json.decodeFromString<PlannedSet>(json.encodeToString(PlannedSet.serializer(), planned[1].copy(completed = true)))
+        assertEquals(true, again.completed)
     }
 
     @Test
@@ -152,7 +212,8 @@ class WorkoutRepositoryTest {
             weight = "100",
             weightUnit = WorkoutWeightUnit.KG,
             reps = "8",
-            rpe = "8"
+            rpe = "8",
+            completed = true
         )
 
         val first = repository.upsertCalculatedWorkout(date, 180, WorkoutWeightUnit.KG)!!
@@ -348,7 +409,7 @@ class WorkoutRepositoryTest {
         val date = LocalDate.of(2026, 9, 8)
         repository.toggleExercise(exerciseItem(), date)
         val strength = repository.planNow(date).exercises.single()
-        repository.updateSet(strength.id, strength.sets.single().id, date, reps = "10")
+        repository.updateSet(strength.id, strength.sets.single().id, date, reps = "10", completed = true)
         val strengthBurn = repository.calculateBurn(date, 70.0, WorkoutWeightUnit.KG)!!
         repository.toggleExercise(exerciseItem().copy(id = "0685", bodyPart = "Cardio"), date)
         val cardio = repository.planNow(date).exercises.last()

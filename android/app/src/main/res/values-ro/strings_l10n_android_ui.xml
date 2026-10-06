@@ -178,4 +178,6 @@
     <string name="ui_flash_auto">Bliț automat</string>
     <string name="ui_flash_off">Bliț dezactivat</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">Marchează setul %1$d ca efectuat</string>
+    <string name="ui_workout_set_done">Gata</string>
 </resources>

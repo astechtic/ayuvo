@@ -173,4 +173,6 @@
     <string name="ui_flash_auto">फ़्लैश ऑटो</string>
     <string name="ui_flash_off">फ़्लैश बंद</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">सेट %1$d को पूरा चिह्नित करें</string>
+    <string name="ui_workout_set_done">पूर्ण</string>
 </resources>

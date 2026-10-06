@@ -81,6 +81,9 @@ final class OutdoorWorkoutRecorder {
     @ObservationIgnored private var lastRecompute = Date.distantPast
     @ObservationIgnored private var lastPersist = Date.distantPast
     @ObservationIgnored private var needsRecompute = false
+    @ObservationIgnored private var routeSketch: WorkoutRouteSketch?
+    @ObservationIgnored private var routeSketchKey: (points: Int, laps: Int) = (0, 0)
+    @ObservationIgnored private var routeSketchAt = Date.distantPast
 
     private init() {
         manager.delegate = locationProxy
@@ -145,6 +148,21 @@ final class OutdoorWorkoutRecorder {
         return (laps.count + 1, max(0, now.timeIntervalSince(lapStart) - pausedSinceLap))
     }
 
+    /// Active (unpaused) seconds of each completed lap, oldest first.
+    var lapSplits: [Double] {
+        guard let startedAt else { return [] }
+        let starts = [startedAt] + laps
+        return zip(starts, laps).map { activeSeconds(from: $0, to: $1) }
+    }
+
+    /// Seconds between two instants minus any manual pause overlapping them.
+    private func activeSeconds(from: Date, to: Date) -> Double {
+        let a = from.timeIntervalSince1970 * 1000, b = to.timeIntervalSince1970 * 1000
+        var paused = pauses.reduce(0.0) { $0 + max(0, min(b, Double($1.1)) - max(a, Double($1.0))) }
+        if let pauseStartedAt { paused += max(0, b - max(a, pauseStartedAt.timeIntervalSince1970 * 1000)) }
+        return max(0, (b - a - paused) / 1000)
+    }
+
     // MARK: - Control
 
     /// Asks for When-In-Use location (never Always) and starts recording.
@@ -166,6 +184,8 @@ final class OutdoorWorkoutRecorder {
         pauses = []
         pauseStartedAt = nil
         laps = []
+        routeSketch = nil
+        routeSketchKey = (0, 0)
         heartRateSamples = []
         live = nil
         currentPaceSecondsPerKm = nil
@@ -285,6 +305,8 @@ final class OutdoorWorkoutRecorder {
         pauses = saved.pauses.compactMap { $0.count == 2 ? ($0[0], $0[1]) : nil }
         pauseStartedAt = saved.pauseStartedAt
         laps = saved.laps
+        routeSketch = nil
+        routeSketchKey = (0, 0)
         heartRateSamples = saved.heartRate.map { HeartRateWorkout.Sample(tMs: $0.t, bpm: $0.bpm) }
         endedAt = nil
         phase = .interrupted
@@ -451,8 +473,24 @@ final class OutdoorWorkoutRecorder {
             pausedElapsed: stateName == "running" ? nil : activeElapsed(),
             distanceM: live?.distanceM, paceSecondsPerKm: currentPaceSecondsPerKm ?? live?.avgPaceSecondsPerKmValue,
             speedMps: currentSpeedMps ?? live?.avgSpeedMps, heartRate: currentHeartRate, lapCount: laps.count,
-            source: watchSessionActive ? "watch" : nil
+            source: watchSessionActive ? "watch" : nil,
+            route: liveRouteSketch(), lapSplits: Array(lapSplits.suffix(WorkoutActivityAttributes.ContentState.maxLapSplits))
         )
+    }
+
+    /// The Live Activity map, rebuilt at most every 10 s (or at once on a new lap), since the
+    /// Douglas–Peucker pass walks the whole track.
+    private func liveRouteSketch(now: Date = Date()) -> WorkoutRouteSketch? {
+        let key = (points: points.count, laps: laps.count)
+        guard key != routeSketchKey else { return routeSketch }
+        guard key.laps != routeSketchKey.laps || routeSketch == nil || now.timeIntervalSince(routeSketchAt) >= 10 else {
+            return routeSketch
+        }
+        routeSketchKey = key
+        routeSketchAt = now
+        let lapStartIndex = laps.last.map { lap in points.firstIndex { $0.tMs >= ms(lap) } ?? points.count - 1 }
+        routeSketch = WorkoutRouteSketch.make(coordinates: points.map { ($0.lat, $0.lon) }, lapStartIndex: lapStartIndex)
+        return routeSketch
     }
 
     // MARK: - Finish
@@ -644,6 +682,8 @@ final class OutdoorWorkoutRecorder {
         pauses = []
         pauseStartedAt = nil
         laps = []
+        routeSketch = nil
+        routeSketchKey = (0, 0)
         heartRateSamples = []
         live = nil
         currentPaceSecondsPerKm = nil

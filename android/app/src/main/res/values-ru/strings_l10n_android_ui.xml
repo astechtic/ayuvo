@@ -183,4 +183,6 @@
     <string name="ui_flash_auto">Вспышка: авто</string>
     <string name="ui_flash_off">Вспышка выключена</string>
     <string name="ui_gps_split_km">Км %1$d</string>
+    <string name="ui_workout_set_mark_done">Отметить подход %1$d как выполненный</string>
+    <string name="ui_workout_set_done">Готово</string>
 </resources>

@@ -222,6 +222,15 @@ struct StrengthPlannedSet: Identifiable, Codable, Equatable, Hashable {
     var rpe = ""
     /// RPE values are meaningful only together with their selected scale.
     var rpeScale: StrengthWorkoutRPEScale?
+    /// The set row's ✓. nil = not set yet: a new blank set, or one saved before ticks existed,
+    /// when entering reps alone made it done. Read it through `isCompleted`; edits pin it.
+    var completed: Bool? = nil
+
+    /// Only ticked sets count toward performed sets, volume, burn and statistics.
+    var isCompleted: Bool {
+        get { completed ?? !reps.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        set { completed = newValue }
+    }
 
     var hasLoggedValue: Bool {
         !weight.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -236,12 +245,14 @@ struct StrengthPlannedSet: Identifiable, Codable, Equatable, Hashable {
         )
     }
 
-    /// New sets inherit weight, unit, and reps from the set above; RPE stays blank.
+    /// New sets inherit weight, unit, and reps from the set above as a prefill; RPE stays blank
+    /// and the set starts unticked.
     func copyingFromPrevious() -> StrengthPlannedSet {
         StrengthPlannedSet(
             weight: weight,
             weightUnit: weightUnit,
-            reps: reps
+            reps: reps,
+            completed: false
         )
     }
 
@@ -382,6 +393,8 @@ struct StrengthPlannedExercise: Identifiable, Codable, Equatable, Hashable {
             copy.sets = sets.map { set in
                 var copiedSet = set
                 copiedSet.id = UUID()
+                // Details are a prefill for the new day; it hasn't been done yet.
+                copiedSet.completed = false
                 return copiedSet
             }
         } else {
@@ -407,11 +420,13 @@ struct StrengthCompletedSet: Identifiable, Codable, Equatable, Hashable {
     let rpe: String
     /// Optional so version-one workout records continue to decode.
     var rpeScale: StrengthWorkoutRPEScale?
+    /// Whether the set was ticked. nil = saved before ticks existed, when every set with reps counted.
+    var completed: Bool? = nil
 
     var isPerformed: Bool {
-        // Delts treats a set as performed once reps are entered; a load or RPE
+        // A set is performed once it is ticked and has reps; a load or RPE
         // by itself remains a planned/incomplete set.
-        !reps.isEmpty
+        completed != false && !reps.isEmpty
     }
 }
 
@@ -456,7 +471,7 @@ struct StrengthWorkoutSession: Identifiable, Codable, Equatable, Hashable {
     var exerciseCount: Int { exercises.count }
     var performedSetCount: Int { exercises.flatMap(\.sets).filter(\.isPerformed).count }
     var repCount: Int {
-        exercises.flatMap(\.sets).reduce(0) { $0 + (Int($1.reps) ?? 0) }
+        exercises.flatMap(\.sets).filter(\.isPerformed).reduce(0) { $0 + (Int($1.reps) ?? 0) }
     }
 
     var stableDiaryDateKey: String {
@@ -511,7 +526,7 @@ enum StrengthWorkoutBurnEstimator {
                 timedCalories += met * 3.5 * safeBodyWeight / 200 * (savedSeconds / 60)
             }
             var performedInExercise = 0
-            for set in exercise.sets {
+            for set in exercise.sets where set.isCompleted {
                 guard let rawReps = Int(set.reps), rawReps > 0 else { continue }
                 let reps = min(rawReps, 100)
                 performedSetCount += 1

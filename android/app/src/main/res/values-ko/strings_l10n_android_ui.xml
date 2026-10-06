@@ -168,4 +168,6 @@
     <string name="ui_flash_auto">플래시 자동</string>
     <string name="ui_flash_off">플래시 끔</string>
     <string name="ui_gps_split_km">%1$d번째 km</string>
+    <string name="ui_workout_set_mark_done">세트 %1$d 완료로 표시</string>
+    <string name="ui_workout_set_done">완료</string>
 </resources>

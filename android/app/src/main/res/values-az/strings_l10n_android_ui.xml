@@ -173,4 +173,6 @@
     <string name="ui_flash_auto">Flaş avtomatik</string>
     <string name="ui_flash_off">Flaş söndürülüb</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">Dəst %1$d tamamlandı kimi işarələ</string>
+    <string name="ui_workout_set_done">Hazır</string>
 </resources>

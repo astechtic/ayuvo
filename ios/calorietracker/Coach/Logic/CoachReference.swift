@@ -79,7 +79,7 @@ enum CR {
 
     static let sources = ["food", "health", "medications", "records"]
     static let foodTools = ["get_data_summary", "get_weight_history", "get_body_fat_history",
-                            "get_calorie_totals", "get_food_entries", "get_fasting_history"]
+                            "get_calorie_totals", "get_food_entries", "get_nutrient_totals", "get_fasting_history"]
     static let workoutTools = ["get_workout_history", "get_workout_plans", "get_workout_preferences",
                                "get_training_summary", "get_exercise_lift_history"]
     static let healthTools = ["get_health_data_types", "get_health_summary", "get_health_samples",

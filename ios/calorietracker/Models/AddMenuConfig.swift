@@ -141,8 +141,12 @@ enum AddMenuSettings {
         }
         let sanitized = decoded.sanitized()
         if sanitized.groups.isEmpty, sanitized.flatMethods.isEmpty {
-            let hadConfiguredContent = decoded.groups.contains { !$0.methods.isEmpty }
-                || !decoded.flatMethods.isEmpty
+            // Decoding already dropped unknown method ids, so look at the raw ids: a menu
+            // saved with methods this build doesn't know must not come back empty.
+            let raw = try? JSONDecoder().decode(RawAddMenuConfig.self, from: data)
+            let hadConfiguredContent = raw.map { raw in
+                (raw.groups ?? []).contains { !($0.methods ?? []).isEmpty } || !(raw.flatMethods ?? []).isEmpty
+            } ?? false
             if hadConfiguredContent {
                 return .iOSDefault
             }
@@ -158,5 +162,12 @@ enum AddMenuSettings {
 
     static func reset(store: UserDefaults = .standard) {
         store.removeObject(forKey: AddMenuConfig.storageKey)
+    }
+
+    /// The stored shape with method ids kept as raw strings.
+    private struct RawAddMenuConfig: Decodable {
+        struct Group: Decodable { var methods: [String]? }
+        var groups: [Group]?
+        var flatMethods: [String]?
     }
 }

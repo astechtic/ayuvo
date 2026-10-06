@@ -74,10 +74,10 @@ data class WorkoutDiaryUiState(
     val windowProposal: WorkoutWindowProposal? = null
 ) {
     val performedSetCount: Int
-        get() = exercises.sumOf { exercise -> exercise.sets.count { it.reps.isNotBlank() } }
+        get() = exercises.sumOf { exercise -> exercise.sets.count { it.isCompleted && it.reps.isNotBlank() } }
 
     val repCount: Int
-        get() = exercises.sumOf { exercise -> exercise.sets.sumOf { it.reps.toIntOrNull() ?: 0 } }
+        get() = exercises.sumOf { exercise -> exercise.sets.filter { it.isCompleted }.sumOf { it.reps.toIntOrNull() ?: 0 } }
 }
 
 data class WorkoutWindowProposal(
@@ -339,12 +339,17 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
         updateSet(exerciseId, setId, rpe = value)
     }
 
+    fun setDone(exerciseId: UUID, setId: UUID, done: Boolean) {
+        updateSet(exerciseId, setId, completed = done)
+    }
+
     private fun updateSet(
         exerciseId: UUID,
         setId: UUID,
         weight: String? = null,
         reps: String? = null,
-        rpe: String? = null
+        rpe: String? = null,
+        completed: Boolean? = null
     ) {
         val date = diaryUiState.selectedDate
         viewModelScope.launch {
@@ -355,7 +360,8 @@ class WorkoutsViewModel(app: Application) : AndroidViewModel(app) {
                 weight = weight,
                 weightUnit = if (weight != null) workoutWeightUnit else null,
                 reps = reps,
-                rpe = rpe
+                rpe = rpe,
+                completed = completed
             )
         }
     }

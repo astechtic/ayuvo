@@ -129,7 +129,7 @@ MIN_SENTENCE_LENGTH = 12
 
 SOURCES = ("food", "health", "medications", "records")
 FOOD_TOOLS = ("get_data_summary", "get_weight_history", "get_body_fat_history", "get_calorie_totals",
-              "get_food_entries", "get_fasting_history")
+              "get_food_entries", "get_nutrient_totals", "get_fasting_history")
 WORKOUT_TOOLS = ("get_workout_history", "get_workout_plans", "get_workout_preferences",
                  "get_training_summary", "get_exercise_lift_history")
 HEALTH_TOOLS = ("get_health_data_types", "get_health_summary", "get_health_samples",

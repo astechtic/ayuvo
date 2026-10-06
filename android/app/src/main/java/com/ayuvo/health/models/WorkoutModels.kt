@@ -255,8 +255,16 @@ data class PlannedSet(
     val weightUnit: WorkoutWeightUnit? = null,
     val reps: String = "",
     val rpe: String = "",
-    val rpeScale: WorkoutRpeScale? = null
+    val rpeScale: WorkoutRpeScale? = null,
+    /**
+     * The set row's ✓. null = not set yet: a new blank set, or one saved before ticks existed,
+     * when entering reps alone made it done. Read it through [isCompleted].
+     */
+    val completed: Boolean? = null
 ) {
+    /** Only ticked sets count toward performed sets, volume, burn and statistics. */
+    val isCompleted: Boolean get() = completed ?: reps.isNotBlank()
+
     val hasLoggedValue: Boolean
         get() = weight.isNotBlank() || reps.isNotBlank() || rpe.isNotBlank()
 
@@ -265,11 +273,12 @@ data class PlannedSet(
         weightUnit = if (carryingWeight) weightUnit else null
     )
 
-    /** New sets inherit weight, unit, and reps from the set above; RPE stays blank. */
+    /** New sets inherit weight, unit, and reps from the set above as a prefill; RPE stays blank and the set starts unticked. */
     fun copyingFromPrevious(): PlannedSet = PlannedSet(
         weight = weight,
         weightUnit = weightUnit,
-        reps = reps
+        reps = reps,
+        completed = false
     )
 
     fun displayWeight(targetUnit: WorkoutWeightUnit): String {
@@ -364,11 +373,12 @@ data class PlannedExercise(
 
     val hasCalculableWork: Boolean
         get() = (timer?.savedSeconds ?: 0.0) > 0.0 ||
-            (!isCardio && sets.any { (it.reps.toIntOrNull() ?: 0) > 0 })
+            (!isCardio && sets.any { it.isCompleted && (it.reps.toIntOrNull() ?: 0) > 0 })
 
     fun copiedForNewDay(includeSetDetails: Boolean = false): PlannedExercise = copy(
         id = UUID.randomUUID(),
-        sets = if (includeSetDetails) sets.map { it.copy(id = UUID.randomUUID()) } else listOf(PlannedSet()),
+        // Details are a prefill for the new day; it hasn't been done yet.
+        sets = if (includeSetDetails) sets.map { it.copy(id = UUID.randomUUID(), completed = false) } else listOf(PlannedSet()),
         timer = if (includeSetDetails) timer else null
     )
 
@@ -416,10 +426,12 @@ data class CompletedSet(
     val weightUnit: WorkoutWeightUnit,
     val reps: String,
     val rpe: String,
-    val rpeScale: WorkoutRpeScale? = null
+    val rpeScale: WorkoutRpeScale? = null,
+    /** Whether the set was ticked. null = saved before ticks existed, when every set with reps counted. */
+    val completed: Boolean? = null
 ) {
-    /** A set is performed once reps were entered; load or RPE alone is incomplete. */
-    val isPerformed: Boolean get() = reps.isNotEmpty()
+    /** A set is performed once it is ticked and has reps; load or RPE alone is incomplete. */
+    val isPerformed: Boolean get() = completed != false && reps.isNotEmpty()
 }
 
 @Serializable
@@ -468,7 +480,7 @@ data class WorkoutSession(
     val durationMinutes: Int get() = ceil(durationSeconds.coerceAtLeast(0) / 60.0).toInt()
     val exerciseCount: Int get() = exercises.size
     val performedSetCount: Int get() = exercises.sumOf { exercise -> exercise.sets.count { it.isPerformed } }
-    val repCount: Int get() = exercises.sumOf { exercise -> exercise.sets.sumOf { it.reps.toIntOrNull() ?: 0 } }
+    val repCount: Int get() = exercises.sumOf { exercise -> exercise.sets.filter { it.isPerformed }.sumOf { it.reps.toIntOrNull() ?: 0 } }
 
     companion object {
         const val KIND_GPS = "gps"
@@ -613,6 +625,7 @@ object WorkoutBurnEstimator {
                 }
                 // Logged reps remain useful statistics; their estimate must not be added twice.
                 exercise.sets.forEach { set ->
+                    if (!set.isCompleted) return@forEach
                     val reps = set.reps.toIntOrNull()?.takeIf { it > 0 } ?: return@forEach
                     performedSetCount += 1
                     repCount += reps.coerceAtMost(100)
@@ -621,6 +634,7 @@ object WorkoutBurnEstimator {
             }
             var performedInExercise = 0
             for (set in exercise.sets) {
+                if (!set.isCompleted) continue
                 val rawReps = set.reps.toIntOrNull()?.takeIf { it > 0 } ?: continue
                 val reps = rawReps.coerceAtMost(100)
                 performedSetCount += 1

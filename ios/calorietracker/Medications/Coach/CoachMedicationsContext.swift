@@ -10,6 +10,11 @@ nonisolated struct CoachMedicationsContext: Sendable {
     var nowMs: Int64
     var count: Int
     var activeCount: Int
+    /// Taken supplement doses as nutrient amounts, averaged over each dosing interval (the store's
+    /// `supplementEntries`, docs/nutrients.md §6). Nil = derive them from `snapshot` (tests).
+    var supplementEntries: [NutrientsReference.SupplementEntry]? = nil
+    /// Instants of every taken dose, for logged-day counting; nil = derive from `snapshot`.
+    var takenDoseMs: [Int64]? = nil
 
     var toolsAvailable: Bool { count > 0 }
 

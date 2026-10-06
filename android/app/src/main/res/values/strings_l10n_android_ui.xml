@@ -84,6 +84,10 @@
     <string name="ui_workout_restart">Restart</string>
     <!-- Set row label, e.g. Set 1 -->
     <string name="ui_workout_set_n">Set %1$d</string>
+    <!-- Workout set row ✓ button accessibility label; %1$d is the set number, not a count -->
+    <string name="ui_workout_set_mark_done">Mark set %1$d done</string>
+    <!-- Workout set row ✓ button state when the set is ticked -->
+    <string name="ui_workout_set_done">Done</string>
     <!-- Workout diary date title -->
     <string name="ui_workout_today">Today</string>
     <!-- Workout diary date title -->

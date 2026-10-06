@@ -315,8 +315,8 @@ class PortableDataTest {
         primaryMuscles = listOf("quads"), secondaryMuscles = listOf("glutes"), instructions = listOf("Stand tall"),
         imageUrl = "https://example.com/a.png", gifUrl = null,
         sets = listOf(
-            PlannedSet(uuid("000000000001", "77777777"), "100", WorkoutWeightUnit.KG, "5", "8", WorkoutRpeScale.STRENGTH),
-            PlannedSet(uuid("000000000002", "77777777"), "", null, "", "", null)
+            PlannedSet(uuid("000000000001", "77777777"), "100", WorkoutWeightUnit.KG, "5", "8", WorkoutRpeScale.STRENGTH, completed = true),
+            PlannedSet(uuid("000000000002", "77777777"), "", null, "", "", null, completed = false)
         )
     )
 
@@ -339,7 +339,7 @@ class PortableDataTest {
                     CompletedExercise(
                         id = uuid("000000000001", "99999999"), itemId = "0001", name = "Squat", targetMuscles = listOf("quads"),
                         equipment = "barbell", durationSeconds = 61.5, intensity = WorkoutIntensity.LIGHT,
-                        sets = listOf(CompletedSet(uuid("000000000001", "aaaaaaaa"), 1, "102.5", WorkoutWeightUnit.KG, "5", "8.5", WorkoutRpeScale.CR10))
+                        sets = listOf(CompletedSet(uuid("000000000001", "aaaaaaaa"), 1, "102.5", WorkoutWeightUnit.KG, "5", "8.5", WorkoutRpeScale.CR10, completed = true))
                     )
                 )
             ),

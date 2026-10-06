@@ -60,7 +60,11 @@ class CoachTools(
      * Catalog actions (docs/actions.md): read tools plus `propose_action`. Null keeps the tool list
      * exactly as the shared data-source contract resolves it.
      */
-    val actions: com.ayuvo.health.actions.CoachActionTools? = null
+    val actions: com.ayuvo.health.actions.CoachActionTools? = null,
+    /** Age / sex / calorie goal for `get_nutrient_totals`' reference values (docs/nutrients.md §4.2). */
+    private val nutrientProfile: com.ayuvo.health.nutrients.NutrientProfile = com.ayuvo.health.nutrients.NutrientProfile(),
+    /** Nutrient key → the user's custom goal, which replaces the reference line like the charts do. */
+    private val nutrientCustomGoals: Map<String, Double> = emptyMap()
 ) {
     private val healthData: CoachHealthData? = healthSnapshot?.let { CoachHealthData(it, clock) }
 
@@ -187,6 +191,7 @@ class CoachTools(
         "get_body_fat_history" -> getBodyFatHistory(args)
         "get_calorie_totals" -> getCalorieTotals(args)
         "get_food_entries" -> getFoodEntries(args)
+        "get_nutrient_totals" -> getNutrientTotals(args)
         "get_fasting_history" -> getFastingHistory(args)
         "get_workout_history" -> getWorkoutHistory(args)
         "get_workout_plans" -> getWorkoutPlans(args)
@@ -359,6 +364,34 @@ class CoachTools(
         return json(payload)
     }
 
+    /**
+     * `get_nutrient_totals`: food, taken supplement doses (Medications source only) and — for the nutrients
+     * the food log does not record (copper, B6, …) — other apps' Health Connect values (Health source only).
+     */
+    private fun getNutrientTotals(args: ToolArguments): String {
+        val range = parseRange(args)
+        val dietary = healthSnapshot?.dietaryDaily.orEmpty()
+        val health = CoachNutrientReport.healthBackedTypes().mapNotNull { (key, type) ->
+            val days = dietary[type].orEmpty()
+                .filter { it.day >= range.fromDate.toString() && it.day <= range.toDate.toString() }
+                .mapNotNull { r -> r.sum?.takeIf { it.isFinite() }?.let { r.day to it } }
+                .toMap()
+            if (days.isEmpty()) null else key to days
+        }.toMap()
+        return json(
+            CoachNutrientReport.payload(
+                foods = foods,
+                supplements = medications?.supplements() ?: com.ayuvo.health.nutrients.SupplementSnapshot.EMPTY,
+                from = range.fromDate,
+                to = range.toDate,
+                zone = clock.zone,
+                profile = nutrientProfile,
+                customGoals = nutrientCustomGoals,
+                health = health
+            )
+        )
+    }
+
     private fun getFastingHistory(args: ToolArguments): String {
         val range = parseRange(args)
         val now = clock.instant()
@@ -435,7 +468,8 @@ class CoachTools(
                                 "sets" to exercise.sets.mapIndexed { index, set ->
                                     linkedMapOf<String, Any?>(
                                         "set" to index + 1,
-                                        "weight_unit" to (set.weightUnit ?: workoutPlanWeightUnit).storageValue
+                                        "weight_unit" to (set.weightUnit ?: workoutPlanWeightUnit).storageValue,
+                                        "done" to set.isCompleted
                                     ).apply {
                                         if (set.weight.isNotEmpty()) put("weight", set.weight)
                                         if (set.reps.isNotEmpty()) put("reps", set.reps.toIntOrNull() ?: 0)
@@ -799,6 +833,7 @@ class CoachTools(
             "get_body_fat_history",
             "get_calorie_totals",
             "get_food_entries",
+            "get_nutrient_totals",
             "get_fasting_history"
         )
 
@@ -825,7 +860,8 @@ class CoachTools(
             "get_weight_history" to "Fetch weight entries between two dates (inclusive). Returns date + weight (kg + lbs). Use this when the user asks about specific past dates or weight trends older than the last 10 entries.",
             "get_body_fat_history" to "Fetch body-fat readings between two dates (inclusive). Returns date + percent. Use when the user asks about body composition trends older than the last 10 readings.",
             "get_calorie_totals" to "Daily calorie totals (sum of all logged foods per day) between two dates. Returns date + kcal. Use when the user asks about intake patterns older than the last 14 days.",
-            "get_food_entries" to "Individual logged food items (name + calories + macros) between two dates. Use when the user asks about specific meals, what they ate on a given date, or wants macro breakdowns rather than just kcal totals.",
+            "get_food_entries" to "Individual logged food items between two dates: name, calories, macros and every nutrient the entry recorded (fiber, sugar, fats, sodium, potassium, calcium, iron, magnesium, zinc, vitamins A/C/D/E/K/B12, folate, omega-3, caffeine). Use when the user asks about specific meals or what they ate on a given date. For nutrient totals prefer get_nutrient_totals.",
+            "get_nutrient_totals" to "Complete nutrition between two dates (inclusive): calories and macros plus every vitamin, mineral and other nutrient with data (calcium, magnesium, iron, zinc, copper, potassium, sodium, vitamins A/B/C/D/E/K, folate, fiber, ...). Per nutrient: food, taken supplement doses, other apps via Health, total, average per logged day, the user's recommended amount (RDA/AI by age and sex, or their custom goal), percent of recommended, limit and upper limit. Also lists nutrients with no data (unknown, not zero) and per-day totals for ranges up to 31 days. Use for any question about the user's intake of vitamins, minerals or complete nutrition — not lab reports.",
             "get_fasting_history" to "Fetch explicitly tracked fasting sessions between two dates, including start/end timestamps, duration, goal, and whether the goal was reached. Never infer fasting from missing food logs.",
             "get_workout_history" to "Fetch completed workouts between two dates, including calculated calorie burn, saved exercise durations and intensity, and logged sets with weight, reps, and RPE. A timed exercise can be performed without any reps or sets. For one specific lift across many dates, prefer get_exercise_lift_history.",
             "get_workout_plans" to "Fetch dated workout diary plans, set targets, saved exercise durations, and current timer state. Running or paused timer time is unsaved. Optional ISO from/to dates narrow the result; without them it returns recent and upcoming plans around today.",

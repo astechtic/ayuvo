@@ -186,8 +186,8 @@ struct PortableDataTests {
             imageURL: URL(string: "https://example.com/a.png"), gifURL: URL(string: "https://example.com/a.gif")
         ))
         exercise.sets = [
-            StrengthPlannedSet(weight: "80", weightUnit: "kg", reps: "8", rpe: "7.5", rpeScale: .strength),
-            StrengthPlannedSet(weight: "", weightUnit: nil, reps: "", rpe: "", rpeScale: nil),
+            StrengthPlannedSet(weight: "80", weightUnit: "kg", reps: "8", rpe: "7.5", rpeScale: .strength, completed: true),
+            StrengthPlannedSet(weight: "", weightUnit: nil, reps: "", rpe: "", rpeScale: nil, completed: false),
         ]
         return exercise
     }
@@ -211,7 +211,7 @@ struct PortableDataTests {
             startedAt: Date(timeIntervalSince1970: 1_790_000_000), completedAt: Date(timeIntervalSince1970: 1_790_001_800), durationSeconds: 1800,
             exercises: [StrengthCompletedExercise(
                 id: UUID(), itemID: "0002", name: "Bench press", targetMuscles: ["Pectorals"], equipment: "Barbell",
-                sets: [StrengthCompletedSet(id: UUID(), setNumber: 1, weight: "80", weightUnit: "kg", reps: "8", rpe: "7", rpeScale: .strength)],
+                sets: [StrengthCompletedSet(id: UUID(), setNumber: 1, weight: "80", weightUnit: "kg", reps: "8", rpe: "7", rpeScale: .strength, completed: true)],
                 durationSeconds: 90.5, intensity: .light
             )]
         )

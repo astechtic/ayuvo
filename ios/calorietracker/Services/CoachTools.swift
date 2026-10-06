@@ -39,6 +39,10 @@ struct CoachTools {
     var sources: CoachDataSwitches = .allOn
     /// Receives `propose_action` cards for this turn (docs/actions.md §Coach); nil hides the tool.
     var actionProposals: CoachActionProposalSink? = nil
+    /// Age / sex / calorie goal for `get_nutrient_totals`' reference values (docs/nutrients.md §4.2).
+    var nutrientProfile: NutrientsReference.Profile = .unknown
+    /// Nutrient key → the user's custom goal, which replaces the reference line like the charts do.
+    var nutrientCustomGoals: [String: Double] = [:]
 
     static let nutritionToolNames: [String] = [
         "get_data_summary",
@@ -46,6 +50,7 @@ struct CoachTools {
         "get_body_fat_history",
         "get_calorie_totals",
         "get_food_entries",
+        "get_nutrient_totals",
         "get_fasting_history",
     ]
 
@@ -137,7 +142,8 @@ struct CoachTools {
         "get_weight_history": "Fetch weight entries between two dates (inclusive). Returns date + weight (kg + lbs). Use this when the user asks about specific past dates or weight trends older than the last 10 entries.",
         "get_body_fat_history": "Fetch body-fat readings between two dates (inclusive). Returns date + percent. Use when the user asks about body composition trends older than the last 10 readings.",
         "get_calorie_totals": "Daily calorie totals (sum of all logged foods per day) between two dates. Returns date + kcal. Use when the user asks about intake patterns older than the last 14 days.",
-        "get_food_entries": "Individual logged food items (name + calories + macros) between two dates. Use when the user asks about specific meals, what they ate on a given date, or wants macro breakdowns rather than just kcal totals.",
+        "get_food_entries": "Individual logged food items between two dates: name, calories, macros and every nutrient the entry recorded (fiber, sugar, fats, sodium, potassium, calcium, iron, magnesium, zinc, vitamins A/C/D/E/K/B12, folate, omega-3, caffeine). Use when the user asks about specific meals or what they ate on a given date. For nutrient totals prefer get_nutrient_totals.",
+        "get_nutrient_totals": "Complete nutrition between two dates (inclusive): calories and macros plus every vitamin, mineral and other nutrient with data (calcium, magnesium, iron, zinc, copper, potassium, sodium, vitamins A/B/C/D/E/K, folate, fiber, ...). Per nutrient: food, taken supplement doses, other apps via Health, total, average per logged day, the user's recommended amount (RDA/AI by age and sex, or their custom goal), percent of recommended, limit and upper limit. Also lists nutrients with no data (unknown, not zero) and per-day totals for ranges up to 31 days. Use for any question about the user's intake of vitamins, minerals or complete nutrition — not lab reports.",
         "get_fasting_history": "Fetch explicitly tracked fasting sessions between two dates, including start/end timestamps, duration, goal, and whether the goal was reached. Never infer fasting from missing food logs.",
         "get_workout_history": "Fetch completed workouts between two dates, including calculated calorie burn, saved exercise durations and intensity, and logged sets with weight, reps, and RPE. A timed exercise can be performed without any reps or sets. For one specific lift across many dates, prefer get_exercise_lift_history.",
         "get_workout_plans": "Fetch dated workout diary plans, set targets, saved exercise durations, and current timer state. Running or paused timer time is unsaved. Optional ISO from/to dates narrow the result; without them it returns recent and upcoming plans around today.",
@@ -242,6 +248,8 @@ struct CoachTools {
             return getCalorieTotals(arguments: arguments)
         case "get_food_entries":
             return getFoodEntries(arguments: arguments)
+        case "get_nutrient_totals":
+            return nutrientTotalsPayload(arguments: arguments, health: [:])
         case "get_fasting_history":
             return getFastingHistory(arguments: arguments)
         case "get_workout_history":
@@ -270,6 +278,9 @@ struct CoachTools {
         }
         if Self.medicationToolNames.contains(name) {
             return executeMedicationTool(name: name, arguments: arguments)
+        }
+        if name == "get_nutrient_totals" {
+            return await getNutrientTotals(arguments: arguments)
         }
         guard Self.healthToolNames.contains(name) else {
             return execute(name: name, arguments: arguments)
@@ -552,6 +563,58 @@ struct CoachTools {
         return jsonString(result)
     }
 
+    /// `get_nutrient_totals`: the async path adds other apps' Health values for the nutrients the food log does
+    /// not record (copper, B6, …) when Coach has Health access; the diary-only result needs none of it.
+    private func getNutrientTotals(arguments: [String: Any]) async -> String {
+        var values: [String: [String: Double]] = [:]
+        if healthAccessEnabled, let health {
+            let (from, to) = parseRange(arguments)
+            let types = Set(await health.query.dataTypes().map(\.dataType))
+            for (key, type) in CoachNutrientReport.healthBackedKeys where types.contains(type) {
+                guard let summary = await health.query.summary(type, Self.iso(from), Self.iso(to), Self.healthSummaryLimit) else { continue }
+                var days: [String: Double] = [:]
+                for day in summary.days { if let sum = day.sum, sum.isFinite { days[day.date] = sum } }
+                if !days.isEmpty { values[key] = days }
+            }
+        }
+        return nutrientTotalsPayload(arguments: arguments, health: values)
+    }
+
+    private func nutrientTotalsPayload(arguments: [String: Any], health: [String: [String: Double]]) -> String {
+        let (from, to) = parseRange(arguments)
+        let input = CoachNutrientReport.Input(
+            foods: foods, supplements: coachSupplementEntries, takenDoseMs: coachTakenDoseMs, health: health,
+            profile: nutrientProfile, customGoals: nutrientCustomGoals
+        )
+        return jsonString(CoachNutrientReport.payload(input, from: from, to: to))
+    }
+
+    /// Supplement contributions Coach may count: none without the Medications source. The store's entries are
+    /// already averaged over each dosing interval; a snapshot-only context (tests) derives them from its tables.
+    private var coachSupplementEntries: [NutrientsReference.SupplementEntry] {
+        guard let medications else { return [] }
+        if let entries = medications.supplementEntries { return entries }
+        let snapshot = medications.snapshot
+        let rows = (snapshot["medication_nutrients"].array ?? []).compactMap { row -> NutrientsReference.MedicationNutrientInput? in
+            guard let id = row["medication_id"].string, let key = row["nutrient_key"].string, NutrientsReference.nutrientUnit(key) != nil,
+                  let amount = row["amount_per_unit"].double else { return nil }
+            return NutrientsReference.MedicationNutrientInput(medicationID: id, nutrientKey: key, amountPerUnit: amount)
+        }
+        let logs = (snapshot["dose_logs"].array ?? []).map {
+            NutrientsReference.DoseInput(medicationID: $0["medication_id"].string ?? "", status: $0["status"].string ?? "",
+                                         takenAtMs: MR.int($0["taken_at_ms"]).map(Int64.init), doseQuantity: $0["dose_quantity"].double)
+        }
+        return NutrientsReference.supplementEntries(nutrients: rows, doseLogs: logs)
+    }
+
+    private var coachTakenDoseMs: [Int64] {
+        guard let medications else { return [] }
+        if let taken = medications.takenDoseMs { return taken }
+        return (medications.snapshot["dose_logs"].array ?? []).compactMap { log in
+            log["status"].string == "taken" ? MR.int(log["taken_at_ms"]).map(Int64.init) : nil
+        }
+    }
+
     /// Per local day and nutrient: amounts from supplement doses marked taken, in each nutrient's unit.
     private func supplementTotals(from: Date, to: Date) -> [[String: Any]] {
         guard let snapshot = medications?.snapshot else { return [] }
@@ -651,11 +714,12 @@ struct CoachTools {
                             "target_muscles": exercise.primaryMuscles,
                             "equipment": exercise.rawEquipment,
                             "performed": (exercise.timer?.savedDurationSeconds ?? 0) > 0
-                                || (!exercise.isCardio && exercise.sets.contains { (Int($0.reps) ?? 0) > 0 }),
+                                || (!exercise.isCardio && exercise.sets.contains { $0.isCompleted && (Int($0.reps) ?? 0) > 0 }),
                             "sets": exercise.sets.enumerated().map { index, set -> [String: Any] in
                                 var value: [String: Any] = [
                                     "set": index + 1,
                                     "weight_unit": set.weightUnit ?? workoutPlanWeightUnit.rawValue,
+                                    "done": set.isCompleted,
                                 ]
                                 if !set.weight.isEmpty { value["weight"] = set.weight }
                                 if !set.reps.isEmpty {

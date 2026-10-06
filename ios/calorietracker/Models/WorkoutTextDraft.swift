@@ -41,6 +41,8 @@ struct WorkoutTextDraft: Codable {
                 let rpe = try number(set.rpe, range: 1...10, message: String(localized: "Enter an RPE from 1 to 10.", comment: "Workout-from-text validation error"))
                 result.rpe = rpe.map { String($0) } ?? ""
                 result.rpeScale = rpe == nil ? nil : .strength
+                // Text logging describes work already done.
+                result.completed = true
                 return result
             }
             guard minutes != nil || !sets.isEmpty else {

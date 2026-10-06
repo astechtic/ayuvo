@@ -139,7 +139,8 @@ struct StrengthWorkoutStoreTests {
             weight: "82,5 kg",
             weightUnit: .kg,
             reps: "8 reps",
-            rpe: "7.5"
+            rpe: "7.5",
+            completed: true
         )
         store.toggleSaved(exercise.id)
         store.updatePreferences { preferences in
@@ -209,7 +210,8 @@ struct StrengthWorkoutStoreTests {
             weight: "70",
             weightUnit: .kg,
             reps: "10",
-            rpe: "8"
+            rpe: "8",
+            completed: true
         )
         store.setSetCount(3, exerciseID: sourceRow.id, on: sourceDate)
 
@@ -241,7 +243,8 @@ struct StrengthWorkoutStoreTests {
         let source = try #require(store.exercises(for: sourceDate).first)
         let sourceSet = try #require(source.sets.first)
         store.updateSet(exerciseID: source.id, setID: sourceSet.id, on: sourceDate,
-                        weight: "40", weightUnit: .kg, reps: "10", rpe: "8")
+                        weight: "40", weightUnit: .kg, reps: "10", rpe: "8",
+                        completed: true)
         store.setSetCount(2, exerciseID: source.id, on: sourceDate)
 
         store.copyPlan(from: sourceDate, to: targetDate, includeSetDetails: true)
@@ -253,6 +256,76 @@ struct StrengthWorkoutStoreTests {
         #expect(copied.sets.first?.rpe == "8")
         #expect(copied.id != source.id)
         #expect(copied.sets.first?.id != sourceSet.id)
+        // Copied details are a prefill for the new day: nothing is ticked yet.
+        #expect(copied.sets.allSatisfy { !$0.isCompleted })
+    }
+
+    @Test func onlyTickedSetsCountAndCopiedPrefillsStartUnticked() throws {
+        let fixture = WorkoutTestFixture()
+        defer { fixture.cleanUp() }
+        let date = WorkoutTestFixture.date(2026, 7, 21)
+        let store = fixture.makeStore()
+        store.toggleExercise(WorkoutTestFixture.exercise(id: "row", name: "Barbell Row"), on: date)
+        let exercise = try #require(store.exercises(for: date).first)
+        let first = try #require(exercise.sets.first)
+        #expect(!first.isCompleted)
+
+        store.updateSet(exerciseID: exercise.id, setID: first.id, on: date, weight: "50", weightUnit: .kg, reps: "10")
+        #expect(store.exercises(for: date).first?.sets.first?.isCompleted == false)
+        // Typing reps alone never ticks the set, so there is nothing to calculate yet.
+        #expect(store.upsertCalculatedWorkout(on: date, caloriesBurned: 100, weightUnit: .kg) == nil)
+
+        store.updateSet(exerciseID: exercise.id, setID: first.id, on: date, completed: true)
+        store.setSetCount(3, exerciseID: exercise.id, on: date)
+        let sets = try #require(store.exercises(for: date).first?.sets)
+        #expect(sets.map(\.isCompleted) == [true, false, false])
+        #expect(sets.map(\.reps) == ["10", "10", "10"])
+
+        store.updateSet(exerciseID: exercise.id, setID: sets[2].id, on: date, completed: true)
+        let session = try #require(store.completeWorkout(on: date, startedAt: date, completedAt: date, elapsedSeconds: 600, weightUnit: .kg))
+        #expect(session.performedSetCount == 2)
+        #expect(session.repCount == 20)
+        #expect(session.exercises[0].sets.map(\.isPerformed) == [true, false, true])
+
+        let ticked = try #require(StrengthWorkoutBurnEstimator.estimate(
+            exercises: store.exercises(for: date), bodyWeightKg: 80, defaultWeightUnit: .kg, defaultRPEScale: .strength))
+        #expect(ticked.performedSetCount == 2)
+        #expect(ticked.repCount == 20)
+
+        store.updateSet(exerciseID: exercise.id, setID: sets[0].id, on: date, completed: false)
+        store.updateSet(exerciseID: exercise.id, setID: sets[2].id, on: date, completed: false)
+        #expect(StrengthWorkoutBurnEstimator.estimate(
+            exercises: store.exercises(for: date), bodyWeightKg: 80, defaultWeightUnit: .kg, defaultRPEScale: .strength) == nil)
+    }
+
+    @Test func setsSavedBeforeTicksKeepCountingAsBefore() throws {
+        // Planned sets: reps alone made a set done; the decoded state is pinned on the first edit.
+        let planned = try JSONDecoder().decode([StrengthPlannedSet].self, from: Data("""
+        [{"id":"00000000-0000-0000-0000-000000000001","weight":"60","reps":"8","rpe":""},
+         {"id":"00000000-0000-0000-0000-000000000002","weight":"60","reps":"","rpe":"8"}]
+        """.utf8))
+        #expect(planned.map(\.completed) == [nil, nil])
+        #expect(planned.map(\.isCompleted) == [true, false])
+
+        // Saved session sets: every set with reps stays performed.
+        let saved = try JSONDecoder().decode([StrengthCompletedSet].self, from: Data("""
+        [{"id":"00000000-0000-0000-0000-000000000003","setNumber":1,"weight":"60","weightUnit":"kg","reps":"8","rpe":""},
+         {"id":"00000000-0000-0000-0000-000000000004","setNumber":2,"weight":"60","weightUnit":"kg","reps":"","rpe":""}]
+        """.utf8))
+        #expect(saved.map(\.isPerformed) == [true, false])
+
+        // A round trip keeps the tick.
+        var ticked = planned[1]
+        ticked.isCompleted = true
+        let again = try JSONDecoder().decode(StrengthPlannedSet.self, from: JSONEncoder().encode(ticked))
+        #expect(again.completed == true)
+
+        // Portable archives without "completed" follow the same rules; new archives carry it.
+        let oldPlanned = PortableData.plannedSet(from: ["id": "00000000-0000-0000-0000-000000000005", "weight": "40", "reps": "10", "rpe": ""])
+        #expect(oldPlanned.isCompleted)
+        let unticked = PortableData.plannedSet(from: ["weight": "40", "reps": "10", "rpe": "", "completed": false])
+        #expect(!unticked.isCompleted)
+        #expect(PortableData.plannedSetJSON(unticked)["completed"] as? Bool == false)
     }
 
     @Test func setLimitsAddBlankRowsAndSanitizeLoadRepsAndRPEScales() throws {
@@ -273,7 +346,8 @@ struct StrengthWorkoutStoreTests {
             weight: "100,5 kg",
             weightUnit: .kg,
             reps: "12a345",
-            rpe: "7.5"
+            rpe: "7.5",
+            completed: true
         )
         store.setSetCount(99, exerciseID: planned.id, on: date)
 
@@ -350,7 +424,8 @@ struct StrengthWorkoutStoreTests {
             on: yesterday,
             weight: "60",
             weightUnit: .kg,
-            reps: "8"
+            reps: "8",
+            completed: true
         )
         _ = store.upsertCalculatedWorkout(on: yesterday, caloriesBurned: 180, weightUnit: .kg)
         store.toggleExercise(bench, on: today)
@@ -420,8 +495,10 @@ struct StrengthWorkoutStoreTests {
                 weight: weight,
                 weightUnit: .lbs,
                 reps: reps,
-                rpe: "8.5"
+                rpe: "8.5",
+                completed: true
             )
+            // The second set is a copied prefill the user never ticked.
             store.setSetCount(2, exerciseID: exercise.id, on: date)
             return try #require(
                 store.completeWorkout(
@@ -492,7 +569,8 @@ struct StrengthWorkoutStoreTests {
             weight: "8",
             weightUnit: .kg,
             reps: "12",
-            rpe: "3"
+            rpe: "3",
+            completed: true
         )
         exercise = try #require(store.exercises(for: date).first)
         let easier = try #require(
@@ -545,7 +623,8 @@ struct StrengthWorkoutStoreTests {
             weight: "100",
             weightUnit: .kg,
             reps: "8",
-            rpe: "8"
+            rpe: "8",
+            completed: true
         )
 
         var exported: [StrengthWorkoutSession] = []
@@ -822,7 +901,7 @@ struct StrengthWorkoutStoreTests {
         let store = fixture.makeStore()
         store.toggleExercise(WorkoutTestFixture.exercise(id: "curl", name: "Curl"), on: date)
         let exercise = store.exercises(for: date)[0]
-        store.updateSet(exerciseID: exercise.id, setID: exercise.sets[0].id, on: date, reps: "10")
+        store.updateSet(exerciseID: exercise.id, setID: exercise.sets[0].id, on: date, reps: "10", completed: true)
         let original = try #require(store.upsertCalculatedWorkout(on: date, caloriesBurned: 40, weightUnit: .kg))
         var deleted: [UUID] = []
         store.onWorkoutBurnDeleted = { deleted.append($0) }
@@ -974,7 +1053,8 @@ struct StrengthWorkoutStoreTests {
             weight: "30",
             weightUnit: .kg,
             reps: "10",
-            rpe: "8"
+            rpe: "8",
+            completed: true
         )
 
         let legacy = try #require(

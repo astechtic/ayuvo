@@ -368,10 +368,16 @@ final class StrengthWorkoutStore {
         weight: String? = nil,
         weightUnit: WeightUnit? = nil,
         reps: String? = nil,
-        rpe: String? = nil
+        rpe: String? = nil,
+        completed: Bool? = nil
     ) {
         updateExercise(exerciseID, on: date) { exercise in
             guard let setIndex = exercise.sets.firstIndex(where: { $0.id == setID }) else { return }
+            // Pin a pre-tick set's state so editing its reps never flips the ✓ on its own.
+            if exercise.sets[setIndex].completed == nil {
+                exercise.sets[setIndex].completed = exercise.sets[setIndex].isCompleted
+            }
+            if let completed { exercise.sets[setIndex].completed = completed }
             if let weight {
                 exercise.sets[setIndex].weight = Self.decimalText(weight)
                 if let weightUnit { exercise.sets[setIndex].weightUnit = weightUnit.rawValue }
@@ -556,7 +562,7 @@ final class StrengthWorkoutStore {
         let planned = exercises(for: date)
         guard planned.contains(where: {
             $0.timer?.isSaved == true
-                || (!$0.isCardio && $0.sets.contains { (Int($0.reps) ?? 0) > 0 })
+                || (!$0.isCardio && $0.sets.contains { $0.isCompleted && (Int($0.reps) ?? 0) > 0 })
         }) else { return nil }
 
         if let interval, interval.duration >= 1 {
@@ -869,7 +875,8 @@ final class StrengthWorkoutStore {
                         weightUnit: set.weightUnit ?? weightUnit.rawValue,
                         reps: set.reps.trimmingCharacters(in: .whitespacesAndNewlines),
                         rpe: set.rpe.trimmingCharacters(in: .whitespacesAndNewlines),
-                        rpeScale: set.rpeScale ?? preferences.rpeScale
+                        rpeScale: set.rpeScale ?? preferences.rpeScale,
+                        completed: set.isCompleted
                     )
                 },
                 durationSeconds: exercise.timer?.isSaved == true ? exercise.timer?.savedDurationSeconds : nil,

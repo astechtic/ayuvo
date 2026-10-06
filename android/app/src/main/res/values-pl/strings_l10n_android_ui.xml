@@ -183,4 +183,6 @@
     <string name="ui_flash_auto">Lampa błyskowa automatyczna</string>
     <string name="ui_flash_off">Lampa błyskowa wyłączona</string>
     <string name="ui_gps_split_km">km %1$d</string>
+    <string name="ui_workout_set_mark_done">Oznacz serię %1$d jako wykonaną</string>
+    <string name="ui_workout_set_done">Gotowe</string>
 </resources>
