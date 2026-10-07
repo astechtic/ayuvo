@@ -208,6 +208,8 @@ nonisolated struct HealthSleepNight: Sendable, Hashable, Identifiable {
     var remS: Double
     var awakeS: Double
     var source: String
+    /// Asleep time of the wake day's other sleep episodes (naps); never part of the night window above.
+    var napS: Double = 0
 
     var id: String { nightOf }
     var startDate: Date { Date(timeIntervalSince1970: Double(startMs) / 1000) }

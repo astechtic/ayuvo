@@ -19,10 +19,14 @@ nonisolated enum SleepDerivation {
         var rows: [DerivedSleepRow]
         /// First to last asleep instant; nil when the source has no asleep rows.
         var window: (startMs: Int64, endMs: Int64)?
+        /// Best-source asleep minutes of the wake day's other episodes (naps), and how many there were.
+        var napMin: Double = 0
+        var naps: Int = 0
 
         var jsonObject: [String: Any] {
             ["source": source, "rows": rows.map(\.jsonObject),
-             "window": window.map { ["start_ms": $0.startMs, "end_ms": $0.endMs] as [String: Any] } ?? NSNull()]
+             "window": window.map { ["start_ms": $0.startMs, "end_ms": $0.endMs] as [String: Any] } ?? NSNull(),
+             "nap_min": napMin, "naps": naps]
         }
     }
 
@@ -42,14 +46,15 @@ nonisolated enum SleepDerivation {
     /// Rows sorted by (start, input order) chain into episodes while each next row starts at most episode_gap_hours
     /// after the episode's latest end; an episode belongs to the local day of its latest end (the wake day). Per wake
     /// day the source with the most unioned asleep time wins (ties: more rows, then the smaller source id);
-    /// out-of-bed rows are ignored.
+    /// out-of-bed rows are ignored. Algorithm 3: only the wake day's main episode (most best-source asleep time; ties:
+    /// the later end) is the night; other episodes are naps (`napMin`, `naps`) and never widen the window.
     static func sleepNights(timeZone: String, rows input: [SourceRow], config: DerivedConfig) -> NightsResult {
         let tz = DerivedDay.timeZone(timeZone)
         let gap = Int64(config.thresholds.episodeGapHours * 3_600_000)
         let rows = input.filter { $0.endMs >= $0.startMs }
         // Stable: equal starts keep input order.
         let order = rows.indices.sorted { rows[$0].startMs != rows[$1].startMs ? rows[$0].startMs < rows[$1].startMs : $0 < $1 }
-        var groups: [String: [SourceRow]] = [:]
+        var groups: [String: [[SourceRow]]] = [:]
         var episode: [SourceRow] = []
         var end: Int64 = 0
 
@@ -58,7 +63,7 @@ nonisolated enum SleepDerivation {
             // `max(episode, key=end)`: the first row with the latest end.
             var last = episode[0]
             for r in episode.dropFirst() where r.endMs > last.endMs { last = r }
-            groups[DerivedDay.localDayOf(last.endMs, tz), default: []].append(contentsOf: episode)
+            groups[DerivedDay.localDayOf(last.endMs, tz), default: []].append(episode)
         }
 
         for i in order {
@@ -75,18 +80,28 @@ nonisolated enum SleepDerivation {
 
         var out: [String: Night] = [:]
         for day in groups.keys.sorted() {
-            let cand = groups[day]!.filter { $0.code != 6 }
-            var by: [String: [SourceRow]] = [:]
-            for r in cand { by[r.source, default: []].append(r) }
-            if by.isEmpty { continue }
-            let ranked = by.keys.map { s in (s, DerivedMath.totalMs(asleepUnion(by[s]!)), by[s]!.count) }
-                .sorted { a, b in
-                    if a.1 != b.1 { return a.1 > b.1 }
-                    if a.2 != b.2 { return a.2 > b.2 }
-                    return DerivedMath.pyLess(a.0, b.0)
+            // One pick per episode: (best source, its rows, its asleep ms, episode end).
+            var picks: [(src: String, rows: [SourceRow], asleep: Int64, end: Int64)] = []
+            for ep in groups[day]! {
+                if let b = bestSource(ep) {
+                    picks.append((b.src, b.rows, b.asleep, ep.map(\.endMs).max()!))
                 }
-            let src = ranked[0].0
-            let chosen = by[src]!.enumerated().sorted { a, b in
+            }
+            if picks.isEmpty { continue }
+            // `sorted(picks, key=(-asleep, -end))[0]`, stable.
+            var mainIndex = 0
+            for i in picks.indices.dropFirst() {
+                let p = picks[i], m = picks[mainIndex]
+                if p.asleep > m.asleep || (p.asleep == m.asleep && p.end > m.end) { mainIndex = i }
+            }
+            var napMs: Int64 = 0
+            var naps = 0
+            for i in picks.indices where i != mainIndex && picks[i].asleep > 0 {
+                napMs += picks[i].asleep
+                naps += 1
+            }
+            let main = picks[mainIndex]
+            let chosen = main.rows.enumerated().sorted { a, b in
                 let x = a.element, y = b.element
                 if x.startMs != y.startMs { return x.startMs < y.startMs }
                 if x.endMs != y.endMs { return x.endMs < y.endMs }
@@ -94,10 +109,25 @@ nonisolated enum SleepDerivation {
                 return a.offset < b.offset
             }.map { DerivedSleepRow(startMs: $0.element.startMs, endMs: $0.element.endMs, code: $0.element.code) }
             let asleep = asleepUnion(chosen)
-            out[day] = Night(source: src, rows: chosen,
-                             window: asleep.isEmpty ? nil : (asleep[0].0, asleep[asleep.count - 1].1))
+            out[day] = Night(source: main.src, rows: chosen,
+                             window: asleep.isEmpty ? nil : (asleep[0].0, asleep[asleep.count - 1].1),
+                             napMin: DerivedMath.roundTo(Double(napMs) / 60000.0, 1), naps: naps)
         }
         return NightsResult(nights: out)
+    }
+
+    /// The winning source of one episode: most unioned asleep time, then more rows, then the smaller source id.
+    private static func bestSource(_ episode: [SourceRow]) -> (src: String, rows: [SourceRow], asleep: Int64)? {
+        var by: [String: [SourceRow]] = [:]
+        for r in episode where r.code != 6 { by[r.source, default: []].append(r) }
+        if by.isEmpty { return nil }
+        let ranked = by.keys.map { s in (s, DerivedMath.totalMs(asleepUnion(by[s]!)), by[s]!.count) }
+            .sorted { a, b in
+                if a.1 != b.1 { return a.1 > b.1 }
+                if a.2 != b.2 { return a.2 > b.2 }
+                return DerivedMath.pyLess(a.0, b.0)
+            }
+        return (ranked[0].0, by[ranked[0].0]!, ranked[0].1)
     }
 
     // MARK: One night

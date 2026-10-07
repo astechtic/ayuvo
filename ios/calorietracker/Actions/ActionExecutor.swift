@@ -76,6 +76,7 @@ final class ActionExecutor {
         case "insights.recovery.get": return try await recoveryGet(v)
         case "insights.healthAge.get": return try await healthAgeGet(v)
         case "insights.dailyReview.get": return try await dailyReviewGet(v)
+        case "insights.evidence.get": return try await evidenceGet(v)
         case "records.search": return try await recordsSearch(v)
         case "records.latest": return try await recordsLatest(v)
         case "records.labValue.get": return try await labValue(v)

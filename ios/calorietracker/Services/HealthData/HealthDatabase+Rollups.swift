@@ -95,12 +95,22 @@ extension HealthDatabase {
         ownBundleID: String
     ) throws -> Int {
         var written = 0
+        // A sleep row dated D can belong to the night that wakes on D + 1 (a stage ending before midnight), and a new
+        // row on D can pull an episode away from D − 1, so both neighbours are rebuilt too.
+        let days = type.isSleep
+            ? Array(Set(days + days.compactMap { HealthDatabase.nextDay($0) } + days.compactMap { HealthDatabase.previousDay($0) })).sorted()
+            : days
         for chunk in stride(from: 0, to: days.count, by: 200).map({ Array(days[$0..<min($0 + 200, days.count)]) }) {
             try connection.inTransaction {
                 var toWrite: [HealthDailyRollupRow] = []
                 var toDelete: [String] = []
                 for day in chunk {
-                    let rows = try rowsForDay(type: type.id, day: day)
+                    let rows = type.isSleep
+                        // D − 1 holds stages of night D that end before midnight; D + 1 completes an episode that
+                        // only starts on D, so it is never mistaken for a night of D.
+                        ? try rowsForDays(type: type.id, fromDay: HealthDatabase.previousDay(day) ?? day,
+                                          toDay: HealthDatabase.nextDay(day) ?? day)
+                        : try rowsForDay(type: type.id, day: day)
                     if let rollup = HealthRollupMath.dailyRollup(rows: rows, type: type, day: day, tz: tz, ownBundleID: ownBundleID, calendar: calendar) {
                         toWrite.append(rollup)
                     } else {
@@ -113,6 +123,33 @@ extension HealthDatabase {
             }
         }
         return written
+    }
+
+    /// `yyyy-MM-dd` ± 1 (Gregorian, UTC arithmetic on the key itself).
+    nonisolated static func nextDay(_ day: String) -> String? { shiftDay(day, 1) }
+    nonisolated static func previousDay(_ day: String) -> String? { shiftDay(day, -1) }
+
+    private nonisolated static func shiftDay(_ day: String, _ n: Int) -> String? {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        let parts = day.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3, let date = cal.date(from: DateComponents(year: parts[0], month: parts[1], day: parts[2])),
+              let shifted = cal.date(byAdding: .day, value: n, to: date) else { return nil }
+        let c = cal.dateComponents([.year, .month, .day], from: shifted)
+        return String(format: "%04d-%02d-%02d", c.year ?? 1970, c.month ?? 1, c.day ?? 1)
+    }
+
+    /// Re-runs every type's rollups once when `HealthSchema.rollupRuleVersion` grew (rule v2: per-night sleep,
+    /// per-metric source policy). Returns true when a rebuild ran.
+    @discardableResult
+    func rebuildRollupsIfRuleChanged(types: [HealthMetricType], tz: String, calendar: Calendar, ownBundleID: String) throws -> Bool {
+        let stored = try metaValue("rollup_rule_version").flatMap(Int.init) ?? 0
+        guard stored < HealthSchema.rollupRuleVersion else { return false }
+        for type in types {
+            try rebuildAllRollups(type: type, tz: tz, calendar: calendar, ownBundleID: ownBundleID)
+        }
+        try setMeta("rollup_rule_version", "\(HealthSchema.rollupRuleVersion)")
+        return true
     }
 
     /// Full rebuild for one type (import, "Rebuild summaries", rule-version change).

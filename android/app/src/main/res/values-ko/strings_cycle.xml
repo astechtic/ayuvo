@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">가장 많이 기록된 증상</string>
     <string name="cycle_chart_flow">생리 일차별 생리량</string>
     <string name="cycle_chart_flow_footer">최근 생리의 각 날짜별 평균 생리량(높을수록 많음).</string>
-    <string name="cycle_chart_empty">아직 데이터가 부족합니다</string>
+    <string name="cycle_chart_empty">아직 데이터가 부족해요</string>
     <string name="cycle_chart_median_line">점선: 중앙값, %1$s일</string>
     <string name="cycle_symptom_cycles">%2$d번 주기 중 %1$d번</string>
     <string name="cycle_about_estimates">이 예상에 대하여</string>

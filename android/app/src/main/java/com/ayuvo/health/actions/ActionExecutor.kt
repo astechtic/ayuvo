@@ -243,6 +243,10 @@ class ActionExecutor(val catalog: ActionCatalog, private val env: ActionEnvironm
                 ActionResult(id, InsightsActionFields.recovery(insights().recovery))
             }
             "insights.healthAge.get" -> insights().let { s -> ActionResult(id, InsightsActionFields.healthAge(s.healthAge, s.pace)) }
+            "insights.evidence.get" -> {
+                if (!env.healthReadAllowed("sleep")) throw ActionException(ActionErrorCode.PERMISSION_REQUIRED, "sleep")
+                ActionResult(id, InsightsActionFields.evidence(insights().analytics?.evidence))
+            }
             "insights.dailyReview.get" -> {
                 val s = insights()
                 val day = if (a.string("day") == "yesterday") s.today.minusDays(1) else s.today

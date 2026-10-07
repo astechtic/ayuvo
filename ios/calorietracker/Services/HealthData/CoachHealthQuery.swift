@@ -473,10 +473,13 @@ nonisolated enum HealthCoachQueryBuilder {
 
     static func sleep(reader: HealthDatabase, from: String, to: String, limit: Int, calendar: Calendar) async -> [HealthCoachNight] {
         guard isValidDay(from), isValidDay(to), from <= to,
-              let rows = try? await reader.rowsForDays(type: "sleep", fromDay: from, toDay: to)
+              // One day earlier: stages that end before midnight carry the previous local_day.
+              let rows = try? await reader.rowsForDays(type: "sleep", fromDay: HealthDatabase.previousDay(from) ?? from, toDay: to)
         else { return [] }
         let sources = Dictionary(uniqueKeysWithValues: ((try? await reader.allSources()) ?? []).map { ($0.id, $0.name) })
-        let nights = HealthSleepAnalysis.nights(rows: rows, calendar: calendar).suffix(max(1, limit))
+        let nights = HealthSleepAnalysis.nights(rows: rows, calendar: calendar)
+            .filter { $0.nightOf >= from && $0.nightOf <= to }
+            .suffix(max(1, limit))
         return nights.map { night in
             HealthCoachNight(
                 nightOf: night.nightOf,

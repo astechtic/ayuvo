@@ -16,6 +16,9 @@ struct PatternsView: View {
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 4)
                 .accessibilityIdentifier("patterns.note")
+            if let analytics = store.analytics, analytics.correlation.has {
+                AnalyticsCorrelationsCard(correlation: analytics.correlation, responses: analytics.responses)
+            }
             if surfaced.isEmpty {
                 InsightsCollectingView(title: String(localized: "No clear patterns yet"),
                                        detail: String(localized: "Patterns need at least 8 days with and 8 days without something, and a consistent difference."),

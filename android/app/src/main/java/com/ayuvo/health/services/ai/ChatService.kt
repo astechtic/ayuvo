@@ -579,6 +579,7 @@ class ChatService(
                 lines.add("- Platform active energy already includes Ayuvo's own workout estimates (reported as own_sum). Never add Ayuvo workout burn on top of platform active energy; subtract own_sum when you need external burn only.")
                 lines.add("- Use the diary tools (get_calorie_totals, get_food_entries, get_nutrient_totals) for intake, never dietary_* health types.")
                 lines.add("- Never diagnose from heart rate, blood pressure, or glucose values: describe patterns plainly and suggest a clinician for anything concerning.")
+                lines.addAll(CoachAnalytics.RULES)
             }
             healthHubEnabled -> lines.add("- Health data from Health Connect is not available to Coach (the user turned Coach access off in Settings › Health & Data).")
             else -> lines.add("- No health platform data is available; nutrition, weight, fasting, and workout tools still work.")

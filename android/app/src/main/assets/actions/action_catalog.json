@@ -2684,6 +2684,44 @@
           "ayuvo://action/insights.dailyReview.get"
         ]
       }
+    },
+    {
+      "id": "insights.evidence.get",
+      "kind": "get",
+      "domain": "insights",
+      "title": "Get Health Evidence",
+      "summary": "Structured, already-computed health evidence: Recovery Indicator with its drivers, multi-signal deviation state, HRV, sleep and training load, each with its status, confidence, classification and algorithm version. Compared with your own history; not a diagnosis.",
+      "params": [],
+      "output": {
+        "kind": "record",
+        "fields": [
+          "evidence_version",
+          "items"
+        ]
+      },
+      "permissions": [
+        "local",
+        "health_read"
+      ],
+      "confirmation": "never",
+      "requires_unlock": true,
+      "surfaces": [
+        "shortcuts",
+        "android",
+        "coach"
+      ],
+      "coach_mode": "read",
+      "coach_tool": "get_health_evidence",
+      "screen": "screen:insights.recovery",
+      "examples": {
+        "siri": [],
+        "shortcuts": [
+          "Get Health Evidence → Get Dictionary Value \"items\""
+        ],
+        "android": [
+          "ayuvo://action/insights.evidence.get"
+        ]
+      }
     }
   ]
 }

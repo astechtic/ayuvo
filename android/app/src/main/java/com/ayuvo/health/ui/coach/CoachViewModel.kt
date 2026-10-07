@@ -592,7 +592,7 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
                 providerOverride = providerOverride,
                 profileOverride = modelOverride.profileId,
                 actions = CoachActionTools(container.actions),
-                cameraScanLines = cameraScanLines(),
+                cameraScanLines = cameraScanLines() + analyticsLines(),
                 cycleLines = cycle.first,
                 cycleOnDeviceBlock = cycle.second
             )
@@ -611,6 +611,12 @@ class CoachViewModel(private val container: AppContainer) : ViewModel() {
      * Recent valid camera scans for the prompt (docs/camera-vitals.md §7): last 7 days, at most 5; SpO₂ / BP only
      * while their estimate toggles are on, always labelled. Never opens the health database just to look.
      */
+    /** Recovery v2 + signals digest (docs/health-analytics.md §8); only while Insights is on. */
+    private suspend fun analyticsLines(): List<String> = runCatching {
+        if (!container.prefs.insightsEnabled.first()) return@runCatching emptyList()
+        com.ayuvo.health.services.ai.CoachAnalytics.promptLines(container.insightsRepository.current())
+    }.getOrDefault(emptyList())
+
     private suspend fun cameraScanLines(): List<String> = runCatching {
         if (!container.appContext.getDatabasePath(com.ayuvo.health.data.health.HealthDatabase.NAME).exists()) return@runCatching emptyList()
         val now = System.currentTimeMillis()

@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">よく記録された症状</string>
     <string name="cycle_chart_flow">生理日ごとの経血量</string>
     <string name="cycle_chart_flow_footer">最近の生理の各日の平均経血量（高いほど多い）。</string>
-    <string name="cycle_chart_empty">まだデータが足りません</string>
+    <string name="cycle_chart_empty">まだデータが不足しています</string>
     <string name="cycle_chart_median_line">破線：中央値 %1$s日</string>
     <string name="cycle_symptom_cycles">%2$d周期中%1$d周期</string>
     <string name="cycle_about_estimates">これらの予測について</string>

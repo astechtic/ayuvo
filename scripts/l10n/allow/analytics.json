@@ -1,0 +1,30 @@
+{
+  "_comment": "analytics (2026-10-07) and earlier follow-ups: SQL column lists, AI prompt/tool text, algorithm id@version identifiers, internal exception and log text, OAuth plumbing, provenance source names and value+unit-symbol formatting code.",
+  "files": [
+    "ios/calorietracker/Services/HealthData/HealthDatabase+Analytics.swift",
+    "ios/calorietracker/Services/Analytics/Engine/AnalyticsForecast.swift",
+    "ios/calorietracker/Services/CoachNutrientReport.swift",
+    "ios/calorietracker/Services/HealthData/HealthDatabase+GoogleHealth.swift",
+    "android/app/src/main/java/com/ayuvo/health/data/analytics/AnalyticsRepository.kt",
+    "android/app/src/main/java/com/ayuvo/health/services/ai/CoachAnalytics.kt",
+    "android/app/src/main/java/com/ayuvo/health/services/ai/CoachNutrientReport.kt",
+    "android/app/src/main/java/com/ayuvo/health/services/health/ManualVitalsRecordFactory.kt"
+  ],
+  "dirs": [
+    "android/app/src/main/java/com/ayuvo/health/data/analytics/engine",
+    "android/app/src/main/java/com/ayuvo/health/services/googlehealth",
+    "ios/calorietracker/Services/GoogleHealth"
+  ],
+  "contains": [
+    "[\"algorithm_id\"].string ?? \"ayuvo.recovery\")@",
+    "Text(verbatim: \"\\(id)@\\(a[\"version\"].int ?? 1)\")",
+    "return .str(\"\\(code):\\(w[\"metric\"].string ?? \"\")\")",
+    "\"sources\": .arr([.str(\"HealthKit\"), .str(\"Ayuvo\")])",
+    ".replacingOccurrences(of: \"{n}\", with: \"\\(r[\"n\"].int ?? 0)\")",
+    "val fmt = { v: Double? -> if (unit == \"min\") InsightsFormat.duration(v) else \"${InsightsFormat.number(v,",
+    "unit == \"br/min\" || unit == \"°C\" -> \"${InsightsFormat.number(v, if (unit == \"°C\") 2 else 1)} $unit\"",
+    "GoogleHealthAuthError.oauth(\"map missing\")",
+    "return .skipped(reason: \"not connected\")",
+    "HealthSourceRow(id: id, name: \"Ayuvo\", deviceModel: nil"
+  ]
+}

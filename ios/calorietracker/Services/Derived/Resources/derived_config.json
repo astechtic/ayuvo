@@ -1,5 +1,5 @@
 {
-  "algo_version": 2,
+  "algo_version": 3,
   "categories": [
     "heart",
     "sleep",
@@ -260,7 +260,7 @@
       "aggregation": "sum",
       "category": "heart",
       "chart_kind": "bar",
-      "citation": "Banister EW. Modeling elite athletic performance. In: Physiological Testing of Elite Athletes, Human Kinetics 1991; Morton RH et al., J Appl Physiol 1990.",
+      "citation": "Banister EW. Modeling elite athletic performance. In: MacDougall JD, Wenger HA, Green HJ, eds. Physiological Testing of the High-Performance Athlete. 2nd ed. Human Kinetics; 1991:403-424. Morton RH et al., J Appl Physiol 1990;69(3):1171-1177.",
       "decimals": 0,
       "default_enabled": true,
       "field": "trimp",
@@ -270,7 +270,7 @@
         "ios": "heart.fill"
       },
       "id": "training_impulse",
-      "method": "Banister TRIMP over minutes at ≥30% heart-rate reserve: Σ minutes × HRr × 0.64 × e^(k × HRr), k = 1.92 for men and 1.67 for women.",
+      "method": "Banister TRIMP over minutes at ≥30% heart-rate reserve: Σ minutes × HRr × a × e^(k × HRr), with a = 0.64, k = 1.92 for men and a = 0.86, k = 1.67 for women (the midpoint for other).",
       "native": null,
       "requires": [
         "resting_hr_derived"
@@ -1455,6 +1455,11 @@
       0.7
     ],
     "tef_share": 0.1,
+    "trimp_a": {
+      "female": 0.86,
+      "male": 0.64,
+      "other": 0.75
+    },
     "trimp_k": {
       "female": 1.67,
       "male": 1.92,

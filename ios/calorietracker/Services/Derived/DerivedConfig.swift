@@ -71,6 +71,7 @@ nonisolated struct DerivedConfig: Decodable, Sendable {
         let strideMinSteps: Double
         let tanaka: [Double]
         let tefShare: Double
+        let trimpA: [String: Double]
         let trimpK: [String: Double]
         let trimpMinHrr: Double
         let uthFactor: Double
@@ -105,7 +106,7 @@ nonisolated struct DerivedConfig: Decodable, Sendable {
                  strainDeltaBpm = "strain_delta_bpm", strainMinDays = "strain_min_days",
                  strainSdFloor = "strain_sd_floor", strainWindowDays = "strain_window_days",
                  strideFactor = "stride_factor", strideMinSteps = "stride_min_steps", tanaka, tefShare = "tef_share",
-                 trimpK = "trimp_k", trimpMinHrr = "trimp_min_hrr", uthFactor = "uth_factor",
+                 trimpA = "trimp_a", trimpK = "trimp_k", trimpMinHrr = "trimp_min_hrr", uthFactor = "uth_factor",
                  validWearMin = "valid_wear_min", wakeWindowHours = "wake_window_hours",
                  wakeupMinGapMin = "wakeup_min_gap_min", walkingMaxSteps = "walking_max_steps",
                  walkingMinMinutes = "walking_min_minutes", walkingMinSteps = "walking_min_steps",

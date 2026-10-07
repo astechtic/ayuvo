@@ -76,6 +76,7 @@ object AppRoutes {
     const val INSIGHTS_REVIEW = "insights/review?$INSIGHTS_DAY_ARG={$INSIGHTS_DAY_ARG}"
     const val INSIGHTS_TRENDS = "insights/trends"
     const val INSIGHTS_PATTERNS = "insights/patterns"
+    const val INSIGHTS_SIGNALS = "insights/signals"
 
     // Camera measurements (docs/camera-vitals.md §7.1): shared destinations opened from Summary, Browse and metric detail.
     const val MEASURE_HOME = "measure/home"

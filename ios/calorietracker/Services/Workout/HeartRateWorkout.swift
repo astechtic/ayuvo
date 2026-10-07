@@ -73,6 +73,7 @@ nonisolated enum HeartRateWorkout {
         let hrMax = inp.hrMax, rhr = inp.rhr
         let hrr = rhr != nil && hrMax > rhr!
         let k = bySex(th.trimpK, inp.sex) ?? 0
+        let a = bySex(th.trimpA, inp.sex) ?? 0
         let weight: Double? = (inp.weightKg == nil || inp.weightKg == 0) ? nil : inp.weightKg
         for (i, x) in samples.enumerated() {
             let t = x.tMs, bpm = x.bpm
@@ -85,7 +86,7 @@ nonisolated enum HeartRateWorkout {
             zones[zone(bpm, hrMax: hrMax, rhr: rhr, th)] += Double(dur) / 1000.0
             if hrr {
                 let xr = (bpm - rhr!) / (hrMax - rhr!)
-                if xr > 0 { trimp += minutes * xr * 0.64 * exp(k * xr) }
+                if xr > 0 { trimp += minutes * xr * a * exp(k * xr) }
             }
             if let weight, let age = inp.age, let kc = bySex(th.keytel, inp.sex) {
                 let perMin = (kc[0] + kc[1] * bpm + kc[2] * weight + kc[3] * age) / 4.184

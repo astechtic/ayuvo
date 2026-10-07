@@ -41,6 +41,8 @@ final class InsightsStore {
     var pace: HealthAgePaceResult? { report?.pace }
     var patterns: [PatternResult] { report?.patterns ?? [] }
     var baselines: [InsightsMetricBaseline] { report?.baselines ?? [] }
+    /// Health analytics of the current report (Recovery v2 detail, signals, HRV, sleep, load, trends, patterns v2).
+    var analytics: AnalyticsBundle? { report?.analytics }
 
     /// Whether `series` took `day`'s value from a finger camera scan.
     func isFromScan(_ series: String, day: String) -> Bool { scanFallback[series]?.contains(day) == true }
@@ -60,6 +62,16 @@ final class InsightsStore {
 
     /// Recomputes when an input changed (or `force`). Runs the engines off the main actor.
     func refresh(force: Bool = false) async {
+        #if DEBUG
+        if AnalyticsDemoSeed.isRequested {
+            if report == nil {
+                let today = InsightsDay.key(for: Date(), calendar: .current)
+                report = AnalyticsDemoSeed.report(today: today, timeZone: TimeZone.current.identifier)
+                isAvailable = true
+            }
+            return
+        }
+        #endif
         guard let source else { return }
         isAvailable = source.healthSyncEnabled && source.insightsEnabled
         guard isAvailable else {
@@ -88,6 +100,8 @@ final class InsightsStore {
             self.scanFallback = inputs.scanFallback
             self.profile = profile
             self.cachedKey = key
+            // Versioned, incremental storage of the analytics results (docs/health-analytics.md §6).
+            Task { await AnalyticsService.shared.persist(report) }
         }
         running = task
         await task.value

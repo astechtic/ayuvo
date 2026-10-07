@@ -82,6 +82,9 @@ nonisolated final class HealthSyncEngine: Sendable {
 
     func sync(trigger: HealthSyncTrigger, progress: @escaping @Sendable (HealthSyncProgress) -> Void = { _ in }) async -> HealthSyncOutcome {
         guard !types.isEmpty else { return .skipped(reason: "no types") }
+        _ = try? await database.rebuildRollupsIfRuleChanged(
+            types: types, tz: calendar.timeZone.identifier, calendar: calendar, ownBundleID: ownBundleID
+        )
         let limits = await reader.earliestAuthorizedSampleDates(types: types)
         let run = RunState(typesTotal: types.count, progress: progress)
         let ordered = types.sorted { lhs, rhs in

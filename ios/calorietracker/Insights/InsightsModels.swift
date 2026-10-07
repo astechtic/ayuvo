@@ -214,6 +214,9 @@ nonisolated struct InsightsInputs: Equatable, Sendable {
     var recovery: RecoveryResult?
     /// A patterns result (Daily Review only).
     var patterns: [PatternResult]?
+    /// Extra inputs of the analytics engine (shared/analytics, docs/health-analytics.md): per-night sleep detail,
+    /// sources, measurement contexts, workout details, provider-only series and the profile facts for energy.
+    var analytics = InsightsAnalyticsInputs()
 
     init() {}
 }
@@ -336,6 +339,9 @@ nonisolated struct RecoveryResult: Codable, Equatable, Sendable {
     var positives: [RecoverySignal]
     var negatives: [RecoverySignal]
     var load: RecoveryLoad?
+    /// The full Recovery Indicator v2 result (`ayuvo.recovery@2`, shared/analytics) this result was adapted from:
+    /// numeric confidence, coverage, drivers, warnings and the summary. Nil for a v1 result. Not encoded.
+    var v2: AJ? = nil
 
     enum CodingKeys: String, CodingKey {
         case day, status, score, label, labelText = "label_text", recommendation, confidence, collecting, components,

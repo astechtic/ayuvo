@@ -1,0 +1,575 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "evidence_version": 1,
+        "items": [
+          {
+            "algorithm": "ayuvo.recovery@2",
+            "classification": "PERSONALIZED_STATISTICAL",
+            "confidence": 0.95,
+            "drivers": [
+              {
+                "baseline": 55.6,
+                "direction": "negative",
+                "metric": "hrv",
+                "unit": "ms",
+                "value": 38.0,
+                "z": -3.83
+              },
+              {
+                "baseline": 54.4,
+                "direction": "negative",
+                "metric": "resting_heart_rate",
+                "unit": "bpm",
+                "value": 61.0,
+                "z": 3.56
+              },
+              {
+                "baseline": 14.2,
+                "direction": "negative",
+                "metric": "respiratory_rate",
+                "unit": "br/min",
+                "value": 16.0,
+                "z": 6.0
+              },
+              {
+                "baseline": 437.8,
+                "direction": "negative",
+                "metric": "sleep",
+                "unit": "min",
+                "value": 300.0,
+                "z": null
+              },
+              {
+                "baseline": 96.0,
+                "direction": "neutral",
+                "metric": "blood_oxygen",
+                "unit": "%",
+                "value": 96.0,
+                "z": 0.0
+              },
+              {
+                "baseline": 0.02,
+                "direction": "neutral",
+                "metric": "wrist_temperature",
+                "unit": "°C",
+                "value": 0.0,
+                "z": -0.2
+              }
+            ],
+            "label": "low",
+            "metric": "recovery_indicator",
+            "score": 16,
+            "status": "VALID",
+            "warnings": []
+          },
+          {
+            "algorithm": "ayuvo.anomaly@1",
+            "classification": "PERSONALIZED_STATISTICAL",
+            "confidence": 0.79,
+            "metric": "multi_signal_deviation",
+            "persistent": false,
+            "signals": [
+              {
+                "flagged": true,
+                "metric": "hrv",
+                "z": -3.39
+              },
+              {
+                "flagged": true,
+                "metric": "resting_heart_rate",
+                "z": 4.43
+              },
+              {
+                "flagged": true,
+                "metric": "respiratory_rate",
+                "z": 6.17
+              },
+              {
+                "flagged": false,
+                "metric": "wrist_temperature",
+                "z": 0.0
+              },
+              {
+                "flagged": true,
+                "metric": "sleep_duration",
+                "z": -3.2
+              },
+              {
+                "flagged": false,
+                "metric": "steps",
+                "z": -0.01
+              },
+              {
+                "flagged": false,
+                "metric": "weight",
+                "z": 0.0
+              }
+            ],
+            "state": "MULTI_SIGNAL_DEVIATION",
+            "status": "VALID"
+          },
+          {
+            "baseline": 54.6,
+            "classification": "PROVIDER_DERIVED",
+            "confidence": 0.95,
+            "kind": "sdnn",
+            "metric": "hrv",
+            "status": "VALID",
+            "trend": "UNUSUAL",
+            "unit": "ms",
+            "value": 38.0,
+            "z": -3.39
+          },
+          {
+            "asleep_min": 300.0,
+            "bedtime_sd": 31.0,
+            "confidence": 0.95,
+            "debt_min": 287.0,
+            "efficiency": 90.0,
+            "metric": "sleep",
+            "need_min": 437.8,
+            "need_source": "personal",
+            "status": "VALID"
+          },
+          {
+            "acute": 27.0,
+            "chronic": 30.4,
+            "classification": "SCIENTIFIC_DERIVED",
+            "method": "trimp",
+            "metric": "training_load",
+            "ratio": 0.89,
+            "state": null,
+            "status": "INSUFFICIENT_HISTORY"
+          }
+        ]
+      },
+      "input": {
+        "anomaly": {
+          "algorithm_id": "ayuvo.anomaly",
+          "algorithm_version": 1,
+          "classification": "PERSONALIZED_STATISTICAL",
+          "confidence": 0.79,
+          "day": "2026-03-15",
+          "flagged_count": 4,
+          "message": "Several health signals are outside your recent normal range.",
+          "persistent": false,
+          "persistent_note": null,
+          "signals": [
+            {
+              "flagged": true,
+              "id": "hrv",
+              "median": 54.6,
+              "value": 38.0,
+              "z": -3.39,
+              "z_bad": 3.39
+            },
+            {
+              "flagged": true,
+              "id": "resting_heart_rate",
+              "median": 54.1,
+              "value": 61.0,
+              "z": 4.43,
+              "z_bad": 4.43
+            },
+            {
+              "flagged": true,
+              "id": "respiratory_rate",
+              "median": 14.15,
+              "value": 16.0,
+              "z": 6.17,
+              "z_bad": 6.17
+            },
+            {
+              "flagged": false,
+              "id": "wrist_temperature",
+              "median": 0.0,
+              "value": 0.0,
+              "z": 0.0,
+              "z_bad": 0.0
+            },
+            {
+              "flagged": true,
+              "id": "sleep_duration",
+              "median": 443.35,
+              "value": 300.0,
+              "z": -3.2,
+              "z_bad": 3.2
+            },
+            {
+              "flagged": false,
+              "id": "steps",
+              "median": 8517.5,
+              "value": 8500.0,
+              "z": -0.01,
+              "z_bad": 0.01
+            },
+            {
+              "flagged": false,
+              "id": "weight",
+              "median": 72.0,
+              "value": 72.0,
+              "z": 0.0,
+              "z_bad": 0.0
+            }
+          ],
+          "state": "MULTI_SIGNAL_DEVIATION",
+          "status": "VALID"
+        },
+        "hrv": {
+          "baseline": {
+            "classification": "PERSONALIZED_STATISTICAL",
+            "confidence": 0.95,
+            "context": "wearable",
+            "coverage": 1.0,
+            "deviation": -16.6,
+            "mad": 3.3,
+            "median": 54.6,
+            "n": 28,
+            "needed": 14,
+            "p10": 49.6,
+            "p90": 60.5,
+            "pct": -30.4,
+            "source_changed": false,
+            "spread": 4.9,
+            "status": "VALID",
+            "value": 38.0,
+            "window_days": 28,
+            "z": -3.39,
+            "z_dir": -3.39
+          },
+          "classification": "PROVIDER_DERIVED",
+          "cv_ln_7d": 3.65,
+          "kind": "sdnn",
+          "ln_mean_7d": 3.926,
+          "stability_days": 7,
+          "trend": {
+            "change_direction": "down",
+            "change_point_day": "2026-03-15",
+            "confidence": 0.95,
+            "coverage": 1.0,
+            "ewma": 49.2,
+            "label": "UNUSUAL",
+            "latest_z": -3.33,
+            "median": 54.3,
+            "pct_change": -7.1,
+            "pct_per_week": -2.81,
+            "prior_median": 54.9,
+            "recent_median": 51.0,
+            "sample_count": 28,
+            "slope_per_day": -0.2174,
+            "spread": 4.8,
+            "status": "VALID",
+            "window_days": 28
+          }
+        },
+        "load": {
+          "classification": "SCIENTIFIC_DERIVED",
+          "day": "2026-03-15",
+          "history_days": 70,
+          "methods": {
+            "minutes": {
+              "acute": 19.3,
+              "chronic": 21.7,
+              "coverage": 1.0,
+              "ratio": 0.89,
+              "today": 0.0
+            },
+            "rpe_load": {
+              "acute": 115.7,
+              "chronic": 130.2,
+              "coverage": 1.0,
+              "ratio": 0.89,
+              "today": 0.0
+            },
+            "trimp": {
+              "acute": 27.0,
+              "chronic": 30.4,
+              "coverage": 1.0,
+              "ratio": 0.89,
+              "today": 0.0
+            }
+          },
+          "primary_method": "trimp",
+          "state": null,
+          "state_label": null,
+          "status": "INSUFFICIENT_HISTORY",
+          "today": 0.0
+        },
+        "recovery": {
+          "algorithm_id": "ayuvo.recovery",
+          "algorithm_version": 2,
+          "classification": "PERSONALIZED_STATISTICAL",
+          "collecting": null,
+          "components": [
+            {
+              "available": true,
+              "baseline": 55.6,
+              "confidence": 0.95,
+              "context": "wearable",
+              "id": "hrv",
+              "impact": -17.5,
+              "n": 60,
+              "parts": null,
+              "subscore": 0.0,
+              "unit": "ms",
+              "value": 38.0,
+              "weight": 35,
+              "z": -3.83
+            },
+            {
+              "available": true,
+              "baseline": 54.4,
+              "confidence": 0.95,
+              "context": "wearable",
+              "id": "resting_heart_rate",
+              "impact": -12.5,
+              "n": 60,
+              "parts": null,
+              "subscore": 0.0,
+              "unit": "bpm",
+              "value": 61.0,
+              "weight": 25,
+              "z": 3.56
+            },
+            {
+              "available": true,
+              "baseline": 437.8,
+              "confidence": 0.95,
+              "context": null,
+              "id": "sleep",
+              "impact": -1.8,
+              "n": 0,
+              "parts": {
+                "duration": 23.4,
+                "efficiency": 50.0,
+                "regularity": 75.0
+              },
+              "subscore": 43.0,
+              "unit": "min",
+              "value": 300.0,
+              "weight": 25,
+              "z": null
+            },
+            {
+              "available": true,
+              "baseline": 14.2,
+              "confidence": 0.95,
+              "context": "wearable",
+              "id": "respiratory_rate",
+              "impact": -2.5,
+              "n": 60,
+              "parts": null,
+              "subscore": 0.0,
+              "unit": "br/min",
+              "value": 16.0,
+              "weight": 5,
+              "z": 6.0
+            },
+            {
+              "available": true,
+              "baseline": 0.02,
+              "confidence": 0.95,
+              "context": "wearable",
+              "id": "wrist_temperature",
+              "impact": 0.0,
+              "n": 60,
+              "parts": null,
+              "subscore": 50.0,
+              "unit": "°C",
+              "value": 0.0,
+              "weight": 5,
+              "z": -0.2
+            },
+            {
+              "available": true,
+              "baseline": 96.0,
+              "confidence": 0.95,
+              "context": "wearable",
+              "id": "blood_oxygen",
+              "impact": 0.0,
+              "n": 60,
+              "parts": null,
+              "subscore": 50.0,
+              "unit": "%",
+              "value": 96.0,
+              "weight": 5,
+              "z": 0.0
+            }
+          ],
+          "confidence": 0.95,
+          "confidence_band": "high",
+          "config_version": 1,
+          "coverage": 1.0,
+          "day": "2026-03-15",
+          "drivers": [
+            {
+              "baseline": 55.6,
+              "direction": "negative",
+              "id": "hrv",
+              "impact": -17.5,
+              "text": "HRV below your baseline",
+              "text_key": "hrv.negative",
+              "unit": "ms",
+              "value": 38.0,
+              "z": -3.83
+            },
+            {
+              "baseline": 54.4,
+              "direction": "negative",
+              "id": "resting_heart_rate",
+              "impact": -12.5,
+              "text": "Resting heart rate above your baseline",
+              "text_key": "resting_heart_rate.negative",
+              "unit": "bpm",
+              "value": 61.0,
+              "z": 3.56
+            },
+            {
+              "baseline": 14.2,
+              "direction": "negative",
+              "id": "respiratory_rate",
+              "impact": -2.5,
+              "text": "Breathing rate outside your usual range",
+              "text_key": "respiratory_rate.negative",
+              "unit": "br/min",
+              "value": 16.0,
+              "z": 6.0
+            },
+            {
+              "baseline": 437.8,
+              "direction": "negative",
+              "id": "sleep",
+              "impact": -1.8,
+              "text": "Sleep was short or unsettled",
+              "text_key": "sleep.negative",
+              "unit": "min",
+              "value": 300.0,
+              "z": null
+            },
+            {
+              "baseline": 96.0,
+              "direction": "neutral",
+              "id": "blood_oxygen",
+              "impact": 0.0,
+              "text": "Blood oxygen in your usual range",
+              "text_key": "blood_oxygen.neutral",
+              "unit": "%",
+              "value": 96.0,
+              "z": 0.0
+            },
+            {
+              "baseline": 0.02,
+              "direction": "neutral",
+              "id": "wrist_temperature",
+              "impact": 0.0,
+              "text": "Sleeping temperature in your usual range",
+              "text_key": "wrist_temperature.neutral",
+              "unit": "°C",
+              "value": 0.0,
+              "z": -0.2
+            }
+          ],
+          "label": "low",
+          "label_text": "Low",
+          "load": {
+            "acute": 36.0,
+            "chronic": 32.6,
+            "day": "2026-03-14",
+            "method": "trimp",
+            "modifier": 0,
+            "ratio": 1.1,
+            "state": null,
+            "status": "INSUFFICIENT_HISTORY"
+          },
+          "negatives": [
+            "hrv",
+            "resting_heart_rate",
+            "respiratory_rate",
+            "sleep"
+          ],
+          "positives": [],
+          "reason": null,
+          "recommendation": "Recovery-focused day",
+          "score": 16,
+          "status": "VALID",
+          "summary": "Main signals pulling the score down: HRV below your baseline; Resting heart rate above your baseline; Breathing rate outside your usual range; Sleep was short or unsettled.",
+          "warnings": [],
+          "weights_version": 1
+        },
+        "sleep": {
+          "asleep_min": 300.0,
+          "bedtime_sd": 31.0,
+          "confidence": 0.95,
+          "day": "2026-03-15",
+          "debt_min": 287.0,
+          "debt_nights": 14,
+          "duration": {
+            "classification": "PERSONALIZED_STATISTICAL",
+            "confidence": 0.95,
+            "context": "wearable",
+            "coverage": 1.0,
+            "deviation": -143.4,
+            "mad": 30.2,
+            "median": 443.4,
+            "n": 28,
+            "needed": 14,
+            "p10": 392.1,
+            "p90": 477.3,
+            "pct": -32.3,
+            "source_changed": false,
+            "spread": 44.8,
+            "status": "VALID",
+            "value": 300.0,
+            "window_days": 28,
+            "z": -3.2,
+            "z_dir": -3.2
+          },
+          "efficiency": 90.0,
+          "efficiency_baseline": {
+            "classification": "PERSONALIZED_STATISTICAL",
+            "confidence": 0.95,
+            "context": "wearable",
+            "coverage": 1.0,
+            "deviation": 0.0,
+            "mad": 0.0,
+            "median": 90.0,
+            "n": 28,
+            "needed": 14,
+            "p10": 90.0,
+            "p90": 90.0,
+            "pct": 0.0,
+            "source_changed": false,
+            "spread": 2.0,
+            "status": "VALID",
+            "value": 90.0,
+            "window_days": 28,
+            "z": 0.0,
+            "z_dir": 0.0
+          },
+          "in_bed_min": 528.0,
+          "nap_min": null,
+          "need_min": 437.8,
+          "need_source": "personal",
+          "status": "VALID",
+          "variability_nights": 14,
+          "wake_sd": 25.9,
+          "waso_min": null
+        }
+      },
+      "name": "full"
+    },
+    {
+      "expected": {
+        "evidence_version": 1,
+        "items": []
+      },
+      "input": {},
+      "name": "none"
+    }
+  ],
+  "format": "ayuvo-analytics-vectors",
+  "function": "evidence",
+  "version": 1
+}

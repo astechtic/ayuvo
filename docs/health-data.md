@@ -93,6 +93,8 @@ DDL: `shared/health/schema.sql` (embedded verbatim; do not restate it here). Tab
 - `origin`: `0` platform, `1` file import, `2` local app adapter (Ayuvo's own weight/body-fat/height entries and manual health entries, §2.2; `source_id` = own package/bundle id, label "Ayuvo"), `3` Google Health API (`docs/google-health.md`; `id` = `gh:<point id>`, `source_id` = `google_health:<package>`; never tombstoned by platform deletions).
 - Schema v3 adds `google_health_sync_state` and `google_health_mirror` (`docs/google-health.md` §3).
 - Schema v4 adds `vital_scans`, `vital_scan_signals`, `vital_calibrations` and `vital_device_profiles` for camera finger/face scans (`docs/camera-vitals.md` §7). Scans are never written to `health_samples`, HealthKit or Health Connect. "Clear synced health data" and the pre-import wipe keep them; deleting all app data removes them.
+- Schema v5 adds `analytics_results`, `analytics_state` and `ml_models` for the health analytics engine (`docs/health-analytics.md` §6). They are recomputable and, like `derived_daily_values`, never exported.
+- Discrete vitals listed in `shared/health/source_policy.json` (resting HR, HRV, respiratory rate, blood oxygen, VO2 max, temperatures, walking HR, HR recovery) take one source per day in the daily rollup instead of a cross-source average. A wearable device wins, then the most samples, then the source id, and Google Health copies of the same Health Connect reading are dropped (`docs/health-analytics.md` §3).
 - Show All Data pages by keyset `(end_ms DESC, id DESC)`, never `OFFSET`.
 
 ### 2.1 Upsert and tombstone rules (both platforms)
@@ -419,7 +421,7 @@ The metric detail and Summary identifiers are shared with app metrics and define
 | Constant | Value | Where |
 |---|---|---|
 | `registry_version` | 2 (v2: Google-only slugs, `docs/google-health.md`) | registry JSON, `health_meta`, export manifest |
-| `schema_version` | 4 (v2 `derived_daily_values`, v3 Google Health tables, v4 camera vitals tables) | `health_meta` |
+| `schema_version` | 5 (v2 `derived_daily_values`, v3 Google Health tables, v4 camera vitals tables, v5 analytics tables) | `health_meta` |
 | Google map `map_version` | 1 | `shared/health/google_health_map.json` |
 | `rollup_rule_version` | 1 | `health_meta` (bump → full rollup rebuild) |
 | `percent_convention` | `0-100` | registry JSON, export manifest |

@@ -131,7 +131,12 @@ enum InsightsBackgroundRefresh {
         guard hour >= earliestHour else { return }
         await syncMirror()
         guard !Task.isCancelled else { return }
+        // Derived values (resting heart rate fallback, VO2 max estimate) and Ayuvo RMSSD feed Recovery: finish that
+        // pass first so the morning score never uses yesterday's derived values.
+        await DerivedMetricsService.shared.refresh()
+        guard !Task.isCancelled else { return }
         let report = await InsightsDataSource.standalone(defaults: defaults, calendar: calendar).report(now: now)
+        await AnalyticsService.shared.persist(report, now: now)
         guard report.recovery.isReady else { return }
         await notifyRecoveryReady(day: report.today, hour: hour, defaults: defaults)
     }

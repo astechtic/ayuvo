@@ -36,6 +36,10 @@ extension ActionExecutor {
             "recommendation": .optional(r.recommendation), "confidence": .optional(r.confidence),
             "positives": .list(r.positives.map { .string($0.text) }), "negatives": .list(r.negatives.map { .string($0.text) }),
             "training_load": .optional(r.load?.label), "value": .optional(r.score),
+            // Recovery Indicator v2 detail: numeric confidence, coverage, drivers with value / baseline / z.
+            "confidence_value": .optional(r.v2?["confidence"].double), "coverage": .optional(r.v2?["coverage"].double),
+            "algorithm": .optional(r.v2.map { "\($0["algorithm_id"].string ?? "ayuvo.recovery")@\($0["algorithm_version"].int ?? 2)" }),
+            "drivers": .list((r.v2?["drivers"].array ?? []).map(Self.actionField)),
         ]
         let dialog: String
         switch r.status {
@@ -52,6 +56,39 @@ extension ActionExecutor {
             dialog = String(localized: "There's no heart reading for last night yet, so there's no Recovery score.")
         }
         return ActionResult(actionID: v.actionID, fields: fields, dialog: dialog)
+    }
+
+    /// `insights.evidence.get` / Coach `get_health_evidence`: the engine's evidence object (docs/health-analytics.md
+    /// §8). Coach explains these values; it never calculates physiological metrics itself.
+    func evidenceGet(_ v: ActionValidation) async throws -> ActionResult {
+        let report = try await insightsReport()
+        guard let evidence = report.analytics?.evidence, evidence.has else {
+            throw ActionError.notFound(String(localized: "There's no health evidence yet."))
+        }
+        let fields: [String: ActionField] = [
+            "evidence_version": .optional(evidence["evidence_version"].int),
+            "items": .list(evidence["items"].array.map(Self.actionField)),
+        ]
+        let recovery = evidence["items"].array.first { $0["metric"].string == "recovery_indicator" }
+        let dialog: String
+        if let score = recovery?["score"].int, let conf = recovery?["confidence"].double {
+            dialog = String(localized: "Recovery Indicator \(score), confidence \(Int((conf * 100).rounded()))%. \(evidence["items"].array.count) evidence items.")
+        } else {
+            dialog = String(localized: "\(evidence["items"].array.count) evidence items from your own data.")
+        }
+        return ActionResult(actionID: v.actionID, fields: fields, dialog: dialog)
+    }
+
+    /// Engine JSON → action output value (numbers stay numbers, nulls stay null).
+    nonisolated static func actionField(_ j: AJ) -> ActionField {
+        switch j {
+        case .null: .null
+        case .bool(let b): .bool(b)
+        case .num(let x): .number(x)
+        case .str(let s): .string(s)
+        case .arr(let a): .list(a.map(actionField))
+        case .obj(let o): .object(o.mapValues(actionField))
+        }
     }
 
     func healthAgeGet(_ v: ActionValidation) async throws -> ActionResult {

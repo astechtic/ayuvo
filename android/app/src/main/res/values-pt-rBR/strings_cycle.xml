@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">Sintomas mais registrados</string>
     <string name="cycle_chart_flow">Fluxo por dia da menstruação</string>
     <string name="cycle_chart_flow_footer">Fluxo médio em cada dia das suas menstruações recentes (mais alto = mais intenso).</string>
-    <string name="cycle_chart_empty">Ainda não há dados suficientes</string>
+    <string name="cycle_chart_empty">Dados insuficientes ainda</string>
     <string name="cycle_chart_median_line">Linha tracejada: mediana, %1$s dias</string>
     <string name="cycle_symptom_cycles">%1$d de %2$d ciclos</string>
     <string name="cycle_about_estimates">Sobre estas estimativas</string>

@@ -18,7 +18,7 @@ class CoachActionToolsTest {
         assertEquals(
             listOf("get_nutrition_targets", "get_water_intake", "get_fasting_status", "get_body_composition",
                 "get_exercise_stats", "get_goals", "search_ayuvo", "get_recovery", "get_health_age", "get_daily_review",
-                CoachActionTools.PROPOSE_TOOL),
+                "get_health_evidence", CoachActionTools.PROPOSE_TOOL),
             tools.names
         )
         val schema = Json.parseToJsonElement(tools.schemaJson("get_water_intake")!!).jsonObject

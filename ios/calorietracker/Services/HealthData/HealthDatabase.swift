@@ -79,7 +79,7 @@ actor HealthDatabase {
 
     /// Idempotent: creates missing tables/indexes and stamps the version rows. Every
     /// migration so far only adds tables (v2 `derived_daily_values`, v3 the Google Health
-    /// tables, v4 the camera-vitals tables), so `CREATE … IF NOT EXISTS` is the whole upgrade path.
+    /// tables, v4 the camera-vitals tables, v5 the analytics tables), so `CREATE … IF NOT EXISTS` is the whole upgrade path.
     func applySchema() throws {
         try connection.inTransaction {
             try connection.exec(HealthSchema.idempotentDDL)
@@ -88,8 +88,11 @@ actor HealthDatabase {
             if try (metaValue("registry_version").flatMap(Int.init) ?? 0) < HealthSchema.registryVersion {
                 try setMetaInTransaction("registry_version", "\(HealthSchema.registryVersion)")
             }
+            // A fresh mirror starts at the current rule; an older stored rule is upgraded by
+            // `rebuildRollupsIfRuleChanged` (HealthSyncEngine) once rows can be re-read.
             if try metaValue("rollup_rule_version") == nil {
-                try setMetaInTransaction("rollup_rule_version", "\(HealthSchema.rollupRuleVersion)")
+                let fresh = try (connection.scalarInt64("SELECT COUNT(*) FROM health_samples") ?? 0) == 0
+                try setMetaInTransaction("rollup_rule_version", fresh ? "\(HealthSchema.rollupRuleVersion)" : "1")
             }
             if try metaValue("rollups_tz") == nil {
                 try setMetaInTransaction("rollups_tz", TimeZone.current.identifier)
@@ -201,6 +204,9 @@ actor HealthDatabase {
             DELETE FROM health_sources;
             DELETE FROM health_type_meta;
             DELETE FROM derived_daily_values;
+            DELETE FROM analytics_results;
+            DELETE FROM analytics_state;
+            DELETE FROM ml_models;
             DELETE FROM google_health_sync_state;
             UPDATE health_sync_state SET cursor=NULL, cursor_issued_ms=NULL, last_sync_ms=NULL, backfill_done=0, status='idle', last_error=NULL, last_error_ms=NULL;
             """)

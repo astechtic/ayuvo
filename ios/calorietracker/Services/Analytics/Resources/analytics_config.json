@@ -1,0 +1,1596 @@
+{
+  "algorithms": [
+    {
+      "assumptions": "One reading per source per instant; Google Health copies of a Health Connect reading are the same reading.",
+      "classification": "PROVIDER_DERIVED",
+      "fallback": "average_all for metrics without a policy",
+      "function": "source_select",
+      "id": "ayuvo.source.select",
+      "inputs": [
+        "discrete health_samples rows of one metric and day"
+      ],
+      "output": {
+        "unit": "metric unit"
+      },
+      "quality": {
+        "min_n": 1
+      },
+      "references": [],
+      "version": 1
+    },
+    {
+      "assumptions": "The user's recent history is the right reference; camera spot readings never enter a wearable baseline.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "INSUFFICIENT_HISTORY below min_points; NO_DATA without today's value",
+      "function": "baseline",
+      "id": "ayuvo.baseline.robust",
+      "inputs": [
+        "day-keyed series of one metric"
+      ],
+      "output": {
+        "unit": "metric unit; z unitless"
+      },
+      "quality": {
+        "min_points": "per window, see baseline.min_points"
+      },
+      "references": [
+        "leys_2013"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "A straight-line tendency over 28 days; robust to single outliers.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "INSUFFICIENT_DATA below 10 readings",
+      "function": "trend",
+      "id": "ayuvo.trend",
+      "inputs": [
+        "day-keyed series of one metric"
+      ],
+      "output": {
+        "unit": "%/week"
+      },
+      "quality": {
+        "min_points": 10
+      },
+      "references": [
+        "theil_1950",
+        "sen_1968",
+        "page_1954"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Beat times from Apple Watch PPG are accurate enough for short-term time-domain HRV at rest; intervals are never interpolated.",
+      "classification": "SCIENTIFIC_DERIVED",
+      "fallback": "INVALID_INPUT above 5% artifacts; INSUFFICIENT_DATA below 30 accepted beats",
+      "function": "hrv_rr",
+      "id": "ayuvo.hrv.rmssd",
+      "inputs": [
+        "HKHeartbeatSeriesSample beat times (iOS only)"
+      ],
+      "output": {
+        "range": [
+          0,
+          500
+        ],
+        "unit": "ms"
+      },
+      "quality": {
+        "max_artifact_fraction": 0.05,
+        "min_beats": 30
+      },
+      "references": [
+        "task_force_1996",
+        "shaffer_2017",
+        "lipponen_2019",
+        "apple_heartbeat"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "SDNN and RMSSD are different measures and are never compared.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "per sub-result status",
+      "function": "hrv_status",
+      "id": "ayuvo.hrv.status",
+      "inputs": [
+        "provider HRV (SDNN on iOS, RMSSD on Android) or Ayuvo RMSSD"
+      ],
+      "output": {
+        "unit": "ms"
+      },
+      "quality": {
+        "baseline_min_points": 14,
+        "stability_min_days": 5
+      },
+      "references": [
+        "plews_2013",
+        "buchheit_2014",
+        "apple_hrv_sdnn",
+        "hc_hrv"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Habitual sleep over 60 nights approximates need; clamped to 7-9 h. The 9 h ceiling is an Ayuvo choice.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "480 min below 14 nights",
+      "function": "sleep_need",
+      "id": "ayuvo.sleep.need",
+      "inputs": [
+        "main-sleep asleep minutes per wake day"
+      ],
+      "output": {
+        "range": [
+          420,
+          540
+        ],
+        "unit": "min"
+      },
+      "quality": {
+        "min_nights": 14
+      },
+      "references": [
+        "watson_2015"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Efficiency uses the conventional TST / time in bed.",
+      "classification": "SCIENTIFIC_DERIVED",
+      "fallback": "NO_DATA without last night",
+      "function": "sleep_status",
+      "id": "ayuvo.sleep.status",
+      "inputs": [
+        "per-night summaries from shared/derived sleep_night"
+      ],
+      "output": {
+        "unit": "min / %"
+      },
+      "quality": {
+        "min_night_minutes": 120
+      },
+      "references": [
+        "reed_sacco_2016",
+        "phillips_2017",
+        "watson_2015"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "A day without a session is a true zero load while workout tracking is on. States are relative to the user's own history and say nothing about the chance of getting hurt.",
+      "classification": "SCIENTIFIC_DERIVED",
+      "fallback": "INSUFFICIENT_HISTORY below 42 days",
+      "function": "load",
+      "id": "ayuvo.load.ewma",
+      "inputs": [
+        "workouts with effort (CR-10) and TRIMP when available"
+      ],
+      "output": {
+        "unit": "AU"
+      },
+      "quality": {
+        "min_history_days": 42,
+        "state_min_days": 28
+      },
+      "references": [
+        "foster_2001",
+        "banister_1991",
+        "williams_2017",
+        "impellizzeri_2020"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "The workout end is the end of exercise; recovery posture is unknown.",
+      "classification": "SCIENTIFIC_DERIVED",
+      "fallback": "INSUFFICIENT_DATA without a peak and a 60 s sample",
+      "function": "hrr",
+      "id": "ayuvo.hrr",
+      "inputs": [
+        "heart-rate samples around the end of a workout"
+      ],
+      "output": {
+        "unit": "bpm"
+      },
+      "quality": {
+        "tolerance_s": 30
+      },
+      "references": [
+        "cole_1999",
+        "shetler_2001"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Weights are Ayuvo design choices (config recovery.components[].why), not universal constants.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "INSUFFICIENT_HISTORY / NO_DATA, never a made-up score",
+      "function": "recovery",
+      "id": "ayuvo.recovery",
+      "inputs": [
+        "hrv",
+        "resting_heart_rate",
+        "sleep nights",
+        "respiratory_rate",
+        "wrist_temperature",
+        "blood_oxygen",
+        "workouts"
+      ],
+      "output": {
+        "range": [
+          0,
+          100
+        ],
+        "unit": "score"
+      },
+      "quality": {
+        "min_points": 7
+      },
+      "references": [
+        "plews_2013",
+        "buchheit_2014",
+        "williams_2017"
+      ],
+      "version": 2
+    },
+    {
+      "assumptions": "Deviation from the user's own range only; never names a condition.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "INSUFFICIENT_DATA below 2 evaluable signals",
+      "function": "anomaly",
+      "id": "ayuvo.anomaly",
+      "inputs": [
+        "hrv",
+        "resting_heart_rate",
+        "respiratory_rate",
+        "wrist_temperature",
+        "sleep",
+        "steps",
+        "weight",
+        "training minutes"
+      ],
+      "output": {
+        "unit": "state"
+      },
+      "quality": {
+        "min_points": 14,
+        "min_signals": 2
+      },
+      "references": [
+        "leys_2013"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Association, not causation; Fisher-z with the Fieller SE is approximate for Spearman's rho.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "INSUFFICIENT_DATA below 21 pairs",
+      "function": "correlation",
+      "id": "ayuvo.correlation",
+      "inputs": [
+        "paired day series"
+      ],
+      "output": {
+        "unit": "rho"
+      },
+      "quality": {
+        "min_n": 21
+      },
+      "references": [
+        "fieller_1957",
+        "bh_1995",
+        "abramowitz_stegun"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "A monotone straight-line relationship; no tie correction in the interval.",
+      "classification": "PERSONALIZED_STATISTICAL",
+      "fallback": "INSUFFICIENT_DATA below 28 pairs",
+      "function": "response",
+      "id": "ayuvo.response",
+      "inputs": [
+        "paired day series"
+      ],
+      "output": {
+        "unit": "outcome units per exposure unit"
+      },
+      "quality": {
+        "min_n": 28
+      },
+      "references": [
+        "sen_1968",
+        "theil_1950"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Wearable energy is an estimate, not ground truth; TEF is a fixed 10%.",
+      "classification": "SCIENTIFIC_DERIVED",
+      "fallback": "Mifflin-St Jeor when basal is missing or partial",
+      "function": "energy",
+      "id": "ayuvo.energy",
+      "inputs": [
+        "provider basal and active energy",
+        "Ayuvo workout burns",
+        "profile"
+      ],
+      "output": {
+        "unit": "kcal"
+      },
+      "quality": {
+        "bmr_min_share": 0.7
+      },
+      "references": [
+        "mifflin_1990",
+        "hall_2011"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Provider, GPS and heart-rate-ratio estimates are different methods, so they are never combined or compared.",
+      "classification": "PROVIDER_DERIVED",
+      "fallback": "NO_DATA per kind without readings; change and slope stay null until enough readings",
+      "function": "vo2max_trend",
+      "id": "ayuvo.fitness.vo2max_trend",
+      "inputs": [
+        "provider VO2 max",
+        "GPS ACSM estimate",
+        "Uth ratio estimate"
+      ],
+      "output": {
+        "unit": "mL/kg/min"
+      },
+      "quality": {
+        "slope_min_points": 4
+      },
+      "references": [
+        "uth_2004",
+        "tanaka_2001"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "One representative Compendium entry per activity type; real intensity varies.",
+      "classification": "SCIENTIFIC_DERIVED",
+      "fallback": "unknown activities get no MET",
+      "function": "met_intensity",
+      "id": "ayuvo.met.intensity",
+      "inputs": [
+        "workouts with an activity key"
+      ],
+      "output": {
+        "unit": "min / MET-min"
+      },
+      "quality": {},
+      "references": [
+        "herrmann_2024",
+        "who_2020"
+      ],
+      "version": 1
+    },
+    {
+      "assumptions": "Next-day values are partly predictable from today's signals; nothing transfers between users.",
+      "classification": "ML_PREDICTED",
+      "fallback": "hidden unless it beats persistence and the 28-day median by 5%",
+      "function": "forecast",
+      "id": "ayuvo.forecast",
+      "inputs": [
+        "feature schema v1"
+      ],
+      "output": {
+        "unit": "target unit"
+      },
+      "quality": {
+        "min_rows": 90,
+        "min_test_rows": 14
+      },
+      "references": [
+        "hoerl_1970"
+      ],
+      "version": 1
+    }
+  ],
+  "anomaly": {
+    "algorithm_id": "ayuvo.anomaly",
+    "algorithm_version": 1,
+    "baseline_window_days": 28,
+    "mild_z": 2.0,
+    "min_points": 14,
+    "min_signals": 2,
+    "multi_signal_count": 3,
+    "persistent_days": 3,
+    "persistent_note": "These changes have lasted several days. Consider discussing persistent changes with a qualified healthcare professional.",
+    "signals": [
+      {
+        "bad": "low",
+        "id": "hrv",
+        "metric": "hrv"
+      },
+      {
+        "bad": "high",
+        "id": "resting_heart_rate",
+        "metric": "resting_heart_rate"
+      },
+      {
+        "bad": "high",
+        "id": "respiratory_rate",
+        "metric": "respiratory_rate"
+      },
+      {
+        "bad": "band",
+        "id": "wrist_temperature",
+        "metric": "wrist_temperature"
+      },
+      {
+        "bad": "low",
+        "id": "sleep_duration",
+        "metric": "sleep_duration"
+      },
+      {
+        "bad": "low",
+        "id": "steps",
+        "metric": "steps"
+      },
+      {
+        "bad": "band",
+        "id": "weight",
+        "metric": "weight"
+      },
+      {
+        "bad": "high",
+        "id": "training_load",
+        "metric": "training_load"
+      }
+    ],
+    "significant_z": 3.0,
+    "states": {
+      "MILD_DEVIATION": "One or more signals are somewhat outside your recent normal range.",
+      "MULTI_SIGNAL_DEVIATION": "Several health signals are outside your recent normal range.",
+      "NORMAL": "Your signals are within your recent normal range.",
+      "SIGNIFICANT_DEVIATION": "A signal is well outside your recent normal range."
+    }
+  },
+  "baseline": {
+    "mad_scale": 1.4826,
+    "min_points": {
+      "14": 7,
+      "28": 14,
+      "60": 21,
+      "7": 5,
+      "90": 30
+    },
+    "percentiles": [
+      10,
+      90
+    ],
+    "windows": [
+      7,
+      14,
+      28,
+      60,
+      90
+    ]
+  },
+  "classifications": {
+    "EXPERIMENTAL": {
+      "about": "An estimate whose accuracy has not been established.",
+      "label": "Experimental",
+      "validity_cap": 0.5
+    },
+    "MEASURED": {
+      "about": "A reading recorded directly by a sensor or entered by you.",
+      "label": "Measured",
+      "validity_cap": 1.0
+    },
+    "ML_PREDICTED": {
+      "about": "A prediction from a small model trained only on your own data. Forecasts can be wrong.",
+      "label": "Forecast",
+      "validity_cap": 0.7
+    },
+    "PERSONALIZED_STATISTICAL": {
+      "about": "A statistical comparison with your own recent history. Weights and thresholds are Ayuvo design choices.",
+      "label": "Compared with your history",
+      "validity_cap": 0.9
+    },
+    "PROVIDER_DERIVED": {
+      "about": "Calculated by Apple Health, Health Connect or your wearable's own software. Ayuvo shows it as reported.",
+      "label": "From your device",
+      "validity_cap": 0.95
+    },
+    "RESEARCH_ONLY": {
+      "about": "A research feature. It is not a measurement and is never used in scores.",
+      "label": "Research only",
+      "validity_cap": 0.3
+    },
+    "SCIENTIFIC_DERIVED": {
+      "about": "Calculated by Ayuvo with a published, documented method.",
+      "label": "Calculated",
+      "validity_cap": 0.95
+    }
+  },
+  "confidence": {
+    "bands": [
+      {
+        "id": "high",
+        "min": 0.75
+      },
+      {
+        "id": "medium",
+        "min": 0.5
+      },
+      {
+        "id": "low",
+        "min": 0.0
+      }
+    ],
+    "context_weight": {
+      "camera": 0.6,
+      "derived": 0.85,
+      "manual": 1.0,
+      "provider": 1.0,
+      "wearable": 1.0
+    },
+    "low_confidence_below": 0.5,
+    "source_change_factor": 0.8,
+    "target_coverage": 0.7,
+    "target_n": 28
+  },
+  "config_version": 1,
+  "correlation": {
+    "algorithm_id": "ayuvo.correlation",
+    "algorithm_version": 1,
+    "direction_words": {
+      "higher": "higher",
+      "lower": "lower"
+    },
+    "lag_words": {
+      "0": "on the same day",
+      "1": "the next day",
+      "2": "two days later",
+      "3": "three days later"
+    },
+    "lags": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "min_abs_rho": 0.3,
+    "min_n": 21,
+    "pairs": [
+      {
+        "exposure": "sleep_duration",
+        "exposure_label": "Longer sleep",
+        "id": "sleep_hrv",
+        "outcome": "hrv",
+        "outcome_label": "HRV"
+      },
+      {
+        "exposure": "sleep_duration",
+        "exposure_label": "Longer sleep",
+        "id": "sleep_rhr",
+        "outcome": "resting_heart_rate",
+        "outcome_label": "resting heart rate"
+      },
+      {
+        "exposure": "training_load",
+        "exposure_label": "Higher training-load",
+        "id": "load_hrv",
+        "outcome": "hrv",
+        "outcome_label": "HRV"
+      },
+      {
+        "exposure": "training_load",
+        "exposure_label": "Higher training-load",
+        "id": "load_rhr",
+        "outcome": "resting_heart_rate",
+        "outcome_label": "resting heart rate"
+      },
+      {
+        "exposure": "bedtime",
+        "exposure_label": "Later bedtime",
+        "id": "bedtime_sleep",
+        "outcome": "sleep_duration",
+        "outcome_label": "sleep duration"
+      },
+      {
+        "exposure": "energy_intake",
+        "exposure_label": "Higher calorie-intake",
+        "id": "energy_weight",
+        "outcome": "weight",
+        "outcome_label": "weight"
+      },
+      {
+        "exposure": "training_load",
+        "exposure_label": "Higher training-load",
+        "id": "load_hrr",
+        "outcome": "hrr1",
+        "outcome_label": "heart rate recovery"
+      }
+    ],
+    "q_level": 0.1,
+    "spearman_se_factor": 1.06,
+    "template": "{exposure} days were associated with {direction} {outcome} {lag} in your recent data ({n} days).",
+    "window_days": 120,
+    "z_975": 1.959964
+  },
+  "disclaimer": "Ayuvo's analytics describe your own data compared with your own history. They are estimates, not a medical measurement or diagnosis. Talk to a qualified healthcare professional about persistent changes.",
+  "energy": {
+    "algorithm_id": "ayuvo.energy",
+    "algorithm_version": 1,
+    "bmr_min_share": 0.7,
+    "confidence": {
+      "predicted_resting": 0.6,
+      "provider_active": 1.0,
+      "provider_resting": 0.8
+    },
+    "mifflin": {
+      "female": -161,
+      "male": 5,
+      "other": -78
+    },
+    "tef_share": 0.1
+  },
+  "fitness": {
+    "algorithm_id": "ayuvo.fitness.vo2max_trend",
+    "algorithm_version": 1,
+    "change_min_gap_days": 60,
+    "kind_classification": {
+      "gps": "SCIENTIFIC_DERIVED",
+      "provider": "PROVIDER_DERIVED",
+      "uth": "EXPERIMENTAL"
+    },
+    "kinds": [
+      "provider",
+      "gps",
+      "uth"
+    ],
+    "slope_min_points": 4,
+    "window_days": 365
+  },
+  "forecast": {
+    "algorithm_id": "ayuvo.forecast",
+    "baseline_median_days": 28,
+    "feature_schema_version": 1,
+    "features": [
+      "hrv",
+      "hrv_z",
+      "resting_heart_rate",
+      "resting_heart_rate_z",
+      "sleep_duration",
+      "sleep_efficiency",
+      "sleep_midpoint",
+      "load_acute",
+      "load_chronic",
+      "load_ratio",
+      "steps",
+      "active_energy",
+      "workout_minutes",
+      "energy_intake",
+      "protein_g",
+      "respiratory_rate",
+      "wrist_temperature",
+      "weight"
+    ],
+    "history_days": 365,
+    "interval_percentile": 80,
+    "lambdas": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "min_improvement": 0.05,
+    "min_rows": 90,
+    "min_test_rows": 14,
+    "model_version": 1,
+    "split": [
+      0.7,
+      0.15,
+      0.15
+    ],
+    "targets": [
+      "hrv",
+      "resting_heart_rate"
+    ]
+  },
+  "format": "ayuvo-analytics-config",
+  "hrr": {
+    "confidence_dense": 0.8,
+    "confidence_sparse": 0.4,
+    "dense_max_gap_s": 10,
+    "tolerance_s": 30
+  },
+  "hrv": {
+    "baseline_window_days": 28,
+    "rr": {
+      "max_artifact_fraction": 0.05,
+      "max_ms": 2000,
+      "max_rel_deviation": 0.2,
+      "median_window": 5,
+      "min_beats": 30,
+      "min_ms": 300
+    },
+    "stability_days": 7,
+    "stability_min_days": 5
+  },
+  "load": {
+    "acute_days": 7,
+    "chronic_days": 28,
+    "effort_divisor": 5.0,
+    "guards": {
+      "high_min_vs_median": 1.1,
+      "increasing_min_ratio": 1.2,
+      "reduced_max_vs_median": 0.8,
+      "spike_min_ratio": 1.3
+    },
+    "max_history_days": 120,
+    "method_min_coverage": 0.7,
+    "min_history_days": 42,
+    "percentiles": {
+      "high_above": 90,
+      "increasing_ratio_above": 80,
+      "reduced_below": 10,
+      "spike_ratio_above": 95
+    },
+    "state_min_days": 28,
+    "state_window_days": 90,
+    "states": {
+      "LOAD_HIGH": "High",
+      "LOAD_INCREASING": "Increasing",
+      "LOAD_REDUCED": "Reduced",
+      "LOAD_SPIKE": "Sharp increase",
+      "LOAD_STABLE": "Stable"
+    }
+  },
+  "met": {
+    "algorithm_id": "ayuvo.met.intensity",
+    "algorithm_version": 1,
+    "bands": {
+      "moderate_min": 3.0,
+      "vigorous_min": 6.0
+    },
+    "bands_reference": "who_2020",
+    "source": "2024 Adult Compendium of Physical Activities, https://pacompendium.com (fetched 2026-10-07)",
+    "table": {
+      "badminton": {
+        "code": "15030",
+        "description": "Badminton, social singles and doubles, general",
+        "met": 5.5
+      },
+      "basketball": {
+        "code": "15055",
+        "description": "Basketball, general",
+        "met": 7.5
+      },
+      "boxing": {
+        "code": "15110",
+        "description": "Boxing, punching bag",
+        "met": 5.8
+      },
+      "climbing": {
+        "code": "15533",
+        "description": "Rock or mountain climbing (Taylor Code 060), (formerly code 17120)",
+        "met": 8.0
+      },
+      "cross_country_skiing": {
+        "code": "19090",
+        "description": "Skiing, cross country, 4.0-4.9 mph, moderate speed and effort",
+        "met": 8.5
+      },
+      "cycling": {
+        "code": "01014",
+        "description": "Bicycling, general",
+        "met": 7.0
+      },
+      "dancing": {
+        "code": "03025",
+        "description": "Ethnic or cultural dancing (e.g. Greek, Middle Eastern, hula, salsa, merengue, bamba y plena, flamenco, belly, and swing)",
+        "met": 4.5
+      },
+      "elliptical": {
+        "code": "02048",
+        "description": "Elliptical trainer, moderate effort",
+        "met": 5.0
+      },
+      "golf": {
+        "code": "15265",
+        "description": "Golf, walking, carrying clubs",
+        "met": 4.3
+      },
+      "hiit": {
+        "code": "02040",
+        "description": "Circuit training, including kettlebells, some aerobic movement with minimal rest, general, vigorous intensity",
+        "met": 7.5
+      },
+      "hiking": {
+        "code": "17080",
+        "description": "Hiking, cross country (Taylor Code 040)",
+        "met": 6.0
+      },
+      "jump_rope": {
+        "code": "02068",
+        "description": "Rope skipping exercise, general",
+        "met": 11.0
+      },
+      "martial_arts": {
+        "code": "15430",
+        "description": "Martial Arts, different types, moderate pace (e.g., judo, jujitsu, karate, kick boxing, tae kwon do, tai-bo, Muay Thai boxing)",
+        "met": 10.3
+      },
+      "mind_body": {
+        "code": "02101",
+        "description": "Stretching, mild",
+        "met": 2.3
+      },
+      "pilates": {
+        "code": "02105",
+        "description": "Pilates, general",
+        "met": 2.8
+      },
+      "rowing_machine": {
+        "code": "02071",
+        "description": "Rowing, stationary ergometer, general, <100 watts, moderate effort",
+        "met": 5.0
+      },
+      "running": {
+        "code": "12145",
+        "description": "Running, self-selected pace",
+        "met": 10.5
+      },
+      "skating": {
+        "code": "19030",
+        "description": "Skating, ice, general (Taylor Code 360)",
+        "met": 7.0
+      },
+      "skiing_downhill": {
+        "code": "19160",
+        "description": "Skiing, downhill, alpine or snowboarding, moderate effort",
+        "met": 6.3
+      },
+      "soccer": {
+        "code": "15610",
+        "description": "Soccer, casual, general (Taylor Code 540)",
+        "met": 7.0
+      },
+      "stair_climbing": {
+        "code": "02065",
+        "description": "Stair treadmill ergometer, general",
+        "met": 9.3
+      },
+      "stationary_cycling": {
+        "code": "01200",
+        "description": "Bicycling, stationary, general",
+        "met": 6.8
+      },
+      "strength_training": {
+        "code": "02054",
+        "description": "Resistance (weight) training, multiple exercises, 8-15 reps at varied resistance",
+        "met": 3.5
+      },
+      "swimming": {
+        "code": "18310",
+        "description": "Swimming, leisurely, not lap swimming, general",
+        "met": 6.0
+      },
+      "table_tennis": {
+        "code": "15660",
+        "description": "Table tennis, ping pong (Taylor Code 410)",
+        "met": 4.0
+      },
+      "tennis": {
+        "code": "15675",
+        "description": "Tennis, general, moderate effort",
+        "met": 6.8
+      },
+      "volleyball": {
+        "code": "15720",
+        "description": "Volleyball, non-competitive, 6 – 9 member team, general",
+        "met": 3.0
+      },
+      "walking": {
+        "code": "17190",
+        "description": "Walking, 2.8 to 3.4 mph, level, moderate pace, firm surface",
+        "met": 3.8
+      },
+      "yoga": {
+        "code": "02150",
+        "description": "Yoga, Hatha",
+        "met": 2.3
+      }
+    },
+    "values_reference": "herrmann_2024",
+    "who_weekly_moderate_equivalent_min": 150,
+    "window_days": 7
+  },
+  "metrics": {
+    "active_energy": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 0,
+      "direction": "higher_better",
+      "label": "Active energy",
+      "spread_floor": 30.0,
+      "trend_stable_pct_per_week": 2.0,
+      "unit": "kcal"
+    },
+    "blood_oxygen": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 0,
+      "direction": "band",
+      "label": "Blood oxygen",
+      "spread_floor": 0.5,
+      "trend_stable_pct_per_week": 0.3,
+      "unit": "%"
+    },
+    "hrr1": {
+      "classification": "SCIENTIFIC_DERIVED",
+      "decimals": 0,
+      "direction": "higher_better",
+      "label": "Heart rate recovery (1 min)",
+      "spread_floor": 2.0,
+      "trend_stable_pct_per_week": 1.0,
+      "unit": "bpm"
+    },
+    "hrv": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 0,
+      "direction": "higher_better",
+      "label": "Heart rate variability",
+      "spread_floor": 3.0,
+      "trend_stable_pct_per_week": 1.5,
+      "unit": "ms"
+    },
+    "respiratory_rate": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 1,
+      "direction": "band",
+      "label": "Respiratory rate",
+      "spread_floor": 0.3,
+      "trend_stable_pct_per_week": 1.0,
+      "unit": "br/min"
+    },
+    "resting_heart_rate": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 0,
+      "direction": "lower_better",
+      "label": "Resting heart rate",
+      "spread_floor": 1.0,
+      "trend_stable_pct_per_week": 0.5,
+      "unit": "bpm"
+    },
+    "sleep_duration": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 0,
+      "direction": "higher_better",
+      "label": "Sleep duration",
+      "spread_floor": 20.0,
+      "trend_stable_pct_per_week": 1.5,
+      "unit": "min"
+    },
+    "sleep_efficiency": {
+      "classification": "SCIENTIFIC_DERIVED",
+      "decimals": 0,
+      "direction": "higher_better",
+      "label": "Sleep efficiency",
+      "spread_floor": 2.0,
+      "trend_stable_pct_per_week": 0.5,
+      "unit": "%"
+    },
+    "steps": {
+      "classification": "MEASURED",
+      "decimals": 0,
+      "direction": "higher_better",
+      "label": "Steps",
+      "spread_floor": 500.0,
+      "trend_stable_pct_per_week": 2.0,
+      "unit": "steps"
+    },
+    "training_load": {
+      "classification": "SCIENTIFIC_DERIVED",
+      "decimals": 0,
+      "direction": "band",
+      "label": "Training load",
+      "spread_floor": 10.0,
+      "trend_stable_pct_per_week": 3.0,
+      "unit": "AU"
+    },
+    "vo2_max": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 1,
+      "direction": "higher_better",
+      "label": "VO2 max",
+      "spread_floor": 0.5,
+      "trend_stable_pct_per_week": 0.25,
+      "unit": "mL/kg/min"
+    },
+    "weight": {
+      "classification": "MEASURED",
+      "decimals": 1,
+      "direction": "band",
+      "label": "Weight",
+      "spread_floor": 0.3,
+      "trend_stable_pct_per_week": 0.25,
+      "unit": "kg"
+    },
+    "wrist_temperature": {
+      "classification": "PROVIDER_DERIVED",
+      "decimals": 2,
+      "direction": "band",
+      "label": "Sleeping temperature",
+      "spread_floor": 0.1,
+      "trend_stable_pct_per_week": 100.0,
+      "unit": "°C"
+    }
+  },
+  "recovery": {
+    "algorithm_id": "ayuvo.recovery",
+    "algorithm_version": 2,
+    "bands": [
+      {
+        "id": "good",
+        "label": "Good Recovery",
+        "min": 67,
+        "recommendation": "Normal training"
+      },
+      {
+        "id": "moderate",
+        "label": "Moderate",
+        "min": 34,
+        "recommendation": "Consider lighter training"
+      },
+      {
+        "id": "low",
+        "label": "Low",
+        "min": 0,
+        "recommendation": "Recovery-focused day"
+      }
+    ],
+    "baseline_window_days": 60,
+    "components": [
+      {
+        "id": "hrv",
+        "metric": "hrv",
+        "mode": "higher",
+        "weight": 35,
+        "why": "HRV is the most responsive overnight marker of how your body is coping, when compared with your own baseline (Plews 2013, Buchheit 2014)."
+      },
+      {
+        "id": "resting_heart_rate",
+        "metric": "resting_heart_rate",
+        "mode": "lower",
+        "weight": 25,
+        "why": "A resting heart rate above your usual level often accompanies short sleep, heavy training or feeling unwell, so it gets the second-largest weight."
+      },
+      {
+        "id": "sleep",
+        "metric": "sleep_duration",
+        "mode": "sleep",
+        "parts": {
+          "duration": 0.5,
+          "efficiency": 0.25,
+          "regularity": 0.25
+        },
+        "weight": 25,
+        "why": "Sleep duration, efficiency and timing are the best-measured sleep signals on consumer devices."
+      },
+      {
+        "id": "respiratory_rate",
+        "metric": "respiratory_rate",
+        "mode": "band",
+        "tolerance_z": 1.0,
+        "weight": 5,
+        "why": "Overnight breathing rate is very stable for most people, so only a clear change in either direction counts."
+      },
+      {
+        "id": "wrist_temperature",
+        "metric": "wrist_temperature",
+        "mode": "band",
+        "tolerance_z": 1.0,
+        "weight": 5,
+        "why": "Sleeping temperature only counts when it moves clearly outside your usual range."
+      },
+      {
+        "id": "blood_oxygen",
+        "metric": "blood_oxygen",
+        "mode": "drop_only",
+        "tolerance_z": 1.0,
+        "weight": 5,
+        "why": "Only a drop below your usual overnight level counts; higher readings never add points."
+      }
+    ],
+    "drivers": {
+      "blood_oxygen": {
+        "negative": "Blood oxygen below your usual range",
+        "neutral": "Blood oxygen in your usual range",
+        "positive": "Blood oxygen in your usual range"
+      },
+      "hrv": {
+        "negative": "HRV below your baseline",
+        "neutral": "HRV close to your baseline",
+        "positive": "HRV above your baseline"
+      },
+      "respiratory_rate": {
+        "negative": "Breathing rate outside your usual range",
+        "neutral": "Breathing rate in your usual range",
+        "positive": "Breathing rate in your usual range"
+      },
+      "resting_heart_rate": {
+        "negative": "Resting heart rate above your baseline",
+        "neutral": "Resting heart rate close to your baseline",
+        "positive": "Resting heart rate below your baseline"
+      },
+      "sleep": {
+        "negative": "Sleep was short or unsettled",
+        "neutral": "Sleep was close to your usual",
+        "neutral_short": "Sleep was shorter than your usual need",
+        "positive": "Sleep was adequate",
+        "positive_short": "Sleep timing and efficiency were good, but sleep was shorter than your usual need"
+      },
+      "training_load": {
+        "negative": "Recent training load elevated"
+      },
+      "wrist_temperature": {
+        "negative": "Sleeping temperature outside your usual range",
+        "neutral": "Sleeping temperature in your usual range",
+        "positive": "Sleeping temperature in your usual range"
+      }
+    },
+    "heart_components": [
+      "hrv",
+      "resting_heart_rate"
+    ],
+    "impact_neutral": 0.5,
+    "load_modifier": {
+      "LOAD_HIGH": -3,
+      "LOAD_SPIKE": -6
+    },
+    "min_points": 7,
+    "sleep": {
+      "duration_zero_deficit_min": 180,
+      "history_target_nights": 28,
+      "regularity_min_nights": 5,
+      "regularity_window_days": 14,
+      "regularity_zero_at_min": 120,
+      "short_note_deficit_min": 30
+    },
+    "subscore_center": 50,
+    "subscore_slope": 20,
+    "summary": {
+      "lead_negative": "Main signals pulling the score down: {items}.",
+      "lead_positive": "Signals supporting the score: {items}.",
+      "none": "All signals are close to your usual levels."
+    },
+    "warnings": {
+      "camera": "Some values came from a finger camera scan, which is less certain than a wearable.",
+      "missing": "Some signals were not available, so the score uses fewer inputs.",
+      "overnight_fallback": "Some values came from daily totals because no reading was found during sleep.",
+      "source_changed": "A data source changed recently, so the comparison with your baseline is less certain."
+    },
+    "weights_version": 1
+  },
+  "references": {
+    "abramowitz_stegun": {
+      "citation": "Abramowitz M, Stegun IA, eds. Handbook of Mathematical Functions with Formulas, Graphs, and Mathematical Tables. National Bureau of Standards Applied Mathematics Series 55. Washington, DC: US Government Printing Office; 1964 (Dover reprint 1965). Formula 7.1.26, p. 299.",
+      "doi": null,
+      "limitations": "Valid for x >= 0; use erf(-x) = -erf(x) for negative arguments; normal CDF Phi(z) = 0.5(1 + erf(z/sqrt2)). Absolute (not relative) error, so tail probabilities far from 0 lose relative precision. No DOI; NIST DLMF (https://dlmf.nist.gov/) is the official successor. Page number from standard citation.",
+      "pmid": null,
+      "supports": "Formula 7.1.26 gives erf(x) ~ 1 - (a1 t + a2 t^2 + a3 t^3 + a4 t^4 + a5 t^5) e^(-x^2), t = 1/(1+px), p = 0.3275911, a1..a5 = 0.254829592, -0.284496736, 1.421413741, -1.453152027, 1.061405429, with |error| <= 1.5e-7 for x >= 0 (due to Hastings 1955).",
+      "url": "https://dlmf.nist.gov/7",
+      "use_supported": true,
+      "verified": true,
+      "year": 1964
+    },
+    "apple_heartbeat": {
+      "citation": "Apple Inc. HKHeartbeatSeriesSample and HKHeartbeatSeriesQuery (init(heartbeatSeries:dataHandler:)). Apple Developer Documentation, HealthKit.",
+      "doi": null,
+      "limitations": "Apple gives beat timestamps, not RR intervals: RR must be computed as successive differences and must not span a beat with precededByGap = true. Series are recorded mainly during Apple Watch Breathe/background HRV readings (~1 min, PPG-derived), so availability is sparse. A HKHeartbeatSeriesQueryDescriptor async API also exists.",
+      "pmid": null,
+      "supports": "HKHeartbeatSeriesSample is 'a sample that represents a series of heartbeats', read via HKHeartbeatSeriesQuery. The query's dataHandler is called once per heartbeat with timeSinceSeriesStart (time of the heartbeat measured from the series start date; positive TimeInterval in seconds), precededByGap (Bool: heartbeat immediately preceded by a gap; one or more beats may be missing), done, and error. Fields confirmed. URLs: https://developer.apple.com/documentation/healthkit/hkheartbeatseriessample ; https://developer.apple.com/documentation/healthkit/hkheartbeatseriesquery ; https://developer.apple.com/documentation/healthkit/hkheartbeatseriesquery/init(heartbeatseries:datahandler:)",
+      "url": "https://developer.apple.com/documentation/healthkit/hkheartbeatseriesquery",
+      "use_supported": true,
+      "verified": true,
+      "year": null
+    },
+    "apple_hrv_sdnn": {
+      "citation": "Apple Inc. HKQuantityTypeIdentifier.heartRateVariabilitySDNN. Apple Developer Documentation, HealthKit.",
+      "doi": null,
+      "limitations": "Apple Watch SDNN comes from short (~1 min) PPG recordings, so it is not comparable to 24-h or 5-min ECG SDNN norms (Task Force) nor to RMSSD from Health Connect.",
+      "pmid": null,
+      "supports": "Apple states: 'A quantity sample type that measures the standard deviation of heartbeat intervals... While there are multiple ways of computing HRV, HealthKit uses SDNN heart rate variability, which uses the standard deviation of the inter-beat (RR) intervals between normal heartbeats (typically measured in milliseconds). The system automatically records samples on Apple Watch.'",
+      "url": "https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/heartratevariabilitysdnn",
+      "use_supported": true,
+      "verified": true,
+      "year": null
+    },
+    "banister_1991": {
+      "citation": "Banister EW. Modeling elite athletic performance. In: MacDougall JD, Wenger HA, Green HJ, eds. Physiological Testing of the High-Performance Athlete. 2nd ed. Champaign, IL: Human Kinetics; 1991:403-424.",
+      "doi": null,
+      "limitations": "IMPORTANT: the female weighting is 0.86e^(1.67x), not 0.64e^(1.67x) - correct the app/docs if they use 0.64 for women. Chapter not indexed (no DOI/PMID); bibliographic details and coefficients confirmed via secondary sources, not the book itself. Weighting derived from lactate-HR relationships in small samples; assumes valid HRrest/HRmax.",
+      "pmid": null,
+      "supports": "Book chapter presenting the impulse-response fitness/fatigue model and the HR-reserve-weighted TRIMP = duration x dHR x y, with y = 0.64e^(1.92 dHR) for men and 0.86e^(1.67 dHR) for women.",
+      "url": null,
+      "use_supported": true,
+      "verified": true,
+      "year": 1991
+    },
+    "bh_1995": {
+      "citation": "Benjamini Y, Hochberg Y. Controlling the false discovery rate: a practical and powerful approach to multiple testing. J R Stat Soc Series B Stat Methodol. 1995;57(1):289-300.",
+      "doi": "10.1111/j.2517-6161.1995.tb02031.x",
+      "limitations": "FDR control proven for independent (later: positively dependent) tests; correlated health metrics may need Benjamini-Yekutieli; p-values must be valid in the first place. Full title includes the subtitle.",
+      "pmid": null,
+      "supports": "Defines the false discovery rate and the step-up procedure (sort p-values; reject p(i) <= (i/m)q) that controls FDR for independent tests.",
+      "url": "https://doi.org/10.1111/j.2517-6161.1995.tb02031.x",
+      "use_supported": true,
+      "verified": true,
+      "year": 1995
+    },
+    "bland_altman_1986": {
+      "citation": "Bland JM, Altman DG. Statistical methods for assessing agreement between two methods of clinical measurement. Lancet. 1986;1(8476):307-310.",
+      "doi": "10.1016/S0140-6736(86)90837-8",
+      "limitations": "Assumes differences are roughly normal and do not vary with magnitude (otherwise log-transform or regression-based LoA); single measurement per subject; Lancet volume 327 in Crossref = 1986 vol 1 issue 8476.",
+      "pmid": "2868172",
+      "supports": "Argues correlation is inappropriate for method agreement and introduces the difference-vs-mean plot with 95% limits of agreement (mean difference +/- 1.96 SD of differences).",
+      "url": "https://doi.org/10.1016/S0140-6736(86)90837-8",
+      "use_supported": true,
+      "verified": true,
+      "year": 1986
+    },
+    "buchheit_2014": {
+      "citation": "Buchheit M. Monitoring training status with HR measures: do all roads lead to Rome? Front Physiol. 2014;5:73.",
+      "doi": "10.3389/fphys.2014.00073",
+      "limitations": "Narrative review focused on athletes; SWC values cited are from ECG/chest-strap protocols with standardized conditions; HR measures do not capture all aspects of fatigue.",
+      "pmid": "24578692",
+      "supports": "Review arguing that resting vagal HRV indices (from short, near-daily recordings), submaximal exercise HR and HR recovery are useful monitoring tools, and that individual changes should be interpreted against the measure's typical error and smallest worthwhile/important change in the training context.",
+      "url": "https://doi.org/10.3389/fphys.2014.00073",
+      "use_supported": true,
+      "verified": true,
+      "year": 2014
+    },
+    "cole_1999": {
+      "citation": "Cole CR, Blackstone EH, Pashkow FJ, Snader CE, Lauer MS. Heart-rate recovery immediately after exercise as a predictor of mortality. N Engl J Med. 1999;341(18):1351-1357.",
+      "doi": "10.1056/NEJM199910283411804",
+      "limitations": "Clinical treadmill protocol with standardized cool-down; the 12-bpm cutoff is protocol-specific (passive recovery uses different cutoffs); referral population; wearable workout HR data are not equivalent to a graded max test.",
+      "pmid": "10536127",
+      "supports": "In 2,428 adults referred for symptom-limited exercise testing, HR recovery defined as peak HR minus HR 1 min after exercise cessation (abnormal <=12 bpm with a cool-down walk) independently predicted 6-year mortality.",
+      "url": "https://doi.org/10.1056/NEJM199910283411804",
+      "use_supported": true,
+      "verified": true,
+      "year": 1999
+    },
+    "fieller_1957": {
+      "citation": "Fieller EC, Hartley HO, Pearson ES. Tests for rank correlation coefficients. I. Biometrika. 1957;44(3-4):470-481.",
+      "doi": "10.1093/biomet/44.3-4.470",
+      "limitations": "Approximation derived for bivariate normal samples of moderate size (n roughly >=10); less accurate for small n or very high correlations; ties and autocorrelation not addressed.",
+      "pmid": null,
+      "supports": "Simulation study of Fisher z-transformed rank correlations, proposing approximate variance 1.060/(n-3) for z of Spearman's rho (and 0.437/(n-4) for Kendall's tau).",
+      "url": "https://doi.org/10.1093/biomet/44.3-4.470",
+      "use_supported": true,
+      "verified": true,
+      "year": 1957
+    },
+    "foster_2001": {
+      "citation": "Foster C, Florhaug JA, Franklin J, Gottschall L, Hrovatin LA, Parker S, Doleshal P, Dodge C. A new approach to monitoring exercise training. J Strength Cond Res. 2001;15(1):109-115.",
+      "doi": "10.1519/00124278-200102000-00019",
+      "limitations": "Small samples; session-RPE produced systematically higher absolute scores than the HR method; RPE should be collected ~30 min post-session. DOI is registered in Crossref but not listed in PubMed.",
+      "pmid": "11708692",
+      "supports": "Validates the session-RPE method (CR-10 session RPE multiplied by session duration in minutes) against an HR-based summated-zone method during cycling and basketball.",
+      "url": "https://doi.org/10.1519/00124278-200102000-00019",
+      "use_supported": true,
+      "verified": true,
+      "year": 2001
+    },
+    "hall_2011": {
+      "citation": "Hall KD, Sacks G, Chandramohan D, Chow CC, Wang YC, Gortmaker SL, Swinburn BA. Quantification of the effect of energy imbalance on bodyweight. Lancet. 2011;378(9793):826-837.",
+      "doi": "10.1016/S0140-6736(11)60812-X",
+      "limitations": "Model calibrated on adult population data; individual variation (adherence, water shifts, adaptive thermogenesis) remains; short-term scale changes are dominated by water/glycogen.",
+      "pmid": "21872751",
+      "supports": "Presents a validated dynamic model showing that the energy content of weight change depends on body composition and changes over time, and that the static ~3500 kcal/lb (~7700 kcal/kg) rule overestimates long-term weight change because energy expenditure adapts; offers the approximation of ~10 kcal/day per lb (~22 kcal/day per kg) at steady state with half the change reached in ~1 year.",
+      "url": "https://doi.org/10.1016/S0140-6736(11)60812-X",
+      "use_supported": true,
+      "verified": true,
+      "year": 2011
+    },
+    "hc_hrv": {
+      "citation": "Android Developers. HeartRateVariabilityRmssdRecord; Health Connect data types. Jetpack Health Connect client documentation.",
+      "doi": null,
+      "limitations": "Absence of an RR record confirmed from the data-types guide (current as of fetch, Oct 2026); the record class page itself could not be fully read via fetch. RMSSD values are computed by the writing app/device with undisclosed methods and windows, so they are not comparable to Apple SDNN. Future Health Connect versions could add types.",
+      "pmid": null,
+      "supports": "Health Connect provides HeartRateVariabilityRmssdRecord (instantaneous RMSSD in milliseconds at a time point). The Health Connect data-types list for vitals contains HeartRateRecord (BPM series), HeartRateVariabilityRmssdRecord and RestingHeartRateRecord, with no RR/inter-beat-interval or heartbeat-series record type. URLs: https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/HeartRateVariabilityRmssdRecord ; https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types",
+      "url": "https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types",
+      "use_supported": true,
+      "verified": true,
+      "year": null
+    },
+    "herrmann_2024": {
+      "citation": "Herrmann SD, Willis EA, Ainsworth BE, Barreira TV, Hastert M, Kracht CL, et al. 2024 Adult Compendium of Physical Activities: a third update of the energy costs of human activities. J Sport Health Sci. 2024;13(1):6-12.",
+      "doi": "10.1016/j.jshs.2023.10.010",
+      "limitations": "Supports MET values per activity. The intensity bands (light <3, moderate 3-5.9, vigorous >=6) are conventional and are better cited to WHO 2020/US guidelines than to this paper. MET values are population averages, not individual energy cost; 1 MET convention overestimates RMR for many adults.",
+      "pmid": "38242596",
+      "supports": "Updated compendium of MET values for 1,114 activities with an accompanying online database; METs are standardized (1 MET = 3.5 mL O2/kg/min) estimates of energy cost.",
+      "url": "https://doi.org/10.1016/j.jshs.2023.10.010",
+      "use_supported": true,
+      "verified": true,
+      "year": 2024
+    },
+    "hoerl_1970": {
+      "citation": "Hoerl AE, Kennard RW. Ridge regression: biased estimation for nonorthogonal problems. Technometrics. 1970;12(1):55-67.",
+      "doi": "10.1080/00401706.1970.10488634",
+      "limitations": "Choice of penalty k is not prescribed (ridge trace is heuristic; cross-validation is modern practice); predictors should be standardized; coefficients are biased so p-values/CIs from OLS do not apply.",
+      "pmid": null,
+      "supports": "Introduces ridge regression, adding k*I to X'X to obtain biased but lower-MSE coefficient estimates under multicollinearity, with the ridge trace for choosing k.",
+      "url": "https://doi.org/10.1080/00401706.1970.10488634",
+      "use_supported": true,
+      "verified": true,
+      "year": 1970
+    },
+    "impellizzeri_2020": {
+      "citation": "Impellizzeri FM, Tenan MS, Kempton T, Novak A, Coutts AJ. Acute:chronic workload ratio: conceptual issues and fundamental pitfalls. Int J Sports Physiol Perform. 2020;15(6):907-913.",
+      "doi": "10.1123/ijspp.2019-0864",
+      "limitations": "Critical commentary (conceptual/statistical), not new injury data; directly supports presenting ACWR as descriptive only, never as an injury predictor.",
+      "pmid": "32502973",
+      "supports": "Concludes there is no evidence supporting ACWR use in training-load management or injury-risk reduction; the ratio is statistically flawed, adds noise and creates artifacts, and its causal link to injury is unestablished.",
+      "url": "https://doi.org/10.1123/ijspp.2019-0864",
+      "use_supported": true,
+      "verified": true,
+      "year": 2020
+    },
+    "leys_2013": {
+      "citation": "Leys C, Ley C, Klein O, Bernard P, Licata L. Detecting outliers: do not use standard deviation around the mean, use absolute deviation around the median. J Exp Soc Psychol. 2013;49(4):764-766.",
+      "doi": "10.1016/j.jesp.2013.03.013",
+      "limitations": "Not indexed in PubMed. The 1.4826 constant assumes underlying normality; MAD = 0 when >50% of values are identical (needs a fallback); the paper is a brief methods note.",
+      "pmid": null,
+      "supports": "Recommends median absolute deviation (MAD) scaled by b = 1.4826 (consistency constant under normality) for outlier detection, with a suggested threshold of 2.5 (moderately conservative).",
+      "url": "https://doi.org/10.1016/j.jesp.2013.03.013",
+      "use_supported": true,
+      "verified": true,
+      "year": 2013
+    },
+    "lipponen_2019": {
+      "citation": "Lipponen JA, Tarvainen MP. A robust algorithm for heart rate variability time series artefact correction using novel beat classification. J Med Eng Technol. 2019;43(3):173-181.",
+      "doi": "10.1080/03091902.2019.1640306",
+      "limitations": "Validated mainly on ECG-derived RR series with simulated artifacts; performance on PPG/wearable inter-beat intervals not established; threshold parameters are algorithm-specific.",
+      "pmid": "31314618",
+      "supports": "Presents an algorithm (used in Kubios) that detects ectopic, missed, extra and long/short beats in RR series using successive-difference (dRR) features with time-varying thresholds and corrects them.",
+      "url": "https://doi.org/10.1080/03091902.2019.1640306",
+      "use_supported": true,
+      "verified": true,
+      "year": 2019
+    },
+    "mifflin_1990": {
+      "citation": "Mifflin MD, St Jeor ST, Hill LA, Scott BJ, Daugherty SA, Koh YO. A new predictive equation for resting energy expenditure in healthy individuals. Am J Clin Nutr. 1990;51(2):241-247.",
+      "doi": "10.1093/ajcn/51.2.241",
+      "limitations": "Healthy, mostly white US adults aged 19-78; individual error commonly +/-10%; less accurate at extremes of BMI, in athletes and in some ethnic groups.",
+      "pmid": "2305711",
+      "supports": "Derives the REE equation 10*weight(kg) + 6.25*height(cm) - 5*age(y) + 5 (men) or -161 (women) from indirect calorimetry in 498 healthy adults.",
+      "url": "https://doi.org/10.1093/ajcn/51.2.241",
+      "use_supported": true,
+      "verified": true,
+      "year": 1990
+    },
+    "morton_1990": {
+      "citation": "Morton RH, Fitz-Clarke JR, Banister EW. Modeling human performance in running. J Appl Physiol (1985). 1990;69(3):1171-1177.",
+      "doi": "10.1152/jappl.1990.69.3.1171",
+      "limitations": "Abstract does not state the TRIMP coefficients; the exponential weighting is in the full text/Banister 1991 (cite Banister 1991 for the sex-specific coefficients). Small samples; model parameters are individual-specific.",
+      "pmid": "2246166",
+      "supports": "Describes the two-component (fitness/fatigue) impulse-response model in which a quantified training impulse (TRIMP based on duration and fractional HR reserve, exponentially weighted) predicts performance.",
+      "url": "https://doi.org/10.1152/jappl.1990.69.3.1171",
+      "use_supported": true,
+      "verified": true,
+      "year": 1990
+    },
+    "page_1954": {
+      "citation": "Page ES. Continuous inspection schemes. Biometrika. 1954;41(1-2):100-115.",
+      "doi": "10.1093/biomet/41.1-2.100",
+      "limitations": "Classic CUSUM assumes independent observations and known in-control mean/variance; reference value k and threshold h must be chosen; autocorrelation and missing days raise false alarms.",
+      "pmid": null,
+      "supports": "Introduces cumulative-sum (CUSUM) schemes for detecting a shift in the mean of a process.",
+      "url": "https://doi.org/10.1093/biomet/41.1-2.100",
+      "use_supported": true,
+      "verified": true,
+      "year": 1954
+    },
+    "phillips_2017": {
+      "citation": "Phillips AJK, Clerx WM, O'Brien CS, Sano A, Barger LK, Picard RW, Lockley SW, Klerman EB, Czeisler CA. Irregular sleep/wake patterns are associated with poorer academic performance and delayed circadian and sleep/wake timing. Sci Rep. 2017;7(1):3216.",
+      "doi": "10.1038/s41598-017-03171-4",
+      "limitations": "Small sample of 61 students, sleep diaries; SRI needs multiple consecutive days at fine (e.g., minute/epoch) resolution and is sensitive to missing data; associations are observational.",
+      "pmid": "28607474",
+      "supports": "Introduces the Sleep Regularity Index: the probability that an individual is in the same state (asleep vs awake) at any two time points 24 h apart, rescaled so 100 = perfectly regular and 0 = random (theoretical range -100..100); links lower SRI to later DLMO and poorer grades in 61 undergraduates.",
+      "url": "https://doi.org/10.1038/s41598-017-03171-4",
+      "use_supported": true,
+      "verified": true,
+      "year": 2017
+    },
+    "plews_2013": {
+      "citation": "Plews DJ, Laursen PB, Stanley J, Kilding AE, Buchheit M. Training adaptation and heart rate variability in elite endurance athletes: opening the door to effective monitoring. Sports Med. 2013;43(9):773-781.",
+      "doi": "10.1007/s40279-013-0071-8",
+      "limitations": "Elite endurance athletes and case examples only; the CV/rolling-average approach is proposed, not validated against outcomes in general populations; HRV 'saturation' issues noted.",
+      "pmid": "23852425",
+      "supports": "Review proposing practical HRV monitoring with log-transformed RMSSD (lnRMSSD), rolling (e.g., 7-day) averages and the coefficient of variation of lnRMSSD to interpret individual day-to-day changes; illustrated with elite athlete case data.",
+      "url": "https://doi.org/10.1007/s40279-013-0071-8",
+      "use_supported": true,
+      "verified": true,
+      "year": 2013
+    },
+    "reed_sacco_2016": {
+      "citation": "Reed DL, Sacco WP. Measuring sleep efficiency: what should the denominator be? J Clin Sleep Med. 2016;12(2):263-266.",
+      "doi": "10.5664/jcsm.5498",
+      "limitations": "Supports TST/TIB only as the widely published convention; the paper actually recommends a different denominator (DSE). Diary-oriented commentary, no empirical validation. Docs should note that TIB includes non-sleep time in bed.",
+      "pmid": "26194727",
+      "supports": "Notes that sleep efficiency is commonly defined as TST/TIB x 100, but argues TIB is a flawed denominator and proposes SE = TST / duration of sleep episode (SOL + TST + WASO + time attempting to sleep after final awakening).",
+      "url": "https://doi.org/10.5664/jcsm.5498",
+      "use_supported": true,
+      "verified": true,
+      "year": 2016
+    },
+    "sen_1968": {
+      "citation": "Sen PK. Estimates of the regression coefficient based on Kendall's tau. J Am Stat Assoc. 1968;63(324):1379-1389.",
+      "doi": "10.1080/01621459.1968.10480934",
+      "limitations": "Assumes independent observations; autocorrelated daily health series inflate confidence; CI is non-parametric and requires enough pairs.",
+      "pmid": null,
+      "supports": "Extends Theil's estimator to handle ties in x, defining the slope as the median of pairwise slopes and deriving a distribution-free confidence interval from the null distribution of Kendall's tau (rank-based order statistics of the pairwise slopes).",
+      "url": "https://doi.org/10.1080/01621459.1968.10480934",
+      "use_supported": true,
+      "verified": true,
+      "year": 1968
+    },
+    "shaffer_2017": {
+      "citation": "Shaffer F, Ginsberg JP. An overview of heart rate variability metrics and norms. Front Public Health. 2017;5:258.",
+      "doi": "10.3389/fpubh.2017.00258",
+      "limitations": "Narrative review, not primary data; norms are from heterogeneous ECG studies; article number 258 (no page range).",
+      "pmid": "29034226",
+      "supports": "Narrative review defining time-, frequency- and nonlinear HRV metrics (incl. SDNN, RMSSD), recording lengths (24 h, short-term ~5 min, ultra-short <5 min) and published norms.",
+      "url": "https://doi.org/10.3389/fpubh.2017.00258",
+      "use_supported": true,
+      "verified": true,
+      "year": 2017
+    },
+    "shetler_2001": {
+      "citation": "Shetler K, Marcus R, Froelicher VF, Vora S, Kalisetti D, Prakash M, Do D, Myers J. Heart rate recovery: validation and methodologic issues. J Am Coll Cardiol. 2001;38(7):1980-1987.",
+      "doi": "10.1016/S0735-1097(01)01652-7",
+      "limitations": "DOI CORRECTION: the correct DOI is 10.1016/S0735-1097(01)01652-7 (10.1016/S0735-1097(01)01671-0 belongs to an unrelated cannabinoid paper). Male veterans with chest pain only; supine recovery protocol; no diagnostic value for angiographic disease.",
+      "pmid": "11738304",
+      "supports": "In 2,193 male veterans, HR recovery at 2 min after exercise outperformed other time points for predicting death (drop <22 bpm, HR 2.6); concludes HR at 1 or 2 min of recovery is a validated prognostic measure.",
+      "url": "https://doi.org/10.1016/S0735-1097(01)01652-7",
+      "use_supported": true,
+      "verified": true,
+      "year": 2001
+    },
+    "tanaka_2001": {
+      "citation": "Tanaka H, Monahan KD, Seals DR. Age-predicted maximal heart rate revisited. J Am Coll Cardiol. 2001;37(1):153-156.",
+      "doi": "10.1016/S0735-1097(00)01054-8",
+      "limitations": "Group-level equation; individual SD around ~10 bpm; healthy, non-medicated adults (beta-blockers etc. invalidate it).",
+      "pmid": "11153730",
+      "supports": "Meta-analysis (351 studies, 18,712 subjects) plus laboratory cross-validation (n=514) yielding HRmax = 208 - 0.7 x age in healthy adults, independent of sex and activity status.",
+      "url": "https://doi.org/10.1016/S0735-1097(00)01054-8",
+      "use_supported": true,
+      "verified": true,
+      "year": 2001
+    },
+    "task_force_1996": {
+      "citation": "Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology. Heart rate variability: standards of measurement, physiological interpretation and clinical use. Circulation. 1996;93(5):1043-1065.",
+      "doi": "10.1161/01.CIR.93.5.1043",
+      "limitations": "Written for ECG recordings; SDNN depends strongly on recording length so values from different durations are not comparable; no norms for wearable/PPG data. Crossref lists the corporate author only; PubMed has no DOI field but the DOI resolves.",
+      "pmid": "8598068",
+      "supports": "Standards document defining time-domain HRV measures (SDNN, RMSSD, pNN50 etc.) computed from normal-to-normal (NN) intervals, recommending 5-min short-term and 24-h recordings, and requiring editing of ectopic beats/artifacts before analysis.",
+      "url": "https://doi.org/10.1161/01.CIR.93.5.1043",
+      "use_supported": true,
+      "verified": true,
+      "year": 1996
+    },
+    "theil_1950": {
+      "citation": "Theil H. A rank-invariant method of linear and polynomial regression analysis. I, II, III. Proc Kon Ned Akad Wetensch (Indagationes Mathematicae). 1950;53:386-392, 521-525, 1397-1412. Reprinted in: Raj B, Koerts J, eds. Henri Theil's Contributions to Economics and Econometrics. Dordrecht: Springer; 1992:345-381.",
+      "doi": "10.1007/978-94-011-2546-8_20",
+      "limitations": "Original 1950 KNAW papers have no DOI; the DOI is for the 1992 Springer reprint (confirmed in Crossref, pp. 345-381). Part I page range from standard citations, not checked against the original volume. Original form assumes distinct x values (Sen 1968 handles ties).",
+      "pmid": null,
+      "supports": "Original proposal of a rank-based (median of pairwise slopes) estimator for the linear regression slope, robust to outliers.",
+      "url": "https://doi.org/10.1007/978-94-011-2546-8_20",
+      "use_supported": true,
+      "verified": true,
+      "year": 1950
+    },
+    "uth_2004": {
+      "citation": "Uth N, Sorensen H, Overgaard K, Pedersen PK. Estimation of VO2max from the ratio between HRmax and HRrest - the Heart Rate Ratio Method. Eur J Appl Physiol. 2004;91(1):111-115.",
+      "doi": "10.1007/s00421-003-0988-y",
+      "limitations": "Only well-trained men aged 21-51; authors state applicability to other groups awaits validation; error roughly doubles with age-predicted HRmax; an erratum was published (Eur J Appl Physiol 2005;93(4):508-509).",
+      "pmid": "14624296",
+      "supports": "Derives VO2max (mL/kg/min) ~ 15.3 x HRmax/HRrest in 46 well-trained men (SEE ~2.7 mL/kg/min with measured HRmax; ~4.7 with age-predicted HRmax).",
+      "url": "https://doi.org/10.1007/s00421-003-0988-y",
+      "use_supported": true,
+      "verified": true,
+      "year": 2004
+    },
+    "watson_2015": {
+      "citation": "Watson NF, Badr MS, Belenky G, Bliwise DL, Buxton OM, Buysse D, et al. Recommended amount of sleep for a healthy adult: a joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society. Sleep. 2015;38(6):843-844. Also published in J Clin Sleep Med. 2015;11(6):591-592 (doi:10.5664/jcsm.4758; PMID 25979105).",
+      "doi": "10.5665/sleep.4716",
+      "limitations": "Recommends >=7 h for adults 18-60; it does NOT set an upper limit of 9 h as a target - the 7-9 h clamp is the app's design choice (the 9 h figure is mentioned as a point of uncertainty). Population consensus, not individual sleep need. Crossref lacks volume/pages for the Sleep version; PubMed confirms 38(6):843-844.",
+      "pmid": "26039963",
+      "supports": "Consensus that adults should sleep 7 or more hours per night regularly; sleeping more than 9 h may be appropriate for young adults, those recovering from sleep debt, or illness; uncertainty about whether >9 h is associated with risk.",
+      "url": "https://doi.org/10.5665/sleep.4716",
+      "use_supported": true,
+      "verified": true,
+      "year": 2015
+    },
+    "who_2020": {
+      "citation": "Bull FC, Al-Ansari SS, Biddle S, Borodulin K, Buman MP, Cardon G, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med. 2020;54(24):1451-1462.",
+      "doi": "10.1136/bjsports-2020-102955",
+      "limitations": "Population public-health guidance; equivalence assumes 1 vigorous min = 2 moderate min; separate recommendations apply to older adults, pregnancy, chronic conditions and children.",
+      "pmid": "33239350",
+      "supports": "Recommends adults (18-64) do at least 150-300 min/week moderate-intensity or 75-150 min/week vigorous-intensity aerobic activity (or an equivalent combination), plus muscle-strengthening on >=2 days, and to limit sedentary time.",
+      "url": "https://doi.org/10.1136/bjsports-2020-102955",
+      "use_supported": true,
+      "verified": true,
+      "year": 2020
+    },
+    "williams_2017": {
+      "citation": "Williams S, West S, Cross MJ, Stokes KA. Better way to determine the acute:chronic workload ratio? Br J Sports Med. 2017;51(3):209-210.",
+      "doi": "10.1136/bjsports-2016-096589",
+      "limitations": "Letter/editorial with no empirical validation; choice of N is arbitrary; does not address the ratio's statistical problems (see Impellizzeri 2020).",
+      "pmid": "27650255",
+      "supports": "Short letter proposing exponentially weighted moving averages for acute and chronic load, with decay lambda_a = 2/(N+1) (N = time-decay constant in days, e.g., 7 and 28), instead of rolling averages.",
+      "url": "https://doi.org/10.1136/bjsports-2016-096589",
+      "use_supported": true,
+      "verified": true,
+      "year": 2017
+    }
+  },
+  "response": {
+    "algorithm_id": "ayuvo.response",
+    "algorithm_version": 1,
+    "min_n": 28,
+    "z_975": 1.959964
+  },
+  "sleep": {
+    "baseline_window_days": 28,
+    "debt_window_days": 14,
+    "min_night_minutes": 120,
+    "need_clamp_min": [
+      420,
+      540
+    ],
+    "need_default_min": 480,
+    "need_min_nights": 14,
+    "need_window_days": 60,
+    "variability_min_nights": 5,
+    "variability_window_days": 14
+  },
+  "source_policy_version": 1,
+  "status_rank": {
+    "EXPERIMENTAL": 2,
+    "INSUFFICIENT_DATA": 5,
+    "INSUFFICIENT_HISTORY": 4,
+    "INVALID_INPUT": 7,
+    "LOW_CONFIDENCE": 1,
+    "NO_DATA": 6,
+    "PROVIDER_REPORTED": 0,
+    "RESEARCH_ONLY": 3,
+    "VALID": 0
+  },
+  "statuses": [
+    "VALID",
+    "LOW_CONFIDENCE",
+    "NO_DATA",
+    "INSUFFICIENT_HISTORY",
+    "INSUFFICIENT_DATA",
+    "INVALID_INPUT",
+    "EXPERIMENTAL",
+    "RESEARCH_ONLY",
+    "PROVIDER_REPORTED"
+  ],
+  "tolerance": 1e-09,
+  "trend": {
+    "cusum": {
+      "h": 4.0,
+      "k": 0.5,
+      "min_points": 28,
+      "reference_points": 14
+    },
+    "ewma_span_days": 7,
+    "min_points": 10,
+    "recent_days": 7,
+    "unusual_abs_z": 3.0,
+    "window_days": 28
+  }
+}

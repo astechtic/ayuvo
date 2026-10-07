@@ -3,6 +3,8 @@
     {
       "expected": {
         "2026-03-10": {
+          "nap_min": 40.0,
+          "naps": 1,
           "rows": [
             [
               1773109800000,
@@ -37,6 +39,8 @@
           }
         },
         "2026-03-11": {
+          "nap_min": 0.0,
+          "naps": 0,
           "rows": [
             [
               1773201000000,
@@ -160,6 +164,8 @@
     {
       "expected": {
         "2026-03-12": {
+          "nap_min": 0.0,
+          "naps": 0,
           "rows": [
             [
               1773270000000,
@@ -198,6 +204,73 @@
         "time_zone": "UTC"
       },
       "name": "tie_breaks_on_source_id"
+    },
+    {
+      "expected": {
+        "2026-03-08": {
+          "nap_min": 45.0,
+          "naps": 1,
+          "rows": [
+            [
+              1772942400000,
+              1772955000000,
+              3
+            ],
+            [
+              1772955000000,
+              1772956800000,
+              2
+            ],
+            [
+              1772956800000,
+              1772967600000,
+              5
+            ]
+          ],
+          "source": "watch",
+          "window": {
+            "end_ms": 1772967600000,
+            "start_ms": 1772942400000
+          }
+        }
+      },
+      "input": {
+        "rows": [
+          [
+            1772942400000,
+            1772955000000,
+            3,
+            "watch"
+          ],
+          [
+            1772955000000,
+            1772956800000,
+            2,
+            "watch"
+          ],
+          [
+            1772956800000,
+            1772967600000,
+            5,
+            "watch"
+          ],
+          [
+            1772992800000,
+            1772995500000,
+            1,
+            "watch"
+          ],
+          [
+            1772992800000,
+            1772995500000,
+            1,
+            "phone"
+          ]
+        ],
+        "time_zone": "America/New_York"
+      },
+      "name": "nap_kept_out_of_night_across_dst",
+      "notes": "New York spring-forward night (02:00 skipped) plus a 45-minute afternoon nap on the wake day: the nap is reported, not merged."
     },
     {
       "expected": {},

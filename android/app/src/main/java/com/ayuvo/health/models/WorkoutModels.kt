@@ -482,6 +482,42 @@ data class WorkoutSession(
     val performedSetCount: Int get() = exercises.sumOf { exercise -> exercise.sets.count { it.isPerformed } }
     val repCount: Int get() = exercises.sumOf { exercise -> exercise.sets.filter { it.isPerformed }.sumOf { it.reps.toIntOrNull() ?: 0 } }
 
+    /**
+     * Session RPE on the CR-10 scale (0–10) for training load (Foster 2001): the mean of the performed sets' logged RPE,
+     * each normalized from its own scale. Null when no performed set has an RPE (never the estimator's default).
+     */
+    val sessionEffortCr10: Double?
+        get() {
+            var total = 0.0
+            var n = 0
+            for (exercise in exercises) for (set in exercise.sets) {
+                if (!set.isPerformed) continue
+                val v = set.rpe.replace(',', '.').toDoubleOrNull()?.takeIf { it.isFinite() } ?: continue
+                val normalized = when (set.rpeScale ?: WorkoutRpeScale.STRENGTH) {
+                    WorkoutRpeScale.STRENGTH -> (v - 1.0) / 9.0
+                    WorkoutRpeScale.CR10 -> v / 10.0
+                    WorkoutRpeScale.BORG -> (v - 6.0) / 14.0
+                }
+                total += normalized.coerceIn(0.0, 1.0) * 10.0
+                n += 1
+            }
+            return if (n > 0) total / n else null
+        }
+
+    /**
+     * The training interval in epoch ms: the real interval when there is one, else the saved duration ending at
+     * [completedAt] (legacy daily snapshots store started == completed). Null when neither gives a positive length;
+     * an unknown duration is never invented.
+     */
+    val trainingIntervalMs: Pair<Long, Long>?
+        get() {
+            val end = completedAt.toEpochMilli()
+            val start = startedAt.toEpochMilli()
+            if (end > start) return start to end
+            if (durationSeconds > 0) return (end - durationSeconds * 1000L) to end
+            return null
+        }
+
     companion object {
         const val KIND_GPS = "gps"
     }

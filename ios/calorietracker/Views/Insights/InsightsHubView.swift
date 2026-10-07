@@ -9,6 +9,8 @@ struct InsightsHubView: View {
             VStack(spacing: 0) {
                 row(.recovery, icon: "bolt.heart.fill", title: String(localized: "Recovery"), subtitle: recoverySubtitle)
                 Divider().padding(.leading, 56)
+                row(.signals, icon: "waveform.path.ecg", title: String(localized: "Health signals"), subtitle: signalsSubtitle)
+                Divider().padding(.leading, 56)
                 row(.healthAge, icon: "hourglass", title: String(localized: "Health Age"), subtitle: healthAgeSubtitle)
                 Divider().padding(.leading, 56)
                 row(.review(nil), icon: "checklist", title: String(localized: "Daily Review"), subtitle: reviewSubtitle)
@@ -49,6 +51,13 @@ struct InsightsHubView: View {
             return String(localized: "Learning your baseline (\(collecting.have)/\(collecting.need) nights)")
         }
         return String(localized: "Waiting for last night's data")
+    }
+
+    private var signalsSubtitle: String {
+        guard let state = store.analytics?.anomaly["state"].string else {
+            return String(localized: "HRV, sleep, training load and more")
+        }
+        return AnalyticsText.anomalyState(state)
     }
 
     private var healthAgeSubtitle: String? {

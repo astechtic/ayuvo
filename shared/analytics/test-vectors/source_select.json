@@ -1,0 +1,277 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "count": 0,
+        "dropped_duplicates": 0,
+        "max": null,
+        "min": null,
+        "source": null,
+        "sources": [],
+        "strategy": "single_best_source_per_day",
+        "value": null
+      },
+      "input": {
+        "metric": "resting_heart_rate",
+        "rows": []
+      },
+      "name": "empty"
+    },
+    {
+      "expected": {
+        "count": 4,
+        "dropped_duplicates": 0,
+        "max": 70.0,
+        "min": 60.0,
+        "source": null,
+        "sources": [
+          "com.apple.health",
+          "com.zepp"
+        ],
+        "strategy": "average_all",
+        "value": 62.5
+      },
+      "input": {
+        "metric": "heart_rate",
+        "rows": [
+          {
+            "count": 3,
+            "device_type": 1,
+            "id": "a",
+            "origin": 0,
+            "source": "com.apple.health",
+            "t_ms": 1000,
+            "value": 60.0
+          },
+          {
+            "count": 1,
+            "device_type": 6,
+            "id": "b",
+            "origin": 0,
+            "source": "com.zepp",
+            "t_ms": 2000,
+            "value": 70.0
+          }
+        ]
+      },
+      "name": "average_all_unlisted_metric"
+    },
+    {
+      "expected": {
+        "count": 1,
+        "dropped_duplicates": 0,
+        "max": 54.0,
+        "min": 54.0,
+        "source": "com.watch",
+        "sources": [
+          "com.phoneapp",
+          "com.watch"
+        ],
+        "strategy": "single_best_source_per_day",
+        "value": 54.0
+      },
+      "input": {
+        "metric": "resting_heart_rate",
+        "rows": [
+          {
+            "count": 5,
+            "device_type": 2,
+            "id": "p1",
+            "origin": 0,
+            "source": "com.phoneapp",
+            "t_ms": 1000,
+            "value": 58.0
+          },
+          {
+            "count": 1,
+            "device_type": 1,
+            "id": "w1",
+            "origin": 0,
+            "source": "com.watch",
+            "t_ms": 2000,
+            "value": 54.0
+          }
+        ]
+      },
+      "name": "wearable_beats_phone"
+    },
+    {
+      "expected": {
+        "count": 2,
+        "dropped_duplicates": 0,
+        "max": 50.0,
+        "min": 50.0,
+        "source": "a.ring",
+        "sources": [
+          "a.ring",
+          "b.band",
+          "c.watch"
+        ],
+        "strategy": "single_best_source_per_day",
+        "value": 50.0
+      },
+      "input": {
+        "metric": "hrv_rmssd",
+        "rows": [
+          {
+            "count": 2,
+            "device_type": 6,
+            "id": "a1",
+            "origin": 0,
+            "source": "b.band",
+            "t_ms": 1000,
+            "value": 40.0
+          },
+          {
+            "count": 2,
+            "device_type": 4,
+            "id": "a2",
+            "origin": 0,
+            "source": "a.ring",
+            "t_ms": 1500,
+            "value": 50.0
+          },
+          {
+            "count": 1,
+            "device_type": 1,
+            "id": "a3",
+            "origin": 0,
+            "source": "c.watch",
+            "t_ms": 1600,
+            "value": 45.0
+          }
+        ]
+      },
+      "name": "most_samples_then_id"
+    },
+    {
+      "expected": {
+        "count": 1,
+        "dropped_duplicates": 1,
+        "max": 57.0,
+        "min": 57.0,
+        "source": "com.fitbit.FitbitMobile",
+        "sources": [
+          "com.fitbit.FitbitMobile",
+          "google_health:com.fitbit.FitbitMobile"
+        ],
+        "strategy": "single_best_source_per_day",
+        "value": 57.0
+      },
+      "input": {
+        "metric": "resting_heart_rate",
+        "rows": [
+          {
+            "count": 1,
+            "device_type": 1,
+            "id": "hc",
+            "origin": 0,
+            "source": "com.fitbit.FitbitMobile",
+            "t_ms": 100000,
+            "value": 57.0
+          },
+          {
+            "count": 1,
+            "device_type": null,
+            "id": "gh",
+            "origin": 3,
+            "source": "google_health:com.fitbit.FitbitMobile",
+            "t_ms": 130000,
+            "value": 57.2
+          },
+          {
+            "count": 1,
+            "device_type": null,
+            "id": "gh2",
+            "origin": 3,
+            "source": "google_health:com.fitbit.FitbitMobile",
+            "t_ms": 900000,
+            "value": 59.0
+          }
+        ]
+      },
+      "name": "google_health_duplicate_dropped",
+      "notes": "gh is the same reading 30 s later (dropped); gh2 is 13 min later (kept). Single best source: the HC row (wearable) wins."
+    },
+    {
+      "expected": {
+        "count": 1,
+        "dropped_duplicates": 0,
+        "max": 96.0,
+        "min": 96.0,
+        "source": "com.fitbit.FitbitMobile",
+        "sources": [
+          "com.fitbit.FitbitMobile",
+          "google_health:com.fitbit.FitbitMobile"
+        ],
+        "strategy": "single_best_source_per_day",
+        "value": 96.0
+      },
+      "input": {
+        "metric": "blood_oxygen",
+        "rows": [
+          {
+            "count": 1,
+            "device_type": 1,
+            "id": "hc",
+            "origin": 0,
+            "source": "com.fitbit.FitbitMobile",
+            "t_ms": 100000,
+            "value": 96.0
+          },
+          {
+            "count": 1,
+            "device_type": null,
+            "id": "gh",
+            "origin": 3,
+            "source": "google_health:com.fitbit.FitbitMobile",
+            "t_ms": 110000,
+            "value": 92.0
+          }
+        ]
+      },
+      "name": "google_health_distinct_value_kept"
+    },
+    {
+      "expected": {
+        "count": 1,
+        "dropped_duplicates": 0,
+        "max": 14.5,
+        "min": 14.5,
+        "source": "s",
+        "sources": [
+          "s"
+        ],
+        "strategy": "single_best_source_per_day",
+        "value": 14.5
+      },
+      "input": {
+        "metric": "respiratory_rate",
+        "rows": [
+          {
+            "count": 1,
+            "device_type": 0,
+            "id": "x",
+            "origin": 0,
+            "source": "s",
+            "t_ms": 1,
+            "value": null
+          },
+          {
+            "count": 1,
+            "device_type": 0,
+            "id": "y",
+            "origin": 0,
+            "source": "s",
+            "t_ms": 2,
+            "value": 14.5
+          }
+        ]
+      },
+      "name": "null_values_ignored"
+    }
+  ],
+  "format": "ayuvo-analytics-vectors",
+  "function": "source_select",
+  "version": 1
+}

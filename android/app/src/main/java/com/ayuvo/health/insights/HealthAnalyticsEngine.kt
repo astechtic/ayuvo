@@ -1,5 +1,6 @@
 package com.ayuvo.health.insights
 
+import com.ayuvo.health.data.analytics.engine.AnalyticsConfig
 import kotlinx.serialization.json.JsonObject
 import java.time.LocalDate
 
@@ -25,7 +26,11 @@ data class InsightsSnapshot(
     val baselines: List<MetricInsight>,
     val profile: InsightsProfile,
     /** Days filled from a finger camera scan, by series id (docs/camera-vitals.md §7); UI footnotes only. */
-    val scanFallback: Map<String, Set<LocalDate>> = emptyMap()
+    val scanFallback: Map<String, Set<LocalDate>> = emptyMap(),
+    /** Health analytics for today (docs/health-analytics.md); null without the analytics contract. */
+    val analytics: AnalyticsDay? = null,
+    /** The engine inputs the analytics were computed from (persistence and the forecast reuse them). */
+    val analyticsInputs: Map<String, Any?>? = null
 ) {
     fun review(day: LocalDate): DailyReviewResult? = reviews.firstOrNull { it.day == day }
 
@@ -46,16 +51,29 @@ data class InsightsSnapshot(
  */
 object HealthAnalyticsEngine {
 
+    /** Recovery v1 (shared/insights). Kept for the vectors and as the fallback without the analytics contract. */
     fun recovery(bundle: InsightsBundle, day: LocalDate, cfg: InsightsConfig): RecoveryResult =
         RecoveryEngine.recovery(bundle.inputsFor(day), day, cfg)
 
-    fun snapshot(bundle: InsightsBundle, cfg: InsightsConfig): InsightsSnapshot {
+    /**
+     * Recovery shown everywhere: Recovery Indicator v2 (shared/analytics, docs/health-analytics.md §5.7) when the
+     * analytics contract is loaded, mapped onto the v1 shape; v1 otherwise.
+     */
+    fun recoveryShown(bundle: InsightsBundle, analyticsInputs: Map<String, Any?>?, acfg: AnalyticsConfig?, day: LocalDate, cfg: InsightsConfig): RecoveryResult {
+        if (acfg == null || analyticsInputs == null) return recovery(bundle, day, cfg)
+        val v2 = runCatching { AnalyticsBridge.recoveryV2(AnalyticsBridge.inputsFor(analyticsInputs, bundle, day), day, acfg) }.getOrNull()
+            ?: return recovery(bundle, day, cfg)
+        return AnalyticsBridge.toRecoveryResult(v2, day)
+    }
+
+    fun snapshot(bundle: InsightsBundle, cfg: InsightsConfig, acfg: AnalyticsConfig? = AnalyticsConfig.active): InsightsSnapshot {
         val today = bundle.today
         val window = cfg.patterns.windowDays
+        val analyticsInputs = acfg?.let { runCatching { AnalyticsBridge.inputs(bundle) }.getOrNull() }
         val recoveries = LinkedHashMap<LocalDate, RecoveryResult>()
         for (k in window downTo 0) {
             val d = today.minusDays(k.toLong())
-            recoveries[d] = recovery(bundle, d, cfg)
+            recoveries[d] = recoveryShown(bundle, analyticsInputs, acfg, d, cfg)
         }
         val scores = recoveries.filterValues { it.ok }.mapValues { it.value.score!!.toDouble() }
         val patterns = PatternEngine.patterns(bundle.inputs.copy(recoveryScores = scores), today, cfg)
@@ -65,8 +83,11 @@ object HealthAnalyticsEngine {
         }
         val history = (InsightsSnapshot.RECOVERY_HISTORY_DAYS - 1 downTo 0).map { k ->
             val d = today.minusDays(k.toLong())
-            recoveries[d] ?: recovery(bundle, d, cfg)
+            recoveries[d] ?: recoveryShown(bundle, analyticsInputs, acfg, d, cfg)
         }
+        val analytics = if (acfg != null && analyticsInputs != null) {
+            runCatching { AnalyticsBridge.day(bundle, analyticsInputs, recoveries.getValue(today).v2, acfg, bundle.profile) }.getOrNull()
+        } else null
         return InsightsSnapshot(
             today = today,
             healthEnabled = bundle.healthEnabled,
@@ -78,7 +99,9 @@ object HealthAnalyticsEngine {
             patterns = patterns,
             baselines = baselines(bundle, today, cfg),
             profile = bundle.profile,
-            scanFallback = bundle.scanFallback
+            scanFallback = bundle.scanFallback,
+            analytics = analytics,
+            analyticsInputs = analyticsInputs
         )
     }
 

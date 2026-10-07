@@ -79,6 +79,8 @@ class DerivedConfig(val root: JsonObject) {
         val tanaka: List<Double>,
         val tefShare: Double,
         val trimpK: Map<String, Double>,
+        /** Banister TRIMP weighting coefficient by sex (0.64 men, 0.86 women). */
+        val trimpA: Map<String, Double>,
         val trimpMinHrr: Double,
         val uthFactor: Double,
         val validWearMin: Int,
@@ -183,6 +185,7 @@ class DerivedConfig(val root: JsonObject) {
                 tanaka = numbers(o["tanaka"]),
                 tefShare = d("tef_share"),
                 trimpK = numberMap(o["trimp_k"]),
+                trimpA = numberMap(o["trimp_a"]),
                 trimpMinHrr = d("trimp_min_hrr"),
                 uthFactor = d("uth_factor"),
                 validWearMin = i("valid_wear_min"),

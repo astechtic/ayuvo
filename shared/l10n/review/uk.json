@@ -291,6 +291,318 @@
   "source": "08cb13673212",
   "state": "needs_review"
  },
+ "analytics_baseline": {
+  "source": "50c329d24cc2",
+  "state": "needs_review"
+ },
+ "analytics_bedtime_var": {
+  "source": "5fd458d02a87",
+  "state": "needs_review"
+ },
+ "analytics_confidence": {
+  "source": "59555ca85bfa",
+  "state": "needs_review"
+ },
+ "analytics_coverage": {
+  "source": "41ab322bd77c",
+  "state": "needs_review"
+ },
+ "analytics_efficiency": {
+  "source": "529cbf01604f",
+  "state": "needs_review"
+ },
+ "analytics_energy_active": {
+  "source": "b69d58f034e2",
+  "state": "needs_review"
+ },
+ "analytics_energy_note": {
+  "source": "7353712ff50a",
+  "state": "needs_review"
+ },
+ "analytics_energy_resting": {
+  "source": "01f4ac46008d",
+  "state": "needs_review"
+ },
+ "analytics_energy_resting_predicted": {
+  "source": "5e06d9a2f350",
+  "state": "needs_review"
+ },
+ "analytics_energy_resting_provider": {
+  "source": "d94c07f580c1",
+  "state": "needs_review"
+ },
+ "analytics_energy_title": {
+  "source": "0539129cd388",
+  "state": "needs_review"
+ },
+ "analytics_energy_total": {
+  "source": "d6f33eb65bb6",
+  "state": "needs_review"
+ },
+ "analytics_forecast_metrics": {
+  "source": "1d2c584592aa",
+  "state": "needs_review"
+ },
+ "analytics_forecast_note": {
+  "source": "44ba096aaf42",
+  "state": "needs_review"
+ },
+ "analytics_forecast_range": {
+  "source": "9c49c0ba88c8",
+  "state": "needs_review"
+ },
+ "analytics_forecast_setting": {
+  "source": "dc47728a2eee",
+  "state": "needs_review"
+ },
+ "analytics_forecast_setting_sub": {
+  "source": "81d9d90c4126",
+  "state": "needs_review"
+ },
+ "analytics_forecast_title": {
+  "source": "bd89e9d0365f",
+  "state": "needs_review"
+ },
+ "analytics_hrr_latest": {
+  "source": "ec704ceedb02",
+  "state": "needs_review"
+ },
+ "analytics_hrr_title": {
+  "source": "7088b336082f",
+  "state": "needs_review"
+ },
+ "analytics_hrv_title": {
+  "source": "fddfc664f70a",
+  "state": "needs_review"
+ },
+ "analytics_hub_signals_sub": {
+  "source": "c630dda2fba8",
+  "state": "needs_review"
+ },
+ "analytics_load_acute": {
+  "source": "6ead5106e07b",
+  "state": "needs_review"
+ },
+ "analytics_load_chronic": {
+  "source": "bbcad979497e",
+  "state": "needs_review"
+ },
+ "analytics_load_method": {
+  "source": "9b900e8b13c5",
+  "state": "needs_review"
+ },
+ "analytics_load_note": {
+  "source": "87518ab12e16",
+  "state": "needs_review"
+ },
+ "analytics_load_ratio": {
+  "source": "427671de3005",
+  "state": "needs_review"
+ },
+ "analytics_load_state": {
+  "source": "5945a617de94",
+  "state": "needs_review"
+ },
+ "analytics_load_title": {
+  "source": "40d6efb0f44c",
+  "state": "needs_review"
+ },
+ "analytics_met_equivalent": {
+  "source": "bbaf48b158d2",
+  "state": "needs_review"
+ },
+ "analytics_met_light": {
+  "source": "48dbe72d37e5",
+  "state": "needs_review"
+ },
+ "analytics_met_moderate": {
+  "source": "a813e54574eb",
+  "state": "needs_review"
+ },
+ "analytics_met_title": {
+  "source": "407fdab8fa79",
+  "state": "needs_review"
+ },
+ "analytics_met_unknown": {
+  "source": "9e591e5db751",
+  "state": "needs_review"
+ },
+ "analytics_met_vigorous": {
+  "source": "fff3ed9d2549",
+  "state": "needs_review"
+ },
+ "analytics_method_minutes": {
+  "source": "8a65555f82d3",
+  "state": "needs_review"
+ },
+ "analytics_method_rpe_load": {
+  "source": "69c246304cc1",
+  "state": "needs_review"
+ },
+ "analytics_method_trimp": {
+  "source": "621a758b36d2",
+  "state": "needs_review"
+ },
+ "analytics_naps": {
+  "source": "f17c174c8f47",
+  "state": "needs_review"
+ },
+ "analytics_not_enough": {
+  "source": "721ab545003b",
+  "state": "needs_review"
+ },
+ "analytics_pattern_effect": {
+  "source": "d75ef6899820",
+  "state": "needs_review"
+ },
+ "analytics_pattern_stats": {
+  "source": "f2104d5b5762",
+  "state": "needs_review"
+ },
+ "analytics_patterns_none": {
+  "source": "708a9ad0c637",
+  "state": "needs_review"
+ },
+ "analytics_patterns_v2": {
+  "source": "082202656563",
+  "state": "needs_review"
+ },
+ "analytics_patterns_v2_sub": {
+  "source": "adfd54d41481",
+  "state": "needs_review"
+ },
+ "analytics_persistent": {
+  "source": "302a80085af5",
+  "state": "needs_review"
+ },
+ "analytics_plus_minus_min": {
+  "source": "1e5d5a26a8b8",
+  "state": "needs_review"
+ },
+ "analytics_recovery_v2": {
+  "source": "0a7cc74172e4",
+  "state": "needs_review"
+ },
+ "analytics_sd": {
+  "source": "40252113d9ba",
+  "state": "needs_review"
+ },
+ "analytics_signal_row": {
+  "source": "588c72b40a25",
+  "state": "needs_review"
+ },
+ "analytics_signals_card": {
+  "source": "006569ba6d39",
+  "state": "needs_review"
+ },
+ "analytics_signals_title": {
+  "source": "9468614b201a",
+  "state": "needs_review"
+ },
+ "analytics_sleep_debt": {
+  "source": "c1d1bba61f6b",
+  "state": "needs_review"
+ },
+ "analytics_sleep_need": {
+  "source": "a224a058b27a",
+  "state": "needs_review"
+ },
+ "analytics_sleep_need_default": {
+  "source": "2e26cb6fc169",
+  "state": "needs_review"
+ },
+ "analytics_sleep_title": {
+  "source": "5d672c2af526",
+  "state": "needs_review"
+ },
+ "analytics_stability": {
+  "source": "b689902a1022",
+  "state": "needs_review"
+ },
+ "analytics_status_history": {
+  "source": "e2ae4453a448",
+  "state": "needs_review"
+ },
+ "analytics_status_low": {
+  "source": "f7e23a262397",
+  "state": "needs_review"
+ },
+ "analytics_status_no_data": {
+  "source": "a927ea3cf526",
+  "state": "needs_review"
+ },
+ "analytics_summary": {
+  "source": "0b8ced55c751",
+  "state": "needs_review"
+ },
+ "analytics_today": {
+  "source": "6b1be5a6a0be",
+  "state": "needs_review"
+ },
+ "analytics_trend": {
+  "source": "045370506273",
+  "state": "needs_review"
+ },
+ "analytics_trend_CHANGING": {
+  "source": "bdc31cfc4c93",
+  "state": "needs_review"
+ },
+ "analytics_trend_DECLINING": {
+  "source": "e969df3e115d",
+  "state": "needs_review"
+ },
+ "analytics_trend_IMPROVING": {
+  "source": "364c02bb305c",
+  "state": "needs_review"
+ },
+ "analytics_trend_INSUFFICIENT_DATA": {
+  "source": "04cc2651b17e",
+  "state": "needs_review"
+ },
+ "analytics_trend_STABLE": {
+  "source": "15220c4af135",
+  "state": "needs_review"
+ },
+ "analytics_trend_UNUSUAL": {
+  "source": "22a3486c4556",
+  "state": "needs_review"
+ },
+ "analytics_trend_detail": {
+  "source": "ac9d22b64bd1",
+  "state": "needs_review"
+ },
+ "analytics_vo2_change": {
+  "source": "6ea6db7a8ce7",
+  "state": "needs_review"
+ },
+ "analytics_vo2_gps": {
+  "source": "925f8f0b209d",
+  "state": "needs_review"
+ },
+ "analytics_vo2_provider": {
+  "source": "1aa261c01ba5",
+  "state": "needs_review"
+ },
+ "analytics_vo2_title": {
+  "source": "b1ca5343878f",
+  "state": "needs_review"
+ },
+ "analytics_vo2_uth": {
+  "source": "51994e2aeae8",
+  "state": "needs_review"
+ },
+ "analytics_vs_baseline": {
+  "source": "cd91a198979d",
+  "state": "needs_review"
+ },
+ "analytics_wake_var": {
+  "source": "f6f359517617",
+  "state": "needs_review"
+ },
+ "analytics_warnings": {
+  "source": "526cf4ae3d5f",
+  "state": "needs_review"
+ },
  "browse_body_measurements": {
   "source": "dacc78e664de",
   "state": "needs_review"
@@ -553,6 +865,394 @@
  },
  "browse_workouts_caption_empty": {
   "source": "d4ef52870aed",
+  "state": "needs_review"
+ },
+ "c_analytics_anomaly_persistent_note": {
+  "source": "d611ded22426",
+  "state": "needs_review"
+ },
+ "c_analytics_anomaly_states_mild_deviation": {
+  "source": "94c75d9e5658",
+  "state": "needs_review"
+ },
+ "c_analytics_anomaly_states_multi_signal_deviation": {
+  "source": "314dff1344d7",
+  "state": "needs_review"
+ },
+ "c_analytics_anomaly_states_normal": {
+  "source": "b4d31f1cb508",
+  "state": "needs_review"
+ },
+ "c_analytics_anomaly_states_significant_deviation": {
+  "source": "9aeeb7af0354",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_experimental_about": {
+  "source": "8959951de26e",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_experimental_label": {
+  "source": "0b287d59e49a",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_measured_about": {
+  "source": "6d92d3f4c6b0",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_measured_label": {
+  "source": "ffc9e2697507",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_ml_predicted_about": {
+  "source": "f0f45c7f7664",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_ml_predicted_label": {
+  "source": "9e49642fe6b6",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_personalized_statistical_about": {
+  "source": "1dd711faad7b",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_personalized_statistical_label": {
+  "source": "bb768d07d992",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_provider_derived_about": {
+  "source": "aa57ad6d7465",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_provider_derived_label": {
+  "source": "1aa261c01ba5",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_research_only_about": {
+  "source": "357aaac7ec46",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_research_only_label": {
+  "source": "69a316abf990",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_scientific_derived_about": {
+  "source": "6cd371207a9e",
+  "state": "needs_review"
+ },
+ "c_analytics_classifications_scientific_derived_label": {
+  "source": "f0c43a07d1e8",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_direction_words_higher": {
+  "source": "f7e96657f3f7",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_direction_words_lower": {
+  "source": "0a99b268ba9b",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_lag_words_0": {
+  "source": "9a26b043c3c7",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_lag_words_1": {
+  "source": "34cfcebc2ff7",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_lag_words_2": {
+  "source": "8dbdbb029f32",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_lag_words_3": {
+  "source": "dd21322cce21",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_bedtime_sleep_exposure_label": {
+  "source": "c96c6c7576f5",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_bedtime_sleep_outcome_label": {
+  "source": "7ae0d3dd7d62",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_energy_weight_exposure_label": {
+  "source": "edd375461135",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_energy_weight_outcome_label": {
+  "source": "0a5e5ae6be73",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_load_hrr_exposure_label": {
+  "source": "3ec636c14797",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_load_hrr_outcome_label": {
+  "source": "4bf100a92138",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_load_hrv_exposure_label": {
+  "source": "3ec636c14797",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_load_rhr_exposure_label": {
+  "source": "3ec636c14797",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_load_rhr_outcome_label": {
+  "source": "f90503069474",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_sleep_hrv_exposure_label": {
+  "source": "0b5384fd80c4",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_sleep_rhr_exposure_label": {
+  "source": "0b5384fd80c4",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_pairs_sleep_rhr_outcome_label": {
+  "source": "f90503069474",
+  "state": "needs_review"
+ },
+ "c_analytics_correlation_template": {
+  "source": "6457b8a2bcc7",
+  "state": "needs_review"
+ },
+ "c_analytics_disclaimer": {
+  "source": "738782db165e",
+  "state": "needs_review"
+ },
+ "c_analytics_load_states_load_high": {
+  "source": "de4c862ad55e",
+  "state": "needs_review"
+ },
+ "c_analytics_load_states_load_increasing": {
+  "source": "365cc1187fe6",
+  "state": "needs_review"
+ },
+ "c_analytics_load_states_load_reduced": {
+  "source": "3c26521aac30",
+  "state": "needs_review"
+ },
+ "c_analytics_load_states_load_spike": {
+  "source": "ba29446ae548",
+  "state": "needs_review"
+ },
+ "c_analytics_load_states_load_stable": {
+  "source": "15220c4af135",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_active_energy_label": {
+  "source": "08f14b25f82f",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_blood_oxygen_label": {
+  "source": "533144c846bb",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_hrr1_label": {
+  "source": "7088b336082f",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_hrv_label": {
+  "source": "61ae51297570",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_respiratory_rate_label": {
+  "source": "826b0b7b9037",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_resting_heart_rate_label": {
+  "source": "7b5cea01e066",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_sleep_duration_label": {
+  "source": "90f7361d8a09",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_sleep_efficiency_label": {
+  "source": "529cbf01604f",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_steps_label": {
+  "source": "1942901acfd8",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_training_load_label": {
+  "source": "40d6efb0f44c",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_vo2_max_label": {
+  "source": "311492d227aa",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_weight_label": {
+  "source": "4ea4bf986f1c",
+  "state": "needs_review"
+ },
+ "c_analytics_metrics_wrist_temperature_label": {
+  "source": "97c2fe790e29",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_bands_good_label": {
+  "source": "1598c22eb416",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_bands_good_recommendation": {
+  "source": "aa75af3d342a",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_bands_low_label": {
+  "source": "adc43fbcac03",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_bands_low_recommendation": {
+  "source": "8d3162ab0877",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_bands_moderate_label": {
+  "source": "6c01396d13ce",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_bands_moderate_recommendation": {
+  "source": "b63a4e374a55",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_components_blood_oxygen_why": {
+  "source": "f6008f9cfb33",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_components_hrv_why": {
+  "source": "e24662229ed4",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_components_respiratory_rate_why": {
+  "source": "27cfffc1ba9b",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_components_resting_heart_rate_why": {
+  "source": "8c7cdff0eda2",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_components_sleep_why": {
+  "source": "4ea31abdb388",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_components_wrist_temperature_why": {
+  "source": "e81175d1f1db",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_blood_oxygen_negative": {
+  "source": "f067257e9391",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_blood_oxygen_neutral": {
+  "source": "b624ab091fc6",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_blood_oxygen_positive": {
+  "source": "b624ab091fc6",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_hrv_negative": {
+  "source": "13749f4a1ef6",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_hrv_neutral": {
+  "source": "ab9ddf2560d7",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_hrv_positive": {
+  "source": "d5536da2dc53",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_respiratory_rate_negative": {
+  "source": "92d1cd635736",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_respiratory_rate_neutral": {
+  "source": "79dcafa8d570",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_respiratory_rate_positive": {
+  "source": "79dcafa8d570",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_resting_heart_rate_negative": {
+  "source": "f0e666281c5e",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_resting_heart_rate_neutral": {
+  "source": "8cc96b531adc",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_resting_heart_rate_positive": {
+  "source": "f898d3cec3c2",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_sleep_negative": {
+  "source": "0554b9a8315f",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_sleep_neutral": {
+  "source": "0308bd80131b",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_sleep_neutral_short": {
+  "source": "4de12a1fe16d",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_sleep_positive": {
+  "source": "b73e17be6266",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_sleep_positive_short": {
+  "source": "af1a6b7c525f",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_training_load_negative": {
+  "source": "53eee686f2a7",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_wrist_temperature_negative": {
+  "source": "d4a7ebbd6a0e",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_wrist_temperature_neutral": {
+  "source": "eac9090b74a7",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_drivers_wrist_temperature_positive": {
+  "source": "eac9090b74a7",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_summary_lead_negative": {
+  "source": "d3a4a5ea3679",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_summary_lead_positive": {
+  "source": "0cac00fbbb52",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_summary_none": {
+  "source": "d33349389a6f",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_warnings_camera": {
+  "source": "52722fecc1dc",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_warnings_missing": {
+  "source": "4ff99ad2ada3",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_warnings_overnight_fallback": {
+  "source": "e54b81e92e33",
+  "state": "needs_review"
+ },
+ "c_analytics_recovery_warnings_source_changed": {
+  "source": "37016c638073",
   "state": "needs_review"
  },
  "c_cycle_basis_default_about": {
@@ -1492,7 +2192,7 @@
   "state": "needs_review"
  },
  "c_derived_metrics_training_impulse_method": {
-  "source": "ad5185d26c11",
+  "source": "98181ffb915a",
   "state": "needs_review"
  },
  "c_derived_metrics_training_impulse_title": {

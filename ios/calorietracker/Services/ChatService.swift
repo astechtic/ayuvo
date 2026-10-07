@@ -300,11 +300,20 @@ struct ChatService {
 
     /// `## Health (last 7 days)` block appended only for tool-less providers (Apple
     /// Intelligence / LiteRT); tool-capable providers query the hub through the tools.
+    /// Health analytics rules (docs/health-analytics.md §8): the engine computes, the Coach explains.
+    static let analyticsRules = [
+        "- Recovery Indicator, HRV baselines, sleep need and debt, training load and signal deviations are computed by Ayuvo's analytics engine. Call get_health_evidence and explain those values; never calculate HRV, RMSSD, sleep efficiency, recovery, training load, VO2 max, blood pressure or SpO2 yourself.",
+        "- Each evidence item has a status, classification and confidence: mention the confidence when it is below 75%, and say a value is not available instead of estimating it when the status is not VALID.",
+        "- Describe relationships in the user's data as associations, never as causes. Never diagnose; when several signals stay outside the usual range, suggest discussing persistent changes with a qualified healthcare professional.",
+        "- Camera SpO2 is experimental and camera blood pressure is research only: never present either as a measurement.",
+    ]
+
     static func onDeviceHealthBlock(_ health: CoachHealthContext?) -> String {
         guard let health, health.context.enabled, !health.context.sevenDayLines.isEmpty else { return "" }
         var lines = ["", "", "## Health (last 7 days, from Apple Health)"]
         lines.append(contentsOf: health.context.sevenDayLines.prefix(HealthCoachPromptSummary.maxLines))
         lines.append("Never diagnose from heart rate, blood pressure or glucose; suggest a clinician when readings look concerning.")
+        lines.append("Recovery, HRV, sleep need and signal lines above are computed by Ayuvo: explain them, never recalculate them; say how confident they are when below 75%; describe associations, never causes.")
         return lines.joined(separator: "\n")
     }
 
@@ -518,6 +527,7 @@ struct ChatService {
             lines.append("- Never add Ayuvo workout burn on top of Apple Health active energy: get_health_summary's own_sum is Ayuvo's own tagged burn already inside the total — subtract it instead of adding workout estimates.")
             lines.append("- Use the diary tools (get_calorie_totals, get_food_entries, get_nutrient_totals) for food intake, never the dietary_* health types.")
             lines.append("- Never diagnose from heart rate, blood pressure or glucose; suggest a clinician when readings look concerning.")
+            lines.append(contentsOf: Self.analyticsRules)
             if !health.context.cameraScanLines.isEmpty {
                 lines.append("")
                 lines.append("## Camera scans (last 7 days)")

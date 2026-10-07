@@ -61,20 +61,29 @@ fun RecoveryScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         val r = snap.recovery
         item(key = "score") { RecoveryHero(r, cfg) }
         if (r.ok) {
+            r.v2?.let { v2 -> item(key = "summary") { RecoverySummaryCard(v2) } }
             item(key = "signals") { SignalsCard(r) }
             item(key = "components") {
                 // docs/camera-vitals.md §7: metrics of this day that came from a finger camera scan.
                 val fromScan = snap.scanFallback.filterValues { r.day in it }.keys
-                ComponentsGroup(r, cfg, fromScan)
+                if (r.v2 != null) V2ComponentsGroup(r.v2) else ComponentsGroup(r, cfg, fromScan)
             }
             r.load?.let { load ->
                 item(key = "load") {
                     InsetGroup(header = stringResource(R.string.insights_training_load), dividerInset = 16.dp) {
                         row {
-                            KeyValueRow(
-                                InsightsText.trainingLoadLabel(LocalContext.current, load.category, load.label),
-                                stringResource(R.string.insights_training_load_value, InsightsFormat.number(load.load), InsightsFormat.number(load.mean28d))
-                            )
+                            if (r.v2 != null) {
+                                val l = r.v2.m("load")
+                                KeyValueRow(
+                                    AnalyticsText.loadState(LocalContext.current, l.s("state")),
+                                    stringResource(R.string.insights_training_load_value, InsightsFormat.number(l.n("acute")), InsightsFormat.number(l.n("chronic")))
+                                )
+                            } else {
+                                KeyValueRow(
+                                    InsightsText.trainingLoadLabel(LocalContext.current, load.category, load.label),
+                                    stringResource(R.string.insights_training_load_value, InsightsFormat.number(load.load), InsightsFormat.number(load.mean28d))
+                                )
+                            }
                         }
                     }
                 }
@@ -131,7 +140,13 @@ private fun RecoveryHero(r: RecoveryResult, cfg: InsightsConfig) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(InsightsText.bandLabel(LocalContext.current, r.label, r.labelText), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = color)
                     Text(stringResource(R.string.insights_recommendation) + ": " + InsightsText.bandRecommendation(LocalContext.current, r.label, r.recommendation), fontSize = 15.sp)
-                    r.confidence?.let { Chip(stringResource(R.string.insights_confidence, confidenceText(it)), AyuvoColors.secondaryLabel()) }
+                    val pct = AnalyticsText.percent(r.confidenceScore)
+                    if (pct != null) {
+                        Chip(stringResource(R.string.analytics_confidence, pct), AyuvoColors.secondaryLabel())
+                        AnalyticsText.percent(r.v2?.get("coverage"))?.let { Text(stringResource(R.string.analytics_coverage, it), fontSize = 13.sp, color = AyuvoColors.secondaryLabel()) }
+                    } else {
+                        r.confidence?.let { Chip(stringResource(R.string.insights_confidence, confidenceText(it)), AyuvoColors.secondaryLabel()) }
+                    }
                 }
             }
         }
@@ -161,6 +176,52 @@ private fun SignalsCard(r: RecoveryResult) {
         if (r.negatives.isNotEmpty()) {
             Text(stringResource(R.string.insights_signals_negative), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = AyuvoColors.secondaryLabel())
             r.negatives.forEach { SignalRow(InsightsText.signal(context, InsightsConfig.active, r, it), InsightsFormat.signed(it.impact), AyuvoPalette.Warning) }
+        }
+    }
+}
+
+/** Recovery v2: the explanation built only from the drivers, plus the data-quality notes. */
+@Composable
+private fun RecoverySummaryCard(v2: Map<String, Any?>) {
+    val context = LocalContext.current
+    SurfaceCard(modifier = Modifier.testTag("insights.recovery.summary"), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(stringResource(R.string.analytics_summary), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = AyuvoColors.secondaryLabel())
+        AnalyticsText.summary(context, v2.ms("drivers"))?.let { Text(it, fontSize = 15.sp) }
+        val notes = v2.ms("warnings").mapNotNull { it.s("code") }.distinct().mapNotNull { AnalyticsText.warning(context, it) }
+        if (notes.isNotEmpty()) {
+            Text(stringResource(R.string.analytics_warnings), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = AyuvoColors.secondaryLabel())
+            notes.forEach { Text("• $it", fontSize = 13.sp, color = AyuvoColors.secondaryLabel()) }
+        }
+    }
+}
+
+/** Recovery v2 components: today vs personal baseline (median) with the robust z. */
+@Composable
+private fun V2ComponentsGroup(v2: Map<String, Any?>) {
+    val context = LocalContext.current
+    val metricOf = mapOf("sleep" to "sleep_duration")
+    InsetGroup(header = stringResource(R.string.insights_components), dividerInset = 16.dp, modifier = Modifier.testTag("insights.recovery.components")) {
+        v2.ms("components").forEach { c ->
+            val id = c.s("id").orEmpty()
+            val unit = c.s("unit").orEmpty()
+            fun fmt(v: Double?): String = when {
+                v == null -> InsightsFormat.MISSING
+                unit == "min" -> InsightsFormat.duration(v)
+                unit == "br/min" || unit == "°C" -> "${InsightsFormat.number(v, if (unit == "°C") 2 else 1)} $unit"
+                unit == "%" -> "${InsightsFormat.number(v)}%"
+                else -> "${InsightsFormat.number(v)} $unit"
+            }
+            row {
+                val available = c["available"] == true
+                val secondary = when {
+                    !available && c.n("value") == null -> null
+                    !available -> stringResource(R.string.analytics_status_history)
+                    id == "sleep" -> stringResource(R.string.analytics_sleep_need) + " " + fmt(c.n("baseline"))
+                    else -> stringResource(R.string.insights_baseline_value, fmt(c.n("baseline"))) +
+                        (c.n("z")?.let { " · " + stringResource(R.string.analytics_sd, InsightsFormat.signed(it, 1)) } ?: "")
+                }
+                ValueWithBaselineRow(AnalyticsText.metricLabel(context, metricOf[id] ?: id), fmt(c.n("value")), secondary, dimmed = !available)
+            }
         }
     }
 }

@@ -38,6 +38,7 @@ fun PatternsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
     ) {
         if (!insightsGate(ui, "insights.patterns", needsHealth = false)) return@InsightsScaffold
         val snap = ui.snapshot ?: return@InsightsScaffold
+        snap.analytics?.correlation?.let { corr -> item(key = "associations") { AssociationsGroup(corr, snap.analytics.responses) } }
         val found = snap.patterns.filter { it.surfaced }
         val rest = snap.patterns.filter { !it.surfaced }
         if (found.isNotEmpty()) {
@@ -61,6 +62,61 @@ fun PatternsScreen(vm: InsightsViewModel, onBack: () -> Unit) {
         }
     }
     if (info) InsightMethodologySheet(cfg, InsightMethodology.patterns(LocalContext.current, cfg, ui.snapshot) { id -> resources.getString(patternLabelRes(id)) }, onDismiss = { info = false })
+}
+
+/** Patterns v2: Spearman associations with Benjamini–Hochberg control and the personal response effect. */
+@Composable
+private fun AssociationsGroup(corr: Map<String, Any?>, responses: List<Map<String, Any?>>) {
+    val context = LocalContext.current
+    val surfaced = corr.ms("results").filter { it["surfaced"] == true }
+    InsetGroup(
+        header = stringResource(R.string.analytics_patterns_v2),
+        footer = stringResource(R.string.analytics_patterns_v2_sub),
+        dividerInset = 16.dp,
+        modifier = Modifier.testTag("insights.patterns.associations")
+    ) {
+        if (surfaced.isEmpty()) {
+            row { Text(stringResource(R.string.analytics_patterns_none), fontSize = 15.sp, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 11.dp)) }
+        }
+        surfaced.forEach { r ->
+            val resp = responses.firstOrNull { it["id"] == r["id"] && it["lag"] == r["lag"] }
+            row {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 11.dp)) {
+                    Text(associationText(context, r), fontSize = 15.sp, lineHeight = 20.sp)
+                    Text(
+                        stringResource(
+                            R.string.analytics_pattern_stats, InsightsFormat.signed(r.n("spearman_rho"), 2),
+                            InsightsFormat.signed(r.n("ci_low"), 2), InsightsFormat.signed(r.n("ci_high"), 2), r.n("n")?.toInt() ?: 0
+                        ),
+                        fontSize = 13.sp, color = AyuvoColors.secondaryLabel()
+                    )
+                    resp?.takeIf { it["status"] == "VALID" || it["status"] == "LOW_CONFIDENCE" }?.let {
+                        Text(
+                            stringResource(R.string.analytics_pattern_effect, InsightsFormat.signed(it.n("effect"), 3), InsightsFormat.signed(it.n("ci_low"), 3), InsightsFormat.signed(it.n("ci_high"), 3)),
+                            fontSize = 13.sp, color = AyuvoColors.secondaryLabel()
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** The association sentence rebuilt from its translated template parts (analytics.correlation.*). */
+private fun associationText(context: android.content.Context, r: Map<String, Any?>): String {
+    val root = com.ayuvo.health.data.analytics.engine.AnalyticsConfig.active?.root ?: return r.s("text").orEmpty()
+    val cc = root.m("correlation") ?: return r.s("text").orEmpty()
+    val pair = cc.ms("pairs").firstOrNull { it["id"] == r["id"] } ?: return r.s("text").orEmpty()
+    val id = pair.s("id")
+    val dir = if ((r.n("spearman_rho") ?: 0.0) > 0) "higher" else "lower"
+    val lag = (r.n("lag")?.toInt() ?: 0).toString()
+    val t = { key: String, en: String? -> AnalyticsText.t(context, key, en.orEmpty()) }
+    return t("analytics.correlation.template", cc.s("template"))
+        .replace("{exposure}", t("analytics.correlation.pairs.$id.exposure_label", pair.s("exposure_label")))
+        .replace("{direction}", t("analytics.correlation.direction_words.$dir", cc.m("direction_words").s(dir)))
+        .replace("{outcome}", t("analytics.correlation.pairs.$id.outcome_label", pair.s("outcome_label")))
+        .replace("{lag}", t("analytics.correlation.lag_words.$lag", cc.m("lag_words").s(lag)))
+        .replace("{n}", (r.n("n")?.toInt() ?: 0).toString())
 }
 
 internal fun patternLabelRes(id: String): Int = when (id) {

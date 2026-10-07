@@ -22,6 +22,9 @@ nonisolated struct InsightsReport: Sendable, Equatable {
     /// Day → review, for the last `reviewDays` days.
     let reviews: [String: DailyReviewResult]
     let baselines: [InsightsMetricBaseline]
+    /// Health analytics (shared/analytics): Recovery v2 detail, signals, HRV, sleep, load, trends, patterns v2,
+    /// energy, VO2 max, activity intensity, forecasts and the Coach evidence.
+    var analytics: AnalyticsBundle? = nil
 
     /// The AI / action view of one review day (today when nil).
     func summary(reviewDay: String? = nil) -> InsightsSummary {
@@ -43,12 +46,16 @@ nonisolated enum HealthAnalyticsEngine {
     static func report(inputs: InsightsInputs, today: String, profile: InsightsProfile,
                        config: InsightsConfig) -> InsightsReport {
         let window = config.patterns.windowDays
+        let a = AnalyticsInputsBuilder.make(inputs, today: today)
         var scores: [String: Double] = [:]
         var byDay: [String: RecoveryResult] = [:]
+        var v2ByDay: [String: AJ] = [:]
+        // Recovery Indicator v2 (`ayuvo.recovery@2`) replaces v1 in the app; v1 stays in RecoveryEngine for reference.
         for k in stride(from: window, through: 0, by: -1) {
             let day = InsightsDay.add(today, -k)
-            let result = RecoveryEngine.recovery(inputs, day: day, config: config)
+            let (result, json) = RecoveryV2Adapter.recovery(a, inputs: inputs, day: day)
             byDay[day] = result
+            if k < AnalyticsSuite.persistDays { v2ByDay[day] = json }
             if result.status == "ok", let score = result.score { scores[day] = Double(score) }
         }
         var patternInputs = inputs
@@ -63,13 +70,14 @@ nonisolated enum HealthAnalyticsEngine {
         let history = (0..<recoveryHistoryDays).reversed().compactMap { byDay[InsightsDay.add(today, -$0)] }
         return InsightsReport(
             today: today,
-            recovery: byDay[today] ?? RecoveryEngine.recovery(inputs, day: today, config: config),
+            recovery: byDay[today] ?? RecoveryV2Adapter.recovery(a, inputs: inputs, day: today).0,
             recoveryHistory: history,
             healthAge: HealthAgeEngine.healthAge(inputs, asOf: today, profile: profile, config: config),
             pace: HealthAgeEngine.pace(inputs, asOf: today, profile: profile, config: config),
             patterns: patterns,
             reviews: reviews,
-            baselines: baselines(inputs, day: today, config: config)
+            baselines: baselines(inputs, day: today, config: config),
+            analytics: AnalyticsSuite.compute(inputs, today: today, recoveryByDay: v2ByDay)
         )
     }
 
@@ -77,7 +85,8 @@ nonisolated enum HealthAnalyticsEngine {
     static func review(_ inputs: InsightsInputs, day: String, recovery: RecoveryResult?, patterns: [PatternResult],
                        config: InsightsConfig) -> DailyReviewResult {
         var reviewInputs = inputs
-        reviewInputs.recovery = recovery ?? RecoveryEngine.recovery(inputs, day: day, config: config)
+        reviewInputs.recovery = recovery ?? RecoveryV2Adapter.recovery(AnalyticsInputsBuilder.make(inputs, today: day),
+                                                                       inputs: inputs, day: day).0
         reviewInputs.patterns = patterns
         return DailyReviewEngine.review(reviewInputs, day: day, config: config)
     }

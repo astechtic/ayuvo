@@ -240,6 +240,13 @@ class PreferencesStore(
     val insightsEnabled: Flow<Boolean> = ds.data.map { it[Keys.INSIGHTS_ENABLED] ?: true }
     suspend fun setInsightsEnabled(v: Boolean) { ds.edit { it[Keys.INSIGHTS_ENABLED] = v } }
 
+    /**
+     * Per-user next-day forecasts (docs/health-analytics.md §5.12, `ML_PREDICTED`): off by default. Shown only for a
+     * model that beat persistence and the 28-day median on the person's own held-out days.
+     */
+    val analyticsForecastEnabled: Flow<Boolean> = ds.data.map { it[Keys.ANALYTICS_FORECAST_ENABLED] ?: false }
+    suspend fun setAnalyticsForecastEnabled(v: Boolean) { ds.edit { it[Keys.ANALYTICS_FORECAST_ENABLED] = v } }
+
     /** Derived metrics (docs/derived-metrics.md): master switch (default on), switched-off ids, BMI cut-offs. */
     val derivedMetricsEnabled: Flow<Boolean> = ds.data.map { it[Keys.DERIVED_METRICS_ENABLED] ?: true }
     suspend fun setDerivedMetricsEnabled(v: Boolean) { ds.edit { it[Keys.DERIVED_METRICS_ENABLED] = v } }
@@ -2226,6 +2233,7 @@ class PreferencesStore(
         val DAILY_MINUTE = intPreferencesKey("dailySummaryMinute")
         val INSIGHTS_ENABLED = booleanPreferencesKey("insightsEnabled")
         val DERIVED_METRICS_ENABLED = booleanPreferencesKey("derivedMetricsEnabled")
+        val ANALYTICS_FORECAST_ENABLED = booleanPreferencesKey("analyticsForecastEnabled")
         val VITALS_KEEP_SIGNALS = booleanPreferencesKey("vitalsKeepSignals")
         val VITALS_EXPERIMENTAL_ENABLED = booleanPreferencesKey("vitalsExperimentalEnabled")
         val VITALS_RESEARCH_ENABLED = booleanPreferencesKey("vitalsResearchEnabled")

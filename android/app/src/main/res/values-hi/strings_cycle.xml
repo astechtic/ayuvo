@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">सबसे ज़्यादा लॉग किए गए लक्षण</string>
     <string name="cycle_chart_flow">पीरियड के दिन के अनुसार फ़्लो</string>
     <string name="cycle_chart_flow_footer">आपके हाल के पीरियड के हर दिन का औसत फ़्लो (ऊंचा = ज़्यादा)।</string>
-    <string name="cycle_chart_empty">अभी पर्याप्त डेटा नहीं है</string>
+    <string name="cycle_chart_empty">अभी पर्याप्त डेटा नहीं</string>
     <string name="cycle_chart_median_line">डैश लाइन: मीडियन, %1$s दिन</string>
     <string name="cycle_symptom_cycles">%2$d में से %1$d चक्र</string>
     <string name="cycle_about_estimates">इन अनुमानों के बारे में</string>

@@ -145,6 +145,10 @@ class AyuvoApp : Application() {
         com.ayuvo.health.widget.WorkoutWidgetSync.observe(this, appScope, container.workoutRepository.activeStrengthSession)
         // Derived metrics (docs/derived-metrics.md): recomputed after mirror writes and switch changes.
         container.derivedMetrics.observe(appScope, container.derivedTrigger())
+        // Health analytics (docs/health-analytics.md §6): persisted after each Insights snapshot, which the derived
+        // revision already re-triggers, so it runs after the derived refresh.
+        // Built on the background scope: the trigger flows touch lazily created repositories (never on the main thread).
+        appScope.launch { container.analyticsService.observe(appScope, container.analyticsSnapshots()) }
         // Warm exercise catalog off the main thread before the first Workouts tab open.
         ExerciseRepository.warm(this)
         appScope.launch {
@@ -278,7 +282,37 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     // -- Health Data hub (local mirror of Health Connect) -------------------
     // Lazily opened: users who never enable the hub never create ayuvo_health.db.
     val healthDatabase: HealthDatabase by lazy { HealthDatabase(app) }
-    val healthStore: HealthDataStore by lazy { SqliteHealthDataStore(healthDatabase) }
+    val healthStore: HealthDataStore by lazy {
+        // Rollups apply the per-metric source policy (shared/health/source_policy.json) from the analytics assets.
+        runCatching { analyticsConfig }
+        SqliteHealthDataStore(healthDatabase)
+    }
+    /** Health analytics contract (docs/health-analytics.md); loading it publishes AnalyticsConfig.active. */
+    val analyticsConfig: com.ayuvo.health.data.analytics.engine.AnalyticsConfig by lazy {
+        com.ayuvo.health.data.analytics.engine.AnalyticsConfig.load(app)
+    }
+    /** Persists analytics results and runs the optional forecast (docs/health-analytics.md §6, §5.12). */
+    val analyticsService: com.ayuvo.health.data.analytics.AnalyticsService by lazy {
+        com.ayuvo.health.data.analytics.AnalyticsService(
+            repository = { if (appContext.getDatabasePath(HealthDatabase.NAME).exists()) analyticsRepository else null },
+            config = { runCatching { analyticsConfig }.getOrNull() },
+            forecastEnabled = { prefs.analyticsForecastEnabled.first() }
+        )
+    }
+
+    /** Insights snapshots while Insights is on (null otherwise), for [analyticsService]. */
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun analyticsSnapshots(): kotlinx.coroutines.flow.Flow<com.ayuvo.health.insights.InsightsSnapshot?> =
+        prefs.insightsEnabled.flatMapLatest { on ->
+            if (!on) kotlinx.coroutines.flow.flowOf(null)
+            else kotlinx.coroutines.flow.combine(insightsTriggers() + prefs.analyticsForecastEnabled) { it.toList() }
+                .let { insightsRepository.snapshots(listOf(it)) }
+        }
+
+    /** Versioned analytics results and per-user forecast models (health DB v5); never exported. */
+    val analyticsRepository: com.ayuvo.health.data.analytics.AnalyticsRepository by lazy {
+        com.ayuvo.health.data.analytics.AnalyticsRepository(healthDatabase)
+    }
     val healthReadSource: HealthReadSource by lazy {
         HealthConnectReadSource(client = { health.clientOrNull() }, ownPackage = app.packageName)
     }
@@ -827,6 +861,8 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
     }
 
     val insightsRepository: com.ayuvo.health.insights.InsightsRepository by lazy {
+        // Recovery v2 and the analytics cards need the analytics contract (publishes AnalyticsConfig.active).
+        runCatching { analyticsConfig }
         com.ayuvo.health.insights.InsightsRepository(
             config = { insightsConfig },
             // Derived resting heart rate / VO2 max fill days without a native reading (docs/derived-metrics.md §1).

@@ -54,6 +54,8 @@ class WorkoutConfig(val root: JsonObject) {
         val minWindowMin: Int,
         val recoveryToleranceS: Int,
         val trimpK: Map<String, Double>,
+        /** Banister TRIMP weighting coefficient by sex (0.64 men, 0.86 women). */
+        val trimpA: Map<String, Double>,
         val walkRunSplitMps: Double
     )
 
@@ -111,6 +113,7 @@ class WorkoutConfig(val root: JsonObject) {
                 minWindowMin = i("min_window_min"),
                 recoveryToleranceS = i("recovery_tolerance_s"),
                 trimpK = o.objOrNull("trimp_k")?.entries?.associate { it.key to (it.value as JsonPrimitive).doubleOrNull!! }.orEmpty(),
+                trimpA = o.objOrNull("trimp_a")?.entries?.associate { it.key to (it.value as JsonPrimitive).doubleOrNull!! }.orEmpty(),
                 walkRunSplitMps = d("walk_run_split_mps")
             )
         }

@@ -251,6 +251,7 @@ internal fun InsightsSettingsPage(ctx: SettingsPageContext) {
     val tint = SettingsPage.INSIGHTS.tint
     val enabled by prefs.insightsEnabled.collectAsState(initial = true)
     val morning by prefs.insightsMorningNotification.collectAsState(initial = false)
+    val forecast by prefs.analyticsForecastEnabled.collectAsState(initial = false)
     val hour by prefs.dailySummaryHour.collectAsState(initial = 21)
     val minute by prefs.dailySummaryMinute.collectAsState(initial = 0)
     var pickTime by remember { mutableStateOf(false) }
@@ -273,6 +274,15 @@ internal fun InsightsSettingsPage(ctx: SettingsPageContext) {
                     icon = Icons.Filled.NotificationsActive, iconTint = tint,
                     modifier = Modifier.settingsRow("insightsMorning"),
                     trailing = RowTrailing.Toggle(morning, ctx.actions.onInsightsMorningToggle)
+                )
+            }
+            row {
+                GroupRow(
+                    title = stringResource(R.string.analytics_forecast_setting),
+                    subtitle = stringResource(R.string.analytics_forecast_setting_sub),
+                    icon = Icons.Filled.Insights, iconTint = tint,
+                    modifier = Modifier.settingsRow("analyticsForecast"),
+                    trailing = RowTrailing.Toggle(forecast, { v -> scope.launch { prefs.setAnalyticsForecastEnabled(v) } })
                 )
             }
             row {

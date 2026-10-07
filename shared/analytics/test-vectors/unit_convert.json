@@ -1,0 +1,199 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "ok": true,
+        "value": 69.85322498
+      },
+      "input": {
+        "from": "lb",
+        "to": "kg",
+        "value": 154.0
+      },
+      "name": "lb_kg"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 154.323583529
+      },
+      "input": {
+        "from": "kg",
+        "to": "lb",
+        "value": 70.0
+      },
+      "name": "kg_lb"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 1.7526
+      },
+      "input": {
+        "from": "ft",
+        "to": "m",
+        "value": 5.75
+      },
+      "name": "ft_m"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 1.7526
+      },
+      "input": {
+        "from": "in",
+        "to": "m",
+        "value": 69.0
+      },
+      "name": "in_m"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 478.011472275
+      },
+      "input": {
+        "from": "kJ",
+        "to": "kcal",
+        "value": 2000.0
+      },
+      "name": "kj_kcal"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 2092.0
+      },
+      "input": {
+        "from": "kcal",
+        "to": "kJ",
+        "value": 500.0
+      },
+      "name": "kcal_kj"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 37.0
+      },
+      "input": {
+        "from": "degF",
+        "to": "degC",
+        "value": 98.6
+      },
+      "name": "f_c"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 97.88
+      },
+      "input": {
+        "from": "degC",
+        "to": "degF",
+        "value": 36.6
+      },
+      "name": "c_f"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 450.0
+      },
+      "input": {
+        "from": "min",
+        "to": "s",
+        "value": 7.5
+      },
+      "name": "min_s"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 435.0
+      },
+      "input": {
+        "from": "h",
+        "to": "min",
+        "value": 7.25
+      },
+      "name": "h_min"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 0.845
+      },
+      "input": {
+        "from": "ms",
+        "to": "s",
+        "value": 845.0
+      },
+      "name": "ms_s"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 18.3
+      },
+      "input": {
+        "from": "fraction",
+        "to": "%",
+        "value": 0.183
+      },
+      "name": "fraction_pct"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 4988.9664
+      },
+      "input": {
+        "from": "mi",
+        "to": "m",
+        "value": 3.1
+      },
+      "name": "mi_m"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 12.5
+      },
+      "input": {
+        "from": "bpm",
+        "to": "bpm",
+        "value": 12.5
+      },
+      "name": "same_unit"
+    },
+    {
+      "expected": {
+        "ok": false,
+        "value": null
+      },
+      "input": {
+        "from": "kg",
+        "to": "m",
+        "value": 1.0
+      },
+      "name": "unknown_pair"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": null
+      },
+      "input": {
+        "from": "kg",
+        "to": "lb",
+        "value": null
+      },
+      "name": "null_value"
+    }
+  ],
+  "format": "ayuvo-analytics-vectors",
+  "function": "unit_convert",
+  "version": 1
+}

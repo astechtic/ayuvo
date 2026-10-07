@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Pushed Insights screens. Registered on the Summary and Browse stacks (`insightsRouteDestinations`).
 enum InsightsRoute: Hashable {
-    case recovery, healthAge, trends, patterns
+    case recovery, healthAge, trends, patterns, signals
     /// Daily Review of a day key ("2026-09-20"); nil → today.
     case review(String?)
 }
@@ -17,6 +17,7 @@ extension View {
             case .review(let day): DailyReviewView(initialDay: day)
             case .trends: InsightsTrendsView()
             case .patterns: PatternsView()
+            case .signals: AnalyticsSignalsView()
             }
         }
     }

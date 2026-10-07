@@ -18,6 +18,7 @@ struct InsightsSettingsSection: View {
     @AppStorage("dailySummaryMinute") private var reviewMinute = 0
     @AppStorage("notificationsEnabled") private var notificationsEnabled = false
     @AppStorage("healthKitEnabled") private var healthKitEnabled = false
+    @AppStorage(AnalyticsSettings.forecastEnabledKey) private var forecastEnabled = false
 
     var body: some View {
         Section {
@@ -81,6 +82,26 @@ struct InsightsSettingsSection: View {
                 Text("Notifications")
             } footer: {
                 Text("Notifications only say that your recovery or review is ready; they never show your values. Your phone decides when the morning refresh runs, so Recovery may appear later than you expect.")
+            }
+            .listRowBackground(AppColors.appCard)
+
+            Section {
+                Toggle(isOn: $forecastEnabled) {
+                    Label {
+                        Text("Forecast")
+                    } icon: {
+                        SettingsIcon("sparkles", tint: SettingsTint.insights)
+                    }
+                }
+                .tint(AppColors.calorie)
+                .accessibilityIdentifier("settings.insights.forecast")
+                .onChange(of: forecastEnabled) { _, _ in
+                    Task { await InsightsStore.shared.refresh(force: true) }
+                }
+            } header: {
+                Text("Experimental")
+            } footer: {
+                Text("Predicts tomorrow's HRV and resting heart rate with a small model trained on your own data, on this iPhone. It needs about 3 months of data and is shown only when it beats simple guesses on your most recent days. Forecasts can be wrong.")
             }
             .listRowBackground(AppColors.appCard)
         }

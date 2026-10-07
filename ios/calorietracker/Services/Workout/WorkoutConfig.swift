@@ -53,6 +53,7 @@ nonisolated struct WorkoutConfig: Decodable, Sendable {
         let minSegmentS: Double
         let minWindowMin: Double
         let recoveryToleranceS: Double
+        let trimpA: [String: Double]
         let trimpK: [String: Double]
         let walkRunSplitMps: Double
 
@@ -63,7 +64,7 @@ nonisolated struct WorkoutConfig: Decodable, Sendable {
                  keytelMinCoverage = "keytel_min_coverage", maxGrade = "max_grade", maxHAccuracyM = "max_h_accuracy_m",
                  maxHrr = "max_hrr", maxSampleGapS = "max_sample_gap_s", mergeGapMin = "merge_gap_min",
                  minHrr = "min_hrr", minSegmentS = "min_segment_s", minWindowMin = "min_window_min",
-                 recoveryToleranceS = "recovery_tolerance_s", trimpK = "trimp_k", walkRunSplitMps = "walk_run_split_mps"
+                 recoveryToleranceS = "recovery_tolerance_s", trimpA = "trimp_a", trimpK = "trimp_k", walkRunSplitMps = "walk_run_split_mps"
         }
     }
 

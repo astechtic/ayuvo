@@ -377,6 +377,20 @@ struct GetDailyReviewIntent: AppIntent {
     }
 }
 
+struct GetHealthEvidenceIntent: AppIntent {
+    static let title: LocalizedStringResource = "Get Health Evidence"
+    static let description = IntentDescription("Already-computed health evidence: Recovery Indicator with its drivers, signal deviations, HRV, sleep and training load, each with status, confidence and algorithm version. Compared with your own history; not a diagnosis.", categoryName: "Insights")
+    static let authenticationPolicy: IntentAuthenticationPolicy = .requiresLocalDeviceAuthentication
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
+        let result = try await runAction("insights.evidence.get")
+        let items = result.fields["items"].map(\.jsonValue) ?? []
+        let data = (try? JSONSerialization.data(withJSONObject: ["items": items], options: [.sortedKeys])) ?? Data()
+        return .result(value: String(decoding: data, as: UTF8.self), dialog: result.intentDialog)
+    }
+}
+
 // MARK: - Records & medications
 
 struct SearchHealthRecordsIntent: AppIntent {

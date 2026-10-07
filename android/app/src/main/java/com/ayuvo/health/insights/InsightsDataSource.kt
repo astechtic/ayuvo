@@ -45,7 +45,9 @@ data class InsightsBundle(
      * Days filled from a finger camera scan (docs/camera-vitals.md §7 "Insights"), by series id
      * (`resting_heart_rate`, `hrv`, `respiratory_rate`). Shown like the overnight fallback; never a platform day.
      */
-    val scanFallback: Map<String, Set<LocalDate>> = emptyMap()
+    val scanFallback: Map<String, Set<LocalDate>> = emptyMap(),
+    /** What the analytics engine needs beyond the Insights inputs (docs/health-analytics.md); empty without the hub. */
+    val extras: AnalyticsExtras = AnalyticsExtras()
 ) {
     fun inputsFor(day: LocalDate): InsightsInputs = inputs.copy(overnightFallback = fallbackByDay[day].orEmpty())
 }
@@ -86,31 +88,55 @@ class InsightsDataSource(
         val sleep = LinkedHashMap<LocalDate, SleepInput>()
         val workouts = ArrayList<WorkoutInput>()
         val health = if (hubOn) healthRepository() else null
+        val nightDetails = LinkedHashMap<LocalDate, NightDetail>()
+        val sources = LinkedHashMap<String, Map<LocalDate, String>>()
+        val derivedDays = LinkedHashMap<String, Set<LocalDate>>()
+        val activities = ArrayList<ActivityInput>()
+        val providerWorkouts = ArrayList<Pair<Long, Long>>()
+        var temperature: Map<LocalDate, Double> = emptyMap()
+        var basal: Map<LocalDate, Double> = emptyMap()
+        var vo2Provider: Map<LocalDate, Double> = emptyMap()
+        var vo2Uth: Map<LocalDate, Double> = emptyMap()
         if (health != null) {
             for (n in health.sleepNights(from, today)) {
                 val day = runCatching { LocalDate.parse(n.nightOf) }.getOrNull() ?: continue
                 sleep[day] = SleepInput(n.asleepS / 60.0, n.startMs, n.endMs)
+                nightDetails[day] = NightDetail.of(n, day, zone)
             }
             for ((metric, type) in OVERNIGHT) {
                 val daily = health.daily(type.id, from, today).filter { it.count > 0 }.associate { LocalDate.parse(it.day) to it.avg }
                 val rows = health.samples(type.id, from.minusDays(1), today).filter { !it.deleted && it.value != null }.sortedBy { it.startMs }
                 val values = overnightSeries(rows, sleep, daily, from, today) { day -> fallback.getOrPut(day) { HashSet() } += metric }
                 if (values.isNotEmpty()) series[metric] = values
+                if (metric == "hrv" || metric == "resting_heart_rate") dominantSources(rows).takeIf { it.isNotEmpty() }?.let { sources[metric] = it }
             }
-            dailyAverage(health, HealthDataType.VO2_MAX, from, today).takeIf { it.isNotEmpty() }?.let { series["vo2_max"] = it }
+            dailyAverage(health, HealthDataType.VO2_MAX, from, today).takeIf { it.isNotEmpty() }?.let {
+                series["vo2_max"] = it
+                vo2Provider = it
+            }
             val derived = runCatching { derivedEnabled() }.getOrDefault(emptySet())
             for ((metric, derivedId) in DERIVED_FALLBACK) {
                 if (derivedId !in derived) continue
                 val estimates = runCatching { health.derivedSeries(derivedId, null, from, today) }.getOrDefault(emptyList())
                     .filter { it.sourceKind == "derived" }
                     .associate { it.day to it.value }
-                val merged = withDerivedFallback(series[metric].orEmpty(), estimates)
+                if (metric == "vo2_max") vo2Uth = estimates
+                val native = series[metric].orEmpty()
+                val merged = withDerivedFallback(native, estimates)
                 if (merged.isNotEmpty()) series[metric] = merged
+                derivedDays[metric] = estimates.keys.filter { it !in native }.toSet()
             }
             dailySum(health, HealthDataType.STEPS, from, today).takeIf { it.isNotEmpty() }?.let { series["steps"] = it }
             dailySum(health, HealthDataType.ACTIVE_ENERGY, from, today).takeIf { it.isNotEmpty() }?.let { series["active_energy"] = it }
+            // Skin temperature: Health Connect stores deltas from the device's own baseline (°C); the daily mean delta.
+            temperature = runCatching { dailyAverage(health, HealthDataType.SKIN_TEMPERATURE, from, today) }.getOrDefault(emptyMap())
+            basal = runCatching { dailyAverage(health, HealthDataType.BASAL_METABOLIC_RATE, from, today) }.getOrDefault(emptyMap())
             for (row in health.samples(HealthDataType.WORKOUT.id, from.minusDays(1), today)) {
-                if (!row.deleted && row.endMs > row.startMs) workouts += WorkoutInput(row.startMs, row.endMs, null)
+                if (!row.deleted && row.endMs > row.startMs) {
+                    workouts += WorkoutInput(row.startMs, row.endMs, null)
+                    activities += ActivityInput(row.startMs, row.endMs, null, null, AnalyticsBridge.activityKey(row.categoryValue))
+                    if (!row.sourceId.startsWith(OWN_PACKAGE_PREFIX)) providerWorkouts += row.startMs to row.endMs
+                }
             }
         }
         // Finger camera scans fill resting HR / HRV (RMSSD) / respiratory rate days that have no platform value.
@@ -123,10 +149,17 @@ class InsightsDataSource(
             if (scans.isNotEmpty()) scanFallback = withScanFallback(series, scans, vcfg, from, today)
         }
         // Ayuvo strength sessions join the health workouts; overlaps are merged by the engine.
+        // Effort is the logged session RPE (CR-10), so training load uses it instead of the default intensity.
         for (w in snap.workouts) {
-            val start = w.startedAt.toEpochMilli()
-            val end = w.completedAt.toEpochMilli()
-            if (end > start && !MetricsReference.localDateOf(start, zone).isBefore(from.minusDays(1))) workouts += WorkoutInput(start, end, null)
+            val (start, end) = w.trainingIntervalMs ?: continue
+            if (end > start && !MetricsReference.localDateOf(start, zone).isBefore(from.minusDays(1))) {
+                workouts += WorkoutInput(start, end, w.sessionEffortCr10)
+                activities += ActivityInput(
+                    start, end, w.sessionEffortCr10, w.heartRate?.trimp,
+                    if (w.isGps) AnalyticsBridge.gpsActivityKey(w.gps!!.sport) else "strength_training",
+                    kcal = (w.gps?.activeKcal ?: w.caloriesBurned)?.toDouble()
+                )
+            }
         }
         daily(snap.weight.map { MetricsReference.localDateOf(it.date.toEpochMilli(), zone) to it.weightKg }, from).takeIf { it.isNotEmpty() }?.let { series["weight"] = it }
         daily(snap.bodyFat.map { MetricsReference.localDateOf(it.date.toEpochMilli(), zone) to it.bodyFatPercent }, from).takeIf { it.isNotEmpty() }?.let { series["body_fat"] = it }
@@ -173,13 +206,37 @@ class InsightsDataSource(
             fastingHours = fasting,
             strengthVolume = strength
         )
-        return InsightsBundle(today, inputs, profileOf(p, zone), fallback, health != null, scanFallback)
+        val gpsVo2 = HashMap<LocalDate, Double>()
+        val hrr1 = HashMap<LocalDate, Double>()
+        for (w in snap.workouts.sortedBy { it.completedAt }) {
+            val day = MetricsReference.workoutDay(w.diaryDateKey, w.startedAt.toEpochMilli(), zone)
+            if (day.isBefore(from) || day.isAfter(today)) continue
+            w.gps?.bestVo2max?.let { gpsVo2[day] = it }
+            w.heartRate?.hrr1?.let { hrr1[day] = it }
+        }
+        val extras = AnalyticsExtras(
+            nights = nightDetails, temperature = temperature, sources = sources, derivedDays = derivedDays,
+            activities = activities, providerWorkouts = providerWorkouts, basalKcal = basal,
+            vo2Provider = vo2Provider, vo2Uth = vo2Uth, vo2Gps = gpsVo2, hrr1 = hrr1,
+            weightKg = series["weight"]?.entries?.maxByOrNull { it.key }?.value
+        )
+        return InsightsBundle(today, inputs, profileOf(p, zone), fallback, health != null, scanFallback, extras)
     }
 
     companion object {
         /** Patterns look back 120 days and each Recovery needs 60 more; Health Age pace needs 12 weeks + 90 days. */
         const val HISTORY_DAYS = 200L
         private const val WORKOUT_TRACKING_DAYS = 90L
+        /** Ayuvo's own Health Connect writes (release and debug packages); not provider workouts. */
+        private const val OWN_PACKAGE_PREFIX = "com.ayuvo.health"
+
+        /** Most frequent source id per local day (ties: the smaller id): notices a source change for the baselines. */
+        fun dominantSources(rows: List<HealthSampleRow>): Map<LocalDate, String> =
+            rows.groupBy { it.localDay }.mapNotNull { (day, rs) ->
+                val d = runCatching { LocalDate.parse(day) }.getOrNull() ?: return@mapNotNull null
+                val counts = rs.groupingBy { it.sourceId }.eachCount()
+                d to counts.entries.sortedWith(compareByDescending<Map.Entry<String, Int>> { it.value }.thenBy { it.key }).first().key
+            }.toMap()
 
         /** Insights series filled from a derived metric on days without a native value (docs/derived-metrics.md §1). */
         val DERIVED_FALLBACK: List<Pair<String, String>> = listOf(
@@ -369,7 +426,14 @@ class InsightsDataSource(
         private suspend fun dailyAverage(h: HealthDataRepository, type: HealthDataType, from: LocalDate, to: LocalDate): Map<LocalDate, Double> =
             h.daily(type.id, from, to).filter { it.count > 0 && it.avg != null }.associate { LocalDate.parse(it.day) to it.avg!! }
 
+        /**
+         * Day totals. Active energy excludes Ayuvo's own workout-burn estimates (`own_sum`), clamped at 0, so it is the
+         * provider's active energy (shared/analytics energy contract: Ayuvo burns are added only where no provider
+         * workout covers them, never on top of the provider total).
+         */
         private suspend fun dailySum(h: HealthDataRepository, type: HealthDataType, from: LocalDate, to: LocalDate): Map<LocalDate, Double> =
-            h.daily(type.id, from, to).filter { it.sum != null && (it.count > 0 || it.fromPlatformAggregate) }.associate { LocalDate.parse(it.day) to it.sum!! }
+            h.daily(type.id, from, to).filter { it.sum != null && (it.count > 0 || it.fromPlatformAggregate) }.associate {
+                LocalDate.parse(it.day) to if (type == HealthDataType.ACTIVE_ENERGY) maxOf(0.0, it.sum!! - (it.ownSum ?: 0.0)) else it.sum!!
+            }
     }
 }

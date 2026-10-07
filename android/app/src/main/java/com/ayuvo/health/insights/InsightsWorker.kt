@@ -33,7 +33,15 @@ class InsightsWorker(appContext: Context, params: WorkerParameters) : CoroutineW
         if (!backgroundRead) return Result.success()
         runCatching { c.requestHealthSync(HealthSyncTrigger.APP_OPEN).await() }
             .onFailure { Log.w(TAG, "Background sync failed: ${it.javaClass.simpleName}") }
-        val recovery = runCatching { c.insightsRepository.recoveryToday() }.getOrNull() ?: return Result.success()
+        // Recompute derived metrics now instead of racing the debounced observer, so Recovery reads the fresh
+        // derived resting heart rate / VO2 max of the night that just synced.
+        runCatching { c.derivedMetrics.refresh() }
+            .onFailure { Log.w(TAG, "Derived refresh failed: ${it.javaClass.simpleName}") }
+        val snapshot = runCatching { c.insightsRepository.current() }.getOrNull() ?: return Result.success()
+        val recovery = snapshot.recovery
+        // Persist today's analytics (docs/health-analytics.md §6) from the same snapshot the notification uses.
+        runCatching { c.analyticsService.refresh(snapshot) }
+            .onFailure { Log.w(TAG, "Analytics refresh failed: ${it.javaClass.simpleName}") }
         val today = LocalDate.now().toString()
         val post = shouldNotify(
             recoveryReady = recovery.ok,

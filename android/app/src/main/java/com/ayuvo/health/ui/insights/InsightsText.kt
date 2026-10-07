@@ -59,6 +59,8 @@ object InsightsText {
 
     /** A Recovery contributor line ("HRV +8% vs baseline"). */
     fun signal(context: Context?, cfg: InsightsConfig?, r: RecoveryResult, s: RecoverySignal): String {
+        // Recovery v2 drivers carry their analytics contract key (shared/analytics recovery.drivers).
+        (s.params["v2_key"] as? String)?.let { return t(context, it, s.text) }
         val english = cfg?.recovery?.contributors?.get(s.id) ?: return s.text
         return refill(context, "insights.recovery.contributors.${s.id}", english, s.params, s.text) { k, v ->
             if (s.id == "training_load" && k == "category") {

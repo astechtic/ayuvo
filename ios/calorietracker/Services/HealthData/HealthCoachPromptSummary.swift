@@ -38,6 +38,30 @@ nonisolated enum HealthCoachPromptSummary {
         return Array(lines.prefix(maxLines))
     }
 
+    /// "- Recovery Indicator (2026-03-15): 64/100, moderate, confidence 87% (ayuvo.recovery@2). Lower: HRV, resting
+    /// heart rate. Higher: sleep." nil without a score.
+    static func recoveryLine(_ r: AJ, day: String) -> String? {
+        guard let score = r["score"].int else { return nil }
+        let conf = Int(((r["confidence"].double ?? 0) * 100).rounded())
+        var line = "- Recovery Indicator (\(day)): \(score)/100, \(r["label"].string ?? ""), confidence \(conf)% (\(r["algorithm_id"].string ?? "ayuvo.recovery")@\(r["algorithm_version"].int ?? 2), compared with the user's own baseline)."
+        let neg = r["drivers"].array.filter { $0["direction"].string == "negative" }.compactMap { $0["id"].string }
+        let pos = r["drivers"].array.filter { $0["direction"].string == "positive" }.compactMap { $0["id"].string }
+        if !neg.isEmpty { line += " Pulling down: \(neg.joined(separator: ", "))." }
+        if !pos.isEmpty { line += " Supporting: \(pos.joined(separator: ", "))." }
+        return line
+    }
+
+    /// "- Signals (2026-03-15): several health signals are outside the recent normal range (HRV, resting heart rate)."
+    static func signalsLine(_ a: AJ, day: String) -> String? {
+        guard let state = a["state"].string, state != "NORMAL" else { return nil }
+        let flagged = a["signals"].array.filter { $0["flagged"].bool == true }.compactMap { $0["id"].string }
+        let text = AnalyticsConfig.shared["anomaly"]["states"][state].string ?? state
+        var line = "- Signals (\(day)): \(text)"
+        if !flagged.isEmpty { line += " (\(flagged.joined(separator: ", ")))" }
+        if a["persistent"].bool == true { line += " Persistent for several days." }
+        return line + " Not a diagnosis."
+    }
+
     static func line(for type: HealthMetricType, summary: HealthCoachSummary) -> String {
         let name = type.englishName
         let days = summary.days.count

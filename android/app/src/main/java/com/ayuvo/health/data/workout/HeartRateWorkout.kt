@@ -92,6 +92,7 @@ object HeartRateWorkout {
         val hrMax = inp.hrMax
         val rhr = inp.rhr
         val k = WorkoutMath.bySex(th.trimpK, inp.sex)
+        val a = WorkoutMath.bySex(th.trimpA, inp.sex)
         val kc = WorkoutMath.bySex(th.keytel, inp.sex)
         val energy = inp.weightKg != null && inp.weightKg != 0.0 && inp.age != null
         for ((i, s) in samples.withIndex()) {
@@ -106,7 +107,7 @@ object HeartRateWorkout {
             zones[zone(bpm, hrMax, rhr, th)] += dur / 1000.0
             if (rhr != null && hrMax > rhr) {
                 val x = (bpm - rhr) / (hrMax - rhr)
-                if (x > 0) trimp += minutes * x * 0.64 * exp(k * x)
+                if (x > 0) trimp += minutes * x * a * exp(k * x)
             }
             if (energy) {
                 val perMin = (kc[0] + kc[1] * bpm + kc[2] * inp.weightKg!! + kc[3] * inp.age!!) / 4.184

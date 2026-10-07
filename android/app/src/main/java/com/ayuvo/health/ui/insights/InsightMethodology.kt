@@ -26,7 +26,59 @@ object InsightMethodology {
 
     private fun disclaimers(context: Context, cfg: InsightsConfig, vararg ids: String): List<String> = ids.mapNotNull { InsightsText.disclaimer(context, cfg, it) }
 
+    @Suppress("UNCHECKED_CAST")
+    private fun analyticsRoot(): Map<String, Any?>? = com.ayuvo.health.data.analytics.engine.AnalyticsConfig.active?.root
+
+    /**
+     * Recovery Indicator v2 (shared/analytics, docs/health-analytics.md §5.7): weights with their reasons, the
+     * person's own inputs vs baseline (robust z), classification and the analytics disclaimer.
+     */
+    @Suppress("UNCHECKED_CAST")
+    private fun recoveryV2(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot): MethodologyContent? {
+        val root = analyticsRoot() ?: return null
+        val rc = root["recovery"] as? Map<String, Any?> ?: return null
+        val res = context.resources
+        val comps = (rc["components"] as List<Map<String, Any?>>)
+        val weights = comps.map { c ->
+            val metric = c["metric"] as String
+            AnalyticsText.metricLabel(context, metric) to pct((c["weight"] as Number).toDouble())
+        }
+        val v2 = snap.recovery.v2
+        val inputs = (v2?.get("components") as? List<Map<String, Any?>>).orEmpty().map { c ->
+            val id = c["id"] as String
+            val metric = comps.firstOrNull { it["id"] == id }?.get("metric") as? String ?: id
+            val label = AnalyticsText.metricLabel(context, metric)
+            if (c["available"] == true) {
+                val unit = c["unit"] as? String ?: ""
+                val value = (c["value"] as? Number)?.toDouble()
+                val base = (c["baseline"] as? Number)?.toDouble()
+                val z = (c["z"] as? Number)?.toDouble()
+                val fmt = { v: Double? -> if (unit == "min") InsightsFormat.duration(v) else "${InsightsFormat.number(v, if (unit == "br/min" || unit == "°C") 1 else 0)} $unit" }
+                InsightInput(label, res.getString(R.string.ui_insights_value_baseline, fmt(value), fmt(base)) + (z?.let { " · " + res.getString(R.string.analytics_sd, InsightsFormat.signed(it, 1)) } ?: ""))
+            } else InsightInput(label, res.getString(R.string.ui_insights_no_reading), missing = true)
+        }
+        val why = comps.map { c -> AnalyticsText.metricLabel(context, c["metric"] as String) + ": " + (c["why"] as? String).orEmpty() }
+        val classification = AnalyticsText.classification(context, "PERSONALIZED_STATISTICAL")
+        return MethodologyContent(
+            listOf("background"), weights, inputs,
+            listOfNotNull(classification) + why,
+            listOfNotNull(AnalyticsText.disclaimer(context)) + disclaimers(context, cfg, "background")
+        )
+    }
+
+    /** Health signals screen: the algorithms behind each card, with their assumptions (shared/analytics registry). */
+    @Suppress("UNCHECKED_CAST")
+    fun analytics(context: Context): MethodologyContent {
+        val root = analyticsRoot()
+        val algos = (root?.get("algorithms") as? List<Map<String, Any?>>).orEmpty()
+            .filter { it["id"] in setOf("ayuvo.anomaly", "ayuvo.hrv.status", "ayuvo.sleep.need", "ayuvo.sleep.status", "ayuvo.load.ewma", "ayuvo.hrr", "ayuvo.met.intensity", "ayuvo.energy", "ayuvo.fitness.vo2max_trend", "ayuvo.forecast") }
+        val weights = algos.map { a -> (a["id"] as String) + " v" + (a["version"] as Number).toInt() to (AnalyticsText.classification(context, a["classification"] as? String) ?: "") }
+        val sources = algos.map { a -> (a["id"] as String) + ": " + (a["assumptions"] as? String).orEmpty() }
+        return MethodologyContent(emptyList(), weights, emptyList(), sources, listOfNotNull(AnalyticsText.disclaimer(context)))
+    }
+
     fun recovery(context: Context, cfg: InsightsConfig, snap: InsightsSnapshot?): MethodologyContent {
+        if (snap?.recovery?.v2 != null) recoveryV2(context, cfg, snap)?.let { return it }
         val res = context.resources
         val rc = cfg.recovery
         val weights = rc.components.map { InsightsText.metricLabel(context, cfg.metric(it.metric)) to pct(it.weight) } +

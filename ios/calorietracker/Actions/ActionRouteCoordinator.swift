@@ -129,6 +129,9 @@ extension AppNavigator {
         case "insights.recovery": openInsights(.recovery)
         case "insights.health_age": openInsights(.healthAge)
         case "insights.review": openInsights(.review(nil))
+        case "insights.signals": openInsights(.signals)
+        case "insights.trends": openInsights(.trends)
+        case "insights.patterns": openInsights(.patterns)
         case "records": selectedTab = .records
         case "coach": selectedTab = .coach
         case "settings": openSettings()

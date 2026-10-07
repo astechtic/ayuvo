@@ -468,6 +468,36 @@ struct StrengthWorkoutSession: Identifiable, Codable, Equatable, Hashable {
     var outdoor: OutdoorWorkoutSummary? = nil
 
     var durationMinutes: Int { max(0, Int(ceil(Double(durationSeconds) / 60))) }
+
+    /// Session effort on the CR-10 scale (0–10): the mean of the performed sets' RPE, each converted from its own
+    /// scale (unspecified sets use `defaultScale`). Nil when no performed set has a numeric RPE, so a missing effort
+    /// never becomes a made-up one. Feeds session-RPE training load (Foster 2001, docs/health-analytics.md).
+    func effortCR10(defaultScale: StrengthWorkoutRPEScale = .strength) -> Double? {
+        var total = 0.0
+        var n = 0
+        for set in exercises.flatMap(\.sets) where set.isPerformed {
+            guard let value = Double(set.rpe.replacingOccurrences(of: ",", with: ".")), value.isFinite else { continue }
+            let normalized: Double
+            switch set.rpeScale ?? defaultScale {
+            case .strength: normalized = (value - 1) / 9
+            case .cr10: normalized = value / 10
+            case .borg: normalized = (value - 6) / 14
+            }
+            total += min(max(normalized, 0), 1) * 10
+            n += 1
+        }
+        return n > 0 ? total / Double(n) : nil
+    }
+
+    /// The session's real time span. Older sessions saved `completedAt == startedAt`; their length then comes from
+    /// `durationSeconds`, else the exercises' saved timer durations. Nil when nothing gives a length.
+    var activeInterval: DateInterval? {
+        if completedAt > startedAt { return DateInterval(start: startedAt, end: completedAt) }
+        var seconds = Double(durationSeconds)
+        if seconds <= 0 { seconds = exercises.compactMap(\.durationSeconds).reduce(0, +) }
+        guard seconds > 0 else { return nil }
+        return DateInterval(start: startedAt, duration: seconds)
+    }
     var exerciseCount: Int { exercises.count }
     var performedSetCount: Int { exercises.flatMap(\.sets).filter(\.isPerformed).count }
     var repCount: Int {

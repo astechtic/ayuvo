@@ -223,12 +223,13 @@ object HeartDerivation {
         val counts = IntArray(5)
         var trimp = 0.0
         val k = th.bySex(th.trimpK, inp.sex)
+        val a = th.bySex(th.trimpA, inp.sex)
         for (t in dayMinutes) {
             val v = hr.getValue(t)
             counts[hrZone(v, hrMax, rhr, th)] += 1
             if (zoneMethod == "hrr") {
                 val x = (v - rhr!!) / (hrMax - rhr)
-                if (x >= th.trimpMinHrr) trimp += x * 0.64 * exp(k * x)
+                if (x >= th.trimpMinHrr) trimp += x * a * exp(k * x)
             }
         }
         return HeartDayResult(

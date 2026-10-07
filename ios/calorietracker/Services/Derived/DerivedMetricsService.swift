@@ -83,11 +83,20 @@ final class DerivedMetricsService {
                                                  calendar: calendar)
         )
         inputs.gpsVO2max = Self.gpsVO2maxByDay(defaults: defaults)
+        // De-duplicated energy (HealthKit statistics, Ayuvo's own tagged burns excluded): the mirror rollups add up
+        // every source, so an iPhone and a watch would be counted twice in TDEE / PAL / energy balance.
+        let energyFrom = InsightsDay.date(from, calendar: calendar) ?? Date()
+        inputs.activeTotals = await InsightsHealthKitTotals.daily(typeID: "active_energy", from: energyFrom, to: Date(),
+                                                                  calendar: calendar, defaults: defaults)
+        inputs.restingTotals = await InsightsHealthKitTotals.daily(typeID: "resting_energy", from: energyFrom, to: Date(),
+                                                                   calendar: calendar, defaults: defaults)
         let rows = await Self.compute(db: db, config: config, catalog: catalog, enabled: enabled, from: from, to: today,
                                       inputs: inputs)
         let days = (0..<historyDays).map { InsightsDay.add(from, $0) }
         try? await db.replaceDerivedValues(rows, metricIDs: enabled.sorted(), days: days)
         revision += 1
+        // Analytics follows the derived pass: Ayuvo RMSSD from new beat-to-beat series (docs/health-analytics.md §5.3).
+        await AnalyticsService.shared.syncHeartbeats()
     }
 
     // MARK: - Compute (off the main actor)
@@ -106,6 +115,10 @@ final class DerivedMetricsService {
         var intake: DerivedIntakeInputs.Snapshot = .empty
         /// VO₂max from GPS workouts by diary day (WorkoutVO2maxInputs); preferred over Uth–Sørensen.
         var gpsVO2max: [String: Double] = [:]
+        /// De-duplicated daily active / resting energy from HealthKit statistics; nil (tests, HealthKit unavailable)
+        /// falls back to the mirror rollups.
+        var activeTotals: [String: Double]?
+        var restingTotals: [String: Double]?
     }
 
     nonisolated static func compute(
@@ -128,6 +141,13 @@ final class DerivedMetricsService {
             .filter { !$0.isDeleted && $0.categoryValue != nil }
             .map { SleepDerivation.SourceRow(startMs: $0.startMs, endMs: $0.endMs, code: $0.categoryValue!, source: $0.sourceID) }
         let nights = SleepDerivation.sleepNights(timeZone: inputs.timeZone, rows: sleepRows, config: config).nights
+        // Main-sleep minutes per wake day: the personal sleep need behind sleep debt (shared/analytics sleep_need).
+        var asleepByDay: [String: Double] = [:]
+        for (wake, night) in nights {
+            if let m = SleepDerivation.sleepNight(timeZone: inputs.timeZone, wakeDay: wake, rows: night.rows, config: config).asleepMin {
+                asleepByDay[wake] = m
+            }
+        }
         let nativeRHR = dailyAvg(await (try? db.dailyRollups(type: "resting_heart_rate", fromDay: lookFrom, toDay: to)) ?? [])
         let activeByDay = Dictionary(uniqueKeysWithValues: ((try? await db.dailyRollups(type: "active_energy", fromDay: from, toDay: to)) ?? []).map { ($0.day, $0) })
         let restingByDay = dailySum((try? await db.dailyRollups(type: "resting_energy", fromDay: from, toDay: to)) ?? [])
@@ -191,7 +211,9 @@ final class DerivedMetricsService {
             let first = InsightsDay.add(day, -(th.regularityWindowDays - 1))
             let windowNights = nights.filter { $0.key <= day && $0.key >= first }.mapValues(\.rows)
             if !windowNights.isEmpty {
-                out["sleep_regularity"] = SleepDerivation.sleepRegularity(timeZone: inputs.timeZone, day: day, needMin: nil,
+                let need = AnalyticsSleep.sleepNeed(asleep: asleepByDay, day: day, AnalyticsConfig.shared)
+                out["sleep_regularity"] = SleepDerivation.sleepRegularity(timeZone: inputs.timeZone, day: day,
+                                                                          needMin: need.source == "personal" ? need.needMin : nil,
                                                                           nights: windowNights, config: config).jsonObject
             }
 
@@ -218,9 +240,9 @@ final class DerivedMetricsService {
             }
 
             // Energy
-            if let resting = restingByDay[day] {
+            if let resting = inputs.restingTotals.map({ $0[day] }) ?? restingByDay[day] {
                 let a = activeByDay[day]
-                let active = a?.sum.map { $0 - (a?.ownSum ?? 0) }
+                let active: Double? = inputs.activeTotals.map { $0[day] } ?? a?.sum.map { max(0, $0 - (a?.ownSum ?? 0)) }
                 out["energy_day"] = EnergyDerivation.energyDay(.init(restingKcal: resting, activeKcal: active,
                                                                      weightKg: weightOn(inputs.weights, day), heightCm: inputs.heightCm,
                                                                      age: age, sex: inputs.sex), config: config).jsonObject

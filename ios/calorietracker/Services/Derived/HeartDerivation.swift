@@ -201,12 +201,13 @@ nonisolated enum HeartDerivation {
         var counts = [0, 0, 0, 0, 0]
         var trimp = 0.0
         let k = DerivedConfig.Thresholds.bySex(th.trimpK, inp.sex)
+        let a = DerivedConfig.Thresholds.bySex(th.trimpA, inp.sex)
         for t in dayMinutes {
             let v = hr[t]!
             counts[hrZone(v, hrMax: hrMax, rhr: rhr, th)] += 1
             if hrr {
                 let x = (v - rhr!) / (hrMax - rhr!)
-                if x >= th.trimpMinHrr { trimp += x * 0.64 * exp(k * x) }
+                if x >= th.trimpMinHrr { trimp += x * a * exp(k * x) }
             }
         }
         out.lightMin = counts[1]

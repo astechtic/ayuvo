@@ -128,9 +128,14 @@ data class RecoveryResult(
     val components: List<RecoveryComponent>,
     val positives: List<RecoverySignal>,
     val negatives: List<RecoverySignal>,
-    val load: RecoveryLoad?
+    val load: RecoveryLoad?,
+    /** The Recovery Indicator v2 result (shared/analytics `recovery`) this was mapped from; null for v1. */
+    val v2: Map<String, Any?>? = null
 ) {
     val ok: Boolean get() = status == "ok"
+
+    /** v2 numeric confidence 0–1 (null for v1). */
+    val confidenceScore: Double? get() = (v2?.get("confidence") as? Number)?.toDouble()
 }
 
 data class HealthAgeMarker(

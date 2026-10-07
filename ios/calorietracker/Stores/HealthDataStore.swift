@@ -545,7 +545,7 @@ final class HealthDataStore {
             await refreshSnapshots()
         }
         let query = CoachHealthQuery.live(reader: reader, calendar: calendar, typeMeta: typeMeta)
-        let lines = await HealthCoachPromptSummary.lines(query: query, calendar: calendar)
+        let lines = await Self.analyticsCoachLines(reader: reader) + HealthCoachPromptSummary.lines(query: query, calendar: calendar)
         let since = Int64(Date().addingTimeInterval(-Double(VitalsCoachSummary.days) * 86_400).timeIntervalSince1970 * 1000)
         let scans = (try? await reader.scans(from: since)) ?? []
         let context = HealthCoachContext(
@@ -558,6 +558,22 @@ final class HealthDataStore {
                                                       researchEnabled: VitalsSettings.researchEnabled(defaults))
         )
         return CoachHealthContext(query: query, context: context)
+    }
+
+    /// Recovery v2 and signal-deviation lines from the newest stored analytics results (docs/health-analytics.md §8),
+    /// first in the digest so the line cap never drops them.
+    static func analyticsCoachLines(reader: HealthDatabase) async -> [String] {
+        var out: [String] = []
+        let recovery = AnalyticsRows.algorithm("recovery"), anomaly = AnalyticsRows.algorithm("anomaly")
+        if let r = try? await reader.latestAnalyticsResult(metric: "recovery_indicator", algorithmVersion: recovery.version),
+           let json = AJ.parse(Data(r.resultJSON.utf8)), let line = HealthCoachPromptSummary.recoveryLine(json, day: r.periodStart) {
+            out.append(line)
+        }
+        if let a = try? await reader.latestAnalyticsResult(metric: "multi_signal_deviation", algorithmVersion: anomaly.version),
+           let json = AJ.parse(Data(a.resultJSON.utf8)), let line = HealthCoachPromptSummary.signalsLine(json, day: a.periodStart) {
+            out.append(line)
+        }
+        return out
     }
 
     // MARK: - Export / import (ayuvo-health-data)

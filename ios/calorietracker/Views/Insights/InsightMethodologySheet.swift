@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Which "How we calculate this" text a screen shows (config `methodology` keys).
 enum InsightsTopic: String {
-    case recovery, healthAge = "health_age", dailyReview = "daily_review", patterns, baselines, background
+    case recovery, healthAge = "health_age", dailyReview = "daily_review", patterns, baselines, background, analytics
 }
 
 /// One "Your inputs" line: what was used, or why it is missing.
@@ -28,7 +28,9 @@ struct InsightMethodologySheet: View {
     var body: some View {
         NavigationStack {
             List {
-                if let methodology {
+                if topic == .recovery || topic == .analytics {
+                    AnalyticsMethodologySections(topic: topic)
+                } else if let methodology {
                     ForEach(Array(methodology.sections.enumerated()), id: \.offset) { index, section in
                         Section {
                             Text(config.sectionBody(topic.rawValue, index, section))
@@ -104,13 +106,13 @@ struct InsightMethodologySheet: View {
 
                 Section {
                     ForEach(disclaimerKeys, id: \.self) { key in
-                        Text(config.displayDisclaimer(key))
+                        Text(key == "analytics" ? AnalyticsText.disclaimer : config.displayDisclaimer(key))
                             .font(.system(.footnote, design: .rounded))
                             .foregroundStyle(.secondary)
                     }
                 }
             }
-            .navigationTitle(config.methodologyTitle(topic.rawValue) ?? String(localized: "How we calculate this"))
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -121,10 +123,19 @@ struct InsightMethodologySheet: View {
         .accessibilityIdentifier("insights.info.sheet")
     }
 
+    private var navigationTitle: String {
+        switch topic {
+        case .recovery: String(localized: "How Recovery is calculated")
+        case .analytics: String(localized: "How health signals are calculated")
+        default: config.methodologyTitle(topic.rawValue) ?? String(localized: "How we calculate this")
+        }
+    }
+
     private var disclaimerKeys: [String] {
         switch topic {
         case .healthAge: ["general", "health_age"]
         case .patterns: ["general", "patterns"]
+        case .recovery, .analytics: ["general", "analytics"]
         default: ["general"]
         }
     }
@@ -145,9 +156,14 @@ struct InsightMethodologySheet: View {
     private var weightRows: [(String, String)] {
         switch topic {
         case .recovery:
-            return config.recovery.components.map { component in
-                (config.metric(component.metric) != nil ? config.metricLabel(component.metric) : component.id, Self.percent(component.weight))
+            // Recovery Indicator v2 weights (shared/analytics, weights version 1).
+            return AnalyticsConfig.shared["recovery"]["components"].array.map { c in
+                let id = c["id"].string ?? ""
+                return (id == "sleep" ? config.metricLabel("sleep") : AnalyticsText.metricLabel(c["metric"].string ?? id),
+                        Self.percent(c["weight"].double ?? 0))
             }
+        case .analytics:
+            return []
         case .healthAge:
             return config.healthAge.markers.map { (config.markerLabel($0.id), Self.percent($0.weight)) }
         case .dailyReview:
@@ -179,6 +195,65 @@ enum InsightsPatternText {
         case "protein_strength_volume": String(localized: "Protein target met → next-day strength volume")
         case "short_sleep_steps": String(localized: "Short night → steps")
         default: id.replacingOccurrences(of: "_", with: " ")
+        }
+    }
+}
+
+/// Methodology of the analytics-based screens, rendered from `shared/analytics/analytics_config.json`.
+struct AnalyticsMethodologySections: View {
+    let topic: InsightsTopic
+    private var cfg: AnalyticsConfig { .shared }
+
+    var body: some View {
+        if topic == .recovery {
+            Section {
+                Text("Recovery Indicator compares last night's HRV, resting heart rate, sleep, breathing rate, sleeping temperature and blood oxygen with your own previous 60 days, using the median and the median absolute deviation so one unusual night does not shift your baseline. Each signal becomes a 0–100 sub-score (50 = your usual), the available signals are averaged by their weights, and a sharp rise in recent training load can take a few points off.")
+                Text("Sleep counts duration against your personal sleep need, sleep efficiency against your own usual, and how close your sleep timing was to your recent nights. Missing signals are left out and the rest re-weighted; confidence goes down when signals are missing, history is short or a value came from a camera scan.")
+                Text("It is an indicator built from your own data, not a measurement of biological recovery.")
+            } header: {
+                Text("Recovery Indicator v\(cfg["recovery"]["algorithm_version"].int ?? 2)")
+            }
+            .font(.system(.subheadline, design: .rounded))
+            Section {
+                ForEach(cfg["recovery"]["components"].array.compactMap { $0["id"].string }, id: \.self) { id in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(id == "sleep" ? InsightsConfig.shared.metricLabel("sleep") : AnalyticsText.metricLabel(id))
+                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        Text(AnalyticsText.componentWhy(id))
+                            .font(.system(.footnote, design: .rounded))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Why each signal counts")
+            } footer: {
+                Text("The weights are Ayuvo design choices, not universal constants.")
+            }
+        } else {
+            Section {
+                ForEach(cfg["algorithms"].array.compactMap { $0["id"].string }, id: \.self) { id in
+                    let a = cfg["algorithms"].array.first { $0["id"].string == id } ?? .null
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(verbatim: "\(id)@\(a["version"].int ?? 1)")
+                            .font(.system(.footnote, design: .monospaced))
+                        Text(AnalyticsText.classificationLabel(a["classification"].string ?? ""))
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Algorithms and versions")
+            }
+        }
+        Section {
+            ForEach(["MEASURED", "PROVIDER_DERIVED", "SCIENTIFIC_DERIVED", "PERSONALIZED_STATISTICAL", "ML_PREDICTED", "EXPERIMENTAL", "RESEARCH_ONLY"], id: \.self) { c in
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(AnalyticsText.classificationLabel(c)).font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    Text(AnalyticsText.classificationAbout(c)).font(.system(.footnote, design: .rounded)).foregroundStyle(.secondary)
+                }
+            }
+        } header: {
+            Text("Where numbers come from")
         }
     }
 }

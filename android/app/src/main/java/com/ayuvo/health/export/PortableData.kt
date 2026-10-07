@@ -96,6 +96,8 @@ data class PortableSettings(
     val derivedMetricsEnabled: Boolean? = null,
     val derivedMetricsDisabled: List<String>? = null,
     val derivedBmiScheme: String? = null,
+    /** Next-day forecasts (docs/health-analytics.md §5.12); off by default. */
+    val analyticsForecastEnabled: Boolean? = null,
     /** Camera measurements (docs/camera-vitals.md §7.2 "Preferences"). */
     val vitalsKeepSignals: Boolean? = null,
     val vitalsExperimentalEnabled: Boolean? = null,
@@ -116,7 +118,7 @@ data class PortableSettings(
         get() = listOfNotNull(
             heightUnit, weightUnit, waterUnit, glucoseUnit, weekStartsOnMonday, dailyStepGoal, appearanceMode,
             appThemeColor, adaptiveGoalsEnabled, preferGramsByDefault, mealSchedule, summaryFavourites,
-            insightsEnabled, derivedMetricsEnabled, derivedMetricsDisabled, derivedBmiScheme,
+            insightsEnabled, derivedMetricsEnabled, derivedMetricsDisabled, derivedBmiScheme, analyticsForecastEnabled,
             vitalsKeepSignals, vitalsExperimentalEnabled, vitalsResearchEnabled,
             cycleEnabled, cycleShowFertility, coachCycleEnabled,
             waterTrackingEnabled, waterDailyGoalMl, fastingTrackingEnabled, fastingDefaultGoalMinutes,
@@ -140,6 +142,7 @@ data class PortableSettings(
             derivedMetricsEnabled = true,
             derivedMetricsDisabled = emptyList(),
             derivedBmiScheme = "who",
+            analyticsForecastEnabled = false,
             vitalsKeepSignals = true,
             vitalsExperimentalEnabled = false,
             vitalsResearchEnabled = false,
@@ -386,6 +389,7 @@ object PortableFormat {
             opt("derived_metrics_enabled", s.derivedMetricsEnabled)
             s.derivedMetricsDisabled?.let { put("derived_metrics_disabled", strings(it.distinct().sorted().take(MAX_DERIVED_DISABLED))) }
             opt("derived_bmi_scheme", s.derivedBmiScheme)
+            opt("analytics_forecast_enabled", s.analyticsForecastEnabled)
             opt("vitals_keep_signals", s.vitalsKeepSignals)
             opt("vitals_experimental_enabled", s.vitalsExperimentalEnabled)
             opt("vitals_research_enabled", s.vitalsResearchEnabled)
@@ -677,6 +681,7 @@ object PortableFormat {
                 ?.filter { it.isNotEmpty() && ',' !in it }
                 ?.distinct()?.sorted()?.take(MAX_DERIVED_DISABLED),
             derivedBmiScheme = canonical(listOf("who", "asian"), prefs?.str("derived_bmi_scheme")),
+            analyticsForecastEnabled = prefs?.bool("analytics_forecast_enabled"),
             vitalsKeepSignals = prefs?.bool("vitals_keep_signals"),
             vitalsExperimentalEnabled = prefs?.bool("vitals_experimental_enabled"),
             vitalsResearchEnabled = prefs?.bool("vitals_research_enabled"),

@@ -53,6 +53,13 @@ CONTRACTS = [
     ("metric", "metrics/metric_catalog.json", [
         "metrics[*].title", "metrics[*].about", "browse_sections[*].title", "domains[*].title",
     ]),
+    ("analytics", "analytics/analytics_config.json", [
+        "disclaimer", "classifications.*.label", "classifications.*.about", "metrics.*.label",
+        "load.states.*", "recovery.bands[*].label", "recovery.bands[*].recommendation", "recovery.drivers.*.*",
+        "recovery.summary.*", "recovery.warnings.*", "recovery.components[*].why", "anomaly.states.*", "anomaly.persistent_note",
+        "correlation.template", "correlation.pairs[*].exposure_label", "correlation.pairs[*].outcome_label",
+        "correlation.direction_words.*", "correlation.lag_words.*",
+    ]),
     ("insights", "insights/insights_config.json", [
         "ai.status_labels.*", "daily_review.areas[*].label", "daily_review.not_logged_template",
         "daily_review.reduce_nutrients[*].label", "daily_review.rules[*].template", "disclaimers.*",

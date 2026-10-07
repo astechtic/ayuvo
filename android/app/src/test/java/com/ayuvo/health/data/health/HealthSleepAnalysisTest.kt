@@ -79,4 +79,19 @@ class HealthSleepAnalysisTest {
         assertEquals(21.0, HealthSleepAnalysis.unionSeconds(rows), 1e-9)
         assertEquals(0.0, HealthSleepAnalysis.unionSeconds(emptyList()), 0.0)
     }
+
+    @Test
+    fun afternoonNapIsReportedButNeverWidensTheNight() {
+        val rows = listOf(
+            stage("n:0", HealthSleepCodes.LIGHT, start, start + 8 * h, "watch"),
+            // 14:00-15:00 the next afternoon (wake day 2026-09-13), more than 3 h after waking: a separate episode.
+            stage("nap:0", HealthSleepCodes.ASLEEP_UNSPECIFIED, start + 16 * h, start + 17 * h, "watch")
+        )
+        val night = HealthSleepAnalysis.nights(rows).single()
+        assertEquals(start, night.startMs)
+        assertEquals(start + 8 * h, night.endMs)
+        assertEquals(8 * 3600.0, night.asleepS, 0.0)
+        assertEquals(3600.0, night.napS, 0.0)
+        assertEquals(1, night.naps)
+    }
 }

@@ -122,6 +122,8 @@ struct InsightsDataSource {
             "\(DerivedMetricsService.shared.revision)",
             // Camera scans feed the fallback (saves, deletes, imports).
             "\(VitalsStore.shared.revision)",
+            // Analytics: the forecast switch and new beat-to-beat HRV results.
+            AnalyticsSettings.forecastEnabled(defaults) ? "f1" : "f0", "\(AnalyticsService.shared.revision)",
         ].joined(separator: "|")
     }
 
@@ -154,6 +156,10 @@ struct InsightsDataSource {
                 if let totals = await dailyTotals(id, calendar.startOfDay(for: start), end), !totals.isEmpty {
                     inputs.series[id] = totals
                 }
+            }
+            // Basal energy for the analytics energy estimate (de-duplicated like active energy).
+            if let totals = await dailyTotals("resting_energy", calendar.startOfDay(for: start), end), !totals.isEmpty {
+                inputs.analytics.series["resting_energy"] = totals
             }
         }
         // Finger-scan fallback after every platform series is resolved: only days without a value are filled.
@@ -237,6 +243,8 @@ struct InsightsDataSource {
         let fallbackUnit: WeightUnit = (WeightUnit(rawValue: defaults.string(forKey: WeightUnit.storageKey) ?? "") ?? .lbs)
         var volume: [String: Double] = [:]
         var sessions: [InsightsWorkout] = []
+        var detail: [AnalyticsWorkoutInput] = []
+        let rpeScale = workouts.preferences.rpeScale
         for session in workouts.completedSessions {
             let day = session.stableDiaryDateKey
             guard inWindow(day) else { continue }
@@ -246,15 +254,34 @@ struct InsightsDataSource {
             }
             let kg = ActionMath.setVolume(sets).volumeKg
             if kg > 0 { volume[day, default: 0] += kg }
-            let start = Self.ms(session.startedAt), end = Self.ms(session.completedAt)
-            if end > start { sessions.append(InsightsWorkout(startMs: start, endMs: end, effort: nil)) }
+            if let span = session.activeInterval {
+                let start = Self.ms(span.start), end = Self.ms(span.end)
+                let effort = session.effortCR10(defaultScale: rpeScale)
+                if end > start {
+                    sessions.append(InsightsWorkout(startMs: start, endMs: end, effort: effort))
+                    detail.append(AnalyticsWorkoutInput(startMs: start, endMs: end, effort: effort, trimp: nil,
+                                                        activity: AnalyticsInputsBuilder.strengthKey,
+                                                        kcal: session.caloriesBurned.map(Double.init), provider: false))
+                }
+            }
         }
         inputs.strengthVolume = volume
         for workout in importedWorkouts.workouts where inWindow(key(workout.startedAt)) {
             let start = Self.ms(workout.startedAt), end = Self.ms(workout.endedAt)
-            if end > start { sessions.append(InsightsWorkout(startMs: start, endMs: end, effort: nil)) }
+            if end > start {
+                sessions.append(InsightsWorkout(startMs: start, endMs: end, effort: nil))
+                detail.append(AnalyticsWorkoutInput(startMs: start, endMs: end, effort: nil, trimp: nil,
+                                                    activity: AnalyticsInputsBuilder.activityKey(hkRaw: workout.activityTypeRaw),
+                                                    kcal: workout.totalEnergyBurned.map(Double.init), provider: true))
+            }
         }
         inputs.workouts = sessions
+        inputs.analytics.workouts = detail.sorted { ($0.startMs, $0.endMs) < ($1.startMs, $1.endMs) }
+        let latestWeight = weight.entries.max(by: { $0.date < $1.date })?.weightKg
+        inputs.analytics.profile = AnalyticsInputsBuilder.profileFacts(profile(), latestWeightKg: latestWeight,
+                                                                       today: InsightsDay.date(today, calendar: calendar) ?? Date(),
+                                                                       calendar: calendar)
+        inputs.analytics.forecastEnabled = AnalyticsSettings.forecastEnabled(defaults)
 
         inputs.tracking = InsightsTracking(
             nutrition: true,
@@ -309,16 +336,30 @@ struct InsightsDataSource {
             for rollup in rollups {
                 if let value = HealthChartSeriesBuilder.primaryValue(rollup, type: type) { daily[rollup.day] = value }
             }
-            var samples: [InsightsSample] = []
+            var sampleRows: [HealthSampleRow] = []
             if let first = nights.values.map(\.startMs).min(), let last = nights.values.map(\.endMs).max() {
-                samples = ((try? await database.rows(type: typeID, startMs: first, endMs: last + 1)) ?? [])
-                    .compactMap { row in row.value.map { InsightsSample(tMs: row.startMs, value: $0) } }
+                sampleRows = ((try? await database.rows(type: typeID, startMs: first, endMs: last + 1)) ?? [])
+                    .filter { !$0.isDeleted && $0.value != nil }
             }
+            let singleSource = AnalyticsCore.strategy(for: typeID, AnalyticsConfig.shared.policy) == "single_best_source_per_day"
             var series: [String: Double] = [:]
             var day = from
             while day <= today {
                 let night = nights[day]
-                let inside = night.map { n in samples.filter { $0.tMs >= n.startMs && $0.tMs <= n.endMs } } ?? []
+                var insideRows = night.map { n in sampleRows.filter { $0.startMs >= n.startMs && $0.startMs <= n.endMs } } ?? []
+                // Per-metric source policy (shared/health/source_policy.json): one source per night, never a blend.
+                if singleSource, !insideRows.isEmpty {
+                    let pick = AnalyticsCore.sourceSelect(metric: typeID, rows: insideRows.map {
+                        AnalyticsCore.SourceRow(id: $0.id, source: $0.sourceID, origin: $0.origin,
+                                                deviceType: HealthRollupMath.deviceTypeCode($0), tMs: $0.startMs,
+                                                value: $0.value, count: $0.count)
+                    }, policy: AnalyticsConfig.shared.policy)
+                    if let source = pick.source {
+                        insideRows = insideRows.filter { $0.sourceID == source }
+                        inputs.analytics.sources[metric, default: [:]][day] = source
+                    }
+                }
+                let inside = insideRows.map { InsightsSample(tMs: $0.startMs, value: $0.value!) }
                 let resolved = BaselineEngine.overnightValue(samples: inside, night: night, fallback: daily[day])
                 if let value = resolved.value {
                     series[day] = value
@@ -340,6 +381,9 @@ struct InsightsDataSource {
             if !series.isEmpty { inputs.series[metric] = series }
         }
 
+        // Provider VO2 max before the derived fallback is merged in (analytics never mixes VO2 max sources).
+        if let provider = inputs.series["vo2_max"] { inputs.analytics.series["vo2_provider"] = provider }
+
         // Derived fallback (docs/derived-metrics.md §1): a day without a native value takes Ayuvo's estimate when
         // that metric is switched on. Native values always win.
         for (metric, derivedID) in derivedFallbacks where derivedFallback.contains(derivedID) {
@@ -347,10 +391,15 @@ struct InsightsDataSource {
             guard !rows.isEmpty else { continue }
             var series = inputs.series[metric] ?? [:]
             for row in rows where series[row.day] == nil {
-                if let value = row.value { series[row.day] = value }
+                if let value = row.value {
+                    series[row.day] = value
+                    inputs.analytics.derivedDays[metric, default: []].insert(row.day)
+                }
             }
             if !series.isEmpty { inputs.series[metric] = series }
         }
+        await analyticsInputs(into: &inputs, database: database, sleepRows: sleepRows, from: from, through: today,
+                              calendar: calendar)
     }
 
     /// Insights series that fall back to a derived metric on days without a native value.
@@ -374,6 +423,7 @@ enum InsightsHealthKitTotals {
         switch typeID {
         case "steps": (identifier, unit) = (.stepCount, .count())
         case "active_energy": (identifier, unit) = (.activeEnergyBurned, .kilocalorie())
+        case "resting_energy": (identifier, unit) = (.basalEnergyBurned, .kilocalorie())
         default: return nil
         }
         let start = calendar.startOfDay(for: from)

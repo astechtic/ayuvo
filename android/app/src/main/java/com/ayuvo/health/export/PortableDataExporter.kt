@@ -51,6 +51,7 @@ class PortableDataExporter(
                 derivedMetricsEnabled = prefs.derivedMetricsEnabled.first(),
                 derivedMetricsDisabled = prefs.derivedMetricsDisabled.first().sorted(),
                 derivedBmiScheme = prefs.derivedBmiScheme.first(),
+                analyticsForecastEnabled = prefs.analyticsForecastEnabled.first(),
                 vitalsKeepSignals = prefs.vitalsKeepSignals.first(),
                 vitalsExperimentalEnabled = prefs.vitalsExperimentalEnabled.first(),
                 vitalsResearchEnabled = prefs.vitalsResearchEnabled.first(),

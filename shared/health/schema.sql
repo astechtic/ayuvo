@@ -102,3 +102,25 @@ CREATE TABLE vital_calibrations (         -- v4: personal SpO2 / BP calibration 
 CREATE TABLE vital_device_profiles (      -- v4: camera capability profile per device model and camera position
   device_model TEXT NOT NULL, camera_position TEXT NOT NULL,   -- back|front
   capability_json TEXT NOT NULL, updated_ms INTEGER NOT NULL, PRIMARY KEY (device_model, camera_position));
+CREATE TABLE analytics_results (          -- v5: health analytics (docs/health-analytics.md); never exported, recomputable
+  metric_id TEXT NOT NULL,                 -- recovery_indicator|anomaly|hrv_status|sleep_status|load|hrr|trend:<metric>|correlation|forecast:<target>|energy|met_week|vo2max_trend|hrv_rr
+  period_start TEXT NOT NULL, period_end TEXT NOT NULL,   -- yyyy-MM-dd local days
+  algorithm_id TEXT NOT NULL, algorithm_version INTEGER NOT NULL, config_version INTEGER NOT NULL,
+  status TEXT NOT NULL, classification TEXT NOT NULL,
+  value REAL, value2 REAL, value3 REAL, unit TEXT,
+  confidence REAL, coverage REAL, input_count INTEGER, baseline_window_days INTEGER,
+  result_json TEXT NOT NULL,               -- the full reference-shaped result
+  provenance_json TEXT NOT NULL,           -- {algorithm, config_version, inputs, sources, sample_count, window, coverage, fallbacks}
+  input_hash TEXT NOT NULL, computed_ms INTEGER NOT NULL,
+  PRIMARY KEY (metric_id, period_start, algorithm_version));
+CREATE INDEX idx_ar_metric_end ON analytics_results(metric_id, period_end);
+CREATE TABLE analytics_state (            -- v5: incremental processing bookkeeping
+  metric_id TEXT PRIMARY KEY NOT NULL, algorithm_version INTEGER NOT NULL, config_version INTEGER NOT NULL,
+  last_processed_day TEXT, updated_ms INTEGER NOT NULL);
+CREATE TABLE ml_models (                  -- v5: per-user forecast models (shared/analytics forecast); never exported
+  model_id TEXT NOT NULL, model_version INTEGER NOT NULL,   -- model_version increments on every retrain
+  algorithm_version INTEGER NOT NULL, target TEXT NOT NULL, feature_schema_version INTEGER NOT NULL,
+  train_start TEXT, train_end TEXT, val_start TEXT, val_end TEXT, test_start TEXT, test_end TEXT,
+  lambda REAL, coefficients_json TEXT NOT NULL, normalization_json TEXT NOT NULL,
+  metrics_json TEXT NOT NULL, baseline_metrics_json TEXT NOT NULL,
+  deployed INTEGER NOT NULL DEFAULT 0, created_ms INTEGER NOT NULL, PRIMARY KEY (model_id, model_version));

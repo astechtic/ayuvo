@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">Najczęściej zapisywane objawy</string>
     <string name="cycle_chart_flow">Krwawienie według dnia miesiączki</string>
     <string name="cycle_chart_flow_footer">Średnie krwawienie w każdym dniu ostatnich miesiączek (wyżej = obficiej).</string>
-    <string name="cycle_chart_empty">Za mało danych</string>
+    <string name="cycle_chart_empty">Jeszcze za mało danych</string>
     <string name="cycle_chart_median_line">Linia przerywana: mediana, %1$s dni</string>
     <string name="cycle_symptom_cycles">%1$d z %2$d cykli</string>
     <string name="cycle_about_estimates">O tych szacunkach</string>

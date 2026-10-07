@@ -1,0 +1,69 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "canonical": "{\"a\":{\"y\":0,\"z\":\"x\"},\"b\":[1,2.5,null,true]}",
+        "hash": "49ec0e85e8fda904"
+      },
+      "input": {
+        "value": {
+          "a": {
+            "y": -4e-07,
+            "z": "x"
+          },
+          "b": [
+            1,
+            2.5,
+            null,
+            true
+          ]
+        }
+      },
+      "name": "nested"
+    },
+    {
+      "expected": {
+        "canonical": "{\"n\":100000000000000000000,\"name\":\"Café \\\"quoted\\\"\\u000a\"}",
+        "hash": "f9da49cb1f7b7a8d"
+      },
+      "input": {
+        "value": {
+          "n": 1e+20,
+          "name": "Café \"quoted\"\n"
+        }
+      },
+      "name": "unicode_and_escape"
+    },
+    {
+      "expected": {
+        "canonical": "{}",
+        "hash": "08f44b07b5901a25"
+      },
+      "input": {
+        "value": {}
+      },
+      "name": "empty_object"
+    },
+    {
+      "expected": {
+        "canonical": "{\"day\":\"2026-03-15\",\"hrv\":61.25,\"rhr\":54,\"sleep\":[431.5,92.1]}",
+        "hash": "12c71e9e6d5e2e83"
+      },
+      "input": {
+        "value": {
+          "day": "2026-03-15",
+          "hrv": 61.25,
+          "rhr": 54.0,
+          "sleep": [
+            431.5,
+            92.1
+          ]
+        }
+      },
+      "name": "day_inputs"
+    }
+  ],
+  "format": "ayuvo-analytics-vectors",
+  "function": "input_hash",
+  "version": 1
+}

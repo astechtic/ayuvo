@@ -34,7 +34,10 @@ data class InsightsUiState(
     val snapshot: InsightsSnapshot? = null,
     /** Null until checked; [InsightsExplainer.Availability.NotConfigured] shows the Settings hint. */
     val ai: InsightsExplainer.Availability? = null,
-    val explanations: Map<String, ExplainUi> = emptyMap()
+    val explanations: Map<String, ExplainUi> = emptyMap(),
+    /** Next-day forecasts switch (docs/health-analytics.md §5.12) and the latest per-target forecast. */
+    val forecastEnabled: Boolean = false,
+    val forecasts: Map<String, com.ayuvo.health.data.analytics.ForecastView> = emptyMap()
 )
 
 /**
@@ -56,6 +59,12 @@ class InsightsViewModel(private val container: AppContainer) : ViewModel() {
                 else container.insightsRepository.snapshots(container.insightsTriggers() + refreshTick).map { on to it }
             }
             .onEach { (on, snap) -> _ui.value = _ui.value.copy(loaded = !on || snap != null, enabled = on, snapshot = snap) }
+            .launchIn(viewModelScope)
+        container.prefs.analyticsForecastEnabled
+            .onEach { _ui.value = _ui.value.copy(forecastEnabled = it) }
+            .launchIn(viewModelScope)
+        container.analyticsService.state
+            .onEach { _ui.value = _ui.value.copy(forecasts = it.forecasts) }
             .launchIn(viewModelScope)
         viewModelScope.launch {
             val availability = runCatching { container.insightsExplainer.availability() }.getOrNull()

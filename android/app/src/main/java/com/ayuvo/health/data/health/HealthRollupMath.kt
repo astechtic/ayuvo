@@ -63,12 +63,17 @@ object HealthRollupMath {
     fun rollupFor(type: HealthTypeDescriptor, day: String, tz: String, rows: List<HealthSampleRow>): HealthDailyRollup {
         val live = rows.filter { !it.deleted }
         if (type.id == HealthDataType.SLEEP.id) return sleepRollup(day, tz, live)
+        // Discrete readings follow the per-metric source policy (one source per day, Google Health copies dropped).
+        val chosen = if (type.kind == HealthKind.DISCRETE || type.kind == HealthKind.SERIES) HealthSourcePolicy.selectRows(type.id, live) else live
         val acc = Accumulator()
-        for (row in live) acc.add(type, row)
+        for (row in chosen) acc.add(type, row)
         return acc.toRollup(type, day, tz)
     }
 
-    /** Fold [added] rows into an existing day rollup. Equal to a full rebuild over the union. */
+    /**
+     * Fold [added] rows into an existing day rollup. Equal to a full rebuild over the union for types without a
+     * per-source policy; policy types ([HealthSourcePolicy]) must be rebuilt from rows with [rollupFor].
+     */
     fun mergeIncremental(type: HealthTypeDescriptor, existing: HealthDailyRollup?, added: List<HealthSampleRow>): HealthDailyRollup {
         val day = existing?.day ?: added.first().localDay
         val tz = existing?.tz ?: ""
@@ -109,6 +114,23 @@ object HealthRollupMath {
         return out.mapValues { (type, days) ->
             days.map { (day, acc) -> acc.toRollup(HealthTypeDescriptor.of(type), day, tz) }.sortedBy { it.day }
         }
+    }
+
+    /** Client-record prefix of Ayuvo's own workout-burn `ActiveCaloriesBurnedRecord`s (HealthConnectManager). */
+    const val WORKOUT_BURN_CLIENT_PREFIX = "ayuvo_workout_burn|"
+
+    /**
+     * `own_sum` per local day: Ayuvo's own workout-burn records only. Google Health write-backs (`ayuvo_gh_`) and
+     * manual entries are Ayuvo-origin too but are real readings, so they must not be subtracted from the platform total.
+     */
+    fun ownWorkoutBurnByDay(rows: List<HealthSampleRow>): Map<String, Double> {
+        val out = HashMap<String, Double>()
+        for (r in rows) {
+            if (r.deleted || r.clientRecordId?.startsWith(WORKOUT_BURN_CLIENT_PREFIX) != true) continue
+            val v = r.value ?: continue
+            out[r.localDay] = (out[r.localDay] ?: 0.0) + v
+        }
+        return out
     }
 
     fun parseExtra(extraJson: String?): JsonObject? {

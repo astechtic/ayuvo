@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">最常记录的症状</string>
     <string name="cycle_chart_flow">按经期天数的经量</string>
     <string name="cycle_chart_flow_footer">近期各次经期中每一天的平均经量（越高 = 越多）。</string>
-    <string name="cycle_chart_empty">数据暂不足</string>
+    <string name="cycle_chart_empty">数据尚不足</string>
     <string name="cycle_chart_median_line">虚线：中位数，%1$s 天</string>
     <string name="cycle_symptom_cycles">%2$d 个周期中的 %1$d 个</string>
     <string name="cycle_about_estimates">关于这些预估</string>

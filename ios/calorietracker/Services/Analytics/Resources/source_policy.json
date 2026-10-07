@@ -1,0 +1,41 @@
+{
+  "dedup_value_tolerance": [
+    0.5,
+    0.01
+  ],
+  "dedup_window_s": 60,
+  "default_strategy": "average_all",
+  "device_type_codes": {
+    "0": "unknown",
+    "1": "watch",
+    "2": "phone",
+    "3": "scale",
+    "4": "ring",
+    "5": "head_mounted",
+    "6": "fitness_band",
+    "7": "chest_strap",
+    "8": "smart_display"
+  },
+  "format": "ayuvo-source-policy",
+  "metrics": {
+    "blood_oxygen": "single_best_source_per_day",
+    "daily_hrv": "single_best_source_per_day",
+    "heart_rate_recovery_one_minute": "single_best_source_per_day",
+    "hrv_rmssd": "single_best_source_per_day",
+    "hrv_sdnn": "single_best_source_per_day",
+    "respiratory_rate": "single_best_source_per_day",
+    "resting_heart_rate": "single_best_source_per_day",
+    "skin_temperature": "single_best_source_per_day",
+    "sleeping_wrist_temperature": "single_best_source_per_day",
+    "vo2_max": "single_best_source_per_day",
+    "walking_heart_rate_average": "single_best_source_per_day"
+  },
+  "notes": "Per-metric source handling for discrete daily rollups (docs/health-data.md \u00a71.3). Cumulative types keep the platform's de-duplicated aggregate; sleep keeps one source per night. device_type uses Health Connect Device.TYPE_* codes; iOS maps HKDevice.model (\"Watch\" -> 1, \"iPhone\" -> 2, other -> 0) at selection time.",
+  "version": 1,
+  "wearable_device_types": [
+    1,
+    4,
+    6,
+    7
+  ]
+}

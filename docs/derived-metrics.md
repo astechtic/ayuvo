@@ -71,11 +71,17 @@ Health mirror (health_samples, Android health_series_points, daily rollups) + pr
 **Settings:** `derivedMetricsEnabled` (bool, default true) and `derivedMetricsDisabled` (a list of metric ids). Both travel in portable data under `preferences`. Cloud backup picks them up automatically.
 
 ## 4. Metrics
+### Algorithm 3 (2026-10-07)
+- TRIMP uses Banister's sex-specific weighting: 0.64·e^(1.92x) for men and 0.86·e^(1.67x) for women. Before this change it used 0.64 for everyone (`thresholds.trimp_a`).
+- `sleep_nights` keeps only the main episode of each wake day as the night. Any other episode on that wake day is reported as `nap_min`/`naps` and never widens the night window.
+- `sleep_debt` uses the personal sleep need from `shared/analytics` `sleep_need` when the app supplies it. With no personal value it uses 480 min.
+- Stored values are recomputed because `algo_version` changed.
+
 <!-- BEGIN GENERATED DERIVED -->
 
 _Generated from `shared/derived/derived_config.json` by `scripts/derived_contract_check.py --write`. Do not edit by hand._
 
-Algorithm version: 2.
+Algorithm version: 3.
 
 ### Heart
 
@@ -91,7 +97,7 @@ Algorithm version: 2.
 | Maximum Heart Rate | `hr_max_estimate` | bpm | — | — | Tanaka formula 208 − 0.7 × age, raised to the highest 2-minute heart rate seen in the last 180 days when that is higher. | Tanaka H, Monahan KD, Seals DR. Age-predicted maximal heart rate revisited. J Am Coll Cardiol 2001;37:153-156. |
 | Heart Rate Reserve | `hr_reserve` | bpm | — | `resting_hr_derived` | Maximum heart rate − resting heart rate (Karvonen). | American College of Sports Medicine. ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. (2021), intensity classification by % heart-rate reserve (Karvonen) and % HRmax. |
 | Cardio Minutes | `cardio_minutes` | min | — | — | Each heart-rate minute is classed by % heart-rate reserve (moderate 40-59%, vigorous 60-89%, near-maximal ≥90%). Without a resting heart rate % of maximum is used (moderate 64-76%, vigorous 77-95%, near-maximal ≥96%). Moderate + 2 × (vigorous + near-maximal). | American College of Sports Medicine. ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. (2021), intensity classification by % heart-rate reserve (Karvonen) and % HRmax. World Health Organization. WHO guidelines on physical activity and sedentary behaviour (2020): 150-300 min/week moderate or 75-150 min/week vigorous; vigorous minutes count double. |
-| Training Impulse (TRIMP) | `training_impulse` | — | — | `resting_hr_derived` | Banister TRIMP over minutes at ≥30% heart-rate reserve: Σ minutes × HRr × 0.64 × e^(k × HRr), k = 1.92 for men and 1.67 for women. | Banister EW. Modeling elite athletic performance. In: Physiological Testing of Elite Athletes, Human Kinetics 1991; Morton RH et al., J Appl Physiol 1990. |
+| Training Impulse (TRIMP) | `training_impulse` | — | — | `resting_hr_derived` | Banister TRIMP over minutes at ≥30% heart-rate reserve: Σ minutes × HRr × a × e^(k × HRr), with a = 0.64, k = 1.92 for men and a = 0.86, k = 1.67 for women (the midpoint for other). | Banister EW. Modeling elite athletic performance. In: MacDougall JD, Wenger HA, Green HJ, eds. Physiological Testing of the High-Performance Athlete. 2nd ed. Human Kinetics; 1991:403-424. Morton RH et al., J Appl Physiol 1990;69(3):1171-1177. |
 | Cardio Fitness (estimated) | `vo2max_estimate` | mL/kg/min | `vo2_max` / `vo2_max` | `resting_hr_derived`, `hr_max_estimate` | Uth-Sørensen: 15.3 × maximum heart rate ÷ resting heart rate. Low confidence when the maximum comes from the age formula. | Uth N, Sørensen H, Overgaard K, Pedersen PK. Estimation of VO2max from the ratio between HRmax and HRrest. Eur J Appl Physiol 2004;91:111-115. |
 | Resting Heart Rate vs Usual | `rhr_deviation` | bpm | — | `resting_hr_derived` | Today − mean of the previous 30 days (needs 14 days). Flag when today and yesterday are both at least 5 bpm above. | Resting-heart-rate elevation as a strain and illness signal: Radin JM et al., Lancet Digital Health 2020; Buchheit M, Front Physiol 2014. |
 | Wear Time | `wear_minutes` | min | — | — | Count of minutes with a heart-rate reading in the local day. | Valid-day rule of ≥10 h wear from accelerometry research: Troiano RP et al., Med Sci Sports Exerc 2008. |
@@ -289,6 +295,11 @@ Algorithm version: 2.
     0.7
   ],
   "tef_share": 0.1,
+  "trimp_a": {
+    "female": 0.86,
+    "male": 0.64,
+    "other": 0.75
+  },
   "trimp_k": {
     "female": 1.67,
     "male": 1.92,

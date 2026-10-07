@@ -710,7 +710,8 @@ fun AppNavHost(
                                 openHealthAge = { nav.navigate(AppRoutes.INSIGHTS_HEALTH_AGE) },
                                 openReview = { nav.navigate(AppRoutes.insightsReview()) },
                                 openTrends = { nav.navigate(AppRoutes.INSIGHTS_TRENDS) },
-                                openPatterns = { nav.navigate(AppRoutes.INSIGHTS_PATTERNS) }
+                                openPatterns = { nav.navigate(AppRoutes.INSIGHTS_PATTERNS) },
+                                openSignals = { nav.navigate(AppRoutes.INSIGHTS_SIGNALS) }
                             )
                         )
                     }
@@ -735,6 +736,9 @@ fun AppNavHost(
                 }
                 composable(AppRoutes.INSIGHTS_PATTERNS) {
                     TabInset { PatternsScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
+                }
+                composable(AppRoutes.INSIGHTS_SIGNALS) {
+                    TabInset { com.ayuvo.health.ui.insights.HealthSignalsScreen(vm = viewModel(factory = InsightsViewModel.Factory(container)), onBack = { nav.popBackStack() }) }
                 }
                 composable(AppRoutes.MEASURE_HOME) {
                     TabInset {

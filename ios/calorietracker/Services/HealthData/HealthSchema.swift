@@ -4,20 +4,22 @@ import Foundation
 /// tables this DDL creates against the shared file (`PRAGMA table_info`), so the two
 /// must stay identical column-for-column.
 nonisolated enum HealthSchema {
-    static let schemaVersion = 4
+    static let schemaVersion = 5
     static let registryVersion = 2
-    static let rollupRuleVersion = 1
+    /// 2: per-night sleep rollups and the per-metric source policy (shared/health/source_policy.json).
+    static let rollupRuleVersion = 2
 
     static let tableNames: [String] = [
         "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
         "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
         "google_health_sync_state", "google_health_mirror",
         "vital_scans", "vital_scan_signals", "vital_calibrations", "vital_device_profiles",
+        "analytics_results", "analytics_state", "ml_models",
     ]
 
     static let indexNames: [String] = [
         "idx_hs_type_end", "idx_hs_type_start", "idx_hs_type_day", "idx_hsp_type_t", "idx_ghm_status",
-        "idx_vs_mode_start", "idx_vs_day",
+        "idx_vs_mode_start", "idx_vs_day", "idx_ar_metric_end",
     ]
 
     static let ddl = """
@@ -110,6 +112,28 @@ nonisolated enum HealthSchema {
     CREATE TABLE vital_device_profiles (      -- v4: camera capability profile per device model and camera position
       device_model TEXT NOT NULL, camera_position TEXT NOT NULL,   -- back|front
       capability_json TEXT NOT NULL, updated_ms INTEGER NOT NULL, PRIMARY KEY (device_model, camera_position));
+    CREATE TABLE analytics_results (          -- v5: health analytics (docs/health-analytics.md); never exported, recomputable
+      metric_id TEXT NOT NULL,                 -- recovery_indicator|anomaly|hrv_status|sleep_status|load|hrr|trend:<metric>|correlation|forecast:<target>|energy|met_week|vo2max_trend|hrv_rr
+      period_start TEXT NOT NULL, period_end TEXT NOT NULL,   -- yyyy-MM-dd local days
+      algorithm_id TEXT NOT NULL, algorithm_version INTEGER NOT NULL, config_version INTEGER NOT NULL,
+      status TEXT NOT NULL, classification TEXT NOT NULL,
+      value REAL, value2 REAL, value3 REAL, unit TEXT,
+      confidence REAL, coverage REAL, input_count INTEGER, baseline_window_days INTEGER,
+      result_json TEXT NOT NULL,               -- the full reference-shaped result
+      provenance_json TEXT NOT NULL,           -- {algorithm, config_version, inputs, sources, sample_count, window, coverage, fallbacks}
+      input_hash TEXT NOT NULL, computed_ms INTEGER NOT NULL,
+      PRIMARY KEY (metric_id, period_start, algorithm_version));
+    CREATE INDEX idx_ar_metric_end ON analytics_results(metric_id, period_end);
+    CREATE TABLE analytics_state (            -- v5: incremental processing bookkeeping
+      metric_id TEXT PRIMARY KEY NOT NULL, algorithm_version INTEGER NOT NULL, config_version INTEGER NOT NULL,
+      last_processed_day TEXT, updated_ms INTEGER NOT NULL);
+    CREATE TABLE ml_models (                  -- v5: per-user forecast models (shared/analytics forecast); never exported
+      model_id TEXT NOT NULL, model_version INTEGER NOT NULL,   -- model_version increments on every retrain
+      algorithm_version INTEGER NOT NULL, target TEXT NOT NULL, feature_schema_version INTEGER NOT NULL,
+      train_start TEXT, train_end TEXT, val_start TEXT, val_end TEXT, test_start TEXT, test_end TEXT,
+      lambda REAL, coefficients_json TEXT NOT NULL, normalization_json TEXT NOT NULL,
+      metrics_json TEXT NOT NULL, baseline_metrics_json TEXT NOT NULL,
+      deployed INTEGER NOT NULL DEFAULT 0, created_ms INTEGER NOT NULL, PRIMARY KEY (model_id, model_version));
     """
 
     /// The same DDL made re-runnable (`IF NOT EXISTS`) for `applySchema()`.

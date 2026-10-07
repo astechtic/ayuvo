@@ -291,12 +291,17 @@ class HealthSyncEngineTest {
     @Test
     fun activeEnergyRollupCarriesOwnSum() = runBlocking {
         source.add(HealthDataType.ACTIVE_ENERGY, mapped(HealthDataType.ACTIVE_ENERGY, "a1", daysAgo(1), 300.0))
+        // Ayuvo's own workout burn (counted in own_sum) and a Google Health write-back (a real reading, not counted).
+        val burn = mapped(HealthDataType.ACTIVE_ENERGY, "a2", daysAgo(1), 120.0)
+        source.add(HealthDataType.ACTIVE_ENERGY, burn.copy(row = burn.row.copy(clientRecordId = "ayuvo_workout_burn|2026-01-01|x")))
+        val mirrored = mapped(HealthDataType.ACTIVE_ENERGY, "a3", daysAgo(1), 50.0)
+        source.add(HealthDataType.ACTIVE_ENERGY, mirrored.copy(row = mirrored.row.copy(clientRecordId = "ayuvo_gh_123")))
         source.aggregateOverride = { type, _, _, own ->
-            if (type == HealthDataType.ACTIVE_ENERGY) mapOf(LocalDateOf(daysAgo(1)) to if (own) 120.0 else 420.0) else emptyMap()
+            if (type == HealthDataType.ACTIVE_ENERGY) mapOf(LocalDateOf(daysAgo(1)) to if (own) 170.0 else 470.0) else emptyMap()
         }
         engine().sync(HealthSyncTrigger.MANUAL_REFRESH, grants(HealthDataType.ACTIVE_ENERGY))
         val rollup = store.daily.getValue("active_energy" to LocalDateOf(daysAgo(1)).toString())
-        assertEquals(420.0, rollup.sum!!, 0.0)
+        assertEquals(470.0, rollup.sum!!, 0.0)
         assertEquals(120.0, rollup.ownSum!!, 0.0)
     }
 

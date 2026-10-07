@@ -191,8 +191,8 @@ class VitalReferencesTest {
 
         val on = CoachCameraScans.promptLines(scans, now, experimentalEnabled = true, researchEnabled = true, cfg = cfg, zone = ZoneOffset.UTC)
         val line = on.first { it.startsWith("- ") }
-        assertTrue(line, line.contains("SpO2 97 % (experimental camera estimate)"))
-        assertTrue(line, line.contains("BP 118/76 mmHg (research estimate, not a blood pressure measurement)"))
+        assertTrue(line, line.contains("SpO2 97 % (${CoachCameraScans.SPO2_LABEL})"))
+        assertTrue(line, line.contains("BP 118/76 mmHg (${CoachCameraScans.BP_LABEL})"))
         // Face scans never carry SpO2 or BP, even with the toggles on.
         val face = CoachCameraScans.line(scan("x", VitalScanRecord.MODE_FACE, spo2 = spo2, bp = bp), true, true, cfg, ZoneOffset.UTC)
         assertTrue(face, face.contains("face scan") && !face.contains("SpO2") && !face.contains("BP "))

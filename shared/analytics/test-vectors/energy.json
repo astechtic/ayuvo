@@ -1,0 +1,213 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "active_kcal": 540.0,
+        "algorithm_id": "ayuvo.energy",
+        "algorithm_version": 1,
+        "ayuvo_extra_kcal": 0.0,
+        "classification": "SCIENTIFIC_DERIVED",
+        "confidence": 0.76,
+        "estimated_daily_expenditure": 2478.0,
+        "predicted_resting_kcal": 1668.0,
+        "provider_active_kcal": 540.0,
+        "provider_basal_kcal": 1690.0,
+        "provider_workout_kcal": 310.0,
+        "resting_kcal": 1690.0,
+        "resting_source": "provider",
+        "status": "VALID"
+      },
+      "input": {
+        "ayuvo_sessions": [
+          {
+            "end_ms": 1773561600000,
+            "kcal": 300.0,
+            "start_ms": 1773558000000
+          }
+        ],
+        "profile": {
+          "age": 34,
+          "height_cm": 178.0,
+          "sex": "male",
+          "weight_kg": 72.0
+        },
+        "provider_active_kcal": 540.0,
+        "provider_basal_kcal": 1690.0,
+        "provider_workout_kcal": 310.0,
+        "provider_workouts": [
+          {
+            "end_ms": 1773561600000,
+            "start_ms": 1773558060000
+          }
+        ]
+      },
+      "name": "provider_full_day",
+      "notes": "The Ayuvo strength burn overlaps a watch workout: not added again."
+    },
+    {
+      "expected": {
+        "active_kcal": 500.0,
+        "algorithm_id": "ayuvo.energy",
+        "algorithm_version": 1,
+        "ayuvo_extra_kcal": 260.0,
+        "classification": "SCIENTIFIC_DERIVED",
+        "confidence": 0.76,
+        "estimated_daily_expenditure": 2433.0,
+        "predicted_resting_kcal": 1668.0,
+        "provider_active_kcal": 240.0,
+        "provider_basal_kcal": 1690.0,
+        "provider_workout_kcal": null,
+        "resting_kcal": 1690.0,
+        "resting_source": "provider",
+        "status": "VALID"
+      },
+      "input": {
+        "ayuvo_sessions": [
+          {
+            "end_ms": 1773601200000,
+            "kcal": 260.0,
+            "start_ms": 1773597600000
+          }
+        ],
+        "profile": {
+          "age": 34,
+          "height_cm": 178.0,
+          "sex": "male",
+          "weight_kg": 72.0
+        },
+        "provider_active_kcal": 240.0,
+        "provider_basal_kcal": 1690.0,
+        "provider_workout_kcal": null,
+        "provider_workouts": []
+      },
+      "name": "ayuvo_burn_added"
+    },
+    {
+      "expected": {
+        "active_kcal": 120.0,
+        "algorithm_id": "ayuvo.energy",
+        "algorithm_version": 1,
+        "ayuvo_extra_kcal": 0.0,
+        "classification": "SCIENTIFIC_DERIVED",
+        "confidence": 0.57,
+        "estimated_daily_expenditure": 1802.0,
+        "predicted_resting_kcal": 1502.0,
+        "provider_active_kcal": 120.0,
+        "provider_basal_kcal": 600.0,
+        "provider_workout_kcal": null,
+        "resting_kcal": 1502.0,
+        "resting_source": "predicted",
+        "status": "VALID"
+      },
+      "input": {
+        "ayuvo_sessions": [],
+        "profile": {
+          "age": 34,
+          "height_cm": 178.0,
+          "sex": "female",
+          "weight_kg": 72.0
+        },
+        "provider_active_kcal": 120.0,
+        "provider_basal_kcal": 600.0,
+        "provider_workout_kcal": null,
+        "provider_workouts": []
+      },
+      "name": "partial_basal_uses_mifflin"
+    },
+    {
+      "expected": {
+        "active_kcal": null,
+        "algorithm_id": "ayuvo.energy",
+        "algorithm_version": 1,
+        "ayuvo_extra_kcal": 0.0,
+        "classification": "SCIENTIFIC_DERIVED",
+        "confidence": 0.0,
+        "estimated_daily_expenditure": null,
+        "predicted_resting_kcal": 1668.0,
+        "provider_active_kcal": null,
+        "provider_basal_kcal": null,
+        "provider_workout_kcal": null,
+        "resting_kcal": null,
+        "resting_source": null,
+        "status": "INVALID_INPUT"
+      },
+      "input": {
+        "ayuvo_sessions": [],
+        "profile": {
+          "age": 34,
+          "height_cm": 178.0,
+          "sex": "male",
+          "weight_kg": 72.0
+        },
+        "provider_active_kcal": -35.0,
+        "provider_basal_kcal": 1600.0,
+        "provider_workout_kcal": null,
+        "provider_workouts": []
+      },
+      "name": "negative_input_invalid",
+      "notes": "Old Android own_sum over-subtraction produced negative active energy."
+    },
+    {
+      "expected": {
+        "active_kcal": null,
+        "algorithm_id": "ayuvo.energy",
+        "algorithm_version": 1,
+        "ayuvo_extra_kcal": 0.0,
+        "classification": "SCIENTIFIC_DERIVED",
+        "confidence": 0.0,
+        "estimated_daily_expenditure": null,
+        "predicted_resting_kcal": 1668.0,
+        "provider_active_kcal": null,
+        "provider_basal_kcal": 1650.0,
+        "provider_workout_kcal": null,
+        "resting_kcal": 1650.0,
+        "resting_source": "provider",
+        "status": "INSUFFICIENT_DATA"
+      },
+      "input": {
+        "ayuvo_sessions": [],
+        "profile": {
+          "age": 34,
+          "height_cm": 178.0,
+          "sex": "male",
+          "weight_kg": 72.0
+        },
+        "provider_active_kcal": null,
+        "provider_basal_kcal": 1650.0,
+        "provider_workout_kcal": null,
+        "provider_workouts": []
+      },
+      "name": "no_active_data"
+    },
+    {
+      "expected": {
+        "active_kcal": null,
+        "algorithm_id": "ayuvo.energy",
+        "algorithm_version": 1,
+        "ayuvo_extra_kcal": 0.0,
+        "classification": "SCIENTIFIC_DERIVED",
+        "confidence": 0.0,
+        "estimated_daily_expenditure": null,
+        "predicted_resting_kcal": null,
+        "provider_active_kcal": 200.0,
+        "provider_basal_kcal": null,
+        "provider_workout_kcal": null,
+        "resting_kcal": null,
+        "resting_source": null,
+        "status": "NO_DATA"
+      },
+      "input": {
+        "ayuvo_sessions": [],
+        "profile": {},
+        "provider_active_kcal": 200.0,
+        "provider_basal_kcal": null,
+        "provider_workout_kcal": null,
+        "provider_workouts": []
+      },
+      "name": "nothing_known"
+    }
+  ],
+  "format": "ayuvo-analytics-vectors",
+  "function": "energy",
+  "version": 1
+}

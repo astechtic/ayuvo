@@ -286,10 +286,10 @@ nonisolated enum VitalsCoachSummary {
             add("heart_rate", "HR", "bpm")
             add("hrv_rmssd", "RMSSD", "ms")
             add("respiratory_rate", "resp", "/min", decimals: 1)
-            if experimentalEnabled { add("spo2", "SpO2", "%", label: "experimental camera estimate") }
+            if experimentalEnabled { add("spo2", "SpO2", "%", label: "EXPERIMENTAL camera estimate, not an oxygen saturation measurement") }
             if researchEnabled, let sbp = v.valid("blood_pressure") {
                 let dia = v.envelope("blood_pressure")["diastolic"].double.map { "\(Int($0.rounded()))" } ?? "?"
-                parts.append("BP \(Int(sbp.rounded()))/\(dia) mmHg (research estimate, not a blood pressure measurement)")
+                parts.append("BP \(Int(sbp.rounded()))/\(dia) mmHg (RESEARCH_ONLY estimate, not a blood pressure measurement)")
             }
             guard !parts.isEmpty else { continue }
             let quality = (try? VitalsJSON.parse(scan.qualityJSON))?["grade"].string ?? "unknown"

@@ -22,6 +22,19 @@ object InsightsActionFields {
         "positives" to r.positives.map { it.text },
         "negatives" to r.negatives.map { it.text },
         "training_load" to r.load?.label
+    ).also { out ->
+        // Recovery Indicator v2: the catalog fields stay as they are; the numeric confidence rides along in the
+        // confidence text ("medium (68%)"), and drivers with numbers come from insights.evidence.get.
+        r.confidenceScore?.let { c -> out["confidence"] = "${r.confidence} (${Math.round(c * 100)}%)" }
+    }
+
+    /**
+     * `insights.evidence.get` / Coach `get_health_evidence`: the reference `evidence()` object (docs/health-analytics.md
+     * §8) — already-computed values with status, classification, confidence and algorithm@version. No raw samples.
+     */
+    fun evidence(evidence: Map<String, Any?>?): Map<String, Any?> = linkedMapOf(
+        "evidence_version" to ((evidence?.get("evidence_version") as? Number)?.toLong() ?: 1L),
+        "items" to (evidence?.get("items") as? List<*>).orEmpty()
     )
 
     fun healthAge(h: HealthAgeResult, pace: HealthAgePace): Map<String, Any?> = linkedMapOf(

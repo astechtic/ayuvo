@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">Síntomas más registrados</string>
     <string name="cycle_chart_flow">Flujo por día del periodo</string>
     <string name="cycle_chart_flow_footer">Flujo medio en cada día de tus periodos recientes (más alto = más abundante).</string>
-    <string name="cycle_chart_empty">Aún no hay suficientes datos</string>
+    <string name="cycle_chart_empty">Aún no hay datos suficientes</string>
     <string name="cycle_chart_median_line">Línea discontinua: mediana, %1$s días</string>
     <string name="cycle_symptom_cycles">%1$d de %2$d ciclos</string>
     <string name="cycle_about_estimates">Sobre estas estimaciones</string>

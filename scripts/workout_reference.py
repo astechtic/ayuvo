@@ -176,6 +176,7 @@ def hr_workout(inp, cfg):
     hr_max, rhr = float(inp["hr_max"]), inp.get("rhr")
     sex = inp.get("sex") or "other"
     k = th["trimp_k"].get(sex, th["trimp_k"]["other"])
+    a = th["trimp_a"].get(sex, th["trimp_a"]["other"])
     for i, (t, bpm) in enumerate(samples):
         nxt = samples[i + 1][0] if i + 1 < len(samples) else s1
         dur = min(nxt, t + cap, s1) - t
@@ -188,7 +189,7 @@ def hr_workout(inp, cfg):
         if rhr is not None and hr_max > rhr:
             x = (bpm - rhr) / (hr_max - rhr)
             if x > 0:
-                trimp += minutes * x * 0.64 * math.exp(k * x)
+                trimp += minutes * x * a * math.exp(k * x)
         if inp.get("weight_kg") and inp.get("age") is not None:
             kc = th["keytel"].get(sex, th["keytel"]["other"])
             per_min = (kc[0] + kc[1] * bpm + kc[2] * inp["weight_kg"] + kc[3] * inp["age"]) / 4.184

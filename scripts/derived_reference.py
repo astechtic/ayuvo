@@ -288,13 +288,14 @@ def heart_day(inp, cfg):
     counts = [0, 0, 0, 0, 0]
     trimp = 0.0
     k = th["trimp_k"].get(inp.get("sex") or "other", th["trimp_k"]["other"])
+    a = th["trimp_a"].get(inp.get("sex") or "other", th["trimp_a"]["other"])
     for t in day_minutes:
         v = hr[t]
         counts[hr_zone(v, hr_max, rhr, th)] += 1
         if out["zone_method"] == "hrr":
             x = (v - rhr) / (hr_max - rhr)
             if x >= th["trimp_min_hrr"]:
-                trimp += x * 0.64 * math.exp(k * x)
+                trimp += x * a * math.exp(k * x)
     out["light_min"], out["moderate_min"], out["vigorous_min"], out["max_min"] = counts[1], counts[2], counts[3], counts[4]
     out["moderate_equivalent"] = counts[2] + 2 * (counts[3] + counts[4])
     out["trimp"] = round_to(trimp, 1) if out["zone_method"] == "hrr" else None
@@ -363,8 +364,12 @@ def sleep_nights(inp, cfg):
     Rows sorted by (start, then input order) are chained into episodes while each next row starts at most
     episode_gap_hours after the episode's latest end; an episode belongs to the local day of its latest-ending row
     (the wake day). Per wake day the source with the most unioned asleep time wins (ties: more rows, then the
-    smaller source id); out-of-bed rows are ignored. Returns {wake_day: {source, rows, window: {start_ms, end_ms}}}
-    where window spans first to last asleep instant (null when the source has no asleep rows)."""
+    smaller source id); out-of-bed rows are ignored.
+
+    Algorithm 3: when a wake day has more than one episode, only the main one (most asleep time of its best source;
+    ties: the later-ending episode) is the night. The others are naps: their best-source asleep minutes are reported
+    as nap_min and they never widen the night window. Returns {wake_day: {source, rows, window: {start_ms, end_ms},
+    nap_min, naps}} where window spans first to last asleep instant (null when the source has no asleep rows)."""
     tz = inp["time_zone"]
     gap = cfg["thresholds"]["episode_gap_hours"] * 3600000
     rows = [r for r in inp["rows"] if r[1] >= r[0]]
@@ -376,7 +381,7 @@ def sleep_nights(inp, cfg):
         if not episode:
             return
         last = max(episode, key=lambda r: r[1])
-        groups.setdefault(local_day_of(last[1], tz), []).extend(episode)
+        groups.setdefault(local_day_of(last[1], tz), []).append(list(episode))
 
     for i in order:
         r = rows[i]
@@ -388,21 +393,42 @@ def sleep_nights(inp, cfg):
         episode.append(r)
         end = max(end, r[1])
     flush()
-    out = {}
-    for day in sorted(groups):
-        cand = [r for r in groups[day] if r[2] != 6]
+
+    def best(ep_rows):
+        """(source, its rows, its asleep ms) for one episode, or None."""
         by = {}
-        for r in cand:
-            by.setdefault(r[3], []).append(r)
+        for r in ep_rows:
+            if r[2] != 6:
+                by.setdefault(r[3], []).append(r)
         if not by:
-            continue
+            return None
         ranked = sorted(by, key=lambda s: (-total_ms(union([(r[0], r[1]) for r in by[s] if r[2] in ASLEEP])),
                                            -len(by[s]), s))
         src = ranked[0]
-        chosen = sorted(by[src], key=lambda r: (r[0], r[1], r[2]))
+        return src, by[src], total_ms(union([(r[0], r[1]) for r in by[src] if r[2] in ASLEEP]))
+
+    out = {}
+    for day in sorted(groups):
+        picks = []
+        for ep in groups[day]:
+            b = best(ep)
+            if b is not None:
+                picks.append((b, max(r[1] for r in ep)))
+        if not picks:
+            continue
+        main = sorted(picks, key=lambda p: (-p[0][2], -p[1]))[0]
+        nap_ms = 0
+        naps = 0
+        for p in picks:
+            if p is not main and p[0][2] > 0:
+                nap_ms += p[0][2]
+                naps += 1
+        src, src_rows, _ = main[0]
+        chosen = sorted(src_rows, key=lambda r: (r[0], r[1], r[2]))
         asleep = union([(r[0], r[1]) for r in chosen if r[2] in ASLEEP])
         out[day] = {"source": src, "rows": [[r[0], r[1], r[2]] for r in chosen],
-                    "window": {"start_ms": asleep[0][0], "end_ms": asleep[-1][1]} if asleep else None}
+                    "window": {"start_ms": asleep[0][0], "end_ms": asleep[-1][1]} if asleep else None,
+                    "nap_min": round_to(nap_ms / 60000.0, 1), "naps": naps}
     return out
 
 

@@ -25,10 +25,21 @@ data class SleepRow(val startMs: Long, val endMs: Long, val code: Int, val sourc
 
 data class SleepNightsInput(val zone: ZoneId, val rows: List<SleepRow>)
 
-data class SleepNightChoice(val source: String, val rows: List<SleepRow>, val window: Span?) {
+/**
+ * The main sleep episode of one wake day. Other episodes of that day are naps: [napMin] is their
+ * best-source asleep minutes (one decimal) and [naps] how many there were; they never widen [window].
+ */
+data class SleepNightChoice(
+    val source: String,
+    val rows: List<SleepRow>,
+    val window: Span?,
+    val napMin: Double = 0.0,
+    val naps: Int = 0
+) {
     fun toJson(): JsonObject = MedicationJson.obj(
         "source" to source, "rows" to rows.map { it.toJsonRow() },
-        "window" to window?.let { MedicationJson.obj("start_ms" to it.startMs, "end_ms" to it.endMs) }
+        "window" to window?.let { MedicationJson.obj("start_ms" to it.startMs, "end_ms" to it.endMs) },
+        "nap_min" to napMin, "naps" to naps
     )
 }
 
@@ -97,14 +108,15 @@ object SleepDerivation {
      * while each next row starts at most `episode_gap_hours` after the episode's latest end; an episode
      * belongs to the local day of its latest-ending row (the first such row on ties, like Python `max`).
      * Per wake day the source with the most unioned asleep time wins (ties: more rows, then the smaller
-     * source id by code point); out-of-bed rows are ignored.
+     * source id by code point); out-of-bed rows are ignored. Algorithm 3: only the main episode of a wake
+     * day is the night; the others are reported as naps (`nap_min`, `naps`).
      */
     fun sleepNights(inp: SleepNightsInput, cfg: DerivedConfig): SleepNightsResult {
         val tz = inp.zone
         val gap = cfg.thresholds.episodeGapHours * 3600000
         val rows = inp.rows.filter { it.endMs >= it.startMs }
         val order = rows.indices.sortedWith(compareBy({ rows[it].startMs }, { it }))
-        val groups = TreeMap<LocalDate, MutableList<SleepRow>>()
+        val groups = TreeMap<LocalDate, MutableList<List<SleepRow>>>()
         val episode = ArrayList<SleepRow>()
         var end = 0L
 
@@ -112,7 +124,7 @@ object SleepDerivation {
             if (episode.isEmpty()) return
             var last = episode[0]
             for (r in episode) if (r.endMs > last.endMs) last = r
-            groups.getOrPut(DerivedMath.localDayOf(last.endMs, tz)) { ArrayList() }.addAll(episode)
+            groups.getOrPut(DerivedMath.localDayOf(last.endMs, tz)) { ArrayList() }.add(ArrayList(episode))
         }
 
         for (i in order) {
@@ -128,25 +140,44 @@ object SleepDerivation {
         flush()
 
         val out = LinkedHashMap<LocalDate, SleepNightChoice>()
-        for ((day, group) in groups) {
-            val by = LinkedHashMap<String, MutableList<SleepRow>>()
-            for (r in group) if (r.code != 6) by.getOrPut(r.source ?: error("sleep row without source")) { ArrayList() } += r
-            if (by.isEmpty()) continue
-            val asleepTotal = by.mapValues { (_, rs) -> totalMs(union(rs.filter { it.code in ASLEEP }.map { it.span })) }
-            val ranked = by.keys.sortedWith(
-                compareByDescending<String> { asleepTotal.getValue(it) }
-                    .thenByDescending { by.getValue(it).size }
-                    .then(DerivedMath.CODE_POINT_ORDER)
-            )
-            val src = ranked[0]
-            val chosen = by.getValue(src).sortedWith(compareBy({ it.startMs }, { it.endMs }, { it.code }))
+        for ((day, episodes) in groups) {
+            // (best source, its rows, its asleep ms, the episode's latest end) per episode
+            val picks = ArrayList<EpisodePick>()
+            for (ep in episodes) bestSource(ep)?.let { picks += it }
+            if (picks.isEmpty()) continue
+            // Main episode: most asleep time of its best source; ties → the later-ending episode.
+            val main = picks.sortedWith(compareByDescending<EpisodePick> { it.asleepMs }.thenByDescending { it.episodeEnd })[0]
+            var napMs = 0L
+            var naps = 0
+            for (p in picks) if (p !== main && p.asleepMs > 0) {
+                napMs += p.asleepMs
+                naps += 1
+            }
+            val chosen = main.rows.sortedWith(compareBy({ it.startMs }, { it.endMs }, { it.code }))
             val asleep = union(chosen.filter { it.code in ASLEEP }.map { it.span })
             out[day] = SleepNightChoice(
-                src, chosen.map { SleepRow(it.startMs, it.endMs, it.code) },
-                if (asleep.isNotEmpty()) Span(asleep.first().startMs, asleep.last().endMs) else null
+                main.source, chosen.map { SleepRow(it.startMs, it.endMs, it.code) },
+                if (asleep.isNotEmpty()) Span(asleep.first().startMs, asleep.last().endMs) else null,
+                roundTo(napMs / 60000.0, 1), naps
             )
         }
         return SleepNightsResult(out)
+    }
+
+    private class EpisodePick(val source: String, val rows: List<SleepRow>, val asleepMs: Long, val episodeEnd: Long)
+
+    /** The winning source of one episode: most unioned asleep time, then more rows, then the smaller id. */
+    private fun bestSource(episode: List<SleepRow>): EpisodePick? {
+        val by = LinkedHashMap<String, MutableList<SleepRow>>()
+        for (r in episode) if (r.code != 6) by.getOrPut(r.source ?: error("sleep row without source")) { ArrayList() } += r
+        if (by.isEmpty()) return null
+        val asleepTotal = by.mapValues { (_, rs) -> totalMs(union(rs.filter { it.code in ASLEEP }.map { it.span })) }
+        val src = by.keys.sortedWith(
+            compareByDescending<String> { asleepTotal.getValue(it) }
+                .thenByDescending { by.getValue(it).size }
+                .then(DerivedMath.CODE_POINT_ORDER)
+        )[0]
+        return EpisodePick(src, by.getValue(src), asleepTotal.getValue(src), episode.maxOf { it.endMs })
     }
 
     fun sleepNight(inp: SleepNightInput, cfg: DerivedConfig): SleepNightResult {

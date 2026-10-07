@@ -51,6 +51,7 @@ nonisolated enum HealthRollupMath {
         ownBundleID: String,
         calendar: Calendar
     ) -> HealthDailyRollupRow? {
+        if type.isSleep { return sleepRollup(rows: allRows, type: type, day: day, tz: tz, calendar: calendar) }
         let rows = allRows.filter { !$0.isDeleted && $0.typeID == type.id && $0.localDay == day }
         guard !rows.isEmpty else { return nil }
         var rollup = HealthDailyRollupRow(typeID: type.id, day: day, tz: tz)
@@ -59,16 +60,6 @@ nonisolated enum HealthRollupMath {
             return lhs.endMs < rhs.endMs
         }
         rollup.lastAtMs = last?.endMs
-
-        if type.isSleep {
-            let nights = HealthSleepAnalysis.nights(rows: rows, calendar: calendar)
-            let asleep = nights.reduce(0.0) { $0 + $1.asleepS }
-            rollup.sum = asleep
-            rollup.durationS = asleep
-            rollup.count = rows.count
-            rollup.lastValue = last?.value
-            return rollup
-        }
 
         switch type.kind {
         case .cumulative:
@@ -85,6 +76,9 @@ nonisolated enum HealthRollupMath {
             }
 
         case .discrete, .series:
+            if AnalyticsCore.strategy(for: type.id, AnalyticsConfig.shared.policy) == "single_best_source_per_day" {
+                return policyRollup(rows: rows, type: type, rollup: rollup)
+            }
             var weightedSum = 0.0
             var weight = 0
             var minimum: Double?
@@ -128,6 +122,57 @@ nonisolated enum HealthRollupMath {
             rollup.count = rows.reduce(0) { $0 + max(1, $1.count) }
             rollup.lastValue = last?.categoryValue.map(Double.init) ?? last?.value
         }
+        return rollup
+    }
+
+    /// Health Connect `Device.TYPE_*` code for a row (shared/health/source_policy.json): the stored device type, else
+    /// the HealthKit device model ("Watch" → watch, "iPhone" → phone), else unknown.
+    static func deviceTypeCode(_ row: HealthSampleRow) -> Int {
+        if let t = row.deviceType { return t }
+        let model = (row.device ?? "").lowercased()
+        if model.contains("watch") { return 1 }
+        if model.contains("iphone") { return 2 }
+        return 0
+    }
+
+    /// Discrete rollup under the per-metric source policy (rule version 2): one source per day, Google Health copies
+    /// of a Health Connect reading dropped (`AnalyticsCore.sourceSelect`, the analytics `source_select` vectors).
+    static func policyRollup(rows: [HealthSampleRow], type: HealthMetricType, rollup base: HealthDailyRollupRow) -> HealthDailyRollupRow {
+        var rollup = base
+        let selection = AnalyticsCore.sourceSelect(metric: type.id, rows: rows.map {
+            AnalyticsCore.SourceRow(id: $0.id, source: $0.sourceID, origin: $0.origin, deviceType: deviceTypeCode($0),
+                                    tMs: $0.startMs, value: $0.value, count: $0.count)
+        }, policy: AnalyticsConfig.shared.policy)
+        rollup.count = selection.count
+        rollup.avg = selection.value
+        rollup.min = selection.min
+        rollup.max = selection.max
+        if let source = selection.source {
+            let chosen = rows.filter { $0.sourceID == source && $0.value != nil }
+            rollup.lastValue = chosen.max { $0.endMs != $1.endMs ? $0.endMs < $1.endMs : $0.id < $1.id }?.value
+        }
+        return rollup
+    }
+
+    /// Sleep rollup of `day` = the main night whose wake day is `day` (rule version 2). `rows` must include the
+    /// previous and next local days (`HealthDatabase.rebuildRollups`): stages that end before midnight carry the
+    /// previous day, and an episode is only complete once its last row is known. Naps are not part of the night.
+    static func sleepRollup(rows allRows: [HealthSampleRow], type: HealthMetricType, day: String, tz: String,
+                            calendar: Calendar) -> HealthDailyRollupRow? {
+        let rows = allRows.filter { !$0.isDeleted && $0.typeID == type.id }
+        guard let episode = HealthSleepAnalysis.mainEpisodes(rows)[day],
+              let night = HealthSleepAnalysis.night(rows: episode.rows, nightOf: day) else { return nil }
+        let nightRows = episode.rows.filter { $0.sourceID == night.source }
+        var rollup = HealthDailyRollupRow(typeID: type.id, day: day, tz: tz)
+        let last = nightRows.max { lhs, rhs in
+            if lhs.endMs == rhs.endMs { return lhs.id < rhs.id }
+            return lhs.endMs < rhs.endMs
+        }
+        rollup.lastAtMs = last?.endMs
+        rollup.sum = night.asleepS
+        rollup.durationS = night.asleepS
+        rollup.count = nightRows.count
+        rollup.lastValue = last?.value
         return rollup
     }
 

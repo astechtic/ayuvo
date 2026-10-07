@@ -112,7 +112,7 @@
     <string name="cycle_chart_symptoms">Найчастіші симптоми</string>
     <string name="cycle_chart_flow">Виділення за днями менструації</string>
     <string name="cycle_chart_flow_footer">Середня інтенсивність виділень у кожен день останніх менструацій (вище = рясніше).</string>
-    <string name="cycle_chart_empty">Поки що недостатньо даних</string>
+    <string name="cycle_chart_empty">Поки недостатньо даних</string>
     <string name="cycle_chart_median_line">Пунктир: медіана, %1$s дн.</string>
     <string name="cycle_symptom_cycles">Циклів: %1$d з %2$d</string>
     <string name="cycle_about_estimates">Про ці прогнози</string>

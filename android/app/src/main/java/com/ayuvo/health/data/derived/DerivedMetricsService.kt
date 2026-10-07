@@ -184,7 +184,8 @@ class DerivedMetricsService(
                 val resting = restingByDay[d] ?: bmrByDay[d]
                 if (resting != null) {
                     val a = activeByDay[d]
-                    val active = a?.sum?.let { it - (a.ownSum ?: 0.0) }
+                    // Provider active energy without Ayuvo's own workout-burn records; never negative.
+                    val active = a?.sum?.let { maxOf(0.0, it - (a.ownSum ?: 0.0)) }
                     out["energy_day"] = EnergyDerivation.energyDay(
                         EnergyDayInput(resting, active, weightOn(ctx.weights, d), profile?.heightCm, age, ctx.sex), cfg
                     ).toJson().toPlain()

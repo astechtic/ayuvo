@@ -35,34 +35,80 @@ data class SleepNight(
     val deepS: Double,
     val remS: Double,
     val awakeS: Double,
-    val sourceId: String
+    val sourceId: String,
+    /** Asleep seconds of the wake day's other episodes (naps); never part of [startMs]..[endMs]. */
+    val napS: Double = 0.0,
+    /** How many nap episodes the wake day had. */
+    val naps: Int = 0
 )
 
 /**
- * Nights are derived at read time (never stored): per wake day pick the source with the
- * longest asleep time, union overlapping intervals within that source and ignore other
- * sources. `out_of_bed` rows never count towards in-bed or asleep time. Identical on iOS.
+ * Nights are derived at read time (never stored), with the same episode rule as the derived contract's
+ * `sleep_nights` algorithm 3 (scripts/derived_reference.py): rows sorted by (start, id) chain into episodes while the
+ * next row starts at most [EPISODE_GAP_MS] after the episode's latest end; an episode belongs to the stored
+ * `local_day` of its latest-ending row (the wake day). Per wake day the main episode is the one whose best source has
+ * the most asleep time (ties: the later-ending episode); the others are naps, reported in [SleepNight.napS] and never
+ * widening the night. Within the main episode the source with the most unioned asleep time wins (ties: more rows,
+ * then the smaller source id); overlapping intervals within that source are unioned and other sources are ignored.
+ * `out_of_bed` rows never count towards in-bed or asleep time. Identical on iOS.
  */
 object HealthSleepAnalysis {
+    /** Rows closer than this belong to one sleep episode (derived `episode_gap_hours`). */
+    const val EPISODE_GAP_MS = 3 * 3_600_000L
 
-    fun nights(rows: List<HealthSampleRow>): List<SleepNight> =
-        rows.asSequence()
-            .filter { !it.deleted }
-            .groupBy { it.localDay }
-            .mapNotNull { (day, dayRows) -> nightFor(day, dayRows) }
-            .sortedBy { it.nightOf }
+    fun nights(rows: List<HealthSampleRow>): List<SleepNight> {
+        val live = rows.filter { !it.deleted }.sortedWith(compareBy<HealthSampleRow> { it.startMs }.thenBy { it.id })
+        val groups = java.util.TreeMap<String, MutableList<List<HealthSampleRow>>>()
+        val episode = ArrayList<HealthSampleRow>()
+        var end = 0L
 
-    fun nightFor(day: String, rows: List<HealthSampleRow>): SleepNight? {
-        val live = rows.filter { !it.deleted && it.categoryValue != HealthSleepCodes.OUT_OF_BED }
+        fun flush() {
+            if (episode.isEmpty()) return
+            var last = episode[0]
+            for (r in episode) if (r.endMs > last.endMs) last = r
+            groups.getOrPut(last.localDay) { ArrayList() }.add(ArrayList(episode))
+        }
+
+        for (r in live) {
+            if (episode.isNotEmpty() && r.startMs > end + EPISODE_GAP_MS) {
+                flush()
+                episode.clear()
+            }
+            if (episode.isEmpty()) end = r.endMs
+            episode += r
+            end = maxOf(end, r.endMs)
+        }
+        flush()
+        return groups.mapNotNull { (day, episodes) -> nightOf(day, episodes) }
+    }
+
+    /** The night of [day] from rows that carry that `local_day` (rollups rebuild one day at a time). */
+    fun nightFor(day: String, rows: List<HealthSampleRow>): SleepNight? = nights(rows).firstOrNull { it.nightOf == day }
+
+    private class Pick(val source: String, val rows: List<HealthSampleRow>, val asleepS: Double, val episodeEnd: Long)
+
+    private fun bestSource(episode: List<HealthSampleRow>): Pick? {
+        val live = episode.filter { it.categoryValue != HealthSleepCodes.OUT_OF_BED }
         if (live.isEmpty()) return null
         val bySource = live.groupBy { it.sourceId }
-        val chosen = bySource.maxWithOrNull(
-            compareBy<Map.Entry<String, List<HealthSampleRow>>> { (_, r) -> unionSeconds(r.filter { it.categoryValue in HealthSleepCodes.ASLEEP }) }
-                .thenBy { (_, r) -> unionSeconds(r) }
-                .thenBy { it.key }
-        ) ?: return null
-        val sourceRows = chosen.value
-        val asleepRows = sourceRows.filter { it.categoryValue in HealthSleepCodes.ASLEEP }
+        val asleep = bySource.mapValues { (_, r) -> unionSeconds(r.filter { it.categoryValue in HealthSleepCodes.ASLEEP }) }
+        val src = bySource.keys.sortedWith(
+            compareByDescending<String> { asleep.getValue(it) }.thenByDescending { bySource.getValue(it).size }.thenBy { it }
+        )[0]
+        return Pick(src, bySource.getValue(src), asleep.getValue(src), episode.maxOf { it.endMs })
+    }
+
+    private fun nightOf(day: String, episodes: List<List<HealthSampleRow>>): SleepNight? {
+        val picks = episodes.mapNotNull { bestSource(it) }
+        if (picks.isEmpty()) return null
+        val main = picks.sortedWith(compareByDescending<Pick> { it.asleepS }.thenByDescending { it.episodeEnd })[0]
+        var napS = 0.0
+        var naps = 0
+        for (p in picks) if (p !== main && p.asleepS > 0) {
+            napS += p.asleepS
+            naps += 1
+        }
+        val sourceRows = main.rows
         val inBedRows = sourceRows.filter { it.categoryValue == HealthSleepCodes.IN_BED }
         val inBed = if (inBedRows.isNotEmpty()) unionSeconds(inBedRows) else unionSeconds(sourceRows)
         return SleepNight(
@@ -70,12 +116,14 @@ object HealthSleepAnalysis {
             startMs = sourceRows.minOf { it.startMs },
             endMs = sourceRows.maxOf { it.endMs },
             inBedS = inBed,
-            asleepS = unionSeconds(asleepRows),
+            asleepS = main.asleepS,
             lightS = unionSeconds(sourceRows.filter { it.categoryValue == HealthSleepCodes.LIGHT }),
             deepS = unionSeconds(sourceRows.filter { it.categoryValue == HealthSleepCodes.DEEP }),
             remS = unionSeconds(sourceRows.filter { it.categoryValue == HealthSleepCodes.REM }),
             awakeS = unionSeconds(sourceRows.filter { it.categoryValue == HealthSleepCodes.AWAKE }),
-            sourceId = chosen.key
+            sourceId = main.source,
+            napS = napS,
+            naps = naps
         )
     }
 

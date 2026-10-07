@@ -21,8 +21,8 @@ import java.util.Locale
 object CoachCameraScans {
     const val WINDOW_DAYS = 7L
     const val MAX_SCANS = 5
-    const val SPO2_LABEL = "experimental camera estimate"
-    const val BP_LABEL = "research estimate, not a blood pressure measurement"
+    const val SPO2_LABEL = "EXPERIMENTAL camera estimate, never a measurement and never used in scores"
+    const val BP_LABEL = "RESEARCH_ONLY estimate, not a blood pressure measurement and never used in scores"
 
     private val json = Json { ignoreUnknownKeys = true }
 

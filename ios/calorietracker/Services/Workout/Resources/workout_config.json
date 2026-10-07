@@ -1,5 +1,5 @@
 {
-  "algo_version": 1,
+  "algo_version": 2,
   "config_version": 1,
   "disclaimer": "Estimated by Ayuvo from your GPS and heart-rate data using published formulas. It is not a clinical exercise test.",
   "format": "ayuvo-workout-config",
@@ -96,6 +96,11 @@
     "min_segment_s": 360,
     "min_window_min": 15,
     "recovery_tolerance_s": 30,
+    "trimp_a": {
+      "female": 0.86,
+      "male": 0.64,
+      "other": 0.75
+    },
     "trimp_k": {
       "female": 1.67,
       "male": 1.92,

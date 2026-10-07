@@ -7,16 +7,29 @@ struct InsightsTrendsView: View {
 
     var body: some View {
         InsightsScreen(title: "Trends", topic: .baselines, inputs: { Self.inputRows(store.baselines) }) {
-            if store.baselines.isEmpty {
+            if store.baselines.isEmpty && (store.analytics?.trends.isEmpty ?? true) {
                 InsightsCollectingView(title: String(localized: "No metrics yet"),
                                        detail: String(localized: "Baselines appear once Apple Health has synced sleep, heart or activity data."),
                                        collecting: nil)
             }
-            ForEach(store.baselines) { row in
-                BaselineRowCard(row: row)
+            if let analytics = store.analytics {
+                // Robust personal baselines (median, usual range, robust z) and Theil–Sen trends (shared/analytics).
+                ForEach(analytics.trends) { row in
+                    AnalyticsTrendCard(row: row, today: analytics.today)
+                }
+                ForEach(store.baselines.filter { Self.legacyOnly.contains($0.id) }) { row in
+                    BaselineRowCard(row: row)
+                }
+            } else {
+                ForEach(store.baselines) { row in
+                    BaselineRowCard(row: row)
+                }
             }
         }
     }
+
+    /// Metrics without an analytics baseline yet, still shown with the Insights baseline.
+    static let legacyOnly: Set<String> = ["body_fat", "workout", "bmi"]
 
     static func inputRows(_ rows: [InsightsMetricBaseline]) -> [InsightsInputRow] {
         rows.map { row in

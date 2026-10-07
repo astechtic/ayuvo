@@ -12,6 +12,18 @@ Ayuvo already mirrors months of health data (sleep, resting heart rate, HRV, VO2
 
 Every number comes from deterministic, shared math with test vectors. AI is optional: it only rephrases the result, and only when the person taps "Explain with AI". All copy is associational ("on days when…"), never causal, and never a diagnosis or medical advice. Ayuvo Health Age is labelled as Ayuvo's own estimate: it is not a clinical or biological age and does not reproduce WHOOP or any other company's score.
 
+> **Recovery v2 (2026-10-07).** The Recovery screen, morning notification, Daily Review, widgets, the `insights.recovery.get` action and the AI explanation now use **Recovery Indicator v2** from `shared/analytics` (docs/health-analytics.md §5.7).
+>
+> What v2 changes:
+> - Robust median/MAD baselines.
+> - Sleep scored on duration against personal need, efficiency and timing.
+> - Sleeping temperature added.
+> - EWMA training-load state.
+> - A numeric confidence that drops when inputs are missing.
+> - Drivers and warnings.
+>
+> The v1 `recovery()` below, its config and its vectors are unchanged and kept for comparison. Everything else on this page (Health Age, Daily Review, Patterns v1, baselines) is unchanged. The Trends screen now shows the analytics robust baseline and trend (§5.1–5.2 there).
+
 ## 2. Contract
 | File | Role |
 |---|---|

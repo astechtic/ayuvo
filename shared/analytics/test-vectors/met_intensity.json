@@ -1,0 +1,125 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "algorithm_id": "ayuvo.met.intensity",
+        "algorithm_version": 1,
+        "classification": "SCIENTIFIC_DERIVED",
+        "day": "2026-03-15",
+        "light_min": 45.0,
+        "meets_who": true,
+        "met_minutes": 1136.5,
+        "moderate_equivalent_min": 260.0,
+        "moderate_min": 100.0,
+        "sessions": 6,
+        "unknown_min": 20.0,
+        "vigorous_min": 80.0
+      },
+      "input": {
+        "activities": [
+          {
+            "end_ms": 1773041400000,
+            "key": "running",
+            "start_ms": 1773039600000
+          },
+          {
+            "end_ms": 1773168300000,
+            "key": "yoga",
+            "start_ms": 1773165600000
+          },
+          {
+            "end_ms": 1773216000000,
+            "key": "walking",
+            "start_ms": 1773212400000
+          },
+          {
+            "end_ms": 1773301200000,
+            "key": "strength_training",
+            "start_ms": 1773298800000
+          },
+          {
+            "end_ms": 1773386400000,
+            "key": "unknown_thing",
+            "start_ms": 1773385200000
+          },
+          {
+            "end_ms": 1773481800000,
+            "key": "cycling",
+            "start_ms": 1773478800000
+          },
+          {
+            "end_ms": 1772956800000,
+            "key": "running",
+            "start_ms": 1772953200000
+          }
+        ],
+        "day": "2026-03-15",
+        "time_zone": "UTC"
+      },
+      "name": "week_mix"
+    },
+    {
+      "expected": {
+        "algorithm_id": "ayuvo.met.intensity",
+        "algorithm_version": 1,
+        "classification": "SCIENTIFIC_DERIVED",
+        "day": "2026-03-14",
+        "light_min": 0.0,
+        "meets_who": true,
+        "met_minutes": 1125.0,
+        "moderate_equivalent_min": 240.0,
+        "moderate_min": 0.0,
+        "sessions": 2,
+        "unknown_min": 0.0,
+        "vigorous_min": 120.0
+      },
+      "input": {
+        "activities": [
+          {
+            "end_ms": 1773489600000,
+            "key": "walking",
+            "start_ms": 1773486000000
+          },
+          {
+            "end_ms": 1773491400000,
+            "key": "running",
+            "start_ms": 1773487800000
+          },
+          {
+            "end_ms": 1772951400000,
+            "key": "swimming",
+            "start_ms": 1772949600000
+          }
+        ],
+        "day": "2026-03-14",
+        "time_zone": "America/New_York"
+      },
+      "name": "overlap_keeps_higher_met_dst"
+    },
+    {
+      "expected": {
+        "algorithm_id": "ayuvo.met.intensity",
+        "algorithm_version": 1,
+        "classification": "SCIENTIFIC_DERIVED",
+        "day": "2026-03-15",
+        "light_min": 0.0,
+        "meets_who": false,
+        "met_minutes": 0.0,
+        "moderate_equivalent_min": 0.0,
+        "moderate_min": 0.0,
+        "sessions": 0,
+        "unknown_min": 0.0,
+        "vigorous_min": 0.0
+      },
+      "input": {
+        "activities": [],
+        "day": "2026-03-15",
+        "time_zone": "UTC"
+      },
+      "name": "empty"
+    }
+  ],
+  "format": "ayuvo-analytics-vectors",
+  "function": "met_intensity",
+  "version": 1
+}

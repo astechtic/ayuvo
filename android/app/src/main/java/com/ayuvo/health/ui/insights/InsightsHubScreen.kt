@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.Bedtime
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Hub
 import androidx.compose.material.icons.outlined.Insights
+import androidx.compose.material.icons.outlined.MonitorHeart
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.outlined.Update
 import androidx.compose.runtime.Composable
@@ -27,7 +28,8 @@ data class InsightsDestinations(
     val openHealthAge: () -> Unit,
     val openReview: () -> Unit,
     val openTrends: () -> Unit,
-    val openPatterns: () -> Unit
+    val openPatterns: () -> Unit,
+    val openSignals: () -> Unit = {}
 )
 
 /** Browse › Insights: Recovery, Health Age, Daily Review, Trends and Patterns. */
@@ -60,6 +62,17 @@ fun InsightsHubScreen(vm: InsightsViewModel, onBack: () -> Unit, destinations: I
                         value = snap?.recovery?.score?.toString(),
                         modifier = Modifier.testTag("insights.hub.recovery"),
                         onClick = destinations.openRecovery
+                    )
+                }
+                row {
+                    val state = snap?.analytics?.anomaly?.get("state") as? String
+                    GroupRow(
+                        title = stringResource(R.string.analytics_signals_title),
+                        subtitle = AnalyticsText.anomalyState(LocalContext.current, state) ?: stringResource(R.string.analytics_hub_signals_sub),
+                        icon = Icons.Outlined.MonitorHeart,
+                        iconTint = InsightsFormat.Insights,
+                        modifier = Modifier.testTag("insights.hub.signals"),
+                        onClick = destinations.openSignals
                     )
                 }
                 row {

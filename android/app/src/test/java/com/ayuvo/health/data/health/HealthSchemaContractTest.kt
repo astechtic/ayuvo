@@ -23,7 +23,10 @@ class HealthSchemaContractTest {
         assertTrue(ddl.contains("REFERENCES health_samples(id) ON DELETE CASCADE"))
         assertTrue(ddl.contains("REFERENCES vital_scans(id) ON DELETE CASCADE"))
         assertEquals(HealthDatabase.SCHEMA_STATEMENTS.size, normalise(ddl).size)
-        assertEquals(4, HealthDatabase.VERSION)
+        assertEquals(5, HealthDatabase.VERSION)
+        // The v4 -> v5 migration adds exactly the analytics statements, which are also part of a fresh schema.
+        assertTrue(HealthDatabase.SCHEMA_STATEMENTS.containsAll(HealthDatabase.ANALYTICS_STATEMENTS))
+        assertTrue(ddl.contains("CREATE INDEX idx_ar_metric_end"))
         // The v3 -> v4 migration adds exactly the vitals statements, which are also part of a fresh schema.
         assertTrue(HealthDatabase.SCHEMA_STATEMENTS.containsAll(HealthDatabase.VITAL_STATEMENTS))
         for (table in HealthDatabase.VITAL_TABLES) {

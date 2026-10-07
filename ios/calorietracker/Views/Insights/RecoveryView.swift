@@ -9,8 +9,11 @@ struct RecoveryView: View {
         InsightsScreen(title: "Recovery", topic: .recovery, disclaimers: ["general", "background"],
                        inputs: { Self.inputRows(store.recovery) }) {
             if let recovery = store.recovery {
-                RecoveryHeaderCard(recovery: recovery)
-                if recovery.isReady {
+                RecoveryHeaderCard(recovery: recovery, baselineChange: Self.baselineChange(store.report?.recoveryHistory ?? [], today: recovery))
+                if recovery.isReady, let v2 = recovery.v2 {
+                    RecoverySummaryCard(v2: v2)
+                    driversCard(v2)
+                } else if recovery.isReady {
                     signalsCard(recovery)
                 }
                 componentsCard(recovery)
@@ -26,6 +29,60 @@ struct RecoveryView: View {
     }
 
     // MARK: Cards
+
+    /// Main drivers (v2): direction, value against the personal baseline and the robust z.
+    private func driversCard(_ v2: AJ) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            AyuvoSectionHeader("Main drivers")
+            let drivers = v2["drivers"].array.filter { $0["direction"].string != "neutral" }
+            if drivers.isEmpty {
+                Text("Every signal was close to your baseline.")
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(Array(drivers.enumerated()), id: \.offset) { _, d in
+                driverRow(d)
+            }
+        }
+        .ayuvoCard()
+        .accessibilityIdentifier("recovery.signals")
+    }
+
+    private func driverRow(_ d: AJ) -> some View {
+        let id = d["id"].string ?? ""
+        let positive = d["direction"].string == "positive"
+        let metric = id == "sleep" ? "sleep_duration" : id
+        let detail: String? = id == "training_load" ? nil : [
+            d["value"].double.map { _ in AnalyticsFormat.value(d["value"].double, metric: metric) },
+            d["baseline"].double.map { _ in id == "sleep"
+                ? String(localized: "need \(AnalyticsFormat.value(d["baseline"].double, metric: metric))")
+                : String(localized: "baseline \(AnalyticsFormat.value(d["baseline"].double, metric: metric))") },
+            AnalyticsFormat.z(d["z"].double),
+        ].compactMap { $0 }.joined(separator: " · ")
+        return HStack(alignment: .top) {
+            Image(systemName: positive ? "arrow.up.circle.fill" : "arrow.down.circle.fill")
+                .foregroundStyle(positive ? AyuvoPalette.nutrition : AyuvoPalette.heart)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(AnalyticsText.driverText(d))
+                    .font(.system(.subheadline, design: .rounded))
+                if let detail, !detail.isEmpty {
+                    Text(detail).font(.system(.caption, design: .rounded)).foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            InsightsChip(text: InsightsDisplayFormat.signed(d["impact"].double ?? 0, 1), tint: positive ? AyuvoPalette.nutrition : AyuvoPalette.heart)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Percent change of today's score against the median of the previous 28 scored days, nil below 7 of them.
+    static func baselineChange(_ history: [RecoveryResult], today: RecoveryResult) -> Double? {
+        guard let score = today.score else { return nil }
+        let prior = history.filter { $0.day < today.day && $0.isReady }.suffix(28).compactMap(\.score).map(Double.init)
+        guard prior.count >= 7 else { return nil }
+        let median = AMath.median(prior)
+        return median == 0 ? nil : (Double(score) - median) / median * 100
+    }
 
     private func signalsCard(_ recovery: RecoveryResult) -> some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -97,7 +154,7 @@ struct RecoveryView: View {
                 InsightsChip(text: InsightsConfig.shared.trainingLoadLabel(load.category, english: load.label), tint: load.category == "high" ? AyuvoPalette.heart : AyuvoPalette.activity)
             }
             if load.modifier != 0 {
-                Text("High compared with your 28-day average, so \(abs(load.modifier)) points were taken off.")
+                Text("Recent training load is high for you, so \(abs(load.modifier)) points were taken off.")
                     .font(.system(.caption, design: .rounded))
                     .foregroundStyle(.secondary)
             }
@@ -127,7 +184,7 @@ struct RecoveryView: View {
     // MARK: Text
 
     static func label(_ id: String) -> String {
-        InsightsConfig.shared.metricLabel(id)
+        InsightsConfig.shared.metric(id) != nil ? InsightsConfig.shared.metricLabel(id) : AnalyticsText.metricLabel(id)
     }
 
     /// The insights series behind a component.
@@ -138,13 +195,14 @@ struct RecoveryView: View {
     static func componentDetail(_ c: RecoveryComponent) -> String {
         guard c.available else {
             if c.value == nil { return String(localized: "No reading last night") }
-            return String(localized: "Learning (\(c.baselineN)/14 nights)")
+            return String(localized: "Learning (\(c.baselineN)/\(AnalyticsConfig.shared["recovery"]["min_points"].int ?? 7) nights)")
         }
         var parts: [String] = []
         if let baseline = c.baseline {
             parts.append(String(localized: "Baseline \(InsightsText.value(baseline, metric: c.id))"))
         }
         if let pct = c.pct { parts.append(InsightsText.percent(pct)) }
+        if let z = AnalyticsFormat.z(c.z) { parts.append(z) }
         if let impact = c.impact { parts.append(String(localized: "\(InsightsDisplayFormat.signed(impact, 1)) points")) }
         if c.fallback { parts.append(String(localized: "daily value, no reading during sleep")) }
         if parts.isEmpty { return InsightsText.missing }
@@ -175,13 +233,15 @@ struct RecoveryView: View {
 /// Gauge, label, suggestion and confidence (also the top of the Summary card's destination).
 struct RecoveryHeaderCard: View {
     let recovery: RecoveryResult
+    /// % change against the median of the previous 28 scored days (v2 screens).
+    var baselineChange: Double? = nil
 
     var body: some View {
         switch recovery.status {
         case "collecting":
             InsightsCollectingView(
-                title: String(localized: "Learning your baseline (\(recovery.collecting?.have ?? 0)/\(recovery.collecting?.need ?? 14) nights)"),
-                detail: String(localized: "Recovery needs about two weeks of sleep with HRV or resting heart rate. Keep wearing your watch to bed."),
+                title: String(localized: "Learning your baseline (\(recovery.collecting?.have ?? 0)/\(recovery.collecting?.need ?? 7) nights)"),
+                detail: String(localized: "Recovery needs about a week of sleep with HRV or resting heart rate. Keep wearing your watch to bed."),
                 collecting: recovery.collecting
             )
         case "no_sleep":
@@ -203,7 +263,14 @@ struct RecoveryHeaderCard: View {
                         Text(recommendation)
                             .font(.system(.subheadline, design: .rounded))
                     }
-                    if let confidence = InsightsText.confidence(recovery.confidence) {
+                    if let change = baselineChange {
+                        Text(String(localized: "\(change < 0 ? "↓" : "↑") \(Int(abs(change).rounded()))% vs your 28-day baseline"))
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
+                    }
+                    if let v2 = recovery.v2, let confidence = AnalyticsFormat.percent(v2["confidence"].double) {
+                        InsightsChip(text: confidence, tint: (v2["confidence"].double ?? 0) >= 0.5 ? AyuvoPalette.insights : AyuvoPalette.activity)
+                    } else if let confidence = InsightsText.confidence(recovery.confidence) {
                         InsightsChip(text: confidence, tint: AyuvoPalette.other)
                     }
                 }
@@ -213,5 +280,36 @@ struct RecoveryHeaderCard: View {
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("recovery.header")
         }
+    }
+}
+
+/// Recovery v2 explanation: the summary built from the drivers, the warnings and the coverage.
+struct RecoverySummaryCard: View {
+    let v2: AJ
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let summary = AnalyticsText.summary(v2) {
+                Text(summary)
+                    .font(.system(.subheadline, design: .rounded))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            let codes = Array(Set(v2["warnings"].array.compactMap { $0["code"].string })).sorted()
+            ForEach(codes, id: \.self) { code in
+                Label(AnalyticsText.warning(code), systemImage: "exclamationmark.circle")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if let coverage = v2["coverage"].double {
+                Text(String(localized: "Signals used: \(Int((coverage * 100).rounded()))% of the full weight"))
+                    .font(.system(.caption2, design: .rounded))
+                    .foregroundStyle(.secondary)
+            }
+            AnalyticsSourceLine(classification: v2["classification"].string,
+                                source: "\(v2["algorithm_id"].string ?? "ayuvo.recovery")@\(v2["algorithm_version"].int ?? 2)")
+        }
+        .ayuvoCard()
+        .accessibilityIdentifier("recovery.summary")
     }
 }

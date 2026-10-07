@@ -168,6 +168,7 @@ class HealthSyncEngine(
         _status.value = _status.value.copy(running = true, phase = HealthSyncPhase.SYNCING, rateLimitedUntilMs = null)
         var outcome: HealthSyncOutcome
         try {
+            runCatching { com.ayuvo.health.data.health.HealthRollupRules.upgradeIfNeeded(store, run.zone) }
             run.prepareStates()
             run.initialWindows()
             run.drainChanges()
@@ -579,6 +580,7 @@ class HealthSyncEngine(
             val rows = rowsForDays(type, sortedDays.first(), sortedDays.last()).filter { it.localDay in fresh }
             val local = HealthRollupMath.rebuildDaily(descriptor, rows, tz).associateBy { it.day }.toMutableMap()
 
+            val ownWorkoutBurn = HealthRollupMath.ownWorkoutBurnByDay(rows)
             if (type.usesPlatformAggregate) {
                 val floor = state(type).backfillFloorMs?.takeIf { !state(type).backfillWithHistory }
                 val windows = windowsOf(sortedDays, policy.aggregateWindowDays.toInt())
@@ -586,9 +588,8 @@ class HealthSyncEngine(
                     val clampedFrom = if (floor != null) maxOf(from, Instant.ofEpochMilli(floor).atZone(zone).toLocalDate()) else from
                     if (clampedFrom.isAfter(to)) continue
                     val totals = call { source.aggregateDaily(type, clampedFrom, to, ownOriginOnly = false) } ?: continue
-                    val own = if (type == HealthDataType.ACTIVE_ENERGY) {
-                        call { source.aggregateDaily(type, clampedFrom, to, ownOriginOnly = true) }
-                    } else null
+                    // own_sum counts only Ayuvo's workout-burn records (from the mirror), not its Google Health write-backs.
+                    val own = if (type == HealthDataType.ACTIVE_ENERGY) ownWorkoutBurn else null
                     for ((day, total) in totals) {
                         val key = day.toString()
                         if (key !in fresh) continue
@@ -598,7 +599,7 @@ class HealthSyncEngine(
                             durationS = if (descriptor.isDurationLike) total else base.durationS,
                             avg = if (base.count > 0) total / base.count else total,
                             lastValue = base.lastValue ?: total,
-                            ownSum = own?.get(day),
+                            ownSum = own?.let { it[key] ?: 0.0 },
                             fromPlatformAggregate = true
                         )
                     }

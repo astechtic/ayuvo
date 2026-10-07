@@ -143,7 +143,8 @@ class HealthKitManager {
     /// v12: Google Health write-back (docs/google-health.md §4): while Google Health is
     /// connected, the share set also holds every type `GoogleHealthMirrorWriter` saves. They
     /// are first requested in step 4 of the Google Health setup, never by the Apple Health toggle.
-    private let typesVersion = 12
+    /// v13: beat-to-beat heartbeat series (read only) for Ayuvo RMSSD (docs/health-analytics.md §5.3).
+    private let typesVersion = 13
     private let typesVersionKey = "healthKitTypesVersion"
 
     /// Active-energy samples written for the workout diary are deliberately
@@ -293,6 +294,8 @@ class HealthKitManager {
         // rebuilding the food log from our own tagged samples after a reinstall.
         types.formUnion(nutritionTypeIdentifiers.map { HKQuantityType($0) })
         types.insert(HKObjectType.workoutType())
+        // Beat-to-beat series recorded by Apple Watch: Ayuvo computes RMSSD from them (never written).
+        types.insert(HKSeriesType.heartbeat())
         // Health Data hub: every registry type the running OS knows (correlation types
         // replaced by their quantity types, per-object-authorization types excluded).
         types.formUnion(HealthMetricRegistry.readObjectTypes())

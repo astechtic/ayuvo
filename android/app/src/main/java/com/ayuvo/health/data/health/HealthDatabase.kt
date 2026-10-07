@@ -26,7 +26,10 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
         SCHEMA_STATEMENTS.forEach(db::execSQL)
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('schema_version', ?)", arrayOf(VERSION.toString()))
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('registry_version', ?)", arrayOf(REGISTRY_VERSION))
-        db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('rollup_rule_version', '1')")
+        db.execSQL(
+            "INSERT OR REPLACE INTO health_meta(key, value) VALUES ('rollup_rule_version', ?)",
+            arrayOf(HealthSourcePolicy.ROLLUP_RULE_VERSION.toString())
+        )
         db.execSQL(
             "INSERT OR REPLACE INTO health_meta(key, value) VALUES ('rollups_tz', ?)",
             arrayOf(ZoneId.systemDefault().id)
@@ -46,6 +49,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
             db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('registry_version', ?)", arrayOf(REGISTRY_VERSION))
         }
         if (oldVersion < 4) VITAL_STATEMENTS.forEach(db::execSQL)
+        if (oldVersion < 5) ANALYTICS_STATEMENTS.forEach(db::execSQL)
         db.execSQL("INSERT OR REPLACE INTO health_meta(key, value) VALUES ('schema_version', ?)", arrayOf(newVersion.toString()))
     }
 
@@ -53,7 +57,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
 
     companion object {
         const val NAME = "ayuvo_health.db"
-        const val VERSION = 4
+        const val VERSION = 5
         const val REGISTRY_VERSION = "2"
 
         /** v2: on-device derived metrics (docs/derived-metrics.md); never exported, rebuilt on demand. */
@@ -117,6 +121,38 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   capability_json TEXT NOT NULL, updated_ms INTEGER NOT NULL, PRIMARY KEY (device_model, camera_position))"""
         )
 
+        /**
+         * v5: health analytics results (docs/health-analytics.md), incremental-processing state and per-user forecast
+         * models. Recomputable, never exported.
+         */
+        val ANALYTICS_STATEMENTS: List<String> = listOf(
+            """CREATE TABLE analytics_results (
+  metric_id TEXT NOT NULL,
+  period_start TEXT NOT NULL, period_end TEXT NOT NULL,
+  algorithm_id TEXT NOT NULL, algorithm_version INTEGER NOT NULL, config_version INTEGER NOT NULL,
+  status TEXT NOT NULL, classification TEXT NOT NULL,
+  value REAL, value2 REAL, value3 REAL, unit TEXT,
+  confidence REAL, coverage REAL, input_count INTEGER, baseline_window_days INTEGER,
+  result_json TEXT NOT NULL,
+  provenance_json TEXT NOT NULL,
+  input_hash TEXT NOT NULL, computed_ms INTEGER NOT NULL,
+  PRIMARY KEY (metric_id, period_start, algorithm_version))""",
+            "CREATE INDEX idx_ar_metric_end ON analytics_results(metric_id, period_end)",
+            """CREATE TABLE analytics_state (
+  metric_id TEXT PRIMARY KEY NOT NULL, algorithm_version INTEGER NOT NULL, config_version INTEGER NOT NULL,
+  last_processed_day TEXT, updated_ms INTEGER NOT NULL)""",
+            """CREATE TABLE ml_models (
+  model_id TEXT NOT NULL, model_version INTEGER NOT NULL,
+  algorithm_version INTEGER NOT NULL, target TEXT NOT NULL, feature_schema_version INTEGER NOT NULL,
+  train_start TEXT, train_end TEXT, val_start TEXT, val_end TEXT, test_start TEXT, test_end TEXT,
+  lambda REAL, coefficients_json TEXT NOT NULL, normalization_json TEXT NOT NULL,
+  metrics_json TEXT NOT NULL, baseline_metrics_json TEXT NOT NULL,
+  deployed INTEGER NOT NULL DEFAULT 0, created_ms INTEGER NOT NULL, PRIMARY KEY (model_id, model_version))"""
+        )
+
+        /** Analytics tables (v5): recomputable caches, cleared with the synced health data. */
+        val ANALYTICS_TABLES: List<String> = listOf("analytics_results", "analytics_state", "ml_models")
+
         /** User-owned camera scan tables; "Clear synced health data" (deleteAll) leaves them alone. */
         val VITAL_TABLES: List<String> = listOf("vital_scans", "vital_scan_signals", "vital_calibrations", "vital_device_profiles")
 
@@ -164,7 +200,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
   aggregation TEXT NOT NULL, unit TEXT NOT NULL, display_name TEXT, platform TEXT, native_id TEXT)""",
             "CREATE TABLE health_meta (key TEXT PRIMARY KEY NOT NULL, value TEXT)",
             DERIVED_DAILY_VALUES
-        ) + GOOGLE_HEALTH_STATEMENTS + VITAL_STATEMENTS
+        ) + GOOGLE_HEALTH_STATEMENTS + VITAL_STATEMENTS + ANALYTICS_STATEMENTS
 
         val SCHEMA_SQL: String get() = SCHEMA_STATEMENTS.joinToString(";\n", postfix = ";\n")
 
@@ -172,7 +208,7 @@ class HealthDatabase(private val context: Context) : SQLiteOpenHelper(context, N
             "health_samples", "health_series_points", "health_daily_rollups", "health_hourly_rollups",
             "health_sources", "health_sync_state", "health_type_meta", "health_meta", "derived_daily_values",
             "google_health_sync_state", "google_health_mirror"
-        ) + VITAL_TABLES
+        ) + VITAL_TABLES + ANALYTICS_TABLES
 
         fun databaseFiles(context: Context): List<File> {
             val base = context.getDatabasePath(NAME)

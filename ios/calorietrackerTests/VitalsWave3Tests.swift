@@ -181,8 +181,8 @@ struct VitalsWave3Tests {
         #expect(!off[1].contains("SpO2") && !off[1].contains("BP"))
         let on = VitalsCoachSummary.lines(scans: scans, now: now, experimentalEnabled: true, researchEnabled: true,
                                           timeZone: TimeZone(identifier: "UTC")!)
-        #expect(on[1].contains("SpO2 97 % (experimental camera estimate)"))
-        #expect(on[1].contains("BP 118/76 mmHg (research estimate, not a blood pressure measurement)"))
+        #expect(on[1].contains("SpO2 97 % (EXPERIMENTAL camera estimate, not an oxygen saturation measurement)"))
+        #expect(on[1].contains("BP 118/76 mmHg (RESEARCH_ONLY estimate, not a blood pressure measurement)"))
         scans = (0..<8).map { Self.record(startMs: nowMs - Int64($0) * 60_000, metrics: full) }
         #expect(VitalsCoachSummary.lines(scans: scans, now: now, experimentalEnabled: false, researchEnabled: false).count == 5 + 2)
         #expect(VitalsCoachSummary.lines(scans: [], now: now, experimentalEnabled: true, researchEnabled: true).isEmpty)

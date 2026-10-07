@@ -2247,6 +2247,27 @@
             "mass_unit": "kg",
             "volume_unit": "ml"
           },
+          "source": "coach"
+        },
+        "id": "insights.evidence.get",
+        "params": {}
+      },
+      "name": "ok insights.evidence.get"
+    },
+    {
+      "expected": {
+        "ai": false,
+        "confirm": false,
+        "ok": true,
+        "params": {}
+      },
+      "input": {
+        "context": {
+          "prefs": {
+            "length_unit": "cm",
+            "mass_unit": "kg",
+            "volume_unit": "ml"
+          },
           "source": "siri"
         },
         "id": "insights.healthAge.get",

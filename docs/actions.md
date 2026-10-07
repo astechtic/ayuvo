@@ -110,6 +110,7 @@ Read tools: every `coach_mode: read` action, named by its `coach_tool`. Writes: 
 | [`insights.recovery.get`](#insightsrecoveryget) | GET | Get Recovery | never | read (`get_recovery`) |
 | [`insights.healthAge.get`](#insightshealthageget) | GET | Get Health Age | never | read (`get_health_age`) |
 | [`insights.dailyReview.get`](#insightsdailyreviewget) | GET | Get Daily Review | never | read (`get_daily_review`) |
+| [`insights.evidence.get`](#insightsevidenceget) | GET | Get Health Evidence | never | read (`get_health_evidence`) |
 
 ### Domain: body
 
@@ -436,6 +437,18 @@ Read tools: every `coach_mode: read` action, named by its `coach_tool`. Writes: 
 - Siri: How did my day go in Ayuvo?
 - Shortcuts: Get Daily Review → Get Day Score → Show Result
 - Android: `ayuvo://action/insights.dailyReview.get`
+
+#### `insights.evidence.get`
+
+**Get Health Evidence** · GET. Structured, already-computed health evidence: Recovery Indicator with its drivers, multi-signal deviation state, HRV, sleep and training load, each with its status, confidence, classification and algorithm version. Compared with your own history; not a diagnosis.
+
+- Output: record — `evidence_version`, `items`
+- Permissions: local, health_read
+- Confirmation: none
+- Requires unlocked device: yes · Opens the app: no
+- Surfaces: shortcuts, android, coach · Screen: `screen:insights.recovery`
+- Shortcuts: Get Health Evidence → Get Dictionary Value "items"
+- Android: `ayuvo://action/insights.evidence.get`
 
 ### Domain: medications
 

@@ -54,7 +54,8 @@ struct InsightsActionTests {
         #expect(result.string("status") == "collecting")
         #expect(result.fields["score"] == .null)
         #expect(result.value == nil)
-        #expect(result.dialog.contains("5/14"))
+        // Recovery Indicator v2 needs 7 nights of baseline (shared/analytics recovery.min_points).
+        #expect(result.dialog.contains("/7"))
     }
 
     @Test func healthAgeAndReviewAnswerWithStatus() async throws {
