@@ -8,6 +8,7 @@ import com.ayuvo.health.AppContainer
 import com.ayuvo.health.data.metrics.AppMetricId
 import com.ayuvo.health.data.metrics.MetricKey
 import com.ayuvo.health.data.metrics.MetricsReference
+import com.ayuvo.health.data.metrics.WeekStart
 import com.ayuvo.health.models.HealthDataType
 import com.ayuvo.health.ui.health.healthUnitPrefsFlow
 import com.ayuvo.health.ui.metrics.MetricCatalog
@@ -19,6 +20,9 @@ import com.ayuvo.health.widget.QuickLogAppWidget
 import com.ayuvo.health.widget.TodayAppWidget
 import com.ayuvo.health.widget.WidgetMetric
 import com.ayuvo.health.widget.WidgetRefreshScheduler
+import com.ayuvo.health.widget.history.FoodHistoryAppWidget
+import com.ayuvo.health.widget.history.HistoryHeatmap
+import com.ayuvo.health.widget.history.WorkoutHistoryAppWidget
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +44,8 @@ import java.time.ZoneId
  * Writes [WidgetDashboardSnapshot] for the Today, My Metrics and Quick Log widgets (docs/widgets.md).
  * [observe] republishes (debounced by one second) whenever a source changes while the app runs;
  * [publishOnce] is also called by the widget refresh worker, so widgets update without the app.
- * Nothing is written while none of those widgets is on a home screen.
+ * Nothing is written while none of those widgets is on a home screen. The Workout / Food history
+ * snapshot (docs/widgets.md "History widgets") is written on the same triggers.
  */
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class WidgetDashboardWriter(private val context: Context, private val container: AppContainer) {
@@ -73,7 +78,9 @@ class WidgetDashboardWriter(private val context: Context, private val container:
                 prefs.appThemeColor,
                 prefs.healthHubEnabled
             ) { a, b, c, d, e -> listOf<Any?>(a, b, c, d, e) },
-            combine(prefs.healthConnectEnabled, container.healthRepository.revision, medsRevision) { a, b, c -> listOf<Any?>(a, b, c) }
+            combine(prefs.healthConnectEnabled, container.healthRepository.revision, medsRevision, prefs.weekStartsOnMonday) { a, b, c, d ->
+                listOf<Any?>(a, b, c, d)
+            }
         ) { a, b, c, d -> listOf(a, b, c, d) }
             .distinctUntilChanged()
             .debounce(DEBOUNCE_MS)
@@ -83,7 +90,8 @@ class WidgetDashboardWriter(private val context: Context, private val container:
 
     /** Rebuilds and stores the snapshot, redraws the dashboard widgets and plans the next boundary refresh. */
     suspend fun publishOnce(): Boolean = lock.withLock {
-        if (!WidgetRefreshScheduler.hasDashboardWidgets(context)) return@withLock false
+        val history = publishHistory()
+        if (!WidgetRefreshScheduler.hasDashboardWidgets(context)) return@withLock history
         val snapshot = runCatching { build() }.onFailure { Log.e(TAG, "Dashboard snapshot failed", it) }.getOrNull()
             ?: return@withLock false
         val previous = container.prefs.widgetDashboardSnapshot.first()
@@ -95,6 +103,31 @@ class WidgetDashboardWriter(private val context: Context, private val container:
         }
         WidgetRefreshScheduler.scheduleBoundary(context, DashboardRender.nextBoundaryMs(snapshot, System.currentTimeMillis()))
         true
+    }
+
+    /** Rebuilds the history heatmaps when a history widget is placed; redraws them only when a day changed. */
+    private suspend fun publishHistory(): Boolean {
+        if (!WidgetRefreshScheduler.hasHistoryWidgets(context)) return false
+        val snapshot = runCatching {
+            val zone = ZoneId.systemDefault()
+            val nowMs = System.currentTimeMillis()
+            val metrics = container.appMetrics.snapshot()
+            HistoryHeatmap.build(
+                workouts = metrics.workouts,
+                food = metrics.food,
+                today = Instant.ofEpochMilli(nowMs).atZone(zone).toLocalDate(),
+                zone = zone,
+                weekStart = WeekStart.of(container.prefs.weekStartsOnMonday.first()),
+                nowMs = nowMs
+            )
+        }.onFailure { Log.e(TAG, "History snapshot failed", it) }.getOrNull() ?: return false
+        val previous = container.prefs.historyHeatmapSnapshot.first()
+        if (previous?.copy(generatedAtMs = 0) != snapshot.copy(generatedAtMs = 0)) {
+            container.prefs.setHistoryHeatmapSnapshot(snapshot)
+            runCatching { WorkoutHistoryAppWidget().updateAll(context) }.onFailure { Log.e(TAG, "Workout history update failed", it) }
+            runCatching { FoodHistoryAppWidget().updateAll(context) }.onFailure { Log.e(TAG, "Food history update failed", it) }
+        }
+        return true
     }
 
     private suspend fun build(): WidgetDashboardSnapshot {

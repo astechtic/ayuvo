@@ -690,6 +690,61 @@
                 android:resource="@xml/workout_widget_info" />
         </receiver>
 
+        <!-- Workout / Food history heatmaps (docs/widgets.md "History widgets"). -->
+        <receiver
+            android:name=".widget.history.WorkoutHistoryWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_history_workout_picker_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/workout_history_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.history.FoodHistoryWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_history_food_picker_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/food_history_widget_info" />
+        </receiver>
+
+        <!-- Quick Settings "Workout" tile (docs/widgets.md "Lock Screen starters"); opens Ayuvo via WIDGET_OPEN. -->
+        <service
+            android:name=".widget.WorkoutTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_widget_fitness"
+            android:label="@string/qs_tile_workout_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="false" />
+        </service>
+
+        <!-- Quick Settings "Walk" tile (docs/widgets.md "Lock Screen starters"); starts a walk via WIDGET_START. -->
+        <service
+            android:name=".widget.WalkTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_widget_walk"
+            android:label="@string/widget_workout_walk"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="false" />
+        </service>
+
         <!-- Quick Log / My Metrics slot picker (docs/widgets.md). -->
         <activity
             android:name=".widget.WidgetConfigureActivity"

@@ -10736,6 +10736,14 @@
   "source": "ba7df74c2911",
   "state": "needs_review"
  },
+ "qs_tile_workout_idle": {
+  "source": "d862fac2ba4e",
+  "state": "needs_review"
+ },
+ "qs_tile_workout_label": {
+  "source": "c4aa9b8b2b45",
+  "state": "needs_review"
+ },
  "reasoning_effort_auto": {
   "source": "b883f5314ebf",
   "state": "needs_review"
@@ -15031,6 +15039,70 @@
  },
  "widget_group_nutrition": {
   "source": "1b3746432770",
+  "state": "needs_review"
+ },
+ "widget_history_by_meals": {
+  "source": "4f812299c5a1",
+  "state": "needs_review"
+ },
+ "widget_history_by_time": {
+  "source": "e15c139d9d63",
+  "state": "needs_review"
+ },
+ "widget_history_fewer_meals": {
+  "source": "91452ea7e647",
+  "state": "needs_review"
+ },
+ "widget_history_food_a11y": {
+  "source": "3844ec89e594",
+  "state": "needs_review"
+ },
+ "widget_history_food_description": {
+  "source": "852c895396d0",
+  "state": "needs_review"
+ },
+ "widget_history_food_picker_label": {
+  "source": "a27b899d38ca",
+  "state": "needs_review"
+ },
+ "widget_history_food_title": {
+  "source": "29167c55aeff",
+  "state": "needs_review"
+ },
+ "widget_history_last_months": {
+  "source": "9df8604d466c",
+  "state": "needs_review"
+ },
+ "widget_history_less_time": {
+  "source": "449eb5bd6584",
+  "state": "needs_review"
+ },
+ "widget_history_more_meals": {
+  "source": "87bfef2b3308",
+  "state": "needs_review"
+ },
+ "widget_history_more_time": {
+  "source": "372f80c73cb2",
+  "state": "needs_review"
+ },
+ "widget_history_open_app": {
+  "source": "366407f3562b",
+  "state": "needs_review"
+ },
+ "widget_history_workout_a11y": {
+  "source": "fd7067295012",
+  "state": "needs_review"
+ },
+ "widget_history_workout_description": {
+  "source": "5d0338e895a8",
+  "state": "needs_review"
+ },
+ "widget_history_workout_picker_label": {
+  "source": "fff6d4e23275",
+  "state": "needs_review"
+ },
+ "widget_history_workout_title": {
+  "source": "089e1587f11b",
   "state": "needs_review"
  },
  "widget_metric_next_dose": {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Məşq tarixçəsi</string>
+    <string name="widget_history_food_picker_label">Ayuvo Qida tarixçəsi</string>
+    <string name="widget_history_workout_description">Son bir ildəki məşqləriniz, məşq vaxtına görə</string>
+    <string name="widget_history_food_description">Son bir ildəki qida jurnalınız, qeyd edilmiş yeməklərə görə</string>
+    <string name="widget_history_workout_title">Məşqlər</string>
+    <string name="widget_history_food_title">Qida jurnalı</string>
+    <string name="widget_history_by_time">məşq vaxtına görə</string>
+    <string name="widget_history_by_meals">qeyd edilmiş yeməklərə görə</string>
+    <string name="widget_history_less_time">Az vaxt</string>
+    <string name="widget_history_more_time">Çox vaxt</string>
+    <string name="widget_history_fewer_meals">Az yemək</string>
+    <string name="widget_history_more_meals">Çox yemək</string>
+    <string name="widget_history_open_app">Tarixçəni görmək üçün Ayuvo-nu açın</string>
+    <string name="qs_tile_workout_label">Məşq</string>
+    <string name="qs_tile_workout_idle">Başlamaq üçün toxunun</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">son %d ay</item>
+        <item quantity="other">son %d ay</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">Son bir ildə məşqli %d gün</item>
+        <item quantity="other">Son bir ildə məşqli %d gün</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">Son bir ildə qida qeydli %d gün</item>
+        <item quantity="other">Son bir ildə qida qeydli %d gün</item>
+    </plurals>
+</resources>

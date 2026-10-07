@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo 锻炼记录</string>
+    <string name="widget_history_food_picker_label">Ayuvo 饮食记录</string>
+    <string name="widget_history_workout_description">过去一年的锻炼，按锻炼时长着色</string>
+    <string name="widget_history_food_description">过去一年的饮食记录，按记录的餐数着色</string>
+    <string name="widget_history_workout_title">锻炼</string>
+    <string name="widget_history_food_title">饮食记录</string>
+    <string name="widget_history_by_time">按锻炼时长</string>
+    <string name="widget_history_by_meals">按记录餐数</string>
+    <string name="widget_history_less_time">时间少</string>
+    <string name="widget_history_more_time">时间多</string>
+    <string name="widget_history_fewer_meals">餐数少</string>
+    <string name="widget_history_more_meals">餐数多</string>
+    <string name="widget_history_open_app">打开 Ayuvo 查看记录</string>
+    <string name="qs_tile_workout_label">锻炼</string>
+    <string name="qs_tile_workout_idle">轻点开始</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="other">最近 %d 个月</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="other">过去一年有 %d 天进行了锻炼</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="other">过去一年有 %d 天记录了饮食</item>
+    </plurals>
+</resources>

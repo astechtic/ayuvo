@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">سجل تمارين Ayuvo</string>
+    <string name="widget_history_food_picker_label">سجل طعام Ayuvo</string>
+    <string name="widget_history_workout_description">تمارينك خلال العام الماضي حسب وقت التمرين</string>
+    <string name="widget_history_food_description">سجل طعامك خلال العام الماضي حسب الوجبات المسجلة</string>
+    <string name="widget_history_workout_title">التمارين</string>
+    <string name="widget_history_food_title">سجل الطعام</string>
+    <string name="widget_history_by_time">حسب وقت التمرين</string>
+    <string name="widget_history_by_meals">حسب الوجبات المسجلة</string>
+    <string name="widget_history_less_time">وقت أقل</string>
+    <string name="widget_history_more_time">وقت أكثر</string>
+    <string name="widget_history_fewer_meals">وجبات أقل</string>
+    <string name="widget_history_more_meals">وجبات أكثر</string>
+    <string name="widget_history_open_app">افتح Ayuvo لعرض السجل</string>
+    <string name="qs_tile_workout_label">تمرين</string>
+    <string name="qs_tile_workout_idle">انقر للبدء</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="zero">آخر %d شهر</item>
+        <item quantity="one">آخر شهر</item>
+        <item quantity="two">آخر شهرين</item>
+        <item quantity="few">آخر %d أشهر</item>
+        <item quantity="many">آخر %d شهرًا</item>
+        <item quantity="other">آخر %d شهر</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="zero">%d يوم بتمرين في العام الماضي</item>
+        <item quantity="one">يوم واحد بتمرين في العام الماضي</item>
+        <item quantity="two">يومان بتمرين في العام الماضي</item>
+        <item quantity="few">%d أيام بتمرين في العام الماضي</item>
+        <item quantity="many">%d يومًا بتمرين في العام الماضي</item>
+        <item quantity="other">%d يوم بتمرين في العام الماضي</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="zero">%d يوم بطعام مسجل في العام الماضي</item>
+        <item quantity="one">يوم واحد بطعام مسجل في العام الماضي</item>
+        <item quantity="two">يومان بطعام مسجل في العام الماضي</item>
+        <item quantity="few">%d أيام بطعام مسجل في العام الماضي</item>
+        <item quantity="many">%d يومًا بطعام مسجل في العام الماضي</item>
+        <item quantity="other">%d يوم بطعام مسجل في العام الماضي</item>
+    </plurals>
+</resources>

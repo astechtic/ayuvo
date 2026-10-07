@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Historique d\'entraînement</string>
+    <string name="widget_history_food_picker_label">Ayuvo Historique des repas</string>
+    <string name="widget_history_workout_description">Entraînements de l\'année écoulée, selon le temps d\'entraînement</string>
+    <string name="widget_history_food_description">Journal alimentaire de l\'année écoulée, selon les repas enregistrés</string>
+    <string name="widget_history_workout_title">Entraînements</string>
+    <string name="widget_history_food_title">Repas</string>
+    <string name="widget_history_by_time">par temps d\'entraînement</string>
+    <string name="widget_history_by_meals">par repas enregistrés</string>
+    <string name="widget_history_less_time">Moins de temps</string>
+    <string name="widget_history_more_time">Plus de temps</string>
+    <string name="widget_history_fewer_meals">Moins de repas</string>
+    <string name="widget_history_more_meals">Plus de repas</string>
+    <string name="widget_history_open_app">Ouvrir Ayuvo pour voir l\'historique</string>
+    <string name="qs_tile_workout_label">Entraînement</string>
+    <string name="qs_tile_workout_idle">Toucher pour démarrer</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">dernier %d mois</item>
+        <item quantity="many">%d derniers mois</item>
+        <item quantity="other">%d derniers mois</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d jour avec entraînement sur l\'année écoulée</item>
+        <item quantity="many">%d jours avec entraînement sur l\'année écoulée</item>
+        <item quantity="other">%d jours avec entraînement sur l\'année écoulée</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d jour avec repas enregistré sur l\'année écoulée</item>
+        <item quantity="many">%d jours avec repas enregistrés sur l\'année écoulée</item>
+        <item quantity="other">%d jours avec repas enregistrés sur l\'année écoulée</item>
+    </plurals>
+</resources>

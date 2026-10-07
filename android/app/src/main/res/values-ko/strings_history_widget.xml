@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo 운동 기록</string>
+    <string name="widget_history_food_picker_label">Ayuvo 식단 기록</string>
+    <string name="widget_history_workout_description">지난 1년간의 운동을 운동 시간별로 표시</string>
+    <string name="widget_history_food_description">지난 1년간의 식단 기록을 기록한 식사 수별로 표시</string>
+    <string name="widget_history_workout_title">운동</string>
+    <string name="widget_history_food_title">식단 기록</string>
+    <string name="widget_history_by_time">운동 시간별</string>
+    <string name="widget_history_by_meals">기록한 식사별</string>
+    <string name="widget_history_less_time">적은 시간</string>
+    <string name="widget_history_more_time">많은 시간</string>
+    <string name="widget_history_fewer_meals">적은 식사</string>
+    <string name="widget_history_more_meals">많은 식사</string>
+    <string name="widget_history_open_app">Ayuvo를 열어 기록을 확인하세요</string>
+    <string name="qs_tile_workout_label">운동</string>
+    <string name="qs_tile_workout_idle">탭하여 시작</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="other">최근 %d개월</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="other">지난 1년간 운동한 날 %d일</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="other">지난 1년간 식사를 기록한 날 %d일</item>
+    </plurals>
+</resources>

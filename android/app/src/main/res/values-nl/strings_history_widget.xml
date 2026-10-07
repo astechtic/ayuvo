@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Trainingsgeschiedenis</string>
+    <string name="widget_history_food_picker_label">Ayuvo Voedingsgeschiedenis</string>
+    <string name="widget_history_workout_description">Je trainingen van het afgelopen jaar, op trainingstijd</string>
+    <string name="widget_history_food_description">Je voedingslogboek van het afgelopen jaar, op gelogde maaltijden</string>
+    <string name="widget_history_workout_title">Trainingen</string>
+    <string name="widget_history_food_title">Voeding</string>
+    <string name="widget_history_by_time">op trainingstijd</string>
+    <string name="widget_history_by_meals">op gelogde maaltijden</string>
+    <string name="widget_history_less_time">Minder tijd</string>
+    <string name="widget_history_more_time">Meer tijd</string>
+    <string name="widget_history_fewer_meals">Minder maaltijden</string>
+    <string name="widget_history_more_meals">Meer maaltijden</string>
+    <string name="widget_history_open_app">Open Ayuvo om je geschiedenis te zien</string>
+    <string name="qs_tile_workout_label">Training</string>
+    <string name="qs_tile_workout_idle">Tik om te starten</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">afgelopen %d maand</item>
+        <item quantity="other">afgelopen %d maanden</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d dag met training in het afgelopen jaar</item>
+        <item quantity="other">%d dagen met training in het afgelopen jaar</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d dag met gelogde maaltijden in het afgelopen jaar</item>
+        <item quantity="other">%d dagen met gelogde maaltijden in het afgelopen jaar</item>
+    </plurals>
+</resources>

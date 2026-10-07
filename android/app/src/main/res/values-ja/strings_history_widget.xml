@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo ワークアウト履歴</string>
+    <string name="widget_history_food_picker_label">Ayuvo 食事履歴</string>
+    <string name="widget_history_workout_description">過去1年間のワークアウトをトレーニング時間で色分け</string>
+    <string name="widget_history_food_description">過去1年間の食事記録を記録した食事の数で色分け</string>
+    <string name="widget_history_workout_title">ワークアウト</string>
+    <string name="widget_history_food_title">食事記録</string>
+    <string name="widget_history_by_time">トレーニング時間別</string>
+    <string name="widget_history_by_meals">記録した食事別</string>
+    <string name="widget_history_less_time">短い</string>
+    <string name="widget_history_more_time">長い</string>
+    <string name="widget_history_fewer_meals">少ない</string>
+    <string name="widget_history_more_meals">多い</string>
+    <string name="widget_history_open_app">Ayuvoを開いて履歴を表示</string>
+    <string name="qs_tile_workout_label">ワークアウト</string>
+    <string name="qs_tile_workout_idle">タップして開始</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="other">過去%dか月</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="other">過去1年間でワークアウトした日：%d日</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="other">過去1年間で食事を記録した日：%d日</item>
+    </plurals>
+</resources>

@@ -26,8 +26,8 @@ class WidgetRefreshWorker(
             return Result.success()
         }
 
-        // Today / My Metrics read a snapshot the app writes; rebuild it here so they stay current
-        // while the app is not running (docs/widgets.md "Freshness").
+        // Today / My Metrics and the history widgets read snapshots the app writes; rebuild them here so
+        // they stay current while the app is not running (docs/widgets.md "Freshness").
         (applicationContext as? AyuvoApp)?.container?.widgetDashboardWriter?.let { writer ->
             runCatching { writer.publishOnce() }.onFailure { Log.e(TAG, "Dashboard snapshot refresh failed", it) }
         }
@@ -65,7 +65,15 @@ object WidgetRefreshScheduler {
         TodayWidgetReceiver::class.java,
         MyMetricsWidgetReceiver::class.java,
         QuickLogWidgetReceiver::class.java,
-        WorkoutWidgetReceiver::class.java
+        WorkoutWidgetReceiver::class.java,
+        com.ayuvo.health.widget.history.WorkoutHistoryWidgetReceiver::class.java,
+        com.ayuvo.health.widget.history.FoodHistoryWidgetReceiver::class.java
+    )
+
+    /** Widgets that read the history heatmap snapshot. */
+    private val historyReceivers = listOf(
+        com.ayuvo.health.widget.history.WorkoutHistoryWidgetReceiver::class.java,
+        com.ayuvo.health.widget.history.FoodHistoryWidgetReceiver::class.java
     )
 
     /** Widgets that read the dashboard snapshot (Quick Log uses its water/fasting state). */
@@ -127,6 +135,13 @@ object WidgetRefreshScheduler {
     fun hasDashboardWidgets(context: Context): Boolean {
         val manager = AppWidgetManager.getInstance(context)
         return dashboardReceivers.any { receiver ->
+            manager.getAppWidgetIds(ComponentName(context, receiver)).isNotEmpty()
+        }
+    }
+
+    fun hasHistoryWidgets(context: Context): Boolean {
+        val manager = AppWidgetManager.getInstance(context)
+        return historyReceivers.any { receiver ->
             manager.getAppWidgetIds(ComponentName(context, receiver)).isNotEmpty()
         }
     }

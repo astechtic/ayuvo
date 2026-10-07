@@ -359,6 +359,51 @@ write("layout/widget_preview_quick_log.xml",
       f'{action_cell("ic_widget_fitness", "widget_preview_bubble_move", "#FF" + MOVE, "wp_workout", "android:layout_marginStart=\"3dp\"")}'
       f'</LinearLayout>\n')
 
+
+# ── History heatmaps (docs/widgets.md "History widgets") ─────────────────────
+def heatmap_art(color, cols=20):
+    """Illustrative year heatmap: 7 rows, `cols` weeks, a fixed pattern of levels 0-4."""
+    pitch, cell, r = 10.0, 8.2, 2.0
+    alphas = ["40", "59", "8C", "C7", "FF"]
+    body = ""
+    for c in range(cols):
+        for row in range(7):
+            if c == cols - 1 and row > 3:
+                continue
+            level = (c * 7 + row) * 37 % 11
+            level = 0 if c < cols // 3 and level < 8 else min(4, level // 2)
+            fill = ("#408E8E93" if level == 0 else f"#{alphas[level]}{color}")
+            x, y = c * pitch, row * pitch
+            d = (f"M{f(x + r)},{f(y)} h{f(cell - 2 * r)} a{f(r)},{f(r)} 0 0,1 {f(r)},{f(r)} v{f(cell - 2 * r)}"
+                 f" a{f(r)},{f(r)} 0 0,1 {f(-r)},{f(r)} h{f(-(cell - 2 * r))} a{f(r)},{f(r)} 0 0,1 {f(-r)},{f(-r)}"
+                 f" v{f(-(cell - 2 * r))} a{f(r)},{f(r)} 0 0,1 {f(r)},{f(-r)} z")
+            body += f'    <path android:pathData="{d}" android:fillColor="{fill}" />\n'
+    return vector(cols * pitch - (pitch - cell), 7 * pitch - (pitch - cell), body)
+
+
+write("drawable/widget_preview_heatmap_move.xml", heatmap_art(MOVE))
+write("drawable/widget_preview_heatmap_eat.xml", heatmap_art(EAT))
+
+
+def history_widget(icon, color, title, art, less, more):
+    return (HEAD + f'<LinearLayout {ANDROID} {TOOLS} tools:ignore="UseAppTint"\n    android:layout_width="match_parent" android:layout_height="match_parent"'
+            f' android:background="@drawable/widget_preview_bg" android:orientation="vertical" android:padding="12dp">'
+            f'{header(icon, title, "#FF" + color, icon_dp=13)}'
+            f'<ImageView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="6dp"'
+            f' android:src="@drawable/{art}" android:scaleType="fitCenter" android:contentDescription="@null" />'
+            f'<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"'
+            f' android:orientation="horizontal" android:gravity="end|center_vertical">'
+            f'{text(less, 10, SEC)}<FrameLayout android:layout_width="4dp" android:layout_height="1dp" />'
+            f'{text(more, 10, SEC)}</LinearLayout></LinearLayout>\n')
+
+
+write("layout/widget_preview_workout_history.xml",
+      history_widget("ic_widget_fitness", MOVE, "widget_history_workout_title", "widget_preview_heatmap_move",
+                     "widget_history_less_time", "widget_history_more_time"))
+write("layout/widget_preview_food_history.xml",
+      history_widget("ic_widget_restaurant", EAT, "widget_history_food_title", "widget_preview_heatmap_eat",
+                     "widget_history_fewer_meals", "widget_history_more_meals"))
+
 # ── Hook previews into the provider infos ────────────────────────────────────
 for info, layout in [("calorie", "calorie"), ("protein", "protein"), ("water", "water"),
                      ("all_metrics", "all_metrics"), ("today", "today"),

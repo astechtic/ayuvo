@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo वर्कआउट इतिहास</string>
+    <string name="widget_history_food_picker_label">Ayuvo भोजन इतिहास</string>
+    <string name="widget_history_workout_description">पिछले साल के आपके वर्कआउट, ट्रेनिंग समय के अनुसार</string>
+    <string name="widget_history_food_description">पिछले साल का आपका भोजन लॉग, लॉग किए गए भोजन के अनुसार</string>
+    <string name="widget_history_workout_title">वर्कआउट</string>
+    <string name="widget_history_food_title">भोजन लॉग</string>
+    <string name="widget_history_by_time">ट्रेनिंग समय के अनुसार</string>
+    <string name="widget_history_by_meals">लॉग किए गए भोजन के अनुसार</string>
+    <string name="widget_history_less_time">कम समय</string>
+    <string name="widget_history_more_time">ज़्यादा समय</string>
+    <string name="widget_history_fewer_meals">कम भोजन</string>
+    <string name="widget_history_more_meals">ज़्यादा भोजन</string>
+    <string name="widget_history_open_app">अपना इतिहास देखने के लिए Ayuvo खोलें</string>
+    <string name="qs_tile_workout_label">वर्कआउट</string>
+    <string name="qs_tile_workout_idle">शुरू करने के लिए टैप करें</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">पिछला %d महीना</item>
+        <item quantity="other">पिछले %d महीने</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">पिछले साल में वर्कआउट वाला %d दिन</item>
+        <item quantity="other">पिछले साल में वर्कआउट वाले %d दिन</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">पिछले साल में भोजन लॉग वाला %d दिन</item>
+        <item quantity="other">पिछले साल में भोजन लॉग वाले %d दिन</item>
+    </plurals>
+</resources>

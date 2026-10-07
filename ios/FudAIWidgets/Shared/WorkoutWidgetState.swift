@@ -43,6 +43,10 @@ nonisolated enum WorkoutWidgetSport: String, CaseIterable, Codable, Sendable {
 nonisolated struct WorkoutWidgetState: Codable, Equatable, Sendable {
     static let currentVersion = 1
     static let widgetKind = "WorkoutWidget"
+    /// Lock Screen "Start workout" circle (docs/widgets.md "Lock Screen starters"); shows the running timer too.
+    static let startWidgetKind = "WorkoutStartWidget"
+    /// Lock Screen "Start Walk" circle (the same circle fixed to Walk).
+    static let startWalkWidgetKind = "WorkoutStartWalkWidget"
     /// Older than this, the state is left over from a process that died without clearing it.
     static let staleAfter: TimeInterval = 24 * 3600
 

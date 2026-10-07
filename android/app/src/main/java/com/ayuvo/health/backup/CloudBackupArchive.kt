@@ -33,6 +33,8 @@ object CloudBackupPolicy {
         "widget_snapshot_v1",
         // Today / My Metrics widget snapshot (docs/widgets.md): device-local.
         "widgetDashboardSnapshot",
+        // Workout / Food history widget snapshot (docs/widgets.md "History widgets"): device-local.
+        "historyHeatmapSnapshot",
         "lastNotifiedUpdateVersion",
         // Whether THIS install finished onboarding is device state: restoring it from the welcome
         // screen would end onboarding before the notification, Health Connect and AI steps ran.

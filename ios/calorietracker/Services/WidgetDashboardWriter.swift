@@ -105,8 +105,8 @@ enum WidgetDashboardBuilder {
     }
 }
 
-/// Keeps the dashboard snapshot current and reloads the new widgets (Today, My Metrics,
-/// Quick Log). Observes store revisions and `UserDefaults` changes, debounced by one second,
+/// Keeps the dashboard and history heatmap snapshots current and reloads the new widgets (Today,
+/// My Metrics, Quick Log, Workout / Food history). Observes store revisions and `UserDefaults` changes, debounced by one second,
 /// and writes only when the content changed.
 @MainActor
 final class WidgetDashboardWriter {
@@ -178,8 +178,13 @@ final class WidgetDashboardWriter {
                 WidgetDashboardSnapshot.clear()
                 Self.reload()
             }
+            if HistoryHeatmapSnapshot.read() != nil {
+                HistoryHeatmapSnapshot.clear()
+                Self.reloadHistory()
+            }
             return
         }
+        publishHistory(now: now)
         let snapshot = await makeSnapshot(now: now)
         if let current = WidgetDashboardSnapshot.read(), current.hasSameContent(as: snapshot) { return }
         WidgetDashboardSnapshot.write(snapshot)
@@ -190,9 +195,24 @@ final class WidgetDashboardWriter {
         for kind in kinds { WidgetCenter.shared.reloadTimelines(ofKind: kind) }
     }
 
+    static func reloadHistory() {
+        WidgetCenter.shared.reloadTimelines(ofKind: HistoryHeatmapSnapshot.workoutKind)
+        WidgetCenter.shared.reloadTimelines(ofKind: HistoryHeatmapSnapshot.foodKind)
+    }
+
     static func clear() {
         WidgetDashboardSnapshot.clear()
         reload()
+        HistoryHeatmapSnapshot.clear()
+        reloadHistory()
+    }
+
+    /// Workout and Food history heatmaps (docs/widgets.md "History widgets"), written only when they changed.
+    private func publishHistory(now: Date) {
+        let snapshot = HistoryHeatmapBuilder.build(sources: sources, now: now)
+        if let current = HistoryHeatmapSnapshot.read(), current.hasSameContent(as: snapshot) { return }
+        HistoryHeatmapSnapshot.write(snapshot)
+        Self.reloadHistory()
     }
 
     // MARK: - Assembly

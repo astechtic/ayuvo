@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Histórico de treinos</string>
+    <string name="widget_history_food_picker_label">Ayuvo Histórico de refeições</string>
+    <string name="widget_history_workout_description">Seus treinos no último ano, pelo tempo de treino</string>
+    <string name="widget_history_food_description">Seu diário alimentar no último ano, pelas refeições registradas</string>
+    <string name="widget_history_workout_title">Treinos</string>
+    <string name="widget_history_food_title">Refeições</string>
+    <string name="widget_history_by_time">por tempo de treino</string>
+    <string name="widget_history_by_meals">por refeições registradas</string>
+    <string name="widget_history_less_time">Menos tempo</string>
+    <string name="widget_history_more_time">Mais tempo</string>
+    <string name="widget_history_fewer_meals">Menos refeições</string>
+    <string name="widget_history_more_meals">Mais refeições</string>
+    <string name="widget_history_open_app">Abra o Ayuvo para ver seu histórico</string>
+    <string name="qs_tile_workout_label">Treino</string>
+    <string name="qs_tile_workout_idle">Toque para iniciar</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">último %d mês</item>
+        <item quantity="many">últimos %d meses</item>
+        <item quantity="other">últimos %d meses</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d dia com treino no último ano</item>
+        <item quantity="many">%d dias com treino no último ano</item>
+        <item quantity="other">%d dias com treino no último ano</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d dia com refeições registradas no último ano</item>
+        <item quantity="many">%d dias com refeições registradas no último ano</item>
+        <item quantity="other">%d dias com refeições registradas no último ano</item>
+    </plurals>
+</resources>

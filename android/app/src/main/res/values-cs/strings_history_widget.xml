@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Historie tréninků</string>
+    <string name="widget_history_food_picker_label">Ayuvo Historie jídel</string>
+    <string name="widget_history_workout_description">Tréninky za poslední rok podle času tréninku</string>
+    <string name="widget_history_food_description">Jídelníček za poslední rok podle zapsaných jídel</string>
+    <string name="widget_history_workout_title">Tréninky</string>
+    <string name="widget_history_food_title">Jídlo</string>
+    <string name="widget_history_by_time">podle času tréninku</string>
+    <string name="widget_history_by_meals">podle zapsaných jídel</string>
+    <string name="widget_history_less_time">Méně času</string>
+    <string name="widget_history_more_time">Více času</string>
+    <string name="widget_history_fewer_meals">Méně jídel</string>
+    <string name="widget_history_more_meals">Více jídel</string>
+    <string name="widget_history_open_app">Otevřete Ayuvo a zobrazte historii</string>
+    <string name="qs_tile_workout_label">Trénink</string>
+    <string name="qs_tile_workout_idle">Klepnutím spustíte</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">poslední %d měsíc</item>
+        <item quantity="few">poslední %d měsíce</item>
+        <item quantity="many">posledních %d měsíce</item>
+        <item quantity="other">posledních %d měsíců</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d den s tréninkem za poslední rok</item>
+        <item quantity="few">%d dny s tréninkem za poslední rok</item>
+        <item quantity="many">%d dne s tréninkem za poslední rok</item>
+        <item quantity="other">%d dní s tréninkem za poslední rok</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d den se zapsaným jídlem za poslední rok</item>
+        <item quantity="few">%d dny se zapsaným jídlem za poslední rok</item>
+        <item quantity="many">%d dne se zapsaným jídlem za poslední rok</item>
+        <item quantity="other">%d dní se zapsaným jídlem za poslední rok</item>
+    </plurals>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Trainingsverlauf</string>
+    <string name="widget_history_food_picker_label">Ayuvo Ernährungsverlauf</string>
+    <string name="widget_history_workout_description">Deine Trainings im letzten Jahr, nach Trainingszeit eingefärbt</string>
+    <string name="widget_history_food_description">Dein Ernährungstagebuch im letzten Jahr, nach erfassten Mahlzeiten eingefärbt</string>
+    <string name="widget_history_workout_title">Trainings</string>
+    <string name="widget_history_food_title">Ernährung</string>
+    <string name="widget_history_by_time">nach Trainingszeit</string>
+    <string name="widget_history_by_meals">nach Mahlzeiten</string>
+    <string name="widget_history_less_time">Weniger Zeit</string>
+    <string name="widget_history_more_time">Mehr Zeit</string>
+    <string name="widget_history_fewer_meals">Weniger Mahlzeiten</string>
+    <string name="widget_history_more_meals">Mehr Mahlzeiten</string>
+    <string name="widget_history_open_app">Öffne Ayuvo, um deinen Verlauf zu sehen</string>
+    <string name="qs_tile_workout_label">Training</string>
+    <string name="qs_tile_workout_idle">Zum Starten tippen</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">letzter %d Monat</item>
+        <item quantity="other">letzte %d Monate</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d Tag mit Training im letzten Jahr</item>
+        <item quantity="other">%d Tage mit Training im letzten Jahr</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d Tag mit erfasster Mahlzeit im letzten Jahr</item>
+        <item quantity="other">%d Tage mit erfassten Mahlzeiten im letzten Jahr</item>
+    </plurals>
+</resources>

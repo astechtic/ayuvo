@@ -8,7 +8,7 @@ struct WidgetSharedCopiesTests {
         URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
     }
 
-    @Test(arguments: ["WidgetOptions.swift", "WidgetDashboardSnapshot.swift", "WorkoutWidgetState.swift"])
+    @Test(arguments: ["WidgetOptions.swift", "WidgetDashboardSnapshot.swift", "WorkoutWidgetState.swift", "HistoryHeatmapSnapshot.swift"])
     func copiesAreByteIdentical(_ name: String) throws {
         let original = try Data(contentsOf: iosRoot.appendingPathComponent("calorietracker/Widgets/Shared/\(name)"))
         let copy = try Data(contentsOf: iosRoot.appendingPathComponent("FudAIWidgets/Shared/\(name)"))

@@ -2193,6 +2193,21 @@ class PreferencesStore(
         }
     }
 
+    /** Workout / Food history widgets (docs/widgets.md "History widgets"). Device-local; never backed up. */
+    val historyHeatmapSnapshot: Flow<com.ayuvo.health.widget.history.HistoryHeatmapSnapshot?> = ds.data.map { prefs ->
+        prefs[Keys.HISTORY_HEATMAP_SNAPSHOT]?.let {
+            runCatching { json.decodeFromString<com.ayuvo.health.widget.history.HistoryHeatmapSnapshot>(it) }.getOrNull()
+        }
+    }
+
+    suspend fun setHistoryHeatmapSnapshot(snapshot: com.ayuvo.health.widget.history.HistoryHeatmapSnapshot) {
+        ds.edit {
+            it[Keys.HISTORY_HEATMAP_SNAPSHOT] = json.encodeToString(
+                com.ayuvo.health.widget.history.HistoryHeatmapSnapshot.serializer(), snapshot
+            )
+        }
+    }
+
     // -- Wipe everything --------------------------------------------------
     suspend fun clearAll() {
         ds.edit { it.clear() }
@@ -2353,6 +2368,7 @@ class PreferencesStore(
         val CHAT_HISTORY = stringPreferencesKey("coachChatHistory")
         val WIDGET_SNAPSHOT = stringPreferencesKey("widget_snapshot_v1")
         val WIDGET_DASHBOARD_SNAPSHOT = stringPreferencesKey("widgetDashboardSnapshot")
+        val HISTORY_HEATMAP_SNAPSHOT = stringPreferencesKey("historyHeatmapSnapshot")
     }
 
     companion object {

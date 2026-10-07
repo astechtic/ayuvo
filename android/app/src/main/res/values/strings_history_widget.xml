@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Workout / Food history widgets and the Quick Settings Workout tile (docs/widgets.md). -->
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Workout history</string>
+    <string name="widget_history_food_picker_label">Ayuvo Food history</string>
+    <string name="widget_history_workout_description">Your workouts over the past year, shaded by time trained</string>
+    <string name="widget_history_food_description">Your food log over the past year, shaded by meals logged</string>
+    <string name="widget_history_workout_title">Workouts</string>
+    <string name="widget_history_food_title">Food log</string>
+    <string name="widget_history_by_time">by time trained</string>
+    <string name="widget_history_by_meals">by meals logged</string>
+    <string name="widget_history_less_time">Less time</string>
+    <string name="widget_history_more_time">More time</string>
+    <string name="widget_history_fewer_meals">Fewer meals</string>
+    <string name="widget_history_more_meals">More meals</string>
+    <string name="widget_history_open_app">Open Ayuvo to see your history</string>
+    <string name="qs_tile_workout_label">Workout</string>
+    <string name="qs_tile_workout_idle">Tap to start</string>
+    <string name="widget_history_title_full" translatable="false">%1$s — %2$s · %3$s</string>
+    <string name="widget_history_title_short" translatable="false">%1$s — %2$s</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">last %d month</item>
+        <item quantity="other">last %d months</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d day with a workout in the past year</item>
+        <item quantity="other">%d days with a workout in the past year</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d day with food logged in the past year</item>
+        <item quantity="other">%d days with food logged in the past year</item>
+    </plurals>
+</resources>

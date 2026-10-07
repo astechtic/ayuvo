@@ -47,6 +47,8 @@ object WorkoutWidgetSync {
                 _inputs.value = next
                 runCatching { WorkoutAppWidget().updateAll(app) }
                     .onFailure { Log.e(TAG, "Workout widget update failed", it) }
+                // Quick Settings tile (docs/widgets.md "Lock Screen starters"): re-read on every phase change.
+                WorkoutTileService.requestRefresh(app)
             }
             .launchIn(scope)
     }

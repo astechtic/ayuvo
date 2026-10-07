@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo История тренировок</string>
+    <string name="widget_history_food_picker_label">Ayuvo История питания</string>
+    <string name="widget_history_workout_description">Ваши тренировки за последний год по времени тренировок</string>
+    <string name="widget_history_food_description">Ваш дневник питания за последний год по записанным приёмам пищи</string>
+    <string name="widget_history_workout_title">Тренировки</string>
+    <string name="widget_history_food_title">Питание</string>
+    <string name="widget_history_by_time">по времени тренировок</string>
+    <string name="widget_history_by_meals">по приёмам пищи</string>
+    <string name="widget_history_less_time">Меньше времени</string>
+    <string name="widget_history_more_time">Больше времени</string>
+    <string name="widget_history_fewer_meals">Меньше приёмов пищи</string>
+    <string name="widget_history_more_meals">Больше приёмов пищи</string>
+    <string name="widget_history_open_app">Откройте Ayuvo, чтобы увидеть историю</string>
+    <string name="qs_tile_workout_label">Тренировка</string>
+    <string name="qs_tile_workout_idle">Нажмите, чтобы начать</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">последний %d месяц</item>
+        <item quantity="few">последние %d месяца</item>
+        <item quantity="many">последние %d месяцев</item>
+        <item quantity="other">последние %d месяца</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d день с тренировкой за последний год</item>
+        <item quantity="few">%d дня с тренировкой за последний год</item>
+        <item quantity="many">%d дней с тренировкой за последний год</item>
+        <item quantity="other">%d дня с тренировкой за последний год</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d день с записями питания за последний год</item>
+        <item quantity="few">%d дня с записями питания за последний год</item>
+        <item quantity="many">%d дней с записями питания за последний год</item>
+        <item quantity="other">%d дня с записями питания за последний год</item>
+    </plurals>
+</resources>

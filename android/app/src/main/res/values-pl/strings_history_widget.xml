@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Historia treningów</string>
+    <string name="widget_history_food_picker_label">Ayuvo Historia posiłków</string>
+    <string name="widget_history_workout_description">Twoje treningi z ostatniego roku według czasu treningu</string>
+    <string name="widget_history_food_description">Twój dziennik posiłków z ostatniego roku według zapisanych posiłków</string>
+    <string name="widget_history_workout_title">Treningi</string>
+    <string name="widget_history_food_title">Posiłki</string>
+    <string name="widget_history_by_time">wg czasu treningu</string>
+    <string name="widget_history_by_meals">wg zapisanych posiłków</string>
+    <string name="widget_history_less_time">Mniej czasu</string>
+    <string name="widget_history_more_time">Więcej czasu</string>
+    <string name="widget_history_fewer_meals">Mniej posiłków</string>
+    <string name="widget_history_more_meals">Więcej posiłków</string>
+    <string name="widget_history_open_app">Otwórz Ayuvo, aby zobaczyć historię</string>
+    <string name="qs_tile_workout_label">Trening</string>
+    <string name="qs_tile_workout_idle">Dotknij, aby rozpocząć</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">ostatni %d miesiąc</item>
+        <item quantity="few">ostatnie %d miesiące</item>
+        <item quantity="many">ostatnich %d miesięcy</item>
+        <item quantity="other">ostatnich %d miesiąca</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d dzień z treningiem w ostatnim roku</item>
+        <item quantity="few">%d dni z treningiem w ostatnim roku</item>
+        <item quantity="many">%d dni z treningiem w ostatnim roku</item>
+        <item quantity="other">%d dnia z treningiem w ostatnim roku</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d dzień z zapisanymi posiłkami w ostatnim roku</item>
+        <item quantity="few">%d dni z zapisanymi posiłkami w ostatnim roku</item>
+        <item quantity="many">%d dni z zapisanymi posiłkami w ostatnim roku</item>
+        <item quantity="other">%d dnia z zapisanymi posiłkami w ostatnim roku</item>
+    </plurals>
+</resources>

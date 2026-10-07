@@ -34,5 +34,7 @@ final class WorkoutWidgetPublisher {
 
     private func reload() {
         WidgetCenter.shared.reloadTimelines(ofKind: WorkoutWidgetState.widgetKind)
+        WidgetCenter.shared.reloadTimelines(ofKind: WorkoutWidgetState.startWidgetKind)
+        WidgetCenter.shared.reloadTimelines(ofKind: WorkoutWidgetState.startWalkWidgetKind)
     }
 }

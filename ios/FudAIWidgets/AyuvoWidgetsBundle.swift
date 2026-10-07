@@ -12,6 +12,14 @@ struct AyuvoWidgetsBundle: WidgetBundle {
         MyMetricsWidget()
         QuickLogWidget()
         WorkoutWidget()
+        WorkoutHistoryWidget()
+        FoodHistoryWidget()
+        WorkoutStartWidget()
+        WalkStartWidget()
         WorkoutLiveActivityWidget()
+        if #available(iOS 18.0, *) {
+            StartWorkoutControl()
+            StartWalkControl()
+        }
     }
 }

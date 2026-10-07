@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Історія тренувань</string>
+    <string name="widget_history_food_picker_label">Ayuvo Історія харчування</string>
+    <string name="widget_history_workout_description">Ваші тренування за останній рік за часом тренувань</string>
+    <string name="widget_history_food_description">Ваш щоденник харчування за останній рік за записаними прийомами їжі</string>
+    <string name="widget_history_workout_title">Тренування</string>
+    <string name="widget_history_food_title">Харчування</string>
+    <string name="widget_history_by_time">за часом тренувань</string>
+    <string name="widget_history_by_meals">за прийомами їжі</string>
+    <string name="widget_history_less_time">Менше часу</string>
+    <string name="widget_history_more_time">Більше часу</string>
+    <string name="widget_history_fewer_meals">Менше прийомів їжі</string>
+    <string name="widget_history_more_meals">Більше прийомів їжі</string>
+    <string name="widget_history_open_app">Відкрийте Ayuvo, щоб побачити історію</string>
+    <string name="qs_tile_workout_label">Тренування</string>
+    <string name="qs_tile_workout_idle">Торкніться, щоб почати</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">останній %d місяць</item>
+        <item quantity="few">останні %d місяці</item>
+        <item quantity="many">останні %d місяців</item>
+        <item quantity="other">останні %d місяця</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d день із тренуванням за останній рік</item>
+        <item quantity="few">%d дні із тренуванням за останній рік</item>
+        <item quantity="many">%d днів із тренуванням за останній рік</item>
+        <item quantity="other">%d дня із тренуванням за останній рік</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d день із записами харчування за останній рік</item>
+        <item quantity="few">%d дні із записами харчування за останній рік</item>
+        <item quantity="many">%d днів із записами харчування за останній рік</item>
+        <item quantity="other">%d дня із записами харчування за останній рік</item>
+    </plurals>
+</resources>

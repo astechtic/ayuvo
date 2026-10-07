@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Historial de entrenos</string>
+    <string name="widget_history_food_picker_label">Ayuvo Historial de comidas</string>
+    <string name="widget_history_workout_description">Tus entrenamientos del último año, según el tiempo entrenado</string>
+    <string name="widget_history_food_description">Tu registro de comidas del último año, según las comidas registradas</string>
+    <string name="widget_history_workout_title">Entrenamientos</string>
+    <string name="widget_history_food_title">Comidas</string>
+    <string name="widget_history_by_time">por tiempo entrenado</string>
+    <string name="widget_history_by_meals">por comidas registradas</string>
+    <string name="widget_history_less_time">Menos tiempo</string>
+    <string name="widget_history_more_time">Más tiempo</string>
+    <string name="widget_history_fewer_meals">Menos comidas</string>
+    <string name="widget_history_more_meals">Más comidas</string>
+    <string name="widget_history_open_app">Abre Ayuvo para ver tu historial</string>
+    <string name="qs_tile_workout_label">Entreno</string>
+    <string name="qs_tile_workout_idle">Toca para empezar</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">último %d mes</item>
+        <item quantity="many">últimos %d meses</item>
+        <item quantity="other">últimos %d meses</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d día con entrenamiento en el último año</item>
+        <item quantity="many">%d días con entrenamiento en el último año</item>
+        <item quantity="other">%d días con entrenamiento en el último año</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d día con comidas registradas en el último año</item>
+        <item quantity="many">%d días con comidas registradas en el último año</item>
+        <item quantity="other">%d días con comidas registradas en el último año</item>
+    </plurals>
+</resources>

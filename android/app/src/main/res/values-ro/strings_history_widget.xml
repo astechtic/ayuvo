@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Istoric antrenamente</string>
+    <string name="widget_history_food_picker_label">Ayuvo Istoric mese</string>
+    <string name="widget_history_workout_description">Antrenamentele tale din ultimul an, după timpul de antrenament</string>
+    <string name="widget_history_food_description">Jurnalul tău alimentar din ultimul an, după mesele înregistrate</string>
+    <string name="widget_history_workout_title">Antrenamente</string>
+    <string name="widget_history_food_title">Mese</string>
+    <string name="widget_history_by_time">după timpul de antrenament</string>
+    <string name="widget_history_by_meals">după mesele înregistrate</string>
+    <string name="widget_history_less_time">Mai puțin timp</string>
+    <string name="widget_history_more_time">Mai mult timp</string>
+    <string name="widget_history_fewer_meals">Mai puține mese</string>
+    <string name="widget_history_more_meals">Mai multe mese</string>
+    <string name="widget_history_open_app">Deschide Ayuvo ca să vezi istoricul</string>
+    <string name="qs_tile_workout_label">Antrenament</string>
+    <string name="qs_tile_workout_idle">Atinge pentru a începe</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">ultima %d lună</item>
+        <item quantity="few">ultimele %d luni</item>
+        <item quantity="other">ultimele %d de luni</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d zi cu antrenament în ultimul an</item>
+        <item quantity="few">%d zile cu antrenament în ultimul an</item>
+        <item quantity="other">%d de zile cu antrenament în ultimul an</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d zi cu mese înregistrate în ultimul an</item>
+        <item quantity="few">%d zile cu mese înregistrate în ultimul an</item>
+        <item quantity="other">%d de zile cu mese înregistrate în ultimul an</item>
+    </plurals>
+</resources>

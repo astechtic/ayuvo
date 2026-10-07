@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_history_workout_picker_label">Ayuvo Storico allenamenti</string>
+    <string name="widget_history_food_picker_label">Ayuvo Storico pasti</string>
+    <string name="widget_history_workout_description">I tuoi allenamenti dell\'ultimo anno, in base al tempo di allenamento</string>
+    <string name="widget_history_food_description">Il tuo diario alimentare dell\'ultimo anno, in base ai pasti registrati</string>
+    <string name="widget_history_workout_title">Allenamenti</string>
+    <string name="widget_history_food_title">Pasti</string>
+    <string name="widget_history_by_time">per tempo di allenamento</string>
+    <string name="widget_history_by_meals">per pasti registrati</string>
+    <string name="widget_history_less_time">Meno tempo</string>
+    <string name="widget_history_more_time">Più tempo</string>
+    <string name="widget_history_fewer_meals">Meno pasti</string>
+    <string name="widget_history_more_meals">Più pasti</string>
+    <string name="widget_history_open_app">Apri Ayuvo per vedere lo storico</string>
+    <string name="qs_tile_workout_label">Allenamento</string>
+    <string name="qs_tile_workout_idle">Tocca per iniziare</string>
+    <plurals name="widget_history_last_months">
+        <item quantity="one">ultimo %d mese</item>
+        <item quantity="many">ultimi %d mesi</item>
+        <item quantity="other">ultimi %d mesi</item>
+    </plurals>
+    <plurals name="widget_history_workout_a11y">
+        <item quantity="one">%d giorno con allenamento nell\'ultimo anno</item>
+        <item quantity="many">%d giorni con allenamento nell\'ultimo anno</item>
+        <item quantity="other">%d giorni con allenamento nell\'ultimo anno</item>
+    </plurals>
+    <plurals name="widget_history_food_a11y">
+        <item quantity="one">%d giorno con pasti registrati nell\'ultimo anno</item>
+        <item quantity="many">%d giorni con pasti registrati nell\'ultimo anno</item>
+        <item quantity="other">%d giorni con pasti registrati nell\'ultimo anno</item>
+    </plurals>
+</resources>

@@ -1,0 +1,53 @@
+{
+  "format": "ayuvo-history-heatmap",
+  "version": 1,
+  "doc": "docs/widgets.md \"History widgets\"",
+  "days": 371,
+  "grid": {
+    "rows": 7,
+    "row_order": "week_start_first",
+    "last_column": "week_containing_today",
+    "future_days": "hidden",
+    "today": "outlined"
+  },
+  "levels": 4,
+  "workout": {
+    "value": "seconds trained on the local day: the sum of the durations of the day's completed workouts, the same entries as the app:workout_minutes metric",
+    "min_seconds_per_level": [1, 900, 1800, 3600],
+    "any_workout_is_at_least_level": 1
+  },
+  "food": {
+    "value": "distinct meal types among the day's diary entries (breakfast, lunch, dinner, snack, other)",
+    "min_meals_per_level": [1, 2, 3, 4],
+    "any_entry_is_at_least_level": 1
+  },
+  "vectors": {
+    "workout_level": [
+      {"workouts": 0, "seconds": 0, "level": 0},
+      {"workouts": 1, "seconds": 0, "level": 1},
+      {"workouts": 1, "seconds": 1, "level": 1},
+      {"workouts": 1, "seconds": 899, "level": 1},
+      {"workouts": 1, "seconds": 900, "level": 2},
+      {"workouts": 2, "seconds": 1799, "level": 2},
+      {"workouts": 1, "seconds": 1800, "level": 3},
+      {"workouts": 1, "seconds": 3599, "level": 3},
+      {"workouts": 1, "seconds": 3600, "level": 4},
+      {"workouts": 3, "seconds": 20000, "level": 4}
+    ],
+    "food_level": [
+      {"meals": [], "level": 0},
+      {"meals": ["snack"], "level": 1},
+      {"meals": ["snack", "snack", "snack"], "level": 1},
+      {"meals": ["breakfast", "lunch"], "level": 2},
+      {"meals": ["breakfast", "lunch", "dinner"], "level": 3},
+      {"meals": ["breakfast", "lunch", "dinner", "snack"], "level": 4},
+      {"meals": ["breakfast", "lunch", "dinner", "snack", "other"], "level": 4}
+    ],
+    "grid": [
+      {"today": "2026-10-07", "week_start": "monday", "columns": 4, "first_day": "2026-09-14", "today_row": 2, "hidden_after_today": 4},
+      {"today": "2026-10-07", "week_start": "sunday", "columns": 4, "first_day": "2026-09-13", "today_row": 3, "hidden_after_today": 3},
+      {"today": "2026-10-04", "week_start": "sunday", "columns": 1, "first_day": "2026-10-04", "today_row": 0, "hidden_after_today": 6},
+      {"today": "2026-10-04", "week_start": "monday", "columns": 2, "first_day": "2026-09-21", "today_row": 6, "hidden_after_today": 0}
+    ]
+  }
+}
