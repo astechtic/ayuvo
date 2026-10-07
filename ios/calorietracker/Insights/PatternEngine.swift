@@ -62,6 +62,10 @@ nonisolated enum PatternEngine {
     }
 
     /// Exposure days asOf−window … asOf−1, each paired with its lagged outcome.
+    /// `@_optimize(none)`: Swift 6.4's CopyPropagation pass crashes the compiler on this function in
+    /// Release/Archive builds ("Found outside of lifetime use", String.UTF8View borrow). It runs once
+    /// per pattern pair over ~a month of days, so skipping optimisation costs nothing measurable.
+    @_optimize(none)
     static func patterns(_ inputs: InsightsInputs, asOf: String, config: InsightsConfig) -> [PatternResult] {
         let pc = config.patterns
         var out: [PatternResult] = []
