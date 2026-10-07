@@ -3,114 +3,114 @@
   "strings" : {
     "CFBundleDisplayName" : {
       "comment" : "Bundle display name",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "az" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ayuvo Debug"
+            "state" : "translated",
+            "value" : "Ayuvo"
           }
         }
       }
