@@ -95,7 +95,9 @@ data class SummaryDestinations(
     val openCompare: () -> Unit = {},
     /** Cycle tracking (docs/cycle-tracking.md §5): the dashboard, and "+" → Period. */
     val openCycle: () -> Unit = {},
-    val logPeriod: () -> Unit = {}
+    val logPeriod: () -> Unit = {},
+    /** Partner Health dashboard for one partner (docs/partner-sync.md §15). */
+    val openPartner: (String) -> Unit = {}
 )
 
 /** A Summary "+" entry requested from outside the screen (Quick Log widget), consumed once. */
@@ -248,12 +250,14 @@ fun SummaryScreen(
             val medications = ui.medications.takeIf { ui.showMedications }
             val fast = ui.activeFast.takeIf { ui.fastingTracking || it != null }
             val workouts = ui.workoutsToday
-            if (medications != null || fast != null || workouts.isNotEmpty() || cycle != null) {
+            val partners = ui.partners
+            if (medications != null || fast != null || workouts.isNotEmpty() || cycle != null || partners.isNotEmpty()) {
                 item(key = "today-header") { SectionHeader(stringResource(R.string.summary_today)) }
                 if (medications != null) item(key = "today-meds") { MedicationsTodayCard(medications, destinations.openMedications) }
                 if (cycle != null) item(key = "today-cycle") { com.ayuvo.health.ui.cycle.CycleTodayCard(cycle, destinations.openCycle) }
                 if (fast != null) item(key = "today-fast") { FastingTodayCard(fast, destinations.openFasting) }
                 if (workouts.isNotEmpty()) item(key = "today-workouts") { WorkoutTodayCard(workouts, destinations.openWorkouts) }
+                if (partners.isNotEmpty()) item(key = "today-partners") { com.ayuvo.health.ui.partner.PartnerSummaryCard(partners, destinations.openPartner) }
             }
 
             item(key = "fav-header") {

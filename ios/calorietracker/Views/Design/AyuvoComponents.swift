@@ -438,3 +438,36 @@ struct EmptyStateView: View {
         }
     }
 }
+
+// MARK: - Collapsing stack
+
+/// A leading-aligned vertical stack that puts `spacing` only between children with a height. Cards that hide
+/// themselves but keep a zero-height container (so their loading task still runs) add no gap.
+struct CollapsingVStack: Layout {
+    var spacing: CGFloat
+
+    private func heights(_ subviews: Subviews, width: CGFloat?) -> [CGFloat] {
+        subviews.map { $0.sizeThatFits(ProposedViewSize(width: width, height: nil)).height }
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        var width: CGFloat = 0
+        for s in subviews { width = max(width, s.sizeThatFits(ProposedViewSize(width: proposal.width, height: nil)).width) }
+        let visible = heights(subviews, width: proposal.width).filter { $0 > 0 }
+        let height = visible.reduce(0, +) + spacing * CGFloat(max(0, visible.count - 1))
+        return CGSize(width: proposal.width ?? width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var y = bounds.minY
+        var placedAny = false
+        for (subview, height) in zip(subviews, heights(subviews, width: bounds.width)) {
+            if height > 0 {
+                if placedAny { y += spacing }
+                placedAny = true
+            }
+            subview.place(at: CGPoint(x: bounds.minX, y: y), anchor: .topLeading, proposal: ProposedViewSize(width: bounds.width, height: height))
+            y += height
+        }
+    }
+}

@@ -53,7 +53,8 @@
     "android/app/src/main/java/com/ayuvo/health/export/DiaryExporter.kt",
     "android/app/src/main/java/com/ayuvo/health/export/AllDataExportCoordinator.kt",
     "android/app/src/main/java/com/ayuvo/health/vitals/session/CoachCameraScans.kt",
-    "android/app/src/main/java/com/ayuvo/health/cycle/coach/CoachCycleContext.kt"
+    "android/app/src/main/java/com/ayuvo/health/cycle/coach/CoachCycleContext.kt",
+    "android/app/src/main/java/com/ayuvo/health/partner/PartnerManager.kt"
   ],
   "dirs": [
     "android/app/src/main/java/com/ayuvo/health/records/processing",
@@ -64,7 +65,14 @@
     "android/app/src/main/java/com/ayuvo/health/vitals/storage",
     "android/app/src/main/java/com/ayuvo/health/vitals/engine",
     "android/app/src/main/java/com/ayuvo/health/cycle/data",
-    "android/app/src/main/java/com/ayuvo/health/cycle/engine"
+    "android/app/src/main/java/com/ayuvo/health/cycle/engine",
+    "android/app/src/main/java/com/ayuvo/health/partner/noise",
+    "android/app/src/main/java/com/ayuvo/health/partner/net",
+    "android/app/src/main/java/com/ayuvo/health/partner/data",
+    "android/app/src/main/java/com/ayuvo/health/partner/sources",
+    "android/app/src/main/java/com/ayuvo/health/partner/logic",
+    "android/app/src/main/java/com/ayuvo/health/partner/sync",
+    "android/app/src/main/java/com/ayuvo/health/partner/pkg"
   ],
   "contains": [
     "AppText.orEnglish(",
@@ -95,5 +103,5 @@
     ".addHeader(\"X-Goog-Upload-Command\"",
     "\"$base.${source.extension.ifEmpty { \"bin\" }}\""
   ],
-  "_comment": "android_core: AI prompts/tool schemas, SQL, parsers of English documents, persisted/raw English keys next to their R.string labels, contract English fallbacks (AppText.orEnglish), machine formats and internal exception text."
+  "_comment": "android_core: AI prompts/tool schemas, SQL, parsers of English documents, persisted/raw English keys next to their R.string labels, contract English fallbacks (AppText.orEnglish), machine formats and internal exception text. Partner Health engine (partner/*): SQL, exception/log text, wire values and product-name fallbacks; all UI copy is in ui/partner via strings_partner.xml."
 }

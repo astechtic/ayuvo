@@ -458,6 +458,11 @@ fun AppNavHost(
         )
     )
 
+    // Partner Health packages (docs/partner-sync.md §13): the confirmation sheet shows over any tab.
+    if (currentRoute != null && currentRoute != AppRoutes.ONBOARDING) {
+        com.ayuvo.health.ui.partner.PartnerImportHost(container) { id -> nav.navigate(AppRoutes.partner(id)) }
+    }
+
     CompositionLocalProvider(LocalLaunchFillEpoch provides launchFillEpoch) {
     Scaffold(
         // Resource ids for uiautomator walkthroughs (docs/ui-structure.md §9).
@@ -520,7 +525,8 @@ fun AppNavHost(
                                 openScan = { mode -> nav.navigate(AppRoutes.measureScan(mode.id)) },
                                 openCompare = { nav.navigate(AppRoutes.measureScan(com.ayuvo.health.vitals.camera.VitalsMode.FINGER.id, java.util.UUID.randomUUID().toString())) },
                                 openCycle = { nav.navigate(AppRoutes.CYCLE_HOME) },
-                                logPeriod = { nav.navigate(AppRoutes.CYCLE_LOG) }
+                                logPeriod = { nav.navigate(AppRoutes.CYCLE_LOG) },
+                                openPartner = { id -> nav.navigate(AppRoutes.partner(id)) }
                             ),
                             logRequest = summaryLogRequest,
                             onLogRequestHandled = { id -> if (summaryLogRequest?.id == id) summaryLogRequest = null }
@@ -574,6 +580,7 @@ fun AppNavHost(
                                     "dailyReview" -> nav.navigate(AppRoutes.insightsReview())
                                     "cameraMeasurements" -> nav.navigate(AppRoutes.MEASURE_HOME)
                                     "cycleTracking" -> nav.navigate(AppRoutes.CYCLE_HOME)
+                                    "partnerHealth" -> openSettingsPage(SettingsPage.PARTNER_HEALTH)
                                 }
                             }
                         )
@@ -885,6 +892,65 @@ fun AppNavHost(
                 ) { entry ->
                     val start = entry.arguments?.getString(AppRoutes.CYCLE_START_ARG) ?: return@composable
                     TabInset { com.ayuvo.health.ui.cycle.CycleDetailScreen(container = container, start = start, onBack = { nav.popBackStack() }) }
+                }
+                // Partner Health (docs/partner-sync.md): dashboard + report overviews (shared), pairing and per-partner settings.
+                composable(
+                    AppRoutes.PARTNER_DASHBOARD,
+                    arguments = listOf(navArgument(AppRoutes.PARTNER_OWNER_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val ownerId = entry.arguments?.getString(AppRoutes.PARTNER_OWNER_ARG)?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: return@composable
+                    TabInset {
+                        com.ayuvo.health.ui.partner.PartnerDashboardScreen(
+                            container = container,
+                            ownerId = ownerId,
+                            onBack = { nav.popBackStack() },
+                            onOpenReport = { id -> nav.navigate(AppRoutes.partnerReport(ownerId, id)) },
+                            onManage = { nav.navigate(AppRoutes.partnerManage(ownerId)) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.PARTNER_REPORT,
+                    arguments = listOf(
+                        navArgument(AppRoutes.PARTNER_OWNER_ARG) { type = NavType.StringType },
+                        navArgument(AppRoutes.PARTNER_REPORT_ARG) { type = NavType.StringType }
+                    )
+                ) { entry ->
+                    val ownerId = entry.arguments?.getString(AppRoutes.PARTNER_OWNER_ARG)?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: return@composable
+                    val reportId = entry.arguments?.getString(AppRoutes.PARTNER_REPORT_ARG)?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: return@composable
+                    TabInset {
+                        com.ayuvo.health.ui.partner.PartnerReportScreen(container = container, ownerId = ownerId, recordId = reportId, onBack = { nav.popBackStack() })
+                    }
+                }
+                composable(
+                    AppRoutes.PARTNER_MANAGE,
+                    arguments = listOf(navArgument(AppRoutes.PARTNER_OWNER_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val ownerId = entry.arguments?.getString(AppRoutes.PARTNER_OWNER_ARG)?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: return@composable
+                    TabInset {
+                        com.ayuvo.health.ui.partner.PartnerManageScreen(
+                            container = container,
+                            ownerId = ownerId,
+                            onBack = { nav.popBackStack() },
+                            onOpenDashboard = { nav.navigate(AppRoutes.partner(ownerId)) }
+                        )
+                    }
+                }
+                composable(
+                    AppRoutes.PARTNER_PAIR,
+                    arguments = listOf(navArgument(AppRoutes.PAIR_MODE_ARG) { type = NavType.StringType })
+                ) { entry ->
+                    val show = entry.arguments?.getString(AppRoutes.PAIR_MODE_ARG) != AppRoutes.PAIR_SCAN
+                    TabInset {
+                        com.ayuvo.health.ui.partner.PartnerPairingScreen(
+                            container = container,
+                            showMode = show,
+                            onClose = { nav.popBackStack() },
+                            onOpenPartner = { id ->
+                                nav.navigate(AppRoutes.partner(id)) { popUpTo(AppRoutes.PARTNER_PAIR) { inclusive = true } }
+                            }
+                        )
+                    }
                 }
                 composable(AppRoutes.MEDICATIONS) {
                     TabInset {

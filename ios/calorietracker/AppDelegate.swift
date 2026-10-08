@@ -22,6 +22,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         InsightsBackgroundRefresh.register()
         InsightsBackgroundRefresh.schedule()
         InsightsBackgroundRefresh.startSleepObserver()
+        // Partner Health Sync window (docs/partner-sync.md §11); scheduled only when a partner is paired.
+        PartnerBackgroundRefresh.register()
         MedicationReminderRuntime.shared.start()
         CycleReminderRuntime.shared.start()
         QuickActionSettings.registerApplicationShortcuts()

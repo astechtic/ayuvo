@@ -5,4 +5,6 @@
     <cache-path name="records_share" path="records-share/" />
     <!-- Coach "Export chat": a cache copy handed to the share sheet (docs/coach.md §10). -->
     <cache-path name="coach_share" path="coach-share/" />
+    <!-- Partner Health "Send as file": the signed .ayuvo.zip handed to the share sheet (docs/partner-sync.md §13). -->
+    <cache-path name="partner_export" path="partner-export/" />
 </paths>

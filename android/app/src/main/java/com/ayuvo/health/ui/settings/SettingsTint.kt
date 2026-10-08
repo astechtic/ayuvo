@@ -30,6 +30,7 @@ internal object SettingsTint {
     val Medications = AyuvoPalette.Medications
     val Records = AyuvoPalette.Records
     val Cycle = AyuvoPalette.Cycle
+    val Partner = AyuvoPalette.Partner
     val Insights = Color(0xFFE08A00)
     val Protein = AyuvoPalette.Protein
     val Carbs = AyuvoPalette.Carbs

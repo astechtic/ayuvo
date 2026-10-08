@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Partner Health Sync (docs/partner-sync.md): Settings page, pairing, import sheet, Summary card, dashboard. -->
+<resources>
+    <string name="partner_title">Partner Health</string>
+    <string name="partner_browse_sub">Share health data with someone you trust, phone to phone</string>
+    <string name="partner_read_only">Read-only</string>
+    <string name="partner_no_longer_shared">No longer shared</string>
+    <!-- Bullet glyph before explainer lines. -->
+    <string name="partner_bullet">•</string>
+    <!-- "Updated 3 min ago": %1$s is a relative time such as "3 min ago". -->
+    <string name="partner_updated_ago">Updated %1$s</string>
+    <string name="partner_updated_just_now">Updated just now</string>
+    <string name="partner_not_synced_yet">Not synced yet</string>
+    <!-- Two parts joined with a middle dot, e.g. "Updated yesterday · Partner offline". -->
+    <string name="partner_join_dot">%1$s · %2$s</string>
+    <string name="partner_today">Today</string>
+    <string name="partner_yesterday">Yesterday</string>
+    <!-- "Today, 08:30". -->
+    <string name="partner_day_time">%1$s, %2$s</string>
+
+    <!-- Categories (what can be shared). -->
+    <string name="partner_cat_vitals">Vitals &amp; activity</string>
+    <string name="partner_cat_vitals_sub">Heart rate, HRV, blood oxygen, blood pressure, weight, steps, recovery</string>
+    <string name="partner_cat_sleep">Sleep</string>
+    <string name="partner_cat_sleep_sub">Nightly sleep time and stages</string>
+    <string name="partner_cat_nutrition">Food &amp; water</string>
+    <string name="partner_cat_nutrition_sub">Food diary entries, calories, macros and water</string>
+    <string name="partner_cat_workouts">Workouts</string>
+    <string name="partner_cat_workouts_sub">Workout type, duration, energy and distance (never GPS routes)</string>
+    <string name="partner_cat_medicines">Medicines</string>
+    <string name="partner_cat_medicines_sub">Medicines, schedules and doses taken or skipped</string>
+    <string name="partner_cat_reports">Health report overviews</string>
+    <string name="partner_cat_reports_sub">Structured overviews only: results, diagnoses, doctor. Never the document or photo</string>
+
+    <!-- Status notes after the freshness. -->
+    <string name="partner_status_syncing">Syncing…</string>
+    <string name="partner_status_offline">Partner offline</string>
+    <string name="partner_status_no_network">No Wi-Fi</string>
+    <string name="partner_status_lan_denied">Local network blocked</string>
+    <string name="partner_status_not_trusted">Pair again</string>
+    <string name="partner_status_failed">Last sync failed</string>
+    <string name="partner_status_pairing_required">Not synced</string>
+    <string name="partner_status_unpaired">Unpaired</string>
+    <!-- Full status sentences (dashboard › Sync status). -->
+    <string name="partner_status_long_syncing">Syncing with your partner now.</string>
+    <string name="partner_status_long_up_to_date">Up to date. The last sync finished without problems.</string>
+    <string name="partner_status_long_offline">Your partner\'s phone was not found on this network during the last sync. You are seeing the data from the last successful sync.</string>
+    <string name="partner_status_long_no_network">This phone was not on Wi-Fi or a hotspot. Sync runs again when it is.</string>
+    <string name="partner_status_long_lan_denied">This phone could not use the local network. Check that Wi-Fi is on and not a guest or isolated network.</string>
+    <string name="partner_status_long_not_trusted">Your partner\'s phone no longer recognises this phone. They may have unpaired or reinstalled Ayuvo. Pair again to keep syncing.</string>
+    <string name="partner_status_long_failed">The last sync did not finish. It will be tried again next time both phones are on the same network.</string>
+    <string name="partner_status_long_pairing_required">Not synced yet. Open Ayuvo on both phones on the same Wi-Fi to sync.</string>
+    <string name="partner_status_long_unpaired">You unpaired from this partner. Nothing new will arrive; the data already here is kept until you delete it.</string>
+    <string name="partner_limits">Sync works only on the same Wi-Fi or hotspot, while both phones are awake. Opening Ayuvo on either phone helps. There is no cloud and no internet fallback.</string>
+    <string name="partner_unpaired_kept">This data is kept, read-only, until you delete it in Settings › Partner Health.</string>
+    <string name="partner_via_file">via file</string>
+    <string name="partner_via_lan">via local network</string>
+    <!-- %1$s is a date and time. -->
+    <string name="partner_last_synced">Last synced %1$s</string>
+
+    <!-- Settings page. -->
+    <string name="partner_intro_title">Share health with someone you trust</string>
+    <string name="partner_intro_body">Pair two phones to see each other\'s health summaries. You choose exactly what each partner can see, and what they share with you stays separate from your own data.</string>
+    <string name="partner_partners_header">Partners</string>
+    <string name="partner_partners_empty">No partners yet. Add one below while you are together.</string>
+    <string name="partner_add_header">Add partner</string>
+    <string name="partner_add_footer">Both phones must be on the same Wi-Fi or one phone\'s hotspot. One phone shows a code, the other scans it.</string>
+    <string name="partner_show_code">Show my code</string>
+    <string name="partner_show_code_sub">Your partner scans it with their phone</string>
+    <string name="partner_scan_code">Scan partner\'s code</string>
+    <string name="partner_scan_code_sub">Scan the code on your partner\'s phone</string>
+    <string name="partner_import">Import package</string>
+    <string name="partner_import_footer">If your phones cannot reach each other, your partner can send a .ayuvo.zip file through any app. Import works only from a paired partner.</string>
+    <string name="partner_this_device">This device</string>
+    <string name="partner_this_device_footer">Your partner sees this fingerprint for you. It changes if Ayuvo is reinstalled or the phone is replaced, and you would need to pair again.</string>
+    <string name="partner_fingerprint">Fingerprint</string>
+    <string name="partner_fingerprint_hint">Matches the fingerprint shown under This device on your partner\'s phone.</string>
+    <string name="partner_how_title">How sync works</string>
+    <string name="partner_how_lan">Data moves directly between the two phones on the same Wi-Fi or hotspot.</string>
+    <string name="partner_how_awake">Both phones need to be awake at the same time. Opening Ayuvo starts a sync; in the background it happens only when Android allows.</string>
+    <string name="partner_how_no_cloud">There is no Ayuvo server, account or cloud copy. Partner data is stored on this device and is not included in backups.</string>
+    <string name="partner_how_signed">Files sent as packages are signed, not encrypted: anyone who gets the file can read it. Send it only to your partner.</string>
+    <string name="partner_how_read_only">What a partner shares is read-only here and never mixes with your own health data.</string>
+
+    <!-- Manage one partner. -->
+    <string name="partner_manage">Manage</string>
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_view_data">View %1$s\'s data</string>
+    <string name="partner_view_short">View data</string>
+    <string name="partner_sync_now">Sync now</string>
+    <string name="partner_sync_now_sub">Open Ayuvo on your partner\'s phone too</string>
+    <string name="partner_syncing">Syncing…</string>
+    <string name="partner_what_i_share">What I share</string>
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_what_i_share_footer">%1$s sees only what is switched on. Switching a category off stops new updates; what they already received stays on their phone.</string>
+    <string name="partner_export_header">Send as a file</string>
+    <string name="partner_export_footer">Makes a signed .ayuvo.zip for this partner only, to send through any app. It is not encrypted.</string>
+    <string name="partner_export_all">Export everything I share</string>
+    <string name="partner_export_changes">Export changes since last sync</string>
+    <string name="partner_export_failed">Could not make the file. Check that you share at least one category.</string>
+    <string name="partner_remove_footer">Unpair keeps the data you received. Delete partner data removes it. Remove partner does both.</string>
+    <string name="partner_unpair">Unpair</string>
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_unpair_title">Unpair from %1$s?</string>
+    <string name="partner_unpair_message">Syncing stops in both directions. The data %1$s already shared stays here, read-only, until you delete it.</string>
+    <string name="partner_delete_data">Delete partner data</string>
+    <string name="partner_delete_data_title">Delete %1$s\'s data?</string>
+    <string name="partner_delete_data_message">Everything %1$s shared is removed from this phone. If you are still paired, the next sync sends what they still share.</string>
+    <string name="partner_remove">Remove partner</string>
+    <string name="partner_remove_title">Remove %1$s?</string>
+    <string name="partner_remove_message">Unpairs and deletes everything %1$s shared from this phone. This cannot be undone.</string>
+
+    <!-- Pairing. -->
+    <string name="partner_your_name">Your name</string>
+    <string name="partner_your_name_sub">How you appear on your partner\'s phone</string>
+    <string name="partner_qr_cd">Pairing code</string>
+    <!-- "Code expires in 9:41": %1$d minutes, %2$s two-digit seconds. -->
+    <string name="partner_code_expires">Code expires in %1$d:%2$s</string>
+    <string name="partner_waiting_scan">Waiting for your partner to scan…</string>
+    <string name="partner_show_code_help">The code contains no health data. It works once, for 10 minutes, on this network.</string>
+    <string name="partner_scan_intro">On your partner\'s phone, open Settings › Partner Health › Show my code, then scan it here.</string>
+    <string name="partner_scan_hint">Scan the Partner Health code</string>
+    <string name="partner_scan_note">Hold the camera over the code on your partner\'s phone</string>
+    <string name="partner_connecting">Connecting to your partner\'s phone…</string>
+    <string name="partner_compare_title">Do the codes match?</string>
+    <string name="partner_compare_body">Your partner\'s phone shows a 6-digit code too. Confirm only if both codes are exactly the same.</string>
+    <!-- %1$s partner name, %2$s short fingerprint. -->
+    <string name="partner_compare_peer">Pairing with %1$s · %2$s</string>
+    <string name="partner_codes_match">Codes match</string>
+    <string name="partner_codes_differ">Codes don\'t match</string>
+    <string name="partner_choose_title">Choose what to share</string>
+    <string name="partner_choose_footer">Everything is off until you switch it on. You can change this anytime in Settings › Partner Health.</string>
+    <string name="partner_continue">Continue</string>
+    <string name="partner_waiting_confirm">Waiting for your partner to confirm…</string>
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_first_sync">Paired with %1$s. Syncing for the first time…</string>
+    <string name="partner_keep_open">Keep Ayuvo open on both phones.</string>
+    <string name="partner_paired_title">You\'re paired with %1$s</string>
+    <string name="partner_paired_synced">The first sync finished. New data arrives whenever both phones are on the same network.</string>
+    <string name="partner_paired_not_synced">The first sync did not finish. It runs again next time both phones open Ayuvo on the same network.</string>
+    <string name="partner_done">Done</string>
+    <string name="partner_try_again">Try again</string>
+    <string name="partner_declined_title">Pairing cancelled</string>
+    <string name="partner_declined_body">The codes did not match, or one of you cancelled. Nothing was shared.</string>
+    <string name="partner_pair_failed_title">Couldn\'t pair</string>
+    <string name="partner_err_not_ayuvo">That isn\'t an Ayuvo Partner Health code. On your partner\'s phone, open Settings › Partner Health › Show my code.</string>
+    <string name="partner_err_qr_version">This code is from a different version of Ayuvo. Update Ayuvo on both phones.</string>
+    <string name="partner_err_malformed">That code couldn\'t be read. Ask your partner to show a new code.</string>
+    <string name="partner_err_self">That\'s this phone\'s own code. Scan the code on your partner\'s phone.</string>
+    <string name="partner_err_expired">The code expired. Show a new code and scan it within 10 minutes.</string>
+    <string name="partner_err_handshake">The phones couldn\'t verify each other. Show a new code and try again.</string>
+    <string name="partner_err_unreachable">Couldn\'t reach your partner\'s phone. Make sure both phones are on the same Wi-Fi or hotspot, and the code screen is still open.</string>
+    <string name="partner_err_generic">Something went wrong while pairing. Try again.</string>
+
+    <!-- Import sheet. -->
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_import_title">Health data from %1$s</string>
+    <string name="partner_import_note">This is read-only data from %1$s. It stays separate from your own health data.</string>
+    <string name="partner_import_action">Import</string>
+    <string name="partner_importing">Importing…</string>
+    <string name="partner_import_done_title">Imported %1$s\'s data</string>
+    <string name="partner_import_up_to_date">Already up to date</string>
+    <!-- %1$s new, %2$s updated, %3$s removed (formatted numbers). -->
+    <string name="partner_import_counts">%1$s new · %2$s updated · %3$s removed</string>
+    <string name="partner_import_failed_title">Couldn\'t import this file</string>
+    <string name="partner_pkg_err_unknown_sender">Pair with this person first, then open the file again.</string>
+    <string name="partner_pkg_err_changed">This file was changed or damaged.</string>
+    <string name="partner_pkg_err_wrong_recipient">This file was made for someone else.</string>
+    <string name="partner_pkg_err_version">Update Ayuvo to open this file.</string>
+    <string name="partner_pkg_err_not_package">Not an Ayuvo partner file.</string>
+    <string name="partner_pkg_err_generic">Something went wrong while importing. Try again.</string>
+    <plurals name="partner_records_count">
+        <item quantity="one">%1$s record</item>
+        <item quantity="other">%1$s records</item>
+    </plurals>
+    <plurals name="partner_import_rejected">
+        <item quantity="one">%d record was skipped because it isn\'t valid.</item>
+        <item quantity="other">%d records were skipped because they aren\'t valid.</item>
+    </plurals>
+
+    <!-- Summary card. -->
+    <string name="partner_summary_title">Partners</string>
+    <string name="partner_metric_recovery">Recovery</string>
+    <string name="partner_metric_sleep">Sleep</string>
+    <string name="partner_metric_resting_hr">Resting HR</string>
+    <string name="partner_metric_activity">Activity</string>
+    <string name="partner_metric_steps">Steps</string>
+    <string name="partner_metric_medicines">Medicines</string>
+    <!-- "7 h 24 min". -->
+    <string name="partner_hours_minutes">%1$s h %2$s min</string>
+    <string name="partner_value_bpm">%1$s bpm</string>
+    <string name="partner_value_minutes">%1$s min</string>
+    <string name="partner_value_steps">%1$s steps</string>
+    <!-- Doses taken of total: "1 of 2". -->
+    <string name="partner_value_of">%1$s of %2$s</string>
+
+    <!-- Dashboard. -->
+    <string name="partner_not_found">Partner not found</string>
+    <string name="partner_not_found_body">This partner was removed from this phone.</string>
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_dashboard_note">Shared by %1$s. Read-only and kept separate from your own data.</string>
+    <string name="partner_section_today">Today</string>
+    <string name="partner_section_vitals">Vitals</string>
+    <string name="partner_section_nutrition">Nutrition</string>
+    <string name="partner_section_trends">Trends</string>
+    <string name="partner_section_reports">Health Reports</string>
+    <string name="partner_section_sync">Sync status</string>
+    <string name="partner_section_empty">Shared, but nothing has arrived yet.</string>
+    <string name="partner_nothing_today">Nothing logged today.</string>
+    <string name="partner_rest_day">Rest day</string>
+    <string name="partner_no_doses_today">No doses today.</string>
+    <string name="partner_out_of_100">/ 100</string>
+    <string name="partner_asleep">asleep</string>
+    <string name="partner_in_bed">%1$s in bed</string>
+    <string name="partner_stage_deep">Deep</string>
+    <string name="partner_stage_rem">REM</string>
+    <string name="partner_stage_light">Light</string>
+    <string name="partner_stage_awake">Awake</string>
+    <string name="partner_vital_heart_rate">Heart rate</string>
+    <string name="partner_vital_hrv">HRV</string>
+    <string name="partner_vital_spo2">Blood oxygen</string>
+    <string name="partner_vital_bp">Blood pressure</string>
+    <string name="partner_vital_weight">Weight</string>
+    <string name="partner_unit_bpm">bpm</string>
+    <string name="partner_unit_ms">ms</string>
+    <string name="partner_unit_percent" formatted="false">%</string>
+    <string name="partner_unit_mmhg">mmHg</string>
+    <!-- Systolic/diastolic: "120/80". -->
+    <string name="partner_bp_value">%1$s/%2$s</string>
+    <!-- Protein, carbs, fat in grams. -->
+    <string name="partner_macros">Protein %1$s g · Carbs %2$s g · Fat %3$s g</string>
+    <string name="partner_water_ml">Water %1$s ml</string>
+    <string name="partner_km">%1$s km</string>
+    <string name="partner_workout">Workout</string>
+    <string name="partner_medicine">Medicine</string>
+    <!-- "1 of 2 taken". -->
+    <string name="partner_doses_taken">%1$d of %2$d taken</string>
+    <string name="partner_dose_taken">Taken</string>
+    <string name="partner_dose_skipped">Skipped</string>
+    <string name="partner_dose_missed">Missed</string>
+    <string name="partner_dose_snoozed">Snoozed</string>
+    <string name="partner_dose_scheduled">Scheduled</string>
+    <string name="partner_days_7">7 days</string>
+    <string name="partner_days_30">30 days</string>
+    <!-- "Average 58 bpm". -->
+    <string name="partner_average">Average %1$s</string>
+    <string name="partner_trends_empty">No trend data for this period.</string>
+    <!-- %1$s is the partner's name. -->
+    <string name="partner_report_overview_note">Overviews only. The original documents stay on %1$s\'s phone.</string>
+    <plurals name="partner_abnormal_count">
+        <item quantity="one">%d out of range</item>
+        <item quantity="other">%d out of range</item>
+    </plurals>
+
+    <!-- Report overview detail. -->
+    <string name="partner_report_original_note">Overview only. The original document stays on %1$s\'s phone.</string>
+    <string name="partner_report_missing">Report not available</string>
+    <string name="partner_report_missing_body">This overview is no longer on this phone.</string>
+    <string name="partner_report_summary">Summary</string>
+    <string name="partner_report_highlights">Highlights</string>
+    <string name="partner_report_abnormal">Out of range</string>
+    <string name="partner_report_results">Results</string>
+    <string name="partner_report_other_results">Other results</string>
+    <string name="partner_report_diagnoses">Diagnoses</string>
+    <string name="partner_report_medications">Medications</string>
+    <string name="partner_report_recommendations">Recommendations</string>
+    <string name="partner_report_disclaimer">Extracted from the report on your partner\'s phone and may contain mistakes. It is not a diagnosis; check the original report or ask a doctor.</string>
+    <string name="partner_flag_low">Low</string>
+    <string name="partner_flag_high">High</string>
+    <string name="partner_flag_critical">Critical</string>
+    <string name="partner_flag_abnormal">Abnormal</string>
+    <string name="partner_flag_normal">Normal</string>
+    <!-- Reference range "12–15". -->
+    <string name="partner_range">%1$s–%2$s</string>
+    <string name="partner_range_min">≥ %1$s</string>
+    <string name="partner_range_max">≤ %1$s</string>
+    <!-- "Reference 12–15 g/dL". -->
+    <string name="partner_reference">Reference %1$s</string>
+</resources>

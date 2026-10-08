@@ -1,0 +1,420 @@
+{
+  "format": "ayuvo-partner-record-types",
+  "version": 1,
+  "categories": [
+    "vitals",
+    "sleep",
+    "nutrition",
+    "workouts",
+    "medicines",
+    "report_overviews"
+  ],
+  "health_types": {
+    "vitals": [
+      "steps",
+      "distance",
+      "active_energy",
+      "total_energy",
+      "resting_energy",
+      "exercise_minutes",
+      "stand_minutes",
+      "move_minutes",
+      "floors_climbed",
+      "active_zone_minutes",
+      "weight",
+      "height",
+      "body_fat",
+      "lean_body_mass",
+      "bmi",
+      "waist_circumference",
+      "heart_rate",
+      "resting_heart_rate",
+      "hrv_rmssd",
+      "hrv_sdnn",
+      "daily_hrv",
+      "blood_pressure",
+      "vo2_max",
+      "walking_heart_rate_average",
+      "heart_rate_recovery_one_minute",
+      "respiratory_rate",
+      "blood_oxygen",
+      "daily_blood_oxygen",
+      "body_temperature",
+      "blood_glucose"
+    ],
+    "sleep": [
+      "sleep",
+      "sleeping_wrist_temperature",
+      "nightly_temperature_deviation"
+    ],
+    "nutrition": [
+      "hydration",
+      "dietary_energy",
+      "dietary_protein",
+      "dietary_carbohydrates",
+      "dietary_fat_total",
+      "dietary_fiber",
+      "dietary_sugar",
+      "dietary_sodium",
+      "dietary_caffeine"
+    ]
+  },
+  "intraday_types": [
+    "heart_rate",
+    "resting_heart_rate",
+    "hrv_rmssd",
+    "hrv_sdnn",
+    "blood_pressure",
+    "blood_oxygen",
+    "respiratory_rate",
+    "body_temperature",
+    "blood_glucose",
+    "weight",
+    "sleep"
+  ],
+  "hourly_types": [
+    "steps",
+    "active_energy",
+    "exercise_minutes",
+    "heart_rate"
+  ],
+  "analytics_metrics": [
+    "recovery_indicator",
+    "hrv_status",
+    "sleep_status",
+    "load"
+  ],
+  "intraday_days": 7,
+  "refresh_window_days": 30,
+  "types": [
+    {
+      "type": "metric_day",
+      "category": "health",
+      "id": "<type_id>:<day>",
+      "day": true,
+      "ts": null,
+      "scope": "window",
+      "required": [
+        "type_id",
+        "day",
+        "unit"
+      ],
+      "optional": [
+        "sum",
+        "avg",
+        "min",
+        "max",
+        "count",
+        "last_value",
+        "last_at_ms",
+        "v2_avg",
+        "v2_min",
+        "v2_max",
+        "duration_s"
+      ]
+    },
+    {
+      "type": "metric_hour",
+      "category": "health",
+      "id": "<type_id>:<day>:<hour>",
+      "day": true,
+      "ts": "hour_start_ms",
+      "scope": "intraday",
+      "retention_days": 7,
+      "required": [
+        "type_id",
+        "day",
+        "hour",
+        "hour_start_ms",
+        "unit"
+      ],
+      "optional": [
+        "sum",
+        "avg",
+        "min",
+        "max",
+        "count"
+      ]
+    },
+    {
+      "type": "sample",
+      "category": "health",
+      "id": "<health_samples.id>",
+      "day": true,
+      "ts": "start_ms",
+      "scope": "intraday",
+      "retention_days": 7,
+      "required": [
+        "type_id",
+        "start_ms",
+        "end_ms",
+        "unit"
+      ],
+      "optional": [
+        "value",
+        "value2",
+        "value3",
+        "category_value",
+        "source_name"
+      ]
+    },
+    {
+      "type": "derived_day",
+      "category": "vitals",
+      "id": "<metric_id>:<day>",
+      "day": true,
+      "ts": null,
+      "scope": "window",
+      "required": [
+        "metric_id",
+        "day"
+      ],
+      "optional": [
+        "value",
+        "value2",
+        "value3",
+        "quality",
+        "algo_version"
+      ]
+    },
+    {
+      "type": "analytics_day",
+      "category": "vitals",
+      "id": "<metric_id>:<day>",
+      "day": true,
+      "ts": null,
+      "scope": "window",
+      "required": [
+        "metric_id",
+        "day",
+        "status",
+        "classification"
+      ],
+      "optional": [
+        "value",
+        "value2",
+        "value3",
+        "unit",
+        "confidence",
+        "coverage"
+      ]
+    },
+    {
+      "type": "sleep_night",
+      "category": "sleep",
+      "id": "<wake day>",
+      "day": true,
+      "ts": "start_ms",
+      "scope": "window",
+      "required": [
+        "day",
+        "start_ms",
+        "end_ms",
+        "asleep_min"
+      ],
+      "optional": [
+        "in_bed_min",
+        "deep_min",
+        "rem_min",
+        "light_min",
+        "awake_min",
+        "score",
+        "avg_hr",
+        "avg_hrv",
+        "avg_resp_rate",
+        "efficiency"
+      ]
+    },
+    {
+      "type": "food_entry",
+      "category": "nutrition",
+      "id": "<entry uuid>",
+      "day": true,
+      "ts": "logged_ms",
+      "scope": "full",
+      "required": [
+        "name",
+        "logged_ms",
+        "calories"
+      ],
+      "optional": [
+        "meal",
+        "serving",
+        "protein_g",
+        "carbs_g",
+        "fat_g",
+        "fiber_g",
+        "sugar_g",
+        "sodium_mg",
+        "emoji"
+      ]
+    },
+    {
+      "type": "water_day",
+      "category": "nutrition",
+      "id": "<day>",
+      "day": true,
+      "ts": null,
+      "scope": "window",
+      "required": [
+        "day",
+        "total_ml"
+      ],
+      "optional": [
+        "goal_ml"
+      ]
+    },
+    {
+      "type": "weight",
+      "category": "vitals",
+      "id": "<entry uuid>",
+      "day": true,
+      "ts": "measured_ms",
+      "scope": "full",
+      "required": [
+        "measured_ms",
+        "kg"
+      ],
+      "optional": []
+    },
+    {
+      "type": "workout",
+      "category": "workouts",
+      "id": "<session id | health sample id>",
+      "day": true,
+      "ts": "start_ms",
+      "scope": "full",
+      "required": [
+        "activity",
+        "start_ms",
+        "end_ms",
+        "duration_s"
+      ],
+      "optional": [
+        "title",
+        "kcal",
+        "distance_m",
+        "pace_s_per_km",
+        "avg_hr",
+        "max_hr",
+        "load",
+        "sets",
+        "volume_kg",
+        "source"
+      ]
+    },
+    {
+      "type": "medication",
+      "category": "medicines",
+      "id": "<medications.id>",
+      "day": false,
+      "ts": null,
+      "scope": "full",
+      "required": [
+        "name",
+        "form",
+        "dose_quantity",
+        "dose_unit",
+        "start_date",
+        "status"
+      ],
+      "optional": [
+        "generic_name",
+        "brand_name",
+        "strength",
+        "food_relation",
+        "instructions",
+        "end_date",
+        "is_prn"
+      ]
+    },
+    {
+      "type": "medication_schedule",
+      "category": "medicines",
+      "id": "<medication_schedules.id>",
+      "day": false,
+      "ts": "active_from_ms",
+      "scope": "full",
+      "required": [
+        "medication_id",
+        "frequency_kind",
+        "times",
+        "active_from_ms"
+      ],
+      "optional": [
+        "days",
+        "interval_hours",
+        "anchor_time",
+        "active_until_ms"
+      ]
+    },
+    {
+      "type": "dose_log",
+      "category": "medicines",
+      "id": "<dose_logs.id>",
+      "day": true,
+      "ts": "scheduled_at_ms",
+      "scope": "full",
+      "required": [
+        "medication_id",
+        "scheduled_at_ms",
+        "status",
+        "dose_quantity",
+        "dose_unit"
+      ],
+      "optional": [
+        "schedule_id",
+        "taken_at_ms",
+        "note"
+      ]
+    },
+    {
+      "type": "report_overview",
+      "category": "report_overviews",
+      "id": "<records.id>",
+      "day": true,
+      "ts": null,
+      "scope": "full",
+      "required": [
+        "title",
+        "record_type",
+        "category"
+      ],
+      "optional": [
+        "report_date",
+        "doctor",
+        "doctor_specialty",
+        "facility",
+        "summary",
+        "highlights",
+        "results",
+        "abnormal",
+        "diagnoses",
+        "medications",
+        "recommendations"
+      ]
+    }
+  ],
+  "forbidden_keys": [
+    "file_path",
+    "thumbnail_path",
+    "original_filename",
+    "checksum_sha256",
+    "photo_path",
+    "evidence",
+    "source_bbox",
+    "source_page",
+    "blocks_json",
+    "text",
+    "page_text",
+    "image",
+    "bytes",
+    "data_base64",
+    "track",
+    "route",
+    "gps",
+    "notes"
+  ],
+  "string_max": 2000,
+  "array_max": 500
+}

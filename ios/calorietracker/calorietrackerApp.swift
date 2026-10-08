@@ -116,9 +116,13 @@ struct calorietrackerApp: App {
                 AppThemeColor.applyAppIconIfNeeded(for: AppThemeColor.color(for: newValue))
             }
             .onOpenURL { url in
-                // "Open in Ayuvo" (Files, Mail…): PDFs and images import as Health Records.
+                // "Open in Ayuvo" (Files, Mail…): a partner health package (zip whose manifest.json says
+                // "ayuvo-partner-sync") opens the partner import; everything else imports as Health Records.
                 if url.isFileURL {
-                    Task { await recordsStore.importOpenIn(url: url) }
+                    Task {
+                        if url.pathExtension.lowercased() == "zip", await PartnerManager.shared.handleIncomingFile(url) { return }
+                        await recordsStore.importOpenIn(url: url)
+                    }
                     return
                 }
                 // Actions: ayuvo://action/<id>?… and ayuvo://open/<section> (docs/actions.md).
@@ -128,7 +132,11 @@ struct calorietrackerApp: App {
                 }
                 // Share extension "Save to Health Records" hand-off.
                 if url.scheme == "ayuvo", url.host == "records-inbox" {
-                    Task { await recordsStore.drainInbox() }
+                    Task {
+                        // Partner packages are claimed first; other items stay for Health Records.
+                        await PartnerManager.shared.claimInboxPackages()
+                        await recordsStore.drainInbox()
+                    }
                     return
                 }
                 // Share extension "Log as food" hand-off: open the diary, which consumes the image.
@@ -193,7 +201,11 @@ struct calorietrackerApp: App {
                 await importHealthFixtureIfRequested()
             }
             .task {
-                // Items shared while Ayuvo was not running.
+                // Items shared while Ayuvo was not running (partner packages first).
+                await PartnerManager.shared.claimInboxPackages()
+                #if DEBUG
+                await PartnerManager.shared.importLaunchFileIfRequested()
+                #endif
                 await recordsStore.drainInbox()
                 await importRecordsFixtureIfRequested()
                 await importRecordsArchiveIfRequested()
@@ -211,6 +223,8 @@ struct calorietrackerApp: App {
             if newPhase == .background {
                 Task { await exportRecordsArchiveIfRequested() }
                 healthDataStore.sceneDidEnterBackground()
+                // Partner Health Sync: request a background refresh window when someone is paired.
+                PartnerManager.shared.sceneDidEnterBackground()
             }
             if newPhase == .active {
                 Task {
@@ -222,9 +236,12 @@ struct calorietrackerApp: App {
                     )
                 }
                 Task {
+                    await PartnerManager.shared.claimInboxPackages()
                     await recordsStore.drainInbox()
                     if hasCompletedOnboarding { await recordsStore.resumeProcessing() }
                 }
+                // Partner Health Sync: a ≤ 60 s local-network window, only when a partner is paired.
+                if hasCompletedOnboarding { PartnerManager.shared.sceneDidBecomeActive() }
                 Task {
                     // Medications: mark doses missed / courses completed, then refresh the Today timeline.
                     await medicationStore.materializeMissedAndCompletions()

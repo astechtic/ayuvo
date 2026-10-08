@@ -28,6 +28,7 @@ class SettingsTintTest {
             SettingsPage.HEALTH_SYNC to "#FF2D55",
             SettingsPage.GOOGLE_HEALTH to "#007AFF",
             SettingsPage.HEALTH_RECORDS to "#5856D6",
+            SettingsPage.PARTNER_HEALTH to "#FF375F",
             SettingsPage.BACKUP_EXPORT to "#007AFF",
             SettingsPage.DELETE_DATA to "#FF3B30",
             SettingsPage.AI_PROVIDERS to "#AF52DE",

@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Storage
@@ -74,6 +75,8 @@ enum class SettingsPage(
     HEALTH_SYNC("healthData", R.string.settings_page_health_sync, SettingsGroup.DATA_PRIVACY, Icons.Filled.Favorite, SettingsTint.HealthSync),
     GOOGLE_HEALTH("googleHealth", R.string.google_health_title, SettingsGroup.DATA_PRIVACY, Icons.Filled.CloudSync, SettingsTint.GoogleHealth),
     HEALTH_RECORDS("healthRecords", R.string.settings_section_health_records, SettingsGroup.DATA_PRIVACY, Icons.Filled.Description, SettingsTint.Records),
+    /** Partner Health Sync (docs/partner-sync.md): pairing, what I share, sync and packages. */
+    PARTNER_HEALTH("partnerHealth", R.string.partner_title, SettingsGroup.DATA_PRIVACY, Icons.Filled.People, SettingsTint.Partner),
     BACKUP_EXPORT("dataManagement", R.string.settings_page_backup_export, SettingsGroup.DATA_PRIVACY, Icons.Filled.Storage, SettingsTint.Backup),
     DELETE_DATA("deleteData", R.string.settings_delete_all_data, SettingsGroup.DATA_PRIVACY, Icons.Filled.Delete, SettingsTint.Destructive),
     AI_PROVIDERS("aiProviders", R.string.settings_page_ai_providers, SettingsGroup.AI_SPEECH, Icons.Filled.AutoAwesome, SettingsTint.Ai),

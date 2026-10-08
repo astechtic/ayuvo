@@ -18,6 +18,7 @@ nonisolated enum SettingsTint {
     static let cycle = AyuvoPalette.cycle
     static let insights = AyuvoPalette.insights
     static let records = AyuvoPalette.records
+    static let partner = AyuvoPalette.partner
     static let other = AyuvoPalette.other
 
     // System-like

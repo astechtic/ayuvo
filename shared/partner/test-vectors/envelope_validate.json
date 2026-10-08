@@ -1,0 +1,872 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "category": "vitals",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "avg": 58,
+            "count": 3,
+            "day": "2026-10-07",
+            "max": 61,
+            "min": 55,
+            "type_id": "resting_heart_rate",
+            "unit": "bpm"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "resting_heart_rate:2026-10-07",
+          "rev": 5,
+          "type": "metric_day",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "metric_day_ok"
+    },
+    {
+      "expected": {
+        "category": "vitals",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "count": 120,
+            "day": "2026-10-07",
+            "sum": 8421,
+            "type_id": "steps",
+            "unit": "count"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "steps:2026-10-07",
+          "rev": 5,
+          "type": "metric_day",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "steps_ok"
+    },
+    {
+      "expected": {
+        "category": "sleep",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "sleep",
+          "data": {
+            "asleep_min": 444,
+            "awake_min": 29,
+            "day": "2026-10-07",
+            "deep_min": 70,
+            "end_ms": 1791367200000,
+            "light_min": 250,
+            "rem_min": 95,
+            "start_ms": 1791338400000
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "2026-10-07",
+          "rev": 5,
+          "type": "sleep_night",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "sleep_ok"
+    },
+    {
+      "expected": {
+        "category": "nutrition",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "food_ok"
+    },
+    {
+      "expected": {
+        "category": "medicines",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "form": "capsule",
+            "name": "Vitamin D3",
+            "start_date": "2026-09-01",
+            "status": "active"
+          },
+          "day": null,
+          "deleted": false,
+          "id": "med-1",
+          "rev": 5,
+          "type": "medication",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "medication_ok_no_day"
+    },
+    {
+      "expected": {
+        "category": "medicines",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "medication_id": "med-1",
+            "scheduled_at_ms": 1791370800000,
+            "status": "taken",
+            "taken_at_ms": 1791370900000
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "log-1",
+          "rev": 5,
+          "type": "dose_log",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "dose_ok"
+    },
+    {
+      "expected": {
+        "category": "report_overviews",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "report_overviews",
+          "data": {
+            "abnormal": [
+              {
+                "flag": "low",
+                "name": "Hemoglobin",
+                "ref_high": 15,
+                "ref_low": 12,
+                "unit": "g/dL",
+                "value": "11.2",
+                "value_num": 11.2
+              }
+            ],
+            "category": "blood",
+            "doctor": "Dr. Sharma",
+            "facility": "XYZ Hospital",
+            "record_type": "lab_report",
+            "report_date": "2026-10-01",
+            "title": "CBC"
+          },
+          "day": "2026-10-01",
+          "deleted": false,
+          "id": "rec-1",
+          "rev": 5,
+          "type": "report_overview",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "report_ok"
+    },
+    {
+      "expected": {
+        "category": "workouts",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "workouts",
+          "data": {
+            "activity": "running",
+            "distance_m": 5000,
+            "duration_s": 1800,
+            "end_ms": 1791369000000,
+            "kcal": 310,
+            "start_ms": 1791367200000
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "w-1",
+          "rev": 5,
+          "type": "workout",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "workout_ok"
+    },
+    {
+      "expected": {
+        "category": "vitals",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "end_ms": 1791374340000,
+            "start_ms": 1791374340000,
+            "type_id": "heart_rate",
+            "unit": "bpm",
+            "value": 72
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "hk-uuid-1",
+          "rev": 5,
+          "type": "sample",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "sample_ok"
+    },
+    {
+      "expected": {
+        "category": "nutrition",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": null,
+          "day": null,
+          "deleted": true,
+          "id": "x",
+          "rev": 9,
+          "type": "food_entry",
+          "updated_ms": 1791374400000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "tombstone_ok"
+    },
+    {
+      "expected": {
+        "category": "vitals",
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "deleted": true,
+          "id": "steps:2026-10-01",
+          "rev": 9,
+          "type": "metric_day",
+          "updated_ms": 1791374400000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "tombstone_health_ok"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "category_mismatch",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "deleted": true,
+          "id": "x",
+          "rev": 9,
+          "type": "food_entry",
+          "updated_ms": 1791374400000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "tombstone_bad_category"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "unknown_type",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "a": 1
+          },
+          "day": null,
+          "deleted": false,
+          "id": "p",
+          "rev": 5,
+          "type": "photo",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "unknown_type"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "not_shareable",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "day": "2026-10-07",
+            "type_id": "menstrual_flow",
+            "unit": "count"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "menstrual_flow:2026-10-07",
+          "rev": 5,
+          "type": "metric_day",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "cycle_type_not_shareable"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "not_shareable",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "day": "2026-10-07",
+            "type_id": "symptom_headache",
+            "unit": "count"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "symptom_headache:2026-10-07",
+          "rev": 5,
+          "type": "metric_day",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "symptom_not_shareable"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "not_shareable",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "end_ms": 2,
+            "start_ms": 1,
+            "type_id": "steps",
+            "unit": "count",
+            "value": 10
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "s1",
+          "rev": 5,
+          "type": "sample",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "steps_sample_not_intraday"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "category_mismatch",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "category_mismatch"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "missing_field",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "logged_ms": 1791374400000,
+            "name": "Tea"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "f2",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "missing_required"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "forbidden_field",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "report_overviews",
+          "data": {
+            "category": "blood",
+            "file_path": "/files/rec-2/original.pdf",
+            "record_type": "lab_report",
+            "title": "X"
+          },
+          "day": "2026-10-01",
+          "deleted": false,
+          "id": "rec-2",
+          "rev": 5,
+          "type": "report_overview",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "forbidden_file_path"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "forbidden_field",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "report_overviews",
+          "data": {
+            "category": "blood",
+            "record_type": "lab_report",
+            "results": [
+              {
+                "evidence": "page text...",
+                "flag": "low",
+                "name": "Hb",
+                "value": "11"
+              }
+            ],
+            "title": "X"
+          },
+          "day": "2026-10-01",
+          "deleted": false,
+          "id": "rec-3",
+          "rev": 5,
+          "type": "report_overview",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "forbidden_nested_evidence"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "forbidden_field",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "workouts",
+          "data": {
+            "activity": "running",
+            "duration_s": 1,
+            "end_ms": 2,
+            "start_ms": 1,
+            "track": [
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "w-2",
+          "rev": 5,
+          "type": "workout",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "forbidden_gps_track"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "forbidden_field",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "form": "tablet",
+            "name": "X",
+            "photo_path": "/x.jpg",
+            "start_date": "2026-09-01",
+            "status": "active"
+          },
+          "day": null,
+          "deleted": false,
+          "id": "med-2",
+          "rev": 5,
+          "type": "medication",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "forbidden_photo_path"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "too_large",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 1,
+            "logged_ms": 1791374400000,
+            "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "f3",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "too_large_string"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "bad_day",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": null,
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "bad_day_missing"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "bad_day",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "07/10/2026",
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "bad_day_format"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "bad_day",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07\n",
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "bad_day_trailing_newline"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "bad_day",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "dose_quantity": 1,
+            "dose_unit": "capsule",
+            "form": "capsule",
+            "name": "Vitamin D3",
+            "start_date": "2026-09-01",
+            "status": "active"
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "med-1",
+          "rev": 5,
+          "type": "medication",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "day_on_dayless_type"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 0,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "rev_zero"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": "5",
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "rev_not_int"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07",
+          "deleted": 0,
+          "id": "f0e1d2c3-0000-4000-8000-000000000001",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "deleted_not_bool"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "envelope": "hello",
+        "now_ms": 1791374400000
+      },
+      "name": "not_object"
+    },
+    {
+      "expected": {
+        "category": null,
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "calories": 320,
+            "carbs_g": 54,
+            "fat_g": 6,
+            "logged_ms": 1791360000000,
+            "meal": "breakfast",
+            "name": "Oats with milk",
+            "protein_g": 12.5
+          },
+          "day": "2026-10-07",
+          "deleted": false,
+          "id": "",
+          "rev": 5,
+          "type": "food_entry",
+          "updated_ms": 1791374399000
+        },
+        "now_ms": 1791374400000
+      },
+      "name": "empty_id"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "envelope_validate",
+  "version": 1
+}

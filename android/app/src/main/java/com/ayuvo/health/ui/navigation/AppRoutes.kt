@@ -106,6 +106,24 @@ object AppRoutes {
 
     fun cycleDetail(start: String): String = "cycle/cycle/$start"
 
+    // Partner Health (docs/partner-sync.md): the dashboard and report overviews are shared destinations (they keep
+    // the Summary tab selected when opened from the Summary card); pairing and per-partner settings live in Settings.
+    const val PARTNER_OWNER_ARG = "ownerId"
+    const val PARTNER_REPORT_ARG = "reportId"
+    const val PARTNER_DASHBOARD = "partner/{$PARTNER_OWNER_ARG}"
+    const val PARTNER_REPORT = "partner/{$PARTNER_OWNER_ARG}/report/{$PARTNER_REPORT_ARG}"
+    const val PARTNER_MANAGE = "settings/partner/manage/{$PARTNER_OWNER_ARG}"
+    const val PAIR_MODE_ARG = "mode"
+    const val PAIR_SHOW = "show"
+    const val PAIR_SCAN = "scan"
+    const val PARTNER_PAIR = "settings/partner/pair/{$PAIR_MODE_ARG}"
+
+    private fun seg(v: String): String = URLEncoder.encode(v, "UTF-8").replace("+", "%20")
+    fun partner(ownerId: String): String = "partner/" + seg(ownerId)
+    fun partnerReport(ownerId: String, reportId: String): String = "partner/" + seg(ownerId) + "/report/" + seg(reportId)
+    fun partnerManage(ownerId: String): String = "settings/partner/manage/" + seg(ownerId)
+    fun partnerPair(mode: String): String = "settings/partner/pair/$mode"
+
     fun measureScan(mode: String, sessionId: String? = null): String =
         if (sessionId == null) "measure/scan/$mode" else "measure/scan/$mode?$MEASURE_SESSION_ARG=" + URLEncoder.encode(sessionId, "UTF-8")
     fun measureDetail(scanId: String): String = "measure/detail/" + URLEncoder.encode(scanId, "UTF-8").replace("+", "%20")
@@ -147,7 +165,8 @@ object AppRoutes {
         route.startsWith("metric/") || route.startsWith("health/") ||
             route == MEDICATIONS || route.startsWith("medications/") ||
             route == INSIGHTS || route.startsWith("insights/") ||
-            route.startsWith("workouts/") || route.startsWith("measure/") || route.startsWith("cycle/")
+            route.startsWith("workouts/") || route.startsWith("measure/") || route.startsWith("cycle/") ||
+            route.startsWith("partner/")
         )
 
     /** The tab that owns [route] by itself; null for shared destinations and unknown routes. */

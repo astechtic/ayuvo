@@ -1,0 +1,2675 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "valid"
+    },
+    {
+      "expected": {
+        "error": "not_package",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "format": "ayuvo-all-data",
+          "format_version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "not_a_package"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 2
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "unsupported_version"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": true
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "version_true_rejected"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111\n"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "hash_with_trailing_newline"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "missing_manifest_field"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "cycle"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "unknown_category"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "xyz"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "bad_file_hash_format"
+    },
+    {
+      "expected": {
+        "error": "unsafe_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "name": "../evil.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "zip_slip_entry"
+    },
+    {
+      "expected": {
+        "error": "unsafe_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "name": "/etc/passwd",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "absolute_entry"
+    },
+    {
+      "expected": {
+        "error": "unknown_sender",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [],
+        "signature_ok": true
+      },
+      "name": "unknown_sender"
+    },
+    {
+      "expected": {
+        "error": "wrong_recipient",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "99999999-9999-4999-8999-999999999999",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "wrong_recipient"
+    },
+    {
+      "expected": {
+        "error": "bad_signature",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": false
+      },
+      "name": "bad_signature"
+    },
+    {
+      "expected": {
+        "error": "missing_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "missing_signature_entry"
+    },
+    {
+      "expected": {
+        "error": "unexpected_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "name": "health/report.pdf",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "pdf_smuggled"
+    },
+    {
+      "expected": {
+        "error": "unexpected_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "name": "files/rec-1/original.jpg",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "image_smuggled"
+    },
+    {
+      "expected": {
+        "error": "unexpected_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "name": "health/medicines.ndjson",
+            "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "ungranted_category_file"
+    },
+    {
+      "expected": {
+        "error": "missing_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "listed_file_missing"
+    },
+    {
+      "expected": {
+        "error": "unexpected_entry",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "unlisted_file_present"
+    },
+    {
+      "expected": {
+        "error": "hash_mismatch",
+        "ok": false
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "hash_mismatch"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "name": "health/",
+            "sha256": null
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "bytes": 3000,
+              "count": 17,
+              "name": "health/report_overviews.ndjson",
+              "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "directory_entries_ignored"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "entries": [
+          {
+            "name": "manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "name": "signature.json",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "manifest": {
+          "categories": [
+            "vitals",
+            "report_overviews"
+          ],
+          "created_ms": 1791374400000,
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "export_id": "3c3c3c3c-1111-4222-8333-444455556666",
+          "files": [
+            {
+              "bytes": 80,
+              "count": 1,
+              "name": "profile/partner.json",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "bytes": 40,
+              "count": 1,
+              "name": "sync/revision.json",
+              "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+            },
+            {
+              "bytes": 9000,
+              "count": 120,
+              "name": "health/vitals.ndjson",
+              "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+            }
+          ],
+          "format": "ayuvo-partner-sync",
+          "from_rev": 0,
+          "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "to_rev": 137,
+          "version": 1
+        },
+        "me": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "now_ms": 1791374400000,
+        "op": "validate",
+        "partners": [
+          "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f"
+        ],
+        "signature_ok": true
+      },
+      "name": "missing_category_file_ok"
+    },
+    {
+      "expected": {
+        "entries": [
+          "manifest.json",
+          "signature.json",
+          "profile/partner.json",
+          "sync/revision.json",
+          "health/vitals.ndjson",
+          "health/report_overviews.ndjson"
+        ]
+      },
+      "input": {
+        "categories": [
+          "report_overviews",
+          "vitals"
+        ],
+        "op": "entries"
+      },
+      "name": "entries_for_categories"
+    },
+    {
+      "expected": {
+        "entries": [
+          "manifest.json",
+          "signature.json",
+          "profile/partner.json",
+          "sync/revision.json"
+        ]
+      },
+      "input": {
+        "categories": [],
+        "op": "entries"
+      },
+      "name": "entries_none"
+    },
+    {
+      "expected": {
+        "filename": "Ananya_Health_2026-10-07.ayuvo.zip"
+      },
+      "input": {
+        "day": "2026-10-07",
+        "name": "Ananya",
+        "op": "filename"
+      },
+      "name": "filename_basic"
+    },
+    {
+      "expected": {
+        "filename": "Ananya_s_Ayuvo_Health_2026-10-07.ayuvo.zip"
+      },
+      "input": {
+        "day": "2026-10-07",
+        "name": "Ananya's Ayuvo",
+        "op": "filename"
+      },
+      "name": "filename_apostrophe_spaces"
+    },
+    {
+      "expected": {
+        "filename": "Partner_Health_2026-10-07.ayuvo.zip"
+      },
+      "input": {
+        "day": "2026-10-07",
+        "name": "अनन्या",
+        "op": "filename"
+      },
+      "name": "filename_non_ascii"
+    },
+    {
+      "expected": {
+        "per_category": [
+          {
+            "category": "vitals",
+            "count": 120
+          },
+          {
+            "category": "report_overviews",
+            "count": 17
+          }
+        ],
+        "total": 137
+      },
+      "input": {
+        "categories": [
+          "vitals",
+          "report_overviews"
+        ],
+        "files": [
+          {
+            "bytes": 80,
+            "count": 1,
+            "name": "profile/partner.json",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+          },
+          {
+            "bytes": 40,
+            "count": 1,
+            "name": "sync/revision.json",
+            "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          {
+            "bytes": 9000,
+            "count": 120,
+            "name": "health/vitals.ndjson",
+            "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "bytes": 3000,
+            "count": 17,
+            "name": "health/report_overviews.ndjson",
+            "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "op": "summary"
+      },
+      "name": "summary_counts"
+    },
+    {
+      "expected": {
+        "accepted": true,
+        "counts": {
+          "deleted": 0,
+          "duplicate": 0,
+          "inserted": 7,
+          "rejected": 1,
+          "stale": 0,
+          "updated": 0
+        },
+        "cursor": 11,
+        "deletes": [],
+        "error": null,
+        "rejected": [
+          {
+            "id": "rec-1",
+            "reason": "not_granted",
+            "type": "report_overview"
+          }
+        ],
+        "upserts": [
+          {
+            "category": "medicines",
+            "data": {
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "medication_id": "med-1",
+              "scheduled_at_ms": 1791370800000,
+              "status": "taken",
+              "taken_at_ms": 1791370900000
+            },
+            "day": "2026-10-07",
+            "record_id": "log-1",
+            "rev": 11,
+            "ts_ms": 1791370800000,
+            "type": "dose_log",
+            "updated_ms": 1791374399000
+          },
+          {
+            "category": "nutrition",
+            "data": {
+              "calories": 320,
+              "carbs_g": 54,
+              "fat_g": 6,
+              "logged_ms": 1791360000000,
+              "meal": "breakfast",
+              "name": "Oats with milk",
+              "protein_g": 12.5
+            },
+            "day": "2026-10-07",
+            "record_id": "f-2",
+            "rev": 10,
+            "ts_ms": 1791360000000,
+            "type": "food_entry",
+            "updated_ms": 1791374399000
+          },
+          {
+            "category": "nutrition",
+            "data": {
+              "calories": 320,
+              "carbs_g": 54,
+              "fat_g": 6,
+              "logged_ms": 1791360000000,
+              "meal": "breakfast",
+              "name": "Oats with milk",
+              "protein_g": 12.5
+            },
+            "day": "2026-10-07",
+            "record_id": "f0e1d2c3-0000-4000-8000-000000000001",
+            "rev": 1,
+            "ts_ms": 1791360000000,
+            "type": "food_entry",
+            "updated_ms": 1791374399000
+          },
+          {
+            "category": "medicines",
+            "data": {
+              "dose_quantity": 1,
+              "dose_unit": "capsule",
+              "form": "capsule",
+              "name": "Vitamin D3",
+              "start_date": "2026-09-01",
+              "status": "active"
+            },
+            "day": null,
+            "record_id": "med-1",
+            "rev": 4,
+            "ts_ms": null,
+            "type": "medication",
+            "updated_ms": 1791374399000
+          },
+          {
+            "category": "vitals",
+            "data": {
+              "avg": 58,
+              "count": 3,
+              "day": "2026-10-07",
+              "max": 61,
+              "min": 55,
+              "type_id": "resting_heart_rate",
+              "unit": "bpm"
+            },
+            "day": "2026-10-07",
+            "record_id": "resting_heart_rate:2026-10-07",
+            "rev": 2,
+            "ts_ms": null,
+            "type": "metric_day",
+            "updated_ms": 1791374399000
+          },
+          {
+            "category": "vitals",
+            "data": {
+              "count": 120,
+              "day": "2026-10-07",
+              "sum": 8421,
+              "type_id": "steps",
+              "unit": "count"
+            },
+            "day": "2026-10-07",
+            "record_id": "steps:2026-10-07",
+            "rev": 9,
+            "ts_ms": null,
+            "type": "metric_day",
+            "updated_ms": 1791374399000
+          },
+          {
+            "category": "sleep",
+            "data": {
+              "asleep_min": 444,
+              "awake_min": 29,
+              "day": "2026-10-07",
+              "deep_min": 70,
+              "end_ms": 1791367200000,
+              "light_min": 250,
+              "rem_min": 95,
+              "start_ms": 1791338400000
+            },
+            "day": "2026-10-07",
+            "record_id": "2026-10-07",
+            "rev": 3,
+            "ts_ms": 1791338400000,
+            "type": "sleep_night",
+            "updated_ms": 1791374399000
+          }
+        ]
+      },
+      "input": {
+        "batch_size": 2,
+        "cursor": 0,
+        "existing": [],
+        "files": {
+          "medicines": [
+            {
+              "category": "medicines",
+              "data": {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "form": "capsule",
+                "name": "Vitamin D3",
+                "start_date": "2026-09-01",
+                "status": "active"
+              },
+              "day": null,
+              "deleted": false,
+              "id": "med-1",
+              "rev": 4,
+              "type": "medication",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "medicines",
+              "data": {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "medication_id": "med-1",
+                "scheduled_at_ms": 1791370800000,
+                "status": "taken",
+                "taken_at_ms": 1791370900000
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "log-1",
+              "rev": 11,
+              "type": "dose_log",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "nutrition": [
+            {
+              "category": "nutrition",
+              "data": {
+                "calories": 320,
+                "carbs_g": 54,
+                "fat_g": 6,
+                "logged_ms": 1791360000000,
+                "meal": "breakfast",
+                "name": "Oats with milk",
+                "protein_g": 12.5
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "f0e1d2c3-0000-4000-8000-000000000001",
+              "rev": 1,
+              "type": "food_entry",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "nutrition",
+              "data": {
+                "calories": 320,
+                "carbs_g": 54,
+                "fat_g": 6,
+                "logged_ms": 1791360000000,
+                "meal": "breakfast",
+                "name": "Oats with milk",
+                "protein_g": 12.5
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "f-2",
+              "rev": 10,
+              "type": "food_entry",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "report_overviews": [
+            {
+              "category": "report_overviews",
+              "data": {
+                "abnormal": [
+                  {
+                    "flag": "low",
+                    "name": "Hemoglobin",
+                    "ref_high": 15,
+                    "ref_low": 12,
+                    "unit": "g/dL",
+                    "value": "11.2",
+                    "value_num": 11.2
+                  }
+                ],
+                "category": "blood",
+                "doctor": "Dr. Sharma",
+                "facility": "XYZ Hospital",
+                "record_type": "lab_report",
+                "report_date": "2026-10-01",
+                "title": "CBC"
+              },
+              "day": "2026-10-01",
+              "deleted": false,
+              "id": "rec-1",
+              "rev": 5,
+              "type": "report_overview",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "sleep": [
+            {
+              "category": "sleep",
+              "data": {
+                "asleep_min": 444,
+                "awake_min": 29,
+                "day": "2026-10-07",
+                "deep_min": 70,
+                "end_ms": 1791367200000,
+                "light_min": 250,
+                "rem_min": 95,
+                "start_ms": 1791338400000
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "2026-10-07",
+              "rev": 3,
+              "type": "sleep_night",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "vitals": [
+            {
+              "category": "vitals",
+              "data": {
+                "avg": 58,
+                "count": 3,
+                "day": "2026-10-07",
+                "max": 61,
+                "min": 55,
+                "type_id": "resting_heart_rate",
+                "unit": "bpm"
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "resting_heart_rate:2026-10-07",
+              "rev": 2,
+              "type": "metric_day",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "vitals",
+              "data": {
+                "count": 120,
+                "day": "2026-10-07",
+                "sum": 8421,
+                "type_id": "steps",
+                "unit": "count"
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "steps:2026-10-07",
+              "rev": 9,
+              "type": "metric_day",
+              "updated_ms": 1791374399000
+            }
+          ]
+        },
+        "manifest": {
+          "categories": [
+            "vitals",
+            "sleep",
+            "nutrition",
+            "medicines"
+          ],
+          "from_rev": 0,
+          "to_rev": 11
+        },
+        "now_ms": 1791374400000,
+        "op": "import"
+      },
+      "name": "import_interleaved_revs_small_batches"
+    },
+    {
+      "expected": {
+        "accepted": true,
+        "counts": {
+          "deleted": 0,
+          "duplicate": 7,
+          "inserted": 0,
+          "rejected": 1,
+          "stale": 0,
+          "updated": 0
+        },
+        "cursor": 11,
+        "deletes": [],
+        "error": null,
+        "rejected": [
+          {
+            "id": "rec-1",
+            "reason": "not_granted",
+            "type": "report_overview"
+          }
+        ],
+        "upserts": []
+      },
+      "input": {
+        "batch_size": 2,
+        "cursor": 11,
+        "existing": [
+          {
+            "record_id": "resting_heart_rate:2026-10-07",
+            "rev": 2,
+            "type": "metric_day"
+          },
+          {
+            "record_id": "steps:2026-10-07",
+            "rev": 9,
+            "type": "metric_day"
+          },
+          {
+            "record_id": "2026-10-07",
+            "rev": 3,
+            "type": "sleep_night"
+          },
+          {
+            "record_id": "f0e1d2c3-0000-4000-8000-000000000001",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "record_id": "f-2",
+            "rev": 10,
+            "type": "food_entry"
+          },
+          {
+            "record_id": "med-1",
+            "rev": 4,
+            "type": "medication"
+          },
+          {
+            "record_id": "log-1",
+            "rev": 11,
+            "type": "dose_log"
+          }
+        ],
+        "files": {
+          "medicines": [
+            {
+              "category": "medicines",
+              "data": {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "form": "capsule",
+                "name": "Vitamin D3",
+                "start_date": "2026-09-01",
+                "status": "active"
+              },
+              "day": null,
+              "deleted": false,
+              "id": "med-1",
+              "rev": 4,
+              "type": "medication",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "medicines",
+              "data": {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "medication_id": "med-1",
+                "scheduled_at_ms": 1791370800000,
+                "status": "taken",
+                "taken_at_ms": 1791370900000
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "log-1",
+              "rev": 11,
+              "type": "dose_log",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "nutrition": [
+            {
+              "category": "nutrition",
+              "data": {
+                "calories": 320,
+                "carbs_g": 54,
+                "fat_g": 6,
+                "logged_ms": 1791360000000,
+                "meal": "breakfast",
+                "name": "Oats with milk",
+                "protein_g": 12.5
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "f0e1d2c3-0000-4000-8000-000000000001",
+              "rev": 1,
+              "type": "food_entry",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "nutrition",
+              "data": {
+                "calories": 320,
+                "carbs_g": 54,
+                "fat_g": 6,
+                "logged_ms": 1791360000000,
+                "meal": "breakfast",
+                "name": "Oats with milk",
+                "protein_g": 12.5
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "f-2",
+              "rev": 10,
+              "type": "food_entry",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "report_overviews": [
+            {
+              "category": "report_overviews",
+              "data": {
+                "abnormal": [
+                  {
+                    "flag": "low",
+                    "name": "Hemoglobin",
+                    "ref_high": 15,
+                    "ref_low": 12,
+                    "unit": "g/dL",
+                    "value": "11.2",
+                    "value_num": 11.2
+                  }
+                ],
+                "category": "blood",
+                "doctor": "Dr. Sharma",
+                "facility": "XYZ Hospital",
+                "record_type": "lab_report",
+                "report_date": "2026-10-01",
+                "title": "CBC"
+              },
+              "day": "2026-10-01",
+              "deleted": false,
+              "id": "rec-1",
+              "rev": 5,
+              "type": "report_overview",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "sleep": [
+            {
+              "category": "sleep",
+              "data": {
+                "asleep_min": 444,
+                "awake_min": 29,
+                "day": "2026-10-07",
+                "deep_min": 70,
+                "end_ms": 1791367200000,
+                "light_min": 250,
+                "rem_min": 95,
+                "start_ms": 1791338400000
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "2026-10-07",
+              "rev": 3,
+              "type": "sleep_night",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "vitals": [
+            {
+              "category": "vitals",
+              "data": {
+                "avg": 58,
+                "count": 3,
+                "day": "2026-10-07",
+                "max": 61,
+                "min": 55,
+                "type_id": "resting_heart_rate",
+                "unit": "bpm"
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "resting_heart_rate:2026-10-07",
+              "rev": 2,
+              "type": "metric_day",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "vitals",
+              "data": {
+                "count": 120,
+                "day": "2026-10-07",
+                "sum": 8421,
+                "type_id": "steps",
+                "unit": "count"
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "steps:2026-10-07",
+              "rev": 9,
+              "type": "metric_day",
+              "updated_ms": 1791374399000
+            }
+          ]
+        },
+        "manifest": {
+          "categories": [
+            "vitals",
+            "sleep",
+            "nutrition",
+            "medicines"
+          ],
+          "from_rev": 0,
+          "to_rev": 11
+        },
+        "now_ms": 1791374400000,
+        "op": "import"
+      },
+      "name": "import_again_all_duplicates"
+    },
+    {
+      "expected": {
+        "accepted": false,
+        "counts": {
+          "deleted": 0,
+          "duplicate": 0,
+          "inserted": 0,
+          "rejected": 0,
+          "stale": 0,
+          "updated": 0
+        },
+        "cursor": 3,
+        "deletes": [],
+        "error": "cursor_gap",
+        "rejected": [],
+        "upserts": []
+      },
+      "input": {
+        "cursor": 3,
+        "existing": [],
+        "files": {
+          "medicines": [
+            {
+              "category": "medicines",
+              "data": {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "form": "capsule",
+                "name": "Vitamin D3",
+                "start_date": "2026-09-01",
+                "status": "active"
+              },
+              "day": null,
+              "deleted": false,
+              "id": "med-1",
+              "rev": 4,
+              "type": "medication",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "medicines",
+              "data": {
+                "dose_quantity": 1,
+                "dose_unit": "capsule",
+                "medication_id": "med-1",
+                "scheduled_at_ms": 1791370800000,
+                "status": "taken",
+                "taken_at_ms": 1791370900000
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "log-1",
+              "rev": 11,
+              "type": "dose_log",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "nutrition": [
+            {
+              "category": "nutrition",
+              "data": {
+                "calories": 320,
+                "carbs_g": 54,
+                "fat_g": 6,
+                "logged_ms": 1791360000000,
+                "meal": "breakfast",
+                "name": "Oats with milk",
+                "protein_g": 12.5
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "f0e1d2c3-0000-4000-8000-000000000001",
+              "rev": 1,
+              "type": "food_entry",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "nutrition",
+              "data": {
+                "calories": 320,
+                "carbs_g": 54,
+                "fat_g": 6,
+                "logged_ms": 1791360000000,
+                "meal": "breakfast",
+                "name": "Oats with milk",
+                "protein_g": 12.5
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "f-2",
+              "rev": 10,
+              "type": "food_entry",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "report_overviews": [
+            {
+              "category": "report_overviews",
+              "data": {
+                "abnormal": [
+                  {
+                    "flag": "low",
+                    "name": "Hemoglobin",
+                    "ref_high": 15,
+                    "ref_low": 12,
+                    "unit": "g/dL",
+                    "value": "11.2",
+                    "value_num": 11.2
+                  }
+                ],
+                "category": "blood",
+                "doctor": "Dr. Sharma",
+                "facility": "XYZ Hospital",
+                "record_type": "lab_report",
+                "report_date": "2026-10-01",
+                "title": "CBC"
+              },
+              "day": "2026-10-01",
+              "deleted": false,
+              "id": "rec-1",
+              "rev": 5,
+              "type": "report_overview",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "sleep": [
+            {
+              "category": "sleep",
+              "data": {
+                "asleep_min": 444,
+                "awake_min": 29,
+                "day": "2026-10-07",
+                "deep_min": 70,
+                "end_ms": 1791367200000,
+                "light_min": 250,
+                "rem_min": 95,
+                "start_ms": 1791338400000
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "2026-10-07",
+              "rev": 3,
+              "type": "sleep_night",
+              "updated_ms": 1791374399000
+            }
+          ],
+          "vitals": [
+            {
+              "category": "vitals",
+              "data": {
+                "avg": 58,
+                "count": 3,
+                "day": "2026-10-07",
+                "max": 61,
+                "min": 55,
+                "type_id": "resting_heart_rate",
+                "unit": "bpm"
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "resting_heart_rate:2026-10-07",
+              "rev": 2,
+              "type": "metric_day",
+              "updated_ms": 1791374399000
+            },
+            {
+              "category": "vitals",
+              "data": {
+                "count": 120,
+                "day": "2026-10-07",
+                "sum": 8421,
+                "type_id": "steps",
+                "unit": "count"
+              },
+              "day": "2026-10-07",
+              "deleted": false,
+              "id": "steps:2026-10-07",
+              "rev": 9,
+              "type": "metric_day",
+              "updated_ms": 1791374399000
+            }
+          ]
+        },
+        "manifest": {
+          "categories": [
+            "vitals",
+            "sleep",
+            "nutrition",
+            "medicines"
+          ],
+          "from_rev": 8,
+          "to_rev": 11
+        },
+        "now_ms": 1791374400000,
+        "op": "import"
+      },
+      "name": "import_delta_gap"
+    },
+    {
+      "expected": {
+        "accepted": true,
+        "counts": {
+          "deleted": 0,
+          "duplicate": 0,
+          "inserted": 0,
+          "rejected": 0,
+          "stale": 0,
+          "updated": 0
+        },
+        "cursor": 20,
+        "deletes": [],
+        "error": null,
+        "rejected": [],
+        "upserts": []
+      },
+      "input": {
+        "cursor": 4,
+        "existing": [],
+        "files": {},
+        "manifest": {
+          "categories": [
+            "vitals",
+            "sleep",
+            "nutrition",
+            "medicines"
+          ],
+          "from_rev": 4,
+          "to_rev": 20
+        },
+        "now_ms": 1791374400000,
+        "op": "import"
+      },
+      "name": "import_empty_package"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "package",
+  "version": 1
+}

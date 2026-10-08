@@ -1,0 +1,428 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzIEF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "input": {
+        "op": "encode",
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "Ananya's  Ayuvo ",
+          "protocol": "ayuvo-partner-sync",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "v": 1,
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "name": "encode_canonical"
+    },
+    {
+      "expected": {
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOjEsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "input": {
+        "op": "encode",
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "protocol": "ayuvo-partner-sync",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "v": 1,
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "name": "encode_long_name_trimmed"
+    },
+    {
+      "expected": {
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "input": {
+        "op": "encode",
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "   ",
+          "protocol": "ayuvo-partner-sync",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "v": 1,
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "name": "encode_empty_name"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "fingerprint": "68a7f0d4954e63b10b2cfc8b817d6c12",
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "Ananya's Ayuvo",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzIEF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "name": "parse_ok"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "fingerprint": "68a7f0d4954e63b10b2cfc8b817d6c12",
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "Ananya's Ayuvo",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "  ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzIEF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0\n"
+      },
+      "name": "parse_ok_whitespace_around"
+    },
+    {
+      "expected": {
+        "error": "expired",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791375000001,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzIEF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "name": "parse_expired"
+    },
+    {
+      "expected": {
+        "error": "expired",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3ODAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOjEsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "name": "parse_exp_too_far"
+    },
+    {
+      "expected": {
+        "error": "self",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzIEF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "name": "parse_self"
+    },
+    {
+      "expected": {
+        "error": "not_ayuvo",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "https://example.com"
+      },
+      "name": "parse_not_ayuvo_url"
+    },
+    {
+      "expected": {
+        "error": "not_ayuvo",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "5901234123457"
+      },
+      "name": "parse_barcode"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:2:abc"
+      },
+      "name": "parse_future_version_prefix"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOjIsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "name": "parse_payload_version_2"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:!!notbase64"
+      },
+      "name": "parse_bad_base64"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:aGVsbG8"
+      },
+      "name": "parse_not_json"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6Im90aGVyIiwidG9rZW4iOiJHblowNjA3bmpmZmhyRU9hazhQNmpqeVVWNFRVM3NuOWpqQVJjNHN2SFdJIiwidiI6MSwieDI1NTE5IjoianliV19pbzlyOWdvQ0J6RDZqcGRZUUNEeEZZX3RQVC1VYkpUT3h6a1RyQSJ9"
+      },
+      "name": "parse_wrong_protocol"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiJBQkMiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOjEsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "name": "parse_bad_device_id"
+    },
+    {
+      "expected": {
+        "error": "bad_key",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOjEsIngyNTUxOSI6ImMyaHZjblEifQ"
+      },
+      "name": "parse_short_key"
+    },
+    {
+      "expected": {
+        "error": "bad_key",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInYiOjEsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "name": "parse_missing_token"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiZXZpbCBob3N0Il0sIm5hbWUiOiJBbmFueWEncyAgQXl1dm8gIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "name": "parse_bad_host"
+    },
+    {
+      "expected": {
+        "ok": true,
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "fingerprint": "68a7f0d4954e63b10b2cfc8b817d6c12",
+          "hosts": [],
+          "name": "Ananya's Ayuvo",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOjEsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "name": "parse_no_hosts_ok"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzICBBeXV2byAiLCJwcm90b2NvbCI6ImF5dXZvLXBhcnRuZXItc3luYyIsInRva2VuIjoiR25aMDYwN25qZmZockVPYWs4UDZqanlVVjRUVTNzbjlqakFSYzRzdkhXSSIsInYiOnRydWUsIngyNTUxOSI6Imp5YldfaW85cjlnb0NCekQ2anBkWVFDRHhGWV90UFQtVWJKVE94emtUckEifQ"
+      },
+      "name": "parse_version_true_rejected"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmZcbiIsImVkMjU1MTkiOiJoQVd1YmVQcjNpcV8teVV4MURlaFk2TWR4Q29RbkhOcHRtdVRKWXgtSFdjIiwiZXhwX21zIjoxNzkxMzc1MDAwMDAwLCJob3N0cyI6WyIxOTIuMTY4LjEuMjA6NTIwMTEiLCIxNzIuMjAuMTAuMTo1MjAxMSJdLCJuYW1lIjoiQW5hbnlhJ3MgIEF5dXZvICIsInByb3RvY29sIjoiYXl1dm8tcGFydG5lci1zeW5jIiwidG9rZW4iOiJHblowNjA3bmpmZmhyRU9hazhQNmpqeVVWNFRVM3NuOWpqQVJjNHN2SFdJIiwidiI6MSwieDI1NTE5IjoianliV19pbzlyOWdvQ0J6RDZqcGRZUUNEeEZZX3RQVC1VYkpUT3h6a1RyQSJ9"
+      },
+      "name": "parse_device_id_trailing_newline"
+    },
+    {
+      "expected": {
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYcKgTWFyaWHigIMgUlx1MDAxZiIsInByb3RvY29sIjoiYXl1dm8tcGFydG5lci1zeW5jIiwidG9rZW4iOiJHblowNjA3bmpmZmhyRU9hazhQNmpqeVVWNFRVM3NuOWpqQVJjNHN2SFdJIiwidiI6MSwieDI1NTE5IjoianliV19pbzlyOWdvQ0J6RDZqcGRZUUNEeEZZX3RQVC1VYkpUT3h6a1RyQSJ9"
+      },
+      "input": {
+        "op": "encode",
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "Ana Maria  \tR\u001f",
+          "protocol": "ayuvo-partner-sync",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "v": 1,
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "name": "encode_name_unicode_spaces_kept"
+    },
+    {
+      "expected": {
+        "error": "not_ayuvo",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": " ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkFuYW55YSdzIEF5dXZvIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "name": "parse_nbsp_around_not_trimmed"
+    },
+    {
+      "expected": {
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6MTc5MTM3NTAwMDAwMCwiaG9zdHMiOlsiMTkyLjE2OC4xLjIwOjUyMDExIiwiMTcyLjIwLjEwLjE6NTIwMTEiXSwibmFtZSI6IkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQsKgIiwicHJvdG9jb2wiOiJheXV2by1wYXJ0bmVyLXN5bmMiLCJ0b2tlbiI6IkduWjA2MDduamZmaHJFT2FrOFA2amp5VVY0VFUzc245ampBUmM0c3ZIV0kiLCJ2IjoxLCJ4MjU1MTkiOiJqeWJXX2lvOXI5Z29DQnpENmpwZFlRQ0R4RllfdFBULVViSlRPeHprVHJBIn0"
+      },
+      "input": {
+        "op": "encode",
+        "payload": {
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+          "exp_ms": 1791375000000,
+          "hosts": [
+            "192.168.1.20:52011",
+            "172.20.10.1:52011"
+          ],
+          "name": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB C",
+          "protocol": "ayuvo-partner-sync",
+          "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI",
+          "v": 1,
+          "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+        }
+      },
+      "name": "encode_name_cut_before_nbsp_keeps_it"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "op": "parse",
+        "self_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+        "text": "ayuvo-partner:1:eyJkZXZpY2VfaWQiOiIwYjhmM2MyYS01ZDFlLTRjN2EtOWYwMC0xYTJiM2M0ZDVlNmYiLCJlZDI1NTE5IjoiaEFXdWJlUHIzaXFfLXlVeDFEZWhZNk1keENvUW5ITnB0bXVUSll4LUhXYyIsImV4cF9tcyI6InNvb24iLCJob3N0cyI6WyIxOTIuMTY4LjEuMjA6NTIwMTEiLCIxNzIuMjAuMTAuMTo1MjAxMSJdLCJuYW1lIjoiQW5hbnlhJ3MgIEF5dXZvICIsInByb3RvY29sIjoiYXl1dm8tcGFydG5lci1zeW5jIiwidG9rZW4iOiJHblowNjA3bmpmZmhyRU9hazhQNmpqeVVWNFRVM3NuOWpqQVJjNHN2SFdJIiwidiI6MSwieDI1NTE5IjoianliV19pbzlyOWdvQ0J6RDZqcGRZUUNEeEZZX3RQVC1VYkpUT3h6a1RyQSJ9"
+      },
+      "name": "parse_exp_not_int"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "qr",
+  "version": 1
+}

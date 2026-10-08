@@ -23,6 +23,12 @@ class ShareViewController: UIViewController {
         providers.filter { $0.hasItemConformingToTypeIdentifier(UTType.image.identifier) }
     }
 
+    /// One shared zip (a partner health package `*.ayuvo.zip` from AirDrop, WhatsApp, Files…): the app decides
+    /// whether it is partner data or a Health Records item, so the button just hands it over.
+    private var isSingleZip: Bool {
+        providers.count == 1 && providers[0].hasItemConformingToTypeIdentifier(UTType.zip.identifier)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
@@ -53,7 +59,11 @@ class ShareViewController: UIViewController {
         detailLabel.textAlignment = .center
         detailLabel.numberOfLines = 0
 
-        configure(saveButton, title: String(localized: "Save to Health Records"), systemImage: "list.clipboard.fill", filled: true)
+        if isSingleZip {
+            configure(saveButton, title: String(localized: "share.zip.open", defaultValue: "Open in Ayuvo", comment: "Share extension button for a shared zip file (partner health data or a record)"), systemImage: "arrow.down.doc.fill", filled: true)
+        } else {
+            configure(saveButton, title: String(localized: "Save to Health Records"), systemImage: "list.clipboard.fill", filled: true)
+        }
         saveButton.addTarget(self, action: #selector(saveToRecords), for: .touchUpInside)
         saveButton.accessibilityIdentifier = "share.saveToRecords"
 
@@ -123,7 +133,9 @@ class ShareViewController: UIViewController {
             dismissWithError(message: String(localized: "These items couldn't be saved to Health Records."))
             return
         }
-        titleLabel.text = String(localized: "Saved to Health Records")
+        titleLabel.text = isSingleZip
+            ? String(localized: "share.zip.opening", defaultValue: "Opening Ayuvo…", comment: "Share extension: a shared zip was handed to the app")
+            : String(localized: "Saved to Health Records")
         detailLabel.text = saved == total ? nil : String(localized: "\(saved) of \(total) items saved")
         saveButton.isHidden = true
         foodButton.isHidden = true

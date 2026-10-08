@@ -44,6 +44,8 @@ struct SettingsView: View {
             .navigationDestination(for: SettingsPane.self) { pane in
                 if pane == .notifications {
                     NotificationSettingsView()
+                } else if pane == .partnerHealth {
+                    PartnerHealthSettingsView()
                 } else {
                     SettingsPaneView(
                         updateState: $updateState,
@@ -53,6 +55,7 @@ struct SettingsView: View {
                 }
             }
             .metricRouteDestinations()
+            .partnerRouteDestinations()
         }
     }
 }

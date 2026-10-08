@@ -14,7 +14,8 @@ struct SummaryView: View {
             ScrollView {
                 // Eager stack: the Summary is short, and keeping every card realized means
                 // scrolling never drops a card out of the accessibility tree.
-                VStack(alignment: .leading, spacing: 20) {
+                // Hidden sections keep zero-height anchors for their tasks; the collapsing stack gives them no gap.
+                CollapsingVStack(spacing: 20) {
                     HStack {
                         Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
                             .font(.system(.subheadline, design: .rounded))
@@ -45,6 +46,7 @@ struct SummaryView: View {
             .metricRouteDestinations()
             .healthRouteDestinations()
             .insightsRouteDestinations()
+            .partnerRouteDestinations()
             .task {
                 if !recordsStore.hasLoadedOnce { await recordsStore.reload() }
                 // The medications card needs counts, and the card itself is hidden until they load.

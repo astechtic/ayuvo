@@ -53,6 +53,8 @@ object AyuvoPalette {
     val Medications = Color(0xFF32ADE6)
     val Records = Color(0xFF5856D6)
     val Insights = Color(0xFFE08A00)
+    /** Partner Health: data a paired partner shares with me (read-only, kept apart from my own). */
+    val Partner = Color(0xFFFF375F)
     val Other = Color(0xFF8E8E93)
 
     val Protein = Color(0xFF007AFF)

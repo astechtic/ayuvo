@@ -1,0 +1,81 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "psk": "0102d69af2b625d21e83c42fd23acdfcdcc33d07cb4ca8519583cc39eedccf98"
+      },
+      "input": {
+        "op": "psk",
+        "token": "GnZ0607njffhrEOak8P6jjyUV4TU3sn9jjARc4svHWI"
+      },
+      "name": "psk_from_token"
+    },
+    {
+      "expected": {
+        "psk": "6cab0bb79a20db038889a74ef04f010b554f13c7ce67ea1bebb379f3e2557de5"
+      },
+      "input": {
+        "op": "psk",
+        "token": "hpDDrwFeYpT_Z_z9M08YGkcEtXnpsrznnslxasYtotY"
+      },
+      "name": "psk_other_token"
+    },
+    {
+      "expected": {
+        "sas": "871475"
+      },
+      "input": {
+        "handshake_hash": "33112ee14ee469c3eb52fe90322ec81dd404a0093d565a6d71ce77cbc8124e3b",
+        "op": "sas"
+      },
+      "name": "sas_1"
+    },
+    {
+      "expected": {
+        "sas": "270119"
+      },
+      "input": {
+        "handshake_hash": "f998fe06afa0cfbe73e0449dc2b1698309e1b5714960f027b2858312b152c275",
+        "op": "sas"
+      },
+      "name": "sas_2"
+    },
+    {
+      "expected": {
+        "sas": "334197"
+      },
+      "input": {
+        "handshake_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "op": "sas"
+      },
+      "name": "sas_zero_hash"
+    },
+    {
+      "expected": {
+        "display": "68A7 F0D4 954E 63B1 0B2C FC8B 817D 6C12",
+        "fingerprint": "68a7f0d4954e63b10b2cfc8b817d6c12"
+      },
+      "input": {
+        "ed25519": "hAWubePr3iq_-yUx1DehY6MdxCoQnHNptmuTJYx-HWc",
+        "op": "fingerprint",
+        "x25519": "jybW_io9r9goCBzD6jpdYQCDxFY_tPT-UbJTOxzkTrA"
+      },
+      "name": "fingerprint_a"
+    },
+    {
+      "expected": {
+        "display": "74DE D0BC 0C38 B381 567A 3E25 E45C 418A",
+        "fingerprint": "74ded0bc0c38b381567a3e25e45c418a"
+      },
+      "input": {
+        "ed25519": "_OJVH8wjBAhw0VEAaBbMOdODGr_5SNxkai9ssHbgjOA",
+        "op": "fingerprint",
+        "x25519": "_xCOocCgaaAO5aHJu-cvw9Z7Xw06zLjhMs2eGo271Q8"
+      },
+      "name": "fingerprint_b"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "kdf",
+  "version": 1
+}

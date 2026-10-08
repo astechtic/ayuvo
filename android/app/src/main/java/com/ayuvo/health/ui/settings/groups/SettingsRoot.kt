@@ -182,6 +182,7 @@ internal fun SettingsPageContent(ctx: SettingsPageContext, page: SettingsPage) {
         SettingsPage.HEALTH_SYNC -> HealthSyncPage(ctx)
         SettingsPage.GOOGLE_HEALTH -> GoogleHealthPage(ctx)
         SettingsPage.HEALTH_RECORDS -> HealthRecordsPage(ctx)
+        SettingsPage.PARTNER_HEALTH -> com.ayuvo.health.ui.partner.PartnerHealthSettingsContent(ctx.container) { route -> ctx.nav.navigate(route) }
         SettingsPage.BACKUP_EXPORT -> BackupExportPage(ctx)
         SettingsPage.DELETE_DATA -> DeleteDataPage(ctx)
         SettingsPage.AI_PROVIDERS -> AiProvidersPage(ctx)

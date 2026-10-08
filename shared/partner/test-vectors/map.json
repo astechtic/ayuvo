@@ -1,0 +1,867 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "avg": 58.5,
+            "count": 3,
+            "day": "2026-10-07",
+            "last_at_ms": 1791370800000,
+            "last_value": 57,
+            "max": 61,
+            "min": 56,
+            "type_id": "resting_heart_rate",
+            "unit": "bpm"
+          },
+          "day": "2026-10-07",
+          "id": "resting_heart_rate:2026-10-07",
+          "type": "metric_day"
+        }
+      },
+      "input": {
+        "row": {
+          "avg": 58.5,
+          "count": 3,
+          "day": "2026-10-07",
+          "duration_s": null,
+          "last_at_ms": 1791370800000,
+          "last_value": 57,
+          "max": 61,
+          "min": 56,
+          "sum": null,
+          "type_id": "resting_heart_rate",
+          "unit": "bpm",
+          "v2_avg": null,
+          "v2_max": null,
+          "v2_min": null
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_resting_hr"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "avg": 118,
+            "count": 2,
+            "day": "2026-10-07",
+            "max": 124,
+            "min": 112,
+            "type_id": "blood_pressure",
+            "unit": "mmHg",
+            "v2_avg": 77,
+            "v2_max": 80,
+            "v2_min": 74
+          },
+          "day": "2026-10-07",
+          "id": "blood_pressure:2026-10-07",
+          "type": "metric_day"
+        }
+      },
+      "input": {
+        "row": {
+          "avg": 118,
+          "count": 2,
+          "day": "2026-10-07",
+          "max": 124,
+          "min": 112,
+          "type_id": "blood_pressure",
+          "unit": "mmHg",
+          "v2_avg": 77,
+          "v2_max": 80,
+          "v2_min": 74
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_blood_pressure_v2"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "row": {
+          "count": 1,
+          "day": "2026-10-07",
+          "type_id": "menstrual_flow",
+          "unit": "count"
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_cycle_type_dropped"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "row": {
+          "count": 1,
+          "day": "2026-10-07",
+          "type_id": "com.vendor.custom",
+          "unit": "count"
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_unknown_type_dropped"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "sleep",
+          "data": {
+            "count": 5,
+            "day": "2026-10-07",
+            "duration_s": 26640,
+            "sum": 444,
+            "type_id": "sleep",
+            "unit": "min"
+          },
+          "day": "2026-10-07",
+          "id": "sleep:2026-10-07",
+          "type": "metric_day"
+        }
+      },
+      "input": {
+        "row": {
+          "count": 5,
+          "day": "2026-10-07",
+          "duration_s": 26640,
+          "sum": 444,
+          "type_id": "sleep",
+          "unit": "min"
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_sleep_category"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "nutrition",
+          "data": {
+            "count": 4,
+            "day": "2026-10-07",
+            "sum": 82.4,
+            "type_id": "dietary_protein",
+            "unit": "g"
+          },
+          "day": "2026-10-07",
+          "id": "dietary_protein:2026-10-07",
+          "type": "metric_day"
+        }
+      },
+      "input": {
+        "row": {
+          "count": 4,
+          "day": "2026-10-07",
+          "sum": 82.4,
+          "type_id": "dietary_protein",
+          "unit": "g"
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_nutrition"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "row": {
+          "day": "2026-10-07",
+          "sum": 10,
+          "type_id": "steps"
+        },
+        "source": "rollup"
+      },
+      "name": "rollup_missing_unit_dropped"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "count": 12,
+            "day": "2026-10-07",
+            "hour": 8,
+            "hour_start_ms": 1791360000000,
+            "sum": 1200,
+            "type_id": "steps",
+            "unit": "count"
+          },
+          "day": "2026-10-07",
+          "id": "steps:2026-10-07:8",
+          "type": "metric_hour"
+        }
+      },
+      "input": {
+        "row": {
+          "count": 12,
+          "day": "2026-10-07",
+          "hour": 8,
+          "hour_start_ms": 1791360000000,
+          "sum": 1200,
+          "type_id": "steps",
+          "unit": "count"
+        },
+        "source": "hourly"
+      },
+      "name": "hourly_steps"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "row": {
+          "avg": 70,
+          "day": "2026-10-07",
+          "hour": 8,
+          "hour_start_ms": 1791374400000,
+          "type_id": "weight",
+          "unit": "kg"
+        },
+        "source": "hourly"
+      },
+      "name": "hourly_not_allowed_type"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "end_ms": 1791374340000,
+            "source_name": "Apple Watch",
+            "start_ms": 1791374340000,
+            "type_id": "heart_rate",
+            "unit": "bpm",
+            "value": 72
+          },
+          "day": "2026-10-07",
+          "id": "hk-1",
+          "type": "sample"
+        }
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "row": {
+          "deleted": 0,
+          "end_ms": 1791374340000,
+          "id": "hk-1",
+          "local_day": "2026-10-07",
+          "source_name": "Apple Watch",
+          "start_ms": 1791374340000,
+          "type_id": "heart_rate",
+          "unit": "bpm",
+          "value": 72
+        },
+        "source": "sample"
+      },
+      "name": "sample_hr_recent"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "sleep",
+          "data": {
+            "category_value": 4,
+            "end_ms": 1791349200000,
+            "start_ms": 1791345600000,
+            "type_id": "sleep",
+            "unit": "min",
+            "value": 60
+          },
+          "day": "2026-10-07",
+          "id": "hk-2",
+          "type": "sample"
+        }
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "row": {
+          "category_value": 4,
+          "deleted": 0,
+          "end_ms": 1791349200000,
+          "id": "hk-2",
+          "local_day": "2026-10-07",
+          "start_ms": 1791345600000,
+          "type_id": "sleep",
+          "unit": "min",
+          "value": 60
+        },
+        "source": "sample"
+      },
+      "name": "sample_sleep_stage"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "row": {
+          "deleted": 0,
+          "end_ms": 1790683200000,
+          "id": "hk-3",
+          "local_day": "2026-09-29",
+          "start_ms": 1790683200000,
+          "type_id": "heart_rate",
+          "unit": "bpm",
+          "value": 70
+        },
+        "source": "sample"
+      },
+      "name": "sample_too_old"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "row": {
+          "deleted": 1,
+          "end_ms": 1791374400000,
+          "id": "hk-4",
+          "local_day": "2026-10-07",
+          "start_ms": 1791374400000,
+          "type_id": "heart_rate",
+          "unit": "bpm",
+          "value": 70
+        },
+        "source": "sample"
+      },
+      "name": "sample_deleted"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "row": {
+          "deleted": 0,
+          "end_ms": 1791374400000,
+          "id": "hk-5",
+          "local_day": "2026-10-07",
+          "start_ms": 1791374400000,
+          "type_id": "steps",
+          "unit": "count",
+          "value": 70
+        },
+        "source": "sample"
+      },
+      "name": "sample_steps_not_intraday"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "vitals",
+          "data": {
+            "classification": "good",
+            "confidence": 0.8,
+            "coverage": 1,
+            "day": "2026-10-07",
+            "metric_id": "recovery_indicator",
+            "status": "ok",
+            "unit": "score",
+            "value": 82.4
+          },
+          "day": "2026-10-07",
+          "id": "recovery_indicator:2026-10-07",
+          "type": "analytics_day"
+        }
+      },
+      "input": {
+        "row": {
+          "classification": "good",
+          "confidence": 0.8,
+          "coverage": 1,
+          "metric_id": "recovery_indicator",
+          "period_end": "2026-10-07",
+          "period_start": "2026-10-07",
+          "status": "ok",
+          "unit": "score",
+          "value": 82.4
+        },
+        "source": "analytics"
+      },
+      "name": "analytics_recovery"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "row": {
+          "classification": "good",
+          "metric_id": "recovery_indicator",
+          "period_end": "2026-10-07",
+          "period_start": "2026-10-01",
+          "status": "ok"
+        },
+        "source": "analytics"
+      },
+      "name": "analytics_multi_day_dropped"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "row": {
+          "classification": "x",
+          "metric_id": "forecast:weight",
+          "period_end": "2026-10-07",
+          "period_start": "2026-10-07",
+          "status": "ok"
+        },
+        "source": "analytics"
+      },
+      "name": "analytics_forecast_dropped"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "food_relation": "with",
+            "form": "tablet",
+            "generic_name": "metformin",
+            "instructions": "With dinner",
+            "is_prn": false,
+            "name": "Metformin",
+            "start_date": "2026-09-01",
+            "status": "active",
+            "strength": "500 mg"
+          },
+          "day": null,
+          "id": "med-1",
+          "type": "medication"
+        }
+      },
+      "input": {
+        "row": {
+          "brand_name": null,
+          "created_ms": 1,
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "end_date": null,
+          "food_relation": "with",
+          "form": "tablet",
+          "generic_name": "metformin",
+          "id": "med-1",
+          "instructions": "With dinner",
+          "is_prn": 0,
+          "name": "Metformin",
+          "photo_path": "/files/ayuvo-medications/med-1/photo.jpg",
+          "related_record_id": "rec-1",
+          "start_date": "2026-09-01",
+          "status": "active",
+          "strength": "500 mg",
+          "updated_ms": 2
+        },
+        "source": "medication"
+      },
+      "name": "medication_row"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "active_from_ms": 1791288000000,
+            "days": [],
+            "frequency_kind": "daily",
+            "medication_id": "med-1",
+            "times": [
+              "08:00",
+              "20:00"
+            ]
+          },
+          "day": null,
+          "id": "sch-1",
+          "type": "medication_schedule"
+        }
+      },
+      "input": {
+        "row": {
+          "active_from_ms": 1791288000000,
+          "active_until_ms": null,
+          "anchor_time": null,
+          "days_json": "[]",
+          "frequency_kind": "daily",
+          "id": "sch-1",
+          "interval_hours": null,
+          "medication_id": "med-1",
+          "reminder_enabled": 1,
+          "times_json": "[\"08:00\",\"20:00\"]"
+        },
+        "source": "schedule"
+      },
+      "name": "schedule_row"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "medicines",
+          "data": {
+            "dose_quantity": 1,
+            "dose_unit": "tablet",
+            "medication_id": "med-1",
+            "note": "after walk",
+            "schedule_id": "sch-1",
+            "scheduled_at_ms": 1791370800000,
+            "status": "taken",
+            "taken_at_ms": 1791370900000
+          },
+          "day": "2026-10-07",
+          "id": "log-1",
+          "type": "dose_log"
+        }
+      },
+      "input": {
+        "local_day": "2026-10-07",
+        "row": {
+          "dose_quantity": 1,
+          "dose_unit": "tablet",
+          "id": "log-1",
+          "medication_id": "med-1",
+          "note": "after walk",
+          "schedule_id": "sch-1",
+          "scheduled_at_ms": 1791370800000,
+          "snoozed_until_ms": null,
+          "status": "taken",
+          "taken_at_ms": 1791370900000
+        },
+        "source": "dose_log"
+      },
+      "name": "dose_log_row"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "report_overviews",
+          "data": {
+            "abnormal": [
+              {
+                "analyte_id": "hemoglobin",
+                "flag": "low",
+                "name": "Hemoglobin",
+                "observed_date": "2026-10-01",
+                "ref_high": 15,
+                "ref_low": 12,
+                "ref_text": "12-15",
+                "unit": "g/dL",
+                "value": "11.2",
+                "value_num": 11.2
+              }
+            ],
+            "category": "blood",
+            "diagnoses": [
+              "Iron deficiency anaemia"
+            ],
+            "doctor": "Dr. Sharma",
+            "facility": "XYZ Hospital",
+            "highlights": [
+              "Hemoglobin: 11.2 g/dL (low)"
+            ],
+            "medications": [
+              {
+                "frequency": "1-0-1",
+                "name": "Ferrous sulfate",
+                "strength": "200 mg"
+              }
+            ],
+            "recommendations": [
+              "Repeat CBC in 3 months"
+            ],
+            "record_type": "lab_report",
+            "report_date": "2026-10-01",
+            "results": [
+              {
+                "analyte_id": "hemoglobin",
+                "flag": "low",
+                "name": "Hemoglobin",
+                "observed_date": "2026-10-01",
+                "ref_high": 15,
+                "ref_low": 12,
+                "ref_text": "12-15",
+                "unit": "g/dL",
+                "value": "11.2",
+                "value_num": 11.2
+              },
+              {
+                "analyte_id": "vitamin_b12",
+                "flag": "normal",
+                "name": "Vitamin B12",
+                "ref_high": 900,
+                "ref_low": 200,
+                "unit": "pg/mL",
+                "value": "320",
+                "value_num": 320
+              }
+            ],
+            "summary": "Mild anaemia; other counts normal.",
+            "title": "Complete Blood Count"
+          },
+          "day": "2026-10-01",
+          "id": "rec-1",
+          "type": "report_overview"
+        }
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.9,
+            "evidence": "Ref: Dr. Sharma",
+            "field_key": "doctor_name",
+            "id": "f1",
+            "source_bbox": "[1,2,3,4]",
+            "state": "confirmed",
+            "value_text": "Dr. Sharma"
+          },
+          {
+            "confidence": 0.95,
+            "field_key": "doctor_name",
+            "id": "f2",
+            "state": "suggested",
+            "value_text": "Dr. Shrma"
+          },
+          {
+            "confidence": 0.7,
+            "field_key": "facility",
+            "id": "f3",
+            "state": "suggested",
+            "value_text": "XYZ Hospital"
+          },
+          {
+            "confidence": 1,
+            "field_key": "diagnosis",
+            "id": "f4",
+            "state": "user",
+            "value_text": "Iron deficiency anaemia"
+          },
+          {
+            "confidence": 0.4,
+            "field_key": "diagnosis",
+            "id": "f5",
+            "state": "rejected",
+            "value_text": "Rejected guess"
+          },
+          {
+            "confidence": 0.8,
+            "field_key": "medication",
+            "id": "f6",
+            "state": "suggested",
+            "value_json": "{\"name\":\"Ferrous sulfate\",\"strength\":\"200 mg\",\"frequency\":\"1-0-1\"}",
+            "value_text": "Ferrous sulfate 200 mg"
+          },
+          {
+            "confidence": 1,
+            "field_key": "patient_name",
+            "id": "f7",
+            "state": "confirmed",
+            "value_text": "Ananya"
+          }
+        ],
+        "highlights": [
+          {
+            "dismissed": 0,
+            "id": "h1",
+            "position": 0,
+            "section": "summary",
+            "text": "Mild anaemia; other counts normal."
+          },
+          {
+            "dismissed": 0,
+            "id": "h2",
+            "position": 0,
+            "section": "important",
+            "text": "Hemoglobin: 11.2 g/dL (low)"
+          },
+          {
+            "dismissed": 1,
+            "id": "h3",
+            "position": 1,
+            "section": "important",
+            "text": "Dismissed item"
+          },
+          {
+            "dismissed": 0,
+            "id": "h4",
+            "position": 0,
+            "section": "recommendations",
+            "text": "Repeat CBC in 3 months"
+          }
+        ],
+        "observations": [
+          {
+            "analyte_id": "hemoglobin",
+            "evidence": "HGB 11.2",
+            "flag": "low",
+            "id": "o1",
+            "observed_date": "2026-10-01",
+            "raw_name": "Hemoglobin",
+            "ref_high": 15,
+            "ref_low": 12,
+            "ref_text": "12-15",
+            "source_page": 1,
+            "state": "confirmed",
+            "unit": "g/dL",
+            "value_num": 11.2,
+            "value_text": "11.2"
+          },
+          {
+            "analyte_id": "vitamin_b12",
+            "flag": "normal",
+            "id": "o2",
+            "raw_name": "Vitamin B12",
+            "ref_high": 900,
+            "ref_low": 200,
+            "state": "suggested",
+            "unit": "pg/mL",
+            "value_num": 320,
+            "value_text": "320"
+          },
+          {
+            "flag": "unknown",
+            "id": "o3",
+            "raw_name": "WBC",
+            "state": "rejected",
+            "value_text": "?"
+          }
+        ],
+        "record": {
+          "archived": 0,
+          "category": "blood",
+          "checksum_sha256": "abababababababababababababababababababababababababababababababab",
+          "document_date": "2026-10-01",
+          "file_path": "records/rec-1/original.pdf",
+          "id": "rec-1",
+          "notes": "private note",
+          "original_filename": "cbc.pdf",
+          "record_type": "lab_report",
+          "sort_date": "2026-10-01T09:00:00Z",
+          "title": "Complete Blood Count"
+        },
+        "source": "report"
+      },
+      "name": "report_overview_structured_only"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "report_overviews",
+          "data": {
+            "category": "blood",
+            "record_type": "lab_report",
+            "title": "Complete Blood Count"
+          },
+          "day": "2026-10-01",
+          "id": "rec-1",
+          "type": "report_overview"
+        }
+      },
+      "input": {
+        "fields": [],
+        "highlights": [],
+        "observations": [],
+        "record": {
+          "archived": 0,
+          "category": "blood",
+          "checksum_sha256": "abababababababababababababababababababababababababababababababab",
+          "document_date": null,
+          "file_path": "records/rec-1/original.pdf",
+          "id": "rec-1",
+          "notes": "private note",
+          "original_filename": "cbc.pdf",
+          "record_type": "lab_report",
+          "sort_date": "2026-10-01T09:00:00Z",
+          "title": "Complete Blood Count"
+        },
+        "source": "report"
+      },
+      "name": "report_overview_minimal"
+    },
+    {
+      "expected": {
+        "envelope": {
+          "category": "report_overviews",
+          "data": {
+            "category": "blood",
+            "record_type": "lab_report",
+            "report_date": "2026-09-28",
+            "title": "Complete Blood Count"
+          },
+          "day": "2026-09-28",
+          "id": "rec-1",
+          "type": "report_overview"
+        }
+      },
+      "input": {
+        "fields": [
+          {
+            "confidence": 0.6,
+            "field_key": "report_date",
+            "id": "d1",
+            "state": "suggested",
+            "value_text": "2026-09-28"
+          }
+        ],
+        "highlights": [],
+        "observations": [],
+        "record": {
+          "archived": 0,
+          "category": "blood",
+          "checksum_sha256": "abababababababababababababababababababababababababababababababab",
+          "document_date": null,
+          "file_path": "records/rec-1/original.pdf",
+          "id": "rec-1",
+          "notes": "private note",
+          "original_filename": "cbc.pdf",
+          "record_type": "lab_report",
+          "sort_date": "2026-10-01T09:00:00Z",
+          "title": "Complete Blood Count"
+        },
+        "source": "report"
+      },
+      "name": "report_overview_date_from_field"
+    },
+    {
+      "expected": {
+        "envelope": null
+      },
+      "input": {
+        "fields": [],
+        "highlights": [],
+        "observations": [],
+        "record": {
+          "archived": 1,
+          "category": "blood",
+          "checksum_sha256": "abababababababababababababababababababababababababababababababab",
+          "document_date": "2026-10-01",
+          "file_path": "records/rec-1/original.pdf",
+          "id": "rec-1",
+          "notes": "private note",
+          "original_filename": "cbc.pdf",
+          "record_type": "lab_report",
+          "sort_date": "2026-10-01T09:00:00Z",
+          "title": "Complete Blood Count"
+        },
+        "source": "report"
+      },
+      "name": "report_overview_archived_skipped"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "map",
+  "version": 1
+}

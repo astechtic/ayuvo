@@ -1,0 +1,123 @@
+{
+  "format": "ayuvo-partner-protocol",
+  "protocol": "ayuvo-partner-sync",
+  "version": 1,
+  "service_type": "_ayuvo-partner._tcp",
+  "txt": {
+    "v": "1"
+  },
+  "qr_prefix": "ayuvo-partner:1:",
+  "qr_ttl_ms": 600000,
+  "name_max": 40,
+  "noise": {
+    "pairing": "Noise_IKpsk2_25519_ChaChaPoly_SHA256",
+    "session": "Noise_KK_25519_ChaChaPoly_SHA256",
+    "prologue": "ayuvo-partner-sync/1",
+    "max_message": 65535,
+    "frame_header_bytes": 2
+  },
+  "kdf": {
+    "psk_salt": "ayuvo-partner-sync-v1",
+    "psk_info": "pairing-psk",
+    "sas_label": "ayuvo-partner-sas",
+    "sas_digits": 6,
+    "fingerprint_bytes": 16
+  },
+  "messages": {
+    "HELLO": {
+      "required": [
+        "protocol",
+        "v",
+        "device_id",
+        "platform",
+        "app_version",
+        "grants"
+      ],
+      "optional": [
+        "capabilities",
+        "name"
+      ]
+    },
+    "PAIR_CONFIRM": {
+      "required": [
+        "accepted"
+      ],
+      "optional": [
+        "name",
+        "grants",
+        "device_id",
+        "ed25519",
+        "platform"
+      ]
+    },
+    "SYNC_REQ": {
+      "required": [
+        "cursor"
+      ],
+      "optional": []
+    },
+    "CHANGES": {
+      "required": [
+        "from_rev",
+        "to_rev",
+        "has_more",
+        "records"
+      ],
+      "optional": []
+    },
+    "ACK": {
+      "required": [
+        "committed_rev"
+      ],
+      "optional": []
+    },
+    "DONE": {
+      "required": [],
+      "optional": []
+    },
+    "ERROR": {
+      "required": [
+        "code"
+      ],
+      "optional": [
+        "message"
+      ]
+    }
+  },
+  "error_codes": [
+    "unsupported_version",
+    "not_trusted",
+    "malformed",
+    "cursor_gap",
+    "busy",
+    "internal"
+  ],
+  "batch_records_max": 500,
+  "batch_bytes_max": 524288,
+  "idle_timeout_ms": 20000,
+  "session_timeout_ms": 300000,
+  "discovery_window_ms": 60000,
+  "statuses": [
+    "pairing_required",
+    "waiting_for_network",
+    "connecting",
+    "syncing",
+    "up_to_date",
+    "partner_unavailable",
+    "local_network_denied",
+    "not_trusted",
+    "sync_failed"
+  ],
+  "package": {
+    "format": "ayuvo-partner-sync",
+    "version": 1,
+    "extension": ".ayuvo.zip",
+    "entries_fixed": [
+      "manifest.json",
+      "signature.json",
+      "profile/partner.json",
+      "sync/revision.json"
+    ],
+    "entry_pattern": "health/<category>.ndjson"
+  }
+}

@@ -1568,6 +1568,7 @@ class SettingsViewModel(val container: AppContainer) : ViewModel() {
             container.deleteHealthDatabase()
             runCatching { container.deleteRecordsData() }
             runCatching { container.deleteMedicationsData() }
+            runCatching { container.deletePartnerDatabase() }
             // Recorded GPS routes (docs/workouts-gps.md) live next to the workout diary.
             runCatching { kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { container.gpsTrackStore.deleteAll() } }
             container.prefs.clearAll()

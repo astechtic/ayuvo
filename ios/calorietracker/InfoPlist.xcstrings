@@ -575,109 +575,109 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "الاتصال بخادم Ollama يعمل على شبكتك المحلية."
+            "value" : "الاتصال بخادم Ollama على شبكتك المحلية، والعثور على هاتف الشريك المقترن على شبكة Wi-Fi نفسها لمزامنة البيانات الصحية التي تشاركانها."
           }
         },
         "az" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Yerli şəbəkənizdə işləyən Ollama serverinə qoşulun."
+            "value" : "Yerli şəbəkənizdəki Ollama serverinə qoşulmaq və paylaşdığınız sağlamlıq məlumatlarını sinxronlaşdırmaq üçün eyni Wi-Fi şəbəkəsində cütləşdirilmiş partnyorun telefonunu tapmaq."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Připojení k serveru Ollama běžícímu ve tvé místní síti."
+            "value" : "Připojení k serveru Ollama ve tvé místní síti a nalezení telefonu spárovaného partnera ve stejné síti Wi-Fi kvůli synchronizaci zdravotních dat, která sdílíte."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Mit einem Ollama-Server in deinem lokalen Netzwerk verbinden."
+            "value" : "Mit einem Ollama-Server in deinem lokalen Netzwerk verbinden und das Telefon eines gekoppelten Partners im selben WLAN finden, um die geteilten Gesundheitsdaten zu synchronisieren."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Connect to an Ollama server running on your local network."
+            "value" : "Connect to an Ollama server on your local network, and find a paired partner's phone on the same Wi-Fi to sync the health data you share."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Conectar con un servidor Ollama que se ejecuta en tu red local."
+            "value" : "Conectar con un servidor Ollama en tu red local y encontrar el teléfono de tu pareja vinculada en la misma Wi-Fi para sincronizar los datos de salud que compartís."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Se connecter à un serveur Ollama sur votre réseau local."
+            "value" : "Se connecter à un serveur Ollama sur votre réseau local et trouver le téléphone d’un partenaire associé sur le même Wi-Fi pour synchroniser les données de santé que vous partagez."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "अपने लोकल नेटवर्क पर चल रहे Ollama सर्वर से कनेक्ट करें।"
+            "value" : "अपने लोकल नेटवर्क पर Ollama सर्वर से कनेक्ट करें, और साझा किया गया स्वास्थ्य डेटा सिंक करने के लिए उसी Wi-Fi पर जोड़े गए पार्टनर का फ़ोन ढूँढें।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Connettiti a un server Ollama in esecuzione sulla tua rete locale."
+            "value" : "Connettiti a un server Ollama sulla tua rete locale e trova il telefono di un partner abbinato sulla stessa Wi-Fi per sincronizzare i dati sanitari che condividete."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "ローカルネットワーク上で動作しているOllamaサーバーに接続します。"
+            "value" : "ローカルネットワーク上のOllamaサーバーに接続し、共有している健康データを同期するために同じWi-Fi上のペアリング済みパートナーのiPhoneを見つけます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "로컬 네트워크에서 실행 중인 Ollama 서버에 연결해요."
+            "value" : "로컬 네트워크의 Ollama 서버에 연결하고, 공유하는 건강 데이터를 동기화하기 위해 같은 Wi-Fi에 있는 연결된 파트너의 휴대폰을 찾아요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Maak verbinding met een Ollama-server op je lokale netwerk."
+            "value" : "Verbinden met een Ollama-server op je lokale netwerk en de telefoon van een gekoppelde partner op hetzelfde wifi-netwerk vinden om de gezondheidsgegevens die je deelt te synchroniseren."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Połącz się z serwerem Ollama działającym w Twojej sieci lokalnej."
+            "value" : "Połącz się z serwerem Ollama w sieci lokalnej i znajdź telefon sparowanego partnera w tej samej sieci Wi-Fi, aby synchronizować udostępniane dane o zdrowiu."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Conectar a um servidor Ollama em execução na sua rede local."
+            "value" : "Conectar a um servidor Ollama na sua rede local e encontrar o celular de um parceiro pareado na mesma rede Wi-Fi para sincronizar os dados de saúde que vocês compartilham."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Conectează-te la un server Ollama care rulează în rețeaua ta locală."
+            "value" : "Conectează-te la un server Ollama din rețeaua locală și găsește telefonul unui partener asociat în aceeași rețea Wi-Fi pentru a sincroniza datele de sănătate pe care le partajați."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Подключение к серверу Ollama в вашей локальной сети."
+            "value" : "Подключение к серверу Ollama в вашей локальной сети и поиск телефона сопряжённого партнёра в той же сети Wi-Fi для синхронизации данных о здоровье, которыми вы делитесь."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Підключення до сервера Ollama у вашій локальній мережі."
+            "value" : "Підключення до сервера Ollama у вашій локальній мережі та пошук телефона спареного партнера в тій самій мережі Wi-Fi для синхронізації даних про здоровʼя, якими ви ділитеся."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "连接到在你的本地网络上运行的 Ollama 服务器。"
+            "value" : "连接到本地网络上的 Ollama 服务器，并在同一 Wi-Fi 中找到已配对伙伴的手机，以同步你们共享的健康数据。"
           }
         }
       }

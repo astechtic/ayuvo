@@ -513,6 +513,7 @@ struct SettingsPaneView: View {
         case .healthData: healthSyncPane
         case .googleHealth: googleHealthPane
         case .healthRecords: healthRecordsPane
+        case .partnerHealth: EmptyView() // the hub pushes PartnerHealthSettingsView
         case .dataManagement: backupExportPane
         case .deleteData: deleteDataPane
         case .aiProviders: aiProvidersPane

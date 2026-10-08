@@ -163,8 +163,14 @@ nonisolated final class ZipArchiveReader {
                     guard status == COMPRESSION_STATUS_OK else {
                         throw ZipArchiveError.decompressionFailed(name)
                     }
-                    // Source drained and destination not full: fetch the next input chunk.
-                    if stream.pointee.src_size == 0, produced < dstCapacity { return }
+                    // Source drained and destination not full: fetch the next input chunk. On the last chunk the
+                    // decoder may still hold output (it returns OK with a partly filled buffer, e.g. Android's
+                    // java.util.zip streams), so keep finalizing until END; a call that makes no progress at all
+                    // means the stream is truncated.
+                    if stream.pointee.src_size == 0, produced < dstCapacity {
+                        if !isLast { return }
+                        if produced == 0 { throw ZipArchiveError.decompressionFailed(name) }
+                    }
                 }
             }
         }

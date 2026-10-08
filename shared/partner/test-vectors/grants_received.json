@@ -1,0 +1,247 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "grants": [
+          {
+            "category": "vitals",
+            "granted": true,
+            "revoked_ms": null
+          },
+          {
+            "category": "sleep",
+            "granted": true,
+            "revoked_ms": null
+          },
+          {
+            "category": "nutrition",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "workouts",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "medicines",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "report_overviews",
+            "granted": false,
+            "revoked_ms": null
+          }
+        ]
+      },
+      "input": {
+        "granted_now": [
+          "vitals",
+          "sleep"
+        ],
+        "now_ms": 1791374400000,
+        "previous": []
+      },
+      "name": "first_hello"
+    },
+    {
+      "expected": {
+        "grants": [
+          {
+            "category": "vitals",
+            "granted": false,
+            "revoked_ms": 1791374400000
+          },
+          {
+            "category": "sleep",
+            "granted": true,
+            "revoked_ms": null
+          },
+          {
+            "category": "nutrition",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "workouts",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "medicines",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "report_overviews",
+            "granted": false,
+            "revoked_ms": null
+          }
+        ]
+      },
+      "input": {
+        "granted_now": [
+          "sleep"
+        ],
+        "now_ms": 1791374400000,
+        "previous": [
+          {
+            "category": "vitals",
+            "granted": true,
+            "revoked_ms": null
+          },
+          {
+            "category": "sleep",
+            "granted": true,
+            "revoked_ms": null
+          }
+        ]
+      },
+      "name": "revoke_keeps_marker"
+    },
+    {
+      "expected": {
+        "grants": [
+          {
+            "category": "vitals",
+            "granted": true,
+            "revoked_ms": null
+          },
+          {
+            "category": "sleep",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "nutrition",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "workouts",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "medicines",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "report_overviews",
+            "granted": false,
+            "revoked_ms": null
+          }
+        ]
+      },
+      "input": {
+        "granted_now": [
+          "vitals"
+        ],
+        "now_ms": 1791374400000,
+        "previous": [
+          {
+            "category": "vitals",
+            "granted": false,
+            "revoked_ms": 1791374395000
+          }
+        ]
+      },
+      "name": "regrant_clears_marker"
+    },
+    {
+      "expected": {
+        "grants": [
+          {
+            "category": "vitals",
+            "granted": false,
+            "revoked_ms": 1791374395000
+          },
+          {
+            "category": "sleep",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "nutrition",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "workouts",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "medicines",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "report_overviews",
+            "granted": false,
+            "revoked_ms": null
+          }
+        ]
+      },
+      "input": {
+        "granted_now": [],
+        "now_ms": 1791374400000,
+        "previous": [
+          {
+            "category": "vitals",
+            "granted": false,
+            "revoked_ms": 1791374395000
+          }
+        ]
+      },
+      "name": "still_revoked_keeps_old_time"
+    },
+    {
+      "expected": {
+        "grants": [
+          {
+            "category": "vitals",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "sleep",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "nutrition",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "workouts",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "medicines",
+            "granted": false,
+            "revoked_ms": null
+          },
+          {
+            "category": "report_overviews",
+            "granted": false,
+            "revoked_ms": null
+          }
+        ]
+      },
+      "input": {
+        "granted_now": [],
+        "now_ms": 1791374400000,
+        "previous": []
+      },
+      "name": "nothing_shared"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "grants_received",
+  "version": 1
+}

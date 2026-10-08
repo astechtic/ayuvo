@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// "Today" cards: medications, cycle tracking (after setup), an active fast and a logged workout. Each hides itself
+/// "Today" cards: medications, cycle tracking (after setup), partners, an active fast and a logged workout. Each hides itself
 /// when empty.
 struct SummaryTodaySection: View {
     @Environment(AppNavigator.self) private var navigator
@@ -27,7 +27,7 @@ struct SummaryTodaySection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        CollapsingVStack(spacing: 12) {
             // The card keeps its own `home.medicationsCard` id; the container carries the
             // Summary id without hiding it (`children: .contain`).
             VStack(spacing: 0) {
@@ -37,6 +37,9 @@ struct SummaryTodaySection: View {
             .accessibilityIdentifier("summary.card.medications")
 
             CycleSummaryCard()
+
+            // Partners' shared health (read-only); hidden until someone is paired.
+            PartnerSummaryCard()
 
             if fastingTrackingEnabled, let active = fastingStore.activeSession {
                 Button {

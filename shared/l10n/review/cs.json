@@ -10840,6 +10840,862 @@
   "source": "2af0e22b654e",
   "state": "needs_review"
  },
+ "partner_abnormal_count": {
+  "source": "9f0625016974",
+  "state": "needs_review"
+ },
+ "partner_add_footer": {
+  "source": "da330b00b1a3",
+  "state": "needs_review"
+ },
+ "partner_add_header": {
+  "source": "aa340f2c0e5c",
+  "state": "needs_review"
+ },
+ "partner_asleep": {
+  "source": "c6134bc6ced5",
+  "state": "needs_review"
+ },
+ "partner_average": {
+  "source": "7ad18c244a74",
+  "state": "needs_review"
+ },
+ "partner_browse_sub": {
+  "source": "20186c7fca25",
+  "state": "needs_review"
+ },
+ "partner_cat_medicines": {
+  "source": "bb1b3e4e36a5",
+  "state": "needs_review"
+ },
+ "partner_cat_medicines_sub": {
+  "source": "a75c1156bef9",
+  "state": "needs_review"
+ },
+ "partner_cat_nutrition": {
+  "source": "c29bcadb7c71",
+  "state": "needs_review"
+ },
+ "partner_cat_nutrition_sub": {
+  "source": "c5917f3338a8",
+  "state": "needs_review"
+ },
+ "partner_cat_reports": {
+  "source": "62ef82d01d38",
+  "state": "needs_review"
+ },
+ "partner_cat_reports_sub": {
+  "source": "36153230ce8c",
+  "state": "needs_review"
+ },
+ "partner_cat_sleep": {
+  "source": "5d672c2af526",
+  "state": "needs_review"
+ },
+ "partner_cat_sleep_sub": {
+  "source": "5394addb9faf",
+  "state": "needs_review"
+ },
+ "partner_cat_vitals": {
+  "source": "d9d7fd1ec977",
+  "state": "needs_review"
+ },
+ "partner_cat_vitals_sub": {
+  "source": "f2ad2598893c",
+  "state": "needs_review"
+ },
+ "partner_cat_workouts": {
+  "source": "089e1587f11b",
+  "state": "needs_review"
+ },
+ "partner_cat_workouts_sub": {
+  "source": "e0b38b8ac8ff",
+  "state": "needs_review"
+ },
+ "partner_choose_footer": {
+  "source": "e63a97473bb1",
+  "state": "needs_review"
+ },
+ "partner_choose_title": {
+  "source": "b555f31376d6",
+  "state": "needs_review"
+ },
+ "partner_code_expires": {
+  "source": "99de613fd13e",
+  "state": "needs_review"
+ },
+ "partner_codes_differ": {
+  "source": "005376375ec3",
+  "state": "needs_review"
+ },
+ "partner_codes_match": {
+  "source": "1739253dd758",
+  "state": "needs_review"
+ },
+ "partner_compare_body": {
+  "source": "8595f080afe8",
+  "state": "needs_review"
+ },
+ "partner_compare_peer": {
+  "source": "52e0686bf00c",
+  "state": "needs_review"
+ },
+ "partner_compare_title": {
+  "source": "f76da745b26b",
+  "state": "needs_review"
+ },
+ "partner_connecting": {
+  "source": "4f58571764b8",
+  "state": "needs_review"
+ },
+ "partner_continue": {
+  "source": "7fffef33e0cf",
+  "state": "needs_review"
+ },
+ "partner_dashboard_note": {
+  "source": "ee261d231d6d",
+  "state": "needs_review"
+ },
+ "partner_days_30": {
+  "source": "8d3184c100cd",
+  "state": "needs_review"
+ },
+ "partner_days_7": {
+  "source": "c9a8e6e642dc",
+  "state": "needs_review"
+ },
+ "partner_declined_body": {
+  "source": "3316a404091d",
+  "state": "needs_review"
+ },
+ "partner_declined_title": {
+  "source": "997bb8d0d8ec",
+  "state": "needs_review"
+ },
+ "partner_delete_data": {
+  "source": "5fc28e0ce5c2",
+  "state": "needs_review"
+ },
+ "partner_delete_data_message": {
+  "source": "d3a95479d585",
+  "state": "needs_review"
+ },
+ "partner_delete_data_title": {
+  "source": "c74d76eba927",
+  "state": "needs_review"
+ },
+ "partner_done": {
+  "source": "d2cc2f560fe7",
+  "state": "needs_review"
+ },
+ "partner_dose_missed": {
+  "source": "519a085df838",
+  "state": "needs_review"
+ },
+ "partner_dose_scheduled": {
+  "source": "7cbde9478f83",
+  "state": "needs_review"
+ },
+ "partner_dose_skipped": {
+  "source": "1ce3aecf7a03",
+  "state": "needs_review"
+ },
+ "partner_dose_snoozed": {
+  "source": "734f592d1c70",
+  "state": "needs_review"
+ },
+ "partner_dose_taken": {
+  "source": "2063d2bc7f26",
+  "state": "needs_review"
+ },
+ "partner_doses_taken": {
+  "source": "d56d23cf853f",
+  "state": "needs_review"
+ },
+ "partner_err_expired": {
+  "source": "a7f5ffa4583c",
+  "state": "needs_review"
+ },
+ "partner_err_generic": {
+  "source": "a44a9c2e6f0b",
+  "state": "needs_review"
+ },
+ "partner_err_handshake": {
+  "source": "cb2e745ebbf6",
+  "state": "needs_review"
+ },
+ "partner_err_malformed": {
+  "source": "4c157be771fb",
+  "state": "needs_review"
+ },
+ "partner_err_not_ayuvo": {
+  "source": "190ee2fdde3d",
+  "state": "needs_review"
+ },
+ "partner_err_qr_version": {
+  "source": "0698cd96e72b",
+  "state": "needs_review"
+ },
+ "partner_err_self": {
+  "source": "0d4e2c4e0bd7",
+  "state": "needs_review"
+ },
+ "partner_err_unreachable": {
+  "source": "c285d4cba996",
+  "state": "needs_review"
+ },
+ "partner_export_all": {
+  "source": "3d74baebea7b",
+  "state": "needs_review"
+ },
+ "partner_export_changes": {
+  "source": "51c102c1b751",
+  "state": "needs_review"
+ },
+ "partner_export_failed": {
+  "source": "91745d20a522",
+  "state": "needs_review"
+ },
+ "partner_export_footer": {
+  "source": "4a64ad195a1c",
+  "state": "needs_review"
+ },
+ "partner_export_header": {
+  "source": "7158895b21c3",
+  "state": "needs_review"
+ },
+ "partner_fingerprint": {
+  "source": "f32cc3d01a6b",
+  "state": "needs_review"
+ },
+ "partner_fingerprint_hint": {
+  "source": "7aed66ead473",
+  "state": "needs_review"
+ },
+ "partner_first_sync": {
+  "source": "6d3917b63a20",
+  "state": "needs_review"
+ },
+ "partner_flag_abnormal": {
+  "source": "0cd2999c0ddd",
+  "state": "needs_review"
+ },
+ "partner_flag_critical": {
+  "source": "e5345e64b9ca",
+  "state": "needs_review"
+ },
+ "partner_flag_high": {
+  "source": "de4c862ad55e",
+  "state": "needs_review"
+ },
+ "partner_flag_low": {
+  "source": "adc43fbcac03",
+  "state": "needs_review"
+ },
+ "partner_flag_normal": {
+  "source": "6f63d66bc875",
+  "state": "needs_review"
+ },
+ "partner_hours_minutes": {
+  "source": "c832c00cd0b7",
+  "state": "needs_review"
+ },
+ "partner_how_awake": {
+  "source": "84941a90e577",
+  "state": "needs_review"
+ },
+ "partner_how_lan": {
+  "source": "5f474463ae71",
+  "state": "needs_review"
+ },
+ "partner_how_no_cloud": {
+  "source": "2d2a0f5428ad",
+  "state": "needs_review"
+ },
+ "partner_how_read_only": {
+  "source": "6d6335e2a38e",
+  "state": "needs_review"
+ },
+ "partner_how_signed": {
+  "source": "d76f3f0ee48f",
+  "state": "needs_review"
+ },
+ "partner_how_title": {
+  "source": "ac126d95d4b5",
+  "state": "needs_review"
+ },
+ "partner_import": {
+  "source": "9ac6a4e9544a",
+  "state": "needs_review"
+ },
+ "partner_import_action": {
+  "source": "40f73d40d962",
+  "state": "needs_review"
+ },
+ "partner_import_counts": {
+  "source": "1c4df0da6eda",
+  "state": "needs_review"
+ },
+ "partner_import_done_title": {
+  "source": "1cff738147d5",
+  "state": "needs_review"
+ },
+ "partner_import_failed_title": {
+  "source": "b50f70c3ed45",
+  "state": "needs_review"
+ },
+ "partner_import_footer": {
+  "source": "61af30e7f2e3",
+  "state": "needs_review"
+ },
+ "partner_import_note": {
+  "source": "216026d25467",
+  "state": "needs_review"
+ },
+ "partner_import_rejected": {
+  "source": "349736490cb8",
+  "state": "needs_review"
+ },
+ "partner_import_title": {
+  "source": "dbb997035eab",
+  "state": "needs_review"
+ },
+ "partner_import_up_to_date": {
+  "source": "4ad13f39ac28",
+  "state": "needs_review"
+ },
+ "partner_importing": {
+  "source": "37f09c7611ab",
+  "state": "needs_review"
+ },
+ "partner_in_bed": {
+  "source": "b205c5857233",
+  "state": "needs_review"
+ },
+ "partner_intro_body": {
+  "source": "e7665e7eadc3",
+  "state": "needs_review"
+ },
+ "partner_intro_title": {
+  "source": "076c2ed9444a",
+  "state": "needs_review"
+ },
+ "partner_keep_open": {
+  "source": "b81dda5faf92",
+  "state": "needs_review"
+ },
+ "partner_km": {
+  "source": "1f8c6bea79e7",
+  "state": "needs_review"
+ },
+ "partner_last_synced": {
+  "source": "4a2b4b0be3ea",
+  "state": "needs_review"
+ },
+ "partner_limits": {
+  "source": "5ea2e0b09d4f",
+  "state": "needs_review"
+ },
+ "partner_macros": {
+  "source": "311cdccccc06",
+  "state": "needs_review"
+ },
+ "partner_manage": {
+  "source": "04cd551c34a3",
+  "state": "needs_review"
+ },
+ "partner_medicine": {
+  "source": "012037ac3cd2",
+  "state": "needs_review"
+ },
+ "partner_metric_activity": {
+  "source": "c58b479d6db6",
+  "state": "needs_review"
+ },
+ "partner_metric_medicines": {
+  "source": "bb1b3e4e36a5",
+  "state": "needs_review"
+ },
+ "partner_metric_recovery": {
+  "source": "ee1be032ab30",
+  "state": "needs_review"
+ },
+ "partner_metric_resting_hr": {
+  "source": "3198f46f560d",
+  "state": "needs_review"
+ },
+ "partner_metric_sleep": {
+  "source": "5d672c2af526",
+  "state": "needs_review"
+ },
+ "partner_metric_steps": {
+  "source": "1942901acfd8",
+  "state": "needs_review"
+ },
+ "partner_no_doses_today": {
+  "source": "1c4af9a265dd",
+  "state": "needs_review"
+ },
+ "partner_no_longer_shared": {
+  "source": "a26f37949559",
+  "state": "needs_review"
+ },
+ "partner_not_found": {
+  "source": "41754f94daa5",
+  "state": "needs_review"
+ },
+ "partner_not_found_body": {
+  "source": "5665e0133c5b",
+  "state": "needs_review"
+ },
+ "partner_not_synced_yet": {
+  "source": "e1db29d8899c",
+  "state": "needs_review"
+ },
+ "partner_nothing_today": {
+  "source": "d2f5d9efca0f",
+  "state": "needs_review"
+ },
+ "partner_pair_failed_title": {
+  "source": "53d38923cdfc",
+  "state": "needs_review"
+ },
+ "partner_paired_not_synced": {
+  "source": "cd58c0ed3ee2",
+  "state": "needs_review"
+ },
+ "partner_paired_synced": {
+  "source": "446d79301025",
+  "state": "needs_review"
+ },
+ "partner_paired_title": {
+  "source": "27a9ace13e67",
+  "state": "needs_review"
+ },
+ "partner_partners_empty": {
+  "source": "565a07059b3d",
+  "state": "needs_review"
+ },
+ "partner_partners_header": {
+  "source": "f63e3afbc02a",
+  "state": "needs_review"
+ },
+ "partner_pkg_err_changed": {
+  "source": "64628cb44a29",
+  "state": "needs_review"
+ },
+ "partner_pkg_err_generic": {
+  "source": "8e1b0d84ee93",
+  "state": "needs_review"
+ },
+ "partner_pkg_err_not_package": {
+  "source": "711b95f16675",
+  "state": "needs_review"
+ },
+ "partner_pkg_err_unknown_sender": {
+  "source": "7efbd5c7d796",
+  "state": "needs_review"
+ },
+ "partner_pkg_err_version": {
+  "source": "c641f2c59d81",
+  "state": "needs_review"
+ },
+ "partner_pkg_err_wrong_recipient": {
+  "source": "7671e1a81d66",
+  "state": "needs_review"
+ },
+ "partner_qr_cd": {
+  "source": "2f177fa6af70",
+  "state": "needs_review"
+ },
+ "partner_read_only": {
+  "source": "dadd18030c5f",
+  "state": "needs_review"
+ },
+ "partner_records_count": {
+  "source": "9d33d330a920",
+  "state": "needs_review"
+ },
+ "partner_reference": {
+  "source": "a4070b2d6ae4",
+  "state": "needs_review"
+ },
+ "partner_remove": {
+  "source": "7ec2dcfb9cbd",
+  "state": "needs_review"
+ },
+ "partner_remove_footer": {
+  "source": "3de8bc5f202a",
+  "state": "needs_review"
+ },
+ "partner_remove_message": {
+  "source": "54784d9b3c83",
+  "state": "needs_review"
+ },
+ "partner_remove_title": {
+  "source": "7b225b0a756c",
+  "state": "needs_review"
+ },
+ "partner_report_abnormal": {
+  "source": "f721379039af",
+  "state": "needs_review"
+ },
+ "partner_report_diagnoses": {
+  "source": "e20bb20e8815",
+  "state": "needs_review"
+ },
+ "partner_report_disclaimer": {
+  "source": "2d15552178e4",
+  "state": "needs_review"
+ },
+ "partner_report_highlights": {
+  "source": "262b97fec02c",
+  "state": "needs_review"
+ },
+ "partner_report_medications": {
+  "source": "c6ad8626abb9",
+  "state": "needs_review"
+ },
+ "partner_report_missing": {
+  "source": "5ce59e448847",
+  "state": "needs_review"
+ },
+ "partner_report_missing_body": {
+  "source": "d491aaf2e7e5",
+  "state": "needs_review"
+ },
+ "partner_report_original_note": {
+  "source": "2ab566fa030e",
+  "state": "needs_review"
+ },
+ "partner_report_other_results": {
+  "source": "3afc188299ee",
+  "state": "needs_review"
+ },
+ "partner_report_overview_note": {
+  "source": "470a6946a0b8",
+  "state": "needs_review"
+ },
+ "partner_report_recommendations": {
+  "source": "d0e2d76bd6fb",
+  "state": "needs_review"
+ },
+ "partner_report_results": {
+  "source": "a948051e2e33",
+  "state": "needs_review"
+ },
+ "partner_report_summary": {
+  "source": "0b8ced55c751",
+  "state": "needs_review"
+ },
+ "partner_rest_day": {
+  "source": "2c55ab2a57d7",
+  "state": "needs_review"
+ },
+ "partner_scan_code": {
+  "source": "b80b61f13953",
+  "state": "needs_review"
+ },
+ "partner_scan_code_sub": {
+  "source": "ef803b1b25e2",
+  "state": "needs_review"
+ },
+ "partner_scan_hint": {
+  "source": "665f6d5ca701",
+  "state": "needs_review"
+ },
+ "partner_scan_intro": {
+  "source": "46cc3ab2ca4e",
+  "state": "needs_review"
+ },
+ "partner_scan_note": {
+  "source": "56cd5e181950",
+  "state": "needs_review"
+ },
+ "partner_section_empty": {
+  "source": "9db9a86d1327",
+  "state": "needs_review"
+ },
+ "partner_section_nutrition": {
+  "source": "cf220a2b8ef3",
+  "state": "needs_review"
+ },
+ "partner_section_reports": {
+  "source": "3df309106c29",
+  "state": "needs_review"
+ },
+ "partner_section_sync": {
+  "source": "fffa2bdce64b",
+  "state": "needs_review"
+ },
+ "partner_section_today": {
+  "source": "6b1be5a6a0be",
+  "state": "needs_review"
+ },
+ "partner_section_trends": {
+  "source": "c2b24d3ef6f4",
+  "state": "needs_review"
+ },
+ "partner_section_vitals": {
+  "source": "ae1d71eecb24",
+  "state": "needs_review"
+ },
+ "partner_show_code": {
+  "source": "0dfacfa2d8ba",
+  "state": "needs_review"
+ },
+ "partner_show_code_help": {
+  "source": "953dc03bdbf5",
+  "state": "needs_review"
+ },
+ "partner_show_code_sub": {
+  "source": "5b79c3a3b456",
+  "state": "needs_review"
+ },
+ "partner_stage_awake": {
+  "source": "bdfce75700c7",
+  "state": "needs_review"
+ },
+ "partner_stage_deep": {
+  "source": "e8c9fd5ba649",
+  "state": "needs_review"
+ },
+ "partner_stage_light": {
+  "source": "5170ad83b2a3",
+  "state": "needs_review"
+ },
+ "partner_stage_rem": {
+  "source": "86db9681f993",
+  "state": "needs_review"
+ },
+ "partner_status_failed": {
+  "source": "67328cd66d2f",
+  "state": "needs_review"
+ },
+ "partner_status_lan_denied": {
+  "source": "b5bb1cb58b19",
+  "state": "needs_review"
+ },
+ "partner_status_long_failed": {
+  "source": "3dc11087bd62",
+  "state": "needs_review"
+ },
+ "partner_status_long_lan_denied": {
+  "source": "fcac245fcd95",
+  "state": "needs_review"
+ },
+ "partner_status_long_no_network": {
+  "source": "2cc0ce002a58",
+  "state": "needs_review"
+ },
+ "partner_status_long_not_trusted": {
+  "source": "83b63c2afa9c",
+  "state": "needs_review"
+ },
+ "partner_status_long_offline": {
+  "source": "71d5ae9d7bcb",
+  "state": "needs_review"
+ },
+ "partner_status_long_pairing_required": {
+  "source": "00cf78d33e17",
+  "state": "needs_review"
+ },
+ "partner_status_long_syncing": {
+  "source": "c8f653a28ec4",
+  "state": "needs_review"
+ },
+ "partner_status_long_unpaired": {
+  "source": "c5b787403b78",
+  "state": "needs_review"
+ },
+ "partner_status_long_up_to_date": {
+  "source": "fd55497bfc84",
+  "state": "needs_review"
+ },
+ "partner_status_no_network": {
+  "source": "4e8524228f2e",
+  "state": "needs_review"
+ },
+ "partner_status_not_trusted": {
+  "source": "629d42b005ce",
+  "state": "needs_review"
+ },
+ "partner_status_offline": {
+  "source": "3772d06130a6",
+  "state": "needs_review"
+ },
+ "partner_status_pairing_required": {
+  "source": "eb23e069112f",
+  "state": "needs_review"
+ },
+ "partner_status_syncing": {
+  "source": "480646688e62",
+  "state": "needs_review"
+ },
+ "partner_status_unpaired": {
+  "source": "baa5a32780df",
+  "state": "needs_review"
+ },
+ "partner_summary_title": {
+  "source": "f63e3afbc02a",
+  "state": "needs_review"
+ },
+ "partner_sync_now": {
+  "source": "063c4968296e",
+  "state": "needs_review"
+ },
+ "partner_sync_now_sub": {
+  "source": "dd66782fa287",
+  "state": "needs_review"
+ },
+ "partner_syncing": {
+  "source": "480646688e62",
+  "state": "needs_review"
+ },
+ "partner_this_device": {
+  "source": "d6fce1b847bf",
+  "state": "needs_review"
+ },
+ "partner_this_device_footer": {
+  "source": "00bef5cb355a",
+  "state": "needs_review"
+ },
+ "partner_title": {
+  "source": "28de6ea54561",
+  "state": "needs_review"
+ },
+ "partner_today": {
+  "source": "6b1be5a6a0be",
+  "state": "needs_review"
+ },
+ "partner_trends_empty": {
+  "source": "1ed2b56fcc1c",
+  "state": "needs_review"
+ },
+ "partner_try_again": {
+  "source": "454b12ef6ba4",
+  "state": "needs_review"
+ },
+ "partner_unit_bpm": {
+  "source": "005db40972bf",
+  "state": "needs_review"
+ },
+ "partner_unit_mmhg": {
+  "source": "0a653de83bd2",
+  "state": "needs_review"
+ },
+ "partner_unit_ms": {
+  "source": "449f1a494714",
+  "state": "needs_review"
+ },
+ "partner_unpair": {
+  "source": "7364530e8084",
+  "state": "needs_review"
+ },
+ "partner_unpair_message": {
+  "source": "0e631857a9de",
+  "state": "needs_review"
+ },
+ "partner_unpair_title": {
+  "source": "b61fbe63d33d",
+  "state": "needs_review"
+ },
+ "partner_unpaired_kept": {
+  "source": "e5de2de34a93",
+  "state": "needs_review"
+ },
+ "partner_updated_ago": {
+  "source": "7d2f1774ffb6",
+  "state": "needs_review"
+ },
+ "partner_updated_just_now": {
+  "source": "372979d87409",
+  "state": "needs_review"
+ },
+ "partner_value_bpm": {
+  "source": "abee7fe35585",
+  "state": "needs_review"
+ },
+ "partner_value_minutes": {
+  "source": "886732b68b80",
+  "state": "needs_review"
+ },
+ "partner_value_of": {
+  "source": "833cebab86db",
+  "state": "needs_review"
+ },
+ "partner_value_steps": {
+  "source": "9fa7e851fd37",
+  "state": "needs_review"
+ },
+ "partner_via_file": {
+  "source": "c5a6b9e14716",
+  "state": "needs_review"
+ },
+ "partner_via_lan": {
+  "source": "c7390cef4762",
+  "state": "needs_review"
+ },
+ "partner_view_data": {
+  "source": "e872730ee083",
+  "state": "needs_review"
+ },
+ "partner_view_short": {
+  "source": "ff2f551d0d6d",
+  "state": "needs_review"
+ },
+ "partner_vital_bp": {
+  "source": "6d6ecdada3f4",
+  "state": "needs_review"
+ },
+ "partner_vital_heart_rate": {
+  "source": "1ca12393ee7f",
+  "state": "needs_review"
+ },
+ "partner_vital_spo2": {
+  "source": "533144c846bb",
+  "state": "needs_review"
+ },
+ "partner_vital_weight": {
+  "source": "4ea4bf986f1c",
+  "state": "needs_review"
+ },
+ "partner_waiting_confirm": {
+  "source": "b82037a9ab8e",
+  "state": "needs_review"
+ },
+ "partner_waiting_scan": {
+  "source": "a0be71d00dbe",
+  "state": "needs_review"
+ },
+ "partner_water_ml": {
+  "source": "bee6d898c44a",
+  "state": "needs_review"
+ },
+ "partner_what_i_share": {
+  "source": "a6fc7e6cac72",
+  "state": "needs_review"
+ },
+ "partner_what_i_share_footer": {
+  "source": "581467bf3334",
+  "state": "needs_review"
+ },
+ "partner_workout": {
+  "source": "c4aa9b8b2b45",
+  "state": "needs_review"
+ },
+ "partner_yesterday": {
+  "source": "e9933d455306",
+  "state": "needs_review"
+ },
+ "partner_your_name": {
+  "source": "d4cfeee6279d",
+  "state": "needs_review"
+ },
+ "partner_your_name_sub": {
+  "source": "349e1f70b98e",
+  "state": "needs_review"
+ },
  "photo_save_failed": {
   "source": "6b4e836ce90c",
   "state": "needs_review"

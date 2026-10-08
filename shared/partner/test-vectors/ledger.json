@@ -1,0 +1,1631 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "changed": 3,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 3,
+            "type": "medication"
+          }
+        ],
+        "rev": 3,
+        "tombstoned": 0
+      },
+      "input": {
+        "current": [
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "record_id": "med-1",
+            "type": "medication"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "record_id": "f2",
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "record_id": "f1",
+            "type": "food_entry"
+          }
+        ],
+        "ledger": [],
+        "op": "refresh",
+        "rev": 0,
+        "scopes": [
+          {
+            "type": "food_entry"
+          },
+          {
+            "type": "medication"
+          }
+        ]
+      },
+      "name": "first_refresh_assigns_revs_in_key_order"
+    },
+    {
+      "expected": {
+        "changed": 0,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 5,
+        "tombstoned": 0
+      },
+      "input": {
+        "current": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "record_id": "f1",
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "record_id": "f2",
+            "type": "food_entry"
+          }
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "refresh",
+        "rev": 5,
+        "scopes": [
+          {
+            "type": "food_entry"
+          }
+        ]
+      },
+      "name": "unchanged_is_noop"
+    },
+    {
+      "expected": {
+        "changed": 1,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1b",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 6,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 6,
+        "tombstoned": 0
+      },
+      "input": {
+        "current": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1b",
+            "day": "2026-10-01",
+            "record_id": "f1",
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "record_id": "f2",
+            "type": "food_entry"
+          }
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "refresh",
+        "rev": 5,
+        "scopes": [
+          {
+            "type": "food_entry"
+          }
+        ]
+      },
+      "name": "edit_bumps_rev"
+    },
+    {
+      "expected": {
+        "changed": 0,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": true,
+            "record_id": "f1",
+            "rev": 6,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 6,
+        "tombstoned": 1
+      },
+      "input": {
+        "current": [
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "record_id": "f2",
+            "type": "food_entry"
+          }
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "refresh",
+        "rev": 5,
+        "scopes": [
+          {
+            "type": "food_entry"
+          }
+        ]
+      },
+      "name": "missing_in_full_scope_tombstoned"
+    },
+    {
+      "expected": {
+        "changed": 0,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": true,
+            "record_id": "steps:2026-10-06",
+            "rev": 6,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 6,
+        "tombstoned": 1
+      },
+      "input": {
+        "current": [],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "refresh",
+        "rev": 5,
+        "scopes": [
+          {
+            "day_from": "2026-09-07",
+            "type": "metric_day"
+          }
+        ]
+      },
+      "name": "window_scope_keeps_older_rows"
+    },
+    {
+      "expected": {
+        "changed": 0,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 5,
+        "tombstoned": 0
+      },
+      "input": {
+        "current": [],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "refresh",
+        "rev": 5,
+        "scopes": [
+          {
+            "type": "workout"
+          }
+        ]
+      },
+      "name": "type_outside_scopes_untouched"
+    },
+    {
+      "expected": {
+        "changed": 1,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 8,
+            "type": "food_entry"
+          }
+        ],
+        "rev": 8,
+        "tombstoned": 0
+      },
+      "input": {
+        "current": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "record_id": "f1",
+            "type": "food_entry"
+          }
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": true,
+            "record_id": "f1",
+            "rev": 7,
+            "type": "food_entry"
+          }
+        ],
+        "op": "refresh",
+        "rev": 7,
+        "scopes": [
+          {
+            "type": "food_entry"
+          }
+        ]
+      },
+      "name": "resurrected_after_tombstone"
+    },
+    {
+      "expected": {
+        "changed": 1,
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-03",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 6,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 6,
+        "tombstoned": 0
+      },
+      "input": {
+        "current": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-03",
+            "record_id": "f1",
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "record_id": "f2",
+            "type": "food_entry"
+          }
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "refresh",
+        "rev": 5,
+        "scopes": [
+          {
+            "type": "food_entry"
+          }
+        ]
+      },
+      "name": "day_move_counts_as_change"
+    },
+    {
+      "expected": {
+        "ledger": [
+          {
+            "category": "vitals",
+            "content_hash": "y",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "b",
+            "rev": 2,
+            "type": "sample"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ]
+      },
+      "input": {
+        "day_from": "2026-09-30",
+        "ledger": [
+          {
+            "category": "vitals",
+            "content_hash": "x",
+            "day": "2026-09-20",
+            "deleted": false,
+            "record_id": "a",
+            "rev": 1,
+            "type": "sample"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "y",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "b",
+            "rev": 2,
+            "type": "sample"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "z",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01:3",
+            "rev": 3,
+            "type": "metric_hour"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "op": "prune"
+      },
+      "name": "prune_old_intraday"
+    },
+    {
+      "expected": {
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 6,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 7,
+            "type": "food_entry"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          }
+        ],
+        "rev": 7
+      },
+      "input": {
+        "category": "nutrition",
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "op": "regrant",
+        "rev": 5
+      },
+      "name": "regrant_bumps_category"
+    },
+    {
+      "expected": {
+        "from_rev": 0,
+        "has_more": false,
+        "keys": [
+          {
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "to_rev": 5
+      },
+      "input": {
+        "cursor": 0,
+        "grants": [
+          "vitals",
+          "medicines"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 500,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_filters_grants"
+    },
+    {
+      "expected": {
+        "from_rev": 3,
+        "has_more": false,
+        "keys": [
+          {
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "to_rev": 5
+      },
+      "input": {
+        "cursor": 3,
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 500,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_from_cursor"
+    },
+    {
+      "expected": {
+        "from_rev": 0,
+        "has_more": true,
+        "keys": [
+          {
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          }
+        ],
+        "to_rev": 2
+      },
+      "input": {
+        "cursor": 0,
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 2,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_paging"
+    },
+    {
+      "expected": {
+        "from_rev": 4,
+        "has_more": false,
+        "keys": [
+          {
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "to_rev": 5
+      },
+      "input": {
+        "cursor": 4,
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 2,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_paging_last_page"
+    },
+    {
+      "expected": {
+        "from_rev": 2,
+        "has_more": false,
+        "keys": [],
+        "to_rev": 5
+      },
+      "input": {
+        "cursor": 2,
+        "grants": [
+          "nutrition"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 500,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_empty_skips_ungranted_revs"
+    },
+    {
+      "expected": {
+        "from_rev": 5,
+        "has_more": false,
+        "keys": [
+          {
+            "deleted": true,
+            "record_id": "med-1",
+            "rev": 6,
+            "type": "medication"
+          }
+        ],
+        "to_rev": 6
+      },
+      "input": {
+        "cursor": 5,
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": true,
+            "record_id": "med-1",
+            "rev": 6,
+            "type": "medication"
+          }
+        ],
+        "limit": 500,
+        "op": "delta",
+        "rev": 6
+      },
+      "name": "delta_includes_tombstones"
+    },
+    {
+      "expected": {
+        "from_rev": 0,
+        "has_more": false,
+        "keys": [
+          {
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "to_rev": 5
+      },
+      "input": {
+        "cursor": 99,
+        "grants": [
+          "medicines"
+        ],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 500,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_cursor_ahead_restarts"
+    },
+    {
+      "expected": {
+        "from_rev": 0,
+        "has_more": false,
+        "keys": [],
+        "to_rev": 5
+      },
+      "input": {
+        "cursor": 0,
+        "grants": [],
+        "ledger": [
+          {
+            "category": "nutrition",
+            "content_hash": "h1",
+            "day": "2026-10-01",
+            "deleted": false,
+            "record_id": "f1",
+            "rev": 1,
+            "type": "food_entry"
+          },
+          {
+            "category": "nutrition",
+            "content_hash": "h2",
+            "day": "2026-10-02",
+            "deleted": false,
+            "record_id": "f2",
+            "rev": 2,
+            "type": "food_entry"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s1",
+            "day": "2026-09-01",
+            "deleted": false,
+            "record_id": "steps:2026-09-01",
+            "rev": 3,
+            "type": "metric_day"
+          },
+          {
+            "category": "vitals",
+            "content_hash": "s2",
+            "day": "2026-10-06",
+            "deleted": false,
+            "record_id": "steps:2026-10-06",
+            "rev": 4,
+            "type": "metric_day"
+          },
+          {
+            "category": "medicines",
+            "content_hash": "m1",
+            "day": null,
+            "deleted": false,
+            "record_id": "med-1",
+            "rev": 5,
+            "type": "medication"
+          }
+        ],
+        "limit": 500,
+        "op": "delta",
+        "rev": 5
+      },
+      "name": "delta_nothing_granted"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "ledger",
+  "version": 1
+}

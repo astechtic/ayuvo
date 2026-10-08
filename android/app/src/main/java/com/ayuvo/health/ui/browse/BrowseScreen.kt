@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.Loop
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Restaurant
@@ -534,6 +535,7 @@ private fun featureIcon(id: String): ImageVector = when (id) {
     "insights", "recovery", "healthAge", "dailyReview" -> Icons.Filled.Insights
     "cameraMeasurements" -> Icons.Filled.MonitorHeart
     "cycleTracking" -> Icons.Filled.Loop
+    "partnerHealth" -> Icons.Filled.People
     "coach" -> Icons.AutoMirrored.Filled.Chat
     "settings" -> Icons.Filled.Settings
     else -> Icons.Filled.Search
@@ -550,6 +552,7 @@ private fun featureColor(domain: BrowseFeatureDomain): Color = when (domain) {
     BrowseFeatureDomain.INSIGHTS -> com.ayuvo.health.ui.insights.InsightsFormat.Insights
     BrowseFeatureDomain.VITALS -> AyuvoPalette.Heart
     BrowseFeatureDomain.CYCLE -> AyuvoPalette.Cycle
+    BrowseFeatureDomain.PARTNER -> AyuvoPalette.Partner
     BrowseFeatureDomain.COACH -> AyuvoPalette.Mindfulness
     BrowseFeatureDomain.SETTINGS -> AyuvoPalette.Other
 }

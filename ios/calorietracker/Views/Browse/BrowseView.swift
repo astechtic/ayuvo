@@ -258,6 +258,8 @@ struct BrowseView: View {
             navigator.selectedTab = .coach
         case .settings:
             navigator.openSettings()
+        case .settingsPane(let pane):
+            navigator.openSettings(pane)
         }
     }
 

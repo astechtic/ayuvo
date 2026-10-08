@@ -6,5 +6,11 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:noHistory="true" />
+        <!-- Partner Health fixture import on emulators (docs/partner-sync.md §16); debug builds only. -->
+        <activity
+            android:name=".debug.DebugPartnerSeedActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true" />
     </application>
 </manifest>

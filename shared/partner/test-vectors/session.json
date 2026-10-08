@@ -1,0 +1,272 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "steps": 7
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "t": "SYNC_REQ"
+          },
+          {
+            "has_more": true,
+            "t": "CHANGES"
+          },
+          {
+            "t": "ACK"
+          },
+          {
+            "has_more": false,
+            "t": "CHANGES"
+          },
+          {
+            "t": "ACK"
+          },
+          {
+            "t": "DONE"
+          }
+        ]
+      },
+      "name": "full_session"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "steps": 5
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "t": "SYNC_REQ"
+          },
+          {
+            "has_more": false,
+            "t": "CHANGES"
+          },
+          {
+            "t": "ACK"
+          },
+          {
+            "t": "DONE"
+          }
+        ]
+      },
+      "name": "empty_delta_session"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true,
+        "steps": 3
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "has_more": false,
+            "t": "CHANGES"
+          },
+          {
+            "t": "DONE"
+          }
+        ]
+      },
+      "name": "peer_asks_nothing"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 0
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "SYNC_REQ"
+          }
+        ]
+      },
+      "name": "missing_hello"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 1
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "t": "HELLO"
+          }
+        ]
+      },
+      "name": "double_hello"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 1
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "t": "ACK"
+          }
+        ]
+      },
+      "name": "ack_before_request"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 2
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "has_more": true,
+            "t": "CHANGES"
+          },
+          {
+            "t": "DONE"
+          }
+        ]
+      },
+      "name": "done_before_last_page"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 2
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "has_more": false,
+            "t": "CHANGES"
+          },
+          {
+            "has_more": false,
+            "t": "CHANGES"
+          }
+        ]
+      },
+      "name": "changes_after_last_page"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 3
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "has_more": false,
+            "t": "CHANGES"
+          },
+          {
+            "t": "DONE"
+          },
+          {
+            "t": "ACK"
+          }
+        ]
+      },
+      "name": "message_after_done"
+    },
+    {
+      "expected": {
+        "error": "incomplete",
+        "ok": false,
+        "steps": 3
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "t": "SYNC_REQ"
+          },
+          {
+            "has_more": true,
+            "t": "CHANGES"
+          }
+        ]
+      },
+      "name": "interrupted_mid_pull"
+    },
+    {
+      "expected": {
+        "error": "not_trusted",
+        "ok": false,
+        "steps": 1
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "code": "not_trusted",
+            "t": "ERROR"
+          }
+        ]
+      },
+      "name": "peer_error"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false,
+        "steps": 1
+      },
+      "input": {
+        "inbound": [
+          {
+            "t": "HELLO"
+          },
+          {
+            "t": "PING"
+          }
+        ]
+      },
+      "name": "unknown_message"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "session",
+  "version": 1
+}

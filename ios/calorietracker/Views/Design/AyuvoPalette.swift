@@ -22,6 +22,8 @@ nonisolated enum AyuvoPalette {
     static let medications = dynamic(0x32ADE6, 0x64D2FF)
     static let records = dynamic(0x5856D6, 0x5E5CE6)
     static let other = dynamic(0x8E8E93, 0x98989D)
+    /// Partner Health Sync: everything that shows a partner's (read-only) data carries this pink.
+    static let partner = dynamic(0xFF375F, 0xFF375F)
 
     static let protein = dynamic(0x007AFF, 0x007AFF)
     static let carbs = dynamic(0xFF9F0A, 0xFF9F0A)
@@ -113,6 +115,7 @@ nonisolated enum AyuvoPalette {
         case "symptoms": symptoms
         case "medications": medications
         case "records": records
+        case "partner": partner
         default: other
         }
     }

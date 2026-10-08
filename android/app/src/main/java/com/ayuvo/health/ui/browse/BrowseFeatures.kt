@@ -6,7 +6,7 @@ import java.text.Normalizer
 import java.util.Locale
 
 /** Colour family of a Browse feature result (matches the domain rows). */
-enum class BrowseFeatureDomain { ACTIVITY, NUTRITION, HYDRATION, FASTING, BODY, MEDICATIONS, RECORDS, INSIGHTS, VITALS, CYCLE, COACH, SETTINGS }
+enum class BrowseFeatureDomain { ACTIVITY, NUTRITION, HYDRATION, FASTING, BODY, MEDICATIONS, RECORDS, INSIGHTS, VITALS, CYCLE, PARTNER, COACH, SETTINGS }
 
 /**
  * A place or action Browse search can open directly ("Features" section above the trends).
@@ -73,6 +73,9 @@ object BrowseFeatures {
         // Cycle tracking (docs/cycle-tracking.md §5).
         BrowseFeature("cycleTracking", R.string.cycle_browse_title, R.string.cycle_browse_sub, BrowseFeatureDomain.CYCLE,
             listOf("period", "periods", "cycle", "cycles", "menstrual", "menstruation", "tracker", "calendar", "ovulation", "fertile", "fertility", "pms", "cramps", "flow", "spotting")),
+        // Partner Health Sync (docs/partner-sync.md): opens Settings › Partner Health.
+        BrowseFeature("partnerHealth", R.string.partner_title, R.string.partner_browse_sub, BrowseFeatureDomain.PARTNER,
+            listOf("partner", "partners", "family", "spouse", "wife", "husband", "parent", "parents", "caregiver", "pair", "pairing", "sharing", "shared", "qr")),
         BrowseFeature("coach", R.string.browse_feature_coach, R.string.browse_feature_coach_sub, BrowseFeatureDomain.COACH,
             listOf("coach", "ai", "chat", "ask", "assistant", "advice", "question", "questions", "help")),
         BrowseFeature("settings", R.string.browse_feature_settings, R.string.browse_feature_settings_sub, BrowseFeatureDomain.SETTINGS,

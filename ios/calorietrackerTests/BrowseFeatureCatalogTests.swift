@@ -15,7 +15,7 @@ struct BrowseFeatureCatalogTests {
             "workouts", "workoutLog", "exerciseLibrary", "nutrition", "logFood", "water", "fasting",
             "bodyMeasurements", "logWeight", "logBodyFat", "medications", "addMedication", "records",
             "addRecord", "coach", "settings", "insights", "recovery", "healthAge", "dailyReview", "patterns",
-            "cameraMeasurements", "cycleTracking",
+            "cameraMeasurements", "cycleTracking", "partnerHealth",
         ])
         #expect(BrowseFeatureCatalog.all.first?.accessibilityID == "browse.feature.workouts")
     }
@@ -54,6 +54,8 @@ struct BrowseFeatureCatalogTests {
         #expect(ids("waist") == ["bodyMeasurements"])
         #expect(ids("chat") == ["coach"])
         #expect(ids("api key") == ["settings"])
+        #expect(ids("partner").first == "partnerHealth")
+        #expect(ids("caregiver") == ["partnerHealth"])
     }
 
     @Test func titleMatchesRankFirst() {
@@ -83,6 +85,7 @@ struct BrowseFeatureCatalogTests {
         #expect(byID["addRecord"] == .addRecord)
         #expect(byID["addMedication"] == .addMedication)
         #expect(byID["cameraMeasurements"] == .browse([.vitals]))
+        #expect(byID["partnerHealth"] == .settingsPane(.partnerHealth))
     }
 
     @MainActor

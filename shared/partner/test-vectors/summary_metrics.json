@@ -1,0 +1,539 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "metrics": [
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "recovery",
+            "shared": true,
+            "unit": null,
+            "value": 82
+          },
+          {
+            "category": "sleep",
+            "day": "2026-10-07",
+            "key": "sleep",
+            "shared": true,
+            "unit": "min",
+            "value": 444
+          },
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "resting_hr",
+            "shared": true,
+            "unit": "bpm",
+            "value": 58
+          }
+        ]
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "rows": [
+          {
+            "data": {
+              "classification": "good",
+              "day": "2026-10-07",
+              "metric_id": "recovery_indicator",
+              "status": "ok",
+              "value": 81.6
+            },
+            "day": "2026-10-07",
+            "record_id": "recovery_indicator:2026-10-07",
+            "ts_ms": null,
+            "type": "analytics_day"
+          },
+          {
+            "data": {
+              "asleep_min": 444,
+              "day": "2026-10-07",
+              "end_ms": 2,
+              "start_ms": 1
+            },
+            "day": "2026-10-07",
+            "record_id": "sleep_night:2026-10-07",
+            "ts_ms": null,
+            "type": "sleep_night"
+          },
+          {
+            "data": {
+              "avg": 57.6,
+              "day": "2026-10-07",
+              "type_id": "resting_heart_rate",
+              "unit": "bpm"
+            },
+            "day": "2026-10-07",
+            "record_id": "resting_heart_rate:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "day": "2026-10-07",
+              "sum": 42,
+              "type_id": "exercise_minutes",
+              "unit": "min"
+            },
+            "day": "2026-10-07",
+            "record_id": "exercise_minutes:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "day": "2026-10-07",
+              "sum": 8421,
+              "type_id": "steps",
+              "unit": "count"
+            },
+            "day": "2026-10-07",
+            "record_id": "steps:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "status": "taken"
+            },
+            "day": "2026-10-07",
+            "record_id": "l1",
+            "ts_ms": null,
+            "type": "dose_log"
+          },
+          {
+            "data": {
+              "status": "missed"
+            },
+            "day": "2026-10-07",
+            "record_id": "l2",
+            "ts_ms": null,
+            "type": "dose_log"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "priority_order_top3"
+    },
+    {
+      "expected": {
+        "metrics": [
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "recovery",
+            "shared": true,
+            "unit": null,
+            "value": 82
+          },
+          {
+            "category": "sleep",
+            "day": "2026-10-07",
+            "key": "sleep",
+            "shared": true,
+            "unit": "min",
+            "value": 444
+          },
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "resting_hr",
+            "shared": true,
+            "unit": "bpm",
+            "value": 58
+          },
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "activity",
+            "shared": true,
+            "unit": "min",
+            "value": 42
+          },
+          {
+            "category": "medicines",
+            "day": "2026-10-07",
+            "key": "medicines",
+            "shared": true,
+            "unit": "of:2",
+            "value": 1
+          }
+        ]
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "limit": 5,
+        "rows": [
+          {
+            "data": {
+              "classification": "good",
+              "day": "2026-10-07",
+              "metric_id": "recovery_indicator",
+              "status": "ok",
+              "value": 81.6
+            },
+            "day": "2026-10-07",
+            "record_id": "recovery_indicator:2026-10-07",
+            "ts_ms": null,
+            "type": "analytics_day"
+          },
+          {
+            "data": {
+              "asleep_min": 444,
+              "day": "2026-10-07",
+              "end_ms": 2,
+              "start_ms": 1
+            },
+            "day": "2026-10-07",
+            "record_id": "sleep_night:2026-10-07",
+            "ts_ms": null,
+            "type": "sleep_night"
+          },
+          {
+            "data": {
+              "avg": 57.6,
+              "day": "2026-10-07",
+              "type_id": "resting_heart_rate",
+              "unit": "bpm"
+            },
+            "day": "2026-10-07",
+            "record_id": "resting_heart_rate:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "day": "2026-10-07",
+              "sum": 42,
+              "type_id": "exercise_minutes",
+              "unit": "min"
+            },
+            "day": "2026-10-07",
+            "record_id": "exercise_minutes:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "day": "2026-10-07",
+              "sum": 8421,
+              "type_id": "steps",
+              "unit": "count"
+            },
+            "day": "2026-10-07",
+            "record_id": "steps:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "status": "taken"
+            },
+            "day": "2026-10-07",
+            "record_id": "l1",
+            "ts_ms": null,
+            "type": "dose_log"
+          },
+          {
+            "data": {
+              "status": "missed"
+            },
+            "day": "2026-10-07",
+            "record_id": "l2",
+            "ts_ms": null,
+            "type": "dose_log"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "limit_5_includes_meds"
+    },
+    {
+      "expected": {
+        "metrics": []
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "rows": [],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "no_data_no_metrics"
+    },
+    {
+      "expected": {
+        "metrics": [
+          {
+            "category": "vitals",
+            "day": "2026-10-06",
+            "key": "recovery",
+            "shared": true,
+            "unit": null,
+            "value": 70
+          },
+          {
+            "category": "sleep",
+            "day": "2026-10-06",
+            "key": "sleep",
+            "shared": true,
+            "unit": "min",
+            "value": 400
+          }
+        ]
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "rows": [
+          {
+            "data": {
+              "metric_id": "recovery_indicator",
+              "value": 70
+            },
+            "day": "2026-10-06",
+            "record_id": "recovery_indicator:2026-10-06",
+            "ts_ms": null,
+            "type": "analytics_day"
+          },
+          {
+            "data": {
+              "asleep_min": 400
+            },
+            "day": "2026-10-06",
+            "record_id": "sleep_night:2026-10-06",
+            "ts_ms": null,
+            "type": "sleep_night"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "yesterday_fallback"
+    },
+    {
+      "expected": {
+        "metrics": []
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "rows": [
+          {
+            "data": {
+              "asleep_min": 400
+            },
+            "day": "2026-10-01",
+            "record_id": "sleep_night:2026-10-01",
+            "ts_ms": null,
+            "type": "sleep_night"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "older_data_not_shown"
+    },
+    {
+      "expected": {
+        "metrics": [
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "recovery",
+            "shared": true,
+            "unit": null,
+            "value": 73
+          },
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "resting_hr",
+            "shared": true,
+            "unit": "bpm",
+            "value": 57
+          }
+        ]
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "rows": [
+          {
+            "data": {
+              "metric_id": "recovery_indicator",
+              "value": 72.5
+            },
+            "day": "2026-10-07",
+            "record_id": "recovery_indicator:2026-10-07",
+            "ts_ms": null,
+            "type": "analytics_day"
+          },
+          {
+            "data": {
+              "avg": 56.5,
+              "type_id": "resting_heart_rate"
+            },
+            "day": "2026-10-07",
+            "record_id": "resting_heart_rate:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "half_values_round_up"
+    },
+    {
+      "expected": {
+        "metrics": [
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "steps",
+            "shared": true,
+            "unit": "count",
+            "value": 5000
+          }
+        ]
+      },
+      "input": {
+        "grants": [
+          "vitals",
+          "sleep",
+          "nutrition",
+          "workouts",
+          "medicines",
+          "report_overviews"
+        ],
+        "rows": [
+          {
+            "data": {
+              "sum": 0,
+              "type_id": "exercise_minutes"
+            },
+            "day": "2026-10-07",
+            "record_id": "exercise_minutes:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "data": {
+              "sum": 5000.4,
+              "type_id": "steps"
+            },
+            "day": "2026-10-07",
+            "record_id": "steps:2026-10-07",
+            "ts_ms": null,
+            "type": "metric_day"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "steps_when_no_exercise"
+    },
+    {
+      "expected": {
+        "metrics": [
+          {
+            "category": "vitals",
+            "day": "2026-10-07",
+            "key": "recovery",
+            "shared": true,
+            "unit": null,
+            "value": 82
+          },
+          {
+            "category": "sleep",
+            "day": "2026-10-07",
+            "key": "sleep",
+            "shared": false,
+            "unit": "min",
+            "value": 444
+          }
+        ]
+      },
+      "input": {
+        "grants": [
+          "vitals"
+        ],
+        "rows": [
+          {
+            "data": {
+              "classification": "good",
+              "day": "2026-10-07",
+              "metric_id": "recovery_indicator",
+              "status": "ok",
+              "value": 81.6
+            },
+            "day": "2026-10-07",
+            "record_id": "recovery_indicator:2026-10-07",
+            "ts_ms": null,
+            "type": "analytics_day"
+          },
+          {
+            "data": {
+              "asleep_min": 444,
+              "day": "2026-10-07",
+              "end_ms": 2,
+              "start_ms": 1
+            },
+            "day": "2026-10-07",
+            "record_id": "sleep_night:2026-10-07",
+            "ts_ms": null,
+            "type": "sleep_night"
+          }
+        ],
+        "today": "2026-10-07",
+        "yesterday": "2026-10-06"
+      },
+      "name": "revoked_category_flagged"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "summary_metrics",
+  "version": 1
+}

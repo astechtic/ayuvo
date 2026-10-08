@@ -23,6 +23,8 @@ enum BrowseFeatureDestination: Hashable {
     case addRecord
     case coach
     case settings
+    /// One Settings pane (e.g. Partner Health).
+    case settingsPane(SettingsPane)
 }
 
 /// One Browse search "Go to" result. Ids are shared with Android (`browse.feature.<id>`).
@@ -44,7 +46,7 @@ struct BrowseFeature: Identifiable, Hashable {
     var leavesBrowse: Bool {
         switch destination {
         case .browse, .metric, .insights, .logFood, .logWorkout, .addMedication: false
-        case .logWeight, .logBodyFat, .recordsTab, .addRecord, .coach, .settings: true
+        case .logWeight, .logBodyFat, .recordsTab, .addRecord, .coach, .settings, .settingsPane: true
         }
     }
 }
@@ -230,6 +232,14 @@ enum BrowseFeatureCatalog {
                 keywords: ["period", "periods", "period tracker", "menstrual", "menstruation", "cycle", "ovulation", "fertile",
                            "fertility", "pms", "cramps", "flow", "spotting", "calendar"],
                 destination: .browse([.cycle])
+            ),
+            BrowseFeature(
+                id: "partnerHealth", title: String(localized: "Partner Health"),
+                subtitle: String(localized: "Share health with a partner, phone to phone"),
+                systemImage: "person.2.fill", domain: "partner",
+                keywords: ["partner", "partners", "share", "sharing", "family", "spouse", "wife", "husband", "couple", "caregiver",
+                           "pair", "pairing", "qr", "sync"],
+                destination: .settingsPane(.partnerHealth)
             ),
         ].filter { $0.id != "cycleTracking" || CycleSettings.enabled() }
     }

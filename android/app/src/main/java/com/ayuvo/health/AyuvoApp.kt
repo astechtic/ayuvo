@@ -602,6 +602,74 @@ class AppContainer(app: AyuvoApp, val scope: CoroutineScope) {
         )
     }
 
+    // -- Partner Health Sync (docs/partner-sync.md) -----------------------------------------------
+    // Nothing runs at startup: ayuvo_partner.db, the catalogs and the identity keys are created on first use.
+    private val partnerDatabaseLazy = lazy { com.ayuvo.health.partner.data.PartnerDatabase(app) }
+    val partnerDatabase: com.ayuvo.health.partner.data.PartnerDatabase by partnerDatabaseLazy
+    val partnerStore: com.ayuvo.health.partner.data.PartnerStore by lazy {
+        com.ayuvo.health.partner.logic.PartnerCatalog.install(appContext)
+        com.ayuvo.health.partner.data.SqlitePartnerStore(partnerDatabase)
+    }
+    val deviceIdentity: com.ayuvo.health.partner.identity.DeviceIdentity by lazy {
+        com.ayuvo.health.partner.logic.PartnerCatalog.install(appContext)
+        com.ayuvo.health.partner.identity.DeviceIdentity(com.ayuvo.health.partner.identity.KeyStorePartnerSecrets(keyStore))
+    }
+
+    /**
+     * The user's own stores as Partner sources (docs/partner-sync.md §7), all read-only. Medications and Records are
+     * read only when their database already exists; nothing here creates one.
+     */
+    fun partnerSources(): List<com.ayuvo.health.partner.sources.PartnerSource> {
+        val zone = { java.time.ZoneId.systemDefault() }
+        val health = { healthDatabase.readableDatabase }
+        val neverShared = setOf("mobility", "hearing")
+        val meds = { if (medicationsDatabaseExists()) medicationsDatabase.readableDatabase else null }
+        return listOf(
+            com.ayuvo.health.partner.sources.MetricDaySource(health),
+            com.ayuvo.health.partner.sources.MetricHourSource(health, zone),
+            com.ayuvo.health.partner.sources.SampleSource(health, System::currentTimeMillis),
+            com.ayuvo.health.partner.sources.DerivedDaySource(health) { id ->
+                derivedCatalog.byId[id]?.category?.let { it !in neverShared } == true
+            },
+            com.ayuvo.health.partner.sources.AnalyticsDaySource(health),
+            com.ayuvo.health.partner.sources.SleepNightSource({ from, to -> healthRepository.sleepNights(from, to) }, health, zone),
+            com.ayuvo.health.partner.sources.FoodEntrySource({ prefs.foodEntries.first() }, { prefs.foodEntriesCorrupt.first() }, zone),
+            com.ayuvo.health.partner.sources.WaterDaySource({ prefs.waterEntries.first() }, { prefs.waterDailyGoalMl.first() }, zone),
+            com.ayuvo.health.partner.sources.WeightSource({ prefs.weightEntries.first() }, zone),
+            com.ayuvo.health.partner.sources.WorkoutSource(
+                { workoutRepository.snapshot().completedSessions }, health, "com.ayuvo.health", zone
+            ),
+            com.ayuvo.health.partner.sources.MedicationSource(meds),
+            com.ayuvo.health.partner.sources.MedicationScheduleSource(meds),
+            com.ayuvo.health.partner.sources.DoseLogSource(meds, zone),
+            com.ayuvo.health.partner.sources.ReportOverviewSource { if (recordsDatabaseExists()) recordsDatabase.readableDatabase else null }
+        )
+    }
+
+    /** Partner Health state holder: pairing, sync windows, packages (docs/partner-sync.md). */
+    val partnerManager: com.ayuvo.health.partner.PartnerManager by lazy {
+        com.ayuvo.health.partner.PartnerManager(
+            context = appContext,
+            scope = scope,
+            storeProvider = { partnerStore },
+            identityProvider = { deviceIdentity },
+            sourcesProvider = ::partnerSources,
+            myName = { profileRepository.current()?.name?.trim().orEmpty() },
+            appVersion = com.ayuvo.health.BuildConfig.VERSION_NAME
+        )
+    }
+
+    /** Whether a partner database exists (callers never create one just to look for partners). */
+    fun partnerDatabaseExists(): Boolean =
+        partnerDatabaseLazy.isInitialized() || com.ayuvo.health.partner.data.PartnerDatabase.exists(appContext)
+
+    /** Delete All Data: the partner database (+ journal files): trust, grants, received data and the ledger. */
+    suspend fun deletePartnerDatabase() = withContext(Dispatchers.IO) {
+        com.ayuvo.health.partner.PartnerSyncWorker.cancel(appContext)
+        if (partnerDatabaseLazy.isInitialized()) runCatching { partnerDatabase.close() }
+        com.ayuvo.health.partner.data.PartnerDatabase.deleteDatabaseFiles(appContext)
+    }
+
     /** Delete All Data: the medications database (+ journal files), every photo and every reminder. */
     suspend fun deleteMedicationsData() = withContext(Dispatchers.IO) {
         MedicationAlarms.cancel(appContext)

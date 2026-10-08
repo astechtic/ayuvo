@@ -1,0 +1,879 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "app_version": "2.4.0",
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "grants": [
+            "vitals",
+            "sleep"
+          ],
+          "platform": "ios",
+          "protocol": "ayuvo-partner-sync",
+          "t": "HELLO",
+          "v": 1
+        }
+      },
+      "name": "hello_ok"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "app_version": "2.4.0",
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "grants": [
+            "vitals",
+            "sleep"
+          ],
+          "platform": "ios",
+          "protocol": "ayuvo-partner-sync",
+          "t": "HELLO",
+          "v": 2
+        }
+      },
+      "name": "hello_v2"
+    },
+    {
+      "expected": {
+        "error": "unsupported_version",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "app_version": "2.4.0",
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "grants": [
+            "vitals",
+            "sleep"
+          ],
+          "platform": "ios",
+          "protocol": "ayuvo-partner-sync",
+          "t": "HELLO",
+          "v": true
+        }
+      },
+      "name": "hello_v_true"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "app_version": "2.4.0",
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "grants": [
+            "vitals",
+            "sleep"
+          ],
+          "platform": "ios",
+          "protocol": "x",
+          "t": "HELLO",
+          "v": 1
+        }
+      },
+      "name": "hello_bad_protocol"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "app_version": "2.4.0",
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "grants": [
+            "vitals",
+            "cycle"
+          ],
+          "platform": "ios",
+          "protocol": "ayuvo-partner-sync",
+          "t": "HELLO",
+          "v": 1
+        }
+      },
+      "name": "hello_unknown_category"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "app_version": "2.4.0",
+          "device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+          "platform": "ios",
+          "protocol": "ayuvo-partner-sync",
+          "t": "HELLO",
+          "v": 1
+        }
+      },
+      "name": "hello_missing_grants"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "cursor": 0,
+          "t": "SYNC_REQ"
+        }
+      },
+      "name": "sync_req_ok"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "cursor": -1,
+          "t": "SYNC_REQ"
+        }
+      },
+      "name": "sync_req_negative"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "from_rev": 0,
+          "has_more": false,
+          "records": [],
+          "t": "CHANGES",
+          "to_rev": 5
+        }
+      },
+      "name": "changes_ok"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "from_rev": 6,
+          "has_more": false,
+          "records": [],
+          "t": "CHANGES",
+          "to_rev": 5
+        }
+      },
+      "name": "changes_backwards"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "from_rev": 0,
+          "has_more": true,
+          "records": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ],
+          "t": "CHANGES",
+          "to_rev": 5
+        }
+      },
+      "name": "changes_too_many"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "committed_rev": 5,
+          "t": "ACK"
+        }
+      },
+      "name": "ack_ok"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "committed_rev": "5",
+          "t": "ACK"
+        }
+      },
+      "name": "ack_string"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "t": "DONE"
+        }
+      },
+      "name": "done_ok"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "code": "not_trusted",
+          "t": "ERROR"
+        }
+      },
+      "name": "error_ok"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "accepted": true,
+          "device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "ed25519": "_OJVH8wjBAhw0VEAaBbMOdODGr_5SNxkai9ssHbgjOA",
+          "grants": [
+            "vitals"
+          ],
+          "name": "Rahul",
+          "platform": "android",
+          "t": "PAIR_CONFIRM"
+        }
+      },
+      "name": "pair_confirm_ok"
+    },
+    {
+      "expected": {
+        "error": null,
+        "ok": true
+      },
+      "input": {
+        "message": {
+          "accepted": false,
+          "t": "PAIR_CONFIRM"
+        }
+      },
+      "name": "pair_confirm_declined"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "accepted": true,
+          "grants": [
+            "vitals"
+          ],
+          "name": "Rahul",
+          "t": "PAIR_CONFIRM"
+        }
+      },
+      "name": "pair_confirm_accept_without_identity"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "accepted": true,
+          "device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "ed25519": "c2hvcnQ",
+          "grants": [],
+          "name": "Rahul",
+          "t": "PAIR_CONFIRM"
+        }
+      },
+      "name": "pair_confirm_bad_key"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "accepted": true,
+          "device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+          "ed25519": "_OJVH8wjBAhw0VEAaBbMOdODGr_5SNxkai9ssHbgjOA",
+          "grants": [
+            "cycle"
+          ],
+          "name": "Rahul",
+          "t": "PAIR_CONFIRM"
+        }
+      },
+      "name": "pair_confirm_unknown_grant"
+    },
+    {
+      "expected": {
+        "error": "unknown_message",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "t": "PING"
+        }
+      },
+      "name": "unknown"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": {
+          "cursor": 1
+        }
+      },
+      "name": "no_type"
+    },
+    {
+      "expected": {
+        "error": "malformed",
+        "ok": false
+      },
+      "input": {
+        "message": [
+          1,
+          2
+        ]
+      },
+      "name": "not_object"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "message_validate",
+  "version": 1
+}

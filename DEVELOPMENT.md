@@ -82,4 +82,7 @@ until reviewed. Brand name "Ayuvo" is never translated.
 - `docs/coach.md` — Coach chat (conversations, attachments, markdown/chart blocks, data switches,
   prompt gallery, `ayuvo-coach-chats` archive); tool sources point at the three docs above.
 - `docs/cloud-backup.md` — optional iCloud / Google Drive backup; reserved preference keys.
+- `docs/partner-sync.md` — Partner Health Sync (QR pairing, Noise sessions over the local network,
+  sender ledger + receiver merge engine, signed `.ayuvo.zip` packages); `shared/partner/`,
+  `python3 scripts/partner_contract_check.py`.
 - `android/docs/` — Android-specific notes.

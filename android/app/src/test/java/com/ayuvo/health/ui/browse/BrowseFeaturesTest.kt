@@ -15,7 +15,7 @@ class BrowseFeaturesTest {
             listOf(
                 "workouts", "workoutLog", "exerciseLibrary", "nutrition", "logFood", "water", "fasting", "bodyMeasurements",
                 "logWeight", "logBodyFat", "medications", "addMedication", "records", "addRecord",
-                "insights", "recovery", "healthAge", "dailyReview", "cameraMeasurements", "cycleTracking", "coach", "settings"
+                "insights", "recovery", "healthAge", "dailyReview", "cameraMeasurements", "cycleTracking", "partnerHealth", "coach", "settings"
             ),
             BrowseFeatures.all.map { it.id }
         )
@@ -66,6 +66,8 @@ class BrowseFeaturesTest {
         assertEquals(listOf("cycleTracking"), ids("period"))
         assertEquals(listOf("cycleTracking"), ids("menstrual"))
         assertTrue(ids("ovulation").contains("cycleTracking"))
+        assertEquals(listOf("partnerHealth"), ids("partner"))
+        assertEquals(listOf("partnerHealth"), ids("family"))
     }
 
     @Test

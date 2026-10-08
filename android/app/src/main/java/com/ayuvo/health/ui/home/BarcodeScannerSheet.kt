@@ -53,7 +53,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 @Composable
 fun BarcodeScannerSheet(
     onBarcode: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    /** ML Kit formats to look for; Partner Health pairing passes [Barcode.FORMAT_QR_CODE]. */
+    formats: Int = Barcode.FORMAT_ALL_FORMATS,
+    hint: String? = null,
+    note: String? = null
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -67,7 +71,7 @@ fun BarcodeScannerSheet(
     val scanner = remember {
         BarcodeScanning.getClient(
             BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+                .setBarcodeFormats(formats)
                 .build()
         )
     }
@@ -173,13 +177,13 @@ fun BarcodeScannerSheet(
                 )
                 Spacer(Modifier.height(10.dp))
                 Text(
-                    stringResource(R.string.barcode_hint),
+                    hint ?: stringResource(R.string.barcode_hint),
                     color = Color.White,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    stringResource(R.string.barcode_off_note),
+                    note ?: stringResource(R.string.barcode_off_note),
                     color = Color.White.copy(alpha = 0.72f),
                     fontSize = 13.sp,
                     lineHeight = 18.sp

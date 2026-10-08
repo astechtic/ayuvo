@@ -1,0 +1,67 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "delete": [
+          {
+            "record_id": "s-old",
+            "type": "sample"
+          },
+          {
+            "record_id": "steps:2026-09-20:8",
+            "type": "metric_hour"
+          }
+        ]
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "rows": [
+          {
+            "record_id": "s-old",
+            "ts_ms": 1790683200000,
+            "type": "sample"
+          },
+          {
+            "record_id": "s-edge",
+            "ts_ms": 1790769600000,
+            "type": "sample"
+          },
+          {
+            "record_id": "s-new",
+            "ts_ms": 1791370800000,
+            "type": "sample"
+          },
+          {
+            "record_id": "steps:2026-09-20:8",
+            "ts_ms": 1789905600000,
+            "type": "metric_hour"
+          },
+          {
+            "record_id": "steps:2020-01-01",
+            "ts_ms": null,
+            "type": "metric_day"
+          },
+          {
+            "record_id": "f-old",
+            "ts_ms": 1756814400000,
+            "type": "food_entry"
+          }
+        ]
+      },
+      "name": "prunes_old_samples_and_hours_only"
+    },
+    {
+      "expected": {
+        "delete": []
+      },
+      "input": {
+        "now_ms": 1791374400000,
+        "rows": []
+      },
+      "name": "empty"
+    }
+  ],
+  "format": "ayuvo-partner-vectors",
+  "function": "retention_prune",
+  "version": 1
+}

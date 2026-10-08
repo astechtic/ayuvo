@@ -11,25 +11,35 @@ import Speech
 import UniformTypeIdentifiers
 
 // MARK: - Barcode Scanner
+
+/// What the camera scanner looks for: product barcodes (food) or a QR code (Partner Health pairing).
+enum CodeScannerMode {
+    case barcode
+    case qr
+}
+
 struct BarcodeScannerView: UIViewControllerRepresentable {
+    var mode: CodeScannerMode = .barcode
     let onScan: (String) -> Void
     let onCancel: () -> Void
 
     func makeUIViewController(context: Context) -> BarcodeScannerViewController {
-        BarcodeScannerViewController(onScan: onScan, onCancel: onCancel)
+        BarcodeScannerViewController(mode: mode, onScan: onScan, onCancel: onCancel)
     }
 
     func updateUIViewController(_ uiViewController: BarcodeScannerViewController, context: Context) {}
 }
 
 final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+    private let mode: CodeScannerMode
     private let onScan: (String) -> Void
     private let onCancel: () -> Void
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var didScan = false
 
-    init(onScan: @escaping (String) -> Void, onCancel: @escaping () -> Void) {
+    init(mode: CodeScannerMode = .barcode, onScan: @escaping (String) -> Void, onCancel: @escaping () -> Void) {
+        self.mode = mode
         self.onScan = onScan
         self.onCancel = onCancel
         super.init(nibName: nil, bundle: nil)
@@ -69,14 +79,21 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
                     if granted {
                         self?.configureSession()
                     } else {
-                        self?.showCameraUnavailable(String(localized: "Camera access is needed to scan barcodes.", comment: "Barcode scanner camera error"))
+                        self?.showCameraUnavailable(self?.accessMessage ?? "")
                     }
                 }
             }
         case .denied, .restricted:
-            showCameraUnavailable(String(localized: "Camera access is needed to scan barcodes.", comment: "Barcode scanner camera error"))
+            showCameraUnavailable(accessMessage)
         @unknown default:
             showCameraUnavailable(String(localized: "Camera is unavailable.", comment: "Barcode scanner camera error"))
+        }
+    }
+
+    private var accessMessage: String {
+        switch mode {
+        case .barcode: String(localized: "Camera access is needed to scan barcodes.", comment: "Barcode scanner camera error")
+        case .qr: String(localized: "Camera access is needed to scan your partner's code. Turn it on in Settings › Ayuvo › Camera.", comment: "Partner pairing QR scanner camera error")
         }
     }
 
@@ -103,7 +120,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         session.addOutput(output)
         output.setMetadataObjectsDelegate(self, queue: .main)
 
-        let supportedTypes: [AVMetadataObject.ObjectType] = [
+        let supportedTypes: [AVMetadataObject.ObjectType] = mode == .qr ? [.qr] : [
             .ean13,
             .ean8,
             .upce,
@@ -186,6 +203,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         closeButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         view.addSubview(closeButton)
 
+        let isQR = mode == .qr
         let scanBox = UIView()
         scanBox.layer.borderColor = UIColor.white.withAlphaComponent(0.9).cgColor
         scanBox.layer.borderWidth = 3
@@ -195,7 +213,9 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         view.addSubview(scanBox)
 
         let label = UILabel()
-        label.text = String(localized: "Point the camera at the barcode", comment: "Barcode scanner instruction")
+        label.text = isQR
+            ? String(localized: "Point the camera at the code on your partner's phone", comment: "Partner pairing QR scanner instruction")
+            : String(localized: "Point the camera at the barcode", comment: "Barcode scanner instruction")
         label.textColor = .white
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         label.textAlignment = .center
@@ -204,7 +224,9 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         view.addSubview(label)
 
         let hint = UILabel()
-        hint.text = String(localized: "If the product is not found, scan the nutrition label instead.", comment: "Barcode scanner hint")
+        hint.text = isQR
+            ? String(localized: "On their phone: Settings › Partner Health › Add partner › Show my code. The camera only reads the code; nothing is recorded.", comment: "Partner pairing QR scanner hint")
+            : String(localized: "If the product is not found, scan the nutrition label instead.", comment: "Barcode scanner hint")
         hint.textColor = UIColor.white.withAlphaComponent(0.72)
         hint.font = .systemFont(ofSize: 14, weight: .medium)
         hint.textAlignment = .center
@@ -219,7 +241,7 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
             scanBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             scanBox.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -34),
             scanBox.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.76),
-            scanBox.heightAnchor.constraint(equalToConstant: 190),
+            isQR ? scanBox.heightAnchor.constraint(equalTo: scanBox.widthAnchor) : scanBox.heightAnchor.constraint(equalToConstant: 190),
 
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
             label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -28),

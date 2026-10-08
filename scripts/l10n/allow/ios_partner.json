@@ -1,0 +1,8 @@
+{
+ "_comment": "Partner Health Sync engine (2026-10-08): SQL column lists and clauses, Python-compatible JSON literals, protocol name defaults (\"Ayuvo\" / \"Partner\" from the contract), internal error descriptions and the on-disk directory name. User-facing engine text uses String(localized:) (PartnerStatusText).",
+ "files": [],
+ "dirs": [
+  "ios/calorietracker/Partner"
+ ],
+ "contains": []
+}

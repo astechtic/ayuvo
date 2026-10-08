@@ -1,0 +1,63 @@
+{
+  "expected": {
+    "first_import": {
+      "counts": {
+        "deleted": 0,
+        "duplicate": 0,
+        "inserted": 10,
+        "rejected": 0,
+        "stale": 0,
+        "updated": 0
+      },
+      "cursor": 12
+    },
+    "second_import": {
+      "counts": {
+        "deleted": 0,
+        "duplicate": 10,
+        "inserted": 0,
+        "rejected": 0,
+        "stale": 0,
+        "updated": 0
+      },
+      "cursor": 12
+    },
+    "summary": {
+      "per_category": [
+        {
+          "category": "vitals",
+          "count": 4
+        },
+        {
+          "category": "sleep",
+          "count": 1
+        },
+        {
+          "category": "nutrition",
+          "count": 2
+        },
+        {
+          "category": "medicines",
+          "count": 2
+        },
+        {
+          "category": "report_overviews",
+          "count": 1
+        }
+      ],
+      "total": 10
+    },
+    "validate": {
+      "error": null,
+      "ok": true
+    }
+  },
+  "format": "ayuvo-partner-fixture",
+  "now_ms": 1791374400000,
+  "recipient_device_id": "7e6d5c4b-3a29-4180-8f7e-6d5c4b3a2918",
+  "sender_device_id": "0b8f3c2a-5d1e-4c7a-9f00-1a2b3c4d5e6f",
+  "sender_ed25519": "BwzLCWnVbK85oHgDHwR5J23GwE6XurQhgoUrbV1J_QQ",
+  "sender_fingerprint": "5cbe8b6c1a846a49e8e550ecf82c3931",
+  "sender_x25519": "YiiWYQ7mJTehVbgzdY3cpXACQOeE3oby2RoPSS7LbFA",
+  "version": 1
+}

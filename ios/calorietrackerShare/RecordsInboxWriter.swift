@@ -66,8 +66,11 @@ nonisolated enum RecordsInboxWriter {
         let conforming: (UTType) -> String? = { type in
             identifiers.first { UTType($0)?.conforms(to: type) == true }
         }
-        // Originals first (PDF, image, any other file), then plain text and links.
-        if let pdf = conforming(.pdf) {
+        // Zip archives first (a partner health package `*.ayuvo.zip` is routed by the app to Partner Health Sync,
+        // any other zip stays a Health Records item), then originals (PDF, image, any other file), text and links.
+        if let zip = conforming(.zip) {
+            copyFile(provider, typeIdentifier: zip, root: root, done: done)
+        } else if let pdf = conforming(.pdf) {
             copyFile(provider, typeIdentifier: pdf, root: root, done: done)
         } else if let image = conforming(.image) {
             let box = ProviderBox(provider: provider)

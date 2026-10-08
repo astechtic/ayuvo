@@ -226,6 +226,10 @@ dependencies {
     implementation(libs.whisper.android)
     // GPS workout summary map (docs/workouts-gps.md §4): OpenStreetMap tiles, no API key.
     implementation(libs.osmdroid.android)
+    // Partner Health Sync (docs/partner-sync.md §3): X25519 / Ed25519 / ChaCha20-Poly1305 for the Noise
+    // sessions and package signatures (JCA lacks them below API 33), and QR generation for pairing.
+    implementation(libs.tink.android)
+    implementation(libs.zxing.core)
 
     testImplementation(libs.junit)
     testImplementation("com.squareup.okhttp3:mockwebserver:${libs.versions.okhttp.get()}")

@@ -76,6 +76,25 @@ struct ZipArchiveTests {
         return out
     }
 
+    /// A small deflate stream that inflates to more than one 256 KB output buffer: the decoder returns OK with a
+    /// partly filled buffer after consuming all input and must be finalized until END (Android partner packages,
+    /// docs/partner-sync.md §13, failed with hash_mismatch before this was handled).
+    @Test func readerInflatesHighlyCompressibleEntriesLargerThanOneBuffer() throws {
+        var text = ""
+        for i in 0..<12_000 {
+            text += "{\"type\":\"metric_day\",\"id\":\"steps:2026-01-\(String(format: "%02d", i % 28 + 1))\",\"rev\":\(i),\"data\":{\"avg\":\(i % 97)}}\n"
+        }
+        let plain = Data(text.utf8)
+        #expect(plain.count > ZipArchiveReader.chunkSize * 3)
+        let reader = try ZipArchiveReader(data: handBuiltZip(entries: [(name: "big.ndjson", plain: plain, deflated: true, dataDescriptor: true)]))
+        let entry = try #require(reader.entry(named: "big.ndjson"))
+        #expect(entry.compressedSize < UInt64(ZipArchiveReader.chunkSize))
+        #expect(try reader.data(for: entry) == plain)
+        var lines = 0
+        try reader.forEachLine(of: entry, maxLineBytes: 1024) { _ in lines += 1 }
+        #expect(lines == 12_000)
+    }
+
     @Test func writerAndReaderRoundTripStoredEntries() throws {
         let directory = try HealthTestFixtures.temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }

@@ -22,6 +22,7 @@ struct ContentView: View {
     @State private var appUpdateState: AppUpdateState = .idle
     @State private var navigator = AppNavigator()
     @State private var actionAlert: ActionAlert?
+    @State private var partnerManager = PartnerManager.shared
 
     /// Deep-link confirmation or the outcome of an action (docs/actions.md §Deep links).
     private enum ActionAlert: Identifiable {
@@ -45,6 +46,9 @@ struct ContentView: View {
                 ActionLiveContext.shared.recordsStore = recordsStore
                 attachInsights()
                 consumePendingLaunchRoutes()
+                #if DEBUG
+                await openPartnerScreenIfRequested()
+                #endif
                 await refreshAppUpdateState()
             }
             .onReceive(NotificationCenter.default.publisher(for: .actionRouteRequested)) { _ in
@@ -63,6 +67,11 @@ struct ContentView: View {
                 case .confirm(let pending): Text(pending.summary)
                 case .message(let text): Text(text)
                 }
+            }
+            // Partner Health: an incoming .ayuvo.zip (Open in, share extension, file importer) asks before importing.
+            .sheet(isPresented: Binding(get: { partnerManager.importSheetPhase != nil },
+                                        set: { if !$0 { partnerManager.dismissImportSheet() } })) {
+                PartnerImportSheet()
             }
             .onChange(of: recordsStore.tabRequest) { _, _ in
                 // Share extension / "Open in Ayuvo" imports and Coach "Used records" chips land on Records.
@@ -204,6 +213,13 @@ struct ContentView: View {
             case .route(let route):
                 navigator.apply(route, recordsStore: recordsStore, medicationStore: medicationStore, chatStore: chatStore)
             case .confirm(let pending):
+                #if DEBUG
+                // Simulator test hook (no UI tap tool): `-ayuvoActionsAutoConfirm YES` taps Confirm on the deep-link alert.
+                if UserDefaults.standard.bool(forKey: "ayuvoActionsAutoConfirm") {
+                    confirmAction(pending)
+                    return
+                }
+                #endif
                 actionAlert = .confirm(pending)
             case .invalid(let message):
                 actionAlert = .message(message)
@@ -225,6 +241,26 @@ struct ContentView: View {
             }
         }
     }
+
+    #if DEBUG
+    /// Screenshot / UI-test hook: `-ayuvoPartnerScreen settings|showCode|dashboard|report:<record id>` opens that Partner
+    /// screen for the first partner (after `-ayuvoPartnerSeed` / `-ayuvoImportPartnerFile`). Compiled out of release.
+    private func openPartnerScreenIfRequested() async {
+        guard let screen = UserDefaults.standard.string(forKey: "ayuvoPartnerScreen") else { return }
+        if screen == "settings" || screen == "showCode" {
+            navigator.openSettings(.partnerHealth)
+            return
+        }
+        await partnerManager.reload()
+        guard let id = partnerManager.partners.first?.id else { return }
+        navigator.selectedTab = .summary
+        var path = NavigationPath()
+        path.append(PartnerRoute.dashboard(id))
+        if screen.hasPrefix("report:") { path.append(PartnerRoute.report(id, String(screen.dropFirst(7)))) }
+        if screen == "partnerSettings" { path.append(PartnerRoute.settings(id)) }
+        navigator.summaryPath = path
+    }
+    #endif
 
     @MainActor
     private func refreshAppUpdateState(force: Bool = false) async {

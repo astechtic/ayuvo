@@ -82,7 +82,9 @@ data class SummaryUiState(
     val latestWeightKg: Double? = null,
     val latestBodyFatFraction: Double? = null,
     /** Recovery / Health Age / Daily Review cards (docs/insights.md §7); null hides the section. */
-    val insights: com.ayuvo.health.ui.insights.SummaryInsights? = null
+    val insights: com.ayuvo.health.ui.insights.SummaryInsights? = null,
+    /** Partner Health card (docs/partner-sync.md §15): up to 3 partners; empty hides the card. */
+    val partners: List<com.ayuvo.health.ui.partner.PartnerSummaryRow> = emptyList()
 ) {
     val rings: List<SummaryRing>
         get() = SummaryRings.build(
@@ -254,6 +256,20 @@ class SummaryViewModel(private val container: AppContainer) : ViewModel() {
             }
             .catch { emit(null) }
             .onEach { s -> update { it.copy(insights = s) } }
+            .launchIn(viewModelScope)
+
+        // Partner Health: read from ayuvo_partner.db off the main thread, only once it exists (never created to look).
+        combine(
+            container.partnerManager.state.map { st -> st.partners.map { it.partner.ownerId to it.sync?.lastSyncMs } to st.partners.sumOf { it.recordCount } }
+                .distinctUntilChanged(),
+            refreshTick
+        ) { _, _ -> Unit }
+            .mapLatest {
+                if (!container.partnerDatabaseExists()) emptyList()
+                else runCatching { com.ayuvo.health.ui.partner.PartnerSummaryLoader.load(container.partnerStore, LocalDate.now(zone)) }.getOrDefault(emptyList())
+            }
+            .flowOn(Dispatchers.IO)
+            .onEach { rows -> update { it.copy(partners = rows) } }
             .launchIn(viewModelScope)
 
         if (container.medicationsDatabaseExists()) {

@@ -153,6 +153,36 @@ class MainActivity : ComponentActivity() {
         intent.action = null
     }
 
+    /**
+     * Partner Health packages (docs/partner-sync.md §13): a VIEW / SEND of a zip (or an `.ayuvo.zip` name) is copied
+     * and sniffed for `manifest.json` format "ayuvo-partner-sync" BEFORE the Records handler. Anything else, and every
+     * non-zip intent, goes to the Records handler exactly as before.
+     */
+    private fun handleIncomingIntent(intent: Intent?) {
+        val action = intent?.action ?: return
+        val uri: Uri? = when (action) {
+            Intent.ACTION_VIEW -> intent.data
+            Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+                ?: intent.clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+            else -> null
+        }
+        val type = (intent.type ?: uri?.let { runCatching { contentResolver.getType(it) }.getOrNull() })?.lowercase()
+        val named = uri?.lastPathSegment?.lowercase()?.endsWith(".ayuvo.zip") == true
+        val candidate = uri != null && uri.scheme != "ayuvo" && (type in com.ayuvo.health.partner.PartnerManager.PACKAGE_MIME_TYPES || named)
+        if (!candidate) {
+            handleIncomingRecordsIntent(intent)
+            return
+        }
+        val original = Intent(intent)
+        intent.action = null
+        val container = (application as AyuvoApp).container
+        lifecycleScope.launch {
+            val isPartner = runCatching { container.partnerManager.receiveIncoming(uri!!) }.getOrDefault(false)
+            // A partner package waits in PartnerManager.state.incoming for the confirmation sheet.
+            if (!isPartner) handleIncomingRecordsIntent(original)
+        }
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -162,7 +192,7 @@ class MainActivity : ComponentActivity() {
         handleMedicationIntent(intent)
         handleWorkoutWidgetIntent(intent)
         handleWidgetIntent(intent)
-        handleIncomingRecordsIntent(intent)
+        handleIncomingIntent(intent)
     }
     override fun onStart() {
         super.onStart()
@@ -176,6 +206,9 @@ class MainActivity : ComponentActivity() {
             // the Health Data hub mirror sync. requestHealthSync launches on the container
             // scope so a quick background/foreground cycle cannot cancel it mid-page.
             container.requestHealthSync(com.ayuvo.health.services.health.HealthSyncTrigger.APP_OPEN)
+            // Partner Health (docs/partner-sync.md §11): a ≤ 60 s sync window, only when a partner exists. The
+            // database is never created just to look.
+            if (container.partnerDatabaseExists()) container.partnerManager.onAppForeground()
         }
     }
 
@@ -232,7 +265,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) handleWorkoutWidgetIntent(intent)
         if (savedInstanceState == null) handleWidgetIntent(intent)
         // A recreated activity (rotation, process restore) still carries the original share intent.
-        if (savedInstanceState == null) handleIncomingRecordsIntent(intent)
+        if (savedInstanceState == null) handleIncomingIntent(intent)
 
         lifecycleScope.launch {
             combine(

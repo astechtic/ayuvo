@@ -28,7 +28,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
     case personalInfo, goalsNutrition, units
     case nutritionTracking, hydration, fasting, activity, medications, cycleTracking, insights, derivedMetrics
     case notifications
-    case healthData, googleHealth, healthRecords, dataManagement, deleteData
+    case healthData, googleHealth, healthRecords, partnerHealth, dataManagement, deleteData
     case aiProviders, speechToText, customInstructions
     case appearance
     case appUpdates, helpSupport, legal
@@ -40,7 +40,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .personalInfo, .goalsNutrition, .units: .healthProfile
         case .nutritionTracking, .hydration, .fasting, .activity, .medications, .cycleTracking, .insights, .derivedMetrics: .tracking
         case .notifications: .notifications
-        case .healthData, .googleHealth, .healthRecords, .dataManagement, .deleteData: .dataPrivacy
+        case .healthData, .googleHealth, .healthRecords, .partnerHealth, .dataManagement, .deleteData: .dataPrivacy
         case .aiProviders, .speechToText, .customInstructions: .aiSpeech
         case .appearance: .appearance
         case .appUpdates, .helpSupport, .legal: .about
@@ -64,6 +64,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .healthData: "Health Sync"
         case .googleHealth: "Google Health"
         case .healthRecords: "Health Records"
+        case .partnerHealth: "Partner Health"
         case .dataManagement: "Backup & Export"
         case .deleteData: "Delete All Data"
         case .aiProviders: "AI Providers"
@@ -93,6 +94,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .healthData: "heart.fill"
         case .googleHealth: "g.circle.fill"
         case .healthRecords: "doc.text.fill"
+        case .partnerHealth: "person.2.fill"
         case .dataManagement: "externaldrive.fill"
         case .deleteData: "trash.fill"
         case .aiProviders: "sparkles"
@@ -124,6 +126,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
         case .healthData: SettingsTint.vitals
         case .googleHealth: SettingsTint.privacy
         case .healthRecords: SettingsTint.records
+        case .partnerHealth: SettingsTint.partner
         case .dataManagement: SettingsTint.backup
         case .deleteData: SettingsTint.destructive
         case .aiProviders: SettingsTint.ai
