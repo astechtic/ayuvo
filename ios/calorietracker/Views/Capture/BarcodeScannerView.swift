@@ -20,11 +20,14 @@ enum CodeScannerMode {
 
 struct BarcodeScannerView: UIViewControllerRepresentable {
     var mode: CodeScannerMode = .barcode
+    /// Embedded inside a screen that already has its own Cancel and instructions (Partner pairing):
+    /// no Cancel button, no hint line, the scan frame and caption sized to fit the card.
+    var embedded: Bool = false
     let onScan: (String) -> Void
     let onCancel: () -> Void
 
     func makeUIViewController(context: Context) -> BarcodeScannerViewController {
-        BarcodeScannerViewController(mode: mode, onScan: onScan, onCancel: onCancel)
+        BarcodeScannerViewController(mode: mode, embedded: embedded, onScan: onScan, onCancel: onCancel)
     }
 
     func updateUIViewController(_ uiViewController: BarcodeScannerViewController, context: Context) {}
@@ -32,14 +35,17 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
 
 final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     private let mode: CodeScannerMode
+    private let embedded: Bool
     private let onScan: (String) -> Void
     private let onCancel: () -> Void
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var didScan = false
 
-    init(mode: CodeScannerMode = .barcode, onScan: @escaping (String) -> Void, onCancel: @escaping () -> Void) {
+    init(mode: CodeScannerMode = .barcode, embedded: Bool = false, onScan: @escaping (String) -> Void,
+         onCancel: @escaping () -> Void) {
         self.mode = mode
+        self.embedded = embedded
         self.onScan = onScan
         self.onCancel = onCancel
         super.init(nibName: nil, bundle: nil)
@@ -195,6 +201,10 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
     }
 
     private func buildOverlay() {
+        if embedded {
+            buildEmbeddedOverlay()
+            return
+        }
         let closeButton = UIButton(type: .system)
         closeButton.setTitle(String(localized: "Cancel", comment: "Barcode scanner close button"), for: .normal)
         closeButton.setTitleColor(.white, for: .normal)
@@ -204,23 +214,10 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
         view.addSubview(closeButton)
 
         let isQR = mode == .qr
-        let scanBox = UIView()
-        scanBox.layer.borderColor = UIColor.white.withAlphaComponent(0.9).cgColor
-        scanBox.layer.borderWidth = 3
-        scanBox.layer.cornerRadius = 22
-        scanBox.backgroundColor = UIColor.clear
-        scanBox.translatesAutoresizingMaskIntoConstraints = false
+        let scanBox = makeScanBox()
         view.addSubview(scanBox)
 
-        let label = UILabel()
-        label.text = isQR
-            ? String(localized: "Point the camera at the code on your partner's phone", comment: "Partner pairing QR scanner instruction")
-            : String(localized: "Point the camera at the barcode", comment: "Barcode scanner instruction")
-        label.textColor = .white
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let label = makeInstructionLabel()
         view.addSubview(label)
 
         let hint = UILabel()
@@ -251,6 +248,77 @@ final class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOut
             hint.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -36),
             hint.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10)
         ])
+    }
+
+    /// Card-sized layout: a square frame centred above a caption on a dark scrim at the bottom edge,
+    /// both always inside the card whatever its size.
+    private func buildEmbeddedOverlay() {
+        let scrim = UIView()
+        scrim.backgroundColor = UIColor.black.withAlphaComponent(0.45)
+        scrim.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrim)
+
+        let label = makeInstructionLabel()
+        label.font = .systemFont(ofSize: 15, weight: .semibold)
+        scrim.addSubview(label)
+
+        let area = UILayoutGuide()
+        view.addLayoutGuide(area)
+
+        let scanBox = makeScanBox()
+        view.addSubview(scanBox)
+
+        let preferredSide = scanBox.widthAnchor.constraint(equalTo: area.widthAnchor, multiplier: 0.62)
+        preferredSide.priority = .defaultHigh
+        let preferredHeight = scanBox.heightAnchor.constraint(equalTo: area.heightAnchor, multiplier: 0.78)
+        preferredHeight.priority = .defaultHigh
+
+        NSLayoutConstraint.activate([
+            scrim.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrim.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrim.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            label.leadingAnchor.constraint(equalTo: scrim.leadingAnchor, constant: 20),
+            label.trailingAnchor.constraint(equalTo: scrim.trailingAnchor, constant: -20),
+            label.topAnchor.constraint(equalTo: scrim.topAnchor, constant: 12),
+            label.bottomAnchor.constraint(equalTo: scrim.bottomAnchor, constant: -14),
+
+            area.topAnchor.constraint(equalTo: view.topAnchor),
+            area.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            area.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            area.bottomAnchor.constraint(equalTo: scrim.topAnchor),
+
+            scanBox.centerXAnchor.constraint(equalTo: area.centerXAnchor),
+            scanBox.centerYAnchor.constraint(equalTo: area.centerYAnchor),
+            scanBox.heightAnchor.constraint(equalTo: scanBox.widthAnchor),
+            scanBox.widthAnchor.constraint(lessThanOrEqualTo: area.widthAnchor, multiplier: 0.62),
+            scanBox.heightAnchor.constraint(lessThanOrEqualTo: area.heightAnchor, multiplier: 0.78),
+            preferredSide,
+            preferredHeight
+        ])
+    }
+
+    private func makeScanBox() -> UIView {
+        let scanBox = UIView()
+        scanBox.layer.borderColor = UIColor.white.withAlphaComponent(0.9).cgColor
+        scanBox.layer.borderWidth = 3
+        scanBox.layer.cornerRadius = 22
+        scanBox.backgroundColor = UIColor.clear
+        scanBox.translatesAutoresizingMaskIntoConstraints = false
+        return scanBox
+    }
+
+    private func makeInstructionLabel() -> UILabel {
+        let label = UILabel()
+        label.text = mode == .qr
+            ? String(localized: "Point the camera at the code on your partner's phone", comment: "Partner pairing QR scanner instruction")
+            : String(localized: "Point the camera at the barcode", comment: "Barcode scanner instruction")
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }
 
     private func showCameraUnavailable(_ message: String) {

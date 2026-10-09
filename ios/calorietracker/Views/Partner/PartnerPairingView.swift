@@ -180,11 +180,12 @@ struct PartnerPairingView: View {
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            BarcodeScannerView(mode: .qr, onScan: { text in
+            BarcodeScannerView(mode: .qr, embedded: true, onScan: { text in
                 Task { await manager.scan(text) }
             }, onCancel: { close() })
             .id(scannerEpoch)
-            .frame(height: 380)
+            .frame(maxWidth: .infinity)
+            .aspectRatio(0.9, contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: AyuvoPalette.cardRadius, style: .continuous))
             .accessibilityIdentifier("partner.pair.scanner")
             PartnerNetworkNote()
