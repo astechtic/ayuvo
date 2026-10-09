@@ -198,6 +198,17 @@ struct MetricRow: View {
 
 // MARK: - Tiles
 
+/// Mini chart on the right of a Summary tile: bars for daily totals, dots for readings, a ring for scores and goals.
+enum SummaryTileChart: Equatable {
+    case none
+    /// Daily totals, oldest first; the newest bar takes the tint.
+    case bars([Double])
+    /// Readings, oldest first, one dot each; the newest dot takes the tint.
+    case dots([Double])
+    /// Score or goal progress (0…1), with optional text in the middle.
+    case ring(progress: Double, text: String?)
+}
+
 struct MetricTileModel: Identifiable, Equatable {
     let key: String
     let title: String
@@ -209,58 +220,213 @@ struct MetricTileModel: Identifiable, Equatable {
     let sparkline: [Double]
     /// Caption when `at` is nil ("Today", "No data").
     var caption: String?
+    /// Daily totals read as bars, readings as dots.
+    var cumulative = false
 
     var id: String { key }
 }
 
+/// Favourite metric on Summary, drawn as an Apple Health style tile.
 struct MetricTile: View {
     let model: MetricTileModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 5) {
-                Image(systemName: model.systemImage)
-                    .font(.system(.caption, weight: .semibold))
-                Text(model.title)
-                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                    .lineLimit(1)
-            }
-            .foregroundStyle(model.tint)
-            Spacer(minLength: 2)
-            HStack(alignment: .firstTextBaseline, spacing: 3) {
-                Text(model.valueText)
-                    .font(.ayuvoNumber(.title2))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                if !model.unitText.isEmpty {
-                    Text(model.unitText)
-                        .font(.system(.caption, design: .rounded, weight: .medium))
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
-            }
-            HStack(alignment: .bottom) {
-                Text(captionText)
-                    .font(.system(.caption2, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                Spacer(minLength: 4)
-                if model.sparkline.count >= 2 {
-                    SparklineView(values: model.sparkline, tint: model.tint)
-                        .frame(width: 48, height: 18)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, minHeight: 104, alignment: .topLeading)
-        .ayuvoCard(padding: 12)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text(verbatim: "\(model.title): \(model.valueText) \(model.unitText)"))
+        SummaryTile(
+            title: model.title,
+            systemImage: model.systemImage,
+            tint: model.tint,
+            trailing: captionText,
+            value: model.valueText,
+            unit: model.unitText,
+            chart: chart
+        )
+    }
+
+    private var chart: SummaryTileChart {
+        guard model.sparkline.count >= 2 else { return .none }
+        return model.cumulative ? .bars(model.sparkline) : .dots(model.sparkline)
     }
 
     private var captionText: String {
         if let at = model.at { return HealthUnitFormatting.relativeText(at) }
         return model.caption ?? String(localized: "No data")
+    }
+}
+
+/// Apple Health style card: tinted icon and title with a time and chevron on top; a large value
+/// bottom-left and a small chart bottom-right. Wrap it in a Button or NavigationLink.
+struct SummaryTile: View {
+    let title: String
+    let systemImage: String
+    let tint: Color
+    var trailing: String?
+    /// Small grey line above the value ("Latest").
+    var label: String?
+    /// Large value; empty for message tiles that only show `detail`.
+    var value: String = ""
+    var unit: String = ""
+    /// Grey line under the value ("Next Metformin at 8:00 PM").
+    var detail: String?
+    var chart: SummaryTileChart = .none
+    var dimmed = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 6) {
+                Image(systemName: systemImage)
+                    .font(.system(.subheadline, weight: .semibold))
+                    .foregroundStyle(tint)
+                    .accessibilityHidden(true)
+                Text(title)
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    .foregroundStyle(tint)
+                    .lineLimit(1)
+                Spacer(minLength: 8)
+                if let trailing {
+                    Text(trailing)
+                        .font(.system(.footnote, design: .rounded))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+                Image(systemName: "chevron.right")
+                    .font(.system(.footnote, weight: .semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            HStack(alignment: .bottom, spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    if let label {
+                        Text(label)
+                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    if !value.isEmpty {
+                        HStack(alignment: .firstTextBaseline, spacing: 4) {
+                            Text(value)
+                                .font(.ayuvoNumber(.title))
+                                .foregroundStyle(.primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
+                            if !unit.isEmpty {
+                                Text(unit)
+                                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                    if let detail {
+                        // Without a value the detail is the tile's message, so it reads in the primary style.
+                        Text(detail)
+                            .font(.system(value.isEmpty ? .body : .subheadline, design: .rounded, weight: value.isEmpty ? .medium : .regular))
+                            .foregroundStyle(value.isEmpty ? .primary : .secondary)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .layoutPriority(1)
+                Spacer(minLength: 0)
+                SummaryTileChartView(chart: chart, tint: tint)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AyuvoPalette.card, in: RoundedRectangle(cornerRadius: AyuvoPalette.cardRadius, style: .continuous))
+        .opacity(dimmed ? 0.55 : 1)
+        .contentShape(RoundedRectangle(cornerRadius: AyuvoPalette.cardRadius, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: [title, label, [value, unit].filter { !$0.isEmpty }.joined(separator: " "), detail, trailing]
+            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")))
+        .accessibilityAddTraits(.isButton)
+    }
+}
+
+struct SummaryTileChartView: View {
+    let chart: SummaryTileChart
+    let tint: Color
+
+    var body: some View {
+        switch chart {
+        case .none:
+            EmptyView()
+        case .bars(let values):
+            MiniBarChart(values: Array(values.suffix(7)), tint: tint)
+                .frame(width: 92, height: 44)
+        case .dots(let values):
+            MiniDotChart(values: Array(values.suffix(7)), tint: tint)
+                .frame(width: 92, height: 44)
+        case .ring(let progress, let text):
+            ZStack {
+                ActivityRingView(progress: progress, ringWidth: 7, gradientColors: [tint, tint], showsEndCap: false)
+                if let text {
+                    Text(verbatim: text)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                        .padding(.horizontal, 8)
+                }
+            }
+            .frame(width: 56, height: 56)
+        }
+    }
+}
+
+/// Seven-day bars, newest in the tint, the rest grey. Zero days keep a short stub so the week reads.
+struct MiniBarChart: View {
+    let values: [Double]
+    let tint: Color
+
+    var body: some View {
+        GeometryReader { geo in
+            let count = max(values.count, 1)
+            let spacing: CGFloat = 4
+            let width = min(11, (geo.size.width - spacing * CGFloat(count - 1)) / CGFloat(count))
+            let top = max(values.max() ?? 0, 0)
+            HStack(alignment: .bottom, spacing: spacing) {
+                ForEach(Array(values.enumerated()), id: \.offset) { index, value in
+                    let fraction = top > 0 ? max(value, 0) / top : 0
+                    RoundedRectangle(cornerRadius: 2.5, style: .continuous)
+                        .fill(index == values.count - 1 ? tint : Color(.systemGray3))
+                        .frame(width: width, height: max(5, geo.size.height * fraction))
+                }
+            }
+            .frame(width: geo.size.width, height: geo.size.height, alignment: .bottomTrailing)
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+/// One dot per reading on a faint column, newest in the tint: reads like a range, not a line.
+struct MiniDotChart: View {
+    let values: [Double]
+    let tint: Color
+
+    var body: some View {
+        GeometryReader { geo in
+            let count = max(values.count, 1)
+            let dot: CGFloat = 7
+            let spacing = count > 1 ? (geo.size.width - dot) / CGFloat(count - 1) : 0
+            let low = values.min() ?? 0
+            let high = values.max() ?? 0
+            let span = high - low
+            ZStack(alignment: .topLeading) {
+                ForEach(Array(values.enumerated()), id: \.offset) { index, value in
+                    let fraction = span > 0 ? (value - low) / span : 0.5
+                    let y = (geo.size.height - dot) * (1 - fraction)
+                    let x = count > 1 ? CGFloat(index) * spacing : (geo.size.width - dot) / 2
+                    Capsule()
+                        .fill(Color(.systemGray5))
+                        .frame(width: 3, height: geo.size.height)
+                        .offset(x: x + (dot - 3) / 2)
+                    Circle()
+                        .fill(index == values.count - 1 ? tint : Color(.systemGray2))
+                        .frame(width: dot, height: dot)
+                        .offset(x: x, y: y)
+                }
+            }
+        }
+        .accessibilityHidden(true)
     }
 }
 

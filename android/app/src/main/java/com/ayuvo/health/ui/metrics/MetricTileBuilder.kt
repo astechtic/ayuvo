@@ -76,6 +76,14 @@ object MetricTileBuilder {
         }
     }
 
+    /** Daily totals (steps, kcal, water, nutrients) draw as bars on Summary; readings (heart rate, weight) as dots. */
+    fun isCumulative(key: MetricKey): Boolean = when (key) {
+        is MetricKey.App -> AppMetricAggregator.aggregation(key.id).summed
+        is MetricKey.Nutrient -> true
+        is MetricKey.Health -> HealthDataType.byId(key.typeId)?.let { it.isSumType || it.isDurationLike || it == HealthDataType.SLEEP } ?: false
+        is MetricKey.Derived -> false
+    }
+
     fun emptyTile(id: String) = HealthTileUi(id, "—", "", HealthTileUi.CaptionKind.NONE, hasData = false)
 
     /**

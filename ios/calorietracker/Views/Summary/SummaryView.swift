@@ -21,7 +21,6 @@ struct SummaryView: View {
                             .font(.system(.subheadline, design: .rounded))
                             .foregroundStyle(.secondary)
                         Spacer()
-                        AyuvoPrivacyPill(opensPrivacyPage: true)
                     }
                     .padding(.horizontal, 4)
 

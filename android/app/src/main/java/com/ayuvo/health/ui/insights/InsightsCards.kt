@@ -4,35 +4,22 @@ import com.ayuvo.health.insights.InsightsConfig
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material.icons.outlined.Update
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ayuvo.health.R
 import com.ayuvo.health.insights.HealthAgePace
 import com.ayuvo.health.insights.HealthAgeResult
 import com.ayuvo.health.insights.InsightsSnapshot
 import com.ayuvo.health.insights.RecoveryResult
-import com.ayuvo.health.ui.design.AyuvoColors
-import com.ayuvo.health.ui.design.AyuvoPalette
-import com.ayuvo.health.ui.design.CategoryIcon
-import com.ayuvo.health.ui.design.SurfaceCard
+import com.ayuvo.health.ui.design.SummaryTile
+import com.ayuvo.health.ui.design.SummaryTileChart
 import kotlin.math.abs
 
 /** What the Summary Insights section shows (docs/insights.md §7); null hides the section. */
@@ -79,24 +66,24 @@ sealed interface SummaryInsights {
 internal fun InsightsSummarySection(insights: SummaryInsights, onRecovery: () -> Unit, onHealthAge: () -> Unit, onReview: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         when (insights) {
-            is SummaryInsights.Learning -> InsightCard(
+            is SummaryInsights.Learning -> InsightTile(
                 icon = Icons.Outlined.Insights,
                 title = stringResource(R.string.insights_card_learning),
-                subtitle = stringResource(R.string.insights_card_learning_sub, insights.have, insights.need),
-                trailing = null,
+                detail = stringResource(R.string.insights_card_learning_sub, insights.have, insights.need),
                 tag = "summary.card.insightsLearning",
                 onClick = onRecovery
             )
             is SummaryInsights.Cards -> {
                 RecoveryCard(insights, onRecovery)
                 HealthAgeCard(insights.healthAge, insights.pace, onHealthAge)
-                InsightCard(
+                InsightTile(
                     icon = Icons.Outlined.Checklist,
                     title = stringResource(R.string.insights_daily_review),
-                    subtitle = if (insights.dayScore == null) stringResource(R.string.insights_day_score_none)
+                    trailing = stringResource(R.string.health_home_today),
+                    value = insights.dayScore?.toString() ?: "",
+                    detail = if (insights.dayScore == null) stringResource(R.string.insights_day_score_none)
                     else stringResource(R.string.insights_card_review_sub, insights.wentWell, insights.toWatch),
-                    trailing = insights.dayScore?.toString() ?: InsightsFormat.MISSING,
-                    trailingColor = InsightsFormat.scoreColor(insights.dayScore),
+                    chart = insights.dayScore?.let { SummaryTileChart.Ring(it / 100f) } ?: SummaryTileChart.None,
                     tag = "summary.card.review",
                     onClick = onReview
                 )
@@ -109,57 +96,53 @@ internal fun InsightsSummarySection(insights: SummaryInsights, onRecovery: () ->
 private fun RecoveryCard(c: SummaryInsights.Cards, onClick: () -> Unit) {
     val r = c.recovery
     if (!r.ok) {
-        InsightCard(
+        InsightTile(
             icon = Icons.Outlined.Insights,
             title = stringResource(R.string.insights_recovery),
-            subtitle = stringResource(if (r.status == "no_sleep") R.string.insights_no_sleep else R.string.insights_no_heart),
-            trailing = InsightsFormat.MISSING,
+            trailing = stringResource(R.string.health_home_today),
+            detail = stringResource(if (r.status == "no_sleep") R.string.insights_no_sleep else R.string.insights_no_heart),
             tag = "summary.card.recovery",
             onClick = onClick
         )
         return
     }
-    val color = InsightsFormat.recoveryColor(r.label)
-    SurfaceCard(padding = PaddingValues(14.dp), onClick = onClick, modifier = Modifier.testTag("summary.card.recovery")) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            ScoreRing(r.score, color, "", size = 56.dp, stroke = 6.dp)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(stringResource(R.string.insights_recovery), fontSize = 13.sp, color = AyuvoColors.secondaryLabel())
-                Text(InsightsText.bandLabel(LocalContext.current, r.label, r.labelText), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = color)
-                val context = LocalContext.current
-                val signals = (r.positives + r.negatives).sortedByDescending { abs(it.impact) }.take(2)
-                signals.forEach { Text(InsightsText.signal(context, InsightsConfig.active, r, it), fontSize = 13.sp, color = AyuvoColors.secondaryLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
-            }
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = AyuvoColors.tertiaryLabel())
-        }
-    }
+    val context = LocalContext.current
+    val top = (r.positives + r.negatives).maxByOrNull { abs(it.impact) }
+    InsightTile(
+        icon = Icons.Outlined.Insights,
+        title = stringResource(R.string.insights_recovery),
+        trailing = stringResource(R.string.health_home_today),
+        value = InsightsText.bandLabel(context, r.label, r.labelText),
+        detail = top?.let { InsightsText.signal(context, InsightsConfig.active, r, it) },
+        chart = SummaryTileChart.Ring((r.score ?: 0) / 100f, r.score?.toString()),
+        tag = "summary.card.recovery",
+        onClick = onClick
+    )
 }
 
 @Composable
 private fun HealthAgeCard(h: HealthAgeResult, pace: HealthAgePace, onClick: () -> Unit) {
+    val title = stringResource(R.string.insights_health_age)
     when (h.status) {
-        "ok" -> InsightCard(
+        "ok" -> InsightTile(
             icon = Icons.Outlined.Update,
-            title = stringResource(R.string.insights_health_age),
-            subtitle = (paceText(pace)?.let { "$it · " } ?: "") + differenceText(h.difference),
-            trailing = InsightsFormat.number(h.healthAge, 1),
+            title = title,
+            value = InsightsFormat.number(h.healthAge, 1),
+            detail = (paceText(pace)?.let { "$it · " } ?: "") + differenceText(h.difference),
             tag = "summary.card.healthAge",
             onClick = onClick
         )
-        "collecting" -> InsightCard(
+        "collecting" -> InsightTile(
             icon = Icons.Outlined.Update,
-            title = stringResource(R.string.insights_health_age),
-            subtitle = stringResource(R.string.insights_collecting_days, h.collecting?.have ?: 0, h.collecting?.need ?: 30),
-            trailing = null,
+            title = title,
+            detail = stringResource(R.string.insights_collecting_days, h.collecting?.have ?: 0, h.collecting?.need ?: 30),
             tag = "summary.card.healthAge",
             onClick = onClick
         )
-        "no_birthday" -> InsightCard(
+        "no_birthday" -> InsightTile(
             icon = Icons.Outlined.Update,
-            title = stringResource(R.string.insights_health_age),
-            subtitle = stringResource(R.string.insights_no_birthday_body),
-            trailing = null,
+            title = title,
+            detail = stringResource(R.string.insights_no_birthday_body),
             tag = "summary.card.healthAge",
             onClick = onClick
         )
@@ -168,28 +151,25 @@ private fun HealthAgeCard(h: HealthAgeResult, pace: HealthAgePace, onClick: () -
 }
 
 @Composable
-private fun InsightCard(
+private fun InsightTile(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
-    subtitle: String?,
-    trailing: String?,
     tag: String,
-    trailingColor: androidx.compose.ui.graphics.Color = InsightsFormat.Insights,
+    trailing: String? = null,
+    value: String = "",
+    detail: String? = null,
+    chart: SummaryTileChart = SummaryTileChart.None,
     onClick: () -> Unit
 ) {
-    SurfaceCard(padding = PaddingValues(14.dp), onClick = onClick, modifier = Modifier.testTag(tag)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            CategoryIcon(icon, InsightsFormat.Insights, size = 32.dp)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                if (!subtitle.isNullOrBlank()) Text(subtitle, fontSize = 13.sp, color = AyuvoColors.secondaryLabel(), maxLines = 2, overflow = TextOverflow.Ellipsis)
-            }
-            if (trailing != null) {
-                Spacer(Modifier.width(8.dp))
-                Text(trailing, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = if (trailing == InsightsFormat.MISSING) AyuvoPalette.Other else trailingColor)
-            }
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = AyuvoColors.tertiaryLabel())
-        }
-    }
+    SummaryTile(
+        title = title,
+        icon = icon,
+        tint = InsightsFormat.Insights,
+        trailing = trailing,
+        value = value,
+        detail = detail,
+        chart = chart,
+        modifier = Modifier.testTag(tag),
+        onClick = onClick
+    )
 }

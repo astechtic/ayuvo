@@ -13,9 +13,7 @@ struct CycleSummaryCard: View {
                 Button {
                     navigator.openBrowse([.cycle])
                 } label: {
-                    MetricRow(systemImage: "calendar.circle.fill", tint: CycleStyle.period,
-                              title: String(localized: "Period tracker"), subtitle: text)
-                        .ayuvoCard()
+                    tile(text)
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("summary.card.cycle")
@@ -25,6 +23,24 @@ struct CycleSummaryCard: View {
             guard enabled else { return }
             if CycleRuntime.shared.databaseExists { await store.refreshIfDayChanged() }
         }
+    }
+
+    /// "Cycle day 12" large, the rest of the status ("estimated period in 9 days") under it.
+    private func tile(_ text: String) -> some View {
+        let day = store.snapshot?.today.cycleDay.map { String(localized: "Cycle day \($0)") }
+        var detail: String? = text
+        if let day, text.hasPrefix(day) {
+            let rest = text.dropFirst(day.count).trimmingCharacters(in: CharacterSet(charactersIn: " ·"))
+            detail = rest.isEmpty ? nil : rest
+        }
+        return SummaryTile(
+            title: String(localized: "Period tracker"),
+            systemImage: "calendar.circle.fill",
+            tint: CycleStyle.period,
+            trailing: String(localized: "Today"),
+            value: day ?? "",
+            detail: day == nil ? text : detail
+        )
     }
 
     /// Status for the card and the Browse row.

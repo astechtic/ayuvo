@@ -3,8 +3,8 @@ package com.ayuvo.health.ui.cycle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Loop
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -14,7 +14,6 @@ import com.ayuvo.health.AppContainer
 import com.ayuvo.health.R
 import com.ayuvo.health.cycle.engine.CycleSnapshot
 import com.ayuvo.health.ui.design.AyuvoPalette
-import com.ayuvo.health.ui.summary.TodayCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -67,11 +66,13 @@ fun CycleTodayCard(summary: CycleSummary, onOpen: () -> Unit) {
         }
         else -> null
     }
-    TodayCard(
+    com.ayuvo.health.ui.design.SummaryTile(
+        title = stringResource(R.string.cycle_browse_title),
         icon = Icons.Filled.Loop,
         tint = AyuvoPalette.Cycle,
-        title = stringResource(R.string.cycle_card_title, day),
-        subtitle = subtitle,
+        trailing = stringResource(R.string.health_home_today),
+        value = stringResource(R.string.cycle_card_title, day),
+        detail = subtitle,
         modifier = Modifier.testTag("summary.card.cycle"),
         onClick = onOpen
     )

@@ -38,14 +38,12 @@ struct SummaryHighlightsSection: View {
                         Button {
                             recordsStore.openRecordFromCoach(item.record.id)
                         } label: {
-                            VStack(alignment: .leading, spacing: 6) {
-                                RecordHighlightRow(text: item.highlight.displayText)
-                                Text(item.record.title)
-                                    .font(.system(.caption, design: .rounded))
-                                    .foregroundStyle(.secondary)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .ayuvoCard()
+                            SummaryTile(
+                                title: item.record.title,
+                                systemImage: "doc.text.fill",
+                                tint: AyuvoPalette.records,
+                                detail: item.highlight.displayText
+                            )
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("summary.card.records")
@@ -55,13 +53,12 @@ struct SummaryHighlightsSection: View {
                         Button {
                             navigator.summaryPath.append(MetricRoute.detail(.app(.weight)))
                         } label: {
-                            MetricRow(
-                                systemImage: "scalemass",
-                                tint: AyuvoPalette.body,
+                            SummaryTile(
                                 title: String(localized: "Weight trend"),
-                                subtitle: weightTrendText
+                                systemImage: "scalemass.fill",
+                                tint: AyuvoPalette.body,
+                                detail: weightTrendText
                             )
-                            .ayuvoCard()
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("summary.card.weightTrend")
@@ -71,13 +68,13 @@ struct SummaryHighlightsSection: View {
                         Button {
                             navigator.openWorkouts()
                         } label: {
-                            MetricRow(
+                            SummaryTile(
+                                title: String(localized: "Last workout"),
                                 systemImage: "dumbbell.fill",
                                 tint: AyuvoPalette.activity,
-                                title: String(localized: "Last workout"),
-                                subtitle: latestWorkout.completedAt.formatted(date: .abbreviated, time: .shortened)
+                                trailing: HealthUnitFormatting.relativeText(latestWorkout.completedAt),
+                                detail: latestWorkout.completedAt.formatted(date: .abbreviated, time: .shortened)
                             )
-                            .ayuvoCard()
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("summary.card.lastWorkout")

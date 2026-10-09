@@ -22,13 +22,16 @@ struct PartnerSummaryCard: View {
 
     private var card: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                CategoryIconView(systemImage: "person.2.fill", tint: AyuvoPalette.partner, size: 28)
+            HStack(spacing: 6) {
+                Image(systemName: "person.2.fill")
+                    .font(.system(.subheadline, weight: .semibold))
+                    .accessibilityHidden(true)
                 Text("Partners", comment: "Summary card title: partners' shared health data")
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 Spacer()
                 PartnerReadOnlyBadge()
             }
+            .foregroundStyle(AyuvoPalette.partner)
             ForEach(Array(shown.enumerated()), id: \.element.id) { index, item in
                 if index > 0 { Divider() }
                 Button {

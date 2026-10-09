@@ -45,8 +45,18 @@ struct SummaryTodaySection: View {
                 Button {
                     navigator.openBrowse([.fasting])
                 } label: {
-                    ActiveFastingRow(session: active)
-                        .ayuvoCard()
+                    TimelineView(.periodic(from: .now, by: 1)) { context in
+                        let elapsed = active.duration(at: context.date)
+                        SummaryTile(
+                            title: String(localized: "Fast in progress"),
+                            systemImage: "timer",
+                            tint: AyuvoPalette.fasting,
+                            trailing: String(localized: "Started \(active.startedAt.formatted(date: .omitted, time: .shortened))"),
+                            value: FastingDurationFormatter.compact(seconds: elapsed),
+                            detail: String(localized: "\(FastingDurationFormatter.goal(minutes: active.goalMinutes)) goal"),
+                            chart: .ring(progress: elapsed / TimeInterval(max(active.goalMinutes, 1) * 60), text: nil)
+                        )
+                    }
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("summary.card.fasting")
@@ -56,13 +66,12 @@ struct SummaryTodaySection: View {
                 Button {
                     navigator.openWorkouts()
                 } label: {
-                    MetricRow(
+                    SummaryTile(
+                        title: String(localized: "Workout today"),
                         systemImage: "figure.strengthtraining.traditional",
                         tint: AyuvoPalette.activity,
-                        title: String(localized: "Workout today"),
-                        subtitle: todayWorkoutSummary
+                        detail: todayWorkoutSummary
                     )
-                    .ayuvoCard()
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("summary.card.workouts")

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Favourite metric tiles (two columns, 7-day sparkline) with an Edit link to the pins editor.
+/// Favourite metrics as full-width Apple Health style tiles (value + 7-day mini chart) with an Edit link.
 struct SummaryFavouritesSection: View {
     @Environment(AppNavigator.self) private var navigator
     @Environment(HealthDataStore.self) private var healthStore
@@ -13,8 +13,6 @@ struct SummaryFavouritesSection: View {
     @Environment(ImportedHealthWorkoutStore.self) private var importedWorkoutStore
     @Environment(ProfileStore.self) private var profileStore
     @Environment(MedicationStore.self) private var medicationStore
-
-    private let columns = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
 
     private var sources: MetricDataSources {
         MetricDataSources(
@@ -51,7 +49,7 @@ struct SummaryFavouritesSection: View {
                 }
                 .ayuvoCard()
             } else {
-                LazyVGrid(columns: columns, spacing: 12) {
+                VStack(spacing: 12) {
                     ForEach(tiles) { tile in
                         if let key = MetricKey(pinID: tile.key) {
                             NavigationLink(value: MetricRoute.detail(key)) {

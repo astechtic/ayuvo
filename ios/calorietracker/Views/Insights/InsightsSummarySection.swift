@@ -31,10 +31,8 @@ struct InsightsSummarySection: View {
                         learningCard(collecting)
                     } else {
                         recoveryCard(report.recovery)
-                        HStack(alignment: .top, spacing: 12) {
-                            healthAgeCard(report.healthAge)
-                            reviewCard(report.reviews[report.today])
-                        }
+                        healthAgeCard(report.healthAge)
+                        reviewCard(report.reviews[report.today])
                     }
                 }
             }
@@ -85,82 +83,55 @@ struct InsightsSummarySection: View {
     }
 
     private func recoveryCard(_ recovery: RecoveryResult) -> some View {
-        Button { open(.recovery) } label: {
-            HStack(spacing: 16) {
-                InsightsScoreRing(score: recovery.isReady ? recovery.score : nil, tint: InsightsText.recoveryTint(recovery.label), size: 72, lineWidth: 9)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Recovery")
-                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                        .foregroundStyle(AyuvoPalette.insights)
-                    Text(recovery.isReady ? (InsightsConfig.shared.bandLabel(recovery.label, english: recovery.labelText) ?? "") : Self.waitingText(recovery))
-                        .font(.system(.headline, design: .rounded))
-                    ForEach(topSignals(recovery), id: \.id) { signal in
-                        Text(InsightsConfig.shared.signalText(signal, in: recovery))
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                    }
-                }
-                Spacer(minLength: 24)
-            }
-            .ayuvoCard()
+        let label = recovery.isReady ? InsightsConfig.shared.bandLabel(recovery.label, english: recovery.labelText) : nil
+        return Button { open(.recovery) } label: {
+            SummaryTile(
+                title: String(localized: "Recovery"),
+                systemImage: "bolt.heart.fill",
+                tint: AyuvoPalette.insights,
+                trailing: String(localized: "Today"),
+                value: label ?? InsightsText.missing,
+                detail: recovery.isReady ? topSignals(recovery).first.map { InsightsConfig.shared.signalText($0, in: recovery) } : Self.waitingText(recovery),
+                chart: .ring(progress: Double(recovery.isReady ? recovery.score ?? 0 : 0) / 100,
+                             text: recovery.isReady ? recovery.score.map { "\($0)" } : nil)
+            )
         }
         .buttonStyle(.plain)
-        .overlay(alignment: .topTrailing) { infoButton(.recovery).padding(12) }
         .accessibilityIdentifier("summary.card.recovery")
     }
 
     private func healthAgeCard(_ result: HealthAgeResult) -> some View {
-        Button { open(.healthAge) } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Health Age")
-                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                    .foregroundStyle(AyuvoPalette.insights)
-                if result.isReady, let age = result.healthAge {
-                    Text(age.formatted(.number.precision(.fractionLength(1))))
-                        .font(.ayuvoNumber(.title2))
-                    if let actual = result.actualAge {
-                        Text("Actual \(actual.formatted(.number.precision(.fractionLength(1))))")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundStyle(.secondary)
-                    }
-                    HealthAgePaceChip(pace: store.pace)
-                } else {
-                    Text(InsightsText.missing)
-                        .font(.ayuvoNumber(.title2))
-                        .foregroundStyle(.secondary)
-                    Text(result.collecting.map { String(localized: "Collecting data (\($0.have)/\($0.need) days)") }
-                         ?? String(localized: "Not enough data yet"))
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .frame(maxWidth: .infinity, minHeight: 104, alignment: .topLeading)
-            .ayuvoCard(padding: 12)
+        let ready = result.isReady && result.healthAge != nil
+        return Button { open(.healthAge) } label: {
+            SummaryTile(
+                title: String(localized: "Health Age"),
+                systemImage: "hourglass",
+                tint: AyuvoPalette.insights,
+                value: ready ? (result.healthAge ?? 0).formatted(.number.precision(.fractionLength(1))) : InsightsText.missing,
+                detail: ready
+                    ? result.actualAge.map { String(localized: "Actual \($0.formatted(.number.precision(.fractionLength(1))))") }
+                    : (result.collecting.map { String(localized: "Collecting data (\($0.have)/\($0.need) days)") }
+                        ?? String(localized: "Not enough data yet"))
+            )
         }
         .buttonStyle(.plain)
-        .overlay(alignment: .topTrailing) { infoButton(.healthAge).padding(8) }
         .accessibilityIdentifier("summary.card.healthAge")
     }
 
     private func reviewCard(_ review: DailyReviewResult?) -> some View {
-        Button { open(.review(nil)) } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Daily Review")
-                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                    .foregroundStyle(AyuvoPalette.insights)
-                Text(review?.dayScore.map { "\($0)" } ?? InsightsText.missing)
-                    .font(.ayuvoNumber(.title2))
-                    .foregroundStyle(review?.dayScore == nil ? .secondary : .primary)
-                Text(review?.dayScore == nil ? String(localized: "Nothing logged yet") : String(localized: "Day Score"))
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, minHeight: 104, alignment: .topLeading)
-            .ayuvoCard(padding: 12)
+        let score = review?.dayScore
+        return Button { open(.review(nil)) } label: {
+            SummaryTile(
+                title: String(localized: "Daily Review"),
+                systemImage: "checklist",
+                tint: AyuvoPalette.insights,
+                trailing: String(localized: "Today"),
+                value: score.map { "\($0)" } ?? InsightsText.missing,
+                detail: score == nil ? String(localized: "Nothing logged yet") : String(localized: "Day Score"),
+                chart: score.map { .ring(progress: Double($0) / 100, text: nil) } ?? .none
+            )
         }
         .buttonStyle(.plain)
-        .overlay(alignment: .topTrailing) { infoButton(.dailyReview).padding(8) }
         .accessibilityIdentifier("summary.card.review")
     }
 

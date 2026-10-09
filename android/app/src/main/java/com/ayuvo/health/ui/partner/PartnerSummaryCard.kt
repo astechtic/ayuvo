@@ -42,7 +42,6 @@ import com.ayuvo.health.partner.logic.SummaryMetric
 import com.ayuvo.health.ui.design.AyuvoColors
 import com.ayuvo.health.ui.design.AyuvoPalette
 import com.ayuvo.health.ui.design.AyuvoSpacing
-import com.ayuvo.health.ui.design.CategoryIcon
 import com.ayuvo.health.ui.design.SurfaceCard
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -115,9 +114,12 @@ fun PartnerSummaryCard(rows: List<PartnerSummaryRow>, onOpen: (String) -> Unit) 
     if (rows.isEmpty()) return
     SurfaceCard(padding = PaddingValues(0.dp), modifier = Modifier.testTag("summary.card.partner")) {
         Row(Modifier.fillMaxWidth().padding(start = 14.dp, end = 14.dp, top = 12.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-            CategoryIcon(Icons.Filled.People, AyuvoPalette.Partner, size = 28.dp)
-            Spacer(Modifier.width(10.dp))
-            Text(stringResource(R.string.partner_summary_title), fontSize = 16.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+            Icon(Icons.Filled.People, contentDescription = null, tint = AyuvoPalette.Partner, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(6.dp))
+            Text(
+                stringResource(R.string.partner_summary_title), fontSize = 15.sp, fontWeight = FontWeight.SemiBold,
+                color = AyuvoPalette.Partner, modifier = Modifier.weight(1f)
+            )
             PartnerBadge(stringResource(R.string.partner_read_only))
         }
         rows.forEachIndexed { index, row ->

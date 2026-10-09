@@ -332,7 +332,7 @@ fun Sparkline(
     }
 }
 
-/** Favourite tile: category label, big value, caption and a 7-day sparkline. */
+/** Favourite tile on Summary (Apple Health style): value with a 7-day mini chart, bars for daily totals, dots for readings. */
 @Composable
 fun MetricTile(
     title: String,
@@ -344,56 +344,25 @@ fun MetricTile(
     spark: List<Float>,
     hasData: Boolean,
     modifier: Modifier = Modifier,
+    cumulative: Boolean = false,
     onClick: () -> Unit
 ) {
-    SurfaceCard(
-        modifier = modifier.heightIn(min = 116.dp),
-        padding = PaddingValues(14.dp),
-        onClick = onClick
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(16.dp))
-            Spacer(Modifier.width(6.dp))
-            Text(
-                title,
-                modifier = Modifier.weight(1f),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = tint,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        Spacer(Modifier.weight(1f, fill = false).heightIn(min = 12.dp))
-        Row(verticalAlignment = Alignment.Bottom) {
-            Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.Bottom) {
-                    Text(
-                        if (hasData) value else "—",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    if (hasData && !unit.isNullOrBlank()) {
-                        Spacer(Modifier.width(3.dp))
-                        Text(
-                            unit,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = AyuvoColors.secondaryLabel(),
-                            modifier = Modifier.padding(bottom = 3.dp),
-                            maxLines = 1
-                        )
-                    }
-                }
-                if (!caption.isNullOrBlank()) {
-                    Text(caption, fontSize = 12.sp, color = AyuvoColors.secondaryLabel(), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                }
-            }
-            if (hasData) Sparkline(spark, tint)
-        }
+    val chart = when {
+        spark.count { it.isFinite() } < 2 -> SummaryTileChart.None
+        cumulative -> SummaryTileChart.Bars(spark)
+        else -> SummaryTileChart.Dots(spark)
     }
+    SummaryTile(
+        title = title,
+        icon = icon,
+        tint = tint,
+        modifier = modifier,
+        trailing = caption,
+        value = if (hasData) value else "—",
+        unit = unit.takeIf { hasData },
+        chart = chart,
+        onClick = onClick
+    )
 }
 
 /** Browse / detail list row: title with caption on the left, latest value on the right. */

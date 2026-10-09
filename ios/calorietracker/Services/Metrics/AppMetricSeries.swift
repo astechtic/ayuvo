@@ -372,7 +372,8 @@ enum MetricTileBuilder {
                     key: pin, title: descriptor.title, systemImage: descriptor.systemImage, tint: descriptor.tint,
                     valueText: display.value, unitText: display.unit, at: tile.at,
                     sparkline: tile.sparkline.map { AppMetricFormat.chartValue($0, metric: metric) ?? $0 },
-                    caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today")
+                    caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today"),
+                    cumulative: isCumulative(descriptor.aggregation)
                 ))
             case .nutrient(let nutrientKey):
                 let parts = sources.nutrientTotals.entries(nutrientKey)
@@ -381,7 +382,8 @@ enum MetricTileBuilder {
                     key: pin, title: descriptor.title, systemImage: descriptor.systemImage, tint: descriptor.tint,
                     valueText: NutrientCatalog.number(tile.value), unitText: NutrientCatalog.unit(nutrientKey), at: tile.at,
                     sparkline: tile.sparkline,
-                    caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today")
+                    caption: tile.value == nil ? String(localized: "No data") : String(localized: "Today"),
+                    cumulative: true
                 ))
             case .derived(let metricID):
                 guard let info = DerivedCatalog.shared.byID[metricID] else { continue }
@@ -398,7 +400,7 @@ enum MetricTileBuilder {
                 tiles.append(MetricTileModel(
                     key: pin, title: descriptor.title, systemImage: descriptor.systemImage, tint: descriptor.tint,
                     valueText: display.value, unitText: display.unit, at: nil, sparkline: snapshot?.sparkline ?? [],
-                    caption: caption
+                    caption: caption, cumulative: isCumulative(descriptor.aggregation)
                 ))
             case .health(let typeID):
                 let model = sources.health.homeSnapshot?.tiles.first { $0.typeID == typeID }
@@ -406,10 +408,19 @@ enum MetricTileBuilder {
                 tiles.append(MetricTileModel(
                     key: pin, title: type.displayName, systemImage: descriptor.systemImage, tint: descriptor.tint,
                     valueText: model?.valueText ?? "—", unitText: model?.unitText ?? HealthUnitFormatting.unitLabel(for: type),
-                    at: model?.at, sparkline: model?.sparkline ?? [], caption: nil
+                    at: model?.at, sparkline: model?.sparkline ?? [], caption: nil,
+                    cumulative: isCumulative(descriptor.aggregation)
                 ))
             }
         }
         return tiles
+    }
+
+    /// Daily totals (steps, kcal, water) draw as bars; readings (heart rate, weight) as dots.
+    private static func isCumulative(_ aggregation: MetricsReference.Aggregation) -> Bool {
+        switch aggregation {
+        case .sum, .duration, .count: true
+        case .avg, .last: false
+        }
     }
 }

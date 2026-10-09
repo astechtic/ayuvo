@@ -22,15 +22,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -215,7 +215,6 @@ fun SummaryScreen(
                         color = com.ayuvo.health.ui.design.AyuvoColors.secondaryLabel(),
                         modifier = Modifier.testTag("summary.date")
                     )
-                    com.ayuvo.health.ui.design.AyuvoPrivacyPill(opensPrivacyPage = true)
                 }
             }
             item(key = "rings") {
@@ -279,26 +278,22 @@ fun SummaryScreen(
                     }
                 }
             } else {
-                ui.favourites.chunked(2).forEachIndexed { index, pair ->
-                    item(key = "fav-row-$index-${pair.joinToString { it.key.storageId }}") {
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(AyuvoSpacing.ItemGap)) {
-                            pair.forEach { fav ->
-                                val key = fav.key
-                                MetricTile(
-                                    title = MetricCatalog.title(context, key),
-                                    icon = MetricCatalog.icon(catalog, key),
-                                    tint = MetricCatalog.color(catalog, key),
-                                    value = fav.tile.number,
-                                    unit = fav.tile.unit,
-                                    caption = tileCaption(fav.tile),
-                                    spark = fav.tile.spark,
-                                    hasData = fav.tile.hasData,
-                                    modifier = Modifier.weight(1f).testTag("summary.favourite.${key.storageId}"),
-                                    onClick = { destinations.openMetric(key) }
-                                )
-                            }
-                            if (pair.size == 1) Spacer(Modifier.weight(1f))
-                        }
+                ui.favourites.forEach { fav ->
+                    val key = fav.key
+                    item(key = "fav-${key.storageId}") {
+                        MetricTile(
+                            title = MetricCatalog.title(context, key),
+                            icon = MetricCatalog.icon(catalog, key),
+                            tint = MetricCatalog.color(catalog, key),
+                            value = fav.tile.number,
+                            unit = fav.tile.unit,
+                            caption = tileCaption(fav.tile),
+                            spark = fav.tile.spark,
+                            hasData = fav.tile.hasData,
+                            cumulative = com.ayuvo.health.ui.metrics.MetricTileBuilder.isCumulative(key),
+                            modifier = Modifier.testTag("summary.favourite.${key.storageId}"),
+                            onClick = { destinations.openMetric(key) }
+                        )
                     }
                 }
             }

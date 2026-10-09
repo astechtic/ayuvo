@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
@@ -26,20 +25,18 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
@@ -63,6 +60,8 @@ import com.ayuvo.health.ui.design.RingId
 import com.ayuvo.health.ui.design.RingSpec
 import com.ayuvo.health.ui.design.RingTrio
 import com.ayuvo.health.ui.design.SurfaceCard
+import com.ayuvo.health.ui.design.SummaryTile
+import com.ayuvo.health.ui.design.SummaryTileChart
 import com.ayuvo.health.ui.medications.MedicationFormat
 import com.ayuvo.health.ui.records.RecordFormat
 import com.ayuvo.health.ui.theme.AppColors
@@ -163,47 +162,7 @@ private fun RingLegend(ring: SummaryRing, label: String, waterUnit: WaterUnit, o
     }
 }
 
-/** A tappable Today card: tinted icon, title, subtitle, optional trailing, optional progress bar. */
-@Composable
-internal fun TodayCard(
-    icon: ImageVector,
-    tint: Color,
-    title: String,
-    subtitle: String?,
-    modifier: Modifier = Modifier,
-    trailing: String? = null,
-    progress: Float? = null,
-    onClick: () -> Unit
-) {
-    SurfaceCard(modifier = modifier, padding = PaddingValues(14.dp), onClick = onClick) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            CategoryIcon(icon, tint, size = 32.dp)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                if (!subtitle.isNullOrBlank()) {
-                    Text(subtitle, fontSize = 13.sp, color = AyuvoColors.secondaryLabel(), maxLines = 2, overflow = TextOverflow.Ellipsis)
-                }
-            }
-            if (trailing != null) {
-                Spacer(Modifier.width(8.dp))
-                Text(trailing, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = tint)
-            }
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = AyuvoColors.tertiaryLabel())
-        }
-        if (progress != null) {
-            Spacer(Modifier.height(10.dp))
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier.fillMaxWidth().height(5.dp).clip(CircleShape),
-                color = tint,
-                trackColor = tint.copy(alpha = 0.16f)
-            )
-        }
-    }
-}
-
-/** Medications today: taken / total and the next due dose (only while a medication is active or paused). */
+/** Medications today: taken / total with a ring and the next due dose (only while a medication is active or paused). */
 @Composable
 internal fun MedicationsTodayCard(timeline: TodayTimeline, onOpen: () -> Unit) {
     val context = LocalContext.current
@@ -211,7 +170,7 @@ internal fun MedicationsTodayCard(timeline: TodayTimeline, onOpen: () -> Unit) {
     val next = timeline.groups.asSequence().flatMap { it.items.asSequence() }
         .firstOrNull { it.status == DoseStatus.DUE || it.status == DoseStatus.SNOOZED || it.status == DoseStatus.SCHEDULED }
     val nextMedication = next?.let { timeline.medications[it.medicationId] }
-    val subtitle = when {
+    val detail = when {
         next != null && nextMedication != null ->
             stringResource(R.string.home_medications_next, MedicationFormat.nameWithStrength(nextMedication), MedicationFormat.time(context, next.scheduledAtMs))
         summary.total == 0 -> stringResource(R.string.home_medications_none_today)
@@ -219,12 +178,14 @@ internal fun MedicationsTodayCard(timeline: TodayTimeline, onOpen: () -> Unit) {
     }
     // Two ids until the UI tests move: the old Home card id wraps the new Summary one.
     Box(Modifier.testTag("home.medicationsCard")) {
-        TodayCard(
+        SummaryTile(
+            title = stringResource(R.string.home_medications_title),
             icon = Icons.Filled.Medication,
             tint = AyuvoPalette.Medications,
-            title = if (summary.total > 0) stringResource(R.string.home_medications_taken, summary.taken, summary.total)
-            else stringResource(R.string.home_medications_title),
-            subtitle = subtitle,
+            trailing = stringResource(R.string.health_home_today),
+            value = if (summary.total > 0) "${summary.taken}/${summary.total}" else "",
+            detail = detail,
+            chart = if (summary.total > 0) SummaryTileChart.Ring(summary.taken.toFloat() / summary.total) else SummaryTileChart.None,
             modifier = Modifier.testTag("summary.card.medications"),
             onClick = onOpen
         )
@@ -243,13 +204,13 @@ internal fun FastingTodayCard(session: FastingSession, onOpen: () -> Unit) {
     }
     val elapsed = session.durationSeconds(now)
     val goalSeconds = session.goalMinutes * 60L
-    TodayCard(
+    SummaryTile(
+        title = stringResource(R.string.fasting_in_progress),
         icon = Icons.Filled.Timer,
         tint = AyuvoPalette.Fasting,
-        title = stringResource(R.string.fasting_in_progress),
-        subtitle = stringResource(R.string.fasting_goal_format, formatFastingDuration(goalSeconds)),
-        trailing = formatFastingDuration(elapsed),
-        progress = if (goalSeconds > 0) (elapsed.toFloat() / goalSeconds).coerceIn(0f, 1f) else null,
+        value = formatFastingDuration(elapsed),
+        detail = stringResource(R.string.fasting_goal_format, formatFastingDuration(goalSeconds)),
+        chart = if (goalSeconds > 0) SummaryTileChart.Ring((elapsed.toFloat() / goalSeconds).coerceIn(0f, 1f)) else SummaryTileChart.None,
         modifier = Modifier.testTag("summary.card.fasting"),
         onClick = onOpen
     )
@@ -264,11 +225,12 @@ internal fun WorkoutTodayCard(sessions: List<WorkoutSession>, onOpen: () -> Unit
         if (minutes > 0) add(stringResource(R.string.summary_minutes_format, minutes))
         if (burns.isNotEmpty()) add(stringResource(R.string.kcal_value_format, burns.sum()))
     }
-    TodayCard(
+    SummaryTile(
+        title = stringResource(R.string.nav_workouts),
         icon = Icons.Filled.FitnessCenter,
         tint = AyuvoPalette.Activity,
-        title = pluralStringResource(R.plurals.summary_workouts_today, sessions.size, sessions.size),
-        subtitle = parts.joinToString(" · ").ifBlank { null },
+        trailing = stringResource(R.string.health_home_today),
+        detail = (listOf(pluralStringResource(R.plurals.summary_workouts_today, sessions.size, sessions.size)) + parts).joinToString(" · "),
         modifier = Modifier.testTag("summary.card.workouts"),
         onClick = onOpen
     )
@@ -284,11 +246,12 @@ internal fun HighlightCard(
     onOpenWorkouts: () -> Unit
 ) {
     when (highlight) {
-        is SummaryHighlight.Record -> TodayCard(
+        is SummaryHighlight.Record -> SummaryTile(
+            title = highlight.item.record.title,
             icon = Icons.Filled.Description,
             tint = AyuvoPalette.Records,
-            title = highlight.item.highlight.text,
-            subtitle = "${highlight.item.record.title} · ${RecordFormat.displayDate(highlight.item.record)}",
+            trailing = RecordFormat.displayDate(highlight.item.record),
+            detail = highlight.item.highlight.text,
             modifier = Modifier.testTag("summary.card.records"),
             onClick = { onOpenRecord(highlight.item.record.id) }
         )
@@ -296,37 +259,37 @@ internal fun HighlightCard(
             val weekly = if (weightMetric) highlight.weeklyChangeKg else highlight.weeklyChangeKg * 2.20462
             val unit = if (weightMetric) stringResource(R.string.unit_kg) else stringResource(R.string.unit_lbs)
             val amount = String.format(Locale.getDefault(), "%.1f %s", abs(weekly), unit)
-            val title = when {
+            val text = when {
                 abs(weekly) < 0.05 -> stringResource(R.string.summary_weight_steady)
                 weekly < 0 -> stringResource(R.string.summary_weight_down, amount)
                 else -> stringResource(R.string.summary_weight_up, amount)
             }
-            TodayCard(
+            SummaryTile(
+                title = stringResource(R.string.metric_weight),
                 icon = Icons.Filled.MonitorWeight,
                 tint = AyuvoPalette.Body,
-                title = title,
-                subtitle = pluralStringResource(R.plurals.summary_weight_trend_basis, highlight.weighIns, highlight.weighIns),
+                detail = text,
                 onClick = onOpenWeight
             )
         }
         is SummaryHighlight.LatestWorkout -> {
             val s = highlight.session
             val first = s.exercises.firstOrNull()?.name
-            val title = when {
+            val name = when {
                 first == null -> stringResource(R.string.home_workout_fallback_title)
                 s.exerciseCount > 1 -> stringResource(R.string.home_workout_title_plus_more, first, s.exerciseCount - 1)
                 else -> first
             }
             val parts = buildList {
-                add(com.ayuvo.health.ui.health.relativeTimeText(s.completedAt.toEpochMilli()))
                 if (s.durationMinutes > 0) add(stringResource(R.string.summary_minutes_format, s.durationMinutes))
                 s.caloriesBurned?.let { add(stringResource(R.string.kcal_value_format, it)) }
             }
-            TodayCard(
+            SummaryTile(
+                title = stringResource(R.string.summary_latest_workout),
                 icon = Icons.Filled.FitnessCenter,
                 tint = AyuvoPalette.Activity,
-                title = title,
-                subtitle = stringResource(R.string.summary_latest_workout) + " · " + parts.joinToString(" · "),
+                trailing = com.ayuvo.health.ui.health.relativeTimeText(s.completedAt.toEpochMilli()),
+                detail = (listOf(name) + parts).joinToString(" · "),
                 onClick = onOpenWorkouts
             )
         }

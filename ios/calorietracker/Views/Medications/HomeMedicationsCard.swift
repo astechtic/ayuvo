@@ -15,56 +15,30 @@ struct HomeMedicationsCard: View {
         return nil
     }
 
-    private var subtitle: String {
+    private var detail: String {
         let summary = store.today.summary
-        var parts: [String] = []
-        if summary.total > 0 {
-            parts.append(String(localized: "Taken \(summary.taken) of \(summary.total)"))
-        } else {
-            parts.append(String(localized: "No doses scheduled today"))
-        }
         if let (item, medication) = nextDose {
-            parts.append(String(localized: "Next \(medication.displayName) at \(MedicationFormatting.timeText(ms: item.scheduledAtMs))"))
-        } else if summary.missed > 0 {
-            parts.append(String(localized: "\(summary.missed) missed doses", comment: "Home medications card: missed doses today"))
+            return String(localized: "Next \(medication.displayName) at \(MedicationFormatting.timeText(ms: item.scheduledAtMs))")
         }
-        return parts.joined(separator: " · ")
+        if summary.missed > 0 {
+            return String(localized: "\(summary.missed) missed doses", comment: "Home medications card: missed doses today")
+        }
+        if summary.total == 0 { return String(localized: "No doses scheduled today") }
+        return String(localized: "Taken \(summary.taken) of \(summary.total)")
     }
 
     var body: some View {
         if store.activeCount + store.pausedCount > 0 {
+            let summary = store.today.summary
             Button(action: onOpen) {
-                HStack(spacing: 12) {
-                    ZStack {
-                        Circle()
-                            .fill(AppColors.calorie.opacity(0.15))
-                            .frame(width: 42, height: 42)
-                        Image(systemName: "pills.fill")
-                            .foregroundColor(AppColors.calorie)
-                            .font(.system(size: 18))
-                    }
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Medications")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(.primary)
-                        Text(subtitle)
-                            .font(.system(size: 12))
-                            .foregroundColor(.secondary)
-                            .lineLimit(2)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.secondary)
-                }
-                .padding(14)
-                .background(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(AppColors.appCard)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
-                        )
+                SummaryTile(
+                    title: String(localized: "Medications"),
+                    systemImage: "pills.fill",
+                    tint: AyuvoPalette.medications,
+                    trailing: String(localized: "Today"),
+                    value: summary.total > 0 ? "\(summary.taken)/\(summary.total)" : InsightsText.missing,
+                    detail: detail,
+                    chart: summary.total > 0 ? .ring(progress: Double(summary.taken) / Double(summary.total), text: nil) : .none
                 )
             }
             .buttonStyle(.plain)
