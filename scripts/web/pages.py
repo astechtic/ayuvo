@@ -1190,7 +1190,7 @@ def build_about() -> Page:
         + privacy_band()
         + band("paper", split(
             "Who", "Published by <em>Yaara Tech</em>.",
-            f'<p>Yaara Tech publishes Ayuvo. The source code is public at <a href="{GITHUB}" rel="noopener">github.com/astechtic/ayuvo</a> under the MIT licence, so what the app stores and sends can be read rather than taken on trust.</p>'
+            f'<p><a href="https://yaaratech.in/" rel="noopener">Yaara Tech</a> publishes Ayuvo. The source code is public at <a href="{GITHUB}" rel="noopener">github.com/astechtic/ayuvo</a> under the MIT licence, so what the app stores and sends can be read rather than taken on trust.</p>'
             f'<p>Questions, corrections and security reports go to <a href="mailto:{EMAIL}">{EMAIL}</a>. There is no account, and there are no ads or analytics, so there is no profile of you to look at either.</p>',
             ["Free, with no subscription, credits or in-app purchases", "Built natively: SwiftUI on iPhone, Jetpack Compose on Android", "Built on earlier open-source work, credited on the open-source page with its licence notice kept"],
             f'<div class="repo"><a class="gh-btn" href="{GITHUB}" rel="noopener">{icon("github")}<span>View on GitHub</span></a><code>MIT licence</code></div>',

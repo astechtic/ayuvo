@@ -1,15 +1,15 @@
 {
  "/": {
-  "date": "2026-09-30",
-  "hash": "6c55ea78392a"
+  "date": "2026-11-22",
+  "hash": "93085621d600"
  },
  "/404": {
   "date": "2026-09-25",
   "hash": "9cc2026fa7a7"
  },
  "/about": {
-  "date": "2026-09-25",
-  "hash": "e7ecd5dd4985"
+  "date": "2026-11-22",
+  "hash": "0e918c97bc60"
  },
  "/ai-providers": {
   "date": "2026-09-25",
@@ -44,16 +44,16 @@
   "hash": "4510b7b69351"
  },
  "/features": {
-  "date": "2026-09-30",
-  "hash": "da19d7384cb9"
+  "date": "2026-11-22",
+  "hash": "c994d5c34047"
  },
  "/features/coach": {
-  "date": "2026-09-28",
-  "hash": "c9593256de48"
+  "date": "2026-11-22",
+  "hash": "d9c7560cf0ec"
  },
  "/features/derived-metrics": {
-  "date": "2026-09-30",
-  "hash": "1095b334b0c2"
+  "date": "2026-11-22",
+  "hash": "35bda9cb4f61"
  },
  "/features/fasting-and-water": {
   "date": "2026-09-25",
@@ -80,8 +80,8 @@
   "hash": "f32a559c4bc0"
  },
  "/features/siri-and-shortcuts": {
-  "date": "2026-09-28",
-  "hash": "71fb9ff25368"
+  "date": "2026-11-22",
+  "hash": "692dc75b014b"
  },
  "/features/switch-phones": {
   "date": "2026-09-25",

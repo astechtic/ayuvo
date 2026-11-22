@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://ayuvo-health.web.app/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/home.jpg</image:loc>
       <image:title>Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.</image:title>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features.jpg</image:loc>
       <image:title>Ayuvo features: nutrition, workouts, health data, records, coach</image:title>
@@ -42,7 +42,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/derived-metrics</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-derived-metrics.jpg</image:loc>
       <image:title>Resting Heart Rate, Zones &amp; Sleep Estimates | Ayuvo</image:title>
@@ -58,7 +58,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/siri-and-shortcuts</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-siri-and-shortcuts.jpg</image:loc>
       <image:title>Siri, Shortcuts &amp; Android Assistant Actions | Ayuvo</image:title>
@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/features/coach</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/features-coach.jpg</image:loc>
       <image:title>AI Health Coach on Your Own Data and Key | Ayuvo</image:title>
@@ -490,7 +490,7 @@
   </url>
   <url>
     <loc>https://ayuvo-health.web.app/about</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <image:image>
       <image:loc>https://ayuvo-health.web.app/assets/og/about.jpg</image:loc>
       <image:title>About Ayuvo: a private, open-source health app for iPhone and Android</image:title>

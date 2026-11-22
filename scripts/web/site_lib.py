@@ -268,7 +268,7 @@ def footer() -> str:
 <div class="footer-col"><p class="footer-h">Help</p><ul><li><a href="/download">Download</a></li><li><a href="/about">About</a></li><li><a href="/support">Support</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
 </div>
 <p class="footer-legal">Apple, the Apple logo, iPhone and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc. Google Play, Android and Health Connect are trademarks of Google LLC. Gemma and MedGemma are trademarks of Google. Ayuvo is an independent app and is not affiliated with or endorsed by Apple or Google. Ayuvo is not a medical device and does not give medical advice.</p>
-<div class="footer-bottom"><span>© 2026 Yaara Tech · MIT licensed</span><span>Set in Fraunces &amp; Manrope · No cookies, no trackers</span></div>
+<div class="footer-bottom"><span>© 2026 <a href="https://yaaratech.in/" rel="noopener">Yaara Tech</a> · MIT licensed</span><span>Set in Fraunces &amp; Manrope · No cookies, no trackers</span></div>
 </div></footer>"""
 
 
@@ -338,7 +338,7 @@ def organization_node() -> dict:
         "name": "Yaara Tech",
         "url": BASE + "/",
         "logo": {"@type": "ImageObject", "url": f"{BASE}/assets/brand/logo-512.png", "width": 512, "height": 512},
-        "sameAs": [GITHUB_OWNER],
+        "sameAs": ["https://yaaratech.in/", GITHUB_OWNER],
         "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": EMAIL, "url": f"{BASE}/support"},
     }
 
