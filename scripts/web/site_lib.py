@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 WEB = ROOT / "web"
 
-BASE = "https://ayuvo-health.web.app"
+BASE = "https://ayuvo.yaaratech.in"  # canonical host; ayuvo-health.web.app still serves the same files (apps link there)
 GITHUB = "https://github.com/astechtic/ayuvo"
 GITHUB_OWNER = "https://github.com/astechtic"
 FUD_AI = "https://github.com/apoorvdarshan/fud-ai"

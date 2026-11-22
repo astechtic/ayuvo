@@ -1,522 +1,522 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://ayuvo-health.web.app/</loc>
+    <loc>https://ayuvo.yaaratech.in/</loc>
     <lastmod>2026-11-22</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/home.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/home.jpg</image:loc>
       <image:title>Ayuvo: your health, your device, your call. Private AI health app for iPhone and Android.</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features</loc>
+    <loc>https://ayuvo.yaaratech.in/features</loc>
     <lastmod>2026-11-22</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features.jpg</image:loc>
       <image:title>Ayuvo features: nutrition, workouts, health data, records, coach</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/nutrition</loc>
+    <loc>https://ayuvo.yaaratech.in/features/nutrition</loc>
     <lastmod>2026-09-30</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-nutrition.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-nutrition.jpg</image:loc>
       <image:title>Private AI Food Scanner &amp; Calorie Tracker | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/workouts</loc>
+    <loc>https://ayuvo.yaaratech.in/features/workouts</loc>
     <lastmod>2026-09-30</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-workouts.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-workouts.jpg</image:loc>
       <image:title>GPS Workout Tracker, Strength Log &amp; Exercises | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/health-data</loc>
+    <loc>https://ayuvo.yaaratech.in/features/health-data</loc>
     <lastmod>2026-09-30</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-health-data.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-health-data.jpg</image:loc>
       <image:title>Apple Health &amp; Health Connect Data Hub | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/derived-metrics</loc>
+    <loc>https://ayuvo.yaaratech.in/features/derived-metrics</loc>
     <lastmod>2026-11-22</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-derived-metrics.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-derived-metrics.jpg</image:loc>
       <image:title>Resting Heart Rate, Zones &amp; Sleep Estimates | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/insights</loc>
+    <loc>https://ayuvo.yaaratech.in/features/insights</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-insights.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-insights.jpg</image:loc>
       <image:title>Recovery Score, Health Age &amp; Health Trends | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/siri-and-shortcuts</loc>
+    <loc>https://ayuvo.yaaratech.in/features/siri-and-shortcuts</loc>
     <lastmod>2026-11-22</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-siri-and-shortcuts.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-siri-and-shortcuts.jpg</image:loc>
       <image:title>Siri, Shortcuts &amp; Android Assistant Actions | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/records-and-medications</loc>
+    <loc>https://ayuvo.yaaratech.in/features/records-and-medications</loc>
     <lastmod>2026-09-30</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-records-and-medications.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-records-and-medications.jpg</image:loc>
       <image:title>Private Health Records &amp; Medication Tracker | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/coach</loc>
+    <loc>https://ayuvo.yaaratech.in/features/coach</loc>
     <lastmod>2026-11-22</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-coach.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-coach.jpg</image:loc>
       <image:title>AI Health Coach on Your Own Data and Key | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/fasting-and-water</loc>
+    <loc>https://ayuvo.yaaratech.in/features/fasting-and-water</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-fasting-and-water.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-fasting-and-water.jpg</image:loc>
       <image:title>Fasting Timer &amp; Water Tracker | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/switch-phones</loc>
+    <loc>https://ayuvo.yaaratech.in/features/switch-phones</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-switch-phones.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-switch-phones.jpg</image:loc>
       <image:title>Move Health Data from iPhone to Android and Back | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/features/on-device-ai</loc>
+    <loc>https://ayuvo.yaaratech.in/features/on-device-ai</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/features-on-device-ai.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/features-on-device-ai.jpg</image:loc>
       <image:title>On-Device AI for Health: MedGemma, Gemma, Qwen | Ayuvo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/privacy-first</loc>
+    <loc>https://ayuvo.yaaratech.in/privacy-first</loc>
     <lastmod>2026-09-30</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/privacy-first.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/privacy-first.jpg</image:loc>
       <image:title>Ayuvo is private by design: your health data stays on your phone.</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/ai-providers</loc>
+    <loc>https://ayuvo.yaaratech.in/ai-providers</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/ai-providers.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/ai-providers.jpg</image:loc>
       <image:title>Ayuvo works with 15 AI providers on your own key</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/open-source</loc>
+    <loc>https://ayuvo.yaaratech.in/open-source</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/open-source.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/open-source.jpg</image:loc>
       <image:title>Ayuvo is open source under the MIT licence on GitHub</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/download</loc>
+    <loc>https://ayuvo.yaaratech.in/download</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/download.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/download.jpg</image:loc>
       <image:title>Download Ayuvo for iPhone and Android</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/compare</loc>
+    <loc>https://ayuvo.yaaratech.in/compare</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/compare.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/compare.jpg</image:loc>
       <image:title>Compare Ayuvo with Guava Health, PicnicHealth, Apple Health, MyChart and Health Connect</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/compare/guava-health</loc>
+    <loc>https://ayuvo.yaaratech.in/compare/guava-health</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/compare-guava-health.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/compare-guava-health.jpg</image:loc>
       <image:title>Guava Health Alternative: Ayuvo, Private and No Account</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/compare/picnichealth</loc>
+    <loc>https://ayuvo.yaaratech.in/compare/picnichealth</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/compare-picnichealth.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/compare-picnichealth.jpg</image:loc>
       <image:title>PicnicHealth Alternative: A Private App, Not a Service</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/compare/apple-health</loc>
+    <loc>https://ayuvo.yaaratech.in/compare/apple-health</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/compare-apple-health.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/compare-apple-health.jpg</image:loc>
       <image:title>Apple Health Alternative? Ayuvo Adds Records and Meds</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/compare/mychart</loc>
+    <loc>https://ayuvo.yaaratech.in/compare/mychart</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/compare-mychart.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/compare-mychart.jpg</image:loc>
       <image:title>MyChart Alternative? Keep a Private Copy of Your Records</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/compare/health-connect</loc>
+    <loc>https://ayuvo.yaaratech.in/compare/health-connect</loc>
     <lastmod>2026-09-25</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/compare-health-connect.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/compare-health-connect.jpg</image:loc>
       <image:title>Health Connect Companion App: What Ayuvo Adds on Android</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients.jpg</image:loc>
       <image:title>Ayuvo nutrient guides: vitamins, minerals, fats and sugar</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-a</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-a</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-a.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-a.jpg</image:loc>
       <image:title>Vitamin A: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-c</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-c</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-c.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-c.jpg</image:loc>
       <image:title>Vitamin C: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-d</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-d</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-d.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-d.jpg</image:loc>
       <image:title>Vitamin D: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-e</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-e</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-e.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-e.jpg</image:loc>
       <image:title>Vitamin E: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-k</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-k</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-k.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-k.jpg</image:loc>
       <image:title>Vitamin K: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-b12</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-b12</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-b12.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-b12.jpg</image:loc>
       <image:title>Vitamin B12: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/folate</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/folate</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-folate.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-folate.jpg</image:loc>
       <image:title>Folate: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/vitamin-b6</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/vitamin-b6</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-vitamin-b6.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-vitamin-b6.jpg</image:loc>
       <image:title>Vitamin B6: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/thiamin</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/thiamin</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-thiamin.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-thiamin.jpg</image:loc>
       <image:title>Thiamin: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/riboflavin</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/riboflavin</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-riboflavin.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-riboflavin.jpg</image:loc>
       <image:title>Riboflavin: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/niacin</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/niacin</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-niacin.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-niacin.jpg</image:loc>
       <image:title>Niacin: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/biotin</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/biotin</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-biotin.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-biotin.jpg</image:loc>
       <image:title>Biotin: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/pantothenic-acid</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/pantothenic-acid</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-pantothenic-acid.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-pantothenic-acid.jpg</image:loc>
       <image:title>Pantothenic acid: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/calcium</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/calcium</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-calcium.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-calcium.jpg</image:loc>
       <image:title>Calcium: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/iron</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/iron</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-iron.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-iron.jpg</image:loc>
       <image:title>Iron: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/magnesium</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/magnesium</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-magnesium.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-magnesium.jpg</image:loc>
       <image:title>Magnesium: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/potassium</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/potassium</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-potassium.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-potassium.jpg</image:loc>
       <image:title>Potassium: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/sodium</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/sodium</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-sodium.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-sodium.jpg</image:loc>
       <image:title>Sodium: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/zinc</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/zinc</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-zinc.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-zinc.jpg</image:loc>
       <image:title>Zinc: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/phosphorus</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/phosphorus</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-phosphorus.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-phosphorus.jpg</image:loc>
       <image:title>Phosphorus: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/chloride</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/chloride</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-chloride.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-chloride.jpg</image:loc>
       <image:title>Chloride: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/copper</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/copper</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-copper.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-copper.jpg</image:loc>
       <image:title>Copper: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/manganese</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/manganese</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-manganese.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-manganese.jpg</image:loc>
       <image:title>Manganese: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/selenium</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/selenium</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-selenium.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-selenium.jpg</image:loc>
       <image:title>Selenium: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/chromium</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/chromium</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-chromium.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-chromium.jpg</image:loc>
       <image:title>Chromium: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/molybdenum</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/molybdenum</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-molybdenum.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-molybdenum.jpg</image:loc>
       <image:title>Molybdenum: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/iodine</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/iodine</loc>
     <lastmod>2026-09-28</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-iodine.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-iodine.jpg</image:loc>
       <image:title>Iodine: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/saturated-fat</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/saturated-fat</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-saturated-fat.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-saturated-fat.jpg</image:loc>
       <image:title>Saturated fat: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/monounsaturated-fat</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/monounsaturated-fat</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-monounsaturated-fat.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-monounsaturated-fat.jpg</image:loc>
       <image:title>Monounsaturated fat: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/polyunsaturated-fat</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/polyunsaturated-fat</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-polyunsaturated-fat.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-polyunsaturated-fat.jpg</image:loc>
       <image:title>Polyunsaturated fat: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/trans-fat</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/trans-fat</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-trans-fat.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-trans-fat.jpg</image:loc>
       <image:title>Trans fat: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/cholesterol</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/cholesterol</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-cholesterol.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-cholesterol.jpg</image:loc>
       <image:title>Cholesterol: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/omega-3</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/omega-3</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-omega-3.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-omega-3.jpg</image:loc>
       <image:title>Omega-3: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/fiber</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/fiber</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-fiber.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-fiber.jpg</image:loc>
       <image:title>Fiber: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/sugar</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/sugar</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-sugar.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-sugar.jpg</image:loc>
       <image:title>Sugar: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/added-sugar</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/added-sugar</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-added-sugar.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-added-sugar.jpg</image:loc>
       <image:title>Added sugar: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/nutrients/caffeine</loc>
+    <loc>https://ayuvo.yaaratech.in/nutrients/caffeine</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/nutrients-caffeine.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/nutrients-caffeine.jpg</image:loc>
       <image:title>Caffeine: what it does, food sources and how much you need</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/about</loc>
+    <loc>https://ayuvo.yaaratech.in/about</loc>
     <lastmod>2026-11-22</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/about.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/about.jpg</image:loc>
       <image:title>About Ayuvo: a private, open-source health app for iPhone and Android</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/privacy</loc>
+    <loc>https://ayuvo.yaaratech.in/privacy</loc>
     <lastmod>2026-10-01</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/privacy.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/privacy.jpg</image:loc>
       <image:title>Ayuvo Privacy Policy: How Your Health Data Is Handled</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/support</loc>
+    <loc>https://ayuvo.yaaratech.in/support</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/support.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/support.jpg</image:loc>
       <image:title>Ayuvo Support: Help, Backups and Data Deletion</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://ayuvo-health.web.app/terms</loc>
+    <loc>https://ayuvo.yaaratech.in/terms</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://ayuvo-health.web.app/assets/og/terms.jpg</image:loc>
+      <image:loc>https://ayuvo.yaaratech.in/assets/og/terms.jpg</image:loc>
       <image:title>Ayuvo Terms of Service: Licence, AI Keys and Disclaimers</image:title>
     </image:image>
   </url>

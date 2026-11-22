@@ -175,7 +175,7 @@ def check_pages(problems: list[str]) -> dict[str, Page]:
                 parts = urlsplit(v)
                 if parts.scheme in ("http", "https"):
                     if (tag, attr) in RESOURCE_ATTRS or tag in ("link", "script"):
-                        if parts.netloc != "ayuvo-health.web.app":
+                        if parts.netloc != "ayuvo.yaaratech.in":
                             problems.append(f"{name}: external resource {v}")
                     elif parts.scheme != "https":
                         problems.append(f"{name}: non-https link {v}")
@@ -225,7 +225,7 @@ def check_sitemap(problems: list[str]):
     text = (WEB / "sitemap.xml").read_text(encoding="utf-8")
     for loc in re.findall(r"<loc>([^<]+)</loc>", text):
         parts = urlsplit(loc)
-        if parts.netloc != "ayuvo-health.web.app":
+        if parts.netloc != "ayuvo.yaaratech.in":
             problems.append(f"sitemap.xml: foreign loc {loc}")
             continue
         if resolve(parts.path or "/", WEB / "index.html") is None:
