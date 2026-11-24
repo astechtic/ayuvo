@@ -4387,6 +4387,14 @@
   "source": "07394cabe925",
   "state": "needs_review"
  },
+ "coach_message_report": {
+  "source": "e46c21057a6a",
+  "state": "needs_review"
+ },
+ "coach_message_reported": {
+  "source": "053e4c339e37",
+  "state": "needs_review"
+ },
  "coach_message_share": {
   "source": "824dab65e089",
   "state": "needs_review"
@@ -4709,6 +4717,46 @@
  },
  "coach_proposal_title": {
   "source": "c99705efe69c",
+  "state": "needs_review"
+ },
+ "coach_report_done": {
+  "source": "26be8c18ad5a",
+  "state": "needs_review"
+ },
+ "coach_report_email": {
+  "source": "c2bd36ec9f86",
+  "state": "needs_review"
+ },
+ "coach_report_email_note": {
+  "source": "686d75edcc9a",
+  "state": "needs_review"
+ },
+ "coach_report_intro": {
+  "source": "e78309290cc0",
+  "state": "needs_review"
+ },
+ "coach_report_reason_harmful": {
+  "source": "af339a4fdabb",
+  "state": "needs_review"
+ },
+ "coach_report_reason_incorrect": {
+  "source": "5f7fae771315",
+  "state": "needs_review"
+ },
+ "coach_report_reason_offensive": {
+  "source": "47f316407f29",
+  "state": "needs_review"
+ },
+ "coach_report_reason_other": {
+  "source": "3a7c1dced9be",
+  "state": "needs_review"
+ },
+ "coach_report_send": {
+  "source": "7865079582b3",
+  "state": "needs_review"
+ },
+ "coach_report_title": {
+  "source": "82c87fa1071f",
   "state": "needs_review"
  },
  "coach_source_connect": {

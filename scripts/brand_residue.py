@@ -57,12 +57,16 @@ ALLOW = [
     ("scripts/brand/render_icons.py", re.compile(r"ROOT / \"ios/")),
     ("scripts/web_check.py", re.compile(r"FORBIDDEN_HOSTS")),
     ("scripts/brand_residue_ios.py", None),
+    # Internal Xcode folder / target names (ios/calorietracker, FudAIWidgets…): paths in contributor docs and
+    # tooling, never user-facing copy. Entries ending in "/" match a directory prefix.
+    ("docs/", re.compile(r"calorietracker")),
+    ("scripts/", re.compile(r"calorietracker|\"FudAI\w*\": \"FudAI\w*\"")),
 ]
 
 
 def allowed(rel: str, line: str) -> bool:
     for suffix, pattern in ALLOW:
-        if rel.endswith(suffix):
+        if rel.startswith(suffix) if suffix.endswith("/") else rel.endswith(suffix):
             if pattern is None or pattern.search(line):
                 return True
     return False
