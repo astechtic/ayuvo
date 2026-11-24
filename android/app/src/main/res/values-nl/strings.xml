@@ -1909,4 +1909,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Niet genoeg gegevens</string>
     <string name="analytics_persistent">Al meerdere dagen</string>
     <string name="analytics_recovery_v2">Herstelindicator</string>
+    <string name="coach_message_report">Antwoord melden</string>
+    <string name="coach_message_reported">Antwoord gemeld</string>
+    <string name="coach_report_title">Dit antwoord melden</string>
+    <string name="coach_report_intro">Vertel ons wat er mis is met dit AI-antwoord. Meldingen helpen ons de veiligheidsinstructies van de coach te verbeteren.</string>
+    <string name="coach_report_reason_offensive">Beledigend of ongepast</string>
+    <string name="coach_report_reason_harmful">Schadelijk of onveilig advies</string>
+    <string name="coach_report_reason_incorrect">Onjuiste informatie</string>
+    <string name="coach_report_reason_other">Iets anders</string>
+    <string name="coach_report_email">Antwoord per e-mail naar Ayuvo sturen</string>
+    <string name="coach_report_email_note">Alleen dit antwoord en de reden worden meegestuurd. Er wordt niets verzonden tenzij je de e-mail verstuurt.</string>
+    <string name="coach_report_send">Melding versturen</string>
+    <string name="coach_report_done">Bedankt. Het antwoord is gemeld.</string>
 </resources>

@@ -438,6 +438,9 @@ class OutdoorWorkoutService : Service() {
         }
     }
 
+    // removeUpdates only unregisters our own listener; a revoked permission throws SecurityException,
+    // which runCatching absorbs.
+    @SuppressLint("MissingPermission")
     private fun stopSensors() {
         locationListener?.let { l ->
             getSystemService(LocationManager::class.java)?.let { lm -> runCatching { LocationManagerCompat.removeUpdates(lm, l) } }
@@ -517,6 +520,7 @@ class OutdoorWorkoutService : Service() {
 
     // -- Notification -----------------------------------------------------------------------------------
 
+    @SuppressLint("MissingPermission") // guarded by WorkoutNotifications.canPost
     private fun notify(state: OutdoorLiveState, force: Boolean) {
         val now = System.currentTimeMillis()
         if (!force && now - lastNotifyMs < NOTIFY_MS) return

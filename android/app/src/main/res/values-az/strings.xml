@@ -1909,4 +1909,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Kifayət qədər məlumat yoxdur</string>
     <string name="analytics_persistent">Bir neçə gündür davam edir</string>
     <string name="analytics_recovery_v2">Bərpa indikatoru</string>
+    <string name="coach_message_report">Cavabı şikayət et</string>
+    <string name="coach_message_reported">Cavab şikayət edildi</string>
+    <string name="coach_report_title">Bu cavabı şikayət et</string>
+    <string name="coach_report_intro">Bu süni intellekt cavabında nəyin səhv olduğunu bizə bildirin. Şikayətlər məşqçinin təhlükəsizlik təlimatlarını yaxşılaşdırmağa kömək edir.</string>
+    <string name="coach_report_reason_offensive">Təhqiramiz və ya uyğunsuz</string>
+    <string name="coach_report_reason_harmful">Zərərli və ya təhlükəli məsləhət</string>
+    <string name="coach_report_reason_incorrect">Yanlış məlumat</string>
+    <string name="coach_report_reason_other">Başqa bir şey</string>
+    <string name="coach_report_email">Cavabı Ayuvo-ya e-poçtla göndər</string>
+    <string name="coach_report_email_note">Yalnız bu cavab və səbəb daxil edilir. E-poçtu göndərməsəniz, heç nə göndərilmir.</string>
+    <string name="coach_report_send">Şikayəti göndər</string>
+    <string name="coach_report_done">Təşəkkürlər. Cavab şikayət edildi.</string>
 </resources>

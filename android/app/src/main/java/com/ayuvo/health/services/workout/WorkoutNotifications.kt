@@ -1,6 +1,7 @@
 package com.ayuvo.health.services.workout
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -135,6 +136,7 @@ object WorkoutNotifications {
     // -- Strength session ------------------------------------------------------------------------
 
     /** Ongoing strength-session notification: elapsed timer plus Finish (docs/workouts-gps.md §1). */
+    @SuppressLint("MissingPermission") // guarded by canPost
     fun showStrength(context: Context, session: ActiveStrengthSession, text: String? = null) {
         if (!canPost(context)) return
         val finish = PendingIntent.getBroadcast(

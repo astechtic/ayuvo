@@ -263,9 +263,15 @@ class PreferencesStore(
     /** Camera measurements (docs/camera-vitals.md §7.1 Settings): keep raw signals, experimental SpO₂, research BP. */
     val vitalsKeepSignals: Flow<Boolean> = ds.data.map { it[Keys.VITALS_KEEP_SIGNALS] ?: true }
     suspend fun setVitalsKeepSignals(v: Boolean) { ds.edit { it[Keys.VITALS_KEEP_SIGNALS] = v } }
-    val vitalsExperimentalEnabled: Flow<Boolean> = ds.data.map { it[Keys.VITALS_EXPERIMENTAL_ENABLED] ?: false }
+    /**
+     * SpO₂ and BP estimates exist only in debug builds: store policies (App Store 1.4.1, Play health claims) reject
+     * blood-oxygen or blood-pressure estimates from phone sensors, so release builds hide the switches and read both
+     * as off whatever is stored (an imported or older preference cannot turn them back on).
+     */
+    val vitalsEstimatesAvailable: Boolean get() = com.ayuvo.health.BuildConfig.DEBUG
+    val vitalsExperimentalEnabled: Flow<Boolean> = ds.data.map { vitalsEstimatesAvailable && (it[Keys.VITALS_EXPERIMENTAL_ENABLED] ?: false) }
     suspend fun setVitalsExperimentalEnabled(v: Boolean) { ds.edit { it[Keys.VITALS_EXPERIMENTAL_ENABLED] = v } }
-    val vitalsResearchEnabled: Flow<Boolean> = ds.data.map { it[Keys.VITALS_RESEARCH_ENABLED] ?: false }
+    val vitalsResearchEnabled: Flow<Boolean> = ds.data.map { vitalsEstimatesAvailable && (it[Keys.VITALS_RESEARCH_ENABLED] ?: false) }
     suspend fun setVitalsResearchEnabled(v: Boolean) { ds.edit { it[Keys.VITALS_RESEARCH_ENABLED] = v } }
 
     /** Cycle tracking (docs/cycle-tracking.md §1, §7): listed everywhere (default) or hidden; fertility marks shown. */

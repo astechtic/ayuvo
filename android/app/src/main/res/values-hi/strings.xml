@@ -1909,4 +1909,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">पर्याप्त डेटा नहीं</string>
     <string name="analytics_persistent">कई दिनों से बना हुआ</string>
     <string name="analytics_recovery_v2">रिकवरी इंडिकेटर</string>
+    <string name="coach_message_report">जवाब की रिपोर्ट करें</string>
+    <string name="coach_message_reported">जवाब की रिपोर्ट हो गई</string>
+    <string name="coach_report_title">इस जवाब की रिपोर्ट करें</string>
+    <string name="coach_report_intro">बताइए कि AI के इस जवाब में क्या गलत है। रिपोर्ट से हमें कोच के सुरक्षा निर्देश बेहतर करने में मदद मिलती है।</string>
+    <string name="coach_report_reason_offensive">आपत्तिजनक या अनुचित</string>
+    <string name="coach_report_reason_harmful">हानिकारक या असुरक्षित सलाह</string>
+    <string name="coach_report_reason_incorrect">गलत जानकारी</string>
+    <string name="coach_report_reason_other">कुछ और</string>
+    <string name="coach_report_email">जवाब ईमेल से Ayuvo को भेजें</string>
+    <string name="coach_report_email_note">केवल यह जवाब और कारण शामिल होते हैं। जब तक आप ईमेल नहीं भेजते, कुछ नहीं भेजा जाता।</string>
+    <string name="coach_report_send">रिपोर्ट भेजें</string>
+    <string name="coach_report_done">धन्यवाद। जवाब की रिपोर्ट कर दी गई।</string>
 </resources>

@@ -1935,4 +1935,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Dati insufficienti</string>
     <string name="analytics_persistent">Da diversi giorni</string>
     <string name="analytics_recovery_v2">Indicatore di recupero</string>
+    <string name="coach_message_report">Segnala risposta</string>
+    <string name="coach_message_reported">Risposta segnalata</string>
+    <string name="coach_report_title">Segnala questa risposta</string>
+    <string name="coach_report_intro">Dicci cosa non va in questa risposta dell\'IA. Le segnalazioni ci aiutano a migliorare le istruzioni di sicurezza del coach.</string>
+    <string name="coach_report_reason_offensive">Offensivo o inappropriato</string>
+    <string name="coach_report_reason_harmful">Consiglio dannoso o pericoloso</string>
+    <string name="coach_report_reason_incorrect">Informazioni errate</string>
+    <string name="coach_report_reason_other">Altro</string>
+    <string name="coach_report_email">Invia la risposta ad Ayuvo via email</string>
+    <string name="coach_report_email_note">Sono inclusi solo questa risposta e il motivo. Non viene inviato nulla finché non invii l\'email.</string>
+    <string name="coach_report_send">Invia segnalazione</string>
+    <string name="coach_report_done">Grazie. La risposta è stata segnalata.</string>
 </resources>

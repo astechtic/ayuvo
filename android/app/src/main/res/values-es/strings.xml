@@ -1935,4 +1935,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">No hay suficientes datos</string>
     <string name="analytics_persistent">Desde hace varios días</string>
     <string name="analytics_recovery_v2">Indicador de recuperación</string>
+    <string name="coach_message_report">Denunciar respuesta</string>
+    <string name="coach_message_reported">Respuesta denunciada</string>
+    <string name="coach_report_title">Denunciar esta respuesta</string>
+    <string name="coach_report_intro">Cuéntanos qué está mal en esta respuesta de la IA. Las denuncias nos ayudan a mejorar las instrucciones de seguridad del coach.</string>
+    <string name="coach_report_reason_offensive">Ofensivo o inapropiado</string>
+    <string name="coach_report_reason_harmful">Consejo dañino o peligroso</string>
+    <string name="coach_report_reason_incorrect">Información incorrecta</string>
+    <string name="coach_report_reason_other">Otra cosa</string>
+    <string name="coach_report_email">Enviar la respuesta a Ayuvo por correo</string>
+    <string name="coach_report_email_note">Solo se incluyen esta respuesta y el motivo. No se envía nada a menos que envíes el correo.</string>
+    <string name="coach_report_send">Enviar denuncia</string>
+    <string name="coach_report_done">Gracias. La respuesta se ha denunciado.</string>
 </resources>

@@ -1884,4 +1884,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">데이터 부족</string>
     <string name="analytics_persistent">며칠째 지속 중</string>
     <string name="analytics_recovery_v2">회복 지표</string>
+    <string name="coach_message_report">답변 신고</string>
+    <string name="coach_message_reported">신고된 답변</string>
+    <string name="coach_report_title">이 답변 신고</string>
+    <string name="coach_report_intro">이 AI 답변의 문제를 알려 주세요. 신고는 코치의 안전 지침을 개선하는 데 도움이 됩니다.</string>
+    <string name="coach_report_reason_offensive">불쾌하거나 부적절함</string>
+    <string name="coach_report_reason_harmful">해롭거나 위험한 조언</string>
+    <string name="coach_report_reason_incorrect">잘못된 정보</string>
+    <string name="coach_report_reason_other">기타</string>
+    <string name="coach_report_email">답변을 이메일로 Ayuvo에 보내기</string>
+    <string name="coach_report_email_note">이 답변과 사유만 포함됩니다. 이메일을 보내지 않으면 아무것도 전송되지 않습니다.</string>
+    <string name="coach_report_send">신고 보내기</string>
+    <string name="coach_report_done">감사합니다. 답변이 신고되었습니다.</string>
 </resources>

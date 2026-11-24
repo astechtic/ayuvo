@@ -1967,4 +1967,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Nedostatek dat</string>
     <string name="analytics_persistent">Trvá několik dní</string>
     <string name="analytics_recovery_v2">Ukazatel regenerace</string>
+    <string name="coach_message_report">Nahlásit odpověď</string>
+    <string name="coach_message_reported">Odpověď nahlášena</string>
+    <string name="coach_report_title">Nahlásit tuto odpověď</string>
+    <string name="coach_report_intro">Řekněte nám, co je s touto odpovědí AI špatně. Hlášení nám pomáhají zlepšovat bezpečnostní pokyny kouče.</string>
+    <string name="coach_report_reason_offensive">Urážlivé nebo nevhodné</string>
+    <string name="coach_report_reason_harmful">Škodlivá nebo nebezpečná rada</string>
+    <string name="coach_report_reason_incorrect">Nesprávné informace</string>
+    <string name="coach_report_reason_other">Něco jiného</string>
+    <string name="coach_report_email">Poslat odpověď do Ayuvo e-mailem</string>
+    <string name="coach_report_email_note">Přiloží se jen tato odpověď a důvod. Nic se neodešle, dokud e-mail neodešlete.</string>
+    <string name="coach_report_send">Odeslat hlášení</string>
+    <string name="coach_report_done">Děkujeme. Odpověď byla nahlášena.</string>
 </resources>

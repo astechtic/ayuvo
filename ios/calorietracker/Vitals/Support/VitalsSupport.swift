@@ -36,12 +36,21 @@ nonisolated enum VitalsSettings {
         defaults.object(forKey: keepSignalsKey) as? Bool ?? true
     }
 
+    /// SpO₂ and BP estimates exist only in Debug builds. App Store guideline 1.4.1 rejects apps that estimate
+    /// blood oxygen or blood pressure from the phone's own sensors, so Release builds hide the switches and treat
+    /// both as off whatever is stored (an imported or older preference cannot turn them back on).
+    #if DEBUG
+    static let estimatesAvailable = true
+    #else
+    static let estimatesAvailable = false
+    #endif
+
     static func experimentalEnabled(_ defaults: UserDefaults = .standard) -> Bool {
-        defaults.object(forKey: experimentalKey) as? Bool ?? false
+        estimatesAvailable && (defaults.object(forKey: experimentalKey) as? Bool ?? false)
     }
 
     static func researchEnabled(_ defaults: UserDefaults = .standard) -> Bool {
-        defaults.object(forKey: researchKey) as? Bool ?? false
+        estimatesAvailable && (defaults.object(forKey: researchKey) as? Bool ?? false)
     }
 
     /// The replay source is used when the launch argument is set (debug builds and the simulator only) or when the

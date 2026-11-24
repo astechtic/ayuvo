@@ -4,8 +4,10 @@ import SwiftUI
 /// an HR trend per mode, HR / RMSSD baselines, history by day and the disclaimer. Finger and face results are never
 /// merged.
 struct VitalsHomeView: View {
-    @AppStorage(VitalsSettings.experimentalKey) private var experimentalEnabled = false
-    @AppStorage(VitalsSettings.researchKey) private var researchEnabled = false
+    @AppStorage(VitalsSettings.experimentalKey) private var storedExperimentalEnabled = false
+    @AppStorage(VitalsSettings.researchKey) private var storedResearchEnabled = false
+    private var experimentalEnabled: Bool { VitalsSettings.estimatesAvailable && storedExperimentalEnabled }
+    private var researchEnabled: Bool { VitalsSettings.estimatesAvailable && storedResearchEnabled }
     @State private var scanMode: VitalsMode?
     @State private var showCompare = false
     @State private var trendMode: VitalsMode = .finger

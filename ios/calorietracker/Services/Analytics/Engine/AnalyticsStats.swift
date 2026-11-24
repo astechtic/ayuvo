@@ -191,6 +191,10 @@ nonisolated enum AnalyticsStats {
 
     // MARK: VO2 max trend
 
+    // Swift 6.4 (Xcode 27) crashes in the optimizer's CopyPropagation pass on this function in Release
+    // archives ("Found outside of lifetime use", String.UTF8View). It is small and runs once per day, so it is
+    // compiled without optimization until the compiler is fixed. Behaviour is unchanged (vectors still apply).
+    @_optimize(none)
     static func vo2maxTrend(readings: [String: [String: Double]], day: String, _ cfg: AnalyticsConfig) -> AJ {
         let fc = cfg["fitness"]
         var kinds: [String: AJ] = [:]

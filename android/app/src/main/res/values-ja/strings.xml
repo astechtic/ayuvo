@@ -1884,4 +1884,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">データが不足しています</string>
     <string name="analytics_persistent">数日間続いています</string>
     <string name="analytics_recovery_v2">リカバリー指標</string>
+    <string name="coach_message_report">回答を報告</string>
+    <string name="coach_message_reported">報告済み</string>
+    <string name="coach_report_title">この回答を報告</string>
+    <string name="coach_report_intro">このAIの回答の問題点を教えてください。報告はコーチの安全指示の改善に役立ちます。</string>
+    <string name="coach_report_reason_offensive">不快または不適切</string>
+    <string name="coach_report_reason_harmful">有害または危険なアドバイス</string>
+    <string name="coach_report_reason_incorrect">誤った情報</string>
+    <string name="coach_report_reason_other">その他</string>
+    <string name="coach_report_email">回答をメールでAyuvoに送る</string>
+    <string name="coach_report_email_note">含まれるのはこの回答と理由だけです。メールを送信しない限り何も送られません。</string>
+    <string name="coach_report_send">報告を送信</string>
+    <string name="coach_report_done">ありがとうございます。回答を報告しました。</string>
 </resources>

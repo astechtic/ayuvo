@@ -40,7 +40,7 @@ class GpsWorkoutFinalizer(private val container: AppContainer) {
         val kept = GpsWorkoutAnalysis.keptPoints(input, cfg)
         if (kept.size < 2) return null
         val result = GpsTrack.gpsTrack(input, cfg)
-        val day = LocalDate.ofInstant(Instant.ofEpochMilli(track.startMs), ZoneId.systemDefault())
+        val day = Instant.ofEpochMilli(track.startMs).atZone(ZoneId.systemDefault()).toLocalDate()
         val person = hrSource.person(day)
         val hr = heartRate(track, if (recovery) end + RECOVERY_WINDOW_MS else end)
         val stats = if (hr.any { it.tMs in track.startMs until end }) {

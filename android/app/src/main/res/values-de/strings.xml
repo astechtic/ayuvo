@@ -1909,4 +1909,16 @@
     <string name="analytics_persistent">Hält seit mehreren Tagen an</string>
     <string name="analytics_recovery_v2">Erholungsindikator</string>
     <string name="analytics_percent">%1$d%%</string>
+    <string name="coach_message_report">Antwort melden</string>
+    <string name="coach_message_reported">Antwort gemeldet</string>
+    <string name="coach_report_title">Diese Antwort melden</string>
+    <string name="coach_report_intro">Sag uns, was an dieser KI-Antwort nicht stimmt. Meldungen helfen uns, die Sicherheitsvorgaben des Coachs zu verbessern.</string>
+    <string name="coach_report_reason_offensive">Beleidigend oder unangemessen</string>
+    <string name="coach_report_reason_harmful">Schädlicher oder gefährlicher Rat</string>
+    <string name="coach_report_reason_incorrect">Falsche Informationen</string>
+    <string name="coach_report_reason_other">Etwas anderes</string>
+    <string name="coach_report_email">Antwort per E-Mail an Ayuvo senden</string>
+    <string name="coach_report_email_note">Nur diese Antwort und der Grund werden übermittelt. Es wird nichts gesendet, solange du die E-Mail nicht abschickst.</string>
+    <string name="coach_report_send">Meldung senden</string>
+    <string name="coach_report_done">Danke. Die Antwort wurde gemeldet.</string>
 </resources>

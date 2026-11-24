@@ -27,7 +27,7 @@ class DerivedIntakeInputs(
     private val weights: Map<LocalDate, Double>,
     private val cfg: IntakeConfig
 ) {
-    private val byDay: Map<LocalDate, List<FoodEntry>> = food.groupBy { LocalDate.ofInstant(it.effectiveEatenAt, zone) }
+    private val byDay: Map<LocalDate, List<FoodEntry>> = food.groupBy { it.effectiveEatenAt.atZone(zone).toLocalDate() }
 
     /** Logged kcal per day (logged days only), the `energy_balance` intake map. */
     val intakeByDay: Map<String, Double> = byDay.entries.associate { (d, list) ->

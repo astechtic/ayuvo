@@ -1961,4 +1961,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Za mało danych</string>
     <string name="analytics_persistent">Utrzymuje się od kilku dni</string>
     <string name="analytics_recovery_v2">Wskaźnik regeneracji</string>
+    <string name="coach_message_report">Zgłoś odpowiedź</string>
+    <string name="coach_message_reported">Odpowiedź zgłoszona</string>
+    <string name="coach_report_title">Zgłoś tę odpowiedź</string>
+    <string name="coach_report_intro">Napisz, co jest nie tak z tą odpowiedzią AI. Zgłoszenia pomagają nam ulepszać zasady bezpieczeństwa coacha.</string>
+    <string name="coach_report_reason_offensive">Obraźliwe lub nieodpowiednie</string>
+    <string name="coach_report_reason_harmful">Szkodliwa lub niebezpieczna rada</string>
+    <string name="coach_report_reason_incorrect">Nieprawdziwe informacje</string>
+    <string name="coach_report_reason_other">Coś innego</string>
+    <string name="coach_report_email">Wyślij odpowiedź do Ayuvo e-mailem</string>
+    <string name="coach_report_email_note">Dołączana jest tylko ta odpowiedź i powód. Nic nie zostanie wysłane, dopóki nie wyślesz e-maila.</string>
+    <string name="coach_report_send">Wyślij zgłoszenie</string>
+    <string name="coach_report_done">Dziękujemy. Odpowiedź została zgłoszona.</string>
 </resources>

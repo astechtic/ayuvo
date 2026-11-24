@@ -1962,4 +1962,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Недостаточно данных</string>
     <string name="analytics_persistent">Сохраняется несколько дней</string>
     <string name="analytics_recovery_v2">Индикатор восстановления</string>
+    <string name="coach_message_report">Пожаловаться на ответ</string>
+    <string name="coach_message_reported">Жалоба отправлена</string>
+    <string name="coach_report_title">Пожаловаться на этот ответ</string>
+    <string name="coach_report_intro">Расскажите, что не так с этим ответом ИИ. Жалобы помогают нам улучшать правила безопасности коуча.</string>
+    <string name="coach_report_reason_offensive">Оскорбительно или неуместно</string>
+    <string name="coach_report_reason_harmful">Вредный или опасный совет</string>
+    <string name="coach_report_reason_incorrect">Неверная информация</string>
+    <string name="coach_report_reason_other">Другое</string>
+    <string name="coach_report_email">Отправить ответ в Ayuvo по почте</string>
+    <string name="coach_report_email_note">Включаются только этот ответ и причина. Ничего не отправляется, пока вы не отправите письмо.</string>
+    <string name="coach_report_send">Отправить жалобу</string>
+    <string name="coach_report_done">Спасибо. Жалоба на ответ отправлена.</string>
 </resources>

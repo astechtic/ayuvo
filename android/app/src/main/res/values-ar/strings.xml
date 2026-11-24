@@ -2013,4 +2013,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">لا توجد بيانات كافية</string>
     <string name="analytics_persistent">مستمر منذ عدة أيام</string>
     <string name="analytics_recovery_v2">مؤشر التعافي</string>
+    <string name="coach_message_report">الإبلاغ عن الرد</string>
+    <string name="coach_message_reported">تم الإبلاغ عن الرد</string>
+    <string name="coach_report_title">الإبلاغ عن هذا الرد</string>
+    <string name="coach_report_intro">أخبرنا بما هو خطأ في رد الذكاء الاصطناعي هذا. تساعدنا البلاغات على تحسين تعليمات الأمان الخاصة بالمدرب.</string>
+    <string name="coach_report_reason_offensive">مسيء أو غير لائق</string>
+    <string name="coach_report_reason_harmful">نصيحة ضارة أو غير آمنة</string>
+    <string name="coach_report_reason_incorrect">معلومات غير صحيحة</string>
+    <string name="coach_report_reason_other">شيء آخر</string>
+    <string name="coach_report_email">إرسال الرد إلى Ayuvo بالبريد الإلكتروني</string>
+    <string name="coach_report_email_note">يُرفق هذا الرد والسبب فقط. لا يُرسل أي شيء ما لم ترسل البريد الإلكتروني.</string>
+    <string name="coach_report_send">إرسال البلاغ</string>
+    <string name="coach_report_done">شكرًا. تم الإبلاغ عن الرد.</string>
 </resources>

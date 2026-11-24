@@ -44,7 +44,7 @@ android {
         applicationId = "com.ayuvo.health"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
         // Release uses localized @string/app_name; debug overrides to "Ayuvo Debug".
         manifestPlaceholders["launcherAppName"] = "@string/app_name"
@@ -78,7 +78,7 @@ android {
     signingConfigs {
         if (keystoreProps.isNotEmpty()) {
             create("release") {
-                storeFile = file(keystoreProps.getProperty("storeFile"))
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile")) // relative to android/, as the template says
                 storePassword = keystoreProps.getProperty("storePassword")
                 keyAlias = keystoreProps.getProperty("keyAlias")
                 keyPassword = keystoreProps.getProperty("keyPassword")

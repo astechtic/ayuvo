@@ -1983,4 +1983,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Недостатньо даних</string>
     <string name="analytics_persistent">Триває кілька днів</string>
     <string name="analytics_recovery_v2">Індикатор відновлення</string>
+    <string name="coach_message_report">Поскаржитися на відповідь</string>
+    <string name="coach_message_reported">Скаргу надіслано</string>
+    <string name="coach_report_title">Поскаржитися на цю відповідь</string>
+    <string name="coach_report_intro">Розкажіть, що не так із цією відповіддю ШІ. Скарги допомагають нам покращувати правила безпеки коуча.</string>
+    <string name="coach_report_reason_offensive">Образливо або недоречно</string>
+    <string name="coach_report_reason_harmful">Шкідлива або небезпечна порада</string>
+    <string name="coach_report_reason_incorrect">Неправильна інформація</string>
+    <string name="coach_report_reason_other">Інше</string>
+    <string name="coach_report_email">Надіслати відповідь до Ayuvo поштою</string>
+    <string name="coach_report_email_note">Додаються лише ця відповідь і причина. Нічого не надсилається, доки ви не надішлете лист.</string>
+    <string name="coach_report_send">Надіслати скаргу</string>
+    <string name="coach_report_done">Дякуємо. Скаргу на відповідь надіслано.</string>
 </resources>

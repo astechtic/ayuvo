@@ -1884,4 +1884,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">数据不足</string>
     <string name="analytics_persistent">已持续数天</string>
     <string name="analytics_recovery_v2">恢复指标</string>
+    <string name="coach_message_report">举报回复</string>
+    <string name="coach_message_reported">已举报</string>
+    <string name="coach_report_title">举报这条回复</string>
+    <string name="coach_report_intro">告诉我们这条 AI 回复有什么问题。举报有助于我们改进教练的安全说明。</string>
+    <string name="coach_report_reason_offensive">冒犯或不当</string>
+    <string name="coach_report_reason_harmful">有害或不安全的建议</string>
+    <string name="coach_report_reason_incorrect">信息不正确</string>
+    <string name="coach_report_reason_other">其他</string>
+    <string name="coach_report_email">通过邮件将回复发送给 Ayuvo</string>
+    <string name="coach_report_email_note">只包含这条回复和原因。除非你发送邮件，否则不会发送任何内容。</string>
+    <string name="coach_report_send">发送举报</string>
+    <string name="coach_report_done">谢谢，已举报这条回复。</string>
 </resources>

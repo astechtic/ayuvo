@@ -1935,4 +1935,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Nu sunt suficiente date</string>
     <string name="analytics_persistent">De câteva zile</string>
     <string name="analytics_recovery_v2">Indicator de recuperare</string>
+    <string name="coach_message_report">Raportează răspunsul</string>
+    <string name="coach_message_reported">Răspuns raportat</string>
+    <string name="coach_report_title">Raportează acest răspuns</string>
+    <string name="coach_report_intro">Spune-ne ce nu este în regulă cu acest răspuns AI. Raportările ne ajută să îmbunătățim instrucțiunile de siguranță ale coachului.</string>
+    <string name="coach_report_reason_offensive">Ofensator sau nepotrivit</string>
+    <string name="coach_report_reason_harmful">Sfat dăunător sau periculos</string>
+    <string name="coach_report_reason_incorrect">Informații incorecte</string>
+    <string name="coach_report_reason_other">Altceva</string>
+    <string name="coach_report_email">Trimite răspunsul către Ayuvo prin e-mail</string>
+    <string name="coach_report_email_note">Sunt incluse doar acest răspuns și motivul. Nu se trimite nimic decât dacă trimiți e-mailul.</string>
+    <string name="coach_report_send">Trimite raportarea</string>
+    <string name="coach_report_done">Mulțumim. Răspunsul a fost raportat.</string>
 </resources>

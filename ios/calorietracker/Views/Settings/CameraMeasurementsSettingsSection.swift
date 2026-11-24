@@ -17,6 +17,7 @@ struct CameraMeasurementsSettingsSection: View {
             }
             .tint(AppColors.calorie)
             .accessibilityIdentifier("settings.vitals.keepSignals")
+            if VitalsSettings.estimatesAvailable {
             Toggle(isOn: $experimentalEnabled) {
                 settingLabel("Experimental estimates", detail: "SpO₂ from a finger scan, only against your own oximeter calibration.",
                              icon: "flask.fill")
@@ -29,6 +30,7 @@ struct CameraMeasurementsSettingsSection: View {
             }
             .tint(AppColors.calorie)
             .accessibilityIdentifier("settings.vitals.research")
+            }
             Button(role: .destructive) {
                 confirmDeleteAll = true
             } label: {

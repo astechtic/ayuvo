@@ -11,8 +11,10 @@ struct VitalsReferenceSheet: View {
     var onSaved: (VitalScanRecord?) -> Void = { _ in }
 
     @Environment(\.dismiss) private var dismiss
-    @AppStorage(VitalsSettings.experimentalKey) private var experimentalEnabled = false
-    @AppStorage(VitalsSettings.researchKey) private var researchEnabled = false
+    @AppStorage(VitalsSettings.experimentalKey) private var storedExperimentalEnabled = false
+    @AppStorage(VitalsSettings.researchKey) private var storedResearchEnabled = false
+    private var experimentalEnabled: Bool { VitalsSettings.estimatesAvailable && storedExperimentalEnabled }
+    private var researchEnabled: Bool { VitalsSettings.estimatesAvailable && storedResearchEnabled }
 
     @State private var heartRate = ""
     @State private var rmssd = ""
@@ -237,8 +239,10 @@ struct VitalsReferenceSection: View {
 /// Camera measurements › Calibration: what the experimental SpO₂ and research BP calibrations need, and the
 /// user's calibrations with delete. Shown only while one of those toggles is on.
 struct VitalsCalibrationView: View {
-    @AppStorage(VitalsSettings.experimentalKey) private var experimentalEnabled = false
-    @AppStorage(VitalsSettings.researchKey) private var researchEnabled = false
+    @AppStorage(VitalsSettings.experimentalKey) private var storedExperimentalEnabled = false
+    @AppStorage(VitalsSettings.researchKey) private var storedResearchEnabled = false
+    private var experimentalEnabled: Bool { VitalsSettings.estimatesAvailable && storedExperimentalEnabled }
+    private var researchEnabled: Bool { VitalsSettings.estimatesAvailable && storedResearchEnabled }
     @State private var calibrations: [VitalCalibration] = []
     @State private var loaded = false
 

@@ -102,7 +102,7 @@ struct GetHealthSamplesIntent: AppIntent {
 
 struct GetSleepIntent: AppIntent {
     static let title: LocalizedStringResource = "Get Last Night's Sleep"
-    static let description = IntentDescription("Hours asleep last night, from Apple Health.", categoryName: "Health")
+    static let description = IntentDescription("Hours asleep last night, from the Health app.", categoryName: "Health")  // App Store rejects "Apple" in intent text (ITMS-90626)
     static let authenticationPolicy: IntentAuthenticationPolicy = .requiresLocalDeviceAuthentication
 
     @MainActor

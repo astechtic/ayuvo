@@ -56,7 +56,7 @@ internal fun CameraMeasurementsSettingsPage(ctx: SettingsPageContext) {
                 trailing = RowTrailing.Toggle(keep, { v -> scope.launch { prefs.setVitalsKeepSignals(v) } })
             )
         }
-        row {
+        if (prefs.vitalsEstimatesAvailable) row {
             GroupRow(
                 title = stringResource(R.string.camvitals_experimental),
                 subtitle = stringResource(R.string.camvitals_experimental_sub),
@@ -65,7 +65,7 @@ internal fun CameraMeasurementsSettingsPage(ctx: SettingsPageContext) {
                 trailing = RowTrailing.Toggle(experimental, { v -> scope.launch { prefs.setVitalsExperimentalEnabled(v) } })
             )
         }
-        row {
+        if (prefs.vitalsEstimatesAvailable) row {
             GroupRow(
                 title = stringResource(R.string.camvitals_research),
                 subtitle = stringResource(R.string.camvitals_research_sub),

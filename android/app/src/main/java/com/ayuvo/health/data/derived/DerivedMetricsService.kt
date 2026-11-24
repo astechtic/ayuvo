@@ -70,7 +70,7 @@ class DerivedMetricsService(
         val off = cat.metrics.map { it.id }.filter { it !in enabled }
         db.deleteDerivedValues(off)
         if (enabled.isEmpty()) return@withLock
-        val today = LocalDate.ofInstant(Instant.ofEpochMilli(nowMs()), zone())
+        val today = Instant.ofEpochMilli(nowMs()).atZone(zone()).toLocalDate()
         compute(db, enabled, today.minusDays(historyDays - 1), today)
     }
 
@@ -99,9 +99,9 @@ class DerivedMetricsService(
                 bmiScheme = prefs.derivedBmiScheme.first(),
                 weights = prefs.weightEntries.first()
                     .sortedBy { it.date }
-                    .associate { LocalDate.ofInstant(it.date, z) to it.weightKg }
+                    .associate { it.date.atZone(z).toLocalDate() to it.weightKg }
             )
-            val age = profile?.birthday?.let { Period.between(LocalDate.ofInstant(it, z), to).years.toDouble() }
+            val age = profile?.birthday?.let { Period.between(it.atZone(z).toLocalDate(), to).years.toDouble() }
             val lookFrom = from.minusDays(cfg.thresholds.hrMaxLookbackDays.toLong())
 
             // Low-volume inputs for the whole range at once.

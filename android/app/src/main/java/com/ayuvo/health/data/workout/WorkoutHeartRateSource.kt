@@ -31,7 +31,7 @@ class WorkoutHeartRateSource(
 
     suspend fun person(day: LocalDate): Person {
         val p = profile()
-        val age = p?.birthday?.let { Period.between(LocalDate.ofInstant(it, zone()), day).years.toDouble() }?.takeIf { it in 10.0..110.0 }
+        val age = p?.birthday?.let { Period.between(it.atZone(zone()).toLocalDate(), day).years.toDouble() }?.takeIf { it in 10.0..110.0 }
         return Person(
             hrMax = age?.let(GpsWorkoutAnalysis::tanakaHrMax),
             rhr = restingHr(day),
@@ -53,7 +53,7 @@ class WorkoutHeartRateSource(
     suspend fun stats(startMs: Long, endMs: Long, samples: List<HrSample>? = null): WorkoutHeartRateStats? {
         val hr = samples ?: samples(startMs, endMs)
         if (hr.none { it.tMs in startMs until endMs }) return null
-        val day = LocalDate.ofInstant(Instant.ofEpochMilli(startMs), zone())
+        val day = Instant.ofEpochMilli(startMs).atZone(zone()).toLocalDate()
         return statsFor(hr, startMs, endMs, person(day), config())
     }
 

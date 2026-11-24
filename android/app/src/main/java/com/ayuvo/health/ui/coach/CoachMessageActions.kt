@@ -16,6 +16,19 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.platform.LocalContext
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +55,7 @@ import kotlinx.coroutines.delay
 import java.io.File
 
 /**
- * Copy, regenerate and share, under each assistant reply (docs/coach.md §10).
+ * Copy, regenerate, share and report, under each assistant reply (docs/coach.md §10).
  *
  * Regenerate never deletes: the new reply keeps the seq it replaces and becomes another version, so
  * the `‹ 1/2 ›` stepper can walk back to the answer the user preferred.
@@ -123,6 +136,103 @@ fun CoachMessageActions(
             tag = "coach.message.share",
             onClick = onShare
         )
+        CoachReportAction(message)
+    }
+}
+
+/**
+ * Reporting an AI reply (Google Play AI-generated content policy): the user picks a reason in an in-app dialog,
+ * the reply is marked "Reported" on this device, and — only if the user keeps the box ticked — the reply and the
+ * reason go to Ayuvo by email. Nothing is sent automatically; there is no server.
+ */
+@Composable
+private fun CoachReportAction(message: CoachMessage) {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences(CoachReport.PREFS, Context.MODE_PRIVATE) }
+    var reported by remember(message.id) { mutableStateOf(CoachReport.isReported(prefs, message.id)) }
+    var open by remember { mutableStateOf(false) }
+    ActionIcon(
+        icon = if (reported) Icons.Filled.Flag else Icons.Outlined.Flag,
+        description = stringResource(if (reported) R.string.coach_message_reported else R.string.coach_message_report),
+        tag = "coach.message.report",
+        onClick = { open = true }
+    )
+    if (!open) return
+    val reasons = listOf(
+        "offensive" to R.string.coach_report_reason_offensive,
+        "harmful" to R.string.coach_report_reason_harmful,
+        "incorrect" to R.string.coach_report_reason_incorrect,
+        "other" to R.string.coach_report_reason_other
+    )
+    var reason by remember { mutableStateOf<String?>(null) }
+    var sendEmail by remember { mutableStateOf(true) }
+    val doneText = stringResource(R.string.coach_report_done)
+    AlertDialog(
+        onDismissRequest = { open = false },
+        title = { Text(stringResource(R.string.coach_report_title)) },
+        text = {
+            Column {
+                Text(stringResource(R.string.coach_report_intro), fontSize = 13.sp)
+                reasons.forEach { (key, label) ->
+                    Row(
+                        Modifier.fillMaxWidth().selectable(selected = reason == key, onClick = { reason = key })
+                            .padding(vertical = 2.dp).testTag("coach.report.reason.$key"),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = reason == key, onClick = { reason = key })
+                        Text(stringResource(label))
+                    }
+                }
+                Row(
+                    Modifier.fillMaxWidth().clickable { sendEmail = !sendEmail }.testTag("coach.report.email"),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(checked = sendEmail, onCheckedChange = { sendEmail = it })
+                    Text(stringResource(R.string.coach_report_email))
+                }
+                Text(stringResource(R.string.coach_report_email_note), fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = reason != null,
+                modifier = Modifier.testTag("coach.report.send"),
+                onClick = {
+                    val r = reason ?: return@TextButton
+                    CoachReport.markReported(prefs, message.id)
+                    reported = true
+                    open = false
+                    Toast.makeText(context, doneText, Toast.LENGTH_SHORT).show()
+                    if (sendEmail) CoachReport.email(context, message, r)
+                }
+            ) { Text(stringResource(R.string.coach_report_send)) }
+        },
+        dismissButton = { TextButton(onClick = { open = false }) { Text(stringResource(android.R.string.cancel)) } }
+    )
+}
+
+/** Device-local record of reported replies, and the optional report email. */
+object CoachReport {
+    const val PREFS = "coach_reports"
+    private const val KEY = "reported_ids"
+    private const val SUPPORT_EMAIL = "yaaratech@gmail.com"
+
+    fun isReported(prefs: android.content.SharedPreferences, id: String) = prefs.getStringSet(KEY, emptySet())!!.contains(id)
+
+    fun markReported(prefs: android.content.SharedPreferences, id: String) {
+        prefs.edit().putStringSet(KEY, prefs.getStringSet(KEY, emptySet())!! + id).apply()
+    }
+
+    fun email(context: Context, message: CoachMessage, reason: String) {
+        val version = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: "?"
+        val body = "AI response report\nReason: $reason\nApp: Ayuvo Android $version\n\nReported response:\n" + message.content.take(6000)
+        val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:")).apply {
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(SUPPORT_EMAIL))
+            putExtra(Intent.EXTRA_SUBJECT, "Ayuvo AI response report")
+            putExtra(Intent.EXTRA_TEXT, body)
+        }
+        runCatching { context.startActivity(intent) }
     }
 }
 

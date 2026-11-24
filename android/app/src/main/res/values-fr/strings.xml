@@ -1935,4 +1935,16 @@
     <string name="analytics_trend_INSUFFICIENT_DATA">Pas assez de données</string>
     <string name="analytics_persistent">Depuis plusieurs jours</string>
     <string name="analytics_recovery_v2">Indicateur de récupération</string>
+    <string name="coach_message_report">Signaler la réponse</string>
+    <string name="coach_message_reported">Réponse signalée</string>
+    <string name="coach_report_title">Signaler cette réponse</string>
+    <string name="coach_report_intro">Dites-nous ce qui ne va pas dans cette réponse de l\'IA. Les signalements nous aident à améliorer les consignes de sécurité du coach.</string>
+    <string name="coach_report_reason_offensive">Offensant ou inapproprié</string>
+    <string name="coach_report_reason_harmful">Conseil dangereux ou nuisible</string>
+    <string name="coach_report_reason_incorrect">Informations incorrectes</string>
+    <string name="coach_report_reason_other">Autre chose</string>
+    <string name="coach_report_email">Envoyer la réponse à Ayuvo par e-mail</string>
+    <string name="coach_report_email_note">Seuls cette réponse et le motif sont inclus. Rien n\'est envoyé tant que vous n\'envoyez pas l\'e-mail.</string>
+    <string name="coach_report_send">Envoyer le signalement</string>
+    <string name="coach_report_done">Merci. La réponse a été signalée.</string>
 </resources>
