@@ -44,7 +44,7 @@ android {
         applicationId = "com.ayuvo.health"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
+        versionCode = 3
         versionName = "1.0"
         // Release uses localized @string/app_name; debug overrides to "Ayuvo Debug".
         manifestPlaceholders["launcherAppName"] = "@string/app_name"

@@ -97,6 +97,11 @@
     <uses-permission android:name="android.permission.health.WRITE_SLEEP" />
     <uses-permission android:name="android.permission.health.WRITE_HYDRATION" />
 
+    <!-- ML Kit's document scanner activity is portrait-locked; without this Play treats a portrait screen as
+         required and hides the app from tablets, Chromebooks and XR devices. -->
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />

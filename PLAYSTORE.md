@@ -1,6 +1,6 @@
 # Play Store Listing
 
-Google Play Console listing copy for **Ayuvo Android 1.0 (versionCode 2)**, package `com.ayuvo.health`. Char counts are tracked because Play Console enforces hard caps. Support: yaaratech@gmail.com · Publisher: Yaara Tech.
+Google Play Console listing copy for **Ayuvo Android 1.0 (versionCode 3)**, package `com.ayuvo.health`. Char counts are tracked because Play Console enforces hard caps. Support: yaaratech@gmail.com · Publisher: Yaara Tech.
 
 **Where to paste each field:** App name / Short description / Full description → Grow → Store presence → Main store listing. What's new → Releases → Production → Create new release → Release notes.
 
