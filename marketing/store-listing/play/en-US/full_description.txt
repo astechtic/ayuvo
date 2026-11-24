@@ -1,0 +1,40 @@
+Ayuvo is a private, all-in-one health companion. Log meals, workouts, medications and health records, mirror your Health Connect data into one hub, and ask an AI coach that can see the whole picture — with no account and no Ayuvo servers.
+
+NUTRITION
+Snap up to 10 photos of a meal, scan a barcode (Open Food Facts), speak it, type it, reuse a saved meal or enter it manually. Review calories, macros and 30+ nutrients before saving, adjust servings and preview "What if?". Personalised targets you can override.
+
+WORKOUTS
+A workout diary with sets, reps, weight and RPE and a 1,300-exercise library with photos and animations. Record walks, runs, rides and hikes with GPS: route, splits, pace and elevation, saved to Health Connect.
+
+HEALTH DATA HUB
+With your permission Ayuvo mirrors the Health Connect data you grant — activity, heart, sleep, vitals, body measurements, cycle tracking, mindfulness, mobility, hearing and symptoms where available, nutrition and hydration — into a local hub with Home tiles, day-to-year charts and Data Sources. Ayuvo writes the nutrition, weight, height, body fat and active calories you log, and the outdoor workouts you record. You can also connect Google Health (read-only). Health data is kept on this device and excluded from Google backup and device transfer.
+
+HEALTH RECORDS & MEDICATIONS
+Keep lab reports, prescriptions, consultation notes, discharge summaries, imaging reports and bills in one place. Scan, photograph or share them to Ayuvo; text is read on your phone, test values are found and tracked across reports, and you can share with identifiers blacked out. Add medicines with schedules, get reminders and keep a dose log.
+
+CYCLE TRACKING
+Optional period tracker with flow, symptoms, mood and notes, calendar estimates of your next period and fertile window (estimates only, not birth control), discreet reminders and Health Connect sync.
+
+CAMERA MEASUREMENTS
+Finger and face scans estimate heart rate, heart rate variability and respiratory rate, with a confidence for every value. General wellness, not a medical measurement.
+
+FASTING & WATER
+Optional fasting timer (1–168 h) and water goals with reminders and widgets.
+
+AI COACH — BRING YOUR OWN KEY
+Chat that can use your food log, workouts, weight trend and fasts and — only with your explicit toggles — your Health data and records. Use Google Gemini, OpenAI, Anthropic, xAI, OpenRouter, Together AI, Groq, Hugging Face, Fireworks AI, DeepInfra, Mistral, DeepSeek, Cerebras, Ollama or any OpenAI-compatible endpoint with your own key, or run a model fully on-device. Keys are encrypted with the Android Keystore; requests go straight from your phone to the provider.
+
+PARTNER HEALTH SYNC
+Pair with someone you trust by QR code and share only the categories you choose, directly between your phones on the same Wi-Fi. No server, no account.
+
+WIDGETS & MORE
+Home screen widgets, app shortcuts, sharing into Ayuvo from any app, optional Google Drive backup (never includes Health data, medications or coach chat), 18 languages and 18 accent colours.
+
+PRIVACY
+No account, no ads, no analytics, no tracking. Your data is stored on this device. It leaves your phone only when you act: a request to the AI provider you chose, a barcode lookup, exercise images, a model download, Google Health sync, a partner you paired with, your own Google Drive backup, or a file you export or share. Export everything or delete everything from Settings.
+
+Ayuvo is not a medical device and does not give medical advice. Estimates come from AI and formulas; talk to a clinician before changing diet, training or medication.
+
+Terms: https://ayuvo-health.web.app/terms
+Privacy: https://ayuvo-health.web.app/privacy
+Support: https://ayuvo-health.web.app/support

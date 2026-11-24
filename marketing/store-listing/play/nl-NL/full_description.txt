@@ -1,0 +1,32 @@
+Ayuvo is een privé gezondheidsmaatje voor alles op één plek: maaltijden, trainingen, medicijnen en medische verslagen, je Health Connect-gegevens in één overzicht en een AI-coach die het hele plaatje ziet – zonder account en zonder Ayuvo-servers.
+
+VOEDING
+Maak tot 10 foto's van een maaltijd, scan een barcode (Open Food Facts), spreek of typ hem in. Controleer calorieën, macro's en meer dan 30 voedingsstoffen voordat je opslaat. Persoonlijke doelen die je kunt aanpassen.
+
+TRAINING
+Trainingsdagboek met sets, herhalingen, gewicht en RPE, een bibliotheek met 1.300 oefeningen en GPS-registratie van wandelen, hardlopen, fietsen en hiken.
+
+GEZONDHEIDSGEGEVENS
+Met je toestemming haalt Ayuvo de Health Connect-gegevens die je deelt – activiteit, hart, slaap, vitale waarden, lichaamsmaten, cyclus en meer – naar een lokaal overzicht met grafieken van dag tot jaar.
+
+VERSLAGEN & MEDICIJNEN
+Labuitslagen, recepten, brieven en rekeningen op één plek. De tekst wordt op je telefoon gelezen en waarden worden over verslagen heen gevolgd. Medicijnen met schema's, herinneringen en een innamelogboek.
+
+CYCLUS
+Optionele menstruatietracker met kalender en schattingen (alleen schattingen, geen anticonceptie).
+
+CAMERAMETINGEN
+Vinger- en gezichtsscans schatten hartslag, hartslagvariabiliteit en ademhaling – algemeen welzijn, geen medische meting.
+
+AI-COACH
+Gebruik je eigen sleutel (Google Gemini, OpenAI, Anthropic en vele andere) of een model op het apparaat. De coach ziet je gezondheidsgegevens alleen als jij dat toestaat.
+
+Widgets, app-snelkoppelingen, optionele Google Drive-back-up en 18 talen.
+
+PRIVACY
+Geen account, geen advertenties, geen analyse. Je gegevens worden op dit apparaat bewaard en verlaten het alleen als jij dat doet.
+
+Ayuvo is geen medisch hulpmiddel en geeft geen medisch advies.
+
+Privacy: https://ayuvo-health.web.app/privacy
+Support: https://ayuvo-health.web.app/support

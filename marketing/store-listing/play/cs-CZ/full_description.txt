@@ -1,0 +1,32 @@
+Ayuvo je soukromý zdravotní společník pro všechno na jednom místě: jídlo, tréninky, léky a lékařské zprávy, vaše data z Health Connect v jednom přehledu a AI kouč, který vidí celý obraz – bez účtu a bez serverů Ayuvo.
+
+VÝŽIVA
+Vyfoťte až 10 snímků jídla, naskenujte čárový kód (Open Food Facts), nadiktujte nebo napište. Zkontrolujte kalorie, makra a více než 30 živin, než uložíte. Osobní cíle, které můžete upravit.
+
+TRÉNINK
+Tréninkový deník se sériemi, opakováními, váhou a RPE, knihovna 1 300 cviků a GPS záznam chůze, běhu, jízdy na kole a turistiky.
+
+ZDRAVOTNÍ DATA
+S vaším svolením Ayuvo převezme data z Health Connect, která povolíte – aktivitu, srdce, spánek, vitální funkce, tělesné míry, cyklus a další – do místního přehledu s grafy od dne po rok.
+
+ZPRÁVY A LÉKY
+Laboratorní výsledky, recepty, lékařské zprávy a účty na jednom místě. Text se čte v telefonu a hodnoty se sledují napříč zprávami. Léky s rozpisem, připomínkami a záznamem dávek.
+
+CYKLUS
+Volitelné sledování menstruace s kalendářem a odhady (pouze odhady, nejde o antikoncepci).
+
+MĚŘENÍ KAMEROU
+Sken prstu a obličeje odhaduje tep, variabilitu srdeční frekvence a dechovou frekvenci – obecná pohoda, nikoli lékařské měření.
+
+AI KOUČ
+Použijte vlastní klíč (Google Gemini, OpenAI, Anthropic a mnoho dalších) nebo model přímo v zařízení. Kouč vidí zdravotní data jen tehdy, když to povolíte.
+
+Widgety, zkratky aplikace, volitelná záloha na Disk Google a 18 jazyků.
+
+SOUKROMÍ
+Bez účtu, bez reklam, bez analytiky. Vaše data jsou uložena v tomto zařízení a opouštějí ho jen tehdy, když se tak rozhodnete.
+
+Ayuvo není zdravotnický prostředek a neposkytuje lékařské rady.
+
+Privacy: https://ayuvo-health.web.app/privacy
+Support: https://ayuvo-health.web.app/support

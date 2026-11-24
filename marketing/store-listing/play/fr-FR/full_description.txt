@@ -1,0 +1,32 @@
+Ayuvo est un compagnon santé privé et complet : repas, entraînements, médicaments et dossiers médicaux, vos données Health Connect réunies en un seul endroit, et un coach IA qui voit l'ensemble – sans compte et sans serveur Ayuvo.
+
+NUTRITION
+Prenez jusqu'à 10 photos d'un repas, scannez un code-barres (Open Food Facts), dictez-le ou tapez-le. Vérifiez calories, macros et plus de 30 nutriments avant d'enregistrer. Objectifs personnalisés et modifiables.
+
+SPORT
+Journal d'entraînement avec séries, répétitions, poids et RPE, bibliothèque de 1 300 exercices et enregistrement GPS de la marche, de la course, du vélo et de la randonnée.
+
+DONNÉES DE SANTÉ
+Avec votre accord, Ayuvo reprend les données Health Connect que vous autorisez – activité, cœur, sommeil, signes vitaux, mesures corporelles, cycle et plus – dans un espace local avec des graphiques du jour à l'année.
+
+DOSSIERS & MÉDICAMENTS
+Analyses, ordonnances, comptes rendus et factures au même endroit. Le texte est lu sur votre téléphone et les résultats sont suivis d'un rapport à l'autre. Médicaments avec horaires, rappels et journal des prises.
+
+CYCLE
+Suivi des règles facultatif avec calendrier et estimations (estimations uniquement, pas une contraception).
+
+MESURES PAR CAMÉRA
+Des scans du doigt et du visage estiment le pouls, la variabilité cardiaque et la fréquence respiratoire – bien-être général, pas une mesure médicale.
+
+COACH IA
+Utilisez votre propre clé (Google Gemini, OpenAI, Anthropic et bien d'autres) ou un modèle sur l'appareil. Le coach ne voit vos données de santé que si vous l'autorisez.
+
+Widgets, raccourcis d'app, sauvegarde Google Drive facultative et 18 langues.
+
+CONFIDENTIALITÉ
+Sans compte, sans publicité, sans statistiques. Vos données sont stockées sur cet appareil et n'en sortent que lorsque vous agissez.
+
+Ayuvo n'est pas un dispositif médical et ne donne pas de conseils médicaux.
+
+Privacy: https://ayuvo-health.web.app/privacy
+Support: https://ayuvo-health.web.app/support

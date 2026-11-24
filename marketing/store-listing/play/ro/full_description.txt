@@ -1,0 +1,32 @@
+Ayuvo este un însoțitor de sănătate privat și complet: mese, antrenamente, medicamente și documente medicale, datele tale din Health Connect într-un singur loc și un coach AI care vede imaginea completă – fără cont și fără servere Ayuvo.
+
+NUTRIȚIE
+Fă până la 10 fotografii ale unei mese, scanează un cod de bare (Open Food Facts), dictează sau scrie. Verifică caloriile, macronutrienții și peste 30 de nutrienți înainte de a salva. Obiective personale pe care le poți ajusta.
+
+ANTRENAMENT
+Jurnal cu serii, repetări, greutate și RPE, o bibliotecă de 1.300 de exerciții și înregistrare GPS pentru mers, alergare, ciclism și drumeții.
+
+DATE DE SĂNĂTATE
+Cu permisiunea ta, Ayuvo preia datele din Health Connect pe care le permiți – activitate, inimă, somn, semne vitale, măsurători corporale, ciclu și altele – într-un spațiu local cu grafice de la o zi la un an.
+
+DOCUMENTE ȘI MEDICAMENTE
+Analize, rețete, scrisori medicale și facturi într-un singur loc. Textul este citit pe telefon, iar valorile sunt urmărite de la un document la altul. Medicamente cu program, mementouri și jurnal al dozelor.
+
+CICLU
+Calendar menstrual opțional cu estimări (doar estimări, nu este o metodă contraceptivă).
+
+MĂSURĂTORI CU CAMERA
+Scanări ale degetului și feței estimează pulsul, variabilitatea ritmului cardiac și frecvența respiratorie – stare generală de bine, nu o măsurătoare medicală.
+
+COACH AI
+Folosește propria cheie (Google Gemini, OpenAI, Anthropic și multe altele) sau un model pe dispozitiv. Coachul vede datele de sănătate doar dacă îi permiți.
+
+Widgeturi, comenzi rapide, backup opțional în Google Drive și 18 limbi.
+
+CONFIDENȚIALITATE
+Fără cont, fără reclame, fără analize. Datele tale sunt stocate pe acest dispozitiv și îl părăsesc doar când decizi tu.
+
+Ayuvo nu este un dispozitiv medical și nu oferă sfaturi medicale.
+
+Privacy: https://ayuvo-health.web.app/privacy
+Support: https://ayuvo-health.web.app/support

@@ -1,0 +1,32 @@
+Ayuvo hər şeyi bir yerdə toplayan şəxsi sağlamlıq köməkçisidir: yeməklər, məşqlər, dərmanlar və tibbi sənədlər, Health Connect məlumatlarınız bir mərkəzdə və bütün mənzərəni görən süni intellekt məşqçisi – hesab və Ayuvo serverləri olmadan.
+
+QİDALANMA
+Yeməyin 10-a qədər şəklini çəkin, barkodu skan edin (Open Food Facts), səslə və ya yazı ilə qeyd edin. Yadda saxlamazdan əvvəl kalorini, makroları və 30-dan çox qida maddəsini yoxlayın. Dəyişdirə biləcəyiniz şəxsi hədəflər.
+
+MƏŞQ
+Dəst, təkrar, çəki və RPE ilə məşq gündəliyi, 1300 hərəkətdən ibarət kitabxana və gəzinti, qaçış, velosiped və yürüşlərin GPS qeydi.
+
+SAĞLAMLIQ MƏLUMATLARI
+İcazənizlə Ayuvo icazə verdiyiniz Health Connect məlumatlarını – fəallıq, ürək, yuxu, həyati göstəricilər, bədən ölçüləri, aybaşı dövrü və s. – gündən ilə qədər qrafiklərlə yerli mərkəzə köçürür.
+
+SƏNƏDLƏR VƏ DƏRMANLAR
+Analizlər, reseptlər, həkim qeydləri və hesablar bir yerdə. Mətn telefonda oxunur, nəticələr hesabatdan hesabata izlənir. Dərmanlar üçün cədvəl, xatırlatmalar və qəbul jurnalı.
+
+AYBAŞI DÖVRÜ
+Təqvim və proqnozlarla istəyə bağlı aybaşı izləyicisi (yalnız proqnoz, kontrasepsiya vasitəsi deyil).
+
+KAMERA ÖLÇMƏLƏRİ
+Barmaq və üz skanı nəbzi, ürək ritminin dəyişkənliyini və tənəffüs tezliyini təxmin edir – ümumi rifah üçün, tibbi ölçmə deyil.
+
+SÜNİ İNTELLEKT MƏŞQÇİSİ
+Öz açarınızı (Google Gemini, OpenAI, Anthropic və digərləri) və ya cihazdakı modeli istifadə edin. Məşqçi sağlamlıq məlumatlarınızı yalnız siz icazə versəniz görür.
+
+Vidcetlər, tətbiq qısayolları, istəyə görə Google Drive ehtiyat nüsxəsi və 18 dil.
+
+MƏXFİLİK
+Hesab, reklam və analitika yoxdur. Məlumatlarınız bu cihazda saxlanılır və yalnız siz istədikdə onu tərk edir.
+
+Ayuvo tibbi cihaz deyil və tibbi məsləhət vermir.
+
+Privacy: https://ayuvo-health.web.app/privacy
+Support: https://ayuvo-health.web.app/support
