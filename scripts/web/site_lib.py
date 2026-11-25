@@ -22,12 +22,12 @@ FUD_AI = "https://github.com/apoorvdarshan/fud-ai"
 EMAIL = "yaaratech@gmail.com"
 SITE_NAME = "Ayuvo"
 
-# Both listings answered 404 when the site was upgraded (2026-09-25). While `live` is False the
+# Google Play went live on 2026-11-25; the App Store listing is still in review. While `live` is False the
 # official badges are replaced by a plain "coming soon" note: a badge must always link to a real
 # listing. Flip the flag (and confirm the URL) the day each app is published.
 STORES = {
     "ios": {"url": "https://apps.apple.com/app/id6811947230", "app_id": "6811947230", "live": False},
-    "android": {"url": "https://play.google.com/store/apps/details?id=com.ayuvo.health", "live": False},
+    "android": {"url": "https://play.google.com/store/apps/details?id=com.ayuvo.health", "live": True},
 }
 
 CATALOG = json.loads((ROOT / "local-models" / "catalog.v2.json").read_text(encoding="utf-8"))

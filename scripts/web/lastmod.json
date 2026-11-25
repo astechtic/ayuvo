@@ -1,259 +1,259 @@
 {
  "/": {
-  "date": "2026-11-22",
-  "hash": "93085621d600"
+  "date": "2026-11-25",
+  "hash": "21951bd2c6c2"
  },
  "/404": {
   "date": "2026-09-25",
   "hash": "9cc2026fa7a7"
  },
  "/about": {
-  "date": "2026-11-22",
-  "hash": "0e918c97bc60"
+  "date": "2026-11-25",
+  "hash": "84af6a1fa99b"
  },
  "/ai-providers": {
-  "date": "2026-09-25",
-  "hash": "e6df747be20b"
+  "date": "2026-11-25",
+  "hash": "0f57e82b7ed2"
  },
  "/compare": {
-  "date": "2026-09-25",
-  "hash": "aa216d97de2d"
+  "date": "2026-11-25",
+  "hash": "ea9ff7ab6c63"
  },
  "/compare/apple-health": {
-  "date": "2026-09-25",
-  "hash": "1d9d942f7ea9"
+  "date": "2026-11-25",
+  "hash": "323952250694"
  },
  "/compare/guava-health": {
-  "date": "2026-09-25",
-  "hash": "20bfa5ab3c79"
+  "date": "2026-11-25",
+  "hash": "b42207d88fb6"
  },
  "/compare/health-connect": {
-  "date": "2026-09-25",
-  "hash": "9a11d0bf81cf"
+  "date": "2026-11-25",
+  "hash": "13b4169a5912"
  },
  "/compare/mychart": {
-  "date": "2026-09-25",
-  "hash": "48327c5ab613"
+  "date": "2026-11-25",
+  "hash": "99e216c945de"
  },
  "/compare/picnichealth": {
-  "date": "2026-09-25",
-  "hash": "9d5f16e62963"
+  "date": "2026-11-25",
+  "hash": "227af37cdd88"
  },
  "/download": {
-  "date": "2026-09-25",
-  "hash": "4510b7b69351"
+  "date": "2026-11-25",
+  "hash": "ed294e8bfd33"
  },
  "/features": {
-  "date": "2026-11-22",
-  "hash": "c994d5c34047"
+  "date": "2026-11-25",
+  "hash": "baedf8a08a23"
  },
  "/features/coach": {
-  "date": "2026-11-22",
-  "hash": "d9c7560cf0ec"
+  "date": "2026-11-25",
+  "hash": "d2952e032d2a"
  },
  "/features/derived-metrics": {
-  "date": "2026-11-22",
-  "hash": "35bda9cb4f61"
+  "date": "2026-11-25",
+  "hash": "f0bf4479b189"
  },
  "/features/fasting-and-water": {
-  "date": "2026-09-25",
-  "hash": "051c28558c4b"
+  "date": "2026-11-25",
+  "hash": "5af33e398683"
  },
  "/features/health-data": {
-  "date": "2026-09-30",
-  "hash": "7cb40d9ba8eb"
+  "date": "2026-11-25",
+  "hash": "578ce4d5ad91"
  },
  "/features/insights": {
-  "date": "2026-09-28",
-  "hash": "2a96b8c3096b"
+  "date": "2026-11-25",
+  "hash": "59c6314f32da"
  },
  "/features/nutrition": {
-  "date": "2026-09-30",
-  "hash": "e02453d401d0"
+  "date": "2026-11-25",
+  "hash": "d007f61d8bf1"
  },
  "/features/on-device-ai": {
-  "date": "2026-09-25",
-  "hash": "a3dd947b6b71"
+  "date": "2026-11-25",
+  "hash": "35fde746d3a0"
  },
  "/features/records-and-medications": {
-  "date": "2026-09-30",
-  "hash": "f32a559c4bc0"
+  "date": "2026-11-25",
+  "hash": "4a6fff406c48"
  },
  "/features/siri-and-shortcuts": {
-  "date": "2026-11-22",
-  "hash": "692dc75b014b"
+  "date": "2026-11-25",
+  "hash": "4a0a56279ec7"
  },
  "/features/switch-phones": {
-  "date": "2026-09-25",
-  "hash": "d0599486c881"
+  "date": "2026-11-25",
+  "hash": "9ece63a35a72"
  },
  "/features/workouts": {
-  "date": "2026-09-30",
-  "hash": "3812b7ebefc2"
+  "date": "2026-11-25",
+  "hash": "20cdc79d9db0"
  },
  "/nutrients": {
-  "date": "2026-09-28",
-  "hash": "e21ef647a894"
+  "date": "2026-11-25",
+  "hash": "e7fc5190477c"
  },
  "/nutrients/added-sugar": {
-  "date": "2026-09-27",
-  "hash": "b3036931ae5c"
+  "date": "2026-11-25",
+  "hash": "3cedb2ed4037"
  },
  "/nutrients/biotin": {
-  "date": "2026-09-28",
-  "hash": "5e746aab6d3d"
+  "date": "2026-11-25",
+  "hash": "e7d66b9113fa"
  },
  "/nutrients/caffeine": {
-  "date": "2026-09-27",
-  "hash": "d42e7cd92d5f"
+  "date": "2026-11-25",
+  "hash": "421bb4545cdc"
  },
  "/nutrients/calcium": {
-  "date": "2026-09-27",
-  "hash": "453ced12fe81"
+  "date": "2026-11-25",
+  "hash": "8ab7c1345565"
  },
  "/nutrients/chloride": {
-  "date": "2026-09-28",
-  "hash": "54916ec64b1f"
+  "date": "2026-11-25",
+  "hash": "5dbad5ad23e0"
  },
  "/nutrients/cholesterol": {
-  "date": "2026-09-27",
-  "hash": "583b7e91bfd3"
+  "date": "2026-11-25",
+  "hash": "44dc94008028"
  },
  "/nutrients/chromium": {
-  "date": "2026-09-28",
-  "hash": "f88417c57940"
+  "date": "2026-11-25",
+  "hash": "ae3259178dfc"
  },
  "/nutrients/copper": {
-  "date": "2026-09-28",
-  "hash": "9e1ae5b6d3bf"
+  "date": "2026-11-25",
+  "hash": "854f1432b17f"
  },
  "/nutrients/fiber": {
-  "date": "2026-09-27",
-  "hash": "c4f474cc434e"
+  "date": "2026-11-25",
+  "hash": "afc9a6313407"
  },
  "/nutrients/folate": {
-  "date": "2026-09-27",
-  "hash": "5642842a2327"
+  "date": "2026-11-25",
+  "hash": "c9d1cfb3f26b"
  },
  "/nutrients/iodine": {
-  "date": "2026-09-28",
-  "hash": "f590806a419f"
+  "date": "2026-11-25",
+  "hash": "38d2e714e07a"
  },
  "/nutrients/iron": {
-  "date": "2026-09-27",
-  "hash": "21ad3f9ca5e0"
+  "date": "2026-11-25",
+  "hash": "f631a1a474b2"
  },
  "/nutrients/magnesium": {
-  "date": "2026-09-27",
-  "hash": "f12581f7c7ea"
+  "date": "2026-11-25",
+  "hash": "a9e84fc79d7c"
  },
  "/nutrients/manganese": {
-  "date": "2026-09-28",
-  "hash": "c356b5a14443"
+  "date": "2026-11-25",
+  "hash": "ff2209b1194f"
  },
  "/nutrients/molybdenum": {
-  "date": "2026-09-28",
-  "hash": "e68f64c96e06"
+  "date": "2026-11-25",
+  "hash": "2be4684b0d81"
  },
  "/nutrients/monounsaturated-fat": {
-  "date": "2026-09-27",
-  "hash": "4e591582735b"
+  "date": "2026-11-25",
+  "hash": "a89d8995b6dc"
  },
  "/nutrients/niacin": {
-  "date": "2026-09-28",
-  "hash": "e4bbe7686133"
+  "date": "2026-11-25",
+  "hash": "6fcbdae6434f"
  },
  "/nutrients/omega-3": {
-  "date": "2026-09-27",
-  "hash": "12bf18bcae64"
+  "date": "2026-11-25",
+  "hash": "9425bbee3a25"
  },
  "/nutrients/pantothenic-acid": {
-  "date": "2026-09-28",
-  "hash": "aca8f49f088b"
+  "date": "2026-11-25",
+  "hash": "055a3f57d9db"
  },
  "/nutrients/phosphorus": {
-  "date": "2026-09-28",
-  "hash": "3b11dbf13057"
+  "date": "2026-11-25",
+  "hash": "4a72470cef88"
  },
  "/nutrients/polyunsaturated-fat": {
-  "date": "2026-09-27",
-  "hash": "e2c3fd7cfc1d"
+  "date": "2026-11-25",
+  "hash": "560999e68b8c"
  },
  "/nutrients/potassium": {
-  "date": "2026-09-27",
-  "hash": "c3ed9d6f82f2"
+  "date": "2026-11-25",
+  "hash": "09ee4229b1b0"
  },
  "/nutrients/riboflavin": {
-  "date": "2026-09-28",
-  "hash": "650bcf478259"
+  "date": "2026-11-25",
+  "hash": "d41fa886ada6"
  },
  "/nutrients/saturated-fat": {
-  "date": "2026-09-27",
-  "hash": "5523b05b5347"
+  "date": "2026-11-25",
+  "hash": "e3a6133bf48e"
  },
  "/nutrients/selenium": {
-  "date": "2026-09-28",
-  "hash": "035f8e8b6e95"
+  "date": "2026-11-25",
+  "hash": "9b9a125a06f5"
  },
  "/nutrients/sodium": {
-  "date": "2026-09-27",
-  "hash": "639f128bd641"
+  "date": "2026-11-25",
+  "hash": "d29ec97aefbe"
  },
  "/nutrients/sugar": {
-  "date": "2026-09-27",
-  "hash": "aba386652864"
+  "date": "2026-11-25",
+  "hash": "b1bf1071cf90"
  },
  "/nutrients/thiamin": {
-  "date": "2026-09-28",
-  "hash": "0eb7d7564b6b"
+  "date": "2026-11-25",
+  "hash": "259241aa47c1"
  },
  "/nutrients/trans-fat": {
-  "date": "2026-09-27",
-  "hash": "fe4446933904"
+  "date": "2026-11-25",
+  "hash": "494afeac1855"
  },
  "/nutrients/vitamin-a": {
-  "date": "2026-09-27",
-  "hash": "17762323d59b"
+  "date": "2026-11-25",
+  "hash": "403f05f0ef34"
  },
  "/nutrients/vitamin-b12": {
-  "date": "2026-09-27",
-  "hash": "a943bc6b1768"
+  "date": "2026-11-25",
+  "hash": "ea17f5195041"
  },
  "/nutrients/vitamin-b6": {
-  "date": "2026-09-28",
-  "hash": "7db8f664a46c"
+  "date": "2026-11-25",
+  "hash": "47c24f66955c"
  },
  "/nutrients/vitamin-c": {
-  "date": "2026-09-27",
-  "hash": "325c29887eac"
+  "date": "2026-11-25",
+  "hash": "ff13313f87cb"
  },
  "/nutrients/vitamin-d": {
-  "date": "2026-09-27",
-  "hash": "19ebb0d5ab1d"
+  "date": "2026-11-25",
+  "hash": "8b9d5eb53dc9"
  },
  "/nutrients/vitamin-e": {
-  "date": "2026-09-27",
-  "hash": "39b5a370fe49"
+  "date": "2026-11-25",
+  "hash": "a889f8034c79"
  },
  "/nutrients/vitamin-k": {
-  "date": "2026-09-27",
-  "hash": "566608ef25b1"
+  "date": "2026-11-25",
+  "hash": "fccf04f68306"
  },
  "/nutrients/zinc": {
-  "date": "2026-09-27",
-  "hash": "d17cc831038c"
+  "date": "2026-11-25",
+  "hash": "7823355b56bf"
  },
  "/open-source": {
-  "date": "2026-09-25",
-  "hash": "fcc0cdb823b4"
+  "date": "2026-11-25",
+  "hash": "73707664f087"
  },
  "/privacy": {
   "date": "2026-11-24",
   "hash": "be5a0c0d56ec"
  },
  "/privacy-first": {
-  "date": "2026-09-30",
-  "hash": "42c4963a5940"
+  "date": "2026-11-25",
+  "hash": "65a4e4e69248"
  },
  "/support": {
   "date": "2026-09-14",

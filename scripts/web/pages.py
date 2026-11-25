@@ -1159,7 +1159,7 @@ def build_download() -> Page:
         '<header class="hero compact"><div class="container">' + crumbs_html([], "Download")
         + f'<div class="hero-center">{eyebrow("Download")}<h1 class="hero-title">Get Ayuvo for <em>iPhone and Android.</em></h1>'
         '<p class="hero-lede">Free, with no account. Bring an AI key or run a model on the phone, or skip AI entirely and use Ayuvo as a private diary.</p>'
-        + store_buttons("hero") + '<p class="cta-note">Not on the stores yet? You can build it from source today.</p></div></div></header>'
+        + store_buttons("hero") + ('<p class="cta-note">Prefer to build it yourself? You can build it from source today.</p>' if all(s["live"] for s in STORES.values()) else '<p class="cta-note">Not on your store yet? You can build it from source today.</p>') + '</div></div></header>'
         + privacy_band()
         + band("paper", section_head("Requirements", "What you need.", num="01") + (
             '<div class="grid-3">'
